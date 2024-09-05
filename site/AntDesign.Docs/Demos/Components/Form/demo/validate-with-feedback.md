@@ -1,12 +1,13 @@
----
+﻿---
 order: 103
 title:
-  zh-CN:
+  zh-CN: 验证提示
   en-US: Validate with Feedback
 ---
 
 ## zh-CN
 
+字段无效时，显示字段级错误指示器。此指示器将在表单验证时显示。
 
 ## en-US
 

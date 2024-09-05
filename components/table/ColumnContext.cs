@@ -1,7 +1,10 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AntDesign
 {
@@ -91,9 +94,13 @@ namespace AntDesign
             {
                 var zeroWidthCols = Columns.Where(x => x.Width == null).ToArray();
                 var totalWidth = string.Join(" + ", Columns.Where(x => x.Width != null).Select(x => (CssSizeLength)x.Width));
+                if (string.IsNullOrEmpty(totalWidth))
+                {
+                    totalWidth = "0px";
+                }
                 foreach (var col in Columns.Where(x => x.Width == null))
                 {
-                    col.Width = $"calc(({(CssSizeLength)_table.ScrollX} - ({totalWidth}) + 3px) / {zeroWidthCols.Length})";
+                    col.Width = $"calc(({(CssSizeLength)_table.ScrollX} - ({totalWidth}) ) / {zeroWidthCols.Length})";
                 }
             }
 

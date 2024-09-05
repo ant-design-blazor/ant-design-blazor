@@ -1,0 +1,62 @@
+﻿@using System.Reflection
+@using System.Globalization
+
+<ConfigProvider>
+    <Router AppAssembly="typeof(App).Assembly" OnNavigateAsync="OnNavigateAsync">
+        <Found Context="routeData">
+            <CascadingValue Value="routeData">
+                <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+            </CascadingValue>
+            <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <Result Status="404" />
+        </NotFound>
+    </Router>
+    <AntContainer />
+</ConfigProvider>
+
+@inject ILocalizationService LocalizationService;
+@inject NavigationManager NavigationManager;
+@code {
+
+    static string[] avaliableRoutes = new[] { "/Docs", "/Components", "/Charts", "/Experimental" };
+
+    async Task OnNavigateAsync(NavigationContext navigationContext)
+    {
+        var relativeUri = navigationContext.Path;
+        var currentCulture = LocalizationService.CurrentCulture;
+
+        var segment = relativeUri.IndexOf('/') > 0 ? relativeUri.Substring(0, relativeUri.IndexOf('/')) : relativeUri;
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(segment))
+            {
+                NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
+            }
+            else if (segment.IsIn("zh-CN", "en-US"))
+            {
+                LocalizationService.SetLanguage(CultureInfo.GetCultureInfo(segment));
+            }
+            else
+            {
+                if (avaliableRoutes.All(x => !$"/{relativeUri}".StartsWith(x, StringComparison.InvariantCultureIgnoreCase)))
+                    return;
+
+                if (currentCulture.Name.IsIn("zh-CN", "en-US"))
+                {
+                    NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
+                }
+                else
+                {
+                    NavigationManager.NavigateTo($"/en-US/{relativeUri}");
+                }
+            }
+        }
+        catch
+        {
+
+        }
+    }
+}

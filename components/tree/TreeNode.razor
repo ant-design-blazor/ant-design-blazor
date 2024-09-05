@@ -14,7 +14,7 @@
                 <TreeNodeSwitcher OnSwitcherClick="OnSwitcherClick" TItem="TItem"></TreeNodeSwitcher>
             }
 
-            @if (TreeComponent.Checkable)
+            @if (Checkable)
             {
                 <TreeNodeCheckbox OnCheckBoxClick="OnCheckBoxClick" TItem="TItem"></TreeNodeCheckbox>
             }
@@ -31,11 +31,11 @@
             <TreeNode DataItem="@item" @key="item.GetHashCode()"></TreeNode>
 	    }
     }
-	else if (ChildContent != null)
+	@if (ChildContent != null)
 	{
 		@ChildContent
 	}
-	else 
+    else
     {
         @Nodes
     }

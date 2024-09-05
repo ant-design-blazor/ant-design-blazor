@@ -1,23 +1,48 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace AntDesign.TableModels
 {
     /// <inheritdoc />
     public class RowData<TItem> : RowData
     {
-        internal TableDataItem<TItem> DataItem { get; }
+        public TableDataItem<TItem> DataItem { get; set; }
+
         public override TableDataItem TableDataItem => DataItem;
 
         public TItem Data => DataItem.Data;
+
         public Table<TItem> Table => DataItem.Table;
 
-        internal Dictionary<TItem, RowData<TItem>> Children { get; set; }
+        /// <summary>
+        /// hold the state of children rows
+        /// </summary>
+        public Dictionary<int, RowData<TItem>> Children { get; set; }
+
+        public GroupResult<TItem> GroupResult { get; set; }
+
+        public RowData()
+        { }
 
         public RowData(TableDataItem<TItem> dataItem)
         {
             DataItem = dataItem;
+        }
+
+        protected override void CheckedChildren(bool isSelected, bool checkStrictly)
+        {
+            if (Children?.Any() != true)
+                return;
+
+            foreach (var item in Children)
+            {
+                item.Value.SetSelected(isSelected, checkStrictly);
+            }
         }
     }
 
@@ -32,6 +57,10 @@ namespace AntDesign.TableModels
         public int RowIndex { get; set; }
 
         public int PageIndex { get; set; }
+
+        public bool IsGrouping { get; set; }
+
+        public string Key { get; set; }
 
         public bool Expanded
         {
@@ -50,23 +79,50 @@ namespace AntDesign.TableModels
 
         public abstract TableDataItem TableDataItem { get; }
 
-        public bool Selected { get => TableDataItem.Selected; set => TableDataItem.Selected = value; }
-        public bool HasChildren { get => TableDataItem.HasChildren; set => TableDataItem.HasChildren = value; }
+        public bool Selected
+        {
+            get => TableDataItem.Selected;
+            set => TableDataItem.SetSelected(value);
+        }
 
         public event Action<RowData, bool> ExpandedChanged;
 
         internal void SetExpanded(bool expanded)
         {
-            _expanded = expanded;
+            if (_expanded != expanded)
+            {
+                _expanded = expanded;
+                ExpandedChanged?.Invoke(this, _expanded);
+            }
+        }
+
+        protected abstract void CheckedChildren(bool isSelected, bool checkStrictly);
+
+        internal void SetSelected(bool isSelected, bool checkStrictly)
+        {
+            TableDataItem.SetSelected(isSelected);
+
+            if (!checkStrictly)
+            {
+                CheckedChildren(isSelected, checkStrictly);
+            }
         }
     }
 
     /// <inheritdoc />
     public class TableDataItem<TItem> : TableDataItem
     {
-        public TItem Data { get; }
+        public TItem Data { get; set; }
 
-        public Table<TItem> Table { get; }
+        public Table<TItem> Table { get; set; }
+
+        public IEnumerable<TItem> Children { get; set; }
+
+        public override bool HasChildren => Children?.Any() ?? false;
+
+        public TableDataItem()
+        {
+        }
 
         public TableDataItem(TItem data, Table<TItem> table)
         {
@@ -76,7 +132,6 @@ namespace AntDesign.TableModels
 
         protected override void OnSelectedChanged(bool value)
         {
-            base.OnSelectedChanged(value);
             Table.DataItemSelectedChanged(this, value);
         }
     }
@@ -96,29 +151,30 @@ namespace AntDesign.TableModels
         public bool Selected
         {
             get => _selected;
-            set
-            {
-                if (_selected != value)
-                {
-                    OnSelectedChanged(value);
-                }
-            }
         }
 
-        public bool HasChildren { get; set; }
+        public bool Disabled { get; set; }
+
+        public virtual bool HasChildren { get; }
 
         public event Action<TableDataItem, bool> SelectedChanged;
 
-        protected virtual void OnSelectedChanged(bool value)
-        {
-            SetSelected(value);
-        }
+        protected abstract void OnSelectedChanged(bool value);
 
         internal void SetSelected(bool selected, bool triggersSelectedChanged = true)
         {
+            if (_selected == selected)
+            {
+                return;
+            }
+
             _selected = selected;
+
             if (triggersSelectedChanged)
+            {
+                OnSelectedChanged(_selected);
                 SelectedChanged?.Invoke(this, _selected);
+            }
         }
     }
 }

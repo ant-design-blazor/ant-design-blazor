@@ -1,7 +1,15 @@
 ﻿<EnumSelect TEnum="Province" OnSelectedItemChanged="handleChange" />
+<br />
+<br />
+<EnumSelect TEnum="Fruits?" @bind-Value="_value" Mode="multiple" />
+
+Flags Enum Value: @Convert.ToUInt64(_value), @_value.ToString()
 
 @using System.ComponentModel.DataAnnotations
 @code {
+
+    Fruits? _value = Fruits.Apple | Fruits.Pear;
+
     void handleChange(Province province)
     {
         Console.WriteLine(province);
@@ -9,11 +17,21 @@
 
     public enum Province
     {
-        [Display(Name = "❤️Shanghai")]
+        [Display(Name = nameof(Resources.App.Shanghai), ResourceType = typeof(Resources.App))]
         Shanghai,
-
+        [Display(Name = nameof(Resources.App.Zhejiang), ResourceType = typeof(Resources.App))]
         Zhejiang,
-
+        [Display(Name = nameof(Resources.App.Jiangsu), ResourceType = typeof(Resources.App))]
         Jiangsu
+    }
+
+    [Flags]
+    public enum Fruits
+    {
+        Apple = 1,
+
+        Pear = 2,
+
+        Orange = 4
     }
 }

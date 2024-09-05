@@ -1,0 +1,20 @@
+﻿<Flex Gap="middle" Vertical>
+    <RadioGroup @bind-Value="gapSize" Options="gapSizeOptions"></RadioGroup>
+    @if (gapSize == "customize")
+    {
+        <Slider @bind-Value="customGapSize" />
+    }
+    <Flex Gap="@(gapSize != "customize" ? gapSize : $"{customGapSize}")">
+        <Button Type="primary">Primary</Button>
+        <Button>Default</Button>
+        <Button Type="dashed">Dashed</Button>
+        <Button Type="link">Link</Button>
+    </Flex>
+</Flex>
+
+@code {
+    string[] gapSizeOptions = ["small", "middle", "large", "customize"];
+    string gapSize;
+
+    double customGapSize;
+}

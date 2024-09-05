@@ -10,6 +10,7 @@
         ShowArrowIcon="false"
 		HideNotFoundContent="true"
         SearchDebounceMilliseconds="350"
+        Loading="_loading"
         OnSearch="@(async (value) => await OnSearch(value))"
 		OnSelectedItemChanged="OnSelectedItemChangedHandler">
 </Select>
@@ -19,25 +20,29 @@
 @inject HttpClient Http
 @code
 {
-	class Item
-	{
-		public string Value { get; set; }
-		public string Label { get; set; }
-	}
-	
+    class Item
+    {
+        public string Value { get; set; }
+        public string Label { get; set; }
+    }
+
     Task<string> _oldTask;
     List<Item> _items = new List<Item>();
-	string _selectedValue;
-	
+    string _selectedValue;
+    bool _loading;
+
     private async Task OnSearch(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
         {
             if (_oldTask == null || _oldTask.IsCompleted)
             {
+                _loading = true;
+                StateHasChanged();
+
                 var key = HttpUtility.UrlEncode(value);
                 var url = $"https://suggest.taobao.com/sug?code=utf-8&q={key}";
-
+        
                 _oldTask = Http.GetStringAsync(url);
                 var content = await _oldTask;
 
@@ -47,16 +52,16 @@
                 {
                     _items.Add(new Item { Value = item[0], Label = item[0]});
                 }
-				
-				await Task.Delay(1);
-                StateHasChanged();
             }
         }
-		else
-		{
-			if (_items.Any())
-				_items.Clear();
-		}
+        else
+        {
+            if (_items.Any())
+                _items.Clear();
+        }
+
+        _loading = false;
+        StateHasChanged();
     }
 
     private void OnSelectedItemChangedHandler(Item value)

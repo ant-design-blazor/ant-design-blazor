@@ -4,7 +4,7 @@
 
 @if (ParentSelect.SuffixIcon != null)
 {
-    <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="@ParentSelect.OnArrowClick" @onclick:stopPropagation="true">
+    <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" >
         @ParentSelect.SuffixIcon
     </span>
 }
@@ -18,7 +18,7 @@ else
 {
     if (ShowArrowIcon || ParentSelect.FeedbackIcon != null)
     {
-        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="@ParentSelect.OnArrowClick" @onclick:stopPropagation="true">
+        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" >
             @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
             {
                 if (ShowSearchIcon)
@@ -39,7 +39,7 @@ else
     }
     else
     {
-        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="@ParentSelect.OnArrowClick" @onclick:stopPropagation="true">
+        <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;" >
             @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
             {
                 if (ShowSearchIcon)
@@ -52,7 +52,11 @@ else
 
     @if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
     {
-        <span class="ant-select-clear" unselectable="on" aria-hidden="true" style="user-select: none;" @onclick="OnClearClick" @onclick:stopPropagation="true">
+        <span class="ant-select-clear"
+              unselectable="on" 
+              aria-hidden="true" 
+              style="user-select: none;" 
+              @ref="@_clearRef">
             <Icon Type="close-circle" Theme="fill"></Icon>
         </span>
     }

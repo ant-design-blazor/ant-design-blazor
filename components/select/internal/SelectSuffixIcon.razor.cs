@@ -1,4 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Text.Json;
+using System.Threading.Tasks;
+using AntDesign.JsInterop;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign.Select.Internal
@@ -14,11 +21,46 @@ namespace AntDesign.Select.Internal
         public bool ShowSearchIcon { get; set; }
 
         [Parameter]
-        public bool ShowArrowIcon { get; set; } 
+        public bool ShowArrowIcon { get; set; }
 
         [Parameter]
-        public EventCallback<MouseEventArgs> OnClearClick { get; set; } 
-        
+        public EventCallback<MouseEventArgs> OnClearClick { get; set; }
+
         [CascadingParameter(Name = "ParentSelect")] internal SelectBase<TItemValue, TItem> ParentSelect { get; set; }
+
+        [Inject] private IDomEventListener DomEventListener { get; set; }
+
+        private string _id = "";
+        private ElementReference _clearRef;
+        protected override Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _id = _clearRef.Id;
+                if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
+                {
+                    DomEventListener.AddExclusive<JsonElement>(_clearRef, "click", OnClear, true, true);
+                }
+            }
+
+            if (_clearRef.Id != _id)
+            {
+                _id = _clearRef.Id;
+                if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
+                {
+                    DomEventListener.AddExclusive<JsonElement>(_clearRef, "click", OnClear, true, true);
+                }
+            }
+
+            return base.OnAfterRenderAsync(firstRender);
+        }
+
+        private async void OnClear(JsonElement jsonElement)
+        {
+            if (OnClearClick.HasDelegate)
+            {
+                await OnClearClick.InvokeAsync(null);
+            }
+        }
     }
 }

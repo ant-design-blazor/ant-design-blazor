@@ -10,9 +10,9 @@
   <base href="~/" />
   <link rel="icon" href="logo.png" type="image/x-icon">
   <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
-  <link rel="stylesheet" href="@("https://unpkg.com/@docsearch/css@3.0.0/dist/style.css")" />
+  <link rel="stylesheet" href="@("https://fastly.jsdelivr.net/npm/@docsearch/css@3")" />
   <link href="_content/AntDesign.Docs/css/default.css" rel="stylesheet">
-  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css">
+  <link antblazor-css />
   <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
@@ -36,51 +36,49 @@
     }
   }
   <script src="@polyfillPath"></script>
-  <script src="_content/AntDesign.Charts/g2plot.js"></script>
+  <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
   <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
-  <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+  @* <script src="_content/AntDesign/js/ant-design-blazor.js"></script> *@
   <script src="_content/AntDesign.Docs/js/prism.js"></script>
+  <script>
+    window.XPrism = {};
+    window.XPrism.highlight = function (code, language) {
+        return Prism.highlight(code, Prism.languages[language], language);
+    }
+
+    window.XPrism.highlightAll = function () {
+        Prism.highlightAll();
+    }
+  </script>
 
   <script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } }</script>
   <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
   <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.nls.js"></script>
   <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.js"></script>
   <script>
-      var instances = {};
-      function createEditor(element, id, ref, options) {
-          console.log(id);
-          var instance = monaco.editor.create(element, options);
-          instance.onDidChangeModelContent(function () {
-              ref.invokeMethodAsync('OnChangeAsync', instance.getValue());
-          });
-          instances[id] = instance;
-          return instance;
-      }
-
-      function copy(id) {
-          var text = instances[id].getValue();
-          navigator.clipboard.writeText(text);
-      }
-  </script>
-
-  <script>
-    window.AntDesign.Prism = {};
-    window.AntDesign.Prism.highlight = function (code, language) {
-        return Prism.highlight(code, Prism.languages[language], language);
+    var instances = {};
+    function createEditor(element, id, ref, options) {
+      console.log(id);
+      var instance = monaco.editor.create(element, options);
+      instance.onDidChangeModelContent(function() {
+          ref.invokeMethodAsync('OnChangeAsync', instance.getValue());
+      });
+      instances[id] = instance;
+      return instance;
     }
-
-    window.AntDesign.Prism.highlightAll = function () {
-        Prism.highlightAll();
+    function copy(id) {
+      var text = instances[id].getValue();
+      navigator.clipboard.writeText(text);
     }
   </script>
-  <script src="@("https://unpkg.com/@docsearch/js@3.0.0/dist/umd/index.js")"></script>
+
+  <script src="@("https://fastly.jsdelivr.net/npm/@docsearch/js@3")"></script>
   <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
-  
-  <script src="_framework/blazor.server.js"></script>
-
   @if (!isNET6)
   {
     <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"></script>
   }
+  <script antblazor-js></script>
+  <script src="_framework/blazor.server.js"></script>
 </body>
 </html>

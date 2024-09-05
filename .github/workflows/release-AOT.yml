@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - "*"
+    branches:
+      - doc-fix
 
 jobs:
   publish-and-deploy:
@@ -12,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -39,7 +41,7 @@ jobs:
       - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: 8.0.100
 
       - uses: actions/setup-node@v1
         with:
@@ -52,7 +54,8 @@ jobs:
       - name: Publish Docs 🎉
         id: publish
         run: |
-          VERSION=`git describe --tags`
+          git fetch --all
+          VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/ant-design-blazor/ant-design-blazor/tags | grep 'name' | cut -d\" -f4 | head -1)
           echo "::set-output name=package_version::${VERSION}"
           npm install
           echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js

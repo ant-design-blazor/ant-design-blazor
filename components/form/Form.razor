@@ -8,16 +8,24 @@
     <EditForm class="@ClassMapper.Class"
               style="@Style"
               id="@Id"
+              method="@Method"
+              FormName="@Name"
+              Enhance="@Enhance"
+              autocomplete="@Autocomplete"
               EditContext="_editContext"
               OnValidSubmit="OnValidSubmit"
               OnInvalidSubmit="OnInvalidSubmit">
-        @if(ValidateMode.IsIn(FormValidateMode.Rules, FormValidateMode.Complex))
+        @if (UseRulesValidator)
         {
             <FormRulesValidator @ref="_rulesValidator" />
         }
-        @if (ValidateMode.IsIn(FormValidateMode.Default, FormValidateMode.Complex))
+        else if (Validate != null)
         {
             @Validator
+        }
+        else
+        {
+            <DataAnnotationsValidator />
         }
         <CascadingValue Value="this" Name="Form" TValue="IForm" IsFixed="@true">
             @if (!string.IsNullOrEmpty(Size))
@@ -30,7 +38,6 @@
             {
                 @ChildContent(Model)
             }
-
         </CascadingValue>
     </EditForm>
 </Spin>

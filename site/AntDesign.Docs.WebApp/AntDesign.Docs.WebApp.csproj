@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Watch Include="$(SolutionDir)**\*.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AntDesign.Docs.Wasm\AntDesign.Docs.Wasm.csproj" />
+  </ItemGroup>
+
+</Project>

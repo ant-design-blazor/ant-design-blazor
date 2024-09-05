@@ -27,7 +27,8 @@
        OnChange="OnChange"
        Total="total"
        RemoteDataSource
-       Bordered>
+       Bordered
+       RowKey="x=>x.Name">
     <Selection />
     <PropertyColumn Property="c=>c.Name" Width="400" />
     <PropertyColumn Property="c=>c.Age" Width="150" />

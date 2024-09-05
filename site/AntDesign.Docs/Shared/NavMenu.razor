@@ -1,28 +1,27 @@
-﻿@using AntDesign.Docs.Services
+﻿
 <Menu Class="aside-container menu-site" Theme="MenuTheme.Light" Mode="MenuMode.Inline" >
-    @menuItemTemplate((MenuItems, LanguageService, 1))
+    @menuItemTemplate((MenuItems, LocalizationService, 1))
 </Menu>
 
 
-@inject ILanguageService LanguageService
+@inject ILocalizationService LocalizationService
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 @inject DemoService DemoService; 
 
 @code {
-
     [Parameter]
     public DemoMenuItem[] MenuItems { get; set; } = {};
 
-    static readonly RenderFragment<(DemoMenuItem[] items, ILanguageService languageService, int level)> menuItemTemplate = context =>
+    static readonly RenderFragment<(DemoMenuItem[] items, ILocalizationService LocalizationService, int level)> menuItemTemplate = context =>
         @<Template>
             @foreach (var menu in context.items)
             {
                 if (menu.Type == "menuItem")
                 {
-                        <MenuItem RouterLink="@($"{context.languageService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
+                        <MenuItem RouterLink="@($"{context.LocalizationService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
                             <span>@menu.Title</span>
-                            @if (menu.SubTitle != null)
+                            @if (context.LocalizationService.CurrentCulture.Name == "zh-CN" && menu.SubTitle != null)
                             {
                                 <span class="chinese">@menu.SubTitle</span>
                             }
@@ -33,7 +32,7 @@
                     <SubMenu Title="@menu.Title" IsOpen="true">
                         @if (menu.Children.Any())
                         {
-                            @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
+                            @menuItemTemplate((menu.Children, context.LocalizationService, context.level + 1))
                         }
                     </SubMenu>
                 }
@@ -42,12 +41,10 @@
                     <MenuItemGroup Title="@menu.Title">
                         @if (menu.Children.Any())
                         {
-                            @menuItemTemplate((menu.Children, context.languageService, context.level + 1))
+                            @menuItemTemplate((menu.Children, context.LocalizationService, context.level + 1))
                         }
                     </MenuItemGroup>
                 }
             }
         </Template>;
-
-
 }

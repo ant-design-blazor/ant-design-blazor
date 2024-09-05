@@ -9,17 +9,16 @@
 }
 else
 {
-	<div style="width: @(AntList.ColumnWidth)%; max-width: @(AntList.ColumnWidth)%;">
-		<AntDesign.Col Flex="1" >
-		    <div class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref">
-		        @itemChildren(this)
-		    </div>
-		</AntDesign.Col>
-	</div>
+    <div style="width: @(AntList.ColumnWidth)%; max-width: @(AntList.ColumnWidth)%;">
+        <AntDesign.Col Flex="1">
+            <div class="@ClassMapper.Class" style="@Style" Id="@Id" @onclick="HandleClick" @onclick:stopPropagation @ref="Ref">
+                @itemChildren(this)
+            </div>
+        </AntDesign.Col>
+    </div>
 }
-@code{
 
-
+@code {
     RenderFragment<ListItem> itemChildren = content =>
     @<Template>
         @if (content.IsVerticalAndExtra)
@@ -59,6 +58,4 @@ else
             </ul>
         }
     </Template>;
-
-
 }

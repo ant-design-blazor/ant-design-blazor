@@ -1,6 +1,9 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.JsInterop.ObservableApi;
@@ -9,7 +12,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Tests
 {
-    class TestDomEventListerner : IDomEventListener
+    internal sealed class TestDomEventListerner : IDomEventListener
     {
         public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
         {
@@ -21,7 +24,7 @@ namespace AntDesign.Tests
             return;
         }
 
-        public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
+        public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false)
         {
             return;
         }

@@ -14,11 +14,9 @@ export class resizeObserver {
     return "ResizeObserver" in window;
   }
 
-  // @ts-ignore: TS2304: Cannot find name 'ResizeObserver'
   private static resizeObservers: Map<string, ResizeObserver> = new Map<string, ResizeObserver>();
 
   static create(key, invoker, isDotNetInvoker: boolean = true ) {
-    // @ts-ignore: TS2304: Cannot find name 'ResizeObserver'
     let observer;
         
     if (isDotNetInvoker) {
@@ -32,7 +30,7 @@ export class resizeObserver {
   static observe(key: string, element) {
     const observer = resizeObserver.resizeObservers.get(key);
     if (observer) {
-      let domElement = domInfoHelper.get(element);
+      const domElement = domInfoHelper.get(element);
       observer.observe(domElement);
     }
   }
@@ -48,7 +46,7 @@ export class resizeObserver {
     const observer = this.resizeObservers.get(key)
 
     if (observer) {
-      let domElement = domInfoHelper.get(element);
+      const domElement = domInfoHelper.get(element);
       observer.unobserve(domElement)
     }
   }

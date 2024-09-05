@@ -1,14 +1,17 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
 using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using AntDesign.Docs.Utils;
+using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign.Docs.Services
 {
@@ -20,22 +23,22 @@ namespace AntDesign.Docs.Services
         private static ConcurrentCache<string, AsyncLazy<DemoMenuItem[]>> _docMenuCache;
         private static ConcurrentCache<string, Type> _showCaseCache;
 
-        private readonly ILanguageService _languageService;
+        private readonly ILocalizationService _localizationService;
         private readonly HttpClient _httpClient;
         private readonly NavigationManager _navigationManager;
         private Uri _baseUrl;
 
-        private string CurrentLanguage => _languageService.CurrentCulture.Name;
+        private string CurrentLanguage => _localizationService.CurrentCulture.Name;
 
-        public DemoService(ILanguageService languageService, HttpClient httpClient, NavigationManager navigationManager)
+        public DemoService(ILocalizationService localizationService, HttpClient httpClient, NavigationManager navigationManager)
         {
-            _languageService = languageService;
+            _localizationService = localizationService;
             _httpClient = httpClient;
             _navigationManager = navigationManager;
             _baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
-            Initialize(languageService.CurrentCulture.Name);
+            Initialize(localizationService.CurrentCulture.Name);
 
-            _languageService.LanguageChanged += (sender, args) => Initialize(args.Name);
+            _localizationService.LanguageChanged += (sender, args) => Initialize(args.Name);
         }
 
         private void Initialize(string language)
@@ -160,6 +163,11 @@ namespace AntDesign.Docs.Services
         public async Task<MoreProps[]> GetMore()
         {
             return await _httpClient.GetFromJsonAsync<MoreProps[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/data/more-list.{CurrentLanguage}.json").ToString());
+        }
+
+        public async Task<Sponsor[]> GetSponsors()
+        {
+            return await _httpClient.GetFromJsonAsync<Sponsor[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/data/sponsors.{CurrentLanguage}.json").ToString());
         }
     }
 }

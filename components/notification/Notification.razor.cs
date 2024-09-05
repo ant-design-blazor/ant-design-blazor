@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,6 +13,27 @@ using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+        <para>Display a notification message globally.</para>
+
+        <h2>When To Use</h2>
+
+        <para>To display a notification message at any of the four corners of the viewport. Typically it can be used in the following cases:</para>
+
+        <list type="bullet">
+            <item>A notification with complex content.</item>
+            <item>A notification providing a feedback based on the user interaction. Or it may show some details about upcoming steps the user may have to follow.</item>
+            <item>A notification that is pushed by the application.</item>
+        </list>
+
+        <para>Note: Please confirm that the <c><AntContainer /></c> component has been added to <c>App.Razor</c>. If notifications are not displaying this is a common problem.</para>
+    </summary>
+    <seealso cref="AntDesign.NotificationService"/>
+    <seealso cref="NotificationConfig"/>
+    <seealso cref="NotificationRef"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/Jxm5nw61w/Notification.svg", Title = "Notification", SubTitle = "通知提醒框")]
     public partial class Notification
     {
         [Inject]
@@ -136,7 +161,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="defaultConfig"></param>
         private void Config(
-            [NotNull]NotificationGlobalConfig defaultConfig)
+            [NotNull] NotificationGlobalConfig defaultConfig)
         {
             if (defaultConfig == null)
             {

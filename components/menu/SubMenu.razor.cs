@@ -1,7 +1,12 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Internal;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -15,6 +20,9 @@ namespace AntDesign
         [CascadingParameter]
         public SubMenu Parent { get; set; }
 
+        /// <summary>
+        /// Menu placement
+        /// </summary>
         [Parameter]
         public Placement? Placement
         {
@@ -32,18 +40,34 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// class name of the popup
+        /// </summary>
         [Parameter]
         public string PopupClassName { get; set; }
 
+        /// <summary>
+        /// Title 
+        /// </summary>
         [Parameter]
         public string Title { get; set; }
 
+        /// <summary>
+        /// Title template
+        /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
+        /// <summary>
+        /// SubMenus or SubMenu items
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Unique ID of the SubMenu
+        /// </summary>
+        /// <default value="Uniquely Generated ID" />
         [Parameter]
         public string Key
         {
@@ -51,12 +75,23 @@ namespace AntDesign
             set => _key = value;
         }
 
+        /// <summary>
+        /// Whether SubMenu is disabled
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Open state of the SubMenu
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool IsOpen { get; set; }
 
+        /// <summary>
+        /// Callback executed when the SubMenu title is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnTitleClick { get; set; }
 
@@ -78,6 +113,21 @@ namespace AntDesign
         internal bool _overlayVisible;
         private PlacementType? _placement;
 
+        private ElementReference _warpperRef;
+        private decimal _warpperHight;
+        private string _warpperStyle;
+
+        private bool _isActive = false;
+        private bool _isInactive = true;
+        private bool _isHidden = true;
+        private bool _isCollapseEnterPrepare;
+        private bool _isCollapseEnterStart;
+        private bool _isCollapseEnterActive;
+
+        private bool _isCollapseLeavePrepare;
+        private bool _isCollapseLeaveStart;
+        private bool _isCollapseLeaveActive;
+
         private void SetClass()
         {
             string prefixCls = $"{RootMenu.PrefixCls}-submenu";
@@ -97,8 +147,14 @@ namespace AntDesign
                 .Get(() => $"{RootMenu?.PrefixCls}-{RootMenu?.Theme}")
                 .Get(() => $"{RootMenu?.PrefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
                 //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
-                .If($"{RootMenu?.PrefixCls}-hidden", () => RootMenu?.InternalMode == MenuMode.Inline && !IsOpen)
+                .If($"{RootMenu?.PrefixCls}-hidden", () => RootMenu?.InternalMode == MenuMode.Inline && !IsOpen && _isHidden)
                 .If($"{RootMenu?.PrefixCls}-rtl", () => RTL)
+                .If("ant-motion-collapse-enter ant-motion-collapse-enter-prepare ant-motion-collapse", () => _isCollapseEnterPrepare)
+                .If("ant-motion-collapse-enter ant-motion-collapse-enter-start ant-motion-collapse", () => _isCollapseEnterStart)
+                .If("ant-motion-collapse-enter ant-motion-collapse-enter-active ant-motion-collapse", () => _isCollapseEnterActive)
+                .If("ant-motion-collapse-leave ant-motion-collapse-leave-prepare ant-motion-collapse", () => _isCollapseLeavePrepare)
+                .If("ant-motion-collapse-leave ant-motion-collapse-leave-start ant-motion-collapse", () => _isCollapseLeaveStart)
+                .If("ant-motion-collapse-leave ant-motion-collapse-leave-active ant-motion-collapse", () => _isCollapseLeaveActive)
                 ;
 
             if (RootMenu?.InternalMode != MenuMode.Inline && _overlayTrigger != null)
@@ -124,7 +180,7 @@ namespace AntDesign
                 await OnTitleClick.InvokeAsync(args);
         }
 
-        public async Task Collapse()
+        internal async Task Collapse()
         {
             if (RootMenu?.InternalMode == MenuMode.Inline)
             {
@@ -143,7 +199,7 @@ namespace AntDesign
             base.OnInitialized();
             SetClass();
 
-            RootMenu?.Submenus.Add(this);
+            RootMenu?.AddSubmenu(this);
 
             if (RootMenu.DefaultOpenKeys.Contains(Key))
                 IsOpen = true;
@@ -168,6 +224,12 @@ namespace AntDesign
             }
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            RootMenu?.RemoveSubmenu(this);
+            base.Dispose(disposing);
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender && RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
@@ -179,12 +241,17 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        public void Close()
+        internal void Close()
         {
             IsOpen = false;
+
+            if (RootMenu.Animation)
+            {
+                HandleCollapse();
+            }
         }
 
-        public void Open()
+        internal void Open()
         {
             if (Disabled)
             {
@@ -192,12 +259,13 @@ namespace AntDesign
             }
 
             IsOpen = true;
-            Parent?.Open();
-        }
 
-        public OverlayTrigger GetOverlayTrigger()
-        {
-            return _overlayTrigger;
+            if (RootMenu.Animation)
+            {
+                HandleExpand();
+            }
+
+            Parent?.Open();
         }
 
         private void OnOverlayVisibleChange(bool visible)
@@ -209,7 +277,7 @@ namespace AntDesign
         {
         }
 
-        public void Select(bool isInitializing = false)
+        internal void Select(bool isInitializing = false)
         {
             Parent?.Select();
             _isSelected = true;
@@ -219,10 +287,86 @@ namespace AntDesign
             }
         }
 
-        public void Deselect()
+        internal void Deselect()
         {
             Parent?.Deselect();
             _isSelected = false;
+        }
+
+        private async Task UpdateHeight()
+        {
+            var rect = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _warpperRef);
+            _warpperHight = rect.ScrollHeight;
+        }
+
+        private void HandleExpand()
+        {
+            _isActive = true;
+            _isInactive = false;
+            _isHidden = false;
+            _isCollapseEnterPrepare = true;
+
+            CallAfterRender(async () =>
+            {
+                await UpdateHeight();
+
+                _isCollapseEnterPrepare = false;
+                _isCollapseEnterStart = true;
+                _warpperStyle = "height: 0px; opacity: 0;";
+
+                CallAfterRender(async () =>
+                {
+                    _isCollapseEnterStart = false;
+                    _isCollapseEnterActive = true;
+                    StateHasChanged();
+                    await Task.Delay(100);
+
+                    _warpperStyle = $"height: {_warpperHight}px; opacity: 1;";
+                    StateHasChanged();
+                    await Task.Delay(450);
+
+                    _isCollapseEnterActive = false;
+                    _warpperStyle = "";
+                    StateHasChanged();
+                });
+
+                StateHasChanged();
+            });
+        }
+
+        private void HandleCollapse()
+        {
+            _isActive = false;
+            _isInactive = true;
+            _isCollapseLeavePrepare = true;
+
+            CallAfterRender(async () =>
+            {
+                _isCollapseLeavePrepare = false;
+                _isCollapseLeaveStart = true;
+                _warpperStyle = $"height: {_warpperHight}px;";
+
+                CallAfterRender(async () =>
+                {
+                    await Task.Delay(100);
+                    _isCollapseLeaveStart = false;
+                    _isCollapseLeaveActive = true;
+
+                    _warpperStyle = "height: 0px; opacity: 0;";//still active
+                    StateHasChanged();
+
+                    await Task.Delay(450);
+                    _isHidden = true; // still height 0
+                    _warpperStyle = "";
+                    _isCollapseLeaveActive = false;
+                    StateHasChanged();
+                });
+
+                StateHasChanged();
+                await Task.Yield();
+            });
+
+            StateHasChanged();
         }
     }
 }

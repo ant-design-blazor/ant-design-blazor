@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -18,14 +22,13 @@ namespace AntDesign.TableModels
 
         public int ColumnIndex => _columnIndex;
 
-        private readonly Func<TField, TField, int> _comparer;
+        private Func<TField, TField, int> _comparer;
 
         private SortDirection _sortDirection;
 
         private LambdaExpression _getFieldExpression;
 
         private int _columnIndex;
-
 
         public SortModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
         {
@@ -95,7 +98,11 @@ namespace AntDesign.TableModels
 
         public object Clone()
         {
-            return new SortModel<TField>(_columnIndex, Priority, FieldName, Sort);
+            return new SortModel<TField>(_columnIndex, Priority, FieldName, Sort)
+            {
+                _getFieldExpression = this._getFieldExpression, // keep the expression instance for sorting rows outside
+                _comparer = this._comparer,
+            };
         }
     }
 }

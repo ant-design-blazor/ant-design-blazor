@@ -1,8 +1,11 @@
-﻿using System.Reflection;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Reflection;
 using AntDesign.Docs.Highlight;
-using AntDesign.Docs.Localization;
-using AntDesign.Docs.Routing;
 using AntDesign.Docs.Services;
+using AntDesign.Extensions.Localization;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -11,11 +14,29 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddAntDesignDocs(this IServiceCollection services)
         {
             services.AddAntDesign();
-            services.AddSingleton<RouteManager>();
             services.AddScoped<DemoService>();
             services.AddScoped<IconListService>();
-            services.AddSingleton<ILanguageService>(new InAssemblyLanguageService(Assembly.GetExecutingAssembly()));
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
+
+            services.AddSimpleEmbeddedJsonLocalization(options =>
+            {
+                options.ResourcesPath = "Resources";
+                options.Resources = SimpleStringLocalizerOptions.BuildResources("Resources", Assembly.GetExecutingAssembly());
+            });
+
+            //services.AddSimpleInteractiveStringLocalizer();
+            services.AddInteractiveStringLocalizer();
+            services.AddLocalization(options =>
+            {
+                options.ResourcesPath = "Resources";
+            });
+
+            //services.AddJsonLocalization(b =>
+            //{
+            //    b.UseEmbeddedJson(o => o.ResourcesPath = "Resources");
+            //}, ServiceLifetime.Singleton);
+            //services.AddLocalization(options => options.ResourcesPath = "Resources");
+
             services.AddScoped<CompilerService>();
             return services;
         }

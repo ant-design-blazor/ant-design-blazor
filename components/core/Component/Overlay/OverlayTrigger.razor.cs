@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -34,6 +38,7 @@ namespace AntDesign.Internal
         /// Overlay adjustment strategy (when for example browser resize is happening). Check
         /// enum for details.
         /// </summary>
+        /// <default value="TriggerBoundaryAdjustMode.InView" />
         [Parameter]
         public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
@@ -44,15 +49,16 @@ namespace AntDesign.Internal
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// 自动关闭功能和Visible参数同时生效
-        /// Both auto-off and Visible control close
+        /// Whether need both auto-off and Visible control closing.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ComplexAutoCloseAndVisible { get; set; } = false;
 
         /// <summary>
         /// Whether the trigger is disabled.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; }
 
@@ -60,12 +66,14 @@ namespace AntDesign.Internal
         /// Property forwarded to Overlay component. Consult the Overlay
         /// property for more detailed explanation.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool HiddenMode { get; set; } = false;
 
         /// <summary>
         /// (not used in Unbound) Sets wrapping div style to `display: inline-flex;`.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool InlineFlexMode { get; set; } = false;
 
@@ -73,6 +81,7 @@ namespace AntDesign.Internal
         /// Behave like a button: when clicked invoke OnClick
         /// (unless OnClickDiv is overriden and does not call base).
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool IsButton { get; set; } = false;
 
@@ -109,6 +118,7 @@ namespace AntDesign.Internal
         /// <summary>
         /// Callback when overlay visibility is changing.
         /// </summary>
+        [Obsolete("Use VisibleChanged instead")]
         [Parameter]
         public EventCallback<bool> OnVisibleChange { get; set; }
 
@@ -160,6 +170,11 @@ namespace AntDesign.Internal
          */
         private PlacementType _paramPlacement = PlacementType.BottomLeft;
 
+        /// <summary>
+        /// The position of the Dropdown overlay relative to the target. 
+        /// Can be: Top, Left, Right, Bottom, TopLeft, TopRight, BottomLeft, BottomRight, LeftTop, LeftBottom, RightTop, RightBottom
+        /// </summary>
+        /// <default value="PlacementType.BottomLeft" />
         [Parameter]
         public Placement Placement
         {
@@ -187,12 +202,14 @@ namespace AntDesign.Internal
         /// Example use case: when overlay has to be contained in a
         /// scrollable area.
         /// </summary>
+        /// <default value="body" />
         [Parameter]
         public string PopupContainerSelector { get; set; } = "body";
 
         /// <summary>
         /// Trigger mode. Could be multiple by passing an array.
         /// </summary>
+        /// <default value="TriggerType.Hover" />
         [Parameter]
         public Trigger[] Trigger //TODO: this should probably be a flag not an array
         {
@@ -203,6 +220,10 @@ namespace AntDesign.Internal
             }
         }
 
+        /// <summary>
+        /// The trigger element CSS class.
+        /// </summary>
+        /// <default value="ant-dropdown-trigger" />
         [Parameter]
         public string TriggerCls { get; set; }
 
@@ -227,8 +248,15 @@ namespace AntDesign.Internal
         /// <summary>
         /// Toggles overlay viability.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Visible { get; set; } = false;
+
+        /// <summary>
+        /// Callback when visibility is changed.
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> VisibleChanged { get; set; }
 
         [Inject]
         protected IDomEventListener DomEventListener { get; set; }
@@ -335,7 +363,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
-                _overlay.PreventHide(true);
+                _overlay.SetMouseInOverlay(true);
 
                 await Show();
             }
@@ -345,7 +373,7 @@ namespace AntDesign.Internal
             }
 
             if (OnMouseEnter.HasDelegate)
-                OnMouseEnter.InvokeAsync(null);
+                _ = OnMouseEnter.InvokeAsync(null);
         }
 
         protected virtual async Task OnTriggerMouseLeave()
@@ -354,7 +382,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
-                _overlay.PreventHide(_mouseInOverlay);
+                _overlay.SetMouseInOverlay(_mouseInOverlay);
 
                 await Hide();
             }
@@ -373,7 +401,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Focus))
             {
-                _overlay.PreventHide(true);
+                _overlay.SetMouseInOverlay(true);
 
                 await Show();
             }
@@ -385,7 +413,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Focus))
             {
-                _overlay.PreventHide(_mouseInOverlay);
+                _overlay.SetMouseInOverlay(_mouseInOverlay);
 
                 await Hide();
             }
@@ -397,7 +425,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
-                _overlay.PreventHide(true);
+                _overlay.SetMouseInOverlay(true);
             }
         }
 
@@ -407,8 +435,7 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
-                _overlay.PreventHide(_mouseInTrigger);
-
+                _overlay.SetMouseInOverlay(_mouseInTrigger);
                 await Hide();
             }
         }
@@ -423,7 +450,7 @@ namespace AntDesign.Internal
         /// </summary>
         /// <param name="args">MouseEventArgs</param>
         /// <returns></returns>
-        public virtual async Task OnClickDiv(MouseEventArgs args)
+        protected virtual async Task OnClickDiv(MouseEventArgs args)
         {
             if (!IsButton)
             {
@@ -445,6 +472,7 @@ namespace AntDesign.Internal
             {
                 if (_overlay.IsPopup())
                 {
+                    _overlay.PreventHide(false);
                     await Hide();
                 }
                 else
@@ -454,6 +482,7 @@ namespace AntDesign.Internal
             }
             else if (IsContainTrigger(TriggerType.ContextMenu) && _overlay.IsPopup())
             {
+                _overlay.PreventHide(false);
                 await Hide();
             }
             if (resetMouseInTrigger)
@@ -479,6 +508,10 @@ namespace AntDesign.Internal
             }
         }
 
+        /// <summary>
+        /// on document mouse up
+        /// </summary>
+        /// <param name="element"></param>
         protected virtual void OnMouseUp(JsonElement element)
         {
             if (_mouseUpInOverlay)
@@ -491,10 +524,10 @@ namespace AntDesign.Internal
             {
                 if (OnMaskClick.HasDelegate)
                 {
-                    OnMaskClick.InvokeAsync(null);
+                    _ = OnMaskClick.InvokeAsync(null);
                 }
-
-                Hide();
+                _overlay?.PreventHide(false);
+                _ = Hide();
             }
         }
 
@@ -506,6 +539,10 @@ namespace AntDesign.Internal
         protected virtual async Task OverlayVisibleChange(bool visible)
         {
             await OnVisibleChange.InvokeAsync(visible);
+            if (VisibleChanged.HasDelegate)
+            {
+                await VisibleChanged.InvokeAsync(visible);
+            }
         }
 
         protected virtual async Task OverlayHiding(bool visible)

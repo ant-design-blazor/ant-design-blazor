@@ -1,9 +1,13 @@
-﻿@inherits AntDesignTestBase
+﻿@using System.ComponentModel.DataAnnotations
+@inherits AntDesignTestBase
 @code {
 
     class Model
     {
         public string Name { get; set; } = "";
+
+        [Required]
+        public string? RequiredField { get; set; }
     }
 	Model _model = new();
 	AntDesign.Form<Model>? _form;
@@ -67,5 +71,28 @@
 		//Assert				
 		handlerExecuted.Should().BeTrue();
 	}
+#endif
+
+#if NET6_0_OR_GREATER
+    [Fact]
+    public void Form_EditContext_Build_Required()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+        .SetResult(new AntDesign.JsInterop.Window());
+
+        var cut = Render<AntDesign.Form<Model>>(
+            @<AntDesign.Form @ref="@_form" Model="@_model" >
+                <AntDesign.FormItem Label="RequiredField">
+                    <AntDesign.Input @bind-Value=@context.RequiredField DebounceMilliseconds="0" />
+                </AntDesign.FormItem>
+            </AntDesign.Form>
+        );
+        //Act
+        var hasAriaRequried=cut.Find("input").HasAttribute("aria-required");
+
+        //Assert
+        hasAriaRequried.Should().BeTrue();
+    }
 #endif
 }

@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -15,9 +19,16 @@ namespace AntDesign
         [CascadingParameter]
         internal SubMenu ParentMenu { get; set; }
 
+        /// <summary>
+        /// Display title
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Unique ID of the menu item
+        /// </summary>
+        /// <default value="Uniquely Generated ID" />
         [Parameter]
         public string Key
         {
@@ -25,31 +36,53 @@ namespace AntDesign
             set => _key = value;
         }
 
+        /// <summary>
+        /// Whether menu item is disabled
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Callback for when item is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
+        /// <summary>
+        /// Href route
+        /// </summary>
         [Parameter]
         public string RouterLink { get; set; }
 
+        /// <summary>
+        /// Modifies the URL matching behavior for a NavLink
+        /// </summary>
+        /// <default value="NavLinkMatch.All" />
         [Parameter]
         public NavLinkMatch RouterMatch { get; set; } = NavLinkMatch.All;
 
+        /// <summary>
+        /// Title of the menu item
+        /// </summary>
         [Parameter]
         public string Title { get; set; }
 
+        /// <summary>
+        /// Icon of the menu item
+        /// </summary>
         [Parameter]
         public string Icon { get; set; }
 
+        /// <summary>
+        /// Custom icon template, when Icon and IconTemplate are set at the same time, IconTemplate is preferred
+        /// </summary>
         [Parameter]
         public RenderFragment IconTemplate { get; set; }
 
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;
         private string _key;
-
         private bool TooltipDisabled => ParentMenu?.IsOpen == true || ParentMenu?._overlayVisible == true || RootMenu?.InlineCollapsed == false;
 
         private int Padding => RootMenu?.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * RootMenu?.InlineIndent ?? 0 : 0;
@@ -70,20 +103,13 @@ namespace AntDesign
                 .If($"{prefixCls}-disabled", () => Disabled);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            RootMenu?.MenuItems?.Remove(this);
-
-            base.Dispose(disposing);
-        }
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             SetClass();
 
-            RootMenu?.MenuItems.Add(this);
+            RootMenu?.AddMenuItem(this);
 
             if (RootMenu?.DefaultSelectedKeys.Contains(Key) == true)
                 Select(false, true);
@@ -95,6 +121,13 @@ namespace AntDesign
 
             if (RootMenu?.SelectedKeys.Contains(Key) == true && !IsSelected)
                 Select();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            RootMenu?.RemoveMenuItem(this);
+
+            base.Dispose(disposing);
         }
 
         internal void UpdateStelected()
@@ -109,10 +142,26 @@ namespace AntDesign
             }
         }
 
-        public async Task HandleOnClick(MouseEventArgs args)
+        private async Task HandleOnClick(MouseEventArgs args)
         {
             if (Disabled)
                 return;
+            // Hide overlay before handling OnClick to make sure the overlay is not on top of modal created in OnClick delegate
+            if (RootMenu?.Selectable == true)
+            {
+                if (IsSelected && RootMenu?.Multiple == true)
+                {
+                    Deselect();
+                }
+                else
+                {
+                    RootMenu?.SelectItem(this);
+                }
+            }
+            else
+            {
+                RootMenu?.HideOverlay();
+            }
 
             if (OnClick.HasDelegate)
             {
@@ -124,18 +173,6 @@ namespace AntDesign
                 await RootMenu.OnMenuItemClicked.InvokeAsync(this);
             }
 
-            if (RootMenu?.Selectable != true)
-                return;
-
-            if (IsSelected && RootMenu?.Multiple == true)
-            {
-                Deselect();
-            }
-            else
-            {
-                RootMenu?.SelectItem(this);
-            }
-
             if (ParentMenu == null)
                 return;
 
@@ -145,30 +182,27 @@ namespace AntDesign
             }
         }
 
-        public void Select(bool skipParentSelection = false, bool isInitializing = false)
+        internal void Select(bool skipParentSelection = false, bool isInitializing = false)
         {
             IsSelected = true;
             FirstRun = false;
             if (!skipParentSelection)
                 ParentMenu?.Select(isInitializing);
 
-            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3204
-            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was warpped by a tooltip.
-            if (ShowTooltip)
-                StateHasChanged();
+            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was wrapped by any other component than a menu.
+            StateHasChanged();
         }
 
-        public void Deselect(bool sameParentAsSelected = false)
+        internal void Deselect(bool sameParentAsSelected = false)
         {
+            RootMenu?.HideOverlay();
             IsSelected = false;
             FirstRun = false;
             if (!sameParentAsSelected)
                 ParentMenu?.Deselect();
 
-            // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3204
-            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was warpped by a tooltip.
-            if (ShowTooltip)
-                StateHasChanged();
+            // It seems that the `StateHasChanged()` call in parent menu doesn't work correctly when the menuitem was wrapped by any other component than a menu.
+            StateHasChanged();
         }
     }
 }

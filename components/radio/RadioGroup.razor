@@ -11,14 +11,14 @@
 				{
 					foreach (var item in Options.AsT0)
 					{
-						<Radio Value="@item">@item</Radio>
+                        <Radio Value="@item" RadioButton="IsButton">@item</Radio>
 					}
 				}
 				else
 				{
 					@foreach (var radio in Options.AsT1)
 					{
-						<Radio Value="radio.Value">@radio.Label</Radio>
+                        <Radio Value="radio.Value" RadioButton="IsButton">@radio.Label</Radio>
 					}
 				}
 			}

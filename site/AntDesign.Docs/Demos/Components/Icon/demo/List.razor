@@ -1,19 +1,19 @@
-﻿
+﻿<h2>List of icons</h2>
 <div style="display: flex; justify-content: space-between;">
     <RadioGroup @bind-Value="currentTheme" ButtonStyle="@RadioButtonStyle.Solid" Size="large" TValue="string" OnChange="OnThemeChanged">
         <Radio RadioButton Value="@("outline")">
-            <Icon Component="OutlineSvg" />@LanguageService.Resources["app.docs.components.icon.outlined"]
+            <Icon Component="OutlineSvg" />@Localizer["app.docs.components.icon.outlined"]
         </Radio>
         <Radio RadioButton Value="@("fill")">
-            <Icon Component="FilledSvg" />@LanguageService.Resources["app.docs.components.icon.filled"]
+            <Icon Component="FilledSvg" />@Localizer["app.docs.components.icon.filled"]
         </Radio>
         <Radio RadioButton Value="@("twotone")">
-            <Icon Component="TwoToneSvg" />@LanguageService.Resources["app.docs.components.icon.two-tone"]
+            <Icon Component="TwoToneSvg" />@Localizer["app.docs.components.icon.two-tone"]
         </Radio>
     </RadioGroup>
     <Search Size="@InputSize.Large"
             WrapperStyle="margin: 0px 10px; flex: 1 1 0%;"
-            Placeholder="@LanguageService.Resources["app.docs.components.icon.search.placeholder"]"
+            Placeholder="@Localizer["app.docs.components.icon.search.placeholder"]"
             OnInput="@(args => OnSearching(args.Value?.ToString()))" />
 </div>
 
@@ -27,7 +27,7 @@ else
 {
     foreach (var item in displayIcons)
     {
-        <h3>@LanguageService.Resources["app.docs.components.icon.category." + @item.Category]</h3>
+        <h3>@Localizer["app.docs.components.icon.category." + @item.Category]</h3>
 
         <ul class="anticons-list">
             @foreach (var name in item.IconNames)
@@ -46,7 +46,8 @@ else
 
 @inject AntDesign.Docs.Services.IconListService iconListService
 @inject IconService IconService
-@inject ILanguageService LanguageService
+@inject ILocalizationService LocalizationService
+@inject IStringLocalizer Localizer;
 @inject IMessageService messageService
 @inject IJSRuntime JsRuntime
 
@@ -65,7 +66,7 @@ else
 
         await base.OnInitializedAsync();
 
-        LanguageService.LanguageChanged += async (_, args) =>
+        LocalizationService.LanguageChanged += async (_, args) =>
         {
             await InvokeAsync(StateHasChanged);
         };

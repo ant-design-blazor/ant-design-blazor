@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -38,7 +42,7 @@ namespace AntDesign.JsInterop
             return new DomEventKey(selector, eventName, _id);
         }
 
-        public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
+        public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false)
         {
             var key = FormatKey(dom, eventName);
             if (_exclusiveDotNetObjectStore.ContainsKey(key))
@@ -48,7 +52,7 @@ namespace AntDesign.JsInterop
             {
                 callback(p);
             }));
-            _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
+            _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject, stopPropagation);
             _exclusiveDotNetObjectStore.Add(key, dotNetObject);
         }
 

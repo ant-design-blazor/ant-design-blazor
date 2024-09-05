@@ -1,0 +1,28 @@
+﻿@inherits AntDesignTestBase
+
+@code {
+    class Model
+    {
+        public string Name { get; set; } = "";
+
+        public string? RequiredField { get; set; }
+    }
+    Model _model = new();
+
+
+    [Fact]
+    public void Form_regression_test()
+    {
+        Model _model = new();
+
+        //Arrange
+        bool handlerExecuted = false;
+        Action<bool> onChangeHandler = value => { handlerExecuted = true; };
+        var cut = Render(@<Form Model="@_model" ValidateOnChange="true"><Switch OnChange="onChangeHandler" /></Form>);
+        var buttonElement = cut.Find("button");
+        //Act
+        buttonElement.Click();
+        //Assert
+        Assert.True(handlerExecuted);
+    }
+}

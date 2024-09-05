@@ -5,21 +5,21 @@
         <TabPane Key="1">
             <TabTemplate>Example 1</TabTemplate>
             <ChildContent>
-                <Donut Data="data1" Config="config1" />
+                <Pie Data="data1" Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
             <TabTemplate>Example 2</TabTemplate>
             <ChildContent>
-                <Donut Data="data2" Config="config2" />
+            <Pie Data="data2" Config="config2" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="3">
             <TabTemplate>Example 3</TabTemplate>
             <ChildContent>
-                <Donut Data="data3" Config="config3" />
+            <Pie Data="data3" Config="config3" />
             </ChildContent>
         </TabPane>
     </Tabs>
@@ -62,7 +62,7 @@
         }
     };
 
-    readonly DonutConfig config1 = new DonutConfig
+    readonly PieConfig config1 = new PieConfig
     {
         ForceFit = true,
         Title = new Title
@@ -119,7 +119,7 @@
         }
     };
 
-    readonly DonutConfig config2 = new DonutConfig
+    readonly PieConfig config2 = new PieConfig
     {
         ForceFit = true,
         Title = new Title
@@ -132,14 +132,13 @@
             Visible = true,
             Text = "The ring chart indicator card can replace the tooltip and display the detailed information of each category in the hollowed-out part of the ring chart."
         },
+        AppendPadding = 10,
+        InnerRadius = 0.6,
         Radius = 0.8,
         Padding = "auto",
         AngleField = "value",
         ColorField = "type",
-        Statistic = new DonutViewConfigStatistic
-        {
-            Visible = true,
-        }
+        
     };
 
     #endregion Example 2
@@ -171,7 +170,7 @@
 
     };
 
-    readonly DonutConfig config3 = new DonutConfig
+    readonly PieConfig config3 = new PieConfig
     {
         Theme = new
         {
@@ -187,15 +186,6 @@
         Color = new string[] { "#5a93fc", "#90b6fd", "#c8dbfe", "#ffffff" },
         AngleField = "value",
         ColorField = "type",
-        Statistic = new DonutViewConfigStatistic
-        {
-            Visible = true,
-            Content = new DonutStatisticContent
-            {
-                Value = "32%",
-                Name = "Texi & delivery"
-            }
-        },
         Label = new PieLabelConfig
         {
             Visible = true,

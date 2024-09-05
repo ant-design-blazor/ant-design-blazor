@@ -1,5 +1,8 @@
 ﻿@layout BlankLayout;
 @page "/mock"
+@page "/zh-CN/mock"
+@page "/en-US/mock"
+
 @using System.Reflection
 @using AntDesign.Docs.Services
 
@@ -11,10 +14,10 @@
 
 @code
 {
-    [Parameter]
+    [SupplyParameterFromQuery]
     public string DemoId { get; set; }
 
-    [Parameter]
+    [SupplyParameterFromQuery]
     public string Type { get; set; }
 
     private Type _demoType;

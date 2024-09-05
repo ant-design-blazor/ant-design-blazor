@@ -1,4 +1,7 @@
-﻿@inherits AntDesignTestBase
+﻿@using System.IO
+@using AngleSharp.Html.Dom
+@using AngleSharp.Io.Dom
+@inherits AntDesignTestBase
 @code {
     [Fact]
     public void Renders_basic_upload()
@@ -11,12 +14,12 @@
           @<span class="">
               <div class=" ant-upload ant-upload-select-text ant-upload-select" style="">
                   <span tabindex="0" class="ant-upload" style="display: grid;" data-fileid:ignore role="button">
-                      <input type="file" style="display:none;" id:ignore>
+                      <input type="file" style="display:none;" id:ignore title="">
                       some content
                   </span>
               </div>
-              <div class="ant-upload-list ant-upload-list-text">
-              </div>
+            <div class="ant-upload-list ant-upload-list-text">
+            </div>
           </span>);
     }
 
@@ -31,13 +34,14 @@
           @<span class="">
               <div class=" ant-upload ant-upload-select-text ant-upload-drag ant-upload-select" style="">
                 <span tabindex="0" class="ant-upload" style="display: grid;;" data-fileid:ignore role="button" >
-                  <input type="file"  style="position: absolute;width: 100%;height: 100%;opacity: 0;top: 0;left: 0;z-index:2;" id:ignore >
+                  <input type="file"  style="position: absolute;width: 100%;height: 100%;opacity: 0;top: 0;left: 0;z-index:2;" id:ignore title="">
                   <div class="ant-upload-drag-container">
                     some content
                   </div>
                 </span>
             </div>
-            <div class="ant-upload-list ant-upload-list-text"></div>
+            <div class="ant-upload-list ant-upload-list-text">
+            </div>
         </span>);
     }
     
@@ -52,12 +56,29 @@
           @<span class="">
               <div class=" ant-upload ant-upload-select-text ant-upload-select" style="">
                   <span tabindex="0" class="ant-upload" style="display: grid;" data-fileid:ignore role="button">
-                      <input type="file" style="display:none;" id:ignore>
+                      <input type="file" style="display:none;" id:ignore title="">
                       some content
                   </span>
               </div>
-              <div class="ant-upload-list ant-upload-list-text">
-              </div>
+            <div class="ant-upload-list ant-upload-list-text">
+            </div>
           </span>);
+    }
+
+    [Fact]
+    public async Task Handles_filenames_without_extension()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.UploadFile, _ => true).SetCanceled();
+        JSInterop.SetupVoid(JSInteropConstants.ClearFile, _ => true);
+
+        JSInterop.Setup<List<UploadFileItem>>(JSInteropConstants.GetFileInfo, _ => true).SetResult(new List<UploadFileItem> { new UploadFileItem { FileName = "test" } });
+
+        var cut = Context.Render(@<Upload>some content</Upload>);
+
+        var inputElement = cut.Find("input");
+        
+        Func<Task> act = () => inputElement.ChangeAsync(new ChangeEventArgs() { Value = "ignored" });
+        await act.Should().NotThrowAsync();
     }
 }

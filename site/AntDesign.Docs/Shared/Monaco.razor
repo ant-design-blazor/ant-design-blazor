@@ -70,8 +70,8 @@
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
-        var valueChanged = parameters.ParameterHasChanged(nameof(Value), Value);
-        var readOnlyChanged = parameters.ParameterHasChanged(nameof(ReadOnly), ReadOnly);
+        var valueChanged = parameters.IsParameterChanged(nameof(Value), Value);
+        var readOnlyChanged = parameters.IsParameterChanged(nameof(ReadOnly), ReadOnly);
 
         await base.SetParametersAsync(parameters);
 

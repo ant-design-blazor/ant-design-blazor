@@ -1,7 +1,7 @@
 ﻿@using System.ComponentModel
 @using AntDesign.TableModels
 
-<Table TItem="Data" DataSource="@data" OnRow="OnRow" OnHeaderRow="OnHeaderRow">
+<Table TItem="Data" DataSource="@data" OnRow="OnRow" OnHeaderRow="OnHeaderRow" @bind-SelectedRows="selectedData" RowKey="x=>x.Key">
   <PropertyColumn Property="c=>c.Name" OnCell="OnCell" OnHeaderCell="OnHeaderCell">
     <a>@context.Name</a>
   </PropertyColumn>
@@ -20,46 +20,57 @@
 </Table>
 
 @code {
-  record Data(string Key, string Name, int Age, string Address, string[] Tags);
+    record Data(string Key, string Name, int Age, string Address, string[] Tags);
 
-  Data[] data = new Data[]
-  {
+    IEnumerable<Data> selectedData= [];
+
+    Data[] data = new Data[]
+    {
         new("1", "John Brown",32, "New York No. 1 Lake Park",new[] {"nice", "developer"}),
         new("2", "Jim Green",42, "London No. 1 Lake Park",new[] { "loser"}),
         new("3", "Joe Black",32, "Sidney No. 1 Lake Park",new[] { "cool", "teacher" }),
-      };
+    };
 
-  Dictionary<string, object> OnRow(RowData<Data> row) => new()
+    Dictionary<string, object> OnRow(RowData<Data> row) => new()
     {
       ["id"] = row.Data.Key,
-      ["onclick"] = ((Action)delegate
+      ["onclick"] = () =>
       {
         Console.WriteLine($"row {row.Data.Key} was clicked");
-      })
+        if (selectedData.Contains(row.Data))
+        {
+            selectedData = selectedData.Where(x => x.Key != row.Data.Key);
+        }
+        else
+        {
+            selectedData = selectedData.Concat(new[] { row.Data });
+        }
+          StateHasChanged();
+      }
     };
 
-  Dictionary<string, object> OnHeaderRow() => new()
+    Dictionary<string, object> OnHeaderRow() => new()
     {
       ["id"] = "header-row",
-      ["onclick"] = ((Action)delegate
+      ["onclick"] = () =>
       {
-        Console.WriteLine("header row was clicked");
-      })
+          Console.WriteLine("header row was clicked");
+      }
     };
 
-  Dictionary<string, object> OnCell(CellData cellData) => new()
+    Dictionary<string, object> OnCell(CellData cellData) => new()
     {
-      ["onclick"] = ((Action)delegate
+      ["onclick"] = () =>
       {
-        Console.WriteLine($"cell {((RowData<Data>)cellData.RowData).Data.Name} was clicked");
-      }),
+          Console.WriteLine($"cell {((RowData<Data>)cellData.RowData).Data.Name} was clicked");
+      }
     };
 
-  Dictionary<string, object> OnHeaderCell() => new()
+    Dictionary<string, object> OnHeaderCell() => new()
     {
-      ["onclick"] = ((Action)delegate
+      ["onclick"] = () =>
       {
-        Console.WriteLine("header cell was clicked");
-      }),
+          Console.WriteLine("header cell was clicked");
+      }
     };
 }

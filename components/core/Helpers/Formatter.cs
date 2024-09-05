@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq.Expressions;
@@ -53,7 +57,7 @@ namespace AntDesign.Core.Helpers
 
             if (typeof(IFormattable).IsAssignableFrom(sourceType))
             {
-                var method = sourceType.GetMethod(nameof(ToString), new[] { typeof(string), typeof(IFormatProvider) });
+                var method = typeof(IFormattable).GetMethod(nameof(ToString), new[] { typeof(string), typeof(IFormatProvider) });
                 body = Expression.Call(Expression.Convert(variable, sourceType), method, parsedFormatString, Expression.Constant(CurrentCulture));
             }
             else

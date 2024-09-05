@@ -1,0 +1,26 @@
+﻿<Tree TItem="string" 
+      Checkable
+      CheckStrictly
+      ExpandOnClickNode
+      @bind-CheckedKeys="_checkedKeys"
+      DefaultExpandAll>
+	<TreeNode Title="parent 1" Key="0-0" Checkable="false">
+        <TreeNode Title="parent 1-0" Key="0-0-0" Checkable="false">
+			<TreeNode Title="leaf" Key="0-0-0-0" ></TreeNode>
+            <TreeNode Title="leaf" Key="0-0-0-1" ></TreeNode>
+            <TreeNode Title="leaf" Key="0-0-0-2" ></TreeNode>
+		</TreeNode>
+        <TreeNode Title="parent 1-1" Key="0-0-1" Checkable="false">
+			<TreeNode Key="0-0-1-0" Title="sss">
+				<TitleTemplate>
+					<span style="color: #1890ff; ">sss</span>
+				</TitleTemplate>
+			</TreeNode>
+		</TreeNode>
+	</TreeNode>
+</Tree>
+
+@code
+{
+    string[] _checkedKeys = { "0-0-0-0", "0-0-0-1" };
+}

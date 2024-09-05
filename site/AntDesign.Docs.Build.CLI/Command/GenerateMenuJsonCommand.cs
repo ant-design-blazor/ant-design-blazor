@@ -1,7 +1,13 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using AntDesign.Docs.Build.CLI.Extensions;
@@ -11,7 +17,6 @@ using Microsoft.Extensions.CommandLineUtils;
 namespace AntDesign.Docs.Build.CLI.Command
 {
     public class GenerateMenuJsonCommand : IAppCommand
-
     {
         public string Name => "menu2json";
 
@@ -38,16 +43,29 @@ namespace AntDesign.Docs.Build.CLI.Command
             ["其他"] = 7,
             ["Charts"] = 8,
             ["图表"] = 8,
-            //["Experimental"] = 9,
-            //["实验性功能"] = 9,
+            ["Experimental"] = 9,
+            ["高阶功能"] = 9,
         };
 
         private static readonly Dictionary<string, string> _demoCategoryMap = new Dictionary<string, string>()
         {
             ["Components"] = "组件",
             ["Charts"] = "图表",
-            //["Experimental"] = "实验性功能"
+            ["Experimental"] = "高阶功能"
         };
+
+        private static readonly Dictionary<string,string> _typeNameMap = new Dictionary<string, string>()
+        {
+            ["General"] = "通用",
+            ["Layout"] = "布局",
+            ["Navigation"] = "导航",
+            ["Data Entry"] = "数据录入",
+            ["Data Display"] = "数据展示",
+            ["Feedback"] = "反馈",
+            ["Other"] = "其他",
+        };
+
+        private const string LibraryAssemblyName = "AntDesign";
 
         public void Execute(CommandLineApplication command)
         {
@@ -136,6 +154,12 @@ namespace AntDesign.Docs.Build.CLI.Command
                 IList<Dictionary<string, DemoMenuItem>> componentMenuList = GetSubMenuList(subDemoDirectory as DirectoryInfo, false).ToList();
 
                 allComponentMenuList.AddRange(componentMenuList);
+
+                if (category == "Components")
+                {
+                    componentMenuList.Add(new Dictionary<string, DemoMenuItem>() { ["zh-CN"] = new DemoMenuItem() { Title = "组件总览", Type = "menuItem", Url = "components/overview", Order = -1 } });
+                    componentMenuList.Add(new Dictionary<string, DemoMenuItem>() { ["en-US"] = new DemoMenuItem() { Title = "Components Overview", Type = "menuItem", Url = "components/overview", Order = -1 } });
+                }
 
                 var componentMenuI18N = componentMenuList
                     .SelectMany(x => x)
@@ -258,7 +282,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                     {
                         [language] = new DemoMenuItem()
                         {
-                            Order = int.TryParse(docData["order"], out var order) ? order : 0,
+                            Order = float.TryParse(docData["order"], out var order) ? order : 0,
                             Title = docData["title"],
                             Url = $"docs/{segments[0]}",
                             Type = "menuItem"
@@ -268,7 +292,7 @@ namespace AntDesign.Docs.Build.CLI.Command
             }
             else
             {
-                var componentI18N = GetComponentI18N(directory);
+                var componentI18N = directory.Name == "Components" ? GetComponentSubMenuList() : GetComponentI18N(directory);
                 foreach (IGrouping<string, KeyValuePair<string, DemoComponent>> group in componentI18N.GroupBy(x => x.Value.Type))
                 {
                     Dictionary<string, DemoMenuItem> menu = new Dictionary<string, DemoMenuItem>();
@@ -339,6 +363,55 @@ namespace AntDesign.Docs.Build.CLI.Command
                 .SelectMany(x => x).OrderBy(x => _sortMap[x.Value.Type]);
 
             return componentI18N;
+        }
+
+        private List<KeyValuePair<string, DemoComponent>> GetComponentSubMenuList()
+        {
+            List<KeyValuePair<string, DemoComponent>> componentList = new();
+
+            var components = Assembly.Load(LibraryAssemblyName).GetTypes();
+
+            foreach (var component in components)
+            {
+                var docAttribute = component.GetCustomAttribute<DocumentationAttribute>();
+                if (docAttribute is null)
+                {
+                    continue;
+                }
+
+                componentList.Add(new(Constants.EnglishLanguage, new DemoComponent()
+                {
+                    Category = docAttribute.Category.ToString(),
+                    Title = docAttribute.Title ?? component.Name,
+                    // SubTitle = docAttribute.SubTitle,
+                    Type = GetDescription(typeof(DocumentationType), docAttribute.Type),
+                    Desc = string.Empty,
+                    ApiDoc = string.Empty,
+                    Cols = docAttribute.Columns,
+                    Cover = docAttribute.CoverImageUrl,
+                }));
+
+                componentList.Add(new(Constants.ChineseLanguage, new DemoComponent()
+                {
+                    Category = docAttribute.Category.ToString(),
+                    Title = docAttribute.Title ?? component.Name,
+                    SubTitle = docAttribute.SubTitle,
+                    Type = _typeNameMap[GetDescription(typeof(DocumentationType), docAttribute.Type)],
+                    Desc = string.Empty,
+                    ApiDoc = string.Empty,
+                    Cols = docAttribute.Columns,
+                    Cover = docAttribute.CoverImageUrl,
+                }));
+            }
+
+            return componentList;
+        }
+
+        private static string GetDescription(Type enumType, object enumValue)
+        {
+            var enumName = Enum.GetName(enumType, enumValue);
+            var fieldInfo = enumType.GetField(enumName);
+            return fieldInfo.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? string.Empty;
         }
     }
 }

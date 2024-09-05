@@ -26,16 +26,22 @@
             //{ "class", ClassMapper.Class },
             { "disabled", Disabled },
             { "readonly", ReadOnly },
-                               };
+    };
 
     if (AutoSize == false)
     {
         attributes.Add("style", _heightStyle + Style);
+        attributes.Add("rows", Rows);
     }
 
     if (Attributes != null)
     {
         Attributes.Keys.ForEach(key => { attributes[key] = Attributes[key]; });
+    }
+
+    if (!string.IsNullOrEmpty(NameAttributeValue))
+    {
+        attributes.Add("name", NameAttributeValue);
     }
 }
 

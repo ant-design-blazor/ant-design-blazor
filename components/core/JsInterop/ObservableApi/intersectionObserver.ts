@@ -1,12 +1,10 @@
 ﻿import { infoHelper as domInfoHelper } from '../modules/dom/infoHelper';
 
 export class intersectionObserver {
-  // @ts-ignore: TS2304: Cannot find name 'IntersectionObserver'
   private static intersectionObservers: Map<string, IntersectionObserver> = new Map<string, IntersectionObserver>();
 
 
   static create(key: string, invoker, isDotNetInvoker: boolean = true) {
-    // @ts-ignore: TS2304: Cannot find name 'IntersectionObserver'
     let observer;
 
     if (isDotNetInvoker) {
@@ -17,10 +15,11 @@ export class intersectionObserver {
     intersectionObserver.intersectionObservers.set(key, observer)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static observe(key: string, element, options?: IntersectionObserverInit) {
     const observer = intersectionObserver.intersectionObservers.get(key);
     if (observer) {
-      let domElement = domInfoHelper.get(element);
+      const domElement = domInfoHelper.get(element);
       observer.observe(domElement);
     }
   }

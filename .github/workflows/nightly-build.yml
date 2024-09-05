@@ -43,7 +43,7 @@ jobs:
       - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: 8.0.100
 
       - uses: actions/setup-node@v1
         with:
@@ -108,6 +108,7 @@ jobs:
           echo "::set-output name=package_version::${FULL_VERSION}"
           dotnet build
           dotnet pack components/AntDesign.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
+          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
           dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
         env:
           next_version: ${{ steps.get_next_version.outputs.next_version }}

@@ -15,11 +15,16 @@
         </Header>
         <Content>
             <div>
-                <ReuseTabs Draggable Size="TabSize.Small"/>
-             </div>
-        @*     <div>
-                 <ReusePages Reuse="false"></ReusePages>
-            </div> *@
+                <ReuseTabs Draggable Size="TabSize.Small" />
+    @*             <AuthorizeView>
+                    <Authorized>
+                        <ReuseTabs Draggable Size="TabSize.Small" />
+                    </Authorized>
+                    <NotAuthorized>
+                        @Body
+                    </NotAuthorized>
+                </AuthorizeView> *@
+            </div>
         </Content>
         <Footer>Footer</Footer>
     </Layout>

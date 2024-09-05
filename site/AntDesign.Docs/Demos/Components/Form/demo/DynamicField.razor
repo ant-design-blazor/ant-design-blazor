@@ -1,0 +1,48 @@
+﻿@using System.ComponentModel.DataAnnotations;
+@using System.ComponentModel
+@using System.Reflection
+
+<Form Model="@model"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      LabelColSpan="8"
+      WrapperColSpan="16" ValidateMode="@FormValidateMode.Rules">
+
+    @foreach (var field in model)
+    {
+        <FormItem Name="@field.Key" Rules="[new FormValidationRule(){ Required = true }]" Required>
+            <Input TValue="string" />
+        </FormItem>
+    }
+
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button OnClick="AddField" Style="width:100%;">Add Field</Button>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+</Form>
+
+@code
+{
+    private Dictionary<string, object> model = new() { ["Field1"] = "" };
+
+    private void AddField()
+    {
+        model.Add("Field" + model.Count + 1, "");
+    }
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(model)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(model)}");
+    }
+
+
+}

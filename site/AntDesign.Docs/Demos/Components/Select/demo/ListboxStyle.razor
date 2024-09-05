@@ -1,0 +1,42 @@
+@using AntDesign.Docs.Services
+<Select Style="width: 200px;"
+        ValueProperty="c=>c"
+        LabelProperty="c=>c"
+        DataSource="_currentNames"
+        DropdownMatchSelectWidth="false"
+        ListboxStyle="display:flex;height: 200px;flex-flow: wrap; max-width: 500px; align-content: baseline;">
+    <ItemTemplate>
+        <Icon Type="@context" />
+    </ItemTemplate>
+    <LabelTemplate>
+        <p style="line-height: 30px;"><Icon Type="@context" /> @context</p>
+    </LabelTemplate>
+    <DropdownRender>
+        <Tabs OnChange="OnChange">
+            @foreach(var item in _lstIcons)
+            {
+                <TabPane Key="@item.Key" Tab="@item.Key"> </TabPane>
+            }
+        </Tabs>
+        @context
+    </DropdownRender>
+</Select>
+
+
+@inject IconListService _iconListService
+@code
+{
+    private Dictionary<string, List<string>> _lstIcons;
+    private List<string> _currentNames;
+
+    protected override void OnInitialized()
+    {
+        _lstIcons = _iconListService.GetIcons().ToDictionary(x => x.Category, x => x.IconNames);
+        base.OnInitialized();
+    }
+
+    private void OnChange(string tab)
+    {
+        _currentNames = _lstIcons[tab];
+    }
+}

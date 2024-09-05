@@ -6,33 +6,179 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class ReuseTabsService
+    /// <summary>
+    /// The service for reuse tabs
+    /// </summary>
+    public partial class ReuseTabsService : IDisposable
     {
         private readonly NavigationManager _navmgr;
+        private readonly MenuService _menusService;
         private readonly Dictionary<string, ReuseTabsPageItem> _pageMap = [];
+        private IReadOnlyCollection<ReuseTabsPageItem> _pages;
 
         internal event Action OnStateHasChanged;
 
         internal string CurrentUrl
         {
             get => "/" + _navmgr.ToBaseRelativePath(_navmgr.Uri);
-            set => _navmgr.NavigateTo(value.StartsWith("/") ? value[1..] : value);
+            set
+            {
+                try
+                {
+                    _navmgr.NavigateTo(value.StartsWith('/') ? value[1..] : value);
+                }
+                catch (NavigationException)
+                {
+                    // would throw exception during static rendering
+                }
+            }
         }
 
-        internal ReuseTabsPageItem[] Pages => _pageMap.Values.Where(x => !x.Ignore)
-            .OrderBy(x => x.CreatedAt)
-            .ThenByDescending(x => x.Pin ? 1 : 0)
-            .ThenBy(x => x.Order)
-            .ToArray();
+        /// <summary>
+        /// The page information list of the currently opened page, which can be used for caching and recovery
+        /// </summary>
+        public IReadOnlyCollection<ReuseTabsPageItem> Pages => _pages;
 
-        public ReuseTabsService(NavigationManager navmgr)
+        public ReuseTabsService(NavigationManager navmgr, MenuService menusService)
         {
-            this._navmgr = navmgr;
+            _navmgr = navmgr;
+            _menusService = menusService;
+
+            // Because the menu would be loaded asynchronously sometimes,
+            // So need to refresh the title after menu loaded.
+            _menusService.MenuItemLoaded += StateHasChanged;
+        }
+
+        /// <summary>
+        /// Create a tab without navigation, the page doesn't really render until the tab is clicked
+        /// </summary>
+        /// <param name="pageUrl">The url of target page</param>
+        /// <param name="titleTemplate">The title show on the tab</param>
+        public void CreateTab(string pageUrl, RenderFragment titleTemplate = null)
+        {
+            if (_pageMap.ContainsKey(pageUrl))
+            {
+                return;
+            }
+            AddPage(pageUrl, new ReuseTabsPageItem() { Url = pageUrl, Title = titleTemplate ?? pageUrl.ToRenderFragment(), CreatedAt = DateTime.MinValue });
+            OnStateHasChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// Create a tab without navigation, the page doesn't really render until the tab is clicked
+        /// </summary>
+        /// <param name="pageUrl">The url of target page</param>
+        /// <param name="title">The title show on the tab</param>
+        public void CreateTab(string pageUrl, string title)
+        {
+            if (_pageMap.ContainsKey(pageUrl))
+            {
+                return;
+            }
+            AddPage(pageUrl, new ReuseTabsPageItem() { Url = pageUrl, Title = title.ToRenderFragment(), CreatedAt = DateTime.MinValue });
+            OnStateHasChanged?.Invoke();
+        }
+
+        //public void Pin(string key)
+        //{
+        //    var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
+        //    if (reuseTabsPageItem == null)
+        //    {
+        //        return;
+        //    }
+        //    reuseTabsPageItem.Pin = true;
+        //    StateHasChanged();
+        //}
+
+        /// <summary>
+        /// Close the page corresponding to the specified key
+        /// </summary>
+        /// <param name="key">The specified page's key</param>
+        public bool ClosePage(string key)
+        {
+            var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == key);
+            if (reuseTabsPageItem?.Closable != true)
+            {
+                return false;
+            }
+
+            RemovePageBase(key);
+            StateHasChanged();
+
+            return true;
+        }
+
+        /// <summary>
+        /// Close all pages except the page with the specified key
+        /// </summary>
+        /// <param name="key">The specified page's key</param>
+        public void CloseOther(string key)
+        {
+            foreach (var item in _pages?.Where(x => x.Closable && x.Url != key && !x.Pin))
+            {
+                RemovePageBase(item.Url);
+            }
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Close all pages that is Closable or is not Pinned
+        /// </summary>
+        public void CloseAll()
+        {
+            foreach (var item in _pages?.Where(x => x.Closable && !x.Pin))
+            {
+                RemovePageBase(item.Url);
+            }
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Close current page
+        /// </summary>
+        public void CloseCurrent()
+        {
+            ClosePage(this.CurrentUrl);
+        }
+
+        /// <summary>
+        /// Reload Current Page
+        /// </summary>
+        public void ReloadPage()
+        {
+            ReloadPage(null);
+        }
+
+        /// <summary>
+        /// Reload the page corresponding to the specified key
+        /// </summary>
+        /// <param name="key"></param>
+        public void ReloadPage(string key)
+        {
+            key ??= CurrentUrl;
+            _pageMap[key].Body = null;
+            if (CurrentUrl == key)
+            {
+                CurrentUrl = key; // auto reload current page, and other page would be load by tab navigation.
+            }
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Update the state of the <see cref="ReuseTabs"/>
+        /// </summary>
+        public void Update()
+        {
+            StateHasChanged();
+        }
+
+        internal void StateHasChanged()
+        {
+            OnStateHasChanged?.Invoke();
         }
 
         internal void Init(bool reuse)
@@ -45,6 +191,11 @@ namespace AntDesign
 
         internal void TrySetRouteData(RouteData routeData, bool reuse)
         {
+            if (routeData == null)
+            {
+                return;
+            }
+
             if (!reuse)
             {
                 _pageMap.Clear();
@@ -59,14 +210,14 @@ namespace AntDesign
                     CreatedAt = DateTime.Now,
                 };
 
-                _pageMap[CurrentUrl] = reuseTabsPageItem;
+                AddPage(CurrentUrl, reuseTabsPageItem);
             }
 
             reuseTabsPageItem.Body ??= CreateBody(routeData, reuseTabsPageItem);
             OnStateHasChanged?.Invoke();
         }
 
-        private static RenderFragment CreateBody(RouteData routeData, ReuseTabsPageItem item)
+        private RenderFragment CreateBody(RouteData routeData, ReuseTabsPageItem item)
         {
             return builder =>
             {
@@ -85,7 +236,7 @@ namespace AntDesign
             };
         }
 
-        private static void GetPageInfo(ReuseTabsPageItem pageItem, Type pageType, string url, object page)
+        private void GetPageInfo(ReuseTabsPageItem pageItem, Type pageType, string url, object page)
         {
             if (page is IReuseTabsPage resuse)
             {
@@ -94,14 +245,18 @@ namespace AntDesign
 
             var attributes = pageType.GetCustomAttributes(true);
 
-            if (attributes.FirstOrDefault(x => x is ReuseTabsPageTitleAttribute) is ReuseTabsPageTitleAttribute titleAttr && titleAttr != null)
+            if (attributes.FirstOrDefault(x => x is ReuseTabsPageTitleAttribute) is ReuseTabsPageTitleAttribute titleAttr && titleAttr is { Title.Length: > 0 })
             {
                 pageItem.Title ??= titleAttr.Title?.ToRenderFragment();
             }
 
             if (attributes.FirstOrDefault(x => x is ReuseTabsPageAttribute) is ReuseTabsPageAttribute attr && attr != null)
             {
-                pageItem.Title ??= attr.Title?.ToRenderFragment();
+                if (!string.IsNullOrWhiteSpace(attr.Title))
+                {
+                    pageItem.Title ??= attr.Title?.ToRenderFragment();
+                }
+
                 pageItem.Ignore = attr.Ignore;
                 pageItem.Closable = attr.Closable;
                 pageItem.Pin = attr.Pin;
@@ -109,11 +264,14 @@ namespace AntDesign
                 pageItem.Order = attr.Order;
             }
 
-            pageItem.Title ??= url.ToRenderFragment();
+            pageItem.Title ??= b =>
+            {
+                b.AddContent(0, _menusService.GetMenuTitle(url) ?? url.ToRenderFragment());
+            };
         }
 
         /// <summary>
-        /// 获取所有程序集
+        /// Get all assembly
         /// </summary>
         /// <returns></returns>
         private IEnumerable<Assembly> GetAllAssembly()
@@ -127,7 +285,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 扫描 ReuseTabsPageAttribute 特性
+        /// Scan ReuseTabsPageAttribute
         /// </summary>
         private void ScanReuseTabsPageAttribute()
         {
@@ -142,6 +300,8 @@ namespace AntDesign
                     this.AddReuseTabsPageItem(pageType);
                 }
             }
+
+            CurrentUrl ??= _pages.FirstOrDefault()?.Url;
         }
 
         private void AddReuseTabsPageItem(Type pageType)
@@ -154,80 +314,33 @@ namespace AntDesign
             GetPageInfo(reuseTabsPageItem, pageType, url, Activator.CreateInstance(pageType));
             reuseTabsPageItem.CreatedAt = DateTime.MinValue;
             reuseTabsPageItem.Url = url;
-            _pageMap[url] = reuseTabsPageItem;
+            AddPage(url, reuseTabsPageItem);
         }
 
-        //public void Pin(string key)
-        //{
-        //    var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
-        //    if (reuseTabsPageItem == null)
-        //    {
-        //        return;
-        //    }
-        //    reuseTabsPageItem.Pin = true;
-        //    StateHasChanged();
-        //}
-
-        public void ClosePage(string key)
+        private void AddPage(string key, ReuseTabsPageItem pageItem)
         {
-            var reuseTabsPageItem = Pages.FirstOrDefault(w => w.Url == key);
-            if (reuseTabsPageItem?.Pin == true)
-            {
-                return;
-            }
-
-            RemovePageBase(key);
-            StateHasChanged();
-        }
-
-        public void CloseOther(string key)
-        {
-            foreach (var item in Pages.Where(x => x.Closable && x.Url != key && !x.Pin))
-            {
-                RemovePageBase(item.Url);
-            }
-            StateHasChanged();
-        }
-
-        public void CloseAll()
-        {
-            foreach (var item in Pages.Where(x => x.Closable && !x.Pin))
-            {
-                RemovePageBase(item.Url);
-            }
-            StateHasChanged();
-        }
-
-        public void CloseCurrent()
-        {
-            ClosePage(this.CurrentUrl);
-        }
-
-        public void StateHasChanged()
-        {
-            OnStateHasChanged?.Invoke();
-        }
-
-        public void ReloadPage()
-        {
-            ReloadPage(null);
-        }
-
-        public void ReloadPage(string key = null)
-        {
-            key ??= CurrentUrl;
-            _pageMap[key].Body = null;
-            if (CurrentUrl == key)
-            {
-                CurrentUrl = key; // auto reload current page, and other page would be load by tab navigation.
-            }
-            StateHasChanged();
+            _pageMap.TryAdd(key, pageItem);
+            _pages = _pageMap.Values.Where(x => !x.Ignore)
+                .OrderBy(x => x.CreatedAt)
+                .ThenByDescending(x => x.Pin ? 1 : 0)
+                .ThenBy(x => x.Order)
+                .ToList();
         }
 
         private void RemovePageBase(string key)
         {
             _pageMap[key].Body = null;
             _pageMap.Remove(key);
+            _pages = _pageMap.Values.Where(x => !x.Ignore)
+                .OrderBy(x => x.CreatedAt)
+                .ThenByDescending(x => x.Pin ? 1 : 0)
+                .ThenBy(x => x.Order)
+                .ToList();
+        }
+
+        public void Dispose()
+        {
+            _menusService.MenuItemLoaded -= StateHasChanged;
         }
     }
 }

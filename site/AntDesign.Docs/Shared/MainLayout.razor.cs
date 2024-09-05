@@ -1,9 +1,11 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Threading.Tasks;
-using AntDesign.Docs.Localization;
 using AntDesign.Docs.Services;
+using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign.Docs.Shared
 {
@@ -11,7 +13,7 @@ namespace AntDesign.Docs.Shared
     {
         private bool _drawerVisible = false;
 
-        public string CurrentLanguage => LanguageService.CurrentCulture.Name;
+        public string CurrentLanguage => LocalizationService.CurrentCulture.Name;
 
         private bool _isMobile;
 
@@ -19,7 +21,7 @@ namespace AntDesign.Docs.Shared
         public NavigationManager NavigationManager { get; set; }
 
         [Inject]
-        public ILanguageService LanguageService { get; set; }
+        public ILocalizationService LocalizationService { get; set; }
 
         [Inject]
         public DemoService DemoService { get; set; }

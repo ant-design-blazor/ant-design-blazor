@@ -1,38 +1,61 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
+using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
+using AntDesign.Core.Helpers;
+using AntDesign.Filters;
 using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
-using System.Text.Json;
-using AntDesign.Core.Helpers;
-using AntDesign.Filters;
-using System.Threading.Tasks;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// The column definition, can be used to define a column for a <see cref="Table{TItem}"/>.
+    /// <para>
+    /// We recommend using <see cref="PropertyColumn{TItem, TProp}"/> instead.
+    /// </para>
+    /// </summary>
+    /// <typeparam name="TData">
+    /// The type of a property of the TItem objec. 
+    /// </typeparam>
     public partial class Column<TData> : ColumnBase, IFieldColumn
     {
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
-        public bool Blocked { get; set; }
+        internal bool Blocked { get; set; }
 
         [CascadingParameter(Name = "ItemType")]
-        public Type ItemType { get; set; }
+        internal Type ItemType { get; set; }
 
+        /// <summary>
+        /// Expression to get the data for the field
+        /// </summary>
         [Parameter]
-        public EventCallback<TData> FieldChanged { get; set; }
-
-        [Parameter]
+        [Obsolete]
         public Expression<Func<TData>> FieldExpression { get; set; }
 
+        /// <summary>
+        /// Field this column represents
+        /// </summary>
         [Parameter]
         public RenderFragment FilterDropdown { get; set; }
 
+        /// <summary>
+        /// Use @bind-Field to bind to a property of TItem, we recommend using <see cref="PropertyColumn{TItem, TProp}"/> instead
+        /// </summary>
         [Parameter]
+        [Obsolete]
         public TData Field
         {
             get
@@ -48,37 +71,83 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Only used for @bind-Field and get the expression, no other purpose
+        /// </summary>
+        [Parameter]
+        [Obsolete]
+        public EventCallback<TData> FieldChanged { get; set; }
+
         private TData _field;
 
-        public override string Title { get => base.Title ?? DisplayName ?? FieldName; set => base.Title = value; }
+        /// <summary>
+        /// Title of the column. Uses the following order of priority: <see cref="ColumnBase.Title"/>, <see cref="DisplayName"/>, then <see cref="FieldName"/>
+        /// </summary>
+        public override string Title
+        {
+            get => base.Title ?? DisplayName ?? FieldName;
+            set => base.Title = value;
+        }
 
+        /// <summary>
+        /// The corresponding path of the column data in the data item, support for querying the nested path through the array
+        /// </summary>
         [Parameter]
         public string DataIndex { get; set; }
 
+        /// <summary>
+        /// Column data serialization rules, such as DateTime.ToString("XXX")
+        /// </summary>
         [Parameter]
         public string Format { get; set; }
 
+        /// <summary>
+        /// Whether to allow sorting or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Sortable { get; set; }
 
+        /// <summary>
+        /// Comparison function for custom sort
+        /// </summary>
         [Parameter]
         public Func<TData, TData, int> SorterCompare { get; set; }
 
+        /// <summary>
+        /// Number of similtaneous sorts allowed
+        /// </summary>
         [Parameter]
         public int SorterMultiple { get; set; }
 
+        /// <summary>
+        /// Whether to show tooltip when hovering over sort button or not
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool ShowSorterTooltip { get; set; } = true;
 
+        /// <summary>
+        /// Allowable sort directions
+        /// </summary>
         [Parameter]
         public SortDirection[] SortDirections { get; set; }
 
+        /// <summary>
+        /// Default sort direction
+        /// </summary>
         [Parameter]
         public SortDirection DefaultSortOrder { get; set; }
 
+        /// <summary>
+        /// Set cell attributes
+        /// </summary>
         [Parameter]
         public Func<CellData, Dictionary<string, object>> OnCell { get; set; }
 
+        /// <summary>
+        /// Set header cell attributes
+        /// </summary>
         [Parameter]
         public Func<Dictionary<string, object>> OnHeaderCell { get; set; }
 
@@ -86,6 +155,10 @@ namespace AntDesign
 
         private bool _hasFilterableAttribute;
 
+        /// <summary>
+        /// Whether the column is filterable or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Filterable
         {
@@ -97,10 +170,25 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Whether the column is used for grouping or not
+        /// </summary>
+        [Parameter]
+        public bool Grouping { get; set; }
+
+        /// <summary>
+        /// Specifies the grouping function for the column
+        /// </summary>
+        [Parameter]
+        public virtual Func<TData, object> GroupBy { get; set; }
+
         private IEnumerable<TableFilter> _filters;
 
         private bool _hasFiltersAttribute;
 
+        /// <summary>
+        /// Filter options for the column
+        /// </summary>
         [Parameter]
         public IEnumerable<TableFilter<TData>> Filters
         {
@@ -112,12 +200,22 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Whether to allow multiple filters or not
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public IEnumerable<TableFilter> DefaultFilters { get; set; }
 
+        /// <summary>
+        /// Whether to allow multiple filters or not
+        /// </summary>
         [Parameter]
         public bool FilterMultiple { get; set; } = true;
 
+        /// <summary>
+        /// Filter type for the column
+        /// </summary>
         [Parameter]
         public IFieldFilterType FieldFilterType { get; set; }
 
@@ -133,6 +231,15 @@ namespace AntDesign
         [Parameter]
         public Expression<Func<TData, TData, bool>> OnFilter { get; set; }
 
+        /// <summary>
+        /// Whether the dataSource is filtered. Filter icon will be actived when it is true.
+        /// </summary>
+        [Parameter]
+        public bool Filtered { get; set; }
+
+        /// <summary>
+        /// Set the column content to be displayed in the table
+        /// </summary>
         [Parameter]
         public virtual RenderFragment<CellData<TData>> CellRender { get; set; }
 
@@ -141,12 +248,24 @@ namespace AntDesign
 
         private Type _columnDataType;
 
+        /// <summary>
+        /// Display name for the column
+        /// </summary>
         public string DisplayName { get; private set; }
 
+        /// <summary>
+        /// Field name for the column
+        /// </summary>
         public string FieldName { get; private set; }
 
+        /// <summary>
+        /// Sort model of the column
+        /// </summary>
         public ITableSortModel SortModel { get; private set; }
 
+        /// <summary>
+        /// Filter model of the column
+        /// </summary>
         public ITableFilterModel FilterModel { get; private set; }
 
         private SortDirection _sortDirection;
@@ -175,6 +294,8 @@ namespace AntDesign
         private RenderFragment _renderDefaultFilterDropdown;
 
         private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+
+        private bool IsFiltered => _hasFilterSelected || Filtered;
 
         protected override void OnInitialized()
         {
@@ -213,6 +334,15 @@ namespace AntDesign
                 {
                     SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
                 }
+
+                if (Grouping)
+                {
+                    Table.AddGroupColumn(this);
+                }
+                else
+                {
+                    Table.RemoveGroupColumn(this);
+                }
             }
             else if (IsBody)
             {
@@ -224,6 +354,11 @@ namespace AntDesign
                 if (DataIndex != null)
                 {
                     (GetValue, _) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                }
+
+                if (RowData.IsGrouping)
+                {
+                    ColSpan = ColIndex == Table.TreeExpandIconColumnIndex ? Context.Columns.Count + 1 : 0;
                 }
             }
 
@@ -368,6 +503,24 @@ namespace AntDesign
             }
         }
 
+        Expression<Func<TItem, object>> IFieldColumn.GetGroupByExpression<TItem>()
+        {
+            var param = Expression.Parameter(typeof(TItem), "item");
+
+            Expression field = Expression.Invoke(GetFieldExpression, param);
+
+            if (GroupBy != null)
+            {
+                var instance = Expression.Constant(GroupBy.Target);
+                field = Expression.Call(instance, GroupBy.Method, field);
+            }
+
+            var body = Expression.Convert(field, typeof(object));
+            var lambda = Expression.Lambda<Func<TItem, object>>(body, param);
+
+            return lambda;
+        }
+
         private void SetSorter(SortDirection sortDirection)
         {
             _sortDirection = sortDirection;
@@ -509,16 +662,45 @@ namespace AntDesign
 
         protected object _filterInputRef;
 
-        async Task FilterDropdownOnVisibleChange(bool visible)
+        private void FilterDropdownOnVisibleChange(bool visible)
         {
 #if NET5_0_OR_GREATER
             if (!visible ||
                 _filterInputRef is not AntDomComponentBase baseDomComponent ||
+                baseDomComponent.GetType().GetGenericTypeDefinition() != typeof(Input<>) ||
                 baseDomComponent.Ref.Context == null) return;
 
-            // implicit wait for component rendering
-            await Task.Delay(150);
-            await baseDomComponent.Ref.FocusAsync();
+            _ = Task.Run(async () =>
+            {
+                var filterInputFocused = false;
+                var attemptCount = 0;
+
+                do
+                {
+                    await Task.Delay(50);
+                    try
+                    {
+                        await Js.FocusAsync(baseDomComponent.Ref, FocusBehavior.FocusAtLast);
+                        await Task.Delay(50);
+                        filterInputFocused = await JsInvokeAsync<string>(JSInteropConstants.GetActiveElement) == baseDomComponent.Id;
+                    }
+                    catch (JSException jsex)
+                    {
+                        Console.WriteLine(jsex.ToString());
+                        break;
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                    finally
+                    {
+                        attemptCount++;
+                    }
+                    if (attemptCount > 2) break;
+
+                } while (!filterInputFocused);
+            });
 #endif
         }
     }

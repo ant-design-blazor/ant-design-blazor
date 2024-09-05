@@ -1,52 +1,62 @@
-<TreeSelect TItem="Data"
+<TreeSelect
             Style="width:100%;"
             DataSource="treeData"
-            @bind-Value="@value"
+            @bind-Values="@values"
             Placeholder="Please select"
+            ItemValue="item=>item"
+            ItemLabel="item=>item.Title"
             AllowClear
             Multiple
+            EnableSearch
             TreeDefaultExpandAll
+            MatchedStyle="font-weight: bold"
             ChildrenExpression="node=>node.DataItem.Children"
             TitleExpression="node=>node.DataItem.Title"
-            KeyExpression="node=>node.DataItem.Key"
+            TitleTemplate="node=>node.DataItem.Title.ToRenderFragment()"
+            KeyExpression="node=>node.DataItem.Key.ToString()"
             IsLeafExpression="node=>node.DataItem.Children==null">
 </TreeSelect>
 
+@JsonSerializer.Serialize(values)
 
 @code {
-  private string value;
+    private IEnumerable<Data> values;
 
-  Data[] treeData = new Data[]
-  {
+    Data[] treeData = new Data[]
+    {
         new()
         {
             Title = "Node1",
-            Key = "0-0",
+            Key = 1,
             Children = new Data[]
             {
                 new()
                 {
                     Title = "Child Node1",
-                    Key = "0-0-1",
+                    Key = 11,
                 },
                 new()
                 {
                     Title = "Child Node2",
-                    Key = "0-0-2",
+                    Key = 12,
                 }
             }
         },
         new()
         {
             Title = "Node2",
-            Key = "0-1",
+            Key = 13,
+        },
+        new()
+        {
+            Title="Node3",
+            Key=14
         }
-  };
+    };
 
-  public class Data : ITreeData<Data>
+  public class Data
   {
-    public string Key { get; set; }
-    public Data Value => this;
+    public int Key { get; set; }
     public string Title { get; set; }
     public IEnumerable<Data> Children { get; set; }
   }

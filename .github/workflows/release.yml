@@ -39,7 +39,7 @@ jobs:
       - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: 8.0.100
 
       - uses: actions/setup-node@v1
         with:
@@ -53,6 +53,7 @@ jobs:
           npm install
           dotnet build
           dotnet pack components/AntDesign.csproj /p:PackageVersion=$VERSION /p:ContinuousIntegrationBuild=true -c Release -o publish
+          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj /p:PackageVersion=$VERSION /p:ContinuousIntegrationBuild=true -c Release -o publish
           dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=$VERSION /p:ContinuousIntegrationBuild=true -c Release -o publish
           dotnet nuget push 'publish/*.nupkg' -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
 

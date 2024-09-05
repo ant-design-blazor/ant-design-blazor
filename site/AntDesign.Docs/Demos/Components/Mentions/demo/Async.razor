@@ -1,13 +1,35 @@
-﻿<div>
-    To do
+﻿@using System.Threading;
+<div>
+    <Mentions Style="width:100%" Loading="true" LoadOptions="@LoadMentions"> 
+    </Mentions>
 </div>
 
-@*<div>
-    <Mentions Style="width:100%" Loading="true">
-        <MentionsOption Value="afc163">
-            <Icon Type="setting" Theme="fill" />
-            <span>afc163</span>
-            <span>zombieJ</span>
-        </MentionsOption>     
-    </Mentions>
-</div>*@
+@code
+{
+    private RenderFragment<string> OptionDisplay => value =>@<span>Display: @value</span>;
+
+    public async Task<IEnumerable<MentionsDynamicOption>> LoadMentions(string search, CancellationToken cancellationToken)
+    {
+        await Task.Delay(TimeSpan.FromSeconds(1));
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Enumerable.Empty<MentionsDynamicOption>();
+        }
+
+        var fakeAsyncResults = new List<string>()
+        {
+            search
+        };
+
+        for (var i = 0; i < 25; i++){
+            fakeAsyncResults.Add(search + i);
+        }
+
+        return fakeAsyncResults.Select(x => new MentionsDynamicOption
+        {
+            Value = x,
+            Display = OptionDisplay(x)
+        });
+    }
+}

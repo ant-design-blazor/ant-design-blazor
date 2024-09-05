@@ -1,12 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Display global messages as feedback in response to user operations.</para>
+
+    <h2>When To Use</h2>
+    <list type="bullet">
+        <item>To provide feedback such as success, warning, error etc.</item>
+        <item>A message is displayed at top and center and will be dismissed automatically, as a non-interrupting light-weighted prompt.</item>
+    </list>
+    </summary>
+    <seealso cref="IMessageService" />
+    <seealso cref="MessageConfig" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg", Title = "Message", SubTitle = "全局提示")]
     public partial class Message : AntDomComponentBase
     {
         [Inject]
@@ -64,11 +83,10 @@ namespace AntDesign
 
         #endregion global config
 
-        private readonly List<MessageConfig> _configs
-            = new List<MessageConfig>();
+        private readonly ConcurrentDictionary<string, MessageConfig> _configDict
+            = new ConcurrentDictionary<string, MessageConfig>();
 
-        private readonly Dictionary<string, MessageConfig> _configDict
-            = new Dictionary<string, MessageConfig>();
+        private static int _counter = 0;
 
         private Task NotifyAsync(MessageConfig config)
         {
@@ -79,12 +97,11 @@ namespace AntDesign
                 var count = _configDict.Count;
                 if (count >= _maxCount)
                 {
-                    var removeConfig = _configs[0];
+                    var removeConfig = _configDict.First().Value;
                     var firstKey = removeConfig.Key;
 
                     removeConfig.Cts.Cancel();
-                    _configDict.Remove(firstKey);
-                    _configs.Remove(removeConfig);
+                    _configDict.TryRemove(firstKey, out _);
                 }
             }
 
@@ -99,8 +116,8 @@ namespace AntDesign
             }
             else
             {
-                _configDict.Add(config.Key, config);
-                _configs.Add(config);
+                config.Order = Interlocked.Increment(ref _counter);
+                _configDict.TryAdd(config.Key, config);
             }
 
             InvokeAsync(StateHasChanged);
@@ -146,8 +163,7 @@ namespace AntDesign
                 Task.Delay(500)
                     .ContinueWith((result) =>
                     {
-                        _configDict.Remove(config.Key);
-                        _configs.Remove(config);
+                        _configDict.TryRemove(config.Key, out _);
                         InvokeAsync(StateHasChanged);
                     }, TaskScheduler.Current);
             }
@@ -158,8 +174,8 @@ namespace AntDesign
         private void Destroy()
         {
             _configDict.Clear();
-            _configs.Clear();
             InvokeAsync(StateHasChanged);
         }
+
     }
 }

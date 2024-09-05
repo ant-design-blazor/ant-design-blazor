@@ -3,8 +3,8 @@
     "AntDesign.Docs.Build.CLI": {
       "commandName": "Project",
       //"commandLineArgs": "docs2html ../../../../../docs ./"
-      //"commandLineArgs": "menu2json ../../../../AntDesign.Docs/Demos ../../../../../docs ./"
-      "commandLineArgs": "demo2json ../../../../AntDesign.Docs/Demos ./"
+      "commandLineArgs": "menu2json ../../../../AntDesign.Docs/Demos ../../../../../docs ./"
+      //"commandLineArgs": "demo2json ../../../../AntDesign.Docs/Demos ./"
       //"commandLineArgs": "icons2json ../../../../../components/wwwroot/icons ./"
     }
   }

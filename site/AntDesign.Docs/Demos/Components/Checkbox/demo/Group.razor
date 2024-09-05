@@ -1,14 +1,14 @@
 <div>
-    <CheckboxGroup Options="@plainOptions" @bind-Value="@_value" OnChange="OnChange" />
+    <CheckboxGroup Options="@plainOptions" @bind-Value="@_value" TValue="string" OnChange="OnChange" />
     <br />
     <br />
-    <CheckboxGroup Options="@options" @bind-Value="@_value" OnChange="OnChange" />
+    <CheckboxGroup Options="@options" @bind-Value="@_value" TValue="string" OnChange="OnChange2" />
     <br />
     <br />
-    <CheckboxGroup Options="@OptionsWithDisabled" Disabled @bind-Value="@_value" OnChange="OnChange" />
+    <CheckboxGroup Options="@OptionsWithDisabled" Disabled @bind-Value="@_value" TValue="string" OnChange="OnChange" />
     <br />
     <br />
-    <CheckboxGroup Disabled @bind-Value="@_value" OnChange="OnChange">
+    <CheckboxGroup Disabled @bind-Value="@_value" TValue="string" OnChange="OnChange">
         <Checkbox Label="Apple" />
         <Checkbox Label="Pear" />
         <Checkbox Label="Orange" />
@@ -23,22 +23,27 @@
 
     string[] plainOptions = { "Apple", "Pear", "Orange" };
 
-    CheckboxOption[] options = new CheckboxOption[]
+    CheckboxOption<string>[] options = new CheckboxOption<string>[]
     {
-        new CheckboxOption {Label = "Apple", Value = "Apple"},
-        new CheckboxOption {Label = "Pear", Value = "Pear"},
-        new CheckboxOption {Label = "Orange", Value = "Orange"},
+        new() {Label = "Apple", Value = "Apple"},
+        new() {Label = "Pear", Value = "Pear"},
+        new() {Label = "Orange", Value = "Orange"},
     };
 
-    CheckboxOption[] OptionsWithDisabled = new CheckboxOption[]
+    CheckboxOption<string>[] OptionsWithDisabled = new CheckboxOption<string>[]
     {
-        new CheckboxOption {Label = "Apple", Value = "Apple"},
-        new CheckboxOption {Label = "Pear", Value = "Pear"},
-        new CheckboxOption {Label = "Orange", Value = "Orange", Disabled = false},
+        new() {Label = "Apple", Value = "Apple"},
+        new() {Label = "Pear", Value = "Pear"},
+        new() {Label = "Orange", Value = "Orange", Disabled = false},
     };
 
     void OnChange(string[] checkedValues)
     {
         Console.WriteLine($"checked = {JsonSerializer.Serialize(checkedValues)}");
+    }
+
+    void OnChange2(string[] checkedValues)
+    {
+        Console.WriteLine($"2 checked = {JsonSerializer.Serialize(checkedValues)}");
     }
 }

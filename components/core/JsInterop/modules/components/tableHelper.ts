@@ -1,8 +1,8 @@
 ﻿export class tableHelper {
-  static bindTableScroll(bodyRef, tableRef, headerRef, scrollX, scrollY, resizable) {
+  static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable) {
     bodyRef.bindScroll = () => {
       if (scrollX) {
-        tableHelper.SetScrollPositionClassName(bodyRef, tableRef);
+        tableHelper.SetScrollPositionClassName(bodyRef, wrapperRef);
       }
       if (scrollY) {
         headerRef.scrollLeft = bodyRef.scrollLeft;
@@ -18,7 +18,7 @@
     window.addEventListener('resize', bodyRef.bindScroll);
 
     if (resizable) {
-      tableHelper.enableColumnResizing(tableRef);
+      tableHelper.enableColumnResizing(headerRef, tableRef, scrollY);
     }
   }
 
@@ -29,11 +29,11 @@
     }
   }
 
-  static SetScrollPositionClassName(bodyRef, tableRef) {
+  static SetScrollPositionClassName(bodyRef, wrapperRef) {
 
-    let scrollLeft = bodyRef.scrollLeft;
-    let scrollWidth = bodyRef.scrollWidth;
-    let clientWidth = bodyRef.clientWidth;
+    const scrollLeft = bodyRef.scrollLeft;
+    const scrollWidth = bodyRef.scrollWidth;
+    const clientWidth = bodyRef.clientWidth;
 
     let pingLeft = false;
     let pingRight = false;
@@ -55,17 +55,22 @@
       pingRight = true;
     }
 
-    pingLeft ? tableRef.classList.add("ant-table-ping-left") : tableRef.classList.remove("ant-table-ping-left");
-    pingRight ? tableRef.classList.add("ant-table-ping-right") : tableRef.classList.remove("ant-table-ping-right");
+    pingLeft ? wrapperRef.classList.add("ant-table-ping-left") : wrapperRef.classList.remove("ant-table-ping-left");
+    pingRight ? wrapperRef.classList.add("ant-table-ping-right") : wrapperRef.classList.remove("ant-table-ping-right");
   }
 
-  static enableColumnResizing(tableElement) {
+  static enableColumnResizing(headerElement, tableElement, scrollY) {
 
     const cols = tableElement.querySelectorAll('col');
+    const ths = scrollY ? 
+      headerElement.querySelectorAll('.ant-table-thead th') :
+      tableElement.tHead.querySelectorAll('.ant-table-thead th');
+    const headerCols = scrollY ? headerElement.querySelectorAll('col') : null;
 
-    tableElement.tHead.querySelectorAll('.ant-table-thead th').forEach((th, i) => {
+    ths.forEach((th, i) => {
 
       const col = cols[i];
+      const headerCol = headerCols ? headerCols[i] : null;
       const handle = document.createElement('div');
       handle.classList.add('ant-table-resizable-handle');
       handle.style.height = `${tableElement.offsetHeight}px`;
@@ -104,6 +109,9 @@
           if (updatedColumnWidth > 0) {
             th.style.width = `${updatedColumnWidth}px`;
             col.style.width = `${updatedColumnWidth}px`;
+            if (headerCol) {
+              headerCol.style.width =`${updatedColumnWidth}px`;
+            }
             handle.style.right = '0';
             handle.style.left = '';
             handle.classList.remove('ant-table-resizing');

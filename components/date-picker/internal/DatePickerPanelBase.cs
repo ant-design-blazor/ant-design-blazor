@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using AntDesign.Internal;
@@ -9,13 +13,13 @@ namespace AntDesign
     public class DatePickerPanelBase<TValue> : PickerPanelBase
     {
         [CascadingParameter]
-        public IDatePicker DatePicker { get; set; }
+        internal IDatePicker DatePicker { get; set; }
 
         [Parameter]
         public string PrefixCls { get; set; }
 
         [Parameter]
-        public string Picker { get; set; }
+        public DatePickerType Picker { get; set; }
 
         [Parameter]
         public bool IsRange { get; set; } = false;
@@ -48,7 +52,7 @@ namespace AntDesign
         public Action<DateTime, int> ChangeValue { get; set; }
 
         [Parameter]
-        public Action<string, int> ChangePickerType { get; set; }
+        public Action<DatePickerType, int> ChangePickerType { get; set; }
 
         [Parameter]
         public Func<int, DateTime> GetIndexPickerValue { get; set; }
@@ -163,11 +167,11 @@ namespace AntDesign
             }
             else
             {
-                baseDate = Picker switch
+                baseDate = Picker.Name switch
                 {
-                    DatePickerType.Date => PickerValue.AddMonths(-1),
-                    DatePickerType.Week => PickerValue.AddMonths(-1),
-                    DatePickerType.Year => PickerValue.AddYears(-10),
+                    DatePickerType.DATE => PickerValue.AddMonths(-1),
+                    DatePickerType.WEEK => PickerValue.AddMonths(-1),
+                    DatePickerType.YEAR => PickerValue.AddYears(-10),
                     _ => PickerValue.AddYears(-1)
                 };
             }
@@ -190,7 +194,7 @@ namespace AntDesign
 
         protected DateTime? Value { get => GetIndexValue(GetPickerIndex()); }
 
-        public void PopUpPicker(string type) => ChangePickerType(type, PickerIndex);
+        public void PopUpPicker(DatePickerType type) => ChangePickerType(type, PickerIndex);
 
         protected override void OnInitialized()
         {

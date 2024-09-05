@@ -7,9 +7,10 @@ title:
 
 ## zh-CN
 
-当表格内容较多不能一次性完全展示时。
+当表格内容较多不能一次性完全展示时。（本例中用于抽象类的不同实现类的展示）
 
 ## en-US
 
 When there's too much information to show and the table can't display all at once.
+(Different implementation classes used for abstract classes in this example.)
 

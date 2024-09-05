@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Components.Web;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -16,15 +20,15 @@ namespace AntDesign
         public MouseEventArgs MouseEvent { get; set; }
 
         /// <summary>
-        /// 获取或设置一个值，该值指示是否应取消事件。
-        /// 返回结果: true 如果应取消事件;否则为 false。
-        /// Gets or sets a value indicating whether the event should be cancelled.
-        /// Return result: true if the event should be cancelled; otherwise false.
+        /// Whether the closing should be cancelled.
+        /// Setting true if the closing should be cancelled; default is false.
+        /// 是否应取消关闭Modal。
+        /// 如果应取消关闭，请设置为 true; 默认为 false。
         /// </summary>
         public bool Cancel { get; set; }
 
         /// <summary>
-        /// Reject to close 
+        /// Reject to close the modal.
         /// </summary>
         public void Reject()
         {

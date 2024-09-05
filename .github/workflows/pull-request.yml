@@ -36,7 +36,7 @@ jobs:
       - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: 8.0.100
 
       - uses: actions/setup-node@v1
         with:
@@ -49,6 +49,7 @@ jobs:
 
       - name: Test 📝
         run: |
+          npm run lint
           dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage"
           npm install ./tests/AntDesign.Tests.Js
           npm --prefix ./tests/AntDesign.Tests.Js run test-cov

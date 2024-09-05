@@ -87,10 +87,8 @@ namespace AntDesign.Docs.Services
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.JSInterop
 @using AntDesign
-@using AntDesign.Docs.Routing
 @using AntDesign.Docs.Pages
 @using AntDesign.Docs.Shared
-@using AntDesign.Docs.Localization
 @using System.Text.Json
 ";
         private readonly HttpClient _httpClient;

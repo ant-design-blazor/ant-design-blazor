@@ -2,25 +2,40 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
-using System.Text.Json;
+#if NET5_0_OR_GREATER
 using System.Text.Json.Serialization;
+#endif
 
 namespace AntDesign
 {
+    /// <summary>
+    /// Filter item definition
+    /// </summary>
     public class TableFilter
     {
+        /// <summary>
+        /// The display text of the filter item
+        /// </summary>
         public string Text { get; set; }
 
+        /// <summary>
+        /// The value of the filter item
+        /// </summary>
         public object Value { get; set; }
 
+        /// <summary>
+        /// Whether the filter item is selected
+        /// </summary>
         public bool Selected { get; set; }
 
+        /// <summary>
+        /// The compare operators supported by the filter item
+        /// </summary>
         public TableFilterCompareOperator FilterCompareOperator { get; internal set; }
 
+        /// <summary>
+        /// The condition of the filter item
+        /// </summary>
         public TableFilterCondition FilterCondition { get; internal set; }
 
         internal void SelectValue(bool selected)
@@ -76,6 +91,7 @@ namespace AntDesign
         IsNotNull = 12,
         NotContains = 13,
         TheSameDateWith = 14,
+        Between = 15
     }
 
     public enum TableFilterCondition

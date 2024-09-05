@@ -1,7 +1,7 @@
 ﻿@using System.ComponentModel
 
 <Table DataSource="_data" TreeChildren="item=>item.Children" DefaultExpandAllRows Size="TableSize.Small">
-    <Selection CheckStrictly />
+    <Selection />
     <PropertyColumn Property="c=>c.Name" />
     <PropertyColumn Property="c=>c.Age" Width="12%" Sortable />
     <PropertyColumn Property="c=>c.Address" Width="30%" />

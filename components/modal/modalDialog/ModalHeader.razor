@@ -1,0 +1,45 @@
+﻿@namespace AntDesign.Internal.ModalDialog
+
+@if (Config.Closable)
+{
+    <button type="button" aria-label="Close" class=@($"{Config.PrefixCls}-close") @onclick="@Parent.OnCloserClick">
+        <span class=@($"{Config.PrefixCls}-close-x")>
+            <span role="img" aria-label="close" class=@($"anticon anticon-close {Config.PrefixCls}-close-icon")>
+                @Config.CloseIcon
+            </span>
+        </span>
+    </button>
+}
+@if (Config.Maximizable)
+{
+    <button type="button" aria-label="Max" class=@($"{Config.PrefixCls}-max-btn") @onclick="@Parent.OnMaxBtnClick">
+        <span class=@($"{Config.PrefixCls}-max-btn-x")>
+            <span role="img" aria-label="close" class=@($"anticon anticon-max {Config.PrefixCls}-max-btn-icon")>
+                @if (Parent.Status == ModalStatus.Default)
+                {
+                    @(Config.MaximizeBtnIcon)
+                }
+                else
+                {
+                    @(Config.RestoreBtnIcon)
+                }
+            </span>
+        </span>
+    </button>
+}
+@if (Config.TitleTemplate != null)
+{
+
+        <div class=@($"{Config.PrefixCls}-title")>
+            @Config.TitleTemplate
+        </div>
+  
+}
+else if (!string.IsNullOrWhiteSpace(Config.Title))
+{
+  
+        <div class=@($"{Config.PrefixCls}-title")>
+            @Config.Title
+        </div>
+  
+}

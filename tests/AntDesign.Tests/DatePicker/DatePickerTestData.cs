@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 
 namespace AntDesign.Tests.DatePicker;
@@ -20,6 +24,8 @@ public static class DatePickerTestData
             yield return new object?[] { new DateOnly?() };
             yield return new object[] { DateOnly.FromDateTime(DateTime.Now) };
             yield return new object[] { new DateOnly?(DateOnly.FromDateTime(DateTime.Now)) };
+            yield return new object[] { TimeOnly.FromDateTime(DateTime.Now) };
+            yield return new object[] { new TimeOnly(0, 0, 0) };
 #endif
         }
     }
@@ -102,6 +108,20 @@ public static class DatePickerTestData
             yield return new object[] { new DateOnly(2020, 4, 5), "yyyy-MM-dd", "en-GB", "2020-04-05" };
             yield return new object[] { new DateOnly(2020, 4, 5), "dd/MM/yyyy", "en-US", "05/04/2020" };
             yield return new object[] { new DateOnly(2020, 4, 5), "MM/dd/yyyy", "en-US", "04/05/2020" };
+#endif
+        }
+    }
+
+    public static IEnumerable<object?[]> TimePickerData
+    {
+        get
+        {
+            yield return new object[] { DateTime.Now };
+            yield return new object[] { DateTimeOffset.Now };
+
+#if NET6_0_OR_GREATER
+            yield return new object[] { TimeOnly.FromDateTime(DateTime.Now) };
+            yield return new object[] { new TimeOnly(0, 0, 0) };
 #endif
         }
     }

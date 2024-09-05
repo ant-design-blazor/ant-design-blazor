@@ -37,7 +37,7 @@
     <section class="code-box-meta markdown">
         <div class="code-box-title" @onclick="@AnchorClick">
             <a @onclick="AnchorClick">@Demo.Title</a>
-            <Tooltip Title="@lang.Resources["app.content.edit-demo"]">
+            <Tooltip Title="@lang["app.content.edit-demo"]">
                 <Unbound>
                     <a @ref="context.Current" class="edit-button" href="@EditUrl" target="_blank" rel="noopener noreferrer">
                         <Icon Type="edit" />
@@ -49,12 +49,12 @@
             @((MarkupString)Demo.Description)
         </div>
         <div class="code-box-actions">
-            <Tooltip Title="@lang.Resources[_copied?"app.demo.copied":"app.demo.copy"]" OnVisibleChange="() => _copied = false">
+            <Tooltip Title="@lang[_copied?"app.demo.copied":"app.demo.copy"]" OnVisibleChange="() => _copied = false">
                 <Unbound>
                     <Icon RefBack="context" Type="@(_copied?"check" : "snippets")" Class="code-box-code-copy code-box-code-action" OnClick="Copy" />
                 </Unbound>
             </Tooltip>
-            <Tooltip Title="@(CodeExpand?lang.Resources["app.demo.code.hide"] : lang.Resources["app.demo.code.show"])">
+            <Tooltip Title="@(CodeExpand?lang["app.demo.code.hide"] : lang["app.demo.code.show"])">
                 <Unbound>
                     <span @ref="context.Current" class="code-expand-icon code-box-code-action" @onclick="_ => CodeExpand = !CodeExpand">
                         <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(CodeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
@@ -82,7 +82,7 @@
 
 @inject InteropService InteropService
 @inject DemoService demoService;
-@inject ILanguageService lang;
+@inject IStringLocalizer lang;
 
 @code {
 
