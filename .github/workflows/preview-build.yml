@@ -55,7 +55,7 @@ jobs:
           PACKAGE_VERSION: ${{ github.event.number }}
 
       - name: upload site artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: site
           path: _site/wwwroot/
@@ -68,7 +68,7 @@ jobs:
 
       - name: Upload PR number
         if: ${{ always() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: pr
           path: ./pr-id.txt
