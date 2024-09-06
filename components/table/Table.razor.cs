@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -20,13 +19,22 @@ using AntDesign.Table.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
+
+#if NETCOREAPP3_1_OR_GREATER
+using System.Diagnostics.CodeAnalysis;
+
+#endif
 
 
 #if NET5_0_OR_GREATER
 
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
+#endif
+
+#if NET6_0_OR_GREATER
+
+using Microsoft.JSInterop;
 #endif
 
 namespace AntDesign
@@ -153,6 +161,12 @@ namespace AntDesign
         /// <default value="true for any rows" />
         [Parameter]
         public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
+
+        /// <summary>
+        /// Function to determine if a specific row is selectable
+        /// </summary>
+        [Parameter]
+        public Func<TItem, bool> RowSelectable { get; set; } = _ => true;
 
         /// <summary>
         /// Children tree items
@@ -331,6 +345,12 @@ namespace AntDesign
         public RenderFragment EmptyTemplate { get; set; }
 
         /// <summary>
+        /// Whether to enable the quick mode
+        /// </summary>
+        /// <default value="true" />
+        [Parameter]
+        public bool Quick { get; set; } = true;
+
         /// Specify the identifier of each row
         /// </summary>
         [Parameter] public Func<TItem, object> RowKey { get; set; } = default!;
@@ -367,7 +387,7 @@ namespace AntDesign
         [Inject]
         private ClientDimensionService ClientDimensionService { get; set; }
 
-        public ColumnContext ColumnContext { get; set; }
+        internal ColumnContext ColumnContext { get; set; }
 
         private IEnumerable<TItem> _showItems;
 
@@ -375,6 +395,7 @@ namespace AntDesign
 
         private IList<SummaryRow> _summaryRows;
 
+        private Type _itemType;
         private bool _hasInitialized;
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
@@ -402,6 +423,8 @@ namespace AntDesign
         private bool _isRebuilding;
         private RenderFragment<TItem> _childContent;
 
+        private bool _useRowTemplateAsColumnDefinitions;
+
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
         private bool IsEntityFrameworkCore => _dataSource is IQueryable<TItem> query && query.Provider.ToString().Contains("EntityFrameworkCore");
@@ -428,7 +451,7 @@ namespace AntDesign
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
-
+        bool ITable.Quick => Quick;
         void ITable.AddGroupColumn(IFieldColumn column) => AddGroupColumn(column);
 
         void ITable.RemoveGroupColumn(IFieldColumn column) => RemoveGroupColumn(column);
@@ -453,8 +476,11 @@ namespace AntDesign
 
         SortDirection[] ITable.SortDirections => SortDirections;
 
+        Type ITable.ItemType => _itemType;
+
         public Table()
         {
+            _itemType = typeof(TItem);
             _dataSourceCache = new();
             _rootRowDataCache = new();
             _selectedRows = new(this);
@@ -536,13 +562,13 @@ namespace AntDesign
 
                 foreach (var sorter in queryModel.SortModel)
                 {
-                    var fieldColumn = ColumnContext.HeaderColumns[sorter.ColumnIndex] as IFieldColumn;
+                    var fieldColumn = ColumnContext.Columns[sorter.ColumnIndex] as IFieldColumn;
                     fieldColumn?.SetSortModel(sorter);
                 }
 
                 foreach (var filter in queryModel.FilterModel)
                 {
-                    var fieldColumn = ColumnContext.HeaderColumns[filter.ColumnIndex] as IFieldColumn;
+                    var fieldColumn = ColumnContext.Columns[filter.ColumnIndex] as IFieldColumn;
                     fieldColumn?.SetFilterModel(filter);
                 }
 
@@ -558,7 +584,7 @@ namespace AntDesign
             ChangePageIndex(1);
             ChangePageSize(PageSize);
 
-            foreach (var col in ColumnContext.HeaderColumns)
+            foreach (var col in ColumnContext.Columns)
             {
                 if (col is IFieldColumn fieldColumn)
                 {
@@ -585,7 +611,7 @@ namespace AntDesign
         {
             var queryModel = new QueryModel<TItem>(PageIndex, PageSize, _startIndex);
 
-            foreach (var col in ColumnContext.HeaderColumns)
+            foreach (var col in ColumnContext.Columns)
             {
                 if (col is IFieldColumn fieldColumn)
                 {
@@ -607,7 +633,7 @@ namespace AntDesign
         void ITable.Refresh()
         {
             _shouldRender = true;
-            StateHasChanged();
+            // StateHasChanged();
         }
 
         void ITable.ColumnFilterChange()
@@ -618,7 +644,7 @@ namespace AntDesign
 
         void ITable.ColumnSorterChange(IFieldColumn column)
         {
-            foreach (var col in ColumnContext.HeaderColumns)
+            foreach (var col in ColumnContext.Columns)
             {
                 if (col.ColIndex != column.ColIndex && col is IFieldColumn fieldCol && fieldCol.SorterMultiple <= 0 && fieldCol.Sortable)
                 {
@@ -635,7 +661,7 @@ namespace AntDesign
 #if NET5_0_OR_GREATER
             if (UseItemsProvider)
             {
-                StateHasChanged();
+                //StateHasChanged();
                 return;
             }
 #endif
@@ -647,8 +673,7 @@ namespace AntDesign
             }
 
             var queryModel = this.InternalReload();
-            StateHasChanged();
-
+            // StateHasChanged();
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(queryModel);
@@ -919,19 +944,19 @@ namespace AntDesign
                 {
                     var scrollBarSize = await ClientDimensionService.GetScrollBarSizeAsync();
                     _scrollBarWidth = $"{scrollBarSize}px";
-                    ColumnContext.HeaderColumns.LastOrDefault()?.UpdateFixedStyle();
+                    ColumnContext.Columns.LastOrDefault()?.UpdateFixedStyle();
                 }
 
                 // To handle the case where JS is called asynchronously and does not render when there is a fixed header or are any fixed columns.
                 if (_hasInitialized && !_shouldRender)
                 {
                     _shouldRender = true;
-                    StateHasChanged();
+                    // StateHasChanged();
                     return;
                 }
 
                 // To handle the case where a dynamic table does not render columns until the data is requested
-                if ((!ColumnContext.HeaderColumns.Any() || _fieldModel is null) && !_hasInitialized)
+                if ((!ColumnContext.Columns.Any() || _fieldModel is null) && !_hasInitialized)
                 {
                     OnColumnInitialized();
                     return;
@@ -974,7 +999,7 @@ namespace AntDesign
         void ITable.TableLayoutIsFixed()
         {
             TableLayout = "fixed";
-            StateHasChanged();
+            //StateHasChanged();
         }
 
         private void OnResize(DomRect domRect)
@@ -986,7 +1011,7 @@ namespace AntDesign
 
             _tableWidth = domRect.Width;
             _shouldRender = true;
-            StateHasChanged();
+            //  StateHasChanged();
         }
 
         protected override void Dispose(bool disposing)

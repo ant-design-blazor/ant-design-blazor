@@ -1,52 +1,72 @@
-﻿<Table DataSource="listOfData" TItem="ItemData" RowClassName="@(_=>"editable-row")" Bordered TableLayout="fixed">
-    <ChildContent Context="data">
-        <Column TData="string" Title="Name">
-            @if (!editCache[data.Id].edit)
-            {
-                @data.Name
+﻿@using AntDesign.TableModels
+<Table DataSource="listOfData" TItem="ItemData" RowClassName="@(_=>"editable-row")" Bordered TableLayout="fixed">
+    <Column TData="string" Title="Name">
+        <CellRender Context="cell">
+            @{
+                var data = GetRow(cell.RowData);
+                @if (!editCache[data.Id].edit)
+                {
+                    @data.Name
+                }
+                else
+                {
+                    <Input @bind-Value="editCache[data.Id].data.Name" />
+                }
             }
-            else
-            {
-                <Input @bind-Value="editCache[data.Id].data.Name" />
+        </CellRender>
+    </Column>
+    <Column TData="string" Title="Age">
+        <CellRender Context="cell">
+            @{
+                var data = GetRow(cell.RowData);
+                @if (!editCache[data.Id].edit)
+                {
+                    @data.Age
+                }
+                else
+                {
+                    <Input @bind-Value="editCache[data.Id].data.Age" />
+                }
             }
-        </Column>
-        <Column TData="string" Title="Age">
-            @if (!editCache[data.Id].edit)
-            {
-                @data.Age
+        </CellRender>
+    </Column>
+    <Column TData="string" Title="Address">
+        <CellRender Context="cell">
+            @{
+                var data = GetRow(cell.RowData);
+                @if (!editCache[data.Id].edit)
+                {
+                    @data.Address
+                }
+                else
+                {
+                    <Input @bind-Value="editCache[data.Id].data.Address" />
+                }
             }
-            else
-            {
-                <Input @bind-Value="editCache[data.Id].data.Age" />
+        </CellRender>
+    </Column>
+    <ActionColumn Title="Action">
+        <CellRender Context="cell">
+            @{
+                var data = GetRow(cell.RowData);
+                @if (!editCache[data.Id].edit)
+                {
+                    <a @onclick="() => startEdit(data.Id)">Edit</a>
+                }
+                else
+                {
+                    <a @onclick="() => saveEdit(data.Id)" class="save">Save</a>
+                    <Popconfirm Title="Sure to cancel?"
+                                OnConfirm="() => cancelEdit(data.Id)"
+                                OkText="Yes"
+                                CancelText="No">
+                        <a>Cancel</a>
+                    </Popconfirm>
+                }
             }
-        </Column>
-        <Column TData="string" Title="Address">
-            @if (!editCache[data.Id].edit)
-            {
-                @data.Address
-            }
-            else
-            {
-                <Input @bind-Value="editCache[data.Id].data.Address" />
-            }
-        </Column>
-        <ActionColumn Title="Action">
-            @if (!editCache[data.Id].edit)
-            {
-                <a @onclick="() => startEdit(data.Id)">Edit</a>
-            }
-            else
-            {
-                <a @onclick="() => saveEdit(data.Id)" class="save">Save</a>
-                <Popconfirm Title="Sure to cancel?"
-                        OnConfirm="() => cancelEdit(data.Id)"
-                        OkText="Yes"
-                        CancelText="No">
-                    <a>Cancel</a>
-                </Popconfirm>
-            }
-        </ActionColumn>
-    </ChildContent>
+        </CellRender>
+
+    </ActionColumn>
 </Table>
 
 <style>
@@ -97,5 +117,10 @@
         {
             editCache[item.Id] = (false, item);
         });
+    }
+
+    private static ItemData GetRow(RowData rowData)
+    {
+        return ((RowData<ItemData>)rowData).Data;
     }
 }

@@ -9,39 +9,22 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public class ColumnBase : AntDomComponentBase, IColumn
+    public abstract class ColumnBase : AntDomComponentBase, IColumn
     {
         [CascadingParameter]
-        public ITable Table { get; set; }
+        internal ColumnContext Context { get; set; }
 
-        [CascadingParameter(Name = "IsInitialize")]
-        public bool IsInitialize { get; set; }
+        [CascadingParameter(Name = "IsHeaderTemplate")]
+        internal bool IsHeaderTemplate { get; set; }
 
-        [CascadingParameter(Name = "IsHeader")]
-        public bool IsHeader { get; set; }
+        [CascadingParameter(Name = "IsRowTemplate")]
+        internal bool IsRowTemplate { get; set; }
 
-        [CascadingParameter(Name = "IsColGroup")]
-        public bool IsColGroup { get; set; }
-
-        [CascadingParameter(Name = "IsPlaceholder")]
-        public bool IsPlaceholder { get; set; }
-
-        [CascadingParameter(Name = "IsBody")]
-        public bool IsBody { get; set; }
-
-        [CascadingParameter]
-        public ColumnContext Context { get; set; }
+        [CascadingParameter(Name = "AntDesign.Column.Blocked")]
+        internal bool Blocked { get; set; }
 
         [CascadingParameter(Name = "RowData")]
         public RowData RowData { get; set; }
-
-        protected TableDataItem DataItem => RowData.TableDataItem;
-
-        [CascadingParameter(Name = "IsMeasure")]
-        public bool IsMeasure { get; set; }
-
-        [CascadingParameter(Name = "IsSummary")]
-        public bool IsSummary { get; set; }
 
         /// <summary>
         /// Title for column header
@@ -127,7 +110,6 @@ namespace AntDesign
                     return;
 
                 _align = value;
-                _fixedStyle = CalcFixedStyle();
             }
         }
 
@@ -135,20 +117,25 @@ namespace AntDesign
         /// Index of this column in the table
         /// </summary>
         public int ColIndex { get; set; }
+        public ITable Table => Context?.Table;
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
-
-        private string _fixedStyle;
+        protected bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+        //protected string _fixedStyle;
+        //protected string _headerFixedStyle;
 
         private ColumnAlign _align = ColumnAlign.Left;
 
+        private int ColEndIndex => ColIndex + ColSpan;
+
+        private int HeaderColEndIndex => ColIndex + HeaderColSpan;
+
+        protected readonly ClassMapper HeaderMapper = new();
+
+        private string _fixedStyle;
         protected string FixedStyle => _fixedStyle;
 
-        private int ActualColumnSpan => IsHeader ? HeaderColSpan : ColSpan;
-
-        private int ColEndIndex => ColIndex + ActualColumnSpan;
-
-        private void SetClass()
+        protected void SetClass()
         {
             ClassMapper
                 .Add("ant-table-cell")
@@ -156,71 +143,74 @@ namespace AntDesign
                 .If("ant-table-cell-fix-left", () => Context.Columns.Any(x => x.Fixed == "left" && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex))
                 .If($"ant-table-cell-fix-right-first", () => Context?.Columns.FirstOrDefault(x => x.Fixed == "right") is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
                 .If($"ant-table-cell-fix-left-last", () => Context?.Columns.LastOrDefault(x => x.Fixed == "left") is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
-                .If($"ant-table-cell-with-append", () => IsBody && Table.TreeMode && Table.TreeExpandIconColumnIndex >= ColIndex && Table.TreeExpandIconColumnIndex < ColEndIndex)
+                .If($"ant-table-cell-with-append", () => Table.TreeMode && Table.TreeExpandIconColumnIndex >= ColIndex && Table.TreeExpandIconColumnIndex < ColEndIndex)
+                .If($"ant-table-cell-ellipsis", () => Ellipsis)
+                ;
+
+            HeaderMapper
+                .Add("ant-table-cell")
+                .If("ant-table-cell-fix-right", () => Context.Columns.Any(x => x.Fixed == "right" && x.ColIndex >= ColIndex && x.ColIndex < HeaderColEndIndex))
+                .If("ant-table-cell-fix-left", () => Context.Columns.Any(x => x.Fixed == "left" && x.ColIndex >= ColIndex && x.ColIndex < HeaderColEndIndex))
+                .If($"ant-table-cell-fix-right-first", () => Context?.Columns.FirstOrDefault(x => x.Fixed == "right") is var column && column?.ColIndex >= ColIndex && column?.ColIndex < HeaderColEndIndex)
+                .If($"ant-table-cell-fix-left-last", () => Context?.Columns.LastOrDefault(x => x.Fixed == "left") is var column && column?.ColIndex >= ColIndex && column?.ColIndex < HeaderColEndIndex)
                 .If($"ant-table-cell-ellipsis", () => Ellipsis)
                 ;
         }
 
         protected override void OnInitialized()
         {
-            base.OnInitialized();
-
-            // Render Pipeline: Initialize -> ColGroup -> Header ...
-            if (IsInitialize)
+            if (Table?.RebuildColumns(true) ?? false)
             {
-                if (Table?.RebuildColumns(true) ?? false)
-                {
-                    return;
-                }
-
-                Context?.AddColumn(this);
-
-                if (Fixed == "left")
-                {
-                    Table?.HasFixLeft();
-                }
-                else if (Fixed == "right")
-                {
-                    Table?.HasFixRight();
-                }
-
-                if (Ellipsis)
-                {
-                    Table?.TableLayoutIsFixed();
-                }
+                return;
             }
-            else if (IsColGroup/* && Width == null*/)
-            {
-                Context?.AddColGroup(this);
-            }
-            else if (IsHeader)
+
+            if (IsHeaderTemplate)
             {
                 Context?.AddHeaderColumn(this);
             }
-            else
+            else if (IsRowTemplate)
             {
                 Context?.AddRowColumn(this);
             }
-
-            if (IsHeader || IsBody || IsSummary)
+            else
             {
-                _fixedStyle = CalcFixedStyle();
+                Context?.AddColumn(this);
             }
 
+            if (Fixed == "left")
+            {
+                Table?.HasFixLeft();
+            }
+            else if (Fixed == "right")
+            {
+                Table?.HasFixRight();
+            }
+
+            if (Ellipsis)
+            {
+                Table?.TableLayoutIsFixed();
+            }
+
+            _fixedStyle = CalcFixedStyle();
+
             SetClass();
+
+            base.OnInitialized();
         }
 
         protected override void Dispose(bool disposing)
         {
-            //Context?.Columns.Remove(this);
-            if (IsInitialize)
+            if (!IsHeaderTemplate && !IsRowTemplate)
             {
-                Table?.RebuildColumns(false);
+                //Context?.RemoveColumn(this);
             }
+            //Context?.Columns.Remove(this);
+            Table?.RebuildColumns(false);
+
             base.Dispose(disposing);
         }
 
-        private string CalcFixedStyle()
+        protected string CalcFixedStyle(bool isHeader = false)
         {
             CssStyleBuilder cssStyleBuilder = new CssStyleBuilder();
             if (Align != ColumnAlign.Left)
@@ -236,10 +226,7 @@ namespace AntDesign
                     cssStyleBuilder.AddStyle("text-align", alignment);
             }
 
-            if (Context == null)
-            {
-                return cssStyleBuilder.Build();
-            }
+            Fixed ??= Context?.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
 
             Fixed ??= Context.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
             if (string.IsNullOrWhiteSpace(Fixed))
@@ -270,7 +257,7 @@ namespace AntDesign
                 }
             }
 
-            if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
+            if (IsHeaderTemplate && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
             {
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
@@ -286,13 +273,19 @@ namespace AntDesign
                 .AddStyle("position", "sticky")
                 .AddStyle(Fixed, fixedWidth);
 
+
             return cssStyleBuilder.Build();
         }
 
-        protected void ToggleTreeNode()
+        protected void ToggleTreeNode(RowData rowData)
         {
-            RowData.Expanded = !RowData.Expanded;
-            Table?.OnExpandChange(RowData);
+            rowData.Expanded = !rowData.Expanded;
+            Table?.OnExpandChange(rowData);
+        }
+
+        public void Load()
+        {
+            //StateHasChanged();
         }
 
         void IColumn.UpdateFixedStyle()

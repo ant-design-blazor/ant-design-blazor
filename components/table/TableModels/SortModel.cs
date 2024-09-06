@@ -30,7 +30,7 @@ namespace AntDesign.TableModels
 
         private int _columnIndex;
 
-        public SortModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
+        internal SortModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName, int priority, SortDirection defaultSortOrder, Func<TField, TField, int> comparer)
         {
             this.Priority = priority;
             this._columnIndex = column.ColIndex;
@@ -43,6 +43,7 @@ namespace AntDesign.TableModels
 #if NET5_0_OR_GREATER
         [JsonConstructor]
 #endif
+
         public SortModel(int columnIndex, int priority, string fieldName, string sort)
         {
             this.Priority = priority;

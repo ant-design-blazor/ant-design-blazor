@@ -1,9 +1,11 @@
 ﻿@using System.ComponentModel
 @using AntDesign.TableModels
 
-<Table TItem="IData" DataSource="@data" OnRowClick="OnRowClick">
+<Table TItem="IData" DataSource="@data" OnRowClick="OnRowClick" Quick>
     <Column @bind-Field="@context.Name">
-        <a>@context.Name</a>
+        <CellRender Context="cell">
+            <a>@cell.FieldValue</a>
+        </CellRender>
     </Column>
     <Column TData="int" DataIndex="Age"></Column>
     <Column @bind-Field="@context.Address">
@@ -12,15 +14,17 @@
         </TitleTemplate>
     </Column>
     <Column @bind-Field="@context.Tags">
-        @foreach (var tag in context.Tags)
-        {
-            var color = tag.Length > 5 ? "geekblue" : "green";
-            if (tag == "loser")
+        <CellRender Context="cell">
+            @foreach (var tag in cell.FieldValue)
             {
-                color = "volcano";
+                var color = tag.Length > 5 ? "geekblue" : "green";
+                if (tag == "loser")
+                {
+                    color = "volcano";
+                }
+                <Tag Color="@color">@tag</Tag>
             }
-            <Tag Color="@color">@tag</Tag>
-        }
+        </CellRender>
     </Column>
     <ActionColumn Title="Action">
         <Space Size=@("middle")>

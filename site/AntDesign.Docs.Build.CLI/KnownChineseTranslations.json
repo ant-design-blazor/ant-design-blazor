@@ -3401,14 +3401,8 @@
   "Get the query model for the table": {
     "Translated": "获取表的查询模型"
   },
-  "Expression to get the data for the field": {
-    "Translated": "获取字段数据的表达式"
-  },
   "Field this column represents": {
     "Translated": "此列代表的字段"
-  },
-  "Title of the column. Uses the following order of priority: <code>AntDesign.ColumnBase.Title</code>, <code>AntDesign.Column`1.DisplayName</code>, then <code>AntDesign.Column`1.FieldName</code>": {
-    "Translated": "列的标题。使用以下优先级顺序：<code>AntDesign.ColumnBase.Title</code>，<code>AntDesign.Column`1.DisplayName</code>，然后是 <code>AntDesign.Column`1.FieldName</code>"
   },
   "The corresponding path of the column data in the data item, support for querying the nested path through the array": {
     "Translated": "数据项中列数据的对应路径，支持通过数组查询嵌套路径"
@@ -3493,9 +3487,6 @@
   },
   "Index of this column in the table": {
     "Translated": "该列在表中的索引"
-  },
-  "Column content for a row. Takes priority over <code>AntDesign.ColumnBase.ChildContent</code>": {
-    "Translated": "一行的列内容。优先于 <code>AntDesign.ColumnBase.ChildContent</code>"
   },
   "Title for column header": {
     "Translated": "列标题的标题"
@@ -4253,9 +4244,6 @@
   "Use @bind-Field to bind to a property of TItem, we recommend using <code>PropertyColumn</code> instead": {
     "Translated": "使用 @bind-Field 绑定到 TItem 的属性，建议使用 <code>PropertyColumn</code> 代替"
   },
-  "Only used for @bind-Field and get the expression, no other purpose": {
-    "Translated": "仅用于 @bind-Field 并获取表达式，无其他用途"
-  },
   "Please use StartIndex": {
     "Translated": "请使用 StartIndex"
   },
@@ -4462,9 +4450,6 @@
   },
   "Customize the empty template when the table is empty": {
     "Translated": "自定义表为空时的空模板"
-  },
-  "Specify the identifier of each row": {
-    "Translated": "指定每行的标识符"
   },
   "Set the field filter type resolver": {
     "Translated": "设置字段筛选条件类型解析程序"

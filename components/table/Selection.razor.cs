@@ -7,10 +7,12 @@ using System.Collections.Generic;
 using System.Linq;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using AntDesign.Table;
+using System.Collections.Generic;
 
 namespace AntDesign
 {
-    public partial class Selection : ColumnBase, ISelectionColumn
+    public partial class Selection : ColumnBase, ISelectionColumn, IRenderColumn
     {
         /// <summary>
         /// Type of selection column, checkbox or radio.
@@ -43,23 +45,23 @@ namespace AntDesign
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
 
-        private bool Indeterminate => IsHeader
-                                   && Table.AnySelected
-                                   && !Table.AllSelected;
+        private bool Indeterminate => !Table.AllSelected && Table.AnySelected;
 
-        public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
+        private IList<ISelectionColumn> _rowSelections = new List<ISelectionColumn>();
 
-        //private int[] _selectedIndexes;
+        private bool IsHeaderDisabled => _rowSelections.Any() && _rowSelections.All(x => x.Disabled);
 
-        private bool IsHeaderDisabled => RowSelections.Any() && RowSelections.All(x => x.Disabled);
+        bool ISelectionColumn.Disabled => Disabled;
 
-        public bool Selected => DataItem.Selected;
+        string ISelectionColumn.Key => Key;
+
+        IList<ISelectionColumn> ISelectionColumn.RowSelections => _rowSelections;
 
         private bool? _selected;
 
-        private void OnCheckedChange(bool selected)
+        private void OnCheckedChange(bool selected, RowData rowData = null, bool isHeader = false)
         {
-            if (IsHeader)
+            if (isHeader)
             {
                 if (selected)
                 {
@@ -70,15 +72,16 @@ namespace AntDesign
                     Table.UnselectAll();
                 }
             }
-            else if (IsBody)
+            else
             {
                 if (Type == "radio")
                 {
-                    Table.SetSelection(this);
+                    Table.SetSelection(new[] { Key });
                 }
                 else
                 {
-                    RowData.SetSelected(selected, CheckStrictly);
+                    rowData.Selected = selected;
+                    Table.Selection.StateHasChanged();
                 }
             }
         }
@@ -92,46 +95,41 @@ namespace AntDesign
                 return;
             }
 
-            if (IsHeader)
-            {
-                Table.Selection = this;
-                Context.HeaderColumnInitialed(this);
-            }
-            else if (IsBody)
-            {
-                Table?.Selection?.RowSelections.Add(this);
-                DataItem.Disabled = Disabled;
-            }
+            Table.Selection = this;
+
+            Table.Selection.RowSelections.Add(this);
         }
 
         // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3312
         // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3417
-        private void HandleSelected()
+        private void HandleSelected(TableDataItem dataItem)
         {
             // avoid check the disabled one but allow default checked
             if (Disabled && _selected.HasValue)
             {
-                DataItem.SetSelected(_selected.Value);
+                dataItem.SetSelected(_selected.Value);
             }
 
-            _selected = DataItem.Selected;
+            _selected = dataItem.Selected;
         }
 
         void ISelectionColumn.StateHasChanged()
         {
-            if (IsHeader && Type == "checkbox")
+            if (Type == "checkbox")
             {
                 StateHasChanged();
             }
         }
 
+        protected override bool ShouldRender()
+        {
+            if (Blocked) return false;
+            return true;
+        }
+
         protected override void Dispose(bool disposing)
         {
-            if (!IsHeader)
-            {
-                Table?.Selection?.RowSelections?.Remove(this);
-            }
-
+            Table?.Selection?.RowSelections?.Remove(this);
             base.Dispose(disposing);
         }
     }

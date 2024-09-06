@@ -48,7 +48,7 @@ namespace AntDesign.Internal
 
             internal static ColumnCacheKey Create(Column<TProp> column)
             {
-                return new(column.ItemType, typeof(TProp), column.DataIndex);
+                return new(column.Table.ItemType, typeof(TProp), column.DataIndex);
             }
 
             internal ColumnCacheKey(Type itemType, Type propType, string dataIndex)

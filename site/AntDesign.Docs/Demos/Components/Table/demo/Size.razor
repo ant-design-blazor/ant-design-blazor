@@ -2,20 +2,24 @@
 <p>Middle size table</p>
 <Table DataSource="@data" Bordered=@true Size=@TableSize.Middle>
     <PropertyColumn Property="c=>c.Name">
-        <a>@context.Name</a>
+        <CellRender Context="cell">
+            <a>@cell.FieldValue</a>
+        </CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address"></PropertyColumn>
     <PropertyColumn Property="c=>c.Tags">
-        @foreach (var tag in context.Tags)
-        {
-            var color = tag.Length > 5 ? "geekblue" : "green";
-            if (tag == "loser")
+        <CellRender Context="cell">
+            @foreach (var tag in cell.FieldValue)
             {
-                color = "volcano";
+                var color = tag.Length > 5 ? "geekblue" : "green";
+                if (tag == "loser")
+                {
+                    color = "volcano";
+                }
+                <Tag Color="@color">@tag</Tag>
             }
-            <Tag Color="@color">@tag</Tag>
-        }
+        </CellRender>
     </PropertyColumn>
     <ActionColumn Title="Action">
         <Space Size=@("middle")>
@@ -31,20 +35,24 @@
 <p>Small size table</p>
 <Table DataSource="@data" Bordered=@true Size=@TableSize.Small>
     <PropertyColumn Property="c=>c.Name">
-        <a>@context.Name</a>
+        <CellRender Context="cell">
+            <a>@cell.FieldValue</a>
+        </CellRender>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address"></PropertyColumn>
     <PropertyColumn Property="c=>c.Tags">
-        @foreach (var tag in context.Tags)
-        {
-            var color = tag.Length > 5 ? "geekblue" : "green";
-            if (tag == "loser")
+        <CellRender Context="cell">
+            @foreach (var tag in cell.FieldValue)
             {
-                color = "volcano";
+                var color = tag.Length > 5 ? "geekblue" : "green";
+                if (tag == "loser")
+                {
+                    color = "volcano";
+                }
+                <Tag Color="@color">@tag</Tag>
             }
-            <Tag Color="@color">@tag</Tag>
-        }
+        </CellRender>
     </PropertyColumn>
     <ActionColumn Title="Action">
         <Space Size=@("middle")>

@@ -18,6 +18,7 @@ using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using AntDesign.Table;
 
 namespace AntDesign
 {
@@ -30,11 +31,8 @@ namespace AntDesign
     /// <typeparam name="TData">
     /// The type of a property of the TItem objec. 
     /// </typeparam>
-    public partial class Column<TData> : ColumnBase, IFieldColumn
+    public partial class Column<TData> : ColumnBase, IFieldColumn, IRenderColumn
     {
-        [CascadingParameter(Name = "AntDesign.Column.Blocked")]
-        internal bool Blocked { get; set; }
-
         [CascadingParameter(Name = "ItemType")]
         internal Type ItemType { get; set; }
 
@@ -42,7 +40,9 @@ namespace AntDesign
         /// Expression to get the data for the field
         /// </summary>
         [Parameter]
+#if NET6_0_OR_GREATER
         [Obsolete]
+#endif
         public Expression<Func<TData>> FieldExpression { get; set; }
 
         /// <summary>
@@ -55,39 +55,21 @@ namespace AntDesign
         /// Use @bind-Field to bind to a property of TItem, we recommend using <see cref="PropertyColumn{TItem, TProp}"/> instead
         /// </summary>
         [Parameter]
+#if NET6_0_OR_GREATER
         [Obsolete]
-        public TData Field
-        {
-            get
-            {
-                return GetValue != null ? GetValue(RowData) : _field;
-            }
-            set
-            {
-                if (GetValue == null)
-                {
-                    _field = value;
-                }
-            }
-        }
+#endif
+        public TData Field { get; set; }
 
         /// <summary>
-        /// Only used for @bind-Field and get the expression, no other purpose
+        /// Use @bind-Field to bind to a property of TItem
         /// </summary>
         [Parameter]
+#if NET6_0_OR_GREATER
         [Obsolete]
+#endif
         public EventCallback<TData> FieldChanged { get; set; }
 
-        private TData _field;
-
-        /// <summary>
-        /// Title of the column. Uses the following order of priority: <see cref="ColumnBase.Title"/>, <see cref="DisplayName"/>, then <see cref="FieldName"/>
-        /// </summary>
-        public override string Title
-        {
-            get => base.Title ?? DisplayName ?? FieldName;
-            set => base.Title = value;
-        }
+        public override string Title { get => base.Title ?? DisplayName ?? FieldName; set => base.Title = value; }
 
         /// <summary>
         /// The corresponding path of the column data in the data item, support for querying the nested path through the array
@@ -182,7 +164,7 @@ namespace AntDesign
         [Parameter]
         public virtual Func<TData, object> GroupBy { get; set; }
 
-        private IEnumerable<TableFilter> _filters;
+        private IEnumerable<TableFilter> _filters = [];
 
         private bool _hasFiltersAttribute;
 
@@ -303,32 +285,38 @@ namespace AntDesign
 
             Sortable = Sortable || SorterMultiple != default || SorterCompare != default || DefaultSortOrder != default || SortDirections?.Any() == true;
 
-            if (IsHeader)
+            if (FieldExpression != null)
             {
-                if (FieldExpression != null)
+                if (FieldExpression.Body is not MemberExpression memberExp)
                 {
-                    if (FieldExpression.Body is not MemberExpression memberExp)
-                    {
-                        throw new ArgumentException("'Field' parameter must be child member");
-                    }
-
-                    var paramExp = Expression.Parameter(ItemType);
-                    var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
-                    GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
-                }
-                else if (DataIndex != null)
-                {
-                    (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                    throw new ArgumentException($"'Field' parameter must be a property or a field of {Table.ItemType}");
                 }
 
-                if (GetFieldExpression != null)
-                {
-                    var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
-                    DisplayName = member?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName
-                               ?? member?.GetCustomAttribute<DisplayAttribute>(true)?.GetName()
-                               ?? member?.Name;
-                    FieldName = DataIndex ?? member?.Name;
-                }
+                var paramExp = Expression.Parameter(Table.ItemType);
+                var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
+                GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
+
+                var rowDataParamExp = Expression.Parameter(typeof(RowData));
+                var rowDataType = typeof(RowData<>).MakeGenericType(Table.ItemType);
+                var convertExp = Expression.Convert(rowDataParamExp, rowDataType);
+                var dataBodyExp = Expression.MakeMemberAccess(convertExp, rowDataType.GetMember(nameof(RowData<int>.Data))[0]);
+                var memberBodyExp = Expression.MakeMemberAccess(dataBodyExp, memberExp.Member);
+                var getValueLambda = Expression.Lambda<Func<RowData, TData>>(memberBodyExp, rowDataParamExp);
+                GetValue = getValueLambda.Compile(); // RowData => ((RowData<TItem>)RowData).Data.{Member}
+            }
+            else if (DataIndex != null)
+            {
+                (GetValue, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+            }
+
+            if (GetFieldExpression != null)
+            {
+                var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
+                DisplayName = member?.GetCustomAttribute<DisplayNameAttribute>(true)?.DisplayName
+                           ?? member?.GetCustomAttribute<DisplayAttribute>(true)?.GetName()
+                           ?? member?.Name;
+                FieldName = DataIndex ?? member?.Name;
+            }
 
                 if (Sortable && GetFieldExpression != null)
                 {
@@ -343,12 +331,12 @@ namespace AntDesign
                 {
                     Table.RemoveGroupColumn(this);
                 }
-            }
-            else if (IsBody)
+            
+             if (IsRowTemplate)
             {
                 if (!Table.HasRowTemplate)
                 {
-                    SortModel = (Context.HeaderColumns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
+                    SortModel = (Context.Columns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
                 }
 
                 if (DataIndex != null)
@@ -369,7 +357,7 @@ namespace AntDesign
 
             _filterable = _filterable || FilterDropdown != null;
 
-            if (IsHeader)
+            if (!IsRowTemplate)
             {
                 if (_hasFiltersAttribute)
                 {
@@ -421,8 +409,6 @@ namespace AntDesign
                     }
                 }
 
-                Context.HeaderColumnInitialed(this);
-
                 _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
             }
 
@@ -435,7 +421,7 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            if (IsHeader)
+            if (IsHeaderTemplate)
             {
                 if (_columnFilterType == TableFilterType.FieldType && _fieldFilterType == null && Filterable)
                 {

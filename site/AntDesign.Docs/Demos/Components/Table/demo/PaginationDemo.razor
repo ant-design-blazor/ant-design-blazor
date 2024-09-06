@@ -18,15 +18,17 @@
     </TitleTemplate>
   </PropertyColumn>
   <PropertyColumn Property="c=>c.Tags">
-    @foreach (var tag in context.Tags)
-    {
-      var color = tag.Length > 5 ? "geekblue" : "green";
-      if (tag == "loser")
+    <CellRender Context="cell">
+      @foreach (var tag in cell.FieldValue)
       {
-        color = "volcano";
+        var color = tag.Length > 5 ? "geekblue" : "green";
+        if (tag == "loser")
+        {
+          color = "volcano";
+        }
+        <Tag Color="@color">@tag</Tag>
       }
-      <Tag Color="@color">@tag</Tag>
-    }
+    </CellRender>
   </PropertyColumn>
   <ActionColumn Title="Action">
     <Space Size=@("middle")>
@@ -44,8 +46,8 @@
     string[] positions = new[] { "none", "topLeft", "topCenter", "topRight", "bottomLeft", "bottomCenter", "bottomRight" };
     string paginationPosition = "bottomRight";
 
-  Data[] data = new Data[]
-  {
+    Data[] data = new Data[]
+    {
         new()
         {
             Key = "1",
@@ -70,23 +72,23 @@
             Address = "Sidney No. 1 Lake Park",
             Tags = new[] { "cool", "teacher" }
         }
-  };
+    };
 
-  public class Data
-  {
-    [DisplayName("Key")]
-    public string Key { get; set; }
+    public class Data
+    {
+        [DisplayName("Key")]
+        public string Key { get; set; }
 
-    [DisplayName("Name")]
-    public string Name { get; set; }
+        [DisplayName("Name")]
+        public string Name { get; set; }
 
-    [DisplayName("Age")]
-    public int Age { get; set; }
+        [DisplayName("Age")]
+        public int Age { get; set; }
 
-    [DisplayName("Address")]
-    public string Address { get; set; }
+        [DisplayName("Address")]
+        public string Address { get; set; }
 
-    [DisplayName("Tags")]
-    public string[] Tags { get; set; }
-  }
+        [DisplayName("Tags")]
+        public string[] Tags { get; set; }
+    }
 }

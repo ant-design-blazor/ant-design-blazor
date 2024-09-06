@@ -1,94 +1,120 @@
-﻿@namespace AntDesign
+﻿﻿
+@namespace AntDesign
 @using AntDesign.TableModels
+@using AntDesign.Table
+
 @inherits ColumnBase
 
-@if (IsInitialize)
+@if (IsHeaderTemplate)
 {
-    return;
+    @if (HeaderColSpan == 0)
+        return;
+    @RenderHeader()
 }
-else if (Hidden)
+else if (IsRowTemplate)
 {
-    return;
+    @if (RowSpan == 0 || ColSpan == 0)
+        return;
+    @RenderBody(RowData)
 }
-else if (IsPlaceholder)
+
+@code
 {
-    <td style="padding: 0px; border: 0px; height: 0px;"></td>
-}
-else if (IsMeasure)
-{
-    <td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>
-}
-else if (IsColGroup)
-{
-    @if (AppendExpandColumn)
+    RenderFragment IRenderColumn.RenderPlaceholder()
     {
-        <col class="ant-table-expand-icon-col">
+        return @<td style="padding: 0px; border: 0px; height: 0px;"></td>;
     }
 
-    if (Width != null)
+    RenderFragment IRenderColumn.RenderMeasure()
     {
-        <col style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
-    }
-    else
-    {
-        <col />
-    }
-}
-else if (IsHeader && HeaderColSpan != 0)
-{
-    @if (AppendExpandColumn)
-    {
-        <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
+        return @<td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>;
     }
 
-	<th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" rowspan="@(RowSpan > 1 ? RowSpan : false)">
-		@if (TitleTemplate != null)
-		{
-			@TitleTemplate
-		}
-		else
-		{
-			@Title
-		}
-	</th>
-}
-else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
-{
-	@if (AppendExpandColumn)
-	{
-		<td class="ant-table-cell ant-table-row-expand-icon-cell">
-			@if (Table.RowExpandable(RowData) && (!Table.TreeMode || !DataItem.HasChildren))
-			{
-				<button type="button" @onclick="ToggleTreeNode"
-			class="ant-table-row-expand-icon @(RowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
-			aria-label="@(RowData.Expanded?Table.Locale.Collapse:Table.Locale.Expand)"></button>
-			}
-        </td>
-    }
-
-    var title = Context.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" data-label="@title">
-		@if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
-		{
-			<span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>
-			@if (DataItem.HasChildren)
-			{
-				<button type="button" @onclick="ToggleTreeNode" class="ant-table-row-expand-icon @(RowData?.Expanded==true?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label="@(RowData?.Expanded==true?Table.Locale.Collapse:Table.Locale.Expand)"></button>
-			}
-			else
-			{
-				<button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
-			}
-		}
-
-        @if (CellRender != null)
+    RenderFragment IRenderColumn.RenderColGroup()
+    {
+        return builder =>
         {
-            var cellData = new CellData(RowData);
-            @CellRender(cellData)
-        }
-        else
+            if (AppendExpandColumn)
+            {
+                builder.AddContent(1,@<col class="ant-table-expand-icon-col">);
+            }
+
+            if (Width != null)
+            {
+                builder.AddContent(2,@<col style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);"> );
+            }
+            else
+            {
+                builder.AddContent(2,@<col />  );
+            }
+        };
+    }
+    RenderFragment IRenderColumn.RenderHeader() => RenderHeader();
+
+    RenderFragment RenderHeader()
+    {
+        return builder =>
         {
-            @ChildContent
-        }
-    </td>
+            @if (AppendExpandColumn)
+            {
+                builder.AddContent(1,@<th class="ant-table-cell ant-table-row-expand-icon-cell"></th>);
+            }
+
+            builder.AddContent(2,@<th class="@HeaderMapper.Class" style="@CalcFixedStyle(true) @HeaderStyle" colspan="@HeaderColSpan" rowspan="@(RowSpan > 1 ? RowSpan : false)">
+                @if (TitleTemplate != null)
+                {
+                    @TitleTemplate
+                }
+                else
+                {
+                    @Title
+                }
+            </th>
+    );
+        };
+    }
+    RenderFragment IRenderColumn.RenderBody(RowData rowData) => RenderBody(rowData);
+    RenderFragment RenderBody(RowData rowData)
+    {
+        return builder =>
+        {
+            if (AppendExpandColumn)
+            {
+                builder.AddContent(1,@<td class="ant-table-cell ant-table-row-expand-icon-cell">
+                    @if (Table.RowExpandable(rowData) && (!Table.TreeMode || !rowData.TableDataItem.HasChildren))
+                    {
+                        <button type="button" @onclick="()=>ToggleTreeNode(rowData)"
+                            class="ant-table-row-expand-icon @(rowData.Expanded?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")"
+                            aria-label="@(rowData.Expanded?Table.Locale.Collapse:Table.Locale.Expand)"></button>
+                    }
+                </td>);
+            }
+
+            var title = Context.Columns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
+            builder.AddContent(2,@<td class="@ClassMapper.Class" style="@CalcFixedStyle() @Style" rowspan="@RowSpan" colspan="@ColSpan" data-label="@title">
+                @if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
+                {
+                    <span class="ant-table-row-indent indent-level-@rowData.Level" style="padding-left: @((CssSizeLength)(rowData.Level * Table.IndentSize));"></span>
+                    @if (rowData.TableDataItem.HasChildren)
+                    {
+                        <button type="button" @onclick="()=>ToggleTreeNode(rowData)" class="ant-table-row-expand-icon @(rowData?.Expanded==true?"ant-table-row-expand-icon-expanded":"ant-table-row-expand-icon-collapsed")" aria-label="@(rowData?.Expanded==true?Table.Locale.Collapse:Table.Locale.Expand)"></button>
+                    }
+                    else
+                    {
+                        <button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
+                    }
+                }
+
+                @if (CellRender != null)
+                {
+                    var cellData = new CellData(rowData);
+                    @CellRender(cellData)
+                }
+                else
+                {
+                    @ChildContent
+                }
+            </td>);
+        };
+    }
 }

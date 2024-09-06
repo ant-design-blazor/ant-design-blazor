@@ -6,17 +6,19 @@
     <a>@context.Name</a>
   </PropertyColumn>
   <PropertyColumn Property="c=>c.Age"></PropertyColumn>
-  <Column Title="Address" TData="string">
+  <PropertyColumn Property="c=>c.Address">
     <TitleTemplate>
       <span> <Icon Type="environment" /> Address </span>
     </TitleTemplate>
-  </Column>
-  <Column Title="Tag" TData="string">
-    @foreach (var tag in context.Tags)
-    {
-      <Tag Color="@(tag == "loser" ? "volcano" : tag.Length > 5 ? "geekblue" : "green")">@tag</Tag>
-    }
-  </Column>
+  </PropertyColumn>
+  <PropertyColumn Title="Tag" Property="c=>c.Tags">
+    <CellRender Context="cell">
+      @foreach (var tag in cell.FieldValue)
+      {
+          <Tag Color="@(tag == "loser" ? "volcano" : tag.Length > 5 ? "geekblue" : "green")">@tag</Tag>
+      }
+    </CellRender>
+  </PropertyColumn>
 </Table>
 
 @code {

@@ -1,46 +1,65 @@
 ﻿@namespace AntDesign
 @using AntDesign.TableModels
-@inherits ColumnBase
+@using AntDesign.Table
 
-@if (IsInitialize)
+@inherits ColumnBase
+@implements IRenderColumn
+
+
+@if (IsHeaderTemplate)
 {
-	return;
+    @if (HeaderColSpan == 0)
+        return;
+    @RenderHeader()
 }
-else if (Hidden)
-{
-    return;
+else if (IsRowTemplate)
+{  
+    @if (RowSpan == 0 || ColSpan == 0)
+        return;
+    @RenderBody(RowData)
 }
-else if (IsPlaceholder)
-{
-	<td style="padding: 0px; border: 0px; height: 0px;"></td>
-}
-else if (IsMeasure)
-{
-	<td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>
-}
-else if (IsColGroup)
-{
-	if (Width != null)
-	{
-		<col class="ant-table-selection-col" style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">
-	}
-	else
-	{
-		<col class="ant-table-selection-col">
-	}
-}
-else if (IsHeader && HeaderColSpan != 0)
-{
-	<th class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
-		@if (Type == "checkbox")
-		{
-			<Checkbox Checked="Table.AllSelected" CheckedChange="OnCheckedChange" Indeterminate="Indeterminate" Disabled="IsHeaderDisabled" />
-		}
-	</th>
-}
-else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
-{
-	<td class="@ClassMapper.Class ant-table-selection-column" style="@FixedStyle @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
+
+@code{
+
+    RenderFragment IRenderColumn.RenderPlaceholder()
+    {
+        return@<td style="padding: 0px; border: 0px; height: 0px;"></td>;
+    }
+
+    RenderFragment IRenderColumn.RenderMeasure()
+    {
+        return@<td style="padding: 0px; border: 0px; height: 0px;"><div style="height: 0px; overflow: hidden;">&nbsp;</div></td>;
+    }
+
+
+    RenderFragment IRenderColumn.RenderColGroup()
+    {
+        if (Width != null)
+        {
+            return@<col class="ant-table-selection-col" style="width: @((CssSizeLength)Width); min-width: @((CssSizeLength)Width);">;
+        }
+        else
+        {
+            return@<col class="ant-table-selection-col">;
+        }
+    }
+    RenderFragment IRenderColumn.RenderHeader() => RenderHeader();
+    RenderFragment RenderHeader()
+    {
+        return
+    @<th class="@HeaderMapper.Class ant-table-selection-column" style="@CalcFixedStyle(true) @HeaderStyle" @key="@Key" colspan="@HeaderColSpan">
+        @if (Type == "checkbox")
+            {
+                <Checkbox Checked="Table.AllSelected" CheckedChanged="(e)=>OnCheckedChange(e,null,true)" Indeterminate="Indeterminate" Disabled="IsHeaderDisabled" />
+            }
+            </th>
+    ;
+    }
+
+    RenderFragment IRenderColumn.RenderBody(RowData rowData) => RenderBody(rowData);
+    RenderFragment RenderBody(RowData rowData)
+    {
+        return@<td class="@ClassMapper.Class ant-table-selection-column" style="@CalcFixedStyle() @Style" @key="@Key" rowspan="@RowSpan" colspan="@ColSpan">
 
 		@if (CellRender != null)
 		{
@@ -53,16 +72,17 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
 		}
 		else
 		{
-            HandleSelected();
+            HandleSelected(rowData.TableDataItem);
 
 			@if (Type == "checkbox")
 			{
-				<Checkbox Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" />
+				<Checkbox Checked="_selected.Value" Disabled="Disabled" CheckedChange="e=>OnCheckedChange(e,rowData)" />
 			}
 			else if (Type == "radio")
 			{
-                <Radio Checked="_selected.Value" Disabled="Disabled" CheckedChange="OnCheckedChange" TValue="bool" />
+                <Radio Checked="_selected.Value" Disabled="Disabled" CheckedChange="e=>OnCheckedChange(e,rowData)" TValue="bool" />
 			}
 		}
-	</td>
+	    </td>;
+    }
 }

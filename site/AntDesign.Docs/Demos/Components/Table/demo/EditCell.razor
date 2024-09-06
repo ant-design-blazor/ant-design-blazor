@@ -1,91 +1,97 @@
 ﻿<div>
-  <Button OnClick="addRow" Type="primary" Style="margin-bottom:16px">
-    Add a row
-  </Button>
-  <Table DataSource="listOfData" RowClassName="@(_=>"editable-row")" Bordered>
-    <PropertyColumn Width="30%" Property="c=>c.Name">
-      @if (editId == context.Id)
-      {
-        <Input Type="text" @bind-Value="context.Name" OnBlur="stopEdit" AutoFocus />
-      }
-      else
-      {
-        <div class="editable-cell-value-wrap" style="padding-right:24px" @onclick="()=>startEdit(context.Id)">
-          @context.Name
-        </div>
-      }
-    </PropertyColumn>
-    <PropertyColumn Property="c=>c.Age"></PropertyColumn>
-    <PropertyColumn Property="c=>c.Address"></PropertyColumn>
-    <ActionColumn Title="Action">
-      <Popconfirm Title="Sure to delete?"
-                  OnConfirm="()=> deleteRow(context.Id)"
-                  OkText="Yes"
-                  CancelText="No">
-        <a>Delete</a>
-      </Popconfirm>
-    </ActionColumn>
-  </Table>
+    <Button OnClick="addRow" Type="primary" Style="margin-bottom:16px">
+        Add a row
+    </Button>
+    <Table DataSource="listOfData" RowClassName="@(_=>"editable-row")" Bordered>
+        <PropertyColumn Width="30%" Property="c=>c.Name">
+            <CellRender Context="cell">
+                @{
+                    var id = ((RowData<ItemData>)cell.RowData).Data.Id;
+                }
+                @if (editId == id)
+                {
+                    <Input Type="text" @bind-Value="cell.FieldValue" OnBlur="stopEdit" AutoFocus />
+                }
+                else
+                {
+                    <div class="editable-cell-value-wrap" style="padding-right:24px" @onclick="()=>startEdit(id)">
+                        @cell.FieldValue
+                    </div>
+                }
+            </CellRender>
+        </PropertyColumn>
+        <PropertyColumn Property="c=>c.Age"></PropertyColumn>
+        <PropertyColumn Property="c=>c.Address"></PropertyColumn>
+        <ActionColumn Title="Action">
+            <Popconfirm Title="Sure to delete?"
+                        OnConfirm="()=> deleteRow(context.Id)"
+                        OkText="Yes"
+                        CancelText="No">
+                <a>Delete</a>
+            </Popconfirm>
+        </ActionColumn>
+    </Table>
 </div>
 
 <style>
-  .editable-cell {
-      position: relative;
-  }
+    .editable-cell {
+        position: relative;
+    }
 
-  .editable-cell-value-wrap {
-      padding: 5px 12px;
-      cursor: pointer;
-  }
+    .editable-cell-value-wrap {
+        padding: 5px 12px;
+        cursor: pointer;
+    }
 
-  .editable-row:hover .editable-cell-value-wrap {
-      padding: 4px 11px;
-      border: 1px solid #d9d9d9;
-      border-radius: 4px;
-  }
+    .editable-row:hover .editable-cell-value-wrap {
+        padding: 4px 11px;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+    }
 
-  [data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
-      border: 1px solid #434343;
-  }
+    [data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
+        border: 1px solid #434343;
+    }
 </style>
 
 @using System.Text.Json;
+@using AntDesign.TableModels;
 @code {
-  int i = 0;
-  string editId;
-  record ItemData(string Id, string Age, string Address)
-  {
-    public string Name { get; set; }
-  };
+    int i = 0;
+    string editId;
+    record ItemData(string Id, string Age, string Address)
+    {
+        public string Name { get; set; }
+    };
 
-  ItemData[] listOfData = { };
+    ItemData[] listOfData = { };
 
-  void addRow()
-  {
-    listOfData = listOfData.Append(new($"{i}", "32", $"London, Park Lane no. {i}") { Name = $"Edward King {i}" });
-    i++;
-  }
+    void addRow()
+    {
+        listOfData = listOfData.Append(new($"{i}", "32", $"London, Park Lane no. {i}") { Name = $"Edward King {i}" });
+        i++;
+    }
 
-  void deleteRow(string id)
-  {
-    listOfData = listOfData.Where(d => d.Id != id).ToArray();
-  }
+    void deleteRow(string id)
+    {
+        listOfData = listOfData.Where(d => d.Id != id).ToArray();
+    }
 
-  void startEdit(string id)
-  {
-    editId = id;
-  }
+    void startEdit(string id)
+    {
+        editId = id;
+    }
 
-  void stopEdit()
-  {
-    var editedData = listOfData.FirstOrDefault(x => x.Id == editId);
-    Console.WriteLine(JsonSerializer.Serialize(editedData));
-    editId = null;
-  }
+    void stopEdit()
+    {
+        var editedData = listOfData.FirstOrDefault(x => x.Id == editId);
+        Console.WriteLine(JsonSerializer.Serialize(editedData));
+        editId = null;
+    }
 
-  protected override void OnInitialized()
-  {
-    addRow();
-    addRow();
-  }
+    protected override void OnInitialized()
+    {
+        addRow();
+        addRow();
+    }
 }

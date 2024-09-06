@@ -8,7 +8,7 @@ using AntDesign.TableModels;
 
 namespace AntDesign
 {
-    public interface IFieldColumn : IColumn
+    internal interface IFieldColumn : IColumn
     {
         public string DisplayName { get; }
 

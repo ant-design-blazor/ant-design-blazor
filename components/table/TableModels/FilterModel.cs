@@ -32,6 +32,7 @@ namespace AntDesign.TableModels
 #if NET5_0_OR_GREATER
         [JsonConstructor]
 #endif
+
         public FilterModel(int columnIndex, string fieldName, IEnumerable<string> selectedValues, IList<TableFilter> filters)
         {
             this.FieldName = fieldName;
@@ -40,7 +41,7 @@ namespace AntDesign.TableModels
             this._columnIndex = columnIndex;
         }
 
-        public FilterModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName,
+        internal FilterModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName,
             Expression<Func<TField, TField, bool>> onFilter, IList<TableFilter> filters, TableFilterType filterType, IFieldFilterType fieldFilterType)
         {
             this._getFieldExpression = getFieldExpression;

@@ -10,7 +10,7 @@
     </TitleTemplate>
     <ColumnDefinitions Context="row">
         <Selection />
-        <GenerateColumns Definitions="@((n,c) => { c.Filterable = true; c.Sortable = true; })" />
+        <GenerateColumns />
         <ActionColumn Title="Action">
             <a @onclick="() => StartEdit(row)">Edit</a>
             <a @onclick="() => Delete(row)">Delete</a>

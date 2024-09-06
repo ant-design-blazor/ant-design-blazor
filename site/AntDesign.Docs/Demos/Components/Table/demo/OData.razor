@@ -5,7 +5,7 @@
        Loading="_loading" OnChange="HandleTableChange" RemoteDataSource>
     <PropertyColumn Property="c=>c.UserName" Sortable DefaultSortOrder="SortDirection.Ascending"></PropertyColumn>
     <PropertyColumn Property="c=>c.Gender" />
-    <PropertyColumn Property="c=>c.Emails.FirstOrDefault()" />
+    <PropertyColumn Property="c=>c.Emails.FirstOrDefault()" Title="Email"/>
 </Table>
 
 @inject HttpClient HttpClient;
