@@ -226,7 +226,7 @@ namespace AntDesign
         /// Specify a callback that will be called before drawer displayed
         /// </summary>
         [Parameter]
-        public Func<Task> OnOpen { get; set; }
+        public EventCallback OnOpen { get; set; }
 
         /// <summary>
         /// Specify a callback that will be called when a user clicks mask, close button or Cancel button.
@@ -359,9 +359,11 @@ namespace AntDesign
             {
                 case ComponentStatus.Opening:
                     {
-                        if (OnOpen != null)
+                        _status = ComponentStatus.Opened;
+
+                        if (OnOpen.HasDelegate)
                         {
-                            await OnOpen.Invoke();
+                            await OnOpen.InvokeAsync(this);
                         }
 
                         if (Visible == false && VisibleChanged.HasDelegate)
@@ -385,7 +387,6 @@ namespace AntDesign
                             ? $"transform: {OffsetTransform};"
                             : string.Empty;
                         StateHasChanged();
-                        _status = ComponentStatus.Opened;
                         break;
                     }
                 case ComponentStatus.Closing:
@@ -393,7 +394,7 @@ namespace AntDesign
                         StateHasChanged();
                         if (!_hasInvokeClosed)
                         {
-                            await HandleClose(true);
+                            await HandleClose();
                         }
 
                         _status = ComponentStatus.Closed;
@@ -433,10 +434,10 @@ namespace AntDesign
         /// </summary>
         /// <param name="isChangeByParamater"></param>
         /// <returns></returns>
-        private async Task HandleClose(bool isChangeByParamater = false)
+        private async Task HandleClose()
         {
             _hasInvokeClosed = true;
-            if (!isChangeByParamater && OnClose.HasDelegate)
+            if (OnClose.HasDelegate)
             {
                 await OnClose.InvokeAsync(this);
             }

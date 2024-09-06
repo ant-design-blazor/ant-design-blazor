@@ -1,18 +1,28 @@
 ﻿<div>
     <Button Type="primary" @onclick="_=>open()">Open</Button>
-    <Drawer Closable="true" @bind-Visible="visible" Placement="right" Title='("Basic Drawer")' >
+    <Drawer Closable="true" @bind-Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="OnClose" OnOpen="OnOpen">
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
     </Drawer>
 </div>
 
-   @code{
+@code{
 
     bool visible = false;
 
     void open()
     {
         this.visible = true;
+    }
+
+    void OnClose()
+    {
+        Console.WriteLine("closed");
+    }
+
+    void OnOpen()
+    {
+        Console.WriteLine("opened");
     }
 }
