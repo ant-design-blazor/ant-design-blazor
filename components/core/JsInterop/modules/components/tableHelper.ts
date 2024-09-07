@@ -1,5 +1,41 @@
 ﻿export class tableHelper {
-  static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable) {
+  static getTotalHeightAbove(element): number {
+    const rect = element.getBoundingClientRect();
+    return rect.top;
+  }
+  static getTotalHeightBelow(element): number {
+    let totalHeight = 0;
+
+    let previousElement = element;
+    let currentElement = element.nextElementSibling;
+
+    while (currentElement) {
+      let marginBottom = 0.0;
+      if (previousElement instanceof HTMLElement) {
+        marginBottom = parseFloat(getComputedStyle(previousElement).marginBottom);
+      }
+      const computedStyle = getComputedStyle(currentElement);
+      totalHeight += currentElement.offsetHeight +  Math.max(parseFloat(computedStyle.marginTop), marginBottom);
+
+      previousElement = currentElement;
+      currentElement = currentElement.nextElementSibling;
+    }
+    let marginTop = 0.0;
+    if (previousElement instanceof HTMLElement) {
+      marginTop = parseFloat(getComputedStyle(previousElement).marginTop);
+    }
+    totalHeight += marginTop;
+    if (element.parentNode != null) {
+      let paddingBottom = 0.0;
+      if (element.parentNode instanceof HTMLElement) {
+        paddingBottom = parseFloat(getComputedStyle(element.parentNode).paddingBottom);
+      }
+      totalHeight += tableHelper.getTotalHeightBelow(element.parentNode) + paddingBottom;
+    }
+    return totalHeight;
+  }
+
+    static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable, autoHeight) {
     bodyRef.bindScroll = () => {
       if (scrollX) {
         tableHelper.SetScrollPositionClassName(bodyRef, wrapperRef);
@@ -7,6 +43,9 @@
       if (scrollY) {
         headerRef.scrollLeft = bodyRef.scrollLeft;
       }
+      if (autoHeight) {
+        tableHelper.SetBodyHeight(bodyRef);
+      }      
     }
 
     // direct setting classlist will not work, so delay 500ms for workaround
@@ -28,7 +67,24 @@
       window.removeEventListener('resize', bodyRef.bindScroll);
     }
   }
+  static SetBodyHeight(bodyRef) {
+    // 计算上面元素的总高度
+    const heightAbove = tableHelper.getTotalHeightAbove(bodyRef);
+    console.log('heightAbove:' + heightAbove);
 
+    // 计算下面元素的总高度
+    const heightBelow = tableHelper.getTotalHeightBelow(bodyRef);
+    console.log('heightBelow:' + heightBelow);
+
+
+
+    // 计算视口高度并减去滚动条的宽度
+    const viewportHeight = window.innerHeight;
+
+
+      // 设置目标元素的高度
+    bodyRef.style.height = `${viewportHeight - heightAbove - heightBelow }px`;
+  }
   static SetScrollPositionClassName(bodyRef, wrapperRef) {
 
     const scrollLeft = bodyRef.scrollLeft;
