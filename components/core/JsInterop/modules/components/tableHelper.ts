@@ -35,7 +35,7 @@
     return totalHeight;
   }
 
-    static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable, autoHeight) {
+  static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable, autoHeight) {
     bodyRef.bindScroll = () => {
       if (scrollX) {
         tableHelper.SetScrollPositionClassName(bodyRef, wrapperRef);

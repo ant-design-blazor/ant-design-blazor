@@ -3341,6 +3341,9 @@
   "Set the vertical scroll, can also be used to specify the height of the scrolling area, can be set as a pixel value": {
     "Translated": "设置垂直滚动，也可以用来指定滚动区域的高度，可以设置为像素值"
   },
+  "Automatically raise the table height to full screen display": {
+    "Translated": "自动拉升表格高度至满屏显示"
+  },
   "Scroll bar width": {
     "Translated": "滚动条宽度"
   },

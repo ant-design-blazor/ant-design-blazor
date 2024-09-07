@@ -243,7 +243,7 @@ namespace AntDesign
 
 
         /// <summary>
-        /// Auto set table body full
+        /// Automatically raise the table height to full screen display
         /// </summary>
         [Parameter]
         public bool AutoHeight { get; set; }
