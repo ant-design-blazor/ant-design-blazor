@@ -235,7 +235,7 @@ namespace AntDesign.Tests.Drawer
                 .Add(x => x.Visible, false));
 
             systemUnderTest.MarkupMatches(@"
-                <div class=""ant-drawer ant-drawer-right"" style=""overflow:hidden; z-index:-9999;"" id:ignore diff:ignoreChildren></div>");
+                <div class=""ant-drawer ant-drawer-right"" style=""z-index:-9999;"" id:ignore diff:ignoreChildren></div>");
         }
 
         [Theory]
