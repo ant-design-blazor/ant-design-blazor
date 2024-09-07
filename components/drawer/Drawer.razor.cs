@@ -381,8 +381,6 @@ namespace AntDesign
                             await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
                         }
 
-                        CalcDrawerStyle();
-                        StateHasChanged();
                         _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform)
                             ? $"transform: {OffsetTransform};"
                             : string.Empty;
@@ -432,7 +430,6 @@ namespace AntDesign
         /// <summary>
         /// clean-up after close
         /// </summary>
-        /// <param name="isChangeByParamater"></param>
         /// <returns></returns>
         private async Task HandleClose()
         {
