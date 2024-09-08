@@ -4,7 +4,7 @@
     <SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)</SolutionDir>
   </PropertyGroup>
   <PropertyGroup>
-    <NoWarn>$(NoWarn);NU1902;NU1903;CS8669;CS8602;CS8625;SYSLIB0051</NoWarn>
+    <NoWarn>$(NoWarn);NU1902;NU1903;CS8669;CS8602;CS8625;SYSLIB0051;nullable</NoWarn>
     <WarningsAsErrors>CS0168</WarningsAsErrors>
   </PropertyGroup>
 </Project>
