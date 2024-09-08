@@ -1,5 +1,60 @@
 ﻿export class tableHelper {
-  static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable) {
+  static getTotalHeightAbove(element): number {
+    let totalHeight = 0;
+    const rect = element.getBoundingClientRect();
+    totalHeight += rect.top;
+
+    if (element instanceof HTMLElement) {
+      const computedStyle = getComputedStyle(element);
+      totalHeight += parseFloat(computedStyle.paddingTop);
+      totalHeight += parseFloat(computedStyle.borderTop);
+    }
+    return totalHeight;
+  }
+  static getTotalHeightBelow(element): number {
+    let totalHeight = 0;
+    let currentElement = element.nextElementSibling;
+
+    if (element instanceof HTMLElement) {
+     
+      let previousComputedStyle = getComputedStyle(element);
+      let previousPosition = previousComputedStyle.getPropertyValue('position');
+      if (previousPosition !== 'absolute') {
+        totalHeight += parseFloat(previousComputedStyle.marginBottom);
+      }
+      
+
+      while (currentElement) {
+   
+
+        const currentComputedStyle = getComputedStyle(currentElement);
+        const currentPosition = currentComputedStyle.getPropertyValue('position');
+        if (currentPosition !== 'absolute') {
+          totalHeight += currentElement.offsetHeight + Math.max(parseFloat(currentComputedStyle.marginTop), parseFloat(previousComputedStyle.marginBottom));
+
+        }
+        currentElement = currentElement.nextElementSibling;
+        previousComputedStyle = currentComputedStyle;
+      }
+      previousPosition = previousComputedStyle.getPropertyValue('position');
+      if (previousPosition !== 'absolute') {
+        totalHeight += parseFloat(previousComputedStyle.marginBottom);
+      }
+    } 
+    if (element.parentNode != null) {
+      if (element.parentNode instanceof HTMLElement) {
+        const parentComputedStyle = getComputedStyle(element.parentNode);
+        const parentPosition = parentComputedStyle.getPropertyValue('position');
+        if (parentPosition !== 'absolute') {
+          totalHeight += parseFloat(parentComputedStyle.paddingBottom);
+        }
+      }
+      totalHeight += tableHelper.getTotalHeightBelow(element.parentNode);
+    }
+    return totalHeight;
+  }
+
+  static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable, autoHeight) {
     bodyRef.bindScroll = () => {
       if (scrollX) {
         tableHelper.SetScrollPositionClassName(bodyRef, wrapperRef);
@@ -7,8 +62,12 @@
       if (scrollY) {
         headerRef.scrollLeft = bodyRef.scrollLeft;
       }
+      if (autoHeight) {
+        tableHelper.SetBodyHeight(bodyRef);
+      }    
+  
     }
-
+    
     // direct setting classlist will not work, so delay 500ms for workaround
     setTimeout(() => {
       bodyRef && bodyRef.bindScroll();
@@ -18,7 +77,17 @@
     window.addEventListener('resize', bodyRef.bindScroll);
 
     if (resizable) {
-      tableHelper.enableColumnResizing(headerRef, tableRef, scrollY);
+      tableHelper.enableColumnResizing(headerRef, tableRef, scrollY); 
+    }
+    if (autoHeight) {
+      bodyRef.observer = new MutationObserver(mutations => {
+        if (mutations) {
+          tableHelper.SetBodyHeight(bodyRef);
+        }        
+      });
+      const config = { childList: true, subtree: true };
+      const target = document.body; // 要观察变动的 DOM 节点
+      bodyRef.observer.observe(target, config);
     }
   }
 
@@ -26,9 +95,29 @@
     if (bodyRef) {
       bodyRef.removeEventListener && bodyRef.removeEventListener('scroll', bodyRef.bindScroll);
       window.removeEventListener('resize', bodyRef.bindScroll);
+      if (bodyRef.observer) {
+        bodyRef.observer.disconnect();
+      }      
     }
   }
+  static SetBodyHeight(bodyRef) {
+    // 计算上面元素的总高度
+    const heightAbove = tableHelper.getTotalHeightAbove(bodyRef);
+    //console.log('heightAbove:' + heightAbove);
 
+    // 计算下面元素的总高度
+    const heightBelow = tableHelper.getTotalHeightBelow(bodyRef);
+    //console.log('heightBelow:' + heightBelow);
+
+
+
+    // 计算视口高度并减去滚动条的宽度
+    const viewportHeight = window.innerHeight;
+
+
+      // 设置目标元素的高度
+    bodyRef.style.height = `${viewportHeight - heightAbove - heightBelow }px`;
+  }
   static SetScrollPositionClassName(bodyRef, wrapperRef) {
 
     const scrollLeft = bodyRef.scrollLeft;

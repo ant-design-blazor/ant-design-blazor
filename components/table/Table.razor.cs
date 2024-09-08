@@ -241,6 +241,14 @@ namespace AntDesign
         [Parameter]
         public string ScrollY { get; set; }
 
+
+        /// <summary>
+        /// Automatically raise the table height to full screen display
+        /// </summary>
+        [Parameter]
+        public bool AutoHeight { get; set; }
+
+
         /// <summary>
         /// Scroll bar width
         /// </summary>
@@ -910,9 +918,9 @@ namespace AntDesign
                 _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
 
-                if (ScrollY != null || ScrollX != null || Resizable)
+                if (ScrollY != null || ScrollX != null || Resizable || AutoHeight)
                 {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable);
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable, AutoHeight);
                 }
 
                 if (ScrollY != null && ScrollY != null && _scrollBarWidth == null)

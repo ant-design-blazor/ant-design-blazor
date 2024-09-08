@@ -125,9 +125,6 @@
   "Whether to support keyboard esc off": {
     "Translated": "是否支持键盘esc关闭"
   },
-  "Please replace it with Config": {
-    "Translated": "Please replace it with Config"
-  },
   "<p>A dropdown list.</p><h2>When To Use</h2><p> When there are more than a few options to choose from, you can wrap them in a <code>Dropdown</code>. By hovering or clicking on the trigger, a dropdown menu will appear, which allows you to choose an option and execute the relevant action. </p><h2>Two types</h2><p>There are 2 rendering approaches for <code>Dropdown</code>:</p><ol><li>Wraps child element (content of the <code>Dropdown</code>) with a <code>div</code> (default approach).</li><li> Child element is not wrapped with anything. This approach requires usage of <code>Unbound</code> tag inside <code>Dropdown</code> and depending on the child element type (please refer to the first example): <ul><li>html tag: has to have its <code>@ref</code> set to <code>@context.Current</code></li><li><code>Ant Design Blazor</code> component: has to have its <code>RefBack</code> attribute set to <code>@context</code>.</li></ul></li></ol>": {
     "Translated": "<p>下拉列表。</p><h2>何时使用</h2><p> 当有多个选项可供选择时，您可以将它们包装在 <code>Dropdown</code> 中.通过悬停或单击触发器，将出现一个下拉菜单，允许您选择一个选项并执行相关操作。 </p><h2>两种类型</h2><p><code>Dropdown</code>有两种渲染方式：</p><ol><li>包裹子元素（<code>的内容>Dropdown</code>) 和 <code>div</code>（默认方法）。</li><li> 子元素未用任何东西包裹。这种方法需要在 <code>Dropdown</code> 中使用 <code>Unbound</code> 标签，并根据子元素类型（请参考第一个示例）： <ul><li>html 标签：必须将其 <code>@ref</code> 设置为 <code>@context.Current</code></li><li><code>Ant Design Blazor</code> 组件：必须具有其 <code> RefBack</code> 属性设置为 <code>@context</code>。</li></ul></li></ol>"
   },
@@ -1565,18 +1562,6 @@
   "If the drawer is visible or not": {
     "Translated": "抽屉是否可见"
   },
-  "close drawer": {
-    "Translated": "关闭抽屉"
-  },
-  "Open drawer": {
-    "Translated": "打开抽屉"
-  },
-  "update drawer config which Visible=true": {
-    "Translated": "更新 Visible=true 的抽屉配置"
-  },
-  "update drawer config with a new options": {
-    "Translated": "使用新选项更新抽屉配置"
-  },
   "Whether the dropdown arrow should be visible.": {
     "Translated": "下拉箭头是否可见。"
   },
@@ -2769,7 +2754,7 @@
     "Translated": "间隙位置，选项：top bottom left right"
   },
   "Display label content for the radio": {
-    "Translated": "显示收音机的标签内容"
+    "Translated": "显示 Radio 的标签内容"
   },
   "Selected value": {
     "Translated": "选定值"
@@ -2778,19 +2763,19 @@
     "Translated": "是否自动对焦"
   },
   "Set to <code>true</code> to style the radio as button group.": {
-    "Translated": "设置为 <code>true</code> 将单选按钮设置为按钮组。"
+    "Translated": "设置为 <code>true</code> 将 Radio 设置为按钮组。"
   },
   "Specifies whether the radio is selected": {
-    "Translated": "指定无线电是否被选中"
+    "Translated": "指定 Radio 是否被选中"
   },
   "Specify if the radio button is checked initially or not": {
-    "Translated": "指定是否最初选中单选按钮"
+    "Translated": "指定是否最初选中 Radio "
   },
   "Callback executed when the checked state changes": {
     "Translated": "checked 状态改变时执行的回调"
   },
   "Disable the radio buton": {
-    "Translated": "禁用单选按钮"
+    "Translated": "禁用 Radio "
   },
   "Radio elements for the group. Use either this or <code>AntDesign.RadioGroup`1.Options</code>": {
     "Translated": "该组的单选元素。使用这个或 <code>AntDesign.RadioGroup`1.Options</code>"
@@ -2802,13 +2787,13 @@
     "Translated": "组的按钮样式。"
   },
   "Input name for all the radios in the group": {
-    "Translated": "输入组中所有无线电的名称"
+    "Translated": "输入组中所有 Radio 的名称"
   },
   "The default selected value for the group": {
     "Translated": "组的默认选择值"
   },
   "Options to display a radio for in the group. Use either this or <code>AntDesign.RadioGroup`1.ChildContent</code>": {
-    "Translated": "在组中显示无线电的选项。使用这个或 <code>AntDesign.RadioGroup`1.ChildContent</code>"
+    "Translated": "在组中显示 Radio 的选项。使用这个或 <code>AntDesign.RadioGroup`1.ChildContent</code>"
   },
   "Whether to allow clear or not when clicking again": {
     "Translated": "再次点击时是否允许清除"
@@ -3341,6 +3326,9 @@
   "Set the vertical scroll, can also be used to specify the height of the scrolling area, can be set as a pixel value": {
     "Translated": "设置垂直滚动，也可以用来指定滚动区域的高度，可以设置为像素值"
   },
+  "Automatically raise the table height to full screen display": {
+    "Translated": "自动拉升表格高度至满屏显示"
+  },
   "Scroll bar width": {
     "Translated": "滚动条宽度"
   },
@@ -3836,14 +3824,8 @@
   "The icon in front of the node": {
     "Translated": "节点前的图标"
   },
-  "Obtain the parent data set": {
-    "Translated": "获取父数据集"
-  },
   "Setting Selection State": {
     "Translated": "设置选择状态"
-  },
-  "Remove the current node": {
-    "Translated": "删除当前节点"
   },
   "Expand the node": {
     "Translated": "展开节点"
@@ -4271,9 +4253,6 @@
   "A <code>ForwardRef</code> instance. Used to get a reference to the internal DOM.": {
     "Translated": "<code>一个 ForwardRef</code> 实例。用于获取对内部 DOM 的引用。"
   },
-  "Use to download a file. inherits <a href=\"/en-US/components/button\"><code>Button</code></a>": {
-    "Translated": "用于下载文件。继承 <a href=“/en-US/components/button”><code>Button</code></a>"
-  },
   "Placement of the overlay": {
     "Translated": "叠加层的放置"
   },
@@ -4375,9 +4354,6 @@
   },
   "Gets or sets the value of the TextArea.": {
     "Translated": "获取或设置 TextArea 的值。"
-  },
-  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
-    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
   },
   "Callback function that is called when open state changes.": {
     "Translated": "打开状态更改时调用的回调函数。"
@@ -4497,7 +4473,7 @@
     "Translated": "设置表中显示的列内容"
   },
   "Type of selection column, checkbox or radio.": {
-    "Translated": "选择列、复选框或单选按钮的类型。"
+    "Translated": "选择列、复选框或 Radio 的类型。"
   },
   "Whether the selection column is disabled.": {
     "Translated": "选择列是否被禁用。"
@@ -4651,5 +4627,35 @@
   },
   "Get or set the list of files that have been uploaded": {
     "Translated": "获取或设置已上传的文件列表"
+  },
+  "Add focus to picker input": {
+    "Translated": "将焦点添加到选取器输入"
+  },
+  "Remove focus from picker input": {
+    "Translated": "从选取器输入中删除焦点"
+  },
+  "Will use both attributes and rules in the same time.": {
+    "Translated": "将同时使用 attributes 和 rules。"
+  },
+  "The value of option.": {
+    "Translated": "option 的值。"
+  },
+  "The content of option.": {
+    "Translated": "选项的内容。"
+  },
+  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
+    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
+  },
+  "Check all nodes": {
+    "Translated": "检查所有节点"
+  },
+  "Uncheck all nodes": {
+    "Translated": "取消选中所有节点"
+  },
+  "Current Node Level": {
+    "Translated": "当前节点级别"
+  },
+  "Get the sibling nodes": {
+    "Translated": "获取同级节点"
   }
 }

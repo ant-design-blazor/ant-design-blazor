@@ -42,7 +42,7 @@
                             </div>
                         }
                         <div class="ant-table-container">
-                            @if (ScrollY != null)
+                            @if (ScrollY != null||AutoHeight)
                             {
                                 <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
                                     <table style="@TableLayoutStyle">
@@ -50,7 +50,7 @@
                                         @header()
                                     </table>
                                 </div>
-                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); @(UseItemsProvider?$"min-height:{(CssSizeLength)ScrollY};":"") @(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")">
+                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto auto;":"overflow-y: auto;") @(AutoHeight?"":$"max-height:{(CssSizeLength)ScrollY};") @((UseItemsProvider&&!AutoHeight)?$"min-height:{(CssSizeLength)ScrollY};":"") @(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")">
                                     <table style="@(ScrollX!=null?$"width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle" @ref="_tableRef">
                                         @colGroup(this, false)
                                         <tbody class="ant-table-tbody">

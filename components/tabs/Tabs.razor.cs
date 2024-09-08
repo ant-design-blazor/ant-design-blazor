@@ -300,6 +300,7 @@ namespace AntDesign
             if (Card is not null)
             {
                 Card.SetTabs(RenderTabs);
+                Card.SetTabPanels(RenderTabPanels);
             }
         }
 
@@ -313,6 +314,7 @@ namespace AntDesign
         {
             tabPane.SetIndex(_tabs.Count);
             _tabs.Add(tabPane);
+            StateHasChanged();
         }
 
         internal void Complete()
@@ -361,6 +363,8 @@ namespace AntDesign
                 {
                     await OnClose.InvokeAsync(tabKey);
                 }
+
+                StateHasChanged();
             }
         }
 
@@ -445,14 +449,20 @@ namespace AntDesign
                 OnChange.InvokeAsync(_activeTab.Key);
             }
             TryRenderInk();
-
-            Card?.SetBody(_activeTab.ChildContent);
+            if (Card?.Body == null)
+            {
+                Card?.SetBody(EmptyRenderFragment);
+            }
+            else
+            {
+                Card?.InvokeStateHasChagned();
+            }
 
             // render the classname of the actived tab
             // Needs to be optimized to render only one tab instead all the tabs
             StateHasChanged();
         }
-
+        private static RenderFragment EmptyRenderFragment => builder =>{};
         public override Task SetParametersAsync(ParameterView parameters)
         {
             if (parameters.IsParameterChanged(nameof(TabPosition), TabPosition))
