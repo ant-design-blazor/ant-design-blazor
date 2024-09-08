@@ -243,10 +243,11 @@ namespace AntDesign.Docs.Build.CLI.Command
                 var seeAlso = await GetAllLanguagesSeeAlsoDocs(componentDocs);
                 var faqs = GetAllLanguagesFaqDocs(componentName);
                 var demos = GetAllLanguagesDemos(componentName);
+                var docs = GetAllLanguagesComponentDocs(componentName);
 
                 // Build docs for multiple languages
-                componentsDocsByLanguage[Constants.EnglishLanguage].Add(GenerateApiDocumentation.ForComponent(Constants.EnglishLanguage, docAttribute, title, componentSummary, pageUrl, apiDocs, seeAlso, faqs, demos));
-                componentsDocsByLanguage[Constants.ChineseLanguage].Add(GenerateApiDocumentation.ForComponent(Constants.ChineseLanguage, docAttribute, title, componentSummary, pageUrl, apiDocs, seeAlso, faqs, demos));
+                componentsDocsByLanguage[Constants.EnglishLanguage].Add(GenerateApiDocumentation.ForComponent(Constants.EnglishLanguage, docAttribute, title, docs, pageUrl, apiDocs, seeAlso, faqs, demos));
+                componentsDocsByLanguage[Constants.ChineseLanguage].Add(GenerateApiDocumentation.ForComponent(Constants.ChineseLanguage, docAttribute, title, docs, pageUrl, apiDocs, seeAlso, faqs, demos));
             }
 
             // recognize componetns by doc files
@@ -346,6 +347,19 @@ namespace AntDesign.Docs.Build.CLI.Command
             {
                 var faqFileContent = File.ReadAllText(faqFile.FullName);
                 return Markdown.ToHtml(faqFileContent);
+            }
+
+            return null;
+        }
+
+        private string GetComponentDocs(string componentName, string language)
+        {
+            var componentFile = new FileInfo(Path.Join(_demoDirectory, $"Components\\{componentName}\\doc\\index.{language}.md"));
+            if (componentFile.Exists)
+            {
+                var faqFileContent = File.ReadAllText(componentFile.FullName);
+                (Dictionary<string, string> Meta, string desc, string apiDoc) docData = DocParser.ParseDemoDoc(faqFileContent);
+                return docData.desc;
             }
 
             return null;
@@ -646,6 +660,17 @@ namespace AntDesign.Docs.Build.CLI.Command
             {
                 { Constants.EnglishLanguage, GetFaqDocs(componentName, Constants.EnglishLanguage) },
                 { Constants.ChineseLanguage, GetFaqDocs(componentName, Constants.ChineseLanguage) }
+            };
+        }
+
+        private Dictionary<string, string> GetAllLanguagesComponentDocs(string componentName)
+        {
+            // Does not need translation - there should be one doc per language for these
+
+            return new Dictionary<string, string>
+            {
+                { Constants.EnglishLanguage, GetComponentDocs(componentName, Constants.EnglishLanguage) },
+                { Constants.ChineseLanguage, GetComponentDocs(componentName, Constants.ChineseLanguage) }
             };
         }
 
