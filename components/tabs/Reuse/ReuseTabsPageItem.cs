@@ -26,5 +26,11 @@ namespace AntDesign
         public bool KeepAlive { get; set; } = true;
 
         public int Order { get; set; } = 9999;
+
+        public string TypeName { get; set; }
+
+        public string Key { get; set; }
+
+        public bool NewPageForParams { get; set; }
     }
 }

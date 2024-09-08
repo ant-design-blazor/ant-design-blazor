@@ -2,12 +2,12 @@
 @inherits AntDomComponentBase
 @inject NavigationManager _navigationManager
 
-<Tabs Class="@Class" Style="@Style" Id="@Id" HideAdd Type="@TabType.EditableCard" @bind-ActiveKey="@ReuseTabsService.CurrentUrl" OnEdit="OnTabEdit" Draggable="@Draggable" Size="@Size">
+<Tabs Class="@Class" Style="@Style" Id="@Id" HideAdd Type="@TabType.EditableCard" @bind-ActiveKey="@ReuseTabsService.ActiveKey" OnEdit="OnTabEdit" Draggable="@Draggable" Size="@Size">
     @if (ReuseTabsService.Pages?.Any() == true)
     {
         @foreach (var item in ReuseTabsService.Pages)
         {
-            <TabPane @key="@item.Url" Key="@item.Url" Class="@TabPaneClass" Closable="item.Closable" ForceRender>
+            <TabPane @key="@item.Key" Key="@item.Key" Class="@TabPaneClass" Closable="item.Closable" ForceRender>
                 <TabTemplate>
                     @item.Title
                 </TabTemplate>

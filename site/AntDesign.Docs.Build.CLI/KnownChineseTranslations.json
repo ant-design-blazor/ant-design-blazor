@@ -125,9 +125,6 @@
   "Whether to support keyboard esc off": {
     "Translated": "是否支持键盘esc关闭"
   },
-  "Please replace it with Config": {
-    "Translated": "Please replace it with Config"
-  },
   "<p>A dropdown list.</p><h2>When To Use</h2><p> When there are more than a few options to choose from, you can wrap them in a <code>Dropdown</code>. By hovering or clicking on the trigger, a dropdown menu will appear, which allows you to choose an option and execute the relevant action. </p><h2>Two types</h2><p>There are 2 rendering approaches for <code>Dropdown</code>:</p><ol><li>Wraps child element (content of the <code>Dropdown</code>) with a <code>div</code> (default approach).</li><li> Child element is not wrapped with anything. This approach requires usage of <code>Unbound</code> tag inside <code>Dropdown</code> and depending on the child element type (please refer to the first example): <ul><li>html tag: has to have its <code>@ref</code> set to <code>@context.Current</code></li><li><code>Ant Design Blazor</code> component: has to have its <code>RefBack</code> attribute set to <code>@context</code>.</li></ul></li></ol>": {
     "Translated": "<p>下拉列表。</p><h2>何时使用</h2><p> 当有多个选项可供选择时，您可以将它们包装在 <code>Dropdown</code> 中.通过悬停或单击触发器，将出现一个下拉菜单，允许您选择一个选项并执行相关操作。 </p><h2>两种类型</h2><p><code>Dropdown</code>有两种渲染方式：</p><ol><li>包裹子元素（<code>的内容>Dropdown</code>) 和 <code>div</code>（默认方法）。</li><li> 子元素未用任何东西包裹。这种方法需要在 <code>Dropdown</code> 中使用 <code>Unbound</code> 标签，并根据子元素类型（请参考第一个示例）： <ul><li>html 标签：必须将其 <code>@ref</code> 设置为 <code>@context.Current</code></li><li><code>Ant Design Blazor</code> 组件：必须具有其 <code> RefBack</code> 属性设置为 <code>@context</code>。</li></ul></li></ol>"
   },
@@ -1564,18 +1561,6 @@
   },
   "If the drawer is visible or not": {
     "Translated": "抽屉是否可见"
-  },
-  "close drawer": {
-    "Translated": "关闭抽屉"
-  },
-  "Open drawer": {
-    "Translated": "打开抽屉"
-  },
-  "update drawer config which Visible=true": {
-    "Translated": "更新 Visible=true 的抽屉配置"
-  },
-  "update drawer config with a new options": {
-    "Translated": "使用新选项更新抽屉配置"
   },
   "Whether the dropdown arrow should be visible.": {
     "Translated": "下拉箭头是否可见。"

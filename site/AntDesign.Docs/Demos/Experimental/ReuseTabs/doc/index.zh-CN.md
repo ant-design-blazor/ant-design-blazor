@@ -71,6 +71,9 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 | PinUrl | 固定加载页面的 Url，在打开路由有参数的页面时需要，比如 `/order/1` | string | - |
 | KeepAlive| 是否缓存页面状态 | bool | true |
 | Order | 标签顺序 | int | 999 |
+| TypeName | 当前页面对应的类别 | string | - |
+| Key | 当前标签页的关键字 | string | - |
+| NewPageForParams | 是否针对具有不同参数的路由创建新的页面 | bool | false |
 
 ### IReuseTabsPage 接口
 
@@ -87,9 +90,9 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 | --- | --- | 
 | Pages | 当前打开过的页面信息列表，可自行用于缓存和恢复 | 
 | CreateTab(string pageUrl, RenderFragment? title = null) | 创建一个标签，但不导航到该页面，等导航到该页面时才初始化这个页面。|
-| ClosePage(string key) | 关闭指定key的页面，key 就是 url。 |
-| CloseOther(string key) | 关闭除了指定key的页面，或者设置了 `Cloasable=false` 或 `Pin=true` 的页面。 |
+| ClosePage(string url) | 关闭指定url的页面。 |
+| CloseOther(string url) | 关闭除了指定url的页面，或者设置了 `Cloasable=false` 或 `Pin=true` 的页面。 |
 | CloseAll() | 关闭除了设置了 `Cloasable=false` 或者 `Pin=true` 的页面。  |
 | CloseCurrent() | 关闭当前页面。 |
 | Update() | 更新 Tab 状态。当 `GetPageTitle()` 中引用的变量发生变化时，需要调用 `Update()` 来更新 tab 的显示。 |
-| ReloadPage(key) | 重新加载指定标签的页面，让页面组件重新初始化，且无需刷新浏览器。不传key时重新加载当前页面。 | 
+| ReloadPage(url) | 重新加载指定标签的页面，让页面组件重新初始化，且无需刷新浏览器。不传url时重新加载当前页面。 | 
