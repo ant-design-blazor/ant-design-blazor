@@ -4627,5 +4627,35 @@
   },
   "Get or set the list of files that have been uploaded": {
     "Translated": "获取或设置已上传的文件列表"
+  },
+  "Add focus to picker input": {
+    "Translated": "将焦点添加到选取器输入"
+  },
+  "Remove focus from picker input": {
+    "Translated": "从选取器输入中删除焦点"
+  },
+  "Will use both attributes and rules in the same time.": {
+    "Translated": "将同时使用 attributes 和 rules。"
+  },
+  "The value of option.": {
+    "Translated": "option 的值。"
+  },
+  "The content of option.": {
+    "Translated": "选项的内容。"
+  },
+  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
+    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
+  },
+  "Check all nodes": {
+    "Translated": "检查所有节点"
+  },
+  "Uncheck all nodes": {
+    "Translated": "取消选中所有节点"
+  },
+  "Current Node Level": {
+    "Translated": "当前节点级别"
+  },
+  "Get the sibling nodes": {
+    "Translated": "获取同级节点"
   }
 }

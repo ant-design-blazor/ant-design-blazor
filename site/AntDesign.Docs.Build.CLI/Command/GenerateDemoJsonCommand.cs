@@ -620,7 +620,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                     {
                         DescriptionContent = descriptionContent,
                         Code = File.ReadAllText(razorFile.FullName) ?? null,
-                        Name = demoType.Split('.').Last().Replace(".razor", ""),
+                        Name = descriptionFile.Name.Replace(".md", ""),
                         Type = demoType
                     };
 
