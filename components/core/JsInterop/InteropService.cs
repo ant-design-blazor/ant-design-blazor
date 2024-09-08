@@ -28,7 +28,7 @@ namespace AntDesign.JsInterop
             {
                 return await _js.InvokeAsync<T>(code, args);
             }
-            catch (Exception e)
+            catch
             {
                 throw;
             }
