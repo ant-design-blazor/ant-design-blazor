@@ -43,6 +43,13 @@ namespace AntDesign
             await base.OnFocusAsync(e);
         }
 
+        internal async override Task OnBlurAsync(FocusEventArgs e)
+        {
+            if (Component != null) await Component?.InputBlur(e);
+
+            await base.OnBlurAsync(e);
+        }
+
         protected override async Task OnkeyDownAsync(KeyboardEventArgs args)
         {
             await base.OnkeyDownAsync(args);

@@ -93,6 +93,7 @@ namespace AntDesign
             {
                 _options = value;
                 _optionDataItems = _options?.Select(x => new AutoCompleteDataItem<TOption>(x, x.ToString())).ToList() ?? new List<AutoCompleteDataItem<TOption>>();
+                UpdateFilteredOptions();
             }
         }
 
@@ -243,6 +244,7 @@ namespace AntDesign
 
         private object _selectedValue;
         private object _activeValue;
+        private bool _isFocused = false;
 
         void IAutoCompleteRef.SetInputComponent(IAutoCompleteInput input)
         {
@@ -253,11 +255,18 @@ namespace AntDesign
 
         Task IAutoCompleteRef.InputFocus(FocusEventArgs e)
         {
+            _isFocused = true;
             if (!_isOptionsZero)
             {
                 this.OpenPanel();
             }
 
+            return Task.CompletedTask;
+        }
+
+        Task IAutoCompleteRef.InputBlur(FocusEventArgs e)
+        {
+            _isFocused = false;
             return Task.CompletedTask;
         }
 
@@ -333,7 +342,7 @@ namespace AntDesign
         {
             if (_optionDataItems != null)
             {
-                if (FilterExpression != null && AllowFilter == true && _selectedValue != null)
+                if (FilterExpression != null && AllowFilter == true && !string.IsNullOrEmpty(_selectedValue?.ToString()))
                     return _optionDataItems.Where(x => FilterExpression(x, _selectedValue?.ToString())).ToList();
                 else
                     return _optionDataItems;
@@ -423,6 +432,10 @@ namespace AntDesign
         {
             _filteredOptions = GetOptionItems();
             _isOptionsZero = _filteredOptions.Count == 0 && Options != null;
+            if (_isFocused && !_isOptionsZero)
+            {
+                OpenPanel();
+            }
         }
 
         private async Task ResetActiveItem()
