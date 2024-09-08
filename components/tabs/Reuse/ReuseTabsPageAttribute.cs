@@ -23,6 +23,6 @@ namespace AntDesign
         public int Order { get; set; } = 999;
 
         // Whether to create a new page for route with different params
-        public bool NewPageForParams { get; set; }
+        public bool NewPageForParams { get; set; } = true;
     }
 }
