@@ -314,6 +314,7 @@ namespace AntDesign
         {
             tabPane.SetIndex(_tabs.Count);
             _tabs.Add(tabPane);
+            StateHasChanged();
         }
 
         internal void Complete()
@@ -362,6 +363,8 @@ namespace AntDesign
                 {
                     await OnClose.InvokeAsync(tabKey);
                 }
+
+                StateHasChanged();
             }
         }
 
@@ -454,7 +457,6 @@ namespace AntDesign
             {
                 Card?.InvokeStateHasChagned();
             }
-            
 
             // render the classname of the actived tab
             // Needs to be optimized to render only one tab instead all the tabs
