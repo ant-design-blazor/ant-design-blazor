@@ -19,16 +19,15 @@ timeline: true
 
 `2024-09-09`
 
-- 🐞 fix(module: tree): recover pointer events. [#4176](https://github.com/ant-design-blazor/ant-design-blazor/pull/4176) [@ElderJames](https://github.com/ElderJames)
-- 🐞 fix(module: tabs): add end remove. [#4173](https://github.com/ant-design-blazor/ant-design-blazor/pull/4173) [@ElderJames](https://github.com/ElderJames)
-- 🐞 fix(module: select): fix reference and remove the duplicaed div. [#4175](https://github.com/ant-design-blazor/ant-design-blazor/pull/4175) [@ElderJames](https://github.com/ElderJames)
-- 🐞 fix(module: auto-complete): open panel immediately when options was changed. [#4172](https://github.com/ant-design-blazor/ant-design-blazor/pull/4172) [@ElderJames](https://github.com/ElderJames)
-- 🔥 Add AutoHeight property to table. [#4168](https://github.com/ant-design-blazor/ant-design-blazor/pull/4168) [@ysj265](https://github.com/ysj265)
-- 🐞 fix(module: drawer): closing effects. [#4166](https://github.com/ant-design-blazor/ant-design-blazor/pull/4166) [@ElderJames](https://github.com/ElderJames)
-- 🐞 Fix the issue where the Tabs under the Card cannot remember the input status. [#4164](https://github.com/ant-design-blazor/ant-design-blazor/pull/4164) [@ysj265](https://github.com/ysj265)
-- 🐞 Update the Focus method access level. [#4153](https://github.com/ant-design-blazor/ant-design-blazor/pull/4153) [@youcaiyouyoucai](https://github.com/youcaiyouyoucai)
-- 🛠 refactor(module: form): make validate mode default to Complex. [#4163](https://github.com/ant-design-blazor/ant-design-blazor/pull/4163) [@ElderJames](https://github.com/ElderJames)
-
+- 🔥 Add Table AutoHeight parameter to fill the height of the page automatically. [#4168](https://github.com/ant-design-blazor/ant-design-blazor/pull/4168) [@ysj265](https://github.com/ysj265)
+- 🐞 Fixed Tree recover pointer events. [#4176](https://github.com/ant-design-blazor/ant-design-blazor/pull/4176) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tabs adding and removing. [#4173](https://github.com/ant-design-blazor/ant-design-blazor/pull/4173) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Select reference and remove the duplicaed div. [#4175](https://github.com/ant-design-blazor/ant-design-blazor/pull/4175) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Auto-complete open panel immediately when options was changed. [#4172](https://github.com/ant-design-blazor/ant-design-blazor/pull/4172) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Drawer closing effects. [#4166](https://github.com/ant-design-blazor/ant-design-blazor/pull/4166) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Card within Tabs cannot keep the input status. [#4164](https://github.com/ant-design-blazor/ant-design-blazor/pull/4164) [@ysj265](https://github.com/ysj265)
+- 🐞 Refactor DatePicker that make some methods public. [#4153](https://github.com/ant-design-blazor/ant-design-blazor/pull/4153) [@youcaiyouyoucai](https://github.com/youcaiyouyoucai)
+- 🛠 Refactor Form that make validate mode default to Complex. [#4163](https://github.com/ant-design-blazor/ant-design-blazor/pull/4163) [@ElderJames](https://github.com/ElderJames)
 
 ### 0.20.3
 
