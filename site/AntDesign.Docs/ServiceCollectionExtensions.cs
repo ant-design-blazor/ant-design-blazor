@@ -37,6 +37,7 @@ namespace Microsoft.Extensions.DependencyInjection
             //}, ServiceLifetime.Singleton);
             //services.AddLocalization(options => options.ResourcesPath = "Resources");
 
+            services.AddScoped<CompilerService>();
             return services;
         }
     }
