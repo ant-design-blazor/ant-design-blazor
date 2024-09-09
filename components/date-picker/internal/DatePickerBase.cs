@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.core.Extensions;
 using AntDesign.Core;
+using AntDesign.Core.Documentation;
 using AntDesign.Datepicker.Locale;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
@@ -855,7 +856,8 @@ namespace AntDesign
         /// <summary>
         /// Close the popover
         /// </summary>
-        internal void Close()
+        [PublicApi("1.0.0")]
+        public void Close()
         {
             _duringManualInput = false;
             _dropDown?.Hide();
