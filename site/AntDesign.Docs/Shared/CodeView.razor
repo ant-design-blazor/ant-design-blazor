@@ -9,9 +9,8 @@
         @((MarkupString)_error)
     </Alert>
 }
-<Spin Spinning="_loading">
-    <Monaco Value=@_source Language="@_language" ValueChanged=@OnValueChanged @ref="@_monaco" />
-</Spin>
+
+<Monaco Value=@_source Language="@_language" ValueChanged=@OnValueChanged @ref="@_monaco" />
 
 @code {
     private string Copy => $"copy('{_monaco?.Id}')";
