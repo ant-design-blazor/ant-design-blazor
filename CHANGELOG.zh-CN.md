@@ -15,6 +15,20 @@ timeline: true
 
 ---
 
+### 0.20.4
+
+`2024-09-09`
+
+- 🐞 修复 Tree 恢复 pointer events。[#4176](https://github.com/ant-design-blazor/ant-design-blazor/pull/4176) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tabs 的新增和删除。[#4173](https://github.com/ant-design-blazor/ant-design-blazor/pull/4173) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Select 元素引用和重复的div。[#4175](https://github.com/ant-design-blazor/ant-design-blazor/pull/4175) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 AutoComplete 应在 options 赋值后立即打开选择面板。[#4172](https://github.com/ant-design-blazor/ant-design-blazor/pull/4172) [@ElderJames](https://github.com/ElderJames)
+- 🔥 新增 Table 支持自动高度 AutoHeight 属性。[#4168](https://github.com/ant-design-blazor/ant-design-blazor/pull/4168) [@ysj265](https://github.com/ysj265)
+- 🐞 修复 Drawer 关闭效果。[#4166](https://github.com/ant-design-blazor/ant-design-blazor/pull/4166) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Card 下面的 Tabs不能记忆输入状态的问题。[#4164](https://github.com/ant-design-blazor/ant-design-blazor/pull/4164) [@ysj265](https://github.com/ysj265)
+- 🐞 修复 DatePicker 的公开方法。[#4153](https://github.com/ant-design-blazor/ant-design-blazor/pull/4153) [@youcaiyouyoucai](https://github.com/youcaiyouyoucai)
+- 🛠 重构 Form 的验证模式默认混合 。[#4163](https://github.com/ant-design-blazor/ant-design-blazor/pull/4163) [@ElderJames](https://github.com/ElderJames)
+
 ### 0.20.3
 
 `2024-09-03`
