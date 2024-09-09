@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace AntDesign.Core.Helpers
 {
-    public static class PropertyAccessHelper
+    internal static class PropertyAccessHelper
     {
         public const string DefaultPathSeparator = ".";
 

@@ -11,26 +11,26 @@
             </ChildContent>
         </TabPane>
 
-        <TabPane Key="2">
-            <TabTemplate>Example 2</TabTemplate>
-            <ChildContent>
-                <Line @ref="chart2" Data="data2" Config="config2" />
-            </ChildContent>
-        </TabPane>
+         <TabPane Key="2">
+             <TabTemplate>Example 2</TabTemplate>
+             <ChildContent>
+                 <Line @ref="chart2" Data="data2" Config="config2" />
+             </ChildContent>
+         </TabPane>
 
-        <TabPane Key="3">
-            <TabTemplate>Example 3</TabTemplate>
-            <ChildContent>
-                <Line @ref="chart3" Data="data3" Config="config3" />
-            </ChildContent>
-        </TabPane>
+         <TabPane Key="3">
+             <TabTemplate>Example 3</TabTemplate>
+             <ChildContent>
+                 <Line @ref="chart3" Data="data3" Config="config3" />
+             </ChildContent>
+         </TabPane>
 
-        <TabPane Key="4">
-            <TabTemplate>Example 4</TabTemplate>
-            <ChildContent>
-                <Line @ref="chart4" Data="data4" Config="config4" />
-            </ChildContent>
-        </TabPane>
+         <TabPane Key="4">
+             <TabTemplate>Example 4</TabTemplate>
+             <ChildContent>
+                 <Line @ref="chart4" Data="data4" Config="config4" />
+             </ChildContent>
+         </TabPane>
     </Tabs>
 
 @code{
@@ -96,9 +96,9 @@
         XField = "year",
         YField = "value",
         SeriesField = "country",
-        XAxis = new ValueCatTimeAxis
+        XAxis = new ValueCatTimeAxis()
         {
-            Type = "dateTime",
+            Type = "timeCat",
             TickCount = 5
         }
     };
@@ -126,7 +126,7 @@
         XAxis = new ValueCatTimeAxis
         {
             Visible = true,
-            Type = "dateTime",
+                Type = "timeCat",
             TickCount = 5
         },
         YAxis = new ValueAxis
@@ -156,7 +156,7 @@
         XAxis = new ValueCatTimeAxis
         {
             Visible = true,
-            Type = "dateTime",
+                Type = "timeCat",
             Title = new BaseAxisTitle
             {
                 Text = "x-axis title",

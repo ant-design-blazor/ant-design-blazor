@@ -1,10 +1,14 @@
-﻿namespace AntDesign.Core.HashCodes
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+namespace AntDesign.Core.HashCodes
 {
     /// <summary>
     /// Provides a hash comparison of two parameter values
     /// </summary>
     /// <typeparam name="TParameter"></typeparam>
-    static class HashCode<TParameter>
+    internal static class HashCode<TParameter>
     {
         private static readonly HashCodeProvider _provider = HashCodeProvider.Create(typeof(TParameter));
 

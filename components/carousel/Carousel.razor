@@ -34,14 +34,17 @@
                 }
             </div>
         </div>
-        <ul class="@($"slick-dots slick-dots-{DotPosition.ToString().ToLower()}")" style="display: block;">
-            @for (int i = 0; i < _slicks.Count; i++)
-            {
-                int index = i;
-                <li class="@(_slicks[index].Active?"slick-active":string.Empty)">
-                    <button @onclick="(e)=>Activate(_slicks[index])">@(index + 1)</button>
-                </li>
-            }
-        </ul>
+        @if (Dots)
+        {
+            <ul class="@($"slick-dots slick-dots-{DotPosition.ToString().ToLower()} {DotsClass}")" style="display: block;">
+                @for (int i = 0; i < _slicks.Count; i++)
+                {
+                    int index = i;
+                    <li class=" @(_slicks[index].Active?"slick-active":string.Empty)">
+                        <button @onclick="(e)=>Activate(_slicks[index])">@(index + 1)</button>
+                    </li>
+                }
+            </ul>
+        }
     </div>
 </div>

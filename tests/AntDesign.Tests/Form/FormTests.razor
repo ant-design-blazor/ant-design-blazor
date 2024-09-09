@@ -1,0 +1,57 @@
+﻿@inherits AntDesignTestBase
+
+@code {
+
+    [Fact]
+    public void Form_Should_Rendered_With_Tabs()
+    {
+        //Arrange
+        JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+            .SetResult(new AntDesign.JsInterop.Window());
+        JSInterop.SetupVoid("AntDesign.interop.styleHelper.addCls", _ => true);
+        JSInterop.Setup<HtmlElement>("AntDesign.interop.domInfoHelper.getInfo", _ => true);
+        JSInterop.Setup<Dictionary<string, HtmlElement>>("AntDesign.interop.domInfoHelper.getElementsInfo", _ => true);
+        var model = new Model
+        {
+            Text = "test"
+        };
+
+        //Act
+        var cut = Render<Tabs>(
+            @<Tabs>
+                <TabPane Key="Edit" ForceRender>
+                    <TabTemplate>
+                        <Icon Type="form" Theme="outline"/><span>Общие данные</span>
+                    </TabTemplate>
+                    <ChildContent>
+                        <Form TModel=Model
+                              Model="@model">
+                            <ChildContent >
+                                <FormItem>
+                                    <InputGroup Compact>
+                                        <FormItem >
+                                            <Input @bind-Value=context.Text/>
+                                        </FormItem>
+                                    </InputGroup>
+                                </FormItem>
+                            </ChildContent>
+                        </Form>
+                    </ChildContent>
+                </TabPane>
+            </Tabs>
+        );
+
+        // Assert
+        var input = cut.FindComponent<AntDesign.Input<string>>();
+        input.Find("input").GetAttribute("value").Should().Be("test");
+    }
+
+    public class Model
+    {
+        /// <summary>
+        /// Код объекта размещения
+        /// </summary>
+        public string Text { get; set; }
+    }
+
+}

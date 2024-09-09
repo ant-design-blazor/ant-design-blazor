@@ -5,14 +5,14 @@
         <TabPane Key="1">
             <TabTemplate>示例1</TabTemplate>
             <ChildContent>
-                <Liquid TItem="string" Config="config1" />
+                <Liquid Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
             <TabTemplate>示例2</TabTemplate>
             <ChildContent>
-                <Liquid TItem="string" Config="config2" />
+                <Liquid Config="config2" />
             </ChildContent>
         </TabPane>
     </Tabs>
@@ -30,7 +30,7 @@
         },
         Min = 0,
         Max = 10000,
-        Value = 5639
+        Percent = new decimal(0.5639)
     };
 
     #endregion 示例1
@@ -51,7 +51,7 @@
         },
         Min = 0,
         Max = 10000,
-        Value = 5639,
+        Percent = new decimal(0.5639),
         Statistic = new LiquidStatisticStyle
         {
             //Formatter

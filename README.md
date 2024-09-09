@@ -128,6 +128,13 @@ Options for the template：
   @using AntDesign
   ```
 
+- Introduce CSS and JS files in appropriate places. The WebApp project was introduced in App.razor, and the WebAssembly project was introduced in index.html
+
+  ```html
+    <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
+    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+  ```
+
 - To display the pop-up component dynamically, you need to add the `<AntContainer />` component in `App.razor`.
 
   - For Blazor WebApp, you also need to specify render mode  to `<Routes />` for interactivity.

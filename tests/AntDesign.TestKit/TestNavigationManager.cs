@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Tests
@@ -7,7 +11,7 @@ namespace AntDesign.Tests
     public class TestNavigationManager : NavigationManager
     {
         public delegate void NavigatedCallback(string uri, bool forceLoad);
-        
+
         public TestNavigationManager()
         {
             Initialize("http://localhost/", "http://localhost/");

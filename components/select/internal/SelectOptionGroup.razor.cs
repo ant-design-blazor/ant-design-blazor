@@ -10,7 +10,8 @@ namespace AntDesign.Select.Internal
     {
         private const string ClassNamePrefix = "ant-select-item-group";
         [CascadingParameter] internal SelectBase<TItemValue, TItem> SelectParent { get; set; }
-        string _oldGroupName = string.Empty;
+
+        private string _oldGroupName = string.Empty;
 
         protected override void OnInitialized()
         {

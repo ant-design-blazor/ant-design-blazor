@@ -3,51 +3,23 @@
 
     <Tabs>
         <TabPane Key="1">
-            <TabTemplate>示例1</TabTemplate>
+            <TabTemplate>基础子弹图</TabTemplate>
             <ChildContent>
-                <Bullet TItem="string" Config="config1" />
+                <Bullet Config="config1" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="2">
-            <TabTemplate>示例2</TabTemplate>
+        <TabTemplate>基础子弹图-多颜色范围区间</TabTemplate>
             <ChildContent>
-                <Bullet TItem="string" Config="config2" OtherConfig="config2_1" />
+            <Bullet Config="config2" OtherConfig="otherconfig2" />
             </ChildContent>
         </TabPane>
 
         <TabPane Key="3">
-            <TabTemplate>示例3</TabTemplate>
+            <TabTemplate>基础子弹图-分组</TabTemplate>
             <ChildContent>
-                <Bullet TItem="string" Config="config3" OtherConfig="config3_1" />
-            </ChildContent>
-        </TabPane>
-
-        <TabPane Key="4">
-            <TabTemplate>示例4</TabTemplate>
-            <ChildContent>
-                <Bullet TItem="string" Config="config4" OtherConfig="config4_1" />
-            </ChildContent>
-        </TabPane>
-
-        <TabPane Key="5">
-            <TabTemplate>示例5</TabTemplate>
-            <ChildContent>
-                <Bullet TItem="string" Config="config5" OtherConfig="config5_1" />
-            </ChildContent>
-        </TabPane>
-
-        <TabPane Key="6">
-            <TabTemplate>示例6</TabTemplate>
-            <ChildContent>
-                <Bullet TItem="string" Config="config6" />
-            </ChildContent>
-        </TabPane>
-
-        <TabPane Key="7">
-            <TabTemplate>示例7</TabTemplate>
-            <ChildContent>
-                <Bullet TItem="string" Config="config7" OtherConfig="config7_1" />
+            <Bullet Config="config6" OtherConfig="otherconfig2" />
             </ChildContent>
         </TabPane>
     </Tabs>
@@ -63,8 +35,9 @@
             new BulletViewConfigData
             {
                 Title = "满意度",
-                Measures = new[] {83},
-                Targets = new[] {90}
+                Measures = new int[]{83 },
+                Targets = new int[]{90 },
+                Ranges = new double[]{100},
             }
         },
         RangeMax = 100,
@@ -77,113 +50,99 @@
         {
             Visible = true,
             Text = "设定子弹图的目标值(goal)和当前进度(value)，即可展示子弹图进度情况；若没有设置最大值(max)，则最大值等于目标值"
-        }
+        },
+        TargetField = "target",
+        RangeField = "ranges",
+        MeasureField = "measures",
+        XField = "title"
     };
 
     #endregion 示例1
 
     #region 示例2
 
-    readonly BulletConfig config2 = new BulletConfig
-    {
-        Title = new Title
-        {
-            Visible = true,
-            Text = "基础子弹图-带多颜色范围区间"
-        },
-        Description = new Description
-        {
-            Visible = true,
-            Text = "自定义图例，表示各颜色范围区间代表的含义（如差、良、优）"
-        },
-        Data = new[]
-        {
-            new BulletViewConfigData
-            {
-                Title = "满意度",
-                Measures = new int[] {83},
-                Targets = new int[] {90},
-                Ranges = new double[] {0, 0.6, 0.9, 1},
-
-            }
-        },
-        RangeMax = 100,
-        RangeColors = new string[] { "#FFB1AC", "#FFDBA2", "#B4EBBF" }
-    };
-
-    readonly object config2_1 = new
+    object otherconfig2 = new
     {
         legend = new
         {
             custom = true,
-            item = new []
+            items = new[]
             {
-                        new
-                        {
-                            name = "实际进度",  // 图例项的文本内容
-                            marker = new
-                            {
-                                symbol = "square",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                                style = new
-                                {
-                                    fill = "#5B8FF9", // 该图例项 marker 的填充颜色
-                               
-                                }
-                            }
-                        },
-                        new
-                        {
-                            name = "目标值",  // 图例项的文本内容
-                            marker = new
-                            {
-                                symbol = "square",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                                style = new
-                                {
-                                    fill = "#5B8FF9", // 该图例项 marker 的填充颜色
-                                }
-                            }
-                        },
-                        new
-                        {
-                            name = "差",  // 图例项的文本内容
-                            marker = new
-                            {
-                                symbol = "square",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                                style = new
-                                {
-                                    fill = "#FFB1AC", // 该图例项 marker 的填充颜色
-                                }
-                            }
-                        },
-                        new
-                        {
-                            name = "良",  // 图例项的文本内容
-                            marker = new
-                            {
-                                symbol = "square",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                                style = new
-                                {
-                                    fill = "#FFDBA2", // 该图例项 marker 的填充颜色
-                                }
-                            }
-                        },
-                        new
-                        {
-                            name = "优",  // 图例项的文本内容
-                            marker = new
-                            {
-                                symbol = "square",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                                style = new
-                                {
-                                    fill = "#B4EBBF", // 该图例项 marker 的填充颜色
-                                }
-                            }
-                        },
+            new {
+                name ="实际进度",
+                marker =new  {
+                    symbol = "square",
+                    style = new
+                    {
+                        fill = "#5B8FF9",
+                    },
+                }
+            },
+           new {
+               name ="目标值",
+               marker =new  {
+                   symbol = "line",
+                   style = new
+                   {
+                       fill = "#5B8FF9",
+                   },
+               }
+           },
+             new {
+                 name ="差",
+                 marker =new  {
+                     symbol = "square",
+                     style = new
+                     {
+                         fill = "#FFB1AC",
+                     },
+                 }
+             },
 
-                    }
+             new {
+                 name ="良",
+                 marker =new  {
+                     symbol = "square",
+                     style = new
+                     {
+                         fill = "#FFDBA2",
+                     },
+                 }
+             },
+            new {
+                name ="优",
+                marker =new  {
+                    symbol = "square",
+                    style = new
+                    {
+                        fill = "#B4EBBF",
+                    },
+                }
+            },
+         }
+
         }
     };
 
+    BulletConfig config2 = new BulletConfig()
+        {
+            Data = new BulletViewConfigData[]{
+            new BulletViewConfigData
+            {
+                Title = "满意度",
+                Measures = new [] {80 },
+                Targets = new [] {85 },
+                Ranges = new double[] {40,70,100 },
+            },
+        },
+            TargetField = "target",
+            RangeField = "ranges",
+            MeasureField = "measures",
+            XField = "title",
+            RangeColors = new string[] { "#FFB1AC", "#FFDBA2", "#B4EBBF" },
+
+
+        };
 
     #endregion 示例2
 
@@ -211,6 +170,10 @@
                 Ranges = new double[]{ 0, 0.6, 0.9, 1 },
             }
         },
+        TargetField = "target",
+        RangeField = "ranges",
+        MeasureField = "measures",
+        XField = "title",
         RangeMax = 100,
         RangeColors = new string[] { "#FFB1AC", "#FFDBA2", "#B4EBBF" },
     };
@@ -276,117 +239,125 @@
 
     #endregion 示例3
 
-    #region 示例4
+    // #region 示例4
 
-    readonly BulletConfig config4 = new BulletConfig
-    {
-        Data = new[]
-        {
-            new BulletViewConfigData
-            {
-                Title = "满意度",
-                Measures = new[] {87},
-                Targets = new[] {80,95}
-            }
-        },
-        RangeMax = 100,
-        RangeColors = new string[] { "#5B8FF9", "#5AD8A6" },
-        Title = new Title
-        {
-            Visible = true,
-            Text = "基础子弹图-多目标值"
-        },
-        Description = new Description
-        {
-            Visible = true,
-            Text = "设定子弹图的目标值(goal)和当前进度(value)，即可展示子弹图进度情况；若没有设置最大值(max)，则最大值等于目标值"
-        },
-    };
+    // readonly BulletConfig config4 = new BulletConfig
+    // {
+    //     Data = new[]
+    //     {
+    //         new BulletViewConfigData
+    //         {
+    //             Title = "满意度",
+    //             Measures = new[] {87},
+    //             Targets = new[] {80,95}
+    //         }
+    //     },
+    //     RangeMax = 100,
+    //     RangeColors = new string[] { "#5B8FF9", "#5AD8A6" },
+    //     Title = new Title
+    //     {
+    //         Visible = true,
+    //         Text = "基础子弹图-多目标值"
+    //     },
+    //     Description = new Description
+    //     {
+    //         Visible = true,
+    //         Text = "设定子弹图的目标值(goal)和当前进度(value)，即可展示子弹图进度情况；若没有设置最大值(max)，则最大值等于目标值"
+    //     },
+    //     TargetField = "target",
+    //     RangeField = "ranges",
+    //     MeasureField = "measures",
+    //     XField = "title"
+    // };
 
-    readonly object config4_1 = new
-    {
-        legend = new
-        {
-            custom = true,
-            item = new[]
-            {
-                    new
-                    {
-                        name = "实际进度",  // 图例项的文本内容
-                        marker = new
-                        {
-                            symbol = "square",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                            style = new
-                            {
-                                fill = "#5B8FF9", // 该图例项 marker 的填充颜色                              
-                            }
-                        }
-                    },
-                    new
-                    {
-                        name = "目标值 1",  // 图例项的文本内容
-                        marker = new
-                        {
-                            symbol = "line",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                            style = new
-                            {
-                                fill = "#5B8FF9", // 该图例项 marker 的填充颜色
-                            }
-                        }
-                    },
-                    new
-                    {
-                        name = "目标值 2",  // 图例项的文本内容
-                        marker = new
-                        {
-                            symbol = "line",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                            style = new
-                            {
-                                fill = "#5AD8A6", // 该图例项 marker 的填充颜色
-                            }
-                        }
-                    },
-            }
-        }
-    };
+    // readonly object config4_1 = new
+    // {
+    //     legend = new
+    //     {
+    //         custom = true,
+    //         item = new[]
+    //         {
+    //                 new
+    //                 {
+    //                     name = "实际进度",  图例项的文本内容
+    //                     marker = new
+    //                     {
+    //                         symbol = "square",  该图例项 marker 的形状，参见 marker 参数的说明
+    //                         style = new
+    //                         {
+    //                             fill = "#5B8FF9", 该图例项 marker 的填充颜色                              
+    //                         }
+    //                     }
+    //                 },
+    //                 new
+    //                 {
+    //                     name = "目标值 1",  图例项的文本内容
+    //                     marker = new
+    //                     {
+    //                         symbol = "line",  该图例项 marker 的形状，参见 marker 参数的说明
+    //                         style = new
+    //                         {
+    //                             fill = "#5B8FF9", 该图例项 marker 的填充颜色
+    //                         }
+    //                     }
+    //                 },
+    //                 new
+    //                 {
+    //                     name = "目标值 2",  图例项的文本内容
+    //                     marker = new
+    //                     {
+    //                         symbol = "line",  该图例项 marker 的形状，参见 marker 参数的说明
+    //                         style = new
+    //                         {
+    //                             fill = "#5AD8A6", 该图例项 marker 的填充颜色
+    //                         }
+    //                     }
+    //                 },
+    //         }
+    //     }
+    // };
 
-    #endregion 示例4
+    // #endregion 示例4
 
-    #region 示例5
+    // #region 示例5
 
-    readonly BulletConfig config5 = new BulletConfig
-    {
-        Data = new[]
-    {
-            new BulletViewConfigData
-            {
-                Title = "满意度",
-                Measures = new[] {30, 40, 10, 20},
-                Targets = new[] {90}
-            }
-        },
-        RangeMax = 100,
-        Title = new Title
-        {
-            Visible = true,
-            Text = "堆叠子弹图"
-        },
-        Description = new Description
-        {
-            Visible = true,
-            Text = "设定子弹图的目标值(goal)和当前进度(value)，即可展示子弹图进度情况；若没有设置最大值(max)，则最大值等于目标值",
-        },
-        Label = new
-        {
-            offset = -6,
-        },
-    };
+    // readonly BulletConfig config5 = new BulletConfig
+    // {
+    //     Data = new[]
+    // {
+    //         new BulletViewConfigData
+    //         {
+    //             Title = "满意度",
+    //             Measures = new[] {30, 40, 10, 20},
+    //             Targets = new[] {90}
+    //         }
+    //     },
+    //     RangeMax = 100,
+    //     Title = new Title
+    //     {
+    //         Visible = true,
+    //         Text = "堆叠子弹图"
+    //     },
+    //     Description = new Description
+    //     {
+    //         Visible = true,
+    //         Text = "设定子弹图的目标值(goal)和当前进度(value)，即可展示子弹图进度情况；若没有设置最大值(max)，则最大值等于目标值",
+    //     },
+    //     Label = new
+    //     {
+    //         offset = -6,
+    //     },
+    //     TargetField = "target",
+    //     RangeField = "ranges",
+    //     MeasureField = "measures",
+    //     XField = "title"
+    // };
 
-    readonly object config5_1 = new
-    {
-    };
+    // readonly object config5_1 = new
+    // {
+    // };
 
-    #endregion 示例5
+    // #endregion 示例5
 
     #region 示例6
 
@@ -397,24 +368,28 @@
             new BulletViewConfigData
             {
                 Title = "广州",
+                Ranges = new double[] {30,90,120 },
                 Measures = new[] {83},
                 Targets = new[] {90}
             },
             new BulletViewConfigData
             {
                 Title = "深圳",
+                Ranges = new double[] {30,90,120 },
                 Measures = new[] {13},
                 Targets = new[] {90}
             },
             new BulletViewConfigData
             {
                 Title = "珠海",
+                Ranges = new double[] {30,90,120 },
                 Measures = new[] {45},
                 Targets = new[] {80}
             },
             new BulletViewConfigData
             {
                 Title = "汕头",
+                Ranges = new double[] {30,90,120 },
                 Measures = new[] {83},
                 Targets = new[] {70}
             },
@@ -429,133 +404,141 @@
         {
             Visible = true,
             Text = "当data数组由多个值时，可以展示多条子弹图进行进度对比"
-        }
+        },
+        TargetField = "target",
+        RangeField = "ranges",
+        MeasureField = "measures",
+        XField = "title"
     };
 
     #endregion 示例6
 
-    #region 示例7
+    // #region 示例7
 
-    readonly BulletConfig config7 = new BulletConfig
-    {
-        Title = new Title
-        {
-            Visible = true,
-            Text = "分组子弹图-带颜色范围区间"
-        },
-        Data = new[]
-        {
-            new BulletViewConfigData
-            {
-                Title = "广州",
-                Measures = new[] {83},
-                Targets = new[] {90},
-                Ranges = new double[]{ 0, 0.6, 0.9, 1 },
+    // readonly BulletConfig config7 = new BulletConfig
+    // {
+    //     Title = new Title
+    //     {
+    //         Visible = true,
+    //         Text = "分组子弹图-带颜色范围区间"
+    //     },
+    //     Data = new[]
+    //     {
+    //         new BulletViewConfigData
+    //         {
+    //             Title = "广州",
+    //             Measures = new[] {83},
+    //             Targets = new[] {90},
+    //             Ranges = new double[]{ 0, 0.6, 0.9, 1 },
 
-            },
-            new BulletViewConfigData
-            {
-                Title = "深圳",
-                Measures = new[] {73},
-                Targets = new[] {90},
-                Ranges = new double[]{ 0, 0.6, 0.9, 1 },
-            },
-            new BulletViewConfigData
-            {
-                Title = "珠海",
-                Measures = new[] {65},
-                Targets = new[] {80},
-                Ranges = new double[]{ 0, 0.6, 0.75, 1 },
-            },
-            new BulletViewConfigData
-            {
-                Title = "汕头",
-                Measures = new[] {83},
-                Targets = new[] {70},
-                Ranges = new double[]{ 0, 0.6, 0.75, 1 },
-            },
-        },
-        RangeMax = 100,
-        RangeColors = new string[] { "#FFB1AC", "#FFDBA2", "#B4EBBF" },
-        Legend = new Legend
-        {
-            Custom = true,
-        }
-    };
+    //         },
+    //         new BulletViewConfigData
+    //         {
+    //             Title = "深圳",
+    //             Measures = new[] {73},
+    //             Targets = new[] {90},
+    //             Ranges = new double[]{ 0, 0.6, 0.9, 1 },
+    //         },
+    //         new BulletViewConfigData
+    //         {
+    //             Title = "珠海",
+    //             Measures = new[] {65},
+    //             Targets = new[] {80},
+    //             Ranges = new double[]{ 0, 0.6, 0.75, 1 },
+    //         },
+    //         new BulletViewConfigData
+    //         {
+    //             Title = "汕头",
+    //             Measures = new[] {83},
+    //             Targets = new[] {70},
+    //             Ranges = new double[]{ 0, 0.6, 0.75, 1 },
+    //         },
+    //     },
+    //     RangeMax = 100,
+    //     RangeColors = new string[] { "#FFB1AC", "#FFDBA2", "#B4EBBF" },
+    //     Legend = new Legend
+    //     {
+    //         Custom = true,
+    //     },
+    //     TargetField = "target",
+    //     RangeField = "ranges",
+    //     MeasureField = "measures",
+    //     XField = "title"
+    // };
 
-    readonly object config7_1 = new
-    {
-        legend = new
-        {
-            custom = true,
-            item = new[]
-                    {
-                        new
-                        {
-                            name = "实际进度",  // 图例项的文本内容
-                            marker = new
-                            {
-                                symbol = "square",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                                style = new
-                                {
-                                    fill = "#5B8FF9", // 该图例项 marker 的填充颜色
+    // readonly object config7_1 = new
+    // {
+    //     legend = new
+    //     {
+    //         custom = true,
+    //         item = new[]
+    //                 {
+    //                     new
+    //                     {
+    //                         name = "实际进度",  图例项的文本内容
+    //                         marker = new
+    //                         {
+    //                             symbol = "square",  该图例项 marker 的形状，参见 marker 参数的说明
+    //                             style = new
+    //                             {
+    //                                 fill = "#5B8FF9", 该图例项 marker 的填充颜色
                                
-                                }
-                            }
-                        },
-                        new
-                        {
-                            name = "目标值",  // 图例项的文本内容
-                            marker = new
-                            {
-                                symbol = "line",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                                style = new
-                                {
-                                    fill = "#5B8FF9", // 该图例项 marker 的填充颜色
-                                }
-                            }
-                        },
-                        new
-                        {
-                            name = "差",  // 图例项的文本内容
-                            marker = new
-                            {
-                                symbol = "square",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                                style = new
-                                {
-                                    fill = "#FFB1AC", // 该图例项 marker 的填充颜色
-                                }
-                            }
-                        },
-                        new
-                        {
-                            name = "良",  // 图例项的文本内容
-                            marker = new
-                            {
-                                symbol = "square",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                                style = new
-                                {
-                                    fill = "#FFDBA2", // 该图例项 marker 的填充颜色
-                                }
-                            }
-                        },
-                        new
-                        {
-                            name = "优",  // 图例项的文本内容
-                            marker = new
-                            {
-                                symbol = "square",  // 该图例项 marker 的形状，参见 marker 参数的说明
-                                style = new
-                                {
-                                    fill = "#B4EBBF", // 该图例项 marker 的填充颜色
-                                }
-                            }
-                        },
+    //                             }
+    //                         }
+    //                     },
+    //                     new
+    //                     {
+    //                         name = "目标值",  图例项的文本内容
+    //                         marker = new
+    //                         {
+    //                             symbol = "line",  该图例项 marker 的形状，参见 marker 参数的说明
+    //                             style = new
+    //                             {
+    //                                 fill = "#5B8FF9", 该图例项 marker 的填充颜色
+    //                             }
+    //                         }
+    //                     },
+    //                     new
+    //                     {
+    //                         name = "差",  图例项的文本内容
+    //                         marker = new
+    //                         {
+    //                             symbol = "square",  该图例项 marker 的形状，参见 marker 参数的说明
+    //                             style = new
+    //                             {
+    //                                 fill = "#FFB1AC", 该图例项 marker 的填充颜色
+    //                             }
+    //                         }
+    //                     },
+    //                     new
+    //                     {
+    //                         name = "良",  图例项的文本内容
+    //                         marker = new
+    //                         {
+    //                             symbol = "square",  该图例项 marker 的形状，参见 marker 参数的说明
+    //                             style = new
+    //                             {
+    //                                 fill = "#FFDBA2", 该图例项 marker 的填充颜色
+    //                             }
+    //                         }
+    //                     },
+    //                     new
+    //                     {
+    //                         name = "优",  图例项的文本内容
+    //                         marker = new
+    //                         {
+    //                             symbol = "square",  该图例项 marker 的形状，参见 marker 参数的说明
+    //                             style = new
+    //                             {
+    //                                 fill = "#B4EBBF", 该图例项 marker 的填充颜色
+    //                             }
+    //                         }
+    //                     },
 
-                    }
-        }
-    };
+    //                 }
+    //     }
+    // };
 
-    #endregion 示例7
+    // #endregion 示例7
 
 }

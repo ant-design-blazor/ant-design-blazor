@@ -8,12 +8,14 @@
 
 <CascadingValue Value="this" IsFixed="IsSelectFixed()">
     <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
-        <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
-            <OverlayTrigger @ref="@_dropDown"
-                            Visible="Open"
+        <OverlayTrigger @ref="@_dropDown"
+                            TriggerReference="RefBack.Current"
+                            Visible="@Open"
+                            VisibleChanged="OpenChanged"
                             Disabled="Disabled"
                             Trigger="new[] { Trigger.Click }"
                             HiddenMode
+                            ComplexAutoCloseAndVisible
                             BoundaryAdjustMode="@BoundaryAdjustMode"
                             OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"
                             OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
@@ -40,7 +42,7 @@
                                 <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
                                     <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
                                         <SelectContent Prefix="@ClassPrefix"
-                                                       RefBack="@context"
+                                                       RefBack="@RefBack"
                                                        @ref="_selectContent"
                                                        TItemValue="TItemValue"
                                                        TItem="TItem"
@@ -63,7 +65,6 @@
                     </CascadingValue>
                 </Unbound>
             </OverlayTrigger>
-        </div>
     </CascadingValue>
 </CascadingValue>
 

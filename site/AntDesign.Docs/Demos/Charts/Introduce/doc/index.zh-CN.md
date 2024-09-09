@@ -22,7 +22,7 @@ GitHub: https://github.com/ant-design-blazor/ant-design-charts-blazor
 - 在 `wwwroot/index.html`(WebAssembly) 或 `Pages/_Host.razor`(Server) 中引入静态文件:
 
   ```html
-  <script src="https://unpkg.com/@antv/g2plot@1.1.28/dist/g2plot.js"></script>
+  <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
   <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
   ```
   

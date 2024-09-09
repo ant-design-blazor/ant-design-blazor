@@ -63,6 +63,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | AutoSize | 将根据内容调整（扩大或缩小）“TextArea”。 可以与 `MaxRows` 和 `MinRows` 结合使用。 将 `textarea` 组件的 `resize` 属性设置为：`none`. | boolean        | false         |
+| Bordered | 是否有边框        | boolean         | true
 | DefaultToEmptyString |设置为`false`时，当内容为空或空白时，值将被设置为`null`,当为 `true` 时，值将被设置为空字符串(string.Empty). | boolean        | false         |
 | MinRows |`TextArea` 将允许用户拖动缩小，直到可见行等于 `MinRows` 。 使用此属性将自动设置“AutoSize = true”。  | int        | 1         |
 | MaxRows |`TextArea` 将允许用户拖动放大,直到可见行等于 `MaxRows` 。 使用此属性将自动设置“AutoSize = true”。  | int        | uint.MaxValue         |
