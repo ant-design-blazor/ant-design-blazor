@@ -10,7 +10,14 @@
     </Alert>
 }
 
-<Monaco Value=@_source Language="@_language" ValueChanged=@OnValueChanged @ref="@_monaco" />
+@if (!_loaded)
+{
+    <div class="highlight">
+        <HighlightedCode Code="@Value" CanLoad Language="html"></HighlightedCode>
+    </div>
+}
+
+<Monaco Value=@_source Language="@_language" ValueChanged=@OnValueChanged @ref="@_monaco" OnLoaded="OnLoaded" />
 
 @code {
     private string Copy => $"copy('{_monaco?.Id}')";
@@ -21,6 +28,7 @@
     private string _language = "razor";
     private string _source;
     private string _initValue;
+    private bool _loaded;
 
     bool _loading;
 
@@ -46,10 +54,15 @@
     async Task OnValueChanged(string value)
     {
         _source = value;
-       
+
         await ValueChanged.InvokeAsync(value);
 
         await Run();
+    }
+
+    void OnLoaded()
+    {
+        _loaded = true;
     }
 
     async Task Reset()
