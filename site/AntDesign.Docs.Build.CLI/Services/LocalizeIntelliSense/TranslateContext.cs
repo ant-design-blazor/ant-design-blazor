@@ -7,8 +7,6 @@ public class TranslateContext
 {
     #region Public 属性
 
-    public IContentTranslator ContentTranslator { get; }
-
     public string FilePath { get; set; }
 
     public bool IsPatch { get; }
@@ -16,8 +14,6 @@ public class TranslateContext
     public string OutputPath { get; }
 
     public int ParallelCount { get; set; } = 2;
-
-    public string? SeparateLine { get; }
 
     public CultureInfo SourceCultureInfo { get; }
 
@@ -27,7 +23,7 @@ public class TranslateContext
 
     #region Public 构造函数
 
-    public TranslateContext(string filePath, string? separateLine, string outputPath, CultureInfo sourceCultureInfo, CultureInfo targetCultureInfo, IContentTranslator contentTranslator, bool isPatch)
+    public TranslateContext(string filePath, string outputPath, CultureInfo sourceCultureInfo, CultureInfo targetCultureInfo, bool isPatch)
     {
         if (string.IsNullOrWhiteSpace(filePath))
         {
@@ -41,10 +37,8 @@ public class TranslateContext
 
         FilePath = filePath;
         OutputPath = outputPath;
-        SeparateLine = separateLine;
         SourceCultureInfo = sourceCultureInfo ?? throw new ArgumentNullException(nameof(sourceCultureInfo));
         TargetCultureInfo = targetCultureInfo ?? throw new ArgumentNullException(nameof(targetCultureInfo));
-        ContentTranslator = contentTranslator;
         IsPatch = isPatch;
     }
 

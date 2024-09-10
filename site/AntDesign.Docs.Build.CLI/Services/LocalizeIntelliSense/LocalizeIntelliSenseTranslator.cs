@@ -37,7 +37,7 @@ public class LocalizeIntelliSenseTranslator
 
     #region Public 方法
 
-    public virtual async Task TranslateAsync(TranslateContext context, CancellationToken cancellationToken)
+    public virtual async Task TranslateAsync(TranslateContext context, CancellationToken cancellationToken = default)
     {
         var sourceXmlDocument = new XmlDocument();
         sourceXmlDocument.Load(context.FilePath);
@@ -75,8 +75,6 @@ public class LocalizeIntelliSenseTranslator
         patchXmlDocument.Load(context.OutputPath);
 
         var outputXmlDocument = (XmlDocument)patchXmlDocument.Clone();
-
-        var contentTranslator = context.ContentTranslator;
 
         var parallelOptions = new ParallelOptions()
         {
@@ -282,8 +280,6 @@ public class LocalizeIntelliSenseTranslator
 
     private async Task TranslateNodesAsync(TranslateContext context, List<XmlNode> nodes, CancellationToken cancellationToken)
     {
-        var contentTranslator = context.ContentTranslator;
-
         var parallelOptions = new ParallelOptions()
         {
             MaxDegreeOfParallelism = context.ParallelCount > 0 ? context.ParallelCount : 1,
@@ -295,7 +291,7 @@ public class LocalizeIntelliSenseTranslator
             var rawInnerXml = node.InnerXml;
             try
             {
-                var translated = await _translator.TranslateText("", rawInnerXml, context.TargetCultureInfo.Name);
+                var translated = await _translator.TranslateText(node.Attributes!["name"]?.Value, rawInnerXml, context.TargetCultureInfo.Name);
                 node.InnerXml = translated;
                 var versionAttribute = node.OwnerDocument!.CreateAttribute("v");
                 //var verison = GetContentVersion(rawInnerXml);

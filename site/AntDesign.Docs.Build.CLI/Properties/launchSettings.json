@@ -4,8 +4,9 @@
       "commandName": "Project",
       //"commandLineArgs": "docs2html ../../../../../docs ./"
       //"commandLineArgs": "menu2json ../../../../AntDesign.Docs/Demos ../../../../../docs ./"
-      "commandLineArgs": "demo2json ../../../../AntDesign.Docs/Demos ./"
-      //"commandLineArgs": "icons2json ../../../../../components/wwwroot/icons ./"
+      //"commandLineArgs": "demo2json ../../../../AntDesign.Docs/Demos ./"
+      //"commandLineArgs": "icons2json ../../../../../components/wwwroot/icons ./",
+      "commandLineArgs": "intellisense ../../../../../components/LocalizedIntellisenseFiles/AntDesign.xml ../../../../../components/LocalizedIntellisenseFiles zh-CN"
     }
   }
 }

@@ -6,6 +6,7 @@ using System;
 using AntDesign.Docs.Build.CLI.Command;
 using AntDesign.Docs.Build.CLI.Services.Translation;
 using AntDesign.Docs.Build.CLI.Utils;
+using IntelliSenseLocalizer.ThirdParty;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +57,9 @@ namespace AntDesign.Docs.Build.CLI
             services.AddSingleton<IAppCommand, GenerateMenuJsonCommand>();
             services.AddSingleton<IAppCommand, GenerateDocsToHtmlCommand>();
             services.AddSingleton<IAppCommand, GenerateIconsToJsonCommand>();
+            services.AddSingleton<IAppCommand, GenerateIntelliSenseCommand>();
+            services.AddSingleton<LocalizeIntelliSenseTranslator>();
+
             services.AddHttpClient<GoogleTranslate>(client =>
             {
                 client.BaseAddress = new Uri("https://translate.google.com");
