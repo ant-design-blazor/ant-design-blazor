@@ -7,7 +7,7 @@ on:
     branches:
       - doc-fix
 
-jobs:  
+jobs:
   publish-and-deploy:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'ant-design-blazor'
