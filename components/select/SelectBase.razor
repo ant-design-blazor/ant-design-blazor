@@ -8,8 +8,8 @@
 
 <CascadingValue Value="this" IsFixed="IsSelectFixed()">
     <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
-        <OverlayTrigger @ref="@_dropDown"
-                            TriggerReference="RefBack.Current"
+        <OverlayTrigger @ref="@_dropDown" 
+                            RefBack="RefBack"
                             Visible="@Open"
                             VisibleChanged="OpenChanged"
                             Disabled="Disabled"
@@ -42,7 +42,7 @@
                                 <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
                                     <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
                                         <SelectContent Prefix="@ClassPrefix"
-                                                       RefBack="@RefBack"
+                                                       RefBack="@context"
                                                        @ref="_selectContent"
                                                        TItemValue="TItemValue"
                                                        TItem="TItem"
