@@ -67,7 +67,7 @@ jobs:
           dotnet build
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net8 -o cargo -p:EnableAOT=true
           cp -rf cargo/staticwebapp.config.json cargo/wwwroot
-          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net8/*.dll _site/wwwroot/_framework
+          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net8/*.dll cargo/wwwroot/_framework
 
       - name: Deploy to Azure 🚀
         id: deploy_azure
