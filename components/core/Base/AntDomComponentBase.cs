@@ -27,8 +27,9 @@ namespace AntDesign
 
         /// <summary>
         /// Returned ElementRef reference for DOM element.
+        /// It would set the value into <see cref="AntComponentBase.RefBack"/> that user can get the <see cref="ElementReference"/> outside.
         /// </summary>
-        internal virtual ElementReference Ref
+        internal protected virtual ElementReference Ref
         {
             get => _ref;
             set

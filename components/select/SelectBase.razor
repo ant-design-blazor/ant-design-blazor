@@ -8,8 +8,8 @@
 
 <CascadingValue Value="this" IsFixed="IsSelectFixed()">
     <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
-        <div class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="-1" @ref="Ref">
-            <OverlayTrigger @ref="@_dropDown"
+        <OverlayTrigger @ref="@_dropDown" 
+                            RefBack="RefBack"
                             Visible="@Open"
                             VisibleChanged="OpenChanged"
                             Disabled="Disabled"
@@ -65,7 +65,6 @@
                     </CascadingValue>
                 </Unbound>
             </OverlayTrigger>
-        </div>
     </CascadingValue>
 </CascadingValue>
 
