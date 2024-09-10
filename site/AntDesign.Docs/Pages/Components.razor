@@ -60,7 +60,7 @@
 
                 @foreach (var docDemo in docDemos)
                 {
-                    <RazorBox Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Type}")" />
+                    <DocDemoView Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Type}")" />
                 }
 
                 @if (_demos.Any())
