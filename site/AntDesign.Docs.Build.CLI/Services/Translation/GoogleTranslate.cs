@@ -37,12 +37,12 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
             }
         }
 
-        public Task BackupTranslations(bool onlyKeepUsed = true)
+        public Task BackupTranslations(string lang, bool onlyKeepUsed = true)
         {
             throw new NotImplementedException("Not the best design, but this class doesn't implement this. It is meant for the cache wrapper class.");
         }
 
-        public async Task<string?> TranslateText(string text, string to, string from = "auto")
+        public async Task<string?> TranslateText(string component, string text, string to, string from = "auto")
         {
             if (string.IsNullOrWhiteSpace(text))
             {

@@ -18,7 +18,11 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
     {
         private readonly ITranslate _innerService;
 
-        private readonly JsonSerializerOptions _serializerOptions;
+        private readonly static JsonSerializerOptions _serializerOptions = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
 
         public TranslateCache(ITranslate innerService)
         {
@@ -26,12 +30,6 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
 
             var encoding = new TextEncoderSettings();
             encoding.AllowRange(UnicodeRanges.All);
-
-            _serializerOptions = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-            };
 
             var filePath = GetPathToKnownTranslationsFile();
 
@@ -48,7 +46,9 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
 
         private Dictionary<string, Translation> KnownChineseTranslations { get; set; }
 
-        public async Task BackupTranslations(bool onlyKeepUsed = true)
+        private Dictionary<string, Dictionary<string, Translation>> ComponentKnownTranslations { get; set; }
+
+        public async Task BackupTranslations(string lang, bool onlyKeepUsed = true)
         {
             var translations = KnownChineseTranslations;
 
@@ -60,10 +60,42 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
             }
 
             await File.WriteAllTextAsync(GetPathToKnownTranslationsFile(), SerializeTranslations(translations), Encoding.UTF8);
+
+            await File.WriteAllTextAsync(GetPathToKnownTranslationsFile(lang), JsonSerializer.Serialize(ComponentKnownTranslations, _serializerOptions), Encoding.UTF8);
         }
 
-        public async Task<string> TranslateText(string text, string to, string from = "auto")
+        public async Task<string> TranslateText(string component, string text, string to, string from = "auto")
         {
+            ComponentKnownTranslations ??= GetComponentKnownTranslations(to);
+
+            if (ComponentKnownTranslations.TryGetValue(component, out var componentTranslations) && componentTranslations.TryGetValue(text, out var translation))
+            {
+                translation.Used = true;
+                return translation.Translated;
+            }
+
+            var newTranslation = await TranslateText(text, to, from);
+
+            if (!ComponentKnownTranslations.ContainsKey(component))
+            {
+                ComponentKnownTranslations[component] = new();
+            }
+
+            if (!ComponentKnownTranslations[component].ContainsKey(text))
+            {
+                ComponentKnownTranslations[component].Add(text, new Translation
+                {
+                    Translated = newTranslation,
+                    Used = true
+                });
+            }
+
+            return newTranslation;
+        }
+
+        private async Task<string> TranslateText(string text, string to, string from = "auto")
+        {
+
             if (KnownChineseTranslations.TryGetValue(text, out var translation))
             {
                 translation.Used = true;
@@ -84,13 +116,14 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
                     Used = true
                 });
 
+
                 return newTranslation;
             }
             catch (Exception)
             {
                 // Back up all translations on error, even the "unused" ones
                 // because something went wrong and we probably still need them.
-                await BackupTranslations(false);
+                await BackupTranslations(to, false);
 
                 return text;
             }
@@ -103,6 +136,26 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
             var absolutePath = Path.GetFullPath(combinedPath);
 
             return absolutePath;
+        }
+
+        private static string GetPathToKnownTranslationsFile(string language)
+        {
+            var executingPath = AppDomain.CurrentDomain.BaseDirectory.ToString();
+            var combinedPath = Path.Combine(executingPath, $"../../../KnownTranslations.{language}.json");
+            var absolutePath = Path.GetFullPath(combinedPath);
+
+            return absolutePath;
+        }
+
+        private static Dictionary<string, Dictionary<string, Translation>> GetComponentKnownTranslations(string lang)
+        {
+            var path = GetPathToKnownTranslationsFile(lang);
+            if (!File.Exists(path))
+            {
+                return new();
+            }
+
+            return JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Translation>>>(File.ReadAllText(path), _serializerOptions)!;
         }
 
         private string SerializeTranslations(Dictionary<string, Translation> translations) =>

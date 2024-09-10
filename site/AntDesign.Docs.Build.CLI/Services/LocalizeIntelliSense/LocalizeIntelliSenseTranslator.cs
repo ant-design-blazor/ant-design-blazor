@@ -1,7 +1,15 @@
-﻿using System.Buffers;
-using System.IO.Hashing;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
+using AntDesign.Docs.Build.CLI.Services.Translation;
 using Microsoft.Extensions.Logging;
 
 namespace IntelliSenseLocalizer.ThirdParty;
@@ -10,7 +18,8 @@ public class LocalizeIntelliSenseTranslator
 {
     #region Private 字段
 
-    private static readonly IBaseAnyEncoder<char> s_base62Encoder = BaseAnyEncoding.CreateEncoder("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".AsSpan());
+    //private static readonly IBaseAnyEncoder<char> s_base62Encoder = BaseAnyEncoding.CreateEncoder("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".AsSpan());
+    private ITranslate _translator;
 
     private readonly ILogger _logger;
 
@@ -18,9 +27,10 @@ public class LocalizeIntelliSenseTranslator
 
     #region Public 构造函数
 
-    public LocalizeIntelliSenseTranslator(ILogger<LocalizeIntelliSenseTranslator> logger)
+    public LocalizeIntelliSenseTranslator(ILogger<LocalizeIntelliSenseTranslator> logger, ITranslate translator)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _translator = translator;
     }
 
     #endregion Public 构造函数
@@ -48,7 +58,7 @@ public class LocalizeIntelliSenseTranslator
         OrderChildNodesByNameAttribute(membersNode);
 
         var outDir = Path.GetDirectoryName(context.OutputPath);
-        DirectoryUtil.CheckDirectory(outDir);
+        //DirectoryUtil.CheckDirectory(outDir);
 
         _logger.LogDebug("[{File}] processing completed. Save the file into {OutputPath}.", context.FilePath, context.OutputPath);
 
@@ -111,11 +121,11 @@ public class LocalizeIntelliSenseTranslator
                         }
 
                         var existedVersion = outputChild.Attributes?.GetNamedItem("v")?.Value;
-                        var version = GetContentVersion(sourceChild.InnerXml);
-                        if (string.Equals(version, existedVersion))
-                        {
-                            continue;
-                        }
+                        //var version = GetContentVersion(sourceChild.InnerXml);
+                        //if (string.Equals(version, existedVersion))
+                        //{
+                        //    continue;
+                        //}
 
                         outputChild.InnerXml = sourceChild.InnerXml;
 
@@ -177,10 +187,10 @@ public class LocalizeIntelliSenseTranslator
 
     #region Private 方法
 
-    private static string GetContentVersion(string content)
-    {
-        return s_base62Encoder.EncodeToString(Crc32.Hash(Encoding.UTF8.GetBytes(content.Trim())));
-    }
+    //private static string GetContentVersion(string content)
+    //{
+    //    return s_base62Encoder.EncodeToString(Crc32.Hash(Encoding.UTF8.GetBytes(content.Trim())));
+    //}
 
     private static XmlNode GetMembersNode(XmlDocument outputXmlDocument)
     {
@@ -285,17 +295,17 @@ public class LocalizeIntelliSenseTranslator
             var rawInnerXml = node.InnerXml;
             try
             {
-                var translated = await contentTranslator.TranslateAsync(rawInnerXml, context.SourceCultureInfo, context.TargetCultureInfo, token);
+                var translated = await _translator.TranslateText("", rawInnerXml, context.TargetCultureInfo.Name);
                 node.InnerXml = translated;
                 var versionAttribute = node.OwnerDocument!.CreateAttribute("v");
-                var verison = GetContentVersion(rawInnerXml);
-                versionAttribute.Value = verison;
-                node.Attributes!.SetNamedItem(versionAttribute);
+                //var verison = GetContentVersion(rawInnerXml);
+                //versionAttribute.Value = verison;
+                //node.Attributes!.SetNamedItem(versionAttribute);
 
                 var ignoreAttribute = node.OwnerDocument!.CreateAttribute("i");
                 ignoreAttribute.Value = "0";
                 node.Attributes!.SetNamedItem(ignoreAttribute);
-                _logger.LogInformation("Translate IntelliSenseFile Content [{Verison}] \"{Content}\" success \"{Translated}\".", verison, rawInnerXml, translated);
+                _logger.LogInformation("Translate IntelliSenseFile Content \"{Content}\" success \"{Translated}\".", rawInnerXml, translated);
             }
             catch (Exception ex)
             {

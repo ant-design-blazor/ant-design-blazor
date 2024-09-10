@@ -110,11 +110,11 @@ namespace AntDesign.Docs.Build.CLI.Command
                 {
                     await GenerateDocumentation(output);
 
-                    await _translate.BackupTranslations();
+                    await _translate.BackupTranslations("zh-CN");
                 }
                 catch (Exception ex)
                 {
-                    await _translate.BackupTranslations(false);
+                    await _translate.BackupTranslations("zh-CN", false);
 
                     Console.WriteLine(ex);
 
@@ -237,10 +237,10 @@ namespace AntDesign.Docs.Build.CLI.Command
 
                 // Build data required for docs
                 var title = docAttribute.Title ?? componentName;
-                var componentSummary = await GetAllLanguageSummaries(componentDocs);
+                var componentSummary = await GetAllLanguageSummaries(componentName, componentDocs);
                 var pageUrl = GetAllLanguagesUrlToComponentDocumentation(component);
-                var apiDocs = await GetAllLanguagesApiDocs(component);
-                var seeAlso = await GetAllLanguagesSeeAlsoDocs(componentDocs);
+                var apiDocs = await GetAllLanguagesApiDocs(componentName,component);
+                var seeAlso = await GetAllLanguagesSeeAlsoDocs(componentName, componentDocs);
                 var faqs = GetAllLanguagesFaqDocs(componentName);
                 var demos = GetAllLanguagesDemos(componentName);
 
@@ -261,7 +261,7 @@ namespace AntDesign.Docs.Build.CLI.Command
             }
         }
 
-        private async Task<IEnumerable<IApiDocumentation>> GetApiDocs(MemberInfo[] allPublicMembers, string language)
+        private async Task<IEnumerable<IApiDocumentation>> GetApiDocs(string component, MemberInfo[] allPublicMembers, string language)
         {
             var allDocs = new List<IApiDocumentation>();
 
@@ -272,14 +272,14 @@ namespace AntDesign.Docs.Build.CLI.Command
                 {
                     var memberDocs = GetMemberXmlNodes(member);
                     var propertyType = GetPropertyType(member as PropertyInfo);
-                    var obsoleteMessage = await GetObsoleteMessage(member, language);
+                    var obsoleteMessage = await GetObsoleteMessage(component, member, language);
 
                     allDocs.Add(new PropertyDocumentation
                     {
                         Name = member.Name,
                         IsParameter = member.GetCustomAttribute<ParameterAttribute>() is not null,
                         IsMethod = false,
-                        Summary = await GetSummaryFromComponentDocsNode(memberDocs, language),
+                        Summary = await GetSummaryFromComponentDocsNode(component, memberDocs, language),
                         ObsoleteMessage = obsoleteMessage,
                         Type = propertyType,
                         Default = GetDefaultFromComponentDocsNode(memberDocs, propertyType)
@@ -303,7 +303,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                     {
                         Signature = GetMethodSignature(member),
                         ReturnType = GetTypeName(member.ReturnType),
-                        Summary = await GetSummaryFromComponentDocsNode(memberDocs, language)
+                        Summary = await GetSummaryFromComponentDocsNode(component, memberDocs, language)
                     });
                 }
             }
@@ -311,7 +311,7 @@ namespace AntDesign.Docs.Build.CLI.Command
             return allDocs;
         }
 
-        private async Task<IEnumerable<IApiDocumentation>> GetEnumDocs(Type type, string language)
+        private async Task<IEnumerable<IApiDocumentation>> GetEnumDocs(string component, Type type, string language)
         {
             var allDocs = new List<IApiDocumentation>();
             var allPublicMembers = type.GetMembers();
@@ -330,8 +330,8 @@ namespace AntDesign.Docs.Build.CLI.Command
                     {
                         Name = member.Name,
                         UnderlyingType = Enum.GetUnderlyingType(type).Name,
-                        Summary = await GetSummaryFromComponentDocsNode(GetMemberXmlNodes(member), language),
-                        ObsoleteMessage = await GetObsoleteMessage(member, language)
+                        Summary = await GetSummaryFromComponentDocsNode(component, GetMemberXmlNodes(member), language),
+                        ObsoleteMessage = await GetObsoleteMessage(component, member, language)
                     });
                 }
             }
@@ -392,7 +392,7 @@ namespace AntDesign.Docs.Build.CLI.Command
             return signature;
         }
 
-        private async Task<string> GetObsoleteMessage(MemberInfo member, string language)
+        private async Task<string> GetObsoleteMessage(string component, MemberInfo member, string language)
         {
             var message = member.GetCustomAttribute<ObsoleteAttribute>()?.Message;
 
@@ -406,7 +406,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 return message;
             }
 
-            var translated = await _translate.TranslateText(message, language);
+            var translated = await _translate.TranslateText(component, message, language);
 
             return string.IsNullOrWhiteSpace(translated)
                 ? null
@@ -423,7 +423,7 @@ namespace AntDesign.Docs.Build.CLI.Command
             return GetTypeName(propertyInfo.PropertyType);
         }
 
-        private async Task<string> GetSummaryFromComponentDocsNode(XmlNode node, string language)
+        private async Task<string> GetSummaryFromComponentDocsNode(string component, XmlNode node, string language)
         {
             if (node is null || !node.HasChildNodes)
             {
@@ -438,13 +438,13 @@ namespace AntDesign.Docs.Build.CLI.Command
                     return string.Empty;
                 }
 
-                var englishSummary = await GetSummaryFromComponentDocsNode(node, Constants.EnglishLanguage);
+                var englishSummary = await GetSummaryFromComponentDocsNode(component, node, Constants.EnglishLanguage);
                 if (string.IsNullOrWhiteSpace(englishSummary))
                 {
                     return string.Empty;
                 }
 
-                var translated = await _translate.TranslateText(englishSummary, language);
+                var translated = await _translate.TranslateText(component, englishSummary, language);
                 return string.IsNullOrWhiteSpace(translated)
                     ? string.Empty
                     : translated;
@@ -579,14 +579,14 @@ namespace AntDesign.Docs.Build.CLI.Command
 
         #region Get All Languages Methods
 
-        private async Task<IDictionary<string, IEnumerable<IApiDocumentation>>> GetAllLanguagesApiDocs(Type type)
+        private async Task<IDictionary<string, IEnumerable<IApiDocumentation>>> GetAllLanguagesApiDocs(string component, Type type)
         {
             var allPublicMembers = type.GetMembers();
 
             return new Dictionary<string, IEnumerable<IApiDocumentation>>
             {
-                { Constants.EnglishLanguage, await GetApiDocs(allPublicMembers, Constants.EnglishLanguage) },
-                { Constants.ChineseLanguage, await GetApiDocs(allPublicMembers, Constants.ChineseLanguage) }
+                { Constants.EnglishLanguage, await GetApiDocs(component, allPublicMembers, Constants.EnglishLanguage) },
+                { Constants.ChineseLanguage, await GetApiDocs(component, allPublicMembers, Constants.ChineseLanguage) }
             };
         }
 
@@ -626,12 +626,12 @@ namespace AntDesign.Docs.Build.CLI.Command
             }
         }
 
-        private async Task<IDictionary<string, IEnumerable<IApiDocumentation>>> GetAllLanguagesEnumDocs(Type type)
+        private async Task<IDictionary<string, IEnumerable<IApiDocumentation>>> GetAllLanguagesEnumDocs(string component,Type type)
         {
             return new Dictionary<string, IEnumerable<IApiDocumentation>>
             {
-                { Constants.EnglishLanguage, await GetEnumDocs(type, Constants.EnglishLanguage) },
-                { Constants.ChineseLanguage, await GetEnumDocs(type, Constants.ChineseLanguage) }
+                { Constants.EnglishLanguage, await GetEnumDocs(component, type, Constants.EnglishLanguage) },
+                { Constants.ChineseLanguage, await GetEnumDocs(component, type, Constants.ChineseLanguage) }
             };
         }
 
@@ -647,7 +647,7 @@ namespace AntDesign.Docs.Build.CLI.Command
         }
 
         /// <returns>{ seeAlsoName: { language: [docs] } }</returns>
-        private async Task<IDictionary<string, IDictionary<string, IEnumerable<IApiDocumentation>>>> GetAllLanguagesSeeAlsoDocs(XmlNode componentDocs)
+        private async Task<IDictionary<string, IDictionary<string, IEnumerable<IApiDocumentation>>>> GetAllLanguagesSeeAlsoDocs(string component, XmlNode componentDocs)
         {
             // Does not need translation - the "GetAllLanguages..." methods called below will translate if needed
 
@@ -664,8 +664,8 @@ namespace AntDesign.Docs.Build.CLI.Command
                     var name = GetNameWithoutGenerics(type);
 
                     var typeApiDocs = type.IsEnum
-                        ? await GetAllLanguagesEnumDocs(type)
-                        : await GetAllLanguagesApiDocs(type);
+                        ? await GetAllLanguagesEnumDocs(component, type)
+                        : await GetAllLanguagesApiDocs(component, type);
 
                     allSeeAlsos.Add(name, typeApiDocs);
                 }
@@ -674,12 +674,12 @@ namespace AntDesign.Docs.Build.CLI.Command
             return allSeeAlsos;
         }
 
-        private async Task<IDictionary<string, string>> GetAllLanguageSummaries(XmlNode node)
+        private async Task<IDictionary<string, string>> GetAllLanguageSummaries(string component, XmlNode node)
         {
             return new Dictionary<string, string>
             {
-                { Constants.EnglishLanguage, await GetSummaryFromComponentDocsNode(node, Constants.EnglishLanguage) },
-                { Constants.ChineseLanguage, await GetSummaryFromComponentDocsNode(node, Constants.ChineseLanguage) }
+                { Constants.EnglishLanguage, await GetSummaryFromComponentDocsNode(component, node, Constants.EnglishLanguage) },
+                { Constants.ChineseLanguage, await GetSummaryFromComponentDocsNode(component, node, Constants.ChineseLanguage) }
             };
         }
 

@@ -1,12 +1,11 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace IntelliSenseLocalizer.ThirdParty;
 
 public class TranslateContext
 {
     #region Public 属性
-
-    public ContentCompareType ContentCompareType { get; }
 
     public IContentTranslator ContentTranslator { get; }
 
@@ -28,7 +27,7 @@ public class TranslateContext
 
     #region Public 构造函数
 
-    public TranslateContext(string filePath, ContentCompareType contentCompareType, string? separateLine, string outputPath, CultureInfo sourceCultureInfo, CultureInfo targetCultureInfo, IContentTranslator contentTranslator, bool isPatch)
+    public TranslateContext(string filePath, string? separateLine, string outputPath, CultureInfo sourceCultureInfo, CultureInfo targetCultureInfo, IContentTranslator contentTranslator, bool isPatch)
     {
         if (string.IsNullOrWhiteSpace(filePath))
         {
@@ -41,7 +40,6 @@ public class TranslateContext
         }
 
         FilePath = filePath;
-        ContentCompareType = contentCompareType;
         OutputPath = outputPath;
         SeparateLine = separateLine;
         SourceCultureInfo = sourceCultureInfo ?? throw new ArgumentNullException(nameof(sourceCultureInfo));

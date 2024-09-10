@@ -10,8 +10,8 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
 {
     public interface ITranslate
     {
-        Task<string?> TranslateText(string text, string to, string from = "auto");
+        Task<string?> TranslateText(string component, string text, string to, string from = "auto");
 
-        Task BackupTranslations(bool onlyKeepUsed = true);
+        Task BackupTranslations(string lang, bool onlyKeepUsed = true);
     }
 }

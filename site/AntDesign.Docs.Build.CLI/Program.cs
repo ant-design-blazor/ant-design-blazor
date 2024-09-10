@@ -3,14 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Net.Http;
 using AntDesign.Docs.Build.CLI.Command;
 using AntDesign.Docs.Build.CLI.Services.Translation;
 using AntDesign.Docs.Build.CLI.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace AntDesign.Docs.Build.CLI
 {
