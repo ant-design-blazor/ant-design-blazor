@@ -6,13 +6,13 @@
     <br />
     
     <Button Type="@ButtonType.Primary"
-            Loading="_noIconLoading"
+            AutoLoading
             OnClick="EnterNoIconLoading">
         Click me!
     </Button>
     <Button Type="@ButtonType.Primary"
             Icon="@IconType.Outline.Poweroff"
-            Loading="_withIconLoading"
+            AutoLoading
             OnClick="EnterWithIconLoading">
         Click me!
     </Button>
@@ -24,22 +24,16 @@
 
 @code
 {
-    private bool _noIconLoading;
-    private bool _withIconLoading;
     private bool _onlyIconLoading;
 
     private async Task EnterNoIconLoading()
     {
-        _noIconLoading = true;
         await Task.Delay(8000);
-        _noIconLoading = false;
     }
 
     private async Task EnterWithIconLoading()
     {
-        _withIconLoading = true;
         await Task.Delay(8000);
-        _withIconLoading = false;
     }
 
     private async Task EnterOnlyIconLoading()
