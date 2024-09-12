@@ -163,9 +163,9 @@ namespace AntDesign
             (_tabIndex, other._tabIndex) = (other._tabIndex, _tabIndex);
         }
 
-        private Task HandleKeydown(KeyboardEventArgs e)
+        private void HandleKeydown(KeyboardEventArgs e)
         {
-            return Parent?.HandleKeydown(e, this);
+            Parent?.HandleKeydown(e, this);
         }
     }
 }
