@@ -41,6 +41,12 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9'">
+    <PackageReference Include="BlazorPolyfill.Server">
+      <Version>6.0.100.1</Version>
+    </PackageReference>
+  </ItemGroup>
+
   <Target Name="CopyDocs" BeforeTargets="Build">
     <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />
   </Target>
