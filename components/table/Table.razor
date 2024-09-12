@@ -42,7 +42,7 @@
                             </div>
                         }
                         <div class="ant-table-container">
-                            @if (ScrollY != null||AutoHeight)
+                            @if (ScrollY != null)
                             {
                                 <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
                                     <table style="@TableLayoutStyle">
@@ -91,7 +91,7 @@
                             }
                             else
                             {
-                                <div class="ant-table-content">
+                                <div class="ant-table-content" @ref="_tableBodyRef" style="@( AutoHeight ? $"overflow-y: auto;":$"")">
                                     <table style="@TableLayoutStyle;@(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")" @ref="_tableRef">
                                         @colGroup(this, true)
                                         @header()

@@ -1,4 +1,31 @@
 ﻿export class tableHelper {
+  static isHidden(element) {
+    if (element instanceof HTMLElement) {
+      const computedStyle = getComputedStyle(element);
+      if (computedStyle.display === "none" || computedStyle.visibility === "hidden") {
+        return true;
+      }
+    }
+    if (element.parentNode != null) {
+      if (tableHelper.isHidden(element.parentNode)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static isIgnore(element, style: CSSStyleDeclaration, left: number, right: number) {
+    const previousPosition = style.getPropertyValue('position');
+    const rect = element.getBoundingClientRect();
+    if (rect.left > right || rect.right < left) {
+      return true;
+    }
+
+    if (previousPosition === 'absolute') {
+      return true;
+    }
+    return false;
+  }
   static getTotalHeightAbove(element): number {
     let totalHeight = 0;
     const rect = element.getBoundingClientRect();
@@ -9,51 +36,67 @@
       totalHeight += parseFloat(computedStyle.paddingTop);
       totalHeight += parseFloat(computedStyle.borderTop);
     }
-    return totalHeight;
+    return totalHeight + 1;
   }
-  static getTotalHeightBelow(element): number {
+  static getTotalHeightBelow(element, left: number, right: number): number {
     let totalHeight = 0;
     let currentElement = element.nextElementSibling;
 
     if (element instanceof HTMLElement) {
-     
+      let previousElement = element;
       let previousComputedStyle = getComputedStyle(element);
-      let previousPosition = previousComputedStyle.getPropertyValue('position');
-      if (previousPosition !== 'absolute') {
+      if (!tableHelper.isIgnore(element, previousComputedStyle, left, right)) {
         totalHeight += parseFloat(previousComputedStyle.marginBottom);
       }
-      
 
       while (currentElement) {
-   
-
         const currentComputedStyle = getComputedStyle(currentElement);
-        const currentPosition = currentComputedStyle.getPropertyValue('position');
-        if (currentPosition !== 'absolute') {
+        if (!tableHelper.isIgnore(currentElement, currentComputedStyle, left, right)) {
           totalHeight += currentElement.offsetHeight + Math.max(parseFloat(currentComputedStyle.marginTop), parseFloat(previousComputedStyle.marginBottom));
-
         }
+        previousElement = currentElement;
         currentElement = currentElement.nextElementSibling;
         previousComputedStyle = currentComputedStyle;
       }
-      previousPosition = previousComputedStyle.getPropertyValue('position');
-      if (previousPosition !== 'absolute') {
+      if (!tableHelper.isIgnore(previousElement, previousComputedStyle, left, right)) {
         totalHeight += parseFloat(previousComputedStyle.marginBottom);
       }
-    } 
+    }
     if (element.parentNode != null) {
       if (element.parentNode instanceof HTMLElement) {
         const parentComputedStyle = getComputedStyle(element.parentNode);
-        const parentPosition = parentComputedStyle.getPropertyValue('position');
-        if (parentPosition !== 'absolute') {
+        if (!tableHelper.isIgnore(element.parentNode, parentComputedStyle, left, right)) {
           totalHeight += parseFloat(parentComputedStyle.paddingBottom);
         }
       }
-      totalHeight += tableHelper.getTotalHeightBelow(element.parentNode);
+      totalHeight += tableHelper.getTotalHeightBelow(element.parentNode, left, right);
     }
     return totalHeight;
   }
+  static setBodyHeight(bodyRef) {
+    const rect = bodyRef.getBoundingClientRect();
+    if (tableHelper.isHidden(bodyRef)) {
+      return;
+    }
+    // 计算上面元素的总高度
+    const heightAbove = tableHelper.getTotalHeightAbove(bodyRef);
+    //console.log('heightAbove:' + heightAbove);
 
+    // 计算下面元素的总高度
+    const heightBelow = tableHelper.getTotalHeightBelow(bodyRef, rect.left, rect.right);
+    //console.log('heightBelow:' + heightBelow);
+
+    // 计算视口高度并减去滚动条的宽度
+    const viewportHeight = window.innerHeight;
+
+    // 设置目标元素的高度
+
+    const heightStyle = `${viewportHeight - heightAbove - heightBelow}px`;
+    if (heightStyle !== bodyRef.style.height) {
+      bodyRef.style.height = heightStyle;
+    }
+
+  }
   static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable, autoHeight) {
     bodyRef.bindScroll = () => {
       if (scrollX) {
@@ -63,11 +106,11 @@
         headerRef.scrollLeft = bodyRef.scrollLeft;
       }
       if (autoHeight) {
-        tableHelper.SetBodyHeight(bodyRef);
-      }    
-  
+        tableHelper.setBodyHeight(bodyRef);
+      }
+
     }
-    
+
     // direct setting classlist will not work, so delay 500ms for workaround
     setTimeout(() => {
       bodyRef && bodyRef.bindScroll();
@@ -77,17 +120,18 @@
     window.addEventListener('resize', bodyRef.bindScroll);
 
     if (resizable) {
-      tableHelper.enableColumnResizing(headerRef, tableRef, scrollY); 
+      tableHelper.enableColumnResizing(headerRef, tableRef, scrollY);
     }
     if (autoHeight) {
       bodyRef.observer = new MutationObserver(mutations => {
-        if (mutations) {
-          tableHelper.SetBodyHeight(bodyRef);
-        }        
+        if (mutations) {         
+          tableHelper.setBodyHeight(bodyRef);
+        }
       });
-      const config = { childList: true, subtree: true };
+      const config = { childList: true, subtree: true, attributes: true, attributeFilter: ['display', 'visibility','aria-selected']};
       const target = document.body; // 要观察变动的 DOM 节点
       bodyRef.observer.observe(target, config);
+      
     }
   }
 
@@ -97,27 +141,10 @@
       window.removeEventListener('resize', bodyRef.bindScroll);
       if (bodyRef.observer) {
         bodyRef.observer.disconnect();
-      }      
+      }
     }
   }
-  static SetBodyHeight(bodyRef) {
-    // 计算上面元素的总高度
-    const heightAbove = tableHelper.getTotalHeightAbove(bodyRef);
-    //console.log('heightAbove:' + heightAbove);
-
-    // 计算下面元素的总高度
-    const heightBelow = tableHelper.getTotalHeightBelow(bodyRef);
-    //console.log('heightBelow:' + heightBelow);
-
-
-
-    // 计算视口高度并减去滚动条的宽度
-    const viewportHeight = window.innerHeight;
-
-
-      // 设置目标元素的高度
-    bodyRef.style.height = `${viewportHeight - heightAbove - heightBelow }px`;
-  }
+  
   static SetScrollPositionClassName(bodyRef, wrapperRef) {
 
     const scrollLeft = bodyRef.scrollLeft;
@@ -151,7 +178,7 @@
   static enableColumnResizing(headerElement, tableElement, scrollY) {
 
     const cols = tableElement.querySelectorAll('col');
-    const ths = scrollY ? 
+    const ths = scrollY ?
       headerElement.querySelectorAll('.ant-table-thead th') :
       tableElement.tHead.querySelectorAll('.ant-table-thead th');
     const headerCols = scrollY ? headerElement.querySelectorAll('col') : null;
@@ -199,7 +226,7 @@
             th.style.width = `${updatedColumnWidth}px`;
             col.style.width = `${updatedColumnWidth}px`;
             if (headerCol) {
-              headerCol.style.width =`${updatedColumnWidth}px`;
+              headerCol.style.width = `${updatedColumnWidth}px`;
             }
             handle.style.right = '0';
             handle.style.left = '';
