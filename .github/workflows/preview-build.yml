@@ -42,7 +42,8 @@ jobs:
           npm install
           dotnet build
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net9 -o _site
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net9 -o _site -p:EnableAOT=true
+          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9/*.dll _site/wwwroot/_framework
         env:
           PACKAGE_VERSION: ${{ github.event.number }}
 
