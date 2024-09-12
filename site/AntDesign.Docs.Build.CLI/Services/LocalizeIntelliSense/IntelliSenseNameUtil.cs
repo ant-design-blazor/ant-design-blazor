@@ -2,6 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+
+// This code is modified from the soures of https://github.com/stratosblue/IntelliSenseLocalizer
+
+
 namespace IntelliSenseLocalizer;
 
 public static class IntelliSenseNameUtil

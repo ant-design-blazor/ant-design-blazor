@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Globalization;
 
+
+// This code is modified from the soures of https://github.com/stratosblue/IntelliSenseLocalizer
+
+
 namespace IntelliSenseLocalizer.ThirdParty;
 
 public class TranslateContext

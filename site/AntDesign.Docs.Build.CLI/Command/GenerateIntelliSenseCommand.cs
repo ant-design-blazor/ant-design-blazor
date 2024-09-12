@@ -48,6 +48,8 @@ namespace AntDesign.Docs.Build.CLI.Command
                     return 1;
                 }
 
+                var sourceFile = new FileInfo(source);
+
                 if (string.IsNullOrEmpty(output))
                 {
                     output = "./";
@@ -55,7 +57,8 @@ namespace AntDesign.Docs.Build.CLI.Command
 
                 foreach (var language in languages)
                 {
-                    var context = new TranslateContext(source, output, CultureInfo.GetCultureInfo("en-US"), CultureInfo.GetCultureInfo(language), false);
+                    var languageFile = Path.Combine(Directory.GetCurrentDirectory(), output, language, sourceFile.Name);
+                    var context = new TranslateContext(source, languageFile, CultureInfo.GetCultureInfo("en-US"), CultureInfo.GetCultureInfo(language), false);
                     await _localizeIntelliSenseTranslator.TranslateAsync(context);
                 }
 

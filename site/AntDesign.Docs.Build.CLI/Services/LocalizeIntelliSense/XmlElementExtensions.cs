@@ -7,6 +7,8 @@ using IntelliSenseLocalizer;
 
 namespace System.Xml;
 
+// This code is modified from the soures of https://github.com/stratosblue/IntelliSenseLocalizer
+
 internal static class XmlElementExtensions
 {
     public static XmlElement CreateParaNode(this XmlElement element, string? value = null)

@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+// This code is modified from the soures of https://github.com/stratosblue/IntelliSenseLocalizer
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,7 +60,11 @@ public class LocalizeIntelliSenseTranslator
         OrderChildNodesByNameAttribute(membersNode);
 
         var outDir = Path.GetDirectoryName(context.OutputPath);
-        //DirectoryUtil.CheckDirectory(outDir);
+
+        if (!Directory.Exists(outDir))
+        {
+            Directory.CreateDirectory(outDir);
+        }
 
         _logger.LogDebug("[{File}] processing completed. Save the file into {OutputPath}.", context.FilePath, context.OutputPath);
 
@@ -159,7 +165,7 @@ public class LocalizeIntelliSenseTranslator
             }
         }
 
-        await TranslateNodesAsync(context, shouldTranslateNodes, cancellationToken);
+        //await TranslateNodesAsync( context, shouldTranslateNodes, cancellationToken);
 
         return outputXmlDocument;
     }
@@ -168,15 +174,36 @@ public class LocalizeIntelliSenseTranslator
     {
         var outputXmlDocument = (XmlDocument)sourceXmlDocument.Clone();
 
-        var nodes = SelectNodes(outputXmlDocument, "//summary", "//typeparam", "//param", "//returns");
-
-        await TranslateNodesAsync(context, nodes, cancellationToken);
-
-        //排序
-        foreach (var item in SelectMembersMap(outputXmlDocument).SelectMany(m => SelectProcessableChildNodes(m.Value)))
+        var memberNodes = SelectMembersMap(sourceXmlDocument);
+        var groupedMenberNodes = memberNodes.GroupBy(x =>
         {
-            OrderChildNodesByNameAttribute(item);
+            var name = x.Key.Split(':')[2];
+            return string.Join(".", name.Split('.').Take(2).ToArray());
+        }).ToDictionary(x => x.Key, x => x.ToList());
+
+        foreach (var group in groupedMenberNodes)
+        {
+            foreach (var (name, node) in group.Value)
+            {
+                var memberChildNotes = SelectProcessableChildNodes(node);
+                await TranslateNodesAsync(group.Key, context, memberChildNotes, cancellationToken);
+
+                foreach (var item in memberChildNotes)
+                {
+                    OrderChildNodesByNameAttribute(item);
+                }
+            }
         }
+
+        //var nodes = SelectNodes(outputXmlDocument, "//summary", "//typeparam", "//param", "//returns");
+
+        //await TranslateNodesAsync(context, nodes, cancellationToken);
+
+        ////排序
+        //foreach (var item in SelectMembersMap(outputXmlDocument).SelectMany(m => SelectProcessableChildNodes(m.Value)))
+        //{
+        //    OrderChildNodesByNameAttribute(item);
+        //}
 
         return outputXmlDocument;
     }
@@ -278,7 +305,7 @@ public class LocalizeIntelliSenseTranslator
         }
     }
 
-    private async Task TranslateNodesAsync(TranslateContext context, List<XmlNode> nodes, CancellationToken cancellationToken)
+    private async Task TranslateNodesAsync(string memberName, TranslateContext context, List<XmlNode> nodes, CancellationToken cancellationToken)
     {
         var parallelOptions = new ParallelOptions()
         {
@@ -291,7 +318,7 @@ public class LocalizeIntelliSenseTranslator
             var rawInnerXml = node.InnerXml;
             try
             {
-                var translated = await _translator.TranslateText(node.Attributes!["name"]?.Value, rawInnerXml, context.TargetCultureInfo.Name);
+                var translated = await _translator.TranslateText(memberName, rawInnerXml, context.TargetCultureInfo.Name);
                 node.InnerXml = translated;
                 var versionAttribute = node.OwnerDocument!.CreateAttribute("v");
                 //var verison = GetContentVersion(rawInnerXml);
