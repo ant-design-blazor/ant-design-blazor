@@ -9,35 +9,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet: [ '3.1.x', '5.0.x', '6.0.x', '7.0.x', '8.0.x', '9.0.x' ]
 
     steps:
       - uses: actions/checkout@v1
 
-      - name: Setup .NET Core 3.1
-        uses: actions/setup-dotnet@v3
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 3.1.300
-
-      - name: Setup .NET 5
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 5.0.100
-
-      - name: Setup .NET 6.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 6.0.101
-
-      - name: Setup .NET 7.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.100
-
-      - name: Setup .NET 8.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0.100
-
+          dotnet-version: ${{ matrix.dotnet }}
+          dotnet-quality: 'preview'
       - uses: actions/setup-node@v1
         with:
           node-version: "16.x"
