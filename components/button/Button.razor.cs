@@ -124,6 +124,12 @@ namespace AntDesign
         public bool Loading { get; set; }
 
         /// <summary>
+        /// Whether to trigger and keep the loading state until the event callback is done.
+        /// </summary>
+        [Parameter]
+        public bool AutoLoading { get; set; }
+
+        /// <summary>
         /// Callback when `Button` is clicked
         /// </summary>
         [Parameter]
@@ -199,7 +205,17 @@ namespace AntDesign
 
             if (OnClick.HasDelegate)
             {
-                await OnClick.InvokeAsync(args);
+                if (AutoLoading)
+                {
+                    Loading = true;
+                    StateHasChanged();
+                    await OnClick.InvokeAsync(args);
+                    Loading = false;
+                }
+                else
+                {
+                    _ = OnClick.InvokeAsync(args);
+                }
             }
         }
 

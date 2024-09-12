@@ -4651,5 +4651,11 @@
   },
   "Get the sibling nodes": {
     "Translated": "获取同级节点"
+  },
+  "A <code>ForwardRef</code> instance. You can get a reference to the internal DOM by using <code>AntDesign.ForwardRef.Current</code>.": {
+    "Translated": "<code>一个 ForwardRef</code> 实例。您可以使用 <code>AntDesign.ForwardRef.Current</code> 获取对内部 DOM 的引用。"
+  },
+  "Close the popover": {
+    "Translated": "关闭弹出窗口"
   }
 }
