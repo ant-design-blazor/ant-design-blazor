@@ -9,9 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet: [ '3.1.x', '5.0.x', '6.0.x', '7.0.x', '8.0.x', '9.0.x' ]
 
     steps:
       - uses: actions/checkout@v1
@@ -19,8 +16,15 @@ jobs:
       - name: Setup .NET SDKs
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ matrix.dotnet }}
           dotnet-quality: 'preview'
+          dotnet-version: |
+            '3.1.x'
+            '5.0.x'
+            '6.0.x'
+            '7.0.x'
+            '8.0.x'
+            '9.0.x'
+
       - uses: actions/setup-node@v1
         with:
           node-version: "16.x"
