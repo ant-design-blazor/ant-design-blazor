@@ -42,13 +42,13 @@ namespace AntDesign
         public NavLinkMatch Match { get; set; } = NavLinkMatch.All;
 
         [CascadingParameter]
-        public MenuItem MenuItem { get; set; }
+        internal MenuItem MenuItem { get; set; }
 
         [CascadingParameter]
-        public Menu Menu { get; set; }
+        internal Menu Menu { get; set; }
 
         [CascadingParameter]
-        public Button Button { get; set; }
+        internal Button Button { get; set; }
 
         [Inject] private NavigationManager NavigationManger { get; set; }
 
