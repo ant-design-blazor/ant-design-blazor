@@ -131,7 +131,7 @@
       const config = { childList: true, subtree: true, attributes: true, attributeFilter: ['display', 'visibility','aria-selected']};
       const target = document.body; // 要观察变动的 DOM 节点
       bodyRef.observer.observe(target, config);
-      
+      tableHelper.setBodyHeight(bodyRef);
     }
   }
 
