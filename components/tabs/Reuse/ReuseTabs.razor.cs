@@ -11,25 +11,13 @@ namespace AntDesign
     /// <summary>
     /// Reuse of multiple page components within an application
     /// </summary>
-    public partial class ReuseTabs : AntDomComponentBase
+    public partial class ReuseTabs : Tabs
     {
         /// <summary>
         /// Class name of the inner tab pane.
         /// </summary>
         [Parameter]
         public string TabPaneClass { get; set; }
-
-        /// <summary>
-        /// Whether Tab can be dragged and dropped.
-        /// </summary>
-        [Parameter]
-        public bool Draggable { get; set; }
-
-        /// <summary>
-        /// The size of tabs.
-        /// </summary>
-        [Parameter]
-        public TabSize Size { get; set; }
 
         /// <summary>
         /// Templates for customizing page content.
@@ -67,6 +55,11 @@ namespace AntDesign
         [CascadingParameter(Name = "AntDesign.InReusePageContent")]
         private bool InReusePageContent { get; set; }
 
+        /// <summary>
+        /// Can't be used with <see cref="ReuseTabs"/>.
+        /// </summary>
+        public override RenderFragment ChildContent { get; set; }
+
         protected override void OnInitialized()
         {
             if (InReusePageContent)
@@ -76,10 +69,9 @@ namespace AntDesign
             base.OnInitialized();
 
             Navmgr.LocationChanged += OnLocationChanged;
-        }
 
-        protected override Task OnFirstAfterRenderAsync()
-        {
+            ChildContent = RenderPanes;
+
             ReuseTabsService.Init(true);
             ReuseTabsService.OnStateHasChanged += InvokeStateHasChanged;
 
@@ -92,10 +84,15 @@ namespace AntDesign
                 ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
             }
 
-            return base.OnFirstAfterRenderAsync();
         }
 
-        protected override bool ShouldRender() => !InReusePageContent;
+        protected override bool ShouldRender() => !InReusePageContent && base.ShouldRender();
+
+        protected override Task OnFirstAfterRenderAsync()
+        {
+            ActivatePane(ReuseTabsService.CurrentUrl);
+            return base.OnFirstAfterRenderAsync();
+        }
 
         protected override void Dispose(bool disposing)
         {
@@ -104,12 +101,9 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        private async Task<bool> OnTabEdit(string key, string action)
+        protected override void OnRemoveTab(TabPane tab)
         {
-            if (action != "remove")
-                return false;
-
-            return ReuseTabsService.ClosePage(key);
+            ReuseTabsService.ClosePage(tab.Key);
         }
 
         private void OnLocationChanged(object o, LocationChangedEventArgs _)
@@ -123,7 +117,7 @@ namespace AntDesign
                 ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
             }
 
-            InvokeStateHasChanged();
+            ActivatePane(ReuseTabsService.CurrentUrl);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace AntDesign
         /// Content for tabs. Should include <c>TabPane</c> elements
         /// </summary>
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public virtual RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// Current <see cref="TabPane"/>'s <see cref="TabPane.Key"/>

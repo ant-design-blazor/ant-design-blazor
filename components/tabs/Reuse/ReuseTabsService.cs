@@ -214,7 +214,7 @@ namespace AntDesign
             }
 
             reuseTabsPageItem.Body ??= CreateBody(routeData, reuseTabsPageItem);
-            OnStateHasChanged?.Invoke();
+           // OnStateHasChanged?.Invoke();
         }
 
         private RenderFragment CreateBody(RouteData routeData, ReuseTabsPageItem item)
