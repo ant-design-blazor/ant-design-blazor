@@ -383,8 +383,7 @@ namespace AntDesign
             // if it is active, need to activiate the previous tab.
             if (ActiveKey == tab.Key)
             {
-                var activeTab = _tabs.FirstOrDefault(x => x.TabIndex == tab.TabIndex - 1) ?? _tabs.FirstOrDefault();
-                NavigateToTab(activeTab);
+                Previous();
             }
 
             _shouldRender = true;
@@ -409,21 +408,27 @@ namespace AntDesign
 
         internal void HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
         {
-            var tabIndex = _tabs.FindIndex(p => p.Key == tabPane.Key);
             switch (e.Code)
             {
-                case "Enter" or "NumpadEnter": NavigateToTab(tabPane); break;
-                case "ArrowLeft": NavigateToTab(_tabs[Math.Max(0, tabIndex - 1)]); break;
-                case "ArrowRight": NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, tabIndex + 1)]); break;
-                case "ArrowUp": NavigateToTab(_tabs[0]); break;
-                case "ArrowDown": NavigateToTab(_tabs[^1]); break;
+                case "Enter" or "NumpadEnter": GoTo(tabPane.TabIndex); break;
+                case "ArrowLeft": Previous(); break;
+                case "ArrowRight": Next(); break;
+                case "ArrowUp": GoTo(0); break;
+                case "ArrowDown": GoTo(_tabs.Count - 1); break;
                 default: return;
             }
         }
 
-        private void NavigateToTab(TabPane tabPane)
+        /// <summary>
+        /// Activate the tab with the specified index
+        /// </summary>
+        /// <param name="tabIndex"></param>
+        [PublicApi("1.0.0")]
+        public void GoTo(int tabIndex)
         {
-            ActivatePane(tabPane.Key);
+            var activeIndex = Math.Min(_tabs.Count - 1, Math.Max(0, tabIndex));
+            var tab = _tabs.Find(x => x.TabIndex == activeIndex);
+            ActivatePane(tab.Key);
         }
 
         /// <summary>
@@ -432,8 +437,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void Next()
         {
-            var currentIndex = _tabs.FindIndex(p => p.Key == ActiveKey);
-            NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, currentIndex + 1)]);
+            GoTo(_activeTab.TabIndex + 1);
         }
 
         /// <summary>
@@ -442,8 +446,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void Previous()
         {
-            var currentIndex = _tabs.FindIndex(p => p.Key == ActiveKey);
-            NavigateToTab(_tabs[Math.Max(0, currentIndex - 1)]);
+            GoTo(_activeTab.TabIndex - 1);
         }
 
         /// <summary>
