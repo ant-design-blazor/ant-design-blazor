@@ -119,7 +119,7 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            if (RootMenu?.SelectedKeys.Contains(Key) == true && !IsSelected)
+            if (RootMenu?.SelectedKey(Key) == true && !IsSelected)
                 Select();
         }
 
@@ -132,7 +132,7 @@ namespace AntDesign
 
         internal void UpdateStelected()
         {
-            if (RootMenu?.SelectedKeys.Contains(Key) == true)
+            if (RootMenu?.SelectedKey(Key) == true)
             {
                 if (!IsSelected) Select();
             }

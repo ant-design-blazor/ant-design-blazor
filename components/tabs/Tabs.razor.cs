@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -355,7 +356,6 @@ namespace AntDesign
             if (await OnEdit.Invoke(tab.Key, "remove"))
             {
                 var tabKey = tab.Key;
-                var index = _tabs.IndexOf(tab);
 
                 tab.Close();
 
@@ -363,8 +363,6 @@ namespace AntDesign
                 {
                     await OnClose.InvokeAsync(tabKey);
                 }
-
-                StateHasChanged();
             }
         }
 
@@ -373,6 +371,12 @@ namespace AntDesign
             // fix https://github.com/ant-design-blazor/ant-design-blazor/issues/2180
             if (IsDisposed)
                 return;
+
+            // if it is active, need to activiate the previous tab.
+            if (ActiveKey == tab.Key)
+            {
+                Previous();
+            }
 
             _tabs.Remove(tab);
 
@@ -392,27 +396,51 @@ namespace AntDesign
             ActivatePane(tabPane.Key);
         }
 
-        internal async Task HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
+        internal void HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
         {
             var tabIndex = _tabs.FindIndex(p => p.Key == tabPane.Key);
             switch (e.Code)
             {
-                case "Enter" or "NumpadEnter": await NavigateToTab(tabPane); break;
-                case "ArrowLeft": await NavigateToTab(_tabs[Math.Max(0, tabIndex - 1)]); break;
-                case "ArrowRight": await NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, tabIndex + 1)]); break;
-                case "ArrowUp": await NavigateToTab(_tabs[0]); break;
-                case "ArrowDown": await NavigateToTab(_tabs[^1]); break;
+                case "Enter" or "NumpadEnter": NavigateToTab(tabPane); break;
+                case "ArrowLeft": NavigateToTab(_tabs[Math.Max(0, tabIndex - 1)]); break;
+                case "ArrowRight": NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, tabIndex + 1)]); break;
+                case "ArrowUp": NavigateToTab(_tabs[0]); break;
+                case "ArrowDown": NavigateToTab(_tabs[^1]); break;
                 default: return;
             }
         }
 
-        private async Task NavigateToTab(TabPane tabPane)
+        private void NavigateToTab(TabPane tabPane)
         {
-            await HandleTabClick(tabPane);
-            await FocusAsync(_activeTab.TabBtnRef);
+            ActivatePane(tabPane.Key);
         }
 
-        private void ActivatePane(string key)
+        /// <summary>
+        /// Move to next tab
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void Next()
+        {
+            var currentIndex = _tabs.FindIndex(p => p.Key == ActiveKey);
+            NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, currentIndex + 1)]);
+        }
+
+        /// <summary>
+        /// Move to previous tab
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void Previous()
+        {
+            var currentIndex = _tabs.FindIndex(p => p.Key == ActiveKey);
+            NavigateToTab(_tabs[Math.Max(0, currentIndex - 1)]);
+        }
+
+        /// <summary>
+        /// Activate the specified tab
+        /// </summary>
+        /// <param name="key">The key of the tab to activate</param>
+        [PublicApi("1.0.0")]
+        public void ActivatePane(string key)
         {
             if (_tabs.Count == 0)
                 return;
@@ -461,8 +489,11 @@ namespace AntDesign
             // render the classname of the actived tab
             // Needs to be optimized to render only one tab instead all the tabs
             StateHasChanged();
+
+            _ = FocusAsync(_activeTab.TabBtnRef);
         }
-        private static RenderFragment EmptyRenderFragment => builder =>{};
+
+        private static RenderFragment EmptyRenderFragment => builder => { };
         public override Task SetParametersAsync(ParameterView parameters)
         {
             if (parameters.IsParameterChanged(nameof(TabPosition), TabPosition))
