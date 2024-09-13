@@ -36,7 +36,7 @@
       totalHeight += parseFloat(computedStyle.paddingTop);
       totalHeight += parseFloat(computedStyle.borderTop);
     }
-    return totalHeight + 1;
+    return totalHeight;
   }
   static getTotalHeightBelow(element, left: number, right: number): number {
     let totalHeight = 0;
@@ -67,6 +67,7 @@
         const parentComputedStyle = getComputedStyle(element.parentNode);
         if (!tableHelper.isIgnore(element.parentNode, parentComputedStyle, left, right)) {
           totalHeight += parseFloat(parentComputedStyle.paddingBottom);
+          totalHeight += parseFloat(parentComputedStyle.borderBottom);
         }
       }
       totalHeight += tableHelper.getTotalHeightBelow(element.parentNode, left, right);
