@@ -359,12 +359,16 @@ namespace AntDesign
 
                 tab.Close();
 
+                OnRemoveTab(tab);
+
                 if (OnClose.HasDelegate)
                 {
                     await OnClose.InvokeAsync(tabKey);
                 }
             }
         }
+
+        protected virtual void OnRemoveTab(TabPane tab) { }
 
         internal void RemovePane(TabPane tab)
         {
