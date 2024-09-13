@@ -26,6 +26,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <BlazorWasmPrerenderingLocale>en-US</BlazorWasmPrerenderingLocale>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BlazorWasmPreRendering.Build" Version="4.0.0" />
   </ItemGroup>
