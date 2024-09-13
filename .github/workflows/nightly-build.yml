@@ -114,7 +114,7 @@ jobs:
         run: |
           npm install
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net9 -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net8 -o cargo
         env:
           PACKAGE_VERSION: ${{ steps.pack.outputs.package_version }}
 
