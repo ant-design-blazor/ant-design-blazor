@@ -320,6 +320,11 @@ namespace AntDesign
 
         internal void Complete()
         {
+            if (_afterFirstRender)
+            {
+                return;
+            }
+
             if (!string.IsNullOrWhiteSpace(ActiveKey))
             {
                 var activedPane = _tabs.Find(x => x.Key == ActiveKey);
@@ -797,8 +802,7 @@ namespace AntDesign
                 _shouldRender = true;
                 _renderedActivePane = null;
                 _needUpdateScrollListPosition = true;
-
-                ActivatePane(_activeKey);
+                StateHasChanged();
             }
         }
 
