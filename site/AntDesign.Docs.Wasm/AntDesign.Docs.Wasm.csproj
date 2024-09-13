@@ -27,6 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BlazorWasmPreRendering.Build" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmscriptenEnvVars Include="PYTHONUTF8=1" />
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
