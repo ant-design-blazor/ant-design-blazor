@@ -372,15 +372,21 @@ namespace AntDesign
             if (IsDisposed)
                 return;
 
+            // reorder tabs
+            _tabs.OrderBy(x => x.TabIndex).ForEach((x, i) => x.SetIndex(i));
+
             // if it is active, need to activiate the previous tab.
             if (ActiveKey == tab.Key)
             {
-                Previous();
+                var activeTab = _tabs.FirstOrDefault(x => x.TabIndex == tab.TabIndex - 1);
+                NavigateToTab(activeTab ?? _tabs.FirstOrDefault());
             }
 
             _tabs.Remove(tab);
-
+            _shouldRender = true;
             _needUpdateScrollListPosition = true;
+
+            StateHasChanged();
         }
 
         internal async Task HandleTabClick(TabPane tabPane)
@@ -445,7 +451,6 @@ namespace AntDesign
             if (_tabs.Count == 0)
                 return;
 
-            var tabIndex = _tabs.FindIndex(p => p.Key == key);
             var tab = _tabs.Find(p => p.Key == key);
 
             if (tab == null)
@@ -766,8 +771,8 @@ namespace AntDesign
         {
             if (Draggable && _draggingTab != null)
             {
-                var oldIndex = _tabs.IndexOf(_draggingTab);
-                var newIndex = _tabs.IndexOf(tab);
+                var oldIndex = _draggingTab.TabIndex;
+                var newIndex = tab.TabIndex;
 
                 if (oldIndex == newIndex)
                 {
@@ -776,7 +781,12 @@ namespace AntDesign
 
                 tab.ExchangeWith(_draggingTab);
 
-                var diffTabs = newIndex < oldIndex ? _tabs.GetRange(newIndex, oldIndex - newIndex) : _tabs.GetRange(oldIndex, newIndex - oldIndex);
+                /* Exchange example:
+                 * 1,2,3,4,5,6 -> 1,5,3,4,2,6
+                 *   ^     ^
+                 */
+                var diffTabs = newIndex < oldIndex ? _tabs.Where(x => x.TabIndex == newIndex && x.TabIndex < oldIndex).ToList()
+                    : _tabs.Where(x => x.TabIndex > oldIndex && x.TabIndex == newIndex).ToList();
 
                 for (var i = diffTabs.Count - 2; i >= 0; i--)
                 {

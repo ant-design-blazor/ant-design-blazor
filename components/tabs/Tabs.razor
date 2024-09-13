@@ -33,7 +33,7 @@
 
                 <div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef" id="@(Id)-nav-warpper">
                     <div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef" id="@(Id)-nav-list">
-                        @foreach (var tab in _tabs.OrderBy(x => x.TabIndex))
+                        @foreach (var tab in _tabs)
                         {
                             @tab.RenderTab
                         }
@@ -90,13 +90,14 @@
         </div>
 
     }    
+
     internal void RenderTabPanels(RenderTreeBuilder __builder)
     {             
         <div class="ant-tabs-content-holder ">
             <div class="@_contentClassMapper.Class">
                 @foreach (var tab in _tabs)
                 {
-                    @tab.RenderPane
+                    __builder.AddContent(tab.GetHashCode(), tab.RenderPane);
                 }
             </div>
         </div>     
