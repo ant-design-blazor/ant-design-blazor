@@ -320,6 +320,11 @@ namespace AntDesign
 
         internal void Complete()
         {
+            if (_afterFirstRender)
+            {
+                return;
+            }
+
             if (!string.IsNullOrWhiteSpace(ActiveKey))
             {
                 var activedPane = _tabs.Find(x => x.Key == ActiveKey);
@@ -372,15 +377,20 @@ namespace AntDesign
             if (IsDisposed)
                 return;
 
+            // reorder tabs
+            _tabs.OrderBy(x => x.TabIndex).ForEach((x, i) => x.SetIndex(i));
+
             // if it is active, need to activiate the previous tab.
             if (ActiveKey == tab.Key)
             {
                 Previous();
             }
 
-            _tabs.Remove(tab);
+            _shouldRender = true;
+            _needUpdateScrollListPosition = tab.TabIndex != _tabs.Count - 1; // only update scroll list position when active tab is not the last one
 
-            _needUpdateScrollListPosition = true;
+            _tabs.Remove(tab);
+            StateHasChanged();
         }
 
         internal async Task HandleTabClick(TabPane tabPane)
@@ -398,21 +408,27 @@ namespace AntDesign
 
         internal void HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
         {
-            var tabIndex = _tabs.FindIndex(p => p.Key == tabPane.Key);
             switch (e.Code)
             {
-                case "Enter" or "NumpadEnter": NavigateToTab(tabPane); break;
-                case "ArrowLeft": NavigateToTab(_tabs[Math.Max(0, tabIndex - 1)]); break;
-                case "ArrowRight": NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, tabIndex + 1)]); break;
-                case "ArrowUp": NavigateToTab(_tabs[0]); break;
-                case "ArrowDown": NavigateToTab(_tabs[^1]); break;
+                case "Enter" or "NumpadEnter": GoTo(tabPane.TabIndex); break;
+                case "ArrowLeft": Previous(); break;
+                case "ArrowRight": Next(); break;
+                case "ArrowUp": GoTo(0); break;
+                case "ArrowDown": GoTo(_tabs.Count - 1); break;
                 default: return;
             }
         }
 
-        private void NavigateToTab(TabPane tabPane)
+        /// <summary>
+        /// Activate the tab with the specified index
+        /// </summary>
+        /// <param name="tabIndex"></param>
+        [PublicApi("1.0.0")]
+        public void GoTo(int tabIndex)
         {
-            ActivatePane(tabPane.Key);
+            var activeIndex = Math.Min(_tabs.Count - 1, Math.Max(0, tabIndex));
+            var tab = _tabs.Find(x => x.TabIndex == activeIndex);
+            ActivatePane(tab.Key);
         }
 
         /// <summary>
@@ -421,8 +437,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void Next()
         {
-            var currentIndex = _tabs.FindIndex(p => p.Key == ActiveKey);
-            NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, currentIndex + 1)]);
+            GoTo(_activeTab.TabIndex + 1);
         }
 
         /// <summary>
@@ -431,8 +446,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void Previous()
         {
-            var currentIndex = _tabs.FindIndex(p => p.Key == ActiveKey);
-            NavigateToTab(_tabs[Math.Max(0, currentIndex - 1)]);
+            GoTo(_activeTab.TabIndex - 1);
         }
 
         /// <summary>
@@ -445,7 +459,6 @@ namespace AntDesign
             if (_tabs.Count == 0)
                 return;
 
-            var tabIndex = _tabs.FindIndex(p => p.Key == key);
             var tab = _tabs.Find(p => p.Key == key);
 
             if (tab == null)
@@ -766,8 +779,8 @@ namespace AntDesign
         {
             if (Draggable && _draggingTab != null)
             {
-                var oldIndex = _tabs.IndexOf(_draggingTab);
-                var newIndex = _tabs.IndexOf(tab);
+                var oldIndex = _draggingTab.TabIndex;
+                var newIndex = tab.TabIndex;
 
                 if (oldIndex == newIndex)
                 {
@@ -776,7 +789,12 @@ namespace AntDesign
 
                 tab.ExchangeWith(_draggingTab);
 
-                var diffTabs = newIndex < oldIndex ? _tabs.GetRange(newIndex, oldIndex - newIndex) : _tabs.GetRange(oldIndex, newIndex - oldIndex);
+                /* Exchange example:
+                 * 1,2,3,4,5,6 -> 1,5,3,4,2,6
+                 *   ^     ^
+                 */
+                var diffTabs = newIndex < oldIndex ? _tabs.Where(x => x.TabIndex == newIndex && x.TabIndex < oldIndex).ToList()
+                    : _tabs.Where(x => x.TabIndex > oldIndex && x.TabIndex == newIndex).ToList();
 
                 for (var i = diffTabs.Count - 2; i >= 0; i--)
                 {
@@ -787,8 +805,7 @@ namespace AntDesign
                 _shouldRender = true;
                 _renderedActivePane = null;
                 _needUpdateScrollListPosition = true;
-
-                ActivatePane(_activeKey);
+                StateHasChanged();
             }
         }
 
