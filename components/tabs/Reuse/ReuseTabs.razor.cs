@@ -83,7 +83,6 @@ namespace AntDesign
             {
                 ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
             }
-
         }
 
         protected override bool ShouldRender() => !InReusePageContent && base.ShouldRender();
