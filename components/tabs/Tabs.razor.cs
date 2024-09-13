@@ -383,14 +383,14 @@ namespace AntDesign
             // if it is active, need to activiate the previous tab.
             if (ActiveKey == tab.Key)
             {
-                var activeTab = _tabs.FirstOrDefault(x => x.TabIndex == tab.TabIndex - 1);
-                NavigateToTab(activeTab ?? _tabs.FirstOrDefault());
+                var activeTab = _tabs.FirstOrDefault(x => x.TabIndex == tab.TabIndex - 1) ?? _tabs.FirstOrDefault();
+                NavigateToTab(activeTab);
             }
 
-            _tabs.Remove(tab);
             _shouldRender = true;
-            _needUpdateScrollListPosition = true;
+            _needUpdateScrollListPosition = tab.TabIndex != _tabs.Count - 1; // only update scroll list position when active tab is not the last one
 
+            _tabs.Remove(tab);
             StateHasChanged();
         }
 
