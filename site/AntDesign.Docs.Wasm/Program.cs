@@ -28,9 +28,15 @@ namespace AntDesign.Docs.Wasm
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-            builder.Services.AddAntDesignDocs();
+            ConfigureServices(builder.Services, builder.HostEnvironment.BaseAddress);
 
             await builder.Build().RunAsync();
+        }
+
+        private static void ConfigureServices(IServiceCollection services, string baseAddress)
+        {
+            services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
+            services.AddAntDesignDocs();
         }
     }
 }
