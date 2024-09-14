@@ -109,7 +109,7 @@ namespace AntDesign
             if (action != "remove")
                 return false;
 
-            return ReuseTabsService.ClosePage(key);
+            return ReuseTabsService.ClosePageByKey(key);
         }
 
         private void OnLocationChanged(object o, LocationChangedEventArgs _)

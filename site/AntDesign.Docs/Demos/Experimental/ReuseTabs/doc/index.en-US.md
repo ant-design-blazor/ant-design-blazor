@@ -70,6 +70,9 @@ Used to implement in-application page tabs and page caching.
 | PinUrl | Specify the Url of the loaded page, and then open the page with a route parameter, such as `/order/1` | string | - |
 | KeepAlive| Whether to cache the page state | bool | true |
 | Order | The sequence number | int | 999 |
+| TypeName | The page's classsname | string | - |
+| Key | The page's key | string | - |
+| NewPageForParams | Whether to create a new page for route with different params | bool | false |
 
 ### IReuseTabsPage interface
 
@@ -86,9 +89,9 @@ Used to control ReuseTabs in pages
 | --- | --- | 
 | Pages | The information list of the currently opened pages can be used for caching and recovery | 
 | CreateTab(string pageUrl, RenderFragment? title = null) | Create a tab, but do not navigate to the page, and initialize the page when you navigate to the page. |
-| ClosePage(string key) | Close the page with the specified key. |
-| CloseOther(string key) | Close all pages except those that specify key, `Cloasable=false`, or `Pin=true`. |
+| ClosePage(string url) | Close the page with the specified url. |
+| CloseOther(string url) | Close all pages except those that specify url, `Cloasable=false`, or `Pin=true`. |
 | CloseAll() | Close all pages except those that `Cloasable=false` or `Pin=true`.|
 | CloseCurrent() | Close current page. |
 | Update() | Update the state of current tab. When the variable referenced in `GetPageTitle()` changes, `Update()` needs to be called to update the tab display. |
-| ReloadPage(key) | Reload the page for the specified label, allowing the page components to be reinitialized without refreshing the browser. If no key is passed, reload the current page . |
+| ReloadPage(url) | Reload the page for the specified label, allowing the page components to be reinitialized without refreshing the browser. If no url is passed, reload the current page . |
