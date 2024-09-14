@@ -58,7 +58,7 @@ namespace AntDesign.Docs.Build.CLI.Documentations
                 Iframe = x.DescriptionContent.Meta.Iframe,
                 Code = x.Code,
                 Description = x.DescriptionContent.Descriptions[language] ?? default,
-                Name = x.Type.Split('.').Last().Replace(".razor", ""),
+                Name = x.Name,
                 Style = x.DescriptionContent.Style,
                 Debug = x.DescriptionContent.Meta.Debug,
                 Docs = x.DescriptionContent.Meta.Docs,

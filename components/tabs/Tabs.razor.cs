@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -314,10 +315,16 @@ namespace AntDesign
         {
             tabPane.SetIndex(_tabs.Count);
             _tabs.Add(tabPane);
+            StateHasChanged();
         }
 
         internal void Complete()
         {
+            if (_afterFirstRender)
+            {
+                return;
+            }
+
             if (!string.IsNullOrWhiteSpace(ActiveKey))
             {
                 var activedPane = _tabs.Find(x => x.Key == ActiveKey);
@@ -354,7 +361,6 @@ namespace AntDesign
             if (await OnEdit.Invoke(tab.Key, "remove"))
             {
                 var tabKey = tab.Key;
-                var index = _tabs.IndexOf(tab);
 
                 tab.Close();
 
@@ -371,9 +377,20 @@ namespace AntDesign
             if (IsDisposed)
                 return;
 
-            _tabs.Remove(tab);
+            // reorder tabs
+            _tabs.OrderBy(x => x.TabIndex).ForEach((x, i) => x.SetIndex(i));
 
-            _needUpdateScrollListPosition = true;
+            // if it is active, need to activiate the previous tab.
+            if (ActiveKey == tab.Key)
+            {
+                Previous();
+            }
+
+            _shouldRender = true;
+            _needUpdateScrollListPosition = tab.TabIndex != _tabs.Count - 1; // only update scroll list position when active tab is not the last one
+
+            _tabs.Remove(tab);
+            StateHasChanged();
         }
 
         internal async Task HandleTabClick(TabPane tabPane)
@@ -389,32 +406,59 @@ namespace AntDesign
             ActivatePane(tabPane.Key);
         }
 
-        internal async Task HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
+        internal void HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
         {
-            var tabIndex = _tabs.FindIndex(p => p.Key == tabPane.Key);
             switch (e.Code)
             {
-                case "Enter" or "NumpadEnter": await NavigateToTab(tabPane); break;
-                case "ArrowLeft": await NavigateToTab(_tabs[Math.Max(0, tabIndex - 1)]); break;
-                case "ArrowRight": await NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, tabIndex + 1)]); break;
-                case "ArrowUp": await NavigateToTab(_tabs[0]); break;
-                case "ArrowDown": await NavigateToTab(_tabs[^1]); break;
+                case "Enter" or "NumpadEnter": GoTo(tabPane.TabIndex); break;
+                case "ArrowLeft": Previous(); break;
+                case "ArrowRight": Next(); break;
+                case "ArrowUp": GoTo(0); break;
+                case "ArrowDown": GoTo(_tabs.Count - 1); break;
                 default: return;
             }
         }
 
-        private async Task NavigateToTab(TabPane tabPane)
+        /// <summary>
+        /// Activate the tab with the specified index
+        /// </summary>
+        /// <param name="tabIndex"></param>
+        [PublicApi("1.0.0")]
+        public void GoTo(int tabIndex)
         {
-            await HandleTabClick(tabPane);
-            await FocusAsync(_activeTab.TabBtnRef);
+            var activeIndex = Math.Min(_tabs.Count - 1, Math.Max(0, tabIndex));
+            var tab = _tabs.Find(x => x.TabIndex == activeIndex);
+            ActivatePane(tab.Key);
         }
 
-        private void ActivatePane(string key)
+        /// <summary>
+        /// Move to next tab
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void Next()
+        {
+            GoTo(_activeTab.TabIndex + 1);
+        }
+
+        /// <summary>
+        /// Move to previous tab
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void Previous()
+        {
+            GoTo(_activeTab.TabIndex - 1);
+        }
+
+        /// <summary>
+        /// Activate the specified tab
+        /// </summary>
+        /// <param name="key">The key of the tab to activate</param>
+        [PublicApi("1.0.0")]
+        public void ActivatePane(string key)
         {
             if (_tabs.Count == 0)
                 return;
 
-            var tabIndex = _tabs.FindIndex(p => p.Key == key);
             var tab = _tabs.Find(p => p.Key == key);
 
             if (tab == null)
@@ -454,13 +498,15 @@ namespace AntDesign
             {
                 Card?.InvokeStateHasChagned();
             }
-            
 
             // render the classname of the actived tab
             // Needs to be optimized to render only one tab instead all the tabs
             StateHasChanged();
+
+            _ = FocusAsync(_activeTab.TabBtnRef);
         }
-        private static RenderFragment EmptyRenderFragment => builder =>{};
+
+        private static RenderFragment EmptyRenderFragment => builder => { };
         public override Task SetParametersAsync(ParameterView parameters)
         {
             if (parameters.IsParameterChanged(nameof(TabPosition), TabPosition))
@@ -733,8 +779,8 @@ namespace AntDesign
         {
             if (Draggable && _draggingTab != null)
             {
-                var oldIndex = _tabs.IndexOf(_draggingTab);
-                var newIndex = _tabs.IndexOf(tab);
+                var oldIndex = _draggingTab.TabIndex;
+                var newIndex = tab.TabIndex;
 
                 if (oldIndex == newIndex)
                 {
@@ -743,7 +789,12 @@ namespace AntDesign
 
                 tab.ExchangeWith(_draggingTab);
 
-                var diffTabs = newIndex < oldIndex ? _tabs.GetRange(newIndex, oldIndex - newIndex) : _tabs.GetRange(oldIndex, newIndex - oldIndex);
+                /* Exchange example:
+                 * 1,2,3,4,5,6 -> 1,5,3,4,2,6
+                 *   ^     ^
+                 */
+                var diffTabs = newIndex < oldIndex ? _tabs.Where(x => x.TabIndex == newIndex && x.TabIndex < oldIndex).ToList()
+                    : _tabs.Where(x => x.TabIndex > oldIndex && x.TabIndex == newIndex).ToList();
 
                 for (var i = diffTabs.Count - 2; i >= 0; i--)
                 {
@@ -754,8 +805,7 @@ namespace AntDesign
                 _shouldRender = true;
                 _renderedActivePane = null;
                 _needUpdateScrollListPosition = true;
-
-                ActivatePane(_activeKey);
+                StateHasChanged();
             }
         }
 

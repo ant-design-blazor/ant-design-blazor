@@ -186,17 +186,11 @@ namespace AntDesign
         public EventCallback<string[]> OnOpenChange { get; set; }
 
         /// <summary>
-        /// Array with the keys of currently selected menu items
+        /// Array with the keys of currently selected menu items, set empty array to clear selection instead of null.
         /// </summary>
+        /// <default value="[]" />
         [Parameter]
-        public string[] SelectedKeys
-        {
-            get => _selectedKeys ?? Array.Empty<string>();
-            set
-            {
-                _selectedKeys = value;
-            }
-        }
+        public string[] SelectedKeys { get; set; }
 
         /// <summary>
         /// Callback when the selected items change. Passed array of open keys.
@@ -228,7 +222,7 @@ namespace AntDesign
         internal MenuMode InternalMode { get; private set; }
 
         private string[] _openKeys;
-        private string[] _selectedKeys;
+        private string[] _selectedKeys = [];
         private bool _inlineCollapsed;
         private MenuMode _mode = MenuMode.Vertical;
 
@@ -237,8 +231,10 @@ namespace AntDesign
 
         public override Task SetParametersAsync(ParameterView parameters)
         {
-            if (parameters.IsParameterChanged(nameof(SelectedKeys), SelectedKeys))
+            // if outside doesn't bind this parameter, it would be set to null
+            if (parameters.IsParameterChanged(nameof(SelectedKeys), SelectedKeys, out var newSelectedKeys) && newSelectedKeys is not null)
             {
+                _selectedKeys = newSelectedKeys;
                 _menuItems.ForEach(x => x.UpdateStelected());
             }
 
@@ -441,6 +437,11 @@ namespace AntDesign
             {
                 StateHasChanged();
             }
+        }
+
+        internal bool SelectedKey(string key)
+        {
+            return _selectedKeys.Contains(key);
         }
     }
 }

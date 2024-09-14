@@ -295,6 +295,8 @@ public partial class GenerateFormItem<TModel> : ComponentBase
         var funcType = typeof(Func<>);
         var constructedFuncType = funcType.MakeGenericType(property.PropertyType);
 
+        var isReadOnly = property.GetCustomAttribute<ReadOnlyAttribute>()?.IsReadOnly ?? false;
+
         return builder =>
         {
             builder.OpenComponent(0, constructedType);
@@ -303,6 +305,7 @@ public partial class GenerateFormItem<TModel> : ComponentBase
                 new Action<object>(o => property.SetValue(model, o)));
             builder.AddAttribute(2, "ValueChanged", eventCallback);
             builder.AddAttribute(3, "ValueExpression", Expression.Lambda(constructedFuncType, exp));
+            if (isReadOnly) builder.AddAttribute(4, "Disabled", isReadOnly);
             builder.CloseComponent();
         };
     }

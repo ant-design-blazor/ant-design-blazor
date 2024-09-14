@@ -15,6 +15,8 @@ namespace AntDesign
 
         Task InputFocus(FocusEventArgs e);
 
+        Task InputBlur(FocusEventArgs e);
+
         Task InputInput(ChangeEventArgs args);
 
         Task InputValueChange(string value);

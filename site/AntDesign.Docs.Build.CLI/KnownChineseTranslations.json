@@ -2754,7 +2754,7 @@
     "Translated": "间隙位置，选项：top bottom left right"
   },
   "Display label content for the radio": {
-    "Translated": "显示收音机的标签内容"
+    "Translated": "显示 Radio 的标签内容"
   },
   "Selected value": {
     "Translated": "选定值"
@@ -2763,19 +2763,19 @@
     "Translated": "是否自动对焦"
   },
   "Set to <code>true</code> to style the radio as button group.": {
-    "Translated": "设置为 <code>true</code> 将单选按钮设置为按钮组。"
+    "Translated": "设置为 <code>true</code> 将 Radio 设置为按钮组。"
   },
   "Specifies whether the radio is selected": {
-    "Translated": "指定无线电是否被选中"
+    "Translated": "指定 Radio 是否被选中"
   },
   "Specify if the radio button is checked initially or not": {
-    "Translated": "指定是否最初选中单选按钮"
+    "Translated": "指定是否最初选中 Radio "
   },
   "Callback executed when the checked state changes": {
     "Translated": "checked 状态改变时执行的回调"
   },
   "Disable the radio buton": {
-    "Translated": "禁用单选按钮"
+    "Translated": "禁用 Radio "
   },
   "Radio elements for the group. Use either this or <code>AntDesign.RadioGroup`1.Options</code>": {
     "Translated": "该组的单选元素。使用这个或 <code>AntDesign.RadioGroup`1.Options</code>"
@@ -2787,13 +2787,13 @@
     "Translated": "组的按钮样式。"
   },
   "Input name for all the radios in the group": {
-    "Translated": "输入组中所有无线电的名称"
+    "Translated": "输入组中所有 Radio 的名称"
   },
   "The default selected value for the group": {
     "Translated": "组的默认选择值"
   },
   "Options to display a radio for in the group. Use either this or <code>AntDesign.RadioGroup`1.ChildContent</code>": {
-    "Translated": "在组中显示无线电的选项。使用这个或 <code>AntDesign.RadioGroup`1.ChildContent</code>"
+    "Translated": "在组中显示 Radio 的选项。使用这个或 <code>AntDesign.RadioGroup`1.ChildContent</code>"
   },
   "Whether to allow clear or not when clicking again": {
     "Translated": "再次点击时是否允许清除"
@@ -3325,6 +3325,9 @@
   },
   "Set the vertical scroll, can also be used to specify the height of the scrolling area, can be set as a pixel value": {
     "Translated": "设置垂直滚动，也可以用来指定滚动区域的高度，可以设置为像素值"
+  },
+  "Automatically raise the table height to full screen display": {
+    "Translated": "自动拉升表格高度至满屏显示"
   },
   "Scroll bar width": {
     "Translated": "滚动条宽度"
@@ -4247,9 +4250,6 @@
   "Get current filters' expression for ORMs like Entity Framework. And you can get the filtered data by executing the expression with the data source.": {
     "Translated": "获取 Entity Framework 等 ORM 的当前过滤器表达式。您可以通过对数据源执行表达式来获取筛选后的数据。"
   },
-  "A <code>ForwardRef</code> instance. Used to get a reference to the internal DOM.": {
-    "Translated": "<code>一个 ForwardRef</code> 实例。用于获取对内部 DOM 的引用。"
-  },
   "Placement of the overlay": {
     "Translated": "叠加层的放置"
   },
@@ -4470,7 +4470,7 @@
     "Translated": "设置表中显示的列内容"
   },
   "Type of selection column, checkbox or radio.": {
-    "Translated": "选择列、复选框或单选按钮的类型。"
+    "Translated": "选择列、复选框或 Radio 的类型。"
   },
   "Whether the selection column is disabled.": {
     "Translated": "选择列是否被禁用。"
@@ -4624,5 +4624,41 @@
   },
   "Get or set the list of files that have been uploaded": {
     "Translated": "获取或设置已上传的文件列表"
+  },
+  "Add focus to picker input": {
+    "Translated": "将焦点添加到选取器输入"
+  },
+  "Remove focus from picker input": {
+    "Translated": "从选取器输入中删除焦点"
+  },
+  "Will use both attributes and rules in the same time.": {
+    "Translated": "将同时使用 attributes 和 rules。"
+  },
+  "The value of option.": {
+    "Translated": "option 的值。"
+  },
+  "The content of option.": {
+    "Translated": "选项的内容。"
+  },
+  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
+    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
+  },
+  "Check all nodes": {
+    "Translated": "检查所有节点"
+  },
+  "Uncheck all nodes": {
+    "Translated": "取消选中所有节点"
+  },
+  "Current Node Level": {
+    "Translated": "当前节点级别"
+  },
+  "Get the sibling nodes": {
+    "Translated": "获取同级节点"
+  },
+  "A <code>ForwardRef</code> instance. You can get a reference to the internal DOM by using <code>AntDesign.ForwardRef.Current</code>.": {
+    "Translated": "<code>一个 ForwardRef</code> 实例。您可以使用 <code>AntDesign.ForwardRef.Current</code> 获取对内部 DOM 的引用。"
+  },
+  "Close the popover": {
+    "Translated": "关闭弹出窗口"
   }
 }

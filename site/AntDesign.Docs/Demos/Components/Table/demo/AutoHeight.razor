@@ -1,0 +1,102 @@
+﻿<Layout Style="min-height:100vh;" >
+    <Header Class="header">
+        <div class="logo" />
+    </Header>
+    <Layout>
+        <Sider Width="200" Class="site-layout-background">
+            <Menu Mode="MenuMode.Inline"
+                  DefaultSelectedKeys=@(new[] {"1"})
+                  Style="height: 100%; border-right: 0;">
+                <MenuItem Key="1">option9</MenuItem>
+                <MenuItem Key="2">option10</MenuItem>
+                <MenuItem Key="3">option11</MenuItem>
+                <MenuItem Key="4">option12</MenuItem>
+            </Menu>
+        </Sider>
+        <Layout Style=" padding: 0 24px 24px;">
+            <Breadcrumb Style="margin: 16px 0;">
+                <BreadcrumbItem>Home</BreadcrumbItem>
+                <BreadcrumbItem>List</BreadcrumbItem>
+                <BreadcrumbItem>App</BreadcrumbItem>
+            </Breadcrumb>
+            <Content Class="site-layout-background">
+                <Form @ref="_form" Model="formData" Name="advanced_search" Class="ant-advanced-search-form">
+                    <Row Gutter="24">
+                        @for (var i = 0; i < (_expand ? formData.Count : 6); i++)
+                        {
+                            var index = i;
+                            var field = $"field-{index}";
+                            <GridCol Span="8" @key="index">
+                                <FormItem Label="@($"Field {index}")">
+                                    <Input @bind-Value="@(context[field].Value)" Placeholder="placeholder" />
+                                </FormItem>
+                            </GridCol>
+                        }
+                    </Row>
+                    <Row>
+                        <GridCol Span="24" Style="text-align:right;">
+                            <Button Type="primary" HtmlType="submit">Search</Button>
+                            <Button Style="margin: 0 8px;" OnClick="()=>{_form?.Reset();}">Clear</Button>
+                            <a style="font-size:12px" @onclick="()=>{_expand=!_expand;}">
+                                <Icon Type="@(_expand?"up":"down")"></Icon>  Collapse
+                            </a>
+                        </GridCol>
+                    </Row>
+                </Form>
+                <Table DataSource="data" PageSize="50" AutoHeight>
+                    <Selection />
+                    <PropertyColumn Property="c=>c.Name" Width="150" />
+                    <PropertyColumn Property="c=>c.Age" Width="150" />
+                    <PropertyColumn Property="c=>c.Address" />
+                </Table>
+            </Content>
+        </Layout>
+    </Layout>
+</Layout>
+
+<style>
+    .ant-advanced-search-form{
+        margin-bottom: 1rem;
+    }
+
+    .ant-form-item {
+        margin-bottom: 1rem;
+    }
+</style>
+
+@code {
+    class Column
+    {
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Address { get; set; }
+    }
+
+    Column[] data = Enumerable.Range(0, 100).Select(i => new Column()
+        {
+            Name = $"Edward King {i}",
+            Age = 32,
+            Address = $"Edward King {i}"
+        }).ToArray();
+
+    bool _expand = false;
+    IForm _form;
+    Dictionary<string, FormValue> formData = new();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        for (var i = 0; i < 9; i++)
+        {
+            formData.Add($"field-{i}", new FormValue());
+        }
+    }
+
+    class FormValue
+    {
+        public string Value { get; set; }
+    }
+}
