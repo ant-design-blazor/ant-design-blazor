@@ -63,6 +63,7 @@ namespace AntDesign
         public ReuseTabs()
         {
             Type = TabType.EditableCard;
+            HideAdd = true;
         }
 
         protected override void OnInitialized()
