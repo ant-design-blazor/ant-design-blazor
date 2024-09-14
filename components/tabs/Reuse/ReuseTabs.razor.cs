@@ -107,6 +107,8 @@ namespace AntDesign
 
         private void OnLocationChanged(object o, LocationChangedEventArgs _)
         {
+            UpdateTabsPosition();
+
             if (RouteData != null)
             {
                 ReuseTabsService.TrySetRouteData(RouteData, true);
