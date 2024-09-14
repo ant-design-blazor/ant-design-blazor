@@ -222,11 +222,6 @@ namespace AntDesign
 
         internal void TrySetRouteData(RouteData routeData, bool reuse)
         {
-            if (routeData == null)
-            {
-                return;
-            }
-
             if (!reuse)
             {
                 _pages.Clear();
@@ -239,7 +234,6 @@ namespace AntDesign
                 {
                     Url = CurrentUrl,
                     CreatedAt = DateTime.Now,
-                    TypeName = routeData.PageType.FullName
                 };
 
                 AddPage(reuseTabsPageItem);
@@ -249,7 +243,19 @@ namespace AntDesign
                 reuseTabsPageItem.Url = CurrentUrl;
             }
 
-            reuseTabsPageItem.Body = CreateBody(routeData, reuseTabsPageItem);
+            if (routeData == null)
+            {
+                reuseTabsPageItem.Title ??= b =>
+                {
+                    var url = reuseTabsPageItem.Url;
+                    b.AddContent(0, _menusService.GetMenuTitle(url) ?? url.ToRenderFragment());
+                };
+            }
+            else
+            {
+                reuseTabsPageItem.Body ??= CreateBody(routeData, reuseTabsPageItem);
+                reuseTabsPageItem.TypeName = routeData.PageType.FullName;
+            }
             ActiveKey = reuseTabsPageItem.Key;
             OnStateHasChanged?.Invoke();
         }

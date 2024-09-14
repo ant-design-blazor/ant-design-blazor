@@ -81,14 +81,9 @@ namespace AntDesign
             ReuseTabsService.Init(true);
             ReuseTabsService.OnStateHasChanged += InvokeStateHasChanged;
 
-            if (RouteData != null)
-            {
-                ReuseTabsService.TrySetRouteData(RouteData, true);
-            }
-            else if (ReuseTabsRouteData != null)
-            {
-                ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
-            }
+            RouteData ??= ReuseTabsRouteData?.RouteData;
+
+            ReuseTabsService.TrySetRouteData(RouteData, true);
         }
 
         protected override bool ShouldRender() => !InReusePageContent && base.ShouldRender();
@@ -129,14 +124,9 @@ namespace AntDesign
         {
             UpdateTabsPosition();
 
-            if (RouteData != null)
-            {
-                ReuseTabsService.TrySetRouteData(RouteData, true);
-            }
-            else if (ReuseTabsRouteData != null)
-            {
-                ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
-            }
+            RouteData ??= ReuseTabsRouteData?.RouteData;
+
+            ReuseTabsService.TrySetRouteData(RouteData, true);
 
             ActivatePane(ReuseTabsService.CurrentUrl);
         }

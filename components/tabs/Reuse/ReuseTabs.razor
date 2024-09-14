@@ -38,7 +38,16 @@
                     <ChildContent>
                         @if (!HidePages && Body != null)
                         {
-                            @Body(item)
+                            @if (RouteData == null && item.Url == _navigationManager.Uri)
+                            {
+                                <AntDesign.Core.Internal.KeepAlive>
+                                    @Body(item)
+                                </AntDesign.Core.Internal.KeepAlive>
+                            }
+                            else
+                            {
+                                @Body(item)
+                            }
                         }
                     </ChildContent>
                 </TabPane>

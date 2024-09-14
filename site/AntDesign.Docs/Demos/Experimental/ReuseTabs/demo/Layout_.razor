@@ -11,6 +11,7 @@
     <Layout Class="site-layout">
         <Header Class="site-layout-background" Style="padding: 0;">
             <Icon Type="@IconType.Outline.Reload" Theme="outline" Class="trigger" OnClick="Reload" />
+            Cascading RouteData: <Switch @bind-Value="Routes.CascadingRouteData" OnChange="CascadingChange"></Switch>
         </Header>
         <Breadcrumb AutoGenerate>
             <BreadcrumbItem Href="/reuse">Home</BreadcrumbItem>
@@ -18,7 +19,7 @@
         <ReuseTabs Style="margin: 16px;">
             <Body>
                 <Content Class="site-layout-background" Style="padding: 24px;min-height: 280px;">
-                    @context.Body
+                    @Body
                 </Content>
             </Body>
         </ReuseTabs>
@@ -56,9 +57,20 @@
 </style>
 
 @inject ReuseTabsService ReuseTabsService
+@inject NavigationManager NavigationManager
 @code {
+
+    // This is used to 
+    [CascadingParameter]
+    private Routes Routes { get; set; }
+
     void Reload()
     {
         ReuseTabsService.ReloadPage();
+    }
+
+    void CascadingChange(bool value)
+    {
+        Routes.SetCascadingRouteData(value);
     }
 }
