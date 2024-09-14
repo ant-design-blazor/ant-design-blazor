@@ -19,6 +19,16 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
 - 既可用于容器顶部，也可用于容器内部，是最通用的 Tabs。
 - [RadioButton](/components/radio/#components-radio-demo-radiobutton) 可作为更次级的页签来使用。
 
+## 支持键盘导航
+
+当焦点在标签上时，可用键盘导航
+
+- <kbd>左键</kbd>：导航到前一个选项卡
+- <kbd>右键</kbd>：导航到后一个选项卡
+- <kbd>上键</kbd>：导航到第一个选项卡
+- <kbd>下键</kbd>：导航到最后一个选项卡
+- <kbd>回车键</kbd>：导航到当前焦点选项卡
+
 ## API
 
 ### Tabs
