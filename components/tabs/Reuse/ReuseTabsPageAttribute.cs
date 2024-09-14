@@ -14,7 +14,7 @@ namespace AntDesign
         /// <summary>
         /// Specifies the title of the tab.
         /// <para>
-        ///  If you want't to set a <see cref="Microsoft.AspNetCore.Components.RenderFragment"/>, you need implement <see cref="IReuseTabsPage.GetPageTitle()"/> in the page.
+        ///  If you want to set a <see cref="Microsoft.AspNetCore.Components.RenderFragment"/>, you need implement <see cref="IReuseTabsPage.GetPageTitle()"/> in the page.
         /// </para>
         /// </summary>
         public string Title { get; set; }
@@ -53,7 +53,10 @@ namespace AntDesign
         public int Order { get; set; } = 999;
 
         /// <summary>
-        /// Weather the page is a singleton. If true, the page will be reused although the url is different, otherwise, another tab will be created.
+        /// Weather the page is a singleton.
+        /// <para>
+        /// If true, the page will be reused although the parameters is different, otherwise, another tab will be created.
+        /// </para>
         /// </summary>
         public bool Singleton { get; set; }
     }
