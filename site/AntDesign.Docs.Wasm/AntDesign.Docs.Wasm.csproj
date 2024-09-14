@@ -27,7 +27,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <BlazorWasmPrerenderingLocale>en-US</BlazorWasmPrerenderingLocale>
+    <BlazorWasmPrerenderingLocale>en-US,zh-CN</BlazorWasmPrerenderingLocale>
+    <BlazorWasmPrerenderingUrlPathToExplicitFetch>/en-US;/zh-CN</BlazorWasmPrerenderingUrlPathToExplicitFetch>
   </PropertyGroup>
 
   <ItemGroup>
