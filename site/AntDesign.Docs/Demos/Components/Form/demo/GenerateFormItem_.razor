@@ -42,7 +42,7 @@
 
         [DisplayName("NumericTestNullable")] public decimal? F { get; set; }
 
-        [DisplayName("EnumTest")][Required] public TestEnum G { get; set; }
+        [DisplayName("EnumTest")] [Required] public TestEnum G { get; set; }
 
         [DisplayName("EnumTestNullable")] public TestEnum? H { get; set; }
 
@@ -55,7 +55,6 @@
         [DisplayName("ReadOnlyTest"), ReadOnly(true)]
         public string K { get; set; }
 
-        // [ValidateComplexType]
         public ModelChild ModelChild { get; set; }
     }
 
@@ -98,28 +97,28 @@
     }
 
     private Model model = new Model()
-            {
-                ModelChild = new ModelChild()
-                {
-                    ModelChild2 = new ModelChild2()
-                }
-            };
+    {
+        ModelChild = new ModelChild()
+        {
+            ModelChild2 = new ModelChild2()
+        }
+    };
 
     public FormValidationRule[]? ValidateRules(string structurePath)
     {
         if (structurePath == "A")
         {
             return new FormValidationRule[]
-        {
+            {
                 new FormValidationRule { Required = true, Min = 5, Max = 10 }
-        };
+            };
         }
         if (structurePath == "ModelChild.AA")
         {
             return new FormValidationRule[]
-        {
+            {
                 new FormValidationRule { Required = true, Max = 10 }
-        };
+            };
         }
 
         return null;
