@@ -16,7 +16,15 @@
             {
                 <TabPane @key="@item.Url" Key="@item.Url" Class="@TabPaneClass" Closable="item.Closable" ForceRender>
                     <TabTemplate>
-                        @item.Title
+                        @if (Type == TabType.Line && item.Closable)
+                        {
+                            <span> @item.Title</span>
+                            <Icon Style="margin-right:0;" Type="@IconType.Outline.Close" OnClick="@(()=>{ ClosePage(item.Url);})" />
+                        }
+                        else
+                        {
+                            @item.Title
+                        }
                     </TabTemplate>
                     <TabContextMenu>
                         <Menu>

@@ -247,7 +247,7 @@ namespace AntDesign
         private readonly List<TabPane> _tabs = new List<TabPane>();
         private List<TabPane> _invisibleTabs = new List<TabPane>();
 
-
+        private static RenderFragment EmptyRenderFragment => builder => { };
         private bool NavWrapPingLeft => _scrollOffset > 0;
         private bool NavWrapPingRight => _scrollListWidth - _wrapperWidth - _scrollOffset > 0;
 
@@ -375,6 +375,8 @@ namespace AntDesign
 
         protected virtual void OnRemoveTab(TabPane tab) { }
 
+        protected virtual void OnActiveTabChanged(TabPane tab) { }
+
         internal void RemovePane(TabPane tab)
         {
             // fix https://github.com/ant-design-blazor/ant-design-blazor/issues/2180
@@ -385,7 +387,7 @@ namespace AntDesign
             _tabs.OrderBy(x => x.TabIndex).ForEach((x, i) => x.SetIndex(i));
 
             // if it is active, need to activiate the previous tab.
-            if (ActiveKey == tab.Key)
+            if (_activeKey == tab.Key)
             {
                 Previous();
             }
@@ -481,18 +483,19 @@ namespace AntDesign
 
             _activeTab = tab;
 
-            if (_activeKey != _activeTab.Key)
+            if (_activeKey == _activeTab.Key)
             {
-                _activeKey = _activeTab.Key;
-                if (ActiveKeyChanged.HasDelegate)
-                {
-                    ActiveKeyChanged.InvokeAsync(_activeKey);
-                }
+                return;
             }
-            if (OnChange.HasDelegate)
+
+            _activeKey = _activeTab.Key;
+            if (ActiveKeyChanged.HasDelegate)
             {
-                OnChange.InvokeAsync(_activeTab.Key);
+                ActiveKeyChanged.InvokeAsync(_activeKey);
             }
+
+            OnActiveTabChanged(_activeTab);
+
             TryRenderInk();
             if (Card?.Body == null)
             {
@@ -510,7 +513,6 @@ namespace AntDesign
             _ = FocusAsync(_activeTab.TabBtnRef);
         }
 
-        private static RenderFragment EmptyRenderFragment => builder => { };
         public override Task SetParametersAsync(ParameterView parameters)
         {
             if (parameters.IsParameterChanged(nameof(TabPosition), TabPosition))

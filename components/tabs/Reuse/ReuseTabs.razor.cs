@@ -60,6 +60,11 @@ namespace AntDesign
         /// </summary>
         public override RenderFragment ChildContent { get; set; }
 
+        public ReuseTabs()
+        {
+            Type = TabType.EditableCard;
+        }
+
         protected override void OnInitialized()
         {
             if (InReusePageContent)
@@ -100,9 +105,23 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
+        private void ClosePage(string key)
+        {
+            UpdateTabsPosition();
+            ReuseTabsService.ClosePage(key);
+        }
+
         protected override void OnRemoveTab(TabPane tab)
         {
             ReuseTabsService.ClosePage(tab.Key);
+        }
+
+        protected override void OnActiveTabChanged(TabPane tab)
+        {
+            if (tab.Key != ReuseTabsService.CurrentUrl)
+            {
+                ReuseTabsService.CurrentUrl = tab.Key;
+            }
         }
 
         private void OnLocationChanged(object o, LocationChangedEventArgs _)
