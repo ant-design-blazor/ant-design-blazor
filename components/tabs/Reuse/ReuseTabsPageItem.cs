@@ -31,6 +31,9 @@ namespace AntDesign
 
         public string Key { get; set; }
 
-        public bool NewPageForParams { get; set; }
+        /// <summary>
+        /// Weather the page is a singleton. If true, the page will be reused although the url is different, otherwise, another tab will be created.
+        /// </summary>
+        public bool Singleton { get; set; }
     }
 }

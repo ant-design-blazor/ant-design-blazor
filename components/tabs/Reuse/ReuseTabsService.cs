@@ -231,8 +231,7 @@ namespace AntDesign
             {
                 _pages.Clear();
             }
-            var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == CurrentUrl)
-                ?? _pages?.FirstOrDefault(w => !w.NewPageForParams && routeData.PageType != null && w.TypeName == routeData.PageType.FullName);
+            var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == CurrentUrl || (w.Singleton && w.TypeName == routeData.PageType?.FullName));
 
             if (reuseTabsPageItem == null)
             {
@@ -300,7 +299,7 @@ namespace AntDesign
                 pageItem.Pin = attr.Pin;
                 pageItem.KeepAlive = attr.KeepAlive;
                 pageItem.Order = attr.Order;
-                pageItem.NewPageForParams = attr.NewPageForParams;
+                pageItem.Singleton = attr.Singleton;
             }
 
             pageItem.Title ??= b =>
