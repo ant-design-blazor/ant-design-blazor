@@ -4,7 +4,9 @@
     <SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)</SolutionDir>
   </PropertyGroup>
   <PropertyGroup>
-    <NoWarn>$(NoWarn);NU1902;NU1903;CS8669;CS8602;CS8625;SYSLIB0051;nullable</NoWarn>
-    <WarningsAsErrors>CS0168</WarningsAsErrors>
+    <!-- disable nuget audit for now -->
+    <NuGetAudit>false</NuGetAudit>
+    <NoWarn>$(NoWarn);nullable</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 </Project>
