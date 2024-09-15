@@ -42,7 +42,7 @@ namespace AntDesign
         /// Content for tabs. Should include <c>TabPane</c> elements
         /// </summary>
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public virtual RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// Current <see cref="TabPane"/>'s <see cref="TabPane.Key"/>
@@ -247,7 +247,7 @@ namespace AntDesign
         private readonly List<TabPane> _tabs = new List<TabPane>();
         private List<TabPane> _invisibleTabs = new List<TabPane>();
 
-
+        private static RenderFragment EmptyRenderFragment => builder => { };
         private bool NavWrapPingLeft => _scrollOffset > 0;
         private bool NavWrapPingRight => _scrollListWidth - _wrapperWidth - _scrollOffset > 0;
 
@@ -320,6 +320,11 @@ namespace AntDesign
 
         internal void Complete()
         {
+            if (_afterFirstRender)
+            {
+                return;
+            }
+
             if (!string.IsNullOrWhiteSpace(ActiveKey))
             {
                 var activedPane = _tabs.Find(x => x.Key == ActiveKey);
@@ -359,6 +364,8 @@ namespace AntDesign
 
                 tab.Close();
 
+                OnRemoveTab(tab);
+
                 if (OnClose.HasDelegate)
                 {
                     await OnClose.InvokeAsync(tabKey);
@@ -366,21 +373,30 @@ namespace AntDesign
             }
         }
 
+        protected virtual void OnRemoveTab(TabPane tab) { }
+
+        protected virtual void OnActiveTabChanged(TabPane tab) { }
+
         internal void RemovePane(TabPane tab)
         {
             // fix https://github.com/ant-design-blazor/ant-design-blazor/issues/2180
             if (IsDisposed)
                 return;
 
+            // reorder tabs
+            _tabs.OrderBy(x => x.TabIndex).ForEach((x, i) => x.SetIndex(i));
+
             // if it is active, need to activiate the previous tab.
-            if (ActiveKey == tab.Key)
+            if (_activeKey == tab.Key)
             {
                 Previous();
             }
 
-            _tabs.Remove(tab);
+            _shouldRender = true;
+            _needUpdateScrollListPosition = tab.TabIndex != _tabs.Count - 1; // only update scroll list position when active tab is not the last one
 
-            _needUpdateScrollListPosition = true;
+            _tabs.Remove(tab);
+            StateHasChanged();
         }
 
         internal async Task HandleTabClick(TabPane tabPane)
@@ -398,21 +414,27 @@ namespace AntDesign
 
         internal void HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
         {
-            var tabIndex = _tabs.FindIndex(p => p.Key == tabPane.Key);
             switch (e.Code)
             {
-                case "Enter" or "NumpadEnter": NavigateToTab(tabPane); break;
-                case "ArrowLeft": NavigateToTab(_tabs[Math.Max(0, tabIndex - 1)]); break;
-                case "ArrowRight": NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, tabIndex + 1)]); break;
-                case "ArrowUp": NavigateToTab(_tabs[0]); break;
-                case "ArrowDown": NavigateToTab(_tabs[^1]); break;
+                case "Enter" or "NumpadEnter": GoTo(tabPane.TabIndex); break;
+                case "ArrowLeft": Previous(); break;
+                case "ArrowRight": Next(); break;
+                case "ArrowUp": GoTo(0); break;
+                case "ArrowDown": GoTo(_tabs.Count - 1); break;
                 default: return;
             }
         }
 
-        private void NavigateToTab(TabPane tabPane)
+        /// <summary>
+        /// Activate the tab with the specified index
+        /// </summary>
+        /// <param name="tabIndex"></param>
+        [PublicApi("1.0.0")]
+        public void GoTo(int tabIndex)
         {
-            ActivatePane(tabPane.Key);
+            var activeIndex = Math.Min(_tabs.Count - 1, Math.Max(0, tabIndex));
+            var tab = _tabs.Find(x => x.TabIndex == activeIndex);
+            ActivatePane(tab.Key);
         }
 
         /// <summary>
@@ -421,8 +443,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void Next()
         {
-            var currentIndex = _tabs.FindIndex(p => p.Key == ActiveKey);
-            NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, currentIndex + 1)]);
+            GoTo(_activeTab.TabIndex + 1);
         }
 
         /// <summary>
@@ -431,8 +452,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void Previous()
         {
-            var currentIndex = _tabs.FindIndex(p => p.Key == ActiveKey);
-            NavigateToTab(_tabs[Math.Max(0, currentIndex - 1)]);
+            GoTo(_activeTab.TabIndex - 1);
         }
 
         /// <summary>
@@ -445,7 +465,6 @@ namespace AntDesign
             if (_tabs.Count == 0)
                 return;
 
-            var tabIndex = _tabs.FindIndex(p => p.Key == key);
             var tab = _tabs.Find(p => p.Key == key);
 
             if (tab == null)
@@ -464,18 +483,19 @@ namespace AntDesign
 
             _activeTab = tab;
 
-            if (_activeKey != _activeTab.Key)
+            if (_activeKey == _activeTab.Key)
             {
-                _activeKey = _activeTab.Key;
-                if (ActiveKeyChanged.HasDelegate)
-                {
-                    ActiveKeyChanged.InvokeAsync(_activeKey);
-                }
+                return;
             }
-            if (OnChange.HasDelegate)
+
+            _activeKey = _activeTab.Key;
+            if (ActiveKeyChanged.HasDelegate)
             {
-                OnChange.InvokeAsync(_activeTab.Key);
+                ActiveKeyChanged.InvokeAsync(_activeKey);
             }
+
+            OnActiveTabChanged(_activeTab);
+
             TryRenderInk();
             if (Card?.Body == null)
             {
@@ -493,7 +513,6 @@ namespace AntDesign
             _ = FocusAsync(_activeTab.TabBtnRef);
         }
 
-        private static RenderFragment EmptyRenderFragment => builder => { };
         public override Task SetParametersAsync(ParameterView parameters)
         {
             if (parameters.IsParameterChanged(nameof(TabPosition), TabPosition))
@@ -766,8 +785,8 @@ namespace AntDesign
         {
             if (Draggable && _draggingTab != null)
             {
-                var oldIndex = _tabs.IndexOf(_draggingTab);
-                var newIndex = _tabs.IndexOf(tab);
+                var oldIndex = _draggingTab.TabIndex;
+                var newIndex = tab.TabIndex;
 
                 if (oldIndex == newIndex)
                 {
@@ -776,7 +795,12 @@ namespace AntDesign
 
                 tab.ExchangeWith(_draggingTab);
 
-                var diffTabs = newIndex < oldIndex ? _tabs.GetRange(newIndex, oldIndex - newIndex) : _tabs.GetRange(oldIndex, newIndex - oldIndex);
+                /* Exchange example:
+                 * 1,2,3,4,5,6 -> 1,5,3,4,2,6
+                 *   ^     ^
+                 */
+                var diffTabs = newIndex < oldIndex ? _tabs.Where(x => x.TabIndex == newIndex && x.TabIndex < oldIndex).ToList()
+                    : _tabs.Where(x => x.TabIndex > oldIndex && x.TabIndex == newIndex).ToList();
 
                 for (var i = diffTabs.Count - 2; i >= 0; i--)
                 {
@@ -787,8 +811,7 @@ namespace AntDesign
                 _shouldRender = true;
                 _renderedActivePane = null;
                 _needUpdateScrollListPosition = true;
-
-                ActivatePane(_activeKey);
+                StateHasChanged();
             }
         }
 
