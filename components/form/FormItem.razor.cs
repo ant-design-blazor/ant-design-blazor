@@ -212,6 +212,12 @@ namespace AntDesign
         [Parameter]
         public string Help { get; set; }
 
+        /// <summary>
+        /// Help Tooltip information
+        /// </summary>
+        [Parameter]
+        public string ToolTipMsg { get; set; }
+        
         private static readonly Dictionary<FormValidateStatus, (string theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (string theme, string type)>
         {
             { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },

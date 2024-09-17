@@ -19,6 +19,12 @@
                         {
                             <span class="ant-form-item-optional">@Form.Locale.Optional</span>
                         }
+                        @if (ToolTipMsg != null)
+                        {
+                            <Tooltip Placement="Placement.TopLeft" Title="@ToolTipMsg">
+                                <Icon Type="question-circle" Theme="outline" />
+                            </Tooltip>
+                        }
                     </label>
                 }
             </AntDesign.Col>
