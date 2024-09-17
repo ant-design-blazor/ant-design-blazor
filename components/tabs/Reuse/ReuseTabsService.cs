@@ -225,6 +225,7 @@ namespace AntDesign
             {
                 _pages.Clear();
             }
+
             var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == CurrentUrl || (w.Singleton && w.TypeName == routeData.PageType?.FullName));
 
             if (reuseTabsPageItem == null)
@@ -241,6 +242,8 @@ namespace AntDesign
             {
                 reuseTabsPageItem.Url = CurrentUrl; // singleton page would change url
             }
+
+            reuseTabsPageItem.Rendered = true;
 
             if (routeData == null)
             {
