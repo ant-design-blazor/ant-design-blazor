@@ -46,11 +46,10 @@ namespace AntDesign
             {
                 _activeKey = value;
                 var pageItem = _pages.FirstOrDefault(r => r.Key == value);
-                if (pageItem != null && (pageItem.Url != CurrentUrl || pageItem.Body == null))
+                if (pageItem != null && (pageItem.Url != CurrentUrl))
                 {
                     CurrentUrl = pageItem.Url;
                 }
-
             }
         }
 
@@ -238,9 +237,9 @@ namespace AntDesign
 
                 AddPage(reuseTabsPageItem);
             }
-            else
+            else if (reuseTabsPageItem.Singleton)
             {
-                reuseTabsPageItem.Url = CurrentUrl;
+                reuseTabsPageItem.Url = CurrentUrl; // singleton page would change url
             }
 
             if (routeData == null)

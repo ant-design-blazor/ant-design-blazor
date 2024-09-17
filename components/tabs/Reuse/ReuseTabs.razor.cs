@@ -60,6 +60,8 @@ namespace AntDesign
         /// </summary>
         public override RenderFragment ChildContent { get; set; }
 
+        private bool _showRender;
+
         public ReuseTabs()
         {
             Type = TabType.EditableCard;
@@ -84,16 +86,18 @@ namespace AntDesign
             RouteData ??= ReuseTabsRouteData?.RouteData;
 
             ReuseTabsService.TrySetRouteData(RouteData, true);
+
+            _showRender = true;
+            ActiveKey = ReuseTabsService.ActiveKey;
         }
 
-        protected override bool ShouldRender() => !InReusePageContent && base.ShouldRender();
+        protected override bool ShouldRender() => !InReusePageContent && base.ShouldRender() && _showRender == true;
 
-        protected override Task OnFirstAfterRenderAsync()
+        protected override void OnAfterRender(bool firstRender)
         {
-            ActivatePane(ReuseTabsService.CurrentUrl);
-            return base.OnFirstAfterRenderAsync();
+            _showRender = false;
+            base.OnAfterRender(firstRender);
         }
-
         protected override void Dispose(bool disposing)
         {
             ReuseTabsService.OnStateHasChanged -= InvokeStateHasChanged;
@@ -114,9 +118,10 @@ namespace AntDesign
 
         protected override void OnActiveTabChanged(TabPane tab)
         {
-            if (tab.Key != ReuseTabsService.CurrentUrl)
+            _showRender = false;
+            if (tab.Key != ReuseTabsService.ActiveKey)
             {
-                ReuseTabsService.CurrentUrl = tab.Key;
+                ReuseTabsService.ActiveKey = tab.Key;
             }
         }
 
@@ -128,7 +133,8 @@ namespace AntDesign
 
             ReuseTabsService.TrySetRouteData(RouteData, true);
 
-            ActivatePane(ReuseTabsService.CurrentUrl);
+            _showRender = true;
+            ActivatePane(ReuseTabsService.ActiveKey);
         }
     }
 }
