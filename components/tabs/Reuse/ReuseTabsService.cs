@@ -255,6 +255,7 @@ namespace AntDesign
                 reuseTabsPageItem.Body ??= CreateBody(routeData, reuseTabsPageItem);
                 reuseTabsPageItem.TypeName = routeData.PageType.FullName;
             }
+
             ActiveKey = reuseTabsPageItem.Key;
             OnStateHasChanged?.Invoke();
         }

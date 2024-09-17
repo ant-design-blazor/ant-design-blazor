@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 
@@ -24,6 +23,9 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public RenderFragment<ReuseTabsPageItem> Body { get; set; } = context => context.Body;
+
+        [Parameter]
+        public RenderFragment Body2 { get; set; }
 
         /// <summary>
         /// Localization Settings.
@@ -91,7 +93,7 @@ namespace AntDesign
             ActiveKey = ReuseTabsService.ActiveKey;
         }
 
-        protected override bool ShouldRender() => !InReusePageContent && base.ShouldRender() && _showRender == true;
+        protected override bool ShouldRender() => !InReusePageContent && base.ShouldRender();
 
         protected override void OnAfterRender(bool firstRender)
         {
@@ -118,7 +120,6 @@ namespace AntDesign
 
         protected override void OnActiveTabChanged(TabPane tab)
         {
-            _showRender = false;
             if (tab.Key != ReuseTabsService.ActiveKey)
             {
                 ReuseTabsService.ActiveKey = tab.Key;
@@ -133,7 +134,6 @@ namespace AntDesign
 
             ReuseTabsService.TrySetRouteData(RouteData, true);
 
-            _showRender = true;
             ActivatePane(ReuseTabsService.ActiveKey);
         }
     }

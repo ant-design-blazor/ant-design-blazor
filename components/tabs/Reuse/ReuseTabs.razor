@@ -41,7 +41,7 @@
                             @if (item.Body == null && (item.Rendered|| item.Url == ReuseTabsService.CurrentUrl))
                             {
                                 item.Rendered = true;
-                                <AntDesign.Core.Internal.KeepAlive ChildContent="Body(item)"></AntDesign.Core.Internal.KeepAlive>
+                                <AntDesign.Core.Internal.KeepAlive ChildContent="Body2"></AntDesign.Core.Internal.KeepAlive>
                             }
                             else if (item.Body!=null)
                             {
