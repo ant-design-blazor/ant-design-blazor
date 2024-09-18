@@ -4637,9 +4637,6 @@
   "The content of option.": {
     "Translated": "选项的内容。"
   },
-  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
-    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
-  },
   "Check all nodes": {
     "Translated": "检查所有节点"
   },
@@ -4675,5 +4672,8 @@
   },
   "Activate the specified tab": {
     "Translated": "激活指定的选项卡"
+  },
+  "FormItem Help Tooltip information": {
+    "Translated": "设置表单字段的帮助提示信息"
   }
 }
