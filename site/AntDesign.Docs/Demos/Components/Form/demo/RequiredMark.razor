@@ -18,7 +18,7 @@
     <FormItem Label="Required By Rule Field" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
         <Input @bind-Value="@context.RequiredByRule" />
     </FormItem>
-    <FormItem Label="Required By Data Attribute">
+    <FormItem Label="Required By Data Attribute" Tooltip="This is a required field">
         <Input @bind-Value="@context.RequiredByDataAttribute" />
     </FormItem>
     <FormItem Label="Optional" >
