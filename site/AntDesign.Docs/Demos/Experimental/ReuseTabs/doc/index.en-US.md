@@ -15,20 +15,7 @@ Used to implement in-application page tabs and page caching.
 
 ## How to use
 
-1. Modify the `Routes.razor` file, warp the `RouteView` or `AuthorizeRouteView` with `<CascadingValue Value="routeData">...</CascadingValue>`.
-
-   ```html
-   <Router AppAssembly="@typeof(Program).Assembly">
-       <Found Context="routeData">
-           <CascadingValue Value="routeData">
-               <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" / >
-           </CascadingValue>
-      </Found>
-       ...
-   </Router>
-   ```
-
-2. Then modify the `MainLayout.razor` file, add the `ReuseTabs` component. Note that `@Body` is not required at this case.
+- Modify the `MainLayout.razor` file, add the `ReuseTabs` component. Note that `@Body` is not required at this case.
 
    ```html
    @inherits LayoutComponentBase
@@ -39,10 +26,23 @@ Used to implement in-application page tabs and page caching.
        </div>
 
        <div class="main">
-         <ReuseTabs Class="top-row px-4" TabPaneClass="content px-4" / >
+         <ReuseTabs Class="top-row px-4" TabPaneClass="content px-4" Body="Body" / >
        </div>
    </div>
 
+   ```
+
+- If you want to use the `ReuseTabsPageAttribute` or `IReuseTabsPage`, you also need to modify the `Routes.razor` file, warp the `RouteView` or `AuthorizeRouteView` with `<CascadingValue Value="routeData">...</CascadingValue>`.
+
+   ```html
+   <Router AppAssembly="@typeof(Program).Assembly">
+       <Found Context="routeData">
+           <CascadingValue Value="routeData">
+               <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" / >
+           </CascadingValue>
+      </Found>
+       ...
+   </Router>
    ```
 
 ## API
@@ -61,6 +61,9 @@ Used to implement in-application page tabs and page caching.
 
 ### ReuseTabsPageAttribute attribute
 
+
+**Note: Must cascade RouteData, otherwise it will be invalid.**
+
 | Property | Description | Type | Default | 
 | --- | --- | --- | --- |
 | Title | The fixed title show on tab. | string | current path |
@@ -75,6 +78,8 @@ Used to implement in-application page tabs and page caching.
 | NewPageForParams | Whether to create a new page for route with different params | bool | false |
 
 ### IReuseTabsPage interface
+
+**Note: Must cascade RouteData, otherwise it will be invalid.**
 
 | Method | Description |
 | --- | --- | 

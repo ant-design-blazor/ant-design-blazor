@@ -15,21 +15,8 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 - 需要缓存页面状态，返回已打开页面状态不丢失
 
 ## 使用方法
-
-1. 修改项目中的 `Routes.razor` 文件，使用 `<CascadingValue Value="routeData">` 包裹 `RouteView` 或者 `AuthorizeRouteView`。
-
-   ```razor
-   <Router AppAssembly="@typeof(Program).Assembly">
-       <Found Context="routeData">
-           <CascadingValue Value="routeData">
-               <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" / >
-           </CascadingValue>
-      </Found>
-       ...
-   </Router>
-   ```
-
-2. 修改 `MainLayout.razor` 文件, 增加 `ReuseTabs` 组件。注意 `@Body` 是不需要的。
+ 
+修改 `MainLayout.razor` 文件, 增加 `ReuseTabs` 组件。注意，不级联传入 RouteData 时，`@Body` 是需要的。
 
    ```razor
    @inherits LayoutComponentBase
@@ -40,10 +27,23 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
        </div>
 
        <div class="main">
-         <ReuseTabs Class="top-row px-4" TabPaneClass="content px-4" / >
+         <ReuseTabs Class="top-row px-4" TabPaneClass="content px-4" Body="Body" / >
        </div>
    </div>
 
+   ```
+
+只需这一步，就可以轻松实现一个简单的多标签页功能。但如果您还需要更强大的页面配置功能，如以下示例中使用 `ReuseTabsPageAttribute` 或 `IReuseTabsPage`，还需要额外修改项目中的 `Routes.razor` 文件，使用 `<CascadingValue Value="routeData">` 包裹 `RouteView` 或者 `AuthorizeRouteView`。
+
+   ```razor
+   <Router AppAssembly="@typeof(Program).Assembly">
+       <Found Context="routeData">
+           <CascadingValue Value="routeData">
+               <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" / >
+           </CascadingValue>
+      </Found>
+       ...
+   </Router>
    ```
 
 ## API
@@ -62,6 +62,8 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 
 ### ReuseTabsPageAttribute 特性
 
+**必须级联传入 RouteData，否则无效。**
+
 | 属性 | 描述 | 类型 | 默认值 | 
 | --- | --- | --- | --- |
 | Title | 设置在 tab 上的固定标题 | string | current path |
@@ -76,6 +78,8 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 | NewPageForParams | 是否针对具有不同参数的路由创建新的页面 | bool | false |
 
 ### IReuseTabsPage 接口
+
+**必须级联传入 RouteData，否则无效。**
 
 | 方法 | Description | 
 | --- | --- | 
