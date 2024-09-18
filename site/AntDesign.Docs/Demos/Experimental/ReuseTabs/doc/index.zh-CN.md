@@ -16,7 +16,7 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 
 ## 使用方法
  
-修改 `MainLayout.razor` 文件, 增加 `ReuseTabs` 组件。注意，不级联传入 RouteData 时，`@Body` 是需要的。
+修改 `MainLayout.razor` 文件, 增加 `ReuseTabs` 组件。注意，不级联传入 RouteData 时，`@Body` 是必须的。
 
    ```razor
    @inherits LayoutComponentBase
@@ -33,7 +33,10 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 
    ```
 
-只需这一步，就可以轻松实现一个简单的多标签页功能。但如果您还需要更强大的页面配置功能，如以下示例中使用 `ReuseTabsPageAttribute` 或 `IReuseTabsPage`，还需要额外修改项目中的 `Routes.razor` 文件，使用 `<CascadingValue Value="routeData">` 包裹 `RouteView` 或者 `AuthorizeRouteView`。
+只需这一步，就可以轻松实现一个简单的多标签页功能。
+
+但如果您还需要更强大的页面配置功能，如以下示例中使用 `ReuseTabsPageAttribute` 或 `IReuseTabsPage`，
+则还需要额外修改项目中的 `Routes.razor` 文件，使用 `<CascadingValue Value="routeData">` 包裹 `RouteView` 或者 `AuthorizeRouteView`。
 
    ```razor
    <Router AppAssembly="@typeof(Program).Assembly">
@@ -52,13 +55,16 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 
 | 属性 | 描述 | 类型 | 默认值 | 
 | --- | --- | --- | --- |
-| TabPaneClass | 可设置 Pane 容器的类名 | string | --- |
+| Body | 用于设置 Layout 组件的 Body，无级联 RouteData 模式下必须设置。| RenderFragment | - |
+| TabPaneClass | 可设置 Pane 容器的类名 | string | - |
 | Draggable | 是否可拖拽调整顺序 | bool | false |
 | Size | Tabs 组件大小 | TabSize | - |
-| Body | 渲染类容的模板，可以给 TabPane 中页面周围增加样式，传入上下文为 ReuseTabsPageItem，其中的 Body 即为页面内容 | `RenderFragment<ReuseTabsPageItem>` | context => context.Body |
+| TabPaneTemplate | 渲染类容的模板，可以给 TabPane 中页面周围增加样式，传入上下文为 ReuseTabsPageItem，其中的 Body 即为页面内容 | `RenderFragment<ReuseTabsPageItem>` | context => context.Body |
 | Locale | 本地化对象 | - | - |
 | HidePages | 是否隐藏在 Tabs 中的页面，搭配 ReusePages 使用 | bool | false |
 | ReuseTabsRouteData | 当前页的路由信息，RouteData 的可序列化版本，用于从静态页面传递到动态页面 | RouteData | - |
+
+其他属性继承自 [Tabs](/components/tabs#API)
 
 ### ReuseTabsPageAttribute 特性
 

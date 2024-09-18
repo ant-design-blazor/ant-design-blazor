@@ -2195,9 +2195,6 @@
   "Callback when the open sub menus change. Passed the array of open keys.": {
     "Translated": "当打开的子菜单改变时回调。传递了一组打开的键。"
   },
-  "Array with the keys of currently selected menu items": {
-    "Translated": "包含当前选定菜单项的键的数组"
-  },
   "Callback when the selected items change. Passed array of open keys.": {
     "Translated": "所选项目更改时回调。传递的打开键数组。"
   },
@@ -4660,5 +4657,23 @@
   },
   "Close the popover": {
     "Translated": "关闭弹出窗口"
+  },
+  "Whether to trigger and keep the loading state until the event callback is done.": {
+    "Translated": "是否触发并保持加载状态，直到事件回调完成。"
+  },
+  "Array with the keys of currently selected menu items, set empty array to clear selection instead of null.": {
+    "Translated": "Array 替换为当前选中的菜单项的键，设置 empty array 来清除选择，而不是 null。"
+  },
+  "Activate the tab with the specified index": {
+    "Translated": "使用指定索引激活选项卡"
+  },
+  "Move to next tab": {
+    "Translated": "移至下一个选项卡"
+  },
+  "Move to previous tab": {
+    "Translated": "移至上一个选项卡"
+  },
+  "Activate the specified tab": {
+    "Translated": "激活指定的选项卡"
   }
 }
