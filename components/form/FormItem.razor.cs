@@ -213,10 +213,10 @@ namespace AntDesign
         public string Help { get; set; }
 
         /// <summary>
-        /// Help Tooltip information
+        /// FormItem Help Tooltip information
         /// </summary>
         [Parameter]
-        public string ToolTipMsg { get; set; }
+        public string ToolTip { get; set; }
         
         private static readonly Dictionary<FormValidateStatus, (string theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (string theme, string type)>
         {

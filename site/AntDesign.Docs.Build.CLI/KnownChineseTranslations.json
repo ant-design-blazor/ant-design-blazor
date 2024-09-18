@@ -2195,9 +2195,6 @@
   "Callback when the open sub menus change. Passed the array of open keys.": {
     "Translated": "当打开的子菜单改变时回调。传递了一组打开的键。"
   },
-  "Array with the keys of currently selected menu items": {
-    "Translated": "包含当前选定菜单项的键的数组"
-  },
   "Callback when the selected items change. Passed array of open keys.": {
     "Translated": "所选项目更改时回调。传递的打开键数组。"
   },
@@ -4640,9 +4637,6 @@
   "The content of option.": {
     "Translated": "选项的内容。"
   },
-  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
-    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
-  },
   "Check all nodes": {
     "Translated": "检查所有节点"
   },
@@ -4660,5 +4654,8 @@
   },
   "Close the popover": {
     "Translated": "关闭弹出窗口"
+  },
+  "FormItem Help Tooltip information": {
+    "Translated": "设置表单字段的帮助提示信息"
   }
 }
