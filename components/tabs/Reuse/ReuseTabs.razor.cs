@@ -61,12 +61,9 @@ namespace AntDesign
         private bool InReusePageContent { get; set; }
 
         /// <summary>
-        /// Can't be used with <see cref="ReuseTabs"/>.
+        /// cover the base ChildContent
         /// </summary>
-        public override RenderFragment ChildContent { get; set; }
-
-        private bool _showRender;
-
+        private new RenderFragment ChildContent { get; set; }
         public ReuseTabs()
         {
             Type = TabType.EditableCard;
@@ -79,20 +76,20 @@ namespace AntDesign
             {
                 return;
             }
+
             base.OnInitialized();
 
             Navmgr.LocationChanged += OnLocationChanged;
 
-            ChildContent = RenderPanes;
-
             ReuseTabsService.Init(true);
-            ReuseTabsService.OnStateHasChanged += InvokeStateHasChanged;
+            ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
 
             RouteData ??= ReuseTabsRouteData?.RouteData;
 
             ReuseTabsService.TrySetRouteData(RouteData, true);
 
-            _showRender = true;
+            base.ChildContent = RenderPanes;
+
             ActiveKey = ReuseTabsService.ActiveKey;
         }
 
@@ -100,12 +97,12 @@ namespace AntDesign
 
         protected override void OnAfterRender(bool firstRender)
         {
-            _showRender = false;
             base.OnAfterRender(firstRender);
         }
+
         protected override void Dispose(bool disposing)
         {
-            ReuseTabsService.OnStateHasChanged -= InvokeStateHasChanged;
+            ReuseTabsService.OnStateHasChanged -= OnStateHasChanged;
             Navmgr.LocationChanged -= OnLocationChanged;
             base.Dispose(disposing);
         }
@@ -113,12 +110,12 @@ namespace AntDesign
         private void ClosePage(string key)
         {
             UpdateTabsPosition();
-            ReuseTabsService.ClosePage(key);
+            ReuseTabsService.ClosePageByKey(key);
         }
 
         protected override void OnRemoveTab(TabPane tab)
         {
-            ReuseTabsService.ClosePage(tab.Key);
+            ReuseTabsService.ClosePageByKey(tab.Key);
         }
 
         protected override void OnActiveTabChanged(TabPane tab)
@@ -138,6 +135,12 @@ namespace AntDesign
             ReuseTabsService.TrySetRouteData(RouteData, true);
 
             ActivatePane(ReuseTabsService.ActiveKey);
+        }
+
+        private void OnStateHasChanged()
+        {
+            SetShowRender();
+            StateHasChanged();
         }
     }
 }

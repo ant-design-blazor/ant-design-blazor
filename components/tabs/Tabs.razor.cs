@@ -552,6 +552,11 @@ namespace AntDesign
             return _shouldRender || _renderedActivePane != _activeTab;
         }
 
+        internal void SetShowRender()
+        {
+            _shouldRender = true;
+        }
+
         private async Task ResetSizes()
         {
             ElementReference[] refs = [_navListRef, _navWarpRef, .. _tabs.Select(x => x.TabRef).ToArray()];

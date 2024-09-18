@@ -144,9 +144,10 @@ namespace AntDesign
         /// <param name="url">The specified page's url</param>
         public void CloseOther(string url)
         {
-            foreach (var item in _pages?.Where(x => x.Closable && x.Url != url && !x.Pin))
+            var closablePages = _pages?.Where(x => x.Closable && x.Url != url && !x.Pin).Select(x => x.Url).ToArray();
+            foreach (var item in closablePages)
             {
-                RemovePageBase(item.Url);
+                RemovePageBase(item);
             }
             StateHasChanged();
         }
@@ -156,9 +157,10 @@ namespace AntDesign
         /// </summary>
         public void CloseAll()
         {
-            foreach (var item in _pages?.Where(x => x.Closable && !x.Pin))
+            var closablePages = _pages?.Where(x => x.Closable && !x.Pin).Select(x => x.Url).ToArray();
+            foreach (var item in closablePages)
             {
-                RemovePageBase(item.Url);
+                RemovePageBase(item);
             }
             StateHasChanged();
         }
@@ -357,6 +359,11 @@ namespace AntDesign
             var reuseTabsAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
 
             var url = reuseTabsAttribute?.PinUrl ?? routeAttribute.Template;
+            if (_pages.Any(p => p.Url == url || !(p.Singleton && p.TypeName == pageType.FullName)))
+            {
+                return;
+            }
+
             var reuseTabsPageItem = new ReuseTabsPageItem
             {
                 Url = url,

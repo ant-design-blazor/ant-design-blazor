@@ -72,6 +72,7 @@
 
     void CascadingChange(bool value)
     {
+        ReuseTabsService.CloseAll();
         Routes.SetCascadingRouteData(value);
     }
 }
