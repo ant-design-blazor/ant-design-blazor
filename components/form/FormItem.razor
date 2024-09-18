@@ -22,7 +22,9 @@
                         @if (ToolTip != null)
                         {
                             <Tooltip Placement="Placement.TopLeft" Title="@ToolTip" ArrowPointAtCenter="true">
-                                <Icon Type="question-circle" Theme="outline" />
+                                <Unbound>
+                                     <Icon RefBack="context" Type="question-circle" Theme="outline" Class="ant-form-item-tooltip" />
+                                </Unbound>
                             </Tooltip>
                         }
                     </label>
