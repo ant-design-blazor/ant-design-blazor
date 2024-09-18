@@ -32,9 +32,9 @@ timeline: true
 
 - Form
   - 🆕 新增 文字提示图标。[#4211](https://github.com/ant-design-blazor/ant-design-blazor/pull/4211) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
-  - 🆕 新增 的 GenerateFormItem 自动生成表单时，识别TModel属性中的ReadOnlyAttribute 标识，并使禁用组件生效。[#4191](https://github.com/ant-design-blazor/ant-design-blazor/pull/4191) [@lishewen](https://github.com/lishewen)
+  - 🆕 新增 GenerateFormItem 自动生成表单时，识别TModel属性中的ReadOnlyAttribute 标识，并使禁用组件生效。[#4191](https://github.com/ant-design-blazor/ant-design-blazor/pull/4191) [@lishewen](https://github.com/lishewen)
 
-- 🐞 修复 Table 解决AutoHeight和Resizable冲突。[#4195](https://github.com/ant-design-blazor/ant-design-blazor/pull/4195) [@ysj265](https://github.com/ysj265)
+- 🐞 修复 Table 解决 AutoHeight 和 Resizable 冲突。[#4195](https://github.com/ant-design-blazor/ant-design-blazor/pull/4195) [@ysj265](https://github.com/ysj265)
 - 🐞 修复 Menu 选中菜单项在页面刷新后变为未选中。[#4194](https://github.com/ant-design-blazor/ant-design-blazor/pull/4194) [@ElderJames](https://github.com/ElderJames)
 - 🆕 新增 Button 的 AutoLoading 属性，在 Task 执行时自动切换 Loading 状态。[#4193](https://github.com/ant-design-blazor/ant-design-blazor/pull/4193) [@ElderJames](https://github.com/ElderJames)
 - 📖 文档 启用预渲染，优化 SEO。[#4207](https://github.com/ant-design-blazor/ant-design-blazor/pull/4207) [@jsakamoto](https://github.com/jsakamoto)
