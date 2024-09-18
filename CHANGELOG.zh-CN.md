@@ -15,6 +15,30 @@ timeline: true
 
 ---
 
+### 1.0.0 RC 1
+
+`2024-09-19`
+
+� 中秋快乐！
+
+- ReuseTabs 
+  - 🔥 重构 无需级联 RouteData 也能实现标签页。[#4205](https://github.com/ant-design-blazor/ant-design-blazor/pull/4205) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 重构 继承 Tabs 的所有功能。[#4200](https://github.com/ant-design-blazor/ant-design-blazor/pull/4200) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 单例页面，实现不同参数重复利用一个页面实例。[#4151](https://github.com/ant-design-blazor/ant-design-blazor/pull/4151) [@pankey888](https://github.com/pankey888)
+
+- Tabs
+  - 🐞 修复 拖拽和右键菜单冲突。[#4199](https://github.com/ant-design-blazor/ant-design-blazor/pull/4199) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 删除激活页后应激活前一个页签。[#4197](https://github.com/ant-design-blazor/ant-design-blazor/pull/4197) [@ElderJames](https://github.com/ElderJames)
+
+- Form
+  - 🆕 新增 文字提示图标。[#4211](https://github.com/ant-design-blazor/ant-design-blazor/pull/4211) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
+  - 🆕 新增 的 GenerateFormItem 自动生成表单时，识别TModel属性中的ReadOnlyAttribute 标识，并使禁用组件生效。[#4191](https://github.com/ant-design-blazor/ant-design-blazor/pull/4191) [@lishewen](https://github.com/lishewen)
+
+- 🐞 修复 Table 解决AutoHeight和Resizable冲突。[#4195](https://github.com/ant-design-blazor/ant-design-blazor/pull/4195) [@ysj265](https://github.com/ysj265)
+- 🐞 修复 Menu 选中菜单项在页面刷新后变为未选中。[#4194](https://github.com/ant-design-blazor/ant-design-blazor/pull/4194) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Button 的 AutoLoading 属性，在 Task 执行时自动切换 Loading 状态。[#4193](https://github.com/ant-design-blazor/ant-design-blazor/pull/4193) [@ElderJames](https://github.com/ElderJames)
+- 📖 文档 启用预渲染，优化 SEO。[#4207](https://github.com/ant-design-blazor/ant-design-blazor/pull/4207) [@jsakamoto](https://github.com/jsakamoto)
+
 ### 0.20.4
 
 `2024-09-09`

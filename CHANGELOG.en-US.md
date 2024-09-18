@@ -15,6 +15,30 @@ timeline: true
 
 ---
 
+
+### 1.0.0 RC 1
+
+`2024-09-19`
+
+- ReuseTabs 
+  - 🔥 Add allow reusetabs to operate independently of cascaded routing data. [#4205](https://github.com/ant-design-blazor/ant-design-blazor/pull/4205) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Refactor that inherts tabs. [#4200](https://github.com/ant-design-blazor/ant-design-blazor/pull/4200) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add Singleton parameter to ReuseTabsPageAttribute. [#4151](https://github.com/ant-design-blazor/ant-design-blazor/pull/4151) [@pankey888](https://github.com/pankey888)
+
+- Tabs
+  - 🐞 Fixed draggable and contextmenu incottectly. [#4199](https://github.com/ant-design-blazor/ant-design-blazor/pull/4199) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed that should active previous tab when the actived tab was remove. [#4197](https://github.com/ant-design-blazor/ant-design-blazor/pull/4197) [@ElderJames](https://github.com/ElderJames)
+
+- Form
+  - 🆕 Add Tooltip to FormItem component. [#4211](https://github.com/ant-design-blazor/ant-design-blazor/pull/4211) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
+  - 🆕 Add `GenerateFormItem`</code>` automatically generates forms and recognizes the <code class="notranslate">ReadOnlyAttribute</code> in the <code class="notranslate">TModel</code> properties, making it effective. [#4191](https://github.com/ant-design-blazor/ant-design-blazor/pull/4191) [@lishewen](https://github.com/lishewen)
+
+- 🐞 Fixed Table conflicts between AutoHeight and Resizable. [#4195](https://github.com/ant-design-blazor/ant-design-blazor/pull/4195) [@ysj265](https://github.com/ysj265)
+- 🐞 Fixed Menu avoid the SelectedKeys set to null when it was not bound. [#4194](https://github.com/ant-design-blazor/ant-design-blazor/pull/4194) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Button AutoLoading parameter. [#4193](https://github.com/ant-design-blazor/ant-design-blazor/pull/4193) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs enable static pre-rendering on the WebAssembly site. [#4207](https://github.com/ant-design-blazor/ant-design-blazor/pull/4207) [@jsakamoto](https://github.com/jsakamoto)
+
+
 ### 0.20.4
 
 `2024-09-09`
