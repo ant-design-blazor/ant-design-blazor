@@ -14,7 +14,7 @@
         {
             @foreach (var item in ReuseTabsService.Pages)
             {
-                <TabPane @key="@item.Url" Key="@item.Url" Class="@TabPaneClass" Closable="item.Closable" ForceRender>
+                <TabPane Id="@item.Url" @key="@item.Key" Key="@item.Key" Class="@TabPaneClass" Closable="item.Closable" ForceRender>
                     <TabTemplate>
                         @if (Type == TabType.Line && item.Closable)
                         {
@@ -36,9 +36,18 @@
                         </Menu>
                     </TabContextMenu>
                     <ChildContent>
-                        @if (!HidePages && Body != null)
+                        @if (!HidePages && item.Rendered)
                         {
-                            @Body(item)
+                            item.Body ??= @<AntDesign.Core.Internal.KeepAlive ChildContent="Body" ></AntDesign.Core.Internal.KeepAlive>;
+                            
+                            if (TabPaneTemplate != null)
+                            {
+                                @TabPaneTemplate(item)
+                            }
+                            else
+                            {
+                                @item.Body
+                            }
                         }
                     </ChildContent>
                 </TabPane>

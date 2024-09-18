@@ -477,18 +477,18 @@ namespace AntDesign
                 return;
             }
 
+            if (_activeTab?.Key == tab.Key)
+            {
+                return;
+            }
+
             _activeTab?.SetActive(false);
 
             tab.SetActive(true);
 
             _activeTab = tab;
-
-            if (_activeKey == _activeTab.Key)
-            {
-                return;
-            }
-
             _activeKey = _activeTab.Key;
+
             if (ActiveKeyChanged.HasDelegate)
             {
                 ActiveKeyChanged.InvokeAsync(_activeKey);
@@ -550,6 +550,11 @@ namespace AntDesign
         protected override bool ShouldRender()
         {
             return _shouldRender || _renderedActivePane != _activeTab;
+        }
+
+        internal void SetShowRender()
+        {
+            _shouldRender = true;
         }
 
         private async Task ResetSizes()
@@ -654,6 +659,11 @@ namespace AntDesign
             {
                 return;
             }
+            if (_activeTab == null)
+            {
+                return;
+            }
+
             if (!_itemRefs.TryGetValue(_activeTab.TabId, out _activeTabElement))
             {
                 return;

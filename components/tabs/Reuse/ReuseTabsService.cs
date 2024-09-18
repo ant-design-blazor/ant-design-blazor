@@ -46,11 +46,10 @@ namespace AntDesign
             {
                 _activeKey = value;
                 var pageItem = _pages.FirstOrDefault(r => r.Key == value);
-                if (pageItem != null && (pageItem.Url != CurrentUrl || pageItem.Body == null))
+                if (pageItem != null && (pageItem.Url != CurrentUrl))
                 {
                     CurrentUrl = pageItem.Url;
                 }
-
             }
         }
 
@@ -145,9 +144,10 @@ namespace AntDesign
         /// <param name="url">The specified page's url</param>
         public void CloseOther(string url)
         {
-            foreach (var item in _pages?.Where(x => x.Closable && x.Url != url && !x.Pin))
+            var closablePages = _pages?.Where(x => x.Closable && x.Url != url && !x.Pin).Select(x => x.Url).ToArray();
+            foreach (var item in closablePages)
             {
-                RemovePageBase(item.Url);
+                RemovePageBase(item);
             }
             StateHasChanged();
         }
@@ -157,9 +157,10 @@ namespace AntDesign
         /// </summary>
         public void CloseAll()
         {
-            foreach (var item in _pages?.Where(x => x.Closable && !x.Pin))
+            var closablePages = _pages?.Where(x => x.Closable && !x.Pin).Select(x => x.Url).ToArray();
+            foreach (var item in closablePages)
             {
-                RemovePageBase(item.Url);
+                RemovePageBase(item);
             }
             StateHasChanged();
         }
@@ -222,15 +223,11 @@ namespace AntDesign
 
         internal void TrySetRouteData(RouteData routeData, bool reuse)
         {
-            if (routeData == null)
-            {
-                return;
-            }
-
             if (!reuse)
             {
                 _pages.Clear();
             }
+
             var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == CurrentUrl || (w.Singleton && w.TypeName == routeData.PageType?.FullName));
 
             if (reuseTabsPageItem == null)
@@ -239,17 +236,31 @@ namespace AntDesign
                 {
                     Url = CurrentUrl,
                     CreatedAt = DateTime.Now,
-                    TypeName = routeData.PageType.FullName
                 };
 
                 AddPage(reuseTabsPageItem);
             }
-            else
+            else if (reuseTabsPageItem.Singleton)
             {
-                reuseTabsPageItem.Url = CurrentUrl;
+                reuseTabsPageItem.Url = CurrentUrl; // singleton page would change url
             }
 
-            reuseTabsPageItem.Body = CreateBody(routeData, reuseTabsPageItem);
+            reuseTabsPageItem.Rendered = true;
+
+            if (routeData == null)
+            {
+                reuseTabsPageItem.Title ??= b =>
+                {
+                    var url = reuseTabsPageItem.Url;
+                    b.AddContent(0, _menusService.GetMenuTitle(url) ?? url.ToRenderFragment());
+                };
+            }
+            else
+            {
+                reuseTabsPageItem.Body ??= CreateBody(routeData, reuseTabsPageItem);
+                reuseTabsPageItem.TypeName = routeData.PageType.FullName;
+            }
+
             ActiveKey = reuseTabsPageItem.Key;
             OnStateHasChanged?.Invoke();
         }
@@ -348,6 +359,11 @@ namespace AntDesign
             var reuseTabsAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
 
             var url = reuseTabsAttribute?.PinUrl ?? routeAttribute.Template;
+            if (_pages.Any(p => p.Url == url || !(p.Singleton && p.TypeName == pageType.FullName)))
+            {
+                return;
+            }
+
             var reuseTabsPageItem = new ReuseTabsPageItem
             {
                 Url = url,

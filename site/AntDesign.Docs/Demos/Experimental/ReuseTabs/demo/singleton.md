@@ -13,9 +13,12 @@ title:
 
 单例页面不会重新实例化，也不再执行初始化方法，因此需要监听页面导航事件来更新界面。
 
+**注意: 必须级联传入 RouteData，否则无效。**
 
 ## en-US
 
 If the page is Singleton, it will be reused although the parameters is different, otherwise, another tab will be created.
 
 The singleton page is not re-instantiated, nor is the `OnInitialized{Async}` method performed, so it needs to listen for location navigation events to update the UI.
+
+**Note: Must cascade RouteData, otherwise it will be invalid.**

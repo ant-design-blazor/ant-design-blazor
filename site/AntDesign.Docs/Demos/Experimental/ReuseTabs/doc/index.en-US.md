@@ -15,7 +15,28 @@ Used to implement in-application page tabs and page caching.
 
 ## How to use
 
-1. Modify the `Routes.razor` file, warp the `RouteView` or `AuthorizeRouteView` with `<CascadingValue Value="routeData">...</CascadingValue>`.
+Modify the `MainLayout.razor` file, add the `ReuseTabs` component. Note that `@Body` is not required at this case.
+
+   ```html
+   @inherits LayoutComponentBase
+
+   <div class="page">
+       <div class="sidebar">
+           <NavMenu />
+       </div>
+
+       <div class="main">
+         <ReuseTabs Class="top-row px-4" TabPaneClass="content px-4" Body="Body" / >
+       </div>
+   </div>
+
+   ```
+
+With just this step, you can easily implement a simple multi-tab feature. 
+
+But if you still need more powerful page configuration capabilities, 
+such as the `ReuseTabsPageAttribute` or `IReuseTabsPage`  in the following examples, 
+you also need to modify the `Routes.razor` file, warp the `RouteView` or `AuthorizeRouteView` with `<CascadingValue Value="routeData">...</CascadingValue>`.
 
    ```html
    <Router AppAssembly="@typeof(Program).Assembly">
@@ -28,38 +49,27 @@ Used to implement in-application page tabs and page caching.
    </Router>
    ```
 
-2. Then modify the `MainLayout.razor` file, add the `ReuseTabs` component. Note that `@Body` is not required at this case.
-
-   ```html
-   @inherits LayoutComponentBase
-
-   <div class="page">
-       <div class="sidebar">
-           <NavMenu />
-       </div>
-
-       <div class="main">
-         <ReuseTabs Class="top-row px-4" TabPaneClass="content px-4" / >
-       </div>
-   </div>
-
-   ```
-
 ## API
 
 ### ReuseTabs
 
 | Property | Description | Type | Default | 
 | --- | --- | --- | --- |
+| Body | Used to set the @Body of Layout component. This parameter must be set in non-cascading RouteData mode. | RenderFragment | - |
 | TabPaneClass | the class names of the Pane container | string | --- |
 | Draggable | Whether you can drag and drop to adjust the order | bool | false |
 | Size | Tabs size | TabSize | - |
-| Body | A template for a rendering class that adds styles around the page in the TabPane, passing in a context called `ReuseTabsPageItem`, where the Body is the page content | `RenderFragment<ReuseTabsPageItem>` | context => context.Body |
+| TabPaneTemplate | A template for a rendering class that adds styles around the page in the TabPane, passing in a context called `ReuseTabsPageItem`, where the Body is the page content | `RenderFragment<ReuseTabsPageItem>` | context => context.Body |
 | Locale | Localized object | - | - |
 | HidePages | Whether pages hidden in Tabs are used with ReusePages | bool | false |
 | ReuseTabsRouteData | The routing information for the current page, which is a serializable version of RouteData | RouteData | - |
 
+Other properties inherit from [Tabs](/components/tabs#API)
+
 ### ReuseTabsPageAttribute attribute
+
+
+**Note: Must cascade RouteData, otherwise it will be invalid.**
 
 | Property | Description | Type | Default | 
 | --- | --- | --- | --- |
@@ -75,6 +85,8 @@ Used to implement in-application page tabs and page caching.
 | NewPageForParams | Whether to create a new page for route with different params | bool | false |
 
 ### IReuseTabsPage interface
+
+**Note: Must cascade RouteData, otherwise it will be invalid.**
 
 | Method | Description |
 | --- | --- | 

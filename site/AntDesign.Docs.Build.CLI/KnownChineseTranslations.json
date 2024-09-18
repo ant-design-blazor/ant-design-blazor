@@ -4655,6 +4655,24 @@
   "Close the popover": {
     "Translated": "关闭弹出窗口"
   },
+  "Whether to trigger and keep the loading state until the event callback is done.": {
+    "Translated": "是否触发并保持加载状态，直到事件回调完成。"
+  },
+  "Array with the keys of currently selected menu items, set empty array to clear selection instead of null.": {
+    "Translated": "Array 替换为当前选中的菜单项的键，设置 empty array 来清除选择，而不是 null。"
+  },
+  "Activate the tab with the specified index": {
+    "Translated": "使用指定索引激活选项卡"
+  },
+  "Move to next tab": {
+    "Translated": "移至下一个选项卡"
+  },
+  "Move to previous tab": {
+    "Translated": "移至上一个选项卡"
+  },
+  "Activate the specified tab": {
+    "Translated": "激活指定的选项卡"
+  },
   "FormItem Help Tooltip information": {
     "Translated": "设置表单字段的帮助提示信息"
   }
