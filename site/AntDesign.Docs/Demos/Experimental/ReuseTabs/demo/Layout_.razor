@@ -17,9 +17,14 @@
             <BreadcrumbItem Href="/reuse">Home</BreadcrumbItem>
         </Breadcrumb>
         <ReuseTabs Style="margin: 16px;">
-            <Body2>
+            <Body>
                 @Body
-            </Body2>
+            </Body>
+            <TabPaneTemplate>
+                <Content Class="site-layout-background" Style="padding: 24px;min-height: 280px;">
+                    @context.Body
+                </Content>
+            </TabPaneTemplate>
         </ReuseTabs>
     </Layout>
 </Layout>
@@ -57,7 +62,6 @@
 @inject NavigationManager NavigationManager
 @code {
 
-    // This is used to 
     [CascadingParameter]
     private Routes Routes { get; set; }
 

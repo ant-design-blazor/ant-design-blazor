@@ -36,15 +36,17 @@
                         </Menu>
                     </TabContextMenu>
                     <ChildContent>
-                        @if (!HidePages && Body != null)
+                        @if (!HidePages && item.Rendered)
                         {
-                            @if (item.Body == null && item.Rendered)
+                            item.Body ??= @<AntDesign.Core.Internal.KeepAlive ChildContent="Body" ></AntDesign.Core.Internal.KeepAlive>;
+                            
+                            if (TabPaneTemplate != null)
                             {
-                                <AntDesign.Core.Internal.KeepAlive ChildContent="Body2"></AntDesign.Core.Internal.KeepAlive>
+                                @TabPaneTemplate(item)
                             }
-                            else if (item.Body!=null)
+                            else
                             {
-                                @Body(item)
+                                @item.Body
                             }
                         }
                     </ChildContent>

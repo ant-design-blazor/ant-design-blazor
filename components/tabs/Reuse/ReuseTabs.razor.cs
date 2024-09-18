@@ -22,10 +22,13 @@ namespace AntDesign
         /// Templates for customizing page content.
         /// </summary>
         [Parameter]
-        public RenderFragment<ReuseTabsPageItem> Body { get; set; } = context => context.Body;
+        public RenderFragment<ReuseTabsPageItem> TabPaneTemplate { get; set; } = context => context.Body;
 
+        /// <summary>
+        /// The content of the tab.
+        /// </summary>
         [Parameter]
-        public RenderFragment Body2 { get; set; }
+        public RenderFragment Body { get; set; }
 
         /// <summary>
         /// Localization Settings.
