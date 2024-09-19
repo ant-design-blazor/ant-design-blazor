@@ -20,7 +20,7 @@ namespace AntDesign.Core.Extensions
             {
                 await jSRuntime.InvokeVoidAsync(JSInteropConstants.Blur, target);
             }
-            catch (Exception e)
+            catch
             {
                 throw;
             }

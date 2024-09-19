@@ -183,7 +183,7 @@ namespace AntDesign
                                 StateHasChanged();
                             }
                         }
-                        catch (Exception ex)
+                        catch
                         {
                         }
                     }
@@ -231,7 +231,7 @@ namespace AntDesign
                             _linkTops[link.Href] = hrefDom.Top + offset;
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         _linkTops[link.Href] = 1;
                     }

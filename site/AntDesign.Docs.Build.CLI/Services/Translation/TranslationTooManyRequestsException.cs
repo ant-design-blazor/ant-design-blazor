@@ -22,6 +22,9 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
         {
         }
 
+#if NET8_0_OR_GREATER
+        [Obsolete(DiagnosticId = "SYSLIB0051")]
+#endif
         protected TranslationTooManyRequestsException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
