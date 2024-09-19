@@ -434,6 +434,10 @@ namespace AntDesign
         {
             var activeIndex = Math.Min(_tabs.Count - 1, Math.Max(0, tabIndex));
             var tab = _tabs.Find(x => x.TabIndex == activeIndex);
+            if (tab == null)
+            {
+                return;
+            }
             ActivatePane(tab.Key);
         }
 
