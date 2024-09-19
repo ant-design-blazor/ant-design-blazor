@@ -21,6 +21,8 @@ namespace AntDesign
             Mask = true;
             MaskClosable = false;
             Locale = LocaleProvider.CurrentLocale.Confirm;
+            OkText = Locale.OkText;
+            CancelText = Locale.CancelText;
         }
 
         #region internal
