@@ -39,6 +39,10 @@ timeline: true
 - 🆕 新增 Button 的 AutoLoading 属性，在 Task 执行时自动切换 Loading 状态。[#4193](https://github.com/ant-design-blazor/ant-design-blazor/pull/4193) [@ElderJames](https://github.com/ElderJames)
 - 📖 文档 启用预渲染，优化 SEO。[#4207](https://github.com/ant-design-blazor/ant-design-blazor/pull/4207) [@jsakamoto](https://github.com/jsakamoto)
 
+破坏性更新：
+
+- ReuseTabs: 旧版本中的 Body 属性被重命名为 TabPaneTemplate 属性，此版本之后的 Body 属性只用于绑定Layout组件 Body 属性。
+
 ### 0.20.4
 
 `2024-09-09`
