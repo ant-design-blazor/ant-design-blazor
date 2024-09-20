@@ -90,7 +90,7 @@ namespace AntDesign
         private string PaddingStyle => Padding > 0 ? $"{(RTL ? "padding-right" : "padding-left")}:{Padding}px;" : "";
 
         // There is no need to render the tooltip if there is no inline mode. Tooltip will be only showing menu content if menu is collapsed to icon version && only for root menu
-        private bool ShowTooltip => RootMenu?.Mode == MenuMode.Inline && ParentMenu is null && RootMenu?.InlineCollapsed == true && RootMenu?.ShowCollapsedTooltip == true;
+        private bool ShowTooltip => RootMenu?.Mode == MenuMode.Inline && ParentMenu is null && RootMenu?.ShowCollapsedTooltip == true;
 
         private void SetClass()
         {
