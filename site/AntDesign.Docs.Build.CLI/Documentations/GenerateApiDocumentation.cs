@@ -72,7 +72,7 @@ namespace AntDesign.Docs.Build.CLI.Documentations
                 Title = title,
                 SubTitle = docAttribute.SubTitle,
                 Type = docAttribute.Type.ToString(),
-                Desc = componentSummary[language],
+                Desc = componentSummary[language] ?? "no description",
                 ApiDoc = allApiDocumentation.ToString(),
                 Cols = docAttribute.Columns,
                 Cover = docAttribute.CoverImageUrl,
