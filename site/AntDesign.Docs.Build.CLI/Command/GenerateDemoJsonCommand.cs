@@ -54,8 +54,6 @@ namespace AntDesign.Docs.Build.CLI.Command
             "StateHasChanged"
         };
 
-        private readonly Type _staticComponentPageType = typeof(IStaticComponentPage);
-
         private readonly IEnumerable<MemberTypes> _supportedMemberTypes = new List<MemberTypes>
         {
             MemberTypes.Field,
