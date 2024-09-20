@@ -319,7 +319,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 return docData.desc;
             }
 
-            return null;
+            return componentFile.FullName;
         }
 
         private string GetMemberXmlName(MemberInfo member)
