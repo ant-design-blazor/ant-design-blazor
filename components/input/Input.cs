@@ -69,8 +69,11 @@ namespace AntDesign
         public bool AllowClear { get; set; }
 
         /// <summary>
-        /// Allow to remove input content with clear icon
+        /// Overrides whether the clear icon is shown. When <see langword="null"/>, it is shown if and only if the input string is not empty.
         /// </summary>
+        /// <remarks>
+        /// Requires <see cref="AllowClear"/> to be <see langword="true"/>, otherwise this has no effect.
+        /// </remarks>
         [Parameter]
         public bool? ShowClear { get; set; }
 
