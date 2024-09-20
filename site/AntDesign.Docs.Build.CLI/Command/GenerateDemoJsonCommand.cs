@@ -183,47 +183,6 @@ namespace AntDesign.Docs.Build.CLI.Command
                 { Constants.ChineseLanguage, new List<DemoComponent>() }
             };
 
-            // recognize components by component attribute
-            var docsStaticComponents = Assembly.Load(DocsAssemblyName).GetTypes().Where(x => x != _staticComponentPageType && x.IsAssignableTo(_staticComponentPageType));
-            foreach (var component in docsStaticComponents)
-            {
-                var docAttribute = component.GetCustomAttribute<DocumentationAttribute>();
-                if (docAttribute is null)
-                {
-                    continue;
-                }
-
-                var componentName = GetNameWithoutGenerics(component);
-                var title = docAttribute.Title ?? componentName;
-
-                var staticComponent = new DemoComponent()
-                {
-                    Category = docAttribute.Category.ToString(),
-                    Title = title,
-                    SubTitle = docAttribute.SubTitle,
-                    Type = docAttribute.Type.ToString(),
-                    Desc = string.Empty,
-                    ApiDoc = string.Empty,
-                    Cols = docAttribute.Columns,
-                    Cover = docAttribute.CoverImageUrl,
-                    DemoList = new List<DemoItem>() {
-                        new()
-                        {
-                            Order = 0,
-                            Name = componentName,
-                            Title = title,
-                            Description = string.Empty,
-                            Type = component.Namespace.Replace(DocsAssemblyName + ".", string.Empty) + "." + component.Name,
-                            Style = "",
-                            Docs = true,
-                            Debug = false
-                        }
-                    }
-                };
-                componentsDocsByLanguage[Constants.EnglishLanguage].Add(staticComponent);
-                componentsDocsByLanguage[Constants.ChineseLanguage].Add(staticComponent);
-            }
-
             var libraryComponents = _libraryAssembly.GetTypes().Where(x => x.GetType() != _componentBaseType);
             foreach (var component in libraryComponents)
             {
