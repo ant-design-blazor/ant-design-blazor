@@ -37,6 +37,7 @@ namespace AntDesign
         <para>Please ensure that the child node of <c>Popconfirm</c> accepts <c>onMouseEnter</c>, <c>onMouseLeave</c>, <c>onFocus</c>, <c>onClick</c> events.</para>
     </summary>
     <inheritdoc/>
+    <seealso cref="ButtonProps" />
     */
     [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/fjMCD9xRq/Popconfirm.svg", Title = "Popconfirm", SubTitle = "气泡确认框")]
     public partial class Popconfirm : OverlayTrigger
@@ -84,13 +85,13 @@ namespace AntDesign
         /// Properties to pass through to the okay button
         /// </summary>
         [Parameter]
-        public ButtonProps OkButtonProps { get; set; }
+        public ButtonProps OkButtonProps { get; set; } = new();
 
         /// <summary>
         /// Properties to pass through to the cancel button
         /// </summary>
         [Parameter]
-        public ButtonProps CancelButtonProps { get; set; }
+        public ButtonProps CancelButtonProps { get; set; } = new();
 
         /// <summary>
         /// Icon displayed by text

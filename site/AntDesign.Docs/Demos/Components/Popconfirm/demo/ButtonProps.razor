@@ -1,11 +1,19 @@
 <Popconfirm Title="Are you sure delete this task?"
             OnConfirm="Confirm"
-            OkButtonProps="new(){ Loading = loading }"
-            CancelButtonProps="new(){ Disabled = true }"
-            OkText="Yes"
-            CancelText="No">
+            OkButtonProps="new(){ Loading = _loading }"
+            CancelButtonProps="new(){ Disabled = true }">
     <a>Delete a task</a>
 </Popconfirm>
+
+<br />
+
+<Popconfirm Title="Are you sure delete this task?"
+            OnConfirm="Confirm"
+            OkButtonProps="new(){ Loading = _loading }"
+            CancelButtonProps="null">
+    <a>Hide cancel button</a>
+</Popconfirm>
+
 
 @inject IMessageService _message;
 @code{

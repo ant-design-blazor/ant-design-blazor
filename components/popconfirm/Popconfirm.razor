@@ -53,7 +53,7 @@
                         <div class="ant-popover-buttons">
                             @if (CancelButtonProps != null)
                             {
-                                <Button OnClick="@Cancel" Size="@AntSizeLDSType.Small"
+                                <Button OnClick="@Cancel" Size="@CancelButtonProps.Size"
                                         Block="@CancelButtonProps.Block"
                                         Ghost="@CancelButtonProps.Ghost"
                                         Loading="@CancelButtonProps.Loading"
@@ -62,12 +62,6 @@
                                         Icon="@CancelButtonProps.Icon"
                                         Disabled="@CancelButtonProps.Disabled"
                                         Danger="@CancelButtonProps.IsDanger">
-                                    @CancelText
-                                </Button>
-                            }
-                            else
-                            {
-                                <Button OnClick="@Cancel" Size="@AntSizeLDSType.Small">
                                     @CancelText
                                 </Button>
                             }
@@ -81,12 +75,6 @@
                                         Icon="@OkButtonProps.Icon"
                                         Disabled="@OkButtonProps.Disabled"
                                         Danger="@OkButtonProps.IsDanger">
-                                    @OkText
-                                </Button>
-                            }
-                            else
-                            {
-                                <Button OnClick="@Confirm" Size="small" type="@OkType">
                                     @OkText
                                 </Button>
                             }
