@@ -145,6 +145,34 @@
 	}
 
     [Fact]
+    public void Input_show_clearButton_when_show_clear_true()
+    {
+        //Arrange
+        var cut = Render<AntDesign.Input<string>>(
+            @<AntDesign.Input TValue="string" AllowClear ShowClear="true"/>);
+        // Not hidden even when empty
+        cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden").Should().BeFalse();
+
+        cut.Find("input").Input("test");
+        // Not hidden after adding input
+        cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden").Should().BeFalse();
+    }
+
+    [Fact]
+    public void Input_hide_clearButton_when_show_clear_false()
+    {
+        //Arrange
+        var cut = Render<AntDesign.Input<string>>(
+            @<AntDesign.Input TValue="string" AllowClear ShowClear="false" />);
+        // Hidden when empty
+        cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden").Should().BeTrue();
+
+        cut.Find("input").Input("test");
+        // Hidden even after adding input
+        cut.Find("span.ant-input-clear-icon").GetAttribute("class")!.Contains("ant-input-clear-icon-hidden").Should().BeTrue();
+    }
+
+    [Fact]
     public void Input_default_change()
     {
         //Arrange

@@ -69,6 +69,12 @@ namespace AntDesign
         public bool AllowClear { get; set; }
 
         /// <summary>
+        /// Allow to remove input content with clear icon
+        /// </summary>
+        [Parameter]
+        public bool? ShowClear { get; set; }
+
+        /// <summary>
         /// Callback when the content is cleared by clicking the "ClearIcon"
         /// </summary>
         [Parameter]
@@ -517,7 +523,7 @@ namespace AntDesign
             builder.OpenElement(31, "span");
             builder.AddAttribute(32, "class", $"{PrefixCls}-clear-icon " +
                 (Suffix != null ? $"{PrefixCls}-clear-icon-has-suffix " : "") +
-                (string.IsNullOrEmpty(_inputString) || Disabled ? $"{PrefixCls}-clear-icon-hidden " : ""));
+                (!ShowClear ?? string.IsNullOrEmpty(_inputString) || Disabled ? $"{PrefixCls}-clear-icon-hidden " : ""));
 
             builder.OpenComponent<Icon>(33);
 
