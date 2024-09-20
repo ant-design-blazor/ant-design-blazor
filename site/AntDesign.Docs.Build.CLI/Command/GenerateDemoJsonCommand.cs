@@ -299,7 +299,7 @@ namespace AntDesign.Docs.Build.CLI.Command
 
         private string GetFaqDocs(string componentName, string language)
         {
-            var faqFile = new FileInfo(Path.Join(_demoDirectory, $"Components\\{componentName}\\faq.{language}.md"));
+            var faqFile = new FileInfo(Path.Combine(_demoDirectory, "Components", componentName, $"faq.{language}.md"));
             if (faqFile.Exists)
             {
                 var faqFileContent = File.ReadAllText(faqFile.FullName);
@@ -311,7 +311,7 @@ namespace AntDesign.Docs.Build.CLI.Command
 
         private string GetComponentDocs(string componentName, string language)
         {
-            var componentFile = new FileInfo(Path.Join(_demoDirectory, $"Components\\{componentName}\\doc\\index.{language}.md"));
+            var componentFile = new FileInfo(Path.Combine(_demoDirectory, "Components", componentName, "doc", $"index.{language}.md"));
             if (componentFile.Exists)
             {
                 var faqFileContent = File.ReadAllText(componentFile.FullName);
