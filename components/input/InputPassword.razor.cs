@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -17,8 +21,9 @@ namespace AntDesign
         public RenderFragment IconRender { get; set; }
 
         /// <summary>
-        ///  Whether to show password
+        /// Whether to show password or not
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ShowPassword
         {
@@ -34,8 +39,9 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Whether show toggle button
+        /// Whether to show password visibility toggle button or not
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool VisibilityToggle { get; set; } = true;
 

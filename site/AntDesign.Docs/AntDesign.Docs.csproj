@@ -7,6 +7,9 @@
 
   <ItemGroup>
     <PackageReference Include="AntDesign.Charts" Version="0.5.5" />
+    <PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Razor" Version="6.0.24" />
     <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4" />
   </ItemGroup>
 
@@ -19,9 +22,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Demos\Components\List\**" />
+    <Content Remove="Demos\Components\List\**" />
+    <EmbeddedResource Remove="Demos\Components\List\**" />
+    <None Remove="Demos\Components\List\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Demos\Components\Modal\faq.en-US.md" />
+    <None Remove="Demos\Components\Modal\faq.zh-CN.md" />
+    <None Remove="Demos\Components\Upload\faq.en-US.md" />
+    <None Remove="Demos\Components\Upload\faq.zh-CN.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\Shared\DemoComponent.cs" Link="Services\DemoComponent.cs" />
     <Compile Include="..\Shared\DemoMenuItem.cs" Link="Services\DemoMenuItem.cs" />
     <Compile Include="..\Shared\DocsFile.cs" Link="Services\DocsFile.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Demos\Components\Modal\faq.zh-CN.md" />
+    <Content Include="Demos\Components\Modal\faq.en-US.md" />
+    <Content Include="Demos\Components\Upload\faq.zh-CN.md" />
+    <Content Include="Demos\Components\Upload\faq.en-US.md" />
   </ItemGroup>
 
   <ItemGroup>

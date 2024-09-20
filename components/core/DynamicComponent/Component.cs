@@ -12,7 +12,7 @@ namespace AntDesign
 {
     public class Component : ComponentBase
     {
-        static Assembly _antAssembly;
+        private static Assembly _antAssembly;
 
         [Parameter]
         public Type Type { get; set; }

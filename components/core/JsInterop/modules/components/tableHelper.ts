@@ -1,5 +1,224 @@
 ﻿export class tableHelper {
-  static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable) {
+  static isHidden(element) {
+    if (element instanceof HTMLElement) {
+      const computedStyle = getComputedStyle(element);
+      if (computedStyle.display === "none" || computedStyle.visibility === "hidden") {
+        return true;
+      }
+    }
+    if (element.parentNode != null) {
+      if (tableHelper.isHidden(element.parentNode)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static isIgnore(element, style: CSSStyleDeclaration, left: number, right: number) {
+    const previousPosition = style.getPropertyValue('position');
+    const rect = element.getBoundingClientRect();
+    if (rect.left > right || rect.right < left) {
+      return true;
+    }
+
+    if (previousPosition === 'absolute') {
+      return true;
+    }
+    return false;
+  }
+  static getTotalHeightAbove(rootElement, element, left: number, right: number): number {
+    let totalHeight = 0;
+    let currentElement = element.previousElementSibling;
+
+    let rowGap = 0;
+    if (element.parentElement != null) {
+      const computedStyle = getComputedStyle(element.parentElement);
+      if (computedStyle.rowGap) {
+        if (computedStyle.rowGap.endsWith('px')) {
+          rowGap = parseFloat(computedStyle.rowGap);
+        }
+      }
+    }
+
+    let nextElement = element;
+    let  nextComputedStyle = getComputedStyle(element);
+    if (!tableHelper.isIgnore(element,  nextComputedStyle, left, right)) {
+      totalHeight += parseFloat( nextComputedStyle.marginTop);
+    }
+
+    while (currentElement) {
+      const currentComputedStyle = getComputedStyle(currentElement);
+      if (!tableHelper.isIgnore(currentElement, currentComputedStyle, left, right)) {
+        totalHeight += currentElement.offsetHeight + Math.max(parseFloat(currentComputedStyle.marginTop), parseFloat(nextComputedStyle.marginTop)) + rowGap;
+
+      }
+      nextElement = currentElement;
+      currentElement = currentElement.previousElementSibling;
+      nextComputedStyle = currentComputedStyle;
+    }
+    if (!tableHelper.isIgnore(nextElement, nextComputedStyle, left, right)) {
+      totalHeight += parseFloat(nextComputedStyle.marginTop);
+    }
+    
+    const parentElement = element.parentElement;
+    if (parentElement != null) {
+ 
+      const parentComputedStyle = getComputedStyle(parentElement);
+      if (!tableHelper.isIgnore(parentElement, parentComputedStyle, left, right)) {
+        totalHeight += parseFloat(parentComputedStyle.paddingTop);
+        totalHeight += parseFloat(parentComputedStyle.borderTop);
+  
+      }
+      if (parentElement == rootElement) {
+        return totalHeight;
+      }
+      totalHeight += tableHelper.getTotalHeightAbove(rootElement, parentElement, left, right);
+    }
+    return totalHeight;
+  }
+  static getTotalHeightBelow(rootElement, element, left: number, right: number): number {
+    let totalHeight = 0;
+    let currentElement = element.nextElementSibling;
+
+    let rowGap = 0;
+    if (element.parentElement != null) {
+      const computedStyle = getComputedStyle(element.parentElement);
+      if (computedStyle.rowGap) {
+        if (computedStyle.rowGap.endsWith('px')) {
+          rowGap = parseFloat(computedStyle.rowGap);
+        }        
+      }
+    }
+    let previousElement = element;
+    let previousComputedStyle = getComputedStyle(element);
+    if (!tableHelper.isIgnore(element, previousComputedStyle, left, right)) {
+      totalHeight += parseFloat(previousComputedStyle.marginBottom); 
+    }
+
+    while (currentElement) {
+      const currentComputedStyle = getComputedStyle(currentElement);
+      if (!tableHelper.isIgnore(currentElement, currentComputedStyle, left, right)) {
+        totalHeight += currentElement.offsetHeight + Math.max(parseFloat(currentComputedStyle.marginTop), parseFloat(previousComputedStyle.marginBottom)) + rowGap;
+      
+      }
+      previousElement = currentElement;
+      currentElement = currentElement.nextElementSibling;
+      previousComputedStyle = currentComputedStyle;
+    }
+    if (!tableHelper.isIgnore(previousElement, previousComputedStyle, left, right)) {
+      totalHeight += parseFloat(previousComputedStyle.marginBottom);
+    }
+    
+    const parentElement = element.parentElement;
+    if (parentElement!=null) {     
+
+      const parentComputedStyle = getComputedStyle(parentElement);
+      if (!tableHelper.isIgnore(parentElement, parentComputedStyle, left, right)) {
+        totalHeight += parseFloat(parentComputedStyle.paddingBottom);
+        totalHeight += parseFloat(parentComputedStyle.borderBottom);
+        //if (parentElement.scrollWidth > parentElement.clientWidth) {
+        //  totalHeight += 23;
+        //  console.log('scrollbar C:' + (parentElement.offsetHeight - parentElement.clientHeight));
+        //  console.log(parentElement);
+        //}
+      }
+      if (parentElement == rootElement) {
+        return totalHeight;
+      }
+      
+      totalHeight += tableHelper.getTotalHeightBelow(rootElement,parentElement, left, right);
+    }
+    return totalHeight;
+  }
+  static parseHeightValue(value) {
+    // 去除单位并转换为数字
+    return parseFloat(value);
+  }
+  static getCssHeight(element,height) {
+    if (element != null) {
+      if (height !== 'auto' && height !== '0px' && height !== '') {
+        // 将 'px' 以外的单位转换为像素
+        if (height.endsWith('px')) {
+          return tableHelper.parseHeightValue(height);
+        } else if (height.endsWith('vh')) {
+          return (tableHelper.parseHeightValue(height) / 100) * window.innerHeight;
+        } else if (height.endsWith('%')) {
+          // 获取父元素的高度
+          const parentElement = element.parentElement;
+          if (parentElement != null) {
+            const parentComputedStyle = window.getComputedStyle(parentElement);
+            const parentHeight = parentComputedStyle.height;
+            return (tableHelper.parseHeightValue(height) / 100) * tableHelper.parseHeightValue(parentHeight);
+          }
+          return 0;
+        }
+        return height;
+
+
+      }
+    }
+    return 0;
+  }
+
+
+  static getNumericHeight(element) {
+    if (element != null) {
+      if (element.style && element.style.height) {
+        const computedStyle = window.getComputedStyle(element);
+        const height = tableHelper.getCssHeight(element, computedStyle.height);
+        if (height > 0) {
+          return height;
+        }
+      }
+      
+    }
+    return 0;
+  }
+  static getContainer(element) {
+    if (element) {     
+      const height = tableHelper.getNumericHeight(element);    
+      if (height > 0) {
+    
+        return element;          
+      }  
+      const parent = this.getContainer(element.parentElement);
+      if (parent != null) {
+        return parent;
+      }         
+    }
+    return null;
+  }
+  static setBodyHeight(bodyRef) {
+
+    let container = tableHelper.getContainer(bodyRef.parentElement);
+    if (!container) {
+      container = document.body;
+    }
+    const rect = bodyRef.getBoundingClientRect();
+    if (tableHelper.isHidden(bodyRef)) {
+      return;
+    }
+    // 计算上面元素的总高度
+    const heightAbove = tableHelper.getTotalHeightAbove(container, bodyRef, rect.left, rect.right);
+    //console.log('heightAbove:' + heightAbove);
+
+    // 计算下面元素的总高度
+    const heightBelow = tableHelper.getTotalHeightBelow(container, bodyRef, rect.left, rect.right);
+    //console.log('heightBelow:' + heightBelow);
+
+    // 计算视口高度并减去滚动条的宽度
+    const viewportHeight = container.clientHeight;
+    //console.log('viewportHeight:' + viewportHeight);
+
+    // 设置目标元素的高度
+
+    const heightStyle = `${viewportHeight - heightAbove - heightBelow}px`;
+    if (heightStyle !== bodyRef.style.height) {
+      bodyRef.style.height = heightStyle;
+    }
+
+  }
+  static bindTableScroll(wrapperRef, bodyRef, tableRef, headerRef, scrollX, scrollY, resizable, autoHeight) {
     bodyRef.bindScroll = () => {
       if (scrollX) {
         tableHelper.SetScrollPositionClassName(bodyRef, wrapperRef);
@@ -7,6 +226,10 @@
       if (scrollY) {
         headerRef.scrollLeft = bodyRef.scrollLeft;
       }
+      if (autoHeight) {
+        tableHelper.setBodyHeight(bodyRef);
+      }
+
     }
 
     // direct setting classlist will not work, so delay 500ms for workaround
@@ -20,15 +243,29 @@
     if (resizable) {
       tableHelper.enableColumnResizing(headerRef, tableRef, scrollY);
     }
+    if (autoHeight) {
+      bodyRef.observer = new MutationObserver(mutations => {
+        if (mutations) {         
+          tableHelper.setBodyHeight(bodyRef);
+        }
+      });
+      const config = { childList: true, subtree: true, attributes: true, attributeFilter: ['display', 'visibility','aria-selected']};
+      const target = document.body; // 要观察变动的 DOM 节点
+      bodyRef.observer.observe(target, config);
+      tableHelper.setBodyHeight(bodyRef);
+    }
   }
 
   static unbindTableScroll(bodyRef) {
     if (bodyRef) {
       bodyRef.removeEventListener && bodyRef.removeEventListener('scroll', bodyRef.bindScroll);
       window.removeEventListener('resize', bodyRef.bindScroll);
+      if (bodyRef.observer) {
+        bodyRef.observer.disconnect();
+      }
     }
   }
-
+  
   static SetScrollPositionClassName(bodyRef, wrapperRef) {
 
     const scrollLeft = bodyRef.scrollLeft;
@@ -62,7 +299,7 @@
   static enableColumnResizing(headerElement, tableElement, scrollY) {
 
     const cols = tableElement.querySelectorAll('col');
-    const ths = scrollY ? 
+    const ths = scrollY ?
       headerElement.querySelectorAll('.ant-table-thead th') :
       tableElement.tHead.querySelectorAll('.ant-table-thead th');
     const headerCols = scrollY ? headerElement.querySelectorAll('col') : null;
@@ -110,7 +347,7 @@
             th.style.width = `${updatedColumnWidth}px`;
             col.style.width = `${updatedColumnWidth}px`;
             if (headerCol) {
-              headerCol.style.width =`${updatedColumnWidth}px`;
+              headerCol.style.width = `${updatedColumnWidth}px`;
             }
             handle.style.right = '0';
             handle.style.left = '';

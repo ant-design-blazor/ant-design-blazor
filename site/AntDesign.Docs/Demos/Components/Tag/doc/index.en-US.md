@@ -24,6 +24,7 @@ Tag for categorizing or markup.
 | Closable | Whether the `Tag` can be closed| boolean         | false       |
 | Color | Color of the `Tag` | string   | "default"         |
 | Icon | Set the icon of the `Tag`  | string        | -         |
+| IconTheme | Set the theme of the `Tag` icon | string   | `fill` \| `outline` \| `twotone`       |
 | OnClick | Callback executed when the `Tag` is clicked (excluding closing button) | Action | -         |
 | OnClose | Callback executed when the `Tag` is closed     | Action<MouseEventArgs>        | -         |
 | OnClosing | Callback executed when the `Tag` is being closed. Closing can be canceled here.     | Action<CloseEventArgs<MouseEventArgs>>        | -         |

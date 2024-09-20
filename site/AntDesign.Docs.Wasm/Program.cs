@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -24,9 +28,16 @@ namespace AntDesign.Docs.Wasm
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-            builder.Services.AddAntDesignDocs();
+            ConfigureServices(builder.Services, builder.HostEnvironment);
 
             await builder.Build().RunAsync();
+        }
+
+        private static void ConfigureServices(IServiceCollection services, IWebAssemblyHostEnvironment hostEnvironment)
+        {
+            services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(hostEnvironment.BaseAddress) });
+            services.AddAntDesignDocs();
+            Environment.SetEnvironmentVariable("DOTNET_ENVIRONMENT", hostEnvironment.Environment);
         }
     }
 }

@@ -1,0 +1,104 @@
+﻿@using System.Text.RegularExpressions;
+@using AntDesign.Docs.Services
+@inject IJSRuntime JSRuntime
+@inject CompilerService Compiler
+
+@if (_error != null)
+{
+    <Alert Type="error">
+        @((MarkupString)_error)
+    </Alert>
+}
+
+@if (!_loaded)
+{
+    <div class="highlight">
+        <HighlightedCode Code="@Value" CanLoad Language="html"></HighlightedCode>
+    </div>
+}
+
+<Monaco Value=@_source Language="@_language" ValueChanged=@OnValueChanged @ref="@_monaco" OnLoaded="OnLoaded" />
+
+@code {
+    private string Copy => $"copy('{_monaco?.Id}')";
+    private Monaco _monaco;
+    private ElementReference pre;
+
+    private string _error;
+    private string _language = "razor";
+    private string _source;
+    private string _initValue;
+    private bool _loaded;
+
+    bool _loading;
+
+    [Parameter]
+    public EventCallback<Type> Compiled { get; set; }
+
+    [Parameter]
+    public string Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        _language = "razor";
+        _initValue ??= Value;
+        _source = Value;
+
+        _error = null;
+    }
+
+    async Task OnValueChanged(string value)
+    {
+        _source = value;
+
+        await ValueChanged.InvokeAsync(value);
+
+        await Run();
+    }
+
+    void OnLoaded()
+    {
+        _loaded = true;
+    }
+
+    async Task Reset()
+    {
+        _source = _initValue;
+
+        await OnValueChanged(_source);
+    }
+
+    async Task CopyCode()
+    {
+        await JSRuntime.InvokeVoidAsync(Copy);
+    }
+
+    async Task Run()
+    {
+        try
+        {
+            _error = null;
+            _loading = true;
+           // await _monaco.SetReadOnly(true);
+
+            await Task.Yield();
+
+            var type = await Compiler.CompileAsync(_source);
+
+            await Compiled.InvokeAsync(type);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+           // await _monaco.SetReadOnly(false);
+            _loading = false;
+        }
+    }
+}

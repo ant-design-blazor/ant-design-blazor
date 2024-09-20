@@ -3,23 +3,30 @@
     <Sider NoTrigger>
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline">
-            <MenuItem Icon="user" RouterLink="/reuse/title-attribute">Home</MenuItem>
+            <MenuItem Icon="home" RouterLink="/reuse">Home</MenuItem>
+            <MenuItem Icon="setting" RouterLink="/reuse/title-attribute">Page settings</MenuItem>
             <MenuItem Icon="block" RouterLink="/reuse/dynamic-title">Dynamic title</MenuItem>
+            <MenuItem Icon="user" RouterLink="/reuse/singleton">Singleton page</MenuItem>
         </Menu>
     </Sider>
     <Layout Class="site-layout">
         <Header Class="site-layout-background" Style="padding: 0;">
             <Icon Type="@IconType.Outline.Reload" Theme="outline" Class="trigger" OnClick="Reload" />
+            Cascading RouteData: <Switch @bind-Value="Routes.CascadingRouteData" OnChange="CascadingChange"></Switch>
         </Header>
-
+        <Breadcrumb AutoGenerate>
+            <BreadcrumbItem Href="/reuse">Home</BreadcrumbItem>
+        </Breadcrumb>
         <ReuseTabs Style="margin: 16px;">
             <Body>
+                @Body
+            </Body>
+            <TabPaneTemplate>
                 <Content Class="site-layout-background" Style="padding: 24px;min-height: 280px;">
                     @context.Body
                 </Content>
-            </Body>
+            </TabPaneTemplate>
         </ReuseTabs>
-
     </Layout>
 </Layout>
 
@@ -53,9 +60,20 @@
 </style>
 
 @inject ReuseTabsService ReuseTabsService
+@inject NavigationManager NavigationManager
 @code {
+
+    [CascadingParameter]
+    private Routes Routes { get; set; }
+
     void Reload()
     {
         ReuseTabsService.ReloadPage();
+    }
+
+    void CascadingChange(bool value)
+    {
+        ReuseTabsService.CloseAll();
+        Routes.SetCascadingRouteData(value);
     }
 }

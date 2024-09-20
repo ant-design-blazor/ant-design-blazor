@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -6,50 +10,123 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Basic text writing, including headings, body text, lists, and more.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>When need to display a title or paragraph contents in Articles/Blogs/Notes.</item>
+        <item>When you need copyable/editable/ellipsis texts.</item>
+    </list>
+    </summary>
+    <seealso cref="Text"/>
+    <seealso cref="Title"/>
+    <seealso cref="Paragraph"/>
+    */
+    [Documentation(DocumentationCategory.Components,
+        DocumentationType.General,
+        "https://gw.alipayobjects.com/zos/alicdn/GOM1KQ24O/Typography.svg",
+        Columns = 1,
+        Title = "Typography",
+        SubTitle = "排版",
+        OutputApi = false)]
     public abstract class TypographyBase : AntDomComponentBase
     {
+        /// <summary>
+        /// Code style
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Code { get; set; } = false;
 
+        /// <summary>
+        /// If the text can be copied or not. Will add a copy icon to end of text if true.
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Copyable { get; set; } = false;
 
+        /// <summary>
+        /// Configure what happens when copying
+        /// </summary>
         [Parameter]
         public TypographyCopyableConfig CopyConfig { get; set; }
 
+        /// <summary>
+        /// Strikethrough style
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Delete { get; set; } = false;
 
+        /// <summary>
+        /// Disabled style
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Disabled { get; set; } = false;
 
+        /// <summary>
+        /// Control if editable or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Editable { get; set; } = false;
 
+        /// <summary>
+        /// Configure editing
+        /// </summary>
         [Parameter]
         public TypographyEditableConfig EditConfig { get; set; }
 
+        /// <summary>
+        /// Display ellipsis when text overflows. Should set width when ellipsis needed
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Ellipsis { get; set; } = false;
 
+        /// <summary>
+        /// Configure ellipsis
+        /// </summary>
         [Parameter]
         public TypographyEllipsisConfig EllipsisConfig { get; set; }
 
+        /// <summary>
+        /// Highlight the text
+        /// </summary>
         [Parameter]
         public bool Mark { get; set; } = false;
 
+        /// <summary>
+        /// Underline the text
+        /// </summary>
         [Parameter]
         public bool Underline { get; set; } = false;
 
+        /// <summary>
+        /// Bold the text
+        /// </summary>
         [Parameter]
         public bool Strong { get; set; } = false;
 
+        /// <summary>
+        /// Callback executed when the user edits the content
+        /// </summary>
         [Parameter]
-        public Action OnChange { get; set; }
+        public EventCallback<string> OnChange { get; set; }
 
+        /// <summary>
+        /// Content type - styles text. Possible values: secondary, warning, danger
+        /// </summary>
         [Parameter]
         public string Type { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Content to wrap
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -219,6 +296,11 @@ namespace AntDesign
             }
             EditConfig.Text = value;
             EditConfig.OnChange?.Invoke(value);
+
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(value);
+            }
         }
     }
 

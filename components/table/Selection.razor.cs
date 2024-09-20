@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
@@ -8,18 +12,36 @@ namespace AntDesign
 {
     public partial class Selection : ColumnBase, ISelectionColumn
     {
-        [Parameter] public string Type { get; set; } = "checkbox";
+        /// <summary>
+        /// Type of selection column, checkbox or radio.
+        /// </summary>
+        /// <default value="checkbox"/>
+        [Parameter]
+        public string Type { get; set; } = "checkbox";
 
-        [Parameter] public bool Disabled { get; set; }
+        /// <summary>
+        /// Whether the selection column is disabled.
+        /// </summary>
+        [Parameter]
+        public bool Disabled { get; set; }
 
-        [Parameter] public string Key { get; set; }
+        /// <summary>
+        /// No use now.
+        /// </summary>
+        [Obsolete("Please use the RowKey of Table instead.")]
+        [Parameter]
+        public string Key { get; set; }
 
-        [Parameter] public bool CheckStrictly { get; set; } = true;
+        /// <summary>
+        /// Check table row precisely; parent row and children rows are not associated
+        /// </summary>
+        [Parameter] public bool CheckStrictly { get; set; }
 
+        /// <summary>
+        /// Customize the content of the cell.
+        /// </summary>
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
-
-        //private bool _checked;
 
         private bool Indeterminate => IsHeader
                                    && Table.AnySelected

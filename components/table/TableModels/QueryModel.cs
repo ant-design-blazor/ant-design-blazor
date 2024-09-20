@@ -1,8 +1,12 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json.Serialization;
-using AntDesign.Filters;
 
 namespace AntDesign.TableModels
 {
@@ -88,6 +92,21 @@ namespace AntDesign.TableModels
             return query;
         }
 
+        /// <summary>
+        /// Get current filters' expression for ORMs like Entity Framework.
+        /// And you can get the filtered data by executing the expression with the data source.
+        /// </summary>
+        /// <returns></returns>
+        public Expression<Func<TItem, bool>> GetFilterExpression()
+        {
+            if (!FilterModel.Any())
+            {
+                return Expression.Lambda<Func<TItem, bool>>(Expression.Constant(true, typeof(bool)), Expression.Parameter(typeof(TItem)));
+            }
+            var filters = FilterModel.Select(filter => filter.FilterExpression<TItem>());
+            return filters.Aggregate(Combine);
+        }
+
         public IQueryable<TItem> CurrentPagedRecords(IQueryable<TItem> query) => query.Skip(StartIndex).Take(PageSize);
 
         public object Clone()
@@ -95,6 +114,12 @@ namespace AntDesign.TableModels
             var sorters = this.SortModel.Select(x => x.Clone() as ITableSortModel).ToList();
             var filters = this.FilterModel.ToList();
             return new QueryModel<TItem>(PageIndex, PageSize, StartIndex, sorters, filters);
+        }
+
+        private Expression<Func<TItem, bool>> Combine(Expression<Func<TItem, bool>> expr1, Expression<Func<TItem, bool>> expr2)
+        {
+            var combineExp = Expression.Lambda<Func<TItem, bool>>(Expression.AndAlso(expr1.Body, expr2.Body), expr1.Parameters);
+            return combineExp;
         }
     }
 }

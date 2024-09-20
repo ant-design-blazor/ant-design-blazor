@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections.Generic;
 using AntDesign.Filters;
 using AntDesign.TableModels;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -29,6 +34,8 @@ namespace AntDesign
         internal TableLocale Locale { get; }
 
         internal ISelectionColumn Selection { get; set; }
+
+        internal RenderFragment<RowData> GroupTitleTemplate { get; }
 
         internal bool TreeMode { get; }
 
@@ -85,5 +92,7 @@ namespace AntDesign
         internal void AddGroupColumn(IFieldColumn column);
 
         internal void RemoveGroupColumn(IFieldColumn column);
+
+        internal bool RebuildColumns(bool add);
     }
 }

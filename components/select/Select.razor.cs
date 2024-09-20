@@ -1,12 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -19,6 +18,19 @@ using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Select component to select value from options.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>A dropdown menu for displaying choices - an elegant alternative to the native HTML <c>select</c> element.</item>
+        <item>Utilizing <see cref="Radio{TValue}"/> is recommended when there are fewer total options (less than 5).</item>
+    </list>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg", Title= "Select", SubTitle = "选择器")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
     [CascadingTypeParameter(nameof(TItemValue))]
@@ -31,12 +43,15 @@ namespace AntDesign
         /// <summary>
         /// Toggle the border style.
         /// </summary>
-        [Parameter] public bool Bordered { get; set; } = true;
+        /// <default value="true"/>
+        [Parameter]
+        public bool Bordered { get; set; } = true;
 
 #if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool EnableVirtualization { get; set; }
 #endif
@@ -44,18 +59,6 @@ namespace AntDesign
         private bool _dataSourceHasChanged = false;
         private IEnumerable<TItem> _dataSourceCopy;
         private IEnumerable<TItem> _dataSourceShallowCopy;
-        //private bool? _isTItemPrimitive;
-        //private bool IsTItemPrimitive
-        //{
-        //    get
-        //    {
-        //        if (_isTItemPrimitive is null)
-        //        {
-        //            _isTItemPrimitive = IsSimpleType(typeof(TItem));
-        //        }
-        //        return _isTItemPrimitive!.Value;
-        //    }
-        //}
 
         /// <summary>
         /// MethodInfo will contain attached MemberwiseClone protected
@@ -126,21 +129,23 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Will match drowdown width:
-        /// - for boolean: true - with widest item in the dropdown list
-        /// - for string: with value (e.g.: "256px")
+        /// Will match dropdown width. If <c>true</c>, matches width of the widest item in the dropdown. If <c>string</c>, matches width of the string's value (ex: 250px)
         /// </summary>
-        [Parameter] public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
+        /// <default value="true"/>
+        [Parameter]
+        public OneOf<bool, string> DropdownMatchSelectWidth { get; set; } = true;
 
         /// <summary>
         /// Will not allow dropdown width to grow above stated in here value (eg. "768px")
         /// </summary>
-        [Parameter] public string DropdownMaxWidth { get; set; } = "auto";
+        /// <default value="auto"/>
+        [Parameter]
+        public string DropdownMaxWidth { get; set; } = "auto";
 
         /// <summary>
         /// The name of the property to be used as a group indicator.
         /// If the value is set, the entries are displayed in groups.
-        /// Use additional SortByGroup and SortByLabel.
+        /// Use additional <see cref="SelectBase{TItemValue, TItem}.SortByGroup"/> and <see cref="SelectBase{TItemValue, TItem}.SortByLabel"/>.
         /// </summary>
         [Parameter]
         public string GroupName
@@ -157,46 +162,53 @@ namespace AntDesign
         /// Is used to increase the speed. If you expect changes to the label name,
         /// group name or disabled indicator, disable this property.
         /// </summary>
-        [Parameter] public bool IgnoreItemChanges { get; set; } = true;
+        /// <default value="true"/>
+        [Parameter]
+        public bool IgnoreItemChanges { get; set; } = true;
 
         /// <summary>
         /// Is used to customize the item style.
         /// </summary>
-        [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+        [Parameter]
+        public RenderFragment<TItem> ItemTemplate { get; set; }
 
         /// <summary>
         /// Specify content to show when no result matches.
         /// </summary>
-        [Parameter] public RenderFragment NotFoundContent { get; set; }
+        [Parameter]
+        public RenderFragment NotFoundContent { get; set; }
 
         /// <summary>
         /// Called when blur.
         /// </summary>
-        [Parameter] public Action OnBlur { get; set; }
+        [Parameter]
+        public Action OnBlur { get; set; }
 
         /// <summary>
         /// Called when custom tag is created.
         /// </summary>
 
-        [Parameter] public Action<string> OnCreateCustomTag { get; set; }
+        [Parameter]
+        public Action<string> OnCreateCustomTag { get; set; }
 
         /// <summary>
-        /// Called when the datasource changes. From null to <see cref="IEnumerable{TItem}"/>,
-        /// from <see cref="IEnumerable{TItem}"/> to <see cref="IEnumerable{TItem}"/>
-        /// or from <see cref="IEnumerable{TItem}"/> to null.
-        /// It does not trigger if a value inside the <see cref="IEnumerable{TItem}"/> changes.
+        /// Called when the datasource object/reference changes.
+        /// It does not trigger if a value inside the datasource changes.
         /// </summary>
-        [Parameter] public Action OnDataSourceChanged { get; set; }
+        [Parameter]
+        public Action OnDataSourceChanged { get; set; }
 
         /// <summary>
         /// Called when the dropdown visibility changes.
         /// </summary>
-        [Parameter] public Action<bool> OnDropdownVisibleChange { get; set; }
+        [Parameter]
+        public Action<bool> OnDropdownVisibleChange { get; set; }
 
         /// <summary>
         /// Callback function that is fired when input changed.
         /// </summary>
-        [Parameter] public Action<string> OnSearch { get; set; }
+        [Parameter]
+        public Action<string> OnSearch { get; set; }
 
         [Parameter] public Func<SelectOptionItem<TItemValue, TItem>, string, bool> FilterExpression { get; set; } = (item, searchValue) => item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase);
 
@@ -207,6 +219,7 @@ namespace AntDesign
         /// <summary>
         /// Whether to show the drop-down arrow
         /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public override bool ShowArrowIcon
         {
@@ -222,12 +235,14 @@ namespace AntDesign
         /// Define what characters will be treated as token separators for newly created tags.
         /// Useful when creating new tags using only keyboard.
         /// </summary>
-        [Parameter] public char[] TokenSeparators { get; set; }
+        [Parameter]
+        public char[] TokenSeparators { get; set; }
 
         /// <summary>
         /// Used for the two-way binding.
         /// </summary>
-        [Parameter] public override EventCallback<TItemValue> ValueChanged { get; set; }
+        [Parameter]
+        public override EventCallback<TItemValue> ValueChanged { get; set; }
 
         private bool _valueHasChanged;
 
@@ -290,7 +305,8 @@ namespace AntDesign
 
         #endregion Parameters
 
-        [Inject] private IDomEventListener DomEventListener { get; set; }
+        [Inject] 
+        private IDomEventListener DomEventListener { get; set; }
 
         #region Properties
 
@@ -305,7 +321,7 @@ namespace AntDesign
         internal ElementReference DropDownRef => _dropDown.GetOverlayComponent().Ref;
         private ElementReference _scrollableSelectDiv;
 
-        
+
         private TItemValue _selectedValue;
         private TItemValue _defaultValue;
         private bool _defaultValueIsNotNull;
@@ -1035,7 +1051,7 @@ namespace AntDesign
         }
 
         #region Events
-        
+
         protected override async Task OnValueChangeAsync(TItemValue value)
         {
             if (!_optionsHasInitialized) // This is important because otherwise the initial value is overwritten by the EventCallback of ValueChanged and would be NULL.
