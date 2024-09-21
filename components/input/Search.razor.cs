@@ -106,7 +106,6 @@ namespace AntDesign
                             {
                                 b.OpenComponent<Icon>(20);
                                 b.AddAttribute(21, "Type", "search");
-                                builder.AddAttribute(22, "Disabled", this.Disabled);
                                 b.CloseComponent();
                             }));
                         }
