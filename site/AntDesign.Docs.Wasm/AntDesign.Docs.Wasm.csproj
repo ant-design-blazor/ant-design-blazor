@@ -29,7 +29,7 @@
   <PropertyGroup>
     <BlazorWasmPrerenderingLocale>en-US,zh-CN</BlazorWasmPrerenderingLocale>
     <BlazorWasmPrerenderingUrlPathToExplicitFetch>/en-US;/zh-CN</BlazorWasmPrerenderingUrlPathToExplicitFetch>
-    <BlazorWasmPrerenderingOutputStyle>AppendHtmlExtension</BlazorWasmPrerenderingOutputStyle>
+    <!-- <BlazorWasmPrerenderingOutputStyle>AppendHtmlExtension</BlazorWasmPrerenderingOutputStyle> -->
   </PropertyGroup>
 
   <ItemGroup>
