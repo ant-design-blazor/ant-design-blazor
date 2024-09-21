@@ -109,6 +109,7 @@ namespace AntDesign.Internal
 
         private bool _shouldRender = true;
         private bool _afterFirstRender = false;
+        private bool _contentRendered = false; // lazy content rendering
 
         protected override bool ShouldRender()
         {

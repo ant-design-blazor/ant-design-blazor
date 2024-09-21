@@ -14,12 +14,16 @@
 		 @onmouseup="OnOverlayMouseUp"
          @onclick:stopPropagation>
 
-        <CascadingValue Value="this" Name="Overlay" IsFixed>
-            <CascadingValue Value="Trigger" Name="ParentTrigger" IsFixed>
-                @if (!string.IsNullOrEmpty(OverlayChildPrefixCls))
-                {
-                    <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
-                        @if (ChildContent != null)
+        @if (_contentRendered || _isOverlayDuringShowing|| _isOverlayShow)
+        {
+            _contentRendered = true;
+
+            <CascadingValue Value="this" Name="Overlay" IsFixed>
+                <CascadingValue Value="Trigger" Name="ParentTrigger" IsFixed>
+                    @if (!string.IsNullOrEmpty(OverlayChildPrefixCls))
+                    {
+                        <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
+                            @if (ChildContent != null)
                         {
                             @ChildContent
                         }
@@ -28,19 +32,21 @@
                             @Trigger.Overlay
                         }
                     </CascadingValue>
-                }
-                else
-                {
-                    @if (ChildContent != null)
-                    {
-                        @ChildContent
                     }
                     else
                     {
-                        @Trigger.Overlay
+                        @if (ChildContent != null)
+                        {
+                            @ChildContent
+                        }
+                        else
+                        {
+                            @Trigger.Overlay
+                        }
                     }
-                }
+                </CascadingValue>
             </CascadingValue>
-        </CascadingValue>
+        }
+
     </div>
 }
