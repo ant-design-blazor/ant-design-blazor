@@ -257,6 +257,7 @@ namespace AntDesign
         private readonly int _addBtnWidth = 40;
         private bool _shownDropdown;
         private bool _needUpdateScrollListPosition;
+        private bool _retryingGetSize;
 
         protected override void OnInitialized()
         {
@@ -494,8 +495,14 @@ namespace AntDesign
                 ActiveKeyChanged.InvokeAsync(_activeKey);
             }
 
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(tab.Key);
+            }
+
             OnActiveTabChanged(_activeTab);
 
+            _retryingGetSize = false;// each activation only can try once
             TryRenderInk();
             if (Card?.Body == null)
             {
@@ -672,8 +679,9 @@ namespace AntDesign
             // the tabs maybe inside other components like modal, it can't get the element info at the first time
             // so here is retrying to get the element info again.
             // Fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/4061
-            if (_activeTabElement.ClientWidth <= 0 || _activeTabElement.ClientHeight <= 0)
+            if (!_retryingGetSize && (_activeTabElement.ClientWidth <= 0 || _activeTabElement.ClientHeight <= 0))
             {
+                _retryingGetSize = true;
                 _needUpdateScrollListPosition = true;
                 StateHasChanged();
                 return;
@@ -681,7 +689,6 @@ namespace AntDesign
 
             if (IsHorizontal)
             {
-
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
 
                 var additionalWidth = HasAddButton ? _addBtnWidth : 0;
