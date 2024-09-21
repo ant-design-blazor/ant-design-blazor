@@ -55,6 +55,10 @@ Blazor 内部会对 Parameters 进行浅比较实现性能优化。当状态变�
 
 这里是一些你在使用 antd 的过程中可能会遇到的错误和警告，但是其中一些并不是 antd 的 bug。
 
+### CS1503: 无法从“方法组”转换为“Microsoft.AspNetCore.Components.EventCallback”
+
+当组件是泛型组件时，且有属性要绑定一个含有该泛型参数的方法时，需显式指定泛型类型参数（如输入组件中的 `TValue`，Select 和 TreeSelect 中的`TItem`、`TItemValue`，Table 中的 `TItem`）。这在支持绑定不同类型的数据源或绑定值的组件中很常见。
+
 ### Col 组件的告警
 
 由于 `Col` 组件会被 VS 识别为 `col` 元素，所以可以使用 `AntDesign.Col` 来避免告警。

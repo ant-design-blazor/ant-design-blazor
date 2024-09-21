@@ -9,6 +9,10 @@ If your question is style-related, please refer to the [list of frequently asked
 
 ---
 
+### CS1503: cannot convert from 'method group' to 'Microsoft.AspNetCore.Components.EventCallback'.
+
+When the component is generic and there is a property to bind to a method that contains the generic parameter, specify the generic type parameters explicitly (such as `TValue` in the entry components, `TItem`and `TItemValue` in Select and TreeSelect, and `TItem` in Table). This is common in components that support binding different types of data sources or binding values.
+
 ### `Select Dropdown DatePicker TimePicker Popover Popconfirm` disappears when I click another popup component inside it. How do I resolve this?
 
 This is related to the scrolling area of the overlay, which by default only scrolls with the body.
