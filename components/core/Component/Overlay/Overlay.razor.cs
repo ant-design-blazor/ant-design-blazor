@@ -72,14 +72,14 @@ namespace AntDesign.Internal
 
         /// <summary>
         /// By default Overlay does not render its content if Overlay hasn't been
-        /// activated (shown at least once). Setting HiddenMode = true will
+        /// activated (shown at least once). Setting RenderBeforeShow = true will
         /// go through rendering process.
         /// Use case: Select component, when using <see cref="SimpleSelectOption"/> or <see cref="SelectOption{TItemValue, TItem}"/>
-        /// needs HiddenMode = true, so the select options are initialized and
+        /// needs RenderBeforeShow = true, so the select options are initialized and
         /// potential defaults can be rendered properly.
         /// </summary>
         [Parameter]
-        public bool HiddenMode { get; set; } = false;
+        public bool RenderBeforeShow { get; set; } = false;
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }

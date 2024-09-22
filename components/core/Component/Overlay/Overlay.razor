@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign.Internal
 @inherits AntDomComponentBase
 
-@if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender || HiddenMode)
+@if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender || RenderBeforeShow)
 {
     string display = GetDisplayStyle();
     string overlayCls = GetOverlayCls();
@@ -14,27 +14,11 @@
 		 @onmouseup="OnOverlayMouseUp"
          @onclick:stopPropagation>
 
-        @if (_contentRendered || _isOverlayDuringShowing|| _isOverlayShow)
-        {
-            _contentRendered = true;
-
-            <CascadingValue Value="this" Name="Overlay" IsFixed>
-                <CascadingValue Value="Trigger" Name="ParentTrigger" IsFixed>
-                    @if (!string.IsNullOrEmpty(OverlayChildPrefixCls))
-                    {
-                        <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
-                            @if (ChildContent != null)
-                        {
-                            @ChildContent
-                        }
-                        else
-                        {
-                            @Trigger.Overlay
-                        }
-                    </CascadingValue>
-                    }
-                    else
-                    {
+        <CascadingValue Value="this" Name="Overlay" IsFixed>
+            <CascadingValue Value="Trigger" Name="ParentTrigger" IsFixed>
+                @if (!string.IsNullOrEmpty(OverlayChildPrefixCls))
+                {
+                    <CascadingValue Value="OverlayChildPrefixCls" Name="PrefixCls">
                         @if (ChildContent != null)
                         {
                             @ChildContent
@@ -43,10 +27,21 @@
                         {
                             @Trigger.Overlay
                         }
+                    </CascadingValue>
+                }
+                else
+                {
+                    @if (ChildContent != null)
+                    {
+                        @ChildContent
                     }
-                </CascadingValue>
+                    else
+                    {
+                        @Trigger.Overlay
+                    }
+                }
             </CascadingValue>
-        }
+        </CascadingValue>
 
     </div>
 }

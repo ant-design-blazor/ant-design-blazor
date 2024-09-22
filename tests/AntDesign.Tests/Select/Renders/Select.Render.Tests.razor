@@ -23,7 +23,8 @@
     {
          //Arrange
             
-        var cut = Render<EnumSelect<City>>(@<EnumSelect TEnum="City"></EnumSelect>);
+        var cut = Render<EnumSelect<City>>(@<EnumSelect Id="enum-select" TEnum="City"></EnumSelect>);
+    
         var options = cut.FindAll(".ant-select-item-option-content");
 
         Assert.Equal(3, options.Count);
