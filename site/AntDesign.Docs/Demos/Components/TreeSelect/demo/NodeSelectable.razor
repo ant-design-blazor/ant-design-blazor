@@ -1,0 +1,28 @@
+﻿<TreeSelect TItem="string"
+      ExpandOnClickNode
+      @bind-Values="@values"
+      TItemValue="string"
+      AllowClear
+      Multiple
+      TreeDefaultExpandAll>
+	<TreeNode Title="parent 1" Key="0-0" Selectable="false">
+        <TreeNode Title="parent 1-0" Key="0-0-0" Selectable="false">
+			<TreeNode Title="leaf" Key="0-0-0-0" ></TreeNode>
+            <TreeNode Title="leaf" Key="0-0-0-1" ></TreeNode>
+            <TreeNode Title="leaf" Key="0-0-0-2" ></TreeNode>
+		</TreeNode>
+        <TreeNode Title="parent 1-1" Key="0-0-1" Selectable="false">
+			<TreeNode Key="0-0-1-0" Title="sss">
+				<TitleTemplate>
+					<span style="color: #1890ff; ">sss</span>
+				</TitleTemplate>
+			</TreeNode>
+		</TreeNode>
+	</TreeNode>
+</TreeSelect>
+
+@JsonSerializer.Serialize(values)
+@code
+{
+    private IEnumerable<string> values;
+}

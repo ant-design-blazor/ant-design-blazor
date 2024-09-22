@@ -211,7 +211,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void SetSelected(bool value)
         {
-            if (!TreeComponent.Selectable) return;
+            if (!Selectable) return;
             DoSelect(value, false, true);
             TreeComponent.UpdateSelectedKeys();
         }
@@ -510,6 +510,15 @@ namespace AntDesign
         {
             get => TreeComponent.Checkable && _checkable;
             set => _checkable = value;
+        }
+
+        private bool _selectable = true;
+
+        [Parameter]
+        public bool Selectable
+        {
+            get => TreeComponent.Selectable && _selectable;
+            set => _selectable = value;
         }
 
         internal bool Indeterminate { get; set; }
@@ -1083,7 +1092,10 @@ namespace AntDesign
                 DoCheck(isChecked, false, false);
             }
 
-            if (TreeComponent.Selectable)
+            if (TreeComponent.SelectableExpression != null)
+                Selectable = TreeComponent.SelectableExpression(this);
+
+            if (Selectable)
             {
                 var isSelected = false;
                 if (_selected)
