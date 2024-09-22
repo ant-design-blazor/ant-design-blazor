@@ -16,7 +16,7 @@
 
         @if (_demoComponent != null)
         {
-            var title = $"{_demoComponent.SubTitle} {_demoComponent.Title} - Ant Design Blazor".Trim();
+            var title = $"{(CurrentLanguage == "zh-CN" ? _demoComponent.SubTitle + " " : "")}{_demoComponent.Title} - Ant Design Blazor".Trim();
             <PageTitle>@title</PageTitle>
             var docDemos = _demoComponent.DemoList?.Where(x => x.Docs.HasValue && x.Docs.Value) ?? Enumerable.Empty<DemoItem>();
 
