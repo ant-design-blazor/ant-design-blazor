@@ -4149,7 +4149,10 @@
     "Translated": "树的数据源。可以是任何自定义对象类型的列表，方法是提供用于获取 children、leafs、titles 等的表达式。使用 this 或 <code>AntDesign.TreeSelect'2.ChildContent</code>"
   },
   "Specifies a method to return a checkable node": {
-    "Translated": "指定返回可检查节点的方法"
+    "Translated": "指定返回可勾选节点的方法"
+  },
+  "Specifies a method to return a selectable node": {
+    "Translated": "指定返回可选择节点的方法"
   },
   "Check or uncheck the node by click TreeNodeTitle if checkable": {
     "Translated": "如果可选中，请单击 TreeNodeTitle 来检查或取消选中节点"

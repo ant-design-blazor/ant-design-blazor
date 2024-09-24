@@ -257,6 +257,12 @@ namespace AntDesign
         public Func<TreeNode<TItem>, bool> CheckableExpression { get; set; }
 
         /// <summary>
+        /// Specifies a method to return a selectable node
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> SelectableExpression { get; set; }
+
+        /// <summary>
         /// (Controlled) expands the specified tree node
         /// </summary>
         [Parameter]
