@@ -421,10 +421,12 @@ namespace AntDesign
                 if (ValueExpression != null)
                 {
                     FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                    _propertyReflector = PropertyReflector.Create(ValueExpression);
                 }
                 else if (ValuesExpression != null)
                 {
                     FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
+                    _propertyReflector = PropertyReflector.Create(ValuesExpression);
                 }
                 else if (Form?.Model != null && FormItem?.Name != null)
                 {
