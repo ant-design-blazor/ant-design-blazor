@@ -870,7 +870,6 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-      
             if (_preventRender)
             {
                 _shouldRender = false;
