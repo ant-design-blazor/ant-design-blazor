@@ -214,5 +214,57 @@
         // All items except John should be visible because John is selected and HideSelected is true
         cut.FindAll(".ant-select-item-option").Where(x => !x.Attributes["style"]?.Value?.Trim()?.Contains("display:none") ?? true).Count().Should().Be(3);
     }
-}
+
+    [Theory]
+    [InlineData("default")]
+    [InlineData("multiple")]
+    public void Will_reset_search_input_when_item_selected(string mode)
+    {
+        JSInterop.SetupVoid("AntDesign.interop.eventHelper.addPreventKeys", _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
+        JSInterop
+            .Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition
+            {
+                Bottom = 10,
+                Left = 10,
+                Right = 10,
+                Top = 10,
+                Placement = Placement.TopLeft,
+                ZIndex = 100
+            });
+
+        IEnumerable<Person> values = new List<Person>();
+        var itemsChanged = false;
+
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select Mode=@mode
+                               EnableSearch=true
+                               HideSelected=true
+                               SearchDebounceMilliseconds=0
+                               OnSelectedItemChanged="() => { itemsChanged = true; }"
+                               OnSelectedItemsChanged="() => { itemsChanged = true; }"
+                               TItemValue="Person"
+                               TItem="Person"
+                               @bind-Values="@values">
+                <SelectOptions>
+                    @foreach (var item in _persons)
+                    {
+                        <SelectOption @key="item"
+                                      TItemValue="Person"
+                                      TItem="Person"
+                                      Value=@item
+                                      Label=@item.Name />
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        var input = cut.Find("input[type=search]");
+        input.Input("John");
+        cut.Find(".ant-select-item-option").Click();
+        cut.WaitForState(() => itemsChanged);
+
+        input.GetAttribute("value").Should().BeEmpty();
+    }
 }

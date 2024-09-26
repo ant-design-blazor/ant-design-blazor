@@ -263,6 +263,24 @@ namespace AntDesign
                 }
             }
         }
+        
+        private bool _searchInputHasChanged;
+
+        /// <summary>
+        /// Get or set the search input.
+        /// Using this property will deactivate the internal management of the input value (e.g. clearing it).
+        /// </summary>
+        [Parameter]
+        public string SearchInput
+        {
+            get => _searchValue;
+            set
+            {
+                _manageSearchInputExternally = true;
+                _searchInputHasChanged = _searchValue != value;
+                _searchValue = value;
+            }
+        }
 
         /// <summary>
         /// Specifies the label property in the option object. If use this property, should not use <see cref="LabelName"/>
@@ -418,6 +436,12 @@ namespace AntDesign
 
                 await OnValueChangeAsync(_selectedValue);
             }
+            
+            if(_searchInputHasChanged && !string.IsNullOrEmpty(_searchValue))
+            {
+                FilterOptionItems(_searchValue);
+            }
+            
             await base.OnParametersSetAsync();
         }
 

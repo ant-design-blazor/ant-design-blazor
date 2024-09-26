@@ -1,0 +1,76 @@
+@using AngleSharp.Css.Values
+@using AntDesign.Core.JsInterop.Modules.Components
+@using AntDesign.Internal
+@inherits AntDesignTestBase
+
+@code {
+    
+    record Person(int Id, string Name);
+    
+    List<Person> _persons = new List<Person>
+    {
+        new Person(1, "John"),
+        new Person(2, "Lucy"),
+        new Person(3, "Jack"),
+        new Person(4, "Emily"),
+    };
+
+    public Select_OnUnfocus_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true).SetVoidResult();
+        JSInterop.SetupVoid(JSInteropConstants.DomMainpulationHelper.Focus, _ => true).SetVoidResult();
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventEnterOnOverlayVisible, _ => true).SetVoidResult();
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+#if !NET6_0_OR_GREATER
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
+#endif
+    }
+
+    [Fact]
+    public async Task Will_reset_search_input_and_filter_on_unfocus()
+    {
+        // Arrange
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               EnableSearch="true"
+                               TItem="Person"
+                               TItemValue="int">
+            </AntDesign.Select>
+        );
+        
+        var trigger = cut.FindComponent<OverlayTrigger>();
+        await cut.InvokeAsync(() => trigger.Instance.OnVisibleChange.InvokeAsync(true));
+        
+        var input = cut.Find(".ant-select-selection-search-input");
+        input.Input("J");
+        
+        // we have to wait for the search to be finished. As the search does not trigger a re-render in the end,
+        // we can't use any cut.Wait... operations.
+        await Task.Delay(400);
+        // trigger re-render after _searchValue in Select was updated. This does not trigger a re-render on its own
+        cut.Render();
+
+        // after the search has been executed, and we triggered the re-render, the input value should have been correctly re-set
+        input.GetAttribute("value").Should().Be("J");
+        
+        
+        // Act
+        await cut.InvokeAsync(() => trigger.Instance.OnVisibleChange.InvokeAsync(false));
+
+        // Assert
+        cut.WaitForAssertion(
+            () => input.GetAttribute("value").Should().BeEmpty(),
+            TimeSpan.FromSeconds(1));
+        
+        var items = cut.FindAll(".ant-select-item-option")
+            .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
+            .ToList();
+        items.Should().HaveCount(4);
+    }
+    
+}

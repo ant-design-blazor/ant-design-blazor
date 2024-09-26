@@ -1,0 +1,207 @@
+@using AntDesign.Core.JsInterop.Modules.Components
+@using AntDesign.Internal
+@using AntDesign.Select.Internal
+@inherits AntDesignTestBase
+
+@code{
+    
+    record Person(int Id, string Name);
+    
+    List<Person> _persons = new List<Person>
+    {
+        new Person(1, "John"),
+        new Person(2, "Lucy"),
+        new Person(3, "Jack"),
+        new Person(4, "Emily"),
+    };
+
+    public Select_SearchInput_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true).SetVoidResult();
+        JSInterop.SetupVoid(JSInteropConstants.DomMainpulationHelper.Focus, _ => true).SetVoidResult();
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventEnterOnOverlayVisible, _ => true).SetVoidResult();
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+    }
+
+    [Fact]
+    public void Set_input_value_when_search_input_provided()
+    {
+        // Act
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               EnableSearch="true"
+                               TItem="Person"
+                               TItemValue="int"
+                               SearchInput="J">
+            </AntDesign.Select>
+        );
+        
+        
+        // Assert
+        var input = cut.Find(".ant-select-selection-search-input");
+        var inputValue = input.GetAttribute("value");
+        inputValue.Should().Be("J");
+    }
+
+    [Fact]
+    public void Update_input_value_when_search_input_updated()
+    {
+        // Arrange
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               EnableSearch="true"
+                               TItem="Person"
+                               TItemValue="int"
+                               SearchInput="J">
+            </AntDesign.Select>
+        );
+        
+        // Act
+        cut.SetParametersAndRender(param => param.Add(p => p.SearchInput, "Jo"));
+        
+        // Assert
+        var input = cut.Find(".ant-select-selection-search-input");
+        var inputValue = input.GetAttribute("value");
+        inputValue.Should().Be("Jo");
+    }
+
+    [Fact]
+    public async Task Filter_items_when_search_input_updated_while_in_focus()
+    {
+        // Arrange
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               EnableSearch="true"
+                               TItem="Person"
+                               TItemValue="int"
+                               SearchInput="J">
+            </AntDesign.Select>
+        );
+        
+        var trigger = cut.FindComponent<OverlayTrigger>();
+        await cut.InvokeAsync(() => trigger.Instance.OnVisibleChange.InvokeAsync(false));
+        
+        // Act
+        cut.SetParametersAndRender(param => param.Add(p => p.SearchInput, "Jo"));
+        
+        // Assert
+        var items = cut.FindAll(".ant-select-item-option")
+            .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
+            .ToList();
+        items.Should().HaveCount(1);
+        items[0].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("John");
+    }
+
+    [Fact]
+    public async Task Filter_items_when_search_input_updated_while_not_in_focus()
+    {
+        // Arrange
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               EnableSearch="true"
+                               TItem="Person"
+                               TItemValue="int"
+                               SearchInput="J">
+            </AntDesign.Select>
+        );
+        
+        // Act
+        cut.SetParametersAndRender(param => param.Add(p => p.SearchInput, "Jo"));
+        
+        // Assert
+        var items = cut.FindAll(".ant-select-item-option")
+            .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
+            .ToList();
+        items.Should().HaveCount(1);
+        items[0].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("John");
+    }
+
+    [Fact]
+    public async Task Filter_items_on_first_render()
+    {
+        // Arrange
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               EnableSearch="true"
+                               TItem="Person"
+                               TItemValue="int"
+                               SearchInput="Jo">
+            </AntDesign.Select>
+        );
+        
+        // Act
+        
+        // Assert
+        var items = cut.FindAll(".ant-select-item-option")
+            .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
+            .ToList();
+        items.Should().HaveCount(1);
+        items[0].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("John");
+    }
+
+
+    [Fact]
+    public async Task Will_not_filter_items_when_search_input_is_null()
+    {
+        // Act
+        string? input = null;
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               EnableSearch="true"
+                               TItem="Person"
+                               TItemValue="int"
+                               SearchInput="@input">
+            </AntDesign.Select>
+        );
+        
+        
+        // Assert
+        var items = cut.FindAll(".ant-select-item-option")
+            .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
+            .ToList();
+        items.Should().HaveCount(4);
+    }
+
+    [Fact]
+    public async Task Will_not_reset_filtered_items_when_exiting_focus()
+    {
+        // Arrange
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               EnableSearch="true"
+                               TItem="Person"
+                               TItemValue="int"
+                               SearchInput="Jo">
+            </AntDesign.Select>
+        );
+        var trigger = cut.FindComponent<OverlayTrigger>();
+        
+        // Act
+        await cut.InvokeAsync(() => trigger.Instance.OnVisibleChange.InvokeAsync(false));
+        
+        // Assert
+        var items = cut.FindAll(".ant-select-item-option")
+            .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
+            .ToList();
+        items.Should().HaveCount(1);
+        items[0].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("John");
+    }
+    
+}

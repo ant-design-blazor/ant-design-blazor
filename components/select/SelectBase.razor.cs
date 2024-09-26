@@ -263,6 +263,10 @@ namespace AntDesign
 
         internal virtual SelectMode SelectMode => Mode.ToSelectMode();
 
+        // When the search input is managed externally (via the SearchValue parameter), it's imporant that the
+        // component itself doesn't try to manage the search input on its own (e.g. clearing it when an item is selected).
+        protected bool _manageSearchInputExternally = false;
+
         /// <summary>
         ///     Currently active (highlighted) option.
         ///     It does not have to be equal to selected option.
@@ -760,6 +764,9 @@ namespace AntDesign
                 return;
             }
 
+            if (_manageSearchInputExternally)
+                return;
+            
             _searchValue = string.Empty;
             _prevSearchValue = string.Empty;
 
@@ -958,8 +965,11 @@ namespace AntDesign
                 }
             }
 
-            _searchValue = string.Empty;
-            _prevSearchValue = string.Empty;
+            if (!_manageSearchInputExternally)
+            {
+                _searchValue = string.Empty;
+                _prevSearchValue = string.Empty;
+            }
         }
 
         /// <summary>

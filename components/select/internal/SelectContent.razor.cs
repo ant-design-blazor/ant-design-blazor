@@ -60,7 +60,23 @@ namespace AntDesign.Select.Internal
         [Parameter] public EventCallback<FocusEventArgs> OnBlur { get; set; }
         [Parameter] public EventCallback<MouseEventArgs> OnClearClick { get; set; }
         [Parameter] public EventCallback<SelectOptionItem<TItemValue, TItem>> OnRemoveSelected { get; set; }
-        [Parameter] public string SearchValue { get; set; }
+        [Parameter] public string SearchValue
+        {
+            get => _inputString;
+            set
+            {
+                // While the debouncer is still active, the outer select doesn't have the latest input yet.
+                // A re-render would then bring the old value back into the input field, only until the debouncer is finished
+                // and updates the outer Select with the latest input. This would make the value in the input field flicker.
+                if (_debounceTimer is not null)
+                {
+                    return;
+                }
+                
+                _inputString = value;
+                StateHasChanged();
+            }
+        }
         [Parameter] public int SearchDebounceMilliseconds { get; set; }
         [Inject] private IDomEventListener DomEventListener { get; set; }
 
