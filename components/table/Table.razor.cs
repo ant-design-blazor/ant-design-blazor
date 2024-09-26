@@ -831,7 +831,6 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-   
             if (ColumnDefinitions != null)
             {
                 ChildContent = ColumnDefinitions;
