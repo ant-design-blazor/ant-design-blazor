@@ -437,9 +437,12 @@ namespace AntDesign
                 await OnValueChangeAsync(_selectedValue);
             }
             
-            if(_searchInputHasChanged && !string.IsNullOrEmpty(_searchValue))
+            if(_searchInputHasChanged)
             {
-                FilterOptionItems(_searchValue);
+                if(string.IsNullOrEmpty(_searchValue))
+                    ResetOptionItems();
+                else
+                    FilterOptionItems(_searchValue);
             }
             
             await base.OnParametersSetAsync();
@@ -1202,14 +1205,19 @@ namespace AntDesign
             }
             else
             {
-                UnhideSelectOptions();
-                if (SelectMode == SelectMode.Tags && CustomTagSelectOptionItem is not null)
-                {
-                    SelectOptionItems.Remove(CustomTagSelectOptionItem);
-                    CustomTagSelectOptionItem = null;
-                }
+                ResetOptionItems();
             }
             OnSearch?.Invoke(_searchValue);
+        }
+
+        private void ResetOptionItems()
+        {
+            UnhideSelectOptions();
+            if (SelectMode == SelectMode.Tags && CustomTagSelectOptionItem is not null)
+            {
+                SelectOptionItems.Remove(CustomTagSelectOptionItem);
+                CustomTagSelectOptionItem = null;
+            }
         }
 
         private async Task TokenizeSearchedPhrase(string searchValue)
