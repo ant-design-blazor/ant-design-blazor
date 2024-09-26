@@ -1,13 +1,11 @@
 ﻿export class tableHelper {
   static isHidden(element) {
-    if (element instanceof HTMLElement) {
+    if (element) {
       const computedStyle = getComputedStyle(element);
       if (computedStyle.display === "none" || computedStyle.visibility === "hidden") {
         return true;
       }
-    }
-    if (element.parentNode != null) {
-      if (tableHelper.isHidden(element.parentNode)) {
+      if (element.parentElement && tableHelper.isHidden(element.parentElement)) {
         return true;
       }
     }
@@ -39,20 +37,16 @@
     let parentBorderBottom = 0;
     let parentPaddingBottom = 0;
     const parentElement = element.parentElement;
-    if (parentElement != null) {
+    if (parentElement) {
       const parentComputedStyle = getComputedStyle(parentElement);
-      if (parentComputedStyle.rowGap) {
-        if (parentComputedStyle.rowGap.endsWith('px')) {
-          rowGap = parseFloat(parentComputedStyle.rowGap);
-        }
-        if (parentComputedStyle.borderStyle != 'none') {
-          if (parentComputedStyle.borderBottom) {
-            parentBorderBottom = parseFloat(parentComputedStyle.borderBottom);
-          }
-        }
-        if (parentComputedStyle.paddingBottom) {
-          parentPaddingBottom = parseFloat(parentComputedStyle.paddingBottom);
-        }
+      if (parentComputedStyle.rowGap && parentComputedStyle.rowGap.endsWith('px')) {
+        rowGap = parseFloat(parentComputedStyle.rowGap);        
+      }
+      if (parentComputedStyle.borderStyle != 'none' && parentComputedStyle.borderBottom) {        
+        parentBorderBottom = parseFloat(parentComputedStyle.borderBottom);        
+      }
+      if (parentComputedStyle.paddingBottom) {
+        parentPaddingBottom = parseFloat(parentComputedStyle.paddingBottom);
       }
     }
     let previousElement = element;
@@ -76,12 +70,9 @@
         totalHeight += marginBottom;
         marginBottom = 0;
       }
+    }    
 
-    }
-    
-
-    if (parentElement!=null) {     
-
+    if (parentElement) {     
       const parentComputedStyle = getComputedStyle(parentElement);
       if (!tableHelper.isIgnore(parentElement, parentComputedStyle, left, right)) {
 
@@ -89,7 +80,7 @@
         totalHeight += parentBorderBottom;
         
       }
-      if (parentElement == rootElement) {
+      if (parentElement === rootElement) {
         return totalHeight;
       }
       
@@ -102,7 +93,7 @@
     return parseFloat(value);
   }
   static getCssHeight(element,height) {
-    if (element != null) {
+    if (element) {
       if (height !== 'auto' && height !== '0px' && height !== '') {
         // 将 'px' 以外的单位转换为像素
         if (height.endsWith('px')) {
@@ -112,7 +103,7 @@
         } else if (height.endsWith('%')) {
           // 获取父元素的高度
           const parentElement = element.parentElement;
-          if (parentElement != null) {
+          if (parentElement) {
             const parentComputedStyle = window.getComputedStyle(parentElement);
             const parentHeight = parentComputedStyle.height;
             return (tableHelper.parseHeightValue(height) / 100) * tableHelper.parseHeightValue(parentHeight);
@@ -120,8 +111,6 @@
           return 0;
         }
         return height;
-
-
       }
     }
     return 0;
@@ -129,23 +118,19 @@
 
 
   static getNumericHeight(element) {
-    if (element != null) {
-      if (element.style && element.style.height) {
-        const computedStyle = window.getComputedStyle(element);
-        const height = tableHelper.getCssHeight(element, computedStyle.height);
-        if (height > 0) {
-          return height;
-        }
-      }
-      
+    if (element && element.style && element.style.height) {
+      const computedStyle = window.getComputedStyle(element);
+      const height = tableHelper.getCssHeight(element, computedStyle.height);
+      if (height > 0) {
+        return height;
+      }          
     }
     return 0;
   }
   static getContainer(element) {
     if (element) {     
       const height = tableHelper.getNumericHeight(element);    
-      if (height > 0) {
-    
+      if (height > 0) {    
         return element;          
       }  
       const parent = this.getContainer(element.parentElement);

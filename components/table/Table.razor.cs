@@ -831,10 +831,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            if (AutoHeight)
-            {
-                ScrollY = "0px";
-            }
+   
             if (ColumnDefinitions != null)
             {
                 ChildContent = ColumnDefinitions;
@@ -862,14 +859,18 @@ namespace AntDesign
 
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
-
-        protected override void OnParametersSet()
-        {
-            base.OnParametersSet();
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {       
+            await base.SetParametersAsync(parameters);
             if (AutoHeight)
             {
                 ScrollY = "0px";
             }
+        }
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+      
             if (_preventRender)
             {
                 _shouldRender = false;
