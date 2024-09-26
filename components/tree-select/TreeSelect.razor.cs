@@ -519,8 +519,7 @@ namespace AntDesign
             {
                 if (node.Selected)
                 {
-                    var option = CreateOption(node, true);
-                    await SetValueAsync(option);
+                    Value = GetValueFromNode(node);
                 }
             }
 
