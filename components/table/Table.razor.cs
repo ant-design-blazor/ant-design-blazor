@@ -831,7 +831,10 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-
+            if (AutoHeight)
+            {
+                ScrollY = "0px";
+            }
             if (ColumnDefinitions != null)
             {
                 ChildContent = ColumnDefinitions;
@@ -863,7 +866,10 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-
+            if (AutoHeight)
+            {
+                ScrollY = "0px";
+            }
             if (_preventRender)
             {
                 _shouldRender = false;
@@ -1010,7 +1016,7 @@ namespace AntDesign
             {
                 if (_afterFirstRender && !_isReloading)
                 {
-                    if (ScrollY != null || ScrollX != null)
+                    if (ScrollY != null || ScrollX != null || Resizable || AutoHeight)
                     {
                         await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                     }
