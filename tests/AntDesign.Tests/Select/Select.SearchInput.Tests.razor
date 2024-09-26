@@ -169,7 +169,6 @@
             </AntDesign.Select>
         );
         
-        
         // Assert
         var items = cut.FindAll(".ant-select-item-option")
             .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
@@ -197,6 +196,84 @@
         await cut.InvokeAsync(() => trigger.Instance.OnVisibleChange.InvokeAsync(false));
         
         // Assert
+        var items = cut.FindAll(".ant-select-item-option")
+            .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
+            .ToList();
+        items.Should().HaveCount(1);
+        items[0].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("John");
+    }
+
+    [Fact]
+    public async Task Will_not_reset_selected_item_when_search_input_changes()
+    {
+        // Arrange
+        int value = 0;
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               Mode="default"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               EnableSearch="true"
+                               @bind-value="@value"
+                               TItem="Person"
+                               TItemValue="int"
+                               SearchInput="Lu">
+            </AntDesign.Select>
+        );
+        
+        cut.FindAll(".ant-select-item-option")
+            .Single(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
+            .Click();
+        value.Should().Be(2);
+        
+        // Act
+        cut.SetParametersAndRender(param => param.Add(p => p.SearchInput, "Jo"));
+        
+        // Assert
+        value.Should().Be(2);
+        
+        var input = cut.Find(".ant-select-selection-search-input");
+        var inputValue = input.GetAttribute("value");
+        inputValue.Should().Be("Jo");
+        
+        var items = cut.FindAll(".ant-select-item-option")
+            .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
+            .ToList();
+        items.Should().HaveCount(1);
+        items[0].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("John");
+    }
+
+    [Fact]
+    public async Task Will_not_reset_selected_items_when_search_input_changes()
+    {
+        // Arrange
+        IEnumerable<int> values = new List<int>();
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select DataSource="@_persons"
+                               Mode="multiple"
+                               LabelName="@nameof(Person.Name)"
+                               ValueName="@nameof(Person.Id)"
+                               EnableSearch="true"
+                               @bind-values="@values"
+                               TItem="Person"
+                               TItemValue="int"
+                               SearchInput="Lu">
+            </AntDesign.Select>
+        );
+        
+        cut.Find(".ant-select-item-option").Click();
+        values.Should().HaveCount(1);
+        
+        // Act
+        cut.SetParametersAndRender(param => param.Add(p => p.SearchInput, "Jo"));
+        
+        // Assert
+        values.Should().HaveCount(1);
+        
+        var input = cut.Find(".ant-select-selection-search-input");
+        var inputValue = input.GetAttribute("value");
+        inputValue.Should().Be("Jo");
+        
         var items = cut.FindAll(".ant-select-item-option")
             .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
             .ToList();

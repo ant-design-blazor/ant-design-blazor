@@ -74,7 +74,6 @@ namespace AntDesign.Select.Internal
                 }
                 
                 _inputString = value;
-                StateHasChanged();
             }
         }
         [Parameter] public int SearchDebounceMilliseconds { get; set; }
