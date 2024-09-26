@@ -316,6 +316,7 @@ namespace AntDesign
         {
             tabPane.SetIndex(_tabs.Count);
             _tabs.Add(tabPane);
+            _needUpdateScrollListPosition = true;
             StateHasChanged();
         }
 
