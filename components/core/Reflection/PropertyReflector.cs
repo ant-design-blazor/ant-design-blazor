@@ -59,6 +59,10 @@ namespace AntDesign.Core.Reflection
             {
                 GetValueDelegate = property.GetValue;
             }
+            else if (propertyInfo is FieldInfo field)
+            {
+                GetValueDelegate = field.GetValue;
+            }
         }
 
         public static PropertyReflector Create<TField>(Expression<Func<TField>> accessor)
@@ -89,6 +93,10 @@ namespace AntDesign.Core.Reflection
                 if (memberExpression.Expression is MemberExpression parentMemberExpression)
                 {
                     parentProperty = Create(parentMemberExpression);
+                }
+                else if (memberExpression.Expression is ConstantExpression constantExpression)
+                {
+                    parentProperty = Create(constantExpression);
                 }
 
                 return new PropertyReflector(memberExpression.Member, parentProperty);

@@ -317,9 +317,6 @@ namespace AntDesign
         {
             _isValueGuid = THelper.GetUnderlyingType<TValue>() == typeof(Guid);
 
-            if (ValueExpression is not null)
-                _propertyReflector = PropertyReflector.Create(ValueExpression);
-
             base.OnInitialized();
 
             if (Form != null && !string.IsNullOrWhiteSpace(FormItem?.Name))
