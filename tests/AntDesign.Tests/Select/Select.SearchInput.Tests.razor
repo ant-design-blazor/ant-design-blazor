@@ -363,7 +363,6 @@
                                SearchInput="Fi">
             </AntDesign.Select>
         );
-        var trigger = cut.FindComponent<OverlayTrigger>();
         
         // Act
         cut.SetParametersAndRender(param => param.Add(p => p.SearchInput, string.Empty));
@@ -376,6 +375,80 @@
         items[0].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("First");
         items[1].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("Second");
         items[2].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("Third");
+    }
+
+    [Fact]
+    public async Task Filter_items_and_custom_tag_after_creating_custom_tag()
+    {
+        // Arrange
+        var cut = Render<AntDesign.Select<string, Tag>>(
+            @<AntDesign.Select DataSource="@_tags"
+                               Mode="tags"
+                               LabelName="@nameof(Tag.Label)"
+                               ValueName="@nameof(Tag.Value)"
+                               EnableSearch="true"
+                               TItem="Tag"
+                               TItemValue="string"
+                               SearchInput="Fi">
+            </AntDesign.Select>
+        );
+        
+        // Act
+        cut.FindAll(".ant-select-item-option")
+            .Single(x => x.GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim() == "Fi")
+            .Click();
+        
+        cut.Render();
+        
+        cut.WaitForAssertion(() => cut.FindAll(".ant-select-selection-overflow-item").Should().HaveCount(2));
+
+        // Assert
+        var items = cut.FindAll(".ant-select-item-option")
+            .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
+            .ToList();
+        items.Should().HaveCount(2);
+        items[0].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("First");
+        items[1].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("Fi");
+    }
+
+    [Fact]
+    public async Task Filter_items_and_custom_tag_on_removing_custom_tag()
+    {
+        // Arrange
+        var cut = Render<AntDesign.Select<string, Tag>>(
+            @<AntDesign.Select DataSource="@_tags"
+                               Mode="tags"
+                               LabelName="@nameof(Tag.Label)"
+                               ValueName="@nameof(Tag.Value)"
+                               EnableSearch="true"
+                               TItem="Tag"
+                               TItemValue="string"
+                               SearchInput="Fi">
+            </AntDesign.Select>
+        );
+        
+        cut.FindAll(".ant-select-item-option")
+            .Single(x => x.GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim() == "Fi")
+            .Click();
+        
+        cut.Render();
+        
+        cut.WaitForAssertion(() => cut.FindAll(".ant-select-selection-overflow-item").Should().HaveCount(2));
+        
+        // Act
+        cut.FindAll(".ant-select-selection-item")
+            .Single(x => x.GetElementsByClassName("ant-select-selection-item-content").Any(y => y.TextContent.Trim() == "Fi"))
+            .GetElementsByClassName("ant-select-selection-item-remove")
+            .Single()
+            .MouseDown();
+        
+        // Assert
+        var items = cut.FindAll(".ant-select-item-option")
+            .Where(x => !x.Attributes["style"]?.Value.Trim().Contains("display:none") ?? true)
+            .ToList();
+        items.Should().HaveCount(2);
+        items[0].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("First");
+        items[1].GetElementsByClassName("ant-select-item-option-content")[0].TextContent.Trim().Should().Be("Fi");
     }
     
 }

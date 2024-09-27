@@ -904,6 +904,15 @@ namespace AntDesign
                 await InvokeValuesChanged(selectOption);
                 await UpdateOverlayPositionAsync();
             }
+            
+            // The tag filters have to be re-applied after removing/adding a tag as the searchValue is not cleared
+            // when SearchInput in the Select is set. Otherwise, the input remains, but the filters would not correspond to it 
+            if(SelectMode == SelectMode.Tags && _manageSearchInputExternally)
+                FilterTagsOptionItems(_searchValue);
+        }
+
+        protected virtual void FilterTagsOptionItems(string searchValue)
+        {
         }
 
         protected async Task InvokeValuesChanged(SelectOptionItem<TItemValue, TItem> newSelection = null)

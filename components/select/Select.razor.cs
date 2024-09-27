@@ -1311,7 +1311,7 @@ namespace AntDesign
             }
         }
 
-        private void FilterTagsOptionItems(string searchValue)
+        protected override void FilterTagsOptionItems(string searchValue)
         {
             SelectOptionItem<TItemValue, TItem> activeCanditate = null;
             List<SelectOptionItem<TItemValue, TItem>> selectOptionItems;
