@@ -71,6 +71,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | PopupContainerMaxHeight | 弹出容器的最大高度. | string | `256px` |  |
 | PopupContainerSelector | 使用它来修复覆盖问题，例如 #area | string | body |  |
 | PrefixIcon | 自定义前缀图标。 对于模式 `multiple` 和 `tags` 仅在未选择数据时可见. | RenderFragment | - |  |
+| SearchInput |  | string | - |  |
 | SelectOptions | 用于手动渲染选择Option. | RenderFragment | - |  |
 | ShowArrowIcon | 是否显示下拉小箭头 | bool | true |  |
 | ShowSearchIcon | 使单选模式可搜索 | bool | true |  |

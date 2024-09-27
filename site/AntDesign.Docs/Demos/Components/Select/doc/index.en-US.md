@@ -71,6 +71,7 @@ Select component to select value from options.
 | PopupContainerMaxHeight | The maximum height of the popup container. | string | `256px` |  |
 | PopupContainerSelector | Use this to fix overlay problems e.g. #area | string | body |  |
 | PrefixIcon | The custom prefix icon. For mode `multiple` and `tags` visible only when no data selected. | RenderFragment | - |  |
+| SearchInput | Used for setting the search input manually. Using this property will deactivate the internal management of the input value (e.g. clearing it). | string | - |  |
 | SelectOptions | Used for rendering select options manually. | RenderFragment | - |  |
 | ShowArrowIcon | Whether to show the drop-down arrow | bool | true |  |
 | ShowSearchIcon | Whether show search input in single mode. | bool | true |  |
