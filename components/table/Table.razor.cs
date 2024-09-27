@@ -1101,7 +1101,7 @@ namespace AntDesign
         /// -> OnColumnInitialized call render#4 -> OnAfterRenderAsync#4 -> OnAfterRenderAsync#3 -> OnAfterRenderAsync#1 (the last 2 steps are duplicated and useless)
         /// </remarks>
         /// <returns>Whether to start rebuilding</returns>
-        bool ITable.RebuildColumns(bool add)
+        public virtual bool RebuildColumns(bool add)
         {
             // avoid rerender again before initialized (beacuse when we render the empty ChildContent, it will be called by Dispose)
             if (add && !_hasInitialized) return false;
