@@ -263,7 +263,7 @@ namespace AntDesign
 
         internal virtual SelectMode SelectMode => Mode.ToSelectMode();
 
-        // When the search input is managed externally (via the SearchValue parameter), it's imporant that the
+        // When the search input is managed externally (via the SearchInput parameter in the Select), it's important that the
         // component itself doesn't try to manage the search input on its own (e.g. clearing it when an item is selected).
         protected bool _manageSearchInputExternally = false;
 
@@ -905,7 +905,7 @@ namespace AntDesign
                 await UpdateOverlayPositionAsync();
             }
             
-            // The tag filters have to be re-applied after removing/adding a tag as the searchValue is not cleared
+            // The tag filters have to be re-applied after removing/adding a tag as the _searchValue is not cleared
             // when SearchInput in the Select is set. Otherwise, the input remains, but the filters would not correspond to it 
             if(SelectMode == SelectMode.Tags && _manageSearchInputExternally)
                 FilterTagsOptionItems(_searchValue);
