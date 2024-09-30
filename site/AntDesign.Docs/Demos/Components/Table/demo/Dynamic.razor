@@ -1,22 +1,56 @@
 ﻿@using System.ComponentModel
 @using AntDesign.TableModels
 
-<Table TItem="Dictionary<string, object>" OnChange="HanleChange" DataSource="@data" Loading="data==null" ScrollX="1500" PageSize="5" Size="TableSize.Small">
-  @foreach (var key in data?.FirstOrDefault()?.Keys.Take(10) ??new string[0])
-  {
-    <PropertyColumn Property=@(c=>c[key]) Title="@key"></PropertyColumn>
-  }
+<Table TItem="Dictionary<string, object>" DataSource="@data" Loading="data == null" ScrollX="1500" PageSize="5" Size="TableSize.Small">
+    <ColumnDefinitions>
+        @foreach (var _ in data?.FirstOrDefault()?.Keys.Take(10) ?? new string[0])
+        {
+            <ColumnDefinition></ColumnDefinition>
+        }
+    </ColumnDefinitions>
+    <HeaderTemplate>
+        <TableRow>
+            
+            @foreach (var key in data?.FirstOrDefault()?.Keys.Take(10) ?? new string[0])
+            {
+                <SimpleTableHeader Title="@key"></SimpleTableHeader>
+            }
+        </TableRow>
+    </HeaderTemplate>
+    <RowTemplate>
+        <TableRow>
+            @foreach (var key in data?.FirstOrDefault()?.Keys.Take(10) ?? new string[0])
+            {
+                <TableCell>
+                    @context.Data[key]
+                </TableCell>
+            }
+        </TableRow>
+    </RowTemplate>
 </Table>
+
+<Button OnClick="Load">Reload</Button>
 
 @inject HttpClient httpClient;
 @code {
 
   List<Dictionary<string, object>> data;
 
-  string githubUrl = "https://api.github.com/repos/ant-design-blazor/ant-design-blazor/contributors?per_page=200";
+  string githubUrl = "https://jsonplaceholder.typicode.com/posts";
+
+  protected override async Task OnInitializedAsync()
+  {
+     await  Load();
+  }
 
   protected async Task HanleChange(QueryModel<Dictionary<string, object>> query)
   {
-    data = await httpClient.GetFromJsonAsync<List<Dictionary<string, object>>>(githubUrl);
+      await Load();
   }
+
+  private async Task Load()
+  {
+      data = await httpClient.GetFromJsonAsync<List<Dictionary<string, object>>>(githubUrl);
+  }
+
 }
