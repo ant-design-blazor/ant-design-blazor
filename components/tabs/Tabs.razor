@@ -39,7 +39,7 @@
                         }
                         @if (HasAddButton)
                         {
-                            <button type="button" class="ant-tabs-nav-add" style="@_firstAddButtonStyle" aria-label="Add tab" @onclick="OnAddTab">
+                            <button type="button" class="ant-tabs-nav-add" style="@_firstAddButtonStyle" aria-label="Add tab" @onclick="OnAddClick">
                                 <Icon Type="plus" />
                             </button>
                         }
@@ -76,7 +76,7 @@
                 </Dropdown>
                 @if (HasAddButton)
                 {
-                    <button type="button" class="ant-tabs-nav-add" style="@_secondAddButtonStyle" aria-label="Add tab" @onclick="OnAddTab">
+                    <button type="button" class="ant-tabs-nav-add" style="@_secondAddButtonStyle" aria-label="Add tab" @onclick="OnAddClick">
                         <Icon Type="plus" />
                     </button>
                 }

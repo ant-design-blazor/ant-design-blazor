@@ -263,7 +263,6 @@ namespace AntDesign
         private bool _shownDropdown;
         private bool _needUpdateScrollListPosition;
         private bool _retryingGetSize;
-        private bool _hasNewTab = false;
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -323,18 +322,11 @@ namespace AntDesign
             _tabs.Add(tabPane);
             _needUpdateScrollListPosition = true;
             StateHasChanged();
-            if (_hasNewTab)
+
+            //The following code must be included, otherwise setting ActiveKey will not take effect after adding it
+            if (ActiveKey == tabPane.Key)
             {
-                ActivatePane(tabPane.Key);
-                _hasNewTab = false;
-            }
-        }
-        private async Task OnAddTab()
-        {
-            if (OnAddClick.HasDelegate)
-            {
-                _hasNewTab = true;
-                await OnAddClick.InvokeAsync(null);
+                ActivatePane(ActiveKey);
             }
         }
         internal void Complete()
