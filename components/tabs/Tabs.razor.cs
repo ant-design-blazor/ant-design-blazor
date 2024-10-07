@@ -258,6 +258,8 @@ namespace AntDesign
 
         private bool HasAddButton => Type == TabType.EditableCard && !HideAdd;
 
+        private bool IsOverflowed => _scrollListWidth <= _wrapperWidth;
+
         private readonly int _dropDownBtnWidth = 46;
         private readonly int _addBtnWidth = 40;
         private bool _shownDropdown;
@@ -405,7 +407,7 @@ namespace AntDesign
             // reorder tabs
             _tabs.OrderBy(x => x.TabIndex).ForEach((x, i) => x.SetIndex(i));
 
-            // if it is active, need to activiate the previous tab.
+            // if it is active, need to activiate the previous tab, or the next one if no previous
             if (_activeKey == tab.Key)
             {
                 if (tab.TabIndex > 0)
@@ -419,9 +421,9 @@ namespace AntDesign
             }
 
             _shouldRender = true;
-            _needUpdateScrollListPosition = true; // only update scroll list position when active tab is not the last one
+            _needUpdateScrollListPosition = true;
 
-            _tabs.Remove(tab);            
+            _tabs.Remove(tab);
             StateHasChanged();
 
         }
@@ -613,7 +615,7 @@ namespace AntDesign
         private void UpdateScrollListPosition()
         {
             // 46 is the size of dropdown button
-            if (_scrollListWidth <= _wrapperWidth)
+            if (IsOverflowed)
             {
                 _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
                 _operationStyle = "visibility: hidden; order: 1;";
@@ -639,7 +641,7 @@ namespace AntDesign
             _firstAddButtonStyle = _secondAddButtonStyle = HiddenStyle;
             if (HasAddButton)
             {
-                if (_scrollListWidth <= _wrapperWidth)
+                if (IsOverflowed)
                 {
                     _firstAddButtonStyle = string.Empty;
                 }
@@ -733,7 +735,7 @@ namespace AntDesign
             {
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
 
-                var additionalWidth = HasAddButton && (_scrollListWidth <= _wrapperWidth) ? _addBtnWidth : 0;
+                var additionalWidth = HasAddButton && (IsOverflowed) ? _addBtnWidth : 0;
 
                 // need to scroll tab bars
                 if (_activeTabElement.OffsetLeft + _activeTabElement.ClientWidth + additionalWidth > _scrollOffset + _wrapperWidth
