@@ -38,7 +38,7 @@
                     <ChildContent>
                         @if (!HidePages && item.Rendered)
                         {
-                            item.Body ??= @Body;
+                            item.Body ??= @<AntDesign.Core.Internal.KeepAlive ChildContent="@Body" ></AntDesign.Core.Internal.KeepAlive>;
                             
                             if (TabPaneTemplate != null)
                             {
