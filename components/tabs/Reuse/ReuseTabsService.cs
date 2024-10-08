@@ -194,6 +194,7 @@ namespace AntDesign
             url ??= CurrentUrl;
             var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == url);
             reuseTabsPageItem.Body = null;
+            reuseTabsPageItem.Title = null;
             reuseTabsPageItem.Rendered = false;
 
             // only reload current page, and other page would be load by tab navigation

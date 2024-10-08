@@ -102,7 +102,8 @@ namespace AntDesign
             // reload current page after ReloadPage() was called by ReuseTabsService
             if (ReuseTabsService.CurrentPage.Rendered == false)
             {
-                ReuseTabsService.CurrentPage.Rendered = true;
+                RouteData ??= ReuseTabsRouteData?.RouteData;
+                ReuseTabsService.TrySetRouteData(RouteData, true);
                 StateHasChanged();
             }
         }
