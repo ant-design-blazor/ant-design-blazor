@@ -151,6 +151,12 @@ namespace AntDesign
             get { return _model; }
             set
             {
+                //prevent building edit context in dead loop
+                if (value is null && _isModelBuildFromNull)
+                {
+                    return;
+                }
+
                 if (!(_model?.Equals(value) ?? false))
                 {
                     var wasNull = _model is null;
@@ -249,6 +255,7 @@ namespace AntDesign
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
         private TModel _model;
         private FormRulesValidator _rulesValidator;
+        private bool _isModelBuildFromNull;
 
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
@@ -496,9 +503,12 @@ namespace AntDesign
             if (_editContext == null)
                 return;
 
+            _isModelBuildFromNull = false;
+
             if (Model == null)
             {
-                Model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
+                _model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
+                _isModelBuildFromNull = true;
             }
 
             var newContext = new EditContext(Model);
