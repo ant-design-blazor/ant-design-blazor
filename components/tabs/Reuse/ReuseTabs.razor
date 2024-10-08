@@ -14,7 +14,7 @@
         {
             @foreach (var item in ReuseTabsService.Pages)
             {
-                <TabPane Id="@item.Url" @key="@item.Key" Key="@item.Key" Class="@TabPaneClass" Closable="item.Closable" ForceRender>
+                <TabPane Id="@item.Url" @key="@item.Key" Key="@item.Key" Class="@TabPaneClass" Closable="item.Closable" ForceRender ChildContent="@PaneConent(item)">
                     <TabTemplate>
                         @if (Type == TabType.Line && item.Closable)
                         {
@@ -35,23 +35,27 @@
                             @* <MenuItem OnClick="@(()=>{ ReuseTabsService.Pin(item.Url);})">@Locale.PinTab</MenuItem> *@
                         </Menu>
                     </TabContextMenu>
-                    <ChildContent>
-                        @if (!HidePages && item.Rendered)
-                        {
-                            item.Body ??= @<AntDesign.Core.Internal.KeepAlive ChildContent="@Body" ></AntDesign.Core.Internal.KeepAlive>;
-                            
-                            if (TabPaneTemplate != null)
-                            {
-                                @TabPaneTemplate(item)
-                            }
-                            else
-                            {
-                                @item.Body
-                            }
-                        }
-                    </ChildContent>
                 </TabPane>
             }
         }
+    }
+
+    private RenderFragment PaneConent(ReuseTabsPageItem item)
+    {
+        if (!HidePages && item.Rendered)
+        {
+            item.Body ??=@<AntDesign.Core.Internal.KeepAlive ChildContent="@Body" ></AntDesign.Core.Internal.KeepAlive> ;
+
+            if (TabPaneTemplate != null)
+            {
+                return TabPaneTemplate(item);
+            }
+            else
+            {
+                return item.Body;
+            }
+        }
+
+        return null;
     }
 }

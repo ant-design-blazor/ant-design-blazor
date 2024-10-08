@@ -83,10 +83,10 @@
              role="tabpanel"
              aria-hidden="@(_isActive ? "false" : "true")"
              aria-labelledby="@($"rc-tabs-{Id}-tab-{Key}")">
-            @if (_isActive || _hasRendered || ForceRender)
+            @if (ChildContent != null && (_isActive || _hasRendered || ForceRender))
             {
                 _hasRendered = true;
-                <AntDesign.Core.Internal.KeepAlive ChildContent="ChildContent" ></AntDesign.Core.Internal.KeepAlive>
+                <AntDesign.Core.Internal.KeepAlive ChildContent="ChildContent"></AntDesign.Core.Internal.KeepAlive>
             }
         </div>
     }

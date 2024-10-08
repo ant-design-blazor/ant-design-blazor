@@ -95,6 +95,18 @@ namespace AntDesign
 
         protected override bool ShouldRender() => !InReusePageContent && base.ShouldRender();
 
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+
+            // reload current page after ReloadPage() was called by ReuseTabsService
+            if (ReuseTabsService.CurrentPage.Rendered == false)
+            {
+                ReuseTabsService.CurrentPage.Rendered = true;
+                StateHasChanged();
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             ReuseTabsService.OnStateHasChanged -= OnStateHasChanged;
