@@ -9,34 +9,31 @@ jobs:
   build-site:
     name: build preview
     runs-on: ubuntu-latest
+
     steps:
       - name: checkout
         uses: actions/checkout@master
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 5.0.100
-
-      - name: Setup .NET 6.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 6.0.101
-
-      - name: Setup .NET 7.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.100
-      
-      - name: Setup .NET 8.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0.100
+          dotnet-version: |
+            3.1.x
+            5.0.x
+            6.0.x
+            7.0.x
+            8.0.x
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: "16.x"
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-quality: 'preview'
+          dotnet-version: '9.0.x'
 
       - name: Prepare AOT workload
         run: |
@@ -45,12 +42,11 @@ jobs:
       - name: build site
         id: site
         run: |
-          dotnet --list-sdks
           npm install
           dotnet build
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net8 -o _site -p:EnableAOT=true
-          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net8/*.dll _site/wwwroot/_framework
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net9 -o _site -p:EnableAOT=true
+          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9/*.dll _site/wwwroot/_framework
           find ./_site/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
         env:
           PACKAGE_VERSION: ${{ github.event.number }}

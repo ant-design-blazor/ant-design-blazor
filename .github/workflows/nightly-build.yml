@@ -20,30 +20,21 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup .NET Core 3.1
-        uses: actions/setup-dotnet@v3
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 3.1.300
+          dotnet-version: |
+            3.1.x
+            5.0.x
+            6.0.x
+            7.0.x
+            8.0.x
 
-      - name: Setup .NET 5
-        uses: actions/setup-dotnet@v3
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 5.0.100
-
-      - name: Setup .NET 6
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 6.0.101
-
-      - name: Setup .NET 7.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.100
-
-      - name: Setup .NET 8.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0.100
+          dotnet-quality: 'preview'
+          dotnet-version: '9.0.x'
 
       - uses: actions/setup-node@v1
         with:
@@ -127,7 +118,7 @@ jobs:
         run: |
           npm install
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net8 -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net9 -o cargo
         env:
           PACKAGE_VERSION: ${{ steps.pack.outputs.package_version }}
 
