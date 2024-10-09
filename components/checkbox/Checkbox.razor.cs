@@ -54,6 +54,12 @@ namespace AntDesign
         [Parameter]
         public bool Indeterminate { get; set; }
 
+        /// <summary>
+        /// Set to <c>true</c> to style the checkbox as a button group
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        public bool CheckboxButton { get; set; }
 
         /// <summary>
         /// Label for checkbox
@@ -69,6 +75,9 @@ namespace AntDesign
         internal bool IsFromOptions { get; set; }
 
         private bool IsDisabled => Disabled || (CheckboxGroup?.Disabled ?? false);
+
+        private readonly ClassMapper _inputClassMapper = new();
+        private readonly ClassMapper _innerClassMapper = new();
 
         private Dictionary<string, object> _attributes;
 
@@ -104,17 +113,31 @@ namespace AntDesign
         protected void SetClass()
         {
             ClassMapperLabel
-                .Add($"{_prefixCls}-wrapper")
-                .If($"{_prefixCls}-wrapper-checked", () => Checked)
-                .If($"{_prefixCls}-wrapper-disabled", () => IsDisabled)
+                .If($"{_prefixCls}-wrapper", () => !CheckboxButton)
+                .If($"{_prefixCls}-button-wrapper", () => CheckboxButton)
+                .If($"{_prefixCls}-wrapper-checked", () => Checked && !CheckboxButton)
+                .If($"{_prefixCls}-button-wrapper-checked", () => Checked && CheckboxButton)
+                .If($"{_prefixCls}-wrapper-disabled", () => IsDisabled && !CheckboxButton)
+                .If($"{_prefixCls}-button-wrapper-disabled", () => IsDisabled && CheckboxButton)
                 .If($"{_prefixCls}-group-item", () => CheckboxGroup != null);
 
             ClassMapper
-                .Add(_prefixCls)
-                .If($"{_prefixCls}-checked", () => Checked && !Indeterminate)
-                .If($"{_prefixCls}-disabled", () => IsDisabled)
+                .If(_prefixCls, () => !CheckboxButton)
+                .If($"{_prefixCls}-button", () => CheckboxButton)
+                .If($"{_prefixCls}-checked", () => Checked && !Indeterminate && !CheckboxButton)
+                .If($"{_prefixCls}-button-checked", () => Checked && !Indeterminate && CheckboxButton)
+                .If($"{_prefixCls}-disabled", () => IsDisabled && !CheckboxButton)
+                .If($"{_prefixCls}-button-disabled", () => IsDisabled && CheckboxButton)
                 .If($"{_prefixCls}-indeterminate", () => Indeterminate)
                 .If($"{_prefixCls}-rtl", () => RTL);
+
+            _inputClassMapper
+                .If($"{_prefixCls}-input", () => !CheckboxButton)
+                .If($"{_prefixCls}-button-input", () => CheckboxButton);
+
+            _innerClassMapper
+                .If($"{_prefixCls}-inner", () => !CheckboxButton)
+                .If($"{_prefixCls}-button-inner", () => CheckboxButton);
         }
 
         protected async Task InputCheckedChange(ChangeEventArgs args)

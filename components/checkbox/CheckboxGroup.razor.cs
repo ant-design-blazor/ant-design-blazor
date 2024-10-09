@@ -45,6 +45,13 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Button style for the group
+        /// </summary>
+        /// <default value="CheckboxButtonStyle.Outline" />
+        [Parameter]
+        public CheckboxButtonStyle? ButtonStyle { get; set; }
+
+        /// <summary>
         /// When both <see cref="ChildContent"/> and <see cref="Options"/> are used this specifies which should render first.
         /// </summary>
         /// <default value="CheckboxGroupMixedMode.ChildContentFirst"/>
@@ -93,11 +100,37 @@ namespace AntDesign
         private int _indexSetOptionsOffset = -1;
         private CheckboxGroupMixedMode _mixedMode = CheckboxGroupMixedMode.ChildContentFirst;
 
-        public CheckboxGroup()
+        private static readonly Dictionary<CheckboxButtonStyle, string> _buttonStyleDics = new()
         {
+            [CheckboxButtonStyle.Outline] = "outline",
+            [CheckboxButtonStyle.Solid] = "solid",
+        };
+
+        protected override void OnInitialized()
+        {
+            string prefixCls = "ant-radio-group";
             ClassMapper
-                .Add("ant-checkbox-group")
-                .If("ant-checkbox-group-rtl", () => RTL);
+                .Add(prefixCls)
+                .If($"{prefixCls}-large", () => Size == ButtonSize.Large)
+                .If($"{prefixCls}-small", () => Size == ButtonSize.Small)
+                .GetIf(() => $"{prefixCls}-{_buttonStyleDics[ButtonStyle.Value]}", () => ButtonStyle.HasValue && ButtonStyle.IsIn(CheckboxButtonStyle.Outline, CheckboxButtonStyle.Solid))
+                .If($"{prefixCls}-rtl", () => RTL);
+
+            if (ChildContent is null && MixedMode == CheckboxGroupMixedMode.ChildContentFirst)
+                MixedMode = CheckboxGroupMixedMode.OptionsFirst;
+
+            base.OnInitialized();
+
+            if (Value != null)
+            {
+                _selectedValues = Value;
+                if (Options.IsT0)
+                {
+                    Options.AsT0.ForEach(opt => opt.Checked = opt.Value.IsIn(_selectedValues));
+                }
+            }
+
+            _selectedValues ??= Array.Empty<TValue>();
         }
 
         internal void AddItem(Checkbox checkbox)
@@ -140,25 +173,6 @@ namespace AntDesign
                 _indexConstructedOptionsOffset--;
             else if (checkbox.IsFromOptions && _indexSetOptionsOffset >= 0)
                 _indexSetOptionsOffset--;
-        }
-
-        protected override void OnInitialized()
-        {
-            if (ChildContent is null && MixedMode == CheckboxGroupMixedMode.ChildContentFirst)
-                MixedMode = CheckboxGroupMixedMode.OptionsFirst;
-
-            base.OnInitialized();
-
-            if (Value != null)
-            {
-                _selectedValues = Value;
-                if (Options.IsT0)
-                {
-                    Options.AsT0.ForEach(opt => opt.Checked = opt.Value.IsIn(_selectedValues));
-                }
-            }
-
-            _selectedValues ??= Array.Empty<TValue>();
         }
 
         protected override void OnValueChange(TValue[] value)
