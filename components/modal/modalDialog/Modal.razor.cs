@@ -199,7 +199,7 @@ namespace AntDesign
             }
             else
             {
-                return $"{Width.AsT1}px";
+                return $"{(CssSizeLength)Width.AsT1}";
             }
         }
 

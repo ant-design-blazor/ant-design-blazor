@@ -327,7 +327,7 @@ namespace AntDesign
                 var offsetHeight = textAreaInfo.PaddingTop + textAreaInfo.PaddingBottom
                     + textAreaInfo.BorderTop + textAreaInfo.BorderBottom;
 
-                _heightStyle = $"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;";
+                _heightStyle = $"height: {(CssSizeLength)(Rows * rowHeight + offsetHeight)};overflow-y: auto;overflow-x: hidden;";
                 StateHasChanged();
             }
         }
