@@ -6904,13 +6904,13 @@ InputGroup的大小指定包含的輸入字段的大小。
 </summary>
       <default value="true" />
     </member>
-    <member name="P:AntDesign.Internal.Overlay.HiddenMode">
+    <member name="P:AntDesign.Internal.Overlay.RenderBeforeShow">
       <summary v="3QUJQe" i="0">
 默認情況下,疊加不呈現其內容,如果疊加尚未
-激活 (至少顯示一次)。 設置HiddenMode = true將
+激活 (至少顯示一次)。 設置RenderBeforeShow = true將
 完成渲染過程。
 用例: 使用<see cref="T:AntDesign.SimpleSelectOption" />或<see cref="T:AntDesign.SelectOption`2" />時選擇組件
-需要HiddenMode = true,因此select選項被初始化並
+需要RenderBeforeShow = true,因此select選項被初始化並
 潛在的默認值可以正確呈現。
 </summary>
     </member>
@@ -6959,7 +6959,7 @@ InputGroup的大小指定包含的輸入字段的大小。
 </summary>
       <default value="false" />
     </member>
-    <member name="P:AntDesign.Internal.OverlayTrigger.HiddenMode">
+    <member name="P:AntDesign.Internal.OverlayTrigger.RenderBeforeShow">
       <summary v="wznUH" i="0">
 屬性轉發到覆蓋組件。 查閱覆蓋圖
 屬性以獲得更詳細的解釋。
