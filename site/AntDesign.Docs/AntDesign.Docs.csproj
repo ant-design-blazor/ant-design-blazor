@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net6;net7;net8;net9</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -12,14 +12,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Razor" Version="6.0.33" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework) != 'net9'">
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.8" />
-  </ItemGroup>
-  
-  <ItemGroup Condition="$(TargetFramework) == 'net9'">
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.0-rc.2.*" />
-  </ItemGroup>
-    
   <ItemGroup>
     <Content Include="$(SolutionDir)docs\**" LinkBase="docs" />
   </ItemGroup>
