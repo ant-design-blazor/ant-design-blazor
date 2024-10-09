@@ -84,13 +84,17 @@ namespace AntDesign
             ReuseTabsService.Init(true);
             ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
 
-            RouteData ??= ReuseTabsRouteData?.RouteData;
-
-            ReuseTabsService.TrySetRouteData(RouteData, true);
+            LoadPage();
 
             base.ChildContent = RenderPanes;
 
             ActiveKey = ReuseTabsService.ActiveKey;
+        }
+
+        private void LoadPage()
+        {
+            RouteData ??= ReuseTabsRouteData?.RouteData;
+            ReuseTabsService.TrySetRouteData(RouteData, true);
         }
 
         protected override bool ShouldRender() => !InReusePageContent && base.ShouldRender();
@@ -102,9 +106,8 @@ namespace AntDesign
             // reload current page after ReloadPage() was called by ReuseTabsService
             if (ReuseTabsService.CurrentPage.Rendered == false)
             {
-                RouteData ??= ReuseTabsRouteData?.RouteData;
-                ReuseTabsService.TrySetRouteData(RouteData, true);
-                StateHasChanged();
+                LoadPage();
+                StateHasChanged(); // update title need calling render again
             }
         }
 
@@ -138,9 +141,7 @@ namespace AntDesign
         {
             UpdateTabsPosition();
 
-            RouteData ??= ReuseTabsRouteData?.RouteData;
-
-            ReuseTabsService.TrySetRouteData(RouteData, true);
+            LoadPage();
 
             ActivatePane(ReuseTabsService.ActiveKey);
         }
