@@ -32,15 +32,15 @@ jobs:
         with:
           node-version: "16.x"
 
-      - name: Prepare AOT workload
-        run: |
-          dotnet workload install wasm-tools
-
       - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
           dotnet-quality: 'preview'
           dotnet-version: '9.0.x'
+
+      - name: Prepare AOT workload
+        run: |
+          dotnet workload install wasm-tools
 
       - name: Publish Docs 🎉
         id: publish
