@@ -21,6 +21,9 @@ namespace AntDesign
             _onOk = DefaultOnCancelOrOk;
             Width = 520;
             MaskClosable = true;
+            Locale = LocaleProvider.CurrentLocale.Modal;
+            CancelText = Locale.CancelText;
+            OkText = Locale.OkText;
         }
 
         internal ModalRef ModalRef { get; set; }
@@ -147,6 +150,11 @@ namespace AntDesign
         /// Resizable
         /// </summary>
         public bool Resizable { get; set; }
+
+        /// <summary>
+        /// The locale of the Modal, you can use it to customize the text for buttons.
+        /// </summary>
+        public ModalLocale Locale { get; set; }
 
         #region internal
 

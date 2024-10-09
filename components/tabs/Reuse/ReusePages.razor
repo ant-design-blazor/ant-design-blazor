@@ -12,7 +12,7 @@
     {
         @foreach (var item in ReuseTabsService.Pages)
         {
-            <div class="ant-reuse-tabs-content @Class" @key="item.Url" style="@(item.Url == ReuseTabsService.CurrentUrl? "": "display:none;") @Style">
+            <div class="ant-reuse-tabs-content @Class" @key="item.Key" style="@(item.Key == ReuseTabsService.ActiveKey? "": "display:none;") @Style">
                 @item.Body
             </div>
         }

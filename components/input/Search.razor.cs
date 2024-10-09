@@ -73,6 +73,7 @@ namespace AntDesign
                         builder.AddAttribute(8, "Type", "default");
                         builder.AddAttribute(9, "Size", Size);
                         builder.AddAttribute(10, "Loading", Loading);
+                        builder.AddAttribute(11, "Disabled", this.Disabled);
                         if (!Loading)
                         {
                             builder.AddAttribute(12, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
@@ -115,7 +116,7 @@ namespace AntDesign
                             b.AddContent(19, str);
                         }));
                     });
-
+                    builder.AddAttribute(20, "Disabled", this.Disabled);
                     builder.CloseComponent();
                 };
             }

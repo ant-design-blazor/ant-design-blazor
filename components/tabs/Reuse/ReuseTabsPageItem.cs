@@ -26,5 +26,19 @@ namespace AntDesign
         public bool KeepAlive { get; set; } = true;
 
         public int Order { get; set; } = 9999;
+
+        public string TypeName { get; set; }
+
+        public string Key { get; set; }
+
+        /// <summary>
+        /// Weather the page is a singleton. If true, the page will be reused although the url is different, otherwise, another tab will be created.
+        /// </summary>
+        public bool Singleton { get; set; }
+
+        /// <summary>
+        /// Weather the page is rendered. If false, the page will not be rendered.
+        /// </summary>
+        public bool Rendered { get; set; }
     }
 }

@@ -2195,9 +2195,6 @@
   "Callback when the open sub menus change. Passed the array of open keys.": {
     "Translated": "当打开的子菜单改变时回调。传递了一组打开的键。"
   },
-  "Array with the keys of currently selected menu items": {
-    "Translated": "包含当前选定菜单项的键的数组"
-  },
   "Callback when the selected items change. Passed array of open keys.": {
     "Translated": "所选项目更改时回调。传递的打开键数组。"
   },
@@ -4152,7 +4149,10 @@
     "Translated": "树的数据源。可以是任何自定义对象类型的列表，方法是提供用于获取 children、leafs、titles 等的表达式。使用 this 或 <code>AntDesign.TreeSelect'2.ChildContent</code>"
   },
   "Specifies a method to return a checkable node": {
-    "Translated": "指定返回可检查节点的方法"
+    "Translated": "指定返回可勾选节点的方法"
+  },
+  "Specifies a method to return a selectable node": {
+    "Translated": "指定返回可选择节点的方法"
   },
   "Check or uncheck the node by click TreeNodeTitle if checkable": {
     "Translated": "如果可选中，请单击 TreeNodeTitle 来检查或取消选中节点"
@@ -4640,9 +4640,6 @@
   "The content of option.": {
     "Translated": "选项的内容。"
   },
-  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
-    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
-  },
   "Check all nodes": {
     "Translated": "检查所有节点"
   },
@@ -4660,5 +4657,29 @@
   },
   "Close the popover": {
     "Translated": "关闭弹出窗口"
+  },
+  "Whether to trigger and keep the loading state until the event callback is done.": {
+    "Translated": "是否触发并保持加载状态，直到事件回调完成。"
+  },
+  "Array with the keys of currently selected menu items, set empty array to clear selection instead of null.": {
+    "Translated": "Array 替换为当前选中的菜单项的键，设置 empty array 来清除选择，而不是 null。"
+  },
+  "Activate the tab with the specified index": {
+    "Translated": "使用指定索引激活选项卡"
+  },
+  "Move to next tab": {
+    "Translated": "移至下一个选项卡"
+  },
+  "Move to previous tab": {
+    "Translated": "移至上一个选项卡"
+  },
+  "Activate the specified tab": {
+    "Translated": "激活指定的选项卡"
+  },
+  "FormItem Help Tooltip information": {
+    "Translated": "设置表单字段的帮助提示信息"
+  },
+  "Overrides whether the clear icon is shown. When <see langword=\"null\" />, it is shown if and only if the input string is not empty.": {
+    "Translated": "覆盖是否显示清除图标。当 <see langword=“null” /> 时，当且仅当输入字符串不为空时，才会显示它。"
   }
 }

@@ -43,6 +43,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | Placeholder              | Provide prompt information that describes the expected value of the input field        | string        | -        |
 | Prefix | The prefix icon for the Input.                           | RenderFragment        | -        |
 | ReadOnly | When present, it specifies that an input field is read-only. | boolean | false    | 0.9
+| ShowClear | Overrides whether the clear button should be shown when `AllowClear` is true (otherwise this has no effect). If null, the default behavior is used, and the clear button is only shown if the input is not empty. | boolean?     | -      |
 | Size |The size of the input box. Note: in the context of a form, the `large` size is used. Available: `large` `default` `small`       | string        | -         |
 | StopPropagation Controls onclick & blur event propagation.    | boolean    | false      | 0.10.0
 | Style | Set CSS style. When using, be aware that some styles can be set only by `WrapperStyle` | string | - |  |

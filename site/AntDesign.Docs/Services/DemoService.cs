@@ -3,13 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
 using System.Threading.Tasks;
-using AntDesign.Docs.Utils;
 using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
 
@@ -17,23 +15,21 @@ namespace AntDesign.Docs.Services
 {
     public class DemoService
     {
-        private static ConcurrentCache<string, AsyncLazy<IDictionary<string, DemoComponent>>> _componentCache;
-        private static ConcurrentCache<string, AsyncLazy<DemoMenuItem[]>> _menuCache;
-        private static ConcurrentCache<string, AsyncLazy<DemoMenuItem[]>> _demoMenuCache;
-        private static ConcurrentCache<string, AsyncLazy<DemoMenuItem[]>> _docMenuCache;
         private static ConcurrentCache<string, Type> _showCaseCache;
 
         private readonly ILocalizationService _localizationService;
         private readonly HttpClient _httpClient;
+        private readonly DemoServiceCache _cache;
         private readonly NavigationManager _navigationManager;
         private Uri _baseUrl;
 
         private string CurrentLanguage => _localizationService.CurrentCulture.Name;
 
-        public DemoService(ILocalizationService localizationService, HttpClient httpClient, NavigationManager navigationManager)
+        public DemoService(ILocalizationService localizationService, HttpClient httpClient, DemoServiceCache cache, NavigationManager navigationManager)
         {
             _localizationService = localizationService;
             _httpClient = httpClient;
+            _cache = cache;
             _navigationManager = navigationManager;
             _baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
             Initialize(localizationService.CurrentCulture.Name);
@@ -43,33 +39,7 @@ namespace AntDesign.Docs.Services
 
         private void Initialize(string language)
         {
-            _menuCache ??= new();
-            _menuCache.GetOrAdd(language, (currentLanguage) => new(async () =>
-            {
-                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/menu.{language}.json").ToString());
-                return menuItems;
-            }));
-
-            _componentCache ??= new();
-            _componentCache.GetOrAdd(language, (currentLanguage) => new(async () =>
-            {
-                var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/components.{language}.json").ToString());
-                return components.ToDictionary(x => $"{x.Category.ToLower()}/{x.Title.ToLower()}", x => x);
-            }));
-
-            _demoMenuCache ??= new();
-            _demoMenuCache.GetOrAdd(language, (currentLanguage) => new(async () =>
-            {
-                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/demos.{language}.json").ToString());
-                return menuItems;
-            }));
-
-            _docMenuCache ??= new();
-            _docMenuCache.GetOrAdd(language, (currentLanguage) => new(async () =>
-            {
-                var menuItems = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/docs.{language}.json").ToString());
-                return menuItems;
-            }));
+            _cache.PreFetch(language);
         }
 
         //public async Task InitializeDemos()
@@ -84,14 +54,12 @@ namespace AntDesign.Docs.Services
 
         public async Task<DemoComponent> GetComponentAsync(string componentName)
         {
-            return _componentCache.TryGetValue(CurrentLanguage, out var component)
-                ? (await component).TryGetValue(componentName.ToLower(), out var demoComponent) ? demoComponent : null
-                : null;
+            return await _cache.GetComponentAsync(CurrentLanguage, componentName);
         }
 
         public async Task<DemoMenuItem[]> GetMenuAsync()
         {
-            return _menuCache.TryGetValue(CurrentLanguage, out var menuItems) ? await menuItems : Array.Empty<DemoMenuItem>();
+            return await _cache.GetMenuAsync(CurrentLanguage);
         }
 
         public async ValueTask<DemoMenuItem[]> GetCurrentMenuItems()
@@ -124,15 +92,15 @@ namespace AntDesign.Docs.Services
 
             if (type.ToLowerInvariant() == "docs")
             {
-                items = _docMenuCache.TryGetValue(CurrentLanguage, out var menuItems) ? (await menuItems).OrderBy(x => x.Order).ToArray() : Array.Empty<DemoMenuItem>();
+                items = (await _cache.GetDocMenuAsync(CurrentLanguage)).OrderBy(x => x.Order).ToArray();
                 currentTitle = $"docs/{currentTitle}";
             }
             else
             {
-                items = _demoMenuCache.TryGetValue(CurrentLanguage, out var menuItems) ? (await menuItems)
+                items = (await _cache.GetDemoMenuAsync(CurrentLanguage))
                 .OrderBy(x => x.Order)
                 .SelectMany(x => x.Children)
-                .ToArray() : Array.Empty<DemoMenuItem>();
+                .ToArray();
 
                 currentTitle = $"components/{currentTitle}";
             }

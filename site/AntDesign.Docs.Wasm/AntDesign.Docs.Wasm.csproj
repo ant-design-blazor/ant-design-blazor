@@ -25,12 +25,22 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
   </ItemGroup>
-  
+
   <ItemGroup Condition="$(TargetFramework) == 'net9'">
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0-rc.2.*" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0-rc.2.*" PrivateAssets="all" />
   </ItemGroup>
   
+  <PropertyGroup>
+    <BlazorWasmPrerenderingLocale>en-US,zh-CN</BlazorWasmPrerenderingLocale>
+    <BlazorWasmPrerenderingUrlPathToExplicitFetch>/en-US;/zh-CN</BlazorWasmPrerenderingUrlPathToExplicitFetch>
+    <!-- <BlazorWasmPrerenderingOutputStyle>AppendHtmlExtension</BlazorWasmPrerenderingOutputStyle> -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlazorWasmPreRendering.Build" Version="4.0.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <EmscriptenEnvVars Include="PYTHONUTF8=1" />
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />

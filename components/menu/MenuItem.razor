@@ -5,69 +5,68 @@
 <CascadingValue Value="this" IsFixed>
     @if (ShowTooltip)
     {
-        <Tooltip TitleTemplate="@content(this)" Placement="@Placement.Right" Disabled="TooltipDisabled">
+        <Tooltip TitleTemplate="@content" Placement="@Placement.Right" Disabled="TooltipDisabled">
             <Unbound Context="tooltip">
-                @MenuItemContent(tooltip.Current)
+                @MenuItemContent(tooltip)
             </Unbound>
         </Tooltip>
     }
     else
     {
-        @MenuItemContent(Ref)
+        @MenuItemContent(RefBack);
     }
 </CascadingValue>
 
 @code {
 
-    RenderFragment MenuItemContent(ElementReference reference)
+    RenderFragment MenuItemContent(ForwardRef refBack)
     {
-        return @<li class="@ClassMapper.Class" role="menuitem" style="@PaddingStyle @Style" @onclick="HandleOnClick" @key="Key" @ref="reference">
-        @icon(this)
-        <span class="ant-menu-title-content">
-            @if (RouterLink == null)
-            {
-                @content(this)
-            }
-            else
-            {
-                <MenuLink Href="@RouterLink" Match="@RouterMatch">@content(this)</MenuLink>
-            }
-        </span>
-    </li>;
+        return@<li class="@ClassMapper.Class" role="menuitem" style="@PaddingStyle @Style" @onclick="HandleOnClick" @key="Key" @ref="refBack.Current">
+            @icon
+            <span class="ant-menu-title-content">
+                @if (RouterLink == null)
+                {
+                    @content
+                }
+                else
+                {
+                    <MenuLink Href="@RouterLink" Match="@RouterMatch">@content</MenuLink>
+                }
+            </span>
+        </li>;
     }
 
-  RenderFragment<MenuItem> content = item =>
-  @<Template>
-    @if (item.Title != null)
+    void content(RenderTreeBuilder __builder)
     {
-        @item.Title
+        @if (Title != null)
+        {
+            @Title
+        }
+        else
+        {
+            @ChildContent
+        }
     }
-    else
-    {
-      @item.ChildContent
-    }
-    </Template>
-  ;
 
-  RenderFragment<MenuItem> icon = item =>
-  @<Template>
-    @if (item.IconTemplate != null)
-      {
-        <span role="img" class=" anticon anticon-container">
-          @item.IconTemplate
-        </span>
-      }
-      else if (item.Icon != null)
-      {
-        <Icon Type="@item.Icon" />
-      }
-    </Template>
-      ;
+
+    void icon(RenderTreeBuilder __builder)
+    {
+        if (IconTemplate != null)
+        {
+            <span role="img" class=" anticon anticon-container">
+                @IconTemplate
+            </span>
+        }
+        else if (Icon != null)
+        {
+            <Icon Type="@Icon" />
+        }
+    }
 
     void TitleContent(RenderTreeBuilder __builder)
     {
-        @icon(this)
-        @content(this)
+        icon(__builder);
+        content(__builder);
     }
 
     internal RenderFragment GetTitleContent()

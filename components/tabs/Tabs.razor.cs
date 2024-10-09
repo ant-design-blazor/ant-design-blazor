@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -41,7 +42,7 @@ namespace AntDesign
         /// Content for tabs. Should include <c>TabPane</c> elements
         /// </summary>
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
+        public virtual RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// Current <see cref="TabPane"/>'s <see cref="TabPane.Key"/>
@@ -227,7 +228,12 @@ namespace AntDesign
         private string _navListStyle;
 
         private string _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
+
+        private const string HiddenStyle = "visibility: hidden; order: 1;";
+
         private string _operationStyle = "visibility: hidden; order: 1;";
+        private string _firstAddButtonStyle = HiddenStyle;
+        private string _secondAddButtonStyle = HiddenStyle;
 
         private decimal _scrollOffset;
         private decimal _scrollListWidth;
@@ -246,17 +252,20 @@ namespace AntDesign
         private readonly List<TabPane> _tabs = new List<TabPane>();
         private List<TabPane> _invisibleTabs = new List<TabPane>();
 
-
+        private static RenderFragment EmptyRenderFragment => builder => { };
         private bool NavWrapPingLeft => _scrollOffset > 0;
         private bool NavWrapPingRight => _scrollListWidth - _wrapperWidth - _scrollOffset > 0;
 
         private bool HasAddButton => Type == TabType.EditableCard && !HideAdd;
 
+        private bool IsOverflowed => _scrollListWidth <= _wrapperWidth;
+
         private readonly int _dropDownBtnWidth = 46;
         private readonly int _addBtnWidth = 40;
         private bool _shownDropdown;
         private bool _needUpdateScrollListPosition;
-
+        private bool _retryingGetSize;
+        private bool _hasNewTab = false;
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -314,11 +323,29 @@ namespace AntDesign
         {
             tabPane.SetIndex(_tabs.Count);
             _tabs.Add(tabPane);
+            _needUpdateScrollListPosition = true;
             StateHasChanged();
+            if (_hasNewTab)
+            {
+                ActivatePane(tabPane.Key);
+                _hasNewTab = false;
+            }
         }
-
+        private async Task OnAddTab()
+        {
+            if (OnAddClick.HasDelegate)
+            {
+                _hasNewTab = true;
+                await OnAddClick.InvokeAsync(null);
+            }
+        }
         internal void Complete()
         {
+            if (_afterFirstRender)
+            {
+                return;
+            }
+
             if (!string.IsNullOrWhiteSpace(ActiveKey))
             {
                 var activedPane = _tabs.Find(x => x.Key == ActiveKey);
@@ -355,18 +382,21 @@ namespace AntDesign
             if (await OnEdit.Invoke(tab.Key, "remove"))
             {
                 var tabKey = tab.Key;
-                var index = _tabs.IndexOf(tab);
 
                 tab.Close();
+
+                OnRemoveTab(tab);
 
                 if (OnClose.HasDelegate)
                 {
                     await OnClose.InvokeAsync(tabKey);
                 }
-
-                StateHasChanged();
             }
         }
+
+        protected virtual void OnRemoveTab(TabPane tab) { }
+
+        protected virtual void OnActiveTabChanged(TabPane tab) { }
 
         internal void RemovePane(TabPane tab)
         {
@@ -374,9 +404,28 @@ namespace AntDesign
             if (IsDisposed)
                 return;
 
-            _tabs.Remove(tab);
+            // reorder tabs
+            _tabs.OrderBy(x => x.TabIndex).ForEach((x, i) => x.SetIndex(i));
 
+            // if it is active, need to activiate the previous tab, or the next one if no previous
+            if (_activeKey == tab.Key)
+            {
+                if (tab.TabIndex > 0)
+                {
+                    Previous();
+                }
+                else
+                {
+                    Next();
+                }
+            }
+
+            _shouldRender = true;
             _needUpdateScrollListPosition = true;
+
+            _tabs.Remove(tab);
+            StateHasChanged();
+
         }
 
         internal async Task HandleTabClick(TabPane tabPane)
@@ -392,32 +441,63 @@ namespace AntDesign
             ActivatePane(tabPane.Key);
         }
 
-        internal async Task HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
+        internal void HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
         {
-            var tabIndex = _tabs.FindIndex(p => p.Key == tabPane.Key);
             switch (e.Code)
             {
-                case "Enter" or "NumpadEnter": await NavigateToTab(tabPane); break;
-                case "ArrowLeft": await NavigateToTab(_tabs[Math.Max(0, tabIndex - 1)]); break;
-                case "ArrowRight": await NavigateToTab(_tabs[Math.Min(_tabs.Count - 1, tabIndex + 1)]); break;
-                case "ArrowUp": await NavigateToTab(_tabs[0]); break;
-                case "ArrowDown": await NavigateToTab(_tabs[^1]); break;
+                case "Enter" or "NumpadEnter": GoTo(tabPane.TabIndex); break;
+                case "ArrowLeft": Previous(); break;
+                case "ArrowRight": Next(); break;
+                case "ArrowUp": GoTo(0); break;
+                case "ArrowDown": GoTo(_tabs.Count - 1); break;
                 default: return;
             }
         }
 
-        private async Task NavigateToTab(TabPane tabPane)
+        /// <summary>
+        /// Activate the tab with the specified index
+        /// </summary>
+        /// <param name="tabIndex"></param>
+        [PublicApi("1.0.0")]
+        public void GoTo(int tabIndex)
         {
-            await HandleTabClick(tabPane);
-            await FocusAsync(_activeTab.TabBtnRef);
+            var activeIndex = Math.Min(_tabs.Count - 1, Math.Max(0, tabIndex));
+            var tab = _tabs.Find(x => x.TabIndex == activeIndex);
+            if (tab == null)
+            {
+                return;
+            }
+            ActivatePane(tab.Key);
         }
 
-        private void ActivatePane(string key)
+        /// <summary>
+        /// Move to next tab
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void Next()
+        {
+            GoTo(_activeTab.TabIndex + 1);
+        }
+
+        /// <summary>
+        /// Move to previous tab
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void Previous()
+        {
+            GoTo(_activeTab.TabIndex - 1);
+        }
+
+        /// <summary>
+        /// Activate the specified tab
+        /// </summary>
+        /// <param name="key">The key of the tab to activate</param>
+        [PublicApi("1.0.0")]
+        public void ActivatePane(string key)
         {
             if (_tabs.Count == 0)
                 return;
 
-            var tabIndex = _tabs.FindIndex(p => p.Key == key);
             var tab = _tabs.Find(p => p.Key == key);
 
             if (tab == null)
@@ -430,24 +510,31 @@ namespace AntDesign
                 return;
             }
 
+            if (_activeTab?.Key == tab.Key)
+            {
+                return;
+            }
+
             _activeTab?.SetActive(false);
 
             tab.SetActive(true);
 
             _activeTab = tab;
+            _activeKey = _activeTab.Key;
 
-            if (_activeKey != _activeTab.Key)
+            if (ActiveKeyChanged.HasDelegate)
             {
-                _activeKey = _activeTab.Key;
-                if (ActiveKeyChanged.HasDelegate)
-                {
-                    ActiveKeyChanged.InvokeAsync(_activeKey);
-                }
+                ActiveKeyChanged.InvokeAsync(_activeKey);
             }
+
             if (OnChange.HasDelegate)
             {
-                OnChange.InvokeAsync(_activeTab.Key);
+                OnChange.InvokeAsync(tab.Key);
             }
+
+            OnActiveTabChanged(_activeTab);
+
+            _retryingGetSize = false;// each activation only can try once
             TryRenderInk();
             if (Card?.Body == null)
             {
@@ -461,8 +548,10 @@ namespace AntDesign
             // render the classname of the actived tab
             // Needs to be optimized to render only one tab instead all the tabs
             StateHasChanged();
+
+            //_ = FocusAsync(_activeTab.TabBtnRef);
         }
-        private static RenderFragment EmptyRenderFragment => builder =>{};
+
         public override Task SetParametersAsync(ParameterView parameters)
         {
             if (parameters.IsParameterChanged(nameof(TabPosition), TabPosition))
@@ -502,6 +591,11 @@ namespace AntDesign
             return _shouldRender || _renderedActivePane != _activeTab;
         }
 
+        internal void SetShowRender()
+        {
+            _shouldRender = true;
+        }
+
         private async Task ResetSizes()
         {
             ElementReference[] refs = [_navListRef, _navWarpRef, .. _tabs.Select(x => x.TabRef).ToArray()];
@@ -521,7 +615,7 @@ namespace AntDesign
         private void UpdateScrollListPosition()
         {
             // 46 is the size of dropdown button
-            if (_scrollListWidth <= _wrapperWidth)
+            if (IsOverflowed)
             {
                 _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
                 _operationStyle = "visibility: hidden; order: 1;";
@@ -542,6 +636,18 @@ namespace AntDesign
                 if (IsHorizontal)
                 {
                     DomEventListener.AddExclusive<string>(_navListRef, "wheel", OnWheel, true);
+                }
+            }
+            _firstAddButtonStyle = _secondAddButtonStyle = HiddenStyle;
+            if (HasAddButton)
+            {
+                if (IsOverflowed)
+                {
+                    _firstAddButtonStyle = string.Empty;
+                }
+                else
+                {
+                    _secondAddButtonStyle = string.Empty;
                 }
             }
         }
@@ -604,6 +710,11 @@ namespace AntDesign
             {
                 return;
             }
+            if (_activeTab == null)
+            {
+                return;
+            }
+
             if (!_itemRefs.TryGetValue(_activeTab.TabId, out _activeTabElement))
             {
                 return;
@@ -612,8 +723,9 @@ namespace AntDesign
             // the tabs maybe inside other components like modal, it can't get the element info at the first time
             // so here is retrying to get the element info again.
             // Fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/4061
-            if (_activeTabElement.ClientWidth <= 0 || _activeTabElement.ClientHeight <= 0)
+            if (!_retryingGetSize && (_activeTabElement.ClientWidth <= 0 || _activeTabElement.ClientHeight <= 0))
             {
+                _retryingGetSize = true;
                 _needUpdateScrollListPosition = true;
                 StateHasChanged();
                 return;
@@ -621,10 +733,9 @@ namespace AntDesign
 
             if (IsHorizontal)
             {
-
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
 
-                var additionalWidth = HasAddButton ? _addBtnWidth : 0;
+                var additionalWidth = HasAddButton && (IsOverflowed) ? _addBtnWidth : 0;
 
                 // need to scroll tab bars
                 if (_activeTabElement.OffsetLeft + _activeTabElement.ClientWidth + additionalWidth > _scrollOffset + _wrapperWidth
@@ -700,7 +811,10 @@ namespace AntDesign
             }
 
             _invisibleTabs = _tabs.ToList();
-            _invisibleTabs.RemoveRange(invisibleHeadCount, visibleCount);
+            if (invisibleHeadCount + visibleCount <= _invisibleTabs.Count)
+            {
+                _invisibleTabs.RemoveRange(invisibleHeadCount, visibleCount);
+            }
         }
 
         private static int GetOverflowCount(decimal maxLength, decimal[] lengths, bool isRight = false)
@@ -735,8 +849,8 @@ namespace AntDesign
         {
             if (Draggable && _draggingTab != null)
             {
-                var oldIndex = _tabs.IndexOf(_draggingTab);
-                var newIndex = _tabs.IndexOf(tab);
+                var oldIndex = _draggingTab.TabIndex;
+                var newIndex = tab.TabIndex;
 
                 if (oldIndex == newIndex)
                 {
@@ -745,7 +859,12 @@ namespace AntDesign
 
                 tab.ExchangeWith(_draggingTab);
 
-                var diffTabs = newIndex < oldIndex ? _tabs.GetRange(newIndex, oldIndex - newIndex) : _tabs.GetRange(oldIndex, newIndex - oldIndex);
+                /* Exchange example:
+                 * 1,2,3,4,5,6 -> 1,5,3,4,2,6
+                 *   ^     ^
+                 */
+                var diffTabs = newIndex < oldIndex ? _tabs.Where(x => x.TabIndex == newIndex && x.TabIndex < oldIndex).ToList()
+                    : _tabs.Where(x => x.TabIndex > oldIndex && x.TabIndex == newIndex).ToList();
 
                 for (var i = diffTabs.Count - 2; i >= 0; i--)
                 {
@@ -756,8 +875,7 @@ namespace AntDesign
                 _shouldRender = true;
                 _renderedActivePane = null;
                 _needUpdateScrollListPosition = true;
-
-                ActivatePane(_activeKey);
+                StateHasChanged();
             }
         }
 

@@ -22,7 +22,7 @@ namespace AntDesign
 
         public string Shape { get; set; } = null;
 
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public string Size { get; set; } = AntSizeLDSType.Small;
 
         public string Icon { get; set; }
 

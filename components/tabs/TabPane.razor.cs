@@ -72,7 +72,7 @@ namespace AntDesign
 
         internal ElementReference TabBtnRef => _tabBtnRef;
 
-        private ClassMapper _tabPaneClassMapper = new();
+        private ClassMapper _tabClassMapper = new();
 
         private const string PrefixCls = "ant-tabs-tab";
         private const string TabPanePrefixCls = "ant-tabs-tabpane";
@@ -85,6 +85,8 @@ namespace AntDesign
 
         private bool _hasRendered;
         private int _tabIndex;
+
+        private string TabStyles => $"margin-right:{(Parent.Type == TabType.Line ? "24px;" : "2px;")}; order:{TabIndex};";
 
         protected override void OnInitialized()
         {
@@ -117,13 +119,13 @@ namespace AntDesign
 
         private void SetClass()
         {
-            ClassMapper
+            _tabClassMapper
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-active", () => _isActive)
                 .If($"{PrefixCls}-with-remove", () => Closable)
                 .If($"{PrefixCls}-disabled", () => Disabled);
 
-            _tabPaneClassMapper
+            ClassMapper
                 .Add(TabPanePrefixCls)
                 .If($"{TabPanePrefixCls}-active", () => _isActive)
                 .If($"{TabPanePrefixCls}-hidden", () => !_isActive)
@@ -163,9 +165,9 @@ namespace AntDesign
             (_tabIndex, other._tabIndex) = (other._tabIndex, _tabIndex);
         }
 
-        private Task HandleKeydown(KeyboardEventArgs e)
+        private void HandleKeydown(KeyboardEventArgs e)
         {
-            return Parent?.HandleKeydown(e, this);
+            Parent?.HandleKeydown(e, this);
         }
     }
 }

@@ -70,9 +70,9 @@ namespace AntDesign.Docs.Build.CLI.Documentations
             {
                 Category = docAttribute.Category.ToString(),
                 Title = title,
-                SubTitle = docAttribute.SubTitle,
+                SubTitle = language == Constants.ChineseLanguage ? docAttribute.SubTitle : "",
                 Type = docAttribute.Type.ToString(),
-                Desc = componentSummary[language],
+                Desc = componentSummary[language] ?? "no description",
                 ApiDoc = allApiDocumentation.ToString(),
                 Cols = docAttribute.Columns,
                 Cover = docAttribute.CoverImageUrl,

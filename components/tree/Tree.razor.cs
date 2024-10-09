@@ -658,6 +658,12 @@ namespace AntDesign
         [Parameter]
         public Func<TreeNode<TItem>, bool> CheckableExpression { get; set; }
 
+        /// <summary>
+        /// Specifies a method to return a selectable node
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> SelectableExpression { get; set; }
+
         #endregion DataBind
 
         #region Event

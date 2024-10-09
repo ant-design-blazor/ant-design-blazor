@@ -59,6 +59,7 @@ jobs:
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net8 -o cargo -p:EnableAOT=true
           cp -rf cargo/staticwebapp.config.json cargo/wwwroot
           cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net8/*.dll cargo/wwwroot/_framework
+          find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
 
       - name: Deploy to Azure 🚀
         id: deploy_azure

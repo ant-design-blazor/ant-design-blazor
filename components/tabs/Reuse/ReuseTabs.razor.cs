@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 
@@ -11,7 +10,7 @@ namespace AntDesign
     /// <summary>
     /// Reuse of multiple page components within an application
     /// </summary>
-    public partial class ReuseTabs : AntDomComponentBase
+    public partial class ReuseTabs : Tabs
     {
         /// <summary>
         /// Class name of the inner tab pane.
@@ -20,22 +19,16 @@ namespace AntDesign
         public string TabPaneClass { get; set; }
 
         /// <summary>
-        /// Whether Tab can be dragged and dropped.
-        /// </summary>
-        [Parameter]
-        public bool Draggable { get; set; }
-
-        /// <summary>
-        /// The size of tabs.
-        /// </summary>
-        [Parameter]
-        public TabSize Size { get; set; }
-
-        /// <summary>
         /// Templates for customizing page content.
         /// </summary>
         [Parameter]
-        public RenderFragment<ReuseTabsPageItem> Body { get; set; } = context => context.Body;
+        public RenderFragment<ReuseTabsPageItem> TabPaneTemplate { get; set; } = context => context.Body;
+
+        /// <summary>
+        /// The content of the tab.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Body { get; set; }
 
         /// <summary>
         /// Localization Settings.
@@ -67,63 +60,82 @@ namespace AntDesign
         [CascadingParameter(Name = "AntDesign.InReusePageContent")]
         private bool InReusePageContent { get; set; }
 
+        /// <summary>
+        /// cover the base ChildContent
+        /// </summary>
+        private new RenderFragment ChildContent { get; set; }
+        public ReuseTabs()
+        {
+            Type = TabType.EditableCard;
+            HideAdd = true;
+        }
+
         protected override void OnInitialized()
         {
             if (InReusePageContent)
             {
                 return;
             }
+
             base.OnInitialized();
 
             Navmgr.LocationChanged += OnLocationChanged;
-        }
 
-        protected override Task OnFirstAfterRenderAsync()
-        {
             ReuseTabsService.Init(true);
-            ReuseTabsService.OnStateHasChanged += InvokeStateHasChanged;
+            ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
 
-            if (RouteData != null)
-            {
-                ReuseTabsService.TrySetRouteData(RouteData, true);
-            }
-            else if (ReuseTabsRouteData != null)
-            {
-                ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
-            }
+            RouteData ??= ReuseTabsRouteData?.RouteData;
 
-            return base.OnFirstAfterRenderAsync();
+            ReuseTabsService.TrySetRouteData(RouteData, true);
+
+            base.ChildContent = RenderPanes;
+
+            ActiveKey = ReuseTabsService.ActiveKey;
         }
 
-        protected override bool ShouldRender() => !InReusePageContent;
+        protected override bool ShouldRender() => !InReusePageContent && base.ShouldRender();
 
         protected override void Dispose(bool disposing)
         {
-            ReuseTabsService.OnStateHasChanged -= InvokeStateHasChanged;
+            ReuseTabsService.OnStateHasChanged -= OnStateHasChanged;
             Navmgr.LocationChanged -= OnLocationChanged;
             base.Dispose(disposing);
         }
 
-        private async Task<bool> OnTabEdit(string key, string action)
+        private void ClosePage(string key)
         {
-            if (action != "remove")
-                return false;
+            UpdateTabsPosition();
+            ReuseTabsService.ClosePageByKey(key);
+        }
 
-            return ReuseTabsService.ClosePage(key);
+        protected override void OnRemoveTab(TabPane tab)
+        {
+            ReuseTabsService.ClosePageByKey(tab.Key);
+        }
+
+        protected override void OnActiveTabChanged(TabPane tab)
+        {
+            if (tab.Key != ReuseTabsService.ActiveKey)
+            {
+                ReuseTabsService.ActiveKey = tab.Key;
+            }
         }
 
         private void OnLocationChanged(object o, LocationChangedEventArgs _)
         {
-            if (RouteData != null)
-            {
-                ReuseTabsService.TrySetRouteData(RouteData, true);
-            }
-            else if (ReuseTabsRouteData != null)
-            {
-                ReuseTabsService.TrySetRouteData(ReuseTabsRouteData.RouteData, true);
-            }
+            UpdateTabsPosition();
 
-            InvokeStateHasChanged();
+            RouteData ??= ReuseTabsRouteData?.RouteData;
+
+            ReuseTabsService.TrySetRouteData(RouteData, true);
+
+            ActivatePane(ReuseTabsService.ActiveKey);
+        }
+
+        private void OnStateHasChanged()
+        {
+            SetShowRender();
+            StateHasChanged();
         }
     }
 }

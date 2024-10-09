@@ -13,8 +13,12 @@ title:
 
 注意，由于页面组件跟 ReuseTabs 位于不同位置，操作 ReuseTabs 都需要通过注入的 ReuseTabsService.
 
+**注意: 必须级联传入 RouteData，否则无效。**
+
 ## en-US
 
 Implement `IReuseTabsPage` to support dynamic headers, which are often used to set headers that need to request data fetch.
 
 Note that since the page component and ReuseTabs are located in different locations, operating ReuseTabs requires an injected ReuseTabsService.
+
+**Note: Must cascade RouteData, otherwise it will be invalid.**

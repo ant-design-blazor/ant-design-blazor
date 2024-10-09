@@ -1,28 +1,44 @@
 ﻿@using System.Reflection
 @using System.Globalization
 
-<ConfigProvider>
-    <Router AppAssembly="typeof(App).Assembly" OnNavigateAsync="OnNavigateAsync">
-        <Found Context="routeData">
-            <CascadingValue Value="routeData">
-                <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
-            </CascadingValue>
-            <FocusOnNavigate RouteData="routeData" Selector="h1" />
-        </Found>
-        <NotFound>
-            <Result Status="404" />
-        </NotFound>
-    </Router>
-    <AntContainer />
-</ConfigProvider>
+@if (!_show)
+    return;
+
+<CascadingValue Value="this" IsFixed>
+    <ConfigProvider>
+        <Router AppAssembly="typeof(App).Assembly" OnNavigateAsync="OnNavigateAsync">
+            <Found Context="routeData">
+
+                @if (CascadingRouteData)
+                {
+                    <CascadingValue Value="routeData">
+                        <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+                    </CascadingValue>
+                }
+                else
+                {
+                    <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+                }
+                <FocusOnNavigate RouteData="routeData" Selector="h1" />
+            </Found>
+            <NotFound>
+                <Result Status="404" />
+            </NotFound>
+        </Router>
+        <AntContainer />
+    </ConfigProvider>
+</CascadingValue>
 
 @inject ILocalizationService LocalizationService;
 @inject NavigationManager NavigationManager;
 @code {
 
+    private bool _show = true;
+    public bool CascadingRouteData { get; set; } = true;
+
     static string[] avaliableRoutes = new[] { "/Docs", "/Components", "/Charts", "/Experimental" };
 
-    async Task OnNavigateAsync(NavigationContext navigationContext)
+    void OnNavigateAsync(NavigationContext navigationContext)
     {
         var relativeUri = navigationContext.Path;
         var currentCulture = LocalizationService.CurrentCulture;
@@ -58,5 +74,15 @@
         {
 
         }
+    }
+
+    public void SetCascadingRouteData(bool value)
+    {
+        CascadingRouteData = value;
+        _show = false;
+        StateHasChanged();
+
+        _show = true;
+        StateHasChanged();
     }
 }

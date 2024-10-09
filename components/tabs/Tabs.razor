@@ -33,13 +33,13 @@
 
                 <div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef" id="@(Id)-nav-warpper">
                     <div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef" id="@(Id)-nav-list">
-                        @foreach (var tab in _tabs.OrderBy(x => x.TabIndex))
+                        @foreach (var tab in _tabs)
                         {
                             @tab.RenderTab
                         }
                         @if (HasAddButton)
                         {
-                            <button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="OnAddClick">
+                            <button type="button" class="ant-tabs-nav-add" style="@_firstAddButtonStyle" aria-label="Add tab" @onclick="OnAddTab">
                                 <Icon Type="plus" />
                             </button>
                         }
@@ -74,7 +74,12 @@
                         </div>
                     </Unbound>
                 </Dropdown>
-
+                @if (HasAddButton)
+                {
+                    <button type="button" class="ant-tabs-nav-add" style="@_secondAddButtonStyle" aria-label="Add tab" @onclick="OnAddTab">
+                        <Icon Type="plus" />
+                    </button>
+                }
                 @if (TabBarExtraContent != null || TabBarExtraContentRight != null || (Card?.Extra != null && Card?.Title == null && Card?.TitleTemplate == null))
                 {
                     <div class="ant-tabs-extra-content">
@@ -90,13 +95,14 @@
         </div>
 
     }    
+
     internal void RenderTabPanels(RenderTreeBuilder __builder)
     {             
         <div class="ant-tabs-content-holder ">
             <div class="@_contentClassMapper.Class">
                 @foreach (var tab in _tabs)
                 {
-                    @tab.RenderPane
+                    __builder.AddContent(tab.GetHashCode(), tab.RenderPane);
                 }
             </div>
         </div>     
