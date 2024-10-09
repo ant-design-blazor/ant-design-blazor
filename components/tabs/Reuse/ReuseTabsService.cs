@@ -21,6 +21,8 @@ namespace AntDesign
 
         internal event Action OnStateHasChanged;
 
+        private ReuseTabsPageItem _currentPage;
+
         internal string CurrentUrl
         {
             get => "/" + _navmgr.ToBaseRelativePath(_navmgr.Uri);
@@ -67,6 +69,8 @@ namespace AntDesign
             // So need to refresh the title after menu loaded.
             _menusService.MenuItemLoaded += StateHasChanged;
         }
+
+        internal ReuseTabsPageItem CurrentPage => _currentPage;
 
         /// <summary>
         /// Create a tab without navigation, the page doesn't really render until the tab is clicked
@@ -189,15 +193,15 @@ namespace AntDesign
         {
             url ??= CurrentUrl;
             var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == url);
-            if (reuseTabsPageItem != null)
+            reuseTabsPageItem.Body = null;
+            reuseTabsPageItem.Title = null;
+            reuseTabsPageItem.Rendered = false;
+
+            // only reload current page, and other page would be load by tab navigation
+            if (reuseTabsPageItem?.Key == ActiveKey)
             {
-                // Reset content
-                reuseTabsPageItem.Body = null;
-                // auto reload current page, and other page would be load by tab navigation
-                if (ActiveKey == reuseTabsPageItem.Key)
-                    ActiveKey = reuseTabsPageItem.Key;
+                StateHasChanged();
             }
-            StateHasChanged();
         }
 
         /// <summary>
@@ -262,6 +266,8 @@ namespace AntDesign
             }
 
             ActiveKey = reuseTabsPageItem.Key;
+            _currentPage = reuseTabsPageItem;
+
             OnStateHasChanged?.Invoke();
         }
 
