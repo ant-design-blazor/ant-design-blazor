@@ -37,9 +37,9 @@
     <!-- <BlazorWasmPrerenderingOutputStyle>AppendHtmlExtension</BlazorWasmPrerenderingOutputStyle> -->
   </PropertyGroup>
 
-  <ItemGroup>
+  <!-- <ItemGroup>
     <PackageReference Include="BlazorWasmPreRendering.Build" Version="4.0.0" />
-  </ItemGroup>
+  </ItemGroup> -->
 
   <ItemGroup>
     <EmscriptenEnvVars Include="PYTHONUTF8=1" />
