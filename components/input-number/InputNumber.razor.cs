@@ -1,9 +1,12 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers;
@@ -13,20 +16,54 @@ using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Enter a number within certain range with the mouse or keyboard.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>When a numeric value needs to be provided.</item>
+    </list>
+
+    <h3>Types Supported</h3>
+
+    <para><c>sbyte</c>, <c>byte</c>, <c>short</c>, <c>ushort</c>, <c>int</c>, <c>uint</c>, <c>long</c>, <c>ulong</c>, <c>float</c>, <c>double</c>, <c>decimal</c></para>
+
+    <para>Nullable types of the above types are also supported. For example, <c>ushort?</c>, <c>int?</c>, etc.</para>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg", Title = "InputNumber", SubTitle = "数字输入框")]
     public partial class InputNumber<TValue> : AntInputComponentBase<TValue>
     {
+        /// <summary>
+        /// Number of decimal places to use for number and display
+        /// </summary>
+        /// <default value="0"/>
         [Parameter]
         public int Precision { get; set; } = 0;
 
+        /// <summary>
+        /// Formatter from number to string for displaying
+        /// </summary>
         [Parameter]
         public Func<TValue, string> Formatter { get; set; }
 
+        /// <summary>
+        /// Parser to extract number from the formatter
+        /// </summary>
         [Parameter]
         public string Format { get; set; }
 
+        /// <summary>
+        /// Specifies the value extracted from formatter
+        /// </summary>
         [Parameter]
         public Func<string, string> Parser { get; set; }
 
+        /// <summary>
+        /// The number to which the current value is increased or decreased with the input arrows. It can be an integer or decimal.
+        /// </summary>
         [Parameter]
         public TValue Step
         {
@@ -46,6 +83,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Initial value
+        /// </summary>
         [Parameter]
         public TValue DefaultValue
         {
@@ -57,34 +97,64 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Max alloable number
+        /// </summary>
         [Parameter]
         public TValue Max { get; set; }
 
+        /// <summary>
+        /// Min allowable number
+        /// </summary>
         [Parameter]
         public TValue Min { get; set; }
 
+        /// <summary>
+        ///  Max length of input
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public int? MaxLength { get; set; }
 
+        /// <summary>
+        /// Disable the input or not
+        /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Callback executed when the input value changes
+        /// </summary>
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
 
+        /// <summary>
+        /// Callback executed when the input gains focus
+        /// </summary>
         [Parameter]
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
 
+        /// <summary>
+        /// Placeholder value
+        /// </summary>
         [Parameter]
         public string PlaceHolder { get; set; }
 
+        /// <summary>
+        /// Whether to show border
+        /// </summary>
         [Parameter]
         public bool Bordered { get; set; } = true;
 
+        /// <summary>
+        /// Setting prefix content to the input
+        /// </summary>
         [Parameter]
         public OneOf<string, RenderFragment> Prefix { get; set; }
 
-
+        /// <summary>
+        /// The width of the input
+        /// </summary>
         [Parameter]
         public string Width { get; set; }
 

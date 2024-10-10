@@ -16,6 +16,17 @@ Ant Design has 3 types of Tabs for different situations.
 - Normal Tabs: for EventCallbackal aspects of a page.
 - [RadioButton](/components/radio/#components-radio-demo-radiobutton): for secondary tabs.
 
+
+## Supports keyboard navigation
+
+Keyboard navigation is available when the focus is on the tab.
+
+- <kbd>ArrowLeft</kbd>: navigate to previous tab
+- <kbd>ArrowRight</kbd>: navigate to next tab
+- <kbd>ArrowUp</kbd>: navigate to first tab
+- <kbd>ArrowDown</kbd>: navigate to last tab
+- <kbd>Enter</kbd>: navigate to currently focused tab
+
 ## API
 
 ### Tabs

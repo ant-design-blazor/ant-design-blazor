@@ -16,19 +16,18 @@
 
         @if (_demoComponent != null)
         {
-            var title = $"{_demoComponent.SubTitle} {_demoComponent.Title} - Ant Design Blazor".Trim();
+            var title = $"{(CurrentLanguage == "zh-CN" ? _demoComponent.SubTitle + " " : "")}{_demoComponent.Title} - Ant Design Blazor".Trim();
             <PageTitle>@title</PageTitle>
             var docDemos = _demoComponent.DemoList?.Where(x => x.Docs.HasValue && x.Docs.Value) ?? Enumerable.Empty<DemoItem>();
-            var demos = _demoComponent.DemoList?.Where(x => !x.Debug && !x.Docs.HasValue).OrderBy(x => x.Order) ?? Enumerable.Empty<DemoItem>();
 
-            if (demos.Any())
+            if (_anchors.Any())
             {
                 <div class="toc-affix">
                     <Affix OffsetTop="16">
                         <Anchor Key="@_demoComponent.Title">
-                            @foreach (var demo in demos)
+                            @foreach (var demo in _anchors)
                             {
-                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#components-{_demoComponent.Title.ToLower()}-demo-{demo.Name}")" Title="@demo.Title" />
+                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#components-{_demoComponent.Title.ToLower()}-demo-{demo.Name.ToLower()}")" Title="@demo.Title" />
                             }
                             @if (!string.IsNullOrEmpty(_demoComponent.ApiDoc))
                             {
@@ -42,7 +41,10 @@
             <section class="markdown">
                 <h1>
                     @_demoComponent.Title
-                    <span class="subtitle">@_demoComponent.SubTitle</span>
+                    @if (CurrentLanguage == "zh-CN")
+                    {
+                        <span class="subtitle">@_demoComponent.SubTitle</span>
+                    }
                     <span class="widget"></span>
                     <Tooltip Title="@Localizer["app.content.edit-demo"]">
                         <Unbound>
@@ -56,18 +58,12 @@
                     @((MarkupString)_demoComponent.Desc)
                 </section>
 
-                @if (_rendered)
+                @foreach (var docDemo in docDemos)
                 {
-                    @foreach (var docDemo in docDemos)
-                    {
-                        <RazorBox Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Type}")" />
-                    }
+                    <DocDemoView Demo="@docDemo" @key="@($"{_demoComponent.Title}-{docDemo.Type}")" />
                 }
-                else
-                {
-                    <Skeleton ParagraphRows="3" Active></Skeleton>
-                }
-                @if (demos.Any())
+
+                @if (_demos.Any())
                 {
                     <h2 data-scrollama-index="1">
                         @Localizer["app.component.examples"]
@@ -90,12 +86,12 @@
                 }
             </section>
 
-            @if (demos.Any())
+            @if (_demos.Any())
             {
                 <Row Style="margin-left: -8px; margin-right: -8px;">
                     @if (_demoComponent.Cols == 1 || _expanded)
                     {
-                        foreach (var demo in demos)
+                        foreach (var demo in _demos)
                         {
                             <AntDesign.Col Span="24" Class="code-boxes-col-1-1" Style="padding-left: 8px; padding-right: 8px;">
                                 <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
@@ -104,19 +100,19 @@
                     }
                     else
                     {
-                        var leftList = demos.Where((_, i) => i % 2 == 0);
-                        var rightList = demos.Where((_, i) => i % 2 != 0);
+                        var leftList = _demos.Where((_, i) => i % 2 == 0);
+                        var rightList = _demos.Where((_, i) => i % 2 != 0);
 
-                        <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                        <AntDesign.Col Md="12" Sm="24" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in leftList)
                             {
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Name" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
-                        <AntDesign.Col Span="12" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                        <AntDesign.Col Md="12" Sm="24" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in rightList)
                             {
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Name" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
                     }
@@ -134,3 +130,9 @@
     </article>
     <ContributorsList FilePaths="_filePaths" />
 </section>
+
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>

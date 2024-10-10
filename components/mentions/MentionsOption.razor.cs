@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -6,10 +10,22 @@ namespace AntDesign
 {
     public partial class MentionsOption
     {
-        [CascadingParameter] public Mentions Mentions { get; set; }
-        [Parameter] public string Value { get; set; }
-        [Parameter] public RenderFragment ChildContent { get; set; }
-        public bool Active => Mentions?.ActiveOptionValue == Value;
+        [CascadingParameter]
+        private Mentions Mentions { get; set; }
+
+        /// <summary>
+        /// The value of option.
+        /// </summary>
+        [Parameter]
+        public string Value { get; set; }
+
+        /// <summary>
+        /// The content of option.
+        /// </summary>
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
+        internal bool Active => Mentions?.ActiveOptionValue == Value;
 
         protected override async Task OnInitializedAsync()
         {
@@ -32,7 +48,8 @@ namespace AntDesign
 
         internal async Task OnClick(MouseEventArgs args)
         {
-            if (args.Button == 0)   //left click
+            var isLeftClick = args.Button == 0;
+            if (isLeftClick)
             {
                 await Mentions.ItemClick(Value);
             }

@@ -5,16 +5,16 @@
 
 <Tabs>
     <TabPane Key="1">
-        <TabTemplate>Example 1</TabTemplate>
+        <TabTemplate>Í¼Àý-Î»ÖÃ</TabTemplate>
         <ChildContent>
-            <StackedColumn Data="data1" Config="config1" />
+            <AntDesign.Charts.Column Data="data1" Config="config1" />
         </ChildContent>
     </TabPane>
 
     <TabPane Key="2">
-        <TabTemplate>Example 2</TabTemplate>
+        <TabTemplate>Í¼Àý-¹ý¶àÊ±ÊÇ·ñ·­Ò³</TabTemplate>
         <ChildContent>
-            <StackedColumn Data="data2" Config="config2" />
+            <AntDesign.Charts.Column Data="data2" Config="config2" />
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -181,7 +181,7 @@
         }
     };
 
-    readonly StackedColumnConfig config1 = new StackedColumnConfig
+    readonly ColumnConfig config1 = new ColumnConfig
     {
         Title = new Title
         {
@@ -195,11 +195,11 @@
         },
         XField = "time",
         YField = "value",
-        StackField = "type",
+        SeriesField = "type",
         Legend = new AntDesign.Charts.Legend
         {
             Visible = true,
-            Position = "right-center"
+            Position = "right"
         }
     };
 
@@ -207,7 +207,7 @@
 
     #region Example 2
 
-    readonly StackedColumnConfig config2 = new StackedColumnConfig
+    readonly ColumnConfig config2 = new ColumnConfig
     {
         Title = new Title
         {
@@ -230,7 +230,7 @@
             Visible = true,
             Type = "time"
         },
-        StackField = "type",
+        SeriesField = "type",
         Legend = new AntDesign.Charts.Legend
         {
             Visible = true,

@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -15,9 +19,7 @@ namespace AntDesign
         /// <summary>
         /// trigger after Dialog is closed
         /// </summary>
-        public Func<Task> AfterClose { get; set; } = () => Task.CompletedTask;
-
-        public Func<Task> AfterOpen { get; set; } = () => Task.CompletedTask;
+        public Func<Task> OnClosed { get; set; }
 
         /// <summary>
         /// ant-modal-body style
@@ -47,26 +49,7 @@ namespace AntDesign
         /// <summary>
         /// Whether to apply loading visual effect for OK button or not
         /// </summary>
-        public bool ConfirmLoading
-        {
-            get
-            {
-                if (OkButtonProps != null)
-                {
-                    return OkButtonProps.Loading;
-                }
-                return false;
-            }
-            set
-            {
-                if (OkButtonProps == null)
-                {
-                    OkButtonProps = new ButtonProps();
-                }
-
-                OkButtonProps.Loading = value;
-            }
-        }
+        public bool ConfirmLoading { get; set; }
 
         /// <summary>
         /// modal header
@@ -86,7 +69,7 @@ namespace AntDesign
         /// <summary>
         /// ChildContent
         /// </summary>
-        public RenderFragment Content { get; set; }
+        public RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// the class name of the element of ".ant-modal"
@@ -97,13 +80,13 @@ namespace AntDesign
         /// for OK-Cancel Confirm dialog, cancel button clicked callback.
         /// It's only trigger in Confirm created by ModalService mode
         /// </summary>
-        public virtual Func<MouseEventArgs, Task> OnCancel { get; set; }
+        public Func<MouseEventArgs, Task> OnCancel { get; set; }
 
         /// <summary>
         /// for OK-Cancel Confirm dialog, OK button clicked callback.
         /// It's only trigger in Confirm created by ModalService mode
         /// </summary>
-        public virtual Func<MouseEventArgs, Task> OnOk { get; set; }
+        public Func<MouseEventArgs, Task> OnOk { get; set; }
 
         /// <summary>
         /// max modal body content height
@@ -139,6 +122,11 @@ namespace AntDesign
         /// Whether to remove Modal from DOM after the Modal closed
         /// </summary>
         public bool DestroyOnClose { get; set; }
+
+        /// <summary>
+        /// Whether to force render the Modal dom before opening.   
+        /// </summary>
+        public bool ForceRender { get; set; }
 
         #region internal
 

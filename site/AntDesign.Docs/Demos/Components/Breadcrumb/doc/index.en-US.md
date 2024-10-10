@@ -21,18 +21,17 @@ Breadcrumb
 
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
-| ItemRender | Custom item renderer | int   | -         |
-| Params   | Routing parameters| int   |-      |
-| Routes | The routing stack information of router | string         |-       |
-| Separator |Custom separator| string  | -  |
+| AutoGenerate | Auto generate navigation from Menu data | bool | - | 
+| ChildContent | Custom item renderer | int   | -         |
+| Separator | Custom separator | RenderFragment  | -  |
 
 
 BreadcrumbItem
 
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
-| Href | Target of hyperlink | int         | -         |
-| Overlay   | The dropdown menu| int         |-         |
+| Href | Target of hyperlink | string         | -         |
+| Overlay   | The dropdown menu | RenderFragment         |-         |
 | OnClick | Set the handler to handle click event | EventCallback<MouseEventArgs>         |-       |
-| DropdownProps |The dropdown props| string  | -  |
+| ChildContent | Title template | RenderFragment  | -  |
 

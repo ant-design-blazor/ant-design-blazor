@@ -1,10 +1,14 @@
-﻿using System.Globalization;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Globalization;
 using System.Text.Json.Serialization;
 using AntDesign.Form.Locale;
 
 namespace AntDesign.Locales
 {
-    public class Locale
+    public record Locale
     {
         private CultureInfo _currentCulture;
 

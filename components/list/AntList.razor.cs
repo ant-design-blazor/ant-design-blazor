@@ -1,50 +1,111 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public class ListGridType
-    {
-        public int Gutter { get; set; }
-        public int Column { get; set; }
-        public int Xs { get; set; }
-        public int Sm { get; set; }
-        public int Md { get; set; }
-        public int Lg { get; set; }
-        public int Xl { get; set; }
-        public int Xxl { get; set; }
-    }
+    /**
+    <summary>
+    <para>Simple List.</para>
 
+    <h2>When To Use</h2>
+
+    <para>A list can be used to display content related to a single subject. The content can consist of multiple elements of varying type and size.</para>
+    </summary>
+    <seealso cref="ListItem"/>
+    <seealso cref="ListItemMeta"/>
+    <seealso cref="PaginationOptions"/>
+    <seealso cref="ListGridType"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/5FrZKStG_/List.svg", Columns = 1, Title = "List", SubTitle = "列表")]
     public partial class AntList<TItem> : AntDomComponentBase, IAntList
     {
-        public string PrefixName { get; set; } = "ant-list";
+        internal string PrefixName { get; set; } = "ant-list";
 
-        [Parameter] public IEnumerable<TItem> DataSource { get; set; }
+        /// <summary>
+        /// List of items to show in list
+        /// </summary>
+        [Parameter]
+        public IEnumerable<TItem> DataSource { get; set; }
 
-        [Parameter] public bool Bordered { get; set; } = false;
+        /// <summary>
+        /// Put a border on the list
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool Bordered { get; set; } = false;
 
-        [Parameter] public RenderFragment Header { get; set; }
+        /// <summary>
+        /// Header content for the list
+        /// </summary>
+        [Parameter]
+        public RenderFragment Header { get; set; }
 
-        [Parameter] public RenderFragment Footer { get; set; }
+        /// <summary>
+        /// Footer content for the list
+        /// </summary>
+        [Parameter]
+        public RenderFragment Footer { get; set; }
 
-        [Parameter] public RenderFragment LoadMore { get; set; }
+        /// <summary>
+        /// Content for the end of list items for diplaying a load more
+        /// </summary>
+        [Parameter]
+        public RenderFragment LoadMore { get; set; }
 
-        [Parameter] public ListItemLayout ItemLayout { get; set; }
+        /// <summary>
+        /// The layout of list, default is horizontal, If a vertical list is desired, set the itemLayout property to vertical
+        /// </summary>
+        [Parameter]
+        public ListItemLayout ItemLayout { get; set; }
 
-        [Parameter] public bool Loading { get; set; } = false;
+        /// <summary>
+        /// Show loading on the list
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool Loading { get; set; } = false;
 
-        [Parameter] public string NoResult { get; set; }
+        /// <summary>
+        /// Currently unused
+        /// </summary>
+        [Parameter]
+        public string NoResult { get; set; }
 
-        [Parameter] public string Size { get; set; } = AntSizeLDSType.Default;
+        /// <summary>
+        /// Size of the list
+        /// </summary>
+        /// <default value="AntSizeLDSType.Default" />
+        [Parameter]
+        public string Size { get; set; } = AntSizeLDSType.Default;
 
-        [Parameter] public bool Split { get; set; } = true;
+        /// <summary>
+        /// Toggles rendering of the split under the list item
+        /// </summary>
+        /// <default value="true"/>
+        [Parameter]
+        public bool Split { get; set; } = true;
 
-        [Parameter] public ListGridType Grid { get; set; }
+        /// <summary>
+        /// The grid type of list
+        /// </summary>
+        [Parameter]
+        public ListGridType Grid { get; set; }
 
-        [Parameter] public PaginationOptions Pagination { get; set; }
+        /// <summary>
+        /// Options for paginating the list
+        /// </summary>
+        [Parameter]
+        public PaginationOptions Pagination { get; set; }
 
-        [Parameter] public RenderFragment<TItem> ChildContent { get; set; }
+        /// <summary>
+        /// Content for the list
+        /// </summary>
+        [Parameter]
+        public RenderFragment<TItem> ChildContent { get; set; }
 
         private bool IsSomethingAfterLastItem
         {
@@ -65,9 +126,9 @@ namespace AntDesign
         ListItemLayout IAntList.ItemLayout => ItemLayout;
         double IAntList.ColumnWidth => _columnWidth;
 
-        double _columnWidth;
-        int _columns = 0;
-        bool _isInitialized = false;
+        private double _columnWidth;
+        private int _columns = 0;
+        private bool _isInitialized = false;
 
         protected override void OnInitialized()
         {

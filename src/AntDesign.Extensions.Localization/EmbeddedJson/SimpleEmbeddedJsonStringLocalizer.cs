@@ -2,24 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace AntDesign.Extensions.Localization.EmbeddedJson
 {
-    internal class SimpleEmbeddedJsonStringLocalizer : IStringLocalizer
+    internal sealed class SimpleEmbeddedJsonStringLocalizer : IStringLocalizer
     {
         private readonly Lazy<IDictionary<string, string>> _resources;
         private readonly Lazy<IDictionary<string, string>> _fallbackResources;

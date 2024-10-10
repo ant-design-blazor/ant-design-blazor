@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -17,7 +18,7 @@ namespace AntDesign
         }
 
         [CascadingParameter]
-        public IAutoCompleteRef Component { get; set; }
+        private IAutoCompleteRef Component { get; set; }
 
         [CascadingParameter(Name = "OverlayTriggerContext")]
         public ForwardRef OverlayTriggerContext
@@ -25,6 +26,8 @@ namespace AntDesign
             get => RefBack;
             set { RefBack = value; }
         }
+
+        IAutoCompleteRef IAutoCompleteInput.Component { get => Component; set => Component = value; }
 
         protected override void OnInitialized()
         {
@@ -38,6 +41,13 @@ namespace AntDesign
             if (Component != null) await Component?.InputFocus(e);
 
             await base.OnFocusAsync(e);
+        }
+
+        internal async override Task OnBlurAsync(FocusEventArgs e)
+        {
+            if (Component != null) await Component?.InputBlur(e);
+
+            await base.OnBlurAsync(e);
         }
 
         protected override async Task OnkeyDownAsync(KeyboardEventArgs args)
@@ -63,7 +73,7 @@ namespace AntDesign
 
         #region IAutoCompleteInput
 
-        public void SetValue(object value)
+        void IAutoCompleteInput.SetValue(object value)
         {
             this.CurrentValue = (TValue)value;
         }

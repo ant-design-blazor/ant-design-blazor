@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net5;net6;net7;net8</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net5.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
     <RazorLangVersion>3.0</RazorLangVersion>
-    <Description>🌈 A set of enterprise-class UI components based on Ant Design and Blazor WebAssembly.</Description>
+    <Description>🌈 A set of enterprise-class UI components based on Ant Design and Blazor.</Description>
     <PackageProjectUrl>https://github.com/ant-design-blazor/ant-design-blazor</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ant-design-blazor/ant-design-blazor</RepositoryUrl>
-    <PackageTags>blazor,ant-design,antd,design,razor,components</PackageTags>
+    <PackageTags>blazor,antblazor,ant-design,ant-design-blazor</PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -23,16 +23,19 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>./LocalizedIntellisenseFiles/$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>AntDesign.xml</DocumentationFile>
-  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="LocalizedIntellisenseFiles\**\*.xml" Exclude="LocalizedIntellisenseFiles/$(AssemblyName).xml" PackagePath="/content/LocalizedIntellisenseFiles" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- The nuget package icon -->
     <None Include="..\README.md" Pack="true" PackagePath="" />
     <None Include="logo.png" Pack="true" PackagePath="" />
+
+    <Content Include="AntDesign.targets" PackagePath="build\$(PackageId).targets" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,7 +54,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework) == 'net5'">
+  <ItemGroup Condition="$(TargetFramework) == 'net5.0'">
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
       <PrivateAssets>all</PrivateAssets>
@@ -59,7 +62,7 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework) == 'net6'">
+  <ItemGroup Condition="$(TargetFramework) == 'net6.0'">
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -67,7 +70,7 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework) == 'net7'">
+  <ItemGroup Condition="$(TargetFramework) == 'net7.0'">
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -75,19 +78,25 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework) == 'net8'">
+  <ItemGroup Condition="$(TargetFramework) == 'net8.0'">
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  
+
+  <ItemGroup Condition="$(TargetFramework) == 'net9.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0-rc.2.*" />
+    <!--<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0-rc.2.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>-->
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="CssInCSharp" Version="0.1.0-nightly-240716071233" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.DataAnnotations.Validation" Version="3.2.0-rc1.20223.4" />
     <PackageReference Include="OneOf" Version="2.1.155" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
   
   <ItemGroup>
@@ -103,5 +112,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="AntDesign.Tests" />
+    <!--<InternalsVisibleTo Include="AntDesign.Docs" />-->
+    <InternalsVisibleTo Include="AntDesign.Docs.Build.CLI" />
   </ItemGroup>
 </Project>

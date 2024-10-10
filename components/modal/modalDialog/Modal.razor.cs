@@ -1,20 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntDesign
 {
-    /// <summary>
-    /// Modal Dialog
-    /// </summary>
-    public partial class Modal: AntDomComponentBase
+    /**
+    <summary>
+    <para>Modal dialogs.</para>
+
+    <h2>When To Use</h2>
+
+    <para>
+    When requiring users to interact with the application, but without jumping to a new page and interrupting the user's workflow, you can use <c>Modal</c> to create a new floating layer over the current page to get user feedback or display information. 
+    Additionally, if you need show a simple confirmation dialog, you can use <c>ModalService.Confirm()</c>, and so on.
+    </para>
+    </summary>
+    <seealso cref="ModalService" />
+    <seealso cref="ConfirmService" />
+    <seealso cref="ConfirmOptions" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg", Title = "Modal", SubTitle = "对话框")]
+    public partial class Modal
     {
         #region Parameter
+
+        [CascadingParameter(Name = "ModalRef")]
+        internal ModalRef ModalRef { get; set; }
 
         /// <summary>
         /// Specify a function that will be called when modal is closed
@@ -43,6 +60,7 @@ namespace AntDesign
         /// <summary>
         /// Whether a close (x) button is visible on top right of the modal dialog or not
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Closable { get; set; } = true;
 
@@ -55,12 +73,14 @@ namespace AntDesign
         /// <summary>
         /// Drag and drop only within the Viewport
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool DragInViewport { get; set; } = true;
 
         /// <summary>
         /// closer icon RenderFragment, the default is a "X"
         /// </summary>
+        /// <default value="close-outline" />
         [Parameter]
         public RenderFragment CloseIcon { get; set; } = DialogOptions.DefaultCloseIcon;
 
@@ -71,8 +91,9 @@ namespace AntDesign
         public bool ConfirmLoading { get; set; }
 
         /// <summary>
-        /// Whether to unmount child components on onClose, default is false
+        /// Whether to unmount child components on onClose
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool DestroyOnClose { get; set; }
 
@@ -97,18 +118,21 @@ namespace AntDesign
         /// <summary>
         /// Whether support press esc to close
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Keyboard { get; set; } = true;
 
         /// <summary>
         /// Whether show mask or not
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Mask { get; set; } = true;
 
         /// <summary>
         /// Whether to close the modal dialog when the mask (area outside the modal) is clicked
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool MaskClosable { get; set; } = true;
 
@@ -121,25 +145,27 @@ namespace AntDesign
         /// <summary>
         /// Text of RenderFragment of the OK button, it will override the ModalLocale
         /// </summary>
+        /// <default value="null" />
         [Parameter]
         public OneOf<string, RenderFragment>? OkText { get; set; } = null;
 
         /// <summary>
         /// Button type of the OK button
         /// </summary>
+        /// <default value="ButtonType.Primary" />
         [Parameter]
         public string OkType { get; set; } = ButtonType.Primary;
 
         #region title
 
         /// <summary>
-        /// The modal dialog's title. If <param>TitleTemplate</param>!= null, <param>Title</param> will not take effect
+        /// The modal dialog's title
         /// </summary>
         [Parameter]
         public string Title { get; set; } = null;
 
         /// <summary>
-        /// The modal dialog's title
+        /// The modal dialog's title. Takes priority over Title.
         /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; } = null;
@@ -161,7 +187,9 @@ namespace AntDesign
         /// <summary>
         /// Width of the modal dialog, the default value is 520
         /// </summary>
-        [Parameter] public OneOf<string, double> Width { get; set; } = 520;
+        /// <default value="520" />
+        [Parameter]
+        public OneOf<string, double> Width { get; set; } = 520;
 
         private string GetWidth()
         {
@@ -184,6 +212,7 @@ namespace AntDesign
         /// <summary>
         /// The z-index of the Modal
         /// </summary>
+        /// <default value="1000" />
         [Parameter]
         public int ZIndex { get; set; } = 1000;
 
@@ -212,14 +241,20 @@ namespace AntDesign
         public ButtonProps CancelButtonProps { get; set; }
 
         /// <summary>
-        ///
+        /// Child content
         /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
+        /// Is RTL
+        /// </summary>
+        public bool Rtl => base.RTL;
+
+        /// <summary>
         /// Modal Locale
         /// </summary>
+        /// <default value="LocaleProvider.CurrentLocacle.Modal" />
         [Parameter]
         public ModalLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Modal;
 
@@ -232,24 +267,28 @@ namespace AntDesign
         /// <summary>
         /// show modal maximize button
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Maximizable { get; set; } = false;
 
         /// <summary>
         /// The icon of the maximize button when the modal is in normal state
         /// </summary>
+        /// <default value="fullscreen-outline" />
         [Parameter]
         public RenderFragment MaximizeBtnIcon { get; set; } = DialogOptions.DefaultMaximizeIcon;
 
         /// <summary>
         /// The icon of the maximize button when the modal is maximized
         /// </summary>
+        /// <default value="fullscreen-exit-outline" />
         [Parameter]
         public RenderFragment RestoreBtnIcon { get; set; } = DialogOptions.DefaultRestoreIcon;
 
         /// <summary>
         /// Maximize the Modal during component initialization, and it will ignore the Maximizable value.
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool DefaultMaximized { get; set; } = false;
 
@@ -259,34 +298,41 @@ namespace AntDesign
         [Parameter]
         public bool Resizable { get; set; } = false;
 
-        public ModalRef ModalRef => _modalRef;
+        /// <summary>
+        /// Whether to force to render the Modal dom before opening.   
+        /// </summary>
+        [Parameter]
+        public bool ForceRender { get; set; }
 
         #endregion Parameter
 
-        [Inject] private ModalService ModalService { get; set; }
+#pragma warning disable 649
+        private DialogWrapper _dialogWrapper;
+#pragma warning restore 649
 
-        private ModalOptions BuildDialogOptions()
+        private DialogOptions BuildDialogOptions()
         {
-            ModalOptions options = new ModalOptions()
+            DialogOptions options = new DialogOptions()
             {
-                AfterClose = OnAfterHide,
-                AfterOpen = OnAfterDialogShow,
+                OnClosed = AfterClose,
                 BodyStyle = BodyStyle,
                 CancelText = CancelText ?? Locale.CancelText,
                 Centered = Centered,
                 Closable = Closable,
-                Content = ChildContent,
                 Draggable = Draggable,
                 DragInViewport = DragInViewport,
                 DestroyOnClose = DestroyOnClose,
                 CloseIcon = CloseIcon,
+                ConfirmLoading = ConfirmLoading,
                 Header = Header,
                 Footer = Footer,
+
                 GetContainer = GetContainer,
                 Keyboard = Keyboard,
                 Mask = Mask,
                 MaskClosable = MaskClosable,
                 MaskStyle = MaskStyle,
+
                 OkText = OkText ?? Locale.OkText,
                 OkType = OkType,
                 Title = Title,
@@ -294,24 +340,68 @@ namespace AntDesign
                 Width = Width,
                 WrapClassName = WrapClassName,
                 ZIndex = ZIndex,
-                OnCancel = HandleOnCancel,
-                OnOk = HandleOnOk,
+                OnCancel = async (e) =>
+                {
+                    var args = new ModalClosingEventArgs(e, false);
+
+                    var modalTemplate = (ModalRef as IFeedbackRef)?.ModalTemplate;
+                    if (modalTemplate != null)
+                        await modalTemplate.OnFeedbackCancelAsync(args);
+                    if (!args.Cancel)
+                    {
+                        await (ModalRef?.OnCancel?.Invoke() ?? Task.CompletedTask);
+
+                        if (VisibleChanged.HasDelegate)
+                        {
+                            await VisibleChanged.InvokeAsync(false);
+                        }
+
+                        if (OnCancel.HasDelegate)
+                        {
+                            await OnCancel.InvokeAsync(e);
+                        }
+                    }
+                },
+                OnOk = async (e) =>
+                {
+                    var args = new ModalClosingEventArgs(e, false);
+
+                    var modalTemplate = (ModalRef as IFeedbackRef)?.ModalTemplate;
+                    if (modalTemplate != null)
+                        await modalTemplate.OnFeedbackOkAsync(args);
+                    if (!args.Cancel)
+                    {
+                        await (ModalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
+
+                        if (VisibleChanged.HasDelegate)
+                        {
+                            await VisibleChanged.InvokeAsync(false);
+                        }
+
+                        if (OnOk.HasDelegate)
+                        {
+                            await OnOk.InvokeAsync(e);
+                        }
+                    }
+                    else
+                    {
+                        ConfirmLoading = false;
+                        await InvokeStateHasChangedAsync();
+                    }
+                },
                 OkButtonProps = OkButtonProps,
+
                 CancelButtonProps = CancelButtonProps,
-                Rtl = base.RTL,
+                Rtl = Rtl,
                 MaxBodyHeight = MaxBodyHeight,
                 Maximizable = Maximizable,
                 MaximizeBtnIcon = MaximizeBtnIcon,
                 RestoreBtnIcon = RestoreBtnIcon,
                 DefaultMaximized = DefaultMaximized,
                 Resizable = Resizable,
-                CreateByService = false,
-                Visible = Visible,
-                Style = Style,
-                ClassName = ClassMapper.Class,
+                ForceRender = ForceRender,
+                CreateByService = ModalRef?.Config.CreateByService ?? false,
             };
-
-            options.ConfirmLoading = ConfirmLoading;
 
             return options;
         }
@@ -322,46 +412,15 @@ namespace AntDesign
 
         private bool _firstShow = true;
 
-        private ModalRef _modalRef;
-
-        public override async Task SetParametersAsync(ParameterView parameters)
-        {
-            var visibleChanged = parameters.IsParameterChanged(nameof(Visible), Visible, out var newVisible);
-
-            parameters.SetParameterProperties(this);
-
-            if (_modalRef == null)
-            {
-                var options = BuildDialogOptions();
-                _modalRef = new ModalRef(options, ModalService);
-            }
-            else
-            {
-                _modalRef.UpdateConfig(BuildDialogOptions());
-            }
-
-            if (visibleChanged)
-            {
-                if (newVisible)
-                {
-                    await _modalRef?.OpenAsync();
-                }
-                else
-                {
-                    await _modalRef?.CloseAsync();
-                }
-            }
-        }
-
         private async Task OnAfterDialogShow()
         {
             if (!_hasFocus)
             {
-                await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{_modalRef.Dialog.SentinelStart}");
+                await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{_dialogWrapper.Dialog.SentinelStart}");
                 _hasFocus = true;
-                if (_modalRef?.OnOpen != null)
+                if (ModalRef?.OnOpen != null)
                 {
-                    await _modalRef.OnOpen();
+                    await ModalRef.OnOpen();
                 }
             }
         }
@@ -369,68 +428,9 @@ namespace AntDesign
         private async Task OnAfterHide()
         {
             _hasFocus = false;
-            if (_modalRef?.OnClose != null)
+            if (ModalRef?.OnClose != null)
             {
-                await _modalRef.OnClose();
-            }
-            if (AfterClose != null)
-            {
-                await AfterClose.Invoke();
-            }
-        }
-
-        private async Task HandleOnCancel(MouseEventArgs e)
-        {
-            var args = new ModalClosingEventArgs(e, false);
-
-            var modalTemplate = (_modalRef as IFeedbackRef)?.ModalTemplate;
-            if (modalTemplate != null)
-                await modalTemplate.OnFeedbackCancelAsync(args);
-            if (!args.Cancel)
-            {
-                await (_modalRef?.OnCancel?.Invoke() ?? Task.CompletedTask);
-
-                await _modalRef.CloseAsync();
-
-                Visible = false;
-                if (VisibleChanged.HasDelegate)
-                {
-                    await VisibleChanged.InvokeAsync(false);
-                }
-
-                if (OnCancel.HasDelegate)
-                {
-                    await OnCancel.InvokeAsync(e);
-                }
-            }
-        }
-
-        private async Task HandleOnOk(MouseEventArgs e)
-        {
-            var args = new ModalClosingEventArgs(e, false);
-
-            var modalTemplate = (_modalRef as IFeedbackRef)?.ModalTemplate;
-            if (modalTemplate != null)
-                await modalTemplate.OnFeedbackOkAsync(args);
-            if (!args.Cancel)
-            {
-                await (_modalRef?.OnOk?.Invoke() ?? Task.CompletedTask);
-
-                if (OnOk.HasDelegate)
-                {
-                    await OnOk.InvokeAsync(e);
-                }
-
-                await _modalRef.CloseAsync();
-                if (VisibleChanged.HasDelegate)
-                {
-                    await VisibleChanged.InvokeAsync(false);
-                }
-            }
-            else
-            {
-                ConfirmLoading = false;
-                await InvokeStateHasChangedAsync();
+                await ModalRef.OnClose();
             }
         }
 

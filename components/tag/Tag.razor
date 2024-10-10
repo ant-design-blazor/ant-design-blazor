@@ -6,7 +6,7 @@
     <span class="@ClassMapper.Class" style="@_style" id="@Id" @ref="Ref" @onclick="ClickTag">
         @if (!string.IsNullOrEmpty(Icon))
         {
-            <Icon Type="@Icon"></Icon>
+            <Icon Type="@Icon" Theme="@IconTheme"></Icon>
         }
         @ChildContent
         @if (Closable)

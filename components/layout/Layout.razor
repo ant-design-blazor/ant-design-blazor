@@ -1,37 +1,8 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-
 <CascadingValue Value="this" IsFixed="@true">
     <section class="@ClassMapper.Class" style="@Style" id="@Id">
         @ChildContent
     </section>
 </CascadingValue>
-@_styleContent
-@code
-     {
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
-
-    private bool _hasSider;
-
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        var prefixCls = "ant-layout";
-        var hashId = UseStyle(prefixCls, LayoutStyle.UseComponentStyle);
-        ClassMapper
-            .Add(prefixCls)
-            .Add(hashId)
-            .If($"{prefixCls}-has-sider", () => _hasSider)
-            .If($"{prefixCls}-rtl", () => RTL);
-    }
-
-    internal void HasSider()
-    {
-        _hasSider = true;
-        StateHasChanged();
-    }
-
-}

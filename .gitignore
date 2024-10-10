@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# This file will contain settings we don't want committed to GIT
+appsettings.private.json
+
 # User-specific files
 *.rsuser
 *.suo
@@ -355,3 +358,5 @@ scripts/previewEditor/index.html
 /tests/AntDesign.Tests.Js/coverage.xml
 /lib
 .history
+/components/LocalizedIntellisenseFiles/AntDesign.xml
+components/LocalizedIntellisenseFiles/AntDesign.xml

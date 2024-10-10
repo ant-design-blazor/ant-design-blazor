@@ -5,20 +5,49 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Timers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+        <para>A panel which slides in from the edge of the screen.</para>
+
+        <h2>When To Use</h2>
+        <para>
+            A Drawer is a panel that is typically overlaid on top of a page and slides in from the side.
+            It contains a set of information or actions.
+            Since the user can interact with the Drawer without leaving the current page, tasks can be achieved more efficiently within the same context.
+        </para>
+        <list type="bullet">
+            <item>Use a Form to create or edit a set of information.</item>
+            <item>Processing subtasks. When subtasks are too heavy for a Popover and we still want to keep the subtasks in the context of the main task, Drawer comes very handy.</item>
+            <item>When the same Form is needed in multiple places.</item>
+        </list>
+    </summary>
+    <seealso cref="DrawerService" />
+    <seealso cref="DrawerOptions" />
+    <seealso cref="DrawerRef" />
+     */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg", Title = "Drawer", SubTitle = "抽屉")]
     public partial class Drawer : AntDomComponentBase
     {
         #region Parameters
 
+        [CascadingParameter(Name = "FromContainer")]
+        private DrawerRef DrawerRef { get; set; }
+
+        /// <summary>
+        /// The content of Drawer.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// The content of Drawer. <para>If <see cref="Content"/> is a string, it will be rendered as HTML.</para>
+        /// </summary>
         [Parameter]
         public OneOf<RenderFragment, string> Content
         {
@@ -31,57 +60,36 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// <para>
-        /// 是否显示右上角的关闭按钮
-        /// </para>
-        /// <para>
         /// Whether a close (x) button is visible on top right of the Drawer dialog or not.
-        /// </para>
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Closable { get; set; } = true;
 
         /// <summary>
-        /// <para>
-        /// 点击蒙层是否允许关闭
-        /// </para>
-        /// <para>
         /// Clicking on the mask (area outside the Drawer) to close the Drawer or not.
-        /// </para>
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool MaskClosable { get; set; } = true;
 
         /// <summary>
-        /// <para>
-        /// 是否显示蒙层
-        /// </para>
-        /// <para>
         /// Whether to show mask or not.
-        /// </para>
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Mask { get; set; } = true;
 
         /// <summary>
-        /// <para>
-        /// 蒙层样式
-        /// </para>
-        /// <para>
         /// Style for Drawer's mask element.
-        /// </para>
         /// </summary>
         [Parameter]
         public string MaskStyle { get; set; }
 
         /// <summary>
-        /// <para>
-        /// 是否支持键盘 esc 关闭
-        /// </para>
-        /// <para>
         /// Whether to support keyboard esc off
-        /// </para>
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Keyboard { get; set; } = true;
 
@@ -92,12 +100,7 @@ namespace AntDesign
         private OneOf<RenderFragment, string> _title;
 
         /// <summary>
-        /// <para>
-        /// 标题
-        /// </para>
-        /// <para>
         /// The title for Drawer.
-        /// </para>
         /// </summary>
         [Parameter]
         public OneOf<RenderFragment, string> Title
@@ -119,79 +122,48 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// <para>
-        /// Drawer 的位置，字符串, "left" | "right" | "top" | "bottom"
-        /// </para>
-        /// <para>
         /// The placement of the Drawer, option could be left, top, right, bottom
-        /// </para>
         /// </summary>
+        /// <default value="right" />
         [Parameter]
         public string Placement { get; set; } = "right";
 
         /// <summary>
-        /// <para>
-        /// Drawer body 样式
-        /// </para>
-        /// <para>
         /// Body style for modal body element. Such as height, padding etc.
-        /// </para>
         /// </summary>
         [Parameter]
         public string BodyStyle { get; set; }
 
         /// <summary>
-        /// <para>
-        /// Drawer header 抽屉头
-        /// </para>
-        /// <para>
         /// Header style for modal header element. Such as height, padding etc.
-        /// </para>
         /// </summary>
         [Parameter]
         public string HeaderStyle { get; set; }
 
         /// <summary>
-        /// <para>
-        /// Drawer对话框外层容器的类名
-        /// </para>
-        /// <para>
-        /// The class name of the container of the Drawer dialog.
-        /// </para>
+        /// The class name of the container of the Drawer dialog. 
         /// </summary>
         [Parameter]
         public string WrapClassName { get; set; }
 
         /// <summary>
-        /// <para>
-        /// 宽度，仅当 <see cref="Placement"/> 为 "left" 或 "right" 时生效
-        /// </para>
-        /// <para>
         /// Width of the Drawer dialog, only when placement is 'left' or 'right'.
-        /// </para>
         /// </summary>
+        /// <default value="256" />
         [Parameter]
-        public int Width { get; set; } = 256;
+        public string Width { get; set; } = "256";
 
         /// <summary>
-        /// <para>
-        /// 高度，仅当 <see cref="Placement"/> 为 "top" 或 "bottom" 时生效
-        /// </para>
-        /// <para>
         /// Height of the Drawer dialog, only when placement is 'top' or 'bottom'.
-        /// </para>
         /// </summary>
+        /// <default value="256" />
         [Parameter]
-        public int Height { get; set; } = 256;
+        public string Height { get; set; } = "256";
 
         /// <summary>
-        /// <para>
-        /// 设置 Drawer 的 z-index
-        /// </para>
-        /// <para>
         /// The z-index of the Drawer.
-        /// </para>
         /// </summary>
+        /// <default value="1000" />
         [Parameter]
         public int ZIndex
         {
@@ -209,35 +181,23 @@ namespace AntDesign
         private string InnerZIndexStyle => (_status.IsOpen() || _status == ComponentStatus.Closing) ? _zIndexStyle : "z-index:-9999;";
 
         /// <summary>
-        /// <para>
-        /// X 轴方向的偏移量，只在方向为 'left'或'right' 时生效.
-        /// </para>
-        /// <para>
         /// The the X coordinate offset(px), only when placement is 'left' or 'right'.
-        /// </para>
         /// </summary>
+        /// <default value="0" />
         [Parameter]
         public int OffsetX { get; set; } = 0;
 
         /// <summary>
-        /// <para>
-        /// Y 轴方向的偏移量，只在方向为 'top'或'bottom' 时生效
-        /// </para>
-        /// <para>
         /// The the Y coordinate offset(px), only when placement is 'top' or 'bottom'.
-        /// </para>
         /// </summary>
+        /// <default value="0" />
         [Parameter]
         public int OffsetY { get; set; } = 0;
 
         /// <summary>
-        /// <para>
-        /// Drawer 是否可见
-        /// </para>
-        /// <para>
         /// Whether the Drawer dialog is visible or not.
-        /// </para>
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Visible
         {
@@ -263,23 +223,13 @@ namespace AntDesign
         public EventCallback<bool> VisibleChanged { get; set; }
 
         /// <summary>
-        /// <para>
-        /// 在 Drawer 打开前的回调事件
-        /// </para>
-        /// <para>
         /// Specify a callback that will be called before drawer displayed
-        /// </para>
         /// </summary>
         [Parameter]
-        public Func<Task> OnOpen { get; set; }
+        public EventCallback OnOpen { get; set; }
 
         /// <summary>
-        /// <para>
-        /// 在 关闭 前的回调事件，应当在 OnClose 将 <see cref="Visible"/> 设置为false
-        /// </para>
-        /// <para>
         /// Specify a callback that will be called when a user clicks mask, close button or Cancel button.
-        /// </para>
         /// </summary>
         [Parameter]
         public EventCallback OnClose { get; set; }
@@ -413,9 +363,9 @@ namespace AntDesign
                     {
                         _status = ComponentStatus.Opened;
 
-                        if (OnOpen != null)
+                        if (OnOpen.HasDelegate)
                         {
-                            await OnOpen.Invoke();
+                            await OnOpen.InvokeAsync(this);
                         }
 
                         if (Visible == false && VisibleChanged.HasDelegate)
@@ -423,7 +373,7 @@ namespace AntDesign
                             await VisibleChanged.InvokeAsync(true);
                         }
 
-                        _hasInvokeClosed = false;
+                        _hasInvokeClosed = true;// avoid closing again
                         if (string.IsNullOrWhiteSpace(Style))
                         {
                             await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
@@ -433,9 +383,6 @@ namespace AntDesign
                             await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
                         }
 
-                        CalcDrawerStyle();
-                        StateHasChanged();
-                        await Task.Delay(3000);
                         _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform)
                             ? $"transform: {OffsetTransform};"
                             : string.Empty;
@@ -444,12 +391,13 @@ namespace AntDesign
                     }
                 case ComponentStatus.Closing:
                     {
-                        _status = ComponentStatus.Closed;
                         StateHasChanged();
                         if (!_hasInvokeClosed)
                         {
-                            await HandleClose(true);
+                            await HandleClose();
                         }
+
+                        _status = ComponentStatus.Closed;
                         break;
                     }
             }
@@ -463,11 +411,11 @@ namespace AntDesign
         /// trigger when mask is clicked
         /// </summary>
         /// <returns></returns>
-        private async Task MaskClick(MouseEventArgs _)
+        private void MaskClick(MouseEventArgs _)
         {
             if (MaskClosable && Mask)
             {
-                await HandleClose();
+                CloseClick();
             }
         }
 
@@ -475,20 +423,20 @@ namespace AntDesign
         /// trigger when Closer is clicked
         /// </summary>
         /// <returns></returns>
-        private async Task CloseClick()
+        private void CloseClick()
         {
-            await HandleClose();
+            _hasInvokeClosed = false;
+            _status = ComponentStatus.Closing;
         }
 
         /// <summary>
         /// clean-up after close
         /// </summary>
-        /// <param name="isChangeByParamater"></param>
         /// <returns></returns>
-        private async Task HandleClose(bool isChangeByParamater = false)
+        private async Task HandleClose()
         {
             _hasInvokeClosed = true;
-            if (!isChangeByParamater && OnClose.HasDelegate)
+            if (OnClose.HasDelegate)
             {
                 await OnClose.InvokeAsync(this);
             }
@@ -496,7 +444,13 @@ namespace AntDesign
             {
                 await VisibleChanged.InvokeAsync(false);
             }
+            _isOpen = false;
             await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+
+            if (DrawerRef != null)
+            {
+                await DrawerRef.CloseAsync();
+            }
         }
 
         private void CalcDrawerStyle()

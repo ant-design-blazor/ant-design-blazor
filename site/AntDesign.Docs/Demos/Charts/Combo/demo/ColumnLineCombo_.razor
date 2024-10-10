@@ -5,28 +5,28 @@
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
-            <ColumnLine Data="@(new[] {uvData, transformData})" Config="config1" />
+            <DualAxes Data="@(new[] {uvData, transformData})" Config="config1" />
         </ChildContent>
     </TabPane>
 
     <TabPane Key="2">
         <TabTemplate>示例2</TabTemplate>
         <ChildContent>
-            <ColumnLine Data="@(new[] {uvData2, transformData2})" Config="config2" />
+            <DualAxes Data="@(new[] {uvData2, transformData2})" Config="config2" />
         </ChildContent>
     </TabPane>
 
     <TabPane Key="3">
         <TabTemplate>示例3</TabTemplate>
         <ChildContent>
-            <ColumnLine Data="@(new[] {uvData3, transformData3})" Config="config3" />
+            <DualAxes Data="@(new[] {uvData3, transformData3})" Config="config3" />
         </ChildContent>
     </TabPane>
 
     <TabPane Key="4">
         <TabTemplate>示例4</TabTemplate>
         <ChildContent>
-            <ColumnLine Data="@(new[] {uvData4, transformData4})" Config="config4" />
+            <DualAxes Data="@(new[] {uvData4, transformData4})" Config="config4" />
         </ChildContent>
     </TabPane>
 </Tabs>
@@ -52,7 +52,7 @@
         new {time = "2019-07", count = 220}
         };
 
-    readonly ColumnLineConfig config1 = new ColumnLineConfig
+    readonly DualAxesConfig config1 = new DualAxesConfig
     {
         Title = new Title
         {
@@ -65,7 +65,23 @@
             Text = "柱线混合图表"
         },
         XField = "time",
-        YField = new[] { "value", "count" }
+        YField = new[] { "value", "count" },
+        GeometryOptions = new object[]
+            {
+            new
+            {
+                Geometry = "column",
+                Color = "#586bce"
+            },
+            new
+            {
+                Geometry = "line",
+                LineStyle = new
+                {
+                    LineWidth = 2,
+                },
+            },
+        },
     };
 
     #endregion 示例1
@@ -90,7 +106,7 @@
         new {time = "2019-07", count = 220}
         };
 
-    readonly ColumnLineConfig config2 = new ColumnLineConfig
+    readonly DualAxesConfig config2 = new DualAxesConfig
     {
         Title = new Title
         {
@@ -104,22 +120,22 @@
         },
         XField = "time",
         YField = new[] { "value", "count" },
-        ColumnConfig = new ColumnConfig
+        GeometryOptions = new object[]
         {
-            Color = "#586bce"
-        },
-        LineConfig = new LineConfig
-        {
-            Color = "#29cae4",
-            Point = new LineViewConfigPoint
+            new
             {
-                Visible = true,
+                Geometry = "column",
+                Color = "#586bce"
             },
-            Label = new Label
+            new
             {
-                Visible = true,
-            }
-        }
+                Geometry = "line",
+                LineStyle = new
+                {
+                    LineWidth = 2,
+                },
+            },
+        },
 
     };
 
@@ -145,7 +161,7 @@
         new {time = "2019-07", count = 220}
         };
 
-    readonly ColumnLineConfig config3 = new ColumnLineConfig
+    readonly DualAxesConfig config3 = new DualAxesConfig
     {
         Title = new Title
         {
@@ -159,17 +175,22 @@
         },
         XField = "time",
         YField = new[] { "value", "count" },
-        YAxis = new ComboYAxis
+        GeometryOptions = new object[]
         {
-            LeftConfig = new ComboYAxisConfig
+            new
             {
-                ColorMapping = false,
+                Geometry = "column",
+                Color = "#586bce"
             },
-            RightConfig = new ComboYAxisConfig
+            new
             {
-                ColorMapping = false,
-            }
-        }
+                Geometry = "line",
+                LineStyle = new
+                {
+                    LineWidth = 2,
+                },
+            },
+        },
 
     };
 
@@ -205,7 +226,7 @@
           new { time =  "2019-07", count =  200, name =  "c" },
         };
 
-    readonly ColumnLineConfig config4 = new ColumnLineConfig
+    readonly DualAxesConfig config4 = new DualAxesConfig
     {
         Title = new Title
         {
@@ -221,12 +242,22 @@
         },
         XField = "time",
         YField = new[] { "value", "count" },
-        ColumnConfig = new ColumnConfig
+        GeometryOptions = new object[]
         {
-            Color = "#586bce"
+            new
+            {
+                Geometry = "column",
+                Color = "#586bce"
+            },
+            new
+            {
+                Geometry = "line",
+                LineStyle = new
+                {
+                    LineWidth = 2,
+                },
+            },
         },
-        LineSeriesField = "name"
-
     };
 
     #endregion 示例4

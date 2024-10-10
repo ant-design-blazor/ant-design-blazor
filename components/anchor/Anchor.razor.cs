@@ -1,8 +1,10 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -11,6 +13,14 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// <para>Hyperlinks to scroll on one page.</para>
+    /// 
+    /// <h2>When To Use</h2>
+    /// <para>For displaying anchor hyperlinks on page and jumping between them.</para>
+    /// </summary>
+    /// <seealso cref="AnchorLink" />
+    [Documentation(DocumentationCategory.Components, DocumentationType.Other, "https://gw.alipayobjects.com/zos/alicdn/_1-C1JwsC/Anchor.svg", Title = "Anchor", SubTitle = "锚点")]
     public partial class Anchor : AntDomComponentBase, IAnchor
     {
         private string _ballClass = "ant-anchor-ink-ball";
@@ -50,24 +60,30 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// The content of the component.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// Fixed mode of Anchor
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Affix { get; set; } = true;
 
         /// <summary>
         /// Bounding distance of anchor area
         /// </summary>
+        /// <default value="5" />
         [Parameter]
         public int Bounds { get; set; } = 5;
 
         /// <summary>
         /// Scrolling container
         /// </summary>
+        /// <default value="window" />
         [Parameter]
         public Func<string> GetContainer { get; set; } = () => "window";
 
@@ -80,12 +96,14 @@ namespace AntDesign
         /// <summary>
         /// Pixels to offset from top when calculating position of scroll
         /// </summary>
+        /// <default value="0" />
         [Parameter]
         public int? OffsetTop { get; set; } = 0;
 
         /// <summary>
         /// Whether show ink-balls in Fixed mode
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ShowInkInFixed { get; set; } = false;
 
@@ -107,6 +125,9 @@ namespace AntDesign
         [Parameter]
         public int? TargetOffset { get; set; }
 
+        /// <summary>
+        /// Callback executed when the anchor changes, either by click or scrolling
+        /// </summary>
         [Parameter]
         public EventCallback<string> OnChange { get; set; }
 
@@ -172,22 +193,7 @@ namespace AntDesign
             }
         }
 
-        public void Remove(AnchorLink anchorLink)
-        {
-            _links.Remove(anchorLink);
-        }
-
-        public void Add(AnchorLink anchorLink)
-        {
-            if (!_links.Where(l => !string.IsNullOrEmpty(l.Href))
-                .Select(l => l.Href)
-                .Contains(anchorLink.Href))
-            {
-                _links.Add(anchorLink);
-            }
-        }
-
-        public void Clear()
+        internal void Clear()
         {
             foreach (IAnchor link in _links)
             {
@@ -196,7 +202,7 @@ namespace AntDesign
             _links.Clear();
         }
 
-        public List<AnchorLink> FlatChildren()
+        internal List<AnchorLink> FlatChildren()
         {
             List<AnchorLink> results = new List<AnchorLink>();
 
@@ -275,7 +281,7 @@ namespace AntDesign
             }
         }
 
-        public async Task OnLinkClickAsync(MouseEventArgs args, AnchorLink anchorLink)
+        internal async Task OnLinkClickAsync(MouseEventArgs args, AnchorLink anchorLink)
         {
             await JsInvokeAsync("window.eval", $"window.location.hash='{anchorLink._hash}'");
 
@@ -300,6 +306,31 @@ namespace AntDesign
         {
             DomEventListener?.Dispose();
             base.Dispose(disposing);
+        }
+
+        void IAnchor.Add(AnchorLink anchorLink)
+        {
+            if (!_links.Where(l => !string.IsNullOrEmpty(l.Href))
+                   .Select(l => l.Href)
+                   .Contains(anchorLink.Href))
+            {
+                _links.Add(anchorLink);
+            }
+        }
+
+        void IAnchor.Remove(AnchorLink anchorLink)
+        {
+            _links.Remove(anchorLink);
+        }
+
+        void IAnchor.Clear()
+        {
+            Clear();
+        }
+
+        List<AnchorLink> IAnchor.FlatChildren()
+        {
+            return FlatChildren();
         }
     }
 }

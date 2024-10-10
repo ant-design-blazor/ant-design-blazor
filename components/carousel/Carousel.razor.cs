@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
@@ -8,6 +12,21 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+        <para>A carousel component. Scales with its container.</para>
+
+        <h2>When To Use</h2>
+
+        <list type="bullet">
+            <item>When there is a group of content on the same level.</item>
+            <item>When there is insufficient content space, it can be used to save space in the form of a revolving door.</item>
+            <item>Commonly used for a group of pictures/cards.</item>
+        </list>
+    </summary>
+    <seealso cref="CarouselSlick"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/%24C9tmj978R/Carousel.svg", Title = "Carousel", SubTitle = "走马灯")]
     public partial class Carousel : AntDomComponentBase
     {
         private const string PrefixCls = "ant-carousel";
@@ -51,6 +70,9 @@ namespace AntDesign
 
         #region Parameters
 
+        /// <summary>
+        /// Content of the carousel. Typically <see cref="CarouselSlick"/> elements
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -72,14 +94,31 @@ namespace AntDesign
         [Parameter]
         public string Effect { get; set; } = CarouselEffect.ScrollX;
 
+        [Parameter]
+        public bool Dots { get; set; }
+
+        [Parameter]
+        public string DotsClass { get; set; }
+
         #endregion Parameters
 
-        [Inject] public IDomEventListener DomEventListener { get; set; }
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
 
+        /// <summary>
+        /// Slides the carousel to the next slide
+        /// </summary>
         public void Next() => GoTo(_slicks.IndexOf(ActiveSlick) + 1);
 
+        /// <summary>
+        /// Slides the carousel to the previous slide
+        /// </summary>
         public void Previous() => GoTo(_slicks.IndexOf(ActiveSlick) - 1);
 
+        /// <summary>
+        /// Slides the carousel to the specified slide
+        /// </summary>
+        /// <param name="index"></param>
         public void GoTo(int index)
         {
             if (index >= _slicks.Count)

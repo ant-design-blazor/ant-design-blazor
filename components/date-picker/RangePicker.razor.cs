@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
+using AntDesign.core.Extensions;
+using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using AntDesign.core.Extensions;
 
 namespace AntDesign
 {
@@ -63,8 +66,33 @@ namespace AntDesign
 
         private readonly DateTime[] _pickerValuesAfterInit = new DateTime[2];
 
+        /// <summary>
+        /// Callback executed when range selected changes
+        /// </summary>
         [Parameter]
         public EventCallback<DateRangeChangedEventArgs<TValue>> OnChange { get; set; }
+
+        /// <summary>
+        /// Add focus to picker input
+        /// </summary>
+        /// <param name="index">Panel index, 0 for start, 1 for end</param>
+        /// <returns></returns>
+        [PublicApi("1.0.0")]
+        public async Task FocusAsync(int index = 0)
+        {
+            await base.Focus(index);
+        }
+
+        /// <summary>
+        /// Remove focus from picker input
+        /// </summary>
+        /// <param name="index">Panel index, 0 for start, 1 for end</param>
+        /// <returns></returns>
+        [PublicApi("1.0.0")]
+        public async Task BlurAsync(int index = 0)
+        {
+            await base.Blur(index);
+        }
 
         private bool ShowFooter => !IsShowTime && (RenderExtraFooter != null || ShowRanges);
 
@@ -168,11 +196,11 @@ namespace AntDesign
                 {
                     var otherValue = GetIndexValue(Math.Abs(index - 1));
 
-                    PickerValues[index] = Picker switch
+                    PickerValues[index] = Picker.Name switch
                     {
-                        DatePickerType.Year when DateHelper.IsSameDecade(currentValue, otherValue) => currentValue.Value,
-                        DatePickerType.Week or DatePickerType.Date when DateHelper.IsSameMonth(currentValue, otherValue) => currentValue.Value,
-                        DatePickerType.Quarter or DatePickerType.Month when DateHelper.IsSameYear(currentValue, otherValue) => currentValue.Value,
+                        DatePickerType.YEAR when DateHelper.IsSameDecade(currentValue, otherValue) => currentValue.Value,
+                        DatePickerType.WEEK or DatePickerType.DATE when DateHelper.IsSameMonth(currentValue, otherValue) => currentValue.Value,
+                        DatePickerType.QUARTER or DatePickerType.MONTH when DateHelper.IsSameYear(currentValue, otherValue) => currentValue.Value,
                         _ => GetClosingDate(currentValue.Value, -1)
                     };
                 }
@@ -383,7 +411,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public override DateTime? GetIndexValue(int index)
+        internal override DateTime? GetIndexValue(int index)
         {
             if (_pickerStatus[index].SelectedValue is null)
             {
@@ -436,7 +464,7 @@ namespace AntDesign
             return outValue == null;
         }
 
-        public override void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true)
+        internal override void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true)
         {
             if (DisabledDate(value))
             {
@@ -517,7 +545,7 @@ namespace AntDesign
 
             if (isValueChanged && startDate is not null && endDate is not null)
             {
-                CurrentValue =  DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
+                CurrentValue = DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
 
                 InvokeOnChange();
             }
@@ -532,7 +560,7 @@ namespace AntDesign
             }
         }
 
-        public override void ClearValue(int index = -1, bool closeDropdown = true)
+        internal override void ClearValue(int index = -1, bool closeDropdown = true)
         {
             _isSetPicker = false;
 
@@ -718,7 +746,7 @@ namespace AntDesign
             await OnInputClick(0);
         }
 
-        public bool ShowClear()
+        internal bool ShowClear()
         {
             return CurrentValue is Array array && (array.GetValue(0) is not null || array.GetValue(1) is not null) && AllowClear;
         }

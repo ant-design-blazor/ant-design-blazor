@@ -40,13 +40,13 @@
     private void OnSelectYear(ChangeEventArgs args, CalendarHeaderRenderArgs renderArgs)
     {
         int year = Convert.ToInt32(args.Value);
-        renderArgs.OnChange.InvokeAsync(DateHelper.CombineNewDate(renderArgs.Value, year: year));
+        renderArgs.OnChange(DateHelper.CombineNewDate(renderArgs.Value, year: year));
     }
 
     private void OnSelectMonth(ChangeEventArgs args, CalendarHeaderRenderArgs renderArgs)
     {
         int month = Convert.ToInt32(args.Value);
-        renderArgs.OnChange.InvokeAsync(DateHelper.CombineNewDate(renderArgs.Value, month: month));
+        renderArgs.OnChange(DateHelper.CombineNewDate(renderArgs.Value, month: month));
     }
 
     private void OnTypeChange()
@@ -70,9 +70,9 @@
                     </Title>
                     <Row Gutter="8">
                         <AntDesign.Col>
-                            <RadioGroup size="small" OnChange="value => args.OnTypeChange.InvokeAsync(value)" Value="@args.Type" TValue="string">
-                                <Radio RadioButton Value="@DatePickerType.Month">Month</Radio>
-                                <Radio RadioButton Value="@DatePickerType.Year">Year</Radio>
+                            <RadioGroup size="small" OnChange="value => args.OnTypeChange(value)" Value="@args.Type" TValue="CalendarMode">
+                                <Radio RadioButton Value="@CalendarMode.Month">Month</Radio>
+                                <Radio RadioButton Value="@CalendarMode.Year">Year</Radio>
                             </RadioGroup>
                         </AntDesign.Col>
                         <AntDesign.Col>

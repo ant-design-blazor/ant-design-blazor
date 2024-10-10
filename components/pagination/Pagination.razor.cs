@@ -1,28 +1,58 @@
-﻿#nullable enable
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+#nullable enable
 
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AntDesign.Internal;
-using AntDesign.Locales;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>A long list can be divided into several pages using `Pagination`, and only one page will be loaded at a time.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>When it will take a long time to load/render all items.</item>
+        <item>If you want to browse the data by navigating through pages.</item>
+    </list>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/1vqv2bj68/Pagination.svg", Columns = 1, Title = "Pagination", SubTitle = "分页")]
     public partial class Pagination : AntDomComponentBase
     {
+        /// <summary>
+        /// Total number of data items	
+        /// </summary>
+        /// <default value="0" />
         [Parameter]
         public int Total { get; set; } = 0;
 
+        /// <summary>
+        /// Default initial page number	
+        /// </summary>
+        /// <default value="1" />
         [Parameter]
         public int DefaultCurrent { get; set; } = InitCurrent;
 
+        /// <summary>
+        /// Disable pagination
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; } = false;
 
+        /// <summary>
+        /// Current page number
+        /// </summary>
+        /// <default value="1" />
         [Parameter]
         public int Current
         {
@@ -42,9 +72,17 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Default number of data items per page
+        /// </summary>
+        /// <default value="10" />
         [Parameter]
         public int DefaultPageSize { get; set; } = InitPageSize;
 
+        /// <summary>
+        /// Number of data items per page
+        /// </summary>
+        /// <default value="10" />
         [Parameter]
         public int PageSize
         {
@@ -70,12 +108,23 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Called when the page number is changed, and it takes the resulting page number and pageSize as its arguments
+        /// </summary>
         [Parameter]
         public EventCallback<PaginationEventArgs> OnChange { get; set; }
 
+        /// <summary>
+        /// Whether to hide pager on single page
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool HideOnSinglePage { get; set; } = false;
 
+        /// <summary>
+        /// Determine whether to show PageSize select
+        /// </summary>
+        /// <default value="true when Total >= TotalBoundaryShowSizeChanger" />
         [Parameter]
         public bool ShowSizeChanger
         {
@@ -86,63 +135,133 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Specify the sizeChanger options
+        /// </summary>
+        /// <default value="10, 20, 50, 100" />
         [Parameter]
         public int[] PageSizeOptions { get; set; } = PaginationOptions.DefaultPageSizeOptions;
 
+        /// <summary>
+        /// Called when PageSize is changed
+        /// </summary>
         [Parameter]
         public EventCallback<PaginationEventArgs> OnShowSizeChange { get; set; }
 
+        /// <summary>
+        /// Determine whether you can jump to pages directly
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ShowQuickJumper { get; set; } = false;
 
+        /// <summary>
+        /// Quick jumper confirm button render fragment
+        /// </summary>
         [Parameter]
         public RenderFragment? GoButton { get; set; }
 
+        /// <summary>
+        /// Show page item's title
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool ShowTitle { get; set; } = true;
 
+        /// <summary>
+        /// To display the total number and range
+        /// </summary>
         [Parameter]
         public OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>>? ShowTotal { get; set; }
 
+        /// <summary>
+        /// Specify the size of Pagination, can be set to small.
+        /// </summary>
         [Parameter]
         public PaginationSize Size { get; set; }
 
+        /// <summary>
+        /// (Not implemented) If Size is not specified, Pagination would resize according to the width of the window
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Responsive { get; set; } = true;
 
+        /// <summary>
+        /// Whether to use simple mode
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Simple { get; set; } = false;
 
+        /// <summary>
+        /// Localization options
+        /// </summary>
+        /// <default value="LocaleProvider.CurrentLocale.Pagination" />
         [Parameter]
         public PaginationLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Pagination;
 
+        /// <summary>
+        /// Custom rendering for page item
+        /// </summary>
         [Parameter]
         public RenderFragment<PaginationItemRenderContext>? ItemRender { get; set; } = context => context.OriginalElement(context);
 
+        /// <summary>
+        /// Show less page items
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ShowLessItems { get; set; } = false;
 
+        /// <summary>
+        /// Show or hide the next/previous buttons
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool ShowPrevNextJumpers { get; set; } = true;
 
+        /// <summary>
+        /// Language direction
+        /// </summary>
+        /// <default value="ltr" />
         [Parameter]
         public string Direction { get; set; } = "ltr";
 
+        /// <summary>
+        /// Previous button
+        /// </summary>
         [Parameter]
         public RenderFragment<PaginationItemRenderContext>? PrevIcon { get; set; }
 
+        /// <summary>
+        /// Next button
+        /// </summary>
         [Parameter]
         public RenderFragment<PaginationItemRenderContext>? NextIcon { get; set; }
 
+        /// <summary>
+        /// Jump previous button
+        /// </summary>
         [Parameter]
         public RenderFragment<PaginationItemRenderContext>? JumpPrevIcon { get; set; }
 
+        /// <summary>
+        /// Jump next icon
+        /// </summary>
         [Parameter]
         public RenderFragment<PaginationItemRenderContext>? JumpNextIcon { get; set; }
 
+        /// <summary>
+        /// Used to determine if the size changer should show using the default logic. Ignored if ShowSizeChanger provided.
+        /// </summary>
+        /// <default value="50" />
         [Parameter]
         public int TotalBoundaryShowSizeChanger { get; set; } = 50;
 
+        /// <summary>
+        /// Any other parameters passed in get splatted onto the container element
+        /// </summary>
         [Parameter(CaptureUnmatchedValues = true)]
         public Dictionary<string, object>? UnmatchedAttributes { get; set; }
 

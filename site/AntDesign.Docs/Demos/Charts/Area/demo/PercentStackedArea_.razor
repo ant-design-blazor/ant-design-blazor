@@ -5,7 +5,7 @@
     <TabPane Key="1">
         <TabTemplate>示例1</TabTemplate>
         <ChildContent>
-            <PercentStackedArea Data="data1" Config="config1"/>
+            <Area Data="data1" Config="config1"/>
         </ChildContent>
     </TabPane>
 
@@ -145,7 +145,7 @@
         }
     };
 
-    readonly PercentStackedAreaConfig config1 = new PercentStackedAreaConfig
+    readonly AreaConfig config1 = new AreaConfig
     {
         Title = new Title
         {
@@ -161,7 +161,7 @@
         },
         XField = "year",
         YField = "value",
-        StackField = "country",
+        SeriesField = "country",
         Color = new[] {"#82d1de", "#cb302d", "#e3ca8c"},
         AreaStyle = new GraphicStyle
         {

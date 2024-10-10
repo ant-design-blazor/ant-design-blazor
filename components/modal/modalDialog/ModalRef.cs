@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
@@ -11,8 +12,10 @@ namespace AntDesign
     /// </summary>
     public class ModalRef : FeedbackRefWithOkCancelBase
     {
+        /// <summary>
+        /// The modal options
+        /// </summary>
         public ModalOptions Config { get; private set; }
-        internal Dialog Dialog { get; set; }
         private readonly ModalService _service;
 
         internal ModalRef(ModalOptions config, ModalService modalService)
@@ -21,22 +24,20 @@ namespace AntDesign
             _service = modalService;
         }
 
-        internal RenderFragment Render => Modal.GetModalRender(this);
-
-        internal void UpdateConfig(ModalOptions config)
-        {
-            Config = config;
-            _service.UpdateModal(this);
-        }
-
         /// <summary>
         /// open the Modal dialog
         /// </summary>
         /// <returns></returns>
         public override async Task OpenAsync()
         {
+            if (!Config.Visible)
+            {
+                Config.Visible = true;
+            }
+
             await _service.CreateOrOpenModalAsync(this);
         }
+
 
         /// <summary>
         /// close the Modal dialog

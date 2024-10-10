@@ -25,7 +25,8 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/%24C9tmj978R/Carousel.svg
 | Autoplay   | 是否自动切换 | TimeSpan         |
 | BeforeChange    | (ToDo)切换面板的回调 | function(from, to)         |-       |
 | DotPosition |	面板指示点位置，可选 `top` `bottom` `left` `right` | string  | -  |
-| Dots | (ToDo)是否显示面板指示点，如果为 object 则同时可以指定 dotsClass    | string | -  |
+| Dots | 是否显示面板指示点    | bool | -  |
+| DotsClass | 面板指示点样式类名 | string        | -         |
 | Easing | (ToDo)动画效果   | string        | -         |
 | Effect | 动画效果函数，可取 scrollx, fade | string        | -         |
 

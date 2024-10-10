@@ -123,7 +123,8 @@
       "greaterThanOrEquals": "Greater Than Or Equals",
       "lessThanOrEquals": "Less Than Or Equals",
       "isNull": "Is Null",
-      "isNotNull": "Is Not Null"
+      "isNotNull": "Is Not Null",
+      "between": "Between"
     }
   },
   "Modal": {
@@ -157,6 +158,56 @@
   },
   "Empty": { "description": "No data" },
   "Form": {
-    "optional": "(optional)"
+    "optional": "(optional)",
+    "defaultValidateMessages": {
+      "default": "Field validation error for ${label}",
+      "required": "Please enter ${label}",
+      "enum": "${label} must be one of [${enum}]",
+      "whitespace": "${label} cannot be a blank character",
+      "date": {
+        "format": "${label} date format is invalid",
+        "parse": "${label} cannot be converted to a date",
+        "invalid": "${label} is an invalid date"
+      },
+      "types": {
+        "string": "${label} is not a valid ${type}",
+        "method": "${label} is not a valid ${type}",
+        "array": "${label} is not a valid ${type}",
+        "object": "${label} is not a valid ${type}",
+        "number": "${label} is not a valid ${type}",
+        "date": "${label} is not a valid ${type}",
+        "boolean": "${label} is not a valid ${type}",
+        "integer": "${label} is not a valid ${type}",
+        "float": "${label} is not a valid ${type}",
+        "regexp": "${label} is not a valid ${type}",
+        "email": "${label} is not a valid ${type}",
+        "url": "${label} is not a valid ${type}",
+        "hex": "${label} is not a valid ${type}"
+      },
+      "string": {
+        "len": "${label} must be ${len} characters",
+        "min": "${label} must be at least ${min} characters",
+        "max": "${label} must be up to ${max} characters",
+        "range": "${label} must be between ${min}-${max} characters"
+      },
+      "number": {
+        "len": "${label} must be equal to ${len}",
+        "min": "${label} must be minimum ${min}",
+        "max": "${label} must be maximum ${max}",
+        "range": "${label} must be between ${min}-${max}"
+      },
+      "array": {
+        "len": "Must be ${len} ${label}",
+        "min": "At least ${min} ${label}",
+        "max": "At most ${max} ${label}",
+        "range": "The amount of ${label} must be between ${min}-${max}"
+      },
+      "pattern": {
+        "mismatch": "${label} does not match the pattern ${pattern}"
+      }
+    }
+  },
+  "Image": {
+    "preview": "Preview"
   }
 }
