@@ -108,7 +108,7 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
-            string prefixCls = "ant-radio-group";
+            string prefixCls = "ant-checkbox-group";
             ClassMapper
                 .Add(prefixCls)
                 .If($"{prefixCls}-large", () => Size == ButtonSize.Large)
