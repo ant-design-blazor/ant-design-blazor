@@ -140,10 +140,11 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Placement of the overlay
+        /// Placement of the overlay. Defaults to <see cref="Placement.BottomLeft"/>.
         /// </summary>
+        /// <default value="Placement.BottomLeft" />
         [Parameter]
-        public Placement Placement { get; set; }
+        public Placement Placement { get; set; } = Placement.BottomLeft;
 
         private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
