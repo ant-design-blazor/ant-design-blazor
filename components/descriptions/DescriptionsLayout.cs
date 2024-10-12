@@ -8,6 +8,6 @@ namespace AntDesign
     {
         public const string Horizontal = "horizontal";
         public const string Vertical = "vertical";
-
+        public const string Complex = "complex";
     }
 }

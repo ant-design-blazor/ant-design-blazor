@@ -21,5 +21,9 @@ namespace AntDesign
         public string LabelStyle { get; set; }
 
         public string ContentStyle { get; set; }
+
+        public bool Colon { get; set; }
+
+        public bool Vertical { get; set; }
     }
 }

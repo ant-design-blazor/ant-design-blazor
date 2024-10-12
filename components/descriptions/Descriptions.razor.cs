@@ -34,7 +34,7 @@ namespace AntDesign
         public bool Bordered { get; set; } = false;
 
         /// <summary>
-        /// Layout - Horizontal or Vertical
+        /// Layout - Horizontal or Vertical or complex
         /// </summary>
         /// <default value="DescriptionsLayout.Horizontal"/>
         [Parameter]
