@@ -365,8 +365,7 @@ namespace AntDesign
                     _selectedNodes.RemoveAll(x => x.Level >= cascaderNode.Level);
                     _selectedNodes.Add(cascaderNode);
                 }
-                //_selectedNodes.Clear();
-                //SetSelectedNodeWithParent(cascaderNode, ref _selectedNodes);
+
                 _renderNodes = _selectedNodes;
 
                 if (ChangeOnSelect || !cascaderNode.HasChildren)
@@ -388,8 +387,6 @@ namespace AntDesign
                     _hoverSelectedNodes.Add(cascaderNode);
                 }
 
-                //_hoverSelectedNodes.Clear();
-                //SetSelectedNodeWithParent(cascaderNode, ref _hoverSelectedNodes);
                 _renderNodes = _hoverSelectedNodes;
             }
             _renderNodes.Sort((x, y) => x.Level.CompareTo(y.Level));  //Level 升序排序
