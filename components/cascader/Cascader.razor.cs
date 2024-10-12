@@ -217,7 +217,6 @@ namespace AntDesign
         protected override void OnValueChange(string value)
         {
             base.OnValueChange(value);
-            //RefreshNodeValue(value);
             RefreshDisplayText();
         }
 
