@@ -140,10 +140,11 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Placement of the overlay
+        /// Placement of the overlay. Defaults to <see cref="Placement.BottomLeft"/>.
         /// </summary>
+        /// <default value="Placement.BottomLeft" />
         [Parameter]
-        public Placement Placement { get; set; }
+        public Placement Placement { get; set; } = Placement.BottomLeft;
 
         private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
@@ -216,7 +217,6 @@ namespace AntDesign
         protected override void OnValueChange(string value)
         {
             base.OnValueChange(value);
-            RefreshNodeValue(value);
             RefreshDisplayText();
         }
 
@@ -354,8 +354,17 @@ namespace AntDesign
             _selectedType = selectedType;
             if (selectedType == SelectedTypeEnum.Click)
             {
-                _selectedNodes.Clear();
-                SetSelectedNodeWithParent(cascaderNode, ref _selectedNodes);
+                var index = _selectedNodes.FindIndex(x => x.Value == cascaderNode.Value);
+                if (index != -1)
+                {
+                    _selectedNodes.RemoveRange(index, _selectedNodes.Count - index);
+                }
+                else
+                {
+                    _selectedNodes.RemoveAll(x => x.Level >= cascaderNode.Level);
+                    _selectedNodes.Add(cascaderNode);
+                }
+
                 _renderNodes = _selectedNodes;
 
                 if (ChangeOnSelect || !cascaderNode.HasChildren)
@@ -365,8 +374,18 @@ namespace AntDesign
             }
             else
             {
-                _hoverSelectedNodes.Clear();
-                SetSelectedNodeWithParent(cascaderNode, ref _hoverSelectedNodes);
+                var index = _hoverSelectedNodes.FindIndex(x => x.Value == cascaderNode.Value);
+
+                if (index != -1)
+                {
+                    _hoverSelectedNodes.RemoveRange(index, _hoverSelectedNodes.Count - index);
+                }
+                else
+                {
+                    _hoverSelectedNodes.RemoveAll(x => x.Level >= cascaderNode.Level);
+                    _hoverSelectedNodes.Add(cascaderNode);
+                }
+
                 _renderNodes = _hoverSelectedNodes;
             }
             _renderNodes.Sort((x, y) => x.Level.CompareTo(y.Level));  //Level 升序排序

@@ -22,12 +22,7 @@ jobs:
             6.0.x
             7.0.x
             8.0.x
-
-      - name: Setup .NET 9
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-quality: 'preview'
-          dotnet-version: '9.0.x'
+            9.0.x
 
       - uses: actions/setup-node@v1
         with:

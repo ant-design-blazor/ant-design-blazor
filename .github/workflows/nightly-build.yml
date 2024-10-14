@@ -29,12 +29,7 @@ jobs:
             6.0.x
             7.0.x
             8.0.x
-
-      - name: Setup .NET 9
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-quality: 'preview'
-          dotnet-version: '9.0.x'
+            9.0.x
 
       - uses: actions/setup-node@v1
         with:
@@ -118,7 +113,7 @@ jobs:
         run: |
           npm install
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net9 -o cargo
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo
         env:
           PACKAGE_VERSION: ${{ steps.pack.outputs.package_version }}
 
