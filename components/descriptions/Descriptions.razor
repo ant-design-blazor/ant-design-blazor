@@ -31,6 +31,8 @@
                     <tr class="ant-descriptions-row">
                         @foreach (var item in row)
                         {
+                            var vertical = !Bordered && (item.item.Vertical ?? false);
+
                             if (Bordered == false)
                             {
                                 <!-- Horizontal & NOT Bordered -->
@@ -46,9 +48,12 @@
                                                 @item.item.Title
                                             }
                                         </span>
-                                        <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
-                                            @item.item.ChildContent
-                                        </span>
+                                        @if (!vertical)
+                                        {
+                                            <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
+                                                @item.item.ChildContent
+                                            </span>
+                                        }
                                     </div>
                                 </td>
                             }
@@ -71,6 +76,29 @@
                             }
                         }
                     </tr>
+                    <!-- Render the content separately for Vertical items -->
+                    @if (Bordered == false && row.Any(n => n.item.Vertical ?? false))
+                    {
+                        <tr class="ant-descriptions-row">
+                            @foreach (var item in row)
+                            {
+                                if (item.item.Vertical ?? false)
+                                {
+                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
+                                        <div class="ant-descriptions-item-container">
+                                            <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
+                                                @item.item.ChildContent
+                                            </span>
+                                        </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }
+                        </tr>
+                    }
                 }
             }
             else if (Layout == DescriptionsLayout.Vertical)
@@ -78,11 +106,13 @@
                 if (Bordered == false)
                 {
                     <!-- Vertical & NOT Bordered -->
-                    foreach (var row in _itemMatrix)
+                    @foreach (var row in _itemMatrix)
                     {
                         <tr class="ant-descriptions-row">
                             @foreach (var item in row)
                             {
+                                var vertical = item.item.Vertical ?? true;
+
                                 <td class="ant-descriptions-item" colspan="@item.realSpan">
                                     <div class="ant-descriptions-item-container">
                                         <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-no-colon" : item.item.Colon ? "ant-descriptions-item-no-colon" : "")" style="@item.item.LabelStyle">
@@ -95,6 +125,12 @@
                                                 @item.item.Title
                                             }
                                         </span>
+                                        @if (!vertical)
+                                        {
+                                            <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
+                                                @item.item.ChildContent
+                                            </span>
+                                        }
                                     </div>
                                 </td>
                             }
@@ -102,13 +138,22 @@
                         <tr class="ant-descriptions-row">
                             @foreach (var item in row)
                             {
-                                <td class="ant-descriptions-item" colspan="@item.realSpan">
-                                    <div class="ant-descriptions-item-container">
-                                        <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
-                                            @item.item.ChildContent
-                                        </span>
-                                    </div>
-                                </td>
+                                var vertical = item.item.Vertical ?? true;
+
+                                if (vertical)
+                                {
+                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
+                                        <div class="ant-descriptions-item-container">
+                                            <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
+                                                @item.item.ChildContent
+                                            </span>
+                                        </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
                             }
                         </tr>
                     }
@@ -116,7 +161,7 @@
                 else
                 {
                     <!-- Vertical & Bordered -->
-                    foreach (var row in _itemMatrix)
+                    @foreach (var row in _itemMatrix)
                     {
                         <tr class="ant-descriptions-row">
                             @foreach (var item in row)
@@ -139,80 +184,6 @@
                                 <td class="ant-descriptions-item-content" colspan="@item.realSpan" style="@item.item.ContentStyle">
                                     @item.item.ChildContent
                                 </td>
-                            }
-                        </tr>
-                    }
-                }
-            }
-            else if (Layout == DescriptionsLayout.Complex)
-            {
-                @foreach (var row in _itemMatrix)
-                {
-                    <tr class="ant-descriptions-row">
-                        @foreach (var item in row)
-                        {
-                            @if (item.item.Vertical)
-                            {
-                                <!-- Vertical Layout -->
-                                <td class="ant-descriptions-item" colspan="@item.realSpan">
-                                    <div class="ant-descriptions-item-container">
-                                        <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-no-colon" : item.item.Colon ? "ant-descriptions-item-no-colon" : "")" style="@item.item.LabelStyle">
-                                            @if (item.item.TitleTemplate != null)
-                                            {
-                                                @item.item.TitleTemplate
-                                            }
-                                            else
-                                            {
-                                                @item.item.Title
-                                            }
-                                        </span>
-                                    </div>
-                                </td>
-                            }
-                            else
-                            {
-                                <!-- Default Horizontal Layout -->
-                                <td class="ant-descriptions-item" colspan="@item.realSpan" @ref="@item.item.Ref">
-                                    <div class="ant-descriptions-item-container">
-                                        <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-no-colon" : item.item.Colon ? "ant-descriptions-item-no-colon" : "")" style="@item.item.LabelStyle">
-                                            @if (item.item.TitleTemplate != null)
-                                            {
-                                                @item.item.TitleTemplate
-                                            }
-                                            else
-                                            {
-                                                @item.item.Title
-                                            }
-                                        </span>
-                                        <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
-                                            @item.item.ChildContent
-                                        </span>
-                                    </div>
-                                </td>
-                            }
-                        }
-                    </tr>
-
-                    <!-- Render the content separately for Vertical items -->
-                    @if (row.Any(n => n.item.Vertical))
-                    {
-                        <tr class="ant-descriptions-row">
-                            @foreach (var item in row)
-                            {
-                                @if (item.item.Vertical)
-                                {
-                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
-                                        <div class="ant-descriptions-item-container">
-                                            <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
-                                                @item.item.ChildContent
-                                            </span>
-                                        </div>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td></td>
-                                }
                             }
                         </tr>
                     }

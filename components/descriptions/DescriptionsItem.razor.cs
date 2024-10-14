@@ -55,7 +55,7 @@ namespace AntDesign
         /// Model for the item
         /// </summary>
         [Parameter]
-        public bool Vertical { get; set; }
+        public bool? Vertical { get; set; }
 
 
         [CascadingParameter]
