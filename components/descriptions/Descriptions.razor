@@ -24,171 +24,170 @@
     <div class="ant-descriptions-view">
         <table>
             <tbody>
-            @if (Layout == DescriptionsLayout.Horizontal)
-            {
-                foreach (var row in _itemMatrix)
+                @if (Layout == DescriptionsLayout.Horizontal)
                 {
-                    <tr class="ant-descriptions-row">
-                        @foreach (var item in row)
-                        {
-                            var vertical = !Bordered && (item.item.Vertical ?? false);
+                    foreach (var row in _itemMatrix)
+                    {
+                        <tr class="ant-descriptions-row">
+                            @foreach (var item in row)
+                            {
+                                var vertical = !Bordered && item.item.Layout == DescriptionsLayout.Vertical;
 
-                            if (Bordered == false)
-                            {
-                                <!-- Horizontal & NOT Bordered -->
-                                <td class="ant-descriptions-item" colspan="@item.realSpan" @ref="@item.item.Ref">
-                                    <div class="ant-descriptions-item-container">
-                                        <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-no-colon" : item.item.Colon ? "ant-descriptions-item-no-colon" : "")" style="@item.item.LabelStyle">
-                                            @if (item.item.TitleTemplate != null)
-                                            {
-                                                @item.item.TitleTemplate
-                                            }
-                                            else
-                                            {
-                                                @item.item.Title
-                                            }
-                                        </span>
-                                        @if (!vertical)
-                                        {
-                                            <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
-                                                @item.item.ChildContent
+                                if (Bordered == false)
+                                {
+                                    <!-- Horizontal & NOT Bordered -->
+                                    <td class="ant-descriptions-item" colspan="@item.realSpan" @ref="@item.item.Ref">
+                                        <div class="ant-descriptions-item-container">
+                                            <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-no-colon" : item.item.Colon ? "ant-descriptions-item-no-colon" : "")" style="@item.item.LabelStyle">
+                                                @if (item.item.TitleTemplate != null)
+                                                {
+                                                    @item.item.TitleTemplate
+                                                }
+                                                else
+                                                {
+                                                    @item.item.Title
+                                                }
                                             </span>
+                                            @if (!vertical)
+                                            {
+                                                <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
+                                                    @item.item.ChildContent
+                                                </span>
+                                            }
+                                        </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <!-- Horizontal & Bordered -->
+                                    <td class="ant-descriptions-item-label" style="@item.item.LabelStyle">
+                                        @if (item.item.TitleTemplate != null)
+                                        {
+                                            @item.item.TitleTemplate
                                         }
-                                    </div>
-                                </td>
+                                        else
+                                        {
+                                            @item.item.Title
+                                        }
+                                    </td>
+                                    <td class="ant-descriptions-item-content" colspan="@(item.realSpan * 2 - 1)" style="@item.item.ContentStyle">
+                                        @item.item.ChildContent
+                                    </td>
+                                }
                             }
-                            else
-                            {
-                                <!-- Horizontal & Bordered -->
-                                <td class="ant-descriptions-item-label" style="@item.item.LabelStyle">
-                                    @if (item.item.TitleTemplate != null)
+                        </tr>
+                        <!-- Render the content separately for Vertical items -->
+                        @if (Bordered == false && row.Any(n => n.item.Layout == DescriptionsLayout.Vertical))
+                        {
+                            <tr class="ant-descriptions-row">
+                                @foreach (var item in row)
+                                {
+                                    if (item.item.Layout == DescriptionsLayout.Vertical)
                                     {
-                                        @item.item.TitleTemplate
+                                        <td class="ant-descriptions-item" colspan="@item.realSpan">
+                                            <div class="ant-descriptions-item-container">
+                                                <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
+                                                    @item.item.ChildContent
+                                                </span>
+                                            </div>
+                                        </td>
                                     }
                                     else
                                     {
-                                        @item.item.Title
+                                        <td></td>
                                     }
-                                </td>
-                                <td class="ant-descriptions-item-content" colspan="@(item.realSpan * 2 - 1)" style="@item.item.ContentStyle">
-                                    @item.item.ChildContent
-                                </td>
+                                }
+                            </tr>
+                        }
+                    }
+                }
+                else if (Layout == DescriptionsLayout.Vertical)
+                {
+                    if (Bordered == false)
+                    {
+                        <!-- Vertical & NOT Bordered -->
+                        @foreach (var row in _itemMatrix)
+                        {
+                            <tr class="ant-descriptions-row">
+                                @foreach (var item in row)
+                                {
+                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
+                                        <div class="ant-descriptions-item-container">
+                                            <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-no-colon" : item.item.Colon ? "ant-descriptions-item-no-colon" : "")" style="@item.item.LabelStyle">
+                                                @if (item.item.TitleTemplate != null)
+                                                {
+                                                    @item.item.TitleTemplate
+                                                }
+                                                else
+                                                {
+                                                    @item.item.Title
+                                                }
+                                            </span>
+                                            @if (item.item.Layout == DescriptionsLayout.Horizontal)
+                                            {
+                                                <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
+                                                    @item.item.ChildContent
+                                                </span>
+                                            }
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                            @if (row.Any(n => n.item.Layout == DescriptionsLayout.Vertical))
+                            {
+                                <tr class="ant-descriptions-row">
+                                    @foreach (var item in row)
+                                    {
+                                        if (item.item.Layout == DescriptionsLayout.Vertical)
+                                        {
+                                            <td class="ant-descriptions-item" colspan="@item.realSpan">
+                                                <div class="ant-descriptions-item-container">
+                                                    <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
+                                                        @item.item.ChildContent
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                    }
+                                </tr>
                             }
                         }
-                    </tr>
-                    <!-- Render the content separately for Vertical items -->
-                    @if (Bordered == false && row.Any(n => n.item.Vertical ?? false))
-                    {
-                        <tr class="ant-descriptions-row">
-                            @foreach (var item in row)
-                            {
-                                if (item.item.Vertical ?? false)
-                                {
-                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
-                                        <div class="ant-descriptions-item-container">
-                                            <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
-                                                @item.item.ChildContent
-                                            </span>
-                                        </div>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td></td>
-                                }
-                            }
-                        </tr>
                     }
-                }
-            }
-            else if (Layout == DescriptionsLayout.Vertical)
-            {
-                if (Bordered == false)
-                {
-                    <!-- Vertical & NOT Bordered -->
-                    @foreach (var row in _itemMatrix)
+                    else
                     {
-                        <tr class="ant-descriptions-row">
-                            @foreach (var item in row)
-                            {
-                                var vertical = item.item.Vertical ?? true;
-
-                                <td class="ant-descriptions-item" colspan="@item.realSpan">
-                                    <div class="ant-descriptions-item-container">
-                                        <span class="ant-descriptions-item-label @(Colon ? "ant-descriptions-item-no-colon" : item.item.Colon ? "ant-descriptions-item-no-colon" : "")" style="@item.item.LabelStyle">
-                                            @if (item.item.TitleTemplate != null)
-                                            {
-                                                @item.item.TitleTemplate
-                                            }
-                                            else
-                                            {
-                                                @item.item.Title
-                                            }
-                                        </span>
-                                        @if (!vertical)
+                        <!-- Vertical & Bordered -->
+                        @foreach (var row in _itemMatrix)
+                        {
+                            <tr class="ant-descriptions-row">
+                                @foreach (var item in row)
+                                {
+                                    <td class="ant-descriptions-item-label" colspan="@item.realSpan" style="@item.item.LabelStyle">
+                                        @if (item.item.TitleTemplate != null)
                                         {
-                                            <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
-                                                @item.item.ChildContent
-                                            </span>
+                                            @item.item.TitleTemplate
                                         }
-                                    </div>
-                                </td>
-                            }
-                        </tr>
-                        <tr class="ant-descriptions-row">
-                            @foreach (var item in row)
-                            {
-                                var vertical = item.item.Vertical ?? true;
-
-                                if (vertical)
-                                {
-                                    <td class="ant-descriptions-item" colspan="@item.realSpan">
-                                        <div class="ant-descriptions-item-container">
-                                            <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
-                                                @item.item.ChildContent
-                                            </span>
-                                        </div>
+                                        else
+                                        {
+                                            @item.item.Title
+                                        }
                                     </td>
                                 }
-                                else
+                            </tr>
+                            <tr class="ant-descriptions-row">
+                                @foreach (var item in row)
                                 {
-                                    <td></td>
+                                    <td class="ant-descriptions-item-content" colspan="@item.realSpan" style="@item.item.ContentStyle">
+                                        @item.item.ChildContent
+                                    </td>
                                 }
-                            }
-                        </tr>
+                            </tr>
+                        }
                     }
                 }
-                else
-                {
-                    <!-- Vertical & Bordered -->
-                    @foreach (var row in _itemMatrix)
-                    {
-                        <tr class="ant-descriptions-row">
-                            @foreach (var item in row)
-                            {
-                                <td class="ant-descriptions-item-label" colspan="@item.realSpan" style="@item.item.LabelStyle">
-                                    @if (item.item.TitleTemplate != null)
-                                    {
-                                        @item.item.TitleTemplate
-                                    }
-                                    else
-                                    {
-                                        @item.item.Title
-                                    }
-                                </td>
-                            }
-                        </tr>
-                        <tr class="ant-descriptions-row">
-                            @foreach (var item in row)
-                            {
-                                <td class="ant-descriptions-item-content" colspan="@item.realSpan" style="@item.item.ContentStyle">
-                                    @item.item.ChildContent
-                                </td>
-                            }
-                        </tr>
-                    }
-                }
-            }
             </tbody>
         </table>
     </div>

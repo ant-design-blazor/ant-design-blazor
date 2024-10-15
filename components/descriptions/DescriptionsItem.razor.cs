@@ -52,10 +52,10 @@ namespace AntDesign
         public bool Colon { get; set; }
 
         /// <summary>
-        /// Model for the item
+        /// Layout - Horizontal or Vertical or complex
         /// </summary>
         [Parameter]
-        public bool? Vertical { get; set; }
+        public string Layout { get; set; }
 
 
         [CascadingParameter]
@@ -71,6 +71,11 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            if (string.IsNullOrEmpty(Layout))
+            {
+                this.Layout = Descriptions.Layout;
+            }
+
             this.Descriptions?.Items.Add(this);
             base.OnInitialized();
         }

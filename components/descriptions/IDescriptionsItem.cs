@@ -24,6 +24,6 @@ namespace AntDesign
 
         public bool Colon { get; set; }
 
-        public bool? Vertical { get; set; }
+        public string Layout { get; set; }
     }
 }
