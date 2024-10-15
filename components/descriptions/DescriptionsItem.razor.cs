@@ -52,7 +52,7 @@ namespace AntDesign
         public bool Colon { get; set; }
 
         /// <summary>
-        /// Layout - Horizontal or Vertical or complex
+        /// Layout - Horizontal or Vertical
         /// </summary>
         [Parameter]
         public string Layout { get; set; }
