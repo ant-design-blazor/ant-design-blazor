@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Forms
 @namespace blazorserver.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
@@ -14,6 +15,7 @@
   <link href="_content/AntDesign.Docs/css/default.css" rel="stylesheet">
   <link antblazor-css />
   <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+  <component type="typeof(AntiforgeryToken)" render-mode="Static" />
 </head>
 <body>
   <app>
