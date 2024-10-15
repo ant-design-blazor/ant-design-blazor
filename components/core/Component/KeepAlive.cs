@@ -13,6 +13,8 @@ public class KeepAlive : IComponent
     private bool _rendered = false;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool IsActive { get; set; }
+
 
     public void Attach(RenderHandle renderHandle)
     {
@@ -23,9 +25,10 @@ public class KeepAlive : IComponent
     {
         parameters.SetParameterProperties(this);
 
-        if (!_rendered && ChildContent != null)
+        if ((!_rendered || IsActive) && ChildContent != null)
         {
             _rendered = true;
+            IsActive = false;
             _renderHandle.Render(ChildContent);
         }
 
