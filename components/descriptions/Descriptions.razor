@@ -31,8 +31,6 @@
                         <tr class="ant-descriptions-row">
                             @foreach (var item in row)
                             {
-                                var vertical = !Bordered && item.item.Layout == DescriptionsLayout.Vertical;
-
                                 if (Bordered == false)
                                 {
                                     <!-- Horizontal & NOT Bordered -->
@@ -48,7 +46,7 @@
                                                     @item.item.Title
                                                 }
                                             </span>
-                                            @if (!vertical)
+                                            @if (item.item.Layout == DescriptionsLayout.Horizontal)
                                             {
                                                 <span class="ant-descriptions-item-content" style="@item.item.ContentStyle">
                                                     @item.item.ChildContent
@@ -94,7 +92,7 @@
                                     }
                                     else
                                     {
-                                        <td></td>
+                                        <td colspan="@item.realSpan"></td>
                                     }
                                 }
                             </tr>
@@ -150,7 +148,7 @@
                                         }
                                         else
                                         {
-                                            <td></td>
+                                            <td colspan="@item.realSpan"></td>
                                         }
                                     }
                                 </tr>
