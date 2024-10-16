@@ -283,7 +283,7 @@ namespace AntDesign
         /// <summary>
         /// 
         /// </summary>
-        internal Tree<TItem> TreeComponent { get => _tree; }
+        public Tree<TItem> TreeComponent { get => _tree; }
 
         private TItemValue _cachedValue;
 
