@@ -28,7 +28,7 @@ namespace AntDesign
     <seealso cref="UploadFileItem"/>
     */
     [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg", Title = "Upload", SubTitle = "上传")]
-    public partial class Upload : AntDomComponentBase
+    public partial class Upload : AntInputComponentBase<string>
     {
         /// <summary>
         /// Function which will be executed before uploading each file. 
@@ -226,6 +226,12 @@ namespace AntDesign
         /// <default value="post"/>
         [Parameter]
         public string Method { get; set; } = "post";
+
+        [Parameter]
+        public IEnumerable<string> Values { get; set; }
+
+        [Parameter]
+        public EventCallback<string[]> ValuesChanged { get; set; }
 
         private bool IsText => ListType == "text";
         private bool IsPicture => ListType == "picture";

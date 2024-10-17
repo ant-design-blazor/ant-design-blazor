@@ -185,6 +185,16 @@ namespace AntDesign.Internal
             if (Upload.OnCompleted.HasDelegate && Upload.FileList.All(x => (x.State.Equals(UploadState.Success) || x.State.Equals(UploadState.Fail))))
             {
                 await Upload.OnCompleted.InvokeAsync(_uploadInfo);
+
+                if (Upload.ValuesChanged.HasDelegate)
+                {
+                    await Upload.ValuesChanged.InvokeAsync(_uploadInfo.FileList.Select(x => x.Url).ToArray());
+                }
+
+                if (Upload.ValueChanged.HasDelegate)
+                {
+                    await Upload.ValueChanged.InvokeAsync(string.Join(";", _uploadInfo.FileList.Select(x => x.Url)));
+                }
             }
         }
 
