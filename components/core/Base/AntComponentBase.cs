@@ -91,7 +91,7 @@ namespace AntDesign
             {
                 return await Js.InvokeAsync<T>(code, args);
             }
-            catch (Exception e)
+            catch
             {
                 throw;
             }
