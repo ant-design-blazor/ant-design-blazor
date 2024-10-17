@@ -71,11 +71,11 @@ namespace AntDesign
 
         private readonly IList<SpaceItem> _items = new List<SpaceItem>();
 
-        private bool HasAlign => Align.IsIn(SpaceAlign.Start, SpaceAlign.End, SpaceAlign.Center, SpaceAlign.Baseline);
+        private bool HasAlign => Align.IsIn("start", "end", "center", "baseline");
 
         private const string PrefixCls = "ant-space";
 
-        private OneOf<string, (string, string)> _size = SpaceSize.Small;
+        private OneOf<string, (string, string)> _size = "small";
 
         private string InnerStyle => Wrap && Direction == DirectionVHType.Horizontal ? "flex-wrap: wrap;" : "";
 
