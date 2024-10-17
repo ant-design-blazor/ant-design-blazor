@@ -102,6 +102,20 @@ namespace AntDesign.Select.Internal
             SetSuppressInput();
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (IsOverlayShow)
+            {
+                _inputString = SearchValue;
+            }
+            else
+            {
+                _inputString = string.Empty;
+            }
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             SetSuppressInput();
