@@ -27,7 +27,7 @@ namespace AntDesign.Docs.Shared
             _ = JS.InvokeVoidAsync(JSInteropConstants.AddElementToBody, _linkRef);
             _ = JS.InvokeVoidAsync(JSInteropConstants.SetDomAttribute, "html", new Dictionary<string, string>
             {
-                ["data-theme"] = theme
+                ["data-theme"] = theme == "compactdark" ? "dark" : theme
             });
         }
     }

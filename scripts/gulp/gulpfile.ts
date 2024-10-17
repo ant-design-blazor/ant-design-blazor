@@ -4,7 +4,7 @@
  */
 
 /* eslint-disable import/no-unassigned-import */
-import { series, task } from 'gulp';
+import { series, task, parallel } from 'gulp';
 import './tasks/clean';
 import './tasks/default';
 
@@ -12,4 +12,8 @@ import './tasks/interop';
 import './tasks/library';
 import './tasks/site';
 
-task('build:preview', series('clean', 'init:site'));
+task('build:site', series('clean', 'init:site'));
+
+task('build:lib', series('clean', 'build:library'));
+
+task('build:all', series('clean', parallel('build:library', 'init:site')));

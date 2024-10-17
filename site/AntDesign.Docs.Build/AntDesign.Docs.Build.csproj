@@ -15,14 +15,12 @@
   </Target>
 
   <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:lib" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:doc" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:all" />
   </Target>
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:lib" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:doc" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:all" />
   </Target>
 
   <PropertyGroup>

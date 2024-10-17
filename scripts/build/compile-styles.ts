@@ -111,6 +111,11 @@ export async function compile(): Promise<void | void[]> {
     await fs.readFile(`${sourcePath}/ant-design-blazor.variable.less`)
   );
 
+  await fs.writeFile(
+    `${targetPath}/ant-design-blazor.compactdark.less`,
+    await fs.readFile(`${sourcePath}/ant-design-blazor.compactdark.less`)
+  );
+
   // Compile concentrated less file to CSS file.
   const lessContent = `@import "${path.posix.join(targetPath, 'ant-design-blazor.less')}";`;
   promiseList.push(compileLess(lessContent, path.join(targetPath, 'ant-design-blazor.css'), false));
@@ -135,6 +140,11 @@ export async function compile(): Promise<void | void[]> {
   const variableLessContent = `@import "${path.posix.join(targetPath, 'ant-design-blazor.variable.less')}";`;
   promiseList.push(compileLess(variableLessContent, path.join(targetPath, 'ant-design-blazor.variable.css'), false));
   promiseList.push(compileLess(variableLessContent, path.join(targetPath, 'ant-design-blazor.variable.min.css'), true));
+
+  const compactDarkLessContent = `@import "${path.posix.join(targetPath, 'ant-design-blazor.compactdark.less')}";`;
+  promiseList.push(compileLess(compactDarkLessContent, path.join(targetPath, 'ant-design-blazor.compactdark.css'), false));
+  promiseList.push(compileLess(compactDarkLessContent, path.join(targetPath, 'ant-design-blazor.compactdark.min.css'), true));
+
 
   // Compile css file that doesn't have component-specific styles.
   const cssIndexPath = path.join(sourcePath, 'style', 'entry.less');

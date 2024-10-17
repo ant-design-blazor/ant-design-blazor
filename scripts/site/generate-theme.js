@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs-extra');
 const { darkPaletteLess } = require('../build/dark-vars');
 const { compactPaletteLess } = require('../build/compact-vars');
+const { compactDarkPaletteLess } = require('../build/compactdark-vars');
 const { aliyunPaletteLess } = require('../build/aliyun-vars');
 const themePath = path.join(__dirname, '../../site/AntDesign.Docs/styles.less');
 const colorPalettePath = path.join(__dirname, '../../components/style/color/colorPalette.less');
@@ -31,6 +32,7 @@ function generateTheme(vars, fileName) {
 
 function generateAllTheme() {
   return generateTheme(compactPaletteLess, 'compact.css')
+    .then(() => generateTheme(compactDarkPaletteLess, 'compactdark.css'))
     .then(() => generateTheme(darkPaletteLess, 'dark.css'))
     .then(() => generateTheme(aliyunPaletteLess, 'aliyun.css'))
     .then(() => generateTheme([], 'default.css'))

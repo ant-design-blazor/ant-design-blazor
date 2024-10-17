@@ -10,6 +10,7 @@ import * as path from 'path';
 import { buildConfig } from '../build-config';
 import { compactPaletteLess } from './compact-vars';
 import { darkPaletteLess } from './dark-vars';
+import { compactDarkPaletteLess } from './compactdark-vars';
 
 export function generateLessVars(): void {
   const dist = buildConfig.publishDir;
@@ -17,6 +18,11 @@ export function generateLessVars(): void {
   fs.writeFileSync(
     path.join(dist, 'compact-theme.js'),
     `module.exports = ${JSON.stringify(compactPaletteLess)}`,
+    'utf8'
+  );
+  fs.writeFileSync(
+    path.join(dist, 'compactdark-theme.js'),
+    `module.exports = ${JSON.stringify(compactDarkPaletteLess)}`,
     'utf8'
   );
 }

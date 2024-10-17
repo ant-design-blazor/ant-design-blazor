@@ -52,7 +52,6 @@ task('library:copy-libs-less', () => {
 task(
   'build:library',
   series(
-    'clean',
     'library:mkdir-dir',
     parallel('library:scripts', 'library:compile-less'),
     parallel('library:copy-libs-css', 'library:copy-libs-js', 'library:copy-libs-less'),
