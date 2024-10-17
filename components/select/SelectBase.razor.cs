@@ -755,13 +755,13 @@ namespace AntDesign
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(_searchValue))
-            {
-                return;
-            }
+            _selectContent?.ClearSearch();
 
-            _searchValue = string.Empty;
-            _prevSearchValue = string.Empty;
+            if (!string.IsNullOrWhiteSpace(_searchValue))
+            {
+                _searchValue = string.Empty;
+                _prevSearchValue = string.Empty;
+            }
 
             if (SelectMode != SelectMode.Default && HideSelected)
             {
@@ -1102,7 +1102,6 @@ namespace AntDesign
         internal async Task CloseAsync()
         {
             await _dropDown.Hide(true);
-            _selectContent?.ClearSearch();
         }
 
         /// <summary>
