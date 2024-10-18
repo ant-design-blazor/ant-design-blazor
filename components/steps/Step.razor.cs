@@ -13,7 +13,7 @@ namespace AntDesign
     /// </summary>
     public partial class Step : AntDomComponentBase
     {
-        private string _status = StepsStatus.Wait;
+        private string _status = "wait";
         private bool _isCustomStatus;
         private int _groupCurrent;
 
@@ -35,7 +35,7 @@ namespace AntDesign
                 _groupCurrent = value;
                 if (!_isCustomStatus)
                 {
-                    this._status = value > this.Index ? StepsStatus.Finish : value == this.Index ? GroupStatus ?? string.Empty : StepsStatus.Wait;
+                    this._status = value > this.Index ? "finish" : value == this.Index ? GroupStatus ?? string.Empty : "wait";
                 }
                 InvokeStateHasChanged();
             }
@@ -43,9 +43,9 @@ namespace AntDesign
 
         internal int Index { get; set; }
         internal double? Percent { get; set; }
-        internal string Size { get; set; } = StepsSize.Default;
+        internal string Size { get; set; } = "default";
         internal RenderFragment ProgressDot { get; set; }
-        internal string Direction { get; set; } = StepsDirection.Horizontal;
+        internal string Direction { get; set; } = "horizontal";
 
         [CascadingParameter]
         public Steps Parent { get; set; }
@@ -158,7 +158,7 @@ namespace AntDesign
                 .If($"{prefixName}-active", () => Parent.Current == Index)
                 .If($"{prefixName}-disabled", () => Disabled)
                 .If($"{prefixName}-custom", () => !string.IsNullOrEmpty(Icon))
-                .If($"ant-steps-next-error", () => GroupStatus == StepsStatus.Error && Parent.Current == Index + 1)
+                .If($"ant-steps-next-error", () => GroupStatus == "error" && Parent.Current == Index + 1)
                 .If($"{prefixName}-rtl", () => RTL)
                 ;
         }
