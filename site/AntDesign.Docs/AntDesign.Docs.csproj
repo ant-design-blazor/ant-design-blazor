@@ -61,12 +61,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Demos\Components\Descriptions\demo\HorizontalItem.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Update="Resources\App.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>App.Designer.cs</LastGenOutput>
