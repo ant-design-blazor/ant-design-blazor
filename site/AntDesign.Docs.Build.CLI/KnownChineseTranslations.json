@@ -4250,9 +4250,6 @@
   "Get current filters' expression for ORMs like Entity Framework. And you can get the filtered data by executing the expression with the data source.": {
     "Translated": "获取 Entity Framework 等 ORM 的当前过滤器表达式。您可以通过对数据源执行表达式来获取筛选后的数据。"
   },
-  "Placement of the overlay": {
-    "Translated": "叠加层的放置"
-  },
   "Whether need both auto-off and Visible control closing.": {
     "Translated": "是否需要自动关闭和可见控件关闭。"
   },
