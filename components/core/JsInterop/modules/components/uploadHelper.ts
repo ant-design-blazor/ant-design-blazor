@@ -67,6 +67,14 @@ export class uploadHelper {
         formData.append(key, data[key]);
       }
     }
+
+    if (!formData['__RequestVerificationToken']) {
+      const antiforgeryToken = document.querySelector('[name="__RequestVerificationToken"]');
+      if (antiforgeryToken) {
+        formData.append('__RequestVerificationToken', antiforgeryToken.getAttribute('value'));
+      }
+    }
+
     const req = new XMLHttpRequest()
     req.onreadystatechange = function () {
       if (req.readyState === 4) {
