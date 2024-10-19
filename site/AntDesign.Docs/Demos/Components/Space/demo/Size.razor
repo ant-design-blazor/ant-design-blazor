@@ -1,7 +1,7 @@
 ﻿<RadioGroup @bind-Value=@size OnChange="e=> setSize(e)" TValue="string">
-    <Radio Value="@SpaceSize.Small">Small</Radio>
-    <Radio Value="@SpaceSize.Middle">Middle</Radio>
-    <Radio Value="@SpaceSize.Large">Large</Radio>
+    <Radio Value="@("small")">Small</Radio>
+    <Radio Value="@("middle")">Middle</Radio>
+    <Radio Value="@("large")">Large</Radio>
 </RadioGroup>
 <br />
 <br />
@@ -21,7 +21,7 @@
 </Space>
 
 @code {
-    string size = SpaceSize.Small;
+    string size = "small";
     void setSize(string value)
     {
         size = value;

@@ -31,7 +31,7 @@
                @onkeydown="OnKeyDown"
                @attributes=@AdditonalAttributes()
                disabled="@ParentSelect.Disabled"
-               value="@_inputString"
+               value="@(IsOverlayShow?_inputString:"")"
                id="@(ParentSelect.Id)_list"
                type="search"
                readonly="@(!ParentSelect.IsSearchEnabled)"
@@ -54,7 +54,8 @@
         else
         {
           var selectedItem = ParentSelect.SelectedOptionItems.FirstOrDefault();
-          if (string.IsNullOrEmpty(_inputString) && selectedItem != null)
+          var canShowItem = !IsOverlayShow || string.IsNullOrEmpty(_inputString);
+          if (canShowItem && selectedItem != null)
           {
             @if (ParentLabelTemplate != null)
             {
@@ -66,7 +67,7 @@
             }
             else
             {
-              <span class="@Prefix-selection-item" title="@selectedItem.Label" style="@(string.IsNullOrEmpty(_inputString)?"":"visibility: hidden;")">
+              <span class="@Prefix-selection-item" title="@selectedItem.Label">
                 @getLabel(selectedItem)
               </span>
             }
