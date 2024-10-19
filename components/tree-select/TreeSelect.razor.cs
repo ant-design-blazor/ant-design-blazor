@@ -462,6 +462,8 @@ namespace AntDesign
         {
             if (visible)
             {
+                OnOverlayShow();
+
                 await SetDropdownStyleAsync();
 
                 await SetInputFocusAsync();
