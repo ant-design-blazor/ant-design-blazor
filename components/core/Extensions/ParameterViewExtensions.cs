@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AntDesign;
 
 namespace Microsoft.AspNetCore.Components
 {
@@ -14,6 +15,37 @@ namespace Microsoft.AspNetCore.Components
             string parameterName, T currentValue)
         {
             return IsParameterChanged(parameters, parameterName, currentValue, out _);
+        }
+
+        public static bool IsParameterChanged<T>(this ParameterView parameters,
+        string parameterName, IEnumerable<T> currentValue)
+        {
+            return IsParameterChanged(parameters, parameterName, currentValue, out _);
+        }
+
+        public static bool IsParameterChanged<T>(this ParameterView parameters, string parameterName, IEnumerable<T> currentValue, out IEnumerable<T> newValue)
+        {
+            if (parameters.TryGetValue<IEnumerable<T>>(parameterName, out newValue))
+            {
+                if (newValue == null && currentValue == null)
+                {
+                    return false;
+                }
+
+                if (newValue == null && currentValue != null)
+                {
+                    return true;
+                }
+
+                if (newValue != null && currentValue == null)
+                {
+                    return true;
+                }
+
+                return !currentValue.SequenceEqual(newValue);
+            }
+
+            return false;
         }
 
         public static bool IsParameterChanged<T>(this ParameterView parameters,
