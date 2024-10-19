@@ -89,7 +89,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="default" />
         [Parameter]
-        public string Type { get; set; } = StepsType.Navigation;
+        public string Type { get; set; } = StepsType.Default;
 
         /// <summary>
         /// Size of steps. Possible Values: default, small
