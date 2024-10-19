@@ -7,6 +7,7 @@
 @inherits AntDomComponentBase
 
 @{
+    _inputString = IsOverlayShow ? _inputString : string.Empty; // ensure _inputString is empty and selected item is shown when overlay is closed
     var showPlaceholder = !ParentSelect.HasValue && string.IsNullOrEmpty(_inputString);
 }
 <div class="@ParentSelect.CurrentClassMapper.Class"
@@ -31,7 +32,7 @@
                @onkeydown="OnKeyDown"
                @attributes=@AdditonalAttributes()
                disabled="@ParentSelect.Disabled"
-               value="@(IsOverlayShow?_inputString:"")"
+               value="@_inputString"
                id="@(ParentSelect.Id)_list"
                type="search"
                readonly="@(!ParentSelect.IsSearchEnabled)"
@@ -224,7 +225,7 @@
                    @onkeyup="OnKeyUp"
                    @onkeydown="OnKeyDown"
                    @attributes=@AdditonalAttributes()
-                   @bind-value="@SearchValue"
+                   value="@_inputString"
                    disabled="@ParentSelect.Disabled"
                    id="@ParentSelect.Id"
                    type="search"
