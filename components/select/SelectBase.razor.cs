@@ -781,6 +781,11 @@ namespace AntDesign
             }
         }
 
+        protected void OnOverlayShow()
+        {
+            _selectContent?.DiscoverySearch();
+        }
+
         /// <summary>
         ///     A separate method to invoke ValuesChanged and OnSelectedItemsChanged to reduce code duplicates.
         /// </summary>
