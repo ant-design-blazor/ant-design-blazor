@@ -93,7 +93,6 @@ namespace AntDesign
             {
                 _options = value;
                 _optionDataItems = _options?.Select(x => new AutoCompleteDataItem<TOption>(x, x.ToString())).ToList() ?? new List<AutoCompleteDataItem<TOption>>();
-                UpdateFilteredOptions();
             }
         }
 
@@ -176,9 +175,9 @@ namespace AntDesign
         /// <summary>
         /// Allow filtering
         /// </summary>
-        /// <default value="true" />
+        /// <default value="false" />
         [Parameter]
-        public bool AllowFilter { get; set; } = true;
+        public bool AllowFilter { get; set; }
 
         /// <summary>
         /// Width of input, pixels when an int is given, full value given to CSS width property when a string is given
@@ -210,8 +209,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public AutoCompleteOption SelectedItem { get; set; }
-
-
 
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening). Check 
@@ -253,15 +250,13 @@ namespace AntDesign
 
         #region 子控件触发事件 / Child controls trigger events
 
-        Task IAutoCompleteRef.InputFocus(FocusEventArgs e)
+        async Task IAutoCompleteRef.InputFocus(FocusEventArgs e)
         {
             _isFocused = true;
             if (!_isOptionsZero)
             {
-                this.OpenPanel();
+                await this.OpenPanel();
             }
-
-            return Task.CompletedTask;
         }
 
         Task IAutoCompleteRef.InputBlur(FocusEventArgs e)
@@ -290,7 +285,7 @@ namespace AntDesign
             {
                 if (key == "Escape" || key == "Tab")
                 {
-                    this.ClosePanel();
+                    await this.ClosePanel();
                 }
                 else if (key == "Enter" && this._activeValue != null)
                 {
@@ -299,7 +294,7 @@ namespace AntDesign
             }
             else if (!_isOptionsZero)
             {
-                this.OpenPanel();
+                await this.OpenPanel();
             }
 
             if (key == "ArrowUp")
@@ -325,6 +320,15 @@ namespace AntDesign
             await SetOverlayWidth();
             await DomEventListener.AddResizeObserver(_overlayTrigger.RefBack.Current, UpdateWidth);
             await base.OnFirstAfterRenderAsync();
+        }
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            if (parameters.IsParameterChanged(nameof(Options), Options))
+            {
+                UpdateFilteredOptions();
+            }
+            await base.SetParametersAsync(parameters);
         }
 
         void IAutoCompleteRef.AddOption(AutoCompleteOption option)
@@ -356,15 +360,17 @@ namespace AntDesign
         /// <summary>
         /// Open panel
         /// </summary>
-        private void OpenPanel()
+        private async Task OpenPanel()
         {
+            _filteredOptions = GetOptionItems();
+
             if (this.ShowPanel == false)
             {
                 this.ShowPanel = true;
 
-                _overlayTrigger.Show();
+                await _overlayTrigger.Show();
 
-                ResetActiveItem();
+                await ResetActiveItem();
                 StateHasChanged();
             }
         }
@@ -372,16 +378,17 @@ namespace AntDesign
         /// <summary>
         /// Close panel
         /// </summary>
-        private void ClosePanel()
+        private async Task ClosePanel()
         {
             if (this.ShowPanel == true)
             {
                 this.ShowPanel = false;
 
-                _overlayTrigger.Close();
+                await _overlayTrigger.Close();
 
                 StateHasChanged();
             }
+            _filteredOptions = GetOptionItems();
         }
 
         private AutoCompleteOption GetActiveItem()
@@ -430,16 +437,30 @@ namespace AntDesign
 
         private void UpdateFilteredOptions()
         {
-            _filteredOptions = GetOptionItems();
-            _isOptionsZero = _filteredOptions.Count == 0 && Options != null;
+            var filteredItems = GetOptionItems();
+            _isOptionsZero = filteredItems.Count == 0 && Options != null;
             if (_isFocused && !_isOptionsZero)
             {
-                OpenPanel();
+                _ = OpenPanel();
             }
         }
 
         private async Task ResetActiveItem()
         {
+            if (_overlayTrigger != null)
+            {
+                // if options count == 0 then close overlay
+                if (_isOptionsZero && _overlayTrigger.IsOverlayShow())
+                {
+                    await ClosePanel();
+                }
+                // if options count > 0 then open overlay
+                else if (!_isOptionsZero && !_overlayTrigger.IsOverlayShow())
+                {
+                    await OpenPanel();
+                }
+            }
+
             var items = _filteredOptions;
 
             if (items.Any(x => CompareWith(x.Value, this._activeValue)) == false)
@@ -460,19 +481,6 @@ namespace AntDesign
                 }
             }
 
-            if (_overlayTrigger != null)
-            {
-                // if options count == 0 then close overlay
-                if (_isOptionsZero && _overlayTrigger.IsOverlayShow())
-                {
-                    await _overlayTrigger.Close();
-                }
-                // if options count > 0 then open overlay
-                else if (!_isOptionsZero && !_overlayTrigger.IsOverlayShow())
-                {
-                    await _overlayTrigger.Show();
-                }
-            }
         }
 
         private async Task SetSelectedItem(AutoCompleteOption item)
