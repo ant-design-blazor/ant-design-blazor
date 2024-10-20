@@ -179,14 +179,14 @@ export class infoHelper {
    */
   static getScrollableParents(element): HTMLElement[] {
     const parents = [];
-    let currentElement = element;
+    let node = this.get(element);
 
-    while (currentElement && currentElement !== document.body) {
-      const overflowY = window.getComputedStyle(currentElement).overflowY;
+    while (node && node.nodeName.toLowerCase() !== 'body') {
+      const overflowY = window.getComputedStyle(node).overflowY;
       if (overflowY === 'auto' || overflowY === 'scroll') {
-        parents.push(currentElement);
+        parents.push(node);
       }
-      currentElement = currentElement.parentElement;
+      node = node.parentNode;
     }
     return parents;
   }
