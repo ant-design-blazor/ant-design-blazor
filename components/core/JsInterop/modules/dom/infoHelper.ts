@@ -171,4 +171,23 @@ export class infoHelper {
 
     return infos;
   }
+
+  /**
+   * Get all scrollable parents of trigger excepted the container.
+   * @param element
+   * @returns
+   */
+  static getScrollableParents(element): HTMLElement[] {
+    const parents = [];
+    let currentElement = element;
+
+    while (currentElement && currentElement !== document.body) {
+      const overflowY = window.getComputedStyle(currentElement).overflowY;
+      if (overflowY === 'auto' || overflowY === 'scroll') {
+        parents.push(currentElement);
+      }
+      currentElement = currentElement.parentElement;
+    }
+    return parents;
+  }
 }

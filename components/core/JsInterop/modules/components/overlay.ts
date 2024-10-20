@@ -130,6 +130,7 @@ export class Overlay {
   public overlay: HTMLDivElement;
   private container: HTMLElement;
   private trigger: HTMLElement;
+  private scrollableContainers: HTMLElement[];
 
   private overlayInfo: domTypes.domInfo;
   private containerInfo: domTypes.domInfo;
@@ -220,6 +221,7 @@ export class Overlay {
     this.verticalCalculation = Overlay.setVerticalCalculation(this.placement, this.selectedVerticalPosition);
     this.horizontalCalculation = Overlay.setHorizontalCalculation(this.placement, this.selectedHorizontalPosition);
     this.isTriggerFixed = domInfoHelper.isFixedPosition(this.trigger);
+    this.scrollableContainers = domInfoHelper.getScrollableParents(this.trigger);
     this.observe();
   }
 
@@ -414,6 +416,11 @@ export class Overlay {
     else {
       this.container.addEventListener("scroll", this.onScroll.bind(this));
     }
+
+    // for sometime the trigger would be scrolled by any parent contaniners but not body or the popup container.
+    this.scrollableContainers.forEach(container => {
+      container.addEventListener('scroll', this.onScroll.bind(this));
+    });
   }  
 
   private onScroll() {
@@ -486,6 +493,10 @@ export class Overlay {
     else {
       this.container.removeEventListener("scroll", this.onScroll);
     }
+
+    this.scrollableContainers.forEach(container => {
+      container.removeEventListener('scroll', this.onScroll);
+    });
   }
 
   public calculatePosition(applyLocation: boolean, firstTime = false, overlayPreset?: domTypes.position): overlayPosition {        
