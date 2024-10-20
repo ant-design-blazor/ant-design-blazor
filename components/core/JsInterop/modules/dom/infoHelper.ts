@@ -173,7 +173,7 @@ export class infoHelper {
   }
 
   /**
-   * Get all scrollable parents of trigger excepted the container.
+   * Get all scrollable parents of an element
    * @param element
    * @returns
    */
