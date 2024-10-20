@@ -220,8 +220,9 @@ export class Overlay {
 
     this.verticalCalculation = Overlay.setVerticalCalculation(this.placement, this.selectedVerticalPosition);
     this.horizontalCalculation = Overlay.setHorizontalCalculation(this.placement, this.selectedHorizontalPosition);
-    this.isTriggerFixed = domInfoHelper.isFixedPosition(this.trigger);
+    //this.isTriggerFixed = domInfoHelper.isFixedPosition(this.trigger);
     this.scrollableContainers = domInfoHelper.getScrollableParents(this.trigger);
+    this.isTriggerFixed = this.scrollableContainers.length == 0;
     this.observe();
   }
 
