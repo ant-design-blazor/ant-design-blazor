@@ -476,6 +476,8 @@ namespace AntDesign
         /// </summary>
         void ITable.OnColumnInitialized() => OnColumnInitialized();
 
+        bool ITable.RebuildColumns(bool add) => RebuildColumns(add);
+
         void ITable.OnExpandChange(RowData rowData)
         {
             _preventRender = true;
