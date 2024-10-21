@@ -33,6 +33,9 @@ namespace AntDesign
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
         private SelectOptionItem<TItemValue, TItem> _selectOptionEqualToTypeDefault;
         private SelectOptionItem<TItemValue, TItem> _activeOption;
+
+        private bool _waittingFocus;
+
         protected OverlayTrigger _dropDown;
 
         internal ElementReference _dropDownRef;
@@ -733,14 +736,23 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected override async Task OnFirstAfterRenderAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (AutoFocus)
+            if (firstRender)
             {
-                await SetInputFocusAsync(false);
+                if (AutoFocus)
+                {
+                    await SetInputFocusAsync();
+                }
             }
-
-            await base.OnFirstAfterRenderAsync();
+            else
+            {
+                if (_waittingFocus)
+                {
+                    _waittingFocus = false;
+                    await SetInputFocusAsync();
+                }
+            }
         }
 
         protected void OnOverlayHide()
@@ -1076,15 +1088,11 @@ namespace AntDesign
         ///     Set the Focused property to true, change the
         ///     style and set the Focus on the Input element via DOM. It also invoke the OnFocus Action.
         /// </summary>
-        internal async Task SetInputFocusAsync(bool forced = true)
+        protected virtual async Task SetInputFocusAsync()
         {
             // SetInputBlurAsync may sometimes not be invoked.
-            if (!Focused || forced)
+            if (!Focused)
             {
-                if (Focused)
-                {
-                    await SetInputBlurAsync();
-                }
                 Focused = true;
 
                 await FocusAsync(_inputRef);
@@ -1259,10 +1267,20 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Method is called via EventCallBack if the Input element get the focus
+        /// </summary>
+        protected async Task OnInputFocusAsync(FocusEventArgs _)
+        {
+            Focused = true;
+            await SetInputFocusAsync();
+        }
+
+        /// <summary>
         /// Method is called via EventCallBack if the Input element loses the focus
         /// </summary>
         protected async Task OnInputBlurAsync(FocusEventArgs _)
         {
+            Focused = false;
             await SetInputBlurAsync();
         }
 
@@ -1287,6 +1305,14 @@ namespace AntDesign
         internal virtual async Task ProcessSelectedSelectOptions()
         {
             await Task.CompletedTask;
+        }
+
+        internal void WaitFocusIfDuringSearching()
+        {
+            if (IsSearchEnabled && IsDropdownShown())
+            {
+                _waittingFocus = true;
+            }
         }
 
         #endregion

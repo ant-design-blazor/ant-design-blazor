@@ -488,10 +488,7 @@ namespace AntDesign
 
             _searchValue = e.Value?.ToString();
             StateHasChanged();
-            if (EnableSearch && IsDropdownShown())
-            {
-                await SetInputFocusAsync(false);
-            }
+            WaitFocusIfDuringSearching();
         }
 
         protected override async Task SetInputBlurAsync()
@@ -515,13 +512,12 @@ namespace AntDesign
                 OnOverlayShow();
 
                 await SetDropdownStyleAsync();
-                if (EnableSearch)
-                    await SetInputFocusAsync();
+                WaitFocusIfDuringSearching();
             }
             else
             {
                 OnOverlayHide();
-                await SetInputBlurAsync();
+                //await SetInputBlurAsync();
             }
         }
 
@@ -537,10 +533,7 @@ namespace AntDesign
                 item.SetChecked(false);
             else
                 item.SetSelected(false);
-            if (IsSearchEnabled && IsDropdownShown())
-            {
-                await SetInputFocusAsync();
-            }
+            WaitFocusIfDuringSearching();
         }
 
         private TItemValue GetValueFromNode(TreeNode<TItem> node)
@@ -588,10 +581,7 @@ namespace AntDesign
             }
             else
             {
-                if (EnableSearch)
-                {
-                    await SetInputFocusAsync();
-                }
+                WaitFocusIfDuringSearching();
             }
         }
 
@@ -706,7 +696,7 @@ namespace AntDesign
                 StateHasChanged();
             }
 
-            if (_cachedValues != null && !_cachedValues.SequenceEqual(Values))
+            if (_cachedValues != null && Values != null && !_cachedValues.SequenceEqual(Values))
             {
                 UpdateValuesSelection();
                 StateHasChanged();
