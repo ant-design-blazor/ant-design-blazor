@@ -15,6 +15,38 @@ timeline: true
 
 ---
 
+### 1.0.0 RC 2
+
+`2024-10-09`
+
+- 🔥 Support .NET 9.0, the doc site is runing on RC2. [#4196](https://github.com/ant-design-blazor/ant-design-blazor/pull/4196) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - ⚡️ Optimized make tab pane only render once. [#4255](https://github.com/ant-design-blazor/ant-design-blazor/pull/4255) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed tab size issue. [#4253](https://github.com/ant-design-blazor/ant-design-blazor/pull/4253) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the ink size when adding new tabPane. [#4239](https://github.com/ant-design-blazor/ant-design-blazor/pull/4239) [@agolub-s](https://github.com/agolub-s)
+  - 🐞 Fixed getting size indefinitely when it is rendered but hidden. [#4225](https://github.com/ant-design-blazor/ant-design-blazor/pull/4225) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed GoTo method would throwing null reference exception. [#4217](https://github.com/ant-design-blazor/ant-design-blazor/pull/4217) [@ElderJames](https://github.com/ElderJames)
+  
+- Table
+  - 🐞 Fixed table layout default to fixed when the auto heigh…. [#4258](https://github.com/ant-design-blazor/ant-design-blazor/pull/4258) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed AutoHeight algorithm. [#4238](https://github.com/ant-design-blazor/ant-design-blazor/pull/4238) [@ysj265](https://github.com/ysj265)
+
+- Form
+  - 🆕 Add support field validation. [#4240](https://github.com/ant-design-blazor/ant-design-blazor/pull/4240) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed prevent building edit context in dead loop. [#4254](https://github.com/ant-design-blazor/ant-design-blazor/pull/4254) [@ElderJames](https://github.com/ElderJames)
+
+- Input
+  - 🆕 Add ShowClear parameter allows overriding when the clear button is shown. [#4221](https://github.com/ant-design-blazor/ant-design-blazor/pull/4221) [@rhodon-jargon](https://github.com/rhodon-jargon)
+  - 🐞 Fixed Disabled  parameter for search component button. [#4214](https://github.com/ant-design-blazor/ant-design-blazor/pull/4214) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
+
+- 🆕 Add Popconfirm supports for hiding buttons. [#3895](https://github.com/ant-design-blazor/ant-design-blazor/pull/3895) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Tree Selectable and SelectableExpression to mark whether TreeNode can be selected or not. [#4229](https://github.com/ant-design-blazor/ant-design-blazor/pull/4229) [@pankey888](https://github.com/pankey888)
+- 🐞 Fixed treeselect a bug which may trigger OnSelectedItemChanged twice. [#4232](https://github.com/ant-design-blazor/ant-design-blazor/pull/4232) [@pankey888](https://github.com/pankey888)
+- 🐞 ifxed DatePicker prevent from crash when browser autoprefills…. [#4251](https://github.com/ant-design-blazor/ant-design-blazor/pull/4251) [@ogix](https://github.com/ogix)
+- 🐞 Fixed Menu tooltip doesn't work. [#4222](https://github.com/ant-design-blazor/ant-design-blazor/pull/4222) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Modal the locale of buttons when it's created by  modal service. [#4215](https://github.com/ant-design-blazor/ant-design-blazor/pull/4215) [@ElderJames](https://github.com/ElderJames)
+
 
 ### 1.0.0 RC 1
 

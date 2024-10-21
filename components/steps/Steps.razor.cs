@@ -75,28 +75,28 @@ namespace AntDesign
         /// </summary>
         /// <default value="horizontal" />
         [Parameter]
-        public string Direction { get; set; } = "horizontal";
+        public string Direction { get; set; } = StepsDirection.Horizontal;
 
         /// <summary>
         /// Place title and description horizontal or vertical
         /// </summary>
         /// <default value="horizontal" />
         [Parameter]
-        public string LabelPlacement { get; set; } = "horizontal";
+        public string LabelPlacement { get; set; } = StepsLabelPlacement.Horizontal;
 
         /// <summary>
         /// Type of steps. Possible Values: default, navigation
         /// </summary>
         /// <default value="default" />
         [Parameter]
-        public string Type { get; set; } = "default";
+        public string Type { get; set; } = StepsType.Default;
 
         /// <summary>
         /// Size of steps. Possible Values: default, small
         /// </summary>
         /// <default value="default" />
         [Parameter]
-        public string Size { get; set; } = "default";
+        public string Size { get; set; } = StepsSize.Default;
 
         /// <summary>
         /// Starting step index
@@ -110,7 +110,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="process" />
         [Parameter]
-        public string Status { get; set; } = "process";
+        public string Status { get; set; } = StepsStatus.Process;
 
         /// <summary>
         /// Child content should contain Step elements
@@ -198,14 +198,13 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add(prefixName)
                 .GetIf(() => $"{prefixName}-{Direction}", () => !string.IsNullOrEmpty(Direction))
-                .If($"{prefixName}-label-horizontal", () => Direction == "horizontal")
-                .If($"{prefixName}-label-vertical", () => (_showProgressDot || LabelPlacement == "vertical") && Direction == "horizontal")
+                .If($"{prefixName}-label-horizontal", () => Direction == StepsDirection.Horizontal)
+                .If($"{prefixName}-label-vertical", () => (_showProgressDot || LabelPlacement == StepsLabelPlacement.Vertical) && Direction == StepsDirection.Horizontal)
                 .If($"{prefixName}-dot", () => _showProgressDot)
-                .If($"{prefixName}-small", () => Size == "small")
-                .If($"{prefixName}-navigation", () => Type == "navigation")
+                .If($"{prefixName}-small", () => Size == StepsSize.Small)
+                .If($"{prefixName}-navigation", () => Type == StepsType.Navigation)
                 .If($"{prefixName}-with-progress", () => Percent != null)
-                .If($"{prefixName}-rtl", () => RTL)
-                ;
+                .If($"{prefixName}-rtl", () => RTL);
         }
     }
 }

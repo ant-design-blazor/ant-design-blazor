@@ -842,11 +842,6 @@ namespace AntDesign
 
             SetClass();
 
-            if (ScrollX != null || ScrollY != null)
-            {
-                TableLayout = "fixed";
-            }
-
             _scrollBarWidth = ScrollBarWidth;
 
 #if NET5_0_OR_GREATER
@@ -861,13 +856,20 @@ namespace AntDesign
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
         public override async Task SetParametersAsync(ParameterView parameters)
-        {       
+        {
             await base.SetParametersAsync(parameters);
+
             if (AutoHeight)
             {
                 ScrollY = "0px";
             }
+
+            if (ScrollX != null || ScrollY != null)
+            {
+                TableLayout ??= "fixed";
+            }
         }
+
         protected override void OnParametersSet()
         {
             base.OnParametersSet();

@@ -1,18 +1,14 @@
-<Select TItem="Person"
-    TItemValue="string"
-    DataSource="@_persons"
+<Select DataSource="@_persons"
         @bind-Value="@_selectedValue"
-        LabelName="@nameof(Person.Name)"
-        ValueName="@nameof(Person.Value)"
+        ItemValue="p=>p.Value"
+        ItemLabel="p=>p.Name"
         Placeholder="Select a person"
-        DefaultActiveFirstOption="false"
         EnableSearch
-        OnBlur="OnBlur"
-        OnFocus="OnFocus"
-        OnSelectedItemChanged="OnSelectedItemChangedHandler"
+        AutoClearSearchValue="false"
         OnSearch="OnSearch">
 </Select>
-<br /><br />
+<br />
+<br />
 <p>
     Selected Value: @_selectedValue <br />
     Selected Item Name: @_selectedItem?.Name
@@ -46,7 +42,7 @@
         Console.WriteLine($"selected: ${value?.Name}");
     }
 
-	private void OnBlur()
+    private void OnBlur()
     {
         Console.WriteLine("blur");
     }

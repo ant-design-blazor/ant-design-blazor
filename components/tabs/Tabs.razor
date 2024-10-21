@@ -39,7 +39,7 @@
                         }
                         @if (HasAddButton)
                         {
-                            <button type="button" class="ant-tabs-nav-add" aria-label="Add tab" @onclick="OnAddClick">
+                            <button type="button" class="ant-tabs-nav-add" style="@_firstAddButtonStyle" aria-label="Add tab" @onclick="OnAddTab">
                                 <Icon Type="plus" />
                             </button>
                         }
@@ -74,7 +74,12 @@
                         </div>
                     </Unbound>
                 </Dropdown>
-
+                @if (HasAddButton)
+                {
+                    <button type="button" class="ant-tabs-nav-add" style="@_secondAddButtonStyle" aria-label="Add tab" @onclick="OnAddTab">
+                        <Icon Type="plus" />
+                    </button>
+                }
                 @if (TabBarExtraContent != null || TabBarExtraContentRight != null || (Card?.Extra != null && Card?.Title == null && Card?.TitleTemplate == null))
                 {
                     <div class="ant-tabs-extra-content">
