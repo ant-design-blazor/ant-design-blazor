@@ -517,7 +517,7 @@ namespace AntDesign
             else
             {
                 OnOverlayHide();
-                //await SetInputBlurAsync();
+                await SetInputBlurAsync();
             }
         }
 
