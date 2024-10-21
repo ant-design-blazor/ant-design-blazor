@@ -360,6 +360,52 @@ namespace AntDesign
             TreeComponent.UncheckAll();
         }
 
+        /// <summary>
+        /// Select all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void SelectAll()
+        {
+            TreeComponent.SelectAll();
+        }
+
+        /// <summary>
+        /// Deselect all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void DeselectAll()
+        {
+            TreeComponent.DeselectAll();
+        }
+
+        /// <summary>
+        /// Expand all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void ExpandAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
+        {
+            TreeComponent.ExpandAll(predicate, recursive);
+        }
+
+        /// <summary>
+        /// Collapse all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void CollapseAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
+        {
+            TreeComponent.CollapseAll(predicate, recursive);
+        }
+
+        /// <summary>
+        /// Get TreeNode by Key
+        /// </summary>
+        /// <param name="key">Key</param>
+        [PublicApi("1.0.0")]
+        public TreeNode<TItem> GetNode(TItemValue key)
+        {
+            return TreeComponent.GetNode(GetTreeKeyFormValue(key));
+        }
+
         private void ClearOptions()
         {
             SelectOptionItems.Clear();
@@ -462,6 +508,8 @@ namespace AntDesign
         {
             if (visible)
             {
+                OnOverlayShow();
+
                 await SetDropdownStyleAsync();
 
                 await SetInputFocusAsync();

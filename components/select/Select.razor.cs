@@ -30,7 +30,7 @@ namespace AntDesign
     </list>
     </summary>
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg", Title= "Select", SubTitle = "选择器")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg", Title = "Select", SubTitle = "选择器")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
     [CascadingTypeParameter(nameof(TItemValue))]
@@ -305,7 +305,7 @@ namespace AntDesign
 
         #endregion Parameters
 
-        [Inject] 
+        [Inject]
         private IDomEventListener DomEventListener { get; set; }
 
         #region Properties
@@ -790,6 +790,8 @@ namespace AntDesign
 
             if (visible)
             {
+                OnOverlayShow();
+
                 await SetDropdownStyleAsync();
 
                 await SetInputFocusAsync();

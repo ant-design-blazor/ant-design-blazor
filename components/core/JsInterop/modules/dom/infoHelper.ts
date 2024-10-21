@@ -171,4 +171,23 @@ export class infoHelper {
 
     return infos;
   }
+
+  /**
+   * Get all scrollable parents of an element
+   * @param element
+   * @returns
+   */
+  static getScrollableParents(element): HTMLElement[] {
+    const parents = [];
+    let node = this.get(element);
+
+    while (node && node.nodeName.toLowerCase() !== 'body') {
+      const overflowY = window.getComputedStyle(node).overflowY;
+      if (overflowY === 'auto' || overflowY === 'scroll') {
+        parents.push(node);
+      }
+      node = node.parentNode;
+    }
+    return parents;
+  }
 }

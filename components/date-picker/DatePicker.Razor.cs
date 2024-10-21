@@ -159,6 +159,10 @@ namespace AntDesign
         protected async Task OnKeyDown(KeyboardEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
+
+            // Key is not always present with autoprefill so we skip
+            if (e.Key == null) return;
+
             var key = e.Key.ToUpperInvariant();
 
             var isEnter = key == "ENTER";

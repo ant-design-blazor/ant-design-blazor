@@ -97,16 +97,6 @@ namespace AntDesign
             Parent?.AddTabPane(this);
         }
 
-        protected override void OnAfterRender(bool firstRender)
-        {
-            base.OnAfterRender(firstRender);
-
-            if (HasTabTitle)
-            {
-                _hasRendered = true;
-            }
-        }
-
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             if (parameters.IsParameterChanged(nameof(Tab), Tab))
