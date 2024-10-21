@@ -296,12 +296,11 @@ namespace AntDesign.Select.Internal
         }
 
         /// <summary>
-        /// clear search value after the dropdown is closed if AutoClearSearchValue=true
+        /// clear input value after the dropdown is closed if AutoClearSearchValue=true
         /// </summary>
-        internal void ClearSearch()
+        internal void ClearInput()
         {
             _inputString = string.Empty;
-            SearchValue = string.Empty;
         }
 
         /// <summary>
