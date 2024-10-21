@@ -737,7 +737,7 @@ namespace AntDesign
         {
             if (AutoFocus)
             {
-                await SetInputFocusAsync();
+                await SetInputFocusAsync(false);
             }
 
             await base.OnFirstAfterRenderAsync();
@@ -755,7 +755,7 @@ namespace AntDesign
                 return;
             }
 
-            _selectContent?.ClearSearch();
+            _selectContent?.ClearInput();
 
             if (!string.IsNullOrWhiteSpace(_searchValue))
             {
@@ -859,11 +859,6 @@ namespace AntDesign
                         selectOption.IsHidden = true;
                     }
 
-                    if (IsSearchEnabled && !string.IsNullOrWhiteSpace(_searchValue))
-                    {
-                        ClearSearch();
-                    }
-
                     if (selectOption.IsAddedTag)
                     {
                         CustomTagSelectOptionItem = null;
@@ -896,7 +891,10 @@ namespace AntDesign
 
                 if (IsSearchEnabled)
                 {
-                    await SetInputFocusAsync();
+                    if (AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
+                    {
+                        ClearSearch();
+                    }
                 }
 
                 await InvokeValuesChanged(selectOption);
@@ -965,6 +963,7 @@ namespace AntDesign
 
             _searchValue = string.Empty;
             _prevSearchValue = string.Empty;
+            _selectContent?.ClearInput();
         }
 
         /// <summary>
@@ -1074,13 +1073,18 @@ namespace AntDesign
         }
 
         /// <summary>
-        ///     Check if Focused property is False; Set the Focused property to true, change the
+        ///     Set the Focused property to true, change the
         ///     style and set the Focus on the Input element via DOM. It also invoke the OnFocus Action.
         /// </summary>
-        internal async Task SetInputFocusAsync()
+        internal async Task SetInputFocusAsync(bool forced = true)
         {
-            if (!Focused)
+            // SetInputBlurAsync may sometimes not be invoked.
+            if (!Focused || forced)
             {
+                if (Focused)
+                {
+                    await SetInputBlurAsync();
+                }
                 Focused = true;
 
                 await FocusAsync(_inputRef);
@@ -1252,14 +1256,6 @@ namespace AntDesign
         protected virtual async Task OnKeyDownAsync(KeyboardEventArgs e)
         {
             await Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Method is called via EventCallBack if the Input element get the focus
-        /// </summary>
-        protected async Task OnInputFocusAsync(FocusEventArgs _)
-        {
-            await SetInputFocusAsync();
         }
 
         /// <summary>

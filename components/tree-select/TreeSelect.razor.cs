@@ -488,6 +488,10 @@ namespace AntDesign
 
             _searchValue = e.Value?.ToString();
             StateHasChanged();
+            if (EnableSearch && IsDropdownShown())
+            {
+                await SetInputFocusAsync(false);
+            }
         }
 
         protected override async Task SetInputBlurAsync()
@@ -511,12 +515,13 @@ namespace AntDesign
                 OnOverlayShow();
 
                 await SetDropdownStyleAsync();
-
-                await SetInputFocusAsync();
+                if (EnableSearch)
+                    await SetInputFocusAsync();
             }
             else
             {
                 OnOverlayHide();
+                await SetInputBlurAsync();
             }
         }
 
@@ -532,6 +537,10 @@ namespace AntDesign
                 item.SetChecked(false);
             else
                 item.SetSelected(false);
+            if (IsSearchEnabled && IsDropdownShown())
+            {
+                await SetInputFocusAsync();
+            }
         }
 
         private TItemValue GetValueFromNode(TreeNode<TItem> node)
@@ -550,8 +559,6 @@ namespace AntDesign
                 return;
             var node = args.Node;
 
-            _searchValue = string.Empty;
-
             var key = node.Key;
             if (Multiple)
             {
@@ -562,6 +569,10 @@ namespace AntDesign
                 }
                 var selectedNodes = _tree._allNodes.Where(x => _tree.SelectedKeys.Contains(x.Key));
                 Values = selectedNodes.Select(GetValueFromNode).ToArray();
+                if (IsSearchEnabled && AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
+                {
+                    ClearSearch();
+                }
             }
             else
             {
@@ -575,10 +586,12 @@ namespace AntDesign
             {
                 await CloseAsync();
             }
-
-            if (EnableSearch)
+            else
             {
-                await SetInputFocusAsync();
+                if (EnableSearch)
+                {
+                    await SetInputFocusAsync();
+                }
             }
         }
 

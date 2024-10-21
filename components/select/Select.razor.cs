@@ -1440,7 +1440,6 @@ namespace AntDesign
                     if (firstActive != null && !firstActive.IsDisabled)
                     {
                         await SetValueAsync(firstActive);
-                        ClearSearch();
                     }
                     return;
                 }
@@ -1713,7 +1712,13 @@ namespace AntDesign
                 (IsSearchEnabled || AllowClear))
             {
                 if (string.IsNullOrEmpty(_prevSearchValue) && SelectedOptionItems.Count > 0)
-                    await OnRemoveSelectedAsync(SelectedOptionItems.Last());
+                {
+                    await SetValueAsync(SelectedOptionItems.Last());
+                    if (IsSearchEnabled)
+                    {
+                        await SetInputFocusAsync(false);
+                    }
+                }
                 else if (!string.IsNullOrEmpty(_prevSearchValue))
                     _prevSearchValue = _searchValue;
             }
@@ -1809,6 +1814,10 @@ namespace AntDesign
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
+            if (IsSearchEnabled && IsDropdownShown())
+            {
+                await SetInputFocusAsync();
+            }
         }
 
 
