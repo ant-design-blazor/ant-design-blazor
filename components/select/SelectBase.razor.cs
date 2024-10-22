@@ -33,6 +33,9 @@ namespace AntDesign
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
         private SelectOptionItem<TItemValue, TItem> _selectOptionEqualToTypeDefault;
         private SelectOptionItem<TItemValue, TItem> _activeOption;
+
+        private bool _waittingFocus;
+
         protected OverlayTrigger _dropDown;
 
         internal ElementReference _dropDownRef;
@@ -733,14 +736,23 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected override async Task OnFirstAfterRenderAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (AutoFocus)
+            if (firstRender)
             {
-                await SetInputFocusAsync();
+                if (AutoFocus)
+                {
+                    await SetInputFocusAsync();
+                }
             }
-
-            await base.OnFirstAfterRenderAsync();
+            else
+            {
+                if (_waittingFocus)
+                {
+                    _waittingFocus = false;
+                    await SetInputFocusAsync();
+                }
+            }
         }
 
         protected void OnOverlayHide()
@@ -755,7 +767,7 @@ namespace AntDesign
                 return;
             }
 
-            _selectContent?.ClearSearch();
+            _selectContent?.ClearInput();
 
             if (!string.IsNullOrWhiteSpace(_searchValue))
             {
@@ -779,6 +791,11 @@ namespace AntDesign
                 SelectOptionItems.Where(x => x.IsHidden)
                     .ForEach(i => i.IsHidden = false);
             }
+        }
+
+        protected void OnOverlayShow()
+        {
+            _selectContent?.DiscoverySearch();
         }
 
         /// <summary>
@@ -854,11 +871,6 @@ namespace AntDesign
                         selectOption.IsHidden = true;
                     }
 
-                    if (IsSearchEnabled && !string.IsNullOrWhiteSpace(_searchValue))
-                    {
-                        ClearSearch();
-                    }
-
                     if (selectOption.IsAddedTag)
                     {
                         CustomTagSelectOptionItem = null;
@@ -891,7 +903,10 @@ namespace AntDesign
 
                 if (IsSearchEnabled)
                 {
-                    await SetInputFocusAsync();
+                    if (AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
+                    {
+                        ClearSearch();
+                    }
                 }
 
                 await InvokeValuesChanged(selectOption);
@@ -960,6 +975,7 @@ namespace AntDesign
 
             _searchValue = string.Empty;
             _prevSearchValue = string.Empty;
+            _selectContent?.ClearInput();
         }
 
         /// <summary>
@@ -1069,11 +1085,12 @@ namespace AntDesign
         }
 
         /// <summary>
-        ///     Check if Focused property is False; Set the Focused property to true, change the
+        ///     Set the Focused property to true, change the
         ///     style and set the Focus on the Input element via DOM. It also invoke the OnFocus Action.
         /// </summary>
-        internal async Task SetInputFocusAsync()
+        protected virtual async Task SetInputFocusAsync()
         {
+            // SetInputBlurAsync may sometimes not be invoked.
             if (!Focused)
             {
                 Focused = true;
@@ -1254,6 +1271,7 @@ namespace AntDesign
         /// </summary>
         protected async Task OnInputFocusAsync(FocusEventArgs _)
         {
+            Focused = true;
             await SetInputFocusAsync();
         }
 
@@ -1262,6 +1280,7 @@ namespace AntDesign
         /// </summary>
         protected async Task OnInputBlurAsync(FocusEventArgs _)
         {
+            Focused = false;
             await SetInputBlurAsync();
         }
 
@@ -1286,6 +1305,25 @@ namespace AntDesign
         internal virtual async Task ProcessSelectedSelectOptions()
         {
             await Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// used to focus again the input box if it still during the search process 
+        /// but lost the focus by clicking on the dropdown or closing tags.
+        /// </summary>
+        internal void FocusIfInSearch()
+        {
+            if (IsSearchEnabled && IsDropdownShown())
+            {
+                if (Focused) // if it's still focused, then wait for blur and then focus again
+                {
+                    _waittingFocus = true;
+                }
+                else
+                {
+                    _ = SetInputFocusAsync();
+                }
+            }
         }
 
         #endregion

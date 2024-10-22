@@ -23,9 +23,9 @@ namespace AntDesign
 
         private static readonly Dictionary<string, string> _spaceSize = new()
         {
-            ["small"] = "8",
-            ["middle"] = "16",
-            ["large"] = "24"
+            [SpaceSize.Small] = "8",
+            [SpaceSize.Middle] = "16",
+            [SpaceSize.Large] = "24"
         };
 
         private string _marginStyle = "";

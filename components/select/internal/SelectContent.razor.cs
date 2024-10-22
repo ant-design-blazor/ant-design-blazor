@@ -295,11 +295,20 @@ namespace AntDesign.Select.Internal
             _compositionInputting = false;
         }
 
-        internal void ClearSearch()
+        /// <summary>
+        /// clear input value after the dropdown is closed if AutoClearSearchValue=true
+        /// </summary>
+        internal void ClearInput()
         {
             _inputString = string.Empty;
-            SearchValue = string.Empty;
-            StateHasChanged();
+        }
+
+        /// <summary>
+        /// discovery search value after the dropdown is opened
+        /// </summary>
+        internal void DiscoverySearch()
+        {
+            _inputString = SearchValue;
         }
 
         private void SetInputWidth()
