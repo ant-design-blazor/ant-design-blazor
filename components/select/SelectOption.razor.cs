@@ -281,8 +281,7 @@ namespace AntDesign
                 {
                     await SelectParent.UpdateOverlayPositionAsync();
 
-                    SelectParent.WaitFocusIfDuringSearching();
-
+                    SelectParent.FocusIfInSearch();
                 }
             }
         }

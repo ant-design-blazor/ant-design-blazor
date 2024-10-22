@@ -488,7 +488,7 @@ namespace AntDesign
 
             _searchValue = e.Value?.ToString();
             StateHasChanged();
-            WaitFocusIfDuringSearching();
+            FocusIfInSearch();
         }
 
         protected override async Task SetInputBlurAsync()
@@ -512,7 +512,7 @@ namespace AntDesign
                 OnOverlayShow();
 
                 await SetDropdownStyleAsync();
-                WaitFocusIfDuringSearching();
+                FocusIfInSearch();
             }
             else
             {
@@ -533,7 +533,7 @@ namespace AntDesign
                 item.SetChecked(false);
             else
                 item.SetSelected(false);
-            WaitFocusIfDuringSearching();
+            FocusIfInSearch();
         }
 
         private TItemValue GetValueFromNode(TreeNode<TItem> node)
@@ -581,7 +581,7 @@ namespace AntDesign
             }
             else
             {
-                WaitFocusIfDuringSearching();
+                FocusIfInSearch();
             }
         }
 

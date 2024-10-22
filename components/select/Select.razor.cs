@@ -794,7 +794,7 @@ namespace AntDesign
 
                 await SetDropdownStyleAsync();
 
-                WaitFocusIfDuringSearching();
+                FocusIfInSearch();
 
                 await ScrollToFirstSelectedItemAsync();
             }
@@ -1714,7 +1714,7 @@ namespace AntDesign
                 if (string.IsNullOrEmpty(_prevSearchValue) && SelectedOptionItems.Count > 0)
                 {
                     await SetValueAsync(SelectedOptionItems.Last());
-                    WaitFocusIfDuringSearching();
+                    FocusIfInSearch();
                 }
                 else if (!string.IsNullOrEmpty(_prevSearchValue))
                     _prevSearchValue = _searchValue;
@@ -1811,7 +1811,7 @@ namespace AntDesign
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
-            WaitFocusIfDuringSearching();
+            FocusIfInSearch();
         }
 
 

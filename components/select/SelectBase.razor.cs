@@ -1307,11 +1307,18 @@ namespace AntDesign
             await Task.CompletedTask;
         }
 
-        internal void WaitFocusIfDuringSearching()
+        internal void FocusIfInSearch()
         {
             if (IsSearchEnabled && IsDropdownShown())
             {
-                _waittingFocus = true;
+                if (Focused)
+                {
+                    _waittingFocus = true;
+                }
+                else
+                {
+                    _ = SetInputFocusAsync();
+                }
             }
         }
 
