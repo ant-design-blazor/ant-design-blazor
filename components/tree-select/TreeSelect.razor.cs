@@ -728,6 +728,10 @@ namespace AntDesign
                         var o = CreateOption(data, true);
                         _ = SetValueAsync(o);
                     }
+                    else
+                    {
+                        ClearOptions();
+                    }
                 }
             }
             base.Value = _cachedValue;
