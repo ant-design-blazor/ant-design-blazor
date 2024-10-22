@@ -647,12 +647,7 @@ namespace AntDesign
         /// <returns></returns>
         private IEnumerable<FormValidationRule> GetRulesFromAttributes()
         {
-            if (_propertyReflector is null)
-            {
-                yield break;
-            }
-
-            if (_propertyReflector?.ValidationAttributes == null)
+            if (_propertyReflector?.ValidationAttributes is null)
             {
                 yield break;
             }
