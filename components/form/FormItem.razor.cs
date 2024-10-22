@@ -217,7 +217,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string ToolTip { get; set; }
-        
+
         private static readonly Dictionary<FormValidateStatus, (string theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (string theme, string type)>
         {
             { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },
@@ -652,9 +652,12 @@ namespace AntDesign
                 yield break;
             }
 
-            var attributes = _propertyReflector?.ValidationAttributes;
+            if (_propertyReflector?.ValidationAttributes == null)
+            {
+                yield break;
+            }
 
-            foreach (var attribute in attributes)
+            foreach (var attribute in _propertyReflector.ValidationAttributes)
             {
                 yield return new FormValidationRule { ValidationAttribute = attribute, Enum = _valueUnderlyingType.IsEnum ? _valueUnderlyingType : null };
             }
