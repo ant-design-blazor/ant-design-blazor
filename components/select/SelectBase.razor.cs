@@ -1307,11 +1307,15 @@ namespace AntDesign
             await Task.CompletedTask;
         }
 
+        /// <summary>
+        /// used to focus again the input box if it still during the search process 
+        /// but lost the focus by clicking on the dropdown or closing tags.
+        /// </summary>
         internal void FocusIfInSearch()
         {
             if (IsSearchEnabled && IsDropdownShown())
             {
-                if (Focused)
+                if (Focused) // if it's still focused, then wait for blur and then focus again
                 {
                     _waittingFocus = true;
                 }
