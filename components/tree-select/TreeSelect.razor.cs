@@ -488,6 +488,7 @@ namespace AntDesign
 
             _searchValue = e.Value?.ToString();
             StateHasChanged();
+            FocusIfInSearch();
         }
 
         protected override async Task SetInputBlurAsync()
@@ -511,12 +512,12 @@ namespace AntDesign
                 OnOverlayShow();
 
                 await SetDropdownStyleAsync();
-
-                await SetInputFocusAsync();
+                FocusIfInSearch();
             }
             else
             {
                 OnOverlayHide();
+                await SetInputBlurAsync();
             }
         }
 
@@ -532,6 +533,7 @@ namespace AntDesign
                 item.SetChecked(false);
             else
                 item.SetSelected(false);
+            FocusIfInSearch();
         }
 
         private TItemValue GetValueFromNode(TreeNode<TItem> node)
@@ -550,8 +552,6 @@ namespace AntDesign
                 return;
             var node = args.Node;
 
-            _searchValue = string.Empty;
-
             var key = node.Key;
             if (Multiple)
             {
@@ -562,6 +562,10 @@ namespace AntDesign
                 }
                 var selectedNodes = _tree._allNodes.Where(x => _tree.SelectedKeys.Contains(x.Key));
                 Values = selectedNodes.Select(GetValueFromNode).ToArray();
+                if (IsSearchEnabled && AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
+                {
+                    ClearSearch();
+                }
             }
             else
             {
@@ -575,10 +579,9 @@ namespace AntDesign
             {
                 await CloseAsync();
             }
-
-            if (EnableSearch)
+            else
             {
-                await SetInputFocusAsync();
+                FocusIfInSearch();
             }
         }
 
@@ -693,7 +696,7 @@ namespace AntDesign
                 StateHasChanged();
             }
 
-            if (_cachedValues != null && !_cachedValues.SequenceEqual(Values))
+            if (_cachedValues != null && Values != null && !_cachedValues.SequenceEqual(Values))
             {
                 UpdateValuesSelection();
                 StateHasChanged();
