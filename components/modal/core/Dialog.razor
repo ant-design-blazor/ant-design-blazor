@@ -8,7 +8,6 @@
             <div class=@($"{Config.PrefixCls}-mask {GetMaskClsName()}") style="@Config.MaskStyle"></div>
         }
         <div tabindex="-1" class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended(this.Status)}") role="dialog"
-             @onclick="@EventUtil.AsNonRenderingEventHandler(OnMaskClick)"
              @onmouseup="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseUp)"
              @onkeydown="@(EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(OnKeyDown))"
              style="@_wrapStyle">
