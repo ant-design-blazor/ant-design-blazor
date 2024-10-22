@@ -15,6 +15,40 @@ timeline: true
 
 ---
 
+### 1.0.0 RC 2
+
+`2024-10-09`
+
+> 人生自古谁无死？留取丹心照汗青。
+
+- 🔥 支持 .NET 9.0，文档站点使用 RC2 发布。[#4196](https://github.com/ant-design-blazor/ant-design-blazor/pull/4196) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - ⚡️ 优化 防止切换时重新渲染 TabPane。[#4255](https://github.com/ant-design-blazor/ant-design-blazor/pull/4255) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Tabs 超出宽度时滚动显示问题。[#4253](https://github.com/ant-design-blazor/ant-design-blazor/pull/4253) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Tab 宽度在添加新tab时重新获取。[#4239](https://github.com/ant-design-blazor/ant-design-blazor/pull/4239) [@agolub-s](https://github.com/agolub-s)
+  - 🐞 修复 Tabs 在隐藏时会导致无限循环获取尺寸。[#4225](https://github.com/ant-design-blazor/ant-design-blazor/pull/4225) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 GoTo 方法会抛空引用异常。[#4217](https://github.com/ant-design-blazor/ant-design-blazor/pull/4217) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🐞 设置 AutoHeight 时默认设置 TableLayout 为 fixed。[#4258](https://github.com/ant-design-blazor/ant-design-blazor/pull/4258) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 重构 AutoHeight 算法。[#4238](https://github.com/ant-design-blazor/ant-design-blazor/pull/4238) [@ysj265](https://github.com/ysj265)
+  
+- Form
+  - 🆕 新增 Form 支持字段验证。[#4240](https://github.com/ant-design-blazor/ant-design-blazor/pull/4240) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Form 避免绑定空模型时循环渲染。[#4254](https://github.com/ant-design-blazor/ant-design-blazor/pull/4254) [@ElderJames](https://github.com/ElderJames)
+
+- Input
+  - 🆕 增加 ShowClear 属性控制是否显示清空按钮。[#4221](https://github.com/ant-design-blazor/ant-design-blazor/pull/4221) [@rhodon-jargon](https://github.com/rhodon-jargon)
+  - 🐞 给 Search 组件的 Button 添加 Disabled 属性。[#4214](https://github.com/ant-design-blazor/ant-design-blazor/pull/4214) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
+
+- 🆕 新增 Popconfirm 支持隐藏按钮。[#3895](https://github.com/ant-design-blazor/ant-design-blazor/pull/3895) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Tree 的 Selectable 和 SelectableExpression 属性设置 TreeNode可选择。[#4229](https://github.com/ant-design-blazor/ant-design-blazor/pull/4229) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 TreeSelect 有时会触发 OnSelectedItemChanged 两次。[#4232](https://github.com/ant-design-blazor/ant-design-blazor/pull/4232) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 DatePicker 避免浏览器自动填充时异常。[#4251](https://github.com/ant-design-blazor/ant-design-blazor/pull/4251) [@ogix](https://github.com/ogix)
+- 🐞 修复 Menu 的 tooltip 失效。[#4222](https://github.com/ant-design-blazor/ant-design-blazor/pull/4222) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Modal 当用服务创建时按钮没有本地化。[#4215](https://github.com/ant-design-blazor/ant-design-blazor/pull/4215) [@ElderJames](https://github.com/ElderJames)
+
 ### 1.0.0 RC 1
 
 `2024-09-19`

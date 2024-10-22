@@ -200,7 +200,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 var seeAlso = await GetAllLanguagesSeeAlsoDocs(componentDocs);
                 var faqs = GetAllLanguagesFaqDocs(componentName);
                 var demos = GetAllLanguagesDemos(componentName);
-                var docs = GetAllLanguagesComponentDocs(componentName);
+                var docs = GetAllLanguagesComponentDocs(title);
 
                 // Build docs for multiple languages
                 componentsDocsByLanguage[Constants.EnglishLanguage].Add(GenerateApiDocumentation.ForComponent(Constants.EnglishLanguage, docAttribute, title, docs, pageUrl, apiDocs, seeAlso, faqs, demos));

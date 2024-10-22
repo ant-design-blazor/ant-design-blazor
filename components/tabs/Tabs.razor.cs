@@ -228,7 +228,12 @@ namespace AntDesign
         private string _navListStyle;
 
         private string _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
+
+        private const string HiddenStyle = "visibility: hidden; order: 1;";
+
         private string _operationStyle = "visibility: hidden; order: 1;";
+        private string _firstAddButtonStyle = HiddenStyle;
+        private string _secondAddButtonStyle = HiddenStyle;
 
         private decimal _scrollOffset;
         private decimal _scrollListWidth;
@@ -253,11 +258,14 @@ namespace AntDesign
 
         private bool HasAddButton => Type == TabType.EditableCard && !HideAdd;
 
+        private bool IsOverflowed => _scrollListWidth <= _wrapperWidth;
+
         private readonly int _dropDownBtnWidth = 46;
         private readonly int _addBtnWidth = 40;
         private bool _shownDropdown;
         private bool _needUpdateScrollListPosition;
-
+        private bool _retryingGetSize;
+        private bool _hasNewTab = false;
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -315,9 +323,22 @@ namespace AntDesign
         {
             tabPane.SetIndex(_tabs.Count);
             _tabs.Add(tabPane);
+            _needUpdateScrollListPosition = true;
             StateHasChanged();
+            if (_hasNewTab)
+            {
+                ActivatePane(tabPane.Key);
+                _hasNewTab = false;
+            }
         }
-
+        private async Task OnAddTab()
+        {
+            if (OnAddClick.HasDelegate)
+            {
+                _hasNewTab = true;
+                await OnAddClick.InvokeAsync(null);
+            }
+        }
         internal void Complete()
         {
             if (_afterFirstRender)
@@ -386,17 +407,25 @@ namespace AntDesign
             // reorder tabs
             _tabs.OrderBy(x => x.TabIndex).ForEach((x, i) => x.SetIndex(i));
 
-            // if it is active, need to activiate the previous tab.
+            // if it is active, need to activiate the previous tab, or the next one if no previous
             if (_activeKey == tab.Key)
             {
-                Previous();
+                if (tab.TabIndex > 0)
+                {
+                    Previous();
+                }
+                else
+                {
+                    Next();
+                }
             }
 
             _shouldRender = true;
-            _needUpdateScrollListPosition = tab.TabIndex != _tabs.Count - 1; // only update scroll list position when active tab is not the last one
+            _needUpdateScrollListPosition = true;
 
             _tabs.Remove(tab);
             StateHasChanged();
+
         }
 
         internal async Task HandleTabClick(TabPane tabPane)
@@ -498,8 +527,14 @@ namespace AntDesign
                 ActiveKeyChanged.InvokeAsync(_activeKey);
             }
 
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(tab.Key);
+            }
+
             OnActiveTabChanged(_activeTab);
 
+            _retryingGetSize = false;// each activation only can try once
             TryRenderInk();
             if (Card?.Body == null)
             {
@@ -514,7 +549,7 @@ namespace AntDesign
             // Needs to be optimized to render only one tab instead all the tabs
             StateHasChanged();
 
-            _ = FocusAsync(_activeTab.TabBtnRef);
+            //_ = FocusAsync(_activeTab.TabBtnRef);
         }
 
         public override Task SetParametersAsync(ParameterView parameters)
@@ -580,7 +615,7 @@ namespace AntDesign
         private void UpdateScrollListPosition()
         {
             // 46 is the size of dropdown button
-            if (_scrollListWidth <= _wrapperWidth)
+            if (IsOverflowed)
             {
                 _operationClass = "ant-tabs-nav-operations ant-tabs-nav-operations-hidden";
                 _operationStyle = "visibility: hidden; order: 1;";
@@ -601,6 +636,18 @@ namespace AntDesign
                 if (IsHorizontal)
                 {
                     DomEventListener.AddExclusive<string>(_navListRef, "wheel", OnWheel, true);
+                }
+            }
+            _firstAddButtonStyle = _secondAddButtonStyle = HiddenStyle;
+            if (HasAddButton)
+            {
+                if (IsOverflowed)
+                {
+                    _firstAddButtonStyle = string.Empty;
+                }
+                else
+                {
+                    _secondAddButtonStyle = string.Empty;
                 }
             }
         }
@@ -676,8 +723,9 @@ namespace AntDesign
             // the tabs maybe inside other components like modal, it can't get the element info at the first time
             // so here is retrying to get the element info again.
             // Fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/4061
-            if (_activeTabElement.ClientWidth <= 0 || _activeTabElement.ClientHeight <= 0)
+            if (!_retryingGetSize && (_activeTabElement.ClientWidth <= 0 || _activeTabElement.ClientHeight <= 0))
             {
+                _retryingGetSize = true;
                 _needUpdateScrollListPosition = true;
                 StateHasChanged();
                 return;
@@ -685,10 +733,9 @@ namespace AntDesign
 
             if (IsHorizontal)
             {
-
                 _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
 
-                var additionalWidth = HasAddButton ? _addBtnWidth : 0;
+                var additionalWidth = HasAddButton && (IsOverflowed) ? _addBtnWidth : 0;
 
                 // need to scroll tab bars
                 if (_activeTabElement.OffsetLeft + _activeTabElement.ClientWidth + additionalWidth > _scrollOffset + _wrapperWidth
@@ -764,7 +811,10 @@ namespace AntDesign
             }
 
             _invisibleTabs = _tabs.ToList();
-            _invisibleTabs.RemoveRange(invisibleHeadCount, visibleCount);
+            if (invisibleHeadCount + visibleCount <= _invisibleTabs.Count)
+            {
+                _invisibleTabs.RemoveRange(invisibleHeadCount, visibleCount);
+            }
         }
 
         private static int GetOverflowCount(decimal maxLength, decimal[] lengths, bool isRight = false)

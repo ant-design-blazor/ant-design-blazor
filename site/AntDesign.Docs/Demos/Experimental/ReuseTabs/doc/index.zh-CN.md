@@ -81,7 +81,7 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 | Order | 标签顺序 | int | 999 |
 | TypeName | 当前页面对应的类别 | string | - |
 | Key | 当前标签页的关键字 | string | - |
-| NewPageForParams | 是否针对具有不同参数的路由创建新的页面 | bool | false |
+| Singleton | 是否针对具有不同参数的路由创建新的页面 | bool | false |
 
 ### IReuseTabsPage 接口
 

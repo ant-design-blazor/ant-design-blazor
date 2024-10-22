@@ -1,13 +1,11 @@
 ﻿export class tableHelper {
   static isHidden(element) {
-    if (element instanceof HTMLElement) {
+    if (element) {
       const computedStyle = getComputedStyle(element);
       if (computedStyle.display === "none" || computedStyle.visibility === "hidden") {
         return true;
       }
-    }
-    if (element.parentNode != null) {
-      if (tableHelper.isHidden(element.parentNode)) {
+      if (element.parentElement && tableHelper.isHidden(element.parentElement)) {
         return true;
       }
     }
@@ -26,107 +24,67 @@
     }
     return false;
   }
-  static getTotalHeightAbove(rootElement, element, left: number, right: number): number {
-    let totalHeight = 0;
-    let currentElement = element.previousElementSibling;
-
-    let rowGap = 0;
-    if (element.parentElement != null) {
-      const computedStyle = getComputedStyle(element.parentElement);
-      if (computedStyle.rowGap) {
-        if (computedStyle.rowGap.endsWith('px')) {
-          rowGap = parseFloat(computedStyle.rowGap);
-        }
-      }
-    }
-
-    let nextElement = element;
-    let  nextComputedStyle = getComputedStyle(element);
-    if (!tableHelper.isIgnore(element,  nextComputedStyle, left, right)) {
-      totalHeight += parseFloat( nextComputedStyle.marginTop);
-    }
-
-    while (currentElement) {
-      const currentComputedStyle = getComputedStyle(currentElement);
-      if (!tableHelper.isIgnore(currentElement, currentComputedStyle, left, right)) {
-        totalHeight += currentElement.offsetHeight + Math.max(parseFloat(currentComputedStyle.marginTop), parseFloat(nextComputedStyle.marginTop)) + rowGap;
-
-      }
-      nextElement = currentElement;
-      currentElement = currentElement.previousElementSibling;
-      nextComputedStyle = currentComputedStyle;
-    }
-    if (!tableHelper.isIgnore(nextElement, nextComputedStyle, left, right)) {
-      totalHeight += parseFloat(nextComputedStyle.marginTop);
-    }
-    
-    const parentElement = element.parentElement;
-    if (parentElement != null) {
- 
-      const parentComputedStyle = getComputedStyle(parentElement);
-      if (!tableHelper.isIgnore(parentElement, parentComputedStyle, left, right)) {
-        totalHeight += parseFloat(parentComputedStyle.paddingTop);
-        totalHeight += parseFloat(parentComputedStyle.borderTop);
-  
-      }
-      if (parentElement == rootElement) {
-        return totalHeight;
-      }
-      totalHeight += tableHelper.getTotalHeightAbove(rootElement, parentElement, left, right);
-    }
-    return totalHeight;
+  static getTotalHeightAbove(rootElement, element): number {
+    const currentRect = element.getBoundingClientRect();
+    const parentRect = rootElement.getBoundingClientRect();
+    return currentRect.top - parentRect.top;   
   }
-  static getTotalHeightBelow(rootElement, element, left: number, right: number): number {
+  static getTotalHeightBelow(rootElement, element, marginBottom: number, left: number, right: number): number {
     let totalHeight = 0;
     let currentElement = element.nextElementSibling;
 
     let rowGap = 0;
-    if (element.parentElement != null) {
-      const computedStyle = getComputedStyle(element.parentElement);
-      if (computedStyle.rowGap) {
-        if (computedStyle.rowGap.endsWith('px')) {
-          rowGap = parseFloat(computedStyle.rowGap);
-        }        
+    let parentBorderBottom = 0;
+    let parentPaddingBottom = 0;
+    const parentElement = element.parentElement;
+    if (parentElement) {
+      const parentComputedStyle = getComputedStyle(parentElement);
+      if (parentComputedStyle.rowGap && parentComputedStyle.rowGap.endsWith('px')) {
+        rowGap = parseFloat(parentComputedStyle.rowGap);        
+      }
+      if (parentComputedStyle.borderStyle != 'none' && parentComputedStyle.borderBottom) {        
+        parentBorderBottom = parseFloat(parentComputedStyle.borderBottom);        
+      }
+      if (parentComputedStyle.paddingBottom) {
+        parentPaddingBottom = parseFloat(parentComputedStyle.paddingBottom);
       }
     }
     let previousElement = element;
     let previousComputedStyle = getComputedStyle(element);
-    if (!tableHelper.isIgnore(element, previousComputedStyle, left, right)) {
-      totalHeight += parseFloat(previousComputedStyle.marginBottom); 
-    }
+
 
     while (currentElement) {
       const currentComputedStyle = getComputedStyle(currentElement);
       if (!tableHelper.isIgnore(currentElement, currentComputedStyle, left, right)) {
         totalHeight += currentElement.offsetHeight + Math.max(parseFloat(currentComputedStyle.marginTop), parseFloat(previousComputedStyle.marginBottom)) + rowGap;
-      
+
+        previousElement = currentElement;
+        previousComputedStyle = currentComputedStyle;
       }
-      previousElement = currentElement;
       currentElement = currentElement.nextElementSibling;
-      previousComputedStyle = currentComputedStyle;
+   
     }
     if (!tableHelper.isIgnore(previousElement, previousComputedStyle, left, right)) {
-      totalHeight += parseFloat(previousComputedStyle.marginBottom);
-    }
-    
-    const parentElement = element.parentElement;
-    if (parentElement!=null) {     
+      marginBottom = Math.max(parseFloat(previousComputedStyle.marginBottom), marginBottom);
+      if (parentBorderBottom > 0.1 || parentPaddingBottom>0.1) {
+        totalHeight += marginBottom;
+        marginBottom = 0;
+      }
+    }    
 
+    if (parentElement) {     
       const parentComputedStyle = getComputedStyle(parentElement);
       if (!tableHelper.isIgnore(parentElement, parentComputedStyle, left, right)) {
-        totalHeight += parseFloat(parentComputedStyle.paddingBottom);
-        totalHeight += parseFloat(parentComputedStyle.borderBottom);
-        //if (parentElement.scrollWidth > parentElement.clientWidth) {
-        //  totalHeight += 23;
-        //  console.log('scrollbar C:' + (parentElement.offsetHeight - parentElement.clientHeight));
-        //  console.log(parentElement);
-        //}
+
+        totalHeight += parentPaddingBottom;   
+        totalHeight += parentBorderBottom;
+        
       }
-      if (parentElement == rootElement) {
+      if (parentElement === rootElement) {
         return totalHeight;
       }
       
-      totalHeight += tableHelper.getTotalHeightBelow(rootElement,parentElement, left, right);
+      totalHeight += tableHelper.getTotalHeightBelow(rootElement, parentElement, marginBottom, left, right);
     }
     return totalHeight;
   }
@@ -135,7 +93,7 @@
     return parseFloat(value);
   }
   static getCssHeight(element,height) {
-    if (element != null) {
+    if (element) {
       if (height !== 'auto' && height !== '0px' && height !== '') {
         // 将 'px' 以外的单位转换为像素
         if (height.endsWith('px')) {
@@ -145,7 +103,7 @@
         } else if (height.endsWith('%')) {
           // 获取父元素的高度
           const parentElement = element.parentElement;
-          if (parentElement != null) {
+          if (parentElement) {
             const parentComputedStyle = window.getComputedStyle(parentElement);
             const parentHeight = parentComputedStyle.height;
             return (tableHelper.parseHeightValue(height) / 100) * tableHelper.parseHeightValue(parentHeight);
@@ -153,8 +111,6 @@
           return 0;
         }
         return height;
-
-
       }
     }
     return 0;
@@ -162,23 +118,19 @@
 
 
   static getNumericHeight(element) {
-    if (element != null) {
-      if (element.style && element.style.height) {
-        const computedStyle = window.getComputedStyle(element);
-        const height = tableHelper.getCssHeight(element, computedStyle.height);
-        if (height > 0) {
-          return height;
-        }
-      }
-      
+    if (element && element.style && element.style.height) {
+      const computedStyle = window.getComputedStyle(element);
+      const height = tableHelper.getCssHeight(element, computedStyle.height);
+      if (height > 0) {
+        return height;
+      }          
     }
     return 0;
   }
   static getContainer(element) {
     if (element) {     
       const height = tableHelper.getNumericHeight(element);    
-      if (height > 0) {
-    
+      if (height > 0) {    
         return element;          
       }  
       const parent = this.getContainer(element.parentElement);
@@ -199,11 +151,11 @@
       return;
     }
     // 计算上面元素的总高度
-    const heightAbove = tableHelper.getTotalHeightAbove(container, bodyRef, rect.left, rect.right);
+    const heightAbove = tableHelper.getTotalHeightAbove(container, bodyRef);
     //console.log('heightAbove:' + heightAbove);
 
     // 计算下面元素的总高度
-    const heightBelow = tableHelper.getTotalHeightBelow(container, bodyRef, rect.left, rect.right);
+    const heightBelow = tableHelper.getTotalHeightBelow(container, bodyRef,0, rect.left, rect.right);
     //console.log('heightBelow:' + heightBelow);
 
     // 计算视口高度并减去滚动条的宽度
