@@ -379,14 +379,6 @@ namespace AntDesign
                         }
 
                         _hasInvokeClosed = true;// avoid closing again
-                        //if (string.IsNullOrWhiteSpace(Style))
-                        //{
-                        //    await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
-                        //}
-                        //else if (!_renderInCurrentContainerRegex.IsMatch(Style))
-                        //{
-                        //    await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
-                        //}
 
                         _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform)
                             ? $"transform: {OffsetTransform};"
@@ -481,11 +473,6 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            //if (_isOpen)
-            //{
-            //    _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
-            //}
-
             base.Dispose(disposing);
         }
     }
