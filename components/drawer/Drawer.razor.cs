@@ -443,7 +443,6 @@ namespace AntDesign
                 await VisibleChanged.InvokeAsync(false);
             }
             _isOpen = false;
-            //await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
 
             if (DrawerRef != null)
             {
