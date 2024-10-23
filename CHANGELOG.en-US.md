@@ -15,6 +15,34 @@ timeline: true
 
 ---
 
+### 1.0.0 RC 3
+
+`2024-10-22`
+
+- 🆕 Add Upload setting up AntiforgeryToken automatically. [#4271](https://github.com/ant-design-blazor/ant-design-blazor/pull/4271) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add steps constants. [#4267](https://github.com/ant-design-blazor/ant-design-blazor/pull/4267) [@pathartl](https://github.com/pathartl)
+- 🆕 Add space string constants。[#4263](https://github.com/ant-design-blazor/ant-design-blazor/pull/4263) [@pathartl](https://github.com/pathartl)
+
+- TreeSelect
+  - 🆕 Add some public methods for controling the inner tree. [#4283](https://github.com/ant-design-blazor/ant-design-blazor/pull/4283) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed that the clear button cannot deselect the selected item when TItemValue is a non-nullable type. [#4283](https://github.com/ant-design-blazor/ant-design-blazor/pull/4283) [@pankey888](https://github.com/pankey888)
+
+- Select
+  - 🐞 Fixed issues with search input. [#4286](https://github.com/ant-design-blazor/ant-design-blazor/pull/4286) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed clear and discovery the search value. [#4281](https://github.com/ant-design-blazor/ant-design-blazor/pull/4281) [#4276](https://github.com/ant-design-blazor/ant-design-blazor/pull/4276) [@ElderJames](https://github.com/ElderJames)
+
+- 💄 Fixed Tree the style of line indent. [#4290](https://github.com/ant-design-blazor/ant-design-blazor/pull/4290) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Overlay that dropdown should follow the scrolling with trigger. [#4285](https://github.com/ant-design-blazor/ant-design-blazor/pull/4285) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Empty image doesn't show in dropdown. [#4282](https://github.com/ant-design-blazor/ant-design-blazor/pull/4282) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed AutoComplete prevent opening empty panel. [#4284](https://github.com/ant-design-blazor/ant-design-blazor/pull/4284) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Modal Buttons size default to Default. [#4268](https://github.com/ant-design-blazor/ant-design-blazor/pull/4268) [@wangj90](https://github.com/wangj90)
+- 🐞 Fixed Tabbs the issue where TabPanes cannot render. [#4269](https://github.com/ant-design-blazor/ant-design-blazor/pull/4269) [@ysj265](https://github.com/ysj265)
+
+- 🐞 Fixed Cascader wrong placement and selected node order. [#4265](https://github.com/ant-design-blazor/ant-design-blazor/pull/4265) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed ReuseTabs page filter after getting the config from pages. [#4266](https://github.com/ant-design-blazor/ant-design-blazor/pull/4266) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Update net9 target usage. [#4262](https://github.com/ant-design-blazor/ant-design-blazor/pull/4262) [@WeihanLi](https://github.com/WeihanLi)
+
 ### 1.0.0 RC 2
 
 `2024-10-09`
