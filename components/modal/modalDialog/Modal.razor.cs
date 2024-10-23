@@ -4,6 +4,7 @@
 
 using System;
 using System.Threading.Tasks;
+using AntDesign.core.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -304,6 +305,8 @@ namespace AntDesign
         [Parameter]
         public bool ForceRender { get; set; }
 
+        [Inject] private ClientDimensionService ClientDimensionService { get; set; }
+
         #endregion Parameter
 
 #pragma warning disable 649
@@ -440,5 +443,14 @@ namespace AntDesign
         }
 
         #endregion Sustainable Dialog
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await ClientDimensionService.GetScrollBarSizeAsync();
+            }
+            await base.OnAfterRenderAsync(firstRender);
+        }
     }
 }

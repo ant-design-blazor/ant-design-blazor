@@ -5,6 +5,7 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AntDesign.core.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -237,6 +238,8 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Handler { get; set; }
 
+        [Inject] private ClientDimensionService ClientDimensionService { get; set; }
+
         private OneOf<RenderFragment, string> _content;
 
         private string ContentString { get; set; }
@@ -355,6 +358,10 @@ namespace AntDesign
 
         protected override async Task OnAfterRenderAsync(bool isFirst)
         {
+            if (isFirst)
+            {
+                await ClientDimensionService.GetScrollBarSizeAsync();
+            }
             switch (_status)
             {
                 case ComponentStatus.Opening:
@@ -372,14 +379,14 @@ namespace AntDesign
                         }
 
                         _hasInvokeClosed = true;// avoid closing again
-                        if (string.IsNullOrWhiteSpace(Style))
-                        {
-                            await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
-                        }
-                        else if (!_renderInCurrentContainerRegex.IsMatch(Style))
-                        {
-                            await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
-                        }
+                        //if (string.IsNullOrWhiteSpace(Style))
+                        //{
+                        //    await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
+                        //}
+                        //else if (!_renderInCurrentContainerRegex.IsMatch(Style))
+                        //{
+                        //    await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
+                        //}
 
                         _drawerStyle = !string.IsNullOrWhiteSpace(OffsetTransform)
                             ? $"transform: {OffsetTransform};"
@@ -399,6 +406,7 @@ namespace AntDesign
                         break;
                     }
             }
+
             await base.OnAfterRenderAsync(isFirst);
         }
 
@@ -443,7 +451,7 @@ namespace AntDesign
                 await VisibleChanged.InvokeAsync(false);
             }
             _isOpen = false;
-            await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+            //await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
 
             if (DrawerRef != null)
             {
@@ -473,10 +481,10 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (_isOpen)
-            {
-                _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
-            }
+            //if (_isOpen)
+            //{
+            //    _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+            //}
 
             base.Dispose(disposing);
         }
