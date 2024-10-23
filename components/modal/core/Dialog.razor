@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <div @ref="@_element" id="@Id">
-    <div class=@($"{Config.PrefixCls}-root")>
+    <div class="@($"{Config.PrefixCls}-root {(Visible?$"{Config.PrefixCls}-open":"")}")">
         @if (Config.Mask)
         {
             <div class=@($"{Config.PrefixCls}-mask {GetMaskClsName()}") style="@Config.MaskStyle"></div>

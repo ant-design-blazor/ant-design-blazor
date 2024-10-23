@@ -466,12 +466,6 @@ namespace AntDesign
                     await InvokeStateHasChangedAsync();
                 }
 
-                if (!_disableBodyScroll)
-                {
-                    _disableBodyScroll = true;
-                    await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
-                }
-
                 // enable drag and drop
                 if (Status != ModalStatus.Max && Config.Draggable && !_doDraggable)
                 {
@@ -486,13 +480,6 @@ namespace AntDesign
             }
             else
             {
-                // enable body scroll
-                if (_disableBodyScroll)
-                {
-                    _disableBodyScroll = false;
-                    await Task.Delay(250);
-                    await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
-                }
                 // disable drag and drop
                 if (Status != ModalStatus.Max && Config.Draggable && _doDraggable)
                 {
@@ -508,13 +495,6 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            // enable body scroll
-            if (_disableBodyScroll)
-            {
-                _disableBodyScroll = false;
-                _ = Task.Delay(250);
-                _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
-            }
 
             _ = TryResetModalStyle();
             // When a modal is defined in template, it will be destroyed when the page is navigated to different page component.
