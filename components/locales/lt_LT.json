@@ -205,7 +205,8 @@
       "number": {
         "len": "${label} turi būti lygi ${len}",
         "min": "${label} turi būti lygus arba didesnis ${min}",
-        "max": "${label} turi būti lygus arba mažesnis ${max}"
+        "max": "${label} turi būti lygus arba mažesnis ${max}",
+        "range": "${label} turi būti tarp ${min}-${max}"
       },
       "array": {
         "len": "Pasirinktas kiekis ${label} turi būti lygus ${len}",
