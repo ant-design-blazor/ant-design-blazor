@@ -159,6 +159,11 @@ namespace AntDesign
             _dialogMouseDown = true;
         }
 
+        private void OnMaskMouseDown()
+        {
+            _dialogMouseDown = false;
+        }
+
         private async Task OnMaskMouseUp()
         {
             if (Config.MaskClosable && !_dialogMouseDown)
