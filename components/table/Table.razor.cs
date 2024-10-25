@@ -70,7 +70,7 @@ namespace AntDesign
         private int _parametersHashCode;
 
         /// <summary>
-        /// Render mode of table. See <see cref="AntDesign.RenderMode"/> documentation for details.
+        /// Render mode of table. See <see cref="AntDesign.RerenderStrategy"/> documentation for details.
         /// </summary>
         [Parameter]
         public RerenderStrategy RerenderStrategy { get; set; } = RerenderStrategy.Always;
@@ -591,7 +591,7 @@ namespace AntDesign
 
         private QueryModel<TItem> BuildQueryModel()
         {
-            var queryModel = new QueryModel<TItem>(PageIndex, PageSize, _startIndex);
+            var queryModel = new QueryModel<TItem>(_pageIndex, _pageSize, _startIndex);
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
@@ -657,7 +657,7 @@ namespace AntDesign
             var queryModel = this.InternalReload();
             StateHasChanged();
 
-            if (OnChange.HasDelegate)
+            if (OnChange.HasDelegate && _pageIndex > 0)
             {
                 OnChange.InvokeAsync(queryModel);
             }
