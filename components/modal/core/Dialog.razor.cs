@@ -59,6 +59,7 @@ namespace AntDesign
         private string _prevUrl = "";
 
         private bool _resizing;
+        private bool _afterFirstRender;
 
 #pragma warning disable 649
 
@@ -450,8 +451,18 @@ namespace AntDesign
         /// </summary>
         /// <param name="isFirst"></param>
         /// <returns></returns>
-        protected override async Task OnAfterRenderAsync(bool isFirst)
-        {
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        { 
+            if (firstRender)
+            {
+                _afterFirstRender = true;
+            }
+
+            if (!_afterFirstRender)
+            {
+                return;
+            }
+
             if (Visible)
             {
                 // disable body scroll
@@ -485,7 +496,7 @@ namespace AntDesign
                 }
             }
 
-            await base.OnAfterRenderAsync(isFirst);
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         #endregion override
