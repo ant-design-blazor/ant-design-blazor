@@ -531,6 +531,12 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Specifies the unique key of the <typeparamref name="TItem"/>, used for comparing items.
+        /// </summary>
+        [Parameter]
+        public Func<TItem, object> ItemKey { get; set; }
+
+        /// <summary>
         ///     Returns a true/false if the placeholder should be displayed or not.
         /// </summary>
         /// <returns>true if SelectOptions has no values and the searchValue is empty; otherwise false </returns>
@@ -1178,6 +1184,11 @@ namespace AntDesign
 
         bool IEqualityComparer<TItem>.Equals(TItem x, TItem y)
         {
+            if (ItemKey is not null)
+            {
+                return ItemKey(x).Equals(ItemKey(y));
+            }
+
             if (_getLabel is null)
             {
                 if (_getValue is null)
@@ -1197,6 +1208,10 @@ namespace AntDesign
 
         int IEqualityComparer<TItem>.GetHashCode(TItem obj)
         {
+            if (ItemKey is not null)
+            {
+                return ItemKey(obj).GetHashCode();
+            }
             return obj.GetHashCode();
         }
 
