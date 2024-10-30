@@ -59,6 +59,7 @@ namespace AntDesign
         private string _prevUrl = "";
 
         private bool _resizing;
+        private bool _afterFirstRender;
 
 #pragma warning disable 649
 
@@ -159,21 +160,18 @@ namespace AntDesign
             _dialogMouseDown = true;
         }
 
-        private async Task OnMaskMouseUp()
+        private void OnMaskMouseDown()
         {
-            if (Config.MaskClosable && _dialogMouseDown)
-            {
-                await Task.Delay(4);
-                _dialogMouseDown = false;
-            }
+            _dialogMouseDown = false;
         }
 
-        private async Task OnMaskClick()
+        private async Task OnMaskMouseUp()
         {
             if (Config.MaskClosable && !_dialogMouseDown)
             {
                 await CloseAsync();
             }
+            _dialogMouseDown = false;
         }
 
         #endregion mask and dialog click event
@@ -453,8 +451,18 @@ namespace AntDesign
         /// </summary>
         /// <param name="isFirst"></param>
         /// <returns></returns>
-        protected override async Task OnAfterRenderAsync(bool isFirst)
-        {
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        { 
+            if (firstRender)
+            {
+                _afterFirstRender = true;
+            }
+
+            if (!_afterFirstRender)
+            {
+                return;
+            }
+
             if (Visible)
             {
                 // disable body scroll
@@ -464,12 +472,6 @@ namespace AntDesign
                     await AppendToContainer();
                     Show();
                     await InvokeStateHasChangedAsync();
-                }
-
-                if (!_disableBodyScroll)
-                {
-                    _disableBodyScroll = true;
-                    await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
                 }
 
                 // enable drag and drop
@@ -486,13 +488,6 @@ namespace AntDesign
             }
             else
             {
-                // enable body scroll
-                if (_disableBodyScroll)
-                {
-                    _disableBodyScroll = false;
-                    await Task.Delay(250);
-                    await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
-                }
                 // disable drag and drop
                 if (Status != ModalStatus.Max && Config.Draggable && _doDraggable)
                 {
@@ -501,20 +496,13 @@ namespace AntDesign
                 }
             }
 
-            await base.OnAfterRenderAsync(isFirst);
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         #endregion override
 
         protected override void Dispose(bool disposing)
         {
-            // enable body scroll
-            if (_disableBodyScroll)
-            {
-                _disableBodyScroll = false;
-                _ = Task.Delay(250);
-                _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
-            }
 
             _ = TryResetModalStyle();
             // When a modal is defined in template, it will be destroyed when the page is navigated to different page component.

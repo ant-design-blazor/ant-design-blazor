@@ -15,6 +15,32 @@ timeline: true
 
 ---
 
+### 1.0.0 RC 3
+
+`2024-10-22`
+
+- 🆕 新增 Upload 自动在请求注入 AntiforgeryToken。[#4271](https://github.com/ant-design-blazor/ant-design-blazor/pull/4271) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Steps 常量值。[#4267](https://github.com/ant-design-blazor/ant-design-blazor/pull/4267) [@pathartl](https://github.com/pathartl)
+- 🆕 新增 space 常量值。[#4263](https://github.com/ant-design-blazor/ant-design-blazor/pull/4263) [@pathartl](https://github.com/pathartl)
+
+- TreeSelect
+  - 🆕 新增 一些控制 Tree 的方法。[#4283](https://github.com/ant-design-blazor/ant-design-blazor/pull/4283) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 当 TItemValue 为非可空类型时无法清楚选项的问题。[#4291](https://github.com/ant-design-blazor/ant-design-blazor/pull/4291) [@pankey888](https://github.com/pankey888)
+
+- Select
+  - 🐞 修复 搜索模式的输入框焦点。[#4286](https://github.com/ant-design-blazor/ant-design-blazor/pull/4286) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 搜索关键字的清除和恢复。[#4281](https://github.com/ant-design-blazor/ant-design-blazor/pull/4281) [#4276](https://github.com/ant-design-blazor/ant-design-blazor/pull/4276) [@ElderJames](https://github.com/ElderJames)
+
+- 💄 修复 Tree 连线的缩进样式。[#4290](https://github.com/ant-design-blazor/ant-design-blazor/pull/4290) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Overlay 跟随 Trigger 滚动。[#4285](https://github.com/ant-design-blazor/ant-design-blazor/pull/4285) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Empty 在 Select 中不显示。[#4282](https://github.com/ant-design-blazor/ant-design-blazor/pull/4282) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 AutoComplete 避免打开空的下拉面板。[#4284](https://github.com/ant-design-blazor/ant-design-blazor/pull/4284) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Modal 的按钮默认大小为 Default。[#4268](https://github.com/ant-design-blazor/ant-design-blazor/pull/4268) [@wangj90](https://github.com/wangj90)
+- 🐞 修复 Tabs 中 TabPanes 无法渲染的问题。[#4269](https://github.com/ant-design-blazor/ant-design-blazor/pull/4269) [@ysj265](https://github.com/ysj265)
+- 🐞 修复 cascader 错误的打开位置和选中值的顺序。[#4265](https://github.com/ant-design-blazor/ant-design-blazor/pull/4265) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ReuseTabs 部分配置失效。[#4266](https://github.com/ant-design-blazor/ant-design-blazor/pull/4266) [@ElderJames](https://github.com/ElderJames)
+- 🛠 项目配置更新 .NET 9 目标。[#4262](https://github.com/ant-design-blazor/ant-design-blazor/pull/4262) [@WeihanLi](https://github.com/WeihanLi)
+
 ### 1.0.0 RC 2
 
 `2024-10-09`
