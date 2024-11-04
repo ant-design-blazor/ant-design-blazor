@@ -53,6 +53,8 @@ namespace AntDesign
 
         internal bool HasExpandTemplate { get; }
 
+        internal bool HasOnExpandDelegate { get; }
+
         internal SortDirection[] SortDirections { get; }
 
         internal void SetSelection(ISelectionColumn selectItem);
