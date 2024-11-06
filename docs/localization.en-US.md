@@ -18,7 +18,7 @@ dotnet add package AntDesign.Extensions.Localization
 
     ```csharp
     builder.Services.AddInteractiveStringLocalizer();
-    services.AddLocalization(options =>
+    builder.Services.AddLocalization(options =>
     {
         options.ResourcesPath = "Resources";
     });
