@@ -76,7 +76,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 }, new JsonSerializerOptions()
                 {
                     WriteIndented = true,
-                    IgnoreNullValues = true,
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
                 });
 
