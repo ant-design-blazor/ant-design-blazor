@@ -348,7 +348,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void CheckAll()
         {
-            TreeComponent.CheckAll();
+            TreeComponent?.CheckAll();
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void UncheckAll()
         {
-            TreeComponent.UncheckAll();
+            TreeComponent?.UncheckAll();
         }
 
         /// <summary>
@@ -366,7 +366,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void SelectAll()
         {
-            TreeComponent.SelectAll();
+            TreeComponent?.SelectAll();
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void DeselectAll()
         {
-            TreeComponent.DeselectAll();
+            TreeComponent?.DeselectAll();
         }
 
         /// <summary>
@@ -384,7 +384,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void ExpandAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
-            TreeComponent.ExpandAll(predicate, recursive);
+            TreeComponent?.ExpandAll(predicate, recursive);
         }
 
         /// <summary>
@@ -393,7 +393,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void CollapseAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
-            TreeComponent.CollapseAll(predicate, recursive);
+            TreeComponent?.CollapseAll(predicate, recursive);
         }
 
         /// <summary>
@@ -403,7 +403,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public TreeNode<TItem> GetNode(TItemValue key)
         {
-            return TreeComponent.GetNode(GetTreeKeyFormValue(key));
+            return TreeComponent?.GetNode(GetTreeKeyFormValue(key));
         }
 
         private void ClearOptions()
@@ -420,7 +420,7 @@ namespace AntDesign
         {
             values.ForEach(value =>
             {
-                var d = _tree._allNodes.FirstOrDefault(m => GetValueFromNode(m).Equals(value));
+                var d = _tree?._allNodes.FirstOrDefault(m => GetValueFromNode(m).Equals(value));
                 if (d != null)
                 {
                     _ = CreateOption(d, true);
@@ -526,7 +526,7 @@ namespace AntDesign
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
             var key = GetTreeKeyFormValue(selectOption.Value);
-            var item = _tree._allNodes.Where(x => x.Key == key).FirstOrDefault();
+            var item = _tree?._allNodes.Where(x => x.Key == key).FirstOrDefault();
             if (item == null)
                 return;
             if (TreeCheckable)
@@ -645,8 +645,8 @@ namespace AntDesign
                 }
                 else
                 {
-                    _tree._allNodes.ForEach(n => n.DoSelect(checkedKeys.Contains(n.Key), true, false));
-                    _tree.UpdateSelectedKeys();
+                    _tree?._allNodes.ForEach(n => n.DoSelect(checkedKeys.Contains(n.Key), true, false));
+                    _tree?.UpdateSelectedKeys();
                 }
             }
             else
@@ -660,9 +660,9 @@ namespace AntDesign
         private void UpdateTreeCheckedKeys(IEnumerable<string> checkedKeys)
         {
             _checkedEventDisabled = true;
-            _tree._allNodes.ForEach(n => n.DoCheck(false, true, false));
-            _tree._allNodes.Where(n => checkedKeys.Contains(n.Key)).ForEach(n => n.DoCheck(true, false, false));
-            _tree.UpdateCheckedKeys();
+            _tree?._allNodes.ForEach(n => n.DoCheck(false, true, false));
+            _tree?._allNodes.Where(n => checkedKeys.Contains(n.Key)).ForEach(n => n.DoCheck(true, false, false));
+            _tree?.UpdateCheckedKeys();
             _checkedEventDisabled = false;
         }
 
@@ -770,7 +770,7 @@ namespace AntDesign
             if (DataSource == null)
                 return null;
 
-            var node = _tree._allNodes.Where(x => _getValue(x.DataItem).Equals(value)).FirstOrDefault();
+            var node = _tree?._allNodes.Where(x => _getValue(x.DataItem).Equals(value)).FirstOrDefault();
 
             if (node == null)
                 return null;

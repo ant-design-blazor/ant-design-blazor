@@ -15,6 +15,25 @@ timeline: true
 
 ---
 
+### 1.0.0
+
+`2024-11-01`
+
+- Modal
+  - 🐞 Fixed calling js interop after renderering. [#4311](https://github.com/ant-design-blazor/ant-design-blazor/pull/4311) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed only hide scrollbar when enable mask. [#4302](https://github.com/ant-design-blazor/ant-design-blazor/pull/4302) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Move Dialog MaskClick Function into MouseUp Event Callback. [#4294](https://github.com/ant-design-blazor/ant-design-blazor/pull/4294) [@chazikaifa](https://github.com/chazikaifa)
+
+
+- ⚡️ Imporeve Table avoid load data when the PageIndex is less than 1. [#4305](https://github.com/ant-design-blazor/ant-design-blazor/pull/4305) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Grid that end col inline style with semicolon. [#4301](https://github.com/ant-design-blazor/ant-design-blazor/pull/4301) [@pathartl](https://github.com/pathartl)
+- 🐞 Fixed Modal using css var to hide/show the scroll bar of body. [#4299](https://github.com/ant-design-blazor/ant-design-blazor/pull/4299) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Form setting dictionary as model would thrown NRE. [#4296](https://github.com/ant-design-blazor/ant-design-blazor/pull/4296) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Improve Tabs make it possible to work without setting keys of TabPane. [#4297](https://github.com/ant-design-blazor/ant-design-blazor/pull/4297) [@ElderJames](https://github.com/ElderJames)
+- 🌐 Add missing translation items for Dutch. [#4313](https://github.com/ant-design-blazor/ant-design-blazor/pull/4313) [@rtrocmn](https://github.com/rtrocmn)
+- 🌐 Add missing number range message of It_LT locale. [#4303](https://github.com/ant-design-blazor/ant-design-blazor/pull/4303) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 1.0.0 RC 3
 
 `2024-10-22`

@@ -15,6 +15,23 @@ timeline: true
 
 ---
 
+### 1.0.0
+
+`2024-11-01`
+
+- Modal
+  - 🐞 修复 Modal 确保在渲染后调用JS。[#4311](https://github.com/ant-design-blazor/ant-design-blazor/pull/4311) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Modal 用css实现打开遮罩时隐藏滚动条。[#4302](https://github.com/ant-design-blazor/ant-design-blazor/pull/4302) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Modal 的遮罩点击事件。[#4294](https://github.com/ant-design-blazor/ant-design-blazor/pull/4294) [@chazikaifa](https://github.com/chazikaifa)
+
+- ⚡️ 改进 Table 当 PageIndex 小于1时不执行加载。[#4305](https://github.com/ant-design-blazor/ant-design-blazor/pull/4305) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Grid 中Col 级联样式的分号。[#4301](https://github.com/ant-design-blazor/ant-design-blazor/pull/4301) [@pathartl](https://github.com/pathartl)
+- 🐞 修复 Drawer 利用 css 隐藏滚动条。[#4299](https://github.com/ant-design-blazor/ant-design-blazor/pull/4299) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Form 设置字典作为Model时会抛出NRE异常。[#4296](https://github.com/ant-design-blazor/ant-design-blazor/pull/4296) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Tabs 在不设置TabPane 的 Key 时仍然工作。[#4297](https://github.com/ant-design-blazor/ant-design-blazor/pull/4297) [@ElderJames](https://github.com/ElderJames)
+- 🌐 补充荷兰语部分翻译。[#4313](https://github.com/ant-design-blazor/ant-design-blazor/pull/4313) [@rtrocmn](https://github.com/rtrocmn)
+- 🌐 补充意大利语翻译。[#4303](https://github.com/ant-design-blazor/ant-design-blazor/pull/4303) [@ElderJames](https://github.com/ElderJames)
+
 ### 1.0.0 RC 3
 
 `2024-10-22`
