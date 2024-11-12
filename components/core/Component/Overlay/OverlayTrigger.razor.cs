@@ -68,7 +68,7 @@ namespace AntDesign.Internal
         /// </summary>
         /// <default value="false" />
         [Parameter]
-        public bool HiddenMode { get; set; } = false;
+        public bool RenderBeforeShow { get; set; } = false;
 
         /// <summary>
         /// (not used in Unbound) Sets wrapping div style to `display: inline-flex;`.
