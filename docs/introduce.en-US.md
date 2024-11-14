@@ -42,7 +42,7 @@ WebAssembly static hosting on:
 
 ## 🖥 Environment Support
 
-- Supports .NET Core 3.1 / .NET 5 / .NET 6 / .Net 7 / .NET 8.
+- Supports .NET Core 3.1 / .NET 5 / .NET 6 / .Net 7 / .NET 8 / .NET 9.
 - Supports WebAssembly static file deployment.
 - Supports 4 major browsers engines, and Internet Explorer 11+ ([Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987) only)
 - Supports [.NET MAUI](https://dotnet.microsoft.com/zh-cn/apps/maui?WT.mc_id=DT-MVP-5003987) / [WPF](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/wpf?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987) / [Windows Forms](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/windows-forms?view=aspnetcore-6.0) and other Blazor Hybrid workloads.
@@ -167,7 +167,7 @@ Click the button below to start a new workspace for development for free.
 
 ### Local
 
-- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/8.0?WT.mc_id=DT-MVP-5003987) 8.0.100 or later.
+- Install [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/9.0?WT.mc_id=DT-MVP-5003987) 9.0.100 or later.
 - Install Node.js (only for building style files and interoperable TypeScript files)
 - Clone to local development
 
