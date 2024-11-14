@@ -45,7 +45,7 @@ WebAssembly 静态托管页面示例
 
 ## 🖥 支持环境
 
-- 支持 .NET Core 3.1 / .NET 5 / .NET 6 / .NET 7 / .NET 8。
+- 支持 .NET Core 3.1 / .NET 5 / .NET 6 / .NET 7 / .NET 8 / .NET 9。
 - 支持 WebAssembly 静态文件部署。
 - 支持主流 4 款现代浏览器，以及 Internet Explorer 11+（限 [Blazor Server](https://docs.microsoft.com/en-us/aspnet/core/blazor/supported-platforms?view=aspnetcore-3.1&WT.mc_id=DT-MVP-5003987)）。
 - 支持 [.NET MAUI](https://dotnet.microsoft.com/zh-cn/apps/maui?WT.mc_id=DT-MVP-5003987)、[WPF](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/wpf?view=aspnetcore-6.0&WT.mc_id=DT-MVP-5003987)、[Windows Forms](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/windows-forms?view=aspnetcore-6.0) 等 Blazor 混合客户端环境中。
@@ -178,7 +178,7 @@ WebAssembly 静态托管页面示例
 
 ### 本地
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/8.0?WT.mc_id=DT-MVP-5003987) 8.0.100 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/9.0?WT.mc_id=DT-MVP-5003987) 9.0.100 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
 
