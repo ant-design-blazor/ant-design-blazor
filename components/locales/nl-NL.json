@@ -248,6 +248,7 @@
     "Close": "Sluiten",
     "CloseAllTabs": "Sluit alle tabbladen",
     "CloseAllButThis": "Sluit alles behalve deze",
-    "PinTab": "Tabblad Vastzetten"
+    "PinTab": "Tabblad Vastzetten",
+    "Reload": "Herladen"
   }
 }
