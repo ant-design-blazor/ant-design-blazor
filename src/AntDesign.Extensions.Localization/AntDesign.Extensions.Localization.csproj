@@ -36,7 +36,7 @@
   </ItemGroup>
   
   <ItemGroup Condition="$(TargetFramework) == 'net9.0'">
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.0-rc.2.*" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
