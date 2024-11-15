@@ -108,8 +108,15 @@ namespace AntDesign
             checkbox.IsFromOptions = IsCheckboxFromOptions(checkbox);
             if (!checkbox.IsFromOptions)
             {
-                checkbox.SetValue(_selectedValues.Any(x => x.ToString() == checkbox.Label));
-                checkbox.SetItemValue(checkbox.Label);
+                if (checkbox.ItemValue != null)
+                {
+                    checkbox.SetValue(_selectedValues.Any(x => checkbox.ItemValue.Equals(x)));
+                }
+                else
+                {
+                    checkbox.SetValue(_selectedValues.Any(x => x.ToString() == checkbox.Label));
+                    checkbox.SetItemValue(checkbox.Label);
+                }
 
                 if (_indexConstructedOptionsOffset == -1)
                     _indexConstructedOptionsOffset = _checkboxItems.Count - 1;
