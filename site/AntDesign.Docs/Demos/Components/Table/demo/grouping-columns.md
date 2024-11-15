@@ -1,7 +1,7 @@
 ---
 order: 22
 title:
-  en-US: Grouping table head
+  en-US: Grouping Table Headers
   zh-CN: 表头分组
 ---
 

@@ -17,7 +17,7 @@
     </h5>
 
     <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name" OnSelectAll="OnSelectAll" >
-        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
+        <Selection Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
         <PropertyColumn Property="c=>c.Name">
             <a>@context.Name</a>
         </PropertyColumn>
