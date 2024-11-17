@@ -3,7 +3,7 @@
 @using System.Reflection
 @using System.Web
 
-<div class="router-pagging-table">
+<div class="router-pagination-table">
     <Input @bind-Value="_url" OnPressEnter="() => _navigation.NavigateTo(_url, true)"/>
     <Table
         DataSource="@_forecasts"
@@ -126,11 +126,11 @@
 }
 
 <style>
-    .router-pagging-table {
+    .router-pagination-table {
         padding: 1em;
     }
 
-        .router-pagging-table input {
+        .router-pagination-table input {
             margin-bottom: 1em;
         }
 </style>

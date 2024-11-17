@@ -1,7 +1,7 @@
 ---
 order: 2.2
 title:
-  en-US: Dynamic data
+  en-US: Dynamic Data
   zh-CN: 动态数据
 ---
 
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Generate the table from json dynamicly.
+Generate the table from JSON dynamically.

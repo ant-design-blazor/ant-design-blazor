@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-可使用 `Hidden` 属性控制 Column 的显示。
+可使用 `Hidden` 属性控制 `Column` 的显示。
 
 ## en-US
 
-Can use the `Hidden` property to control the display of the Column.
+Use the `Hidden` property to control the display of a `Column`.

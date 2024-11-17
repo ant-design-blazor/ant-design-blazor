@@ -1,7 +1,7 @@
 ---
 order: 27
 title:
-  en-US: Resizable column
+  en-US: Resizable Column
   zh-CN: 可伸缩列
 ---
 
@@ -11,5 +11,4 @@ title:
 
 ## en-US
 
-Enable resizable column with `Resizable` parameter.
-
+Enable resizable columns with the `Resizable` property.
