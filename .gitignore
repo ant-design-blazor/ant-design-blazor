@@ -363,3 +363,5 @@ site/AntDesign.Docs/wwwroot/color.less
 .history
 /components/LocalizedIntellisenseFiles/AntDesign.xml
 components/LocalizedIntellisenseFiles/AntDesign.xml
+.DS_Store
+package-lock.json

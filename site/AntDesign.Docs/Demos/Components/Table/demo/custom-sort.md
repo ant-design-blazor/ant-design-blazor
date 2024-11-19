@@ -1,7 +1,7 @@
 ﻿---
 order: 6.1
 title:
-  en-US: Custom sort
+  en-US: Custom Sort
   zh-CN: 自定义排序
 ---
 

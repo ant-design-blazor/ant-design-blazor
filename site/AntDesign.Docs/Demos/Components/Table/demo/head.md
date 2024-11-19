@@ -1,7 +1,7 @@
 ---
 order: 6
 title:
-  en-US: Filter and sorter
+  en-US: Filtering and Sorting
   zh-CN: 筛选和排序
 ---
 
@@ -19,9 +19,9 @@ title:
 
 ## en-US
 
-Use `Filters` to generate filter menu in columns, `OnFilter` to determine filtered result, and `FilterMultiple` to indicate whether it's multiple or single selection.
+Use `Filters` to generate a filter menu in the table's columns, `OnFilter` to determine filtered result, and `FilterMultiple` to indicate whether it's a multiple or single selection.
 
-Uses `defaultFilteredValue` to make a column filtered by default.
+Uses `DefaultFilteredValue` to make a column filtered by default.
 
 Use `Sortable` to make a column sortable. Or use `SorterCompare`, a function of the type `(a, b) => int` for sorting data locally.
 
@@ -31,4 +31,4 @@ Uses `DefaultSortOrder` to make a column sorted by default.
 
 If a `SortOrder` or `DefaultSortOrder` is specified with the value `ascend` or `descend`, you can access this value from within the function passed to the `sorter` as explained above. Such a function can take the form: `function(a, b, sortOrder) { ... }`.
 
-You can also customize the filtering logic in the 'OnChange' event method, using the method 'QueryModel.ExecuteQuery(data)' to build query expressions.
+You can also customize the filtering logic in the 'OnChange' event method, using the method `QueryModel.ExecuteQuery(data)` to build query expressions.

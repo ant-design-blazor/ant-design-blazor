@@ -1,7 +1,7 @@
 ---
 order: 25
 title:
-  en-US: Nested tables
+  en-US: Nested Tables
   zh-CN: 嵌套子表格
 ---
 
@@ -11,5 +11,4 @@ title:
 
 ## en-US
 
-Showing more detailed info of every row.
-
+Additional content can be nested in a table row by using the `ExpandTemplate` component. In this example another table is nested in the row to show additional data.

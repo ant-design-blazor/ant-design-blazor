@@ -15,6 +15,23 @@ timeline: true
 
 ---
 
+### 1.0.1
+
+`2024-11-18`
+
+- 🔥 Update to .NET 9 GA. [#4330](https://github.com/ant-design-blazor/ant-design-blazor/pull/4330) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Update the building staff to .NET 9 target. [#4335](https://github.com/ant-design-blazor/ant-design-blazor/pull/4335) [@ElderJames](https://github.com/ElderJames)
+
+- TreeSelect
+  - 🐞 Fixed tree/node's null value may cause exception. [#4316](https://github.com/ant-design-blazor/ant-design-blazor/pull/4316) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed the selection doesn't bind default values. [#4315](https://github.com/ant-design-blazor/ant-design-blazor/pull/4315) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Checkbox make ItemValue available when customizing CheckboxGroup. [#4333](https://github.com/ant-design-blazor/ant-design-blazor/pull/4333) [@pankey888](https://github.com/pankey888)
+- 📖 Various updates to English documentation for Table. [#4331](https://github.com/ant-design-blazor/ant-design-blazor/pull/4331) [@pathartl](https://github.com/pathartl)
+- 📖 Update localization.en-US.md. [#4319](https://github.com/ant-design-blazor/ant-design-blazor/pull/4319) [@JackLovel](https://github.com/JackLovel)
+- 🌐 Add dutch translation for ReuseTabs Reload property. [#4323](https://github.com/ant-design-blazor/ant-design-blazor/pull/4323) [@rtrocmn](https://github.com/rtrocmn)
+
+
 ### 1.0.0
 
 `2024-11-01`
