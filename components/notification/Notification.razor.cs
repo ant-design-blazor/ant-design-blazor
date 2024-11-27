@@ -106,17 +106,17 @@ namespace AntDesign
             switch (placement)
             {
                 case NotificationPlacement.Top:
-                    return $"inset: {_top}px auto auto 50%; transform: translateX(-50%);";
+                    return $"inset: {(CssSizeLength)_top} auto auto 50%; transform: translateX(-50%);";
                 case NotificationPlacement.Bottom:
-                    return $"inset: auto auto {_bottom}px 50%; transform: translateX(-50%);";
+                    return $"inset: auto auto {(CssSizeLength)_bottom} 50%; transform: translateX(-50%);";
                 case NotificationPlacement.TopRight:
-                    return $"right: 0px; top:{_top}px; bottom: auto;";
+                    return $"right: 0px; top:{(CssSizeLength)_top}; bottom: auto;";
                 case NotificationPlacement.TopLeft:
-                    return $"left: 0px; top:{_top}px; bottom: auto;";
+                    return $"left: 0px; top:{(CssSizeLength)_top}; bottom: auto;";
                 case NotificationPlacement.BottomLeft:
-                    return $"left: 0px; top: auto; bottom: {_bottom}px;";
+                    return $"left: 0px; top: auto; bottom: {(CssSizeLength)_bottom};";
                 default:
-                    return $"right: 0px; top: auto; bottom: {_bottom}px;";
+                    return $"right: 0px; top: auto; bottom: {(CssSizeLength)_bottom};";
             }
         }
 
