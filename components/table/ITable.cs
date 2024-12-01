@@ -94,5 +94,7 @@ namespace AntDesign
         internal void RemoveGroupColumn(IFieldColumn column);
 
         internal bool RebuildColumns(bool add);
+
+        internal bool AutoColIndexes { get; }
     }
 }

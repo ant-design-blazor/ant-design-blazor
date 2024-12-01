@@ -59,8 +59,7 @@ namespace AntDesign
                         }
                     }
                 }
-            }
-            while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
+            } while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
             column.ColIndex = CurrentColIndex;
             HeaderColumns.Add(column);
@@ -93,11 +92,13 @@ namespace AntDesign
             if (_table.ScrollX != null && Columns.Any(x => x.Width == null))
             {
                 var zeroWidthCols = Columns.Where(x => x.Width == null).ToArray();
-                var totalWidth = string.Join(" + ", Columns.Where(x => x.Width != null).Select(x => (CssSizeLength)x.Width));
+                var totalWidth = string.Join(" + ",
+                    Columns.Where(x => x.Width != null).Select(x => (CssSizeLength)x.Width));
                 if (string.IsNullOrEmpty(totalWidth))
                 {
                     totalWidth = "0px";
                 }
+
                 foreach (var col in Columns.Where(x => x.Width == null))
                 {
                     col.Width = $"calc(({(CssSizeLength)_table.ScrollX} - ({totalWidth}) ) / {zeroWidthCols.Length})";
@@ -137,10 +138,13 @@ namespace AntDesign
                         }
                     }
                 }
-            }
-            while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
+            } while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
-            column.ColIndex = CurrentColIndex;
+            if (_table.AutoColIndexes)
+            {
+                column.ColIndex = CurrentColIndex;
+            }
+
             CurrentColIndex += columnSpan - 1;
 
             if (column.RowSpan > 1)

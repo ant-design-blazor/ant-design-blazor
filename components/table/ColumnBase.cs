@@ -134,6 +134,7 @@ namespace AntDesign
         /// <summary>
         /// Index of this column in the table
         /// </summary>
+        [Parameter]
         public int ColIndex { get; set; }
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
