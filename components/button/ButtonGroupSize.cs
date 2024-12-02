@@ -4,10 +4,9 @@
 
 namespace AntDesign
 {
-    public enum ButtonShape
+    public enum ButtonGroupSize
     {
-        Circle,
-        CircleOutline,
-        Round
+        Large,
+        Small,
     }
 }

@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -160,7 +161,16 @@ namespace AntDesign
         /// </summary>
         /// <default value="ButtonType.Default" />
         [Parameter]
-        public string Type { get; set; } = ButtonType.Default;
+        public ButtonType? Type { get; set; } = ButtonType.Default;
+
+        private readonly Hashtable _typeMap = new Hashtable()
+        {
+            [ButtonType.Default] = "default",
+            [ButtonType.Primary] = "primary",
+            [ButtonType.Dashed] = "dashed",
+            [ButtonType.Link] = "link",
+            [ButtonType.Text] = "text",
+        };
 
         /// <summary>
         /// Do not wrap with &lt;span&gt;
@@ -178,7 +188,7 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(prefixName)
-                .GetIf(() => $"{prefixName}-{this.Type}", () => !string.IsNullOrEmpty(Type))
+                .GetIf(() => $"{prefixName}-{_typeMap[Type]}", () => Type.HasValue)
                 .If($"{prefixName}-dangerous", () => Danger)
                 .GetIf(() => $"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
                 .If($"{prefixName}-lg", () => Size == "large")
