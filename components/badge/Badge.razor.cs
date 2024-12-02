@@ -3,9 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -26,13 +28,7 @@ namespace AntDesign
         /// Customize Badge status dot color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
-        public string Color { get; set; }
-
-        /// <summary>
-        /// Set Badge status dot to a preset color. Usage of this parameter will make the badge a status dot.
-        /// </summary>
-        [Parameter]
-        public PresetColor? PresetColor { get; set; }
+        public OneOf<BadgeColor, string> Color { get; set; }
 
         /// <summary>
         /// Number to show in badge
@@ -111,7 +107,7 @@ namespace AntDesign
         /// Set Badge dot to a status color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
-        public string Status { get; set; }
+        public BadgeStatus? Status { get; set; }
 
         /// <summary>
         /// The display text next to the status dot
@@ -147,17 +143,25 @@ namespace AntDesign
 
         private char[] _maxNumberArray = Array.Empty<char>();
 
-        private string StatusOrPresetColor => Status.IsIn(_badgeStatusTypes)
-            ? Status
-            : (PresetColor.HasValue
-                ? Enum.GetName(typeof(PresetColor), PresetColor)
+        private readonly Hashtable _statusMap = new Hashtable() {
+            [BadgeStatus.Default] = "square",
+            [BadgeStatus.Success] = "success",
+            [BadgeStatus.Processing] = "processing",
+            [BadgeStatus.Error] = "error",
+            [BadgeStatus.Warning] = "warning",
+        };
+
+        private string StatusOrPresetColor => Status.HasValue
+            ? _statusMap[Status.Value].ToString()
+            : (Color.IsT0
+                ? Enum.GetName(typeof(BadgeColor), Color.AsT0)
                 : "");
 
-        private bool HasStatusOrColor => !string.IsNullOrWhiteSpace(Status) || !string.IsNullOrWhiteSpace(Color) || PresetColor.HasValue;
+        private bool HasStatusOrColor => Status.HasValue || Color.IsT0;
 
         private string CountStyle => Offset == default ? "" : $"{$"right:{-Offset.Left}px"};{$"margin-top:{Offset.Top}px"};";
 
-        private string DotColorStyle => (PresetColor == null && !string.IsNullOrWhiteSpace(Color) ? $"background:{Color};" : "");
+        private string DotColorStyle => Color.IsT1 ? $"background:{Color};" : "";
 
         private bool RealShowSup => (Dot && (!Count.HasValue || (Count > 0 || Count == 0 && ShowZero)))
                                 || Count > 0
@@ -174,15 +178,6 @@ namespace AntDesign
         private int _overflowCount = 99;
 
         private bool _showOverflowCount = false;
-
-        private static readonly string[] _badgeStatusTypes =
-        {
-            "success",
-            "processing",
-            "default",
-            "error",
-            "warning"
-        };
 
         /// <summary>
         /// Sets the default CSS classes.
