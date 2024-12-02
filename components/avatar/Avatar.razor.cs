@@ -38,7 +38,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="AvatarShape.Circle"/>
         [Parameter]
-        public string Shape { get; set; } = null;
+        public AvatarShape? Shape { get; set; }
 
         /// <summary>
         /// Size of the avatar. See <see cref="AntSizeLDSType"/> for possible values.
@@ -128,6 +128,7 @@ namespace AntDesign
         private string _prefixCls = "ant-avatar";
 
         private readonly Hashtable _sizeMap = new Hashtable() { ["large"] = "lg", ["small"] = "sm" };
+        private readonly Hashtable _shapeMap = new Hashtable() { [AvatarShape.Square] = "square", [AvatarShape.Circle] = "circle" };
 
         private string _text;
         private RenderFragment _childContent;
@@ -186,7 +187,7 @@ namespace AntDesign
             ClassMapper
                 .Add(_prefixCls)
                 .GetIf(() => $"{_prefixCls}-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
-                .GetIf(() => $"{_prefixCls}-{Shape}", () => !string.IsNullOrEmpty(Shape))
+                .GetIf(() => $"{_prefixCls}-{_shapeMap[Shape]}", () => Shape.HasValue)
                 .If($"{_prefixCls}-icon", () => !string.IsNullOrEmpty(Icon))
                 .If($"{_prefixCls}-image", () => _hasSrc);
         }
