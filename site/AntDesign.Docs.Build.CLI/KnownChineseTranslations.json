@@ -3371,6 +3371,9 @@
   "Callback executed when total records changes": {
     "Translated": "记录总数变化时执行的回调"
   },
+  "Currently visible page": {
+    "Translated": "当前可见页面"
+  },
   "Number of records per page": {
     "Translated": "每页记录数"
   },
@@ -4105,6 +4108,9 @@
   },
   "Customize dropdown content. The context is the original content.": {
     "Translated": "自定义下拉内容。上下文是原始内容。"
+  },
+  "Render mode of table. See <see cref=\"!:AntDesign.RenderMode\" /> documentation for details.": {
+    "Translated": "表的渲染模式。有关详细信息，请参见<参见 cref=“！：AntDesign.RenderMode” /> 文档。"
   },
   "Enable resizable column": {
     "Translated": "启用可调整大小的列"
