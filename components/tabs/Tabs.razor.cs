@@ -322,7 +322,7 @@ namespace AntDesign
         internal void AddTabPane(TabPane tabPane)
         {
             tabPane.SetIndex(_tabs.Count);
-            _tabs.Add(tabPane);   
+            _tabs.Add(tabPane);
             _needUpdateScrollListPosition = true;
             StateHasChanged();
             if (_hasNewTab)
