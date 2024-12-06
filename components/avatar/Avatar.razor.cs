@@ -195,7 +195,7 @@ namespace AntDesign
 
         private void SetSizeStyle()
         {
-            CssSizeLength cssSize = null;
+            CssSizeLength cssSize = new CssSizeLength(0);
 
             if (Size.IsT0)
                 if (!CssSizeLength.TryParse(Size.AsT0.ToString().ToLowerInvariant(), out cssSize)) return;

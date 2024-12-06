@@ -39,7 +39,7 @@ namespace AntDesign.Tests.Avatar
         [InlineData(AvatarShape.Square, "ant-avatar-square")]
         [InlineData(AvatarShape.Circle, "ant-avatar-circle")]
         [InlineData(null, "")]
-        public void ItShouldProperlyStyleShapes(AvatarShape shape, string expectedClass)
+        public void ItShouldProperlyStyleShapes(AvatarShape? shape, string expectedClass)
         {
             var systemUnderTest = RenderComponent<AntDesign.Avatar>(parameters => parameters
                 .Add(x => x.Shape, shape)
