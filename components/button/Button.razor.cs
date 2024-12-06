@@ -39,12 +39,12 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg", Title = "Button", SubTitle = "按钮")]
     public partial class Button : AntDomComponentBase
     {
-        private string _formSize;
+        private FormSize _formSize;
 
         private const int RemoveAnimationAfter = 500;
 
         [CascadingParameter(Name = "FormSize")]
-        public string FormSize
+        public FormSize FormSize
         {
             get
             {
@@ -53,7 +53,13 @@ namespace AntDesign
             set
             {
                 _formSize = value;
-                Size = value;
+
+                Size = _formSize switch
+                {
+                    FormSize.Large => ButtonSize.Large,
+                    FormSize.Default => ButtonSize.Default,
+                    FormSize.Small => ButtonSize.Small,
+                };
             }
         }
 
@@ -147,14 +153,14 @@ namespace AntDesign
         /// </summary>
         /// <default value="null" />
         [Parameter]
-        public string Shape { get; set; } = null;
+        public ButtonShape Shape { get; set; } = ButtonShape.Rectangle;
 
         /// <summary>
         /// Set the size of button.
         /// </summary>
-        /// <default value="AntSizeLDSType.Default" />
+        /// <default value="ButtonSize.Default" />
         [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public ButtonSize Size { get; set; } = ButtonSize.Default;
 
         /// <summary>
         /// Type of the button.
@@ -190,9 +196,9 @@ namespace AntDesign
                 .Add(prefixName)
                 .GetIf(() => $"{prefixName}-{_typeMap[Type]}", () => Type.HasValue)
                 .If($"{prefixName}-dangerous", () => Danger)
-                .GetIf(() => $"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
-                .If($"{prefixName}-lg", () => Size == "large")
-                .If($"{prefixName}-sm", () => Size == "small")
+                .GetIf(() => $"{prefixName}-{Shape.ToString().ToLower()}", () => Shape != ButtonShape.Rectangle)
+                .If($"{prefixName}-lg", () => Size == ButtonSize.Large)
+                .If($"{prefixName}-sm", () => Size == ButtonSize.Small)
                 .If($"{prefixName}-loading", () => Loading)
                 .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && this.ChildContent == null)
                 .If($"{prefixName}-background-ghost", () => Ghost)

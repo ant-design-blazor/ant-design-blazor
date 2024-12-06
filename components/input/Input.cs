@@ -186,13 +186,13 @@ namespace AntDesign
         /// Callback when a key is pressed
         /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
+        public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
 
         /// <summary>
         /// Callback when a key is released
         /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyUp { get; set; }
+        public EventCallback<KeyboardEventArgs> OnKeyUp { get; set; }
 
         /// <summary>
         /// Callback when a mouse button is released
@@ -240,7 +240,7 @@ namespace AntDesign
         /// The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)
         /// </summary>
         [Parameter]
-        public string Type { get; set; } = "text";
+        public InputType Type { get; set; } = AntDesign.InputType.Text;
 
         /// <summary>
         /// Set CSS style of wrapper. Is used when component has visible: Prefix/Suffix
@@ -465,12 +465,12 @@ namespace AntDesign
         {
             ChangeValue();
 
-            if (OnkeyUp.HasDelegate) await OnkeyUp.InvokeAsync(args);
+            if (OnKeyUp.HasDelegate) await OnKeyUp.InvokeAsync(args);
         }
 
         protected virtual async Task OnkeyDownAsync(KeyboardEventArgs args)
         {
-            if (OnkeyDown.HasDelegate) await OnkeyDown.InvokeAsync(args);
+            if (OnKeyDown.HasDelegate) await OnKeyDown.InvokeAsync(args);
         }
 
         protected async Task OnMouseUpAsync(MouseEventArgs args)

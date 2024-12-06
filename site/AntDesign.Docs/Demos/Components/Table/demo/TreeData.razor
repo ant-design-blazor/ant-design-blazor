@@ -4,17 +4,17 @@ CheckStrictly:
 <Switch @bind-Checked="_checkStrictly" />
 <br />
 <RadioGroup @bind-Value="selectionType">
-    <Radio Value="@("checkbox")">Checkbox</Radio>
-    <Radio Value="@("radio")">radio</Radio>
+    <Radio Value="SelectionType.Checkbox">Checkbox</Radio>
+    <Radio Value="SelectionType.Radio">Radio</Radio>
 </RadioGroup>
 
-<Table DataSource="_data" TreeChildren="item=>item.Children" @bind-SelectedRows="_selectedRows">
-    <Selection CheckStrictly="_checkStrictly" Type="@selectionType" />
-    <PropertyColumn Property="c=>c.Name" />
-    <PropertyColumn Property="c=>c.Age" Width="12%" Sortable />
-    <PropertyColumn Property="c=>c.Address" Width="30%" />
+<Table DataSource="_data" TreeChildren="item => item.Children" @bind-SelectedRows="_selectedRows">
+    <Selection CheckStrictly="_checkStrictly" Type="selectionType" />
+    <PropertyColumn Property="c => c.Name" />
+    <PropertyColumn Property="c => c.Age" Width="12%" Sortable />
+    <PropertyColumn Property="c => c.Address" Width="30%" />
     <ActionColumn>
-        <Button OnClick="@(()=>AddChildren(context))">Add Children</Button>
+        <Button OnClick="@(() => AddChildren(context))">Add Children</Button>
     </ActionColumn>
 </Table>
 
@@ -22,7 +22,7 @@ CheckStrictly:
 
 @code {
     bool _checkStrictly;
-    string selectionType = "checkbox";
+    SelectionType selectionType = SelectionType.Checkbox;
     Data[] _data;
 
     IEnumerable<Data> _selectedRows = [];

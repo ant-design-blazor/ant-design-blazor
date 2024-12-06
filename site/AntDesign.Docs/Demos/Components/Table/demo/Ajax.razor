@@ -51,7 +51,7 @@
         queryModel.SortModel.ForEach(x =>
         {
             query.Add($"sortField={x.FieldName.ToLower()}");
-            query.Add($"sortOrder={x.Sort}");
+            query.Add($"sortOrder={x.SortDirection}");
         });
 
         queryModel.FilterModel.ForEach(filter =>

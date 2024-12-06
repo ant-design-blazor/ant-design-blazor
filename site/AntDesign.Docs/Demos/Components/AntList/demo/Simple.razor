@@ -1,4 +1,4 @@
-﻿<Divider Orientation="left">Default Size</Divider>
+﻿<Divider Orientation="DividerOrientation.Left">Default Size</Divider>
 
 <AntList Bordered DataSource="@data">
     <Header>Header</Header>
@@ -11,9 +11,9 @@
     <Footer>Footer</Footer>
 </AntList>
 
-<Divider Orientation="left">Small Size</Divider>
+<Divider Orientation="DividerOrientation.Left">Small Size</Divider>
 
-<AntList Bordered DataSource="@data" Size="small">
+<AntList Bordered DataSource="@data" Size="ListSize.Small">
     <Header>Header</Header>
     <ChildContent Context="item">
         <ListItem>
@@ -23,9 +23,9 @@
     <Footer>Footer</Footer>
 </AntList>
 
-<Divider Orientation="left">Large Size</Divider>
+<Divider Orientation="DividerOrientation.Left">Large Size</Divider>
 
-<AntList Bordered DataSource="@data" Size="large">
+<AntList Bordered DataSource="@data" Size="ListSize.Large">
     <Header>Header</Header>
     <Header>Header</Header>
     <ChildContent Context="item">

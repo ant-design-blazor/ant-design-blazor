@@ -142,14 +142,14 @@ namespace AntDesign
             }
         }
 
-        private string _size = AntSizeLDSType.Default;
+        private ButtonSize _size = ButtonSize.Default;
 
         /// <summary>
         /// Button size.
         /// </summary>
         /// <default value="AntSizeLDSType.Default" />
         [Parameter]
-        public string Size
+        public ButtonSize Size
         {
             get => _size;
             set
@@ -165,7 +165,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="ButtonType.Default" />
         [Parameter]
-        public OneOf<string, (string LeftButton, string RightButton)> Type
+        public OneOf<ButtonType, (ButtonType LeftButton, ButtonType RightButton)> Type
 
         {
             get => _buttonsType;
@@ -189,7 +189,7 @@ namespace AntDesign
         private bool _ghost = false;
         private OneOf<string, (string LeftButton, string RightButton)> _buttonsStyle;
         private OneOf<string, (string LeftButton, string RightButton)> _buttonsClass;
-        private OneOf<string, (string LeftButton, string RightButton)> _buttonsType = ButtonType.Default;
+        private OneOf<ButtonType, (ButtonType LeftButton, ButtonType RightButton)> _buttonsType = ButtonType.Default;
 
         public DropdownButton() => IsButton = true;
 

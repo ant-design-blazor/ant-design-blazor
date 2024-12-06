@@ -16,8 +16,6 @@ namespace AntDesign.TableModels
 
         public string FieldName { get; }
 
-        public string Sort => _sortDirection?.Name;
-
         SortDirection ITableSortModel.SortDirection => _sortDirection;
 
         public int ColumnIndex => _columnIndex;
@@ -37,18 +35,18 @@ namespace AntDesign.TableModels
             this._getFieldExpression = getFieldExpression;
             this.FieldName = fieldName;
             this._comparer = comparer;
-            this._sortDirection = defaultSortOrder ?? SortDirection.None;
+            this._sortDirection = defaultSortOrder;
         }
 
 #if NET5_0_OR_GREATER
         [JsonConstructor]
 #endif
-        public SortModel(int columnIndex, int priority, string fieldName, string sort)
+        public SortModel(int columnIndex, int priority, string fieldName, SortDirection sortDirection)
         {
             this.Priority = priority;
             this._columnIndex = columnIndex;
             this.FieldName = fieldName;
-            this._sortDirection = SortDirection.Parse(sort);
+            this._sortDirection = sortDirection;
         }
 
         void ITableSortModel.SetSortDirection(SortDirection sortDirection)
@@ -98,7 +96,7 @@ namespace AntDesign.TableModels
 
         public object Clone()
         {
-            return new SortModel<TField>(_columnIndex, Priority, FieldName, Sort)
+            return new SortModel<TField>(_columnIndex, Priority, FieldName, _sortDirection)
             {
                 _getFieldExpression = this._getFieldExpression, // keep the expression instance for sorting rows outside
                 _comparer = this._comparer,

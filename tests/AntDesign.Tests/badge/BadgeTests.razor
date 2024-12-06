@@ -16,11 +16,11 @@
   [InlineData(BadgeColor.Volcano)]
   [InlineData(BadgeColor.Gold)]
   [InlineData(BadgeColor.Lime)]
-  public void ItShouldRenderBadgeWithColors(string color)
+  public void ItShouldRenderBadgeWithColors(BadgeColor color)
   {
     var cut = Render<Badge>(@<Badge Color="@color"></Badge> );
     cut.MarkupMatches(@<span class="ant-badge ant-badge-status ant-badge-not-a-wrapper" id:ignore>
-        <span class="ant-badge-status-dot" style="background: @color; "></span>
+        <span class="ant-badge-status-dot" style="background: @color.ToString().ToLower(); "></span>
       </span>);
   }
 

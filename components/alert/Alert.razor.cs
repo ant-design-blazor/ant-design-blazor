@@ -143,7 +143,7 @@ namespace AntDesign
             string prefixName = "ant-alert";
             ClassMapper
                 .Add("ant-alert")
-                .GetIf(() => $"{prefixName}-{_cssMap}", () => !CalcType.HasValue)
+                .GetIf(() => $"{prefixName}-{_cssMap}", () => CalcType.HasValue)
                 .If($"{prefixName}-no-icon", () => !IsShowIcon)
                 .If($"{prefixName}-closable", () => Closable)
                 .If($"{prefixName}-banner", () => Banner)

@@ -28,7 +28,7 @@
             <DataAnnotationsValidator />
         }
         <CascadingValue Value="this" Name="Form" TValue="IForm" IsFixed="@true">
-            @if (!string.IsNullOrEmpty(Size))
+            @if (Size.HasValue)
             {
                 <CascadingValue Value="Size" Name="FormSize">
                     @ChildContent(Model)

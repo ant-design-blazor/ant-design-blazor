@@ -108,7 +108,7 @@ namespace AntDesign
         /// Set mode of Select - default | multiple | tags
         /// </summary>
         [Parameter]
-        public string Mode { get; set; } = "default";
+        public SelectMode Mode { get; set; } = SelectMode.Default;
 
         /// <summary>
         /// Indicates whether the search function is active or not. Always true for mode tags.
@@ -264,8 +264,6 @@ namespace AntDesign
         [Parameter]
         public EventCallback<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
 
-        internal virtual SelectMode SelectMode => Mode.ToSelectMode();
-
         /// <summary>
         ///     Currently active (highlighted) option.
         ///     It does not have to be equal to selected option.
@@ -360,7 +358,7 @@ namespace AntDesign
         ///     Returns whether the user can input a pattern to search matched items
         /// </summary>
         /// <returns>true if search is enabled</returns>
-        internal bool IsSearchEnabled => EnableSearch || SelectMode == SelectMode.Tags;
+        internal bool IsSearchEnabled => EnableSearch || Mode == SelectMode.Tags;
 
         /// <summary>
         ///     Sorted list of SelectOptionItems
@@ -507,7 +505,7 @@ namespace AntDesign
             set
             {
                 _getLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
-                if (SelectMode == SelectMode.Tags)
+                if (Mode == SelectMode.Tags)
                 {
                     _setLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, string>(value);
                 }
@@ -590,7 +588,7 @@ namespace AntDesign
             foreach (var value in values.ToList())
             {
                 SelectOptionItem<TItemValue, TItem> result;
-                if (SelectMode == SelectMode.Multiple)
+                if (Mode == SelectMode.Multiple)
                 {
                     result = SelectOptionItems.FirstOrDefault(x =>
                         !x.IsSelected && EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
@@ -777,7 +775,7 @@ namespace AntDesign
                 _prevSearchValue = string.Empty;
             }
 
-            if (SelectMode != SelectMode.Default && HideSelected)
+            if (Mode != SelectMode.Default && HideSelected)
             {
                 SelectOptionItems.Where(x => !x.IsSelected && x.IsHidden)
                     .ForEach(i => i.IsHidden = false);
@@ -846,7 +844,7 @@ namespace AntDesign
                 throw new ArgumentNullException(nameof(selectOption));
             }
 
-            if (SelectMode == SelectMode.Default)
+            if (Mode == SelectMode.Default)
             {
                 if (SelectedOptionItems.Count > 0)
                 {
@@ -950,7 +948,7 @@ namespace AntDesign
 
         protected void ClearSearch()
         {
-            if (SelectMode != SelectMode.Default)
+            if (Mode != SelectMode.Default)
             {
                 foreach (var item in SelectOptionItems)
                 {
@@ -987,7 +985,7 @@ namespace AntDesign
         /// </summary>
         protected async Task OnInputClearClickAsync(MouseEventArgs _)
         {
-            if (SelectMode == SelectMode.Default)
+            if (Mode == SelectMode.Default)
             {
                 await ClearDefaultMode();
             }
@@ -1150,7 +1148,7 @@ namespace AntDesign
         /// </summary>
         protected async Task ClearSelectedAsync()
         {
-            if (SelectMode == SelectMode.Default)
+            if (Mode == SelectMode.Default)
             {
                 await OnSelectedItemChanged.InvokeAsync(default);
                 await ValueChanged.InvokeAsync(default);

@@ -314,11 +314,11 @@ namespace AntDesign.Select.Internal
         private void SetInputWidth()
         {
             _inputWidth = string.Empty;
-            if (ParentSelect.PrefixIcon != null && ParentSelect.SelectMode == SelectMode.Default)
+            if (ParentSelect.PrefixIcon != null && ParentSelect.Mode == SelectMode.Default)
             {
                 _inputWidth = "left: 22px;";
             }
-            if (ParentSelect.SelectMode != SelectMode.Default)
+            if (ParentSelect.Mode != SelectMode.Default)
             {
                 if (!string.IsNullOrWhiteSpace(_inputString))
                 {

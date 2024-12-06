@@ -1,14 +1,14 @@
-﻿<Flex Gap="middle" Vertical>
+﻿<Flex Gap="FlexGap.Middle" Vertical>
     <RadioGroup @bind-Value="gapSize" Options="gapSizeOptions"></RadioGroup>
     @if (gapSize == "customize")
     {
         <Slider @bind-Value="customGapSize" />
     }
     <Flex Gap="@(gapSize != "customize" ? gapSize : $"{customGapSize}")">
-        <Button Type="primary">Primary</Button>
+        <Button Type="ButtonType.Primary">Primary</Button>
         <Button>Default</Button>
-        <Button Type="dashed">Dashed</Button>
-        <Button Type="link">Link</Button>
+        <Button Type="ButtonType.Dashed">Dashed</Button>
+        <Button Type="ButtonType.Link">Link</Button>
     </Flex>
 </Flex>
 

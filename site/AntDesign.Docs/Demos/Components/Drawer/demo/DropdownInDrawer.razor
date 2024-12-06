@@ -1,8 +1,8 @@
 ﻿@inject IMessageService _message
 
 <div>
-    <Button Type="primary" @onclick="_=>open()">Open</Button>
-    <Drawer Width="500" Closable="true" Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
+    <Button Type="ButtonType.Primary" @onclick="_=>open()">Open</Button>
+    <Drawer Width="500" Closable="true" Visible="visible" Placement="DrawerPlacement.Right" Title='("Basic Drawer")' OnClose="_=>close()">
         <b>Select:</b><br />
 
         <Form Model="_formModal">

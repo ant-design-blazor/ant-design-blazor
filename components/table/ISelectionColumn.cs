@@ -8,7 +8,7 @@ namespace AntDesign
 {
     public interface ISelectionColumn : IColumn
     {
-        public string Type { get; set; }
+        public SelectionType Type { get; set; }
 
         public bool Disabled { get; }
 

@@ -1,7 +1,7 @@
 ﻿@inject ModalService _modalService
 
 <div>
-    <Button Type="primary" OnClick="@ShowModal">
+    <Button Type="ButtonType.Primary" OnClick="@ShowModal">
         Modal
     </Button>
     <Modal Title="@("Modal")"
@@ -30,7 +30,7 @@
         _modalService.Confirm(new ConfirmOptions()
         {
             Title = "Confirm",
-            Icon =@<Icon Type="exclamation-circle" Theme="Outline"></Icon>,
+            Icon = @<Icon Type="@IconType.Outline.ExclamationCircle" />,
             Content = "Bla bla ...",
             OkText = "Agree",
             CancelText = "Dismiss"

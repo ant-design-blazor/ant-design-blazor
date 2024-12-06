@@ -61,10 +61,10 @@ namespace AntDesign
         /// </summary>
         public string[] ValidationMessages { get; private set; } = Array.Empty<string>();
 
-        private string _formSize;
+        private FormSize _formSize;
 
         [CascadingParameter(Name = "FormSize")]
-        public string FormSize
+        public FormSize FormSize
         {
             get
             {
@@ -73,7 +73,7 @@ namespace AntDesign
             set
             {
                 _formSize = value;
-                Size = value;
+                Size = (InputSize)(int)value;
             }
         }
 
@@ -128,9 +128,9 @@ namespace AntDesign
         /// The size of the input box. Note: in the context of a form,
         /// the `large` size is used. Available: `large` `default` `small`
         /// </summary>
-        /// <default value="AntSizeLDSType.Default"/>
+        /// <default value="InputSize.Default"/>
         [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public InputSize Size { get; set; } = InputSize.Default;
 
         /// <summary>
         /// What Culture will be used when converting string to value and value to string

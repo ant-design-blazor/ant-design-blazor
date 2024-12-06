@@ -8,6 +8,7 @@ namespace AntDesign
     {
         Circle,
         CircleOutline,
-        Round
+        Round,
+        Rectangle,
     }
 }

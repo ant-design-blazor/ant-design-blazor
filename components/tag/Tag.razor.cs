@@ -3,11 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -60,50 +61,12 @@ namespace AntDesign
         public EventCallback<bool> CheckedChanged { get; set; }
 
         /// <summary>
-        /// Tag color. Can either be a predefined color (string)
+        /// Tag color. Can either be a predefined color (TagColor)
         /// or hex color.
         /// </summary>
         /// <default value="default" />
         [Parameter]
-        public string Color
-        {
-            get => _color;
-            set
-            {
-                if (_color != value)
-                {
-                    _color = string.IsNullOrWhiteSpace(value)
-                        ? "default"
-                        : value.ToLowerInvariant();
-                    _isPresetColor = IsPresetColor(_color);
-                    _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value                      
-                }
-            }
-        }
-
-        /// <summary>
-        /// Tag color from the PresetColor list
-        /// </summary>
-        [Parameter]
-        [Obsolete($"Use {nameof(Color)} instead by passing the string of the enum value")]
-        public PresetColor? PresetColor
-        {
-            get
-            {
-                object result;
-
-                if (Enum.TryParse(typeof(PresetColor), _color, true, out result) == false)
-                {
-                    return null;
-                }
-
-                return (PresetColor)result;
-            }
-            set
-            {
-                Color = Enum.GetName(typeof(PresetColor), value).ToLowerInvariant();
-            }
-        }
+        public OneOf<TagColor, string> Color { get; set; }
 
         /// <summary>
         /// Set the tag's icon 
@@ -112,10 +75,11 @@ namespace AntDesign
         public string Icon { get; set; }
 
         /// <summary>
-        /// 'fill' | 'outline' | 'twotone';
+        /// Define the icon theme.
         /// </summary>
+        /// <default value="IconThemeType.Outline" />
         [Parameter]
-        public string IconTheme { get; set; } = IconThemeType.Outline;
+        public IconThemeType IconTheme { get; set; } = IconThemeType.Outline;
 
         [Parameter]
         [Obsolete("Parameter is not used and does not affect functionality")]
@@ -150,7 +114,7 @@ namespace AntDesign
         private bool _isPresetColor = true;
         private bool _isCustomColor;
         private bool _closed;
-        private string _color = "default";
+        private TagColor _color = TagColor.Default;
         private string _style;
 
         protected override void OnParametersSet()
@@ -165,19 +129,36 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        private static bool IsPresetColor(string color)
+        private readonly Hashtable _colorMap = new Hashtable()
         {
-            return Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime|success|processing|error|warning|default)(-inverse)?$");
-        }
+            [TagColor.Red] = "red",
+            [TagColor.Volcano] = "volcano",
+            [TagColor.Orange] = "orange",
+            [TagColor.Gold] = "gold",
+            [TagColor.Yellow] = "yellow",
+            [TagColor.Lime] = "lime",
+            [TagColor.Green] = "green",
+            [TagColor.Cyan] = "cyan",
+            [TagColor.Blue] = "blue",
+            [TagColor.GeekBlue] = "geekBlue",
+            [TagColor.Purple] = "purple",
+            [TagColor.Magenta] = "magenta",
+            [TagColor.Pink] = "pink",
+            [TagColor.Success] = "success",
+            [TagColor.Processing] = "processing",
+            [TagColor.Error] = "error",
+            [TagColor.Warning] = "warning",
+            [TagColor.Default] = "default",
+        };
 
         private string _prefix = "ant-tag";
 
         private void UpdateClassMap()
         {
             this.ClassMapper.Add(_prefix)
-                .If($"{_prefix}-has-color", () => _isCustomColor)
+                .If($"{_prefix}-has-color", () => Color.IsT1)
                 .If($"{_prefix}-hidden", () => Visible == false)
-                .GetIf(() => $"{_prefix}-{_color}", () => _isPresetColor)
+                .GetIf(() => $"{_prefix}-{_colorMap[Color.AsT0]}", () => Color.IsT0)
                 .If($"{_prefix}-checkable", () => Checkable)
                 .If($"{_prefix}-checkable-checked", () => Checked)
                 .If($"{_prefix}-rtl", () => RTL)
@@ -198,7 +179,7 @@ namespace AntDesign
 
             if (_isCustomColor)
             {
-                styleBuilder.Append($"background-color: {_color};");
+                styleBuilder.Append($"background-color: {Color.AsT1};");
             }
 
             var newStyle = styleBuilder.ToString();

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -41,16 +42,16 @@ namespace AntDesign
         public AvatarShape? Shape { get; set; }
 
         /// <summary>
-        /// Size of the avatar. See <see cref="AntSizeLDSType"/> for possible values.
+        /// Size of the avatar. See <see cref="AvatarSize"/> for possible values.
         /// </summary>
-        /// <default value="default"/>
+        /// <default value="AvatarSize.Default"/>
         [Parameter]
-        public string Size
+        public OneOf<AvatarSize, string> Size
         {
             get => _size;
             set
             {
-                if (_size != value)
+                if ((_size.IsT0 && _size.AsT0 == value.AsT0) || (_size.IsT1 && _size.AsT1 == value.AsT1))
                 {
                     _size = value;
                     SetSizeStyle();
@@ -133,7 +134,7 @@ namespace AntDesign
         private string _text;
         private RenderFragment _childContent;
         private bool _waitingCalcSize;
-        private string _size = AntSizeLDSType.Default;
+        private OneOf<AvatarSize, string> _size = AvatarSize.Default;
 
         protected override void OnInitialized()
         {
@@ -194,10 +195,18 @@ namespace AntDesign
 
         private void SetSizeStyle()
         {
-            if (!CssSizeLength.TryParse(Size, out var cssSize)) return;
+            CssSizeLength cssSize = null;
 
-            _sizeStyles = $"width:{cssSize};height:{cssSize};line-height:{cssSize};";
-            _sizeStyles += $"font-size:calc({cssSize} / 2);";
+            if (Size.IsT0)
+                if (!CssSizeLength.TryParse(Size.AsT0.ToString().ToLowerInvariant(), out cssSize)) return;
+            else
+                if (!CssSizeLength.TryParse(Size.AsT1, out cssSize)) return;
+
+            if (cssSize != null)
+            {
+                _sizeStyles = $"width:{cssSize};height:{cssSize};line-height:{cssSize};";
+                _sizeStyles += $"font-size:calc({cssSize} / 2);";
+            }
         }
 
         private async Task CalcStringSize()

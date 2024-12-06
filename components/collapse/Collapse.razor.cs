@@ -47,7 +47,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="CollapseExpandIconPosition.Left"/>
         [Parameter]
-        public string ExpandIconPosition { get; set; } = CollapseExpandIconPosition.Left;
+        public CollapseExpandIconPosition ExpandIconPosition { get; set; } = CollapseExpandIconPosition.Left;
 
         /// <summary>
         /// Default <see cref="Panel"/> element's <see cref="Panel.Key"/>
@@ -66,7 +66,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="right"/>
         [Parameter]
-        public string ExpandIcon { get; set; } = "right";
+        public string ExpandIcon { get; set; } = IconType.Outline.Right;
 
         /// <summary>
         /// Expand icon content to display in <see cref="ExpandIconPosition"/>. Takes priority over <see cref="ExpandIcon"/>
