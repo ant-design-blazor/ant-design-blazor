@@ -97,10 +97,10 @@ namespace AntDesign.Tests.Icon
             yield return new object[] { "bad-icon-name", IconThemeType.TwoTone };
 
             // Correct icon, bad type
-            yield return new object[] { "alert", "bad-type-name" };
+            yield return new object[] { "alert", IconThemeType.Internal };
 
             // Bad icon, bad type
-            yield return new object[] { "bad-icon-name", "bad-type-name" };
+            yield return new object[] { "bad-icon-name", IconThemeType.Internal };
         }
     }
 }
