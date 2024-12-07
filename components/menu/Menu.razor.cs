@@ -335,9 +335,11 @@ namespace AntDesign
                 .If($"{PrefixCls}-inline", () => InternalMode == MenuMode.Inline)
                 .If($"{PrefixCls}-vertical", () => InternalMode == MenuMode.Vertical)
                 .If($"{PrefixCls}-horizontal", () => InternalMode == MenuMode.Horizontal)
-                .If($"{PrefixCls}-inline-collapsed", () => InlineCollapsed)
+                .If($"{PrefixCls}-inline-collapsed", () => _inlineCollapsed)
                 .If($"{PrefixCls}-unselectable", () => !Selectable)
                 .If($"{PrefixCls}-rtl", () => RTL);
+
+            StateHasChanged();
         }
 
         protected override void OnInitialized()
@@ -403,6 +405,8 @@ namespace AntDesign
             {
                 InternalMode = Mode;
             }
+
+            SetClass();
         }
 
         private void HandleOpenChange(string[] openKeys)
