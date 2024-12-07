@@ -28,7 +28,7 @@ namespace AntDesign.Tests.Drawer
         {
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters.Add(x => x.Placement, placement));
 
-            systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement}"" style=""z-index:-9999;"" id:ignore>
+            systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement.ToString().ToLowerInvariant()}"" style=""z-index:-9999;"" id:ignore>
                 <div class=""ant-drawer-content-wrapper"" style=""{contentWrapperStyle}"" id:ignore>
                     <div class=""ant-drawer-content"">
                         <div class=""ant-drawer-wrapper-body"" style=""{bodyWrapperStyle}"">
@@ -64,7 +64,7 @@ namespace AntDesign.Tests.Drawer
 
             systemUnderTest.SetParametersAndRender(parameters => parameters.Add(x => x.Placement, placement));
 
-            systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement}"" style=""z-index:-9999;"" id:ignore>
+            systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement.ToString().ToLowerInvariant()}"" style=""z-index:-9999;"" id:ignore>
                 <div class=""ant-drawer-content-wrapper"" style=""{contentWrapperStyle}"" id:ignore>
                     <div class=""ant-drawer-content"">
                         <div class=""ant-drawer-wrapper-body"" style=""{bodyWrapperStyle}"">
