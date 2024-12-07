@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq;
+using AntDesign.Core.Documentation;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
@@ -135,6 +136,7 @@ namespace AntDesign
         /// Index of this column in the table
         /// </summary>
         [Parameter]
+        [PublicApi("1.1.0")]
         public int ColIndex { get; set; }
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);

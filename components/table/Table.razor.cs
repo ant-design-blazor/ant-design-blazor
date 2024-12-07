@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.core.Services;
 using AntDesign.Core.HashCodes;
 using AntDesign.Core.Reflection;
@@ -70,7 +71,9 @@ namespace AntDesign
         private bool _shouldRender = true;
         private int _parametersHashCode;
 
-        [Parameter] public bool AutoColIndexes { get; set; } = true;
+        [Parameter]
+        [PublicApi("1.1.0")]
+        public bool AutoColIndexes { get; set; } = true;
 
         /// <summary>
         /// Render mode of table. See <see cref="AntDesign.RerenderStrategy"/> documentation for details.
