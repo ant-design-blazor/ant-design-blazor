@@ -70,6 +70,10 @@ namespace AntDesign
         private bool _shouldRender = true;
         private int _parametersHashCode;
 
+        /// <summary>
+        /// Enable or disable automatic column index assignments.
+        /// Should be disabled if complex column structure is used and index assigned via ColIndex parameter.
+        /// </summary>
         [Parameter]
         [PublicApi("1.1.0")]
         public bool AutoColIndexes { get; set; } = true;
