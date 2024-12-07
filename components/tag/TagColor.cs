@@ -6,6 +6,7 @@ namespace AntDesign
 {
     public enum TagColor
     {
+        Default,
         Red,
         Volcano,
         Orange,
@@ -23,6 +24,23 @@ namespace AntDesign
         Processing,
         Error,
         Warning,
-        Default
+        DefaultInverse,
+        RedInverse,
+        VolcanoInverse,
+        OrangeInverse,
+        GoldInverse,
+        YellowInverse,
+        LimeInverse,
+        GreenInverse,
+        CyanInverse,
+        BlueInverse,
+        GeekBlueInverse,
+        PurpleInverse,
+        MagentaInverse,
+        PinkInverse,
+        SuccessInverse,
+        ProcessingInverse,
+        ErrorInverse,
+        WarningInverse,
     }
 }

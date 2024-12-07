@@ -64,9 +64,53 @@ namespace AntDesign
         /// Tag color. Can either be a predefined color (TagColor)
         /// or hex color.
         /// </summary>
-        /// <default value="default" />
+        /// <default value="TagColor.Default" />
         [Parameter]
-        public OneOf<TagColor, string> Color { get; set; }
+        public OneOf<TagColor, string> Color {
+            get
+            {
+                if (_isPresetColor)
+                    return _presetColor;
+                else
+                    return _customColor;
+            }
+            set
+            {
+                if (value.IsT0)
+                {
+                    _isPresetColor = true;
+                    _isCustomColor = false;
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(value.AsT1) && _colorMap.ContainsValue(value.AsT1.ToLowerInvariant()))
+                    {
+                        foreach (TagColor color in Enum.GetValues(typeof(TagColor)))
+                        {
+                            if ((string)_colorMap[color] == value.AsT1.ToLowerInvariant())
+                            {
+                                _presetColor = color;
+                                _isPresetColor = true;
+                                _isCustomColor = false;
+                                break;
+                            }
+                        }
+                    }
+                    else if (string.IsNullOrWhiteSpace(value.AsT1))
+                    {
+                        _presetColor = TagColor.Default;
+                        _isPresetColor = true;
+                        _isCustomColor = false;
+                    }
+                    else
+                    {
+                        _isPresetColor = false;
+                        _isCustomColor = true;
+                        _customColor = value.AsT1;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Set the tag's icon 
@@ -114,7 +158,8 @@ namespace AntDesign
         private bool _isPresetColor = true;
         private bool _isCustomColor;
         private bool _closed;
-        private TagColor _color = TagColor.Default;
+        private TagColor _presetColor = TagColor.Default;
+        private string _customColor = "";
         private string _style;
 
         protected override void OnParametersSet()
@@ -131,6 +176,7 @@ namespace AntDesign
 
         private readonly Hashtable _colorMap = new Hashtable()
         {
+            [TagColor.Default] = "default",
             [TagColor.Red] = "red",
             [TagColor.Volcano] = "volcano",
             [TagColor.Orange] = "orange",
@@ -148,7 +194,24 @@ namespace AntDesign
             [TagColor.Processing] = "processing",
             [TagColor.Error] = "error",
             [TagColor.Warning] = "warning",
-            [TagColor.Default] = "default",
+            [TagColor.DefaultInverse] = "default-inverse",
+            [TagColor.RedInverse] = "red-inverse",
+            [TagColor.VolcanoInverse] = "volcano-inverse",
+            [TagColor.OrangeInverse] = "orange-inverse",
+            [TagColor.GoldInverse] = "gold-inverse",
+            [TagColor.YellowInverse] = "yellow-inverse",
+            [TagColor.LimeInverse] = "lime-inverse",
+            [TagColor.GreenInverse] = "green-inverse",
+            [TagColor.CyanInverse] = "cyan-inverse",
+            [TagColor.BlueInverse] = "blue-inverse",
+            [TagColor.GeekBlueInverse] = "geekblue-inverse",
+            [TagColor.PurpleInverse] = "purple-inverse",
+            [TagColor.MagentaInverse] = "magenta-inverse",
+            [TagColor.PinkInverse] = "pink-inverse",
+            [TagColor.SuccessInverse] = "success-inverse",
+            [TagColor.ProcessingInverse] = "processing-inverse",
+            [TagColor.ErrorInverse] = "error-inverse",
+            [TagColor.WarningInverse] = "warning-inverse",
         };
 
         private string _prefix = "ant-tag";
@@ -156,9 +219,9 @@ namespace AntDesign
         private void UpdateClassMap()
         {
             this.ClassMapper.Add(_prefix)
-                .If($"{_prefix}-has-color", () => Color.IsT1)
+                .If($"{_prefix}-has-color", () => _isCustomColor)
                 .If($"{_prefix}-hidden", () => Visible == false)
-                .GetIf(() => $"{_prefix}-{_colorMap[Color.AsT0]}", () => Color.IsT0)
+                .GetIf(() => $"{_prefix}-{_colorMap[_presetColor]}", () => _isPresetColor)
                 .If($"{_prefix}-checkable", () => Checkable)
                 .If($"{_prefix}-checkable-checked", () => Checked)
                 .If($"{_prefix}-rtl", () => RTL)
@@ -179,7 +242,7 @@ namespace AntDesign
 
             if (_isCustomColor)
             {
-                styleBuilder.Append($"background-color: {Color.AsT1};");
+                styleBuilder.Append($"background-color: {_customColor};");
             }
 
             var newStyle = styleBuilder.ToString();
