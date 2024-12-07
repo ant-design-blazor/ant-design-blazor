@@ -39,12 +39,12 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg", Title = "Button", SubTitle = "按钮")]
     public partial class Button : AntDomComponentBase
     {
-        private FormSize _formSize;
+        private FormSize? _formSize;
 
         private const int RemoveAnimationAfter = 500;
 
         [CascadingParameter(Name = "FormSize")]
-        public FormSize FormSize
+        public FormSize? FormSize
         {
             get
             {
@@ -54,12 +54,17 @@ namespace AntDesign
             {
                 _formSize = value;
 
-                Size = _formSize switch
+                if (_formSize.HasValue)
                 {
-                    FormSize.Large => ButtonSize.Large,
-                    FormSize.Default => ButtonSize.Default,
-                    FormSize.Small => ButtonSize.Small,
-                };
+                    Size = _formSize.Value switch
+                    {
+                        AntDesign.FormSize.Large => ButtonSize.Large,
+                        AntDesign.FormSize.Default => ButtonSize.Default,
+                        AntDesign.FormSize.Small => ButtonSize.Small,
+                    };
+                }
+                else
+                    Size = ButtonSize.Default;
             }
         }
 

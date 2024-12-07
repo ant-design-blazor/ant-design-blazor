@@ -6,8 +6,8 @@ namespace AntDesign
 {
     public enum ButtonSize
     {
-        Default,
         Large,
+        Default,
         Small,
     }
 }
