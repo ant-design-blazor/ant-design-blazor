@@ -24,6 +24,7 @@ using Microsoft.JSInterop;
 
 
 #if NET5_0_OR_GREATER
+
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 #endif
@@ -60,7 +61,7 @@ namespace AntDesign
     {
         private static TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>()
             : !typeof(TItem).IsAbstract ? ExpressionActivator<TItem>.CreateInstance()
-                                          ?? (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem))
+            ?? (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem))
             : default;
 
         private static readonly EventCallbackFactory _callbackFactory = new EventCallbackFactory();
@@ -367,13 +368,17 @@ namespace AntDesign
 
 #endif
 
-        [Inject] private IDomEventListener DomEventListener { get; set; }
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
 
-        [Inject] private ILogger<Table<TItem>> Logger { get; set; }
+        [Inject]
+        private ILogger<Table<TItem>> Logger { get; set; }
 
-        [Inject] private IFieldFilterTypeResolver InjectedFieldFilterTypeResolver { get; set; }
+        [Inject]
+        private IFieldFilterTypeResolver InjectedFieldFilterTypeResolver { get; set; }
 
-        [Inject] private ClientDimensionService ClientDimensionService { get; set; }
+        [Inject]
+        private ClientDimensionService ClientDimensionService { get; set; }
 
         public ColumnContext ColumnContext { get; set; }
 
@@ -412,8 +417,7 @@ namespace AntDesign
 
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
-        private bool IsEntityFrameworkCore => _dataSource is IQueryable<TItem> query &&
-                                              query.Provider.ToString().Contains("EntityFrameworkCore");
+        private bool IsEntityFrameworkCore => _dataSource is IQueryable<TItem> query && query.Provider.ToString().Contains("EntityFrameworkCore");
 
         private bool UseItemsProvider
         {
@@ -432,12 +436,7 @@ namespace AntDesign
         string ITable.ScrollX => ScrollX;
         string ITable.ScrollY => ScrollY;
         string ITable.ScrollBarWidth => _scrollBarWidth ?? "15px";
-
-        int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex +
-                                            (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex
-                                                ? 1
-                                                : 0);
-
+        int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
@@ -459,7 +458,6 @@ namespace AntDesign
                     builder.AddContent(0, groupResult.Key);
                 };
             }
-
             return builder =>
             {
                 builder.AddContent(0, GroupTitleTemplate(groupResult));
@@ -635,8 +633,7 @@ namespace AntDesign
         {
             foreach (var col in ColumnContext.HeaderColumns)
             {
-                if (col.ColIndex != column.ColIndex && col is IFieldColumn fieldCol && fieldCol.SorterMultiple <= 0 &&
-                    fieldCol.Sortable)
+                if (col.ColIndex != column.ColIndex && col is IFieldColumn fieldCol && fieldCol.SorterMultiple <= 0 && fieldCol.Sortable)
                 {
                     fieldCol.ClearSorter();
                 }
@@ -733,14 +730,10 @@ namespace AntDesign
                 }
             }
 
-            _treeMode = (TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true)) ||
-                        _groupedColumns.Count > 0;
+            _treeMode = (TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true)) || _groupedColumns.Count > 0;
             if (_treeMode)
             {
-                _treeExpandIconColumnIndex = ExpandIconColumnIndex +
-                                             (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex
-                                                 ? 1
-                                                 : 0);
+                _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
 
             return queryModel;
@@ -865,7 +858,6 @@ namespace AntDesign
 
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
-
         public override async Task SetParametersAsync(ParameterView parameters)
         {
             await base.SetParametersAsync(parameters);
@@ -940,8 +932,7 @@ namespace AntDesign
 
                 if (ScrollY != null || ScrollX != null || Resizable || AutoHeight)
                 {
-                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef,
-                        _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable, AutoHeight);
+                    await JsInvokeAsync(JSInteropConstants.BindTableScroll, _wrapperRef, _tableBodyRef, _tableRef, _tableHeaderRef, ScrollX != null, ScrollY != null, Resizable, AutoHeight);
                 }
 
                 if (ScrollY != null && ScrollY != null && _scrollBarWidth == null)
@@ -1036,7 +1027,6 @@ namespace AntDesign
                         await JsInvokeAsync(JSInteropConstants.UnbindTableScroll, _tableBodyRef);
                     }
                 }
-
                 DomEventListener?.Dispose();
             }
 #if NET6_0_OR_GREATER
