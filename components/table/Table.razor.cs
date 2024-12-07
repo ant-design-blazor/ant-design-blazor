@@ -48,8 +48,7 @@ namespace AntDesign
     <seealso cref="Selection"/>
     <seealso cref="QueryModel{TItem}" />
     */
-    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay,
-        "https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg", Columns = 1, Title = "Table", SubTitle = "表格")]
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg", Columns = 1, Title = "Table", SubTitle = "表格")]
 #if NET6_0_OR_GREATER
     [CascadingTypeParameter(nameof(TItem))]
 #endif
@@ -347,14 +346,12 @@ namespace AntDesign
         /// <summary>
         /// Specify the identifier of each row
         /// </summary>
-        [Parameter]
-        public Func<TItem, object> RowKey { get; set; } = default!;
+        [Parameter] public Func<TItem, object> RowKey { get; set; } = default!;
 
         /// <summary>
         /// Enable resizable column
         /// </summary>
-        [Parameter]
-        public bool Resizable { get; set; }
+        [Parameter] public bool Resizable { get; set; }
 
         /// <summary>
         /// Set the field filter type resolver

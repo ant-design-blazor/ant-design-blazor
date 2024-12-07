@@ -59,7 +59,8 @@ namespace AntDesign
                         }
                     }
                 }
-            } while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
+            } 
+            while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
             column.ColIndex = CurrentColIndex;
             HeaderColumns.Add(column);
