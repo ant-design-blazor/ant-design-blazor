@@ -20,7 +20,7 @@
   {
     var cut = Render<Badge>(@<Badge Color="@color"></Badge> );
     cut.MarkupMatches(@<span class="ant-badge ant-badge-status ant-badge-not-a-wrapper" id:ignore>
-        <span class="ant-badge-status-dot" style="background: @color.ToString().ToLower(); "></span>
+        <span class="ant-badge-status-dot ant-badge-status-@color.ToString().ToLower()" style=""></span>
       </span>);
   }
 

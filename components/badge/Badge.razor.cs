@@ -28,7 +28,7 @@ namespace AntDesign
         /// Customize Badge status dot color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
-        public OneOf<BadgeColor, string> Color { get; set; }
+        public OneOf<BadgeColor?, string> Color { get; set; }
 
         /// <summary>
         /// Number to show in badge
@@ -144,7 +144,7 @@ namespace AntDesign
         private char[] _maxNumberArray = Array.Empty<char>();
 
         private readonly Hashtable _statusMap = new Hashtable() {
-            [BadgeStatus.Default] = "square",
+            [BadgeStatus.Default] = "default",
             [BadgeStatus.Success] = "success",
             [BadgeStatus.Processing] = "processing",
             [BadgeStatus.Error] = "error",
@@ -153,15 +153,15 @@ namespace AntDesign
 
         private string StatusOrPresetColor => Status.HasValue
             ? _statusMap[Status.Value].ToString()
-            : (Color.IsT0
+            : (Color.IsT0 && Color.AsT0.HasValue
                 ? Enum.GetName(typeof(BadgeColor), Color.AsT0)
                 : "");
 
-        private bool HasStatusOrColor => Status.HasValue || Color.IsT0;
+        private bool HasStatusOrColor => Status.HasValue || ((Color.IsT0 && Color.AsT0.HasValue) || (Color.IsT1 && !string.IsNullOrWhiteSpace(Color.AsT1)));
 
         private string CountStyle => Offset == default ? "" : $"{$"right:{-Offset.Left}px"};{$"margin-top:{Offset.Top}px"};";
 
-        private string DotColorStyle => Color.IsT1 ? $"background:{Color};" : "";
+        private string DotColorStyle => Color.IsT1 ? $"background:{Color.AsT1};" : "";
 
         private bool RealShowSup => (Dot && (!Count.HasValue || (Count > 0 || Count == 0 && ShowZero)))
                                 || Count > 0
