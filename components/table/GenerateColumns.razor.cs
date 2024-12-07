@@ -56,6 +56,11 @@ namespace AntDesign
                 if (HideColumnsByName.Contains(property.Name)) continue;
                 var columnType = typeof(Column<>).MakeGenericType(property.PropertyType.GetUnderlyingType());
                 var instance = Activator.CreateInstance(columnType) as IFieldColumn;
+                
+                if (instance != null) 
+                {
+                    instance.ColIndex = i / 3;
+                }
 
                 Definitions?.Invoke(property.Name, instance);
 
