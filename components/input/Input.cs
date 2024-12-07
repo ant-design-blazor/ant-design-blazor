@@ -530,8 +530,8 @@ namespace AntDesign
 
             builder.OpenComponent<Icon>(33);
 
-            builder.AddAttribute(34, "Type", "close-circle");
-            builder.AddAttribute(35, "Theme", "fill");
+            builder.AddAttribute(34, "Type", IconType.Fill.CloseCircle);
+            builder.AddAttribute(35, "Theme", IconThemeType.Fill);
 
             builder.AddAttribute(36, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
             {
