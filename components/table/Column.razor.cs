@@ -421,7 +421,7 @@ namespace AntDesign
                     }
                 }
 
-                Context.HeaderColumnInitialed(this);
+                Context.HeaderColumnInitialized(this);
 
                 _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
             }

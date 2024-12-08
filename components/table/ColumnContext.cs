@@ -153,7 +153,7 @@ namespace AntDesign
             }
         }
 
-        internal void HeaderColumnInitialed(IColumn column)
+        internal void HeaderColumnInitialized(IColumn column)
         {
             if (column.ColIndex == Columns.Count - 1)
             {

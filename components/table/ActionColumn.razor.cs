@@ -23,7 +23,7 @@ namespace AntDesign
             base.OnInitialized();
             if (IsHeader)
             {
-                Context.HeaderColumnInitialed(this);
+                Context.HeaderColumnInitialized(this);
             }
         }
 
