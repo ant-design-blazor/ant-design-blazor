@@ -2,13 +2,13 @@
 
 <Table DataSource="@data" Bordered Size="TableSize.Small" ScrollX="1350" ScrollY="600">
     <ColumnDefinitions>
-        <ColumnDefinition Width="100" Fixed="left" />
+        <ColumnDefinition Width="100" Fixed="ColumnFixPlacement.Left" />
         <ColumnDefinition Width="200" />
         <ColumnDefinition Width="200" />
         <ColumnDefinition Width="200" />
         <ColumnDefinition Width="200" />
         <ColumnDefinition />
-        <ColumnDefinition Width="80" Fixed="right" />
+        <ColumnDefinition Width="80" Fixed="ColumnFixPlacement.Right" />
     </ColumnDefinitions>
     <HeaderTemplate>
         <TableRow>
@@ -27,7 +27,7 @@
     </HeaderTemplate>
     <RowTemplate>
         <TableRow>
-            <TableCell RowSpan="2"><Avatar Size="64" Icon="user" /></TableCell>
+            <TableCell RowSpan="2"><Avatar Size="@("64")" Icon="@IconType.Outline.User" /></TableCell>
             <TableCell>@context.Data.Name</TableCell>
             <TableCell>@context.Data.Age</TableCell>
             <TableCell>@context.Data.Street</TableCell>

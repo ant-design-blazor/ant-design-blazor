@@ -196,11 +196,11 @@ namespace AntDesign
                 {
                     var otherValue = GetIndexValue(Math.Abs(index - 1));
 
-                    PickerValues[index] = Picker.Name switch
+                    PickerValues[index] = Picker switch
                     {
-                        DatePickerType.YEAR when DateHelper.IsSameDecade(currentValue, otherValue) => currentValue.Value,
-                        DatePickerType.WEEK or DatePickerType.DATE when DateHelper.IsSameMonth(currentValue, otherValue) => currentValue.Value,
-                        DatePickerType.QUARTER or DatePickerType.MONTH when DateHelper.IsSameYear(currentValue, otherValue) => currentValue.Value,
+                        DatePickerType.Year when DateHelper.IsSameDecade(currentValue, otherValue) => currentValue.Value,
+                        DatePickerType.Week or DatePickerType.Date when DateHelper.IsSameMonth(currentValue, otherValue) => currentValue.Value,
+                        DatePickerType.Quarter or DatePickerType.Month when DateHelper.IsSameYear(currentValue, otherValue) => currentValue.Value,
                         _ => GetClosingDate(currentValue.Value, -1)
                     };
                 }

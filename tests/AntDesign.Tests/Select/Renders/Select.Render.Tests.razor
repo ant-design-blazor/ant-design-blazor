@@ -36,7 +36,7 @@
     public void Render_multiple_enum_select_with_ShowArrowIcon() 
     {
         // Arrange
-        var cut = Render<EnumSelect<City>>(@<EnumSelect TEnum="City" Mode="multiple" ShowArrowIcon></EnumSelect>);
+        var cut = Render<EnumSelect<City>>(@<EnumSelect TEnum="City" Mode="SelectMode.Multiple" ShowArrowIcon></EnumSelect>);
         
         // Act
         var arrow = cut.Find("span.ant-select-arrow");
@@ -54,12 +54,13 @@
             new PersonNullable("3", "Test 3"),
             new PersonNullable("4", "Test 4")
         };
+
         var cut = Render<AntDesign.Select<string?, PersonNullable>>(
             @<AntDesign.Select DataSource="@dataSource"
                 LabelName="@nameof(PersonNullable.Name)"
                 ValueName="@nameof(PersonNullable.Id)"
                 TItem="PersonNullable"
-                TItemValue="string?"
+                TItemValue="string"
                 Value="null"
                 AllowClear>
         </AntDesign.Select>

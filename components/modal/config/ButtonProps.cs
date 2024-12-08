@@ -18,11 +18,11 @@ namespace AntDesign
 
         public bool Loading { get; set; } = false;
 
-        public string Type { get; set; } = ButtonType.Default;
+        public ButtonType Type { get; set; } = ButtonType.Default;
 
-        public string Shape { get; set; } = null;
+        public ButtonShape Shape { get; set; } = ButtonShape.Rectangle;
 
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public ButtonSize Size { get; set; } = ButtonSize.Default;
 
         public string Icon { get; set; }
 

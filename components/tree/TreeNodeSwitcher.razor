@@ -5,7 +5,7 @@
 <span class="@ClassMapper.Class" @onclick="OnClick">
     @if (SelfNode.Loading)
     {
-        <Icon Type="loading" Theme="outline" Class="ant-tree-switcher-loading-icon" />
+        <Icon Type="@IconType.Outline.Loading" Class="ant-tree-switcher-loading-icon" />
     }
     else
     {
@@ -50,7 +50,7 @@
                     <!-- Show the leaf icon (file) or leaf line (└) -->
                     if (TreeComponent.ShowLeafIcon)
                     {
-                        <Icon Type="file" Theme="outline" Class="ant-tree-switcher-line-icon" />
+                        <Icon Type="@IconType.Outline.File" Class="ant-tree-switcher-line-icon" />
                     }
                     else
                     {
@@ -61,7 +61,7 @@
             else if (!SelfNode.IsLeaf)
             {
                 <!-- node is not leaf and not show line, then show the default arrow icon -->
-                <Icon Type="caret-down" Theme="outline" Class="ant-tree-switcher-icon" />
+                <Icon Type="@IconType.Outline.CaretDown" Class="ant-tree-switcher-icon" />
             }
         }
     }

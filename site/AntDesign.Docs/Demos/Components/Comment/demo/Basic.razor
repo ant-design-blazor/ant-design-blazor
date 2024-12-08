@@ -13,7 +13,7 @@
     RenderFragment likeAction=>
         @<span>
             <Tooltip Title="Like">
-                <Icon Type="like" Theme="@(like ? "fill" : "outline")" OnClick="SetLike" />
+                <Icon Type="like" Theme="@(like ? IconThemeType.Fill : IconThemeType.Outline)" OnClick="SetLike" />
             </Tooltip>
             <span>@(like ? 1 : 0)</span>
         </span>;
@@ -21,7 +21,7 @@
     RenderFragment dislikeAction=>
         @<span>
             <Tooltip Title="Dislike">
-                <Icon Type="dislike" Theme="@(dislike ? "fill" : "outline")" OnClick="SetDislike" />
+                <Icon Type="dislike" Theme="@(dislike ? IconThemeType.Fill : IconThemeType.Outline)" OnClick="SetDislike" />
             </Tooltip>
             <span>@(dislike ? 1:0)</span>
         </span>;

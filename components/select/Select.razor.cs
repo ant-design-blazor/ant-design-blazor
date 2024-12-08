@@ -387,7 +387,7 @@ namespace AntDesign
             {
                 _isPrimitive = IsSimpleType(typeof(TItem));
                 _isValueEnum = typeof(TItemValue).IsEnum;
-                if (!_showArrowIconChanged && SelectMode != SelectMode.Default)
+                if (!_showArrowIconChanged && Mode != SelectMode.Default)
                     _showArrowIcon = SuffixIcon != null;
             }
             _isInitialized = true;
@@ -501,7 +501,7 @@ namespace AntDesign
         {
             if (_isInitialized && _afterFirstRender)
             {
-                if (Mode == "default")
+                if (Mode == SelectMode.Default)
                 {
                     if (LastValueBeforeReset is not null)
                     {
@@ -539,7 +539,7 @@ namespace AntDesign
             }
             if (!_defaultValueApplied || !_defaultActiveFirstOptionApplied)
             {
-                if (SelectMode == SelectMode.Default)
+                if (Mode == SelectMode.Default)
                 {
                     bool hasOptions = SelectOptionItems.Any();
                     if (!HasValue && hasOptions && (_defaultValueIsNotNull || DefaultActiveFirstOption))
@@ -627,9 +627,9 @@ namespace AntDesign
             //A simple approach to avoid unnecessary scanning through _selectedValues once
             //all of SelectOptionItem where already marked as selected
             int processedSelectedCount = 0;
-            if (SelectMode == SelectMode.Default && _selectedValue != null)
+            if (Mode == SelectMode.Default && _selectedValue != null)
                 processedSelectedCount = 1;
-            else if (SelectMode != SelectMode.Default && _selectedValues != null)
+            else if (Mode != SelectMode.Default && _selectedValues != null)
                 processedSelectedCount = _selectedValues.Count();
 
             foreach (var item in _datasource)
@@ -658,7 +658,7 @@ namespace AntDesign
                 bool isSelected = false;
                 if (processedSelectedCount > 0)
                 {
-                    if (SelectMode == SelectMode.Default)
+                    if (Mode == SelectMode.Default)
                         isSelected = ReferenceEquals(value, _selectedValue) || value?.Equals(_selectedValue) == true;
                     else
                         isSelected = _selectedValues.Contains(value);
@@ -735,10 +735,10 @@ namespace AntDesign
                 .Add($"{ClassPrefix}")
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
-                .If($"{ClassPrefix}-single", () => SelectMode == SelectMode.Default)
-                .If($"{ClassPrefix}-multiple", () => SelectMode != SelectMode.Default)
-                .If($"{ClassPrefix}-sm", () => Size == AntSizeLDSType.Small)
-                .If($"{ClassPrefix}-lg", () => Size == AntSizeLDSType.Large)
+                .If($"{ClassPrefix}-single", () => Mode == SelectMode.Default)
+                .If($"{ClassPrefix}-multiple", () => Mode != SelectMode.Default)
+                .If($"{ClassPrefix}-sm", () => Size == InputSize.Small)
+                .If($"{ClassPrefix}-lg", () => Size == InputSize.Large)
                 .If($"{ClassPrefix}-borderless", () => !Bordered)
                 .If($"{ClassPrefix}-show-arrow", () => ShowArrowIcon)
                 .If($"{ClassPrefix}-show-search", () => IsSearchEnabled)
@@ -848,7 +848,7 @@ namespace AntDesign
                         SelectedOptionItems[0] = firstEnabled;
                     }
 
-                    if (SelectMode == SelectMode.Default)
+                    if (Mode == SelectMode.Default)
                     {
                         Value = firstEnabled.Value;
                         firstEnabled.IsSelected = true;
@@ -976,7 +976,7 @@ namespace AntDesign
         private async Task SetInitialValuesAsync()
         {
             SelectedOptionItems.Clear();
-            if (SelectMode == SelectMode.Default)
+            if (Mode == SelectMode.Default)
             {
                 if (_selectedValue != null || TypeDefaultExistsAsSelectOption)
                 {
@@ -1181,7 +1181,7 @@ namespace AntDesign
             else
             {
                 UnhideSelectOptions();
-                if (SelectMode == SelectMode.Tags && CustomTagSelectOptionItem is not null)
+                if (Mode == SelectMode.Tags && CustomTagSelectOptionItem is not null)
                 {
                     SelectOptionItems.Remove(CustomTagSelectOptionItem);
                     CustomTagSelectOptionItem = null;
@@ -1197,7 +1197,7 @@ namespace AntDesign
                 item => item.Trim(),
                 _ => default(SelectOptionItem<TItemValue, TItem>));
 
-            if (SelectMode == SelectMode.Tags)
+            if (Mode == SelectMode.Tags)
             {
                 List<SelectOptionItem<TItemValue, TItem>> selectOptionItems;
                 if (AddedTags.Count > 0)
@@ -1246,7 +1246,7 @@ namespace AntDesign
 
         private void FilterOptionItems(string searchValue)
         {
-            if (SelectMode != SelectMode.Tags)
+            if (Mode != SelectMode.Tags)
             {
                 bool firstDone = false;
                 foreach (var item in SelectOptionItems)
@@ -1369,7 +1369,7 @@ namespace AntDesign
             var key = e.Key.ToUpperInvariant();
             var overlayFirstOpen = false;
 
-            if (_isToken && SelectMode == SelectMode.Tags)
+            if (_isToken && Mode == SelectMode.Tags)
             {
                 if (!_dropDown.IsOverlayShow())
                     return;
@@ -1414,7 +1414,7 @@ namespace AntDesign
                 if (!SelectOptionItems.Any())
                     return;
 
-                if (SelectMode == SelectMode.Default)
+                if (Mode == SelectMode.Default)
                 {
                     var firstActive = SelectOptionItems.FirstOrDefault(x => x.IsActive);
 
@@ -1430,7 +1430,7 @@ namespace AntDesign
                     return;
                 }
 
-                if (SelectMode == SelectMode.Multiple)
+                if (Mode == SelectMode.Multiple)
                 {
                     if (AllOptionsHidden())
                         return;
@@ -1444,7 +1444,7 @@ namespace AntDesign
                     return;
                 }
 
-                if (SelectMode == SelectMode.Tags)
+                if (Mode == SelectMode.Tags)
                 {
                     SelectOptionItem<TItemValue, TItem> firstActive;
                     if (ActiveOption.IsAddedTag)

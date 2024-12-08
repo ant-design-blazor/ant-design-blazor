@@ -20,15 +20,15 @@ namespace AntDesign.Tests.Drawer
         }
 
         [Theory]
-        [InlineData("left", "width:256px;transform:translateX(-100%);", "height:100%")]
-        [InlineData("right", "width:256px;transform:translateX(100%);", "height:100%")]
-        [InlineData("top", "height:256px;transform:translateY(-100%);", "")]
-        [InlineData("bottom", "height:256px;transform:translateY(100%);", "")]
-        public void ItShouldRenderWrapperProperly(string placement, string contentWrapperStyle, string bodyWrapperStyle)
+        [InlineData(DrawerPlacement.Left, "width:256px;transform:translateX(-100%);", "height:100%")]
+        [InlineData(DrawerPlacement.Right, "width:256px;transform:translateX(100%);", "height:100%")]
+        [InlineData(DrawerPlacement.Top, "height:256px;transform:translateY(-100%);", "")]
+        [InlineData(DrawerPlacement.Bottom, "height:256px;transform:translateY(100%);", "")]
+        public void ItShouldRenderWrapperProperly(DrawerPlacement placement, string contentWrapperStyle, string bodyWrapperStyle)
         {
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters.Add(x => x.Placement, placement));
 
-            systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement}"" style=""z-index:-9999;"" id:ignore>
+            systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement.ToString().ToLowerInvariant()}"" style=""z-index:-9999;"" id:ignore>
                 <div class=""ant-drawer-content-wrapper"" style=""{contentWrapperStyle}"" id:ignore>
                     <div class=""ant-drawer-content"">
                         <div class=""ant-drawer-wrapper-body"" style=""{bodyWrapperStyle}"">
@@ -54,17 +54,17 @@ namespace AntDesign.Tests.Drawer
         }
 
         [Theory]
-        [InlineData("top", "left", "width:256px;transform:translateX(-100%);", "height:100%")]
-        [InlineData("top", "right", "width:256px;transform:translateX(100%);", "height:100%")]
-        [InlineData("left", "top", "height:256px;transform:translateY(-100%);", "")]
-        [InlineData("left", "bottom", "height:256px;transform:translateY(100%);", "")]
-        public void ItShouldChangePlacementAfterRender(string initialPlacement, string placement, string contentWrapperStyle, string bodyWrapperStyle)
+        [InlineData(DrawerPlacement.Top, DrawerPlacement.Left, "width:256px;transform:translateX(-100%);", "height:100%")]
+        [InlineData(DrawerPlacement.Top, DrawerPlacement.Right, "width:256px;transform:translateX(100%);", "height:100%")]
+        [InlineData(DrawerPlacement.Left, DrawerPlacement.Top, "height:256px;transform:translateY(-100%);", "")]
+        [InlineData(DrawerPlacement.Left, DrawerPlacement.Bottom, "height:256px;transform:translateY(100%);", "")]
+        public void ItShouldChangePlacementAfterRender(DrawerPlacement initialPlacement, DrawerPlacement placement, string contentWrapperStyle, string bodyWrapperStyle)
         {
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters.Add(x => x.Placement, initialPlacement));
 
             systemUnderTest.SetParametersAndRender(parameters => parameters.Add(x => x.Placement, placement));
 
-            systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement}"" style=""z-index:-9999;"" id:ignore>
+            systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement.ToString().ToLowerInvariant()}"" style=""z-index:-9999;"" id:ignore>
                 <div class=""ant-drawer-content-wrapper"" style=""{contentWrapperStyle}"" id:ignore>
                     <div class=""ant-drawer-content"">
                         <div class=""ant-drawer-wrapper-body"" style=""{bodyWrapperStyle}"">
@@ -254,9 +254,9 @@ namespace AntDesign.Tests.Drawer
         //}
 
         [Theory]
-        [InlineData("right", 20, "transform: translateX(-20px)")]
-        [InlineData("left", 25, "transform: translateX(25px)")]
-        public void ItShouldRenderProperOffsetXStyleWhenVisible(string placement, int offset, string expectedStyle)
+        [InlineData(DrawerPlacement.Right, 20, "transform: translateX(-20px)")]
+        [InlineData(DrawerPlacement.Left, 25, "transform: translateX(25px)")]
+        public void ItShouldRenderProperOffsetXStyleWhenVisible(DrawerPlacement placement, int offset, string expectedStyle)
         {
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
                 .Add(x => x.Placement, placement)
@@ -268,9 +268,9 @@ namespace AntDesign.Tests.Drawer
         }
 
         [Theory]
-        [InlineData("top", 20, "transform: translateY(20px)")]
-        [InlineData("bottom", 25, "transform: translateY(-25px)")]
-        public void ItShouldRenderProperOffsetYStyleWhenVisible(string placement, int offset, string expectedStyle)
+        [InlineData(DrawerPlacement.Top, 20, "transform: translateY(20px)")]
+        [InlineData(DrawerPlacement.Bottom, 25, "transform: translateY(-25px)")]
+        public void ItShouldRenderProperOffsetYStyleWhenVisible(DrawerPlacement placement, int offset, string expectedStyle)
         {
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
                 .Add(x => x.Placement, placement)
@@ -342,7 +342,7 @@ namespace AntDesign.Tests.Drawer
                 closed = true;
             };
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
-                .Add(x => x.Placement, "right")
+                .Add(x => x.Placement, DrawerPlacement.Right)
                 .Add(x => x.Visible, true));
 
             systemUnderTest.SetParametersAndRender(parameters => parameters.Add(x => x.Visible, false));
@@ -362,7 +362,7 @@ namespace AntDesign.Tests.Drawer
             };
 
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
-                .Add(x => x.Placement, "right")
+                .Add(x => x.Placement, DrawerPlacement.Right)
                 .Add(x => x.Visible, false)
                 .Add(x => x.OnOpen, onOpen));
 
@@ -375,7 +375,7 @@ namespace AntDesign.Tests.Drawer
         public void ItShouldCloseWhenVisibleChangedToFalseAfterRender()
         {
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
-                .Add(x => x.Placement, "right")
+                .Add(x => x.Placement, DrawerPlacement.Right)
                 .Add(x => x.Visible, true));
 
             systemUnderTest.SetParametersAndRender(parameters => parameters.Add(x => x.Visible, false));

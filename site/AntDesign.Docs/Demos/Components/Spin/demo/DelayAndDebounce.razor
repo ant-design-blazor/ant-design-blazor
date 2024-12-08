@@ -1,14 +1,13 @@
 ﻿<div>
-    <Spin Spinning=loading Delay=500>
+    <Spin Spinning="loading" Delay="500">
         <Alert
             Message="Alert message title"
             Description="Further details about the context of this alert."
-            Type="info"
-        />
+            Type="AlertType.Info" />
     </Spin>
     <div style="margin-top: 16px">
         Loading state：
-        <Switch Checked=loading OnChange=toggle />
+        <Switch Checked="loading" OnChange="toggle" />
     </div>
 </div>
 

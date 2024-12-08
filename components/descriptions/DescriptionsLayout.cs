@@ -4,10 +4,9 @@
 
 namespace AntDesign
 {
-    public static class DescriptionsLayout
+    public enum DescriptionsLayout
     {
-        public const string Horizontal = "horizontal";
-        public const string Vertical = "vertical";
-
+        Horizontal,
+        Vertical,
     }
 }

@@ -16,7 +16,7 @@
      tabindex="-1" 
      @ref="@Ref"
      >
-    @if (ParentSelect.SelectMode == SelectMode.Default)
+    @if (ParentSelect.Mode == SelectMode.Default)
     {
       <div class="@Prefix-selector" style="@(ParentSelect.PrefixIcon is null?"":"padding-left: 4px;")">
         @if (ParentSelect.PrefixIcon != null)

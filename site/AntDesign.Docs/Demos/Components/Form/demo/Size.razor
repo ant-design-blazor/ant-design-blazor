@@ -55,7 +55,7 @@
         </Select>
     </FormItem>
     <FormItem Label="Multiselect">
-        <Select Mode="multiple"
+        <Select Mode="SelectMode.Multiple"
             DataSource="@_persons"            
             @bind-Values="@context.Names"
             LabelName="@nameof(Person.Name)"
@@ -73,7 +73,7 @@
 {
     public class Model
     {
-        public string Size { get; set; } = AntSizeLDSType.Small;
+        public FormSize Size { get; set; } = FormSize.Small;
         public string Input { get; set; } = "input";
         public string InputArea { get; set; } = "inputArea";
         public string Cascader { get; set; } = "11";

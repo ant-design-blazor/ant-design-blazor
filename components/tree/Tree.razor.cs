@@ -37,7 +37,7 @@ namespace AntDesign
         [CascadingParameter(Name = "TreeSelect")]
         private ITreeSelect TreeSelect { get; set; }
 
-        #region fields
+        #region Fields
 
         /// <summary>
         /// All of the node
