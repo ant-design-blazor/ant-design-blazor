@@ -87,7 +87,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-spinning", () => _isLoading)
                 .If($"{PrefixCls}-lg", () => Size == SpinSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == SpinSize.Small)
-                .If($"{PrefixCls}-show-text", () => string.IsNullOrWhiteSpace(Tip))
+                .If($"{PrefixCls}-show-text", () => !string.IsNullOrWhiteSpace(Tip))
                 .If($"{PrefixCls}-rtl", () => RTL);
         }
 
