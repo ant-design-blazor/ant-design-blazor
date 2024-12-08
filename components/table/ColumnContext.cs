@@ -59,7 +59,7 @@ namespace AntDesign
                         }
                     }
                 }
-            }
+            } 
             while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
             column.ColIndex = CurrentColIndex;
@@ -140,7 +140,11 @@ namespace AntDesign
             }
             while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
-            column.ColIndex = CurrentColIndex;
+            if (_table.AutoColIndexes)
+            {
+                column.ColIndex = CurrentColIndex;
+            }
+
             CurrentColIndex += columnSpan - 1;
 
             if (column.RowSpan > 1)

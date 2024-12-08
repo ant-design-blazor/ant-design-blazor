@@ -2,11 +2,11 @@
 @using AntDesign.TableModels
 @using AntDesign.Core.Extensions
 
-<Table TItem="Data" DataSource="@data">
+<Table TItem="Data" DataSource="@data" AutoColIndexes="false">
 
     <GenerateColumns Range="1.." HideColumnsByName="@(new []{ "IdCard" })" Definitions=definitions />
 
-    <ActionColumn Title="Action">
+    <ActionColumn ColIndex="4" Title="Action">
         <Space Size=@("middle")>
             <SpaceItem>
                 <a>Invite @context.Name</a>
