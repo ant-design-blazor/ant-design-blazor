@@ -51,6 +51,8 @@ namespace AntDesign
             {
                 showPropertys = _propertyInfos[Range.Value];
             }
+
+            var colIndex = 0;
             foreach (var property in showPropertys)
             {
                 if (HideColumnsByName.Contains(property.Name)) continue;
@@ -59,8 +61,10 @@ namespace AntDesign
                 
                 if (instance != null) 
                 {
-                    instance.ColIndex = i / 3;
+                    instance.ColIndex = colIndex;
                 }
+
+                colIndex++;
 
                 Definitions?.Invoke(property.Name, instance);
 
