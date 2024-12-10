@@ -78,6 +78,8 @@ namespace AntDesign
 
         internal ClassMapper CurrentClassMapper => ClassMapper;
 
+        protected virtual bool RenderBeforeShow => SelectOptions != null;
+
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
         /// </summary>

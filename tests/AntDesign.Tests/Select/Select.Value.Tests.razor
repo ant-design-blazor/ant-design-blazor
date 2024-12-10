@@ -34,7 +34,9 @@
     public Select_Value_Tests()
     {
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-                    .SetResult(new AntDesign.JsInterop.DomRect());  
+                    .SetResult(new AntDesign.JsInterop.DomRect());
+
+        JSInterop.SetupVoid("AntDesign.interop.eventHelper.addPreventKeys", _ => true);
     }
 
 
@@ -152,7 +154,7 @@
     }
     
     [Fact]
-    public void Select_Must_Set_SelectedValue_After_Select_In_DropDown()
+    public async Task Select_Must_Set_SelectedValue_After_Select_In_DropDown()
     {
         var dataSource = new PersonNullable[]
         {
@@ -162,6 +164,7 @@
         
         var cut = Render<AntDesign.Select<string, PersonNullable>>(
             @<AntDesign.Select TItem="PersonNullable" TItemValue="string" DataSource="@dataSource"
+                               EnableSearch
                                LabelName="@nameof(PersonNullable.Name)"
                                ValueName="@nameof(PersonNullable.Id)"
                                AllowClear>
@@ -169,15 +172,18 @@
         cut.Render();
         
         // Act
-        var input = cut.Find("input");
-        input.Input("t");
+
+        var input = cut.Find("input.ant-select-selection-search-input");
+        //Act
+        await cut.InvokeAsync(() => input.Input("t"));
+
         cut.WaitForElements("div.ant-select-item-option-content");
         var dropDownItems = cut.FindAll("div.ant-select-item-option-content");
         var firstItem = dropDownItems.First();
         firstItem.Click();
         
         // Arrange
-        cut.WaitForElement("span.ant-select-selection-item");
+        cut.WaitForElement("span.ant-select-selection-item", TimeSpan.FromSeconds(2));
         var selectedLabel = cut.Find("span.ant-select-selection-item");
         selectedLabel.GetAttribute("title").Should().Be("test");
         input.GetAttribute("value").Should().BeEmpty();

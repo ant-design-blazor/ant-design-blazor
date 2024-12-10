@@ -4536,13 +4536,13 @@ InputGroup의 크기는 포함된 입력 필드의 크기를 지정합니다.
 토글 버튼 표시 여부
 </summary>
     </member>
-    <member name="P:AntDesign.Internal.Overlay.HiddenMode">
+    <member name="P:AntDesign.Internal.Overlay.RenderBeforeShow">
       <summary v="3QUJQe" i="0">
 오버레이가 없는 경우 기본적으로 오버레이는 콘텐츠를 렌더링하지 않습니다.
-활성화 (적어도 한 번 표시). 설정 HiddenMode = true
+활성화 (적어도 한 번 표시). 설정 RenderBeforeShow = true
 렌더링 프로세스를 진행하십시오.
 사용 사례: 사용할 때 구성 요소 선택<see cref="T:AntDesign.SimpleSelectOption" />또는<see cref="T:AntDesign.SelectOption`2" />
-HiddenMode = true가 필요하므로 선택 옵션이 초기화되고
+RenderBeforeShow = true가 필요하므로 선택 옵션이 초기화되고
 잠재적인 기본값은 제대로 렌더링될 수 있습니다.
 </summary>
     </member>
@@ -4589,7 +4589,7 @@ HiddenMode = true가 필요하므로 선택 옵션이 초기화되고
 방아쇠가 비활성화되었는지 여부.
 </summary>
     </member>
-    <member name="P:AntDesign.Internal.OverlayTrigger.HiddenMode">
+    <member name="P:AntDesign.Internal.OverlayTrigger.RenderBeforeShow">
       <summary v="wznUH" i="0">
 오버레이 구성 요소로 전달되는 속성. 오버레이를 참조하십시오
 더 자세한 설명을위한 속성.
