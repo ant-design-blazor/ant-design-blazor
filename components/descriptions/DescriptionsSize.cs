@@ -4,10 +4,10 @@
 
 namespace AntDesign
 {
-    public static class DescriptionsSize
+    public enum DescriptionsSize
     {
-        public const string Default = "default";
-        public const string Middle = "middle";
-        public const string Small = "small";
+        Default,
+        Middle,
+        Small,
     }
 }

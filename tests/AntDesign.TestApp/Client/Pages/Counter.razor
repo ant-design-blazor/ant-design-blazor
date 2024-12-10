@@ -5,7 +5,7 @@
 
 <p>Current count: @currentCount</p>
 
-<Button Type="primary" @onclick="IncrementCount">Click me</Button>
+<Button Type="ButtonType.Primary" OnClick="IncrementCount">Click me</Button>
 
 <br />
 <p @onclick="@(()=>GoTo($"/counter/{Id+1}"))">Go to @($"Counter {Id+1}")</p>

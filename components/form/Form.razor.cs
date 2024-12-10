@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using AntDesign.Form.Locale;
@@ -57,7 +58,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="FormLayout.Horizontal"/>
         [Parameter]
-        public string Layout { get; set; } = FormLayout.Horizontal;
+        public FormLayout Layout { get; set; } = FormLayout.Horizontal;
 
         /// <summary>
         /// Content of the form. Typically contains different form inputs and layout elements.
@@ -127,7 +128,7 @@ namespace AntDesign
         /// The size of the ant components inside the form
         /// </summary>
         [Parameter]
-        public string Size { get; set; }
+        public FormSize? Size { get; set; }
 
         /// <summary>
         /// Gets or sets the form handler name. This is required for posting it to a server-side endpoint.
@@ -140,7 +141,7 @@ namespace AntDesign
         /// Http method used to submit form
         /// </summary>
         [Parameter]
-        public string Method { get; set; } = "get";
+        public HttpMethod Method { get; set; } = HttpMethod.Get;
 
         /// <summary>
         /// The model to bind the form inputs to
@@ -264,7 +265,7 @@ namespace AntDesign
         EditContext IForm.EditContext => _editContext;
 
         AntLabelAlignType? IForm.LabelAlign => LabelAlign;
-        string IForm.Size => Size;
+        FormSize IForm.Size => Size.GetValueOrDefault();
         string IForm.Name => Name;
         object IForm.Model => Model;
         bool IForm.ValidateOnChange => ValidateOnChange;
@@ -357,7 +358,7 @@ namespace AntDesign
         {
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
-                .Get(() => $"{_prefixCls}-{Layout.ToLowerInvariant()}")
+                .Get(() => $"{_prefixCls}-{Layout.ToString().ToLowerInvariant()}")
                 .If($"{_prefixCls}-rtl", () => RTL)
                ;
         }

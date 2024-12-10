@@ -1,24 +1,24 @@
 ﻿@inject DrawerService DrawerService
 @inject IConfirmService confirmService
 
-<Space Direction="DirectionVHType.Vertical">
+<Space Direction="SpaceDirection.Vertical">
     <SpaceItem>
         <Space>
             <SpaceItem>
                 <Input @bind-Value="@value" />
             </SpaceItem>
             <SpaceItem>
-                <Button OnClick="OpenComponent" Type="primary">Use Component</Button>
+                <Button OnClick="OpenComponent" Type="ButtonType.Primary">Use Component</Button>
             </SpaceItem>
         </Space>
     </SpaceItem>
 
     <SpaceItem>
         <div>
-            <Button Type="primary" @onclick="@OpenDrawer">OpenDrawer</Button>
+            <Button Type="ButtonType.Primary" @onclick="@OpenDrawer">OpenDrawer</Button>
             <Drawer Closable="true"
                     Visible="@visible"
-                    Placement="right"
+                    Placement="DrawerPlacement.Right"
                     Title='("Basic Drawer")'
                     OnOpen="@OnOpen"
                     OnClose="@CloseDrawer">

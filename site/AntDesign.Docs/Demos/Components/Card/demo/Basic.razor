@@ -8,7 +8,7 @@
         </Body>
     </Card>
     <br />
-    <Card Size="small" Title="Small size card" Style="width:300px;">
+    <Card Size="CardSize.Small" Title="Small size card" Style="width:300px;">
         <Extra>
             <a>More</a>
         </Extra>
@@ -19,7 +19,7 @@
     <br />
     <Card Style="width:300px;">
         <TitleTemplate>
-            <Icon Type="credit-card" Theme="outline" /> Title is Template
+            <Icon Type="@IconType.Outline.CreditCard" /> Title is Template
         </TitleTemplate>
         <Extra>
             <a>More</a>
@@ -29,7 +29,7 @@
         </Body>
     </Card>
     <br />
-    <Card Size="small" TitleTemplate="titleTemplate" Style="width:300px;">
+    <Card Size="CardSize.Small" TitleTemplate="titleTemplate" Style="width:300px;">
         <Extra>
             <a>More</a>
         </Extra>
@@ -40,6 +40,6 @@
 </div>
 
 @code{
-    RenderFragment titleTemplate =@<div><Icon Type="credit-card" Theme="outline" /> Title is Template</div>;
+    RenderFragment titleTemplate =@<div><Icon Type="@IconType.Outline.CreditCard" /> Title is Template</div>;
 
 }

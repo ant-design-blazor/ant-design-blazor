@@ -1,27 +1,27 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
 
-<RadioGroup @bind-Value=@ChosenRequiredMark>
-    <Radio RadioButton Value=@FormRequiredMark.Required>Required</Radio>
-    <Radio RadioButton Value=@FormRequiredMark.Optional>Optional</Radio>
-    <Radio RadioButton Value=@FormRequiredMark.None>None</Radio>
+<RadioGroup @bind-Value="@ChosenRequiredMark">
+    <Radio RadioButton Value="FormRequiredMark.Required">Required</Radio>
+    <Radio RadioButton Value="FormRequiredMark.Optional">Optional</Radio>
+    <Radio RadioButton Value="FormRequiredMark.None">None</Radio>
 </RadioGroup>
 
 <Form 
     Model="@model"
-      Layout="vertical"
-    ValidateMode=@FormValidateMode.Complex
-    RequiredMark=@ChosenRequiredMark>
-    <FormItem Label="Required By Parameter" Required >
+    Layout="FormLayout.Vertical"
+    ValidateMode="FormValidateMode.Complex"
+    RequiredMark="@ChosenRequiredMark">
+    <FormItem Label="Required By Parameter" Required>
         <Input @bind-Value="@context.RequiredByParameter" />
     </FormItem>
-    <FormItem Label="Required By Rule Field" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
+    <FormItem Label="Required By Rule Field" Rules="@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })">
         <Input @bind-Value="@context.RequiredByRule" />
     </FormItem>
     <FormItem Label="Required By Data Attribute" Tooltip="This is a required field">
         <Input @bind-Value="@context.RequiredByDataAttribute" />
     </FormItem>
-    <FormItem Label="Optional" >
+    <FormItem Label="Optional">
         <Input @bind-Value="@context.Optional" />
     </FormItem>
 </Form>

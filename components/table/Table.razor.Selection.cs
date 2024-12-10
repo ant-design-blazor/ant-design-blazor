@@ -149,7 +149,7 @@ namespace AntDesign
             _preventRowDataTriggerSelectedRowsChanged = true;
 
             ClearSelectedRows();
-            selectItem.RowData.SetSelected(true, selectItem.Type == "radio" || selectItem.CheckStrictly);
+            selectItem.RowData.SetSelected(true, selectItem.Type == SelectionType.Radio || selectItem.CheckStrictly);
 
             _preventRowDataTriggerSelectedRowsChanged = false;
 

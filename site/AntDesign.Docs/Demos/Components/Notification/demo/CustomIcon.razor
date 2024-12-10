@@ -8,7 +8,7 @@
 
     private async Task OnClick()
     {
-        RenderFragment customIcon = @<Icon Type="smile" Theme="outline" Style="color:#108ee9;"></Icon>;
+        RenderFragment customIcon = @<Icon Type="@IconType.Outline.Smile" Style="color:#108ee9;"></Icon>;
         await _notice.Open(new NotificationConfig()
         {
             Message = "Notification Title",

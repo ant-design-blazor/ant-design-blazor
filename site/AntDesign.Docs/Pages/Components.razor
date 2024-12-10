@@ -79,7 +79,7 @@
                                     <Icon Type="expand" Class="code-box-expand-trigger" OnClick="() => _expanded = true " />
                                 }
                             }
-                            <Icon Type="code" Theme="@(_expandAllCode ? "fill":"outline")" Class="code-box-expand-trigger" OnClick="()=>_expandAllCode=!_expandAllCode" />
+                            <Icon Type="code" Theme="@(_expandAllCode ? IconThemeType.Fill : IconThemeType.Outline)" Class="code-box-expand-trigger" OnClick="()=>_expandAllCode=!_expandAllCode" />
                             @*<Icon Type="bug" Class="code-box-expand-trigger" />*@
                         </span>
                     </h2>

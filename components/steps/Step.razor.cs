@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,7 +14,7 @@ namespace AntDesign
     /// </summary>
     public partial class Step : AntDomComponentBase
     {
-        private string _status = StepsStatus.Wait;
+        private StepsStatus? _status = StepsStatus.Wait;
         private bool _isCustomStatus;
         private int _groupCurrent;
 
@@ -25,7 +26,7 @@ namespace AntDesign
 
         internal bool ShowProcessDot { get; set; }
 
-        internal string GroupStatus { get; set; } = string.Empty;
+        internal StepsStatus? GroupStatus { get; set; }
 
         internal int GroupCurrentIndex
         {
@@ -35,7 +36,7 @@ namespace AntDesign
                 _groupCurrent = value;
                 if (!_isCustomStatus)
                 {
-                    this._status = value > this.Index ? StepsStatus.Finish : value == this.Index ? GroupStatus ?? string.Empty : StepsStatus.Wait;
+                    this._status = value > this.Index ? StepsStatus.Finish : value == this.Index ? GroupStatus ?? null : StepsStatus.Wait;
                 }
                 InvokeStateHasChanged();
             }
@@ -43,9 +44,9 @@ namespace AntDesign
 
         internal int Index { get; set; }
         internal double? Percent { get; set; }
-        internal string Size { get; set; } = StepsSize.Default;
+        internal StepsSize Size { get; set; } = StepsSize.Default;
         internal RenderFragment ProgressDot { get; set; }
-        internal string Direction { get; set; } = StepsDirection.Horizontal;
+        internal StepsDirection Direction { get; set; } = StepsDirection.Horizontal;
 
         [CascadingParameter]
         public Steps Parent { get; set; }
@@ -60,9 +61,9 @@ namespace AntDesign
         /// To specify the status. It will be automatically set by current of Steps if not configured. Possible Values: wait, process, finish, error
         /// </summary>
         [Parameter]
-        public string Status
+        public StepsStatus Status
         {
-            get => _status;
+            get => _status.GetValueOrDefault();
             set
             {
                 if (_status != value)
@@ -123,6 +124,14 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
+        private readonly Hashtable _statusMap = new Hashtable()
+        {
+            [StepsStatus.Wait] = "wait",
+            [StepsStatus.Process] = "process",
+            [StepsStatus.Finish] = "finish",
+            [StepsStatus.Error] = "error",
+        };
+
         protected override void OnInitialized()
         {
             Parent?.AddStep(this);
@@ -154,7 +163,7 @@ namespace AntDesign
             string prefixName = "ant-steps-item";
             ClassMapper.Clear()
                 .Add(prefixName)
-                .GetIf(() => $"{prefixName}-{Status}", () => !string.IsNullOrEmpty(Status))
+                .Get(() => $"{prefixName}-{_statusMap[Status]}")
                 .If($"{prefixName}-active", () => Parent.Current == Index)
                 .If($"{prefixName}-disabled", () => Disabled)
                 .If($"{prefixName}-custom", () => !string.IsNullOrEmpty(Icon))

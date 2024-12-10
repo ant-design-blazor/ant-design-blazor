@@ -7,12 +7,12 @@
     }        
     @if (inputVisible)
     {
-        <Input @ref="_inputRef" Style="width: 78px" Size="small" @bind-Value="_inputValue" OnBlur="HandleInputConfirm" OnPressEnter="HandleInputConfirm" AutoFocus/>
+        <Input @ref="_inputRef" Style="width: 78px" Size="InputSize.Small" @bind-Value="_inputValue" OnBlur="HandleInputConfirm" OnPressEnter="HandleInputConfirm" AutoFocus/>
     }
     else
     {
         <Tag Class="site-tag-plus" OnClick="@(() => inputVisible = !inputVisible)">
-            <Icon Type="plus" />New Tag
+            <Icon Type="@IconType.Outline.Plus" />New Tag
         </Tag>
     }    
 </div>

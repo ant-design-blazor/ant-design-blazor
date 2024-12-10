@@ -20,7 +20,7 @@
     }
     <Select Class=@($"{PrefixCls}-year-select")
             @bind-Value="@_yearValue"
-            Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
+            Size=@(Calendar.FullScreen ? InputSize.Default : InputSize.Small)
             DefaultValue=@Calendar.Value.Year
             TItemValue="int"
             TItem="string"
@@ -51,7 +51,7 @@
 
         <Select class=@($"{PrefixCls}-month-select")
                 @bind-Value="@_monthValue"
-                Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
+                Size=@(Calendar.FullScreen ? InputSize.Default : InputSize.Small)
                 DefaultValue=@Calendar.Value.Month
                 Style="width: unset;"
                 TItemValue="int"
@@ -68,7 +68,7 @@
     }
 
     <RadioGroup class=@($"{PrefixCls}-mode-switch")
-                Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
+                Size=@(Calendar.FullScreen ? InputSize.Default : InputSize.Small)
                 Value="@Calendar.Mode"
                 OnChange="OnModeChange" TValue="CalendarMode">
         <Radio RadioButton Value="@CalendarMode.Month">@(Calendar.Locale.Lang.Month)</Radio>

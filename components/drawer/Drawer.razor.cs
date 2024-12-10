@@ -127,7 +127,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="right" />
         [Parameter]
-        public string Placement { get; set; } = "right";
+        public DrawerPlacement Placement { get; set; } = DrawerPlacement.Right;
 
         /// <summary>
         /// Body style for modal body element. Such as height, padding etc.
@@ -252,7 +252,7 @@ namespace AntDesign
         private bool _hasInvokeClosed;
         private bool _isOpen = default;
 
-        private string _originalPlacement;
+        private DrawerPlacement _originalPlacement;
 
         private bool PlacementChanging { get; set; } = false;
 
@@ -270,10 +270,10 @@ namespace AntDesign
 
                 return Placement switch
                 {
-                    "left" => $"translateX({OffsetX}px);",
-                    "right" => $"translateX(-{OffsetX}px);",
-                    "top" => $"translateY({OffsetY}px);",
-                    "bottom" => $"translateY(-{OffsetY}px);",
+                    DrawerPlacement.Left => $"translateX({OffsetX}px);",
+                    DrawerPlacement.Right => $"translateX(-{OffsetX}px);",
+                    DrawerPlacement.Top => $"translateY({OffsetY}px);",
+                    DrawerPlacement.Bottom => $"translateY(-{OffsetY}px);",
                     _ => null
                 };
             }
@@ -298,16 +298,16 @@ namespace AntDesign
 
                 return Placement switch
                 {
-                    "left" => "translateX(-100%)",
-                    "right" => "translateX(100%)",
-                    "top" => "translateY(-100%)",
-                    "bottom" => "translateY(100%)",
+                    DrawerPlacement.Left => "translateX(-100%)",
+                    DrawerPlacement.Right => "translateX(100%)",
+                    DrawerPlacement.Top => "translateY(-100%)",
+                    DrawerPlacement.Bottom => "translateY(100%)",
                     _ => null
                 };
             }
         }
 
-        private bool IsLeftOrRight => Placement == "left" || Placement == "right";
+        private bool IsLeftOrRight => Placement == DrawerPlacement.Left || Placement == DrawerPlacement.Right;
 
         private string WidthPx => IsLeftOrRight ? StyleHelper.ToCssPixel(Width) : null;
 
@@ -333,7 +333,7 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add(prefixCls)
                 .If($"{prefixCls}-open", () => _isOpen)
-                .If($"{prefixCls}-{Placement}", () => Placement.IsIn("top", "bottom", "right", "left"))
+                .Add($"{prefixCls}-{Placement.ToString().ToLowerInvariant()}")
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
@@ -455,7 +455,7 @@ namespace AntDesign
             string style = null;
             if (_status == ComponentStatus.Opened)
             {
-                var widthHeightTransition = Placement is "left" or "right"
+                var widthHeightTransition = IsLeftOrRight
                     ? $"width 0s {Ease} {Duration}"
                     : $"height 0s {Ease} {Duration}";
 

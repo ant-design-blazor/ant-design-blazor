@@ -1,11 +1,11 @@
 ﻿
-<Button Type="primary" OnClick="@ShowModal">
+<Button Type="ButtonType.Primary" OnClick="@ShowModal">
     Open Modal with customized footer
 </Button>
 @{
     RenderFragment footer = @<Template>
     <Button OnClick="@HandleOk" @key="@( "submit" )"
-            Type="primary"
+            Type="ButtonType.Primary"
             Loading="@_loading">
         Submit
     </Button>

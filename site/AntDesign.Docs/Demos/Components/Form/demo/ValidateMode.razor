@@ -8,7 +8,7 @@
 	  ValidateOnChange="@validateOnChange"
 	  LabelColSpan="10"
 	  WrapperColSpan="14"
-	  Size="@AntSizeLDSType.Small">
+	  Size="@FormSize.Small">
 	<FormItem Label="Default-UserName">
 		<Input @bind-Value="@context.Username" />
 	</FormItem>
@@ -25,7 +25,7 @@
 	  ValidateOnChange="@validateOnChange"
 	  LabelColSpan="10"
 	  WrapperColSpan="14"
-	  Size="@AntSizeLDSType.Small">
+	  Size="@FormSize.Small">
 	<FormItem Label="Rules-UserName" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
 		<Input @bind-Value="@context.Username" />
 	</FormItem>
@@ -44,7 +44,7 @@
 	  ValidateOnChange="@validateOnChange"
 	  LabelColSpan="10"
 	  WrapperColSpan="14"
-	  Size="@AntSizeLDSType.Small">
+	  Size="@FormSize.Small">
 	<FormItem Label="Complex-UserName" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
 		<Input @bind-Value="@context.Username" />
 	</FormItem>

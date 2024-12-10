@@ -8,7 +8,7 @@
         ShowRemoveIcon=true
         @bind-FileList="fileList"
         ShowButton="fileList?.Count < 8"
-        ListType="picture-card"
+        ListType="UploadListType.PictureCard"
         OnPreview="(file)=> {
                            Console.WriteLine(file.FileName);
                            Console.WriteLine(file.Url);

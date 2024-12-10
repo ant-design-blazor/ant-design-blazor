@@ -21,7 +21,7 @@
                       Style="height: 100%;">
                     @{ RenderFragment sub1Title =
                         @<span>
-                            <Icon Type="user" Theme="outline" />
+                            <Icon Type="@IconType.Outline.User" />
                             subnav 1
                         </span>; }
                     <SubMenu Key="sub1" Title=sub1Title>
@@ -32,7 +32,7 @@
                     </SubMenu>
                     @{ RenderFragment sub2Title =
                         @<span>
-                            <Icon Type="laptop" Theme="outline" />
+                            <Icon Type="@IconType.Outline.Laptop" />
                             subnav 2
                         </span>; }
                     <SubMenu Key="sub2" Title=sub2Title>
@@ -43,7 +43,7 @@
                     </SubMenu>
                     @{ RenderFragment sub3Title =
                         @<span>
-                            <Icon Type="notification" Theme="outline" />
+                            <Icon Type="@IconType.Outline.Notification" />
                             subnav 3
                         </span>; }
                     <SubMenu Key="sub3" Title=sub3Title>
@@ -57,7 +57,7 @@
             <Content Style="padding:0 24px; min-height: 280px;">Content</Content>
         </Layout>
     </Content>
-    <Footer Style="text-align: center; ">Ant Design ©2018 Created by Ant UED</Footer>
+    <Footer Style="text-align: center;">Ant Design ©2018 Created by Ant UED</Footer>
 </Layout>
 
 <style>

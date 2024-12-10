@@ -440,13 +440,13 @@ namespace AntDesign.Internal
 
         private bool ShouldStopRenderDate(DateTime preDate, DateTime nextDate)
         {
-            return Picker.Name switch
+            return Picker switch
             {
-                DatePickerType.DATE => DateHelper.IsSameDay(preDate, nextDate),
-                DatePickerType.YEAR => DateHelper.IsSameYear(preDate, nextDate),
-                DatePickerType.MONTH => DateHelper.IsSameMonth(preDate, nextDate),
-                DatePickerType.QUARTER => DateHelper.IsSameQuarter(preDate, nextDate),
-                DatePickerType.DECADE => DateHelper.IsSameYear(preDate, nextDate) || nextDate.Year == DateTime.MaxValue.Year,
+                DatePickerType.Date => DateHelper.IsSameDay(preDate, nextDate),
+                DatePickerType.Year => DateHelper.IsSameYear(preDate, nextDate),
+                DatePickerType.Month => DateHelper.IsSameMonth(preDate, nextDate),
+                DatePickerType.Quarter => DateHelper.IsSameQuarter(preDate, nextDate),
+                DatePickerType.Decade => DateHelper.IsSameYear(preDate, nextDate) || nextDate.Year == DateTime.MaxValue.Year,
                 _ => false,
             };
         }
