@@ -31,6 +31,13 @@ namespace AntDesign
         public OneOf<BadgeColor?, string> Color { get; set; }
 
         /// <summary>
+        /// Set Badge status dot to a preset color. Usage of this parameter will make the badge a status dot.
+        /// </summary>
+        [Parameter]
+        [Obsolete("Use Color instead")]
+        public PresetColor? PresetColor { get; set; }
+
+        /// <summary>
         /// Number to show in badge
         /// </summary>
         [Parameter]

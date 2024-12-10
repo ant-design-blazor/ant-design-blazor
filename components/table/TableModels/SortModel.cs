@@ -16,6 +16,9 @@ namespace AntDesign.TableModels
 
         public string FieldName { get; }
 
+        [Obsolete("Use SortDirection instead")]
+        public string Sort => _sortDirection.ToString();
+
         SortDirection ITableSortModel.SortDirection => _sortDirection;
 
         public int ColumnIndex => _columnIndex;

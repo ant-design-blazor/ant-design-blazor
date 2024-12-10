@@ -113,6 +113,13 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Tag color from the PresetColor list
+        /// </summary>
+        [Parameter]
+        [Obsolete("Use Color instead")]
+        public string PresetColor { get; set; }
+
+        /// <summary>
         /// Set the tag's icon 
         /// </summary>
         [Parameter]

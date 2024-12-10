@@ -9,6 +9,8 @@ namespace AntDesign.TableModels
 {
     public interface ITableSortModel : ICloneable
     {
+        [Obsolete("Use SortDirection instead")]
+        public string Sort { get; }
         public int Priority { get; }
 
         public string FieldName { get; }
