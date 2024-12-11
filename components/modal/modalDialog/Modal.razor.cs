@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Threading.Tasks;
 using AntDesign.core.Services;
+using AntDesign.Core.Documentation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -35,10 +35,18 @@ namespace AntDesign
         internal ModalRef ModalRef { get; set; }
 
         /// <summary>
-        /// Specify a function that will be called when modal is closed
+        /// Callback after modal is closed.
         /// </summary>
         [Parameter]
-        public Func<Task> AfterClose { get; set; }
+        [PublicApi("1.1.0")]
+        public EventCallback AfterClose { get; set; }
+
+        /// <summary>
+        /// Callback after modal is opened.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.1.0")]
+        public EventCallback AfterOpen { get; set; }
 
         /// <summary>
         /// Body style for modal body element. Such as height, padding etc
@@ -317,7 +325,7 @@ namespace AntDesign
         {
             DialogOptions options = new DialogOptions()
             {
-                OnClosed = AfterClose,
+                OnClosed = OnAfterClose,
                 BodyStyle = BodyStyle,
                 CancelText = CancelText ?? Locale.CancelText,
                 Centered = Centered,
@@ -421,6 +429,10 @@ namespace AntDesign
             {
                 await JsInvokeAsync(JSInteropConstants.FocusDialog, $"#{_dialogWrapper.Dialog.SentinelStart}");
                 _hasFocus = true;
+                if (AfterOpen.HasDelegate)
+                {
+                    await AfterOpen.InvokeAsync();
+                }
                 if (ModalRef?.OnOpen != null)
                 {
                     await ModalRef.OnOpen();
@@ -434,6 +446,14 @@ namespace AntDesign
             if (ModalRef?.OnClose != null)
             {
                 await ModalRef.OnClose();
+            }
+        }
+
+        private async Task OnAfterClose()
+        {
+            if (AfterClose.HasDelegate)
+            {
+                await AfterClose.InvokeAsync();
             }
         }
 
