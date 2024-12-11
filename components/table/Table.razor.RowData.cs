@@ -71,7 +71,7 @@ namespace AntDesign
                 rowIndex += PageSize * (PageIndex - 1);
             }
 
-            var hashCode = grouping.GetHashCode();
+            var hashCode = grouping.Key.GetHashCode() ^ rowIndex;
             rowCache ??= _rootRowDataCache;
 
             if (!rowCache.TryGetValue(hashCode, out var groupRowData) || groupRowData == null)

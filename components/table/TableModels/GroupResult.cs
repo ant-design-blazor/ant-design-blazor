@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AntDesign.TableModels;
 
@@ -13,9 +14,4 @@ public class GroupResult<TEntity>
     public object Key { get; set; }
     internal List<GroupResult<TEntity>> Children { get; set; } = [];
     public List<TEntity> Items { get; set; } = [];
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Items);
-    }
 }

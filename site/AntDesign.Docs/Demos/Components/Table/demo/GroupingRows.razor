@@ -1,6 +1,7 @@
 ﻿@using System.ComponentModel
+@using AntDesign.TableModels
 
-<Table DataSource="data" Bordered>
+<Table TItem="Data" DataSource="data" Bordered OnRowClick="OnRowClick">
     <GroupTitleTemplate Context="group">
         <span style="min-width: 120px;">
             @(group.Level == 1 ? "Name" : "Grade") : @group.Key
@@ -71,6 +72,11 @@
             Subject= "Math"
         },
     };
+
+    private void OnRowClick(RowData rowData)
+    {
+        rowData.Expanded = !rowData.Expanded;
+    }
 
     public class Data
     {
