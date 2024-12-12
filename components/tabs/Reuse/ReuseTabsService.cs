@@ -323,6 +323,8 @@ namespace AntDesign
             {
                 b.AddContent(0, _menusService.GetMenuTitle(url) ?? url.ToRenderFragment());
             };
+
+            FilterPages();
         }
 
         /// <summary>
@@ -384,11 +386,15 @@ namespace AntDesign
         {
             pageItem.Key = pageItem.GetHashCode().ToString();
             _pages.Add(pageItem);
+        }
+
+        private void FilterPages()
+        {
             _pages = _pages.Where(x => !x.Ignore)
-                .OrderBy(x => x.CreatedAt)
-                .ThenByDescending(x => x.Pin ? 1 : 0)
-                .ThenBy(x => x.Order)
-                .ToList();
+               .OrderBy(x => x.CreatedAt)
+               .ThenByDescending(x => x.Pin ? 1 : 0)
+               .ThenBy(x => x.Order)
+               .ToList();
         }
 
         private void RemovePageBase(string key)

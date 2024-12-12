@@ -8,9 +8,9 @@
   <ItemGroup>
     <PackageReference Include="AntDesign.Charts" Version="0.5.5" />
     <PackageReference Include="AntDesign.Icons" Version="0.1.1" />
-	  <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
-	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
-	  <PackageReference Include="Microsoft.CodeAnalysis.Razor" Version="6.0.33" />
+    <PackageReference Include="System.Net.Http.Json" Version="9.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Razor" Version="6.0.33" />
   </ItemGroup>
 
   <ItemGroup>

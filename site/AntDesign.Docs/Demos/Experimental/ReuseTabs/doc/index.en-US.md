@@ -82,7 +82,7 @@ Other properties inherit from [Tabs](/components/tabs#API)
 | Order | The sequence number | int | 999 |
 | TypeName | The page's classsname | string | - |
 | Key | The page's key | string | - |
-| NewPageForParams | Whether to create a new page for route with different params | bool | false |
+| Singleton | Whether to create a new page for route with different params | bool | false |
 
 ### IReuseTabsPage interface
 

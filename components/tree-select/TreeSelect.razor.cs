@@ -348,7 +348,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void CheckAll()
         {
-            TreeComponent.CheckAll();
+            TreeComponent?.CheckAll();
         }
 
         /// <summary>
@@ -357,7 +357,53 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void UncheckAll()
         {
-            TreeComponent.UncheckAll();
+            TreeComponent?.UncheckAll();
+        }
+
+        /// <summary>
+        /// Select all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void SelectAll()
+        {
+            TreeComponent?.SelectAll();
+        }
+
+        /// <summary>
+        /// Deselect all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void DeselectAll()
+        {
+            TreeComponent?.DeselectAll();
+        }
+
+        /// <summary>
+        /// Expand all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void ExpandAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
+        {
+            TreeComponent?.ExpandAll(predicate, recursive);
+        }
+
+        /// <summary>
+        /// Collapse all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void CollapseAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
+        {
+            TreeComponent?.CollapseAll(predicate, recursive);
+        }
+
+        /// <summary>
+        /// Get TreeNode by Key
+        /// </summary>
+        /// <param name="key">Key</param>
+        [PublicApi("1.0.0")]
+        public TreeNode<TItem> GetNode(TItemValue key)
+        {
+            return TreeComponent?.GetNode(GetTreeKeyFormValue(key));
         }
 
         private void ClearOptions()
@@ -374,7 +420,7 @@ namespace AntDesign
         {
             values.ForEach(value =>
             {
-                var d = _tree._allNodes.FirstOrDefault(m => GetValueFromNode(m).Equals(value));
+                var d = _tree?._allNodes.FirstOrDefault(m => GetValueFromNode(m).Equals(value));
                 if (d != null)
                 {
                     _ = CreateOption(d, true);
@@ -442,6 +488,7 @@ namespace AntDesign
 
             _searchValue = e.Value?.ToString();
             StateHasChanged();
+            FocusIfInSearch();
         }
 
         protected override async Task SetInputBlurAsync()
@@ -462,13 +509,15 @@ namespace AntDesign
         {
             if (visible)
             {
-                await SetDropdownStyleAsync();
+                OnOverlayShow();
 
-                await SetInputFocusAsync();
+                await SetDropdownStyleAsync();
+                FocusIfInSearch();
             }
             else
             {
                 OnOverlayHide();
+                await SetInputBlurAsync();
             }
         }
 
@@ -477,13 +526,14 @@ namespace AntDesign
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
             var key = GetTreeKeyFormValue(selectOption.Value);
-            var item = _tree._allNodes.Where(x => x.Key == key).FirstOrDefault();
+            var item = _tree?._allNodes.Where(x => x.Key == key).FirstOrDefault();
             if (item == null)
                 return;
             if (TreeCheckable)
                 item.SetChecked(false);
             else
                 item.SetSelected(false);
+            FocusIfInSearch();
         }
 
         private TItemValue GetValueFromNode(TreeNode<TItem> node)
@@ -502,8 +552,6 @@ namespace AntDesign
                 return;
             var node = args.Node;
 
-            _searchValue = string.Empty;
-
             var key = node.Key;
             if (Multiple)
             {
@@ -514,6 +562,10 @@ namespace AntDesign
                 }
                 var selectedNodes = _tree._allNodes.Where(x => _tree.SelectedKeys.Contains(x.Key));
                 Values = selectedNodes.Select(GetValueFromNode).ToArray();
+                if (IsSearchEnabled && AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
+                {
+                    ClearSearch();
+                }
             }
             else
             {
@@ -527,10 +579,9 @@ namespace AntDesign
             {
                 await CloseAsync();
             }
-
-            if (EnableSearch)
+            else
             {
-                await SetInputFocusAsync();
+                FocusIfInSearch();
             }
         }
 
@@ -594,8 +645,8 @@ namespace AntDesign
                 }
                 else
                 {
-                    _tree._allNodes.ForEach(n => n.DoSelect(checkedKeys.Contains(n.Key), true, false));
-                    _tree.UpdateSelectedKeys();
+                    _tree?._allNodes.ForEach(n => n.DoSelect(checkedKeys.Contains(n.Key), true, false));
+                    _tree?.UpdateSelectedKeys();
                 }
             }
             else
@@ -609,9 +660,9 @@ namespace AntDesign
         private void UpdateTreeCheckedKeys(IEnumerable<string> checkedKeys)
         {
             _checkedEventDisabled = true;
-            _tree._allNodes.ForEach(n => n.DoCheck(false, true, false));
-            _tree._allNodes.Where(n => checkedKeys.Contains(n.Key)).ForEach(n => n.DoCheck(true, false, false));
-            _tree.UpdateCheckedKeys();
+            _tree?._allNodes.ForEach(n => n.DoCheck(false, true, false));
+            _tree?._allNodes.Where(n => checkedKeys.Contains(n.Key)).ForEach(n => n.DoCheck(true, false, false));
+            _tree?.UpdateCheckedKeys();
             _checkedEventDisabled = false;
         }
 
@@ -647,7 +698,7 @@ namespace AntDesign
                 StateHasChanged();
             }
 
-            if (_cachedValues != null && !_cachedValues.SequenceEqual(Values))
+            if (_cachedValues != null && Values != null && !_cachedValues.SequenceEqual(Values))
             {
                 UpdateValuesSelection();
                 StateHasChanged();
@@ -678,6 +729,10 @@ namespace AntDesign
                     {
                         var o = CreateOption(data, true);
                         _ = SetValueAsync(o);
+                    }
+                    else
+                    {
+                        ClearOptions();
                     }
                 }
             }
@@ -717,7 +772,7 @@ namespace AntDesign
             if (DataSource == null)
                 return null;
 
-            var node = _tree._allNodes.Where(x => _getValue(x.DataItem).Equals(value)).FirstOrDefault();
+            var node = _tree?._allNodes.Where(x => _getValue(x.DataItem).Equals(value)).FirstOrDefault();
 
             if (node == null)
                 return null;

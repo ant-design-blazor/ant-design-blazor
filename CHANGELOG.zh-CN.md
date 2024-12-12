@@ -15,6 +15,66 @@ timeline: true
 
 ---
 
+### 1.0.1
+
+`2024-11-18`
+
+- 🔥 更新到 .NET 9 正式版。[#4330](https://github.com/ant-design-blazor/ant-design-blazor/pull/4330) [@ElderJames](https://github.com/ElderJames)
+- 🛠 更新基础设施到 .NET 9。[#4335](https://github.com/ant-design-blazor/ant-design-blazor/pull/4335) [@ElderJames](https://github.com/ElderJames)
+
+- TreeSelect
+  - 🐞 修复 TreeSelect 可能的空引用异常。[#4316](https://github.com/ant-design-blazor/ant-design-blazor/pull/4316) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 TreeSelect 在模版options方式时默认选中无效。[#4315](https://github.com/ant-design-blazor/ant-design-blazor/pull/4315) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Checkbox 在自定义CheckboxGroup 时用ItemValue 比对无效。[#4333](https://github.com/ant-design-blazor/ant-design-blazor/pull/4333) [@pankey888](https://github.com/pankey888)
+- 📖 优化 Table 英文文档。[#4331](https://github.com/ant-design-blazor/ant-design-blazor/pull/4331) [@pathartl](https://github.com/pathartl)
+- 📖 更新 本地化 英文文档。[#4319](https://github.com/ant-design-blazor/ant-design-blazor/pull/4319) [@JackLovel](https://github.com/JackLovel)
+- 🌐 增加 ReuseTabs Reload 属性荷兰语翻译。[#4323](https://github.com/ant-design-blazor/ant-design-blazor/pull/4323) [@rtrocmn](https://github.com/rtrocmn)
+
+
+### 1.0.0
+
+`2024-11-01`
+
+- Modal
+  - 🐞 修复 Modal 确保在渲染后调用JS。[#4311](https://github.com/ant-design-blazor/ant-design-blazor/pull/4311) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Modal 用css实现打开遮罩时隐藏滚动条。[#4302](https://github.com/ant-design-blazor/ant-design-blazor/pull/4302) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Modal 的遮罩点击事件。[#4294](https://github.com/ant-design-blazor/ant-design-blazor/pull/4294) [@chazikaifa](https://github.com/chazikaifa)
+
+- ⚡️ 改进 Table 当 PageIndex 小于1时不执行加载。[#4305](https://github.com/ant-design-blazor/ant-design-blazor/pull/4305) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Grid 中Col 级联样式的分号。[#4301](https://github.com/ant-design-blazor/ant-design-blazor/pull/4301) [@pathartl](https://github.com/pathartl)
+- 🐞 修复 Drawer 利用 css 隐藏滚动条。[#4299](https://github.com/ant-design-blazor/ant-design-blazor/pull/4299) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Form 设置字典作为Model时会抛出NRE异常。[#4296](https://github.com/ant-design-blazor/ant-design-blazor/pull/4296) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Tabs 在不设置TabPane 的 Key 时仍然工作。[#4297](https://github.com/ant-design-blazor/ant-design-blazor/pull/4297) [@ElderJames](https://github.com/ElderJames)
+- 🌐 补充荷兰语部分翻译。[#4313](https://github.com/ant-design-blazor/ant-design-blazor/pull/4313) [@rtrocmn](https://github.com/rtrocmn)
+- 🌐 补充意大利语翻译。[#4303](https://github.com/ant-design-blazor/ant-design-blazor/pull/4303) [@ElderJames](https://github.com/ElderJames)
+
+### 1.0.0 RC 3
+
+`2024-10-22`
+
+- 🆕 新增 Upload 自动在请求注入 AntiforgeryToken。[#4271](https://github.com/ant-design-blazor/ant-design-blazor/pull/4271) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Steps 常量值。[#4267](https://github.com/ant-design-blazor/ant-design-blazor/pull/4267) [@pathartl](https://github.com/pathartl)
+- 🆕 新增 space 常量值。[#4263](https://github.com/ant-design-blazor/ant-design-blazor/pull/4263) [@pathartl](https://github.com/pathartl)
+
+- TreeSelect
+  - 🆕 新增 一些控制 Tree 的方法。[#4283](https://github.com/ant-design-blazor/ant-design-blazor/pull/4283) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 当 TItemValue 为非可空类型时无法清楚选项的问题。[#4291](https://github.com/ant-design-blazor/ant-design-blazor/pull/4291) [@pankey888](https://github.com/pankey888)
+
+- Select
+  - 🐞 修复 搜索模式的输入框焦点。[#4286](https://github.com/ant-design-blazor/ant-design-blazor/pull/4286) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 搜索关键字的清除和恢复。[#4281](https://github.com/ant-design-blazor/ant-design-blazor/pull/4281) [#4276](https://github.com/ant-design-blazor/ant-design-blazor/pull/4276) [@ElderJames](https://github.com/ElderJames)
+
+- 💄 修复 Tree 连线的缩进样式。[#4290](https://github.com/ant-design-blazor/ant-design-blazor/pull/4290) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Overlay 跟随 Trigger 滚动。[#4285](https://github.com/ant-design-blazor/ant-design-blazor/pull/4285) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Empty 在 Select 中不显示。[#4282](https://github.com/ant-design-blazor/ant-design-blazor/pull/4282) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 AutoComplete 避免打开空的下拉面板。[#4284](https://github.com/ant-design-blazor/ant-design-blazor/pull/4284) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Modal 的按钮默认大小为 Default。[#4268](https://github.com/ant-design-blazor/ant-design-blazor/pull/4268) [@wangj90](https://github.com/wangj90)
+- 🐞 修复 Tabs 中 TabPanes 无法渲染的问题。[#4269](https://github.com/ant-design-blazor/ant-design-blazor/pull/4269) [@ysj265](https://github.com/ysj265)
+- 🐞 修复 cascader 错误的打开位置和选中值的顺序。[#4265](https://github.com/ant-design-blazor/ant-design-blazor/pull/4265) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ReuseTabs 部分配置失效。[#4266](https://github.com/ant-design-blazor/ant-design-blazor/pull/4266) [@ElderJames](https://github.com/ElderJames)
+- 🛠 项目配置更新 .NET 9 目标。[#4262](https://github.com/ant-design-blazor/ant-design-blazor/pull/4262) [@WeihanLi](https://github.com/WeihanLi)
+
 ### 1.0.0 RC 2
 
 `2024-10-09`

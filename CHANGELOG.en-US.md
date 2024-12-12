@@ -15,6 +15,70 @@ timeline: true
 
 ---
 
+### 1.0.1
+
+`2024-11-18`
+
+- 🔥 Update to .NET 9 GA. [#4330](https://github.com/ant-design-blazor/ant-design-blazor/pull/4330) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Update the building staff to .NET 9 target. [#4335](https://github.com/ant-design-blazor/ant-design-blazor/pull/4335) [@ElderJames](https://github.com/ElderJames)
+
+- TreeSelect
+  - 🐞 Fixed tree/node's null value may cause exception. [#4316](https://github.com/ant-design-blazor/ant-design-blazor/pull/4316) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed the selection doesn't bind default values. [#4315](https://github.com/ant-design-blazor/ant-design-blazor/pull/4315) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Checkbox make ItemValue available when customizing CheckboxGroup. [#4333](https://github.com/ant-design-blazor/ant-design-blazor/pull/4333) [@pankey888](https://github.com/pankey888)
+- 📖 Various updates to English documentation for Table. [#4331](https://github.com/ant-design-blazor/ant-design-blazor/pull/4331) [@pathartl](https://github.com/pathartl)
+- 📖 Update localization.en-US.md. [#4319](https://github.com/ant-design-blazor/ant-design-blazor/pull/4319) [@JackLovel](https://github.com/JackLovel)
+- 🌐 Add dutch translation for ReuseTabs Reload property. [#4323](https://github.com/ant-design-blazor/ant-design-blazor/pull/4323) [@rtrocmn](https://github.com/rtrocmn)
+
+
+### 1.0.0
+
+`2024-11-01`
+
+- Modal
+  - 🐞 Fixed calling js interop after renderering. [#4311](https://github.com/ant-design-blazor/ant-design-blazor/pull/4311) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed only hide scrollbar when enable mask. [#4302](https://github.com/ant-design-blazor/ant-design-blazor/pull/4302) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Move Dialog MaskClick Function into MouseUp Event Callback. [#4294](https://github.com/ant-design-blazor/ant-design-blazor/pull/4294) [@chazikaifa](https://github.com/chazikaifa)
+
+
+- ⚡️ Imporeve Table avoid load data when the PageIndex is less than 1. [#4305](https://github.com/ant-design-blazor/ant-design-blazor/pull/4305) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Grid that end col inline style with semicolon. [#4301](https://github.com/ant-design-blazor/ant-design-blazor/pull/4301) [@pathartl](https://github.com/pathartl)
+- 🐞 Fixed Modal using css var to hide/show the scroll bar of body. [#4299](https://github.com/ant-design-blazor/ant-design-blazor/pull/4299) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Form setting dictionary as model would thrown NRE. [#4296](https://github.com/ant-design-blazor/ant-design-blazor/pull/4296) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Improve Tabs make it possible to work without setting keys of TabPane. [#4297](https://github.com/ant-design-blazor/ant-design-blazor/pull/4297) [@ElderJames](https://github.com/ElderJames)
+- 🌐 Add missing translation items for Dutch. [#4313](https://github.com/ant-design-blazor/ant-design-blazor/pull/4313) [@rtrocmn](https://github.com/rtrocmn)
+- 🌐 Add missing number range message of It_LT locale. [#4303](https://github.com/ant-design-blazor/ant-design-blazor/pull/4303) [@ElderJames](https://github.com/ElderJames)
+
+
+### 1.0.0 RC 3
+
+`2024-10-22`
+
+- 🆕 Add Upload setting up AntiforgeryToken automatically. [#4271](https://github.com/ant-design-blazor/ant-design-blazor/pull/4271) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add steps constants. [#4267](https://github.com/ant-design-blazor/ant-design-blazor/pull/4267) [@pathartl](https://github.com/pathartl)
+- 🆕 Add space string constants。[#4263](https://github.com/ant-design-blazor/ant-design-blazor/pull/4263) [@pathartl](https://github.com/pathartl)
+
+- TreeSelect
+  - 🆕 Add some public methods for controling the inner tree. [#4283](https://github.com/ant-design-blazor/ant-design-blazor/pull/4283) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed that the clear button cannot deselect the selected item when TItemValue is a non-nullable type. [#4283](https://github.com/ant-design-blazor/ant-design-blazor/pull/4283) [@pankey888](https://github.com/pankey888)
+
+- Select
+  - 🐞 Fixed issues with search input. [#4286](https://github.com/ant-design-blazor/ant-design-blazor/pull/4286) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed clear and discovery the search value. [#4281](https://github.com/ant-design-blazor/ant-design-blazor/pull/4281) [#4276](https://github.com/ant-design-blazor/ant-design-blazor/pull/4276) [@ElderJames](https://github.com/ElderJames)
+
+- 💄 Fixed Tree the style of line indent. [#4290](https://github.com/ant-design-blazor/ant-design-blazor/pull/4290) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Overlay that dropdown should follow the scrolling with trigger. [#4285](https://github.com/ant-design-blazor/ant-design-blazor/pull/4285) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Empty image doesn't show in dropdown. [#4282](https://github.com/ant-design-blazor/ant-design-blazor/pull/4282) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed AutoComplete prevent opening empty panel. [#4284](https://github.com/ant-design-blazor/ant-design-blazor/pull/4284) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Modal Buttons size default to Default. [#4268](https://github.com/ant-design-blazor/ant-design-blazor/pull/4268) [@wangj90](https://github.com/wangj90)
+- 🐞 Fixed Tabbs the issue where TabPanes cannot render. [#4269](https://github.com/ant-design-blazor/ant-design-blazor/pull/4269) [@ysj265](https://github.com/ysj265)
+
+- 🐞 Fixed Cascader wrong placement and selected node order. [#4265](https://github.com/ant-design-blazor/ant-design-blazor/pull/4265) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed ReuseTabs page filter after getting the config from pages. [#4266](https://github.com/ant-design-blazor/ant-design-blazor/pull/4266) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Update net9 target usage. [#4262](https://github.com/ant-design-blazor/ant-design-blazor/pull/4262) [@WeihanLi](https://github.com/WeihanLi)
+
 ### 1.0.0 RC 2
 
 `2024-10-09`

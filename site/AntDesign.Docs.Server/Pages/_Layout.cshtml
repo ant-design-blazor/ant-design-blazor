@@ -1,4 +1,6 @@
-﻿@using CssInCSharp
+@using CssInCSharp
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Forms
 @namespace blazorserver.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
@@ -14,6 +16,7 @@
   <link rel="stylesheet" href="@("https://fastly.jsdelivr.net/npm/@docsearch/css@3")" />
   <link href="_content/AntDesign.Docs/css/default.css" rel="stylesheet">
   <link no-antblazor-css />
+  <component type="typeof(AntiforgeryToken)" render-mode="Static" />
 </head>
 <body>
   <app>

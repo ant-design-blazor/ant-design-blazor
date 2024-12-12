@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFrameworks>net9</TargetFrameworks>
+    <TargetFramework>net9.0</TargetFramework>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <BlazorWebAssemblyLoadAllGlobalizationData>false</BlazorWebAssemblyLoadAllGlobalizationData>
   </PropertyGroup>
@@ -11,24 +11,9 @@
     <WasmStripILAfterAOT>true</WasmStripILAfterAOT>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework) == 'net6'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework) == 'net7'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.0" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework) == 'net8'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework) == 'net9'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0-rc.2.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0-rc.2.*" PrivateAssets="all" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0" PrivateAssets="all" />
   </ItemGroup>
   
   <PropertyGroup>

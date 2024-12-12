@@ -85,13 +85,13 @@ namespace AntDesign
         /// Properties to pass through to the okay button
         /// </summary>
         [Parameter]
-        public ButtonProps OkButtonProps { get; set; } = new();
+        public ButtonProps OkButtonProps { get; set; } = new() { Size = ButtonSize.Small };
 
         /// <summary>
         /// Properties to pass through to the cancel button
         /// </summary>
         [Parameter]
-        public ButtonProps CancelButtonProps { get; set; } = new();
+        public ButtonProps CancelButtonProps { get; set; } = new() { Size = ButtonSize.Small };
 
         /// <summary>
         /// Icon displayed by text

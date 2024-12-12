@@ -360,3 +360,5 @@ scripts/previewEditor/index.html
 .history
 /components/LocalizedIntellisenseFiles/AntDesign.xml
 components/LocalizedIntellisenseFiles/AntDesign.xml
+.DS_Store
+package-lock.json

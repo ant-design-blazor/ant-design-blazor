@@ -1021,7 +1021,7 @@ namespace AntDesign
         public void ExpandAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
             if (predicate != null)
-                _ = FindFirstOrDefaultNode(predicate, recursive).ExpandAll();
+                _ = FindFirstOrDefaultNode(predicate, recursive)?.ExpandAll();
             else
                 ChildNodes.ForEach(node => _ = node.ExpandAll());
         }
@@ -1032,7 +1032,7 @@ namespace AntDesign
         public void CollapseAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
             if (predicate != null)
-                _ = FindFirstOrDefaultNode(predicate, recursive).CollapseAll();
+                _ = FindFirstOrDefaultNode(predicate, recursive)?.CollapseAll();
             else
                 ChildNodes.ForEach(node => _ = node.CollapseAll());
         }

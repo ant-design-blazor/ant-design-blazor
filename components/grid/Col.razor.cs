@@ -182,12 +182,12 @@ namespace AntDesign
                 {
                     if (Regex.Match(str, "^\\d+(\\.\\d+)?(px|em|rem|%)$").Success)
                     {
-                        return $"flex: 0 0 {str}";
+                        return $"flex: 0 0 {str};";
                     }
 
-                    return $"flex: {str}";
+                    return $"flex: {str};";
                 },
-                num => $"flex: {num} {num} auto");
+                num => $"flex: {num} {num} auto;");
         }
 
         protected override void OnInitialized()

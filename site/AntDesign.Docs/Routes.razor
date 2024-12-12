@@ -47,26 +47,30 @@
 
         try
         {
-            if (string.IsNullOrWhiteSpace(segment))
+            if (segment is { Length: > 0 })
             {
-                NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
-            }
-            else if (segment.IsIn("zh-CN", "en-US"))
-            {
-                LocalizationService.SetLanguage(CultureInfo.GetCultureInfo(segment));
-            }
-            else
-            {
-                if (avaliableRoutes.All(x => !$"/{relativeUri}".StartsWith(x, StringComparison.InvariantCultureIgnoreCase)))
-                    return;
-
-                if (currentCulture.Name.IsIn("zh-CN", "en-US"))
+                if (segment.IsIn("zh-CN", "en-US"))
                 {
-                    NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
+                    LocalizationService.SetLanguage(CultureInfo.GetCultureInfo(segment));
                 }
                 else
                 {
+                    if (relativeUri is {Length:>0} && avaliableRoutes.All(x => !$"/{relativeUri}".StartsWith(x, StringComparison.InvariantCultureIgnoreCase)))
+                        return;
+                }
+            } 
+            else
+            {
+                if (currentCulture.Name.IsIn("zh-CN", "en-US"))
+                {
+                    NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
+                    return;
+                }
+                else
+                {
+                    LocalizationService.SetLanguage(CultureInfo.GetCultureInfo("en-US"));
                     NavigationManager.NavigateTo($"/en-US/{relativeUri}");
+                    return;
                 }
             }
         }
