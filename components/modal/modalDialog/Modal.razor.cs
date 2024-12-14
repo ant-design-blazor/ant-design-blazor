@@ -431,7 +431,7 @@ namespace AntDesign
                 _hasFocus = true;
                 if (AfterOpen.HasDelegate)
                 {
-                    await AfterOpen.InvokeAsync();
+                    await AfterOpen.InvokeAsync(this);
                 }
                 if (ModalRef?.OnOpen != null)
                 {
@@ -453,7 +453,7 @@ namespace AntDesign
         {
             if (AfterClose.HasDelegate)
             {
-                await AfterClose.InvokeAsync();
+                await AfterClose.InvokeAsync(this);
             }
         }
 
