@@ -15,13 +15,13 @@
                 <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
                             Class="@_paginationClass.Class"
                             Total="_total"
-                            PageSize="PageSize"
-                            Current="PageIndex"
+                            PageSize="_pageSize"
+                            Current="_pageIndex"
                             OnChange="HandlePageChange" />
             }
             else
             {
-                @PaginationTemplate((PageSize,PageIndex,_total,_paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
+                @PaginationTemplate((_pageSize, _pageIndex, _total, _paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
             }
         }
 
@@ -120,13 +120,13 @@
                 <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
                             Class="@_paginationClass.Class"
                             Total="_total"
-                            PageSize="PageSize"
-                            Current="PageIndex"
+                            PageSize="_pageSize"
+                            Current="_pageIndex"
                             OnChange="HandlePageChange" />
             }
             else
             {
-                @PaginationTemplate((PageSize,PageIndex,_total,_paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
+                @PaginationTemplate((_pageSize,_pageIndex,_total,_paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
             }
         }
     </Spin>

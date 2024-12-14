@@ -70,7 +70,7 @@ namespace AntDesign
         private int _parametersHashCode;
 
         /// <summary>
-        /// Render mode of table. See <see cref="AntDesign.RenderMode"/> documentation for details.
+        /// Render mode of table. See <see cref="AntDesign.RerenderStrategy"/> documentation for details.
         /// </summary>
         [Parameter]
         public RerenderStrategy RerenderStrategy { get; set; } = RerenderStrategy.Always;
@@ -477,6 +477,8 @@ namespace AntDesign
         /// </summary>
         void ITable.OnColumnInitialized() => OnColumnInitialized();
 
+        bool ITable.RebuildColumns(bool add) => RebuildColumns(add);
+
         void ITable.OnExpandChange(RowData rowData)
         {
             _preventRender = true;
@@ -592,7 +594,7 @@ namespace AntDesign
 
         private QueryModel<TItem> BuildQueryModel()
         {
-            var queryModel = new QueryModel<TItem>(PageIndex, PageSize, _startIndex);
+            var queryModel = new QueryModel<TItem>(_pageIndex, _pageSize, _startIndex);
 
             foreach (var col in ColumnContext.HeaderColumns)
             {
@@ -658,7 +660,7 @@ namespace AntDesign
             var queryModel = this.InternalReload();
             StateHasChanged();
 
-            if (OnChange.HasDelegate)
+            if (OnChange.HasDelegate && _pageIndex > 0)
             {
                 OnChange.InvokeAsync(queryModel);
             }
@@ -1104,7 +1106,7 @@ namespace AntDesign
         /// -> OnColumnInitialized call render#4 -> OnAfterRenderAsync#4 -> OnAfterRenderAsync#3 -> OnAfterRenderAsync#1 (the last 2 steps are duplicated and useless)
         /// </remarks>
         /// <returns>Whether to start rebuilding</returns>
-        bool ITable.RebuildColumns(bool add)
+        protected virtual bool RebuildColumns(bool add)
         {
             // avoid rerender again before initialized (beacuse when we render the empty ChildContent, it will be called by Dispose)
             if (add && !_hasInitialized) return false;

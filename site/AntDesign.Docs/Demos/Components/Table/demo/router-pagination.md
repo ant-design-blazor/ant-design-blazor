@@ -2,7 +2,7 @@
 order: 2
 iframe: 550
 title:
-  en-US: Router pagging
+  en-US: Router Pagination
   zh-CN: 通过路由参数进行翻页
 ---
 
@@ -12,5 +12,4 @@ title:
 
 ## en-US
 
-Pagging using router.
-
+Tables can be configured to paginate based on URL query parameters by utilizing `NavigationManager`.

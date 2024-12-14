@@ -51,7 +51,7 @@ namespace AntDesign
         public EventCallback<int> TotalChanged { get; set; }
 
         /// <summary>
-        /// Currently visible page
+        /// Currently visible page. The first page is 1. If it is set to less than 1, the <see cref="OnChange"/> callback won't be invoked.
         /// </summary>
         /// <default value="1"/>
         [Parameter]

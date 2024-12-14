@@ -738,6 +738,8 @@ namespace AntDesign
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            await base.OnAfterRenderAsync(firstRender);
+
             if (firstRender)
             {
                 if (AutoFocus)

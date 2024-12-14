@@ -1,7 +1,7 @@
 ---
 order: 17
 title:
-  en-US: Tree data
+  en-US: Tree Data
   zh-CN: 树形数据展示
 ---
 
@@ -13,7 +13,6 @@ title:
 
 ## en-US
 
-Display tree structure data in Table when there is field key `children` in dataSource, try to customize `childrenColumnName` property to avoid tree table structure.
+Tables can nest rows into a tree structure when `TreeChildren` is set.
 
-You can control the indent width by setting `indentSize`.
-
+You can control the width of the indent by setting `IndentSize`.
