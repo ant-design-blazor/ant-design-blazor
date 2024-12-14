@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class DescriptionsItem : AntDomComponentBase, IDescriptionsItem
+    public class DescriptionsItem : AntDomComponentBase, IDescriptionsItem
     {
         /// <summary>
         /// Title for the item
@@ -45,6 +45,19 @@ namespace AntDesign
         [Parameter]
         public string ContentStyle { get; set; }
 
+        /// <summary>
+        /// Change default props <c>Colon</c> value of <see cref="DescriptionsItem"/>.
+        /// </summary>
+        [Parameter]
+        public bool Colon { get; set; }
+
+        /// <summary>
+        /// Layout - Horizontal or Vertical
+        /// </summary>
+        [Parameter]
+        public string Layout { get; set; }
+
+
         [CascadingParameter]
         private Descriptions Descriptions { get; set; }
 
@@ -58,6 +71,11 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            if (string.IsNullOrEmpty(Layout))
+            {
+                this.Layout = Descriptions.Layout;
+            }
+
             this.Descriptions?.Items.Add(this);
             base.OnInitialized();
         }

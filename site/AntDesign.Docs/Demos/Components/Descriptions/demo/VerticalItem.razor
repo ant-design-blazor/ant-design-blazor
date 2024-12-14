@@ -1,0 +1,14 @@
+﻿<Descriptions Title="User Info" Layout="@parentLayout">
+    <DescriptionsItem Title="Descriptions Layout"> <RadioGroup @bind-Value="@parentLayout" Options="new string[]{ DescriptionsLayout.Horizontal, DescriptionsLayout.Vertical }" /></DescriptionsItem>
+    <DescriptionsItem Title="Descriptions Item Layout"><RadioGroup @bind-Value="@itemLayout" Options="@(new string[]{"None", DescriptionsLayout.Horizontal, DescriptionsLayout.Vertical })" /></DescriptionsItem>
+    <DescriptionsItem Title="Live">Hangzhou, Zhejiang</DescriptionsItem>
+    <DescriptionsItem Title="Remark">Empty</DescriptionsItem>
+    <DescriptionsItem Title="Address" Layout="@itemLayout">
+        No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
+    </DescriptionsItem>
+</Descriptions>
+
+@code {
+    string parentLayout = @DescriptionsLayout.Horizontal;
+    string itemLayout;
+}
