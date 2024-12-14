@@ -1,4 +1,5 @@
 ﻿@using System.ComponentModel
+@using AntDesign.TableModels
 
 CheckStrictly:
 <Switch @bind-Checked="_checkStrictly" />
@@ -8,7 +9,7 @@ CheckStrictly:
     <Radio Value="@("radio")">radio</Radio>
 </RadioGroup>
 
-<Table DataSource="_data" TreeChildren="item=>item.Children" @bind-SelectedRows="_selectedRows">
+<Table TItem="Data" DataSource="_data" TreeChildren="item=>item.Children" OnExpand="OnExpand" @bind-SelectedRows="_selectedRows">
     <Selection CheckStrictly="_checkStrictly" Type="@selectionType" />
     <PropertyColumn Property="c=>c.Name" />
     <PropertyColumn Property="c=>c.Age" Width="12%" Sortable />
@@ -31,6 +32,15 @@ CheckStrictly:
     {
         await Task.Delay(500);
         _data = data;
+    }
+
+    private async Task OnExpand(RowData row)
+    {
+        var data=((RowData<Data>)row).Data;
+        if (data.Children==null)
+        {
+            await AddChildren(data);
+        }
     }
 
     async Task AddChildren(Data row)
