@@ -34,11 +34,15 @@
 
 <Button OnClick="()=> table.ExpandAll()">Expand All</Button>
 <Button OnClick="()=> table.CollapseAll()">Collapse All</Button>
-
+<Button OnClick="ToggleExpand">Toggle Expand</Button>
 
 @code {
     ITable table;
 
+    private void ToggleExpand()
+    {
+        data[2].Name = data[2].Name == "Expandable"?"Not Expandable":"Expandable";
+    }
     Contact[] data =
     {
         new Student() {
