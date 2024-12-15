@@ -45,7 +45,7 @@ CheckStrictly:
 
     async Task AddChildren(Data row)
     {
-        await Task.Delay(100);
+        await Task.Delay(1000);
         var index = row.Children?.Count() ?? 0;
         row.Children = [new() {
             Key = Guid.NewGuid().ToString(),
