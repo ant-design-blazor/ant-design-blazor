@@ -803,12 +803,7 @@ namespace AntDesign
 
         internal void RemoveGroupColumn(IFieldColumn column)
         {
-            var findIndex = this._groupedColumns.FindIndex(x => x.ColIndex == column.ColIndex);
-
-            if (findIndex != -1)
-            {
-                _groupedColumns.RemoveAt(findIndex);
-            }
+            this._groupedColumns.RemoveAll(x => x.ColIndex == column.ColIndex);
         }
 
         private void SetClass()
