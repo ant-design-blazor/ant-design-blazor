@@ -59,7 +59,7 @@ namespace AntDesign
                         }
                     }
                 }
-            }
+            } 
             while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
             column.ColIndex = CurrentColIndex;
@@ -140,7 +140,11 @@ namespace AntDesign
             }
             while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
-            column.ColIndex = CurrentColIndex;
+            if (_table.AutoColIndexes)
+            {
+                column.ColIndex = CurrentColIndex;
+            }
+
             CurrentColIndex += columnSpan - 1;
 
             if (column.RowSpan > 1)
@@ -153,7 +157,7 @@ namespace AntDesign
             }
         }
 
-        internal void HeaderColumnInitialed(IColumn column)
+        internal void HeaderColumnInitialized(IColumn column)
         {
             if (column.ColIndex == Columns.Count - 1)
             {

@@ -95,7 +95,7 @@ namespace AntDesign
             if (IsHeader)
             {
                 Table.Selection = this;
-                Context.HeaderColumnInitialed(this);
+                Context.HeaderColumnInitialized(this);
             }
             else if (IsBody)
             {

@@ -53,6 +53,8 @@ namespace AntDesign
 
         internal bool HasExpandTemplate { get; }
 
+        internal bool HasOnExpandDelegate { get; }
+
         internal SortDirection[] SortDirections { get; }
 
         internal void SetSelection(ISelectionColumn selectItem);
@@ -94,5 +96,7 @@ namespace AntDesign
         internal void RemoveGroupColumn(IFieldColumn column);
 
         internal bool RebuildColumns(bool add);
+
+        internal bool AutoColIndexes { get; }
     }
 }
