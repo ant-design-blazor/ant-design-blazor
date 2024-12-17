@@ -68,6 +68,15 @@ jobs:
           skip_api_build: true
           skip_app_build: true
 
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ID }}
+          projectName: 'ant-design-blazor'
+          directory: "cargo/wwwroot"
+          wranglerVersion: '3'      
+
       # - name: Deploy to Gitee 🚀
       #   uses: peaceiris/actions-gh-pages@v3
       #   with:

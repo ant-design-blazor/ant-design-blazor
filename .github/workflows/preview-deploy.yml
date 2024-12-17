@@ -42,6 +42,15 @@ jobs:
           export DEPLOY_DOMAIN=https://preview-${{ steps.pr.outputs.id }}-antblazor.surge.sh
           npx surge --project ./ --domain $DEPLOY_DOMAIN --token ${{ secrets.SURGE_TOKEN }}
 
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ID }}
+          projectName: 'ant-design-blazor'
+          #directory: site
+          wranglerVersion: '3'
+
       - name: update status comment
         uses: actions-cool/maintain-one-comment@v1.1.0
         with:
