@@ -141,6 +141,8 @@ namespace AntDesign
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
 
+        protected bool Expandable => Table.HasOnExpandDelegate && Table.RowExpandable(RowData);
+
         private string _fixedStyle;
 
         private ColumnAlign _align = ColumnAlign.Left;
