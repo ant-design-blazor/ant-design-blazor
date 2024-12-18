@@ -6893,13 +6893,13 @@ InputGroupのサイズは、含まれる入力フィールドのサイズを指�
 </summary>
       <default value="true" />
     </member>
-    <member name="P:AntDesign.Internal.Overlay.HiddenMode">
+    <member name="P:AntDesign.Internal.Overlay.RenderBeforeShow">
       <summary v="3QUJQe" i="0">
 デフォルトでは、オーバーレイがない場合、オーバーレイはコンテンツをレンダリングしません
-活性化 (少なくとも1回表示)。 HiddenMode = trueの設定
+活性化 (少なくとも1回表示)。 RenderBeforeShow = trueの設定
 レンダリングプロセスを通过します。
 ユースケース: コンポーネントを選択します。<see cref="T:AntDesign.SimpleSelectOption" />または<see cref="T:AntDesign.SelectOption`2" />
-HiddenMode = trueが必要なため、選択オプションが初期化され、
+RenderBeforeShow = trueが必要なため、選択オプションが初期化され、
 潜在的なデフォルトは適切にレンダリングできます。
 </summary>
     </member>
@@ -6948,7 +6948,7 @@ HiddenMode = trueが必要なため、選択オプションが初期化され、
 </summary>
       <default value="false" />
     </member>
-    <member name="P:AntDesign.Internal.OverlayTrigger.HiddenMode">
+    <member name="P:AntDesign.Internal.OverlayTrigger.RenderBeforeShow">
       <summary v="wznUH" i="0">
 オーバーレイコンポーネントに転送されるプロパティ。 オーバーレイに相談する
 より詳細な説明のためのプロパティ。
