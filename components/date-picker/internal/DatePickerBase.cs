@@ -502,7 +502,8 @@ namespace AntDesign
         {
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
-                .Get(() => $"{PrefixCls}-{Size}")
+                .If($"{PrefixCls}-large", () => Size == InputSize.Large)
+                .If($"{PrefixCls}-small", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-rtl", () => RTL)
                 .If($"{PrefixCls}-borderless", () => Bordered == false)
                 .If($"{PrefixCls}-disabled", () => IsDisabled() == true)

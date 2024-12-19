@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -40,6 +41,13 @@ namespace AntDesign
 
         protected override bool EnableOnPressEnter => OnSearch.HasDelegate || OnPressEnter.HasDelegate;
 
+        private readonly Hashtable _buttonSizeMap = new Hashtable()
+        {
+            [InputSize.Large] = ButtonSize.Large,
+            [InputSize.Default] = ButtonSize.Default,
+            [InputSize.Small] = ButtonSize.Small,
+        };
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -71,7 +79,7 @@ namespace AntDesign
                         builder.OpenComponent<Button>(6);
                         builder.AddAttribute(7, "Class", $"{PrefixCls}-search-button");
                         builder.AddAttribute(8, "Type", "default");
-                        builder.AddAttribute(9, "Size", Size);
+                        builder.AddAttribute(9, "Size", _buttonSizeMap[Size]);
                         builder.AddAttribute(10, "Loading", Loading);
                         builder.AddAttribute(11, "Disabled", this.Disabled);
                         if (!Loading)
@@ -91,7 +99,7 @@ namespace AntDesign
                     builder.OpenComponent<Button>(11);
                     builder.AddAttribute(12, "Class", $"{PrefixCls}-search-button");
                     builder.AddAttribute(13, "Type", "primary");
-                    builder.AddAttribute(14, "Size", Size);
+                    builder.AddAttribute(14, "Size", _buttonSizeMap[Size]);
                     builder.AddAttribute(15, "Loading", Loading);
                     if (!Loading)
                     {

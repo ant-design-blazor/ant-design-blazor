@@ -64,7 +64,7 @@ namespace AntDesign
         private FormSize _formSize;
 
         [CascadingParameter(Name = "FormSize")]
-        public FormSize FormSize
+        public FormSize? FormSize
         {
             get
             {
@@ -72,8 +72,12 @@ namespace AntDesign
             }
             set
             {
-                _formSize = value;
-                Size = (InputSize)(int)value;
+                if (value.HasValue)
+                    _formSize = value.Value;
+                else
+                    _formSize = AntDesign.FormSize.Default;
+
+                Size = (InputSize)_formSizeMap[value];
             }
         }
 
@@ -126,7 +130,7 @@ namespace AntDesign
 
         /// <summary>
         /// The size of the input box. Note: in the context of a form,
-        /// the `large` size is used. Available: `large` `default` `small`
+        /// `InputSize.Large` is used. Available: `InputSize.Large` `InputSize.Default` `InputSize.Small`
         /// </summary>
         /// <default value="InputSize.Default"/>
         [Parameter]
@@ -380,6 +384,14 @@ namespace AntDesign
                 return string.Empty;
             }
         }
+
+        private readonly Hashtable _formSizeMap = new Hashtable()
+        {
+            [AntDesign.FormSize.Large] = InputSize.Large,
+            [AntDesign.FormSize.Default] = InputSize.Default,
+            [AntDesign.FormSize.Small] = InputSize.Small,
+        };
+
 
         /// <inheritdoc />
         public override Task SetParametersAsync(ParameterView parameters)
