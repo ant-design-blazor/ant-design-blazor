@@ -24,16 +24,16 @@ Radio/Radio.Button
 | Checked            | 指定当前是否选中           | boolean         |
 | DefaultChecked            | 初始是否选中          | boolean         |-       |
 | Disabled |	禁用 Radio        | string        | -         |
-| RadioButton | 设置为 TRUE 以将radio风格设置为按钮组 | bool | false |
+| RadioButton | 设置为 `true` 以将radio风格设置为按钮组 | bool | false |
 | Value              | 根据 value 进行比较，判断是否选中        | string        | -        |
 
 RadioGroup
 
 | 参数             | 说明                                         | 类型          | 默认值    |
 | ---------------- | -------------------------------------------- | ------------- | --------- |
-| ButtonStyle            | RadioButton 的风格样式，目前有描边和填色两种风格          | `outline`,`solid`         |-       |
+| ButtonStyle            | RadioButton 的风格样式，目前有描边和填色两种风格          | RadioButtonStyle |-       |
 | Disabled |禁选所有子单选器       | string        | -         |
 | Value              | 用于设置当前选中的值        | string        | -        |
-| Name            | RadioGroup 下所有 input[type="radio"] 的 name 属性          | string         |-       |
-| Size |	大小，只对按钮样式生效        | string        | -         |
-| onChange              | 选项变化时的回调函数       | function(e)        | -        |
+| Name            | RadioGroup 下所有 `input[type="radio"]` 的 name 属性          | string         |-       |
+| Size |	大小，只对按钮样式生效        | InputSize | `InputSize.Default` |
+| OnChange              | 选项变化时的回调函数       | function(e)        | -        |
