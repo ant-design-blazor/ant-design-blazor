@@ -42,7 +42,7 @@
             <Tooltip Title="@Localizer["app.content.edit-demo"]">
                 <Unbound>
                     <a @ref="context.Current" class="edit-button" href="@EditUrl" target="_blank" rel="noopener noreferrer">
-                        <Icon Type="edit" />
+                        <Icon Type="@IconType.Outline.Edit" />
                     </a>
                 </Unbound>
             </Tooltip>
@@ -53,7 +53,7 @@
         <div class="code-box-actions">
             <Tooltip Title="@Localizer[_copied?"app.demo.copied":"app.demo.copy"]" OnVisibleChange="() => _copied = false">
                 <Unbound>
-                    <Icon RefBack="context" Type="@(_copied?"check" : "snippets")" Class="code-box-code-copy code-box-code-action" OnClick="Copy" />
+                    <Icon RefBack="context" Type="@(_copied ? IconType.Outline.Check : IconType.Outline.Snippets)" Class="code-box-code-copy code-box-code-action" OnClick="Copy" />
                 </Unbound>
             </Tooltip>
             <Tooltip Title="@(CodeExpand?Localizer["app.demo.code.hide"] : Localizer["app.demo.code.show"])">
@@ -118,7 +118,7 @@
 #if DEBUG
         DebugIcon =
     @<a href="@(Demo.Link??$"mock?type={Demo.Type}")" class="code-box-code-action" target="_blank">
-            <Icon Type="bug" />
+            <Icon Type="@IconType.Outline.Bug" />
     </a>
     ;
 #endif

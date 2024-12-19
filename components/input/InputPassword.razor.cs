@@ -113,12 +113,12 @@ namespace AntDesign
             {
                 if (_visible)
                 {
-                    _eyeIcon = "eye";
+                    _eyeIcon = IconType.Outline.Eye;
                     Type = AntDesign.InputType.Text;
                 }
                 else
                 {
-                    _eyeIcon = "eye-invisible";
+                    _eyeIcon = IconType.Outline.EyeInvisible;
                     Type = AntDesign.InputType.Password;
                 }
 

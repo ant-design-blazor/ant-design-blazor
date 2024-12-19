@@ -23,7 +23,7 @@
     </Overlay>
     <ChildContent>
         <a class="ant-dropdown-link" @onclick:preventDefault>
-            Hover me <Icon Type="down" />
+            Hover me <Icon Type="@IconType.Outline.Down" />
         </a>
     </ChildContent>
 </Dropdown>
@@ -50,7 +50,7 @@
     </Overlay>
     <Unbound>
         <a class="ant-dropdown-link" @ref="@context.Current" @onclick:preventDefault>
-            Hover me (unbounded) <Icon Type="down" />
+            Hover me (unbounded) <Icon Type="@IconType.Outline.Down" />
         </a>
     </Unbound>
 </Dropdown>

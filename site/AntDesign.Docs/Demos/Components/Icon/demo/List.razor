@@ -33,7 +33,7 @@ else
             @foreach (var name in item.IconNames)
             {
                 <li class="@item.Category" @onclick="(() => OnCopyClick(currentTheme, name))">
-                    <Icon Type="@name" Theme="@currentTheme" Style="font-size:36px" @key="@($"{currentTheme}-{name}")"></Icon>
+                    <Icon Type="@name" Theme="@currentTheme" Style="font-size:36px" @key="@($"{currentTheme}-{name}")" />
                     <div class="anticon-class">
                         <Badge>@name</Badge>
                     </div>

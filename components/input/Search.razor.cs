@@ -54,11 +54,11 @@ namespace AntDesign
                         builder.AddAttribute(2, "Class", $"{PrefixCls}-search-icon");
                         if (Loading)
                         {
-                            builder.AddAttribute(3, "Type", "loading");
+                            builder.AddAttribute(3, "Type", IconType.Outline.Loading);
                         }
                         else
                         {
-                            builder.AddAttribute(4, "Type", "search");
+                            builder.AddAttribute(4, "Type", IconType.Outline.Search);
                         }
                         builder.AddAttribute(5, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                         builder.CloseComponent();
@@ -78,7 +78,7 @@ namespace AntDesign
                         {
                             builder.AddAttribute(12, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                         }
-                        builder.AddAttribute(13, "Icon", "search");
+                        builder.AddAttribute(13, "Icon", IconType.Outline.Search);
 
                         builder.CloseComponent();
                     };
@@ -105,7 +105,7 @@ namespace AntDesign
                             builder.AddAttribute(17, "ChildContent", new RenderFragment((b) =>
                             {
                                 b.OpenComponent<Icon>(20);
-                                b.AddAttribute(21, "Type", "search");
+                                b.AddAttribute(21, "Type", IconType.Outline.Search);
                                 b.CloseComponent();
                             }));
                         }
