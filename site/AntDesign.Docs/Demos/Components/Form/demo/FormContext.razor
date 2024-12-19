@@ -33,7 +33,7 @@
             }
         </FormItem>
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
-            <Button HtmlType="submit" Type="@ButtonType.Primary">
+            <Button HtmlType="submit" Type="ButtonType.Primary">
                 Submit
             </Button>
             <Button HtmlType="button" Style="margin: 0 8px" OnClick="ShowUserModal">
@@ -46,7 +46,7 @@
            Visible="@_modelVisible"
            OnOk="@HandleOk"
            OnCancel="@HideUserModal">
-        <Form @ref="@_userForm" Model="@_userFormModel" Layout="@FormLayout.Vertical" Name="userForm">
+        <Form @ref="@_userForm" Model="@_userFormModel" Layout="FormLayout.Vertical" Name="userForm">
             <FormItem Label="User Name">
                 <Input @bind-Value="@context.Name" />
             </FormItem>

@@ -1,7 +1,7 @@
 ﻿<RadioGroup @bind-Value="@size" OnChange="e=> setSize(e)" TValue="SpaceSize">
-    <Radio Value="@SpaceSize.Small">Small</Radio>
-    <Radio Value="@SpaceSize.Middle">Middle</Radio>
-    <Radio Value="@SpaceSize.Large">Large</Radio>
+    <Radio Value="SpaceSize.Small">Small</Radio>
+    <Radio Value="SpaceSize.Middle">Middle</Radio>
+    <Radio Value="SpaceSize.Large">Large</Radio>
 </RadioGroup>
 <br />
 <Space Size=@size>
@@ -12,10 +12,10 @@
         <Button>Default</Button>
     </SpaceItem>
     <SpaceItem>
-        <Button Type="@ButtonType.Dashed">Dashed</Button>
+        <Button Type="ButtonType.Dashed">Dashed</Button>
     </SpaceItem>
     <SpaceItem>
-        <Button Type="@ButtonType.Link">Link</Button>
+        <Button Type="ButtonType.Link">Link</Button>
     </SpaceItem>
 </Space>
 

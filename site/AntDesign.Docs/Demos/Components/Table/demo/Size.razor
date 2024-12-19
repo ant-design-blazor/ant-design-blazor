@@ -1,6 +1,6 @@
 @using System.ComponentModel
 <p>Middle size table</p>
-<Table DataSource="@data" Bordered=@true Size=@TableSize.Middle>
+<Table DataSource="@data" Bordered="true" Size="TableSize.Middle">
     <PropertyColumn Property="c=>c.Name">
         <a>@context.Name</a>
     </PropertyColumn>
@@ -29,7 +29,7 @@
     </ActionColumn>
 </Table>
 <p>Small size table</p>
-<Table DataSource="@data" Bordered=@true Size=@TableSize.Small>
+<Table DataSource="@data" Bordered="true" Size="TableSize.Small">
     <PropertyColumn Property="c=>c.Name">
         <a>@context.Name</a>
     </PropertyColumn>

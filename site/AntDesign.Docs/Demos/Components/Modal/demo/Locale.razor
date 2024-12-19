@@ -1,7 +1,7 @@
 ﻿@inject ModalService _modalService
 
 <div>
-    <Button Type="ButtonType.Primary" OnClick="@ShowModal">
+    <Button Type="ButtonType.Primary" OnClick="ShowModal">
         Modal
     </Button>
     <Modal Title="@("Modal")"
@@ -13,7 +13,7 @@
         <p>Bla bla ...</p>
     </Modal>
 
-    <Button OnClick="@HandleConfirm">Confirm</Button>
+    <Button OnClick="HandleConfirm">Confirm</Button>
 
 </div>
 

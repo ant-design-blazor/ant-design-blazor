@@ -7,7 +7,7 @@
 		TItem="string"
 		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
 		Style="width: 100%; margin-bottom: 8px;"
-        MaxTagCount="@ResponsiveTag.Responsive"
+        MaxTagCount="ResponsiveTag.Responsive"
 		EnableSearch
 		AllowClear>
 		<SelectOptions>
@@ -23,7 +23,7 @@
 		@bind-Values="@_selectedValues1"
 		TItemValue="string"
 		TItem="string"        
-        MaxTagCount="@ResponsiveTag.Responsive"
+        MaxTagCount="ResponsiveTag.Responsive"
 		Disabled>
 		<SelectOptions>
 			@foreach(var item in _items)

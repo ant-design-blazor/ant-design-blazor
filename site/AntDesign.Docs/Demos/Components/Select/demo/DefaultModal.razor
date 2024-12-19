@@ -4,8 +4,8 @@
 
 <Modal Title="@_title"
        Visible="@_visible"
-       OnOk="@HandleOk"
-       OnCancel="@HandleCancel"
+       OnOk="HandleOk"
+       OnCancel="HandleCancel"
        DestroyOnClose="true">
     <Form @ref="_form"
           Model="@_formModel"
@@ -42,7 +42,7 @@
             </Select>
         </FormItem>
         <FormItem>
-            <Button OnClick="@(ResetFormHandler)">Reset Form</Button>
+            <Button OnClick="ResetFormHandler">Reset Form</Button>
         </FormItem>
     </Form>
 </Modal>

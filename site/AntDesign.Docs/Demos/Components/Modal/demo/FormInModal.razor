@@ -1,17 +1,17 @@
 ﻿@using System.ComponentModel.DataAnnotations
 
-<Button Type="ButtonType.Primary" OnClick="@ShowModal">
+<Button Type="ButtonType.Primary" OnClick="ShowModal">
     Open Modal with a Form
 </Button>
 
-<Button Type="ButtonType.Primary" OnClick="@ShowModalWithService">
+<Button Type="ButtonType.Primary" OnClick="ShowModalWithService">
     Open Modal with a Form with service
 </Button>
 
 <Modal Title="@("BasicModal")"
        @bind-Visible="@_visible"
-       OnOk="@HandleOk"
-       OnCancel="@HandleCancel">
+       OnOk="HandleOk"
+       OnCancel="HandleCancel">
          @FormTemplate()
 </Modal>
 
