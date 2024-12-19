@@ -93,6 +93,12 @@ namespace AntDesign
 
                 rowCache.Add(hashCode, groupRowData);
             }
+            
+            groupRowData.Children = grouping.Children.SelectMany(x =>
+                    x.Key == null
+                        ? x.Items.Select((data, index) => GetRowData(data, index + rowIndex, level + 1, rowCache))
+                        : [GetGroupRowData(x, index + rowIndex, level + 1, rowCache)])
+                .ToDictionary(x => x.Data != null ? GetHashCode(x.Data) : x.GroupResult.GetHashCode(), x => x);
 
             return groupRowData;
         }
