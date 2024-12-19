@@ -8,22 +8,22 @@
     <Column TData="int" DataIndex="Age"></Column>
     <Column @bind-Field="@context.Address">
         <TitleTemplate>
-            <span> <Icon Type="environment" /> Address </span>
+            <span><Icon Type="@IconType.Outline.Environment" /> Address</span>
         </TitleTemplate>
     </Column>
     <Column @bind-Field="@context.Tags">
         @foreach (var tag in context.Tags)
         {
-            var color = tag.Length > 5 ? "geekblue" : "green";
+            var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
             if (tag == "loser")
             {
-                color = "volcano";
+                color = TagColor.Volcano;
             }
             <Tag Color="@color">@tag</Tag>
         }
     </Column>
     <ActionColumn Title="Action">
-        <Space Size=@("middle")>
+        <Space Size="SpaceSize.Middle">
             <SpaceItem>
                 <a>Invite @context.Name</a>
             </SpaceItem>
@@ -71,7 +71,7 @@
         [DisplayName("Name")]
         public string Name { get; set; }
 
-        [DisplayName("🔢Age")]
+        [DisplayName("Age")]
         public int Age { get; set; }
 
         [DisplayName("Address")]
@@ -96,6 +96,6 @@
 
     void OnRowClick(RowData<IData> row)
     {
-        Console.WriteLine($"row {row.Data.Key} was clicked.");
+        Console.WriteLine($"Row {row.Data.Key} was clicked.");
     }
 }

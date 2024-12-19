@@ -80,7 +80,7 @@ namespace AntDesign
         /// <summary>
         /// set OK button type for the leftmost button: OK or Yes button
         /// </summary>
-        public new string OkType
+        public new ButtonType OkType
         {
             get
             {

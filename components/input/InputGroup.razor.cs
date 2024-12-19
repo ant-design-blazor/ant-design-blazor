@@ -38,7 +38,7 @@ namespace AntDesign
         /// Available: large default small
         /// </summary>
         [Parameter]
-        public string Size { get; set; }
+        public InputSize Size { get; set; }
 
         protected override void OnInitialized()
         {

@@ -13,7 +13,7 @@ namespace AntDesign
         public AutoCompleteInput()
         {
             AutoComplete = false;
-            Type = "search";
+            Type = AntDesign.InputType.Search;
             BindOnInput = true;
         }
 

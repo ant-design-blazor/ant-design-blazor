@@ -115,7 +115,7 @@
 	[Fact]
 	public void Renders_custom_style_and_custom_color_tag()
     {
-		var cut = Context.Render(@<AntDesign.Tag Color="#108ee9" Style="margin-left:5px;">Tag 1</AntDesign.Tag>);
+		var cut = Context.Render(@<AntDesign.Tag Color="@("#108ee9")" Style="margin-left:5px;">Tag 1</AntDesign.Tag>);
         cut.MarkupMatches(@<span class="ant-tag ant-tag-has-color" id:ignore style="margin-left: 5px; background-color: #108ee9; ">Tag 1</span>);
     }
 }

@@ -11,3 +11,4 @@ title:
 
 ## en-US
 
+The grid used for forms can be customized either on the form itself or a `FormItem` using the `LabelCol` or `WrapperCol` properties.

@@ -7,7 +7,7 @@
     </SelectOptions>
 </SimpleSelect>
 
-<SimpleSelect DefaultValues=@(new[]{"lucy","jack"}) Mode="multiple" Style="width:200px;" OnSelectedItemsChanged="handleItemsChange">
+<SimpleSelect DefaultValues=@(new[]{"lucy","jack"}) Mode="SelectMode.Multiple" Style="width:200px;" OnSelectedItemsChanged="handleItemsChange">
     <SelectOptions>
         <SimpleSelectOption Value="jack" Label="Jack"></SimpleSelectOption>
         <SimpleSelectOption Value="lucy" Label="Lucy"></SimpleSelectOption>

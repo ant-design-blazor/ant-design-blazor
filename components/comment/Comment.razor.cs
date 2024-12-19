@@ -81,20 +81,18 @@ namespace AntDesign
         public IList<RenderFragment> Actions { get; set; } = new List<RenderFragment>();
 
         /// <summary>
-        /// Sets the direction of the comment. <c>left</c> or <c>right</c>.
+        /// Sets the direction of the comment with <see cref="CommentPlacement" />.
         /// </summary>
         /// <default value="left"/>
         [Parameter]
-        public string Placement { get; set; } = "left";
-
-        private bool RightAvatar => Placement?.Equals("right", StringComparison.InvariantCultureIgnoreCase) == true;
+        public CommentPlacement Placement { get; set; } = CommentPlacement.Left;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
             this.ClassMapper.Clear()
                 .Add("ant-comment")
-                .If("ant-comment-right", () => RightAvatar)
+                .If("ant-comment-right", () => Placement == CommentPlacement.Right)
                 .If("ant-comment-rtl", () => RTL);
         }
     }

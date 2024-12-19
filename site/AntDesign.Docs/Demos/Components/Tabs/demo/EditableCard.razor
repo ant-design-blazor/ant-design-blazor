@@ -1,4 +1,4 @@
-﻿<Tabs DefaultActiveKey="1" Type="@TabType.EditableCard" OnAddClick="OnAddClick" OnClose="OnTabClose" @bind-ActiveKey="activeKey">
+﻿<Tabs DefaultActiveKey="1" Type="TabType.EditableCard" OnAddClick="OnAddClick" OnClose="OnTabClose" @bind-ActiveKey="activeKey">
     @foreach (var pane in panes)
     {
         <TabPane Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable">
@@ -7,7 +7,7 @@
     }
 </Tabs>
 
-<Tabs DefaultActiveKey="1" Type="@TabType.Line">
+<Tabs DefaultActiveKey="1" Type="TabType.Line">
     <TabPane Key="0" Tab="0"></TabPane>
     @foreach (var tab in _tabs)
     {

@@ -21,37 +21,38 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xqsDu4ZyR/Progress.svg
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| type | 类型，可选 `line` `circle` `dashboard` | string | `line` |
-| format | 内容的模板函数 | function(percent, successPercent) | `percent => percent + '%'` |
-| percent | 百分比 | number | 0 |
-| showInfo | 是否显示进度数值或状态图标 | boolean | true |
-| status | 状态，可选：`success` `exception` `normal` `active`(仅限 line) | string | - |
-| strokeLinecap | - | `round` \| `square` | `round` |
-| strokeColor | 进度条的色彩 | string | - |
-| successPercent | 已完成的分段百分比 | number | 0 |
-| trailColor | 未完成的分段的颜色 | string | - |
+| Size | - | ProgressSize | `ProgressSize.Default` |
+| Type | 类型 | ProgressType | `ProgressType.Line` |
+| Format | 内容的模板函数 | Func<double, string> | `percent => percent + "%"` |
+| Percent | 百分比 | number | 0 |
+| ShowInfo | 是否显示进度数值或状态图标 | boolean | true |
+| Status | 状态| ProgressStatus | `ProgressStatus.Normal` |
+| StrokeLinecap | - | ProgressStrokeLinecap | `ProgressStrokeLinecap.Round` |
+| StrokeColor | 进度条的色彩 | string | - |
+| SuccessPercent | 已完成的分段百分比 | number | 0 |
+| TrailColor | 未完成的分段的颜色 | string | - |
 
-### `type="line"`
+### `Type="ProgressType.Line"`
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| strokeWidth | 进度条线的宽度，单位 px | number | 10 |
-| strokeColor | 进度条的色彩，传入 object 时为渐变 | string \| { from: string; to: string; direction: string } | - |
-| steps | 进度条总共步数 | number | - |
+| StrokeWidth | 进度条线的宽度，单位 px | number | 10 |
+| StrokeColor | 进度条的色彩，传入 object 时为渐变 | string \| { from: string; to: string; direction: string } | - |
+| Steps | 进度条总共步数 | number | - |
 
-### `type="circle"`
+### `Type="ProgressType.Circle"`
 
 | 属性        | 说明                                             | 类型             | 默认值 |
 | ----------- | ------------------------------------------------ | ---------------- | ------ |
-| width       | 圆形进度条画布宽度，单位 px                      | number           | 132    |
-| strokeWidth | 圆形进度条线的宽度，单位是进度条画布宽度的百分比 | number           | 6      |
-| strokeColor | 圆形进度条线的色彩，传入 object 时为渐变         | string \| object | -      |
+| Width       | 圆形进度条画布宽度，单位 px                      | number           | 132    |
+| StrokeWidth | 圆形进度条线的宽度，单位是进度条画布宽度的百分比 | number           | 6      |
+| StrokeColor | 圆形进度条线的色彩，传入 object 时为渐变         | string \| object | -      |
 
-### `type="dashboard"`
+### `Type="ProgressType.Dashboard"`
 
 | 属性 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| width | 仪表盘进度条画布宽度，单位 px | number | 132 |
-| strokeWidth | 仪表盘进度条线的宽度，单位是进度条画布宽度的百分比 | number | 6 |
-| gapDegree | 仪表盘进度条缺口角度，可取值 0 ~ 360 | number | 0 |
-| gapPosition | 仪表盘进度条缺口位置 | `top` \| `bottom` \| `left` \| `right` | `top` |
+| Width | 仪表盘进度条画布宽度，单位 px | number | 132 |
+| StrokeWidth | 仪表盘进度条线的宽度，单位是进度条画布宽度的百分比 | number | 6 |
+| GapDegree | 仪表盘进度条缺口角度，可取值 0 ~ 360 | number | 0 |
+| GapPosition | 仪表盘进度条缺口位置 | ProgressGapPosition | `ProgressGapPosition.Top` |

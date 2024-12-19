@@ -2,7 +2,7 @@
 order: 101
 title:
   zh-CN: 动态校验规则
-  en-US: dynamic-rule
+  en-US: Dynamic Rules
 ---
 
 ## zh-CN

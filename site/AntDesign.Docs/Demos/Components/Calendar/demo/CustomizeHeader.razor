@@ -6,9 +6,9 @@
 
 @code
 {
-    private void OnPanelChange(DateTime value, string mode)
+    private void OnPanelChange(DateTime value, DatePickerType type)
     {
-        Console.WriteLine($"{value} {mode}");
+        Console.WriteLine($"{value} {type}");
     }
 
     private RenderFragment GetMonthOptions()
@@ -70,9 +70,9 @@
                     </Title>
                     <Row Gutter="8">
                         <AntDesign.Col>
-                            <RadioGroup size="small" OnChange="value => args.OnTypeChange(value)" Value="@args.Type" TValue="CalendarMode">
-                                <Radio RadioButton Value="@CalendarMode.Month">Month</Radio>
-                                <Radio RadioButton Value="@CalendarMode.Year">Year</Radio>
+                            <RadioGroup Size="InputSize.Small" OnChange="value => args.OnTypeChange(value)" Value="@args.Type" TValue="CalendarMode">
+                                <Radio RadioButton Value="CalendarMode.Month">Month</Radio>
+                                <Radio RadioButton Value="CalendarMode.Year">Year</Radio>
                             </RadioGroup>
                         </AntDesign.Col>
                         <AntDesign.Col>

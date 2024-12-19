@@ -3,10 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -80,11 +83,11 @@ namespace AntDesign
         public Dictionary<string, object> Data { get; set; }
 
         /// <summary>
-        /// Built-in stylesheets, support for three types: <c>text</c>, <c>picture</c> or <c>picture-card</c>
+        /// Built-in stylesheets, support for three types: <c>Text</c>, <c>Picture</c> or <c>PictureCard</c>
         /// </summary>
-        /// <default value="text" />
+        /// <default value="UploadListType.Text" />
         [Parameter]
-        public string ListType { get; set; } = "text";
+        public UploadListType ListType { get; set; } = UploadListType.Text;
 
         /// <summary>
         /// Support upload whole directory.
@@ -225,15 +228,22 @@ namespace AntDesign
         /// </summary>
         /// <default value="post"/>
         [Parameter]
-        public string Method { get; set; } = "post";
+        public OneOf<HttpMethod, string> Method { get; set; } = HttpMethod.Post;
 
-        private bool IsText => ListType == "text";
-        private bool IsPicture => ListType == "picture";
-        private bool IsPictureCard => ListType == "picture-card";
+        private bool IsText => ListType == UploadListType.Text;
+        private bool IsPicture => ListType == UploadListType.Picture;
+        private bool IsPictureCard => ListType == UploadListType.PictureCard;
 
         private ClassMapper _listClassMapper = new ClassMapper();
 
         internal bool _dragHover;
+
+        private readonly Hashtable _typeMap = new Hashtable()
+        {
+            [UploadListType.Text] = "text",
+            [UploadListType.Picture] = "picture",
+            [UploadListType.PictureCard] = "picture-card",
+        };
 
         protected override void OnInitialized()
         {
@@ -247,7 +257,7 @@ namespace AntDesign
 
             _listClassMapper
                 .Add($"{prefixCls}-list")
-                .Get(() => $"{prefixCls}-list-{ListType}")
+                .Get(() => $"{prefixCls}-list-{_typeMap[ListType]}")
                 .If($"{prefixCls}-list-rtl", () => RTL);
 
             FileList.InsertRange(0, DefaultFileList);

@@ -2,7 +2,7 @@
 order: 7
 title:
   zh-CN: 填底的按钮样式
-  en-US: Solid radio button
+  en-US: Radio Button
 
 ---
 
@@ -11,4 +11,4 @@ title:
 
 
 ## en-US
-Solid radio button style.
+Radio components can be displayed as buttons by using the `RadioButton` property.

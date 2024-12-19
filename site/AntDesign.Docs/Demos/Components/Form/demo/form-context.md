@@ -2,7 +2,7 @@
 order: 8
 title:
   zh-CN: 多表单联动
-  en-US: Control between forms
+  en-US: Form Provider
 ---
 
 ## zh-CN
@@ -11,5 +11,5 @@ title:
 
 ## en-US
 
-Use `FormProvider` to process data between forms. In this case, submit button is in the Modal which is out of Form. You can use `form.Submit` to submit form. Besides, we recommend native `<Button HtmlType="submit" />` to submit a form.
+Use `FormProvider` to process data between forms. In this case, the form's submit button is in the modal, outside of the Form component. You can use `Form.Submit` to submit the form. We recommend using the native submit input by using `<Button HtmlType="submit" />` to submit a form.
 

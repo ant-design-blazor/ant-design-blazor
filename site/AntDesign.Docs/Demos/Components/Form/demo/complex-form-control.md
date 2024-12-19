@@ -2,7 +2,7 @@
 order: 6
 title:
   zh-CN: 复杂一点的控件
-  en-US: Complex form control
+  en-US: Complex Form Controls
 ---
 
 ## zh-CN
@@ -26,10 +26,10 @@ This demonstrates the use of multiple elements within a `FormItem`.
 
 Three typical scenarios are shown here.
 
-- `Username`: there is a description text or other component behind the input box, within `FormItem` only the component that uses @bind-Value will be bound to the FormItem, other components can be added at will.
-- `Address`: there are two controls, use two `<FormItem NoStyle />` within the `FormItem` to bind the corresponding controls separately (only one control with @bind-Value can appear under a FormItem), use NoStyle for the FormItem, then The Grid layout of the FormItem will be ignored, even if LabelCol or WrapperCol is actively used.
+- `Username`: there is a description text or other component behind the input box, within `FormItem` only the component that uses `@bind-Value` will be bound to the FormItem, other components can be added at will.
+- `Address`: there are two controls, use two `<FormItem NoStyle />` within the `FormItem` to bind the corresponding controls separately (only one control with `@bind-Value` can appear under a FormItem), use `NoStyle` for the `<FormItem>`. This causes the grid layout to be ignored, even if `LabelCol` or `WrapperCol` is actively used.
 
-The scenario also shows complex types of form validation. The Address property is a type that contains two properties. When a cascading form entry binds its property, it inherits all attributes of that property, but because the form does not bind this property, the external form cannot obtain Required and Label.
+The scenario also shows complex types of form validation. The `Address` property is a type that contains two properties. When a cascading form entry binds its property, it inherits all attributes of that property, but because the form does not bind this property, the external form cannot obtain Required and Label.
 
 - `BirthDate`: there are two inline controls with error messages displayed under each control, using two `<FormItem />`s to bind the corresponding controls separately, and modifying the `style` to make the layout inline.
 

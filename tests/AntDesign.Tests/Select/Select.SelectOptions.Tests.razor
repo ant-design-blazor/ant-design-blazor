@@ -77,7 +77,7 @@
 
         IEnumerable<Person> values = new List<Person>() { _persons[1] };
         var cut = Render<AntDesign.Select<Person, Person>>(
-        @<AntDesign.Select Mode="multiple"
+        @<AntDesign.Select Mode="SelectMode.Multiple"
             TItemValue="Person"
             TItem="Person"
             @bind-Values="@values">
@@ -109,9 +109,9 @@
     }
 
     [Theory]
-    [InlineData("default")]
-    [InlineData("multiple")]
-    public void Will_not_show_selected_items_on_search_when_hide_selected_is_true(string mode)
+    [InlineData(SelectMode.Default)]
+    [InlineData(SelectMode.Multiple)]
+    public void Will_not_show_selected_items_on_search_when_hide_selected_is_true(SelectMode mode)
     {
         JSInterop.SetupVoid("AntDesign.interop.eventHelper.addPreventKeys", _ => true);
         JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
@@ -131,7 +131,7 @@
         var itemsChanged = false;
 
         var cut = Render<AntDesign.Select<Person, Person>>(
-            @<AntDesign.Select Mode=@mode
+            @<AntDesign.Select Mode="@mode"
                 EnableSearch=true
                 HideSelected=true
                 SearchDebounceMilliseconds=0
@@ -184,7 +184,7 @@
         var itemsChanged = false;
 
         var cut = Render<AntDesign.Select<Person, Person>>(
-            @<AntDesign.Select Mode="multiple"
+            @<AntDesign.Select Mode="SelectMode.Multiple"
                                EnableSearch=true
                                HideSelected=true
                                SearchDebounceMilliseconds=0

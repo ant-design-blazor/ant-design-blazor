@@ -37,7 +37,7 @@
 
     public RenderFragment<TableFilterInputRenderOptions> GetEnumInput<TData>() => filter =>
         @<text>
-            <EnumSelect TEnum="TData" Mode="multiple"
+            <EnumSelect TEnum="TData" Mode="@SelectMode.Multiple"
                 Value="(TData)filter.Value"
                 Style="width:180px;"
                 ValueChanged="value => filter.Value = value"

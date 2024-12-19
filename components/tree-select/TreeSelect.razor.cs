@@ -49,7 +49,7 @@ namespace AntDesign
                 _multiple = value;
                 if (_multiple)
                 {
-                    Mode = SelectMode.Multiple.ToString("G");
+                    Mode = SelectMode.Multiple;
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace AntDesign
                 _treeCheckable = value;
                 if (_treeCheckable)
                 {
-                    Mode = SelectMode.Multiple.ToString("G");
+                    Mode = SelectMode.Multiple;
                 }
             }
         }
@@ -272,8 +272,6 @@ namespace AntDesign
 
         private bool IsTemplatedNodes => ChildContent != null;
 
-        internal override SelectMode SelectMode => IsMultiple ? SelectMode.Multiple : base.SelectMode;
-
         private bool _multiple;
         private bool _treeCheckable;
         private readonly string _dir = "ltr";
@@ -440,7 +438,7 @@ namespace AntDesign
                     LabelTemplate = node.TitleTemplate,
                     Value = GetValueFromNode(node),
                     Item = node.DataItem,
-                    IsAddedTag = SelectMode != SelectMode.Default,
+                    IsAddedTag = Mode != SelectMode.Default,
                 };
                 if (append && !SelectOptionItems.Any(m => m.Value.AllNullOrEquals(o.Value)))
                     SelectOptionItems.Add(o);
@@ -575,7 +573,7 @@ namespace AntDesign
                 }
             }
 
-            if (SelectMode == SelectMode.Default)
+            if (Mode == SelectMode.Default)
             {
                 await CloseAsync();
             }
@@ -673,10 +671,10 @@ namespace AntDesign
                 .Add($"{ClassPrefix}")
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
-                .If($"{ClassPrefix}-single", () => SelectMode == SelectMode.Default)
-                .If($"{ClassPrefix}-multiple", () => SelectMode != SelectMode.Default)
-                .If($"{ClassPrefix}-sm", () => Size == AntSizeLDSType.Small)
-                .If($"{ClassPrefix}-lg", () => Size == AntSizeLDSType.Large)
+                .If($"{ClassPrefix}-single", () => Mode == SelectMode.Default)
+                .If($"{ClassPrefix}-multiple", () => Mode != SelectMode.Default)
+                .If($"{ClassPrefix}-sm", () => Size == InputSize.Small)
+                .If($"{ClassPrefix}-lg", () => Size == InputSize.Large)
                 .If($"{ClassPrefix}-show-arrow", () => ShowArrowIcon)
                 .If($"{ClassPrefix}-show-search", () => IsSearchEnabled)
                 .If($"{ClassPrefix}-loading", () => Loading)
