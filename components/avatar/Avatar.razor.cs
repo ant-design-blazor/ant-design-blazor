@@ -51,7 +51,19 @@ namespace AntDesign
             get => _size;
             set
             {
-                if ((_size.IsT0 && _size.AsT0 == value.AsT0) || (_size.IsT1 && _size.AsT1 == value.AsT1))
+                if (_size.IsT0 && value.IsT0 && _size.AsT0 != value.AsT0)
+                {
+                    _size = value;
+                    SetSizeStyle();
+                }
+
+                if (_size.IsT1 && value.IsT1 && _size.AsT1 != value.AsT1)
+                {
+                    _size = value;
+                    SetSizeStyle();
+                }
+
+                if (_size.IsT0 != value.IsT0)
                 {
                     _size = value;
                     SetSizeStyle();
@@ -128,7 +140,6 @@ namespace AntDesign
 
         private string _prefixCls = "ant-avatar";
 
-        private readonly Hashtable _sizeMap = new Hashtable() { ["large"] = "lg", ["small"] = "sm" };
         private readonly Hashtable _shapeMap = new Hashtable() { [AvatarShape.Square] = "square", [AvatarShape.Circle] = "circle" };
 
         private string _text;
@@ -187,26 +198,26 @@ namespace AntDesign
         {
             ClassMapper
                 .Add(_prefixCls)
-                .GetIf(() => $"{_prefixCls}-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
                 .GetIf(() => $"{_prefixCls}-{_shapeMap[Shape]}", () => Shape.HasValue)
+                .If($"{_prefixCls}-sm", () => _size.IsT0 && _size.AsT0 == AvatarSize.Small)
+                .If($"{_prefixCls}-lg", () => _size.IsT0 && _size.AsT0 == AvatarSize.Large)
                 .If($"{_prefixCls}-icon", () => !string.IsNullOrEmpty(Icon))
                 .If($"{_prefixCls}-image", () => _hasSrc);
         }
 
         private void SetSizeStyle()
         {
-            CssSizeLength cssSize = new CssSizeLength(0);
+            var size = string.Empty;
 
-            if (Size.IsT0)
-                if (!CssSizeLength.TryParse(Size.AsT0.ToString().ToLowerInvariant(), out cssSize)) return;
+            if (_size.IsT0)
+                size = _size.AsT0.ToString().ToLowerInvariant();
             else
-                if (!CssSizeLength.TryParse(Size.AsT1, out cssSize)) return;
+                size = _size.AsT1;
 
-            if (cssSize != null)
-            {
-                _sizeStyles = $"width:{cssSize};height:{cssSize};line-height:{cssSize};";
-                _sizeStyles += $"font-size:calc({cssSize} / 2);";
-            }
+            if (!CssSizeLength.TryParse(size, out var cssSize)) return;
+
+            _sizeStyles = $"width:{cssSize};height:{cssSize};line-height:{cssSize};";
+            _sizeStyles += $"font-size:calc({cssSize} / 2);";
         }
 
         private async Task CalcStringSize()
