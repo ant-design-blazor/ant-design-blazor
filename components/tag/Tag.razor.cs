@@ -80,6 +80,7 @@ namespace AntDesign
                 {
                     _isPresetColor = true;
                     _isCustomColor = false;
+                    _presetColor = value.AsT0;
                 }
                 else
                 {
@@ -193,7 +194,7 @@ namespace AntDesign
             [TagColor.Green] = "green",
             [TagColor.Cyan] = "cyan",
             [TagColor.Blue] = "blue",
-            [TagColor.GeekBlue] = "geekBlue",
+            [TagColor.GeekBlue] = "geekblue",
             [TagColor.Purple] = "purple",
             [TagColor.Magenta] = "magenta",
             [TagColor.Pink] = "pink",

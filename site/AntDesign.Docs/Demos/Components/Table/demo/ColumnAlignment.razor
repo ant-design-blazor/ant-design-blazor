@@ -15,7 +15,7 @@
   <PropertyColumn Property="c=>c.Tags" Align="columnAlign">
         @foreach (var tag in context.Tags)
         {
-            string color = tag.Length > 5 ? "geekblue" : "green";
+            var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
             <Tag Color="@color">@tag</Tag>
         }
     </PropertyColumn>
