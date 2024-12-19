@@ -47,7 +47,7 @@
         <AutoComplete @bind-Value="@context.AutoComplete" Options="@autoCompleteOptions" Placeholder="Input here" />
     </FormItem>
     <FormItem Label="Select">
-        <Select Mode="default"
+        <Select Mode="SelectMode.Default"
             DataSource="@_persons"            
             @bind-Value="@context.Name"
             LabelName="@nameof(Person.Name)"
