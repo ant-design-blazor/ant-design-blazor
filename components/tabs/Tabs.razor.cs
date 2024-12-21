@@ -325,7 +325,7 @@ namespace AntDesign
             _tabs.Add(tabPane);   
             _needUpdateScrollListPosition = true;
             StateHasChanged();
-            if (_hasNewTab)
+            if (_hasNewTab || ActiveKey == tabPane.Key)
             {
                 ActivatePane(tabPane.Key);
                 _hasNewTab = false;
@@ -571,10 +571,10 @@ namespace AntDesign
 
             if (_afterFirstRender && _needUpdateScrollListPosition)
             {
-                _needUpdateScrollListPosition = false;
                 await ResetSizes();
                 UpdateScrollListPosition();
                 TryRenderInk();
+                _needUpdateScrollListPosition = false;
             }
 
             _shouldRender = false;
@@ -717,7 +717,6 @@ namespace AntDesign
 
             if (!_itemRefs.TryGetValue(_activeTab.TabId, out _activeTabElement))
             {
-                _needUpdateScrollListPosition = true;
                 return;
             }
 
