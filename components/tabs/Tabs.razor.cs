@@ -717,7 +717,6 @@ namespace AntDesign
 
             if (!_itemRefs.TryGetValue(_activeTab.TabId, out _activeTabElement))
             {
-                _needUpdateScrollListPosition = true;
                 return;
             }
 
