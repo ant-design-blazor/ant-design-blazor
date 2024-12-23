@@ -1,7 +1,7 @@
 ﻿name: Release antdv5 package
 
 env:
-  Version: 0.0.1
+  Version: 2.0.0
   NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
 
 on:
@@ -39,16 +39,10 @@ jobs:
           npm i
           SUFFIX=`date "+%y%m%d%H%M%S"`
           dotnet build
-          dotnet pack components/AntDesign.csproj /p:PackageVersion=$Version-v5-${SUFFIX} -c Release -o publish
+          dotnet pack components/AntDesign.csproj /p:PackageVersion=$Version-nightly-${SUFFIX} -c Release -o publish
           dotnet pack src/AntDesign.Style.Generator/AntDesign.Style.Generator.csproj /p:PackageVersion=$Version-v5-${SUFFIX} -c Release -o publish
 
       - name: Publish to Nuget ✔
         run: |
           dotnet nuget push publish/*.nupkg -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
 
-      - name: Upload package artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: package
-          path: publish/
-          retention-days: 5
