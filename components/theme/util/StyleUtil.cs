@@ -19,7 +19,7 @@ namespace AntDesign
         public List<(string, string)> DeprecatedTokens { get; set; }
     }
 
-    internal class StyleUtil
+    public class StyleUtil
     {
         private const string DefaultIconPrefixCls = "anticon";
 
@@ -154,7 +154,7 @@ namespace AntDesign
             return !string.IsNullOrEmpty(suffixCls) ? $"ant-{suffixCls}" : "ant";
         }
 
-        internal static (string, GlobalToken) UseToken()
+        public static (string, GlobalToken) UseToken()
         {
             var (hash, token) = UseTheme();
             return (hash.HashId, token);
