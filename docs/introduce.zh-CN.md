@@ -149,7 +149,7 @@ title: Ant Design of Blazor
 - 最后就可以在`.razor`组件中引用啦！
 
   ```
-  <Button Type="primary">Hello World!</Button>
+  <Button Type="ButtonType.Primary">Hello World!</Button>
   ```
 
 ## 🔨 开发

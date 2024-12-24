@@ -4,7 +4,7 @@
 {
     class ListData
     {
-        public string type;
+        public BadgeStatus type;
         public string content;
     }
 
@@ -14,25 +14,25 @@
             case 8:
                 listData = new List<ListData>
                 {
-                    new ListData { type = "warning", content = "This is warning event." },
-                    new ListData { type = "success", content = "This is usual event." },
+                    new ListData { type = BadgeStatus.Warning, content = "This is warning event." },
+                    new ListData { type = BadgeStatus.Success, content = "This is usual event." },
                 };
                 break;
             case 10:
                 listData = new List<ListData> {
-                    new ListData { type = "warning", content = "This is warning event." },
-                    new ListData { type = "success", content = "This is usual event." },
-                    new ListData { type = "error", content = "This is error event." },
+                    new ListData { type = BadgeStatus.Warning, content = "This is warning event." },
+                    new ListData { type = BadgeStatus.Success, content = "This is usual event." },
+                    new ListData { type = BadgeStatus.Error, content = "This is error event." },
                 };
                 break;
             case 15:
                 listData = new List<ListData> {
-                    new ListData { type = "warning", content = "This is warning event" },
-                    new ListData { type = "success", content = "This is very long usual event。。...." },
-                    new ListData { type = "error", content = "This is error event 1." },
-                    new ListData { type = "error", content = "This is error event 2." },
-                    new ListData { type = "error", content = "This is error event 3." },
-                    new ListData { type = "error", content = "This is error event 4." },
+                    new ListData { type = BadgeStatus.Warning, content = "This is warning event" },
+                    new ListData { type = BadgeStatus.Success, content = "This is very long usual event。。...." },
+                    new ListData { type = BadgeStatus.Error, content = "This is error event 1." },
+                    new ListData { type = BadgeStatus.Error, content = "This is error event 2." },
+                    new ListData { type = BadgeStatus.Error, content = "This is error event 3." },
+                    new ListData { type = BadgeStatus.Error, content = "This is error event 4." },
                 };
                 break;
         }

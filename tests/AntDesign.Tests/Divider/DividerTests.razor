@@ -11,7 +11,7 @@
 	public void Renders_divider_with_title()
 	{
 		var style = "font-weight:bold";
-		var orientation = "left";
+		var orientation = DividerOrientation.Left;
 
 		var cut = Context.Render(@<AntDesign.Divider Orientation="@orientation" Style="@style">A Title</AntDesign.Divider>);		
 		cut.MarkupMatches(
@@ -27,9 +27,9 @@
 		var cut = Context.Render(
 			@<text>
 				Text
-				<AntDesign.Divider Type=@DirectionVHType.Vertical/>
+				<AntDesign.Divider Type="@DividerType.Vertical" />
 				<a href="#">Link 1</a>
-				<AntDesign.Divider Type=@DirectionVHType.Vertical/>
+				<AntDesign.Divider Type="@DividerType.Vertical" />
 				<a href="#">Link 2</a>
 			</text>
 	);

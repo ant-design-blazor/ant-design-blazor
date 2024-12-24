@@ -6,39 +6,39 @@
     LabelCol="_labelCol"
     WrapperCol="_wrapperCol">
 
-    <FormItem Label="Fail" ValidateStatus=FormValidateStatus.Error Help="Should be combination of numbers & alphabets">
+    <FormItem Label="Fail" ValidateStatus="FormValidateStatus.Error" Help="Should be combination of numbers & alphabets">
         <Input @bind-Value="@context.Username" Placeholder="unavailable choice" />
     </FormItem>
 
-    <FormItem Label="Warning" ValidateStatus=FormValidateStatus.Warning>
+    <FormItem Label="Warning" ValidateStatus="FormValidateStatus.Warning">
         <Input @bind-Value="@context.Username" Placeholder="Warning">
         <Prefix>
-            <Icon Type="smile" Theme="outline" />
+            <Icon Type="@IconType.Outline.Smile" />
         </Prefix>
         </Input>
     </FormItem>
 
-    <FormItem Label="Validating" HasFeedback ValidateStatus=FormValidateStatus.Validating Help="The information is being validated...">
+    <FormItem Label="Validating" HasFeedback ValidateStatus="FormValidateStatus.Validating" Help="The information is being validated...">
         <Input @bind-Value="@context.Username" Placeholder="I'm the content is being validated" />
     </FormItem>
 
-    <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
+    <FormItem Label="Success" HasFeedback ValidateStatus="FormValidateStatus.Success">
         <Input @bind-Value="@context.Username" Placeholder="I'm the content" />
     </FormItem>
 
-    <FormItem Label="Warning" HasFeedback ValidateStatus=FormValidateStatus.Warning>
+    <FormItem Label="Warning" HasFeedback ValidateStatus="FormValidateStatus.Warning">
         <Input @bind-Value="@context.Username" Placeholder="Warning" />
     </FormItem>
 
-    <FormItem Label="Fail" HasFeedback ValidateStatus=FormValidateStatus.Error Help="Should be combination of numbers & alphabets">
+    <FormItem Label="Fail" HasFeedback ValidateStatus="FormValidateStatus.Error" Help="Should be combination of numbers & alphabets">
         <Input @bind-Value="@context.Username" Placeholder="unavailable choice" />
     </FormItem>
 
-    <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
-        <DatePicker @bind-Value="@context.DatePicker" Picker="@DatePickerType.Date" Style="width: 100%;" AllowClear />
+    <FormItem Label="Success" HasFeedback ValidateStatus="FormValidateStatus.Success">
+        <DatePicker @bind-Value="@context.DatePicker" Picker="DatePickerType.Date" Style="width: 100%;" AllowClear />
     </FormItem>
 
-    <FormItem Label="Warning" HasFeedback ValidateStatus=FormValidateStatus.Warning>
+    <FormItem Label="Warning" HasFeedback ValidateStatus="FormValidateStatus.Warning">
         <TimePicker @bind-Value="@context.TimePicker" Style="width: 100%;" />
     </FormItem>
 
@@ -46,7 +46,7 @@
         <RangePicker @bind-Value="@context.RangePicker" Style="width: 100%;" />
     </FormItem>
 
-    <FormItem Label="Error" HasFeedback ValidateStatus=FormValidateStatus.Error>
+    <FormItem Label="Error" HasFeedback ValidateStatus="FormValidateStatus.Error">
         <Select DataSource="@_options"
                 @bind-Value="@context.SelectedOption"
                 Placeholder="I'm Select"
@@ -69,7 +69,7 @@
     </FormItem>
 
     <FormItem Label="inline" Style="margin-bottom: 0; font-size: 0;">
-        <FormItem ValidateStatus=FormValidateStatus.Error Help="Please select right date" Style="display: inline-block; width: calc(50% - 12px);">
+        <FormItem ValidateStatus="FormValidateStatus.Error" Help="Please select right date" Style="display: inline-block; width: calc(50% - 12px);">
             <DatePicker @bind-Value="@context.DatePicker2" />
         </FormItem>
         <span style="display: inline-block; width: 24px; line-height: 32px; text-align: center;font-size: 12px;">-</span>
@@ -78,19 +78,19 @@
         </FormItem>
     </FormItem>
 
-    <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
+    <FormItem Label="Success" HasFeedback ValidateStatus="FormValidateStatus.Success">
         <AntDesign.InputNumber Prefix="@("RMB")" @bind-Value="@context.InputNumber" Style="width:100%;" />
     </FormItem>
 
-    <FormItem Label="Success" HasFeedback ValidateStatus=FormValidateStatus.Success>
+    <FormItem Label="Success" HasFeedback ValidateStatus="FormValidateStatus.Success">
         <AntDesign.Input @bind-Value="@context.Input" AllowClear Placeholder="with allowClear"></AntDesign.Input>
     </FormItem>
 
-    <FormItem Label="Warning" HasFeedback ValidateStatus=FormValidateStatus.Warning>
+    <FormItem Label="Warning" HasFeedback ValidateStatus="FormValidateStatus.Warning">
         <AntDesign.InputPassword @bind-Value="@context.Password" Placeholder="with input password"></AntDesign.InputPassword>
     </FormItem>
 
-    <FormItem Label="Error" HasFeedback ValidateStatus=FormValidateStatus.Error>
+    <FormItem Label="Error" HasFeedback ValidateStatus="FormValidateStatus.Error">
         <AntDesign.InputPassword @bind-Value="@context.Password" AllowClear Placeholder="with input password and allowClear"></AntDesign.InputPassword>
     </FormItem>
 

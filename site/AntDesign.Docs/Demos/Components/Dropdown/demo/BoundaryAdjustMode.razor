@@ -1,4 +1,4 @@
-﻿<Dropdown BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None">
+﻿<Dropdown BoundaryAdjustMode="TriggerBoundaryAdjustMode.None">
     <Overlay>
         <Menu>
             <MenuItem>1st menu item</MenuItem>
@@ -8,13 +8,13 @@
     </Overlay>
     <ChildContent>
         <a class="ant-dropdown-link" @onclick:preventDefault>
-            None mode: Hover me <Icon Type="down" />
+            None mode: Hover me <Icon Type="@IconType.Outline.Down" />
         </a>
     </ChildContent>
 </Dropdown>
 <p />
 
-<Dropdown BoundaryAdjustMode="@TriggerBoundaryAdjustMode.InView">
+<Dropdown BoundaryAdjustMode="TriggerBoundaryAdjustMode.InView">
     <Overlay>
         <Menu>
             <MenuItem>1st menu item</MenuItem>
@@ -24,13 +24,13 @@
     </Overlay>
     <ChildContent>
         <a class="ant-dropdown-link" @onclick:preventDefault>
-            InView mode: Hover me <Icon Type="down" />
+            InView mode: Hover me <Icon Type="@IconType.Outline.Down" />
         </a>
     </ChildContent>
 </Dropdown>
 <p />
 
-<Dropdown BoundaryAdjustMode="@TriggerBoundaryAdjustMode.InScroll">
+<Dropdown BoundaryAdjustMode="TriggerBoundaryAdjustMode.InScroll">
     <Overlay>
         <Menu>
             <MenuItem>1st menu item</MenuItem>
@@ -40,7 +40,7 @@
     </Overlay>
     <ChildContent>
         <a class="ant-dropdown-link" @onclick:preventDefault>
-            InScroll mode: Hover me <Icon Type="down" />
+            InScroll mode: Hover me <Icon Type="@IconType.Outline.Down" />
         </a>
     </ChildContent>
 </Dropdown>

@@ -2,7 +2,7 @@
 order: 2
 title:
   zh-CN: 自动调整字符大小
-  en-US: Autoset Font Size
+  en-US: Auto Font Size
 ---
 
 ## zh-CN
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-For letter type Avatar, when the letters are too long to display, the font size can be automatically adjusted according to the width of the Avatar.
+When an `Avatar` is populated with a string, the font size will change to autofit the text.

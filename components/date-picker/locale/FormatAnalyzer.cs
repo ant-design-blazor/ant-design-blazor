@@ -278,17 +278,17 @@ namespace AntDesign.Datepicker.Locale
             {
                 if (_converter is null)
                 {
-                    switch (_analyzerType.Name)
+                    switch (_analyzerType)
                     {
-                        case DatePickerType.YEAR:
+                        case DatePickerType.Year:
                             _converter = (pickerString) => TryParseYear(pickerString);
                             break;
 
-                        case DatePickerType.QUARTER:
+                        case DatePickerType.Quarter:
                             _converter = (pickerString) => TryParseQuarterString(pickerString);
                             break;
 
-                        case DatePickerType.WEEK:
+                        case DatePickerType.Week:
                             _converter = (pickerString) => TryParseWeekString(pickerString);
                             break;
 

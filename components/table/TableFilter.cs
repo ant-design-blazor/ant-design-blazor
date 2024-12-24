@@ -74,35 +74,4 @@ namespace AntDesign
 
         new public TValue Value { get => (TValue)(base.Value ?? default(TValue)); set => base.Value = value; }
     }
-
-    public enum TableFilterCompareOperator
-    {
-        Equals = 1,
-        Contains = 2,
-        StartsWith = 3,
-        EndsWith = 4,
-        GreaterThan = 5,
-        LessThan = 6,
-        GreaterThanOrEquals = 7,
-        LessThanOrEquals = 8,
-        Condition = 9,
-        NotEquals = 10,
-        IsNull = 11,
-        IsNotNull = 12,
-        NotContains = 13,
-        TheSameDateWith = 14,
-        Between = 15
-    }
-
-    public enum TableFilterCondition
-    {
-        And = 1,
-        Or = 2
-    }
-
-    public enum TableFilterType
-    {
-        List = 1,
-        FieldType = 2
-    }
 }

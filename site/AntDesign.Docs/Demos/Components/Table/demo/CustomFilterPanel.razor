@@ -9,7 +9,7 @@
             </FilterDropdown>
         </PropertyColumn>
         <PropertyColumn Property="c=>c.Age"
-                        DefaultSortOrder="@SortDirection.Descending"
+                        DefaultSortOrder="SortDirection.Descending"
                         SorterCompare="@((a,b)=> a - b)" />
         <PropertyColumn Property="c=>c.Address"
                         SorterCompare="@((a,b)=> a.Length - b.Length)"

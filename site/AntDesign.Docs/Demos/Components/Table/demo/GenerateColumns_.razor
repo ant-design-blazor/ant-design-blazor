@@ -86,10 +86,10 @@
             @<span>
                 @foreach (var tag in cellData.FieldValue)
                 {
-                    var color = tag.Length > 5 ? "geekblue" : "green";
+                    var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
                     if (tag == "loser")
                     {
-                        color = "volcano";
+                        color = TagColor.Volcano;
                     }
                     <Tag Color="@color">@tag</Tag>
                 }

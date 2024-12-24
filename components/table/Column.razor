@@ -50,7 +50,7 @@ else if (IsHeader && HeaderColSpan != 0)
     var headerCellAttributes = OnHeaderCell?.Invoke();
     <CascadingValue Name="IsHeader" Value="false" IsFixed>
         <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)" title="@(Ellipsis ? Title : false)" @attributes="headerCellAttributes">
-            @if (IsFiexedEllipsis)
+            @if (IsFixedEllipsis)
             {
                 <span class="ant-table-cell-content">
                     @HeaderCellContent()
@@ -111,7 +111,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             {
                 @Table.GroupTitleTemplate(RowData)
             }
-            else if (IsFiexedEllipsis)
+            else if (IsFixedEllipsis)
             {
                 <span class="ant-table-cell-content">
                     @CellContent(cellData)
@@ -236,7 +236,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             <Unbound>
                 <span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (IsFiltered ? " active" : ""))"
                       @onclick="() => { if (_filterOpened) FilterConfirm(); else _filterOpened = true; }">
-                    <Icon Type="filter" Theme="fill" />
+                    <Icon Type="@IconType.Outline.Filter" />
                 </span>
             </Unbound>
             <Overlay>
@@ -334,8 +334,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                         @if (filterCount > 1)
                         {
                             <SpaceItem>
-                                <Button Size="small" Icon="close" Type="primary" OnClick="()=> RemoveFilter(filter)">
-                                </Button>
+                                <Button Size="@ButtonSize.Small" Icon="close" Type="@ButtonType.Primary" OnClick="()=> RemoveFilter(filter)" />
                             </SpaceItem>
                         }
                     </Space>
@@ -344,15 +343,14 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             }
         }
         <div class="ant-table-filter-dropdown-btns">
-            <Button Size="small" Type="link" OnClick="ResetFilters">
+            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" OnClick="ResetFilters">
                 @Table?.Locale.FilterReset
             </Button>
             @if (_columnFilterType == TableFilterType.FieldType)
             {
-                <Button Size="small" Icon="plus" Type="primary" OnClick="AddFilter">
-                </Button>
+                <Button Size="@ButtonSize.Small" Icon="plus" Type="@ButtonType.Primary" OnClick="AddFilter" />
             }
-            <Button Size="small" Type="primary" OnClick="() => FilterConfirm()">
+            <Button Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="() => FilterConfirm()">
                 @Table?.Locale.FilterConfirm
             </Button>
         </div>

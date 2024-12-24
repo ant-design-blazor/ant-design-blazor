@@ -1,22 +1,22 @@
 ﻿<div>
-    <Button Type="@ButtonType.Primary" Loading>Loading</Button>
-    <Button Type="@ButtonType.Primary" Size="@ButtonSize.Small" Loading>Loading</Button>
-    <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Poweroff" Loading />
+    <Button Type="ButtonType.Primary" Loading>Loading</Button>
+    <Button Type="ButtonType.Primary" Size="ButtonSize.Small" Loading>Loading</Button>
+    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Poweroff" Loading />
     
     <br />
     
-    <Button Type="@ButtonType.Primary"
+    <Button Type="ButtonType.Primary"
             AutoLoading
             OnClick="EnterNoIconLoading">
         Click me!
     </Button>
-    <Button Type="@ButtonType.Primary"
+    <Button Type="ButtonType.Primary"
             Icon="@IconType.Outline.Poweroff"
             AutoLoading
             OnClick="EnterWithIconLoading">
         Click me!
     </Button>
-    <Button Type="@ButtonType.Primary"
+    <Button Type="ButtonType.Primary"
             Icon="@IconType.Outline.Poweroff"
             Loading="_onlyIconLoading"
             OnClick="EnterOnlyIconLoading" />

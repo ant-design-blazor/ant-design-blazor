@@ -1,4 +1,4 @@
-<Select Mode="tags"
+<Select Mode="SelectMode.Tags"
         Placeholder="Please select"
 		@bind-Values="@_selectedValues"
 		TItemValue="string"
@@ -6,9 +6,9 @@
 		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
 		EnableSearch>
 		<SelectOptions>
-			@foreach(var item in _items)
+			@foreach (var item in _items)
 			{
-				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
+				<SelectOption TItemValue="string" TItem="string" Value="@item" Label="@item" />
 			}
 		</SelectOptions>
 </Select>

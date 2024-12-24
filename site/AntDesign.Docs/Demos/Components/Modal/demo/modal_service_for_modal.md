@@ -29,7 +29,7 @@ title:
         <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
     </FormItem>
     <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
-        <Button Type="@ButtonType.Primary" HtmlType="submit">
+        <Button Type="ButtonType.Primary" HtmlType="submit">
             Submit
         </Button>
     </FormItem>
@@ -88,7 +88,7 @@ Template code: ModalTemplateDemo.razor
         <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
     </FormItem>
     <FormItem WrapperCol="new ColLayoutParam{ Offset = 8, Span = 16 }">
-        <Button Type="@ButtonType.Primary" HtmlType="submit">
+        <Button Type="ButtonType.Primary" HtmlType="submit">
             Submit
         </Button>
     </FormItem>

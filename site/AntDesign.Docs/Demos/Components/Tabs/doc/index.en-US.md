@@ -34,24 +34,24 @@ Keyboard navigation is available when the focus is on the tab.
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | ActiveKey | Current TabPane's key£¬support two-way binding. | string | - |
-| Animated | Whether to change tabs with animation. Only works while `tabPosition="top"\|"bottom"` | boolean | `false` |
-| DefaultActiveKey | Initial active TabPane's key, if `activeKey` is not set. | string | - |
-| HideAdd | Hide plus icon or not. Only works while `type="editable-card"` | boolean | `false` |
-| Size | preset tab bar size | `large` \| `default` \| `small` | `default` |
+| Animated | Whether to change tabs with animation. Only works while `TabPosition="TabPosition.Top"\|"TabPosition.Bottom"` | boolean | `false` |
+| DefaultActiveKey | Initial active TabPane's key, if `ActiveKey` is not set. | string | - |
+| HideAdd | Hide plus icon or not. Only works while `Type="TabType.EditableCard"` | boolean | `false` |
+| Size | Preset tab bar size | TabSize | `TabSize.Default` |
 | TabBarExtraContent | Extra content in tab bar | RenderFargment | - |
 | TabBarExtraContentLeft | Extra content in the left of tab bar | RenderFargment | - |
 | TabBarExtraContentRight | Extra content in the right of tab bar | RenderFargment | - |
 | TabBarGutter | The gap between tabs | number | - |
 | TabBarStyle | Tab bar style object | object | - |
-| TabPosition | Position of tabs | `top` \| `right` \| `bottom` \| `left` | `top` |
-| Type | Basic style of tabs | `line` \| `card` \| `editable-card` | `line` |
+| TabPosition | Position of tabs | TabPosition | `TabPosition.Top` |
+| Type | Basic style of tabs | TabType | `TabType.Line` |
 | OnChange | Callback executed when active tab is changed | EventCallback(activeKey) {} | - |
-| OnEdit | Callback executed when tab is added or removed. Only works while `type="editable-card"` | (targetKey, action): void | - |
-| OnClose | Callback executed when tab is removed. Only works while `type="editable-card"` | EventCallback(targetKey) {} | - |
+| OnEdit | Callback executed when tab is added or removed. Only works while `Type="TabType.EditableCard"` | `Func<string, string, Task<bool>>` | - |
+| OnClose | Callback executed when tab is removed. Only works while `Type="TabType.EditableCard"` | EventCallback(targetKey) {} | - |
 | OnNextClick | Callback executed when next button is clicked | EventCallback | - |
 | OnPrevClick | Callback executed when prev button is clicked | EventCallback | - |
 | OnTabClick | Callback executed when tab is clicked | EventCallback(key: string, event: MouseEvent) | - |
-| Draggable | make tabs draggable. | bool | false | 
+| Draggable | Make tabs draggable | bool | false | 
 
 ### Tabs.TabPane
 

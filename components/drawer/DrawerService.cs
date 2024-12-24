@@ -102,7 +102,7 @@ namespace AntDesign
             string title = null,
             string width = "256",
             bool mask = true,
-             string placement = "right") where TComponent : FeedbackComponent<TComponentOptions, TResult>
+             DrawerPlacement placement = DrawerPlacement.Right) where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             var config = new DrawerOptions()
             {

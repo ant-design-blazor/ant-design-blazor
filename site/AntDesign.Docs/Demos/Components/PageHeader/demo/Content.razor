@@ -22,15 +22,15 @@
 
     <!--tags-->
     <PageHeaderTags>
-        <Tag Color="@PresetColor.Blue.ToString()">Running</Tag>
+        <Tag Color="TagColor.Blue">Running</Tag>
     </PageHeaderTags>
 
     <!--extra-->
     <PageHeaderExtra>
         <Button>Operation</Button>
         <Button>Operation</Button>
-        <Button Type="@ButtonType.Primary">Primary</Button>
-        <Dropdown Placement="@Placement.BottomRight">
+        <Button Type="ButtonType.Primary">Primary</Button>
+        <Dropdown Placement="Placement.BottomRight">
             <Overlay>
                 <Menu>
                     <MenuItem>
@@ -45,7 +45,7 @@
                 </Menu>
             </Overlay>
             <ChildContent>
-                <Button><Icon Type="ellipsis" /></Button>
+                <Button><Icon Type="@IconType.Outline.Ellipsis" /></Button>
             </ChildContent>
         </Dropdown>
     </PageHeaderExtra>

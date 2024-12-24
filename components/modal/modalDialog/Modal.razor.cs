@@ -163,7 +163,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="ButtonType.Primary" />
         [Parameter]
-        public string OkType { get; set; } = ButtonType.Primary;
+        public ButtonType OkType { get; set; } = ButtonType.Primary;
 
         #region title
 

@@ -2,9 +2,9 @@
     <div style="height:200px;overflow:hidden;position:relative;border:1px solid #ebedf0; border-radius:2px;padding:48px;text-align:center;background:#fafafa">
         Render in this
         <div style="margin-top: 16px">
-            <Button Type="primary" @onclick="_=>open()">Open</Button>
+            <Button Type="ButtonType.Primary" OnClick="open">Open</Button>
         </div>
-        <Drawer Style="position:absolute" Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
+        <Drawer Style="position:absolute" Visible="visible" Placement="DrawerPlacement.Right" Title='("Basic Drawer")' OnClose="close">
 
             <p>Some contents...</p>
             <p>Some contents...</p>
@@ -13,15 +13,11 @@
     </div>
 </div>
 
-@code{
-
+@code {
     bool visible = false;
-
-
 
     void open()
     {
-
         this.visible = true;
     }
 

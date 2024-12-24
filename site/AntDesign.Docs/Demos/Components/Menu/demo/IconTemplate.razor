@@ -1,19 +1,19 @@
 ﻿@inject IconService iconService
 
 <div style="width: 256px;">
-    <Button Type="primary" OnClick="ToggleCollapsed" Style="margin-bottom: 16px">
+    <Button Type="ButtonType.Primary" OnClick="ToggleCollapsed" Style="margin-bottom: 16px">
         @if (collapsed)
         {
-            <Icon Type="menu-unfold" Theme="outline"></Icon>
+            <Icon Type="@IconType.Outline.MenuUnfold" />
         }
         else
         {
-            <Icon Type="menu-fold" Theme="outline"></Icon>
+            <Icon Type="@IconType.Outline.MenuFold" />
         }
     </Button>
     <Menu Theme="MenuTheme.Dark"
-          Mode=MenuMode.Inline
-          InlineCollapsed=collapsed>
+          Mode="MenuMode.Inline"
+          InlineCollapsed>
         <MenuItem Key="0">
             <IconTemplate>
                 <svg viewBox="0 0 1133 1024" width="1em" height="1em" fill="currentColor"><path d="M1016.452929 325.008051a563.029686 563.029686 0 0 1-552.102137 474.312222 408.956599 408.956599 0 0 1-80.701003-4.895699 247.31566 247.31566 0 0 1-205.677843-233.140565 240.162284 240.162284 0 0 1 480.256301-3.388954c1.009372 39.804368-16.237724 74.72279-51.682775 75.727285-37.863643 0-55.617863-27.014112-55.617864-63.429525v-101.181016a61.971544 61.971544 0 0 0-61.493676-62.025182H404.612545a147.641388 147.641388 0 1 0 109.056069 246.028345l2.969601-4.422708 2.964726 4.905451a104.443189 104.443189 0 0 0 89.063675 42.413131 117.721064 117.721064 0 0 0 109.056068-123.050744 320.200125 320.200125 0 0 0-8.7869-78.209268A299.651845 299.651845 0 0 0 116.483145 559.543208a303.406514 303.406514 0 0 0 295.711881 299.651845s22.215938 2.018744 47.260068 1.443353a639.542039 639.542039 0 0 0 342.967072-102.322045c1.453106-1.009372 2.906211 1.009372 1.940725 2.486859a503.413344 503.413344 0 0 1-392.158113 160.363377A353.875117 353.875117 0 0 1 52.029619 558.075474a366.216763 366.216763 0 0 1 147.105007-293.288413A358.702549 358.702549 0 0 1 410.746797 194.930713h113.839614a320.302525 320.302525 0 0 0 236.290586-104.321285 4.422708 4.422708 0 0 1 2.403963-1.37021 4.515355 4.515355 0 0 1 4.832308 2.106515 4.57387 4.57387 0 0 1 0.629029 2.71604 321.107097 321.107097 0 0 1-49.673783 143.642909 4.354441 4.354441 0 0 0-0.536382 2.462478 4.442212 4.442212 0 0 0 2.930593 3.827812 4.412955 4.412955 0 0 0 2.506363 0.131657 344.210502 344.210502 0 0 0 239.313826-197.3298 6.29029 6.29029 0 0 1 2.213792-2.130896 6.056232 6.056232 0 0 1 5.948956 0 6.212271 6.212271 0 0 1 2.208916 2.130896 436.224273 436.224273 0 0 1 42.793475 278.211222zM411.902454 467.748865a88.551675 88.551675 0 1 0 88.537046 88.537046V473.629554a6.382937 6.382937 0 0 0-6.061108-6.061108l-82.475938 0.180419z" p-id="3785"></path></svg>
@@ -22,7 +22,7 @@
                 <span>Home</span>
             </ChildContent>
         </MenuItem>
-        <MenuItem Key="1" Icon="pie-chart">
+        <MenuItem Key="1" Icon="@IconType.Outline.PieChart">
             <IconTemplate>
                 <IconFont Type="icon-c-sharp-l" />
             </IconTemplate>
@@ -30,13 +30,13 @@
                 Option 1
             </ChildContent>
         </MenuItem>
-        <MenuItem Key="2" Icon="desktop">
+        <MenuItem Key="2" Icon="@IconType.Outline.Desktop">
             Option 2
         </MenuItem>
-        <MenuItem Key="3" Icon="container">
+        <MenuItem Key="3" Icon="@IconType.Outline.Container">
             Option 3
         </MenuItem>
-        <SubMenu Key="sub1" TitleTemplate=@sub1Title>
+        <SubMenu Key="sub1" TitleTemplate="@sub1Title">
             <MenuItem Key="5">
                 <IconTemplate>
                     <IconFont Type="icon-csharp" />
@@ -55,7 +55,7 @@
 
     RenderFragment sub1Title =
     @<span>
-        <Icon Type="mail" Theme="outline"></Icon>
+        <Icon Type="@IconType.Outline.Mail" />
         <span>Navigation One</span>
     </span>;
 

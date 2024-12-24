@@ -1,7 +1,7 @@
 ﻿<div>
     <RadioGroup @bind-Value="mode" Style="margin-bottom: 8px;">
-        <Radio RadioButton Value="@TabPosition.Top">Horizontal</Radio>
-        <Radio RadioButton Value="@TabPosition.Left">Vertical</Radio>
+        <Radio RadioButton Value="TabPosition.Top">Horizontal</Radio>
+        <Radio RadioButton Value="TabPosition.Left">Vertical</Radio>
     </RadioGroup>
     <Tabs DefaultActiveKey="0" TabPosition="@mode" Style="height: 220px;">
         @for (int i = 0; i < 30; i++)

@@ -16,7 +16,7 @@
         </Mentions>
     </FormItem>
     <FormItem Label="Another Comment">
-        <Mentions @bind-Value=@model.AnotherComment>
+        <Mentions @bind-Value="@model.AnotherComment">
             <ChildContent>
                 <MentionsOption Value="afc163">afc163</MentionsOption>
                 <MentionsOption Value="zombieJ">zombieJ</MentionsOption>
@@ -34,7 +34,7 @@
         </Mentions>
     </FormItem>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit">
+        <Button Type="ButtonType.Primary" HtmlType="submit">
             Submit
         </Button>
     </FormItem>

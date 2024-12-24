@@ -20,37 +20,38 @@ Properties that shared by all types.
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| type | to set the type, options: `line` `circle` `dashboard` | string | `line` |
-| format | template function of the content | function(percent, successPercent) | `percent => percent + '%'` |
-| percent | to set the completion percentage | number | 0 |
-| showInfo | whether to display the progress value and the status icon | boolean | true |
-| status | to set the status of the Progress, options: `success` `exception` `normal` `active`(line only) | string | - |
-| strokeLinecap | to set the style of the progress linecap | `round` \| `square` | `round` |
-| strokeColor | color of progress bar | string | - |
-| successPercent | segmented success percent | number | 0 |
-| trailColor | color of unfilled part as hex string. | string | - |
+| Size | Size of the progress bar | ProgressSize | `ProgressSize.Default` |
+| Type | Set the type of progress | ProgressType | `ProgressType.Line` |
+| Format | Template expression for content | Func<double, string> | `percent => percent + '%'` |
+| Percent | Completion percentage | number | 0 |
+| ShowInfo | Display the progress value and the status icon | boolean | true |
+| Status | Status of the progress | ProgressStatus | `ProgressStatus.Normal` |
+| StrokeLinecap | Set the style of the progress linecap | ProgressStrokeLinecap | `ProgressStrokeLinecap.Round` |
+| StrokeColor | Color of progress bar | string | - |
+| SuccessPercent | Segmented success percent | number | 0 |
+| TrailColor | Color of unfilled part as hex string. | string | - |
 
-### `type="line"`
-
-| Property | Description | Type | Default |
-| --- | --- | --- | --- |
-| strokeWidth | to set the width of the progress bar, unit: `px` | number | 10 |
-| strokeColor | color of progress bar, render `linear-gradient` when passing an object | string \| { from: string; to: string; direction: string } | - |
-| steps | the total step count | number | - |
-
-### `type="circle"`
+### `Type="ProgressType.Line"`
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| width | to set the canvas width of the circular progress, unit: `px` | number | 132 |
-| strokeWidth | to set the width of the circular progress, unit: percentage of the canvas width | number | 6 |
-| strokeColor | color of circular progress, render `linear-gradient` when passing an object | string \| object | - |
+| StrokeWidth | to set the width of the progress bar, unit: `px` | number | 10 |
+| StrokeColor | color of progress bar, render `linear-gradient` when passing an object | string \| { from: string; to: string; direction: string } | - |
+| Steps | the total step count | number | - |
 
-### `type="dashboard"`
+### `Type="ProgressType.Circle"`
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| width | to set the canvas width of the dashboard progress, unit: `px` | number | 132 |
-| strokeWidth | to set the width of the dashboard progress, unit: percentage of the canvas width | number | 6 |
-| gapDegree | the gap degree of half circle, 0 ~ 360 | number | 0 |
-| gapPosition | the gap position, options: `top` `bottom` `left` `right` | string | `top` |
+| Width | to set the canvas width of the circular progress, unit: `px` | number | 132 |
+| WtrokeWidth | to set the width of the circular progress, unit: percentage of the canvas width | number | 6 |
+| StrokeColor | color of circular progress, render `linear-gradient` when passing an object | string \| object | - |
+
+### `Type="ProgressType.Dashboard"`
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| Width | Set the canvas width of the dashboard progress, unit: `px` | number | 132 |
+| StrokeWidth | Set the width of the dashboard progress, unit: percentage of the canvas width | number | 6 |
+| MapDegree | The gap degree of half circle, 0 ~ 360 | number | 0 |
+| GapPosition | Set the gap position | ProgressGapPosition | `ProgressGapPosition.Top` |

@@ -2,7 +2,7 @@
     @if (prev != null)
     {
         <NavLink class="prev-page" href="@($"{MainLayout?.CurrentLanguage}/{prev.Url}")">
-            <Icon Type="left" Class="footer-nav-icon-before"/>
+            <Icon Type="@IconType.Outline.Left" Class="footer-nav-icon-before"/>
             <span>
                 @prev.Title
             </span>
@@ -10,19 +10,19 @@
             {
                 <span class="chinese">@prev.SubTitle</span>
             }
-            <Icon Type="right" Class="footer-nav-icon-after"/>
+            <Icon Type="@IconType.Outline.Right" Class="footer-nav-icon-after"/>
         </NavLink>
     }
     @if (next != null)
     {
         <NavLink class="next-page" href="@($"{MainLayout?.CurrentLanguage}/{next.Url}")">
-            <Icon Type="left" Class="footer-nav-icon-before"/>
+            <Icon Type="@IconType.Outline.Left" Class="footer-nav-icon-before"/>
             <span>@next.Title</span>
             @if (next.SubTitle != null)
             {
                 <span class="chinese">@next.SubTitle</span>
             }
-            <Icon Type="right" Class="footer-nav-icon-after"/>
+            <Icon Type="@IconType.Outline.Right" Class="footer-nav-icon-after"/>
         </NavLink>
     }
 </section>

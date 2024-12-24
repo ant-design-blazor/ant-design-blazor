@@ -93,7 +93,7 @@ namespace AntDesign
         /// Fix a column
         /// </summary>
         [Parameter]
-        public string Fixed { get; set; }
+        public ColumnFixPlacement? Fixed { get; set; }
 
         /// <summary>
         /// Content of the column
@@ -157,10 +157,10 @@ namespace AntDesign
         {
             ClassMapper
                 .Add("ant-table-cell")
-                .If("ant-table-cell-fix-right", () => Context.Columns.Any(x => x.Fixed == "right" && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex))
-                .If("ant-table-cell-fix-left", () => Context.Columns.Any(x => x.Fixed == "left" && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex))
-                .If($"ant-table-cell-fix-right-first", () => Context?.Columns.FirstOrDefault(x => x.Fixed == "right") is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
-                .If($"ant-table-cell-fix-left-last", () => Context?.Columns.LastOrDefault(x => x.Fixed == "left") is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
+                .If("ant-table-cell-fix-right", () => Context.Columns.Any(x => x.Fixed == ColumnFixPlacement.Right && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex))
+                .If("ant-table-cell-fix-left", () => Context.Columns.Any(x => x.Fixed == ColumnFixPlacement.Left && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex))
+                .If($"ant-table-cell-fix-right-first", () => Context?.Columns.FirstOrDefault(x => x.Fixed == ColumnFixPlacement.Right) is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
+                .If($"ant-table-cell-fix-left-last", () => Context?.Columns.LastOrDefault(x => x.Fixed == ColumnFixPlacement.Left) is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
                 .If($"ant-table-cell-with-append", () => IsBody && Table.TreeMode && Table.TreeExpandIconColumnIndex >= ColIndex && Table.TreeExpandIconColumnIndex < ColEndIndex)
                 .If($"ant-table-cell-ellipsis", () => Ellipsis)
                 ;
@@ -180,11 +180,11 @@ namespace AntDesign
 
                 Context?.AddColumn(this);
 
-                if (Fixed == "left")
+                if (Fixed == ColumnFixPlacement.Left)
                 {
                     Table?.HasFixLeft();
                 }
-                else if (Fixed == "right")
+                else if (Fixed == ColumnFixPlacement.Right)
                 {
                     Table?.HasFixRight();
                 }
@@ -247,14 +247,14 @@ namespace AntDesign
             }
 
             Fixed ??= Context.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
-            if (string.IsNullOrWhiteSpace(Fixed))
+            if (!Fixed.HasValue)
             {
                 return cssStyleBuilder.Build();
             }
 
             var fixedWidths = Array.Empty<string>();
 
-            if (Fixed == "left" && Context?.Columns.Count >= ColIndex)
+            if (Fixed == ColumnFixPlacement.Left && Context?.Columns.Count >= ColIndex)
             {
                 for (int i = 0; i < ColIndex; i++)
                 {
@@ -264,7 +264,7 @@ namespace AntDesign
                     }
                 }
             }
-            else if (Fixed == "right")
+            else if (Fixed == ColumnFixPlacement.Right)
             {
                 for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
                 {
@@ -275,7 +275,7 @@ namespace AntDesign
                 }
             }
 
-            if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
+            if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == ColumnFixPlacement.Right)
             {
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
@@ -287,9 +287,13 @@ namespace AntDesign
                 _ => "0px"
             };
 
-            cssStyleBuilder
-                .AddStyle("position", "sticky")
-                .AddStyle(Fixed, fixedWidth);
+
+            cssStyleBuilder.AddStyle("position", "sticky");
+
+            if (Fixed == ColumnFixPlacement.Left)
+                cssStyleBuilder.AddStyle("left", fixedWidth);
+            else if (Fixed == ColumnFixPlacement.Right)
+                cssStyleBuilder.AddStyle("right", fixedWidth);
 
             return cssStyleBuilder.Build();
         }

@@ -10,7 +10,7 @@
         <Input @bind-Value="@context.ClassName" />
     </FormItem>
     <FormItem Label="Students" Name="@nameof(context.Students)" Rules="[new(){ Min=1 }]">
-        <Button OnClick="addRow" Type="primary" Style="margin-bottom:16px" Size="small">
+        <Button OnClick="addRow" Type="ButtonType.Primary" Style="margin-bottom:16px" Size="ButtonSize.Small">
             Add a row
         </Button>
         <Table DataSource="context.Students" TItem="Student" Context="row" Size="TableSize.Small" HidePagination Bordered>
@@ -27,7 +27,7 @@
         </Table>
     </FormItem>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit">
+        <Button Type="ButtonType.Primary" HtmlType="submit">
             Submit
         </Button>
     </FormItem>

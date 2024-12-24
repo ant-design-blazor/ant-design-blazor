@@ -9,7 +9,7 @@ Multiple: <Switch @bind-Value="multiple"></Switch>
         DataSource="data"
         @bind-Open="selectOpen"
         @bind-Values="@selectedRows"
-        Mode="@(multiple?"multiple":"default")"
+        Mode="@(multiple ? SelectMode.Multiple : SelectMode.Default)"
         DropdownMatchSelectWidth="false"
         EnableSearch
         OnSearch="OnSearch">

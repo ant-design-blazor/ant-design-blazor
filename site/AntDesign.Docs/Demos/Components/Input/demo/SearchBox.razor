@@ -1,9 +1,9 @@
-﻿<Space Direction="@DirectionVHType.Vertical">
+﻿<Space Direction="SpaceDirection.Vertical">
     <SpaceItem>
         <Search Placeholder="input search text" WrapperStyle="width: 200px;" ClassicSearchIcon />
     </SpaceItem>
     <SpaceItem>
-        <Search Placeholder="input search text" WrapperStyle="width: 200px;" AllowClear/>
+        <Search Placeholder="input search text" WrapperStyle="width: 200px;" AllowClear />
     </SpaceItem>
     <SpaceItem>
         <Search AddonBefore="@("https://".ToRenderFragment())" Placeholder="input search text" AllowClear Style="width: 304px; " />
@@ -12,13 +12,13 @@
         <Search Placeholder="input search text" EnterButton="true"/>
     </SpaceItem>
     <SpaceItem> 
-        <Search Placeholder="input search text" AllowClear EnterButton="@("Search")" Size="large"/>
+        <Search Placeholder="input search text" AllowClear EnterButton="@("Search")" Size="InputSize.Large"/>
     </SpaceItem>
     <SpaceItem> 
-        <Search Placeholder="input search text" EnterButton="@("Search")" Size="large" Suffix="@_audioIcon"/>
+        <Search Placeholder="input search text" EnterButton="@("Search")" Size="InputSize.Large" Suffix="@_audioIcon"/>
     </SpaceItem>
 </Space>
 
 @code {
-    RenderFragment _audioIcon =@<Icon Type="audio" Theme="outline" Style="color: #1890ff"/>;
+    RenderFragment _audioIcon =@<Icon Type="@IconType.Outline.Audio" Style="color: #1890ff"/>;
 }

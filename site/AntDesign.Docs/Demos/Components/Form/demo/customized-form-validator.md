@@ -2,7 +2,7 @@
 order: 7
 title:
   zh-CN: 自定义表单验证器
-  en-US: Customized form validator
+  en-US: Custom Validator
 ---
 
 ## zh-CN
@@ -15,8 +15,8 @@ title:
 
 ## en-US
 
-Setting a custom validator using the Form Validator property or the `<Validator>` element overrides the built-in validator. When validation is not required, it can be set to NULL to improve performance.
+Setting a custom validator using the `Validator` property or the `<Validator>` element overrides the built-in validator. When validation is not required, it can be set to `null` to improve performance.
 
 Note: When using the `<Validator>` element to set the validator, you need to wrap the other components within the Form with `<ChildContent>`.
 
-For custom validator development, see document: [ASP.NET Core Blazor forms and validation - Validator components](https://docs.microsoft.com/en-US/aspnet/core/blazor/forms-validation?view=aspnetcore-5.0&WT.mc_id=DT-MVP-5003987#validator-components)
+For custom validator development, reference the official Blazor documentation: [ASP.NET Core Blazor forms and validation - Validator components](https://docs.microsoft.com/en-US/aspnet/core/blazor/forms-validation?view=aspnetcore-5.0&WT.mc_id=DT-MVP-5003987#validator-components)

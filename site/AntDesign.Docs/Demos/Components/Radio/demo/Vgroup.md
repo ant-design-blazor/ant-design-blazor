@@ -1,8 +1,8 @@
 ---
 order: 3
 title:
-  zh-CN: Radio.Group 垂直
-  en-US: Vertical Radio.Group
+  zh-CN: Radio Group 垂直
+  en-US: Vertical Radio Group
 ---
 
 ## zh-CN

@@ -80,7 +80,7 @@ namespace AntDesign
         /// Type of Alert styles, options: success, info, warning, error
         /// </summary>
         [Parameter]
-        public string Type { get; set; }
+        public AlertType? Type { get; set; }
 
         /// <summary>
         /// Callback when Alert is closed.
@@ -124,7 +124,16 @@ namespace AntDesign
 
         private bool IsShowIcon => (Banner && ShowIcon == null) ? true : ShowIcon == true;
 
-        private string CalcType => Type ?? (Banner ? AlertType.Warning : AlertType.Info);
+        private AlertType? CalcType => Type ?? (Banner ? AlertType.Warning : AlertType.Info);
+
+        private string _cssMap => CalcType switch
+        {
+            AlertType.Success => "success",
+            AlertType.Info => "info",
+            AlertType.Warning => "warning",
+            AlertType.Error => "error",
+            _ => "warning",
+        };
 
         /// <summary>
         /// Sets the default classes.
@@ -134,7 +143,7 @@ namespace AntDesign
             string prefixName = "ant-alert";
             ClassMapper
                 .Add("ant-alert")
-                .GetIf(() => $"{prefixName}-{CalcType}", () => !string.IsNullOrEmpty(CalcType))
+                .GetIf(() => $"{prefixName}-{_cssMap}", () => CalcType.HasValue)
                 .If($"{prefixName}-no-icon", () => !IsShowIcon)
                 .If($"{prefixName}-closable", () => Closable)
                 .If($"{prefixName}-banner", () => Banner)

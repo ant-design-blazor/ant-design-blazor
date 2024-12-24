@@ -1,17 +1,17 @@
 <div>
-    <Timeline Mode="@TimelineMode.Right">
+    <Timeline Mode="TimelineMode.Right">
         <TimelineItem>Create a services site 2015-09-01</TimelineItem>
         <TimelineItem>Solve initial network problems 2015-09-01</TimelineItem>
-        <TimelineItem Dot="dotTemplate" Color="red">
+        <TimelineItem Dot="dotTemplate" Color="TimelineDotColor.Red">
             Technical testing 2015-09-01
         </TimelineItem>
-        <TimelineItem Color="red">Network problems being solved 2015-09-01</TimelineItem>
+        <TimelineItem Color="TimelineDotColor.Red">Network problems being solved 2015-09-01</TimelineItem>
     </Timeline>,
 </div>
 
 @code{
     RenderFragment dotTemplate =
     @<Template>
-        <Icon Type="clock-circle" Theme="outline" Style="font-size: 16px;" />
+        <Icon Type="@IconType.Outline.ClockCircle" Style="font-size: 16px;" />
     </Template>;
 }

@@ -25,7 +25,7 @@
             .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });               
 
         var cut = Render<AntDesign.Select<string, string>>(
-        @<AntDesign.Select Mode="tags"
+        @<AntDesign.Select Mode="SelectMode.Tags"
 			TItemValue="string"
 			TItem="string"
             SearchDebounceMilliseconds="0"
@@ -61,7 +61,7 @@
 
 		IEnumerable<string> values = new string[] { "1", "2", "3", "4", "5", "6" };
         var cut = Render<AntDesign.Select<string, string>>(
-			@<AntDesign.Select Mode="tags"        		
+			@<AntDesign.Select Mode="SelectMode.Tags"        		
 				TItemValue="string"
 				TItem="string"						
 				MaxTagCount="2"
@@ -104,7 +104,7 @@
         var datasource = new List<string>();
 
         var systemUnderTest = Render<Select<string, string>>(
-            @<AntDesign.Select Mode="tags" TItemValue="string" TItem="string" DataSource="datasource" EnableSearch SearchDebounceMilliseconds="0"/>
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string" DataSource="datasource" EnableSearch SearchDebounceMilliseconds="0"/>
         );
 
         var input = systemUnderTest.Find("input.ant-select-selection-search-input");
