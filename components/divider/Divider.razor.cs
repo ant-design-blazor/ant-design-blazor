@@ -41,18 +41,18 @@ namespace AntDesign
         public bool Plain { get; set; } = false;
 
         /// <summary>
-        /// Type of divider - 'horizontal' | 'vertical'
+        /// Type of divider - `DividerType.Horizontal` | `DividerType.Vertical`
         /// </summary>
-        /// <default value="DirectionVHType.Horizontal" />
+        /// <default value="DividerType.Horizontal" />
         [Parameter]
-        public DirectionVHType Type { get; set; } = DirectionVHType.Horizontal;
+        public DividerType Type { get; set; } = DividerType.Horizontal;
 
         /// <summary>
-        /// Content/Text orientation - 'left' | 'right' | 'center'. Ignored when not using `Text` or `ChildContent`
+        /// Content/Text orientation - `DividerOrientation.Left` | `DividerOrientation.Right` | `DividerOrientation.Center`. Ignored when not using `Text` or `ChildContent`
         /// </summary>
-        /// <default value="center" />
+        /// <default value="DividerOrientation.Center" />
         [Parameter]
-        public string Orientation { get; set; } = "center";
+        public DividerOrientation Orientation { get; set; } = DividerOrientation.Center;
 
         /// <summary>
         /// Whether to style the line as dashed or not.
@@ -69,9 +69,9 @@ namespace AntDesign
                 .Add(prefixCls)
                 .Add(hashId)
                 .If(prefixCls, () => RTL)
-                .Get(() => $"{prefixCls}-{this.Type.Name.ToLowerInvariant()}")
+                .Get(() => $"{prefixCls}-{this.Type.ToString().ToLowerInvariant()}")
                 .If($"{prefixCls}-with-text", () => Text != null || ChildContent != null)
-                .GetIf(() => $"{prefixCls}-with-text-{this.Orientation.ToLowerInvariant()}", () => Text != null || ChildContent != null)
+                .GetIf(() => $"{prefixCls}-with-text-{this.Orientation.ToString().ToLowerInvariant()}", () => Text != null || ChildContent != null)
                 .If($"{prefixCls}-plain", () => Plain && (Text != null || ChildContent != null))
                 .If($"{prefixCls}-dashed", () => Dashed)
                 ;

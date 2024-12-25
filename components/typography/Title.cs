@@ -15,7 +15,7 @@ namespace AntDesign
         private int _level = DefaultLevel;
 
         /// <summary>
-        /// Level of heading (ex: h1 would be 1). Must be between 1 and 4, inclusive. If outside that range it will default back to 1.
+        /// Level of heading (ex: h1 would be 1). Must be between 1 and 5, inclusive. If outside that range it will default back to 1.
         /// </summary>
         /// <default value="1"/>
         [Parameter]
@@ -27,7 +27,7 @@ namespace AntDesign
             }
             set
             {
-                _level = value < 1 || value > 4
+                _level = value < 1 || value > 5
                     ? DefaultLevel
                     : value;
             }

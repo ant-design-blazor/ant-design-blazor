@@ -4,9 +4,9 @@
 
 namespace AntDesign
 {
-    public static class StepsLabelPlacement
+    public enum StepsLabelPlacement
     {
-        public const string Horizontal = "horizontal";
-        public const string Vertical = "vertical";
+        Horizontal,
+        Vertical,
     }
 }

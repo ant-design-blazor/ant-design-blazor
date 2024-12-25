@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -38,12 +39,12 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg", Title = "Button", SubTitle = "按钮")]
     public partial class Button : AntDomComponentBase
     {
-        private string _formSize;
+        private FormSize? _formSize;
 
         private const int RemoveAnimationAfter = 500;
 
         [CascadingParameter(Name = "FormSize")]
-        public string FormSize
+        public FormSize? FormSize
         {
             get
             {
@@ -52,7 +53,18 @@ namespace AntDesign
             set
             {
                 _formSize = value;
-                Size = value;
+
+                if (_formSize.HasValue)
+                {
+                    Size = _formSize.Value switch
+                    {
+                        AntDesign.FormSize.Large => ButtonSize.Large,
+                        AntDesign.FormSize.Default => ButtonSize.Default,
+                        AntDesign.FormSize.Small => ButtonSize.Small,
+                    };
+                }
+                else
+                    Size = ButtonSize.Default;
             }
         }
 
@@ -146,21 +158,30 @@ namespace AntDesign
         /// </summary>
         /// <default value="null" />
         [Parameter]
-        public string Shape { get; set; } = null;
+        public ButtonShape Shape { get; set; } = ButtonShape.Rectangle;
 
         /// <summary>
         /// Set the size of button.
         /// </summary>
-        /// <default value="AntSizeLDSType.Default" />
+        /// <default value="ButtonSize.Default" />
         [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public ButtonSize Size { get; set; } = ButtonSize.Default;
 
         /// <summary>
         /// Type of the button.
         /// </summary>
         /// <default value="ButtonType.Default" />
         [Parameter]
-        public string Type { get; set; } = ButtonType.Default;
+        public ButtonType? Type { get; set; } = ButtonType.Default;
+
+        private readonly Hashtable _typeMap = new Hashtable()
+        {
+            [ButtonType.Default] = "default",
+            [ButtonType.Primary] = "primary",
+            [ButtonType.Dashed] = "dashed",
+            [ButtonType.Link] = "link",
+            [ButtonType.Text] = "text",
+        };
 
         /// <summary>
         /// Do not wrap with &lt;span&gt;
@@ -180,11 +201,11 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add(prefixName)
                 .Add(hashId)
-                .GetIf(() => $"{prefixName}-{this.Type}", () => !string.IsNullOrEmpty(Type))
+                .GetIf(() => $"{prefixName}-{_typeMap[Type]}", () => Type.HasValue)
                 .If($"{prefixName}-dangerous", () => Danger)
-                .GetIf(() => $"{prefixName}-{Shape}", () => !string.IsNullOrEmpty(Shape))
-                .If($"{prefixName}-lg", () => Size == "large")
-                .If($"{prefixName}-sm", () => Size == "small")
+                .GetIf(() => $"{prefixName}-{Shape.ToString().ToLower()}", () => Shape != ButtonShape.Rectangle)
+                .If($"{prefixName}-lg", () => Size == ButtonSize.Large)
+                .If($"{prefixName}-sm", () => Size == ButtonSize.Small)
                 .If($"{prefixName}-loading", () => Loading)
                 .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && this.ChildContent == null)
                 .If($"{prefixName}-background-ghost", () => Ghost)

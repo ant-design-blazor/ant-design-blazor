@@ -12,7 +12,7 @@
 
     private async Task ShowConfirm()
     {
-        RenderFragment icon =@<Icon Type="exclamation-circle" Theme="outline"></Icon>;
+        RenderFragment icon = @<Icon Type="@IconType.Outline.ExclamationCircle" />;
         RenderFragment content = @<Button OnClick="DestroyAll"> Click to destroy all </Button>;
 
         for (int i = 0; i < 3; i++)

@@ -35,9 +35,9 @@
             @{
                 var containerClass = ListType switch
                 {
-                    "picture-card" => "ant-upload-list-picture-card-container",
-                    "text" => "ant-upload-list-text-container",
-                    "picture" => "ant-upload-list-picture-container",
+                    UploadListType.PictureCard => "ant-upload-list-picture-card-container",
+                    UploadListType.Text => "ant-upload-list-text-container",
+                    UploadListType.Picture => "ant-upload-list-picture-container",
                     _ => ""
                 };
 

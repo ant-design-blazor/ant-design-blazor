@@ -154,7 +154,7 @@ Options for the template：
 - Finally, it can be referenced in the `.razor' component!
 
   ```html
-  <Button Type="primary">Hello World!</Button>
+  <Button Type="ButtonType.Primary">Hello World!</Button>
   ```
 
 ## 🔨 Development

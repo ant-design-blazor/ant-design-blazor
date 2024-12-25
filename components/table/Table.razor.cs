@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.core.Services;
 using AntDesign.Core.HashCodes;
 using AntDesign.Core.Reflection;
@@ -68,6 +69,14 @@ namespace AntDesign
         private bool _preventRender = false;
         private bool _shouldRender = true;
         private int _parametersHashCode;
+
+        /// <summary>
+        /// Enable or disable automatic column index assignments.
+        /// Should be disabled if complex column structure is used and index assigned via ColIndex parameter.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.1.0")]
+        public bool AutoColIndexes { get; set; } = true;
 
         /// <summary>
         /// Render mode of table. See <see cref="AntDesign.RerenderStrategy"/> documentation for details.
@@ -230,6 +239,14 @@ namespace AntDesign
         public bool Bordered { get; set; } = false;
 
         /// <summary>
+        /// Striped table or not
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        [PublicApi("1.1.0")]
+        public bool Striped { get; set; } = false;
+
+        /// <summary>
         /// Set horizontal scrolling, can also be used to specify the width of the scrolling area, can be set as pixel value, percentage
         /// </summary>
         [Parameter]
@@ -292,7 +309,7 @@ namespace AntDesign
         /// Supported sorting methods, covering sortDirections in Table
         /// </summary>
         [Parameter]
-        public SortDirection[] SortDirections { get; set; } = SortDirection.Preset.Default;
+        public SortDirection[] SortDirections { get; set; } = [SortDirection.Ascending];
 
         /// <summary>
         /// The table-layout attribute of the table element, set to fixed means that the content will not affect the layout of the column
@@ -434,6 +451,7 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
+        bool ITable.HasOnExpandDelegate => OnExpand.HasDelegate;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
 
@@ -475,6 +493,8 @@ namespace AntDesign
         /// This method will be called when all columns have been set
         /// </summary>
         void ITable.OnColumnInitialized() => OnColumnInitialized();
+
+        bool ITable.RebuildColumns(bool add) => RebuildColumns(add);
 
         void ITable.OnExpandChange(RowData rowData)
         {
@@ -801,7 +821,7 @@ namespace AntDesign
 
         internal void RemoveGroupColumn(IFieldColumn column)
         {
-            this._groupedColumns.Remove(column);
+            this._groupedColumns.RemoveAll(x => x.ColIndex == column.ColIndex);
         }
 
         private void SetClass()
@@ -812,6 +832,7 @@ namespace AntDesign
                 .Add(hashId)
                 .If($"{prefixCls}-fixed-header", () => ScrollY != null)
                 .If($"{prefixCls}-bordered", () => Bordered)
+                .If($"{prefixCls}-striped", () => Striped)
                 .If($"{prefixCls}-small", () => Size == TableSize.Small)
                 .If($"{prefixCls}-middle", () => Size == TableSize.Middle)
                 .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ScrollX != null)
@@ -1106,7 +1127,7 @@ namespace AntDesign
         /// -> OnColumnInitialized call render#4 -> OnAfterRenderAsync#4 -> OnAfterRenderAsync#3 -> OnAfterRenderAsync#1 (the last 2 steps are duplicated and useless)
         /// </remarks>
         /// <returns>Whether to start rebuilding</returns>
-        bool ITable.RebuildColumns(bool add)
+        protected virtual bool RebuildColumns(bool add)
         {
             // avoid rerender again before initialized (beacuse when we render the empty ChildContent, it will be called by Dispose)
             if (add && !_hasInitialized) return false;

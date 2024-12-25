@@ -58,22 +58,22 @@ namespace AntDesign
         internal bool Block { get; set; }
 
         private string _rightButtonIcon = "ellipsis";
-        private string _buttonSize = AntSizeLDSType.Default;
+        private ButtonSize _buttonSize = AntDesign.ButtonSize.Default;
         private bool _danger;
         private bool _ghost;
         private bool _isLoading;
 
-        private string _buttonTypeRight = ButtonType.Default;
-        private string _buttonTypeLeft = ButtonType.Default;
+        private ButtonType _buttonTypeRight = ButtonType.Default;
+        private ButtonType _buttonTypeLeft = ButtonType.Default;
         protected string _buttonClassRight;
         protected string _buttonClassLeft;
         protected string _buttonStyleRight;
         protected string _buttonStyleLeft;
 
         internal string RightButtonIcon => _rightButtonIcon;
-        internal string ButtonSize => _buttonSize;
-        internal string ButtonTypeRight => _buttonTypeRight;
-        internal string ButtonTypeLeft => _buttonTypeLeft;
+        internal ButtonSize ButtonSize => _buttonSize;
+        internal ButtonType ButtonTypeRight => _buttonTypeRight;
+        internal ButtonType ButtonTypeLeft => _buttonTypeLeft;
         internal string ButtonClassRight => _buttonClassRight;
         internal string ButtonClassLeft => _buttonClassLeft;
         internal string ButtonStyleRight => _buttonStyleRight;
@@ -116,7 +116,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        protected void ChangeButtonSize(string size)
+        protected void ChangeButtonSize(ButtonSize size)
         {
             _buttonSize = size;
 
@@ -144,7 +144,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        protected void ChangeButtonType(string leftButton, string rightButton)
+        protected void ChangeButtonType(ButtonType leftButton, ButtonType rightButton)
         {
             _buttonTypeLeft = leftButton;
             _buttonTypeRight = rightButton;

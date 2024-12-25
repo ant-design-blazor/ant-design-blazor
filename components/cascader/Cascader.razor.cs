@@ -172,10 +172,10 @@ namespace AntDesign
         private bool _focused;
         private string _menuStyle;
 
-        private static Dictionary<string, string> _sizeMap = new Dictionary<string, string>()
+        private static Dictionary<InputSize, string> _sizeMap = new Dictionary<InputSize, string>()
         {
-            ["large"] = "lg",
-            ["small"] = "sm"
+            [InputSize.Large] = "lg",
+            [InputSize.Small] = "sm"
         };
 
         protected override void OnInitialized()
@@ -195,8 +195,8 @@ namespace AntDesign
                 .If("ant-select-focused", () => _focused)
                 .If($"{prefixCls}-picker-show-search ant-select-show-search", () => ShowSearch)
                 .If($"{prefixCls}-picker-with-value", () => !string.IsNullOrEmpty(_searchValue))
-                .If($"ant-select-lg", () => Size == "large")
-                .If($"ant-select-sm", () => Size == "small")
+                .If($"ant-select-lg", () => Size == InputSize.Large)
+                .If($"ant-select-sm", () => Size == InputSize.Small)
                 .If($"ant-select-disabled", () => Disabled)
                 .If("ant-select-allow-clear ", () => AllowClear)
                 .If($"{selectCls}-in-form-item ", () => FormItem != null)

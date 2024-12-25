@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -149,6 +150,12 @@ namespace AntDesign
 
         #endregion Parameters
 
+        private readonly Hashtable _sizeMap = new Hashtable()
+        {
+            [ProgressSize.Small] = 6,
+            [ProgressSize.Default] = 8,
+        };
+
         protected override void OnInitialized()
         {
             SetClasses();
@@ -163,11 +170,11 @@ namespace AntDesign
             {
                 if (Type == ProgressType.Line)
                 {
-                    StrokeWidth = Size.Value;
+                    StrokeWidth = (int)_sizeMap[Size];
                 }
                 else // Type is Circle or Dashboard
                 {
-                    StrokeWidth = 6;
+                    StrokeWidth = (int)_sizeMap[ProgressSize.Small];
                 }
             }
 
@@ -189,10 +196,11 @@ namespace AntDesign
             ClassMapper
                 .Add(PrefixCls)
                 .Add(hashId)
-                .Get(() => $"{PrefixCls}-{Size.Name}")
-                .GetIf(() => $"{PrefixCls}-{Type.Name}", () => Type != ProgressType.Dashboard)
-                .GetIf(() => $"{PrefixCls}-{ProgressType.Circle.Name}", () => Type == ProgressType.Dashboard)
-                .GetIf(() => $"{PrefixCls}-status-{Status.Name}", () => Status != null)
+                .Get(() => $"{PrefixCls}-status-{Status.ToString().ToLowerInvariant()}")
+                .GetIf(() => $"{PrefixCls}-small", () => Size == ProgressSize.Small)
+                .GetIf(() => $"{PrefixCls}-default", () => Size == ProgressSize.Default)
+                .GetIf(() => $"{PrefixCls}-{Type.ToString().ToLowerInvariant()}", () => Type != ProgressType.Dashboard)
+                .GetIf(() => $"{PrefixCls}-circle", () => Type == ProgressType.Dashboard)
                 .GetIf(() => $"{PrefixCls}-show-info", () => ShowInfo)
                 .GetIf(() => $"{PrefixCls}-steps", () => Steps > 0)
                 .GetIf(() => $"{PrefixCls}-rtl", () => RTL);

@@ -1,7 +1,7 @@
 ﻿<EnumSelect TEnum="Province" OnSelectedItemChanged="handleChange" />
 <br />
 <br />
-<EnumSelect TEnum="Fruits?" @bind-Value="_value" Mode="multiple" />
+<EnumSelect TEnum="Fruits?" @bind-Value="_value" Mode="SelectMode.Multiple" />
 
 Flags Enum Value: @Convert.ToUInt64(_value), @_value.ToString()
 

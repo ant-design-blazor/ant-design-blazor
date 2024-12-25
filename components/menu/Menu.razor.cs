@@ -332,14 +332,16 @@ namespace AntDesign
                 .Add(PrefixCls)
                 .Add(hashId)
                 .Add($"{PrefixCls}-root")
-                .If($"{PrefixCls}-{MenuTheme.Dark}", () => Theme == MenuTheme.Dark)
-                .If($"{PrefixCls}-{MenuTheme.Light}", () => Theme == MenuTheme.Light)
-                .If($"{PrefixCls}-{MenuMode.Inline}", () => InternalMode == MenuMode.Inline)
-                .If($"{PrefixCls}-{MenuMode.Vertical}", () => InternalMode == MenuMode.Vertical)
-                .If($"{PrefixCls}-{MenuMode.Horizontal}", () => InternalMode == MenuMode.Horizontal)
-                .If($"{PrefixCls}-inline-collapsed", () => InlineCollapsed)
+                .If($"{PrefixCls}-dark", () => Theme == MenuTheme.Dark)
+                .If($"{PrefixCls}-light", () => Theme == MenuTheme.Light)
+                .If($"{PrefixCls}-inline", () => InternalMode == MenuMode.Inline)
+                .If($"{PrefixCls}-vertical", () => InternalMode == MenuMode.Vertical)
+                .If($"{PrefixCls}-horizontal", () => InternalMode == MenuMode.Horizontal)
+                .If($"{PrefixCls}-inline-collapsed", () => _inlineCollapsed)
                 .If($"{PrefixCls}-unselectable", () => !Selectable)
                 .If($"{PrefixCls}-rtl", () => RTL);
+
+            StateHasChanged();
         }
 
         protected override void OnInitialized()
@@ -405,6 +407,8 @@ namespace AntDesign
             {
                 InternalMode = Mode;
             }
+
+            SetClass();
         }
 
         private void HandleOpenChange(string[] openKeys)

@@ -21,7 +21,7 @@
 
         <AntDesign.Input TValue="string" Class="components-overview-search" Placeholder="@L["app.components.overview.search"]" OnInput="@(args => OnSearchEnter(args.Value?.ToString()))">
             <Suffix>
-                <Icon Type="search" />
+                <Icon Type="@IconType.Outline.Search" />
             </Suffix>
         </AntDesign.Input>
 
@@ -36,7 +36,7 @@
 
             <div class="components-overview">
                 <AntDesign.Title Level="2">
-                    <Space Align="center">
+                    <Space Align="SpaceAlign.Center">
                         <SpaceItem>@menuGroup.Title</SpaceItem>
                         <SpaceItem>
                             <Tag Style="display: block;">@(menuGroup.Children?.Length ?? 0)</Tag>
@@ -49,7 +49,7 @@
                     {
                         <AntDesign.Col Xl="6" Lg="8" Sm="12" Xs="24" Style="padding:12px">
                             <a href=@($"/{CurrentLanguage}/{item.Url}")>
-                                <Card Bordered Class="components-overview-card" Size="small" Hoverable>
+                                <Card Bordered Class="components-overview-card" Size="CardSize.Small" Hoverable>
                                     <TitleTemplate>
                                         <div class="components-overview-title">
                                             @item.Title

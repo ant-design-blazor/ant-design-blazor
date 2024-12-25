@@ -21,7 +21,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private static readonly Dictionary<string, string> _spaceSize = new()
+        private static readonly Dictionary<SpaceSize, string> _spaceSize = new()
         {
             [SpaceSize.Small] = "8",
             [SpaceSize.Middle] = "16",
@@ -49,9 +49,13 @@ namespace AntDesign
             var size = Parent.Size;
             var direction = Parent.Direction;
 
-            size.Switch(sigleSize =>
+            size.Switch(singleSize =>
             {
-                _marginStyle = direction == DirectionVHType.Horizontal ? (_index != Parent.SpaceItemCount - 1 ? $"margin-right:{GetSize(sigleSize)};" : "") : $"margin-bottom:{GetSize(sigleSize)};";
+                _marginStyle = direction == SpaceDirection.Horizontal ? (_index != Parent.SpaceItemCount - 1 ? $"margin-right:{GetSize(singleSize)};" : "") : $"margin-bottom:{GetSize(singleSize)};";
+            },
+            singleSize =>
+            {
+                _marginStyle = direction == SpaceDirection.Horizontal ? (_index != Parent.SpaceItemCount - 1 ? $"margin-right:{singleSize};" : "") : $"margin-bottom:{singleSize};";
             },
             arraySize =>
             {
@@ -59,15 +63,21 @@ namespace AntDesign
             });
         }
 
+        private CssSizeLength GetSize(SpaceSize size)
+        {
+            var originalSize = _spaceSize[size];
+
+            return GetSize(originalSize);
+        }
+
         private CssSizeLength GetSize(string size)
         {
-            var originalSize = size.IsIn(_spaceSize.Keys) ? _spaceSize[size] : size;
             if (Parent?.Split != null)
             {
-                return ((CssSizeLength)originalSize).Value / 2;
+                return ((CssSizeLength)size).Value / 2;
             }
 
-            return originalSize;
+            return size;
         }
     }
 }

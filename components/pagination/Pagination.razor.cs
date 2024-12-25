@@ -108,6 +108,9 @@ namespace AntDesign
             }
         }
 
+        [Parameter]
+        public EventCallback<int> OnPageSizeChanged { get; set; }
+
         /// <summary>
         /// Called when the page number is changed, and it takes the resulting page number and pageSize as its arguments
         /// </summary>

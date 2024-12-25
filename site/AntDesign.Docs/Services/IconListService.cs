@@ -277,7 +277,7 @@ namespace AntDesign.Docs.Services
         {
             List<string> icons = new List<string>();
 
-            IDictionary<string, string[]> iconfiles = IconService.GetAllIcons();
+            IDictionary<IconThemeType, string[]> iconfiles = IconService.GetAllIcons();
 
             foreach (var item in iconfiles)
             {

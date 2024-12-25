@@ -117,7 +117,7 @@ namespace AntDesign
         /// Callback executed when the type of calendar being viewed changes
         /// </summary>
         [Parameter]
-        public Action<DateTime, string> OnPanelChange { get; set; }
+        public Action<DateTime, DatePickerType> OnPanelChange { get; set; }
 
         /// <summary>
         /// Function to determine if a specific date is disabled
@@ -162,11 +162,11 @@ namespace AntDesign
             base.OnInitialized();
             _hashId = UseStyle("ant-picker", CalendarStyle.UseComponentStyle);
 
-            _picker = Mode.Name switch
+            _picker = Mode switch
             {
-                CalendarMode.MONTH => DatePickerType.Date,
-                CalendarMode.YEAR => DatePickerType.Month,
-                _ => DatePickerType.Date,
+                CalendarMode.Month => DatePickerType.Date,
+                CalendarMode.Year => DatePickerType.Month,
+                _ => DatePickerType.Date
             };
 
             if (ValidRange != null)
@@ -222,17 +222,17 @@ namespace AntDesign
         {
             Mode = mode;
 
-            DatePickerType picker = mode.Name switch
+            DatePickerType picker = Mode switch
             {
-                DatePickerType.YEAR => DatePickerType.Month,
-                DatePickerType.MONTH => DatePickerType.Date,
-                _ => DatePickerType.Date,
+                CalendarMode.Month => DatePickerType.Date,
+                CalendarMode.Year => DatePickerType.Month,
+                _ => DatePickerType.Date
             };
 
             _prePickerStack.Push(_picker);
             _picker = picker;
 
-            OnPanelChange?.Invoke(PickerValues[0], _picker.Name);
+            OnPanelChange?.Invoke(PickerValues[0], _picker);
 
             StateHasChanged();
         }

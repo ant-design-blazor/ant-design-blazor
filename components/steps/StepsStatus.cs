@@ -4,11 +4,11 @@
 
 namespace AntDesign
 {
-    public static class StepsStatus
+    public enum StepsStatus
     {
-        public const string Wait = "wait";
-        public const string Process = "process";
-        public const string Finish = "finish";
-        public const string Error = "error";
+        Wait,
+        Process,
+        Finish,
+        Error,
     }
 }

@@ -1,6 +1,7 @@
 ﻿@using System.IO
 @using AngleSharp.Html.Dom
 @using AngleSharp.Io.Dom
+@using System.Net.Http
 @inherits AntDesignTestBase
 @code {
     [Fact]
@@ -50,7 +51,7 @@
     {
         JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
 
-        var cut = Context.Render(@<Upload Method="put">some content</Upload>);
+        var cut = Context.Render(@<Upload Method="HttpMethod.Put">some content</Upload>);
 
         cut.MarkupMatches(
           @<span class="">

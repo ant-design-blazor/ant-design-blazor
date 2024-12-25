@@ -29,7 +29,7 @@ namespace AntDesign
         /// <summary>
         /// Where the line will be in relation to the items - left, right or alternate
         /// </summary>
-        /// <default value="left" />
+        /// <default value="TimelineMode.Left" />
         [Parameter]
         public TimelineMode? Mode
         {
@@ -202,9 +202,9 @@ namespace AntDesign
                 item.IsLast = i == length - 1;
                 item.Position = _mode switch
                 {
-                    TimelineMode.Left => "left",
-                    TimelineMode.Right => "right",
-                    TimelineMode.Alternate => i % 2 == 0 ? "left" : "right",
+                    TimelineMode.Left => TimelineMode.Left,
+                    TimelineMode.Right => TimelineMode.Right,
+                    TimelineMode.Alternate => i % 2 == 0 ? TimelineMode.Left : TimelineMode.Right,
                     _ => null,
                 };
 

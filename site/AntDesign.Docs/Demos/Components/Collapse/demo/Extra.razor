@@ -2,7 +2,7 @@
     <Collapse DefaultActiveKey="@(new[] { "1" })"
               OnChange="Callback"
               ExpandIconPosition="@expandIconPosition"
-              ExpandIcon="caret-right">
+              ExpandIcon="@IconType.Outline.CaretRight">
         <Panel Header="This is panel header 1" Key="1" ExtraTemplate="@extra">
             <div>@text</div>
         </Panel>
@@ -11,7 +11,7 @@
         </Panel>
         <Panel Header="This is panel header 3" Key="3">
             <ExtraTemplate>
-                <div @onclick:stopPropagation><Icon Type="snippets" /></div>
+                <div @onclick:stopPropagation><Icon Type="@IconType.Outline.Snippets" /></div>
             </ExtraTemplate>
             <ChildContent>
                 <div>@text</div>
@@ -27,12 +27,12 @@ Known for its loyalty and faithfulness,
 it can be found as a welcome guest in many households across the world.
 ";
 
-    RenderFragment extra =@<div @onclick:stopPropagation><Icon Type="setting"></Icon></div>;
+    RenderFragment extra =@<div @onclick:stopPropagation><Icon Type="@IconType.Outline.Setting" /></div>;
 
-        string expandIconPosition = "left";
+    CollapseExpandIconPosition expandIconPosition = CollapseExpandIconPosition.Left;
 
-        void Callback(string[] keys)
-        {
-            Console.WriteLine(string.Join(',',keys));
-        }
+    void Callback(string[] keys)
+    {
+        Console.WriteLine(string.Join(',',keys));
     }
+}

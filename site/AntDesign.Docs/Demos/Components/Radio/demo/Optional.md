@@ -2,7 +2,7 @@
 order: 8
 title:
   zh-CN: Radio.Group 组合 - 配置方式
-  en-US: Radio.Group group - optional
+  en-US: Radio Group Options
 ---
 
 ## zh-CN
@@ -10,4 +10,4 @@ title:
 
 
 ## en-US
-Render radios by configuring options.
+The options of a `RadioGroup` can be populated using the `Options` property. Options can be defined as either a `string[]` or `RadioOption[]`.

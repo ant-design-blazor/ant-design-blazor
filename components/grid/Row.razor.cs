@@ -40,13 +40,13 @@ namespace AntDesign
         /// Vertical alignment for the flex layout: 'top' | 'middle' | 'bottom'
         /// </summary>
         [Parameter]
-        public string Align { get; set; }
+        public RowAlign Align { get; set; }
 
         /// <summary>
         /// Hotizontal alignment for the flex layout: 'start' | 'end' | 'center' | 'space-around' | 'space-between'
         /// </summary>
         [Parameter]
-        public string Justify { get; set; }
+        public RowJustify Justify { get; set; }
 
         /// <summary>
         /// Allow the row's content to wrap or not
@@ -117,14 +117,14 @@ namespace AntDesign
             var hashId = UseStyle(prefixCls, GridStyle.UseRowStyle);
             ClassMapper.Add(prefixCls)
                 .Add(hashId)
-                .If($"{prefixCls}-top", () => Align == "top")
-                .If($"{prefixCls}-middle", () => Align == "middle")
-                .If($"{prefixCls}-bottom", () => Align == "bottom")
-                .If($"{prefixCls}-start", () => Justify == "start")
-                .If($"{prefixCls}-end", () => Justify == "end")
-                .If($"{prefixCls}-center", () => Justify == "center")
-                .If($"{prefixCls}-space-around", () => Justify == "space-around")
-                .If($"{prefixCls}-space-between", () => Justify == "space-between")
+                .If($"{prefixCls}-top", () => Align == RowAlign.Top)
+                .If($"{prefixCls}-middle", () => Align == RowAlign.Middle)
+                .If($"{prefixCls}-bottom", () => Align == RowAlign.Bottom)
+                .If($"{prefixCls}-start", () => Justify == RowJustify.Start)
+                .If($"{prefixCls}-end", () => Justify == RowJustify.End)
+                .If($"{prefixCls}-center", () => Justify == RowJustify.Center)
+                .If($"{prefixCls}-space-around", () => Justify == RowJustify.SpaceAround)
+                .If($"{prefixCls}-space-between", () => Justify == RowJustify.SpaceBetween)
                 .If($"{prefixCls}-no-wrap", () => !Wrap)
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;

@@ -53,9 +53,9 @@ namespace AntDesign
         /// <summary>
         /// Type of result. Influences styles and default image/icon. Possible values: success, error, info, warning, 404, 403, 500
         /// </summary>
-        /// <default value="info" />
+        /// <default value="ResultStatus.Info" />
         [Parameter]
-        public string Status { get; set; } = "info";
+        public ResultStatus Status { get; set; } = ResultStatus.Info;
 
         /// <summary>
         /// Custom icon. Format: "{type}-{theme}"
@@ -94,38 +94,66 @@ namespace AntDesign
             builder.CloseComponent();
         };
 
-        private (string type, string theme) DetermineIconType()
+        private (string type, IconThemeType theme) DetermineIconType()
         {
             if (!string.IsNullOrEmpty(Icon))
             {
                 var separatorIndex = Icon.LastIndexOf("-", StringComparison.CurrentCultureIgnoreCase);
                 var type = Icon.Substring(0, separatorIndex);
-                var theme = Icon.Substring(separatorIndex + 1, Icon.Length - separatorIndex - 1);
+                var themeString = Icon.Substring(separatorIndex + 1, Icon.Length - separatorIndex - 1);
+
+                IconThemeType theme;
+
+                switch (themeString)
+                {
+                    case "fill":
+                        theme = IconThemeType.Fill;
+                        break;
+
+                    case "twotone":
+                        theme = IconThemeType.TwoTone;
+                        break;
+
+                    case "internal":
+                        theme = IconThemeType.Internal;
+                        break;
+
+                    case "outline":
+                    default:
+                        theme = IconThemeType.Outline;
+                        break;
+                }
+
                 return (type, theme);
             }
 
-            if (Status == "error")
-                return ("close-circle", "fill");
+            switch (Status)
+            {
+                case ResultStatus.Error:
+                    return ("close-circle", IconThemeType.Fill);
 
-            if (Status == "success")
-                return ("check-circle", "fill");
+                case ResultStatus.Success:
+                    return ("check-circle", IconThemeType.Fill);
 
-            if (Status == "warning")
-                return ("warning", "fill");
+                case ResultStatus.Warning:
+                    return ("warning", IconThemeType.Fill);
 
-            if (Status == "403")
-                return ("unauthorized", "internal");
+                case ResultStatus.Http403:
+                    return ("unauthorized", IconThemeType.Internal);
 
-            if (Status == "404")
-                return ("not-found", "internal");
+                case ResultStatus.Http404:
+                    return ("not-found", IconThemeType.Internal);
 
-            if (Status == "500")
-                return ("bad-request", "internal");
+                case ResultStatus.Http500:
+                    return ("bad-request", IconThemeType.Internal);
 
-            return ("info-circle", "fill");
+                case ResultStatus.Info:
+                default:
+                    return ("info-circle", IconThemeType.Fill);
+            }
         }
 
-        private bool IsImage => Status.IsIn("403", "404", "500");
+        private bool IsImage => Status.IsIn(ResultStatus.Http403, ResultStatus.Http404, ResultStatus.Http500);
 
         private void LoadImage()
         {

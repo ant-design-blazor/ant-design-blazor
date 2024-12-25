@@ -4,10 +4,10 @@
 
 namespace AntDesign
 {
-    public class AntSizeLDSType
+    public enum AntSizeLDSType
     {
-        public const string Default = "default";
-        public const string Large = "large";
-        public const string Small = "small";
+        Default,
+        Large,
+        Small,
     }
 }

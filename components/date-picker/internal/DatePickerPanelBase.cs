@@ -167,11 +167,11 @@ namespace AntDesign
             }
             else
             {
-                baseDate = Picker.Name switch
+                baseDate = Picker switch
                 {
-                    DatePickerType.DATE => PickerValue.AddMonths(-1),
-                    DatePickerType.WEEK => PickerValue.AddMonths(-1),
-                    DatePickerType.YEAR => PickerValue.AddYears(-10),
+                    DatePickerType.Date => PickerValue.AddMonths(-1),
+                    DatePickerType.Week => PickerValue.AddMonths(-1),
+                    DatePickerType.Year => PickerValue.AddYears(-10),
                     _ => PickerValue.AddYears(-1)
                 };
             }

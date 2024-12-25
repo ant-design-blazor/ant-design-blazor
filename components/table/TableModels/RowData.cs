@@ -85,7 +85,7 @@ namespace AntDesign.TableModels
             set => TableDataItem.SetSelected(value);
         }
 
-        public event Action<RowData, bool> ExpandedChanged;
+        internal event Action<RowData, bool> ExpandedChanged;
 
         internal void SetExpanded(bool expanded)
         {

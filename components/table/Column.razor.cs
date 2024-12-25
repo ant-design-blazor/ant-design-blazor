@@ -137,7 +137,7 @@ namespace AntDesign
         /// Default sort direction
         /// </summary>
         [Parameter]
-        public SortDirection DefaultSortOrder { get; set; }
+        public SortDirection? DefaultSortOrder { get; set; }
 
         /// <summary>
         /// Set cell attributes
@@ -293,7 +293,7 @@ namespace AntDesign
 
         private RenderFragment _renderDefaultFilterDropdown;
 
-        private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+        private bool IsFixedEllipsis => Ellipsis && Fixed is ColumnFixPlacement.Left or ColumnFixPlacement.Right;
 
         private bool IsFiltered => _hasFilterSelected || Filtered;
 
@@ -332,7 +332,7 @@ namespace AntDesign
 
                 if (Sortable && GetFieldExpression != null)
                 {
-                    SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
+                    SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder ?? SortDirection.None, SorterCompare);
                 }
 
                 if (Grouping)
@@ -421,7 +421,7 @@ namespace AntDesign
                     }
                 }
 
-                Context.HeaderColumnInitialed(this);
+                Context.HeaderColumnInitialized(this);
 
                 _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
             }
@@ -475,12 +475,13 @@ namespace AntDesign
             get
             {
                 var next = NextSortDirection();
-                return next?.Value switch
+
+                return next switch
                 {
-                    0 => Table.Locale.CancelSort,
-                    1 => Table.Locale.TriggerAsc,
-                    2 => Table.Locale.TriggerDesc,
-                    _ => Table.Locale.CancelSort
+                    SortDirection.None => Table.Locale.CancelSort,
+                    SortDirection.Ascending => Table.Locale.TriggerAsc,
+                    SortDirection.Descending => Table.Locale.TriggerDesc,
+                    _ => Table.Locale.CancelSort,
                 };
             }
         }
@@ -656,8 +657,8 @@ namespace AntDesign
 
         void IFieldColumn.SetSortModel(ITableSortModel sortModel)
         {
-            SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, SortDirection.Parse(sortModel.Sort), SorterCompare);
-            this.SetSorter(SortDirection.Parse(sortModel.Sort));
+            SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, sortModel.SortDirection, SorterCompare);
+            this.SetSorter(sortModel.SortDirection);
         }
 
         protected object _filterInputRef;

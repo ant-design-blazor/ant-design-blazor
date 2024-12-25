@@ -87,13 +87,13 @@ namespace AntDesign
         /// Card style type, can be set to inner or not set
         /// </summary>
         [Parameter]
-        public string Type { get; set; }
+        public CardType Type { get; set; }
 
         /// <summary>
         /// Size of the card
         /// </summary>
         [Parameter]
-        public string Size { get; set; }
+        public CardSize Size { get; set; }
 
         /// <summary>
         /// Title string for header
@@ -128,9 +128,9 @@ namespace AntDesign
                 .If($"{prefixCls}-loading", () => Loading)
                 .If($"{prefixCls}-bordered", () => Bordered)
                 .If($"{prefixCls}-hoverable", () => Hoverable)
-                .If($"{prefixCls}-small", () => Size == "small")
+                .If($"{prefixCls}-small", () => Size == CardSize.Small)
                 .If($"{prefixCls}-contain-grid", () => _hasGrids)
-                .If($"{prefixCls}-type-inner", () => Type == "inner")
+                .If($"{prefixCls}-type-inner", () => Type == CardType.Inner)
                 .If($"{prefixCls}-contain-tabs", () => _cardTabs != null)
                 ;
         }

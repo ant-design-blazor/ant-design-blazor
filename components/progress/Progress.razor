@@ -67,12 +67,12 @@
                         </linearGradient>
                     </defs>
                 }
-                <path class="ant-progress-circle-trail" style="@_circleTrailStyle" fill-opacity="0" stroke-linecap="@StrokeLinecap.Name" stroke-width="@StrokeWidth" d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" />
+                <path class="ant-progress-circle-trail" style="@_circleTrailStyle" fill-opacity="0" stroke-linecap="@StrokeLinecap.ToString().ToLowerInvariant()" stroke-width="@StrokeWidth" d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" />
                 @if (SuccessPercent != 0)
                 {
-                    <path class="ant-progress-circle-path" style="@_circleSuccessStyle" opacity="1" fill-opacity="0" stroke="" stroke-linecap="@StrokeLinecap.Name" stroke-width="@StrokeWidth" d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" />
+                    <path class="ant-progress-circle-path" style="@_circleSuccessStyle" opacity="1" fill-opacity="0" stroke="" stroke-linecap="@StrokeLinecap.ToString().ToLowerInvariant()" stroke-width="@StrokeWidth" d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" />
                 }
-                <path class="ant-progress-circle-path" style="@_circlePathStyle" opacity="1" fill-opacity="0" stroke="@(StrokeColor.IsT1?$"url(#ant-progress-gradient-{Id})":StrokeColor.AsT0)" stroke-linecap="@StrokeLinecap.Name" stroke-width="@StrokeWidth" d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" />
+                <path class="ant-progress-circle-path" style="@_circlePathStyle" opacity="1" fill-opacity="0" stroke="@(StrokeColor.IsT1?$"url(#ant-progress-gradient-{Id})":StrokeColor.AsT0)" stroke-linecap="@StrokeLinecap.ToString().ToLowerInvariant()" stroke-width="@StrokeWidth" d="M 50 50 m 0 -47 a 47 47 0 1 1 0 94 a 47 47 0 1 1 0 -94" />
             </svg>
             @if (Status == ProgressStatus.Success && Format == null)
             {
@@ -96,12 +96,12 @@
     {
         <div class="ant-progress-inner" style="width: @(Width)px; height: @(Width)px; font-size: 24px;">
             <svg xmlns="http://www.w3.org/2000/svg" class="ant-progress-circle" viewBox="0 0 100 100">
-                <path class="ant-progress-circle-trail" style="@_circleTrailStyle" fill-opacity="0" stroke="@TrailColor" stroke-linecap="@StrokeLinecap.Name" stroke-width="@StrokeWidth" d="M 50 50 m 0 47 a 47 47 0 1 1 0 -94 a 47 47 0 1 1 0 94" />
+                <path class="ant-progress-circle-trail" style="@_circleTrailStyle" fill-opacity="0" stroke="@TrailColor" stroke-linecap="@StrokeLinecap.ToString().ToLowerInvariant()" stroke-width="@StrokeWidth" d="M 50 50 m 0 47 a 47 47 0 1 1 0 -94 a 47 47 0 1 1 0 94" />
                 @if (SuccessPercent != 0)
                 {
-                    <path class="ant-progress-circle-path" style="@_circleSuccessStyle" opacity="1" fill-opacity="0" stroke="" stroke-linecap="@StrokeLinecap.Name" stroke-width="@StrokeWidth" d="M 50 50 m 0 47 a 47 47 0 1 1 0 -94 a 47 47 0 1 1 0 94" />
+                            <path class="ant-progress-circle-path" style="@_circleSuccessStyle" opacity="1" fill-opacity="0" stroke="" stroke-linecap="@StrokeLinecap.ToString().ToLowerInvariant()" stroke-width="@StrokeWidth" d="M 50 50 m 0 47 a 47 47 0 1 1 0 -94 a 47 47 0 1 1 0 94" />
                 }
-                <path class="ant-progress-circle-path" style="@_circlePathStyle" opacity="1" fill-opacity="0" stroke="" stroke-linecap="@StrokeLinecap.Name" stroke-width="@StrokeWidth" d="M 50 50 m 0 47 a 47 47 0 1 1 0 -94 a 47 47 0 1 1 0 94" />
+                    <path class="ant-progress-circle-path" style="@_circlePathStyle" opacity="1" fill-opacity="0" stroke="" stroke-linecap="@StrokeLinecap.ToString().ToLowerInvariant()" stroke-width="@StrokeWidth" d="M 50 50 m 0 47 a 47 47 0 1 1 0 -94 a 47 47 0 1 1 0 94" />
             </svg>
             @if (Status == ProgressStatus.Success && Format == null)
             {

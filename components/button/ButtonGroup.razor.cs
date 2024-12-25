@@ -11,17 +11,8 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private string _size;
-
         [Parameter]
-        public string Size
-        {
-            get => _size;
-            set
-            {
-                this._size = value;
-            }
-        }
+        public ButtonGroupSize? Size { get; set; }
 
         private readonly bool _isInDropdown = false;
 
@@ -32,8 +23,8 @@ namespace AntDesign
             ClassMapper.Add(prefixName)
                 .Add(hashId)
                 .If("ant-dropdown-button", () => _isInDropdown)
-                .If($"{prefixName}-lg", () => this._size == "large")
-                .If($"{prefixName}-sm", () => this._size == "small")
+                .If($"{prefixName}-lg", () => Size.HasValue && Size.Value == ButtonGroupSize.Large)
+                .If($"{prefixName}-sm", () => Size.HasValue && Size.Value == ButtonGroupSize.Small)
                 .If($"{prefixName}-rtl", () => RTL);
         }
 

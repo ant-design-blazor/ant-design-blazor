@@ -38,7 +38,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="DescriptionsLayout.Horizontal"/>
         [Parameter]
-        public string Layout { get; set; } = DescriptionsLayout.Horizontal;
+        public DescriptionsLayout Layout { get; set; } = DescriptionsLayout.Horizontal;
 
         /// <summary>
         /// The number of <see cref="DescriptionsItem"/> elements in a row. Could be a number or a object like { xs: 8, sm: 16, md: 24}
@@ -50,7 +50,7 @@ namespace AntDesign
         /// Size of the list
         /// </summary>
         [Parameter]
-        public string Size { get; set; }
+        public DescriptionsSize Size { get; set; }
 
         /// <summary>
         /// Title shown at the top of the element
@@ -115,9 +115,9 @@ namespace AntDesign
                 .Add(prefixCls)
                 .Add(hashId)
                 .If($"{prefixCls}", () => RTL)
-                .If($"{prefixCls}-bordered", () => this.Bordered)
-                .If($"{prefixCls}-middle", () => this.Size == DescriptionsSize.Middle)
-                .If($"{prefixCls}-small", () => this.Size == DescriptionsSize.Small);
+                .If($"{prefixCls}-bordered", () => Bordered)
+                .If($"{prefixCls}-middle", () => Size == DescriptionsSize.Middle)
+                .If($"{prefixCls}-small", () => Size == DescriptionsSize.Small);
         }
 
         protected override async Task OnInitializedAsync()

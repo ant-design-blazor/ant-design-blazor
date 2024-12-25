@@ -73,30 +73,30 @@ namespace AntDesign
         /// <summary>
         /// Direction of the step bar
         /// </summary>
-        /// <default value="horizontal" />
+        /// <default value="StepsDirection.Horizontal" />
         [Parameter]
-        public string Direction { get; set; } = StepsDirection.Horizontal;
+        public StepsDirection Direction { get; set; } = StepsDirection.Horizontal;
 
         /// <summary>
         /// Place title and description horizontal or vertical
         /// </summary>
-        /// <default value="horizontal" />
+        /// <default value="StepsLabelPlacement.Horizontal" />
         [Parameter]
-        public string LabelPlacement { get; set; } = StepsLabelPlacement.Horizontal;
+        public StepsLabelPlacement LabelPlacement { get; set; } = StepsLabelPlacement.Horizontal;
 
         /// <summary>
         /// Type of steps. Possible Values: default, navigation
         /// </summary>
-        /// <default value="default" />
+        /// <default value="StepsType.Default" />
         [Parameter]
-        public string Type { get; set; } = StepsType.Default;
+        public StepsType Type { get; set; } = StepsType.Default;
 
         /// <summary>
         /// Size of steps. Possible Values: default, small
         /// </summary>
-        /// <default value="default" />
+        /// <default value="StepsSize.Default" />
         [Parameter]
-        public string Size { get; set; } = StepsSize.Default;
+        public StepsSize Size { get; set; } = StepsSize.Default;
 
         /// <summary>
         /// Starting step index
@@ -110,7 +110,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="process" />
         [Parameter]
-        public string Status { get; set; } = StepsStatus.Process;
+        public StepsStatus Status { get; set; } = StepsStatus.Process;
 
         /// <summary>
         /// Child content should contain Step elements
@@ -199,7 +199,8 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add(prefixName)
                 .Add(hashId)
-                .GetIf(() => $"{prefixName}-{Direction}", () => !string.IsNullOrEmpty(Direction))
+                .If($"{prefixName}-horizontal", () => Direction == StepsDirection.Horizontal)
+                .If($"{prefixName}-vertical", () => Direction == StepsDirection.Vertical)
                 .If($"{prefixName}-label-horizontal", () => Direction == StepsDirection.Horizontal)
                 .If($"{prefixName}-label-vertical", () => (_showProgressDot || LabelPlacement == StepsLabelPlacement.Vertical) && Direction == StepsDirection.Horizontal)
                 .If($"{prefixName}-dot", () => _showProgressDot)

@@ -8,13 +8,13 @@
   <PropertyColumn Property="c=>c.Age"></PropertyColumn>
   <Column Title="Address" TData="string">
     <TitleTemplate>
-      <span> <Icon Type="environment" /> Address </span>
+      <span><Icon Type="@IconType.Outline.Environment" /> Address</span>
     </TitleTemplate>
   </Column>
   <Column Title="Tag" TData="string">
     @foreach (var tag in context.Tags)
     {
-      <Tag Color="@(tag == "loser" ? "volcano" : tag.Length > 5 ? "geekblue" : "green")">@tag</Tag>
+      <Tag Color="@(tag == "loser" ? TagColor.Volcano : tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green)">@tag</Tag>
     }
   </Column>
 </Table>

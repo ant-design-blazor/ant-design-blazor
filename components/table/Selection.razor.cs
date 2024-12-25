@@ -13,11 +13,11 @@ namespace AntDesign
     public partial class Selection : ColumnBase, ISelectionColumn
     {
         /// <summary>
-        /// Type of selection column, checkbox or radio.
+        /// The type of input to use for the selection column (checkbox or radio)
         /// </summary>
-        /// <default value="checkbox"/>
+        /// <default value="SelectionType.Checkbox"/>
         [Parameter]
-        public string Type { get; set; } = "checkbox";
+        public SelectionType Type { get; set; } = SelectionType.Checkbox;
 
         /// <summary>
         /// Whether the selection column is disabled.
@@ -72,7 +72,7 @@ namespace AntDesign
             }
             else if (IsBody)
             {
-                if (Type == "radio")
+                if (Type == SelectionType.Radio)
                 {
                     Table.SetSelection(this);
                 }
@@ -95,7 +95,7 @@ namespace AntDesign
             if (IsHeader)
             {
                 Table.Selection = this;
-                Context.HeaderColumnInitialed(this);
+                Context.HeaderColumnInitialized(this);
             }
             else if (IsBody)
             {
@@ -119,7 +119,7 @@ namespace AntDesign
 
         void ISelectionColumn.StateHasChanged()
         {
-            if (IsHeader && Type == "checkbox")
+            if (IsHeader && Type == SelectionType.Radio)
             {
                 StateHasChanged();
             }
