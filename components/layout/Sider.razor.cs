@@ -136,8 +136,8 @@ namespace AntDesign
         private RenderFragment DefaultTrigger => builder =>
         {
             builder.OpenComponent<Icon>(1);
-            builder.AddAttribute(2, "Type", _isCollapsed ? "right" : "left");
-            builder.AddAttribute(3, "Theme", "outline");
+            builder.AddAttribute(2, "Type", _isCollapsed ? IconType.Outline.Right : IconType.Outline.Left);
+            builder.AddAttribute(3, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 

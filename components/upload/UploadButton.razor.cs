@@ -3,11 +3,14 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using OneOf;
 
 namespace AntDesign.Internal
 {
@@ -20,7 +23,7 @@ namespace AntDesign.Internal
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public string ListType { get; set; }
+        public UploadListType ListType { get; set; }
 
         [Parameter]
         public bool ShowButton { get; set; }
@@ -47,7 +50,7 @@ namespace AntDesign.Internal
         public string Action { get; set; }
 
         [Parameter]
-        public string Method { get; set; }
+        public OneOf<HttpMethod, string> Method { get; set; }
 
         [Parameter]
         public bool Disabled
@@ -82,6 +85,13 @@ namespace AntDesign.Internal
 
         protected override bool ShouldRender() => Upload != null;
 
+        private readonly Hashtable _typeMap = new Hashtable()
+        {
+            [UploadListType.Text] = "text",
+            [UploadListType.Picture] = "picture",
+            [UploadListType.PictureCard] = "picture-card",
+        };
+
         protected override void OnInitialized()
         {
             _currentInstance = DotNetObjectReference.Create(this);
@@ -89,7 +99,7 @@ namespace AntDesign.Internal
 
             ClassMapper
                 .Add(prefixCls)
-                .Get(() => $"{prefixCls}-select-{ListType}")
+                .Get(() => $"{prefixCls}-select-{_typeMap[ListType]}")
                 .If($"{prefixCls}-drag", () => Upload?.Drag == true)
                 .If($"{prefixCls}-drag-hover", () => Upload?._dragHover == true)
                 .Add($"{prefixCls}-select")

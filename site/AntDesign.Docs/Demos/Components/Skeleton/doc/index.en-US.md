@@ -19,39 +19,39 @@ Provide a placeholder while you wait for content to load, or to visualise conten
 
 ### Skeleton
 
-| 属性             | 说明                                                                       | 类型                                     | 默认值  |
+| Property         | Description                                                                | Type                                     | Default |
 | ---------------- | -------------------------------------------------------------------------- | ---------------------------------------- | ------- |
-| `Active`         | Show animation effect                                                           | `boolean`                                | `false` |
-| `Avatar`         | Show avatar placeholder                                                             | `boolean`                                | `false` |
-| `AvatarSize`     | Set the size of avatar                                                    | `int \| 'large' \| 'small' \| 'default'` | -       |
-| `AvatarShape`    | Set the shape of avatar                                                             | `'circle' \| 'square'`                   | -       |
-| `Loading`        | Display the skeleton when `true`                           | `boolean`                                | -       |
-| `Paragraph`      | Show paragraph placeholder                                                            | `boolean`                                | `true`  |
-| `ParagraphRows`  | Set the row count of paragraph                                                        | `int`                                    | -       |
-| `ParagraphWidth` | Set the width of paragraph. When width is an Array, it can set the width of each row. Otherwise only set the last row width | `int \| string \| Array<int \| string>`  | -       |
-| `Title`          | Show title placeholder                                                       | `boolean`                                | `true`  |
-| `TitleWidth`     | Set the width of title                                                   | `int \| string`                          | -       |
+| Active           | Show animation effect                                                      | `boolean`                                | `false` |
+| Avatar           | Show avatar placeholder                                                    | `boolean`                                | `false` |
+| AvatarSize       | Set the size of avatar                                                     | `OneOf<SkeletonElementSize, string>`     | -       |
+| AvatarShape      | Set the shape of avatar                                                    | `SkeletonElementShape`                   | -       |
+| Loading          | Display the skeleton when `true`                                           | `boolean`                                | -       |
+| Paragraph        | Show paragraph placeholder                                                 | `boolean`                                | `true`  |
+| ParagraphRows    | Set the row count of paragraph                                             | `int`                                    | -       |
+| ParagraphWidth   | Set the width of paragraph. When width is an Array, it can set the width of each row. Otherwise only set the last row width | `int \| string \| Array<int \| string>`  | -       |
+| Title            | Show title placeholder                                                     | `boolean`                                | `true`  |
+| TitleWidth       | Set the width of title                                                     | `int \| string`                          | -       |
 
 
-### SkeletonElement Type="button"
+### SkeletonElement Type="SkeletonElementType.Button"
 
-| 属性     | 说明             | 类型                               | 默认值      |
-| -------- | ---------------- | ---------------------------------- | ----------- |
-| `Active` | Show animation effect | `boolean`                          | `false`     |
-| `Size`   | Set the size              | `'large' \| 'small' \| 'default'`  | `'default'` |
-| `Shape`  | Set the shape               | `'circle' \| 'round' \| 'default'` | `'default'` |
+| Property | Description                 | Type                                 | Default                        |
+| -------- | --------------------------- | ------------------------------------ | ------------------------------ |
+| Active   | Show animation effect       | `boolean`                            | `false`                        |
+| Size     | Set the size                | `OneOf<SkeletonElementSize, string>` | `SkeletonElementSize.Default`  |
+| Shape    | Set the shape               | `SkeletonElementShape`               | `SkeletonElementShape.Default` |
 
-### SkeletonElement Type="avatar"
+### SkeletonElement Type="SkeletonElementType.Avatar"
 
-| 属性     | 说明             | 类型                                     | 默认值      |
-| -------- | ---------------- | ---------------------------------------- | ----------- |
-| `Active` | Show animation effect | `boolean`                                | `false`     |
-| `Size`   | Set the size             | `int \| 'large' \| 'small' \| 'default'` | `'default'` |
-| `Shape`  | Set the shape              | `'circle' \| 'square'`                   | `'square'`  |
+| Property | Description                 | Type                                     | Default                        |
+| -------- | --------------------------- | ---------------------------------------- | ------------------------------ |
+| Active   | Show animation effect       | `boolean`                                | `false`                        |
+| Size     | Set the size                | `OneOf<SkeletonElementSize, string>`     | `SkeletonElementSize.Default`  |
+| Shape    | Set the shape               | `SkeletonElementShape`                   | `SkeletonElementShape.Default` |
 
-### SkeletonElement Type="input"
+### SkeletonElement Type="SkeletonElementType.Input"
 
-| 属性     | 说明             | 类型                              | 默认值      |
-| -------- | ---------------- | --------------------------------- | ----------- |
-| `Active` | Show animation effect | `boolean`                         | `false`     |
-| `Size`   | Set the size                | `'large' \| 'small' \| 'default'` | `'default'` |
+| Property | Description                 | Type                                 | Default                       |
+| -------- | --------------------------- | ------------------------------------ | ----------------------------- |
+| Active   | Show animation effect       | `boolean`                            | `false`                       |
+| Size     | Set the size                | `OneOf<SkeletonElementSize, string>` | `SkeletonElementSize.Default` |

@@ -73,7 +73,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="primary" />
         [Parameter]
-        public string OkType { get; set; } = "primary";
+        public ButtonType OkType { get; set; } = ButtonType.Primary;
 
         /// <summary>
         /// Properties to pass through to the okay button

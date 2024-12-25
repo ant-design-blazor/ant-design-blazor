@@ -183,12 +183,12 @@ namespace AntDesign
 
         public static DateTime FormatDateByPicker(DateTime dateTime, DatePickerType picker)
         {
-            switch (picker.Name)
+            switch (picker)
             {
-                case DatePickerType.DATE: return dateTime.Date;
-                case DatePickerType.YEAR: return new DateTime(dateTime.Year, 1, 1);
-                case DatePickerType.MONTH: return new DateTime(dateTime.Year, dateTime.Month, 1);
-                case DatePickerType.QUARTER: return new DateTime(dateTime.Year, dateTime.Month, 1);
+                case DatePickerType.Date: return dateTime.Date;
+                case DatePickerType.Year: return new DateTime(dateTime.Year, 1, 1);
+                case DatePickerType.Month: return new DateTime(dateTime.Year, dateTime.Month, 1);
+                case DatePickerType.Quarter: return new DateTime(dateTime.Year, dateTime.Month, 1);
             }
 
             return dateTime;
@@ -285,26 +285,26 @@ namespace AntDesign
 
         public static DateTime GetPreviousStartDateOfPeriod(DateTime dateTime, DatePickerType picker)
         {
-            return picker.Name switch
+            return picker switch
             {
-                DatePickerType.DATE => AddDaysSafely(dateTime, -1),
-                DatePickerType.YEAR => AddYearsSafely(dateTime, -1),
-                DatePickerType.MONTH => AddMonthsSafely(dateTime, -1),
-                DatePickerType.QUARTER => AddMonthsSafely(dateTime, -3),
-                DatePickerType.DECADE => AddYearsSafely(dateTime, -10),
+                DatePickerType.Date => AddDaysSafely(dateTime, -1),
+                DatePickerType.Year => AddYearsSafely(dateTime, -1),
+                DatePickerType.Month => AddMonthsSafely(dateTime, -1),
+                DatePickerType.Quarter => AddMonthsSafely(dateTime, -3),
+                DatePickerType.Decade => AddYearsSafely(dateTime, -10),
                 _ => dateTime,
             };
         }
 
         public static DateTime GetNextStartDateOfPeriod(DateTime dateTime, DatePickerType picker)
         {
-            return picker.Name switch
+            return picker switch
             {
-                DatePickerType.DATE => AddDaysSafely(dateTime, 1),
-                DatePickerType.YEAR => AddYearsSafely(dateTime, 1),
-                DatePickerType.MONTH => AddMonthsSafely(dateTime, 1),
-                DatePickerType.QUARTER => AddMonthsSafely(dateTime, 3),
-                DatePickerType.DECADE => AddYearsSafely(dateTime, 10),
+                DatePickerType.Date => AddDaysSafely(dateTime, 1),
+                DatePickerType.Year => AddYearsSafely(dateTime, 1),
+                DatePickerType.Month => AddMonthsSafely(dateTime, 1),
+                DatePickerType.Quarter => AddMonthsSafely(dateTime, 3),
+                DatePickerType.Decade => AddYearsSafely(dateTime, 10),
                 _ => dateTime,
             };
         }

@@ -1,32 +1,32 @@
 ﻿@using System
 
 <div>
-    <Divider Orientation="left">Presets</Divider>
+    <Divider Orientation="DividerOrientation.Left">Presets</Divider>
     <div>
-        @foreach (var color in Enum.GetValues(typeof(PresetColor)))
+        @foreach (var color in Enum.GetValues(typeof(BadgeColor)))
         {
             <div key="@color">
-                <Badge PresetColor="@((PresetColor)color)" Text="@(Enum.GetName(typeof(PresetColor), color))" />
+                <Badge Color="@((BadgeColor)color)" Text="@(Enum.GetName(typeof(BadgeColor), color))" />
             </div>
         }
     </div>
-    <Divider Orientation="left">Custom</Divider>
+    <Divider Orientation="DividerOrientation.Left">Custom</Divider>
     <div>
-        <Badge Color="#f50" Text="#f50" />
+        <Badge Color="@("#f50")" Text="#f50" />
         <br />
-        <Badge Color="#2db7f5" Text="#2db7f5" />
+        <Badge Color="@("#2db7f5")" Text="#2db7f5" />
         <br />
-        <Badge Color="#87d068" Text="#87d068" />
+        <Badge Color="@("#87d068")" Text="#87d068" />
         <br />
-        <Badge Color="#108ee9" Text="#108ee9" />
+        <Badge Color="@("#108ee9")" Text="#108ee9" />
         <br />
-        <Badge Color="HotPink" Text="HotPink" />
+        <Badge Color="@("HotPink")" Text="HotPink" />
         <br />
-        <Badge Color="DarkRed" Text="DarkRed" />
+        <Badge Color="@("DarkRed")" Text="DarkRed" />
         <br />
-        <Badge Color="rgb(143, 201, 146)" Text="rgb(143, 201, 146)" />
+        <Badge Color="@("rgb(143, 201, 146)")" Text="rgb(143, 201, 146)" />
         <br />
-        <Badge Color="rgb(105, 58, 236)" Text="rgb(105, 58, 236)" />
+        <Badge Color="@("rgb(105, 58, 236)")" Text="rgb(105, 58, 236)" />
     </div>
 </div>
 

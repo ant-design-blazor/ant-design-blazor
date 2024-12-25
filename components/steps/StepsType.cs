@@ -4,9 +4,9 @@
 
 namespace AntDesign
 {
-    public static class StepsType
+    public enum StepsType
     {
-        public const string Default = "default";
-        public const string Navigation = "navigation";
+        Default,
+        Navigation,
     }
 }

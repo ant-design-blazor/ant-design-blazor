@@ -78,9 +78,9 @@ namespace AntDesign
         /// <summary>
         /// Size of the list
         /// </summary>
-        /// <default value="AntSizeLDSType.Default" />
+        /// <default value="ListSize.Default" />
         [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public ListSize Size { get; set; } = ListSize.Default;
 
         /// <summary>
         /// Toggles rendering of the split under the list item
@@ -117,8 +117,8 @@ namespace AntDesign
 
         private string SizeCls => Size switch
         {
-            "large" => "lg",
-            "small" => "sm",
+            ListSize.Large => "lg",
+            ListSize.Small => "sm",
             _ => string.Empty
         };
 

@@ -20,7 +20,7 @@ namespace AntDesign
 
         public int ColIndex { get; set; }
 
-        public string Fixed { get; set; }
+        public ColumnFixPlacement? Fixed { get; set; }
 
         public string Title { get; set; }
         public bool Hidden { get; set; }

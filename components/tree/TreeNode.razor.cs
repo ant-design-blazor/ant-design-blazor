@@ -825,7 +825,7 @@ namespace AntDesign
 
         #endregion Title
 
-        #region data binding
+        #region Data Binding
 
         /// <summary>
         /// The data of the node, it's the data item in the data source
@@ -863,7 +863,7 @@ namespace AntDesign
                 return TreeComponent.DataSource as IList<TItem> ?? TreeComponent.DataSource.ToList();
         }
 
-        #endregion data binding
+        #endregion Data Binding
 
         #region Node data operation
 

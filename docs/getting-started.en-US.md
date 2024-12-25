@@ -87,7 +87,7 @@ public void ConfigureServices(IServiceCollection services)
 - Finally, it can be referenced in the `.razor' component!
 
   ```html
-  <Button Type="primary">Hello World!</Button>
+  <Button Type="ButtonType.Primary">Hello World!</Button>
   ```
 
 ### Specify the style/script auto-import location

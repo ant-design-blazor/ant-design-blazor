@@ -502,7 +502,8 @@ namespace AntDesign
         {
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
-                .Get(() => $"{PrefixCls}-{Size}")
+                .If($"{PrefixCls}-large", () => Size == InputSize.Large)
+                .If($"{PrefixCls}-small", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-rtl", () => RTL)
                 .If($"{PrefixCls}-borderless", () => Bordered == false)
                 .If($"{PrefixCls}-disabled", () => IsDisabled() == true)
@@ -965,10 +966,10 @@ namespace AntDesign
 
         internal DateTime GetClosingDate(DateTime pickerValue, int offset = 1)
         {
-            return Picker.Name switch
+            return Picker switch
             {
-                DatePickerType.YEAR => pickerValue.AddYears(offset * 10),
-                DatePickerType.QUARTER or DatePickerType.DECADE or DatePickerType.MONTH => pickerValue.AddYears(offset),
+                DatePickerType.Year => pickerValue.AddYears(offset * 10),
+                DatePickerType.Quarter or DatePickerType.Decade or DatePickerType.Month => pickerValue.AddYears(offset),
                 _ => pickerValue.AddMonths(offset)
             };
         }
@@ -1034,15 +1035,15 @@ namespace AntDesign
                     if (!string.IsNullOrEmpty(Format))
                         _internalFormat = Format;
                     else
-                        _internalFormat = _pickerStatus[0].InitPicker.Name switch
+                        _internalFormat = _pickerStatus[0].InitPicker.Value switch
                         {
-                            DatePickerType.DATE => GetTimeFormat(),
-                            DatePickerType.MONTH => Locale.Lang.YearMonthFormat,
-                            DatePickerType.YEAR => Locale.Lang.YearFormat,
-                            DatePickerType.TIME when Use12Hours => Locale.Lang.TimeFormat12Hour,
-                            DatePickerType.TIME => Locale.Lang.TimeFormat,
-                            DatePickerType.WEEK => $"{Locale.Lang.YearFormat}-0{Locale.Lang.Week}",
-                            DatePickerType.QUARTER => $"{Locale.Lang.YearFormat}-Q0",
+                            DatePickerType.Date => GetTimeFormat(),
+                            DatePickerType.Month => Locale.Lang.YearMonthFormat,
+                            DatePickerType.Year => Locale.Lang.YearFormat,
+                            DatePickerType.Time when Use12Hours => Locale.Lang.TimeFormat12Hour,
+                            DatePickerType.Time => Locale.Lang.TimeFormat,
+                            DatePickerType.Week => $"{Locale.Lang.YearFormat}-0{Locale.Lang.Week}",
+                            DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-Q0",
                             _ => Locale.Lang.DateFormat,
                         };
                 }
@@ -1070,10 +1071,10 @@ namespace AntDesign
         {
             string format;
             if (string.IsNullOrEmpty(Format))
-                format = _pickerStatus[index].InitPicker.Name switch
+                format = _pickerStatus[index].InitPicker.Value switch
                 {
-                    DatePickerType.WEEK => $"{Locale.Lang.YearFormat}-{CultureInfo.Calendar.GetWeekOfYear(value, CultureInfo.DateTimeFormat.CalendarWeekRule, Locale.FirstDayOfWeek)}'{Locale.Lang.Week}'",
-                    DatePickerType.QUARTER => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
+                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{CultureInfo.Calendar.GetWeekOfYear(value, CultureInfo.DateTimeFormat.CalendarWeekRule, Locale.FirstDayOfWeek)}'{Locale.Lang.Week}'",
+                    DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
                     _ => InternalFormat,
                 };
             else
@@ -1319,22 +1320,22 @@ namespace AntDesign
             OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
                 Date = InternalConvert.FromDateTimeOffset<TValue>(newValue),
-                DateString = _picker.Name
+                DateString = _picker.ToString().ToLowerInvariant()
             });
         }
 
         protected DateTime FormatDateTime(DateTime dateTime)
         {
-            switch (Picker.Name)
+            switch (Picker)
             {
-                case DatePickerType.TIME:
+                case DatePickerType.Time:
                     return dateTime.AddMilliseconds(-dateTime.Millisecond);
 
-                case DatePickerType.YEAR:
+                case DatePickerType.Year:
                     return new DateTime(dateTime.Year, 1, 1);
 
-                case DatePickerType.MONTH:
-                case DatePickerType.QUARTER:
+                case DatePickerType.Month:
+                case DatePickerType.Quarter:
                     return new DateTime(dateTime.Year, dateTime.Month, 1);
             }
 

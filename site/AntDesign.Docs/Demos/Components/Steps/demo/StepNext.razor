@@ -12,15 +12,15 @@
     <div class="steps-action">
         @if (current > 0)
         {
-            <Button Type="primary" OnClick="OnPreClick">Previous</Button>
+            <Button Type="ButtonType.Primary" OnClick="OnPreClick">Previous</Button>
         }
         @if (current < steps.Length - 1)
         {
-            <Button Type="primary" OnClick="OnNextClick">Next</Button>
+            <Button Type="ButtonType.Primary" OnClick="OnNextClick">Next</Button>
         }
         @if (current == steps.Length - 1)
         {
-            <Button Type="primary" OnClick=@(() => message.Success("Processing complete!"))>
+            <Button Type="ButtonType.Primary" OnClick=@(() => message.Success("Processing complete!"))>
                 Done
             </Button>
         }

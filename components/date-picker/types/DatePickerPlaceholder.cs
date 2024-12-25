@@ -8,14 +8,14 @@ namespace AntDesign
     {
         public static string GetPlaceholderByType(DatePickerType pickerType, DatePickerLocale locale)
         {
-            var placeholder = pickerType.Name switch
+            var placeholder = pickerType switch
             {
-                DatePickerType.DATE => locale.Lang.DateSelect,
-                DatePickerType.WEEK => locale.Lang.WeekSelect,
-                DatePickerType.MONTH => locale.Lang.MonthSelect,
-                DatePickerType.QUARTER => locale.Lang.QuarterSelect,
-                DatePickerType.YEAR => locale.Lang.YearSelect,
-                DatePickerType.TIME => locale.Lang.TimeSelect,
+                DatePickerType.Date => locale.Lang.DateSelect,
+                DatePickerType.Week => locale.Lang.WeekSelect,
+                DatePickerType.Month => locale.Lang.MonthSelect,
+                DatePickerType.Quarter => locale.Lang.QuarterSelect,
+                DatePickerType.Year => locale.Lang.YearSelect,
+                DatePickerType.Time => locale.Lang.TimeSelect,
                 _ => locale.Lang.DateSelect,
             };
 
@@ -24,14 +24,14 @@ namespace AntDesign
 
         public static (string, string) GetRangePlaceHolderByType(DatePickerType pickerType, DatePickerLocale locale)
         {
-            var placeholder = pickerType.Name switch
+            var placeholder = pickerType switch
             {
-                DatePickerType.DATE => (locale.Lang.StartDate, locale.Lang.EndDate),
-                DatePickerType.WEEK => (locale.Lang.StartWeek, locale.Lang.EndWeek),
-                DatePickerType.MONTH => (locale.Lang.StartMonth, locale.Lang.EndMonth),
-                DatePickerType.YEAR => (locale.Lang.StartYear, locale.Lang.EndYear),
-                DatePickerType.TIME => (locale.Lang.StartDate, locale.Lang.EndDate),
-                DatePickerType.QUARTER => (locale.Lang.StartQuarter, locale.Lang.EndQuarter),
+                DatePickerType.Date => (locale.Lang.StartDate, locale.Lang.EndDate),
+                DatePickerType.Week => (locale.Lang.StartWeek, locale.Lang.EndWeek),
+                DatePickerType.Month => (locale.Lang.StartMonth, locale.Lang.EndMonth),
+                DatePickerType.Year => (locale.Lang.StartYear, locale.Lang.EndYear),
+                DatePickerType.Time => (locale.Lang.StartDate, locale.Lang.EndDate),
+                DatePickerType.Quarter => (locale.Lang.StartQuarter, locale.Lang.EndQuarter),
                 _ => (locale.Lang.StartDate, locale.Lang.EndDate),
             };
             return placeholder;

@@ -4,10 +4,9 @@
 
 namespace AntDesign
 {
-    public sealed class SpaceSize
+    public enum TableFilterType
     {
-        public static readonly string Small = "small";
-        public static readonly string Middle = "middle";
-        public static readonly string Large = "large";
+        List = 1,
+        FieldType = 2
     }
 }

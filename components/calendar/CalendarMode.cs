@@ -4,16 +4,9 @@
 
 namespace AntDesign
 {
-    public class CalendarMode : EnumValue<CalendarMode>
+    public enum CalendarMode
     {
-        internal const string MONTH = "month";
-        internal const string YEAR = "year";
-
-        public static CalendarMode Month = new CalendarMode(MONTH, 0);
-        public static CalendarMode Year = new CalendarMode(YEAR, 1);
-
-        public CalendarMode(string name, int value) : base(name, value)
-        {
-        }
+        Month,
+        Year,
     }
 }

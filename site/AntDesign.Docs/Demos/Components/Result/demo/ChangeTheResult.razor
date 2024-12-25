@@ -4,22 +4,22 @@
         SubTitle="@subTitle">
 </Result>
 <Divider/>
-<Space Direction="DirectionVHType.Vertical" Size=@("large")>
+<Space Direction="SpaceDirection.Vertical" Size="SpaceSize.Large">
     <SpaceItem>
         <Space>
             <SpaceItem>
                 <Text>Select Icon</Text>
             </SpaceItem>
             <SpaceItem>
-                <RadioGroup TValue="string" @bind-Value="@icon" Size="large" OnChange="Rb_OnChange">
+                <RadioGroup TValue="string" @bind-Value="icon" Size="InputSize.Large" OnChange="Rb_OnChange">
                     <Radio RadioButton Value="@("smile-outline")">
-                        <Icon Type="smile" Theme="outline" />
+                        <Icon Type="@IconType.Outline.Smile" />
                     </Radio>
                     <Radio RadioButton Value="@("like-outline")">
-                        <Icon Type="like" Theme="outline" />
+                        <Icon Type="@IconType.Outline.Like" />
                     </Radio>
                     <Radio RadioButton Value="@("bug-outline")">
-                        <Icon Type="bug" Theme="outline" />
+                        <Icon Type="@IconType.Outline.Bug" />
                     </Radio>
                     <Radio RadioButton Value="@("")">
                         Use Image
@@ -34,17 +34,17 @@
                 <Text>Select Result</Text>
             </SpaceItem>
             <SpaceItem>
-                <SimpleSelect Style="width:150px;" @bind-Value="@status" OnSelectedItemChanged="Cbo_OnSelectedItemChanged">
+                <Select TItem="ResultStatus" TItemValue="ResultStatus" Style="width: 150px;" @bind-Value="@status" OnSelectedItemChanged="Cbo_OnSelectedItemChanged">
                     <SelectOptions>
-                        <SimpleSelectOption Label="Icon-Info" Value="info" />
-                        <SimpleSelectOption Label="Icon-Warning" Value="warning" />
-                        <SimpleSelectOption Label="Icon-Error" Value="error" />
-                        <SimpleSelectOption Label="Icon-Success" Value="success" />
-                        <SimpleSelectOption Label="Image-403" Value="403" />
-                        <SimpleSelectOption Label="Image-404" Value="404" />
-                        <SimpleSelectOption Label="Image-500" Value="500" />
+                        <SelectOption Label="Icon-Info" Value="ResultStatus.Info" />
+                        <SelectOption Label="Icon-Warning" Value="ResultStatus.Warning" />
+                        <SelectOption Label="Icon-Error" Value="ResultStatus.Error" />
+                        <SelectOption Label="Icon-Success" Value="ResultStatus.Success" />
+                        <SelectOption Label="Image-403" Value="ResultStatus.Http403" />
+                        <SelectOption Label="Image-404" Value="ResultStatus.Http404" />
+                        <SelectOption Label="Image-500" Value="ResultStatus.Http500" />
                     </SelectOptions>
-                </SimpleSelect>
+                </Select>
             </SpaceItem>
         </Space>
     </SpaceItem>
@@ -52,28 +52,28 @@
 
 @code
 {
-    private string status = "info";
+    private ResultStatus status = ResultStatus.Info;
     private string icon = "smile-outline";
     private string title = "smile-outline";
     private string subTitle = "The status is info, and the icon used is 'smile-outline'";
 
     private void Rb_OnChange(string value)
     {
-        bool isImageStatus = status.IsIn("403", "404", "500");
+        bool isImageStatus = status.IsIn(ResultStatus.Http403, ResultStatus.Http404, ResultStatus.Http500);
         bool isUseIcon = !string.IsNullOrEmpty(value);
         if (!isUseIcon)
         {
             if (!isImageStatus)
             {
-                status = "403";
+                status = ResultStatus.Http403;
             }
         }
         else if (isImageStatus)
         {
-            status = "info";
+            status = ResultStatus.Info;
         }
 
-        title = isUseIcon ? icon : status;
+        title = isUseIcon ? icon : status.ToString();
         subTitle = $"The status is {status}";
         if (isUseIcon)
         {
@@ -81,15 +81,15 @@
         }
     }
 
-    private void Cbo_OnSelectedItemChanged(string value)
+    private void Cbo_OnSelectedItemChanged(ResultStatus value)
     {
-        if (!string.IsNullOrEmpty(value) && value.IsIn("403", "404", "500"))
+        if (value.IsIn(ResultStatus.Http403, ResultStatus.Http404, ResultStatus.Http500))
         {
             icon = "";
         }
 
         bool isUseIcon = !string.IsNullOrEmpty(icon);
-        title = isUseIcon ? icon : status;
+        title = isUseIcon ? icon : status.ToString();
         subTitle = $"The status is {status}";
         if (isUseIcon)
         {
