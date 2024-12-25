@@ -239,6 +239,14 @@ namespace AntDesign
         public bool Bordered { get; set; } = false;
 
         /// <summary>
+        /// Striped table or not
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        [PublicApi("1.1.0")]
+        public bool Striped { get; set; } = false;
+
+        /// <summary>
         /// Set horizontal scrolling, can also be used to specify the width of the scrolling area, can be set as pixel value, percentage
         /// </summary>
         [Parameter]
@@ -822,6 +830,7 @@ namespace AntDesign
             ClassMapper.Add(prefixCls)
                 .If($"{prefixCls}-fixed-header", () => ScrollY != null)
                 .If($"{prefixCls}-bordered", () => Bordered)
+                .If($"{prefixCls}-striped", () => Striped)
                 .If($"{prefixCls}-small", () => Size == TableSize.Small)
                 .If($"{prefixCls}-middle", () => Size == TableSize.Middle)
                 .If($"{prefixCls}-fixed-column {prefixCls}-scroll-horizontal", () => ScrollX != null)
