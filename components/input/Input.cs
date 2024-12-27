@@ -448,9 +448,10 @@ namespace AntDesign
 
         protected async Task OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (args?.Key == "Enter" && InputType != "textarea")
+            if (args?.Key == "Enter")
             {
-                ChangeValue(true);
+                ChangeValue(InputType != "textarea");
+
                 if (EnableOnPressEnter)
                 {
                     await OnPressEnter.InvokeAsync(args);
