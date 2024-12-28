@@ -326,6 +326,8 @@ namespace AntDesign
 
         private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
 
+        private Queue<Func<Task>> _afterValueChangedQueue = new();
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -446,20 +448,30 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-        protected async Task OnKeyPressAsync(KeyboardEventArgs args)
+        protected void OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (args?.Key == "Enter" && InputType != "textarea")
+            if (EnableOnPressEnter && args?.Key == "Enter")
             {
-                ChangeValue(true);
-                if (EnableOnPressEnter)
+                CallAfterValueChanged(async () =>
                 {
                     await OnPressEnter.InvokeAsync(args);
                     await OnPressEnterAsync();
-                }
+                });
             }
         }
 
         protected virtual Task OnPressEnterAsync() => Task.CompletedTask;
+
+        protected void CallAfterValueChanged(Func<Task> workItem)
+        {
+            _afterValueChangedQueue.Enqueue(workItem);
+            var original = BindOnInput;
+            BindOnInput = true;
+            // Ignoring textarea is to avoid ongoing line breaks being withdrawn due to bindings
+            // However, if the user wishes to use the carriage return event to get the bound value, the value needs to be bound first
+            ChangeValue(InputType != "textarea");
+            BindOnInput = original;
+        }
 
         protected async Task OnKeyUpAsync(KeyboardEventArgs args)
         {
@@ -587,6 +599,10 @@ namespace AntDesign
             if (!_compositionInputting && CurrentValueAsString != _inputString)
             {
                 CurrentValueAsString = _inputString;
+            }
+            while (_afterValueChangedQueue.TryDequeue(out var task))
+            {
+                InvokeAsync(task.Invoke);
             }
         }
 
