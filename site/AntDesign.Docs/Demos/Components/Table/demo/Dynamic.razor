@@ -1,22 +1,30 @@
 ﻿@using System.ComponentModel
 @using AntDesign.TableModels
 
-<Table TItem="Dictionary<string, object>" OnChange="HanleChange" DataSource="@data" Loading="data==null" ScrollX="1500" PageSize="5" Size="TableSize.Small">
-  @foreach (var key in data?.FirstOrDefault()?.Keys.Take(10) ??new string[0])
-  {
-    <PropertyColumn Property=@(c=>c[key]) Title="@key"></PropertyColumn>
-  }
+<Table TItem="Dictionary<string, object>" OnChange="HanleChange" DataSource="@data" Loading="data==null" ScrollX="1500"
+       PageSize="5" Size="TableSize.Small">
+    @foreach (var key in data?.FirstOrDefault()?.Keys.Take(10) ?? new string[0])
+    {
+                    <PropertyColumn Property=@(c=>c[key]) Title="@key"></PropertyColumn>
+    }
 </Table>
 
 @inject HttpClient httpClient;
 @code {
 
-  List<Dictionary<string, object>> data;
+    List<Dictionary<string, object>> data;
 
-  string githubUrl = "https://api.github.com/repos/ant-design-blazor/ant-design-blazor/contributors?per_page=200";
+    string githubUrl = "https://api.github.com/repos/ant-design-blazor/ant-design-blazor/contributors?per_page=200";
 
-  protected async Task HanleChange(QueryModel<Dictionary<string, object>> query)
-  {
-    data = await httpClient.GetFromJsonAsync<List<Dictionary<string, object>>>(githubUrl);
-  }
+    protected async Task HanleChange(QueryModel<Dictionary<string, object>> query)
+    {
+        try
+        {
+            data = await httpClient.GetFromJsonAsync<List<Dictionary<string, object>>>(githubUrl);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
 }
