@@ -41,7 +41,8 @@ namespace AntDesign
 
             var svg = !string.IsNullOrEmpty(icon.IconFont) ?
                 $"<svg><use xlink:href=#{icon.IconFont} /></svg>"
-                : GetIconImg(icon.Type.ToLowerInvariant(), icon.Theme);
+                : icon.Type.EndsWith("</svg>", StringComparison.OrdinalIgnoreCase) ? icon.Type :
+                GetIconImg(icon.Type.ToLowerInvariant(), icon.Theme);
 
             if (string.IsNullOrEmpty(svg))
             {
