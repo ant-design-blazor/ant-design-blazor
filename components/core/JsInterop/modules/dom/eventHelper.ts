@@ -12,26 +12,28 @@ export class eventHelper {
 
   static addDomEventListener(element, eventName: string, preventDefault: boolean, invoker: any, stopPropagation: boolean = false) {
     const callback = args => {
-      const obj = {};
-      for (const k in args) {
-        if (k !== 'originalTarget') { //firefox occasionally raises Permission Denied when this property is being stringified
-          obj[k] = args[k];
-        }
-      }
-      const cache = new Set();
-      const json = JSON.stringify(obj, (k, v) => {
-        if (typeof v === 'object' && v !== null) {
-          if (cache.has(v)) {
-            return;
-          }
-          cache.add(v);
-        }
-        if (v instanceof Node) return 'Node';
-        if (v instanceof Window) return 'Window';
-        return v;
-      }, ' ');
+      // const obj = {};
+      // for (const k in args) {
+      //   if (k !== 'originalTarget') { //firefox occasionally raises Permission Denied when this property is being stringified
+      //     obj[k] = args[k];
+      //   }
+      // }
+      // const cache = new Set();
+      // const json = JSON.stringify(obj, (k, v) => {
+      //   if (typeof v === 'object' && v !== null) {
+      //     if (cache.has(v)) {
+      //       return;
+      //     }
+      //     cache.add(v);
+      //   }
+      //   if (v instanceof Node) return 'Node';
+      //   if (v instanceof Window) return 'Window';
+      //   return v;
+      // }, ' ');
 
-      setTimeout(function () { invoker.invokeMethodAsync('Invoke', json) }, 0);
+      delete args ['originalTarget'];
+
+      invoker.invokeMethodAsync('Invoke', args);
       if (preventDefault === true) {
         args.preventDefault();
       }

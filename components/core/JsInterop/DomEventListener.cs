@@ -84,7 +84,7 @@ namespace AntDesign.JsInterop
             {
                 _domEventSubscriptionsStore[key] = new List<DomEventSubscription>();
 
-                var dotNetObject = DotNetObjectReference.Create(new Invoker<string>((p) =>
+                var dotNetObject = DotNetObjectReference.Create(new Invoker<T>((p) =>
                 {
                     if (!_domEventSubscriptionsStore.ContainsKey(key))
                         return;
@@ -92,8 +92,8 @@ namespace AntDesign.JsInterop
                     for (var i = 0; i < _domEventSubscriptionsStore[key].Count; i++)
                     {
                         var subscription = _domEventSubscriptionsStore[key][i];
-                        var tP = JsonSerializer.Deserialize(p, subscription.Type, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-                        subscription.Delegate.DynamicInvoke(tP);
+                        // var tP = JsonSerializer.Deserialize(p, subscription.Type, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                        subscription.Delegate.DynamicInvoke(p);
                     }
                 }));
 
@@ -159,13 +159,13 @@ namespace AntDesign.JsInterop
                 if (!_domEventSubscriptionsStore.ContainsKey(key))
                 {
                     _domEventSubscriptionsStore[key] = new List<DomEventSubscription>();
-                    await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), DotNetObjectReference.Create(new Invoker<string>((p) =>
+                    await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), DotNetObjectReference.Create(new Invoker<List<ResizeObserverEntry>>((p) =>
                     {
                         for (var i = 0; i < _domEventSubscriptionsStore[key].Count; i++)
                         {
                             var subscription = _domEventSubscriptionsStore[key][i];
-                            object tP = JsonSerializer.Deserialize(p, subscription.Type);
-                            subscription.Delegate.DynamicInvoke(tP);
+                            // object tP = JsonSerializer.Deserialize(p, subscription.Type);
+                            subscription.Delegate.DynamicInvoke(p);
                         }
                     })));
                     await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Observe, key.ToString(), dom);
@@ -229,10 +229,10 @@ namespace AntDesign.JsInterop
 
         public void AddEventListenerToFirstChild<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
         {
-            AddEventListenerToFirstChildInternal<string>(dom, eventName, preventDefault, (e) =>
+            AddEventListenerToFirstChildInternal<T>(dom, eventName, preventDefault, (e) =>
             {
-                T obj = JsonSerializer.Deserialize<T>(e);
-                callback(obj);
+                // T obj = JsonSerializer.Deserialize<T>(e);
+                callback(e);
             });
         }
 
@@ -246,7 +246,7 @@ namespace AntDesign.JsInterop
                     callback?.Invoke(p);
                 }));
 
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListenerToFirstChild, dom, eventName, preventDefault, dotNetObject);
+                _jsRuntime.InvokeVoidAsync(JSInteropConstants.AddDomEventListenerToFirstChild, dom, eventName, preventDefault, dotNetObject);
                 _exclusiveDotNetObjectStore.Add(key, dotNetObject);
             }
         }
@@ -266,17 +266,26 @@ namespace AntDesign.JsInterop
 
     public class Invoker<T>
     {
-        private Action<T> _action;
+        private Func<T, Task> _invoker;
 
         public Invoker(Action<T> invoker)
         {
-            _action = invoker;
+            _invoker = (T args) =>
+            {
+                invoker(args);
+                return Task.CompletedTask;
+            };
+        }
+
+        public Invoker(Func<T, Task> invoker)
+        {
+            _invoker = invoker;
         }
 
         [JSInvokable]
-        public void Invoke(T param)
+        public async Task Invoke(T param)
         {
-            _action.Invoke(param);
+            await _invoker.Invoke(param);
         }
     }
 }
