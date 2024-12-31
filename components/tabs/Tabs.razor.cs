@@ -571,10 +571,10 @@ namespace AntDesign
 
             if (_afterFirstRender && _needUpdateScrollListPosition)
             {
-                _needUpdateScrollListPosition = false;
                 await ResetSizes();
                 UpdateScrollListPosition();
                 TryRenderInk();
+                _needUpdateScrollListPosition = false;
             }
 
             _shouldRender = false;
