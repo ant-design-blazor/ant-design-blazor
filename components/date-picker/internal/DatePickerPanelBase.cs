@@ -118,6 +118,17 @@ namespace AntDesign
                 { "IsShowTime", IsShowTime },
             };
 
+        protected static Dictionary<DatePickerType, string> PickerTypeMap = new()
+        {
+            [DatePickerType.Date] = "date",
+            [DatePickerType.Decade] = "decade",
+            [DatePickerType.Month] = "month",
+            [DatePickerType.Quarter] = "quarter",
+            [DatePickerType.Time] = "time",
+            [DatePickerType.Week] = "week",
+            [DatePickerType.Year] = "year"
+        };
+
         protected void OnSelectTime(DateTime date) => OnSelect?.Invoke(date, GetPickerIndex());
 
         protected void OnSelectDate(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(year: date.Year, month: date.Month, day: date.Day), GetPickerIndex());
