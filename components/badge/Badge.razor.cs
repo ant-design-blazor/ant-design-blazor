@@ -132,7 +132,7 @@ namespace AntDesign
         /// Size of the badge
         /// </summary>
         [Parameter]
-        public string Size { get; set; }
+        public BadgeSize? Size { get; set; }
 
         /// <summary>
         /// Wrapping this item.
@@ -150,7 +150,8 @@ namespace AntDesign
 
         private char[] _maxNumberArray = Array.Empty<char>();
 
-        private readonly Hashtable _statusMap = new Hashtable() {
+        private readonly static Hashtable _statusMap = new Hashtable()
+        {
             [BadgeStatus.Default] = "default",
             [BadgeStatus.Success] = "success",
             [BadgeStatus.Processing] = "processing",
@@ -203,7 +204,7 @@ namespace AntDesign
                 .Add("ant-scroll-number")
                 .If($"{prefixName}-count", () => !Dot && !HasStatusOrColor)
                 .If($"{prefixName}-dot", () => Dot || HasStatusOrColor)
-                .If($"{prefixName}-count-sm", () => !string.IsNullOrWhiteSpace(Size) && Size.Equals("small", StringComparison.OrdinalIgnoreCase))
+                .If($"{prefixName}-count-sm", () => Size == BadgeSize.Small)
                 .GetIf(() => $"ant-badge-status-{StatusOrPresetColor}", () => !string.IsNullOrWhiteSpace(StatusOrPresetColor))
                 .If($"{prefixName}-multiple-words", () => _countArray.Length >= 2)
                 .If($"{prefixName}-zoom-enter {prefixName}-zoom-enter-active", () => _dotEnter)

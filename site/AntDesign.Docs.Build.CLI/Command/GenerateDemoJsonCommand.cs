@@ -689,7 +689,7 @@ namespace AntDesign.Docs.Build.CLI.Command
             IList<string> demoTypes = null;
 
             var directories = demoDirectoryInfo.GetFileSystemInfos().Where(x => x.Name != "Components")
-                .SelectMany(x => (x as DirectoryInfo).GetFileSystemInfos());
+                .SelectMany(x => x is DirectoryInfo directory ? directory.GetFileSystemInfos() : []);
 
             foreach (FileSystemInfo component in directories)
             {
