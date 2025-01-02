@@ -10,10 +10,7 @@
     <base href="/" />
     <link rel="icon" href="logo.png" type="image/x-icon">
     <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
-    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@docsearch/css@3" />
     <link href="_content/AntDesign.Docs/css/default.css" rel="stylesheet">
-    <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/color.less">
-    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css">
 </head>
 
 <body>
@@ -30,7 +27,7 @@
                 }
 
                 #root {
-                    background-image: url("_content/AntDesign.Docs/home_bg.png");
+                    /* background-image: url("_content/AntDesign.Docs/home_bg.png"); */
                     background-repeat: no-repeat;
                     background-size: 100% auto;
                 }
@@ -199,10 +196,35 @@
         </div>
     </app>
 
+    <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
 
     <script src="_content/AntDesign.Docs/js/prism.js"></script>
+    <script>
+        window.XPrism = {};
+        window.XPrism.highlight = function (code, language) {
+            return Prism.highlight(code, Prism.languages[language], language);
+        }
+
+        window.XPrism.highlightAll = function () {
+            Prism.highlightAll();
+        }
+
+        window.changeColor = function (hex, ref) {
+            window.less
+                .modifyVars({
+                    '@primary-color': hex
+                }).then(() => ref.invokeMethodAsync('OnColorChanged'))
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@docsearch/css@3" />
+    <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/color.less">
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://fastly.jsdelivr.net/npm/@docsearch/js@3"></script>
+    <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
     <script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } }</script>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.nls.js"></script>
@@ -224,27 +246,5 @@
             navigator.clipboard.writeText(text);
         }
     </script>
-    <script>
-        window.XPrism = {};
-        window.XPrism.highlight = function (code, language) {
-            return Prism.highlight(code, Prism.languages[language], language);
-        }
-
-        window.XPrism.highlightAll = function () {
-            Prism.highlightAll();
-        }
-
-        window.changeColor = function (hex, ref) {
-            window.less
-                .modifyVars({
-                    '@primary-color': hex
-                }).then(() => ref.invokeMethodAsync('OnColorChanged'))
-        }
-    </script>
-
-    <script src="_framework/blazor.webassembly.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://fastly.jsdelivr.net/npm/@docsearch/js@3"></script>
-    <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
 </body>
 </html>

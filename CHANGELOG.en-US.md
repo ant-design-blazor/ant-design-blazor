@@ -1,5 +1,5 @@
 ---
-order: 6
+order: 98
 title: Change Log
 toc: false
 timeline: true
@@ -14,6 +14,15 @@ timeline: true
 - Major version release is not included in this schedule for breaking change and new features.
 
 ---
+
+### 1.1.1
+
+`2025-01-02`
+
+- 🛠 Refactor Badge changed the type of Size and Color of BadgeRibbon to be enum. [#4389](https://github.com/ant-design-blazor/ant-design-blazor/pull/4389) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed BackTop scrolling in a dead loop. [#4391](https://github.com/ant-design-blazor/ant-design-blazor/pull/4391) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Upload error cause by OneOf converting. [#4390](https://github.com/ant-design-blazor/ant-design-blazor/pull/4390) [@ElderJames](https://github.com/ElderJames)
+
 ### 1.1.0
 
 `2024-12-31`
@@ -21,7 +30,7 @@ timeline: true
 Happy new year!
 
 - Table
-  - 🆕 Add `Striped` parameter for . [#4372](https://github.com/ant-design-blazor/ant-design-blazor/pull/4372) [@zandiarash](https://github.com/zandiarash)
+  - 🆕 Add `Striped` parameter. [#4372](https://github.com/ant-design-blazor/ant-design-blazor/pull/4372) [@zandiarash](https://github.com/zandiarash)
   - 🆕 Add support lazy load for tree data. [#4228](https://github.com/ant-design-blazor/ant-design-blazor/pull/4228) [@ElderJames](https://github.com/ElderJames)
   - 🆕 Add disable auto column index feature. [#4343](https://github.com/ant-design-blazor/ant-design-blazor/pull/4343) [@GoldSucc](https://github.com/GoldSucc)
   - 🐞 Fixed the issue that grouped sub-data is not refreshed is fixed. [#4368](https://github.com/ant-design-blazor/ant-design-blazor/pull/4368) [@GlodenBoy](https://github.com/GlodenBoy)

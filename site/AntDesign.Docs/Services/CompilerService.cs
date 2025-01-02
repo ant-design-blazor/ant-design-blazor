@@ -135,6 +135,8 @@ namespace AntDesign.Docs.Services
                  typeof(AntDesign._Imports).Assembly,
                  typeof(ExpandoObject).Assembly,
                  typeof(_Imports).Assembly,
+                 typeof(System.ValueType).Assembly,
+                 typeof(OneOf.IOneOf).Assembly,
              };
 
             var referencedAssemblies = referenceAssemblyRoots
