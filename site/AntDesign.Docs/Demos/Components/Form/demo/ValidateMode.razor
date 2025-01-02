@@ -4,16 +4,16 @@
 <Switch @bind-Value="@validateOnChange" CheckedChildren="ValidateOnChange" UnCheckedChildren="ValidateOnSubmit" />
 <p />
 <Form Model="@modelDefault"
-	  ValidateMode="@FormValidateMode.Default"
+	  ValidateMode="FormValidateMode.Default"
 	  ValidateOnChange="@validateOnChange"
 	  LabelColSpan="10"
 	  WrapperColSpan="14"
-	  Size="@AntSizeLDSType.Small">
+	  Size="FormSize.Small">
 	<FormItem Label="Default-UserName">
 		<Input @bind-Value="@context.Username" />
 	</FormItem>
 	<FormItem WrapperColOffset="8" WrapperColSpan="16">
-		<Button Type="@ButtonType.Primary" HtmlType="submit">
+		<Button Type="ButtonType.Primary" HtmlType="submit">
 			Submit
 		</Button>
 	</FormItem>
@@ -21,11 +21,11 @@
 
 
 <Form Model="@modelRules"
-	  ValidateMode="@FormValidateMode.Rules"
+	  ValidateMode="FormValidateMode.Rules"
 	  ValidateOnChange="@validateOnChange"
 	  LabelColSpan="10"
 	  WrapperColSpan="14"
-	  Size="@AntSizeLDSType.Small">
+	  Size="FormSize.Small">
 	<FormItem Label="Rules-UserName" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
 		<Input @bind-Value="@context.Username" />
 	</FormItem>
@@ -33,23 +33,23 @@
 		<Input @bind-Value="@context.Number" />
 	</FormItem>
 	<FormItem WrapperColOffset="8" WrapperColSpan="16">
-		<Button Type="@ButtonType.Primary" HtmlType="submit">
+		<Button Type="ButtonType.Primary" HtmlType="submit">
 			Submit
 		</Button>
 	</FormItem>
 </Form>
 
 <Form Model="@modelComplex"
-	  ValidateMode="@FormValidateMode.Complex"
+	  ValidateMode="FormValidateMode.Complex"
 	  ValidateOnChange="@validateOnChange"
 	  LabelColSpan="10"
 	  WrapperColSpan="14"
-	  Size="@AntSizeLDSType.Small">
+	  Size="FormSize.Small">
 	<FormItem Label="Complex-UserName" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
 		<Input @bind-Value="@context.Username" />
 	</FormItem>
 	<FormItem WrapperColOffset="8" WrapperColSpan="16">
-		<Button Type="@ButtonType.Primary" HtmlType="submit">
+		<Button Type="ButtonType.Primary" HtmlType="submit">
 			Submit
 		</Button>
 	</FormItem>

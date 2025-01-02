@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -53,9 +54,9 @@ namespace AntDesign
         /// <summary>
         /// Type of result. Influences styles and default image/icon. Possible values: success, error, info, warning, 404, 403, 500
         /// </summary>
-        /// <default value="info" />
+        /// <default value="ResultStatus.Info" />
         [Parameter]
-        public string Status { get; set; } = "info";
+        public ResultStatus Status { get; set; } = ResultStatus.Info;
 
         /// <summary>
         /// Custom icon. Format: "{type}-{theme}"
@@ -84,6 +85,17 @@ namespace AntDesign
 
         private ClassMapper IconClassMapper { get; set; } = new ClassMapper();
 
+        private static Dictionary<ResultStatus, string> _typeMap = new()
+        {
+            [ResultStatus.Info] = "info",
+            [ResultStatus.Success] = "success",
+            [ResultStatus.Warning] = "warning",
+            [ResultStatus.Error] = "error",
+            [ResultStatus.Http403] = "403",
+            [ResultStatus.Http404] = "404",
+            [ResultStatus.Http500] = "500"
+        };
+
         private RenderFragment BuildIcon => builder =>
         {
             var iconType = DetermineIconType();
@@ -94,38 +106,66 @@ namespace AntDesign
             builder.CloseComponent();
         };
 
-        private (string type, string theme) DetermineIconType()
+        private (string type, IconThemeType theme) DetermineIconType()
         {
             if (!string.IsNullOrEmpty(Icon))
             {
                 var separatorIndex = Icon.LastIndexOf("-", StringComparison.CurrentCultureIgnoreCase);
                 var type = Icon.Substring(0, separatorIndex);
-                var theme = Icon.Substring(separatorIndex + 1, Icon.Length - separatorIndex - 1);
+                var themeString = Icon.Substring(separatorIndex + 1, Icon.Length - separatorIndex - 1);
+
+                IconThemeType theme;
+
+                switch (themeString)
+                {
+                    case "fill":
+                        theme = IconThemeType.Fill;
+                        break;
+
+                    case "twotone":
+                        theme = IconThemeType.TwoTone;
+                        break;
+
+                    case "internal":
+                        theme = IconThemeType.Internal;
+                        break;
+
+                    case "outline":
+                    default:
+                        theme = IconThemeType.Outline;
+                        break;
+                }
+
                 return (type, theme);
             }
 
-            if (Status == "error")
-                return ("close-circle", "fill");
+            switch (Status)
+            {
+                case ResultStatus.Error:
+                    return ("close-circle", IconThemeType.Fill);
 
-            if (Status == "success")
-                return ("check-circle", "fill");
+                case ResultStatus.Success:
+                    return ("check-circle", IconThemeType.Fill);
 
-            if (Status == "warning")
-                return ("warning", "fill");
+                case ResultStatus.Warning:
+                    return ("warning", IconThemeType.Fill);
 
-            if (Status == "403")
-                return ("unauthorized", "internal");
+                case ResultStatus.Http403:
+                    return ("unauthorized", IconThemeType.Internal);
 
-            if (Status == "404")
-                return ("not-found", "internal");
+                case ResultStatus.Http404:
+                    return ("not-found", IconThemeType.Internal);
 
-            if (Status == "500")
-                return ("bad-request", "internal");
+                case ResultStatus.Http500:
+                    return ("bad-request", IconThemeType.Internal);
 
-            return ("info-circle", "fill");
+                case ResultStatus.Info:
+                default:
+                    return ("info-circle", IconThemeType.Fill);
+            }
         }
 
-        private bool IsImage => Status.IsIn("403", "404", "500");
+        private bool IsImage => Status.IsIn(ResultStatus.Http403, ResultStatus.Http404, ResultStatus.Http500);
 
         private void LoadImage()
         {
@@ -140,7 +180,7 @@ namespace AntDesign
         private void SetClass()
         {
             ClassMapper.Add(PrefixCls)
-                .Get(() => $"{PrefixCls}-{Status}")
+                .Get(() => $"{PrefixCls}-{_typeMap[Status]}")
                 .If($"{PrefixCls}-rtl", () => RTL);
 
             IconClassMapper.Get(() => $"{PrefixCls}-{(IsImage ? "image" : "icon")}");

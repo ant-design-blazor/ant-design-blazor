@@ -122,7 +122,7 @@ namespace AntDesign
         /// Content type - styles text. Possible values: secondary, warning, danger
         /// </summary>
         [Parameter]
-        public string Type { get; set; } = string.Empty;
+        public TextElementType? Type { get; set; }
 
         /// <summary>
         /// Content to wrap
@@ -150,7 +150,7 @@ namespace AntDesign
         {
             ClassMapper
                 .Add(PrefixName)
-                .GetIf(() => $"{PrefixName}-{Type}", () => !string.IsNullOrEmpty(Type))
+                .GetIf(() => $"{PrefixName}-{Type.ToString().ToLowerInvariant()}", () => Type.HasValue)
                 .GetIf(() => $"{PrefixName}-{HtmlType}", () => Editing)
                 .If($"{PrefixName}-disabled", () => Disabled)
                 .If($"{PrefixName}-edit-content", () => Editing)

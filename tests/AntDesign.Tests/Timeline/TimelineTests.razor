@@ -6,7 +6,7 @@
 		var cut = Context.Render(
 			@<Timeline>
 			  <TimelineItem>Create a services site 2015-09-01</TimelineItem>
-			  <TimelineItem Color="red" >Solve initial network problems 2015-09-01</TimelineItem>
+			  <TimelineItem Color="TimelineDotColor.Red" >Solve initial network problems 2015-09-01</TimelineItem>
 			</Timeline>);		
 		cut.MarkupMatches(
 			@<ul class="ant-timeline" id:ignore >
@@ -35,7 +35,7 @@
 		var cut = Context.Render(
 			@<Timeline Mode="@TimelineMode.Right">
 			  <TimelineItem>Create a services site 2015-09-01</TimelineItem>
-			  <TimelineItem Color="red" >Solve initial network problems 2015-09-01</TimelineItem>
+			  <TimelineItem Color="TimelineDotColor.Red" >Solve initial network problems 2015-09-01</TimelineItem>
 			</Timeline>);		
 		cut.MarkupMatches(
 			@<ul class="ant-timeline ant-timeline-right" id:ignore >
@@ -100,7 +100,7 @@
 		var cut = Context.Render(
 			@<Timeline Mode="@mode">
 			  <TimelineItem Label="2015-09-01">Create a services site</TimelineItem>
-			  <TimelineItem Label="2015-09-02" Color="red" >Solve initial network problems</TimelineItem>
+			  <TimelineItem Label="2015-09-02" Color="TimelineDotColor.Red" >Solve initial network problems</TimelineItem>
 			</Timeline>);
 
 		cut.MarkupMatches(

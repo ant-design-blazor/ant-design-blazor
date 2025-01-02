@@ -232,7 +232,7 @@ namespace AntDesign
 
         private bool IsAlreadySelected(SelectOptionItem<TItemValue, TItem> selectOption)
         {
-            if (SelectParent.Mode == "default")
+            if (SelectParent.Mode == SelectMode.Default)
             {
                 return EqualityComparer<TItemValue>.Default.Equals(selectOption.Value, SelectParent.Value) ||
                     EqualityComparer<TItemValue>.Default.Equals(selectOption.Value, SelectParent.LastValueBeforeReset);
@@ -273,7 +273,7 @@ namespace AntDesign
             {
                 await SelectParent.SetValueAsync(Model);
 
-                if (SelectParent.SelectMode == SelectMode.Default)
+                if (SelectParent.Mode == SelectMode.Default)
                 {
                     await SelectParent.CloseAsync();
                 }

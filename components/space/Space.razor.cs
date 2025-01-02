@@ -25,21 +25,21 @@ namespace AntDesign
         /// Alignment of items - start | end | center | baseline
         /// </summary>
         [Parameter]
-        public string Align { get; set; }
+        public OneOf<SpaceAlign, string> Align { get; set; }
 
         /// <summary>
         /// Item flow direction
         /// </summary>
-        /// <default value="DirectionVHType.Horizontal" />
+        /// <default value="SpaceDirection.Horizontal" />
         [Parameter]
-        public DirectionVHType Direction { get; set; } = DirectionVHType.Horizontal;
+        public SpaceDirection Direction { get; set; } = SpaceDirection.Horizontal;
 
         /// <summary>
         /// Size of space between items
         /// </summary>
         /// <default value="small" />
         [Parameter]
-        public OneOf<string, (string, string)> Size
+        public OneOf<SpaceSize, string, (string, string)> Size
         {
             get { return _size; }
             set
@@ -75,17 +75,17 @@ namespace AntDesign
 
         private const string PrefixCls = "ant-space";
 
-        private OneOf<string, (string, string)> _size = SpaceSize.Small;
+        private OneOf<SpaceSize, string, (string, string)> _size = SpaceSize.Small;
 
-        private string InnerStyle => Wrap && Direction == DirectionVHType.Horizontal ? "flex-wrap: wrap;" : "";
+        private string InnerStyle => Wrap && Direction == SpaceDirection.Horizontal ? "flex-wrap: wrap;" : "";
 
         private void SetClass()
         {
             ClassMapper
                 .Add(PrefixCls)
-                .GetIf(() => $"{PrefixCls}-{Direction.Name.ToLowerInvariant()}", () => Direction.IsIn(DirectionVHType.Horizontal, DirectionVHType.Vertical))
+                .Get(() => $"{PrefixCls}-{Direction.ToString().ToLowerInvariant()}")
                 .GetIf(() => $"{PrefixCls}-align-{Align}", () => HasAlign)
-                .If($"{PrefixCls}-align-center", () => !HasAlign && Direction == DirectionVHType.Horizontal)
+                .If($"{PrefixCls}-align-center", () => !HasAlign && Direction == SpaceDirection.Horizontal)
                 .If($"{PrefixCls}-rtl", () => RTL);
         }
 

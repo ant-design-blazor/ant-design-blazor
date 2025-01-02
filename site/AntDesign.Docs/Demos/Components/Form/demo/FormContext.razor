@@ -17,7 +17,7 @@
                     @for (int i = 0; i < context.Users.Count; i++)
                     {
                         <li class="user">
-                            <Icon Type="user" />
+                            <Icon Type="@IconType.Outline.User" />
                             @(context.Users[i].Name) - @(context.Users[i].Age)
                         </li>
                     }
@@ -27,13 +27,13 @@
             {
                 <Paragraph>
                     <Text Class="ant-form-text">
-                        ( <Icon Type="smile" /> No user yet. )
+                        ( <Icon Type="@IconType.Outline.Smile" /> No user yet. )
                     </Text>
                 </Paragraph>
             }
         </FormItem>
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
-            <Button HtmlType="submit" Type="@ButtonType.Primary">
+            <Button HtmlType="submit" Type="ButtonType.Primary">
                 Submit
             </Button>
             <Button HtmlType="button" Style="margin: 0 8px" OnClick="ShowUserModal">
@@ -46,7 +46,7 @@
            Visible="@_modelVisible"
            OnOk="@HandleOk"
            OnCancel="@HideUserModal">
-        <Form @ref="@_userForm" Model="@_userFormModel" Layout="@FormLayout.Vertical" Name="userForm">
+        <Form @ref="@_userForm" Model="@_userFormModel" Layout="FormLayout.Vertical" Name="userForm">
             <FormItem Label="User Name">
                 <Input @bind-Value="@context.Name" />
             </FormItem>

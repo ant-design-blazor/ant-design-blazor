@@ -1,4 +1,4 @@
-﻿<Tabs Type="@TabType.EditableCard" HideAdd Draggable>
+﻿<Tabs Type="TabType.EditableCard" HideAdd Draggable>
     @foreach (var pane in panes)
     {
         <TabPane @key="@pane.Key" Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable">

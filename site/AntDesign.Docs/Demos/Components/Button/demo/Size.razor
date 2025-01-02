@@ -1,30 +1,29 @@
 ﻿<div>
-    <RadioGroup @bind-Value="@_size">
-        <Radio RadioButton Value="@ButtonSize.Large">Large</Radio>
-        <Radio RadioButton Value="@ButtonSize.Default">Default</Radio>
-        <Radio RadioButton Value="@ButtonSize.Small">Small</Radio>
+    <RadioGroup @bind-Value="_size">
+        <Radio RadioButton Value="ButtonSize.Large">Large</Radio>
+        <Radio RadioButton Value="ButtonSize.Default">Default</Radio>
+        <Radio RadioButton Value="ButtonSize.Small">Small</Radio>
     </RadioGroup>
     
     <br />
-    <br />
     
-    <Button Type="@ButtonType.Primary" Size="@_size">Primary</Button>
-    <Button Size="@_size">Default</Button>
-    <Button Type="@ButtonType.Dashed" Size="@_size">Dashed</Button>
-    
-    <br />
-    
-    <Button Type="@ButtonType.Link" Size="@_size">Link</Button>
+    <Button Type="ButtonType.Primary" Size="_size">Primary</Button>
+    <Button Size="_size">Default</Button>
+    <Button Type="ButtonType.Dashed" Size="_size">Dashed</Button>
     
     <br />
     
-    <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Download" Size="@_size" />
-    <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Download" Size="@_size" Shape="@ButtonShape.Round" />
-    <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Download" Size="@_size" Shape="@ButtonShape.Round" >Download</Button>
-    <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Download" Size="@_size">Download</Button>
+    <Button Type="ButtonType.Link" Size="_size">Link</Button>
+    
+    <br />
+    
+    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="_size" />
+    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="_size" Shape="ButtonShape.Round" />
+    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="_size" Shape="ButtonShape.Round">Download</Button>
+    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" Size="_size">Download</Button>
 </div>
 
 @code
 {
-    string _size = ButtonSize.Large;
+    ButtonSize _size = ButtonSize.Large;
 }

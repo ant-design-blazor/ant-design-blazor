@@ -14,7 +14,7 @@
             }
             else
             {
-                <Icon Type="@IconType" Theme="@(string.IsNullOrWhiteSpace(Description)?"fill":"outline")" Class="ant-alert-icon" />
+                <Icon Type="@IconType" Theme="@(string.IsNullOrWhiteSpace(Description) ? IconThemeType.Fill : IconThemeType.Outline)" Class="ant-alert-icon" />
             }
         }
         <div class="ant-alert-content">

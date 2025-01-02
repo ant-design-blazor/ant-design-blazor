@@ -107,8 +107,8 @@ namespace AntDesign
         {
             string prefixCls = "ant-radio-group";
             ClassMapper.Add(prefixCls)
-                .If($"{prefixCls}-large", () => Size == "large")
-                .If($"{prefixCls}-small", () => Size == "small")
+                .If($"{prefixCls}-large", () => Size == InputSize.Large)
+                .If($"{prefixCls}-small", () => Size == InputSize.Small)
                 .GetIf(() => $"{prefixCls}-{_buttonStyleDics[ButtonStyle.Value]}", () => ButtonStyle.HasValue && ButtonStyle.IsIn(RadioButtonStyle.Outline, RadioButtonStyle.Solid))
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;

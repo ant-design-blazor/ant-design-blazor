@@ -85,7 +85,7 @@ public void ConfigureServices(IServiceCollection services)
 - 最后就可以在`.razor`组件中引用啦！
 
 ```html
-<Button Type="primary">Primary</Button>
+<Button Type="ButtonType.Primary">Primary</Button>
 ```
 
 ### 指定样式/脚本自动引入位置

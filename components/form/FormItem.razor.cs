@@ -218,7 +218,7 @@ namespace AntDesign
         [Parameter]
         public string ToolTip { get; set; }
 
-        private static readonly Dictionary<FormValidateStatus, (string theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (string theme, string type)>
+        private static readonly Dictionary<FormValidateStatus, (IconThemeType theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (IconThemeType theme, string type)>
         {
             { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },
             { FormValidateStatus.Warning, (IconThemeType.Fill, Outline.ExclamationCircle) },

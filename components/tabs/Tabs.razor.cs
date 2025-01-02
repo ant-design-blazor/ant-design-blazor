@@ -281,7 +281,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-line", () => Type == TabType.Line)
                 .If($"{PrefixCls}-editable-card", () => Type == TabType.EditableCard)
                 .If($"{PrefixCls}-card", () => Type.IsIn(TabType.EditableCard, TabType.Card))
-                .If($"{PrefixCls}-large", () => Size == TabSize.Large || (Card != null && Card.Size != "small"))
+                .If($"{PrefixCls}-large", () => Size == TabSize.Large || (Card != null && Card.Size != CardSize.Small))
                 .If($"{PrefixCls}-head-tabs", () => Card != null)
                 .If($"{PrefixCls}-small", () => Size == TabSize.Small)
                 .If($"{PrefixCls}-no-animation", () => !Animated)
@@ -571,10 +571,10 @@ namespace AntDesign
 
             if (_afterFirstRender && _needUpdateScrollListPosition)
             {
-                _needUpdateScrollListPosition = false;
                 await ResetSizes();
                 UpdateScrollListPosition();
                 TryRenderInk();
+                _needUpdateScrollListPosition = false;
             }
 
             _shouldRender = false;

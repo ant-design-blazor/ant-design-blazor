@@ -62,13 +62,13 @@ namespace AntDesign
         /// </summary>
         /// <default value="IconThemeType.Outline" />
         [Parameter]
-        public string Theme { get; set; } = IconThemeType.Outline;
+        public IconThemeType Theme { get; set; } = IconThemeType.Outline;
 
         /// <summary>
         /// Specify the primary color when using the TwoTone theme. Other themes ignore this parameter.
         /// </summary>
         [Parameter]
-        public string TwotoneColor
+        public string TwoToneColor
         {
             get => _primaryColor;
             set
@@ -76,7 +76,7 @@ namespace AntDesign
                 if (_primaryColor != value)
                 {
                     _primaryColor = value;
-                    _twotoneColorChanged = true;
+                    _twoToneColorChanged = true;
                 }
             }
         }
@@ -141,7 +141,7 @@ namespace AntDesign
         protected string _svgImg;
         private string _primaryColor = "#1890ff";
         private string _secondaryColor = null;
-        private bool _twotoneColorChanged = false;
+        private bool _twoToneColorChanged = false;
 
         private Dictionary<string, object> _attributes = new();
 
@@ -183,9 +183,9 @@ namespace AntDesign
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (Theme == IconThemeType.Twotone && (firstRender || _twotoneColorChanged))
+            if (Theme == IconThemeType.TwoTone && (firstRender || _twoToneColorChanged))
             {
-                _twotoneColorChanged = false;
+                _twoToneColorChanged = false;
                 await ChangeTwoToneColor();
 
                 SetupSvgImg();

@@ -2,14 +2,14 @@
 
 <Table DataSource="@data" Bordered Size="TableSize.Small" ScrollX="1350" ScrollY="240">
     <ColumnDefinitions>
-        <PropertyColumn Property="c=>c.Name" Width="100" Fixed="left" />
+        <PropertyColumn Property="c=>c.Name" Width="100" Fixed="ColumnFixPlacement.Left" />
         <PropertyColumn Property="c=>c.Age" Width="150" />
         <PropertyColumn Property="c=>c.Street" Width="150" />
         <PropertyColumn Property="c=>c.Building" Width="100" />
         <PropertyColumn Property="c=>c.Number" Width="100" />
         <PropertyColumn Property="c=>c.CompanyAddress" Width="200" />
         <PropertyColumn Property="c=>c.CompanyName" />
-        <PropertyColumn Property="c=>c.Gender" Width="80" Fixed="right" />
+        <PropertyColumn Property="c=>c.Gender" Width="80" Fixed="ColumnFixPlacement.Right" />
     </ColumnDefinitions>
     <HeaderTemplate>
         <TableRow>

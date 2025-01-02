@@ -49,7 +49,7 @@
                     <Tooltip Title="@Localizer["app.content.edit-demo"]">
                         <Unbound>
                             <a @ref="context.Current" href="@EditUrl" class="edit-button" rel="noopener noreferrer" target="_blank">
-                                <Icon Type="edit" />
+                                <Icon Type="@IconType.Outline.Edit" />
                             </a>
                         </Unbound>
                     </Tooltip>
@@ -72,15 +72,15 @@
                             {
                                 @if (_expanded)
                                 {
-                                    <Icon Type="compress" Class="code-box-expand-trigger" OnClick="() => _expanded = false " />
+                                    <Icon Type="@IconType.Outline.Compress" Class="code-box-expand-trigger" OnClick="() => _expanded = false " />
                                 }
                                 else
                                 {
-                                    <Icon Type="expand" Class="code-box-expand-trigger" OnClick="() => _expanded = true " />
+                                    <Icon Type="@IconType.Outline.Expand" Class="code-box-expand-trigger" OnClick="() => _expanded = true " />
                                 }
                             }
-                            <Icon Type="code" Theme="@(_expandAllCode ? "fill":"outline")" Class="code-box-expand-trigger" OnClick="()=>_expandAllCode=!_expandAllCode" />
-                            @*<Icon Type="bug" Class="code-box-expand-trigger" />*@
+                            <Icon Type="@IconType.Outline.Code" Theme="@(_expandAllCode ? IconThemeType.Fill : IconThemeType.Outline)" Class="code-box-expand-trigger" OnClick="()=>_expandAllCode=!_expandAllCode" />
+                            @*<Icon Type="@IconType.Outline.Bug" Class="code-box-expand-trigger" />*@
                         </span>
                     </h2>
                 }
@@ -106,13 +106,13 @@
                         <AntDesign.Col Md="12" Sm="24" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in leftList)
                             {
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Name" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
                         <AntDesign.Col Md="12" Sm="24" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
                             @foreach (var demo in rightList)
                             {
-                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Name" ComponentName="@_demoComponent.Title"></CodeBox>
+                                <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
                     }

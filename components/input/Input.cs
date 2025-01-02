@@ -186,13 +186,13 @@ namespace AntDesign
         /// Callback when a key is pressed
         /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
+        public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
 
         /// <summary>
         /// Callback when a key is released
         /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyUp { get; set; }
+        public EventCallback<KeyboardEventArgs> OnKeyUp { get; set; }
 
         /// <summary>
         /// Callback when a mouse button is released
@@ -240,7 +240,7 @@ namespace AntDesign
         /// The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)
         /// </summary>
         [Parameter]
-        public string Type { get; set; } = "text";
+        public InputType Type { get; set; } = AntDesign.InputType.Text;
 
         /// <summary>
         /// Set CSS style of wrapper. Is used when component has visible: Prefix/Suffix
@@ -325,6 +325,8 @@ namespace AntDesign
         private string CountString => $"{_inputString?.Length ?? 0}{(MaxLength > 0 ? $" / {MaxLength}" : "")}";
 
         private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
+
+        private Queue<Func<Task>> _afterValueChangedQueue = new();
 
         protected override void OnInitialized()
         {
@@ -446,31 +448,41 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-        protected async Task OnKeyPressAsync(KeyboardEventArgs args)
+        protected void OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (args?.Key == "Enter" && InputType != "textarea")
+            if (EnableOnPressEnter && args?.Key == "Enter")
             {
-                ChangeValue(true);
-                if (EnableOnPressEnter)
+                CallAfterValueChanged(async () =>
                 {
                     await OnPressEnter.InvokeAsync(args);
                     await OnPressEnterAsync();
-                }
+                });
             }
         }
 
         protected virtual Task OnPressEnterAsync() => Task.CompletedTask;
 
+        protected void CallAfterValueChanged(Func<Task> workItem)
+        {
+            _afterValueChangedQueue.Enqueue(workItem);
+            var original = BindOnInput;
+            BindOnInput = true;
+            // Ignoring textarea is to avoid ongoing line breaks being withdrawn due to bindings
+            // However, if the user wishes to use the carriage return event to get the bound value, the value needs to be bound first
+            ChangeValue(InputType != "textarea");
+            BindOnInput = original;
+        }
+
         protected async Task OnKeyUpAsync(KeyboardEventArgs args)
         {
             ChangeValue();
 
-            if (OnkeyUp.HasDelegate) await OnkeyUp.InvokeAsync(args);
+            if (OnKeyUp.HasDelegate) await OnKeyUp.InvokeAsync(args);
         }
 
         protected virtual async Task OnkeyDownAsync(KeyboardEventArgs args)
         {
-            if (OnkeyDown.HasDelegate) await OnkeyDown.InvokeAsync(args);
+            if (OnKeyDown.HasDelegate) await OnKeyDown.InvokeAsync(args);
         }
 
         protected async Task OnMouseUpAsync(MouseEventArgs args)
@@ -530,8 +542,8 @@ namespace AntDesign
 
             builder.OpenComponent<Icon>(33);
 
-            builder.AddAttribute(34, "Type", "close-circle");
-            builder.AddAttribute(35, "Theme", "fill");
+            builder.AddAttribute(34, "Type", IconType.Fill.CloseCircle);
+            builder.AddAttribute(35, "Theme", IconThemeType.Fill);
 
             builder.AddAttribute(36, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
             {
@@ -587,6 +599,10 @@ namespace AntDesign
             if (!_compositionInputting && CurrentValueAsString != _inputString)
             {
                 CurrentValueAsString = _inputString;
+            }
+            while (_afterValueChangedQueue.TryDequeue(out var task))
+            {
+                InvokeAsync(task.Invoke);
             }
         }
 

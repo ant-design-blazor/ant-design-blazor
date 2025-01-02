@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using AntDesign.Docs.Services;
 using Blazor.Polyfill.Server;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,21 +14,23 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton(sp =>
 {
     var httpContext = sp.GetService<IHttpContextAccessor>()?.HttpContext;
+    var customHandler = new HttpClientCustom() { InnerHandler = new HttpClientHandler() };
     if (httpContext != null)
     {
         var request = httpContext.Request;
         var host = request.Host.ToUriComponent();
         var scheme = request.Scheme;
         var baseAddress = $"{scheme}://{host}";
-        return new HttpClient() { BaseAddress = new Uri(baseAddress) };
+        return new HttpClient(customHandler) { BaseAddress = new Uri(baseAddress) };
     }
     else
     {
-        return new HttpClient() { BaseAddress = new Uri("http://0.0.0.0:8181") };
+        return new HttpClient(customHandler) { BaseAddress = new Uri("http://0.0.0.0:8181") };
     }
 });
 
 builder.Services.AddAntDesignDocs();
+
 #if NET5_0_OR_GREATER
 builder.Services.AddBlazorPolyfill();
 #endif

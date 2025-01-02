@@ -3,9 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -26,12 +28,13 @@ namespace AntDesign
         /// Customize Badge status dot color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
-        public string Color { get; set; }
+        public OneOf<BadgeColor?, string> Color { get; set; }
 
         /// <summary>
         /// Set Badge status dot to a preset color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
+        [Obsolete("Use Color instead")]
         public PresetColor? PresetColor { get; set; }
 
         /// <summary>
@@ -111,7 +114,7 @@ namespace AntDesign
         /// Set Badge dot to a status color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
-        public string Status { get; set; }
+        public BadgeStatus? Status { get; set; }
 
         /// <summary>
         /// The display text next to the status dot
@@ -129,7 +132,7 @@ namespace AntDesign
         /// Size of the badge
         /// </summary>
         [Parameter]
-        public string Size { get; set; }
+        public BadgeSize? Size { get; set; }
 
         /// <summary>
         /// Wrapping this item.
@@ -147,17 +150,26 @@ namespace AntDesign
 
         private char[] _maxNumberArray = Array.Empty<char>();
 
-        private string StatusOrPresetColor => Status.IsIn(_badgeStatusTypes)
-            ? Status
-            : (PresetColor.HasValue
-                ? Enum.GetName(typeof(PresetColor), PresetColor)
+        private readonly static Hashtable _statusMap = new Hashtable()
+        {
+            [BadgeStatus.Default] = "default",
+            [BadgeStatus.Success] = "success",
+            [BadgeStatus.Processing] = "processing",
+            [BadgeStatus.Error] = "error",
+            [BadgeStatus.Warning] = "warning",
+        };
+
+        private string StatusOrPresetColor => Status.HasValue
+            ? _statusMap[Status.Value].ToString()
+            : (Color.IsT0 && Color.AsT0.HasValue
+                ? Enum.GetName(typeof(BadgeColor), Color.AsT0)
                 : "");
 
-        private bool HasStatusOrColor => !string.IsNullOrWhiteSpace(Status) || !string.IsNullOrWhiteSpace(Color) || PresetColor.HasValue;
+        private bool HasStatusOrColor => Status.HasValue || ((Color.IsT0 && Color.AsT0.HasValue) || (Color.IsT1 && !string.IsNullOrWhiteSpace(Color.AsT1)));
 
         private string CountStyle => Offset == default ? "" : $"{$"right:{-Offset.Left}px"};{$"margin-top:{Offset.Top}px"};";
 
-        private string DotColorStyle => (PresetColor == null && !string.IsNullOrWhiteSpace(Color) ? $"background:{Color};" : "");
+        private string DotColorStyle => Color.IsT1 ? $"background:{Color.AsT1};" : "";
 
         private bool RealShowSup => (Dot && (!Count.HasValue || (Count > 0 || Count == 0 && ShowZero)))
                                 || Count > 0
@@ -174,15 +186,6 @@ namespace AntDesign
         private int _overflowCount = 99;
 
         private bool _showOverflowCount = false;
-
-        private static readonly string[] _badgeStatusTypes =
-        {
-            "success",
-            "processing",
-            "default",
-            "error",
-            "warning"
-        };
 
         /// <summary>
         /// Sets the default CSS classes.
@@ -201,7 +204,7 @@ namespace AntDesign
                 .Add("ant-scroll-number")
                 .If($"{prefixName}-count", () => !Dot && !HasStatusOrColor)
                 .If($"{prefixName}-dot", () => Dot || HasStatusOrColor)
-                .If($"{prefixName}-count-sm", () => !string.IsNullOrWhiteSpace(Size) && Size.Equals("small", StringComparison.OrdinalIgnoreCase))
+                .If($"{prefixName}-count-sm", () => Size == BadgeSize.Small)
                 .GetIf(() => $"ant-badge-status-{StatusOrPresetColor}", () => !string.IsNullOrWhiteSpace(StatusOrPresetColor))
                 .If($"{prefixName}-multiple-words", () => _countArray.Length >= 2)
                 .If($"{prefixName}-zoom-enter {prefixName}-zoom-enter-active", () => _dotEnter)
