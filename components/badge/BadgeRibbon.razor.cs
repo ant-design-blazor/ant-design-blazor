@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -15,7 +17,7 @@ namespace AntDesign
         /// Customize ribbon color
         /// </summary>
         [Parameter]
-        public string Color { get; set; }
+        public OneOf<BadgeColor?, string> Color { get; set; }
 
         /// <summary>
         /// Text string of ribbon.
@@ -42,7 +44,9 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private string PresetColor => Color.IsIn(_badgePresetColors) ? Color : null;
+        private string PresetColor => Color.IsT0 && Color.AsT0.HasValue ? Enum.GetName(typeof(BadgeColor), Color.AsT0)
+            : Color.IsT1 && Color.AsT1.ToLowerInvariant().IsIn(_badgePresetColors) ?
+            Color.AsT1.ToLowerInvariant() : null;
 
         private string _colorStyle;
 
@@ -58,16 +62,16 @@ namespace AntDesign
                 .Add(prefixName)
                 .Add($"{prefixName}-placement-{Placement}")
                 .If($"{prefixName}-rtl", () => RTL)
-                .If($"{prefixName}-color-{PresetColor}", () => Color.IsIn(_badgePresetColors))
+                .If($"{prefixName}-color-{PresetColor}", () => PresetColor != null)
                 ;
         }
 
         private void SetStyle()
         {
-            if (PresetColor == null && !string.IsNullOrWhiteSpace(Color))
+            if (PresetColor == null && Color.IsT1 && !string.IsNullOrWhiteSpace(Color.AsT1))
             {
-                _colorStyle = $"background:{Color}; {Style}";
-                _cornerColorStyle = $"color:{Color}; {Style}";
+                _colorStyle = $"background:{Color.AsT1.ToLowerInvariant()}; {Style}";
+                _cornerColorStyle = $"color:{Color.AsT1.ToLowerInvariant()}; {Style}";
             }
             else
             {
@@ -96,10 +100,10 @@ namespace AntDesign
             SetStyle();
         }
 
-        private readonly string[] _badgePresetColors =
-        {
+        private readonly static string[] _badgePresetColors =
+        [
             "pink", "red", "yellow", "orange", "cyan", "green", "blue", "purple", "geekblue", "magenta", "volcano",
             "gold", "lime"
-        };
+        ];
     }
 }
