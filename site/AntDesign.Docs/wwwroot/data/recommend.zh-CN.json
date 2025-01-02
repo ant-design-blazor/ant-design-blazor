@@ -1,9 +1,9 @@
 ﻿[
   {
-    "title": "Blazor 全栈渲染模式的原理与应用 - .NET Conf China 2023 实录",
-    "description": "远赴北京大冬天，为大家带来最新的 Blazor 原创成果。首先讲解了 Blazor 在 .NET 8 全新的渲染模式，然后深度解析静态服务端渲染的优势和局限，最后讲解实际应用 SSR + Auto 架构，.NET 8 终于可以 All in Blazor！",
-    "img": "/docs/assets/news/dotNetConf2023.jpg",
-    "href": "https://www.bilibili.com/video/BV1vg4y1m78w",
+    "title": "AntDesign Blazor 2024年度总结",
+    "description": "[庆祝]在1日发布的 .NET 基金会 2024 年度最活跃社区项目榜单中，以 PR 数（428）排名第六，以新增贡献者数（35）排名第三！目前 github star 接近5.9k，fork接近1100，nuget 下载量超过150万！感谢大家的支持和贡献！",
+    "img": "/docs/assets/news/DNF2024.jpg",
+    "href": "https://mp.weixin.qq.com/s/WRs2mMSqYPus8f09BOLQ7g",
     "popularize": false
   },
   {

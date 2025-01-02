@@ -1,5 +1,5 @@
 ---
-order: 11
+order: 4
 title: FAQ
 ---
 
