@@ -85,6 +85,8 @@ namespace AntDesign.Internal
 
         protected override bool ShouldRender() => Upload != null;
 
+        private string MethodString => Method.IsT0 ? Method.AsT0.ToString().ToLower() : Method.AsT1.ToLower();
+
         private readonly Hashtable _typeMap = new Hashtable()
         {
             [UploadListType.Text] = "text",
@@ -165,7 +167,7 @@ namespace AntDesign.Internal
                 await Upload.FileListChanged.InvokeAsync(this.Upload.FileList);
 
                 await InvokeAsync(StateHasChanged);
-                await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError", Method);
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError", MethodString);
                 index++;
             }
 
