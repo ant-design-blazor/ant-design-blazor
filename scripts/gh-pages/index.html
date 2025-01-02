@@ -240,27 +240,7 @@
     <script src="/_content/AntDesign.Charts/g2plot.min.js?v={version}"></script>
     <script src="/_content/AntDesign.Charts/ant-design-charts-blazor.js?v={version}"></script>
     <script src="/_content/AntDesign.Docs/js/prism.js?v={version}"></script>
-    <script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } }</script>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.nls.js"></script>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.js"></script>
-    <script>
-        var instances = {};
-        function createEditor(element, id, ref, options) {
-            console.log(id);
-            var instance = monaco.editor.create(element, options);
-            instance.onDidChangeModelContent(function () {
-                ref.invokeMethodAsync('OnChangeAsync', instance.getValue());
-            });
-            instances[id] = instance;
-            return instance;
-        }
-
-        function copy(id) {
-            var text = instances[id].getValue();
-            navigator.clipboard.writeText(text);
-        }
-    </script>
+  
     <script>
         window.XPrism = {};
         window.XPrism.highlight = function (code, language) {
@@ -354,6 +334,27 @@
                 window.location.reload();
                 refreshing = true;
             });
+        }
+    </script>
+    <script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } }</script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.nls.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.js"></script>
+    <script>
+        var instances = {};
+        function createEditor(element, id, ref, options) {
+            console.log(id);
+            var instance = monaco.editor.create(element, options);
+            instance.onDidChangeModelContent(function () {
+                ref.invokeMethodAsync('OnChangeAsync', instance.getValue());
+            });
+            instances[id] = instance;
+            return instance;
+        }
+
+        function copy(id) {
+            var text = instances[id].getValue();
+            navigator.clipboard.writeText(text);
         }
     </script>
 </body>
