@@ -1,5 +1,4 @@
-﻿window.DocSearch = {
-  init: function (locale) {
+﻿window.DocSearchInit = function (locale) {
     if (!docsearch) {
       return;
     }
