@@ -15,6 +15,14 @@ timeline: true
 
 ---
 
+### 1.1.1
+
+`2025-01-02`
+
+- 🛠 重构 Badge 的 Size 属性和 BadgeRibbon 的 Color 属性类型改为枚举。[#4389](https://github.com/ant-design-blazor/ant-design-blazor/pull/4389) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Backtop 滚动死循环。[#4391](https://github.com/ant-design-blazor/ant-design-blazor/pull/4391) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Upload 的 OneOf 类型转换报错。[#4390](https://github.com/ant-design-blazor/ant-design-blazor/pull/4390) [@ElderJames](https://github.com/ElderJames)
+
 ### 1.1.0
 
 `2024-12-31`
@@ -22,13 +30,13 @@ timeline: true
 元旦快乐！
 
 - Table
-  - 🆕 新增 Table 条纹样式 Striped 属性。[#4372](https://github.com/ant-design-blazor/ant-design-blazor/pull/4372) [@zandiarash](https://github.com/zandiarash)
-  - 🆕 新增 Table: 树行结构支持延迟加载（即在无子数据时也能显示展开按钮）。[#4228](https://github.com/ant-design-blazor/ant-design-blazor/pull/4228) [@ElderJames](https://github.com/ElderJames)
-  - 🆕 新增 Table 支持手动设置列索引 ColIndex，以避免动态列时无法正确计算顺序。[#4343](https://github.com/ant-design-blazor/ant-design-blazor/pull/4343) [@GoldSucc](https://github.com/GoldSucc)
-  - 🐞 修复 Table 在行分组的设置发生改变时，无法正确删除分组行。[#4366](https://github.com/ant-design-blazor/ant-design-blazor/pull/4366) [@GlodenBoy](https://github.com/GlodenBoy)
-  - 🐞 修复 Table 分组后的数据行状态不能刷新。[#4368](https://github.com/ant-design-blazor/ant-design-blazor/pull/4368) [@GlodenBoy](https://github.com/GlodenBoy)
-  - 🐞 修复 Table 行分组由于未正确缓存导致无法通过程序方式展开。[#4358](https://github.com/ant-design-blazor/ant-design-blazor/pull/4358) [@ElderJames](https://github.com/ElderJames)
-  - 🛠 重构 Table 允许 RebuildColumns 支持重写。[#4242](https://github.com/ant-design-blazor/ant-design-blazor/pull/4242) [@agolub-s](https://github.com/agolub-s)
+  - 🆕 新增 条纹样式 Striped 属性。[#4372](https://github.com/ant-design-blazor/ant-design-blazor/pull/4372) [@zandiarash](https://github.com/zandiarash)
+  - 🆕 新增 树行结构支持延迟加载（即在无子数据时也能显示展开按钮）。[#4228](https://github.com/ant-design-blazor/ant-design-blazor/pull/4228) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 支持手动设置列索引 ColIndex，以避免动态列时无法正确计算顺序。[#4343](https://github.com/ant-design-blazor/ant-design-blazor/pull/4343) [@GoldSucc](https://github.com/GoldSucc)
+  - 🐞 修复 在行分组的设置发生改变时，无法正确删除分组行。[#4366](https://github.com/ant-design-blazor/ant-design-blazor/pull/4366) [@GlodenBoy](https://github.com/GlodenBoy)
+  - 🐞 修复 分组后的数据行状态不能刷新。[#4368](https://github.com/ant-design-blazor/ant-design-blazor/pull/4368) [@GlodenBoy](https://github.com/GlodenBoy)
+  - 🐞 修复 行分组由于未正确缓存导致无法通过程序方式展开。[#4358](https://github.com/ant-design-blazor/ant-design-blazor/pull/4358) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 重构 允许 RebuildColumns 支持重写。[#4242](https://github.com/ant-design-blazor/ant-design-blazor/pull/4242) [@agolub-s](https://github.com/agolub-s)
   - 🛠 新增 IColumn 的 Hidden 属性。[#4344](https://github.com/ant-design-blazor/ant-design-blazor/pull/4344) [@pathartl](https://github.com/pathartl)
 
 - 🛠 参数标准化，将有限选项的参数类型从字符串改为枚举。[#4352](https://github.com/ant-design-blazor/ant-design-blazor/pull/4352) [@pathartl](https://github.com/pathartl)
