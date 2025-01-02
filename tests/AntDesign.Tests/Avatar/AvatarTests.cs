@@ -19,10 +19,10 @@ namespace AntDesign.Tests.Avatar
         [InlineData(AvatarSize.Small, "ant-avatar-sm", "")]
         [InlineData(AvatarSize.Large, "ant-avatar-lg", "")]
         [InlineData("64.5", "", "width:64.5px;height:64.5px;line-height:64.5px;font-size:calc(64.5px / 2);")]
-        public void ItShouldSetSizeProperly(OneOf<AvatarSize, string> size, string expectedClass, string expectedStyle)
+        public void ItShouldSetSizeProperly(object size, string expectedClass, string expectedStyle)
         {
             var systemUnderTest = RenderComponent<AntDesign.Avatar>(parameters => parameters
-                .Add(x => x.Size, size)
+                .Add(x => x.Size, size is AvatarSize enumSize ? enumSize : size.ToString())
                 .Add(x => x.Icon, "user"));
 
             systemUnderTest.MarkupMatches(@$"<span class=""ant-avatar ant-avatar-icon {expectedClass}"" style=""{expectedStyle}"" id:ignore>
