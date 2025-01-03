@@ -392,7 +392,7 @@ namespace AntDesign
         [Inject]
         private ClientDimensionService ClientDimensionService { get; set; }
 
-        public ColumnContext ColumnContext { get; set; }
+        protected ColumnContext ColumnContext { get; set; }
 
         private IEnumerable<TItem> _showItems;
 
