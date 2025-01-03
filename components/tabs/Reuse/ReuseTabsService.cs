@@ -194,7 +194,6 @@ namespace AntDesign
             url ??= CurrentUrl;
             var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == url);
             reuseTabsPageItem.Body = null;
-            reuseTabsPageItem.Title = null;
             reuseTabsPageItem.Rendered = false;
 
             // only reload current page, and other page would be load by tab navigation
@@ -209,6 +208,23 @@ namespace AntDesign
         /// </summary>
         public void Update()
         {
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Update the options of the specified page
+        /// </summary>
+        /// <param name="url"> The url of the page </param>
+        /// <param name="optionsAction"></param>
+        public void UpdatePage(string url, Action<ReuseTabsPageItem> optionsAction)
+        {
+            var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == url);
+            if (reuseTabsPageItem == null)
+            {
+                return;
+            }
+
+            optionsAction?.Invoke(reuseTabsPageItem);
             StateHasChanged();
         }
 
@@ -247,6 +263,7 @@ namespace AntDesign
             else if (reuseTabsPageItem.Singleton)
             {
                 reuseTabsPageItem.Url = CurrentUrl; // singleton page would change url
+                reuseTabsPageItem.RouteData = routeData; // to update component parameters
             }
 
             reuseTabsPageItem.Rendered = true;
@@ -261,8 +278,9 @@ namespace AntDesign
             }
             else
             {
-                reuseTabsPageItem.Body ??= CreateBody(routeData, reuseTabsPageItem);
+                reuseTabsPageItem.RouteData = routeData;
                 reuseTabsPageItem.TypeName = routeData.PageType.FullName;
+                reuseTabsPageItem.Body ??= CreateBody(reuseTabsPageItem);
             }
 
             ActiveKey = reuseTabsPageItem.Key;
@@ -271,10 +289,11 @@ namespace AntDesign
             OnStateHasChanged?.Invoke();
         }
 
-        private RenderFragment CreateBody(RouteData routeData, ReuseTabsPageItem item)
+        private RenderFragment CreateBody(ReuseTabsPageItem item)
         {
             return builder =>
             {
+                var routeData = item.RouteData;
                 builder.OpenComponent(0, routeData.PageType);
                 foreach (var routeValue in routeData.RouteValues)
                 {
