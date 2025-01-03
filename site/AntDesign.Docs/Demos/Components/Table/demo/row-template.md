@@ -1,5 +1,5 @@
 ---
-order: 22.1
+order: 22.2
 title:
   en-US: Multiple rows for a single data item
   zh-CN: 自定义每行的模板
