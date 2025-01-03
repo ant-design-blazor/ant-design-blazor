@@ -2,9 +2,6 @@
 @using System.Globalization
 @using Microsoft.AspNetCore.Components.Rendering
 
-@if (!_show)
-    return;
-
 <CascadingValue Value="this" IsFixed>
     <ConfigProvider>
         <Router AppAssembly="typeof(App).Assembly" OnNavigateAsync="OnNavigateAsync">
@@ -36,8 +33,6 @@
 @inject IStringLocalizer<Routes> L;
 
 @code {
-
-    private bool _show = true;
     public bool CascadingRouteData { get; set; } = true;
 
     static string[] avaliableRoutes = new[] { "/Docs", "/Components", "/Charts", "/Experimental" };
@@ -88,7 +83,7 @@
     public void SetCascadingRouteData(bool value)
     {
         CascadingRouteData = value;
-        _show = false;
+        StateHasChanged();
     }
 
     void Description(RenderTreeBuilder __builder)

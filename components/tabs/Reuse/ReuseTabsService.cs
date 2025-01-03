@@ -228,6 +228,11 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        public void UpdatePage(Action<ReuseTabsPageItem> optionsAction)
+        {
+            UpdatePage(CurrentUrl, optionsAction);
+        }
+
         internal void StateHasChanged()
         {
             OnStateHasChanged?.Invoke();
