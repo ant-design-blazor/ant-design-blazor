@@ -171,7 +171,7 @@ namespace AntDesign
         public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
 
         /// <summary>
-        /// Callback executed when paging, sorting, and filtering changes	
+        /// Callback executed when table initialized, paging, sorting, and filtering changes.
         /// </summary>
         [Parameter]
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
