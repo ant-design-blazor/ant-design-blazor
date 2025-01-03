@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -83,6 +84,17 @@ namespace AntDesign
         private string _svgImage;
 
         private ClassMapper IconClassMapper { get; set; } = new ClassMapper();
+
+        private static Dictionary<ResultStatus, string> _typeMap = new()
+        {
+            [ResultStatus.Info] = "info",
+            [ResultStatus.Success] = "success",
+            [ResultStatus.Warning] = "warning",
+            [ResultStatus.Error] = "error",
+            [ResultStatus.Http403] = "403",
+            [ResultStatus.Http404] = "404",
+            [ResultStatus.Http500] = "500"
+        };
 
         private RenderFragment BuildIcon => builder =>
         {
@@ -170,7 +182,7 @@ namespace AntDesign
             var hashId = UseStyle(PrefixCls, ResultStyle.UseComponentStyle);
             ClassMapper.Add(PrefixCls)
                 .Add(hashId)
-                .Get(() => $"{PrefixCls}-{Status}")
+                .Get(() => $"{PrefixCls}-{_typeMap[Status]}")
                 .If($"{PrefixCls}-rtl", () => RTL);
 
             IconClassMapper.Get(() => $"{PrefixCls}-{(IsImage ? "image" : "icon")}");

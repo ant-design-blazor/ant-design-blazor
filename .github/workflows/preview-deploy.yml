@@ -48,7 +48,7 @@ jobs:
           apiToken: ${{ secrets.CF_TOKEN }}
           accountId: ${{ secrets.CF_ID }}
           projectName: 'ant-design-blazor'
-          #directory: site
+          directory: .
           wranglerVersion: '3'
 
       - name: update status comment

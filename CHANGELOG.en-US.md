@@ -1,5 +1,5 @@
 ---
-order: 6
+order: 98
 title: Change Log
 toc: false
 timeline: true
@@ -14,6 +14,46 @@ timeline: true
 - Major version release is not included in this schedule for breaking change and new features.
 
 ---
+
+### 1.1.1
+
+`2025-01-02`
+
+- 🛠 Refactor Badge changed the type of Size and Color of BadgeRibbon to be enum. [#4389](https://github.com/ant-design-blazor/ant-design-blazor/pull/4389) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed BackTop scrolling in a dead loop. [#4391](https://github.com/ant-design-blazor/ant-design-blazor/pull/4391) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Upload error cause by OneOf converting. [#4390](https://github.com/ant-design-blazor/ant-design-blazor/pull/4390) [@ElderJames](https://github.com/ElderJames)
+
+### 1.1.0
+
+`2024-12-31`
+
+Happy new year!
+
+- Table
+  - 🆕 Add `Striped` parameter. [#4372](https://github.com/ant-design-blazor/ant-design-blazor/pull/4372) [@zandiarash](https://github.com/zandiarash)
+  - 🆕 Add support lazy load for tree data. [#4228](https://github.com/ant-design-blazor/ant-design-blazor/pull/4228) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add disable auto column index feature. [#4343](https://github.com/ant-design-blazor/ant-design-blazor/pull/4343) [@GoldSucc](https://github.com/GoldSucc)
+  - 🐞 Fixed the issue that grouped sub-data is not refreshed is fixed. [#4368](https://github.com/ant-design-blazor/ant-design-blazor/pull/4368) [@GlodenBoy](https://github.com/GlodenBoy)
+  - 🐞 Fixed the issue that the column could not be deleted when compiling colums, and colIndex was used to delete it. [#4366](https://github.com/ant-design-blazor/ant-design-blazor/pull/4366) [@GlodenBoy](https://github.com/GlodenBoy)
+  - 🐞 Fixed row grouping cannot be expanded programmatically because it is not cached correctly. [#4358](https://github.com/ant-design-blazor/ant-design-blazor/pull/4358) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Add allow to disable RebuildColumns in table. [#4242](https://github.com/ant-design-blazor/ant-design-blazor/pull/4242) [@agolub-s](https://github.com/agolub-s)
+  - 🛠 Add IColumn Hidden. [#4344](https://github.com/ant-design-blazor/ant-design-blazor/pull/4344) [@pathartl](https://github.com/pathartl)
+
+- 🛠 Refactor: standardize arguments. [#4352](https://github.com/ant-design-blazor/ant-design-blazor/pull/4352) [@pathartl](https://github.com/pathartl)
+- 🆕 Add Icon support custom svg string. [#4380](https://github.com/ant-design-blazor/ant-design-blazor/pull/4380) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Typography level 5 for title. [#4377](https://github.com/ant-design-blazor/ant-design-blazor/pull/4377) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Modal a parameter `AfterOpen`. [#4353](https://github.com/ant-design-blazor/ant-design-blazor/pull/4353) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tabs ink rendering when adding tabs. [#4387](https://github.com/ant-design-blazor/ant-design-blazor/pull/4387) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Statistic overflow exception cause by int extraction. [#4383](https://github.com/ant-design-blazor/ant-design-blazor/pull/4383) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Input the `OnPressEnter` doesn't work for TextArea. [#4381](https://github.com/ant-design-blazor/ant-design-blazor/pull/4381) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Spin show text style. [#4351](https://github.com/ant-design-blazor/ant-design-blazor/pull/4351) [@ElderJames](https://github.com/ElderJames)
+- 📖 docs: fix layout demo for menu title. [#4367](https://github.com/ant-design-blazor/ant-design-blazor/pull/4367) [@ElderJames](https://github.com/ElderJames)
+- 📖 docs: Using DelegatingHandler for all Http requests and Fixed error of fetching for dynamic table. [#4379](https://github.com/ant-design-blazor/ant-design-blazor/pull/4379) [@zandiarash](https://github.com/zandiarash)
+- 📖 docs: fix demo clearing when navigating. [#4386](https://github.com/ant-design-blazor/ant-design-blazor/pull/4386) [@ElderJames](https://github.com/ElderJames)
+
+#### Breaking Changes
+
+Please see [#4352](https://github.com/ant-design-blazor/ant-design-blazor/pull/4352) for detail.
 
 ### 1.0.1
 
