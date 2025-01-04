@@ -222,6 +222,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="false" />
         [Parameter]
+        [Obsolete("This property is useless, please remove it.")]
         public bool ShowPanel { get; set; } = false;
 
         [Inject] private IDomEventListener DomEventListener { get; set; }
@@ -242,6 +243,8 @@ namespace AntDesign
         private object _selectedValue;
         private object _activeValue;
         private bool _isFocused = false;
+
+        private bool _isOpened = false;
 
         void IAutoCompleteRef.SetInputComponent(IAutoCompleteInput input)
         {
@@ -281,7 +284,7 @@ namespace AntDesign
         {
             var key = args.Key;
 
-            if (this.ShowPanel)
+            if (this._isOpened)
             {
                 if (key == "Escape" || key == "Tab")
                 {
@@ -364,9 +367,9 @@ namespace AntDesign
         {
             _filteredOptions = GetOptionItems();
 
-            if (this.ShowPanel == false)
+            if (this._isOpened == false)
             {
-                this.ShowPanel = true;
+                this._isOpened = true;
 
                 await _overlayTrigger.Show();
 
@@ -380,9 +383,9 @@ namespace AntDesign
         /// </summary>
         private async Task ClosePanel()
         {
-            if (this.ShowPanel == true)
+            if (this._isOpened == true)
             {
-                this.ShowPanel = false;
+                this._isOpened = false;
 
                 await _overlayTrigger.Close();
 
@@ -504,9 +507,9 @@ namespace AntDesign
                 await OnPanelVisibleChange.InvokeAsync(visible);
             }
 
-            if (this.ShowPanel != visible)
+            if (this._isOpened != visible)
             {
-                this.ShowPanel = visible;
+                this._isOpened = visible;
             }
         }
 

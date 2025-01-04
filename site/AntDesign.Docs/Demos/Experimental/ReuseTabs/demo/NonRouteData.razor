@@ -1,0 +1,26 @@
+@layout AntDesign.Docs.Demos.Experimental.ReuseTabs.demo.Layout_
+@page "/reuse/non-route-data"
+
+<Button OnClick="Update">Update settings</Button>
+
+@inject ReuseTabsService ReuseTabsService
+@code {
+
+    [CascadingParameter]
+    private Routes Routes { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Routes.SetCascadingRouteData(false);
+    }
+
+    private void Update()
+    {
+        ReuseTabsService.UpdatePage(options =>
+        {
+            options.Title = b => b.AddContent(1, $"New Title {Random.Shared.Next(0, 1000)}");
+            options.Order = Random.Shared.Next(0, 1000);
+            options.Closable = !options.Closable;
+        });
+    }
+}
