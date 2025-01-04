@@ -75,7 +75,7 @@ namespace AntDesign.Docs.Build.CLI.Command
             var demoJson = JsonSerializer.Serialize(iconList, new JsonSerializerOptions()
             {
                 WriteIndented = false,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             });
 

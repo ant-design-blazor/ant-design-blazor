@@ -3,4 +3,10 @@
   <PropertyGroup Label="BasePath">
     <SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)</SolutionDir>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- disable nuget audit for now -->
+    <NuGetAudit>false</NuGetAudit>
+    <NoWarn>$(NoWarn);nullable</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
 </Project>
