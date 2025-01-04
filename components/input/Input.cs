@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -251,6 +252,17 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string WrapperStyle { get; set; }
+
+        /// <summary>
+        /// Set Class of wrapper. Is used when component has visible: Prefix/Suffix
+        /// or has paramter set <seealso cref="AllowClear"/> or for components: <see cref="InputPassword"/>
+        /// and <see cref="Search"/>. In these cases, html span elements is used
+        /// to wrap the html input element.
+        /// <seealso cref="WrapperClass"/> is used on the span element.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public string WrapperClass { get; set; }
 
         /// <summary>
         /// Show count of characters in the input
@@ -674,7 +686,7 @@ namespace AntDesign
             {
                 container = "groupWrapper";
                 builder.OpenElement(1, "span");
-                builder.AddAttribute(2, "class", GroupWrapperClass);
+                builder.AddAttribute(2, "class", string.Join(" ", GroupWrapperClass, WrapperClass));
                 builder.AddAttribute(3, "style", $"{WidthStyle} {WrapperStyle}");
                 builder.OpenElement(4, "span");
                 builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");

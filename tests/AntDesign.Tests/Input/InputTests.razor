@@ -286,6 +286,18 @@
         isValid.Should().Be(false);
         input?.ValidationMessages.Should().Contain("value field isn't valid.");
     }
-
     #endif
+
+    [Fact]
+    public void Input_WrapperClass_Test()
+    {
+        //Arrange
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" WrapperClass="test-wrapper-class"><AddOnAfter>AddOnAfter</AddOnAfter></AntDesign.Input>);
+
+        //Act
+        ITokenList classList = cut.Find("span.ant-input-group-wrapper").ClassList;
+
+        //Assert
+        classList.Contains("test-wrapper-class").Should().BeTrue();
+    }
 }
