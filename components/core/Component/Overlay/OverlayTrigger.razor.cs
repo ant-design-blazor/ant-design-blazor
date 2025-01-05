@@ -271,6 +271,11 @@ namespace AntDesign.Internal
 
         internal void SetShouldRender(bool shouldRender) => _shouldRender = shouldRender;
 
+        public OverlayTrigger()
+        {
+            ClassMapper.Add("antblazor-overlay-trigger-wrapper");
+        }
+
         protected override bool ShouldRender()
         {
             if (_shouldRender)
