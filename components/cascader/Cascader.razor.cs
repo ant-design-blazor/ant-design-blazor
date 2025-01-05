@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AntDesign.JsInterop;
+using AntDesign.Core.Documentation;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -146,6 +146,20 @@ namespace AntDesign
         [Parameter]
         public Placement Placement { get; set; } = Placement.BottomLeft;
 
+        /// <summary>
+        /// Child content to be rendered inside the <see cref="Cascader"/>.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public RenderFragment ChildContent { get; set; }
+
+        /// <summary>
+        /// ChildElement with ElementReference set to avoid wrapping div.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public RenderFragment<ForwardRef> Unbound { get; set; }
+
         private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
         private List<CascaderNode> _hoverSelectedNodes = new List<CascaderNode>();
@@ -170,7 +184,15 @@ namespace AntDesign
         private string _placeHolder = LocaleProvider.CurrentLocale.Global.Placeholder;
 
         private bool _focused;
-        private string _menuStyle;
+
+        private OverlayTrigger _overlayTrigger;
+
+        private Trigger[] OpenTriggers => ExpandTrigger switch
+        {
+            _ when Disabled => [],
+            "hover" => [Trigger.Hover],
+            _ => [Trigger.Click]
+        };
 
         private static Dictionary<InputSize, string> _sizeMap = new Dictionary<InputSize, string>()
         {
@@ -223,28 +245,30 @@ namespace AntDesign
             RefreshDisplayText();
         }
 
+        private void OnOverlayVisibleChanged(bool visible)
+        {
+            _dropdownOpened = visible;
+            if (visible)
+            {
+                InputOnToggle();
+            }
+            else
+            {
+                CascaderOnBlur();
+            }
+        }
+
         /// <summary>
         /// 输入框单击(显示/隐藏浮层)
         /// </summary>
-        private async Task InputOnToggle()
+        private void InputOnToggle()
         {
             if (Disabled)
                 return;
 
             _selectedType = SelectedTypeEnum.Click;
             _hoverSelectedNodes.Clear();
-            if (!_dropdownOpened)
-            {
-                var inputElemnet = await Js.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputRef);
-                _menuStyle = $"width:{inputElemnet.ClientWidth}px;";
-                if (!_nodelist.Any())
-                {
-                    _menuStyle += "height:auto;";
-                }
-
-                _dropdownOpened = true;
-                _focused = true;
-            }
+            _focused = true;
         }
 
         /// <summary>
@@ -254,7 +278,6 @@ namespace AntDesign
         {
             if (!_isOnCascader)
             {
-                _dropdownOpened = false;
                 _renderNodes = _selectedNodes;
                 _searchValue = string.Empty;
             }
@@ -271,8 +294,7 @@ namespace AntDesign
             _hoverSelectedNodes.Clear();
             _displayText = string.Empty;
             SetValue(string.Empty);
-            _dropdownOpened = false;
-
+            _ = _overlayTrigger.Close();
             _searchValue = string.Empty;
             await this.FocusAsync(_inputRef);
         }
@@ -327,7 +349,7 @@ namespace AntDesign
             _searchValue = e.Value?.ToString();
         }
 
-        private async Task OnSearchKeyUp(KeyboardEventArgs e)
+        private void OnSearchKeyUp(KeyboardEventArgs e)
         {
             if (string.IsNullOrEmpty(_searchValue))
             {
@@ -335,14 +357,8 @@ namespace AntDesign
                 return;
             }
 
-            var inputElemnet = await Js.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputRef);
-            _menuStyle = $"width:{inputElemnet.ClientWidth}px;";
             _matchList = _searchList.Where(x => x.Label.Contains(_searchValue, StringComparison.OrdinalIgnoreCase));
             _showClearIcon = true;
-            if (!_matchList.Any())
-            {
-                _menuStyle += "height:auto;";
-            }
         }
 
         /// <summary>
@@ -395,7 +411,7 @@ namespace AntDesign
 
             if (!cascaderNode.HasChildren)
             {
-                _dropdownOpened = false;
+                _ = _overlayTrigger.Close();
                 _isOnCascader = false;
             }
         }
