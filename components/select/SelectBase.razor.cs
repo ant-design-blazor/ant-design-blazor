@@ -1259,6 +1259,14 @@ namespace AntDesign
         [Parameter] public virtual bool ShowArrowIcon { get; set; } = true;
 
         /// <summary>
+        /// Placement of the overlay. Defaults to <see cref="Placement.BottomLeft"/>.
+        /// </summary>
+        /// <default value="Placement.BottomLeft" />
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public Placement Placement { get; set; } = Placement.BottomLeft;
+
+        /// <summary>
         /// When newly set Value is not found in SelectOptionItems, it is reset to
         /// default. This property holds the value before reset. It may be needed
         /// to be reaplied (for example when new Value is set at the same time
