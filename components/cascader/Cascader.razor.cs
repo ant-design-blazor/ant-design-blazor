@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AntDesign.Core.Documentation;
-using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -29,24 +27,8 @@ namespace AntDesign
     <seealso cref="TriggerBoundaryAdjustMode"/>
     */
     [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/UdS8y8xyZ/Cascader.svg", Title = "Cascader", SubTitle = "级联选择")]
-    public partial class Cascader : AntInputComponentBase<string>
+    public partial class Cascader : SelectBase<string, string>
     {
-        /// <summary>
-        /// Whether to allow clearing or not
-        /// </summary>
-        /// <summary xml:lang="zh-CN">
-        /// 是否允许清算
-        /// </summary>
-        /// <default value="true" />
-        [Parameter]
-        public bool AllowClear { get; set; } = true;
-
-        /// <summary>
-        /// Overlay adjustment strategy (when for example browser resize is happening)
-        /// </summary>
-        [Parameter]
-        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
-
         /// <summary>
         /// Change value on each selection if set to true, only chage on final selection if false.
         /// </summary>
@@ -74,34 +56,10 @@ namespace AntDesign
         public string NotFoundContent { get; set; } = LocaleProvider.CurrentLocale.Empty.Description;
 
         /// <summary>
-        /// Placeholder for input
-        /// </summary>
-        /// <default value="Please select (in current locacle)" />
-        [Parameter]
-        public string Placeholder
-        {
-            get => _placeHolder;
-            set => _placeHolder = value;
-        }
-
-        /// <summary>
-        /// Element to show popup container in
-        /// </summary>
-        /// <deault value="body"/>
-        [Parameter]
-        public string PopupContainerSelector { get; set; } = "body";
-
-        /// <summary>
         /// Allow searching or not
         /// </summary>
         [Parameter]
         public bool ShowSearch { get; set; }
-
-        /// <summary>
-        /// Disable input or not
-        /// </summary>
-        [Parameter]
-        public bool Disabled { get; set; }
 
         /// <summary>
         /// Callback executed when the selected value changes
@@ -146,19 +104,6 @@ namespace AntDesign
         [Parameter]
         public Placement Placement { get; set; } = Placement.BottomLeft;
 
-        /// <summary>
-        /// Child content to be rendered inside the <see cref="Cascader"/>.
-        /// </summary>
-        [Parameter]
-        [PublicApi("1.2.0")]
-        public RenderFragment ChildContent { get; set; }
-
-        /// <summary>
-        /// ChildElement with ElementReference set to avoid wrapping div.
-        /// </summary>
-        [Parameter]
-        [PublicApi("1.2.0")]
-        public RenderFragment<ForwardRef> Unbound { get; set; }
 
         private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
@@ -185,7 +130,9 @@ namespace AntDesign
 
         private bool _focused;
 
-        private OverlayTrigger _overlayTrigger;
+        protected override string OverlayClassName => "ant-cascader-dropdown";
+
+        protected override string DefaultWidth => "";
 
         private Trigger[] OpenTriggers => ExpandTrigger switch
         {
@@ -203,36 +150,6 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            string prefixCls = "ant-cascader";
-            string selectCls = "ant-select";
-
-            ClassMapper
-                .Add("ant-select ant-cascader ant-select-single ant-select-show-arrow")
-                .Add($"{prefixCls}-picker")
-                .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
-                .If("ant-select-open", () => _dropdownOpened)
-                .If("ant-select-focused", () => _focused)
-                .If($"{prefixCls}-picker-show-search ant-select-show-search", () => ShowSearch)
-                .If($"{prefixCls}-picker-with-value", () => !string.IsNullOrEmpty(_searchValue))
-                .If($"ant-select-lg", () => Size == InputSize.Large)
-                .If($"ant-select-sm", () => Size == InputSize.Small)
-                .If($"ant-select-disabled", () => Disabled)
-                .If("ant-select-allow-clear ", () => AllowClear)
-                .If($"{selectCls}-in-form-item ", () => FormItem != null)
-                .If($"{selectCls}-has-feedback", () => FormItem?.HasFeedback == true)
-                .GetIf(() => $"{selectCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
-                .If($"{prefixCls}-picker-rtl", () => RTL);
-
-            _inputClassMapper
-                .Add("ant-input")
-                .GetIf(() => $"ant-input-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
-                .Add($"{prefixCls}-input")
-                .If($"{prefixCls}-input-rtl", () => RTL);
-
-            _menuClassMapper
-                .Add($"{prefixCls}-menu")
-                .If($"{prefixCls}-menu-rtl", () => RTL);
-
             SetDefaultValue(Value ?? DefaultValue);
         }
 
@@ -240,19 +157,6 @@ namespace AntDesign
         {
             base.OnValueChange(value);
             RefreshDisplayText();
-        }
-
-        private void OnOverlayVisibleChanged(bool visible)
-        {
-            _dropdownOpened = visible;
-            if (visible)
-            {
-                InputOnToggle();
-            }
-            else
-            {
-                CascaderOnBlur();
-            }
         }
 
         /// <summary>
@@ -291,29 +195,9 @@ namespace AntDesign
             _hoverSelectedNodes.Clear();
             _displayText = string.Empty;
             SetValue(string.Empty);
-            _ = _overlayTrigger.Close();
+            _ = CloseAsync();
             _searchValue = string.Empty;
             await this.FocusAsync(_inputRef);
-        }
-
-        /// <summary>
-        /// 浮层移入
-        /// </summary>
-        private void NodesOnMouseOver()
-        {
-            if (!AllowClear) return;
-
-            _isOnCascader = true;
-        }
-
-        /// <summary>
-        /// 浮层移出
-        /// </summary>
-        private void NodesOnMouseOut()
-        {
-            if (!AllowClear) return;
-
-            _isOnCascader = false;
         }
 
         /// <summary>
@@ -408,7 +292,7 @@ namespace AntDesign
 
             if (!cascaderNode.HasChildren)
             {
-                _ = _overlayTrigger.Close();
+                CloseAsync();
                 _isOnCascader = false;
             }
         }
@@ -562,6 +446,63 @@ namespace AntDesign
                 }
             }
             return null;
+        }
+
+        protected override void SetClassMap()
+        {
+            string prefixCls = "ant-cascader";
+            string selectCls = "ant-select";
+
+            ClassMapper
+                .Add("ant-select ant-cascader ant-select-single ant-select-show-arrow")
+                .Add($"{prefixCls}-picker")
+                .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
+                .If("ant-select-open", () => _dropdownOpened)
+                .If("ant-select-focused", () => _focused)
+                .If($"{prefixCls}-picker-show-search ant-select-show-search", () => ShowSearch)
+                .If($"{prefixCls}-picker-with-value", () => !string.IsNullOrEmpty(_searchValue))
+                .If($"ant-select-lg", () => Size == InputSize.Large)
+                .If($"ant-select-sm", () => Size == InputSize.Small)
+                .If($"ant-select-disabled", () => Disabled)
+                .If("ant-select-allow-clear ", () => AllowClear)
+                .If($"{selectCls}-in-form-item ", () => FormItem != null)
+                .If($"{selectCls}-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{selectCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .If($"{prefixCls}-picker-rtl", () => RTL);
+
+            _inputClassMapper
+                .Add("ant-input")
+                .GetIf(() => $"ant-input-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
+                .Add($"{prefixCls}-input")
+                .If($"{prefixCls}-input-rtl", () => RTL);
+
+            _menuClassMapper
+                .Add($"{prefixCls}-menu")
+                .If($"{prefixCls}-menu-rtl", () => RTL);
+        }
+
+        protected override async Task OnOverlayVisibleChangeAsync(bool visible)
+        {
+            _dropdownOpened = visible;
+
+            if (OpenChanged.HasDelegate)
+            {
+                await OpenChanged.InvokeAsync(visible);
+            }
+
+            if (visible)
+            {
+                InputOnToggle();
+            }
+            else
+            {
+                CascaderOnBlur();
+            }
+        }
+
+        protected override void OnInputAsync(ChangeEventArgs e)
+        {
+
         }
     }
 }

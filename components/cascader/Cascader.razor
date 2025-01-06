@@ -1,53 +1,45 @@
 ﻿@using AntDesign.Internal
 @using Microsoft.AspNetCore.Components.Rendering
 @namespace AntDesign
-@inherits AntInputComponentBase<string>
+@inherits SelectBase<string,string>
 
-<CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
-  <OverlayTrigger @ref="_overlayTrigger" 
-                  VisibleChanged="OnOverlayVisibleChanged" 
-                  Trigger="OpenTriggers"
-                  BoundaryAdjustMode="@BoundaryAdjustMode"
-                  Placement="@Placement"
-                  PopupContainerSelector="@PopupContainerSelector"
-                  OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
-                  OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
-                  Unbound="@(ChildContent == null? RenderContent : null)"
-                  ChildContent="@(Unbound == null? ChildContent : null)"
-                >
-    <Overlay>
-      <div class=" ant-cascader-dropdown " tabindex="-1">
-        <div @onmouseover="NodesOnMouseOver" @onmouseout="NodesOnMouseOut">
-          <div class="ant-cascader-menus">
-            @if (!ShowSearch || string.IsNullOrWhiteSpace(_searchValue))
-            {
-              <ul class="@_menuClassMapper.Class">
-                @menuList((_nodelist, this))
-              </ul>
-              @foreach (CascaderNode node in _renderNodes)
-              {
-                if (node.HasChildren)
-                {
-                  <ul class="ant-cascader-menu">
-                    @menuList((node.Children, this))
-                  </ul>
-                }
-              }
-            }
-            else
-            {
-              <ul class="@_menuClassMapper.Class">
-                @searchList(this)
-              </ul>
-            }
-          </div>
-        </div>
-      </div>
-    </Overlay>
-  </OverlayTrigger>
-</CascadingValue>
+@{
+    base.BuildRenderTree(__builder);
+}
 
 @code {
+        protected override RenderFragment RenderOptionDropdown()
+        {
+            return builder => OverlayDropdown(builder);
+        }
+
+        private void OverlayDropdown(RenderTreeBuilder __builder)
+        {
+       
+                <div class="ant-cascader-menus">
+                  @if (!ShowSearch || string.IsNullOrWhiteSpace(_searchValue))
+                  {
+                    <ul class="@_menuClassMapper.Class">
+                      @menuList((_nodelist, this))
+                    </ul>
+                    @foreach (CascaderNode node in _renderNodes)
+                    {
+                      if (node.HasChildren)
+                      {
+                        <ul class="ant-cascader-menu">
+                          @menuList((node.Children, this))
+                        </ul>
+                      }
+                    }
+                  }
+                  else
+                  {
+                    <ul class="@_menuClassMapper.Class">
+                      @searchList(this)
+                    </ul>
+                  }
+                </div>
+        }
   RenderFragment<(IEnumerable<CascaderNode> nodes, Cascader cascader)> menuList = context =>@<Template>
 
           @if (context.nodes?.Any() != true)
@@ -113,7 +105,7 @@
           }
         </Template>;
 
-  RenderFragment RenderContent(ForwardRef forwardRef)
+  protected override RenderFragment RenderTriggerContent(ForwardRef forwardRef)
   {
     return builder => UnboundContent(forwardRef, builder);
   }

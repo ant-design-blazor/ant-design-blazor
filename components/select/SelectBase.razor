@@ -5,6 +5,7 @@
 
 @using AntDesign.Internal
 @using AntDesign.Select.Internal
+@using Microsoft.AspNetCore.Components.Rendering
 
 <CascadingValue Value="this" IsFixed="IsSelectFixed()">
     <CascadingValue Value=@("ant-select-dropdown") Name="PrefixCls" IsFixed>
@@ -21,6 +22,9 @@
                             OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
                             OnVisibleChange="@OnOverlayVisibleChangeAsync"
                             PopupContainerSelector="@PopupContainerSelector"
+                            Unbound="@(ChildContent == null? (RenderFragment<ForwardRef>)RenderTriggerContent : null)"
+                            ChildContent="@(Unbound == null? ChildContent : null)"
+                            OverlayClassName="@OverlayClassName"
                             OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                             OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
                 <Overlay>
@@ -34,40 +38,53 @@
                             @RenderOptionDropdown()
                         }
                     </div>                    
-                </Overlay>
-                <Unbound>
-                    <CascadingValue Value="this" Name="ParentSelect" IsFixed>
-                        <CascadingValue Value="@LabelTemplate" Name="ParentLabelTemplate">
-                            <CascadingValue Value="@MaxTagPlaceholder" Name="ParentMaxTagPlaceholerTemplate">
-                                <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
-                                    <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
-                                        <SelectContent Prefix="@ClassPrefix"
-                                                       RefBack="@context"
-                                                       @ref="_selectContent"
-                                                       TItemValue="TItemValue"
-                                                       TItem="TItem"
-                                                       SearchValue="@_searchValue"
-                                                       SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
-                                                       IsOverlayShow="@_dropDown.IsOverlayShow()"
-                                                       MaxTagCount="@_maxTagCountAsInt"
-                                                       OnInput="@OnInputAsync"
-                                                       OnKeyUp="@OnKeyUpAsync"
-                                                       OnKeyDown="@OnKeyDownAsync"
-                                                       OnFocus="@OnInputFocusAsync"
-                                                       OnBlur="@OnInputBlurAsync"
-                                                       OnClearClick="@OnInputClearClickAsync"
-                                                       OnRemoveSelected="@OnRemoveSelectedAsync"
-                                                       Placeholder="@Placeholder" />
-                                    </CascadingValue>
-                                </CascadingValue>
-                            </CascadingValue>
-                        </CascadingValue>
-                    </CascadingValue>
-                </Unbound>
+                </Overlay> 
             </OverlayTrigger>
     </CascadingValue>
 </CascadingValue>
 
 @code {
     protected abstract RenderFragment RenderOptionDropdown();
+
+    protected virtual RenderFragment RenderTriggerContent(ForwardRef forwardRef)
+    {
+        return builder => UnboundContent(forwardRef, builder);
+    }
+    private void UnboundContent(ForwardRef context, RenderTreeBuilder __builder)
+    {
+        @if (Unbound!=null)
+        {
+            @Unbound(context)
+        }
+        else
+        {
+            <CascadingValue Value="this" Name="ParentSelect" IsFixed>
+                <CascadingValue Value="@LabelTemplate" Name="ParentLabelTemplate">
+                    <CascadingValue Value="@MaxTagPlaceholder" Name="ParentMaxTagPlaceholerTemplate">
+                        <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
+                            <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
+                                <SelectContent Prefix="@ClassPrefix"
+                                               RefBack="@context"
+                                               @ref="_selectContent"
+                                               TItemValue="TItemValue"
+                                               TItem="TItem"
+                                               SearchValue="@_searchValue"
+                                               SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
+                                               IsOverlayShow="@_dropDown.IsOverlayShow()"
+                                               MaxTagCount="@_maxTagCountAsInt"
+                                               OnInput="@OnInputAsync"
+                                               OnKeyUp="@OnKeyUpAsync"
+                                               OnKeyDown="@OnKeyDownAsync"
+                                               OnFocus="@OnInputFocusAsync"
+                                               OnBlur="@OnInputBlurAsync"
+                                               OnClearClick="@OnInputClearClickAsync"
+                                               OnRemoveSelected="@OnRemoveSelectedAsync"
+                                               Placeholder="@Placeholder" />
+                            </CascadingValue>
+                        </CascadingValue>
+                    </CascadingValue>
+                </CascadingValue>
+            </CascadingValue>
+        }
+    }
 }
