@@ -118,11 +118,6 @@ namespace AntDesign
         public IEnumerable<TItem> DataSource { get; set; }
 
         /// <summary>
-        /// Use this to set the content of the tree. Use either this or <see cref="DataSource"/>
-        /// </summary>
-        [Parameter] public RenderFragment ChildContent { get; set; }
-
-        /// <summary>
         /// Whether to expand all nodes by default
         /// </summary>
         [Parameter] public bool TreeDefaultExpandAll { get; set; }
@@ -277,6 +272,8 @@ namespace AntDesign
         private readonly string _dir = "ltr";
         private Tree<TItem> _tree;
         private bool _checkedEventDisabled = false;
+
+        protected override bool UseChildContentAsTrigger => false;
 
         /// <summary>
         /// 
