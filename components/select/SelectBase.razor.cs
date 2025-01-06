@@ -31,6 +31,7 @@ namespace AntDesign
     public abstract partial class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>, IEqualityComparer<TItem>
     {
         protected virtual string DefaultWidth => "width: 100%;";
+        protected virtual bool UseChildContentAsTrigger => true;
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
         private SelectOptionItem<TItemValue, TItem> _selectOptionEqualToTypeDefault;
         private SelectOptionItem<TItemValue, TItem> _activeOption;
