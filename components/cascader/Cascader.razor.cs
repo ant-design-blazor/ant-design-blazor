@@ -496,5 +496,94 @@ namespace AntDesign
         {
 
         }
+
+        protected override async Task OnKeyUpAsync(KeyboardEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case "ArrowUp":
+                    ActivePrevNode();
+                    break;
+                case "ArrowDown":
+                    ActiveNextNode();
+                    break;
+                case "ArrowLeft":
+                    ActiveParentNode();
+                    break;
+                case "ArrowRight":
+                    ActiveChildNode();
+                    break;
+                default:
+                    OnSearchKeyUp(e);
+                    break;
+            }
+
+        }
+
+        private void ActiveNextNode()
+        {
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Hover);
+                return;
+            }
+
+            var siblingNodes = (node.ParentNode == null ? _nodelist.Where(x => x.ParentNode == null) : node.ParentNode.Children).ToList();
+            var currentIndex = siblingNodes.FindIndex(x => x.Value == node.Value);
+            // 取下一个索引，如果超过范围，则取第一个，用math.max保证不会越界 
+            var nextIndex = currentIndex + 1 > siblingNodes.Count ? 0 : currentIndex + 1;
+            var nextNode = siblingNodes.ElementAt(nextIndex);
+            SetSelectedNode(nextNode, SelectedTypeEnum.Hover);
+        }
+
+        private void ActivePrevNode()
+        {
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Hover);
+                return;
+            }
+
+            var siblingNodes = (node.ParentNode == null ? _nodelist.Where(x => x.ParentNode == null) : node.ParentNode.Children).ToList();
+            var currentIndex = siblingNodes.FindIndex(x => x.Value == node.Value);
+            // 取下一个索引，如果超过范围，则取第一个，用math.max保证不会越界 
+            var prevIndex = currentIndex - 1 < 0 ? siblingNodes.Count - 1 : currentIndex - 1;
+            var prevNode = siblingNodes.ElementAt(prevIndex);
+            SetSelectedNode(prevNode, SelectedTypeEnum.Hover);
+        }
+
+        private void ActiveChildNode()
+        {
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Hover);
+                return;
+            }
+            // 找到这个节点的子节点
+            if (node != null && node.HasChildren)
+            {
+                var childNode = node.Children.FirstOrDefault();
+                SetSelectedNode(childNode, SelectedTypeEnum.Hover);
+            }
+        }
+
+        private void ActiveParentNode()
+        {
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Hover);
+                return;
+            }
+            // 找到这个节点的父节点
+            if (node != null && node.ParentNode != null)
+            {
+                var parentNode = node.ParentNode;
+                SetSelectedNode(parentNode, SelectedTypeEnum.Hover);
+            }
+        }
     }
 }
