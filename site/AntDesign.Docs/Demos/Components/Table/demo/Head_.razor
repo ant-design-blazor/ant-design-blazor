@@ -17,6 +17,7 @@
                         OnFilter="((value,name)=>name.StartsWith(value))" />
         <PropertyColumn Property="c=>c.Age"
                         DefaultSortOrder="SortDirection.Descending"
+                        SortDirections="new[] { SortDirection.Descending, SortDirection.Ascending, SortDirection.Descending }"
                         SorterCompare="@((a,b)=> a - b)" />
         <PropertyColumn Property="c=>c.Address"
                         SorterCompare="@((a,b)=> a.Length - b.Length)"
