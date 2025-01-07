@@ -69,6 +69,36 @@ namespace AntDesign.Docs.Services
             return menuItems.FirstOrDefault(x => x.Url == currentSubmenuUrl)?.Children ?? Array.Empty<DemoMenuItem>();
         }
 
+        public async ValueTask<DemoMenuItem[]> GetSearchedMenuItems(string searchText)
+        {
+            var menuItems = await GetCurrentMenuItems();
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                // Filtering itemGroups in a way that only if itemGroup has at least one Children with a title Or subTitle that contains searchText
+                menuItems = menuItems
+                    .Where(x => x.Children != null && x.Children.Any(c => 
+                        c.Title.ToLower().Contains(searchText) ||
+                        (!string.IsNullOrEmpty(c.SubTitle) && c.SubTitle.ToLower().Contains(searchText))
+                    ))
+                    .Select(x => new DemoMenuItem
+                    {
+                        Order = x.Order,
+                        SubTitle = x.SubTitle,
+                        Type = x.Type,
+                        Cover = x.Cover,
+                        Url = x.Url,
+                        Title = x.Title,
+                        Children = x.Children?.Where(c =>
+                            string.IsNullOrEmpty(searchText) ||
+                            c.Title.ToLower().Contains(searchText) ||
+                            (!string.IsNullOrEmpty(c.SubTitle) && c.SubTitle.ToLower().Contains(searchText)) 
+                        ).ToArray()
+                    })
+                    .ToArray();
+            }
+            return menuItems;
+        }
+
         public string GetCurrentSubMenuUrl()
         {
             var currentUrl = _navigationManager.ToBaseRelativePath(_navigationManager.Uri);

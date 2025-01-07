@@ -1,5 +1,6 @@
 ﻿
-<Menu Class="aside-container menu-site" Theme="MenuTheme.Light" Mode="MenuMode.Inline" >
+<Menu Class="aside-container menu-site" Theme="MenuTheme.Light" Mode="MenuMode.Inline">
+    <Input Placeholder="Search Components" AllowClear="true" OnInput="OnComponentsSearch" OnClear="OnComponentsSearchCleared" @bind-Value="@_searchTerm"/>
     @menuItemTemplate((MenuItems, LocalizationService, 1))
 </Menu>
 
@@ -7,44 +8,44 @@
 @inject ILocalizationService LocalizationService
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
-@inject DemoService DemoService; 
+@inject DemoService DemoService;
 
 @code {
     [Parameter]
-    public DemoMenuItem[] MenuItems { get; set; } = {};
+    public DemoMenuItem[] MenuItems { get; set; } = { };
 
     static readonly RenderFragment<(DemoMenuItem[] items, ILocalizationService LocalizationService, int level)> menuItemTemplate = context =>
-        @<Template>
-            @foreach (var menu in context.items)
+    @<Template>
+        @foreach (var menu in context.items)
+        {
+            if (menu.Type == "menuItem")
             {
-                if (menu.Type == "menuItem")
+                <MenuItem RouterLink="@($"{context.LocalizationService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
+                <span>@menu.Title</span>
+                @if (context.LocalizationService.CurrentCulture.Name == "zh-CN" && menu.SubTitle != null)
                 {
-                        <MenuItem RouterLink="@($"{context.LocalizationService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
-                            <span>@menu.Title</span>
-                            @if (context.LocalizationService.CurrentCulture.Name == "zh-CN" && menu.SubTitle != null)
-                            {
-                                <span class="chinese">@menu.SubTitle</span>
-                            }
-                        </MenuItem>
+                    <span class="chinese">@menu.SubTitle</span>
                 }
-                else if (menu.Type == "subMenu")
-                {
-                    <SubMenu Title="@menu.Title" IsOpen="true">
-                        @if (menu.Children.Any())
-                        {
-                            @menuItemTemplate((menu.Children, context.LocalizationService, context.level + 1))
-                        }
-                    </SubMenu>
-                }
-                else if (menu.Type == "itemGroup")
-                {
-                    <MenuItemGroup Title="@menu.Title">
-                        @if (menu.Children.Any())
-                        {
-                            @menuItemTemplate((menu.Children, context.LocalizationService, context.level + 1))
-                        }
-                    </MenuItemGroup>
-                }
+                </MenuItem>
             }
+            else if (menu.Type == "subMenu")
+            {
+                <SubMenu Title="@menu.Title" IsOpen="true">
+                    @if (menu.Children.Any())
+                    {
+                        @menuItemTemplate((menu.Children, context.LocalizationService, context.level + 1))
+                    }
+                </SubMenu>
+            }
+            else if (menu.Type == "itemGroup")
+            {
+                <MenuItemGroup Title="@menu.Title">
+                    @if (menu.Children.Any())
+                    {
+                        @menuItemTemplate((menu.Children, context.LocalizationService, context.level + 1))
+                    }
+                </MenuItemGroup>
+            }
+        }
         </Template>;
 }
