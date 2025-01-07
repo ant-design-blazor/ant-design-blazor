@@ -522,19 +522,24 @@ namespace AntDesign
 
         private void ActiveNextNode()
         {
+            if (!_dropdownOpened)
+            {
+                _ = OpenAsync();
+                return;
+            }
             var node = _renderNodes.LastOrDefault();
             if (node == null)
             {
-                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Hover);
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
                 return;
             }
 
             var siblingNodes = (node.ParentNode == null ? _nodelist.Where(x => x.ParentNode == null) : node.ParentNode.Children).ToList();
             var currentIndex = siblingNodes.FindIndex(x => x.Value == node.Value);
-            // 取下一个索引，如果超过范围，则取第一个，用math.max保证不会越界 
-            var nextIndex = currentIndex + 1 > siblingNodes.Count ? 0 : currentIndex + 1;
+
+            var nextIndex = currentIndex + 1 > siblingNodes.Count - 1 ? 0 : currentIndex + 1;
             var nextNode = siblingNodes.ElementAt(nextIndex);
-            SetSelectedNode(nextNode, SelectedTypeEnum.Hover);
+            SetSelectedNode(nextNode, SelectedTypeEnum.Click);
         }
 
         private void ActivePrevNode()
@@ -542,16 +547,16 @@ namespace AntDesign
             var node = _renderNodes.LastOrDefault();
             if (node == null)
             {
-                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Hover);
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
                 return;
             }
 
             var siblingNodes = (node.ParentNode == null ? _nodelist.Where(x => x.ParentNode == null) : node.ParentNode.Children).ToList();
             var currentIndex = siblingNodes.FindIndex(x => x.Value == node.Value);
-            // 取下一个索引，如果超过范围，则取第一个，用math.max保证不会越界 
+
             var prevIndex = currentIndex - 1 < 0 ? siblingNodes.Count - 1 : currentIndex - 1;
             var prevNode = siblingNodes.ElementAt(prevIndex);
-            SetSelectedNode(prevNode, SelectedTypeEnum.Hover);
+            SetSelectedNode(prevNode, SelectedTypeEnum.Click);
         }
 
         private void ActiveChildNode()
@@ -559,14 +564,14 @@ namespace AntDesign
             var node = _renderNodes.LastOrDefault();
             if (node == null)
             {
-                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Hover);
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
                 return;
             }
-            // 找到这个节点的子节点
+
             if (node != null && node.HasChildren)
             {
                 var childNode = node.Children.FirstOrDefault();
-                SetSelectedNode(childNode, SelectedTypeEnum.Hover);
+                SetSelectedNode(childNode, SelectedTypeEnum.Click);
             }
         }
 
@@ -575,14 +580,13 @@ namespace AntDesign
             var node = _renderNodes.LastOrDefault();
             if (node == null)
             {
-                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Hover);
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
                 return;
             }
-            // 找到这个节点的父节点
-            if (node != null && node.ParentNode != null)
+
+            if (node != null)
             {
-                var parentNode = node.ParentNode;
-                SetSelectedNode(parentNode, SelectedTypeEnum.Hover);
+                SetSelectedNode(node, SelectedTypeEnum.Click);
             }
         }
     }

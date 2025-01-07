@@ -1140,6 +1140,11 @@ namespace AntDesign
             await _dropDown.Hide(true);
         }
 
+        protected async Task OpenAsync()
+        {
+            await _dropDown.Show();
+        }
+
         /// <summary>
         ///     Called by the Form reset method
         /// </summary>
