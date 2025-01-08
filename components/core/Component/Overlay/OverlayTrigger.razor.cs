@@ -541,14 +541,6 @@ namespace AntDesign.Internal
             return _trigger.Contains(triggerType);
         }
 
-        protected virtual async Task OverlayVisibleChange(bool visible)
-        {
-            await OnVisibleChange.InvokeAsync(visible);
-            if (VisibleChanged.HasDelegate)
-            {
-                await VisibleChanged.InvokeAsync(visible);
-            }
-        }
 
         protected virtual async Task OverlayHiding(bool visible)
         {
@@ -657,6 +649,6 @@ namespace AntDesign.Internal
         /// Toggle overlay visibility.
         /// </summary>
         /// <param name="visible">boolean: visibility true/false</param>
-        public void SetVisible(bool visible) => Visible = visible;
+        internal void SetVisible(bool visible) => Visible = visible;
     }
 }
