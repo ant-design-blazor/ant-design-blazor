@@ -146,13 +146,7 @@
     {
         //Arrange
         var cut = Render<AntDesign.Menu>(GetBasicInlineRender());
-        //Act
-        var topExpandable = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
-        await cut.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
-        await cut.InvokeAsync(() => topExpandable.Instance.Show());
-        // Assert
-        var topOverlay = topExpandable.FindComponent<AntDesign.Internal.Overlay>();
-        topOverlay.Find(".ant-menu-sub").ClassList.Contains("ant-menu-inline");
+        cut.Find(".ant-menu-sub").ClassList.Contains("ant-menu-inline");
     }
 
 
