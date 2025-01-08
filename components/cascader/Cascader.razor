@@ -132,7 +132,7 @@
                    unselectable="on"
                    aria-expanded="false"
                    @oninput="OnSearchInput"
-                   @onkeyup="OnSearchKeyUp">
+                   @onkeyup="OnKeyUpAsync">
           </span>
           @if (string.IsNullOrEmpty(_displayText)&& string.IsNullOrEmpty(_searchValue))
           {

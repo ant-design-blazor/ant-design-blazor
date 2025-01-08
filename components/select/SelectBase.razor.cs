@@ -1140,6 +1140,11 @@ namespace AntDesign
             await _dropDown.Hide(true);
         }
 
+        protected async Task OpenAsync()
+        {
+            await _dropDown.Show();
+        }
+
         /// <summary>
         ///     Called by the Form reset method
         /// </summary>
@@ -1257,6 +1262,14 @@ namespace AntDesign
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
 
         [Parameter] public virtual bool ShowArrowIcon { get; set; } = true;
+
+        /// <summary>
+        /// Placement of the overlay. Defaults to <see cref="Placement.BottomLeft"/>.
+        /// </summary>
+        /// <default value="Placement.BottomLeft" />
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public Placement Placement { get; set; } = Placement.BottomLeft;
 
         /// <summary>
         /// When newly set Value is not found in SelectOptionItems, it is reset to

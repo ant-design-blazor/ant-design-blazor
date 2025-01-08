@@ -15,6 +15,26 @@ timeline: true
 
 ---
 
+### 1.1.2
+
+`2025-01-08`
+
+- Overlay
+  - 🆕 新增 Overlay 组件支持 Visible 属性控制打开关闭。[#4418](https://github.com/ant-design-blazor/ant-design-blazor/pull/4418) [@ElderJames](https://github.com/ElderJames)
+  - 💄 修复 Overlay 相关组件有 div 包围的触发器的内联样式。[#4405](https://github.com/ant-design-blazor/ant-design-blazor/pull/4405) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🐞 修复 默认筛选方向只有一个。[#4411](https://github.com/ant-design-blazor/ant-design-blazor/pull/4411) [@ElderJames](https://github.com/ElderJames)
+  - 📖 更新 树形数据的文档并调整demo顺序。[#4398](https://github.com/ant-design-blazor/ant-design-blazor/pull/4398) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 新增 Typography 一个 article 元素的组件。[#4400](https://github.com/ant-design-blazor/ant-design-blazor/pull/4400) [@ElderJames](https://github.com/ElderJames)
+- 💄 新增 Cascader 缺少的 class 。[#4407](https://github.com/ant-design-blazor/ant-design-blazor/pull/4407) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ReuseTabs 的 Singleton 页面的属性更新。[#4399](https://github.com/ant-design-blazor/ant-design-blazor/pull/4399) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Result 的 Http 状态图片失效。[#4396](https://github.com/ant-design-blazor/ant-design-blazor/pull/4396) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Menu 子菜单布局问题。[#4417](https://github.com/ant-design-blazor/ant-design-blazor/pull/4417) [@ElderJames](https://github.com/ElderJames)
+- 🛠 重构 AutoComplete 脱离 ShowPanel 属性作用并标记废弃。[#4393](https://github.com/ant-design-blazor/ant-design-blazor/pull/4393) [@ElderJames](https://github.com/ElderJames)
+- 📖 清理 Dropdown 文档 demo 多余的代码。[#4401](https://github.com/ant-design-blazor/ant-design-blazor/pull/4401) [@zandiarash](https://github.com/zandiarash)
+
 ### 1.1.1
 
 `2025-01-02`

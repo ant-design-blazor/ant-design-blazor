@@ -134,8 +134,7 @@ namespace AntDesign
 
             ClassMapper
                 .Add(prefixCls)
-                .GetIf(() => $"{prefixCls}-horizontal", () => RootMenu?.InternalMode == MenuMode.Vertical)
-                .GetIf(() => $"{prefixCls}-vertical", () => RootMenu?.InternalMode == MenuMode.Horizontal)
+                .GetIf(() => $"{prefixCls}-vertical", () => RootMenu?.InternalMode != MenuMode.Inline)
                 .GetIf(() => $"{prefixCls}-inline", () => RootMenu?.InternalMode == MenuMode.Inline)
                 .If($"{prefixCls}-disabled", () => Disabled)
                 .If($"{prefixCls}-selected", () => _isSelected)
@@ -148,8 +147,7 @@ namespace AntDesign
                 .Add($"{RootMenu?.PrefixCls}-sub")
                 .GetIf(() => $"{RootMenu?.PrefixCls}-light", () => RootMenu?.Theme == MenuTheme.Light)
                 .GetIf(() => $"{RootMenu?.PrefixCls}-dark", () => RootMenu?.Theme == MenuTheme.Dark)
-                .GetIf(() => $"{RootMenu?.PrefixCls}-horizontal", () => RootMenu?.InternalMode == MenuMode.Vertical)
-                .GetIf(() => $"{RootMenu?.PrefixCls}-vertical", () => RootMenu?.InternalMode == MenuMode.Horizontal)
+                .GetIf(() => $"{RootMenu?.PrefixCls}-vertical", () => RootMenu?.InternalMode != MenuMode.Inline)
                 .GetIf(() => $"{RootMenu?.PrefixCls}-inline", () => RootMenu?.InternalMode == MenuMode.Inline)
                 //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
                 .If($"{RootMenu?.PrefixCls}-hidden", () => RootMenu?.InternalMode == MenuMode.Inline && !IsOpen && _isHidden)

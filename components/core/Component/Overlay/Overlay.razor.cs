@@ -251,7 +251,10 @@ namespace AntDesign.Internal
             }
             await Task.Delay(HideMillisecondsDelay);
 
-            if (!force && ((!IsContainTrigger(TriggerType.Click) && _mouseInOverlay) || _isPreventHide || (_childrenToShow.Count > 0)))
+            // if mouse is in overlay, don't hide
+            // if there are children overlay is showing, don't hide
+            // if trigger is set visible by outside and has no visible changed delegate, it means that the user is using visible to control show and hide, show don't hide by itself
+            if (!force && ((!IsContainTrigger(TriggerType.Click) && _mouseInOverlay) || _isPreventHide || (_childrenToShow.Count > 0) || (Trigger.Visible && !Trigger.VisibleChanged.HasDelegate)))
             {
                 return;
             }

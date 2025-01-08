@@ -309,7 +309,7 @@ namespace AntDesign
         /// Supported sorting methods, covering sortDirections in Table
         /// </summary>
         [Parameter]
-        public SortDirection[] SortDirections { get; set; } = [SortDirection.Ascending];
+        public SortDirection[] SortDirections { get; set; } = [SortDirection.Ascending, SortDirection.Descending, SortDirection.None];
 
         /// <summary>
         /// The table-layout attribute of the table element, set to fixed means that the content will not affect the layout of the column

@@ -15,6 +15,27 @@ timeline: true
 
 ---
 
+### 1.1.2
+
+`2025-01-08`
+
+- Overlay
+  - 🆕 Add Overlay support control visiblity by Visible parameter. [#4418](https://github.com/ant-design-blazor/ant-design-blazor/pull/4418) [@ElderJames](https://github.com/ElderJames)
+  - 💄 Fixed inline style for overlay trigger warpper with inline child element. [#4405](https://github.com/ant-design-blazor/ant-design-blazor/pull/4405) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🐞 Fixed default sort directions was wrong. [#4411](https://github.com/ant-design-blazor/ant-design-blazor/pull/4411) [@ElderJames](https://github.com/ElderJames)
+  - 📖 Docs update treedata demo and orders. [#4398](https://github.com/ant-design-blazor/ant-design-blazor/pull/4398) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 Add Typography article type component. [#4400](https://github.com/ant-design-blazor/ant-design-blazor/pull/4400) [@ElderJames](https://github.com/ElderJames)
+- 💄 Add Cascader missing dropdown class name. [#4407](https://github.com/ant-design-blazor/ant-design-blazor/pull/4407) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Reusetabs parameters updating for singleton page. [#4399](https://github.com/ant-design-blazor/ant-design-blazor/pull/4399) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Result Http status image are unavailable. [#4396](https://github.com/ant-design-blazor/ant-design-blazor/pull/4396) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Menu wrong layout of submenu. [#4417](https://github.com/ant-design-blazor/ant-design-blazor/pull/4417) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Refactor AutoComplete make ShowPanel obsoleted. [#4393](https://github.com/ant-design-blazor/ant-design-blazor/pull/4393) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs clean the unused Dropdown code for demo. [#4401](https://github.com/ant-design-blazor/ant-design-blazor/pull/4401) [@zandiarash](https://github.com/zandiarash)
+
+
 ### 1.1.1
 
 `2025-01-02`
