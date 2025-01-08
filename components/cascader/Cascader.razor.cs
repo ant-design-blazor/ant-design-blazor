@@ -496,5 +496,98 @@ namespace AntDesign
         {
 
         }
+
+        protected override async Task OnKeyUpAsync(KeyboardEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case "ArrowUp":
+                    ActivePrevNode();
+                    break;
+                case "ArrowDown":
+                    ActiveNextNode();
+                    break;
+                case "ArrowLeft":
+                    ActiveParentNode();
+                    break;
+                case "ArrowRight":
+                    ActiveChildNode();
+                    break;
+                default:
+                    OnSearchKeyUp(e);
+                    break;
+            }
+
+        }
+
+        private void ActiveNextNode()
+        {
+            if (!_dropdownOpened)
+            {
+                _ = OpenAsync();
+                return;
+            }
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
+                return;
+            }
+
+            var siblingNodes = (node.ParentNode == null ? _nodelist.Where(x => x.ParentNode == null) : node.ParentNode.Children).ToList();
+            var currentIndex = siblingNodes.FindIndex(x => x.Value == node.Value);
+
+            var nextIndex = currentIndex + 1 > siblingNodes.Count - 1 ? 0 : currentIndex + 1;
+            var nextNode = siblingNodes.ElementAt(nextIndex);
+            SetSelectedNode(nextNode, SelectedTypeEnum.Click);
+        }
+
+        private void ActivePrevNode()
+        {
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
+                return;
+            }
+
+            var siblingNodes = (node.ParentNode == null ? _nodelist.Where(x => x.ParentNode == null) : node.ParentNode.Children).ToList();
+            var currentIndex = siblingNodes.FindIndex(x => x.Value == node.Value);
+
+            var prevIndex = currentIndex - 1 < 0 ? siblingNodes.Count - 1 : currentIndex - 1;
+            var prevNode = siblingNodes.ElementAt(prevIndex);
+            SetSelectedNode(prevNode, SelectedTypeEnum.Click);
+        }
+
+        private void ActiveChildNode()
+        {
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
+                return;
+            }
+
+            if (node != null && node.HasChildren)
+            {
+                var childNode = node.Children.FirstOrDefault();
+                SetSelectedNode(childNode, SelectedTypeEnum.Click);
+            }
+        }
+
+        private void ActiveParentNode()
+        {
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
+                return;
+            }
+
+            if (node != null)
+            {
+                SetSelectedNode(node, SelectedTypeEnum.Click);
+            }
+        }
     }
 }
