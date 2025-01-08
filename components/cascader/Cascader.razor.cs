@@ -492,6 +492,18 @@ namespace AntDesign
             }
         }
 
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            var valueChanged = parameters.IsParameterChanged(nameof(Value), Value,out string newValue);
+
+            await base.SetParametersAsync(parameters);
+            if (valueChanged)
+            {
+                RefreshNodeValue(newValue);
+                SetValue(newValue);
+            }
+        }
+
         protected override void OnInputAsync(ChangeEventArgs e)
         {
 
