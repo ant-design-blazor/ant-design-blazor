@@ -171,7 +171,7 @@ namespace AntDesign
         public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
 
         /// <summary>
-        /// Callback executed when paging, sorting, and filtering changes	
+        /// Callback executed when table initialized, paging, sorting, and filtering changes.
         /// </summary>
         [Parameter]
         public EventCallback<QueryModel<TItem>> OnChange { get; set; }
@@ -309,7 +309,7 @@ namespace AntDesign
         /// Supported sorting methods, covering sortDirections in Table
         /// </summary>
         [Parameter]
-        public SortDirection[] SortDirections { get; set; } = [SortDirection.Ascending];
+        public SortDirection[] SortDirections { get; set; } = [SortDirection.Ascending, SortDirection.Descending, SortDirection.None];
 
         /// <summary>
         /// The table-layout attribute of the table element, set to fixed means that the content will not affect the layout of the column
@@ -392,7 +392,7 @@ namespace AntDesign
         [Inject]
         private ClientDimensionService ClientDimensionService { get; set; }
 
-        public ColumnContext ColumnContext { get; set; }
+        protected ColumnContext ColumnContext { get; set; }
 
         private IEnumerable<TItem> _showItems;
 

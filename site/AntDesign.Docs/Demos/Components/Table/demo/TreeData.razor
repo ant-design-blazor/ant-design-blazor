@@ -9,7 +9,7 @@ CheckStrictly:
     <Radio Value="SelectionType.Radio">Radio</Radio>
 </RadioGroup>
 
-<Table TItem="Data" DataSource="_data" TreeChildren="item=>item.Children" OnExpand="OnExpand" @bind-SelectedRows="_selectedRows">
+<Table TItem="Data" DataSource="_data" TreeChildren="item=>item.Children" OnExpand="OnExpand" @bind-SelectedRows="_selectedRows" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
     <Selection CheckStrictly="_checkStrictly" Type="@selectionType" />
     <PropertyColumn Property="c => c.Name" />
     <PropertyColumn Property="c => c.Age" Width="12%" Sortable />
@@ -115,7 +115,7 @@ CheckStrictly:
         },
         new() {
             Key = "2",
-            Name = "Joe Black",
+            Name = "Not Expandable",
             Age = 32,
             Address = "Sidney No. 1 Lake Park",
         },

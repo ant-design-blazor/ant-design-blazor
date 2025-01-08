@@ -19,6 +19,8 @@ namespace AntDesign.Docs
 
         public string ApiDoc { get; set; }
 
+        public string Faq { get; set; }
+
         public int? Cols { get; set; }
 
         public string Cover { get; set; }

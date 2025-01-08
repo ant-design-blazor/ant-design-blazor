@@ -1,5 +1,5 @@
 ---
-order: 22.1
+order: 22.5
 title:
   en-US: Grouping Rows
   zh-CN: 行分组

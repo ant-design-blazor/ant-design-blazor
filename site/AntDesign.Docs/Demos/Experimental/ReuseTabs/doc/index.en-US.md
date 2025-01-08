@@ -82,7 +82,7 @@ Other properties inherit from [Tabs](/components/tabs#API)
 | Order | The sequence number | int | 999 |
 | TypeName | The page's classsname | string | - |
 | Key | The page's key | string | - |
-| Singleton | Whether to create a new page for route with different params | bool | false |
+| Singleton | Turn on page singleton mode so that the same routing template will reuse the same page | bool | false |
 
 ### IReuseTabsPage interface
 
@@ -106,4 +106,6 @@ Used to control ReuseTabs in pages
 | CloseAll() | Close all pages except those that `Cloasable=false` or `Pin=true`.|
 | CloseCurrent() | Close current page. |
 | Update() | Update the state of current tab. When the variable referenced in `GetPageTitle()` changes, `Update()` needs to be called to update the tab display. |
+| UpdatePage(string url, Action<ReuseTabsPageItem> optionsAction) | Update the state of specific tab. | 
+| UpdatePage(Action<ReuseTabsPageItem> optionsAction) | Update the state of current tab. | 
 | ReloadPage(url) | Reload the page for the specified label, allowing the page components to be reinitialized without refreshing the browser. If no url is passed, reload the current page . |

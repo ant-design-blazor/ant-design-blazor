@@ -33,6 +33,10 @@
                             {
                                 <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#API")" Title="API" />
                             }
+                            @if (!string.IsNullOrEmpty(_demoComponent.Faq))
+                            {
+                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#Faq")" Title="@Localizer["app.footer.faq"]" />
+                            }
                         </Anchor>
                     </Affix>
                 </div>
@@ -121,6 +125,10 @@
            
             <section class="markdown api-container">
                 @((MarkupString)_demoComponent.ApiDoc)
+            </section>
+
+            <section class="markdown api-container">
+                @((MarkupString)_demoComponent.Faq)
             </section>
         }
         else
