@@ -1,6 +1,5 @@
 ﻿@using System.Reflection
 @using System.Globalization
-@using Microsoft.AspNetCore.Components.Rendering
 
 <CascadingValue Value="this" IsFixed>
     <ConfigProvider>
@@ -29,8 +28,6 @@
 
 @inject ILocalizationService LocalizationService;
 @inject NavigationManager NavigationManager;
-@inject NotificationService _notice
-@inject IStringLocalizer<Routes> L;
 
 @code {
     public bool CascadingRouteData { get; set; } = true;
@@ -86,37 +83,4 @@
         StateHasChanged();
     }
 
-    void Description(RenderTreeBuilder __builder)
-    {
-        <p style="padding-right:10px">
-            @L["app.sponsorship-notice"]
-        </p>
-
-        @if (LocalizationService.CurrentCulture.Name == "zh-CN")
-        {
-            <ImagePreviewGroup>
-                <Image Width="80" Height="80" Src="/docs/assets/links/alipay.jpg" />
-                <Image Width="80" Height="80" Src="/docs/assets/links/wepay.jpg" />
-            </ImagePreviewGroup>
-        }
-        else
-        {
-            <iframe src="https://github.com/sponsors/ant-design-blazor/button" title="Sponsor ant-design-blazor" height="32"
-                width="114" style="border: 0; border-radius: 6px;"></iframe>
-        }
-    }
-
-    protected override void OnInitialized()
-    {
-        Task.Run(async () =>
-        {
-            await Task.Delay(60 * 1000);
-            await _notice.Open(new NotificationConfig()
-            {
-                Icon = @<Icon Type="@IconType.Outline.Smile" Style="color:hotpink" />,
-                Description = (RenderFragment)(b => Description(b)),
-                Duration = 0
-            });
-        });
-    }
 }
