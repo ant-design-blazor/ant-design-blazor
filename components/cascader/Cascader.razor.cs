@@ -148,7 +148,8 @@ namespace AntDesign
         protected override void OnValueChange(string value)
         {
             base.OnValueChange(value);
-            RefreshDisplayText();
+            RefreshNodeValue(value);
+            SetValue(value);
         }
 
         /// <summary>
@@ -489,18 +490,6 @@ namespace AntDesign
             else
             {
                 CascaderOnBlur();
-            }
-        }
-
-        public override async Task SetParametersAsync(ParameterView parameters)
-        {
-            var valueChanged = parameters.IsParameterChanged(nameof(Value), Value,out string newValue);
-
-            await base.SetParametersAsync(parameters);
-            if (valueChanged)
-            {
-                RefreshNodeValue(newValue);
-                SetValue(newValue);
             }
         }
 
