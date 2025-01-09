@@ -95,31 +95,31 @@
                     animation: antSpinMove 1s infinite linear alternate;
                 }
 
-                    .ant-spin-dot-item:nth-child(1) {
-                        top: 0;
-                        left: 0;
-                    }
+                .ant-spin-dot-item:nth-child(1) {
+                    top: 0;
+                    left: 0;
+                }
 
-                    .ant-spin-dot-item:nth-child(2) {
-                        top: 0;
-                        right: 0;
-                        -webkit-animation-delay: 0.4s;
-                        animation-delay: 0.4s;
-                    }
+                .ant-spin-dot-item:nth-child(2) {
+                    top: 0;
+                    right: 0;
+                    -webkit-animation-delay: 0.4s;
+                    animation-delay: 0.4s;
+                }
 
-                    .ant-spin-dot-item:nth-child(3) {
-                        right: 0;
-                        bottom: 0;
-                        -webkit-animation-delay: 0.8s;
-                        animation-delay: 0.8s;
-                    }
+                .ant-spin-dot-item:nth-child(3) {
+                    right: 0;
+                    bottom: 0;
+                    -webkit-animation-delay: 0.8s;
+                    animation-delay: 0.8s;
+                }
 
-                    .ant-spin-dot-item:nth-child(4) {
-                        bottom: 0;
-                        left: 0;
-                        -webkit-animation-delay: 1.2s;
-                        animation-delay: 1.2s;
-                    }
+                .ant-spin-dot-item:nth-child(4) {
+                    bottom: 0;
+                    left: 0;
+                    -webkit-animation-delay: 1.2s;
+                    animation-delay: 1.2s;
+                }
 
                 .ant-spin-dot-spin {
                     -webkit-transform: rotate(45deg);
@@ -135,10 +135,10 @@
                     height: 32px;
                 }
 
-                    .ant-spin-lg .ant-spin-dot i {
-                        width: 14px;
-                        height: 14px;
-                    }
+                .ant-spin-lg .ant-spin-dot i {
+                    width: 14px;
+                    height: 14px;
+                }
 
                 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
                     .ant-spin-blur {
@@ -217,7 +217,7 @@
                     '@primary-color': hex
                 }).then(() => ref.invokeMethodAsync('OnColorChanged'))
         }
-        window.DocSearchInit = window.DocSearchInit || function(){};
+        window.DocSearchInit = window.DocSearchInit || function () { };
     </script>
 
     <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@docsearch/css@3" />
@@ -247,5 +247,20 @@
             navigator.clipboard.writeText(text);
         }
     </script>
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@@petercatai/assistant/dist/umd/assistant.min.css">
+    </link>
+    <script src="https://fastly.jsdelivr.net/npm/react/umd/react.development.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/dayjs/dayjs.min.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/antd/dist/antd.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/lottie-web/build/player/lottie.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/@@petercatai/assistant/dist/umd/assistant.min.js"></script>
+    <script>
+        PetercatLUI.initAssistant({
+            apiDomain: 'https://api.petercat.ai',
+            token: '9dda22fa-1d1a-4854-a53a-5abbc5584840'
+        });
+    </script>
 </body>
+
 </html>
