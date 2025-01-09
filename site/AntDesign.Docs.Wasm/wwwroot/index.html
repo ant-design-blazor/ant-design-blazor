@@ -196,6 +196,9 @@
         </div>
     </app>
 
+    <script>
+        window.DocSearchInit = window.DocSearchInit || function () { };
+    </script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
@@ -217,7 +220,6 @@
                     '@primary-color': hex
                 }).then(() => ref.invokeMethodAsync('OnColorChanged'))
         }
-        window.DocSearchInit = window.DocSearchInit || function () { };
     </script>
 
     <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@docsearch/css@3" />
