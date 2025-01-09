@@ -79,12 +79,14 @@ namespace AntDesign
 
         private string InnerStyle => Wrap && Direction == SpaceDirection.Horizontal ? "flex-wrap: wrap;" : "";
 
+        private string AlignString => Align.Match(@enum => @enum.ToString().ToLowerInvariant(), str => str);
+
         private void SetClass()
         {
             ClassMapper
                 .Add(PrefixCls)
                 .Get(() => $"{PrefixCls}-{Direction.ToString().ToLowerInvariant()}")
-                .GetIf(() => $"{PrefixCls}-align-{Align}", () => HasAlign)
+                .GetIf(() => $"{PrefixCls}-align-{AlignString}", () => HasAlign)
                 .If($"{PrefixCls}-align-center", () => !HasAlign && Direction == SpaceDirection.Horizontal)
                 .If($"{PrefixCls}-rtl", () => RTL);
         }
