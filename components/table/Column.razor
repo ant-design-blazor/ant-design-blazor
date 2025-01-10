@@ -327,6 +327,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
                             _fieldFilterType.InputAttributes.TryAdd("PopupContainerSelector", $"#popup-container-for-{Id}");
                             _fieldFilterType.InputAttributes.TryAdd("Format", Format);
                             _fieldFilterType.InputAttributes.TryAdd("Width", Width ?? "120px");
+                            _fieldFilterType.InputAttributes.TryAdd("Style",$"min-width: 120px;width:{Width??"120px"}");
                             <SpaceItem>
                                 @_fieldFilterType.FilterInput(new TableFilterInputRenderOptions(filter, _fieldFilterType.InputAttributes, Expression.Field(Expression.Constant(this), nameof(_filterInputRef))))
                             </SpaceItem>

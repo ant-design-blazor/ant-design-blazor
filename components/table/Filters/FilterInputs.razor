@@ -39,7 +39,7 @@
         @<text>
             <EnumSelect TEnum="TData" Mode="@SelectMode.Multiple"
                 Value="(TData)filter.Value"
-                Style="width:180px;"
+                DropdownMatchSelectWidth="@false"
                 ValueChanged="value => filter.Value = value"
                 BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None"  @attributes="filter.Attributes" />
          </text>
