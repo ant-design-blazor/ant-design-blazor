@@ -1,0 +1,98 @@
+﻿@namespace AntDesign
+@inherits OverlayTrigger
+
+@using AntDesign.Internal
+
+<div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-flex; @Style"
+        @onclick="OnClickDiv"
+        @onmouseenter="OnTriggerMouseEnter"
+        @onmouseleave="OnTriggerMouseLeave"
+        @oncontextmenu="OnTriggerContextmenu"
+        @onfocusin="OnTriggerFocusIn"
+        @onfocusout="OnTriggerFocusOut"
+        @oncontextmenu:preventDefault>
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }else{
+            <div class="ant-color-picker-block-outer">
+                <div class="ant-color-picker-block">
+                    <div class="ant-color-picker-block-inner" style="@($"background: {_value.ToString(AntColorOutputFormats.RGBA)};")"></div>
+                </div>
+            </div>
+        }
+</div>
+@if (Unbound != null)
+{
+    @Unbound(RefBack)
+}
+
+
+<CascadingValue Value="this" Name="Trigger" IsFixed="@true">
+    <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
+        <Overlay @ref="_overlay"
+                 HideMillisecondsDelay="10"
+                 WaitForHideAnimMilliseconds="100"
+                 OnOverlayMouseEnter="OnOverlayMouseEnter"
+                 OnOverlayMouseLeave="OnOverlayMouseLeave"
+                 OnOverlayMouseUp="OnOverlayMouseUp">
+            <div class="ant-popover-content">
+                <div class="ant-popover-arrow">
+                    <span class="ant-popover-arrow-content"></span>
+                </div>
+                <div class="ant-popover-inner" role="tooltip">
+                    <div class="ant-popover-title">
+                        <GridRow>
+                            <GridCol Span="20">@Title</GridCol>
+                            <GridCol Span="4"><Button Type="@ButtonType.Primary" OnClick="ClickClose">关闭</Button></GridCol>
+                        </GridRow>
+                    </div>
+                    <div class="ant-popover-inner-content">
+                        <div class="ant-color-picker" style="@($"background-color: {_value.ToString(AntColorOutputFormats.RGB)}")">
+                            <div class="ant-color-picker-overlay">
+                                <div class="ant-color-picker-overlay ant-color-picker-overlay-white">
+                                    <div class="ant-color-picker-overlay ant-color-picker-overlay-black">
+                                        <div class="ant-color-picker-overlay" @onclick="OnColorOverlayClick">
+                                            <svg class="ant-color-picker-selector" height="26" width="26" style="transform: @GetSelectorLocation()" @onclick="OnSelectorClicked" @onclick:stopPropagation="true">
+                                                <defs>
+                                                    <filter id="ant-color-picker-selector-shadow" x="-50%" y="-50%" width="200%" height="200%">
+                                                        <feGaussianBlur in="SourceAlpha" stdDeviation="1" />
+                                                        <feOffset dx="0" dy="5" result="offsetblur" />
+                                                        <feOffset dx="0" dy="-5" result="offsetblur" />
+                                                        <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+                                                    </filter>
+                                                </defs>
+                                                <circle r="10" cx="13" cy="13" stroke="white" stroke-width="1" fill="transparent" style="filter: url(#ant-picker-color-selector-shadow)" />
+                                                <circle r="11" cx="13" cy="13" stroke="white" stroke-width="1.5" fill="transparent" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ant-popover-title">
+                        <GridRow Align="middle" Justify="center">
+                            <GridCol Span="22">
+                                <GridRow><GridCol Span="24"><Slider class="ant-color-picker-slider-hue" TValue="double" Value="@_value.H" OnChange="UpdateBaseColorSlider" Step="1" Min="0" Max="360" @onclick:stopPropagation="true"/></GridCol></GridRow>
+                                <GridRow><GridCol Span="24"><Slider TValue="double" Value="@_value.A" OnChange="SetAlpha" Step="1" Min="0" Max="255" @onclick:stopPropagation="true" /></GridCol></GridRow>
+                            </GridCol>
+                            <GridCol Span="2">
+                                <div class="ant-color-picker-block-outer">
+                                    <div class="ant-color-picker-block">
+                                        <div class="ant-color-picker-block-inner" style="@($"background: {_value.ToString(AntColorOutputFormats.RGBA)};")"></div>
+                                    </div>
+                                </div>
+                            </GridCol>
+                        </GridRow>
+                        <GridRow>
+                            <GridCol Span="24">
+                                <Input TValue="string" Value="@_value.ToString(AntColorOutputFormats.HexA)" OnChange="SetInputString" />
+                            </GridCol>
+                        </GridRow>
+                    </div>
+                </div>
+            </div>
+        </Overlay>
+    </CascadingValue>
+</CascadingValue>
