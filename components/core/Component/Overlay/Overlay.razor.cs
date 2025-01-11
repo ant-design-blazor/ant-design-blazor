@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
@@ -104,6 +108,7 @@ namespace AntDesign.Internal
         private string _overlayCls = "";
 
         private bool _shouldRender = true;
+        private bool _afterFirstRender = false;
 
         protected override bool ShouldRender()
         {
@@ -138,6 +143,7 @@ namespace AntDesign.Internal
         {
             if (firstRender)
             {
+                _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
             }
 
@@ -217,6 +223,11 @@ namespace AntDesign.Internal
             _overlayCls = Trigger.GetOverlayEnterClass();
             await Trigger.OnVisibleChange.InvokeAsync(true);
 
+            if (Trigger != null && Trigger.VisibleChanged.HasDelegate)
+            {
+                await Trigger.VisibleChanged.InvokeAsync(true);
+            }
+
             await InvokeAsync(StateHasChanged);
 
             if (OnShow.HasDelegate)
@@ -237,7 +248,10 @@ namespace AntDesign.Internal
             }
             await Task.Delay(HideMillisecondsDelay);
 
-            if (!force && ((!IsContainTrigger(TriggerType.Click) && _mouseInOverlay) || _isPreventHide || (_childrenToShow.Count > 0)))
+            // if mouse is in overlay, don't hide
+            // if there are children overlay is showing, don't hide
+            // if trigger is set visible by outside and has no visible changed delegate, it means that the user is using visible to control show and hide, show don't hide by itself
+            if (!force && ((!IsContainTrigger(TriggerType.Click) && _mouseInOverlay) || _isPreventHide || (_childrenToShow.Count > 0) || (Trigger.Visible && !Trigger.VisibleChanged.HasDelegate)))
             {
                 return;
             }
@@ -259,6 +273,11 @@ namespace AntDesign.Internal
             _isOverlayHiding = false;
 
             await Trigger.OnVisibleChange.InvokeAsync(false);
+
+            if (Trigger != null && Trigger.VisibleChanged.HasDelegate)
+            {
+                await Trigger.VisibleChanged.InvokeAsync(false);
+            }
 
             StateHasChanged();
 
@@ -334,6 +353,11 @@ namespace AntDesign.Internal
 
         private async Task AddOverlayToBody(int? overlayLeft = null, int? overlayTop = null)
         {
+            if (!_afterFirstRender)
+            {
+                return;
+            }
+
             if (!_hasAddOverlayToBody)
             {
                 bool triggerIsWrappedInDiv = Trigger.Unbound is null;

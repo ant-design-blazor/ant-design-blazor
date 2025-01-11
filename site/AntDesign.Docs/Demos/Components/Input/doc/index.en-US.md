@@ -43,6 +43,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | Placeholder              | Provide prompt information that describes the expected value of the input field        | string        | -        |
 | Prefix | The prefix icon for the Input.                           | RenderFragment        | -        |
 | ReadOnly | When present, it specifies that an input field is read-only. | boolean | false    | 0.9
+| ShowClear | Overrides whether the clear button should be shown when `AllowClear` is true (otherwise this has no effect). If null, the default behavior is used, and the clear button is only shown if the input is not empty. | boolean?     | -      |
 | Size |The size of the input box. Note: in the context of a form, the `large` size is used. Available: `large` `default` `small`       | string        | -         |
 | StopPropagation Controls onclick & blur event propagation.    | boolean    | false      | 0.10.0
 | Style | Set CSS style. When using, be aware that some styles can be set only by `WrapperStyle` | string | - |  |
@@ -62,6 +63,7 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | AutoSize | Will adjust (grow or shrink) the `TextArea` according to content. Can work in connection with `MaxRows` & `MinRows`. Sets `resize` attribute of the `textarea` HTML element to: `none`. | boolean        | false         |
+| Bordered | Whether has border style         | boolean         | true
 | DefaultToEmptyString | When `false`, value will be set to `null` when content is empty or whitespace. When `true`, value will be set to empty string. | boolean        | false         |
 | MinRows | `TextArea` will allow shrinking, but it will stop when visible rows = `MinRows` (will not shrink further). Using this property will autoset `AutoSize = true`.  | int        | 1         |
 | MaxRows | `TextArea` will allow growing, but it will stop when visible rows = `MaxRows` (will not grow further). Using this property will autoset `AutoSize = true`.  | int        | uint.MaxValue         |

@@ -1,29 +1,69 @@
-﻿using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Previewable image.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>When you need to display pictures.</item>
+        <item>Display when loading a large image or fault tolerant handling when loading fail.</item>
+    </list>
+    </summary>
+    <seealso cref="ImagePreviewGroup"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/D1dXz9PZqa/image.svg", Columns = 2, Title = "Image", SubTitle = "图片")]
     public partial class Image : AntDomComponentBase
     {
+        /// <summary>
+        /// Alternative text for image
+        /// </summary>
         [Parameter]
         public string Alt { get; set; }
 
+        /// <summary>
+        /// Fallback if image fails to load
+        /// </summary>
         [Parameter]
         public string Fallback { get; set; }
 
+        /// <summary>
+        /// Height of image
+        /// </summary>
         [Parameter]
         public string Height { get; set; }
 
+        /// <summary>
+        /// Width of image
+        /// </summary>
         [Parameter]
         public string Width { get; set; }
 
+        /// <summary>
+        /// Loading placeholder
+        /// </summary>
         [Parameter]
         public RenderFragment Placeholder { get; set; }
 
+        /// <summary>
+        /// Enable or disable preview functionality
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Preview { get; set; } = true;
 
+        /// <summary>
+        /// If the preview is visible or not
+        /// </summary>
         [Parameter]
         public bool PreviewVisible
         {
@@ -42,6 +82,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Image source
+        /// </summary>
         [Parameter]
         public string Src
         {
@@ -62,6 +105,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Preview image source
+        /// </summary>
         [Parameter]
         public string PreviewSrc
         {
@@ -73,12 +119,21 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when <see cref="PreviewVisible"/> changes
+        /// </summary>
         [Parameter]
         public EventCallback<bool> PreviewVisibleChanged { get; set; }
 
+        /// <summary>
+        /// Callback executed on image click
+        /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
+        /// <summary>
+        /// Locale data for component
+        /// </summary>
         [Parameter]
         public ImageLocale Locale { get; set; } = LocaleProvider.CurrentLocale.Image;
 
@@ -155,7 +210,7 @@ namespace AntDesign
             }
         }
 
-        public void ShowPreview()
+        private void ShowPreview()
         {
             var images = Group?.Images ?? new List<Image>() { this };
             var index = images.IndexOf(this);
@@ -170,7 +225,7 @@ namespace AntDesign
             }
         }
 
-        public void OnPreviewClose()
+        private void OnPreviewClose()
         {
             if (PreviewVisibleChanged.HasDelegate)
             {

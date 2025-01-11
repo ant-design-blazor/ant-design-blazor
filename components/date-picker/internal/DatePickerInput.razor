@@ -43,7 +43,7 @@
         @if (ShowClear())
         {
             <span class="@(PrefixCls)-clear" onclick="@OnClickClear">
-                <Icon Type="close-circle" Theme="fill"/>
+                <Icon Type="@IconType.Fill.CloseCircle"/>
             </span>
         }
     </div>
@@ -73,7 +73,7 @@ else
     public string PrefixCls { get; set; } = "ant-picker";
 
     [Parameter]
-    public string Size { get; set; }
+    public InputSize Size { get; set; }
 
     [Parameter]
     public string Value { get; set; }
@@ -144,9 +144,9 @@ else
     [Parameter]
     public bool Active { get; set; }
 
-    public bool IsOnFocused { get; set; } = false;
+    internal bool IsOnFocused { get; set; } = false;
 
-    public bool ShowClear()
+    internal bool ShowClear()
     {
         return !Disabled && !String.IsNullOrEmpty(Value) && AllowClear;
     }

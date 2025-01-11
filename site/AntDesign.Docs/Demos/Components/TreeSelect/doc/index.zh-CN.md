@@ -91,6 +91,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | ChildrenExpression  | 返回子节点的方法  | Func  |   |   |
 | DisabledExpression  |  指定一个返回禁用节点的方法 | Func  |   |   |
 | CheckableExpression  |  指定一个返回可勾选节点的方法 | Func  |   |   |
+| SelectableExpression  |  指定一个返回可选择节点的方法 | Func  |   |   |
 | TreeDefaultExpandAll  |  默认展开所有节点 |  boolean  | false  |   |
 | TreeDefaultExpandParent  |  默认展开顶级父节点 | boolean  | false  |   |
 | TreeDefaultExpandedKeys  |  默认展开的节点 | string[]  | null |   |
@@ -120,6 +121,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | Checkable | 是否可勾选  |  boolean |  true |   |
 | Checked | 是否勾选（支持双向绑定）  |  boolean |  false |   |
 | DisableCheckbox | 禁用复选框  |  boolean |  false |   |
+| Selectable | 是否可选择  |  boolean |  true |   |
 | Selected | 是否选中（支持双向绑定）  |  boolean |  false |   |
 | Expanded | 是否展开（支持双向绑定）  |  boolean |  false |   |
 | Title | 标题  |  string |  false |   |

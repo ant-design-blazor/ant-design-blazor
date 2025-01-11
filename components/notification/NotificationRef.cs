@@ -2,9 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
@@ -23,7 +20,7 @@ namespace AntDesign
 
         private readonly NotificationService _service;
 
-        internal NotificationRef(NotificationService service,NotificationConfig config)
+        internal NotificationRef(NotificationService service, NotificationConfig config)
         {
             _service = service;
             Config = config;

@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net5;net6</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net5;net6;net7;net8;net9</TargetFrameworks>
     <OutputType>Library</OutputType>
     <IsPackable>true</IsPackable>
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bunit.web" Version="1.26.64" />
+    <PackageReference Include="bunit.web" Version="1.36.0" />
     <PackageReference Include="FluentAssertions" Version="6.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
     <PackageReference Include="Moq" Version="4.16.1" />

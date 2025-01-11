@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -17,7 +18,7 @@ namespace AntDesign
         #region Parameters
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Parameter]
         public ConfirmOptions Config { get; set; }
@@ -38,8 +39,7 @@ namespace AntDesign
 
         private string _okBtnId = "ant-blazor-" + Guid.NewGuid();
         private string _cancelBtnId = "ant-blazor-" + Guid.NewGuid();
-
-        DialogOptions _dialogOptions;
+        private DialogOptions _dialogOptions;
         private DialogOptions BuildDialogOptions(ConfirmOptions confirmOptions)
         {
             DialogOptions config = new DialogOptions()
@@ -61,14 +61,16 @@ namespace AntDesign
                 Footer = null,
 
                 ClassName = confirmOptions.ClassName,
-                Closable = false
+                Closable = false,
+                CreateByService = confirmOptions.CreateByService,
+                DestroyOnClose = true
             };
 
             config.ClassName = "ant-modal-confirm ant-modal-confirm-" + confirmOptions.ConfirmType;
             config.Title = null;
             config.CloseIcon = null;
             config.OnClosed = Close;
-            config.OnCancel = ConfirmRef.IsCreateByService ? e => HandleCancel(e, ConfirmResult.Cancel) : new Func<MouseEventArgs, Task>(async (e) => await Close());
+            config.OnCancel = ConfirmRef.Config.CreateByService ? e => HandleCancel(e, ConfirmResult.Cancel) : new Func<MouseEventArgs, Task>(async (e) => await Close());
             return config;
         }
 
@@ -181,7 +183,7 @@ namespace AntDesign
 
         private async Task HandleBtn1Click(MouseEventArgs e, ConfirmResult confirmResult)
         {
-            if (ConfirmRef.IsCreateByService)
+            if (ConfirmRef.Config.CreateByService)
             {
                 await HandleOk(e, confirmResult);
             }
@@ -196,7 +198,7 @@ namespace AntDesign
 
         private async Task HandleBtn2Click(MouseEventArgs e, ConfirmResult confirmResult)
         {
-            if (ConfirmRef.IsCreateByService)
+            if (ConfirmRef.Config.CreateByService)
             {
                 await HandleCancel(e, confirmResult);
             }

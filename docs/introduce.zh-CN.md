@@ -40,7 +40,7 @@ title: Ant Design of Blazor
 
 ## 🖥 支持环境
 
-- 兼容 .NET Core 3.1 / .NET 5 / .NET 6 / .NET 7 / .NET 8。
+- 兼容 .NET Core 3.1 / .NET 5 / .NET 6 / .NET 7 / .NET 8 / .NET 9。
 - 支持 WebAssembly 静态文件部署。
 - 支持服务端双向绑定。
 - 支持 WebAssembly 静态文件部署。
@@ -67,7 +67,7 @@ title: Ant Design of Blazor
 
 ### 先决条件
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1 以上版本，推荐 .NET 8。
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1?WT.mc_id=DT-MVP-5003987) 3.1 以上版本，推荐 .NET 9。
 
 ### 选择一：从模板创建一个新项目
 
@@ -149,7 +149,7 @@ title: Ant Design of Blazor
 - 最后就可以在`.razor`组件中引用啦！
 
   ```
-  <Button Type="primary">Hello World!</Button>
+  <Button Type="ButtonType.Primary">Hello World!</Button>
   ```
 
 ## 🔨 开发
@@ -163,7 +163,7 @@ title: Ant Design of Blazor
 
 ### 本地
 
-- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/8.0?WT.mc_id=DT-MVP-5003987) 8.0.100 以上版本
+- 先安装 [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet/9.0?WT.mc_id=DT-MVP-5003987) 9.0.100 以上版本
 - 安装 Node.js（只用于样式文件和互操作所需 TS 文件的构建）
 - 克隆到本地开发
 

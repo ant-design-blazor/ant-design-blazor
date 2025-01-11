@@ -2,11 +2,13 @@
 @using System.Text.Json;
 @using System.ComponentModel
 @using System.Globalization
+@using AntDesign.Form.Locale
 
 <Form Model="@model"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
       LabelColSpan="8"
+      Locale="locale"
       WrapperColSpan="16">
     <FormItem>
         <Input @bind-Value="@context.Username" />
@@ -14,11 +16,11 @@
     <FormItem>
         <InputPassword @bind-Value="@context.Password" />
     </FormItem>
-    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+    <FormItem Label="" WrapperColOffset="8" WrapperColSpan="16">
         <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
     </FormItem>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit">
+        <Button Type="ButtonType.Primary" HtmlType="submit">
             Submit
         </Button>
     </FormItem>
@@ -27,14 +29,21 @@
 
 @code
 {
+    FormLocale locale = new FormLocale() { DefaultValidateMessages = new() };
+
+    protected override void OnInitialized()
+    {
+        locale.DefaultValidateMessages.Required = "❌ {0} is required.";
+    }
     public class Model
     {
-        [Required(ErrorMessageResourceName = nameof(Resources.App.UserNameValidation), ErrorMessageResourceType = typeof(Resources.App))]
-        [Display(Name = nameof(Resources.App.UserName), ResourceType = typeof(Resources.App))]
+        [Required]
+        [DisplayName("User Name")]
         public string Username { get; set; }
 
         [Required(ErrorMessageResourceName = nameof(Resources.App.PasswordValidation), ErrorMessageResourceType = typeof(Resources.App))]
         [Display(Name = nameof(Resources.App.Password), ResourceType = typeof(Resources.App))]
+        [MaxLength(16,ErrorMessage ="{0} is too long (16 characters max).")]
         public string Password { get; set; }
 
         public bool RememberMe { get; set; } = true;

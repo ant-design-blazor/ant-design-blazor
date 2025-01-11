@@ -2,9 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using AntDesign.Core.JsInterop.ObservableApi;
 using AntDesign.JsInterop;
@@ -15,11 +13,14 @@ namespace AntDesign.Core.Component.ResizeObserver
 {
     public partial class ResizeObserver : AntComponentBase
     {
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
 
-        [Parameter] public EventCallback<DomRect> OnResize { get; set; }
+        [Parameter]
+        public EventCallback<DomRect> OnResize { get; set; }
 
-        [Inject] public DomEventService DomEventService { get; set; }
+        [Inject]
+        public DomEventService DomEventService { get; set; }
 
         private IDomEventListener _domEventListener;
 

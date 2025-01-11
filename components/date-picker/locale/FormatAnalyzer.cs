@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -19,7 +23,7 @@ namespace AntDesign.Datepicker.Locale
         private List<string> _separators = new();
         private List<DateTimePartialType> _partialsOrder = new();
         private Dictionary<DateTimePartialType, int> _parsedMap;
-        private readonly string _analyzerType;
+        private readonly DatePickerType _analyzerType;
         private bool _hasPrefix;
         private int _startPosition;
         private int _separatorPrefixOffset;
@@ -38,7 +42,7 @@ namespace AntDesign.Datepicker.Locale
             AmPmDesignator
         }
 
-        public FormatAnalyzer(string format, string analyzerType, DatePickerLocale locale, CultureInfo cultureInfo)
+        public FormatAnalyzer(string format, DatePickerType analyzerType, DatePickerLocale locale, CultureInfo cultureInfo)
         {
             _formatLength = format.Length;
             _analyzerType = analyzerType;

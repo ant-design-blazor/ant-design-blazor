@@ -23,7 +23,7 @@
         <Routes @rendermode="InteractiveAuto" />
     </app>
 
-    <script src="_content/AntDesign.Charts/g2plot.js"></script>
+    <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
     @* <script src="_content/AntDesign/js/ant-design-blazor.js"></script> *@
     <script src="_content/AntDesign.Docs/js/prism.js"></script>
@@ -36,10 +36,32 @@
         window.XPrism.highlightAll = function () {
             Prism.highlightAll();
         }
+        window.DocSearchInit = window.DocSearchInit || function(){};
     </script>
     <script src="@("https://fastly.jsdelivr.net/npm/@docsearch/js@3")"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css">
+    <script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } }</script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.nls.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.js"></script>
+    <script>
+        var instances = {};
+        function createEditor(element, id, ref, options) {
+            console.log(id);
+            var instance = monaco.editor.create(element, options);
+            instance.onDidChangeModelContent(function () {
+                ref.invokeMethodAsync('OnChangeAsync', instance.getValue());
+            });
+            instances[id] = instance;
+            return instance;
+        }
 
+        function copy(id) {
+            var text = instances[id].getValue();
+            navigator.clipboard.writeText(text);
+        }
+    </script>
     <script antblazor-js></script>
     @* <script src="/blazor.web.js" autostart="false"></script> *@
     <script src="/blazor.web.patched.js" autostart="false"></script>

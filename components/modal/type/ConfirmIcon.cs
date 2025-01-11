@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -24,7 +25,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "info-circle");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -32,7 +33,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "exclamation-circle");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -40,7 +41,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "close-circle");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -48,7 +49,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "check-circle");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -56,7 +57,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "question-circle");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 

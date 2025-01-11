@@ -1,0 +1,49 @@
+﻿<Divider Orientation="DividerOrientation.Left">Default Size</Divider>
+
+<AntList Bordered DataSource="@data">
+    <Header>Header</Header>
+    <ChildContent Context="item">
+        <ListItem>
+            <span><Text Mark>[ITEM]</Text></span>@item
+        </ListItem>
+    </ChildContent>
+
+    <Footer>Footer</Footer>
+</AntList>
+
+<Divider Orientation="DividerOrientation.Left">Small Size</Divider>
+
+<AntList Bordered DataSource="@data" Size="ListSize.Small">
+    <Header>Header</Header>
+    <ChildContent Context="item">
+        <ListItem>
+            <span><Text Mark>[ITEM]</Text></span>@item
+        </ListItem>
+    </ChildContent>
+    <Footer>Footer</Footer>
+</AntList>
+
+<Divider Orientation="DividerOrientation.Left">Large Size</Divider>
+
+<AntList Bordered DataSource="@data" Size="ListSize.Large">
+    <Header>Header</Header>
+    <Header>Header</Header>
+    <ChildContent Context="item">
+        <ListItem>
+            <span><Text Mark>[ITEM]</Text></span>@item
+        </ListItem>
+    </ChildContent>
+    <Footer>Footer</Footer>
+</AntList>
+
+@code{
+
+    public List<string> data = new List<string>
+{
+        "Racing car sprays burning fuel into crowd.",
+        "Japanese princess to wed commoner.",
+        "Australian walks 100km after outback crash.",
+        "Man charged over missing wedding girl.",
+        "Los Angeles battles huge wildfires."
+    };
+}

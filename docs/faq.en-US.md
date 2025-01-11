@@ -1,5 +1,5 @@
 ---
-order: 11
+order: 4
 title: FAQ
 ---
 
@@ -19,7 +19,7 @@ And make sure that `#some-scroll-area` element is `position: relative` or `posit
 
 ### How do I modify the default theme of Ant Design?
 
-See: https://ant.design/docs/react/customize-theme .
+See: [https://ant.design/docs/react/customize-theme](https://ant.design/docs/react/customize-theme)
 
 ### Why does modifying props in mutable way not trigger a component update?
 

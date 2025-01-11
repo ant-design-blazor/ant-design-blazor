@@ -3,7 +3,7 @@
     <Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
             Name="avatar"
             Class="avatar-uploader"
-            ListType="picture-card"
+            ListType="UploadListType.PictureCard"
             ShowUploadList="false"
             BeforeUpload="BeforeUpload"
             OnChange="HandleChange">
@@ -14,7 +14,7 @@
         else
         {
             <div>
-                <Icon Spin="loading" Type="@(loading?"Loading":"plus")" ></Icon>
+                <Icon Spin="loading" Type="@(loading ? IconType.Outline.Loading : IconType.Outline.Plus)" />
                 <div className="ant-upload-text">Upload</div>
             </div>
         }

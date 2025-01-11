@@ -1,5 +1,5 @@
 ---
-order: 4.1
+order: 3
 title: 本地化
 ---
 

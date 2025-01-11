@@ -1,17 +1,21 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using OneOf;
 
 namespace AntDesign
 {
+    /// <summary>
+    /// Link in an Anchor list. Designed to be a child of Anchor
+    /// </summary>
     [DebuggerDisplay("Href: {Href}")]
     public partial class AnchorLink : AntDomComponentBase, IAnchor
     {
@@ -21,17 +25,17 @@ namespace AntDesign
         private bool _hrefDomExist;
         private ClassMapper _titleClass = new ClassMapper();
         private List<AnchorLink> _links = new List<AnchorLink>();
-        public DomRect LinkDom { get; private set; }
+        internal DomRect LinkDom { get; private set; }
 
         #region Parameters
 
         [CascadingParameter(Name = "Root")]
-        public Anchor Root { get; set; }
+        private Anchor Root { get; set; }
 
         private IAnchor _parent;
 
         [CascadingParameter(Name = "Parent")]
-        public IAnchor Parent
+        private IAnchor Parent
         {
             get => _parent;
             set
@@ -42,17 +46,20 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Additional content. Does not override Title.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// target of hyperlink
+        /// Target of hyperlink
         /// </summary>
         [Parameter]
         public string Href { get; set; }
 
         /// <summary>
-        /// content of hyperlink
+        /// Content of hyperlink
         /// </summary>
         [Parameter]
         public string Title { get; set; }
@@ -99,12 +106,12 @@ namespace AntDesign
             catch { }
         }
 
-        public void Remove(AnchorLink anchorLink)
+        internal void Remove(AnchorLink anchorLink)
         {
             _links.Remove(anchorLink);
         }
 
-        public void Add(AnchorLink anchorLink)
+        internal void Add(AnchorLink anchorLink)
         {
             if (!_links.Where(l => !string.IsNullOrEmpty(l.Href))
                 .Select(l => l.Href)
@@ -114,7 +121,7 @@ namespace AntDesign
             }
         }
 
-        public void Clear()
+        internal void Clear()
         {
             foreach (IAnchor link in _links)
             {
@@ -124,7 +131,7 @@ namespace AntDesign
             _links.Clear();
         }
 
-        public List<AnchorLink> FlatChildren()
+        internal List<AnchorLink> FlatChildren()
         {
             List<AnchorLink> results = new List<AnchorLink>();
 
@@ -160,6 +167,26 @@ namespace AntDesign
         private async void OnClick(MouseEventArgs args)
         {
             await Root.OnLinkClickAsync(args, this);
+        }
+
+        void IAnchor.Add(AnchorLink anchorLink)
+        {
+            Add(anchorLink);
+        }
+
+        void IAnchor.Remove(AnchorLink anchorLink)
+        {
+           Remove(anchorLink);
+        }
+
+        void IAnchor.Clear()
+        {
+            Clear();
+        }
+
+        List<AnchorLink> IAnchor.FlatChildren()
+        {
+            return FlatChildren();
         }
     }
 }

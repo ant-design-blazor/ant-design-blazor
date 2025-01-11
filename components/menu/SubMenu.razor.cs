@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Internal;
@@ -16,6 +20,9 @@ namespace AntDesign
         [CascadingParameter]
         public SubMenu Parent { get; set; }
 
+        /// <summary>
+        /// Menu placement
+        /// </summary>
         [Parameter]
         public Placement? Placement
         {
@@ -33,18 +40,34 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// class name of the popup
+        /// </summary>
         [Parameter]
         public string PopupClassName { get; set; }
 
+        /// <summary>
+        /// Title 
+        /// </summary>
         [Parameter]
         public string Title { get; set; }
 
+        /// <summary>
+        /// Title template
+        /// </summary>
         [Parameter]
         public RenderFragment TitleTemplate { get; set; }
 
+        /// <summary>
+        /// SubMenus or SubMenu items
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Unique ID of the SubMenu
+        /// </summary>
+        /// <default value="Uniquely Generated ID" />
         [Parameter]
         public string Key
         {
@@ -52,12 +75,23 @@ namespace AntDesign
             set => _key = value;
         }
 
+        /// <summary>
+        /// Whether SubMenu is disabled
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Open state of the SubMenu
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool IsOpen { get; set; }
 
+        /// <summary>
+        /// Callback executed when the SubMenu title is clicked
+        /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnTitleClick { get; set; }
 
@@ -100,7 +134,8 @@ namespace AntDesign
 
             ClassMapper
                 .Add(prefixCls)
-                .Get(() => $"{prefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
+                .GetIf(() => $"{prefixCls}-vertical", () => RootMenu?.InternalMode != MenuMode.Inline)
+                .GetIf(() => $"{prefixCls}-inline", () => RootMenu?.InternalMode == MenuMode.Inline)
                 .If($"{prefixCls}-disabled", () => Disabled)
                 .If($"{prefixCls}-selected", () => _isSelected)
                 .If($"{prefixCls}-rtl", () => RTL)
@@ -110,8 +145,10 @@ namespace AntDesign
             SubMenuMapper
                 .Add(RootMenu?.PrefixCls)
                 .Add($"{RootMenu?.PrefixCls}-sub")
-                .Get(() => $"{RootMenu?.PrefixCls}-{RootMenu?.Theme}")
-                .Get(() => $"{RootMenu?.PrefixCls}-{(RootMenu?.InternalMode == MenuMode.Horizontal ? MenuMode.Vertical : RootMenu?.InternalMode)}")
+                .GetIf(() => $"{RootMenu?.PrefixCls}-light", () => RootMenu?.Theme == MenuTheme.Light)
+                .GetIf(() => $"{RootMenu?.PrefixCls}-dark", () => RootMenu?.Theme == MenuTheme.Dark)
+                .GetIf(() => $"{RootMenu?.PrefixCls}-vertical", () => RootMenu?.InternalMode != MenuMode.Inline)
+                .GetIf(() => $"{RootMenu?.PrefixCls}-inline", () => RootMenu?.InternalMode == MenuMode.Inline)
                 //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
                 .If($"{RootMenu?.PrefixCls}-hidden", () => RootMenu?.InternalMode == MenuMode.Inline && !IsOpen && _isHidden)
                 .If($"{RootMenu?.PrefixCls}-rtl", () => RTL)
@@ -146,7 +183,7 @@ namespace AntDesign
                 await OnTitleClick.InvokeAsync(args);
         }
 
-        public async Task Collapse()
+        internal async Task Collapse()
         {
             if (RootMenu?.InternalMode == MenuMode.Inline)
             {
@@ -165,7 +202,7 @@ namespace AntDesign
             base.OnInitialized();
             SetClass();
 
-            RootMenu?.Submenus.Add(this);
+            RootMenu?.AddSubmenu(this);
 
             if (RootMenu.DefaultOpenKeys.Contains(Key))
                 IsOpen = true;
@@ -190,6 +227,12 @@ namespace AntDesign
             }
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            RootMenu?.RemoveSubmenu(this);
+            base.Dispose(disposing);
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender && RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
@@ -201,7 +244,7 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        public void Close()
+        internal void Close()
         {
             IsOpen = false;
 
@@ -211,7 +254,7 @@ namespace AntDesign
             }
         }
 
-        public void Open()
+        internal void Open()
         {
             if (Disabled)
             {
@@ -228,11 +271,6 @@ namespace AntDesign
             Parent?.Open();
         }
 
-        public OverlayTrigger GetOverlayTrigger()
-        {
-            return _overlayTrigger;
-        }
-
         private void OnOverlayVisibleChange(bool visible)
         {
             _overlayVisible = visible;
@@ -242,7 +280,7 @@ namespace AntDesign
         {
         }
 
-        public void Select(bool isInitializing = false)
+        internal void Select(bool isInitializing = false)
         {
             Parent?.Select();
             _isSelected = true;
@@ -252,7 +290,7 @@ namespace AntDesign
             }
         }
 
-        public void Deselect()
+        internal void Deselect()
         {
             Parent?.Deselect();
             _isSelected = false;

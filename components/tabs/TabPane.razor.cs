@@ -3,8 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,18 +11,13 @@ namespace AntDesign
 {
     public partial class TabPane : AntDomComponentBase
     {
-        [CascadingParameter(Name = "IsTab")]
-        internal bool IsTab { get; set; }
-
-        [CascadingParameter(Name = "IsPane")]
-        internal bool IsPane { get; set; }
-
         [CascadingParameter]
         private Tabs Parent { get; set; }
 
         /// <summary>
         /// Forced render of content in tabs, not lazy render after clicking on tabs
         /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool ForceRender { get; set; } = false;
 
@@ -40,18 +33,31 @@ namespace AntDesign
         [Parameter]
         public string Tab { get; set; }
 
+        /// <summary>
+        /// Template of TabPane's head
+        /// </summary>
         [Parameter]
         public RenderFragment TabTemplate { get; set; }
 
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Template for customer context menu
+        /// </summary>
         [Parameter]
         public RenderFragment TabContextMenu { get; set; }
 
+        /// <summary>
+        /// If the tab is disabled
+        /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// If the tab is closable
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Closable { get; set; } = true;
 
@@ -59,11 +65,15 @@ namespace AntDesign
 
         private bool HasTabTitle => Tab != null || TabTemplate != null;
 
+        internal int TabIndex => _tabIndex;
+
         internal ElementReference TabRef => _tabRef;
+
+        internal string TabId => $"rc-tabs-{Id}-tab-{Key}";
 
         internal ElementReference TabBtnRef => _tabBtnRef;
 
-        private ClassMapper _tabPaneClassMapper = new();
+        private ClassMapper _tabClassMapper = new();
 
         private const string PrefixCls = "ant-tabs-tab";
         private const string TabPanePrefixCls = "ant-tabs-tabpane";
@@ -75,6 +85,9 @@ namespace AntDesign
         private bool _hasClosed;
 
         private bool _hasRendered;
+        private int _tabIndex;
+
+        private string TabStyles => $"margin-right:{(Parent.Type == TabType.Line ? "24px;" : "2px;")}; order:{TabIndex};";
 
         protected override void OnInitialized()
         {
@@ -82,37 +95,34 @@ namespace AntDesign
 
             this.SetClass();
 
+            Key ??= Guid.NewGuid().ToString();
+
             Parent?.AddTabPane(this);
         }
 
-        protected override void OnAfterRender(bool firstRender)
+        public override async Task SetParametersAsync(ParameterView parameters)
         {
-            base.OnAfterRender(firstRender);
-
-            if (IsTab && HasTabTitle)
+            if (parameters.IsParameterChanged(nameof(Tab), Tab))
             {
-                _hasRendered = true;
+                Parent?.UpdateTabsPosition();
             }
+
+            await base.SetParametersAsync(parameters);
         }
 
         private void SetClass()
         {
-            ClassMapper
+            _tabClassMapper
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-active", () => _isActive)
                 .If($"{PrefixCls}-with-remove", () => Closable)
                 .If($"{PrefixCls}-disabled", () => Disabled);
 
-            _tabPaneClassMapper
+            ClassMapper
                 .Add(TabPanePrefixCls)
                 .If($"{TabPanePrefixCls}-active", () => _isActive)
                 .If($"{TabPanePrefixCls}-hidden", () => !_isActive)
                 ;
-        }
-
-        internal void SetKey(string key)
-        {
-            Key = key;
         }
 
         internal void SetActive(bool isActive)
@@ -122,6 +132,11 @@ namespace AntDesign
                 _isActive = isActive;
                 InvokeAsync(StateHasChanged);
             }
+        }
+
+        internal void SetIndex(int index)
+        {
+            _tabIndex = index;
         }
 
         internal void Close()
@@ -140,37 +155,12 @@ namespace AntDesign
 
         internal void ExchangeWith(TabPane other)
         {
-            var temp = other.Clone();
-            other.SetPane(this);
-            this.SetPane(temp);
+            (_tabIndex, other._tabIndex) = (other._tabIndex, _tabIndex);
         }
 
-        private TabPane Clone()
+        private void HandleKeydown(KeyboardEventArgs e)
         {
-            return new TabPane
-            {
-                Key = Key,
-                Tab = this.Tab,
-                TabTemplate = this.TabTemplate,
-                Disabled = this.Disabled,
-                Closable = this.Closable,
-            };
-        }
-
-        private void SetPane(TabPane tabPane)
-        {
-            Key = tabPane.Key;
-            Tab = tabPane.Tab;
-            TabTemplate = tabPane.TabTemplate;
-            Disabled = tabPane.Disabled;
-            Closable = tabPane.Closable;
-
-            StateHasChanged();
-        }
-
-        private Task HandleKeydown(KeyboardEventArgs e)
-        {
-            return Parent?.HandleKeydown(e, this);
+            Parent?.HandleKeydown(e, this);
         }
     }
 }

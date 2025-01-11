@@ -2,11 +2,11 @@
 @using AntDesign.TableModels
 @using AntDesign.Core.Extensions
 
-<Table TItem="Data" DataSource="@data">
+<Table TItem="Data" DataSource="@data" AutoColIndexes="false">
 
     <GenerateColumns Range="1.." HideColumnsByName="@(new []{ "IdCard" })" Definitions=definitions />
 
-    <ActionColumn Title="Action">
+    <ActionColumn ColIndex="4" Title="Action">
         <Space Size=@("middle")>
             <SpaceItem>
                 <a>Invite @context.Name</a>
@@ -76,7 +76,7 @@
     /// </summary>
     /// <param name="propertyName">The name of the property binding the column. </param>
     /// <param name="column">The column instance, you need to explicitly cast to a concrete Column type. </param>
-    void definitions(string propertyName, object column)
+    void definitions(string propertyName, IFieldColumn column)
     {
         if (propertyName == "Tags")
         {
@@ -86,10 +86,10 @@
             @<span>
                 @foreach (var tag in cellData.FieldValue)
                 {
-                    var color = tag.Length > 5 ? "geekblue" : "green";
+                    var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
                     if (tag == "loser")
                     {
-                        color = "volcano";
+                        color = TagColor.Volcano;
                     }
                     <Tag Color="@color">@tag</Tag>
                 }
@@ -99,7 +99,7 @@
             return;
         }
 
-        ((dynamic)column).Sortable = true;
-        ((dynamic)column).Filterable= true;
+        column.Sortable = true;
+        column.Filterable = true;
     }
 }

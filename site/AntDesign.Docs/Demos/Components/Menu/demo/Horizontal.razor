@@ -1,10 +1,10 @@
 ﻿<Menu Mode=MenuMode.Horizontal>
     <MenuItem Key="mail">
-        <Icon Type="mail" Theme="outline"></Icon>
+        <Icon Type="@IconType.Outline.Mail" />
         Navigation One
     </MenuItem>
     <MenuItem Key="app" Disabled>
-        <Icon Type="appstore" Theme="outline"></Icon>
+        <Icon Type="@IconType.Outline.Appstore" />
         Navigation Two
     </MenuItem>
     <SubMenu TitleTemplate=@sub1Title>
@@ -32,7 +32,7 @@
 {
     RenderFragment sub1Title =
     @<Template>
-        <Icon Type="setting" Theme="outline"></Icon>
+        <Icon Type="@IconType.Outline.Setting" />
         Navigation Three - Submenu
     </Template>;
 }

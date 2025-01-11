@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 <CascadingValue Value="@($"#ant-drawer-wrap_{Id} .ant-drawer-wrapper-body")" Name="PopupContainerSelector">
     <div class="@ClassMapper.Class" @ref="@Ref" style="@_drawerStyle @InnerZIndexStyle @Style" id="@Id">
-        @if (Mask && Visible)
+        @if (Mask && _isOpen)
         {
             <div class="ant-drawer-mask" @onclick="MaskClick" style="@MaskStyle"></div>
         }

@@ -1,7 +1,7 @@
 ---
 order: 1
 title:
-  en-US: Set props on per row
+  en-US: Setting Attributes
   zh-CN: 设置行属性
 ---
 
@@ -14,7 +14,9 @@ title:
 
 ## en-US
 
-You can set any property to a row or cell by passing in a delegate that returns the dictionary. Such as 'onclick', 'style', 'class' and so on.
+You can set any property to a row or cell by passing in a delegate that returns the dictionary. Such as `onclick`, `style`, `class` and so on.
 Same as `OnRow` `OnHeaderRow` `OnCell` `OnHeaderCell`.
 
-For the rules for returning dictionaries, please refer to the official documentation [[Attribute splatting and arbitrary parameters]](https://docs.microsoft.com/en-us/aspnet/core/blazor/components/?view=aspnetcore-5.0&WT.mc_id=DT-MVP-5003987#attribute-splatting-and-arbitrary-parameters).
+For the rules for returning dictionaries, please refer to the official documentation:
+
+[Attribute splatting and arbitrary parameters](https://docs.microsoft.com/en-us/aspnet/core/blazor/components/?view=aspnetcore-5.0&WT.mc_id=DT-MVP-5003987#attribute-splatting-and-arbitrary-parameters)

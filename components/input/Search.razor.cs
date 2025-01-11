@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
-using System;
-using System.Threading.Tasks;
 
 namespace AntDesign
 {
@@ -10,13 +14,13 @@ namespace AntDesign
     {
         /// <summary>
         /// Search input is rendered with suffix search icon, not as a button.
-        /// Will be ignored when EnterButton != false
+        /// Will be ignored when <see cref="EnterButton"/> != false
         /// </summary>
         [Parameter]
         public bool ClassicSearchIcon { get; set; }
 
         /// <summary>
-        /// Whether to show an enter button after input. This property conflicts with the AddonAfter property
+        /// Whether to show an enter button after input. This property conflicts with the <see cref="Input{TValue}.AddOnAfter"/>
         /// </summary>
         [Parameter]
         public OneOf<bool, string> EnterButton { get; set; } = false;
@@ -28,7 +32,7 @@ namespace AntDesign
         public bool Loading { get; set; }
 
         /// <summary>
-        /// The callback function triggered when you click on the search-icon, the clear-icon or press the Enter key
+        /// Callback executed when you click on the search-icon, the clear-icon or press the Enter key
         /// </summary>
         [Parameter]
         public EventCallback<string> OnSearch { get; set; }
@@ -36,6 +40,13 @@ namespace AntDesign
         protected override bool IgnoreOnChangeAndBlur => OnSearch.HasDelegate;
 
         protected override bool EnableOnPressEnter => OnSearch.HasDelegate || OnPressEnter.HasDelegate;
+
+        private readonly Hashtable _buttonSizeMap = new Hashtable()
+        {
+            [InputSize.Large] = ButtonSize.Large,
+            [InputSize.Default] = ButtonSize.Default,
+            [InputSize.Small] = ButtonSize.Small,
+        };
 
         protected override void OnInitialized()
         {
@@ -51,11 +62,11 @@ namespace AntDesign
                         builder.AddAttribute(2, "Class", $"{PrefixCls}-search-icon");
                         if (Loading)
                         {
-                            builder.AddAttribute(3, "Type", "loading");
+                            builder.AddAttribute(3, "Type", IconType.Outline.Loading);
                         }
                         else
                         {
-                            builder.AddAttribute(4, "Type", "search");
+                            builder.AddAttribute(4, "Type", IconType.Outline.Search);
                         }
                         builder.AddAttribute(5, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                         builder.CloseComponent();
@@ -67,14 +78,15 @@ namespace AntDesign
                     {
                         builder.OpenComponent<Button>(6);
                         builder.AddAttribute(7, "Class", $"{PrefixCls}-search-button");
-                        builder.AddAttribute(8, "Type", "default");
-                        builder.AddAttribute(9, "Size", Size);
+                        builder.AddAttribute(8, "Type", ButtonType.Default);
+                        builder.AddAttribute(9, "Size", _buttonSizeMap[Size]);
                         builder.AddAttribute(10, "Loading", Loading);
+                        builder.AddAttribute(11, "Disabled", this.Disabled);
                         if (!Loading)
                         {
                             builder.AddAttribute(12, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                         }
-                        builder.AddAttribute(13, "Icon", "search");
+                        builder.AddAttribute(13, "Icon", IconType.Outline.Search);
 
                         builder.CloseComponent();
                     };
@@ -86,8 +98,8 @@ namespace AntDesign
                 {
                     builder.OpenComponent<Button>(11);
                     builder.AddAttribute(12, "Class", $"{PrefixCls}-search-button");
-                    builder.AddAttribute(13, "Type", "primary");
-                    builder.AddAttribute(14, "Size", Size);
+                    builder.AddAttribute(13, "Type", ButtonType.Primary);
+                    builder.AddAttribute(14, "Size", _buttonSizeMap[Size]);
                     builder.AddAttribute(15, "Loading", Loading);
                     if (!Loading)
                     {
@@ -101,7 +113,7 @@ namespace AntDesign
                             builder.AddAttribute(17, "ChildContent", new RenderFragment((b) =>
                             {
                                 b.OpenComponent<Icon>(20);
-                                b.AddAttribute(21, "Type", "search");
+                                b.AddAttribute(21, "Type", IconType.Outline.Search);
                                 b.CloseComponent();
                             }));
                         }
@@ -112,7 +124,7 @@ namespace AntDesign
                             b.AddContent(19, str);
                         }));
                     });
-
+                    builder.AddAttribute(20, "Disabled", this.Disabled);
                     builder.CloseComponent();
                 };
             }

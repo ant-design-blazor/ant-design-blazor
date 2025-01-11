@@ -1,9 +1,12 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
@@ -42,15 +45,21 @@ namespace AntDesign
         [CascadingParameter(Name = "DialogWrapperId")]
         public string DialogWrapperId { get; set; } = "";
 
+        [Inject] private NavigationManager NavigationManager { get; set; }
+
         private string _maskAnimationClsName = "";
         private string _modalAnimationClsName = "";
-        private string _maskHideClsName = "";
-        private string _wrapStyle = "";
+        private string _maskHideClsName = "ant-modal-mask-hidden";
+        private string _wrapStyle = "display: none;";
 
         private bool _hasShow;
         private bool _hasDestroy = true;
         private bool _disableBodyScroll;
         private bool _doDraggable;
+        private string _prevUrl = "";
+
+        private bool _resizing;
+        private bool _afterFirstRender;
 
 #pragma warning disable 649
 
@@ -136,7 +145,7 @@ namespace AntDesign
         /// <returns></returns>
         private async Task AppendToContainer()
         {
-            await JsInvokeAsync(JSInteropConstants.AddElementTo, _element, Config.GetContainer);
+            await JsInvokeAsync(JSInteropConstants.AddElementTo, _element, "body");
         }
 
         #region mask and dialog click event
@@ -151,21 +160,18 @@ namespace AntDesign
             _dialogMouseDown = true;
         }
 
-        private async Task OnMaskMouseUp()
+        private void OnMaskMouseDown()
         {
-            if (Config.MaskClosable && _dialogMouseDown)
-            {
-                await Task.Delay(4);
-                _dialogMouseDown = false;
-            }
+            _dialogMouseDown = false;
         }
 
-        private async Task OnMaskClick()
+        private async Task OnMaskMouseUp()
         {
             if (Config.MaskClosable && !_dialogMouseDown)
             {
                 await CloseAsync();
             }
+            _dialogMouseDown = false;
         }
 
         #endregion mask and dialog click event
@@ -253,10 +259,12 @@ namespace AntDesign
         {
             if (Status == ModalStatus.Default)
             {
+                _resizing = false;
                 SetModalStatus(ModalStatus.Max);
             }
             else
             {
+                _resizing = Config.Resizable;
                 SetModalStatus(ModalStatus.Default);
             }
             return Task.CompletedTask;
@@ -280,6 +288,7 @@ namespace AntDesign
             if (!_hasShow && Visible)
             {
                 _hasShow = true;
+                _resizing = Config.Resizable;
                 _wrapStyle = CalcWrapStyle();
                 _maskHideClsName = "";
                 _maskAnimationClsName = ModalAnimation.MaskEnter;
@@ -289,7 +298,7 @@ namespace AntDesign
 
         private string CalcWrapStyle()
         {
-            string style;
+            string style = "";
             if (Status == ModalStatus.Default && Config.Draggable)
             {
                 style = "display:flex;justify-content: center;";
@@ -302,10 +311,12 @@ namespace AntDesign
                     style += "align-items: flex-start;";
                 }
             }
-            else
+
+            if (!Config.Mask)
             {
-                style = "";
+                style += "pointer-events:none;";
             }
+
             return style;
         }
 
@@ -384,6 +395,7 @@ namespace AntDesign
                 Config.ClassName,
                 _modalAnimationClsName,
                 Status == ModalStatus.Max ? "ant-modal-max" : "",
+                Config.Resizable ? "ant-modal-resizable":"",
                 Class
             };
 
@@ -393,6 +405,13 @@ namespace AntDesign
         #endregion build element's class name
 
         #region override
+
+        protected override void OnInitialized()
+        {
+            _prevUrl = NavigationManager.Uri;
+
+            base.OnInitialized();
+        }
 
         private bool _hasRendered = false;
 
@@ -432,8 +451,18 @@ namespace AntDesign
         /// </summary>
         /// <param name="isFirst"></param>
         /// <returns></returns>
-        protected override async Task OnAfterRenderAsync(bool isFirst)
-        {
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        { 
+            if (firstRender)
+            {
+                _afterFirstRender = true;
+            }
+
+            if (!_afterFirstRender)
+            {
+                return;
+            }
+
             if (Visible)
             {
                 // disable body scroll
@@ -445,12 +474,6 @@ namespace AntDesign
                     await InvokeStateHasChangedAsync();
                 }
 
-                if (!_disableBodyScroll)
-                {
-                    _disableBodyScroll = true;
-                    await JsInvokeAsync(JSInteropConstants.DisableBodyScroll);
-                }
-
                 // enable drag and drop
                 if (Status != ModalStatus.Max && Config.Draggable && !_doDraggable)
                 {
@@ -458,15 +481,13 @@ namespace AntDesign
                     await JsInvokeAsync(JSInteropConstants.EnableDraggable, _dialogHeader, _modal, Config.DragInViewport);
                 }
             }
+            else if (!_hasRendered && Config.ForceRender)
+            {
+                _hasRendered = true;
+                await AppendToContainer();
+            }
             else
             {
-                // enable body scroll
-                if (_disableBodyScroll)
-                {
-                    _disableBodyScroll = false;
-                    await Task.Delay(250);
-                    await JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
-                }
                 // disable drag and drop
                 if (Status != ModalStatus.Max && Config.Draggable && _doDraggable)
                 {
@@ -475,19 +496,21 @@ namespace AntDesign
                 }
             }
 
-            await base.OnAfterRenderAsync(isFirst);
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         #endregion override
 
         protected override void Dispose(bool disposing)
         {
-            // enable body scroll
-            if (_disableBodyScroll)
+
+            _ = TryResetModalStyle();
+            // When a modal is defined in template, it will be destroyed when the page is navigated to different page component.
+            // but sometime the opened modal dom would not be removed from body, and sometime it would...
+            // so we remove it manually, and set a delay to avoid the dom being removed before the page is navigated.
+            if (!Config.CreateByService && !Config.DestroyOnClose && _prevUrl != NavigationManager.Uri)
             {
-                _disableBodyScroll = false;
-                _ = Task.Delay(250);
-                _ = JsInvokeAsync(JSInteropConstants.EnableBodyScroll);
+                _ = JsInvokeAsync(JSInteropConstants.DelElementFrom, "#" + Id, "body", 1000);
             }
         }
     }

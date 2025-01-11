@@ -1,37 +1,52 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Linq;
+using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
     public partial class TimelineItem : AntDomComponentBase
     {
+        /// <summary>
+        /// The content of the timeline item.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// The dot of the timeline item.
+        /// </summary>
         [Parameter]
         public RenderFragment Dot { get; set; }
 
+        /// <summary>
+        /// The color of the timeline item.
+        /// </summary>
+        /// <default value="TimelineDotColor.Blue" />
         [Parameter]
-        public string Color { get; set; } = "blue";
+        public OneOf<TimelineDotColor, string> Color { get; set; } = TimelineDotColor.Blue;
 
+        /// <summary>
+        /// The label of the timeline item.
+        /// </summary>
         [Parameter]
         public string Label { get; set; }
 
         [CascadingParameter]
-        public Timeline ParentTimeline { get; set; }
+        private Timeline ParentTimeline { get; set; }
 
         internal ClassMapper _headClassMapper = new ClassMapper();
 
         internal bool IsLast { get; set; } = false;
 
-        //'left' | 'alternate' | 'right'
-        internal string Position { get; set; } = "";
+        internal TimelineMode? Position { get; set; }
 
         internal string HeadStyle { get; set; } = "";
 
         internal string ItemClass => ClassMapper.Class;
-
-        private readonly string[] _defaultColors = new[] { "blue", "red", "green", "gray" };
 
         protected override void Dispose(bool disposing)
         {
@@ -55,20 +70,20 @@ namespace AntDesign
 
         private void TryUpdateCustomColor()
         {
-            HeadStyle = !_defaultColors.Contains(Color) ? $"border-color:{Color}" : "";
+            HeadStyle = !Color.IsT0 ? $"border-color:{Color}" : "";
         }
 
         internal void SetClassMap()
         {
             var prefix = "ant-timeline-item";
             ClassMapper.Clear().Add(prefix)
-                .If($"{prefix}-right", () => Position == "right")
-                .If($"{prefix}-left", () => Position == "left")
+                .If($"{prefix}-right", () => Position == TimelineMode.Right)
+                .If($"{prefix}-left", () => Position == TimelineMode.Left)
                 .If($"{prefix}-last", () => IsLast);
 
             var headPrefix = "ant-timeline-item-head";
             _headClassMapper.Clear().Add(headPrefix)
-                .If($"{headPrefix}-{Color}", () => _defaultColors.Contains(Color))
+                .If($"{headPrefix}-{Color.AsT0.ToString().ToLowerInvariant()}", () => Color.IsT0)
                 .If($"{headPrefix}-custom", () => Dot != null);
         }
 

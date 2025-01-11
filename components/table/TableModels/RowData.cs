@@ -1,7 +1,10 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AntDesign.TableModels
 {
@@ -20,6 +23,8 @@ namespace AntDesign.TableModels
         /// hold the state of children rows
         /// </summary>
         public Dictionary<int, RowData<TItem>> Children { get; set; }
+
+        public GroupResult<TItem> GroupResult { get; set; }
 
         public RowData()
         { }
@@ -80,7 +85,7 @@ namespace AntDesign.TableModels
             set => TableDataItem.SetSelected(value);
         }
 
-        public event Action<RowData, bool> ExpandedChanged;
+        internal event Action<RowData, bool> ExpandedChanged;
 
         internal void SetExpanded(bool expanded)
         {
@@ -113,6 +118,8 @@ namespace AntDesign.TableModels
 
         public IEnumerable<TItem> Children { get; set; }
 
+        public override bool HasChildren => Children?.Any() ?? false;
+
         public TableDataItem()
         {
         }
@@ -120,8 +127,6 @@ namespace AntDesign.TableModels
         public TableDataItem(TItem data, Table<TItem> table)
         {
             this.Data = data;
-            Children = table.TreeChildren(data);
-            HasChildren = Children?.Any() == true;
             Table = table;
         }
 
@@ -150,7 +155,7 @@ namespace AntDesign.TableModels
 
         public bool Disabled { get; set; }
 
-        public virtual bool HasChildren { get; set; }
+        public virtual bool HasChildren { get; }
 
         public event Action<TableDataItem, bool> SelectedChanged;
 
@@ -165,10 +170,11 @@ namespace AntDesign.TableModels
 
             _selected = selected;
 
-            OnSelectedChanged(_selected);
-
             if (triggersSelectedChanged)
+            {
+                OnSelectedChanged(_selected);
                 SelectedChanged?.Invoke(this, _selected);
+            }
         }
     }
 }

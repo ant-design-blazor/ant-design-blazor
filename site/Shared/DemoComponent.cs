@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections.Generic;
 
 namespace AntDesign.Docs
 {
@@ -14,6 +18,8 @@ namespace AntDesign.Docs
         public string Desc { get; set; }
 
         public string ApiDoc { get; set; }
+
+        public string Faq { get; set; }
 
         public int? Cols { get; set; }
 

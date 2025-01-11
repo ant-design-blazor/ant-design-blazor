@@ -1,5 +1,5 @@
 ﻿@using AntDesign.Select
-<Select Mode="multiple"
+<Select Mode="SelectMode.Multiple"
         Id="selectDemo"
         Placeholder="Please select"
 		@bind-Values="@_selectedValues1"
@@ -7,7 +7,7 @@
 		TItem="string"
 		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
 		Style="width: 100%; margin-bottom: 8px;"
-        MaxTagCount="@ResponsiveTag.Responsive"
+        MaxTagCount="ResponsiveTag.Responsive"
 		EnableSearch
 		AllowClear>
 		<SelectOptions>
@@ -17,13 +17,13 @@
 			}
 		</SelectOptions>
 </Select>
-<Select Mode="multiple"
+<Select Mode="SelectMode.Multiple"
         Id="selectDemoDisabled"
         Placeholder="Please select"
 		@bind-Values="@_selectedValues1"
 		TItemValue="string"
 		TItem="string"        
-        MaxTagCount="@ResponsiveTag.Responsive"
+        MaxTagCount="ResponsiveTag.Responsive"
 		Disabled>
 		<SelectOptions>
 			@foreach(var item in _items)

@@ -2,13 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using AntDesign.Internal.ModalDialog;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntDesign
@@ -27,7 +22,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "fullscreen");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -35,7 +30,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "fullscreen-exit");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -46,7 +41,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "close");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -129,7 +124,7 @@ namespace AntDesign
         /// <summary>
         /// Button type of the OK button
         /// </summary>
-        public string OkType { get; set; } = ButtonType.Primary;
+        public ButtonType OkType { get; set; } = ButtonType.Primary;
 
         /// <summary>
         /// The modal dialog's title of String
@@ -155,5 +150,7 @@ namespace AntDesign
         /// Is RTL
         /// </summary>
         public bool Rtl { get; set; } = false;
+
+        internal bool CreateByService { get; set; }
     }
 }

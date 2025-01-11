@@ -17,28 +17,27 @@
     // Therefore, we need to implement them as instance properties and use a singleton pattern
     public static FilterInputs Instance { get; } = new();
 
-    public readonly RenderFragment<TableFilterInputRenderOptions> DateTimeInput, GuidInput;
+    public readonly RenderFragment<TableFilterInputRenderOptions> GuidInput;
 
     private FilterInputs() {
-        DateTimeInput = filter =>
-            @<text>
-                @if (filter.FilterCompareOperator != TableFilterCompareOperator.TheSameDateWith) {
-                    <DatePicker Value="(DateTime?)filter.Value" ShowTime="true"
-                                TValue="DateTime?" ValueChanged="value => filter.Value = value?.AddMilliseconds(-value.Value.Millisecond)"
-                                BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" @attributes="filter.Attributes" />
-                }
-                else {
-                    <DatePicker Value="(DateTime?)filter.Value" TValue="DateTime?" ValueChanged="value => filter.Value = value"
-                                BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" @attributes="filter.Attributes"/>
-                }
-             </text>;
         GuidInput = filter =>
             @<Input Value="(Guid?)filter.Value" TValue="Guid?" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" @attributes="filter.Attributes" />;
     }
 
+    public RenderFragment<TableFilterInputRenderOptions> GetDatePicker<TData>() => filter =>
+    {
+        if (filter.FilterCompareOperator == TableFilterCompareOperator.Between)
+        {
+            return @<RangePicker Value="(TData[])filter.Value" TValue="TData[]" ValueChanged="value => filter.Value = value"
+                    BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" @attributes="filter.Attributes" />;
+        }
+        return @<DatePicker Value="(TData)filter.Value" TValue="TData" ValueChanged="value => filter.Value = value"
+                    BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" @attributes="filter.Attributes" />;
+    };
+
     public RenderFragment<TableFilterInputRenderOptions> GetEnumInput<TData>() => filter =>
         @<text>
-            <EnumSelect TEnum="TData" Mode="multiple"
+            <EnumSelect TEnum="TData" Mode="@SelectMode.Multiple"
                 Value="(TData)filter.Value"
                 Style="width:180px;"
                 ValueChanged="value => filter.Value = value"

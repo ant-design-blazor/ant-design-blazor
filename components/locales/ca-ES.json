@@ -123,6 +123,53 @@
     "description": "Sense dades"
   },
   "Form": {
-    "optional": "(opcional)"
+    "optional": "(opcional)",
+    "defaultValidateMessages": {
+      "default": "Error de validació del camp ${label}",
+      "required": "Introdueix ${label}",
+      "enum": "${label} ha de ser un de [${enum}]",
+      "whitespace": "${label} no pot ser un caràcter en blanc",
+      "date": {
+        "format": "El format de la data de ${label} és invàlid",
+        "parse": "${label} no es pot convertir a cap data",
+        "invalid": "${label} és una data invàlida"
+      },
+      "types": {
+        "string": "${label} no és un ${type} vàlid",
+        "method": "${label} no és un ${type} vàlid",
+        "array": "${label} no és un ${type} vàlid",
+        "object": "${label} no és un ${type} vàlid",
+        "number": "${label} no és un ${type} vàlid",
+        "date": "${label} no és un ${type} vàlid",
+        "boolean": "${label} no és un ${type} vàlid",
+        "integer": "${label} no és un ${type} vàlid",
+        "float": "${label} no és un ${type} vàlid",
+        "regexp": "${label} no és un ${type} vàlid",
+        "email": "${label} no és un ${type} vàlid",
+        "url": "${label} no és un ${type} vàlid",
+        "hex": "${label} no és un ${type} vàlid"
+      },
+      "string": {
+        "len": "${label} ha de ser de ${len} caràcters",
+        "min": "${label} ha de tenir com a mínim ${min} caràcters",
+        "max": "${label} ha de tenir com a màxim ${max} caràcters",
+        "range": "${label} ha d’estar entre ${min} i ${max} caràcters"
+      },
+      "number": {
+        "len": "${label} ha de ser igual a ${len}",
+        "min": "${label} ha de tenir un valor mínim de ${min}",
+        "max": "${label} ha de tenir un valor màxim de ${max}",
+        "range": "${label} ha de tenir un valor entre ${min} i ${max}"
+      },
+      "array": {
+        "len": "La llargada de ${label} ha de ser de ${len}",
+        "min": "La llargada de ${label} ha de ser com a mínim de ${min}",
+        "max": "La llargada de ${label} ha de ser com a màxim de ${max}",
+        "range": "La llargada de ${label} ha d’estar entre ${min} i ${max}"
+      },
+      "pattern": {
+        "mismatch": "${label} no coincideix amb el patró ${pattern}"
+      }
+    }
   }
 }

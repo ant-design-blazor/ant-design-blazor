@@ -4,7 +4,10 @@
 
 namespace AntDesign
 {
-    public class ButtonSize : AntSizeLDSType
+    public enum ButtonSize
     {
+        Large,
+        Default,
+        Small,
     }
 }

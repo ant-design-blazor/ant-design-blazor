@@ -29,12 +29,14 @@ export class manipulationHelper {
     return false;
   }
 
-  static delElementFrom(delElementSelector, elementSelector) {
-    const delElement = domInfoHelper.get(delElementSelector);
-    const parent = domInfoHelper.get(elementSelector);
-    if (parent && delElement) {
-      parent.removeChild(delElement);
-    }
+  static delElementFrom(delElementSelector, elementSelector, delay = 0) {
+    setTimeout(() => {
+      const delElement = domInfoHelper.get(delElementSelector);
+      const parent = domInfoHelper.get(elementSelector);
+      if (parent && delElement) {
+        parent.removeChild(delElement);
+      }
+    }, delay);
   }
 
   static setDomAttribute(element, attributes) {
@@ -308,6 +310,7 @@ export class manipulationHelper {
 
       document.body.removeChild(outer);
       cachedScrollBarSize = widthContained - widthScroll;
+      document.documentElement.style.setProperty('--ant-scrollbar-width', `${cachedScrollBarSize}px`);
     }
     return cachedScrollBarSize;
   };

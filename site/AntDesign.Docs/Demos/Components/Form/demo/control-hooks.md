@@ -2,7 +2,7 @@
 order: 1
 title:
   zh-CN: 表单方法调用
-  en-US: Form methods
+  en-US: Form Methods
 ---
 
 ## zh-CN
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Get form ref with `@ref`.
+Access methods on the form by using the `@ref` of the form.

@@ -1,13 +1,14 @@
 ---
 order: 2
 title:
-  zh-CN: 其它路由
-  en-US: Other Router Integration
+  zh-CN: 匹配路由
+  en-US: Match Routes
 ---
 
 ## zh-CN
-和 react-router@4+，或其他路由进行结合使用。
 
+自动匹配路由，利用菜单数据自动生成导航（首页的节点还需自己设置）。
 
 ## en-US
-Used together with react-router@4+ or other router.
+
+Auto match routes, generate navigation based on menu data (the home node needs to be set by yourself).

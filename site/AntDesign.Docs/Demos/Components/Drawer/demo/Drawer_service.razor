@@ -3,11 +3,11 @@
 <Input @bind-Value="@value" />
 <br />
 <br />
-<Button OnClick="OpenFastDialogMode" Type="primary">Use Fast Dialog Mode</Button>
-<Button OnClick="OpenDialogMode" Type="primary">Use Dialog Mode</Button>
+<Button OnClick="OpenFastDialogMode" Type="ButtonType.Primary">Use Fast Dialog Mode</Button>
+<Button OnClick="OpenDialogMode" Type="ButtonType.Primary">Use Dialog Mode</Button>
 <br />
-<Button OnClick="OpenComponent" Type="primary">Use Component</Button>
-<Button OnClick="OpenContent" Type="primary">Use Template</Button>
+<Button OnClick="OpenComponent" Type="ButtonType.Primary">Use Component</Button>
+<Button OnClick="OpenContent" Type="ButtonType.Primary">Use Template</Button>
 
 
 
@@ -20,7 +20,7 @@
     //fast dialog mode
     private async Task OpenFastDialogMode()
     {
-        var result = await DrawerService.CreateDialogAsync<DrawerTemplateDemo, string, string>(value, title: "Component", width: 350);
+        var result = await DrawerService.CreateDialogAsync<DrawerTemplateDemo, string, string>(value, title: "Component", width: "350");
 
         if (result != null)
             value = result;
@@ -33,7 +33,7 @@
         var options = new DrawerOptions()
         {
             Title = "Component",
-            Width = 350,
+            Width = "350",
         };
 
         var result = await DrawerService.CreateDialogAsync<DrawerTemplateDemo, string, string>(options, value);
@@ -48,7 +48,7 @@
         var options = new DrawerOptions()
         {
             Title = "Component",
-            Width = 350,
+            Width = "350",
         };
 
         var drawerRef = await DrawerService.CreateAsync<DrawerTemplateDemo, string, string>(options, value);
@@ -76,7 +76,7 @@
         var options = new DrawerOptions()
         {
             Title = "Drawer",
-            Width = 350,
+            Width = "350",
             Content = content,
         };
 

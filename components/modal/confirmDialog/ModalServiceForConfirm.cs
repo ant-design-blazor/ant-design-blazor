@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -25,6 +27,7 @@ namespace AntDesign
         /// <returns></returns>
         public ConfirmRef Confirm(ConfirmOptions props)
         {
+            props.CreateByService = true;
             CheckConfirmOptionsIsNull(props);
             ConfirmRef confirmRef = new ConfirmRef(props, this);
             confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
@@ -109,6 +112,7 @@ namespace AntDesign
         public async Task<bool> ConfirmAsync(ConfirmOptions props)
         {
             ConfirmRef confirmRef = new ConfirmRef(props, this);
+            props.CreateByService = true;
             confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
             if (OnConfirmOpenEvent != null)
             {
@@ -300,7 +304,7 @@ namespace AntDesign
         public Task<ConfirmRef<TResult>> CreateConfirmAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             CheckConfirmOptionsIsNull(config);
-
+            config.CreateByService = true;
             ConfirmRef<TResult> confirmRef = new ConfirmRef<TResult>(config, this);
             OnConfirmOpenEvent?.Invoke(confirmRef);
 

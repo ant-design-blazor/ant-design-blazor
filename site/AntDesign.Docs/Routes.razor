@@ -1,28 +1,43 @@
 ﻿@using System.Reflection
 @using System.Globalization
+@using Microsoft.AspNetCore.Components.Rendering
 
-<ConfigProvider>
-    <Router AppAssembly="typeof(App).Assembly" OnNavigateAsync="OnNavigateAsync">
-        <Found Context="routeData">
-            <CascadingValue Value="routeData">
-                <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
-            </CascadingValue>
-            <FocusOnNavigate RouteData="routeData" Selector="h1" />
-        </Found>
-        <NotFound>
-            <Result Status="404" />
-        </NotFound>
-    </Router>
-    <AntContainer />
-</ConfigProvider>
+<CascadingValue Value="this" IsFixed>
+    <ConfigProvider>
+        <Router AppAssembly="typeof(App).Assembly" OnNavigateAsync="OnNavigateAsync">
+            <Found Context="routeData">
+
+                @if (CascadingRouteData)
+                {
+                        <CascadingValue Value="routeData">
+                            <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+                        </CascadingValue>
+                }
+                else
+                {
+                        <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+                }
+                <FocusOnNavigate RouteData="routeData" Selector="h1" />
+            </Found>
+            <NotFound>
+                <Result Status="ResultStatus.Http404" />
+            </NotFound>
+        </Router>
+        <AntContainer />
+    </ConfigProvider>
+</CascadingValue>
 
 @inject ILocalizationService LocalizationService;
 @inject NavigationManager NavigationManager;
+@inject NotificationService _notice
+@inject IStringLocalizer<Routes> L;
+
 @code {
+    public bool CascadingRouteData { get; set; } = true;
 
     static string[] avaliableRoutes = new[] { "/Docs", "/Components", "/Charts", "/Experimental" };
 
-    async Task OnNavigateAsync(NavigationContext navigationContext)
+    void OnNavigateAsync(NavigationContext navigationContext)
     {
         var relativeUri = navigationContext.Path;
         var currentCulture = LocalizationService.CurrentCulture;
@@ -31,32 +46,80 @@
 
         try
         {
-            if (string.IsNullOrWhiteSpace(segment))
+            if (segment is { Length: > 0 })
             {
-                NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
-            }
-            else if (segment.IsIn("zh-CN", "en-US"))
-            {
-                LocalizationService.SetLanguage(CultureInfo.GetCultureInfo(segment));
-            }
-            else
-            {
-                if (avaliableRoutes.All(x => !$"/{relativeUri}".StartsWith(x, StringComparison.InvariantCultureIgnoreCase)))
-                    return;
-
-                if (currentCulture.Name.IsIn("zh-CN", "en-US"))
+                if (segment.IsIn("zh-CN", "en-US"))
                 {
-                    NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
+                    LocalizationService.SetLanguage(CultureInfo.GetCultureInfo(segment));
                 }
                 else
                 {
+                    if (relativeUri is { Length: > 0 } && avaliableRoutes.All(x => !$"/{relativeUri}".StartsWith(x,
+                    StringComparison.InvariantCultureIgnoreCase)))
+                        return;
+                }
+            }
+            else
+            {
+                if (currentCulture.Name.IsIn("zh-CN", "en-US"))
+                {
+                    NavigationManager.NavigateTo($"/{currentCulture.Name}/{relativeUri}");
+                    return;
+                }
+                else
+                {
+                    LocalizationService.SetLanguage(CultureInfo.GetCultureInfo("en-US"));
                     NavigationManager.NavigateTo($"/en-US/{relativeUri}");
+                    return;
                 }
             }
         }
         catch
         {
 
+        }
+    }
+
+    public void SetCascadingRouteData(bool value)
+    {
+        CascadingRouteData = value;
+        StateHasChanged();
+    }
+
+    void Description(RenderTreeBuilder __builder)
+    {
+                <p style="padding-right:10px">
+            @L["app.sponsorship-notice"]
+                </p>
+
+        @if (LocalizationService.CurrentCulture.Name == "zh-CN")
+        {
+                        <ImagePreviewGroup>
+                            <Image Width="80" Height="80" Src="/docs/assets/links/alipay.jpg" />
+                            <Image Width="80" Height="80" Src="/docs/assets/links/wepay.jpg" />
+                        </ImagePreviewGroup>
+        }
+        else
+        {
+                        <iframe src="https://github.com/sponsors/ant-design-blazor/button" title="Sponsor ant-design-blazor" height="32"
+                            width="114" style="border: 0; border-radius: 6px;"></iframe>
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        if (avaliableRoutes.Any(x => NavigationManager.Uri.Contains(x, StringComparison.InvariantCultureIgnoreCase)))
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(60 * 1000);
+                await _notice.Open(new NotificationConfig()
+                {
+                    Icon = @<Icon Type="@IconType.Outline.Smile" Style="color:hotpink" />,
+                    Description = (RenderFragment)(b => Description(b)),
+                    Duration = 0
+                });
+            });
         }
     }
 }

@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - "*"
+    branches:
+      - doc-fix
 
 jobs:
   publish-and-deploy:
@@ -12,34 +14,20 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
-      - name: Setup .NET Core 3.1
-        uses: actions/setup-dotnet@v3
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 3.1.300
-
-      - name: Setup .NET Core 5.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 5.0.100
-
-      - name: Setup .NET 6.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 6.0.101
-
-      - name: Setup .NET 7.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.100
-
-      - name: Setup .NET 8.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0.100
+          dotnet-version: |
+            3.1.x
+            5.0.x
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
 
       - uses: actions/setup-node@v1
         with:
@@ -52,7 +40,8 @@ jobs:
       - name: Publish Docs 🎉
         id: publish
         run: |
-          VERSION=`git describe --tags`
+          git fetch --all
+          VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/ant-design-blazor/ant-design-blazor/tags | grep 'name' | cut -d\" -f4 | head -1)
           echo "::set-output name=package_version::${VERSION}"
           npm install
           echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
@@ -62,8 +51,10 @@ jobs:
           sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
           sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
           dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net8 -o cargo -p:EnableAOT=true
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=true
           cp -rf cargo/staticwebapp.config.json cargo/wwwroot
+          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll cargo/wwwroot/_framework
+          find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
 
       - name: Deploy to Azure 🚀
         id: deploy_azure
@@ -76,6 +67,15 @@ jobs:
           output_location: "cargo/wwwroot"
           skip_api_build: true
           skip_app_build: true
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ID }}
+          projectName: 'ant-design-blazor'
+          directory: "cargo/wwwroot"
+          wranglerVersion: '3'      
 
       # - name: Deploy to Gitee 🚀
       #   uses: peaceiris/actions-gh-pages@v3

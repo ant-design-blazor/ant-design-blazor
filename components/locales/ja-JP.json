@@ -125,6 +125,53 @@
     "description": "データがありません"
   },
   "Form": {
-    "optional": "(optional)"
+    "optional": "(optional)",
+    "defaultValidateMessages": {
+      "default": "${label}のフィールド検証エラー",
+      "required": "${label}を入力してください",
+      "enum": "${label}は[${enum}]のいずれかである必要があります",
+      "whitespace": "${label}は空白文字にすることはできません",
+      "date": {
+        "format": "${label}の日付形式は不正です",
+        "parse": "${label}は日付に変換できません",
+        "invalid": "${label}は不正な日付です"
+      },
+      "types": {
+        "string": "${label}は有効な${type}ではありません",
+        "method": "${label}は有効な${type}ではありません",
+        "array": "${label}は有効な${type}ではありません",
+        "object": "${label}は有効な${type}ではありません",
+        "number": "${label}は有効な${type}ではありません",
+        "date": "${label}は有効な${type}ではありません",
+        "boolean": "${label}は有効な${type}ではありません",
+        "integer": "${label}は有効な${type}ではありません",
+        "float": "${label}は有効な${type}ではありません",
+        "regexp": "${label}は有効な${type}ではありません",
+        "email": "${label}は有効な${type}ではありません",
+        "url": "${label}は有効な${type}ではありません",
+        "hex": "${label}は有効な${type}ではありません"
+      },
+      "string": {
+        "len": "${label}は${len}文字である必要があります",
+        "min": "${label}は${min}文字以上である必要があります",
+        "max": "${label}は${max}文字以下である必要があります",
+        "range": "${label}は${min}-${max}文字の範囲である必要があります"
+      },
+      "number": {
+        "len": "${label}は${len}と等しい必要があります",
+        "min": "${label}の最小値は${min}です",
+        "max": "${label}の最大値は${max}です",
+        "range": "${label}は${min}-${max}の範囲である必要があります"
+      },
+      "array": {
+        "len": "${label}は${len}である必要があります",
+        "min": "${label}の最小は${min}です",
+        "max": "${label}の最大は${max}です",
+        "range": "${label}の合計は${min}-${max}の範囲である必要があります"
+      },
+      "pattern": {
+        "mismatch": "${label}はパターン${pattern}と一致しません"
+      }
+    }
   }
 }

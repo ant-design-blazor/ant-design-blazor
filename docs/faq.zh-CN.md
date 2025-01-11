@@ -1,5 +1,5 @@
 ---
-order: 11
+order: 4
 title: 常见问题
 ---
 
@@ -19,7 +19,7 @@ title: 常见问题
 
 ### 如何修改 Ant Design 的默认主题？
 
-可以参考[定制主题](/docs/customize-theme)。
+可以参考[定制主题](https://ant.design/docs/react/customize-theme)。
 
 ### 如何修改 Ant Design 组件的默认样式？
 

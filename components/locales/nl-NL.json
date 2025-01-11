@@ -141,6 +141,7 @@
       "equals": "Gelijk",
       "notEquals": "Niet Gelijk",
       "contains": "Bevat",
+      "notContains": "Bevat Niet",
       "startsWith": "Begint Met",
       "endsWith": "Eindigt Op",
       "greaterThan": "Groter Dan",
@@ -148,7 +149,9 @@
       "greaterThanOrEquals": "Groter Dan Of Gelijk",
       "lessThanOrEquals": "Kleiner Dan Of Gelijk",
       "isNull": "Is Null",
-      "isNotNull": "Is Niet Null"
+      "isNotNull": "Is Niet Null",
+      "theSameDateWith": "Dezelfde datum als",
+      "between": "Tussen"
     }
   },
   "Modal": {
@@ -239,6 +242,13 @@
     }
   },
   "Image": {
-    "preview": "Preview"
+    "preview": "Voorbeeld"
+  },
+  "ReuseTabs": {
+    "Close": "Sluiten",
+    "CloseAllTabs": "Sluit alle tabbladen",
+    "CloseAllButThis": "Sluit alles behalve deze",
+    "PinTab": "Tabblad Vastzetten",
+    "Reload": "Herladen"
   }
 }

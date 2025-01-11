@@ -13,11 +13,11 @@
         <FormItem Label="Password">
             <InputPassword @bind-Value="@context.Password" />
         </FormItem>
-        <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <FormItem Label="" WrapperColOffset="8" WrapperColSpan="16">
             <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
         </FormItem>
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
-            <Button Type="@ButtonType.Primary" HtmlType="submit">
+            <Button Type="ButtonType.Primary" HtmlType="submit">
                 Submit
             </Button>
         </FormItem>

@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using AntDesign.Core.Documentation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -21,7 +21,7 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Range? Range { get; set; }
-        
+
         /// <summary>
         /// Hide the columns by the property name.
         /// </summary>
@@ -34,8 +34,14 @@ namespace AntDesign
         /// <param name="propertyName">The name of the property binding the column. </param>
         /// <param name="column">The column instance, you need to explicitly cast to a concrete Column type. </param>
         [Parameter]
-        public Action<string, object> Definitions { get; set; }
-        
+        public Action<string, IFieldColumn> Definitions { get; set; }
+
+        /// <summary>
+        /// Specify start column index, use it if auto indexes disabled and there are columns before generated ones
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.1.0")]
+        public int StartColumnIndex { get; set; }
 
         protected override void OnInitialized()
         {
@@ -52,11 +58,20 @@ namespace AntDesign
             {
                 showPropertys = _propertyInfos[Range.Value];
             }
+
+            var colIndex = StartColumnIndex;
             foreach (var property in showPropertys)
             {
                 if (HideColumnsByName.Contains(property.Name)) continue;
                 var columnType = typeof(Column<>).MakeGenericType(property.PropertyType.GetUnderlyingType());
-                var instance = Activator.CreateInstance(columnType);
+                var instance = Activator.CreateInstance(columnType) as IFieldColumn;
+
+                if (instance != null)
+                {
+                    instance.ColIndex = colIndex;
+                }
+
+                colIndex++;
 
                 Definitions?.Invoke(property.Name, instance);
 

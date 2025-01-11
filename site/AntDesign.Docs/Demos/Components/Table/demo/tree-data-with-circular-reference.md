@@ -1,7 +1,7 @@
 ---
-order: 17
+order: 17.1
 title:
-  en-US: Tree data with circular reference
+  en-US: Tree Data with Circular Reference
   zh-CN: 带有循环引用的树形数据
 ---
 
@@ -15,9 +15,9 @@ DefaultExpandMaxLevel 的默认值为 4。
 
 ## en-US
 
-`Table` component can solve the circular reference in tree data.
+`Table` can mitigate circular references in tree data.
 
-When you are using `DefaultExpandAllRows`, the max expand level is limited by `DefaultExpandMaxLevel` to avoid endless loop.
+When you are using `DefaultExpandAllRows`, the max expand level is limited by `DefaultExpandMaxLevel` to avoid endless looping.
 
-The deault value of `DefaultExpandMaxLevel` is 4.
+The default value of `DefaultExpandMaxLevel` is 4.
 
