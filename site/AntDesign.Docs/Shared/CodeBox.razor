@@ -158,7 +158,6 @@
         if (firstRender)
         {
             _rendered = true;
-            await Task.Yield();
             StateHasChanged();
             return;
         }

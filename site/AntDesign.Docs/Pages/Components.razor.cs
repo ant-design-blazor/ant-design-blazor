@@ -164,7 +164,7 @@ namespace AntDesign.Docs.Pages
                 _filePaths.Add($"site/AntDesign.Docs/{item.Type.Replace(".", "/")}.razor");
                 _demos.Add(item);
                 StateHasChanged();
-                await Task.Yield();
+                await Task.Delay(50); //Make outgoing threads avoid lagging operations (e.g. switching menus)
             }
         }
 
