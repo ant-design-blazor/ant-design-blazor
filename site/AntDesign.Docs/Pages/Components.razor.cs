@@ -164,7 +164,7 @@ namespace AntDesign.Docs.Pages
                 _filePaths.Add($"site/AntDesign.Docs/{item.Type.Replace(".", "/")}.razor");
                 _demos.Add(item);
                 StateHasChanged();
-                await Task.Delay(100);
+                await Task.Yield();
             }
         }
 
