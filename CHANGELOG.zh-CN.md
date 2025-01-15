@@ -15,6 +15,23 @@ timeline: true
 
 ---
 
+
+### 1.1.3
+
+`2025-01-15`
+
+- 🐞 修复 Modal 当没有滚动条时不应增加空白。[#4434](https://github.com/ant-design-blazor/ant-design-blazor/pull/4434) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Timeline 颜色Color属性不正常。[#4433](https://github.com/ant-design-blazor/ant-design-blazor/pull/4433) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 DatePicker 在手动输入后不能重新打开的问题。[#4431](https://github.com/ant-design-blazor/ant-design-blazor/pull/4431) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ReuseTabs 在导航时 RouteData 未及时更新时显示问题。[#4429](https://github.com/ant-design-blazor/ant-design-blazor/pull/4429) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Breadcrumb 自动生成时路由匹配方式使用 MenuItem 中的。[#4428](https://github.com/ant-design-blazor/ant-design-blazor/pull/4428) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 AutoComplete 在异步增加选项后展开面板。[#4425](https://github.com/ant-design-blazor/ant-design-blazor/pull/4425) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Badge Ribbon 的预设颜色。[#4426](https://github.com/ant-design-blazor/ant-design-blazor/pull/4426) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 筛选组件输入框增加最小宽度。[#4424](https://github.com/ant-design-blazor/ant-design-blazor/pull/4424) [@ElderJames](https://github.com/ElderJames)
+- 💄 修复 Space 的 Size 和 Align 样式。[#4421](https://github.com/ant-design-blazor/ant-design-blazor/pull/4421) [@ElderJames](https://github.com/ElderJames)
+- 📖 文档 修复示例源码展开被自动关闭的问题[#4430](https://github.com/ant-design-blazor/ant-design-blazor/pull/4430) [@ElderJames](https://github.com/ElderJames)
+- 📖 文档 增加 PeterCat AI 挂件。[#4420](https://github.com/ant-design-blazor/ant-design-blazor/pull/4420) [@ElderJames](https://github.com/ElderJames)
+
 ### 1.1.2
 
 `2025-01-08`

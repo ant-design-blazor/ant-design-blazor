@@ -15,6 +15,23 @@ timeline: true
 
 ---
 
+### 1.1.3
+
+`2025-01-15`
+
+- 🐞 Fixed Modal shouldn't show padding without scrollbar. [#4434](https://github.com/ant-design-blazor/ant-design-blazor/pull/4434) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Timeline color incorrectly. [#4433](https://github.com/ant-design-blazor/ant-design-blazor/pull/4433) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Datepicker can't open after manual input. [#4431](https://github.com/ant-design-blazor/ant-design-blazor/pull/4431) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed ReuseTabs the navigation when routedata changed after the location changed. [#4429](https://github.com/ant-design-blazor/ant-design-blazor/pull/4429) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Breadcrumb  auto-generating should be matched against the MenuItem's RouterMatch. [#4428](https://github.com/ant-design-blazor/ant-design-blazor/pull/4428) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed AutoComplete show panel when adding options asynchronously. [#4425](https://github.com/ant-design-blazor/ant-design-blazor/pull/4425) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Badge Ribbon preset color. [#4426](https://github.com/ant-design-blazor/ant-design-blazor/pull/4426) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Table that min-width for filter input. [#4424](https://github.com/ant-design-blazor/ant-design-blazor/pull/4424) [@ElderJames](https://github.com/ElderJames)
+- 💄 Fixed Space size and align style. [#4421](https://github.com/ant-design-blazor/ant-design-blazor/pull/4421) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs fix codebox expand. [#4430](https://github.com/ant-design-blazor/ant-design-blazor/pull/4430) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs add peter cat. [#4420](https://github.com/ant-design-blazor/ant-design-blazor/pull/4420) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 1.1.2
 
 `2025-01-08`
