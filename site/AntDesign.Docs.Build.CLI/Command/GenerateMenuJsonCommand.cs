@@ -149,9 +149,14 @@ namespace AntDesign.Docs.Build.CLI.Command
 
             foreach (var subDemoDirectory in demoDirectoryInfo.GetFileSystemInfos())
             {
+                if (subDemoDirectory is not DirectoryInfo directory)
+                {
+                    continue;
+                }
+
                 var category = subDemoDirectory.Name;
 
-                IList<Dictionary<string, DemoMenuItem>> componentMenuList = GetSubMenuList(subDemoDirectory as DirectoryInfo, false).ToList();
+                IList<Dictionary<string, DemoMenuItem>> componentMenuList = GetSubMenuList(directory, false).ToList();
 
                 allComponentMenuList.AddRange(componentMenuList);
 

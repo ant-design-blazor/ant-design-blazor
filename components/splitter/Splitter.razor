@@ -1,0 +1,21 @@
+
+@typeparam TSize
+@implements IAsyncDisposable
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div @ref="_containerElementRef" id="@this.Id" class="split-container splitter-orientation-@(Vertical?"vertical":"horizontal") @(ClassMapper.Class)" style="@Style" data-unit-of-size="@(UnitOfPaneSize.ToString().ToLower())">
+
+    <div class="pane-of-split-container ant-splitter-panel" style="@this.GetPaneStyle(this.FirstPaneSize, this.FirstPaneMinSize)">
+        @FirstPane
+    </div>
+
+    <div class="spliter-bar ant-splitter-bar" >
+        <div class="ant-splitter-bar-dragger"></div>
+    </div>
+
+    <div class="pane-of-split-container ant-splitter-panel" style="@this.GetPaneStyle(this.SecondPaneSize, this.SecondPaneMinSize)">
+        @SecondPane
+    </div>
+
+</div>

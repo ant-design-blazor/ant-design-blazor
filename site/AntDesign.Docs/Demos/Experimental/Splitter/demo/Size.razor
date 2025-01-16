@@ -1,0 +1,24 @@
+@using Microsoft.AspNetCore.Components.Rendering
+
+<Splitter Style="height: 200px; box-shadow:0 0 10px rgba(0, 0, 0, 0.1)" FirstPaneSize="@(40)"
+    FirstPaneMinSize="@(20)" UnitOfPaneSize="UnitOfPaneSize.Percent">
+    <FirstPane>
+        @Desc("First")
+    </FirstPane>
+    <SecondPane>
+        @Desc("Second")
+    </SecondPane>
+</Splitter>
+
+@code {
+    RenderFragment Desc(string text) => b=>RenderDesc(b, text);
+
+    void RenderDesc(RenderTreeBuilder __builder, string text)
+    {
+        <Flex Justify="FlexJustify.Center" align="FlexAlign.Center" Style="height: 100%">
+            <Title Type="TextElementType.Secondary" Level="5" Style="white-space: nowrap">
+                @text
+            </Title>
+        </Flex>
+    }
+}
