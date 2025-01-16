@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign.Internal
 @inherits AntDomComponentBase
 
-@if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender || HiddenMode)
+@if (_hasAddOverlayToBody == true || _isWaitForOverlayFirstRender || RenderBeforeShow)
 {
     string display = GetDisplayStyle();
     string overlayCls = GetOverlayCls();
@@ -42,5 +42,6 @@
                 }
             </CascadingValue>
         </CascadingValue>
+
     </div>
 }

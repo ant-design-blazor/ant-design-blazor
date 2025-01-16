@@ -14,7 +14,7 @@
                             VisibleChanged="OpenChanged"
                             Disabled="Disabled"
                             Trigger="new[] { Trigger.Click }"
-                            HiddenMode
+                            RenderBeforeShow="RenderBeforeShow"
                             ComplexAutoCloseAndVisible
                             BoundaryAdjustMode="@BoundaryAdjustMode"
                             OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"
