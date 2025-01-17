@@ -54,7 +54,7 @@ namespace AntDesign.Docs.Build.CLI.Command
             ["Experimental"] = "高阶功能"
         };
 
-        private static readonly Dictionary<string,string> _typeNameMap = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _typeNameMap = new Dictionary<string, string>()
         {
             ["General"] = "通用",
             ["Layout"] = "布局",
