@@ -201,7 +201,7 @@ namespace AntDesign
             {
                 foreach (var kv in left.RouteValues)
                 {
-                    if (!right.RouteValues.ContainsKey(kv.Key) || !kv.Value.Equals(right.RouteValues[kv.Key]))
+                    if (!right.RouteValues.ContainsKey(kv.Key) || !object.Equals(kv.Value, right.RouteValues[kv.Key]))
                     {
                         return true;
                     }
