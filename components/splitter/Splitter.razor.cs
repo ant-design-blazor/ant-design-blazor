@@ -95,6 +95,8 @@ public partial class Splitter : AntDomComponentBase
 
     private bool Disabled => _panes.Any(x => !x.Resizable);
 
+    private string[] _paneSizes = [];
+
     /// <summary>
     /// Represents a component consisting of a movable bar that divides a container's display area into two resizable panes.
     /// </summary>
@@ -172,12 +174,13 @@ public partial class Splitter : AntDomComponentBase
     [JSInvokable]
     public async Task UpdateSize(string[] paneSizes)
     {
+        _paneSizes = paneSizes;
         _panes[0].Size = paneSizes[0];
         _panes[1].Size = paneSizes[1];
 
         if (OnResize.HasDelegate)
         {
-            await OnResize.InvokeAsync([_panes[0].Size, _panes[1].Size]);
+            await OnResize.InvokeAsync(_paneSizes);
         }
     }
 

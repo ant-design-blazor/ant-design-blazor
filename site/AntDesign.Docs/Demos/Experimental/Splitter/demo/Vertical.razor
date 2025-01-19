@@ -1,4 +1,3 @@
-
 @using Microsoft.AspNetCore.Components.Rendering
 
 <Splitter Layout="@SplitterLayout.Vertical" Style="height: 200px; box-shadow:0 0 10px rgba(0, 0, 0, 0.1)">
@@ -11,8 +10,6 @@
 </Splitter>
 
 @code {
-    string[] sizes = ["50%", "50%"];
-    bool enabled = true;
     RenderFragment Desc(string text) => b => RenderDesc(b, text);
 
     void RenderDesc(RenderTreeBuilder __builder, string text)
@@ -22,10 +19,5 @@
                 @text
             </Title>
         </Flex>
-    }
-
-    void setSizes(string[] sizes)
-    {
-        this.sizes = sizes;
     }
 }

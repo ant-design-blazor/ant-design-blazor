@@ -39,11 +39,15 @@
 
     --ant-color-fill: rgba(0, 0, 0, 0.15);
     --ant-control-item-bg-hover: rgba(0, 0, 0, 0.04);
+    --ant-control-height-sm: 24px;
     --ant-color-text: rgba(0, 0, 0, 0.88);
     --ant-font-size: 14px;
     --ant-line-height: 1.5714285714285714;
     --ant-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-
+    --ant-font-size-sm: 12px;
+    --ant-border-radius-xs: 2px;
+    --ant-z-index-popup-base: 1000;
+    
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -143,6 +147,28 @@
     height: var(--ant-splitter-split-trigger-size);
 }
 
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-collapse-bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: var(--ant-z-index-popup-base);
+    background: var(--ant-control-item-bg-hover);
+    font-size: var(--ant-font-size-sm);
+    border-radius: var(--ant-border-radius-xs);
+    color: var(--ant-color-text);
+    cursor: pointer;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ant-splitter-horizontal >.ant-splitter-bar .ant-splitter-bar-collapse-bar {
+    width: var(--ant-font-size-sm);
+    height: var(--ant-control-height-sm);
+}
+
 .ant-splitter-vertical>.ant-splitter-bar .ant-splitter-bar-collapse-bar-start {
     top: auto;
     bottom: calc(var(--ant-splitter-split-trigger-size) / 2);
@@ -172,23 +198,6 @@
     width: var(--ant-control-height-sm);
 }
 
-.ant-splitter>.ant-splitter-bar .ant-splitter-bar-collapse-bar {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: var(--ant-z-index-popup-base);
-    background: var(--ant-control-item-bg-hover);
-    font-size: var(--ant-font-size-sm);
-    border-radius: var(--ant-border-radius-xs);
-    color: var(--ant-color-text);
-    cursor: pointer;
-    opacity: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .ant-splitter >.ant-splitter-bar .ant-splitter-bar-dragger::before {
     content: "";
     background: var(--ant-control-item-bg-hover);
@@ -215,4 +224,12 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.ant-splitter >.ant-splitter-bar:hover .ant-splitter-bar-collapse-bar, .ant-splitter >.ant-splitter-bar:active .ant-splitter-bar-collapse-bar {
+    opacity: 1;
+}
+
+.ant-splitter >.ant-splitter-bar:hover .ant-splitter-bar-collapse-bar, .ant-splitter >.ant-splitter-bar:active .ant-splitter-bar-collapse-bar {
+    opacity: 1;
 }

@@ -10,7 +10,7 @@ export class splitterHelper {
   static attach(component, container) {
     const state = { isHorizontal: 0, targetPaneIndex: 0, pos: 0, sizeOfTargetPane: 0, sizeOfContainer: 0 };
     let disposed = false;
-    const splitter = container.querySelector(":scope > .spliter-bar");
+    const splitter = container.querySelector(":scope > .ant-splitter-bar > .spliter-bar");
     const panes = [...container.querySelectorAll(":scope > .pane-of-split-container")];
     const round = Math.round;
     const getPos = (ev) => round(state.isHorizontal === 0 ? ev.clientX : ev.clientY);

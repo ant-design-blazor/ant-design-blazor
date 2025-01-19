@@ -33,6 +33,26 @@ public class SplitterPanel : ComponentBase, IDisposable
     [CascadingParameter]
     private Splitter Splitter { get; set; }
 
+    private bool _isCollapsed;
+
+    private string _prevSize;
+
+    internal void ToggleCollapse()
+    {
+        _isCollapsed = !_isCollapsed;
+        if (_isCollapsed)
+        {
+            _prevSize = Size;
+            Size = Min ?? "0px";
+        }
+        else
+        {
+            Size = _prevSize;
+        }
+
+        Splitter.UpdatePaneState();
+    }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
