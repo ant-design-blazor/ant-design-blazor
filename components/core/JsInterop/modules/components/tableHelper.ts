@@ -55,7 +55,7 @@
 
     while (currentElement) {
       const currentComputedStyle = getComputedStyle(currentElement);
-      let hasSameZIndex = previousComputedStyle.getPropertyValue('z-index') == currentComputedStyle.getPropertyValue('z-index');
+      const hasSameZIndex = previousComputedStyle.getPropertyValue('z-index') == currentComputedStyle.getPropertyValue('z-index');
       if (!tableHelper.isIgnore(currentElement, currentComputedStyle, left, right) && hasSameZIndex) {
         totalHeight += currentElement.offsetHeight + Math.max(parseFloat(currentComputedStyle.marginTop), parseFloat(previousComputedStyle.marginBottom)) + rowGap;
 
