@@ -3,11 +3,12 @@
 <Table DataSource="data">
     @foreach (DataColumn column in _dataTable.Columns)
     {
-        <PropertyColumn Property="c=>c.Field<object>(column.ColumnName)" Title="@column.ColumnName" Sortable Filterable></PropertyColumn>
+        <PropertyColumn Property="c=>c.Field<object>(column.ColumnName)" Title="@column.ColumnName" Sortable Filterable>
+        </PropertyColumn>
     }
-</Table>
+        </Table>
 
-@code {
+        @code {
     DataTable _dataTable = new DataTable();
 
     IEnumerable<DataRow> data => _dataTable?.AsEnumerable();
@@ -17,10 +18,11 @@
         _dataTable.Columns.Add("Name");
         _dataTable.Columns.Add("Age", typeof(int));
         _dataTable.Columns.Add("Address");
+        _dataTable.Columns.Add("CreateAt", typeof(DateTime));
 
-        _dataTable.Rows.Add("John Brown", 32, "New York No. 1 Lake Park");
-        _dataTable.Rows.Add("Jim Green", 42, "London No. 1 Lake Park");
-        _dataTable.Rows.Add(null, 32, "Sidney No. 1 Lake Park");
+        _dataTable.Rows.Add("John Brown", 32, "New York No. 1 Lake Park", DateTime.Now);
+        _dataTable.Rows.Add("Jim Green", 42, "London No. 1 Lake Park", DateTime.Now);
+        _dataTable.Rows.Add(null, 32, "Sidney No. 1 Lake Park", DateTime.Now);
 
         base.OnInitialized();
     }
