@@ -3,7 +3,7 @@
 <Table DataSource="data">
     @foreach (DataColumn column in _dataTable.Columns)
     {
-        <PropertyColumn Property="c=>c.Field<string>(column.ColumnName)" Title="@column.ColumnName" Sortable Filterable></PropertyColumn>
+        <PropertyColumn Property="c=>c.Field<object>(column.ColumnName)" Title="@column.ColumnName" Sortable Filterable></PropertyColumn>
     }
 </Table>
 
@@ -15,7 +15,7 @@
     protected override void OnInitialized()
     {
         _dataTable.Columns.Add("Name");
-        _dataTable.Columns.Add("Age");
+        _dataTable.Columns.Add("Age", typeof(int));
         _dataTable.Columns.Add("Address");
 
         _dataTable.Rows.Add("John Brown", 32, "New York No. 1 Lake Park");
