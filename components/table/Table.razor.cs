@@ -21,8 +21,10 @@ using AntDesign.Table.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
 
+#if NET6_0_OR_GREATER
+using Microsoft.JSInterop;
+#endif
 
 #if NET5_0_OR_GREATER
 
