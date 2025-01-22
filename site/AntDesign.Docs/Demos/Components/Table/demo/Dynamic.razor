@@ -7,12 +7,12 @@
     PageSize="5" Size="TableSize.Small">
     @foreach (var key in data?.FirstOrDefault()?.Keys.Take(10) ?? new string[0])
     {
-        <PropertyColumn Filterable Sortable Property=@(c=>c[key]) Title="@key"></PropertyColumn>
+        <PropertyColumn Filterable Sortable Property=@(c=>c[key]) Title="@key" />
     }
-    </Table>
+</Table>
 
 @inject HttpClient httpClient;
-    @code {
+@code {
 
     List<Dictionary<string, object>> data;
 

@@ -3,12 +3,15 @@
 <Table DataSource="data">
     @foreach (DataColumn column in _dataTable.Columns)
     {
-        <PropertyColumn Property="c=>c.Field<object>(column.ColumnName)" Title="@column.ColumnName" Sortable Filterable>
-        </PropertyColumn>
+        <PropertyColumn
+            Property="c=>c.Field<object>(column.ColumnName)"
+            Title="@column.ColumnName"
+            Sortable
+            Filterable />
     }
-        </Table>
+</Table>
 
-        @code {
+@code {
     DataTable _dataTable = new DataTable();
 
     IEnumerable<DataRow> data => _dataTable?.AsEnumerable();
