@@ -9,6 +9,8 @@ namespace AntDesign.Filters;
 public interface IFieldFilterTypeResolver
 {
     public IFieldFilterType Resolve<T>();
+
+    public IFieldFilterType Resolve(Type underlyingType);
 }
 
 public class DefaultFieldFilterTypeResolver : IFieldFilterTypeResolver
@@ -17,10 +19,19 @@ public class DefaultFieldFilterTypeResolver : IFieldFilterTypeResolver
     {
         var underlyingType = THelper.GetUnderlyingType<T>();
 
+        return underlyingType switch
+        {
+            _ when underlyingType.IsEnum => new EnumFieldFilterType<T>(),
+            _ => Resolve(underlyingType),
+        };
+    }
+
+    public IFieldFilterType Resolve(Type underlyingType)
+    {
 #pragma warning disable format
         return underlyingType switch
         {
-            _ when underlyingType.IsEnum              => new EnumFieldFilterType<T>(),
+            // _ when underlyingType.IsEnum              => new EnumFieldFilterType<T>(),
             _ when underlyingType == typeof(byte)     => new NumberFieldFilterType<byte>(),
             _ when underlyingType == typeof(decimal)  => new NumberFieldFilterType<decimal>(),
             _ when underlyingType == typeof(double)   => new NumberFieldFilterType<double>(),
@@ -34,12 +45,12 @@ public class DefaultFieldFilterTypeResolver : IFieldFilterTypeResolver
             _ when underlyingType == typeof(ulong)    => new NumberFieldFilterType<ulong>(),
             _ when underlyingType == typeof(DateTime) => new DateTimeFieldFilterType(),
 #if NET6_0_OR_GREATER
-            _ when underlyingType == typeof(DateOnly) => new DateTimeFieldFilterType<T>(),
-            _ when underlyingType == typeof(TimeOnly) => new DateTimeFieldFilterType<T>() { InputAttributes = { [nameof(DatePicker<T>.Picker)]= DatePickerType.Time } },
+            _ when underlyingType == typeof(DateOnly) => new DateTimeFieldFilterType<DateOnly>(),
+            _ when underlyingType == typeof(TimeOnly) => new DateTimeFieldFilterType<TimeOnly>() { InputAttributes = { [nameof(DatePicker<TimeOnly>.Picker)] = DatePickerType.Time } },
 #endif
             _ when underlyingType == typeof(string)   => new StringFieldFilterType(),
             _ when underlyingType == typeof(Guid)     => new GuidFieldFilterType(),
-            _                                         => throw new NotSupportedException()
+            _                                         => null
         };
 #pragma warning restore format
     }

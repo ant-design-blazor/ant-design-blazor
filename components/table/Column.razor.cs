@@ -425,6 +425,16 @@ namespace AntDesign
 
                 _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
             }
+            // When the column type is object, the filter type is recognized by the type of the value
+            else if (IsBody && _hasFilterableAttribute && _fieldFilterType is null && Field is not null)
+            {
+                var headerColumn = Context.HeaderColumns[ColIndex];
+                if (headerColumn is IFieldColumn fieldColumn)
+                {
+                    var columnDataType = Field.GetType();
+                    fieldColumn.SetHeaderFilter(columnDataType);
+                }
+            }
 
             ClassMapper
                .If("ant-table-column-has-sorters", () => Sortable)
@@ -607,7 +617,7 @@ namespace AntDesign
                 return new TableFilter()
                 {
                     FilterCondition = TableFilterCondition.And,
-                    FilterCompareOperator = _fieldFilterType.DefaultCompareOperator
+                    FilterCompareOperator = _fieldFilterType?.DefaultCompareOperator ?? TableFilterCompareOperator.Equals
                 };
             }
             else
@@ -703,6 +713,26 @@ namespace AntDesign
                 } while (!filterInputFocused);
             });
 #endif
+        }
+
+        void IFieldColumn.SetHeaderFilter(Type columnDataType)
+        {
+            if (IsHeader && _fieldFilterType is null)
+            {
+                _columnDataType = columnDataType;
+                _fieldFilterType = Table.FieldFilterTypeResolver.Resolve(columnDataType);
+
+                var getValue = GetValue;
+                GetValue = rowData =>
+                {
+                    var value = getValue(rowData);
+                    return (TData)Convert.ChangeType(value, columnDataType);
+                };
+
+                var getFieldExpression = GetFieldExpression;
+
+                StateHasChanged();
+            }
         }
     }
 }
