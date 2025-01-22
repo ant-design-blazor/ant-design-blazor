@@ -540,6 +540,7 @@ namespace AntDesign
 
         private void SetFilterCompareOperator(TableFilter filter, TableFilterCompareOperator compareOperator)
         {
+            filter.Value = default;
             filter.FilterCompareOperator = compareOperator;
         }
 
