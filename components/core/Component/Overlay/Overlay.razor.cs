@@ -219,7 +219,6 @@ namespace AntDesign.Internal
             _isOverlayShow = true;
             _isOverlayDuringShowing = false;
             _isOverlayHiding = false;
-            _preVisible = true;
 
             _overlayCls = Trigger.GetOverlayEnterClass();
             await Trigger.OnVisibleChange.InvokeAsync(true);
@@ -272,7 +271,6 @@ namespace AntDesign.Internal
             await Task.Delay(WaitForHideAnimMilliseconds);
             _isOverlayShow = false;
             _isOverlayHiding = false;
-            _preVisible = false;
 
             await Trigger.OnVisibleChange.InvokeAsync(false);
 
