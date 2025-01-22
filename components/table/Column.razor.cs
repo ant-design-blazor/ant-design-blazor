@@ -426,7 +426,7 @@ namespace AntDesign
                 _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
             }
             // When the column type is object, the filter type is recognized by the type of the value
-            else if (IsBody && _fieldFilterType is null && Field is not null)
+            else if (IsBody && _hasFilterableAttribute && _fieldFilterType is null && Field is not null)
             {
                 var headerColumn = Context.HeaderColumns[ColIndex];
                 if (headerColumn is IFieldColumn fieldColumn)
