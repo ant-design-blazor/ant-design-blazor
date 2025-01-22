@@ -429,6 +429,7 @@ namespace AntDesign
         private bool _isRebuilding;
         private RenderFragment<TItem> _childContent;
 
+        private HashSet<string> _outsideParameters;
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
 
         private bool IsEntityFrameworkCore => _dataSource is IQueryable<TItem> query && query.Provider.ToString().Contains("EntityFrameworkCore");
@@ -696,7 +697,7 @@ namespace AntDesign
 
         private QueryModel<TItem> InternalReload()
         {
-            if (HidePagination && _dataSourceCount > 0)
+            if (HidePagination && !_outsideParameters.Contains(nameof(PageSize)) && _dataSourceCount > 0)
             {
                 _pageSize = _dataSourceCount;
             }
@@ -871,13 +872,14 @@ namespace AntDesign
                 HidePagination = true;
             }
 #endif
-
             InitializePagination();
 
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
         public override async Task SetParametersAsync(ParameterView parameters)
         {
+            _outsideParameters ??= [.. parameters.ToDictionary().Keys];
+
             await base.SetParametersAsync(parameters);
 
             if (AutoHeight)
