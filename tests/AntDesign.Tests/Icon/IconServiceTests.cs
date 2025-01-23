@@ -71,8 +71,8 @@ namespace AntDesign.Tests.Icon
         }
 
         [Theory]
-        [InlineData(IconThemeType.Internal, "alert", false)]
-        [InlineData(IconThemeType.Internal, "bad-icon", false)]
+        [InlineData(IconThemeType.Outline, "alert", false)]
+        [InlineData(IconThemeType.Outline, "bad-icon", false)]
         [InlineData(IconThemeType.TwoTone, "bad-icon", false)]
         [InlineData(IconThemeType.TwoTone, "alert", true)]
         public void IconExistsShouldReturnProperValue(IconThemeType themeType, string iconName, bool exists)

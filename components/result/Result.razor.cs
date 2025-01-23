@@ -126,10 +126,6 @@ namespace AntDesign
                         theme = IconThemeType.TwoTone;
                         break;
 
-                    case "internal":
-                        theme = IconThemeType.Internal;
-                        break;
-
                     case "outline":
                     default:
                         theme = IconThemeType.Outline;
@@ -151,13 +147,13 @@ namespace AntDesign
                     return ("warning", IconThemeType.Fill);
 
                 case ResultStatus.Http403:
-                    return ("unauthorized", IconThemeType.Internal);
+                    return ("__unauthorized", default);
 
                 case ResultStatus.Http404:
-                    return ("not-found", IconThemeType.Internal);
+                    return ("__not-found", default);
 
                 case ResultStatus.Http500:
-                    return ("bad-request", IconThemeType.Internal);
+                    return ("__bad-request", default);
 
                 case ResultStatus.Info:
                 default:
