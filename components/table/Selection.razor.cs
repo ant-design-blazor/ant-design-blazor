@@ -104,6 +104,16 @@ namespace AntDesign
             }
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (IsBody && DataItem != null)
+            {
+                DataItem.Disabled = Disabled;
+            }
+        }
+
         // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3312
         // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3417
         private void HandleSelected()
@@ -119,7 +129,7 @@ namespace AntDesign
 
         void ISelectionColumn.StateHasChanged()
         {
-            if (IsHeader && Type == SelectionType.Radio)
+            if (IsHeader && Type == SelectionType.Checkbox)
             {
                 StateHasChanged();
             }
