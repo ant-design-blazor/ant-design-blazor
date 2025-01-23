@@ -47,13 +47,15 @@ namespace AntDesign
                                    && Table.AnySelected
                                    && !Table.AllSelected;
 
-        public IList<ISelectionColumn> RowSelections { get; set; } = new List<ISelectionColumn>();
+        private IList<ISelectionColumn> _rowSelections = [];
 
         //private int[] _selectedIndexes;
 
-        private bool IsHeaderDisabled => RowSelections.Any() && RowSelections.All(x => x.Disabled);
+        private bool IsHeaderDisabled => _rowSelections.Any() && _rowSelections.All(x => x.Disabled);
 
         public bool Selected => DataItem.Selected;
+
+        IList<ISelectionColumn> ISelectionColumn.RowSelections => _rowSelections;
 
         private bool? _selected;
 
@@ -114,6 +116,12 @@ namespace AntDesign
             }
         }
 
+        // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/4320
+        void ISelectionColumn.ResetSelected()
+        {
+            _selected = null;
+        }
+
         // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3312
         // fixed https://github.com/ant-design-blazor/ant-design-blazor/issues/3417
         private void HandleSelected()
@@ -125,6 +133,11 @@ namespace AntDesign
             }
 
             _selected = DataItem.Selected;
+        }
+
+        void ISelectionColumn.OnDataSourceChange()
+        {
+            _rowSelections.ForEach(x => x.ResetSelected());
         }
 
         void ISelectionColumn.StateHasChanged()
