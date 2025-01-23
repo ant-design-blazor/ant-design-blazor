@@ -678,6 +678,8 @@ namespace AntDesign
             }
 
             var queryModel = this.InternalReload();
+            _selection?.OnDataSourceChange();
+
             StateHasChanged();
 
             if (OnChange.HasDelegate && _pageIndex > 0)

@@ -18,8 +18,12 @@ namespace AntDesign
 
         public bool CheckStrictly { get; set; }
 
-        public IList<ISelectionColumn> RowSelections { get; }
+        internal IList<ISelectionColumn> RowSelections { get; }
 
-        public void StateHasChanged();
+        internal void StateHasChanged();
+
+        internal void ResetSelected();
+
+        internal void OnDataSourceChange();
     }
 }
