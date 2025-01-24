@@ -15,6 +15,26 @@ timeline: true
 
 ---
 
+### 1.1.4
+
+`2025-01-24`
+
+- Table
+  - 🆕 新增 动态列支持识别内置筛选器类型。[#4439](https://github.com/ant-design-blazor/ant-design-blazor/pull/4439) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 按回车键时确认筛选器。[#4441](https://github.com/ant-design-blazor/ant-design-blazor/pull/4441) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 全选状态更新不正常。[#4449](https://github.com/ant-design-blazor/ant-design-blazor/pull/4449) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 选中行会被 Disabled 行翻页后清除。[#4450](https://github.com/ant-design-blazor/ant-design-blazor/pull/4450) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 筛选器条件从Between切换到Equals时异常。[#4447](https://github.com/ant-design-blazor/ant-design-blazor/pull/4447) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 设置 PageSize 并隐藏分页器时偶发的无限循环。[#4446](https://github.com/ant-design-blazor/ant-design-blazor/pull/4446) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 筛选器下拉组件的边界调整模式。[#4445](https://github.com/ant-design-blazor/ant-design-blazor/pull/4445) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Querymodel 反序列化。[#4443](https://github.com/ant-design-blazor/ant-design-blazor/pull/4443) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 计算自动高度时未将 Modal 和 Drawer 排除。[#4440](https://github.com/ant-design-blazor/ant-design-blazor/pull/4440) [@pankey888](https://github.com/pankey888)
+
+- 🐞 修复 Tabs 当关闭了中间一个标签后，其右边标签的右键菜单失效。 [#4456](https://github.com/ant-design-blazor/ant-design-blazor/pull/4456) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Form 动态更新 Help 提示。[#4452](https://github.com/ant-design-blazor/ant-design-blazor/pull/4452) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Icon 设置 TwoToneColor 值时自动生成双色。[#4451](https://github.com/ant-design-blazor/ant-design-blazor/pull/4451) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ReuseTabs 当 RouteValue 是 null 时 NRE 异常。[#4438](https://github.com/ant-design-blazor/ant-design-blazor/pull/4438) [@ElderJames](https://github.com/ElderJames)
+- 🗑 移除 TestKit 中的 FluentAssertions 引用。[#4444](https://github.com/ant-design-blazor/ant-design-blazor/pull/4444) [@ElderJames](https://github.com/ElderJames)
 
 ### 1.1.3
 
