@@ -248,6 +248,8 @@ namespace AntDesign
 
         private string DisplayName => Label ?? _propertyReflector?.DisplayName;
 
+        private string[] ValidationMessages => _validationMessages.Any() ? _validationMessages : [Help];
+
         private string _name;
         private Action _nameChanged;
 
@@ -364,14 +366,6 @@ namespace AntDesign
             }
         }
 
-        protected override void OnParametersSet()
-        {
-            if (!string.IsNullOrWhiteSpace(Help))
-            {
-                _validationMessages = new[] { Help };
-            }
-        }
-
         private void SetInternalIsRequired()
         {
             if (Form is null)
@@ -481,10 +475,6 @@ namespace AntDesign
 
             _onValidated(_validationMessages);
 
-            if (!string.IsNullOrWhiteSpace(Help))
-            {
-                _validationMessages = new[] { Help };
-            }
             _vaildateStatusChanged?.Invoke();
             InvokeAsync(StateHasChanged);
         }
