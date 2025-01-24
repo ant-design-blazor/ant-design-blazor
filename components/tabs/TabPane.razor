@@ -62,7 +62,7 @@
 
         @if (TabContextMenu != null)
         {
-            <Dropdown Trigger="new[]{ Trigger.ContextMenu }" TriggerReference="_tabRef">
+            <Dropdown @key="@($"tab-menu-{Key}")" Trigger="new[]{ Trigger.ContextMenu }" TriggerReference="_tabRef">
                 <Overlay>
                     @TabContextMenu
                 </Overlay>
