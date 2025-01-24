@@ -30,7 +30,8 @@ timeline: true
   - 🐞 修复 Querymodel 反序列化。[#4443](https://github.com/ant-design-blazor/ant-design-blazor/pull/4443) [@ElderJames](https://github.com/ElderJames)
   - 🐞 修复 计算自动高度时未将 Modal 和 Drawer 排除。[#4440](https://github.com/ant-design-blazor/ant-design-blazor/pull/4440) [@pankey888](https://github.com/pankey888)
 
-- 🐞 修复 动态更新 Help 提示。[#4452](https://github.com/ant-design-blazor/ant-design-blazor/pull/4452) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tabs 当关闭了中间一个标签后，其右边标签的右键菜单失效。 [#4456](https://github.com/ant-design-blazor/ant-design-blazor/pull/4456) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Form 动态更新 Help 提示。[#4452](https://github.com/ant-design-blazor/ant-design-blazor/pull/4452) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 Icon 设置 TwoToneColor 值时自动生成双色。[#4451](https://github.com/ant-design-blazor/ant-design-blazor/pull/4451) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 ReuseTabs 当 RouteValue 是 null 时 NRE 异常。[#4438](https://github.com/ant-design-blazor/ant-design-blazor/pull/4438) [@ElderJames](https://github.com/ElderJames)
 - 🗑 移除 TestKit 中的 FluentAssertions 引用。[#4444](https://github.com/ant-design-blazor/ant-design-blazor/pull/4444) [@ElderJames](https://github.com/ElderJames)

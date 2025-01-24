@@ -30,6 +30,7 @@ timeline: true
   - 🐞 Fixed QueryModel deserialize. [#4443](https://github.com/ant-design-blazor/ant-design-blazor/pull/4443) [@ElderJames](https://github.com/ElderJames)
   - 🐞 Fixed the modal/drawer was not excluded when calculating the automatic height. [#4440](https://github.com/ant-design-blazor/ant-design-blazor/pull/4440) [@pankey888](https://github.com/pankey888)
 
+- 🐞 Fixed Tabs when a tab is closed, the context menu of the tab to its right does not work. [#4456](https://github.com/ant-design-blazor/ant-design-blazor/pull/4456) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed Form change Help message dynamically. [#4452](https://github.com/ant-design-blazor/ant-design-blazor/pull/4452) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed Icon generate twotone color when TwoToneColor is set. [#4451](https://github.com/ant-design-blazor/ant-design-blazor/pull/4451) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed ReuseTabs throwing NRE when any route value is null. [#4438](https://github.com/ant-design-blazor/ant-design-blazor/pull/4438) [@ElderJames](https://github.com/ElderJames)
