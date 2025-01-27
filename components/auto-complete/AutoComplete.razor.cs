@@ -523,7 +523,7 @@ namespace AntDesign
         private async Task SetOverlayWidth()
         {
             HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _overlayTrigger.RefBack.Current);
-            _minWidth = $"min-width:{element.ClientWidth}px";
+            _minWidth = $"min-width:{(CssSizeLength)element.ClientWidth}";
         }
 
         protected override void Dispose(bool disposing)

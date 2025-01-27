@@ -199,7 +199,7 @@ namespace AntDesign
         private async Task PlayMotion()
         {
             _isClosing = true;
-            _innerStyle = $"max-height:{_height}px;";
+            _innerStyle = $"max-height:{(CssSizeLength)_height};";
             await InvokeAsync(StateHasChanged);
 
             _motionStage = 1;

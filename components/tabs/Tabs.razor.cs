@@ -708,11 +708,11 @@ namespace AntDesign
             {
                 if (IsHorizontal)
                 {
-                    _navListStyle = $"transform: translate(-{_scrollOffset}px, 0px);";
+                    _navListStyle = $"transform: translate(-{(CssSizeLength)_scrollOffset}, 0px);";
                 }
                 else
                 {
-                    _navListStyle = $"transform: translate(0px, -{_scrollOffset}px);";
+                    _navListStyle = $"transform: translate(0px, -{(CssSizeLength)_scrollOffset});";
                 }
             }
         }
@@ -746,7 +746,7 @@ namespace AntDesign
 
             if (IsHorizontal)
             {
-                _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
+                _inkStyle = $"left: {(CssSizeLength)_activeTabElement.OffsetLeft}; width: {(CssSizeLength)_activeTabElement.ClientWidth}";
 
                 var additionalWidth = HasAddButton && (IsOverflowed) ? _addBtnWidth : 0;
 

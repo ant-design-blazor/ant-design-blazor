@@ -229,7 +229,7 @@ namespace AntDesign
                     StateHasChanged();
                     await Task.Delay(100);
 
-                    _warpperStyle = $"height: {_warpperHight}px; opacity: 1;";
+                    _warpperStyle = $"height: {(CssSizeLength)_warpperHight}; opacity: 1;";
                     StateHasChanged();
                     await Task.Delay(450);
 
@@ -252,7 +252,7 @@ namespace AntDesign
             {
                 _isCollapseLeavePrepare = false;
                 _isCollapseLeaveStart = true;
-                _warpperStyle = $"height: {_warpperHight}px;";
+                _warpperStyle = $"height: {(CssSizeLength)_warpperHight};";
 
                 CallAfterRender(async () =>
                 {
