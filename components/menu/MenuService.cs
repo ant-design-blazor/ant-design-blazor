@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign
 {
@@ -64,7 +63,7 @@ namespace AntDesign
                 return _titleCache[url];
             }
 
-            var matchedMenuItem = _menuItems.FirstOrDefault(x => x.RouterLink != null && MenuHelper.ShouldMatch(NavLinkMatch.All, url.TrimStart('/'), x.RouterLink.TrimStart('/')));
+            var matchedMenuItem = _menuItems.FirstOrDefault(x => x.RouterLink != null && MenuHelper.ShouldMatch(x.RouterMatch, url.TrimStart('/'), x.RouterLink.TrimStart('/')));
             if (matchedMenuItem == null)
             {
                 return null;

@@ -98,7 +98,6 @@ namespace AntDesign
                         _pendingItem.SetChildContent(rf);
                     });
 
-                    _pendingItem?.SetClassMap();
                     _waitingItemUpdate = true;
                 }
             }
@@ -205,8 +204,6 @@ namespace AntDesign
                     TimelineMode.Alternate => i % 2 == 0 ? TimelineMode.Left : TimelineMode.Right,
                     _ => null,
                 };
-
-                item.SetClassMap();
 
                 yield return item;
             }

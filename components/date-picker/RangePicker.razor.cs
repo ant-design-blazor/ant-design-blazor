@@ -271,7 +271,7 @@ namespace AntDesign
                     await Task.Delay(5);
                     _duringManualInput = false;
                 }
-                var input = (index == 0 ? _inputStart : _inputEnd);
+                var input = index == 0 ? _inputStart : _inputEnd;
 
                 if (isEnter || isTab)
                 {
@@ -362,10 +362,10 @@ namespace AntDesign
                 }
             }
 
-            if (_openingOverlay || _dropDown.IsOverlayShow())
-            {
-                return;
-            }
+            // if (_openingOverlay || _dropDown.IsOverlayShow())
+            // {
+            //     return;
+            // }
 
             _duringManualInput = false;
             AutoFocus = false;
@@ -730,11 +730,12 @@ namespace AntDesign
 
         private async Task OverlayVisibleChange(bool isVisible)
         {
-            _openingOverlay = false;
+            _openingOverlay = isVisible;
             await OnOpenChange.InvokeAsync(isVisible);
             InvokeInternalOverlayVisibleChanged(isVisible);
             if (!isVisible)
             {
+                // if value is changed, focus the input
                 var index = GetOnFocusPickerIndex();
                 await Focus(index);
             }

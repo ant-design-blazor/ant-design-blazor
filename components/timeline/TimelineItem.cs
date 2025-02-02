@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Linq;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -59,18 +58,18 @@ namespace AntDesign
             ParentTimeline?.AddItem(this);
             this.TryUpdateCustomColor();
             base.OnInitialized();
+            SetClassMap();
         }
 
         protected override void OnParametersSet()
         {
-            this.SetClassMap();
             this.TryUpdateCustomColor();
             base.OnParametersSet();
         }
 
         private void TryUpdateCustomColor()
         {
-            HeadStyle = !Color.IsT0 ? $"border-color:{Color}" : "";
+            HeadStyle = Color.IsT1 ? $"border-color:{Color.AsT1}" : "";
         }
 
         internal void SetClassMap()
@@ -82,8 +81,8 @@ namespace AntDesign
                 .If($"{prefix}-last", () => IsLast);
 
             var headPrefix = "ant-timeline-item-head";
-            _headClassMapper.Clear().Add(headPrefix)
-                .If($"{headPrefix}-{Color.AsT0.ToString().ToLowerInvariant()}", () => Color.IsT0)
+            _headClassMapper.Add(headPrefix)
+                .GetIf(() => $"{headPrefix}-{Color.AsT0.ToString().ToLowerInvariant()}", () => Color.IsT0)
                 .If($"{headPrefix}-custom", () => Dot != null);
         }
 

@@ -1,4 +1,4 @@
-curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 9.0
+curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 9.0.0
 dotnet workload install wasm-tools
 npm install
 dotnet build

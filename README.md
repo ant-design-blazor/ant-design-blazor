@@ -21,7 +21,7 @@ A rich set of enterprise-class UI components based on Ant Design and Blazor.
 
 </div>
 
-[![](https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*Yl83RJhUE7kAAAAAAAAAAABkARQnAQ)](https://ant-design-blazor.github.io)
+[![](https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*Yl83RJhUE7kAAAAAAAAAAABkARQnAQ)](https://antblazor.com)
 
 English | [简体中文](README-zh_CN.md)
 

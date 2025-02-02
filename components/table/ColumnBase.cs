@@ -36,7 +36,7 @@ namespace AntDesign
         [CascadingParameter(Name = "RowData")]
         public RowData RowData { get; set; }
 
-        protected TableDataItem DataItem => RowData.TableDataItem;
+        protected TableDataItem DataItem => RowData?.TableDataItem;
 
         [CascadingParameter(Name = "IsMeasure")]
         public bool IsMeasure { get; set; }

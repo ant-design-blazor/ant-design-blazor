@@ -143,6 +143,7 @@ namespace AntDesign
                 return;
 
             AutoFocus = false;
+            _duringManualInput = false;
 
             if (!_dropDown.IsOverlayShow())
             {

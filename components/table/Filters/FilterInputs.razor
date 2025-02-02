@@ -29,19 +29,19 @@
         if (filter.FilterCompareOperator == TableFilterCompareOperator.Between)
         {
             return @<RangePicker Value="(TData[])filter.Value" TValue="TData[]" ValueChanged="value => filter.Value = value"
-                    BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" @attributes="filter.Attributes" />;
+                    @attributes="filter.Attributes" />;
         }
         return @<DatePicker Value="(TData)filter.Value" TValue="TData" ValueChanged="value => filter.Value = value"
-                    BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" @attributes="filter.Attributes" />;
+                    @attributes="filter.Attributes" />;
     };
 
     public RenderFragment<TableFilterInputRenderOptions> GetEnumInput<TData>() => filter =>
         @<text>
             <EnumSelect TEnum="TData" Mode="@SelectMode.Multiple"
                 Value="(TData)filter.Value"
-                Style="width:180px;"
+                DropdownMatchSelectWidth="@false"
                 ValueChanged="value => filter.Value = value"
-                BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None"  @attributes="filter.Attributes" />
+                @attributes="filter.Attributes" />
          </text>
     ;
 
@@ -49,7 +49,7 @@
          @<InputNumber Value="(TData?)filter.Value" TValue="TData?" ValueChanged="value => filter.Value = (object)value" @ref="@filter.InputRef" @attributes="filter.Attributes" />;
 
     public RenderFragment<TableFilterInputRenderOptions> GetInput<TData>() => filter =>
-        @<Input TValue="TData" Value="(TData)filter.Value" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" @attributes="filter.Attributes" />;
+        @<Input TValue="TData" Value="(TData)filter.Value" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" OnPressEnter="()=> filter.Confirm()" @attributes="filter.Attributes" />;
 
     // https://github.com/dotnet/aspnetcore/issues/24655
     Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem callback, object arg) => callback.InvokeAsync(arg);

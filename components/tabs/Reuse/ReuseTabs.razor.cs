@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 
@@ -64,6 +67,9 @@ namespace AntDesign
         /// cover the base ChildContent
         /// </summary>
         private new RenderFragment ChildContent { get; set; }
+
+        private RouteData ActualRouteData => RouteData ?? ReuseTabsRouteData?.RouteData;
+
         public ReuseTabs()
         {
             Type = TabType.EditableCard;
@@ -93,8 +99,19 @@ namespace AntDesign
 
         private void LoadPage()
         {
-            RouteData ??= ReuseTabsRouteData?.RouteData;
-            ReuseTabsService.TrySetRouteData(RouteData, true);
+            ReuseTabsService.TrySetRouteData(ActualRouteData, true);
+        }
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            var isRouteDataChanged = parameters.IsParameterChanged(nameof(RouteData), RouteData, out var newValue) && IsRouteDataChanged(RouteData, newValue);
+            var isReuseTabsRouteDataChanged = parameters.IsParameterChanged(nameof(ReuseTabsRouteData), ReuseTabsRouteData, out var newReuseTabsRouteData) && IsRouteDataChanged(ReuseTabsRouteData?.RouteData, newReuseTabsRouteData?.RouteData);
+
+            await base.SetParametersAsync(parameters);
+            if (isRouteDataChanged || isReuseTabsRouteDataChanged)
+            {
+                UpdateRouteData();
+            }
         }
 
         protected override bool ShouldRender() => !InReusePageContent && base.ShouldRender();
@@ -137,7 +154,17 @@ namespace AntDesign
             }
         }
 
-        private void OnLocationChanged(object o, LocationChangedEventArgs _)
+        private void OnLocationChanged(object o, LocationChangedEventArgs e)
+        {
+            // sometime the routeData is not updated in time
+            // Here it is called almost only when Routedata is null because SetParametersAsync is called before OnLocationChanged
+            if (RouteData == null || IsRouteDataChanged(ActualRouteData, ReuseTabsService.CurrentPage?.RouteData))
+            {
+                UpdateRouteData();
+            }
+        }
+
+        private void UpdateRouteData()
         {
             UpdateTabsPosition();
 
@@ -150,6 +177,38 @@ namespace AntDesign
         {
             SetShowRender();
             StateHasChanged();
+        }
+
+        private static bool IsRouteDataChanged(RouteData left, RouteData right)
+        {
+            if (left == null && right == null)
+            {
+                return false;
+            }
+            else if (left == null || right == null)
+            {
+                return true;
+            }
+            else if (left.PageType != right.PageType)
+            {
+                return true;
+            }
+            else if (left.RouteValues.Count != right.RouteValues.Count)
+            {
+                return true;
+            }
+            else
+            {
+                foreach (var kv in left.RouteValues)
+                {
+                    if (!right.RouteValues.ContainsKey(kv.Key) || !object.Equals(kv.Value, right.RouteValues[kv.Key]))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

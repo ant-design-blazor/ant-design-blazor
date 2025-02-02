@@ -71,8 +71,8 @@ namespace AntDesign.Tests.Icon
         }
 
         [Theory]
-        [InlineData(IconThemeType.Internal, "alert", false)]
-        [InlineData(IconThemeType.Internal, "bad-icon", false)]
+        [InlineData(IconThemeType.Outline, "alert", false)]
+        [InlineData(IconThemeType.Outline, "bad-icon", false)]
         [InlineData(IconThemeType.TwoTone, "bad-icon", false)]
         [InlineData(IconThemeType.TwoTone, "alert", true)]
         public void IconExistsShouldReturnProperValue(IconThemeType themeType, string iconName, bool exists)
@@ -97,10 +97,10 @@ namespace AntDesign.Tests.Icon
             yield return new object[] { "bad-icon-name", IconThemeType.TwoTone };
 
             // Correct icon, bad type
-            yield return new object[] { "alert", IconThemeType.Internal };
+            yield return new object[] { "alert", default(IconThemeType) };
 
             // Bad icon, bad type
-            yield return new object[] { "bad-icon-name", IconThemeType.Internal };
+            yield return new object[] { "bad-icon-name", default(IconThemeType) };
         }
     }
 }

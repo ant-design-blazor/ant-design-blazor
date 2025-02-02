@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections;
+using AntDesign.Core.Documentation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using OneOf;
@@ -34,7 +36,25 @@ namespace AntDesign
         /// <summary>
         /// Is direction of the flex vertical, use flex-direction: column
         /// </summary>
-        [Parameter] public bool Vertical { get; set; }
+        [Obsolete("Use FlexDirection instead")]
+        [Parameter]
+        public bool Vertical
+        {
+            get => Direction == FlexDirection.Vertical;
+            set
+            {
+                if (value)
+                    Direction = FlexDirection.Vertical;
+                else
+                    Direction = FlexDirection.Horizontal;
+            }
+        }
+        
+        /// <summary>
+        /// Sets the direction of the flex, either horizontal or vertical
+        /// </summary>
+        [PublicApi("1.2.0")]
+        [Parameter] public FlexDirection Direction { get; set; } = FlexDirection.Horizontal;
 
         /// <summary>
         /// Set whether the element is displayed in a single line or in multiple lines
@@ -144,8 +164,8 @@ namespace AntDesign
         private void SetClass()
         {
             ClassMapper.Add("ant-flex")
-                .GetIf(() => "ant-flex-vertical", () => Vertical)
-                .GetIf(() => "ant-flex-align-stretch", () => Vertical && Align.IsT0 && Align.AsT0 == FlexAlign.Normal)
+                .GetIf(() => "ant-flex-vertical", () => Direction == FlexDirection.Vertical)
+                .GetIf(() => "ant-flex-align-stretch", () => Direction == FlexDirection.Vertical && Align.IsT0 && Align.AsT0 == FlexAlign.Normal)
                 .GetIf(() => $"ant-flex-align-{_alignMap[Align.AsT0]}", () => Align.IsT0)
                 .GetIf(() => $"ant-flex-justify-{_justifyMap[Justify.AsT0]}", () => Justify.IsT0)
                 .GetIf(() => $"ant-flex-gap-{_gapMap[Gap.AsT0]}", () => Gap.IsT0)

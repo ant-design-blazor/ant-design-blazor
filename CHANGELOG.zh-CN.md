@@ -15,6 +15,43 @@ timeline: true
 
 ---
 
+### 1.1.4
+
+`2025-01-24`
+
+- Table
+  - 🆕 新增 动态列支持识别内置筛选器类型。[#4439](https://github.com/ant-design-blazor/ant-design-blazor/pull/4439) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 按回车键时确认筛选器。[#4441](https://github.com/ant-design-blazor/ant-design-blazor/pull/4441) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 全选状态更新不正常。[#4449](https://github.com/ant-design-blazor/ant-design-blazor/pull/4449) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 选中行会被 Disabled 行翻页后清除。[#4450](https://github.com/ant-design-blazor/ant-design-blazor/pull/4450) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 筛选器条件从Between切换到Equals时异常。[#4447](https://github.com/ant-design-blazor/ant-design-blazor/pull/4447) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 设置 PageSize 并隐藏分页器时偶发的无限循环。[#4446](https://github.com/ant-design-blazor/ant-design-blazor/pull/4446) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 筛选器下拉组件的边界调整模式。[#4445](https://github.com/ant-design-blazor/ant-design-blazor/pull/4445) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Querymodel 反序列化。[#4443](https://github.com/ant-design-blazor/ant-design-blazor/pull/4443) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 计算自动高度时未将 Modal 和 Drawer 排除。[#4440](https://github.com/ant-design-blazor/ant-design-blazor/pull/4440) [@pankey888](https://github.com/pankey888)
+
+- 🐞 修复 Tabs 当关闭了中间一个标签后，其右边标签的右键菜单失效。 [#4456](https://github.com/ant-design-blazor/ant-design-blazor/pull/4456) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Form 动态更新 Help 提示。[#4452](https://github.com/ant-design-blazor/ant-design-blazor/pull/4452) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Icon 设置 TwoToneColor 值时自动生成双色。[#4451](https://github.com/ant-design-blazor/ant-design-blazor/pull/4451) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ReuseTabs 当 RouteValue 是 null 时 NRE 异常。[#4438](https://github.com/ant-design-blazor/ant-design-blazor/pull/4438) [@ElderJames](https://github.com/ElderJames)
+- 🗑 移除 TestKit 中的 FluentAssertions 引用。[#4444](https://github.com/ant-design-blazor/ant-design-blazor/pull/4444) [@ElderJames](https://github.com/ElderJames)
+
+### 1.1.3
+
+`2025-01-15`
+
+- 🐞 修复 Modal 当没有滚动条时不应增加空白。[#4434](https://github.com/ant-design-blazor/ant-design-blazor/pull/4434) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Timeline 颜色Color属性不正常。[#4433](https://github.com/ant-design-blazor/ant-design-blazor/pull/4433) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 DatePicker 在手动输入后不能重新打开的问题。[#4431](https://github.com/ant-design-blazor/ant-design-blazor/pull/4431) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 ReuseTabs 在导航时 RouteData 未及时更新时显示问题。[#4429](https://github.com/ant-design-blazor/ant-design-blazor/pull/4429) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Breadcrumb 自动生成时路由匹配方式使用 MenuItem 中的。[#4428](https://github.com/ant-design-blazor/ant-design-blazor/pull/4428) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 AutoComplete 在异步增加选项后展开面板。[#4425](https://github.com/ant-design-blazor/ant-design-blazor/pull/4425) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Badge Ribbon 的预设颜色。[#4426](https://github.com/ant-design-blazor/ant-design-blazor/pull/4426) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Table 筛选组件输入框增加最小宽度。[#4424](https://github.com/ant-design-blazor/ant-design-blazor/pull/4424) [@ElderJames](https://github.com/ElderJames)
+- 💄 修复 Space 的 Size 和 Align 样式。[#4421](https://github.com/ant-design-blazor/ant-design-blazor/pull/4421) [@ElderJames](https://github.com/ElderJames)
+- 📖 文档 修复示例源码展开被自动关闭的问题[#4430](https://github.com/ant-design-blazor/ant-design-blazor/pull/4430) [@ElderJames](https://github.com/ElderJames)
+- 📖 文档 增加 PeterCat AI 挂件。[#4420](https://github.com/ant-design-blazor/ant-design-blazor/pull/4420) [@ElderJames](https://github.com/ElderJames)
+
 ### 1.1.2
 
 `2025-01-08`
