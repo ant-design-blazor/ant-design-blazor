@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Internal;
@@ -29,7 +30,8 @@ namespace AntDesign
 #endif
     public abstract partial class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>, IEqualityComparer<TItem>
     {
-        protected const string DefaultWidth = "width: 100%;";
+        protected virtual string DefaultWidth => "width: 100%;";
+        protected virtual bool UseChildContentAsTrigger => true;
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
         private SelectOptionItem<TItemValue, TItem> _selectOptionEqualToTypeDefault;
         private SelectOptionItem<TItemValue, TItem> _activeOption;
@@ -77,6 +79,8 @@ namespace AntDesign
         internal RenderFragment FeedbackIcon => FormItem?.FeedbackIcon;
 
         internal ClassMapper CurrentClassMapper => ClassMapper;
+
+        protected virtual string OverlayClassName { get; }
 
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
@@ -246,6 +250,21 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback OnClearSelected { get; set; }
+
+        /// <summary>
+        /// Child content to be rendered inside the <see cref="Cascader"/>.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public RenderFragment ChildContent { get; set; }
+
+        /// <summary>
+        /// ChildElement with ElementReference set to avoid wrapping div.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public RenderFragment<ForwardRef> Unbound { get; set; }
+
 
         internal bool IsResponsive { get; set; }
 
@@ -1121,6 +1140,11 @@ namespace AntDesign
             await _dropDown.Hide(true);
         }
 
+        protected async Task OpenAsync()
+        {
+            await _dropDown.Show();
+        }
+
         /// <summary>
         ///     Called by the Form reset method
         /// </summary>
@@ -1238,6 +1262,14 @@ namespace AntDesign
         [Parameter] public bool ShowSearchIcon { get; set; } = true;
 
         [Parameter] public virtual bool ShowArrowIcon { get; set; } = true;
+
+        /// <summary>
+        /// Placement of the overlay. Defaults to <see cref="Placement.BottomLeft"/>.
+        /// </summary>
+        /// <default value="Placement.BottomLeft" />
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public Placement Placement { get; set; } = Placement.BottomLeft;
 
         /// <summary>
         /// When newly set Value is not found in SelectOptionItems, it is reset to

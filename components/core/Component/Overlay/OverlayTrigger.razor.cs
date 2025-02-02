@@ -385,7 +385,7 @@ namespace AntDesign.Internal
         {
             _mouseInTrigger = false;
 
-            if (_overlay != null && IsContainTrigger(TriggerType.Hover))
+            if (_overlay != null && IsContainTrigger(TriggerType.Hover) && IsOverlayShow())
             {
                 _overlay.SetMouseInOverlay(_mouseInOverlay);
 
@@ -522,6 +522,11 @@ namespace AntDesign.Internal
             if (_mouseUpInOverlay)
             {
                 _mouseUpInOverlay = false;
+                return;
+            }
+
+            if (!IsOverlayShow())
+            {
                 return;
             }
 
