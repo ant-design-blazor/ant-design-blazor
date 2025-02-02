@@ -15,6 +15,23 @@ timeline: true
 
 ---
 
+### 1.2.0
+
+`2025-02-02`
+
+Happy Chinese New Year!
+
+- Cascader
+  - 🆕 Add support keyboard navigation. [#4414](https://github.com/ant-design-blazor/ant-design-blazor/pull/4414) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Refactor inherits from SelectBase. [#4408](https://github.com/ant-design-blazor/ant-design-blazor/pull/4408) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add support custom trigger. [#4404](https://github.com/ant-design-blazor/ant-design-blazor/pull/4404) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed activation the selected option from Value. [#4415](https://github.com/ant-design-blazor/ant-design-blazor/pull/4415) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 Refactor Vertical property on Flex to Direction. [#4410](https://github.com/ant-design-blazor/ant-design-blazor/pull/4410) [@pathartl](https://github.com/pathartl)
+- 🆕 Add Select `Placement` parameter for select-base components. [#4409](https://github.com/ant-design-blazor/ant-design-blazor/pull/4409) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add WrapperClass for Input. [#4403](https://github.com/ant-design-blazor/ant-design-blazor/pull/4403) [@zandiarash](https://github.com/zandiarash)
+- 🌐 Update tr-TR locale. [#4460](https://github.com/ant-design-blazor/ant-design-blazor/pull/4460) [@gunesoguzhan](https://github.com/gunesoguzhan)
+
 ### 1.1.4
 
 `2025-01-24`
