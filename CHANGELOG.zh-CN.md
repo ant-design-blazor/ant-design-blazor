@@ -15,6 +15,23 @@ timeline: true
 
 ---
 
+### 1.2.0
+
+`2025-02-02`
+
+新春快乐，巳巳如意！
+
+- Cascader
+  - 🆕 新增 支持键盘导航。[#4414](https://github.com/ant-design-blazor/ant-design-blazor/pull/4414) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 重构 派生自 SelectBase。[#4408](https://github.com/ant-design-blazor/ant-design-blazor/pull/4408) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 支持自定义触发器。[#4404](https://github.com/ant-design-blazor/ant-design-blazor/pull/4404) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Value 双向绑定默认值选中。[#4415](https://github.com/ant-design-blazor/ant-design-blazor/pull/4415) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 新增 Flex 属性 Direction。[#4410](https://github.com/ant-design-blazor/ant-design-blazor/pull/4410) [@pathartl](https://github.com/pathartl)
+- 🆕 新增 Select 属性 Placement。[#4409](https://github.com/ant-design-blazor/ant-design-blazor/pull/4409) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Input 属性 WrapperClass。[#4403](https://github.com/ant-design-blazor/ant-design-blazor/pull/4403) [@zandiarash](https://github.com/zandiarash)
+- 🌐 更新土耳其语本地化。[#4460](https://github.com/ant-design-blazor/ant-design-blazor/pull/4460) [@gunesoguzhan](https://github.com/gunesoguzhan)
+
 ### 1.1.4
 
 `2025-01-24`
