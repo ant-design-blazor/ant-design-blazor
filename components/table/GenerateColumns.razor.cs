@@ -31,8 +31,8 @@ namespace AntDesign
         /// <summary>
         /// An Action to defined each column
         /// </summary>
-        /// <param name="propertyName">The name of the property binding the column. </param>
-        /// <param name="column">The column instance, you need to explicitly cast to a concrete Column type. </param>
+        /// param1: propertyName, the name of the property binding the column.
+        /// param2: column, The column instance, you need to explicitly cast to a concrete Column type.
         [Parameter]
         public Action<string, IFieldColumn> Definitions { get; set; }
 

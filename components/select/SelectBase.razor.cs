@@ -547,11 +547,11 @@ namespace AntDesign
             }
         }
 
-        /// <summary>
-        ///     Returns a true/false if the placeholder should be displayed or not.
-        /// </summary>
-        /// <returns>true if SelectOptions has no values and the searchValue is empty; otherwise false </returns>
-        //protected bool ShowPlaceholder => !HasValue && string.IsNullOrEmpty(_searchValue);
+        // /// <summary>
+        // ///     Returns a true/false if the placeholder should be displayed or not.
+        // /// </summary>
+        // /// <returns>true if SelectOptions has no values and the searchValue is empty; otherwise false </returns>
+        // protected bool ShowPlaceholder => !HasValue && string.IsNullOrEmpty(_searchValue);
 
         /// <summary>
         ///     The Method is called every time if the value of the @bind-Values was changed by the two-way binding.
