@@ -35,7 +35,7 @@ namespace AntDesign
         /// Saving the input value after blur
         /// </summary>
         [Parameter]
-        public bool ChangeOnClose { get; set; }
+        public bool ChangeOnClose { get; set; } = true;
 
         protected DatePickerType _picker;
         protected bool _isSetPicker = false;
@@ -862,6 +862,7 @@ namespace AntDesign
         {
             _duringManualInput = false;
             _dropDown?.Hide();
+            AutoFocus = false;
         }
 
         /// <summary>
@@ -1185,15 +1186,18 @@ namespace AntDesign
                 {
                     ClearValue(index);
                 }
+
+                _duringManualInput = false;
             }
             else
             {
-                _pickerStatus[index].SelectedValue = null;
+                _pickerStatus[index].SelectedValue = GetIndexValue(index);
             }
 
             if (IsRange)
             {
-                _pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
+                // don't reset the other one on close
+                //_pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
 
                 if (!visible)
                 {

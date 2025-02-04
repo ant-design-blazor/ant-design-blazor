@@ -300,6 +300,7 @@ namespace AntDesign
             if (closeDropdown)
                 Close();
 
+            _pickerStatus[index].SelectedValue = null;
             OnClear.InvokeAsync(null);
             OnClearClick.InvokeAsync(null);
 
