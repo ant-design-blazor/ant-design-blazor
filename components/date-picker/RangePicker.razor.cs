@@ -10,6 +10,7 @@ using AntDesign.Core.Extensions;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -114,6 +115,14 @@ namespace AntDesign
                 _disabledDate = (date) => (value?.Invoke(date) is true) || _defaultDisabledDateCheck(date);
             }
         }
+
+        /// <summary>
+        /// Disable the date picker. 
+        /// When given a single boolean, it will disable all of it. 
+        /// When given an array of booleans, it represents disabling the start/end of a range: [start, end]
+        /// </summary>
+        [Parameter]
+        public OneOf<bool, bool[]> Disabled { get; set; } = new bool[] { false, false };
 
         public RangePicker()
         {
@@ -750,6 +759,28 @@ namespace AntDesign
         internal bool ShowClear()
         {
             return CurrentValue is Array array && (array.GetValue(0) is not null || array.GetValue(1) is not null) && AllowClear;
+        }
+
+        protected override bool IsDisabled(int? index = null)
+        {
+            bool disabled = false;
+
+            Disabled.Switch(single =>
+            {
+                disabled = single;
+            }, arr =>
+            {
+                if (index == null || index > 1 || index < 0)
+                {
+                    disabled = arr[0] && arr[1];
+                }
+                else
+                {
+                    disabled = arr[(int)index];
+                }
+            });
+
+            return disabled;
         }
     }
 }
