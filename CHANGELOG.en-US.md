@@ -53,6 +53,10 @@ Happy Chinese New Year!
 - 🐞 Fixed ReuseTabs throwing NRE when any route value is null. [#4438](https://github.com/ant-design-blazor/ant-design-blazor/pull/4438) [@ElderJames](https://github.com/ElderJames)
 - 🗑 Remove FluentAssertions from TestKit. [#4444](https://github.com/ant-design-blazor/ant-design-blazor/pull/4444) [@ElderJames](https://github.com/ElderJames)
 
+Breaking changes:
+
+- Table: When the HidePagination is set to true, PageSize should not be set, so all the data will be displayed. Otherwise, if PageSize is set, the number of rows per page will be displayed according to PageSize. This requires the user to handle the logic of the pagging themselves.
+
 ### 1.1.3
 
 `2025-01-15`
