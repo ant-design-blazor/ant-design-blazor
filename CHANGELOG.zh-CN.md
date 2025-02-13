@@ -53,6 +53,10 @@ timeline: true
 - 🐞 修复 ReuseTabs 当 RouteValue 是 null 时 NRE 异常。[#4438](https://github.com/ant-design-blazor/ant-design-blazor/pull/4438) [@ElderJames](https://github.com/ElderJames)
 - 🗑 移除 TestKit 中的 FluentAssertions 引用。[#4444](https://github.com/ant-design-blazor/ant-design-blazor/pull/4444) [@ElderJames](https://github.com/ElderJames)
 
+破坏性更新：
+
+- 表格： 当 HidePagination 设置为 true 时，不应设置 PageSize，此时展示的是所以数据。否则，如果设置了 PageSize，将根据 PageSize 显示每页的行数，这就需要用户自己处理分页的逻辑。
+
 ### 1.1.3
 
 `2025-01-15`

@@ -12,7 +12,8 @@ namespace AntDesign
     public partial class Table<TItem> : ITable
     {
         /// <summary>
-        /// Whether to hide pagination or not
+        /// Whether to hide pagination or not.
+        /// <para> Note: When the HidePagination is set to true, PageSize should not be set, so all the data will be displayed. Otherwise, if PageSize is set, the number of rows per page will be displayed according to PageSize. This requires the user to handle the logic of the pagging themselves. </para>
         /// </summary>
         [Parameter]
         public bool HidePagination { get; set; }
