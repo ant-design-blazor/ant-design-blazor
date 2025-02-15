@@ -81,7 +81,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="ProgressStatus.Normal" />
         [Parameter]
-        public ProgressStatus Status { get; set; } = ProgressStatus.Normal;
+        public ProgressStatus? Status { get; set; }
 
         /// <summary>
         /// to set the style of the progress linecap
@@ -178,14 +178,12 @@ namespace AntDesign
                 }
             }
 
-            if (Percent is double percent && percent == 100)
+            if (Status is null && Percent is double percent && percent == 100)
             {
                 Status = ProgressStatus.Success;
             }
-            else
-            {
-                Status = ProgressStatus.Normal;
-            }
+
+            Status ??= ProgressStatus.Normal;
 
             SetStyle();
         }
@@ -312,11 +310,6 @@ namespace AntDesign
             }
 
             return style.ToString();
-        }
-
-        private string GetCircleBGStyle()
-        {
-            throw new NotImplementedException();
         }
 
         private string ToRGB(string color)

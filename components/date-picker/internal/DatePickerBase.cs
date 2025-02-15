@@ -80,14 +80,6 @@ namespace AntDesign
         public string PopupContainerSelector { get; set; }
 
         /// <summary>
-        /// Disable the date picker. 
-        /// When given a single boolean, it will disable all of it. 
-        /// When given an array of booleans, it represents disabling the start/end of a range: [start, end]
-        /// </summary>
-        [Parameter]
-        public OneOf<bool, bool[]> Disabled { get; set; } = new bool[] { false, false };
-
-        /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
         /// </summary>
         [Parameter]
@@ -832,27 +824,7 @@ namespace AntDesign
             ResetPlaceholder();
         }
 
-        protected bool IsDisabled(int? index = null)
-        {
-            bool disabled = false;
-
-            Disabled.Switch(single =>
-            {
-                disabled = single;
-            }, arr =>
-            {
-                if (index == null || index > 1 || index < 0)
-                {
-                    disabled = arr[0] && arr[1];
-                }
-                else
-                {
-                    disabled = arr[(int)index];
-                }
-            });
-
-            return disabled;
-        }
+        protected abstract bool IsDisabled(int? index = null);
 
         /// <summary>
         /// Close the popover
