@@ -3,9 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -66,49 +67,20 @@ namespace AntDesign
         /// </summary>
         /// <default value="TagColor.Default" />
         [Parameter]
-        public OneOf<TagColor, string> Color {
-            get
-            {
-                if (_isPresetColor)
-                    return _presetColor;
-                else
-                    return _customColor;
-            }
+        public OneOf<TagColor, string> Color
+        {
+            get => _isPresetColor ? _presetColor : _customColor;
+
             set
             {
                 if (value.IsT0)
                 {
                     _isPresetColor = true;
-                    _isCustomColor = false;
                     _presetColor = value.AsT0;
                 }
                 else
                 {
-                    if (!string.IsNullOrWhiteSpace(value.AsT1) && _colorMap.ContainsValue(value.AsT1.ToLowerInvariant()))
-                    {
-                        foreach (TagColor color in Enum.GetValues(typeof(TagColor)))
-                        {
-                            if ((string)_colorMap[color] == value.AsT1.ToLowerInvariant())
-                            {
-                                _presetColor = color;
-                                _isPresetColor = true;
-                                _isCustomColor = false;
-                                break;
-                            }
-                        }
-                    }
-                    else if (string.IsNullOrWhiteSpace(value.AsT1))
-                    {
-                        _presetColor = TagColor.Default;
-                        _isPresetColor = true;
-                        _isCustomColor = false;
-                    }
-                    else
-                    {
-                        _isPresetColor = false;
-                        _isCustomColor = true;
-                        _customColor = value.AsT1;
-                    }
+                    ResolveColorStrInput(value.AsT1);
                 }
             }
         }
@@ -163,9 +135,8 @@ namespace AntDesign
         [Parameter]
         public bool Visible { get; set; } = true;
 
-        private bool _isPresetColor = true;
-        private bool _isCustomColor;
         private bool _closed;
+        private bool _isPresetColor = true;
         private TagColor _presetColor = TagColor.Default;
         private string _customColor = "";
         private string _style;
@@ -182,7 +153,7 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        private readonly Hashtable _colorMap = new Hashtable()
+        private static readonly Dictionary<TagColor, string> _colorMap = new()
         {
             [TagColor.Default] = "default",
             [TagColor.Red] = "red",
@@ -222,39 +193,58 @@ namespace AntDesign
             [TagColor.WarningInverse] = "warning-inverse",
         };
 
-        private string _prefix = "ant-tag";
+        private void ResolveColorStrInput(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                _isPresetColor = true;
+                _presetColor = TagColor.Default;
+                return;
+            }
+            var trimmedInput = input.Trim();
+            // Fast check
+            if (trimmedInput.StartsWith('#') || trimmedInput.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
+            {
+                _isPresetColor = false;
+                _customColor = trimmedInput;
+                return;
+            }
+            // Slow check
+            foreach (var item in _colorMap)
+            {
+                if (trimmedInput.Equals(item.Value, StringComparison.OrdinalIgnoreCase))
+                {
+                    _isPresetColor = true;
+                    _presetColor = item.Key;
+                    return;
+                }
+            }
+            _isPresetColor = false;
+            _customColor = trimmedInput;
+        }
+
+        private const string StylePrefix = "ant-tag";
 
         private void UpdateClassMap()
         {
-            this.ClassMapper.Add(_prefix)
-                .If($"{_prefix}-has-color", () => _isCustomColor)
-                .If($"{_prefix}-hidden", () => Visible == false)
-                .GetIf(() => $"{_prefix}-{_colorMap[_presetColor]}", () => _isPresetColor)
-                .If($"{_prefix}-checkable", () => Checkable)
-                .If($"{_prefix}-checkable-checked", () => Checked)
-                .If($"{_prefix}-rtl", () => RTL)
-                .If($"{_prefix}-clickable", () => OnClick.HasDelegate)
+            this.ClassMapper.Add(StylePrefix)
+                .If($"{StylePrefix}-has-color", () => !_isPresetColor)
+                .If($"{StylePrefix}-hidden", () => !Visible)
+                .GetIf(() => $"{StylePrefix}-{_colorMap[_presetColor]}", () => _isPresetColor)
+                .If($"{StylePrefix}-checkable", () => Checkable)
+                .If($"{StylePrefix}-checkable-checked", () => Checked)
+                .If($"{StylePrefix}-rtl", () => RTL)
+                .If($"{StylePrefix}-clickable", () => OnClick.HasDelegate)
                 ;
         }
 
         private string GetStyle()
         {
-            var styleBuilder = new StringBuilder();
+            var styleBuilder = new StringBuilder()
+                .AppendIfNotNullOrEmpty(Style)
+                .AppendIf($"background-color: {_customColor};", !_isPresetColor);
 
-            styleBuilder.Append(Style);
-
-            if (!string.IsNullOrEmpty(Style) && !Style.EndsWith(";"))
-            {
-                styleBuilder.Append(";");
-            }
-
-            if (_isCustomColor)
-            {
-                styleBuilder.Append($"background-color: {_customColor};");
-            }
-
-            var newStyle = styleBuilder.ToString();
-            return string.IsNullOrEmpty(newStyle) ? null : newStyle;
+            return styleBuilder.Length > 0 ? styleBuilder.ToString() : null;
         }
 
         private async Task UpdateCheckedStatus()
