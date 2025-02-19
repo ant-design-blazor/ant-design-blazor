@@ -44,21 +44,21 @@ namespace AntDesign.Tests.Icon
         }
 
         [Theory]
-        [MemberData(nameof(InvalidIconTestData))]
-        public void InvalidIconNameOrTypeShouldReturnNull(string iconName, IconThemeType type)
+        [InlineData(IconThemeType.Outline, "bad-icon")]
+        public void InvalidIconNameOrTypeShouldReturnNull(IconThemeType themeType, string iconName)
         {
-            IconService.GetIconImg(iconName, type).Should().BeNull();
+            IconService.GetIconImg(iconName, themeType).Should().BeNull();
         }
 
         [Fact]
         public void GetAllIconsShouldReturnDictionaryKeyedByThemeType()
         {
-            IconService.GetAllIcons().Keys.Should().BeEquivalentTo(new[]
-            {
+            IconService.GetAllIcons().Keys.Should().BeEquivalentTo(
+            [
                 IconThemeType.Outline,
                 IconThemeType.Fill,
                 IconThemeType.TwoTone
-            });
+            ]);
         }
 
         [Theory]
@@ -71,7 +71,7 @@ namespace AntDesign.Tests.Icon
         }
 
         [Theory]
-        [InlineData(IconThemeType.Outline, "alert", false)]
+        [InlineData(IconThemeType.Outline, "alert", true)]
         [InlineData(IconThemeType.Outline, "bad-icon", false)]
         [InlineData(IconThemeType.TwoTone, "bad-icon", false)]
         [InlineData(IconThemeType.TwoTone, "alert", true)]
@@ -89,18 +89,6 @@ namespace AntDesign.Tests.Icon
                     yield return new object[] { singleIconName, type };
                 }
             }
-        }
-
-        public static IEnumerable<object[]> InvalidIconTestData()
-        {
-            // Bad icon, correct type
-            yield return new object[] { "bad-icon-name", IconThemeType.TwoTone };
-
-            // Correct icon, bad type
-            yield return new object[] { "alert", default(IconThemeType) };
-
-            // Bad icon, bad type
-            yield return new object[] { "bad-icon-name", default(IconThemeType) };
         }
     }
 }

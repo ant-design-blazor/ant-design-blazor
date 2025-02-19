@@ -74,10 +74,14 @@ namespace AntDesign
             get => _style;
             set
             {
-                _style = value;
-                if (!string.IsNullOrWhiteSpace(_style) && !_style.EndsWith(";"))
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    _style += ";";
+                    _style = string.Empty;
+                }
+                else
+                {
+                    var trimmed = value.Trim();
+                    _style = trimmed.EndsWith(';') ? trimmed : trimmed + ";";
                 }
             }
         }
