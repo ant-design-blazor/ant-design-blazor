@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 1.2.1
+
+`2025-02-25`
+
+- 🛠 Optimize Tag preset colors. [#4479](https://github.com/ant-design-blazor/ant-design-blazor/pull/4479) [@LeaFrock](https://github.com/LeaFrock)
+- 🐞 Fixed Progress Status parameter is incorrect. [#4475](https://github.com/ant-design-blazor/ant-design-blazor/pull/4475) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Overlay position is not correctly adjusted when it is opened beyond the boundary. [#4483](https://github.com/ant-design-blazor/ant-design-blazor/pull/4483) [@ElderJames](https://github.com/ElderJames) 
+- 🛠 Refactor Datepicker that separate the Disabled parameter of DatePicker and RangePicker. [#4474](https://github.com/ant-design-blazor/ant-design-blazor/pull/4474) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs Table describe the behavior of HidePagination. [#4473](https://github.com/ant-design-blazor/ant-design-blazor/pull/4473) [@ElderJames](https://github.com/ElderJames)
+- 🌐 i18n: Update some missing properties for fa-IR. [#4464](https://github.com/ant-design-blazor/ant-design-blazor/pull/4464) [@zandiarash](https://github.com/zandiarash)
+
+
 ### 1.2.0
 
 `2025-02-02`

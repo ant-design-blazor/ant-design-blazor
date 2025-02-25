@@ -15,6 +15,17 @@ timeline: true
 
 ---
 
+### 1.2.1
+
+`2025-02-25`
+
+- 🛠 优化 Tag 组件 preset color 实现。[#4479](https://github.com/ant-design-blazor/ant-design-blazor/pull/4479) [@LeaFrock](https://github.com/LeaFrock)
+- 🐞 修复 Progress 的 Status 属性不正确。 [#4475](https://github.com/ant-design-blazor/ant-design-blazor/pull/4475) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Overlay 打开时超出边界时的定位调整问题。 [#4483](https://github.com/ant-design-blazor/ant-design-blazor/pull/4483) [@ElderJames](https://github.com/ElderJames)
+- 🛠 重构 Datepicker 将DatePicker 和 RangePicker 的 Disabled 属性分开。[#4474](https://github.com/ant-design-blazor/ant-design-blazor/pull/4474) [@ElderJames](https://github.com/ElderJames)
+- 📖 文档 Table 增加 HidePagination 行为的说明。[#4473](https://github.com/ant-design-blazor/ant-design-blazor/pull/4473) [@ElderJames](https://github.com/ElderJames)
+- 🌐 更新 fa-IR 语言包。[#4464](https://github.com/ant-design-blazor/ant-design-blazor/pull/4464) [@zandiarash](https://github.com/zandiarash)
+
 ### 1.2.0
 
 `2025-02-02`
