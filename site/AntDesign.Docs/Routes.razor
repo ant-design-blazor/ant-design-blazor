@@ -88,21 +88,20 @@
 
     void Description(RenderTreeBuilder __builder)
     {
-                <p style="padding-right:10px">
+        <p style="padding-right:10px">
             @L["app.sponsorship-notice"]
-                </p>
+        </p>
 
         @if (LocalizationService.CurrentCulture.Name == "zh-CN")
         {
-                        <ImagePreviewGroup>
-                            <Image Width="80" Height="80" Src="/docs/assets/links/alipay.jpg" />
-                            <Image Width="80" Height="80" Src="/docs/assets/links/wepay.jpg" />
-                        </ImagePreviewGroup>
+            <ImagePreviewGroup>
+                <Image Width="80" Height="80" Src="/docs/assets/links/alipay.jpg" />
+                <Image Width="80" Height="80" Src="/docs/assets/links/wepay.jpg" />
+            </ImagePreviewGroup>
         }
         else
         {
-                        <iframe src="https://github.com/sponsors/ant-design-blazor/button" title="Sponsor ant-design-blazor" height="32"
-                            width="114" style="border: 0; border-radius: 6px;"></iframe>
+            <iframe src="https://github.com/sponsors/ant-design-blazor/button" title="Sponsor ant-design-blazor" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
         }
     }
 
