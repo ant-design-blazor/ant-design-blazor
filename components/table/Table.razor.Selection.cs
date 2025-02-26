@@ -177,6 +177,12 @@ namespace AntDesign
         /// <param name="items"></param>
         public void SetSelection(IEnumerable<TItem> items)
         {
+            UpdateSelection(items);
+            SelectionChanged();
+        }
+
+        private void UpdateSelection(IEnumerable<TItem> items)
+        {
             if (items.SequenceEqual(_selectedRows, this))
                 return;
 
@@ -193,7 +199,6 @@ namespace AntDesign
             _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
-            SelectionChanged();
         }
 
         /// <summary>

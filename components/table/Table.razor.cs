@@ -746,7 +746,7 @@ namespace AntDesign
             {
                 if (_outerSelectedRows != null)
                 {
-                    SetSelection(_outerSelectedRows);
+                    UpdateSelection(_outerSelectedRows);
                 }
             }
 
