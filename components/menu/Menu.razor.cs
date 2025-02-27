@@ -366,7 +366,7 @@ namespace AntDesign
         internal void AddMenuItem(MenuItem item)
         {
             _menuItems.Add(item);
-            MenusService.SetMenuItems([item]);
+            MenusService.SetMenuItem(item);
         }
 
         internal void RemoveSubmenu(SubMenu menu)

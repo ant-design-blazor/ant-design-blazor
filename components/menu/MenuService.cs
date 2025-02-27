@@ -14,7 +14,7 @@ namespace AntDesign
         private readonly NavigationManager _navmgr;
         private Dictionary<string, MenuItem> _titleCache = [];
         private Dictionary<string, BreadcrumbOption[]> _breadcrumbCache = [];
-        private IEnumerable<MenuItem> _menuItems = [];
+        private List<MenuItem> _menuItems = [];
 
         internal event Action MenuItemLoaded;
 
@@ -23,9 +23,9 @@ namespace AntDesign
             this._navmgr = navmgr;
         }
 
-        internal void SetMenuItems(IEnumerable<MenuItem> menuItems)
+        internal void SetMenuItem(MenuItem menuItem)
         {
-            _menuItems = [.. _menuItems, .. menuItems];
+            _menuItems.Add(menuItem);
             MenuItemLoaded?.Invoke();
         }
 
