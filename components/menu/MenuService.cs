@@ -25,7 +25,7 @@ namespace AntDesign
 
         internal void SetMenuItems(IEnumerable<MenuItem> menuItems)
         {
-            _menuItems = menuItems;
+            _menuItems = [.. _menuItems, .. menuItems];
             MenuItemLoaded?.Invoke();
         }
 
