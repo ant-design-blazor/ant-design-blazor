@@ -358,12 +358,6 @@ namespace AntDesign
             SetClass();
         }
 
-        protected override Task OnFirstAfterRenderAsync()
-        {
-            MenusService.SetMenuItems(_menuItems);
-            return base.OnFirstAfterRenderAsync();
-        }
-
         internal void AddSubmenu(SubMenu menu)
         {
             _submenus.Add(menu);
@@ -372,6 +366,7 @@ namespace AntDesign
         internal void AddMenuItem(MenuItem item)
         {
             _menuItems.Add(item);
+            MenusService.SetMenuItem(item);
         }
 
         internal void RemoveSubmenu(SubMenu menu)
