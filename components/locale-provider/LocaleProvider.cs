@@ -124,7 +124,7 @@ namespace AntDesign
         private static bool TryGetSpecifiedLocale(string cultureName, out Locale locale)
         {
             if (!_availableResources.ContainsKey(cultureName)) return _localeCache.TryGetValue(cultureName, out locale);
-            locale = _localeCache.GetOrAdd(cultureName, key =>
+            locale = _localeCache.GetOrAdd(cultureName, static key =>
             {
                 string fileName = _availableResources[key];
                 using var fileStream = _resourcesAssembly.GetManifestResourceStream(fileName);
@@ -134,7 +134,7 @@ namespace AntDesign
 
                 var serializerOptions = new JsonSerializerOptions()
                 {
-                    PropertyNameCaseInsensitive = true,
+                    TypeInfoResolver = LocaleSourceGenerationContext.Default,
                 };
                 serializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
                 var result = JsonSerializer.Deserialize<Locale>(content, serializerOptions);
@@ -160,9 +160,15 @@ namespace AntDesign
             }
             catch (Exception)
             {
-                if (name.Contains("-")) return name[0..name.LastIndexOf("-")];
+                if (name.Contains('-')) return name[0..name.LastIndexOf('-')];
                 else return "";
             }
         }
+    }
+
+    [JsonSourceGenerationOptions(PropertyNameCaseInsensitive = true)]
+    [JsonSerializable(typeof(Locale))]
+    internal partial class LocaleSourceGenerationContext : JsonSerializerContext
+    {
     }
 }
