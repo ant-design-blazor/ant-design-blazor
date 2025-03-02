@@ -134,7 +134,7 @@ namespace AntDesign
 
                 var serializerOptions = new JsonSerializerOptions()
                 {
-#if NET6_0_OR_GREATER
+#if NET7_0_OR_GREATER
                     TypeInfoResolver = LocaleSourceGenerationContext.Default,
 #endif
                     PropertyNameCaseInsensitive = true,
@@ -169,7 +169,7 @@ namespace AntDesign
         }
     }
 
-#if NET6_0_OR_GREATER
+#if NET7_0_OR_GREATER
     [JsonSerializable(typeof(Locale))]
     internal partial class LocaleSourceGenerationContext : JsonSerializerContext
     {
