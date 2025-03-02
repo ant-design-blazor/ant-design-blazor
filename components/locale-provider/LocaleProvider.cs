@@ -136,9 +136,8 @@ namespace AntDesign
                 {
 #if NET6_0_OR_GREATER
                     TypeInfoResolver = LocaleSourceGenerationContext.Default,
-#else
-                    PropertyNameCaseInsensitive=true,
 #endif
+                    PropertyNameCaseInsensitive = true,
                 };
                 serializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
                 var result = JsonSerializer.Deserialize<Locale>(content, serializerOptions);
@@ -171,7 +170,6 @@ namespace AntDesign
     }
 
 #if NET6_0_OR_GREATER
-    [JsonSourceGenerationOptions(PropertyNameCaseInsensitive = true)]
     [JsonSerializable(typeof(Locale))]
     internal partial class LocaleSourceGenerationContext : JsonSerializerContext
     {
