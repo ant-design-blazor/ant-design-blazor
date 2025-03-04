@@ -24,6 +24,7 @@ namespace AntDesign.Filters
             TableFilterCompareOperator.Equals,
             TableFilterCompareOperator.NotEquals,
             TableFilterCompareOperator.Contains,
+            TableFilterCompareOperator.NotContains,
             TableFilterCompareOperator.StartsWith,
             TableFilterCompareOperator.EndsWith,
         };
@@ -61,6 +62,8 @@ namespace AntDesign.Filters
                     compareOperator, leftExpr, rightExpr),
                 TableFilterCompareOperator.Contains => NotNullAnd(GetMethodExpression(nameof(string.Contains),
                     lowerLeftExpr, lowerRightExpr)),
+                TableFilterCompareOperator.NotContains => NotNullAnd(Expression.Not(GetMethodExpression(nameof(string.Contains),
+                    lowerLeftExpr, lowerRightExpr))),
                 TableFilterCompareOperator.StartsWith => NotNullAnd(GetMethodExpression(nameof(string.StartsWith),
                     lowerLeftExpr, lowerRightExpr)),
                 TableFilterCompareOperator.EndsWith => NotNullAnd(GetMethodExpression(nameof(string.EndsWith),
