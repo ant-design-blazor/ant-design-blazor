@@ -27,6 +27,10 @@ public static class MessageExtensions
         Action onClose = null
     )
     {
+        if (content.IsT2)
+        {
+            content.AsT2.Duration = 0;
+        }
         var task = messageService.Loading(content, 0, onClose);
         try
         {
@@ -52,6 +56,10 @@ public static class MessageExtensions
         Action onClose = null
     )
     {
+        if (content.IsT2)
+        {
+            content.AsT2.Duration = 0;
+        }
         var task = messageService.Loading(content, 0, onClose);
         try
         {
