@@ -83,6 +83,8 @@
         var firstCellInNextMonth = dateCells.First(x => x.GetAttribute("title") == dateToSelect);
         firstCellInNextMonth.Click();
 
+        await Task.Delay(1);
+
         input.GetAttribute("value").Should().Be(dateToSelect);
     }
 
