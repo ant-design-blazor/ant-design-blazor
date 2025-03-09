@@ -33,7 +33,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "22.x"
+          node-version: "18.x"
 
       - name: Check Building ⚙
         run: |
