@@ -262,7 +262,14 @@
         var input = cut.FindAll("input");
 
         await input[0].InputAsync(new ChangeEventArgs { Value = startValueAsString });
-        await input[0].KeyDownAsync(new KeyboardEventArgs { Key = key });
+        /*
+         * I cannot figure out why using await input[0].KeyDownAsync causes the test to hang indefinitely,
+         * whereas using input[0].KeyDown works as expected.
+         * What's even more puzzling is that if we change the following KeyDownAsync to use the same KeyDown method, the test fails.
+         * This is quite confusing, and I hope that future maintainers will be able to resolve this issue.
+         * TODO: Investigate and fix this issue.
+         */
+        input[0].KeyDown(new KeyboardEventArgs { Key = key });
         await input[1].InputAsync(new ChangeEventArgs { Value = endValueAsString });
         await input[1].KeyDownAsync(new KeyboardEventArgs { Key = key });
 
@@ -445,7 +452,14 @@
         //Act
         var input = cut.FindAll("input");
         await input[0].InputAsync(new ChangeEventArgs() { Value = startValueAsString });
-        await input[0].KeyDownAsync(new KeyboardEventArgs() { Key = "Enter" });
+        /*
+         * I cannot figure out why using await input[0].KeyDownAsync causes the test to hang indefinitely,
+         * whereas using input[0].KeyDown works as expected.
+         * What's even more puzzling is that if we change the following KeyDownAsync to use the same KeyDown method, the test fails.
+         * This is quite confusing, and I hope that future maintainers will be able to resolve this issue.
+         * TODO: Investigate and fix this issue.
+         */
+        input[0].KeyDown(new KeyboardEventArgs() { Key = "Enter" });
         await input[1].InputAsync(new ChangeEventArgs() { Value = endValueAsString });
         await input[1].KeyDownAsync(new KeyboardEventArgs() { Key = "Enter" });
 
