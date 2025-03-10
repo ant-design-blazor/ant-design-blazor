@@ -883,7 +883,7 @@ namespace AntDesign
             if (input != null)
             {
                 input.IsOnFocused = false;
-                await JsInvokeAsync(JSInteropConstants.Blur, input.Ref);
+                await BlurAsync(input.Ref);
                 _needRefresh = true;
             }
         }

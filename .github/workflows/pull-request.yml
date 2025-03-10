@@ -26,7 +26,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "16.x"
+          node-version: "18.x"
 
       - name: Check Building ⚙
         run: |
@@ -36,7 +36,9 @@ jobs:
       - name: Test 📝
         run: |
           npm run lint
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage"
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net6
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net8
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net9
           npm install ./tests/AntDesign.Tests.Js
           npm --prefix ./tests/AntDesign.Tests.Js run test-cov
           find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
