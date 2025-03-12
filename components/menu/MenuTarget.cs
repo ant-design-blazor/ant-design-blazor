@@ -6,7 +6,6 @@ namespace AntDesign;
 
 public enum MenuTarget
 {
-    None,
     Self,
     Blank,
     Parent,
