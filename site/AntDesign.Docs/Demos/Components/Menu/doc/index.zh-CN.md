@@ -56,17 +56,18 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 
 ### MenuItem
 
-| 参数     | 说明                     | 类型    | 默认值 | 版本 |
-| -------- | ------------------------ | ------- | ------ | ---- |
-| Disabled | 是否禁用                 | boolean | false  |      |
-| Key      | item 的唯一标志          | string  |        |      |
-| OnClick  | 当鼠标点击菜单项时触发 | EventCallback&lt;MouseEventArgs> | - |  |
-| RouterLink    |  路由链接，当需要让菜单自动匹配路由进行高亮时使用  | string |     -          |         |
-| RouterMatch    | 修改自 `NavLink`,用于选择匹配模式  | NavLinkMatch |     -          |         |
-| Style    | 额外的 CSS 样式  | string |     -          |         |
-| Title    | 设置收缩时展示的悬浮标题 | string  |        |      |
-| Icon | 图标的类型| string | - | |
-| IconTemplate | 自定义Icon模板，当`Icon`和`IconTemplate`同时设置时，优先使用`IconTemplate`| RenderFragment | - | |
+| 参数          | 说明                                                       | 类型                              | 默认值   | 版本 |
+|--------------|----------------------------------------------------------|---------------------------------|-------|----|
+| Disabled     | 是否禁用                                                     | boolean                         | false |    |
+| Key          | item 的唯一标志                                               | string                          |       |    |
+| OnClick      | 当鼠标点击菜单项时触发                                              | EventCallback&lt;MouseEventArgs> | -     |    |
+| RouterLink   | 路由链接，当需要让菜单自动匹配路由进行高亮时使用                                 | string                          | -     |    |
+| RouterMatch  | 修改自 `NavLink`,用于选择匹配模式                                   | NavLinkMatch                    | -     |    |
+| Style        | 额外的 CSS 样式                                               | string                          | -     |    |
+| Target       |                                                          | MenuTarget?                     | -     |    |
+| Title        | 设置收缩时展示的悬浮标题                                             | string                          |       |    |
+| Icon         | 图标的类型                                                    | string                          | -     |    |
+| IconTemplate | 自定义Icon模板，当`Icon`和`IconTemplate`同时设置时，优先使用`IconTemplate` | RenderFragment                  | -     |    |
 
 ### SubMenu
 
