@@ -10,9 +10,9 @@
                autofocus=@AutoFocus
                @onchange="@InputCheckedChange"
                type="checkbox"
-               class="ant-checkbox-input"
+               class="@_inputClassMapper.Class"
                @attributes="_attributes" />
-        <span class="ant-checkbox-inner"></span>
+        <span class="@_innerClassMapper.Class"></span>
     </span>
 
     @if (ChildContent != null)
