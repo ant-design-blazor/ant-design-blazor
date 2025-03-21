@@ -73,7 +73,7 @@
         <RenderFirstCol>
             @if (IsWeek || ShowWeek)
             {
-                <td class="@(PrefixCls)-cell @(PrefixCls)-cell-weak">  
+                <td class="@(PrefixCls)-cell @(PrefixCls)-cell-week">  
                     @calendar.GetWeekOfYear(context,calendarWeekRule, Locale.FirstDayOfWeek)
                 </td>
             }
