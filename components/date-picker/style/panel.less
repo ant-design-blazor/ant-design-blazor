@@ -544,6 +544,12 @@
     }
   }
   
+  &-date-panel.show-week-panel {
+    .@{picker-prefix-cls}-cell-week {
+      cursor: default;
+    }
+  }
+  
   &-date-panel:not(.show-week-panel) {
     .@{picker-prefix-cls}-content {
       width: @picker-panel-cell-width * 7;
