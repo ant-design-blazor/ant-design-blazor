@@ -120,7 +120,7 @@ namespace AntDesign
             }
 
             currentDataItem.Data = data;
-            currentDataItem.Children = TreeChildren(data);
+            currentDataItem.Children = TreeChildren?.Invoke(data);
             // this row cache may be for children rows
             rowCache ??= _rootRowDataCache;
 
