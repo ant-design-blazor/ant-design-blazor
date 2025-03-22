@@ -45,7 +45,8 @@
                            OnRowSelect="OnRowSelect"
                            OnValueSelect="OnValueSelect"
                            GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
-                           SkipDays="skipDays">
+                           SkipDays="skipDays"
+                           ShowWeek="ShowWeek">
         <RenderPickerHeader>
             <DatePickerHeader TValue="TValue"
                               @attributes="GetAttributes()"
@@ -56,7 +57,7 @@
         </RenderPickerHeader>
         <RenderTableHeader>
             <tr>
-                @if (IsWeek)
+                @if (IsWeek || ShowWeek)
                 {
                     <th></th>
                 }
@@ -70,9 +71,9 @@
             </tr>
         </RenderTableHeader>
         <RenderFirstCol>
-            @if (IsWeek)
+            @if (IsWeek || ShowWeek)
             {
-                <td class="@(PrefixCls)-cell @(PrefixCls)-cell-weak">  
+                <td class="@(PrefixCls)-cell @(PrefixCls)-cell-week">  
                     @calendar.GetWeekOfYear(context,calendarWeekRule, Locale.FirstDayOfWeek)
                 </td>
             }
