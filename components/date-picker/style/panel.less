@@ -542,24 +542,16 @@
     .@{picker-prefix-cls}-body {
       padding: @padding-xs @padding-sm;
     }
-  }
-  
-  &-date-panel.show-week-panel {
-    .@{picker-prefix-cls}-cell-week {
-      cursor: default;
-    }
-  }
-  
-  &-date-panel:not(.show-week-panel) {
+    
     .@{picker-prefix-cls}-content {
       width: @picker-panel-cell-width * 7;
     }
-    
+
     th {
       width: @picker-panel-cell-width;
     }
   }
-
+  
   // ==================== Datetime Panel ====================
   &-datetime-panel {
     display: flex;
