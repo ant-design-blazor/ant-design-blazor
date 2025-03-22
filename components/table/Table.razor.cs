@@ -168,9 +168,8 @@ namespace AntDesign
         /// <summary>
         /// Children tree items
         /// </summary>
-        /// <default value="Enumerable.Empty&lt;TItem&gt;()" />
         [Parameter]
-        public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
+        public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; }
 
         /// <summary>
         /// Callback executed when table initialized, paging, sorting, and filtering changes.
@@ -750,7 +749,7 @@ namespace AntDesign
                 }
             }
 
-            _treeMode = (TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true)) || _groupedColumns.Count > 0;
+            _treeMode = (TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true || OnExpand.HasDelegate)) || _groupedColumns.Count > 0;
             if (_treeMode)
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
