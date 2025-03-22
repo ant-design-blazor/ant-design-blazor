@@ -61,6 +61,12 @@ namespace AntDesign
         /// <default value="NavLinkMatch.All" />
         [Parameter]
         public NavLinkMatch RouterMatch { get; set; } = NavLinkMatch.All;
+        
+        /// <summary>
+        /// Allows specification of the HTML `target` attribute
+        /// </summary>
+        [Parameter]
+        public MenuTarget? Target { get; set; }
 
         /// <summary>
         /// Title of the menu item
