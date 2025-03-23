@@ -1,7 +1,7 @@
 ﻿@using System.ComponentModel
 @using AntDesign.TableModels
 
-<Table @ref="table" DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
+<Table @ref="table" TItem="Contact" DataSource="data" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")" OnExpand="OnExpand">
 	<ColumnDefinitions>
 		<PropertyColumn Property="c=>c.Name" />
 		<PropertyColumn Property="c=>c.Age" />
@@ -37,6 +37,12 @@
 
 @code {
     ITable table;
+
+    void OnExpand(RowData<Contact> args)
+    {
+        Console.WriteLine(args.Data.Name);
+    }
+
     Contact[] data =
     {
         new Student() {
