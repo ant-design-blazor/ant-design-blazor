@@ -397,6 +397,9 @@ namespace AntDesign
 
                 _rulesValidator.DisplayErrors(errors);
             }
+
+            // invoke StateHasChanged to update the form state like error message and IsModified
+            StateHasChanged();
         }
 
         private void RulesModeOnValidationRequested(object sender, ValidationRequestedEventArgs args)
