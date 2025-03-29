@@ -15,6 +15,28 @@ timeline: true
 
 ---
 
+### 1.3.0
+
+`2025-03-29`
+
+- Table
+  - 🆕 新增 字符串筛选器的操作增加”不包含“。[#4494](https://github.com/ant-design-blazor/ant-design-blazor/pull/4494) [@rtrocmn](https://github.com/rtrocmn)
+  - 🐞 修复 当同时设置了 RowExpandable 和 OnExpand 时避免重复的显示展开按钮 。[#4508](https://github.com/ant-design-blazor/ant-design-blazor/pull/4508) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 当外部修改 SelectedRows 时避免触发 SelectedRowsChanged。[#4486](https://github.com/ant-design-blazor/ant-design-blazor/pull/4486) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 新增 DatePicker 支持显示周数。[#4507](https://github.com/ant-design-blazor/ant-design-blazor/pull/4507) [@duseo](https://github.com/duseo)
+- 🆕 新增 Message 服务接口 IMessageService 实现 LoadingWhen 扩展方法，以方便回调操作。[#4493](https://github.com/ant-design-blazor/ant-design-blazor/pull/4493) [@XmmShp](https://github.com/XmmShp)
+- 🆕 新增 Menu 菜单项的 Target 属性。[#4502](https://github.com/ant-design-blazor/ant-design-blazor/pull/4502) [@pathartl](https://github.com/pathartl)
+- 🆕 新增 ReuseTabs 支持等到 Menu 加载后再收集标题。[#4487](https://github.com/ant-design-blazor/ant-design-blazor/pull/4487) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Form 绑定模型变更时未能及时触发状态。[#4514](https://github.com/ant-design-blazor/ant-design-blazor/pull/4514) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Drawer 关闭时，留下滚动条阴影。[#4512](https://github.com/ant-design-blazor/ant-design-blazor/pull/4512) [@thirking](https://github.com/thirking)
+- 💄 优化 Spin 为form, list, 和 table 内置的增加一个classname。[#4500](https://github.com/ant-design-blazor/ant-design-blazor/pull/4500) [@pathartl](https://github.com/pathartl)
+- 🐞 修复隐式转换导致的 System.ArgumentException。[#4498](https://github.com/ant-design-blazor/ant-design-blazor/pull/4498) [@XmmShp](https://github.com/XmmShp)
+- 🌐 优化本地化服务的序列化支持JSON源生成器。[#4489](https://github.com/ant-design-blazor/ant-design-blazor/pull/4489) [@ElderJames](https://github.com/ElderJames)
+- 🛠 更新 Node.js 版本以迎合依赖要求。[#4499](https://github.com/ant-design-blazor/ant-design-blazor/pull/4499) [@XmmShp](https://github.com/XmmShp)
+- 🐞 修复 npm 启动脚本以适应 .Net9.0。[#4495](https://github.com/ant-design-blazor/ant-design-blazor/pull/4495) [@XmmShp](https://github.com/XmmShp)
+
+
 ### 1.2.1
 
 `2025-02-25`
