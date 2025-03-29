@@ -63,7 +63,7 @@ Blazor 内部会对 Parameters 进行浅比较实现性能优化。当状态变�
 <Select TItem="string"
         TItemValue="string"
         DataSource="@_personNames"
-        OnSelectedItemChanged="@((personName) => {...S}))">
+        OnSelectedItemChanged="@((personName) => {...}))">
 </Select>
 ```
 
