@@ -15,6 +15,28 @@ timeline: true
 
 ---
 
+### 1.3.0
+
+`2025-03-29`
+
+- Table
+  - 🐞 Fixed avoid duplicated expand button while both RowExpandable and OnExpand was set. [#4508](https://github.com/ant-design-blazor/ant-design-blazor/pull/4508) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add string table filter option Not Contains. [#4494](https://github.com/ant-design-blazor/ant-design-blazor/pull/4494) [@rtrocmn](https://github.com/rtrocmn)
+  - 🐞 Fixed prevert trigger SelectedRowsChanged when the SelectedRows was changed outside. [#4486](https://github.com/ant-design-blazor/ant-design-blazor/pull/4486) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 Add DatePicker Enable display of week column in DatePicker. [#4507](https://github.com/ant-design-blazor/ant-design-blazor/pull/4507) [@duseo](https://github.com/duseo)
+- 🆕 Add Message Implement LoadingWhen API for IMessageService. [#4493](https://github.com/ant-design-blazor/ant-design-blazor/pull/4493) [@XmmShp](https://github.com/XmmShp)
+- 🆕 Add Menu the Target parameter. [#4502](https://github.com/ant-design-blazor/ant-design-blazor/pull/4502) [@pathartl](https://github.com/pathartl)
+- 🆕 Add ReuseTabs the title would be collected after the menu load. [#4487](https://github.com/ant-design-blazor/ant-design-blazor/pull/4487) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Form invoke StateHasChanged to update form state after validation. [#4514](https://github.com/ant-design-blazor/ant-design-blazor/pull/4514) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Drawer leaves a shadow after being closed. [#4512](https://github.com/ant-design-blazor/ant-design-blazor/pull/4512) [@thirking](https://github.com/thirking)
+- 💄 Add Spin wrapper classes for form, list, and table. [#4500](https://github.com/ant-design-blazor/ant-design-blazor/pull/4500) [@pathartl](https://github.com/pathartl)
+- 🐞 Fixed the System.ArgumentException caused by implicit conversion. [#4498](https://github.com/ant-design-blazor/ant-design-blazor/pull/4498) [@XmmShp](https://github.com/XmmShp)
+- 🌐 LocaleProvider support json source generator for locale file Deserializaztion. [#4489](https://github.com/ant-design-blazor/ant-design-blazor/pull/4489) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Upgrade Node.js version to meet dependency requirements. [#4499](https://github.com/ant-design-blazor/ant-design-blazor/pull/4499) [@XmmShp](https://github.com/XmmShp)
+- 🐞 Fixed the startup script of node.js to adapt to the .net9.0. [#4495](https://github.com/ant-design-blazor/ant-design-blazor/pull/4495) [@XmmShp](https://github.com/XmmShp)
+
+
 ### 1.2.1
 
 `2025-02-25`
