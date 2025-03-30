@@ -300,7 +300,7 @@
                     @body(SortFilterChildren(currentDataItem.Children), currentRowData);
                     @groupFooter(currentRowData);
                 }
-                @if (!currentDataItem.HasChildren && ExpandTemplate != null && RowExpandable(currentRowData) && currentRowData.Expanded)
+                @if (!currentDataItem.HasChildren && ExpandTemplate != null && InternalRowExpandable(currentRowData) && currentRowData.Expanded)
                 {
                     <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @ExpandedRowClassName(currentRowData)"
                         style="@(currentRowData.Expanded?"":"display: none;")">
