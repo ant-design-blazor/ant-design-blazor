@@ -163,7 +163,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="true for any rows" />
         [Parameter]
-        public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
+        public Func<RowData<TItem>, bool> RowExpandable { get; set; }
 
         /// <summary>
         /// Children tree items
@@ -453,7 +453,6 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
-        bool ITable.HasOnExpandDelegate => OnExpand.HasDelegate;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
 
@@ -1059,9 +1058,21 @@ namespace AntDesign
             }
         }
 
-        bool ITable.RowExpandable(RowData rowData)
+        bool ITable.RowExpandable(RowData rowData) => InternalRowExpandable(rowData as RowData<TItem>);
+
+        private bool InternalRowExpandable(RowData<TItem> rowData)
         {
-            return RowExpandable(rowData as RowData<TItem>);
+            if (RowExpandable != null)
+            {
+                return RowExpandable.Invoke(rowData);
+            }
+
+            if (_treeMode && TreeChildren != null)
+            {
+                return TreeChildren(rowData.Data)?.Any() == true || OnExpand.HasDelegate;
+            }
+
+            return OnExpand.HasDelegate;
         }
 
         private IEnumerable<TItem> SortFilterChildren(IEnumerable<TItem> children)
