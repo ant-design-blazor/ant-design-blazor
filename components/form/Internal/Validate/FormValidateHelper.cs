@@ -482,17 +482,8 @@ namespace AntDesign.Internal.Form.Validate
 
         private static bool IsValid(ValidationAttribute validationAttribute, FormValidationContext validationContext, out ValidationResult result)
         {
-            result = null;
-
-            if (validationAttribute is CompareAttribute compareAttribute)
-            {
-                result = validationAttribute.GetValidationResult(validationContext.Value, new ValidationContext(validationContext.Model));
-                if (result == null)
-                {
-                    return true;
-                }
-            }
-            else if (validationAttribute?.IsValid(validationContext.Value) != false)
+            result = validationAttribute?.GetValidationResult(validationContext.Value, new ValidationContext(validationContext.Model));
+            if (result == null)
             {
                 return true;
             }
