@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -150,7 +149,7 @@ namespace AntDesign
 
         #endregion Parameters
 
-        private readonly Hashtable _sizeMap = new Hashtable()
+        private static readonly Dictionary<ProgressSize, int> _sizeMap = new()
         {
             [ProgressSize.Small] = 6,
             [ProgressSize.Default] = 8,
@@ -168,14 +167,12 @@ namespace AntDesign
 
             if (StrokeWidth <= 0)
             {
-                if (Type == ProgressType.Line)
+                var size = Type switch
                 {
-                    StrokeWidth = (int)_sizeMap[Size];
-                }
-                else // Type is Circle or Dashboard
-                {
-                    StrokeWidth = (int)_sizeMap[ProgressSize.Small];
-                }
+                    ProgressType.Line => Size,
+                    _ => ProgressSize.Small // Type is Circle or Dashboard
+                };
+                StrokeWidth = _sizeMap[size];
             }
 
             if (Status is null && Percent is double percent && percent == 100)
@@ -246,7 +243,7 @@ namespace AntDesign
 
         private string GetCircleColor()
         {
-            var baseColor = "";
+            var baseColor = string.Empty;
             if (StrokeColor.Value == null)
             {
                 return baseColor;
