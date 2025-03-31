@@ -1,48 +1,58 @@
-﻿@using System.ComponentModel
+@using System.ComponentModel
+@using AntDesign.TableModels
 
-CheckStrictly: <Switch @bind-Checked="_checkStrictly" />
-<br/>
+CheckStrictly:
+<Switch @bind-Checked="_checkStrictly" />
+<br />
 <RadioGroup @bind-Value="selectionType">
-    <Radio Value="@("checkbox")">Checkbox</Radio>
-    <Radio Value="@("radio")">radio</Radio>
+    <Radio Value="SelectionType.Checkbox">Checkbox</Radio>
+    <Radio Value="SelectionType.Radio">Radio</Radio>
 </RadioGroup>
 
-<Table DataSource="_data" TreeChildren="item=>item.Children" @bind-SelectedRows="_selectedRows">
+<Table TItem="Data" DataSource="_data" TreeChildren="item=>item.Children" OnExpand="OnExpand" @bind-SelectedRows="_selectedRows" RowExpandable="@((record)=>record.Data.Name!="Not Expandable")">
     <Selection CheckStrictly="_checkStrictly" Type="@selectionType" />
-    <PropertyColumn Property="c=>c.Name" />
-    <PropertyColumn Property="c=>c.Age" Width="12%" Sortable />
-    <PropertyColumn Property="c=>c.Address" Width="30%" />
+    <PropertyColumn Property="c => c.Name" />
+    <PropertyColumn Property="c => c.Age" Width="12%" Sortable />
+    <PropertyColumn Property="c => c.Address" Width="30%" />
+    <ActionColumn>
+        <Button OnClick="@(() => AddChildren(context))">Add Children</Button>
+    </ActionColumn>
 </Table>
 
-@string.Join(",", _selectedRows.Select(x=>x.Name))
+@string.Join(",", _selectedRows.Select(x => x.Name))
 
 @code {
     bool _checkStrictly;
-    string selectionType = "checkbox";
+    SelectionType selectionType = SelectionType.Checkbox;
     Data[] _data;
 
     IEnumerable<Data> _selectedRows = [];
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-
         await Task.Delay(500);
-
         _data = data;
-        await InvokeAsync(StateHasChanged);
+    }
 
-        await Task.Delay(500);
-
-        _data[1].Children = new Data[]
+    private async Task OnExpand(RowData row)
+    {
+        var data=((RowData<Data>)row).Data;
+        if (data.Children==null)
         {
-            new() {
-                Key = "21",
-                Name = "Jim Green",
-                Age = 42,
-                Address = "London No. 1 Lake Park",
-            },
-        };
+            await AddChildren(data);
+        }
+    }
+
+    async Task AddChildren(Data row)
+    {
+        await Task.Delay(1000);
+        var index = row.Children?.Count() ?? 0;
+        row.Children = [new() {
+            Key = Guid.NewGuid().ToString(),
+            Name = "Jim Green No. "+index,
+            Age = 42 +index ,
+            Address = "London No. 1 Lake Park",
+        }, ..row.Children??[]];
     }
 
     Data[] data =
@@ -105,7 +115,7 @@ CheckStrictly: <Switch @bind-Checked="_checkStrictly" />
         },
         new() {
             Key = "2",
-            Name = "Joe Black",
+            Name = "Not Expandable",
             Age = 32,
             Address = "Sidney No. 1 Lake Park",
         },

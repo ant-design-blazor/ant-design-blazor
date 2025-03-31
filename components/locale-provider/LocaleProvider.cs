@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
@@ -120,7 +124,7 @@ namespace AntDesign
         private static bool TryGetSpecifiedLocale(string cultureName, out Locale locale)
         {
             if (!_availableResources.ContainsKey(cultureName)) return _localeCache.TryGetValue(cultureName, out locale);
-            locale = _localeCache.GetOrAdd(cultureName, key =>
+            locale = _localeCache.GetOrAdd(cultureName, static key =>
             {
                 string fileName = _availableResources[key];
                 using var fileStream = _resourcesAssembly.GetManifestResourceStream(fileName);
@@ -130,6 +134,9 @@ namespace AntDesign
 
                 var serializerOptions = new JsonSerializerOptions()
                 {
+#if NET7_0_OR_GREATER
+                    TypeInfoResolver = LocaleSourceGenerationContext.Default,
+#endif
                     PropertyNameCaseInsensitive = true,
                 };
                 serializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
@@ -156,9 +163,16 @@ namespace AntDesign
             }
             catch (Exception)
             {
-                if (name.Contains("-")) return name[0..name.LastIndexOf("-")];
+                if (name.Contains('-')) return name[0..name.LastIndexOf('-')];
                 else return "";
             }
         }
     }
+
+#if NET7_0_OR_GREATER
+    [JsonSerializable(typeof(Locale))]
+    internal partial class LocaleSourceGenerationContext : JsonSerializerContext
+    {
+    }
+#endif
 }

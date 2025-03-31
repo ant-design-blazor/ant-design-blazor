@@ -1,15 +1,19 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.core.Extensions;
 using AntDesign.Core;
+using AntDesign.Core.Documentation;
 using AntDesign.Datepicker.Locale;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using OneOf;
 
@@ -21,11 +25,11 @@ namespace AntDesign
         DateTime? IDatePicker.HoverDateTime { get; set; }
         private TValue _swpValue;
 
-        public const int START_PICKER_INDEX = 0;
-        public const int END_PICKER_INDEX = 0;
+        internal const int START_PICKER_INDEX = 0;
+        internal const int END_PICKER_INDEX = 0;
 
-        [Parameter]
-        public string PrefixCls { get; set; } = "ant-picker";
+        //[CascadingParameter(Name = "PrefixCls")]
+        internal string PrefixCls { get; set; } = "ant-picker";
 
         /// <summary>
         /// Saving the input value after blur
@@ -33,7 +37,7 @@ namespace AntDesign
         [Parameter]
         public bool ChangeOnClose { get; set; } = true;
 
-        protected string _picker;
+        protected DatePickerType _picker;
         protected bool _isSetPicker = false;
         private bool _isNullableEvaluated;
         private bool _isNullable;
@@ -54,8 +58,11 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Set picker type
+        /// </summary>
         [Parameter]
-        public string Picker
+        public DatePickerType Picker
         {
             get => _picker;
             set
@@ -66,11 +73,11 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Selector for placing the container of the popup in
+        /// </summary>
         [Parameter]
         public string PopupContainerSelector { get; set; }
-
-        [Parameter]
-        public OneOf<bool, bool[]> Disabled { get; set; } = new bool[] { false, false };
 
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
@@ -78,21 +85,45 @@ namespace AntDesign
         [Parameter]
         public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
 
+        /// <summary>
+        /// Show a border or not
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool Bordered { get; set; } = true;
 
+        /// <summary>
+        /// Autofocus on the input or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool AutoFocus { get; set; } = false;
 
+        /// <summary>
+        /// If the picker is open or not
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Open { get; set; }
 
+        /// <summary>
+        /// If the picker is read-only or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool InputReadOnly { get; set; } = false;
 
+        /// <summary>
+        /// Whether to show the Today button which selects Today from any date
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool ShowToday { get; set; } = true;
 
+        /// <summary>
+        /// Locale for localizing UI strings
+        /// </summary>
+        /// <default value="LocaleProvider.CurrentLocale.DatePicker" />
         [Parameter]
         public string Mask { get; set; }
 
@@ -107,6 +138,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// CultureInfo to use for localization
+        /// </summary>
+        /// <default value="CultureInfo for Locale"/>
         [Parameter]
         public override CultureInfo CultureInfo
         {
@@ -130,12 +165,25 @@ namespace AntDesign
             }
         }
 
-        public bool IsShowTime { get; protected set; }
-        public string ShowTimeFormat { get; protected set; }
+        /// <summary>
+        /// If time should be shown or not. Contains the boolean decision made from setting <see cref="ShowTime" />
+        /// </summary>
+        internal bool IsShowTime { get; set; }
+
+        /// <summary>
+        /// Time format when showing time. Contains the string format from setting <see cref="ShowTime" /> with a string
+        /// </summary>
+        internal string ShowTimeFormat { get; set; }
+
         protected OneOf<bool, string> _showTime = null;
 
         private bool _timeFormatProvided;
 
+        /// <summary>
+        /// Show time or not. 
+        /// <para>When boolean, it sets ShowTime to the boolean.</para>
+        /// <para>When string, it sets ShowTime to true and uses the string value as the time format.</para>
+        /// </summary>
         [Parameter]
         public OneOf<bool, string> ShowTime
         {
@@ -156,12 +204,19 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Allow clearing the selected value or not
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool AllowClear { get; set; } = true;
 
         protected string[] _placeholders = new string[] { "", "" };
         protected OneOf<string, string[]> _placeholder;
 
+        /// <summary>
+        /// Placeholder for input
+        /// </summary>
         [Parameter]
         public OneOf<string, string[]> Placeholder
         {
@@ -180,20 +235,35 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Style applied to popup
+        /// </summary>
         [Parameter]
         public string PopupStyle { get; set; }
 
+        /// <summary>
+        /// Picker class name
+        /// </summary>
         [Parameter]
         public string ClassName { get; set; }
 
+        /// <summary>
+        /// Class name for popover dropdown
+        /// </summary>
         [Parameter]
         public string DropdownClassName { get; set; }
 
+        /// <summary>
+        /// Format for the DateTime display
+        /// </summary>
         [Parameter]
         public string Format { get; set; }
 
         private TValue _defaultValue;
 
+        /// <summary>
+        /// Default value
+        /// </summary>
         [Parameter]
         public TValue DefaultValue
         {
@@ -204,6 +274,9 @@ namespace AntDesign
         protected bool[] UseDefaultPickerValue { get; } = new bool[2];
         private TValue _defaultPickerValue;
 
+        /// <summary>
+        /// Default value of the picker
+        /// </summary>
         [Parameter]
         public TValue DefaultPickerValue
         {
@@ -211,69 +284,128 @@ namespace AntDesign
             set => _defaultPickerValue = SortValue(value);
         }
 
+        /// <summary>
+        /// Custom suffix icon
+        /// </summary>
         [Parameter]
         public RenderFragment SuffixIcon { get; set; }
 
+        /// <summary>
+        /// Range selection presets to allow the user to select a range with one button click
+        /// </summary>
         [Parameter]
         public Dictionary<string, DateTime?[]> Ranges { get; set; } = new Dictionary<string, DateTime?[]>();
 
+        /// <summary>
+        /// Extra content to display in picker footer
+        /// </summary>
         [Parameter]
         public RenderFragment RenderExtraFooter { get; set; }
 
-        [Obsolete]
+        /// <summary>
+        /// Callback executed when clear is clicked
+        /// </summary>
+        [Obsolete("Use OnClear instead")]
         [Parameter]
         public EventCallback OnClearClick { get; set; }
 
         /// <summary>
-        /// Called when  clear button clicked.
+        /// Called when clear button clicked.
         /// </summary>
         [Parameter]
         public EventCallback OnClear { get; set; }
 
+        /// <summary>
+        /// Callback executed when ok is clicked
+        /// </summary>
         [Parameter]
         public EventCallback OnOk { get; set; }
 
+        /// <summary>
+        /// Callback executed when popover calendar is opened or closed
+        /// </summary>
         [Parameter]
         public EventCallback<bool> OnOpenChange { get; set; }
 
+        /// <summary>
+        /// Callback executed when the type of panel displayed changes
+        /// </summary>
         [Parameter]
         public EventCallback<DateTimeChangedEventArgs<TValue>> OnPanelChange { get; set; }
 
+        /// <summary>
+        /// Function to determine if a provided date should be disabled
+        /// </summary>
         [Parameter]
         public virtual Func<DateTime, bool> DisabledDate { get; set; } = null;
 
+        /// <summary>
+        /// Function to determine if a hours in a date should be disabled
+        /// </summary>
         [Parameter]
         public Func<DateTime, int[]> DisabledHours { get; set; } = null;
 
+        /// <summary>
+        /// Function to determine if a minutes in a date should be disabled
+        /// </summary>
         [Parameter]
         public Func<DateTime, int[]> DisabledMinutes { get; set; } = null;
 
+        /// <summary>
+        /// Function to determine if a seconds in a date should be disabled
+        /// </summary>
         [Parameter]
         public Func<DateTime, int[]> DisabledSeconds { get; set; } = null;
 
+        /// <summary>
+        /// Function to determine what pieces of time should be disabled in a date
+        /// </summary>
         [Parameter]
         public Func<DateTime, DatePickerDisabledTime> DisabledTime { get; set; } = null;
 
+        /// <summary>
+        /// Custom rendering for date cells
+        /// </summary>
         [Parameter]
         public Func<DateTime, DateTime, RenderFragment> DateRender { get; set; }
 
+        /// <summary>
+        /// Custom rendering for month cells
+        /// </summary>
         // TODO: need locale
         [Parameter]
         public Func<DateTime, RenderFragment> MonthCellRender { get; set; }
-
-        [Parameter]
-        public bool Use12Hours { get; set; }
 
         /// <summary>
         /// The position where the selection box pops up
         /// </summary>
         [Parameter] public Placement Placement { get; set; } = Placement.BottomLeft;
 
-        public DateTime CurrentDate { get; set; } = DateTime.Today;
+        /// <summary>
+        /// When true, will use 12 hour time. When false will use 24 hour time
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        public bool Use12Hours { get; set; }
+        
+        /// <summary>
+        /// When true, will show week column in date panel
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        public bool ShowWeek { get; set; }
+        
+        /// <summary>
+        /// Date used for "Today"
+        /// </summary>
+        DateTime IDatePicker.CurrentDate { get; set; } = DateTime.Today;
 
         protected DateTime[] PickerValues { get; } = { DateTime.Today, DateTime.Today };
 
-        public bool IsRange { get; protected set; }
+        /// <summary>
+        /// If picker is a range picker or not
+        /// </summary>
+        internal bool IsRange { get; set; }
 
         protected DatePickerInput _inputStart;
         protected DatePickerInput _inputEnd;
@@ -282,10 +414,9 @@ namespace AntDesign
         protected string _activeBarStyle = "";
         protected string _rangeArrowStyle = "";
 
-        internal DatePickerStatus[] _pickerStatus
-            = new DatePickerStatus[] { new DatePickerStatus(), new DatePickerStatus() };
+        internal DatePickerStatus[] _pickerStatus = new DatePickerStatus[] { new DatePickerStatus(), new DatePickerStatus() };
 
-        protected Stack<string> _prePickerStack = new Stack<string>();
+        protected Stack<DatePickerType> _prePickerStack = new Stack<DatePickerType>();
         protected bool _isClose = true;
         protected bool _needRefresh;
         protected bool _duringManualInput;
@@ -370,7 +501,8 @@ namespace AntDesign
         {
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
-                .Get(() => $"{PrefixCls}-{Size}")
+                .If($"{PrefixCls}-large", () => Size == InputSize.Large)
+                .If($"{PrefixCls}-small", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-rtl", () => RTL)
                 .If($"{PrefixCls}-borderless", () => Bordered == false)
                 .If($"{PrefixCls}-disabled", () => IsDisabled() == true)
@@ -594,7 +726,7 @@ namespace AntDesign
             SetDisabledTime();
         }
 
-        public async Task OnOkClick()
+        internal async Task OnOkClick()
         {
             var index = GetOnFocusPickerIndex();
 
@@ -686,41 +818,25 @@ namespace AntDesign
             }
         }
 
-        protected void InitPicker(string picker)
+        protected void InitPicker(DatePickerType picker)
         {
-            if (string.IsNullOrEmpty(_pickerStatus[0].InitPicker))
+            if (_pickerStatus[0].InitPicker == null)
             {
                 _pickerStatus[0].InitPicker = picker;
             }
-            if (string.IsNullOrEmpty(_pickerStatus[1].InitPicker))
+            if (_pickerStatus[1].InitPicker == null)
             {
                 _pickerStatus[1].InitPicker = picker;
             }
             ResetPlaceholder();
         }
 
-        protected bool IsDisabled(int? index = null)
-        {
-            bool disabled = false;
+        protected abstract bool IsDisabled(int? index = null);
 
-            Disabled.Switch(single =>
-            {
-                disabled = single;
-            }, arr =>
-            {
-                if (index == null || index > 1 || index < 0)
-                {
-                    disabled = arr[0] && arr[1];
-                }
-                else
-                {
-                    disabled = arr[(int)index];
-                }
-            });
-
-            return disabled;
-        }
-
+        /// <summary>
+        /// Close the popover
+        /// </summary>
+        [PublicApi("1.0.0")]
         public void Close()
         {
             _duringManualInput = false;
@@ -728,7 +844,12 @@ namespace AntDesign
             AutoFocus = false;
         }
 
-        public async Task Focus(int index = 0)
+        /// <summary>
+        /// Add focus to picker
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        protected async Task Focus(int index = 0)
         {
             DatePickerInput input = null;
 
@@ -749,7 +870,12 @@ namespace AntDesign
             }
         }
 
-        public async Task Blur(int index = 0)
+        /// <summary>
+        /// Remove focus from picker
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        protected async Task Blur(int index = 0)
         {
             DatePickerInput input = null;
             _duringManualInput = false;
@@ -765,12 +891,16 @@ namespace AntDesign
             if (input != null)
             {
                 input.IsOnFocused = false;
-                await JsInvokeAsync(JSInteropConstants.Blur, input.Ref);
+                await BlurAsync(input.Ref);
                 _needRefresh = true;
             }
         }
 
-        public int GetOnFocusPickerIndex()
+        /// <summary>
+        /// Get index of picker which is currently focused
+        /// </summary>
+        /// <returns>Index of picker. 0 can also mean neither is focused.</returns>
+        internal int GetOnFocusPickerIndex()
         {
             if (_inputStart != null && _inputStart.IsOnFocused)
             {
@@ -824,14 +954,14 @@ namespace AntDesign
             };
         }
 
-        public void ChangePlaceholder(string placeholder, int index = 0)
+        protected void ChangePlaceholder(string placeholder, int index = 0)
         {
             _placeholders[index] = placeholder;
 
             StateHasChanged();
         }
 
-        public void ResetPlaceholder(int rangePickerIndex = -1)
+        protected void ResetPlaceholder(int rangePickerIndex = -1)
         {
             _placeholder.Switch(single =>
             {
@@ -885,7 +1015,7 @@ namespace AntDesign
                     if (!string.IsNullOrEmpty(Format))
                         _internalFormat = Format;
                     else
-                        _internalFormat = _pickerStatus[0].InitPicker switch
+                        _internalFormat = _pickerStatus[0].InitPicker.Value switch
                         {
                             DatePickerType.Date => GetTimeFormat(),
                             DatePickerType.Month => Locale.Lang.YearMonthFormat,
@@ -917,11 +1047,11 @@ namespace AntDesign
         private FormatAnalyzer _formatAnalyzer;
         protected FormatAnalyzer FormatAnalyzer => _formatAnalyzer ??= new(InternalFormat, Picker, Locale, CultureInfo);
 
-        public string GetFormatValue(DateTime value, int index)
+        protected string GetFormatValue(DateTime value, int index)
         {
             string format;
             if (string.IsNullOrEmpty(Format))
-                format = _pickerStatus[index].InitPicker switch
+                format = _pickerStatus[index].InitPicker.Value switch
                 {
                     DatePickerType.Week => $"{Locale.Lang.YearFormat}-{CultureInfo.Calendar.GetWeekOfYear(value, CultureInfo.DateTimeFormat.CalendarWeekRule, Locale.FirstDayOfWeek)}'{Locale.Lang.Week}'",
                     DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
@@ -962,12 +1092,12 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        public void ChangePickerType(string type)
+        internal void ChangePickerType(DatePickerType type)
         {
             ChangePickerType(type, 0);
         }
 
-        public virtual void ChangePickerType(string type, int index)
+        internal virtual void ChangePickerType(DatePickerType type, int index)
         {
             _prePickerStack.Push(_picker);
             _picker = type;
@@ -978,16 +1108,26 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 修改值
+        /// Change the value of the given picker panel
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="index"></param>
-        /// <param name="closeDropdown"></param>
-        public abstract void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true);
+        /// <param name="value">Value to change to</param>
+        /// <param name="index">Index of the picker panel to change</param>
+        /// <param name="closeDropdown">Close the panel when set or not</param>
+        internal abstract void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true);
 
-        public abstract void ClearValue(int index = 0, bool closeDropdown = true);
+        /// <summary>
+        /// Clear the value for the given picker panel index
+        /// </summary>
+        /// <param name="index">Index of the picker panel to clear</param>
+        /// <param name="closeDropdown">Close the panel when cleared or not</param>
+        internal abstract void ClearValue(int index = 0, bool closeDropdown = true);
 
-        public abstract DateTime? GetIndexValue(int index);
+        /// <summary>
+        /// Get value of picker panel at index
+        /// </summary>
+        /// <param name="index">Index of picker panel to get value of</param>
+        /// <returns>DateTime value of panel</returns>
+        internal abstract DateTime? GetIndexValue(int index);
 
         protected TValue SortValue(TValue value)
         {
@@ -1163,7 +1303,7 @@ namespace AntDesign
             OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
                 Date = InternalConvert.FromDateTimeOffset<TValue>(newValue),
-                DateString = _picker
+                DateString = _picker.ToString().ToLowerInvariant()
             });
         }
 
@@ -1208,6 +1348,41 @@ namespace AntDesign
             }
 
             return dateTime.Date;
+        }
+
+        int IDatePicker.GetOnFocusPickerIndex()
+        {
+            return GetOnFocusPickerIndex();
+        }
+
+        void IDatePicker.ChangePlaceholder(string placeholder, int index)
+        {
+            ChangePlaceholder(placeholder, index);
+        }
+
+        void IDatePicker.ResetPlaceholder(int index)
+        {
+            ResetPlaceholder(index);
+        }
+
+        string IDatePicker.GetFormatValue(DateTime value, int index)
+        {
+            return GetFormatValue(value, index);
+        }
+
+        void IDatePicker.ChangePickerType(DatePickerType type)
+        {
+            ChangePickerType(type);
+        }
+
+        void IDatePicker.ChangePickerType(DatePickerType type, int index)
+        {
+            ChangePickerType(type, index);
+        }
+
+        void IDatePicker.Close()
+        {
+            Close();
         }
     }
 }

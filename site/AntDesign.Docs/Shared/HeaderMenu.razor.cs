@@ -1,4 +1,8 @@
-﻿using System.Globalization;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Globalization;
 using System.Threading.Tasks;
 using AntDesign.Docs.Services;
 using AntDesign.Extensions.Localization;
@@ -49,7 +53,7 @@ namespace AntDesign.Docs.Shared
             if (firstRender)
             {
                 _firstRender = true;
-                await JsInterop.InvokeVoidAsync("window.DocSearch.init", CurrentLanguage);
+                await JsInterop.InvokeVoidAsync("window.DocSearchInit", CurrentLanguage);
             }
         }
 
@@ -60,7 +64,7 @@ namespace AntDesign.Docs.Shared
                 return;
             }
             _menuItems = await DemoService.GetMenuAsync();
-            await JsInterop.InvokeVoidAsync("window.DocSearch.init", culture.Name);
+            await JsInterop.InvokeVoidAsync("window.DocSearchInit", culture.Name);
             await InvokeAsync(StateHasChanged);
         }
 

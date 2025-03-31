@@ -1,39 +1,32 @@
 ﻿@using System.ComponentModel
+@using AntDesign.TableModels
 
-<Table DataSource="data">
-    <GroupTitleTemplate Context="rowData">
-        <div style="display: flex; align-items: center;">
-            <span style="min-width: 120px;">
-                @rowData.Key
-            </span>
-            <span style="margin-left: -30px;">
-                @if (rowData.Key == "A")
-                {
-                    <Tag Color="red-inverse">Excellent</Tag>
-                }
-                else if (rowData.Key == "B")
-                {
-                    <Tag Color="purple-inverse">Good</Tag>
-                }
-                else
-                {
-                    <Tag Color="rgb(143, 201, 146)">Average</Tag>
-                }
-            </span>
-        </div>
+<Table TItem="Data" DataSource="data" Bordered OnRowClick="OnRowClick">
+    <GroupTitleTemplate Context="group">
+        <span style="min-width: 120px;">
+            @(group.Level == 1 ? "Name" : "Grade") : @group.Key
+        </span>
     </GroupTitleTemplate>
+    <GroupFooterTemplate Context="group">
+        @if (group.Level == 1)
+        {
+            <span style="padding: 8px; float: right; ">
+                Total: @group.Items.Sum(x => x.Score)
+            </span>
+        }
+    </GroupFooterTemplate>
     <ColumnDefinitions>
         <Selection />
-        <PropertyColumn Property="c=>c.Name" />
-        <PropertyColumn Property="c=>c.Age" Width="12%" Sortable />
-        <PropertyColumn Property="c=>c.Subject" Width="30%" />
-        <PropertyColumn Property="c=>c.Grade" Width="30%" Grouping GroupBy="GradeGroupBy" />
+        <PropertyColumn Property="c=>c.Name" Grouping />
+        <PropertyColumn Property="c=>c.Age" Width="12%"   />
+        <PropertyColumn Property="c=>c.Subject" Width="30%"  />
+        <PropertyColumn Property="c=>c.Score" Width="30%" Grouping GroupBy="GradeGroupBy" Sortable />
     </ColumnDefinitions>
  </Table>
 
  @code {
-    string GradeGroupBy(int grade)
-       => grade switch
+    string GradeGroupBy(int score)
+       => score switch
        {
             >= 95 => "A",
             >= 90 => "B",
@@ -45,40 +38,45 @@
         new() {
             Name = "John Brown",
             Age = 10,
-            Grade = 90,
-            Subject= "Math"
-        },
-        new() {
-            Name = "John Brown",
-            Age = 10,
-            Grade = 95,
+            Score = 95,
             Subject= "Language"
         },
         new() {
             Name = "John Brown",
             Age = 10,
-            Grade = 85,
+            Score = 90,
+            Subject= "Math"
+        },
+        new() {
+            Name = "John Brown",
+            Age = 10,
+            Score = 85,
             Subject="Science"
         },
         new() {
             Name = "Harry Potter",
-            Age = 10,
-            Grade = 89,
-            Subject= "Math"
+            Age = 9,
+            Score = 95,
+            Subject="Science"
         },
         new() {
             Name = "Harry Potter",
-            Age = 10,
-            Grade = 90,
+            Age = 9,
+            Score = 90,
             Subject= "Language"
         },
         new() {
             Name = "Harry Potter",
-            Age = 10,
-            Grade = 95,
-            Subject="Science"
+            Age = 9,
+            Score = 89,
+            Subject= "Math"
         },
     };
+
+    private void OnRowClick(RowData rowData)
+    {
+        rowData.Expanded = !rowData.Expanded;
+    }
 
     public class Data
     {
@@ -86,7 +84,7 @@
 
         public int Age { get; set; }
 
-        public int Grade { get; set; }
+        public int Score { get; set; }
 
         public string Subject { get; set; }
     }

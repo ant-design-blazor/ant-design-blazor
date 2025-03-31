@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -15,6 +14,10 @@ namespace AntDesign
 
         private int _level = DefaultLevel;
 
+        /// <summary>
+        /// Level of heading (ex: h1 would be 1). Must be between 1 and 5, inclusive. If outside that range it will default back to 1.
+        /// </summary>
+        /// <default value="1"/>
         [Parameter]
         public int Level
         {
@@ -24,7 +27,7 @@ namespace AntDesign
             }
             set
             {
-                _level = value < 1 || value > 4
+                _level = value < 1 || value > 5
                     ? DefaultLevel
                     : value;
             }

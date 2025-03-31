@@ -1,10 +1,12 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.Json;
-using AntDesign;
-using AntDesign.Internal;
 using AntDesign.Internal.Form.Validate;
 using Xunit;
 
@@ -270,9 +272,6 @@ namespace AntDesign.Tests.Form.Validation
             new object[] { FormFieldType.Float, 100, false },
             new object[] { FormFieldType.Float, "100", false },
 
-            new object[] { FormFieldType.Enum, FormValidateHelperEnum.None, true },
-            new object[] { FormFieldType.Enum, 100, false },
-
             new object[] { FormFieldType.Regexp, "\\d", true },
             new object[] { FormFieldType.Regexp, "^????---))%%%$$3#@^^", false },
 
@@ -406,11 +405,10 @@ namespace AntDesign.Tests.Form.Validation
             new object[] {
                 new FormValidationRule { Type= FormFieldType.Integer, OneOf = new object[] { 1, 2 } },
                 0,
-                string.Format($"{_defValidateMsgs.Enum}{_customSuffix}", _displayName, JsonSerializer.Serialize(new object[] { 1, 2 }))
+                string.Format($"{_defValidateMsgs.Enum}{_customSuffix}", _displayName, JsonSerializer.Serialize(new object[] { 1, 2 }).Trim('[', ']'))
             },
             new object[] { new FormValidationRule { Type = FormFieldType.String }, 123, string.Format($"{_defValidateMsgs.Types.String }{_customSuffix}", _displayName, FormFieldType.String) },
             new object[] { new FormValidationRule { Type = FormFieldType.Array }, 123, string.Format($"{_defValidateMsgs.Types.Array  }{_customSuffix}", _displayName, FormFieldType.Array) },
-            new object[] { new FormValidationRule { Type = FormFieldType.Enum }, 123, string.Format($"{_defValidateMsgs.Types.Enum   }{_customSuffix}", _displayName, FormFieldType.Enum) },
             new object[] { new FormValidationRule { Type = FormFieldType.Number }, "str", string.Format($"{_defValidateMsgs.Types.Number }{_customSuffix}", _displayName, FormFieldType.Number) },
             new object[] { new FormValidationRule { Type = FormFieldType.Date }, 123, string.Format($"{_defValidateMsgs.Types.Date   }{_customSuffix}", _displayName, FormFieldType.Date) },
             new object[] { new FormValidationRule { Type = FormFieldType.Boolean }, "str", string.Format($"{_defValidateMsgs.Types.Boolean}{_customSuffix}", _displayName, FormFieldType.Boolean) },
@@ -433,7 +431,6 @@ namespace AntDesign.Tests.Form.Validation
             customValidateMessage.Types.String = $"{customValidateMessage.Types.String}{suffix}";
             customValidateMessage.Types.Array = $"{customValidateMessage.Types.Array}{suffix}";
             customValidateMessage.Types.Object = $"{customValidateMessage.Types.Object}{suffix}";
-            customValidateMessage.Types.Enum = $"{customValidateMessage.Types.Enum}{suffix}";
             customValidateMessage.Types.Number = $"{customValidateMessage.Types.Number}{suffix}";
             customValidateMessage.Types.Date = $"{customValidateMessage.Types.Date}{suffix}";
             customValidateMessage.Types.Boolean = $"{customValidateMessage.Types.Boolean}{suffix}";
@@ -472,6 +469,13 @@ namespace AntDesign.Tests.Form.Validation
                 Value = value,
                 FieldName = _fieldName,
                 DisplayName = _displayName,
+                FieldType = rule.Type switch
+                {
+                    FormFieldType.String => typeof(string),
+                    FormFieldType.Number => typeof(int),
+                    FormFieldType.Array => typeof(string[]),
+                    _ => typeof(object)
+                }
             };
 
             return FormValidateHelper.GetValidationResult(validationContext);
@@ -480,7 +484,7 @@ namespace AntDesign.Tests.Form.Validation
     }
 }
 
-class CustomValidationAttribute : ValidationAttribute
+internal sealed class CustomValidationAttribute : ValidationAttribute
 {
     public int Max { get; set; }
     public CustomValidationAttribute(int max) : base("The field {0} should not max than {1}.")
@@ -509,7 +513,7 @@ class CustomValidationAttribute : ValidationAttribute
     }
 }
 
-class FieldsTestObj
+internal sealed class FieldsTestObj
 {
     public string _fieldName = "one";
     public int _fieldAge = 10;
@@ -517,7 +521,7 @@ class FieldsTestObj
     public int PropertyAge { get; set; } = 10;
 }
 
-enum FormValidateHelperEnum
+internal enum FormValidateHelperEnum
 {
     None,
 }

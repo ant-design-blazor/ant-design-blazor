@@ -13,26 +13,37 @@
     "next_3": "۳ صفحه بعدی"
   },
   "DatePicker": {
+    "firstDayOfWeek": "یکشنبه",
     "lang": {
       "placeholder": "انتخاب تاریخ",
+      "yearPlaceholder": "انتخاب سال",
+      "quarterPlaceholder": "انتخاب فصل",
+      "monthPlaceholder": "انتخاب ماه",
+      "weekPlaceholder": "انتخاب هفته",
       "rangePlaceholder": [ "تاریخ شروع", "تاریخ پایان" ],
+      "rangeYearPlaceholder": [ "شروع سال", "پایان سال" ],
+      "rangeMonthPlaceholder": [ "شروع ماه", "پایان ماه" ],
+      "rangeWeekPlaceholder": [ "شروع هفته", "پایان هفته" ],
       "locale": "fa_IR",
       "today": "امروز",
       "now": "اکنون",
       "backToToday": "بازگشت به روز",
       "ok": "باشه",
-      "clear": "پاک کردن",
+      "clear": "خالی کردن",
       "month": "ماه",
       "year": "سال",
       "timeSelect": "انتخاب زمان",
       "dateSelect": "انتخاب تاریخ",
       "monthSelect": "یک ماه را انتخاب کنید",
+      "weekSelect": "انتخاب هفته",
       "yearSelect": "یک سال را انتخاب کنید",
       "decadeSelect": "یک دهه را انتخاب کنید",
       "yearFormat": "yyyy",
       "dateFormat": "M/d/yyyy",
       "dayFormat": "d",
       "dateTimeFormat": "M/d/yyyy HH:mm:ss",
+      "dateTimeFormat12Hour": "M/d/yyyy hh:mm:ss tt",
+      "timeFormat12Hour": "hh:mm:ss tt",
       "monthBeforeYear": true,
       "previousMonth": "ماه قبل (PageUp)",
       "nextMonth": "ماه بعد (PageDown)",
@@ -41,25 +52,53 @@
       "previousDecade": "دهه قبل",
       "nextDecade": "دهه بعد",
       "previousCentury": "قرن قبل",
-      "nextCentury": "قرن بعد"
+      "nextCentury": "قرن بعد",
+      "startDate": "تاریخ شروع",
+      "startWeek": "هفته شروع",
+      "startMonth": "ماه شروع",
+      "startYear": "سال شروع",
+      "startQuarter": "فصل شروع",
+      "endDate": "تاریخ پایان",
+      "endWeek": "هفته پایانی",
+      "endMonth": "ماه پایانی",
+      "endYear": "سال پایانی",
+      "endQuarter": "فصل پایانی",
+      "quarterSelect": "انتخاب فصل",
+      "week": "هفته",
+      "monthFormat": "MMM",
+      "shortWeekDays": [ "یکش", "دوش", "سه", "چهار", "پنج", "جمع", "شن" ]
     },
-    "timePickerLocale": { "placeholder": "انتخاب زمان" }
+    "timePickerLocale": {
+      "placeholder": "انتخاب زمان",
+      "rangePlaceholder": [ "تاریخ شروع", "تاریخ پایان" ]
+    }
   },
-  "TimePicker": { "placeholder": "انتخاب زمان" },
+  "TimePicker": {
+    "placeholder": "انتخاب زمان",
+    "rangePlaceholder": [ "تاریخ شروع", "تاریخ پایان" ]
+  },
   "Calendar": {
     "lang": {
       "placeholder": "انتخاب تاریخ",
+      "yearPlaceholder": "انتخاب سال",
+      "quarterPlaceholder": "انتخاب فصل",
+      "monthPlaceholder": "انتخاب ماه",
+      "weekPlaceholder": "انتخاب هفته",
       "rangePlaceholder": [ "تاریخ شروع", "تاریخ پایان" ],
+      "rangeYearPlaceholder": [ "سال شروع", "سال پایان" ],
+      "rangeMonthPlaceholder": [ "ماه شروع", "ماه پایان" ],
+      "rangeWeekPlaceholder": [ "هفته شروع", "هفته پایان" ],
       "locale": "fa_IR",
       "today": "امروز",
       "now": "اکنون",
-      "backToToday": "بازگشت به روز",
+      "backToToday": "بازگشت به امروز",
       "ok": "باشه",
-      "clear": "پاک کردن",
+      "clear": "خالی کردن",
       "month": "ماه",
       "year": "سال",
       "timeSelect": "انتخاب زمان",
       "dateSelect": "انتخاب تاریخ",
+      "weekSelect": "یک هفته را انتخاب کنید",
       "monthSelect": "یک ماه را انتخاب کنید",
       "yearSelect": "یک سال را انتخاب کنید",
       "decadeSelect": "یک دهه را انتخاب کنید",
@@ -67,6 +106,8 @@
       "dateFormat": "M/d/yyyy",
       "dayFormat": "d",
       "dateTimeFormat": "M/d/yyyy HH:mm:ss",
+      "dateTimeFormat12Hour": "M/d/yyyy hh:mm:ss tt",
+      "timeFormat12Hour": "hh:mm:ss tt",
       "monthBeforeYear": true,
       "previousMonth": "ماه قبل (PageUp)",
       "nextMonth": "ماه بعد (PageDown)",
@@ -77,21 +118,45 @@
       "previousCentury": "قرن قبل",
       "nextCentury": "قرن بعد"
     },
-    "timePickerLocale": { "placeholder": "انتخاب زمان" }
+    "timePickerLocale": {
+      "placeholder": "انتخاب زمان",
+      "rangePlaceholder": [ "تاریخ شروع", "تاریخ پایان" ]
+    }
   },
+  "global": { "placeholder": "لطفا انتخاب نمایید" },
   "Table": {
     "filterTitle": "منوی فیلتر",
     "filterConfirm": "تایید",
     "filterReset": "پاک کردن",
-    "selectAll": "انتخاب صفحه‌ی کنونی",
-    "selectInvert": "معکوس کردن انتخاب‌ها در صفحه ی کنونی",
+    "selectAll": "انتخاب صفحه‌ کنونی",
+    "selectInvert": "معکوس کردن انتخاب‌ها در صفحه کنونی",
     "selectionAll": "انتخاب همه داده‌ها",
     "sortTitle": "مرتب سازی",
     "expand": "باز شدن ردیف",
     "collapse": "بستن ردیف",
     "triggerDesc": "ترتیب نزولی",
     "triggerAsc": "ترتیب صعودی",
-    "cancelSort": "لغوِ ترتیبِ داده شده"
+    "cancelSort": "لغوِ ترتیب داده شده",
+    "filterOptions": {
+      "true": "درست",
+      "false": "غلط",
+      "and": "و",
+      "or": "یا",
+      "equals": "برابر",
+      "notEquals": "برابر نباشد",
+      "contains": "شامل می باشد",
+      "notContains": "شامل نمی‌باشد",
+      "startsWith": "شروع با",
+      "endsWith": "پایان با",
+      "greaterThan": "بزرگتر از",
+      "lessThan": "کوچکتر از",
+      "greaterThanOrEquals": "بزرگتر مساوی",
+      "lessThanOrEquals": "کوچکتر مساوی",
+      "isNull": "نال باشد",
+      "isNotNull": "نال نباشد",
+      "theSameDateWith": "تاریخ برابر باشد با",
+      "between": "بین"
+    }
   },
   "Modal": {
     "okText": "تایید",
@@ -119,7 +184,7 @@
   "Upload": {
     "uploading": "در حال آپلود...",
     "removeFile": "حذف فایل",
-    "uploadError": "خطا در آپلود",
+    "uploadError": "آپلود با خطا مواجه شد",
     "previewFile": "مشاهده‌ی فایل",
     "downloadFile": "دریافت فایل"
   },
@@ -127,7 +192,7 @@
   "Icon": { "icon": "آیکن" },
   "Text": {
     "edit": "ویرایش",
-    "copy": "کپس",
+    "copy": "کپی",
     "copied": "کپی شد",
     "expand": "توسعه"
   },
@@ -136,13 +201,13 @@
     "optional": "(اختیاری)",
     "defaultValidateMessages": {
       "default": "خطا در ${label}",
-      "required": "فیلد ${label} اجباریست",
+      "required": "فیلد ${label} اجباری می‌باشد",
       "enum": "${label} باید یکی از [${enum}] باشد",
       "whitespace": "${label} نمیتواند خالی باشد",
       "date": {
         "format": "ساختار تاریخ در ${label} نامعتبر است",
         "parse": "${label} قابل تبدیل به تاریخ نیست",
-        "invalid": "${label} تاریخی نا معتبر است"
+        "invalid": "${label} تاریخ نامعتبر می‌باشد"
       },
       "types": {
         "string": "${label} از نوع ${type} معتبر نیست",
@@ -177,7 +242,16 @@
         "max": "تعداد ${lable} حداکثر باید ${max} باشد",
         "range": "مقدار ${label} باید بین ${min}-${max} باشد"
       },
-      "pattern": { "mismatch": "الگوی ${label} با ${pattern} برابری نمی‌کند" }
+      "pattern": { "mismatch": "الگوی ${label} با ${pattern} همخوانی ندارد" }
     }
+  },
+  "Image": {
+    "preview": "نمایش"
+  },
+  "ReuseTabs": {
+    "Close": "بستن",
+    "CloseAllTabs": "بستن همه زبانه ها",
+    "CloseAllButThis": "بستن همه زبانه ها بجز زبانه فعلی",
+    "PinTab": "پین کردن"
   }
 }

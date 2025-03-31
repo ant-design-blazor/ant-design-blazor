@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -16,7 +17,7 @@ namespace AntDesign
         }
 
         [CascadingParameter]
-        public IAutoCompleteRef Component { get; set; }
+        internal IAutoCompleteRef Component { get; set; }
 
         [CascadingParameter(Name = "OverlayTriggerContext")]
         public ForwardRef OverlayTriggerContext
@@ -28,6 +29,8 @@ namespace AntDesign
                 RefBack = value;
             }
         }
+
+        IAutoCompleteRef IAutoCompleteInput.Component { get => Component; set => Component = value; }
 
         protected override void OnInitialized()
         {
@@ -64,13 +67,9 @@ namespace AntDesign
             Component?.InputValueChange(value);
         }
 
-        #region IAutoCompleteInput
-
-        public void SetValue(object value)
+        void IAutoCompleteInput.SetValue(object value)
         {
             this.CurrentValue = value?.ToString();
         }
-
-        #endregion IAutoCompleteInput
     }
 }

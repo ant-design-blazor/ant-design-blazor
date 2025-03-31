@@ -3,7 +3,7 @@
 
 <CascadingValue Value="this" IsFixed="@true">
     <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-        @if (TitleTemplate != null || Title != null || Extra != null || CardTabs != null)
+        @if (TitleTemplate != null || Title != null || Extra != null || _cardTabs != null)
         {
             <div class="ant-card-head">
 
@@ -29,9 +29,9 @@
                     }
                 </div>
 
-                @if (CardTabs != null)
+                @if (_cardTabs != null)
                 {
-                    @CardTabs
+                    @_cardTabs
                 }
             </div>
         }
@@ -43,11 +43,12 @@
             </div>
         }
 
-        @if (Body != null || ChildContent != null)
+        @if (Body != null || ChildContent != null || _cardTabPanels != null)
         {
             <div class="ant-card-body" style="@BodyStyle">
                 @if (!Loading)
                 {
+                    @_cardTabPanels
                     @Body
                     @ChildContent
                 }

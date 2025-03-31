@@ -13,88 +13,150 @@
     "next_3": "Sonraki 3 Sayfa"
   },
   "DatePicker": {
+    "firstDayOfWeek": "Monday",
     "lang": {
-      "placeholder": "Tarih Seç",
-      "rangePlaceholder": [ "Başlangıç Tarihi", "Bitiş Tarihi" ],
+      "placeholder": "Tarih seç",
+      "yearPlaceholder": "Yıl seç",
+      "quarterPlaceholder": "Çeyrek seç",
+      "monthPlaceholder": "Ay seç",
+      "weekPlaceholder": "Hafta seç",
+      "rangePlaceholder": [ "Başlangıç tarihi", "Bitiş tarihi" ],
+      "rangeYearPlaceholder": [ "Başlangıç yılı", "Bitiş yılı" ],
+      "rangeMonthPlaceholder": [ "Başlangıç ayı", "Bitiş ayı" ],
+      "rangeWeekPlaceholder": [ "Başlangıç haftası", "Bitiş haftası" ],
       "locale": "tr_TR",
       "today": "Bugün",
       "now": "Şimdi",
-      "backToToday": "Bugüne Geri Dön",
-      "ok": "tamam",
+      "backToToday": "Bugüne geri dön",
+      "ok": "Tamam",
       "clear": "Temizle",
       "month": "Ay",
       "year": "Yıl",
-      "timeSelect": "Zaman Seç",
-      "dateSelect": "Tarih Seç",
-      "monthSelect": "Ay Seç",
-      "yearSelect": "Yıl Seç",
-      "decadeSelect": "On Yıl Seç",
+      "timeSelect": "Zaman seç",
+      "dateSelect": "Tarih seç",
+      "weekSelect": "Hafta seç",
+      "monthSelect": "Ay seç",
+      "yearSelect": "Yıl seç",
+      "decadeSelect": "On yıl seç",
       "yearFormat": "yyyy",
-      "dateFormat": "M/d/yyyy",
+      "dateFormat": "dd/MM/yyyy",
       "dayFormat": "d",
-      "dateTimeFormat": "M/d/yyyy HH:mm:ss",
+      "dateTimeFormat": "dd/MM/yyyy HH:mm:ss",
+      "dateTimeFormat12Hour": "dd/MM/yyyy hh:mm:ss tt",
+      "timeFormat12Hour": "hh:mm:ss tt",
       "monthBeforeYear": true,
-      "previousMonth": "Önceki Ay (PageUp)",
-      "nextMonth": "Sonraki Ay (PageDown)",
-      "previousYear": "Önceki Yıl (Control + Sol)",
-      "nextYear": "Sonraki Yıl (Control + Sağ)",
-      "previousDecade": "Önceki On Yıl",
-      "nextDecade": "Sonraki On Yıl",
-      "previousCentury": "Önceki Yüzyıl",
-      "nextCentury": "Sonraki Yüzyıl"
+      "previousMonth": "Önceki ay (PageUp)",
+      "nextMonth": "Sonraki ay (PageDown)",
+      "previousYear": "Önceki yıl (Control + sol)",
+      "nextYear": "Sonraki yıl (Control + sağ)",
+      "previousDecade": "Önceki on yıl",
+      "nextDecade": "Sonraki on yıl",
+      "previousCentury": "Önceki yüzyıl",
+      "nextCentury": "Sonraki yüzyıl",
+      "startDate": "Başlangıç tarihi",
+      "startWeek": "Başlangıç haftası",
+      "startMonth": "Başlangıç ayı",
+      "startYear": "Başlangıç yılı",
+      "startQuarter": "Başlangıç çeyreği",
+      "endDate": "Bitiş tarihi",
+      "endWeek": "Bitiş haftası",
+      "endMonth": "Bitiş ayı",
+      "endYear": "Bitiş yılı",
+      "endQuarter": "Bitiş çeyreği",
+      "quarterSelect": "Çeyrek seç",
+      "week": "Hafta",
+      "monthFormat": "MMM",
+      "shortWeekDays": [ "Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt" ]
     },
     "timePickerLocale": {
-      "placeholder": "Zaman Seç"
+      "placeholder": "Zaman seç",
+      "rangePlaceholder": [ "Başlangıç zamanı", "Bitiş zamanı" ]
     }
   },
   "TimePicker": {
-    "placeholder": "Zaman Seç"
+    "placeholder": "Zaman Seç",
+    "rangePlaceholder": [ "Başlangıç zamanı", "Bitiş zamanı" ]
   },
   "Calendar": {
     "lang": {
-      "placeholder": "Tarih Seç",
-      "rangePlaceholder": [ "Başlangıç Tarihi", "Bitiş Tarihi" ],
+      "placeholder": "Tarih seç",
+      "yearPlaceholder": "Yıl seç",
+      "quarterPlaceholder": "Çeyrek seç",
+      "monthPlaceholder": "Ay seç",
+      "weekPlaceholder": "Hafta seç",
+      "rangePlaceholder": [ "Başlangıç tarihi", "Bitiş tarihi" ],
+      "rangeYearPlaceholder": [ "Başlangıç yılı", "Bitiş yılı" ],
+      "rangeMonthPlaceholder": [ "Başlangıç ayı", "Bitiş ayı" ],
+      "rangeWeekPlaceholder": [ "Başlangıç haftası", "Bitiş haftası" ],
       "locale": "tr_TR",
       "today": "Bugün",
       "now": "Şimdi",
-      "backToToday": "Bugüne Geri Dön",
-      "ok": "tamam",
+      "backToToday": "Bugüne geri dön",
+      "ok": "Tamam",
       "clear": "Temizle",
       "month": "Ay",
       "year": "Yıl",
-      "timeSelect": "Zaman Seç",
-      "dateSelect": "Tarih Seç",
-      "monthSelect": "Ay Seç",
-      "yearSelect": "Yıl Seç",
-      "decadeSelect": "On Yıl Seç",
+      "timeSelect": "Zaman seç",
+      "dateSelect": "Tarih seç",
+      "weekSelect": "Hafta seç",
+      "monthSelect": "Ay seç",
+      "yearSelect": "Yıl seç",
+      "decadeSelect": "On yıl seç",
       "yearFormat": "yyyy",
-      "dateFormat": "M/d/yyyy",
+      "dateFormat": "dd/MM/yyyy",
       "dayFormat": "d",
-      "dateTimeFormat": "M/d/yyyy HH:mm:ss",
+      "dateTimeFormat": "dd/MM/yyyy HH:mm:ss",
+      "dateTimeFormat12Hour": "dd/MM/yyyy hh:mm:ss tt",
+      "timeFormat12Hour": "hh:mm:ss tt",
       "monthBeforeYear": true,
-      "previousMonth": "Önceki Ay (PageUp)",
-      "nextMonth": "Sonraki Ay (PageDown)",
-      "previousYear": "Önceki Yıl (Control + Sol)",
-      "nextYear": "Sonraki Yıl (Control + Sağ)",
-      "previousDecade": "Önceki On Yıl",
-      "nextDecade": "Sonraki On Yıl",
-      "previousCentury": "Önceki Yüzyıl",
-      "nextCentury": "Sonraki Yüzyıl"
+      "previousMonth": "Önceki ay (PageUp)",
+      "nextMonth": "Sonraki ay (PageDown)",
+      "previousYear": "Önceki yıl (Control + sol)",
+      "nextYear": "Sonraki yıl (Control + sağ)",
+      "previousDecade": "Önceki on yıl",
+      "nextDecade": "Sonraki on yıl",
+      "previousCentury": "Önceki yüzyıl",
+      "nextCentury": "Sonraki yüzyıl"
     },
     "timePickerLocale": {
-      "placeholder": "Zaman Seç"
+      "placeholder": "Zaman seç",
+      "rangePlaceholder": [ "Başlangıç zamanı", "Bitiş zamanı" ]
     }
   },
-  "global": {
-    "placeholder": "Lütfen seçiniz"
-  },
+  "global": { "placeholder": "Lütfen seçiniz" },
   "Table": {
-    "filterTitle": "Menü Filtrele",
+    "filterTitle": "Filtre menüsü",
     "filterConfirm": "Tamam",
     "filterReset": "Sıfırla",
-    "selectAll": "Hepsini Seç",
-    "selectInvert": "Tersini Seç",
-    "sortTitle": "Sırala"
+    "selectAll": "Mevcut sayfayı seç",
+    "selectInvert": "Mevcut sayfadaki seçimi tersine çevir",
+    "selectionAll": "Tüm veriyi seç",
+    "sortTitle": "Sırala",
+    "expand": "Satırı genişlet",
+    "collapse": "Satırı daralt",
+    "triggerDesc": "Azalan düzende sıralamak için tıklayın",
+    "triggerAsc": "Artan düzende sıralamak için tıklayın",
+    "cancelSort": "Sıralamayı iptal etmek için tıklayın",
+    "filterOptions": {
+      "true": "Doğru",
+      "false": "Yanlış",
+      "and": "Ve",
+      "or": "Veya",
+      "equals": "Eşit",
+      "notEquals": "Eşit Değil",
+      "contains": "İçeren",
+      "notContains": "İçermeyen",
+      "startsWith": "İle Başlayan",
+      "endsWith": "İle Biten",
+      "greaterThan": "Büyüktür",
+      "lessThan": "Küçüktür",
+      "greaterThanOrEquals": "Büyük Eşit",
+      "lessThanOrEquals": "Küçük Eşit",
+      "isNull": "Null Olan",
+      "isNotNull": "Null Olmayan",
+      "theSameDateWith": "İle Aynı Tarihte",
+      "between": "Aralığında"
+    }
   },
   "Modal": {
     "okText": "Tamam",
@@ -104,10 +166,10 @@
     "okText": "Tamam",
     "cancelText": "İptal",
     "yesText": "Evet",
-    "noText": "Hayır, hayır",
+    "noText": "Hayır",
     "retryText": "Yeniden dene",
-    "abortText": "Kes",
-    "ignoreText": "İhmal et"
+    "abortText": "Vazgeç",
+    "ignoreText": "Yoksay"
   },
   "Popconfirm": {
     "okText": "Tamam",
@@ -122,23 +184,74 @@
   "Upload": {
     "uploading": "Yükleniyor...",
     "removeFile": "Dosyayı kaldır",
-    "uploadError": "Yükleme Hatası",
-    "previewFile": "Dosyayı Önizle",
+    "uploadError": "Yükleme hatası",
+    "previewFile": "Dosyayı önizle",
     "downloadFile": "Dosyayı indir"
   },
-  "Empty": {
-    "description": "Veri Yok"
-  },
-  "Icon": {
-    "icon": "icon"
-  },
+  "Empty": { "description": "Veri Yok" },
+  "Icon": { "icon": "ikon" },
   "Text": {
-    "edit": "düzenle",
-    "copy": "kopyala",
-    "copied": "kopyalandı",
-    "expand": "genişlet"
+    "edit": "Düzenle",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "expand": "Genişlet"
   },
+  "PageHeader": { "back": "Geri" },
   "Form": {
-    "optional": "(opsiyonel)"
+    "optional": "(isteğe bağlı)",
+    "defaultValidateMessages": {
+      "default": "Alan doğrulama hatası ${label}",
+      "required": "Lütfen ${label} girin",
+      "enum": "${label} şunlardan biri olmalı: [${enum}]",
+      "whitespace": "${label} sadece boş karakter olamaz",
+      "date": {
+        "format": "${label} tarih biçimi geçersiz",
+        "parse": "${label} bir tarihe dönüştürülemedi",
+        "invalid": "${label} geçersiz bir tarih"
+      },
+      "types": {
+        "string": "${label} geçerli bir ${type} değil",
+        "method": "${label} geçerli bir ${type} değil",
+        "array": "${label} geçerli bir ${type} değil",
+        "object": "${label} geçerli bir ${type} değil",
+        "number": "${label} geçerli bir ${type} değil",
+        "date": "${label} geçerli bir ${type} değil",
+        "boolean": "${label} geçerli bir ${type} değil",
+        "integer": "${label} geçerli bir ${type} değil",
+        "float": "${label} geçerli bir ${type} değil",
+        "regexp": "${label} geçerli bir ${type} değil",
+        "email": "${label} geçerli bir ${type} değil",
+        "url": "${label} geçerli bir ${type} değil",
+        "hex": "${label} geçerli bir ${type} değil"
+      },
+      "string": {
+        "len": "${label} ${len} karakter olmalı",
+        "min": "${label} en az ${min} karakter olmalı",
+        "max": "${label} en çok ${max} karakter olmalı",
+        "range": "${label} en az ${min} en fazla ${max} karakter olmalı"
+      },
+      "number": {
+        "len": "${label} ${len} olmalı",
+        "min": "${label} en az ${min} olmalı",
+        "max": "${label} en çok ${max} olmalı",
+        "range": "${label} ${min}-${max} aralığında olmalı"
+      },
+      "array": {
+        "len": "${label} eleman sayısı ${len} olmalı",
+        "min": "${label} eleman sayısı en az ${min} olmalı",
+        "max": "${label} eleman sayısı en çok ${max} olmalı",
+        "range": "${label} eleman sayısı ${min}-${max} aralığında olmalı"
+      },
+      "pattern": { "mismatch": "${label} şu kalıpla eşleşmeli: ${pattern}" }
+    }
+  },
+  "Image": {
+    "preview": "Önizleme"
+  },
+  "ReuseTabs": {
+    "Close": "Kapat",
+    "CloseAllTabs": "Tüm Sekmeleri Kapat",
+    "CloseAllButThis": "Diğer Sekmeleri Kapat",
+    "PinTab": "Sekmeyi Sabitle"
   }
 }

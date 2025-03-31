@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using AntDesign.Core.Documentation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -36,6 +36,12 @@ namespace AntDesign
         [Parameter]
         public Action<string, IFieldColumn> Definitions { get; set; }
 
+        /// <summary>
+        /// Specify start column index, use it if auto indexes disabled and there are columns before generated ones
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.1.0")]
+        public int StartColumnIndex { get; set; }
 
         protected override void OnInitialized()
         {
@@ -52,11 +58,20 @@ namespace AntDesign
             {
                 showPropertys = _propertyInfos[Range.Value];
             }
+
+            var colIndex = StartColumnIndex;
             foreach (var property in showPropertys)
             {
                 if (HideColumnsByName.Contains(property.Name)) continue;
                 var columnType = typeof(Column<>).MakeGenericType(property.PropertyType.GetUnderlyingType());
                 var instance = Activator.CreateInstance(columnType) as IFieldColumn;
+
+                if (instance != null)
+                {
+                    instance.ColIndex = colIndex;
+                }
+
+                colIndex++;
 
                 Definitions?.Invoke(property.Name, instance);
 

@@ -23,10 +23,11 @@ namespace AntDesign.Tests.Tabs
             jsRuntime.Setup(u => u.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, It.IsAny<object[]>()))
                 .ReturnsAsync(new HtmlElement());
             jsRuntime.Setup(u => u.InvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, It.IsAny<object[]>()))
-                .ReturnsAsync(new Dictionary<string, HtmlElement>() { 
-                    ["1-nav-list"] = new HtmlElement() { },
-                    ["1-nav-warpper"] = new HtmlElement() { },
-                    ["rc-tabs-2-tab-2"] = new HtmlElement() { },
+                .ReturnsAsync(new Dictionary<string, HtmlElement>()
+                {
+                    ["1-nav-list"] = new HtmlElement() { ClientWidth = 45, ClientHeight = 45, },
+                    ["1-nav-warpper"] = new HtmlElement() { ClientWidth = 45, ClientHeight = 45, },
+                    ["rc-tabs-2-tab-2"] = new HtmlElement() { ClientWidth = 45, ClientHeight = 45, },
                 });
 
             Context.Services.AddScoped(_ => jsRuntime.Object);

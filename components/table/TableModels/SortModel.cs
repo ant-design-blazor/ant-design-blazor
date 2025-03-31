@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,15 +16,15 @@ namespace AntDesign.TableModels
 
         public string FieldName { get; }
 
-        public string Sort => _sortDirection?.Name;
+        [Obsolete("Use SortDirection instead")]
+        public string Sort => SortDirection.ToString();
 
-        SortDirection ITableSortModel.SortDirection => _sortDirection;
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public SortDirection SortDirection { get; set; }
 
         public int ColumnIndex => _columnIndex;
 
         private Func<TField, TField, int> _comparer;
-
-        private SortDirection _sortDirection;
 
         private LambdaExpression _getFieldExpression;
 
@@ -33,28 +37,28 @@ namespace AntDesign.TableModels
             this._getFieldExpression = getFieldExpression;
             this.FieldName = fieldName;
             this._comparer = comparer;
-            this._sortDirection = defaultSortOrder ?? SortDirection.None;
+            this.SortDirection = defaultSortOrder;
         }
 
 #if NET5_0_OR_GREATER
         [JsonConstructor]
 #endif
-        public SortModel(int columnIndex, int priority, string fieldName, string sort)
+        public SortModel(int columnIndex, int priority, string fieldName, SortDirection sortDirection)
         {
             this.Priority = priority;
             this._columnIndex = columnIndex;
             this.FieldName = fieldName;
-            this._sortDirection = SortDirection.Parse(sort);
+            this.SortDirection = sortDirection;
         }
 
         void ITableSortModel.SetSortDirection(SortDirection sortDirection)
         {
-            _sortDirection = sortDirection;
+            SortDirection = sortDirection;
         }
 
         IQueryable<TItem> ITableSortModel.SortList<TItem>(IQueryable<TItem> source)
         {
-            if (_sortDirection == SortDirection.None)
+            if (SortDirection == SortDirection.None)
             {
                 return source;
             }
@@ -64,7 +68,7 @@ namespace AntDesign.TableModels
             if (source.Expression.Type == typeof(IOrderedQueryable<TItem>))
             {
                 var orderedSource = source as IOrderedQueryable<TItem>;
-                if (_sortDirection == SortDirection.Ascending)
+                if (SortDirection == SortDirection.Ascending)
                 {
                     return _comparer == null ? orderedSource.ThenBy(lambda) : orderedSource.ThenBy(lambda, this);
                 }
@@ -75,7 +79,7 @@ namespace AntDesign.TableModels
             }
             else
             {
-                if (_sortDirection == SortDirection.Ascending)
+                if (SortDirection == SortDirection.Ascending)
                 {
                     return _comparer == null ? source.OrderBy(lambda) : source.OrderBy(lambda, this);
                 }
@@ -94,7 +98,7 @@ namespace AntDesign.TableModels
 
         public object Clone()
         {
-            return new SortModel<TField>(_columnIndex, Priority, FieldName, Sort)
+            return new SortModel<TField>(_columnIndex, Priority, FieldName, SortDirection)
             {
                 _getFieldExpression = this._getFieldExpression, // keep the expression instance for sorting rows outside
                 _comparer = this._comparer,

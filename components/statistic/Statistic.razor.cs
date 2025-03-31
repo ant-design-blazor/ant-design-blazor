@@ -1,18 +1,54 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Globalization;
-using System.Linq;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Display statistic number.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>When want to highlight some data.</item>
+        <item>When want to display statistic data with description.</item>
+    </list>
+    </summary>
+    <seealso cref="CountDown"/>
+    <inheritdoc/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/rcBNhLBrKbE/Statistic.svg", Title = "Statistic", SubTitle = "统计数值")]
     public partial class Statistic<TValue> : StatisticComponentBase<TValue>
     {
-        [Parameter] public string DecimalSeparator { get; set; }
+        /// <summary>
+        /// Decimal separator for number formatting
+        /// </summary>
+        /// <default value="." />
+        [Parameter]
+        public string DecimalSeparator { get; set; } = ".";
 
-        [Parameter] public string GroupSeparator { get; set; }
+        /// <summary>
+        /// Group separator for number formatting
+        /// </summary>
+        /// <default value="," />
+        [Parameter]
+        public string GroupSeparator { get; set; } = ",";
 
-        [Parameter] public int Precision { get; set; }
+        /// <summary>
+        /// Number of decimal places for rounding
+        /// </summary>
+        /// <default value="0" />
+        [Parameter]
+        public int Precision { get; set; }
 
+        /// <summary>
+        /// Specifies the culture to use for formatting the number.
+        /// </summary>
         [Parameter] public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
 
         protected override void OnInitialized()
@@ -46,7 +82,7 @@ namespace AntDesign
                 decimalValue = Convert.ToDecimal(Value, CultureInfo.InvariantCulture);
             }
 
-            var intValue = (int)decimalValue;
+            var intValue = decimalValue - decimalValue % 1;
 
             var intString = intValue == 0 ? (decimalValue >= 0 ? "0" : "-0") : intValue.ToString($"###{GroupSeparator}###", CultureInfo.InvariantCulture);
 

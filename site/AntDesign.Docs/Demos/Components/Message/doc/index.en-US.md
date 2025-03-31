@@ -1,4 +1,4 @@
-﻿---
+---
 category: Components
 type: Feedback
 title: Message
@@ -84,3 +84,27 @@ MessageService.Config(new MessageGlobalConfig{
 | MaxCount | max message show, drop oldest if exceed limit | int | - |
 | Top | distance from top | double | 24 |
 | Rtl | whether to enable RTL mode | bool | `false` |
+
+### Extension Methods
+
+The `MessageExtensions` class provides extension methods to display loading indicators during asynchronous operations:
+
+#### LoadingWhen<T>
+
+Displays a loading message while an asynchronous operation is being executed, and returns the result of the operation.
+
+| Parameter | Description | Type | Default |
+| --- | --- | --- | --- |
+| asyncFunc | The asynchronous operation to execute | Func<Task<T>> | - |
+| content | The message to display during loading | string\|RenderFragment\|MessageConfig | - |
+| onClose | The action to perform when the loading message is closed | Action | null |
+
+#### LoadingWhen (version without return value)
+
+Displays a loading message while an asynchronous operation is being executed. Suitable for operations without a return value.
+
+| Parameter | Description | Type | Default |
+| --- | --- | --- | --- |
+| asyncFunc | The asynchronous operation to execute | Func<Task> | - |
+| content | The message to display during loading | string\|RenderFragment\|MessageConfig | - |
+| onClose | The action to perform when the loading message is closed | Action | null |

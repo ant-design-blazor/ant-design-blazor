@@ -81,7 +81,7 @@
 
                 <div class="@(PrefixCls)-range-separator">
                     <span aria-label="to" class="@(PrefixCls)-separator">
-                        <Icon Type="swap-right" Theme="outline" />
+                        <Icon Type="@IconType.Outline.SwapRight" />
                     </span>
                 </div>
 
@@ -134,7 +134,7 @@
                 @if (ShowClear())
                 {
                     <span class="@(PrefixCls)-clear" @onclick="@(e => ClearValue(-1))">
-                        <Icon Type="close-circle" Theme="fill" />
+                        <Icon Type="@IconType.Fill.CloseCircle" />
                     </span>
                 }
             </div>

@@ -1,10 +1,10 @@
 ﻿<div>
-    <Button  Type="primary" OnClick="_=>open()">Open</Button>
+    <Button Type="ButtonType.Primary" OnClick="_=>open()">Open</Button>
 
     <Drawer Width="@wdFirstLayer" Closable="true" Visible="visible1" Title='("Multi-level drawer")' OnClose="_=>close()">
-        <Button Type="primary" OnClick="_=>ShowDrawer()">Two-level Drawer</Button>
+        <Button Type="ButtonType.Primary" OnClick="_=>ShowDrawer()">Two-level Drawer</Button>
         <Drawer Width="260" Closable="true" Visible="visible2" Title='("two-level drawer")' OnClose="_=>CloseDrawer()">
-            <Button Type="primary">This is two-level drawer</Button>
+            <Button Type="ButtonType.Primary">This is two-level drawer</Button>
         </Drawer>
 
     </Drawer>
@@ -14,29 +14,29 @@
 
        bool visible1 = false;
        bool visible2 = false;
-       int wdFirstLayer = 520;
+        string wdFirstLayer = "520";
 
-       void open()
-       {
-           this.visible1 = true;
-       }
+        void open()
+        {
+            this.visible1 = true;
+        }
 
-       void ShowDrawer()
-       {
+        void ShowDrawer()
+        {
 
-           this.visible2 = true;
-           wdFirstLayer += 260;
-       }
+            this.visible2 = true;
+            wdFirstLayer = $"{int.Parse(wdFirstLayer) + 260}";
+        }
 
-       void close()
-       {
-           this.visible1 = false;
-       }
+        void close()
+        {
+            this.visible1 = false;
+        }
 
-       void CloseDrawer()
-       {
-           wdFirstLayer -= 260;
-           this.visible2 = false;
-       }
+        void CloseDrawer()
+        {
+            wdFirstLayer = $"{int.Parse(wdFirstLayer) - 260}";
+            this.visible2 = false;
+        }
 
 }

@@ -22,7 +22,7 @@
                  TItemValue="int"
                  Disabled="@Disabled"
                  Style="width: auto"
-                 Size="@(IsSmall ? "small" : "default")"
+                 Size="@(IsSmall ? InputSize.Small : InputSize.Default)"
                  Class="@($"{prefixCls}-size-changer")"
                  DefaultValue="@(PageSize > 0 ? PageSize : pageSizeOptions[0])"
                  Value="@PageSize"

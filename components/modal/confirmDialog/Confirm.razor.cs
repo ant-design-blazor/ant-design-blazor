@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -17,7 +18,7 @@ namespace AntDesign
         #region Parameters
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Parameter]
         public ConfirmOptions Config { get; set; }
@@ -38,8 +39,7 @@ namespace AntDesign
 
         private string _okBtnId = "ant-blazor-" + Guid.NewGuid();
         private string _cancelBtnId = "ant-blazor-" + Guid.NewGuid();
-
-        DialogOptions _dialogOptions;
+        private DialogOptions _dialogOptions;
         private DialogOptions BuildDialogOptions(ConfirmOptions confirmOptions)
         {
             DialogOptions config = new DialogOptions()

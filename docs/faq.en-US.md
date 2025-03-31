@@ -1,5 +1,5 @@
 ---
-order: 11
+order: 4
 title: FAQ
 ---
 
@@ -19,7 +19,7 @@ And make sure that `#some-scroll-area` element is `position: relative` or `posit
 
 ### How do I modify the default theme of Ant Design?
 
-See: https://ant.design/docs/react/customize-theme .
+See: [https://ant.design/docs/react/customize-theme](https://ant.design/docs/react/customize-theme)
 
 ### Why does modifying props in mutable way not trigger a component update?
 
@@ -65,6 +65,18 @@ If you get warnings like "`::deep` is not a valid pseudo-element." then you can 
 ## Errors and Warnings
 
 Here are some errors & warnings that you may encounter while using AntDesign Blazor, although most of these are not actual bugs of antd itself.
+
+### When binding events of components, a compilation error occurs: CS1503 cannot convert from 'method group' to 'Microsoft.AspNetCore.Components.EventCallback'
+
+This is because the component is generic, and it is necessary to explicitly set the generic type parameters of the component (starting with "T").
+
+```html
+<Select TItem="string"
+        TItemValue="string"
+        DataSource="@_personNames"
+        OnSelectedItemChanged="@((personName) => {...}))">
+</Select>
+```
 
 ### Build error for Col components
 

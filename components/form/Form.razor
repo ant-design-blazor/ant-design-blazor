@@ -4,7 +4,7 @@
 @using Microsoft.AspNetCore.Components.Forms;
 @using AntDesign.Internal;
 
-<Spin Spinning="Loading">
+<Spin Spinning="Loading" WrapperClassName="ant-form-spin-wrapper">
     <EditForm class="@ClassMapper.Class"
               style="@Style"
               id="@Id"
@@ -15,16 +15,20 @@
               EditContext="_editContext"
               OnValidSubmit="OnValidSubmit"
               OnInvalidSubmit="OnInvalidSubmit">
-        @if(UseLocaleValidateMessage)
+        @if (UseRulesValidator)
         {
             <FormRulesValidator @ref="_rulesValidator" />
         }
-        else
+        else if (Validate != null)
         {
             @Validator
         }
+        else
+        {
+            <DataAnnotationsValidator />
+        }
         <CascadingValue Value="this" Name="Form" TValue="IForm" IsFixed="@true">
-            @if (!string.IsNullOrEmpty(Size))
+            @if (Size.HasValue)
             {
                 <CascadingValue Value="Size" Name="FormSize">
                     @ChildContent(Model)
@@ -34,7 +38,6 @@
             {
                 @ChildContent(Model)
             }
-
         </CascadingValue>
     </EditForm>
 </Spin>

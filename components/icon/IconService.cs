@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,7 +25,7 @@ namespace AntDesign
             _js = js;
         }
 
-        internal static string GetIconImg(string type, string theme)
+        internal static string GetIconImg(string type, IconThemeType theme)
         {
             var iconImg = IconStore.GetIcon(type, theme);
 
@@ -37,7 +41,8 @@ namespace AntDesign
 
             var svg = !string.IsNullOrEmpty(icon.IconFont) ?
                 $"<svg><use xlink:href=#{icon.IconFont} /></svg>"
-                : GetIconImg(icon.Type.ToLowerInvariant(), icon.Theme.ToLowerInvariant());
+                : icon.Type.EndsWith("</svg>", StringComparison.OrdinalIgnoreCase) ? icon.Type :
+                GetIconImg(icon.Type.ToLowerInvariant(), icon.Theme);
 
             if (string.IsNullOrEmpty(svg))
             {
@@ -52,9 +57,9 @@ namespace AntDesign
 
             var iconSvg = svg.Insert(svg.IndexOf("<svg", StringComparison.Ordinal) + 4, $" {svgStyle} ");
 
-            if (icon.Theme == IconThemeType.Twotone)
+            if (icon.Theme == IconThemeType.TwoTone)
             {
-                return GetTwoToneIconSvg(iconSvg, icon.TwotoneColor, icon.SecondaryColor);
+                return GetTwoToneIconSvg(iconSvg, icon.TwoToneColor, icon.SecondaryColor);
             }
 
             return iconSvg;
@@ -70,10 +75,10 @@ namespace AntDesign
             await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, scriptUrl);
         }
 
-        public static IDictionary<string, string[]> GetAllIcons()
+        public static IDictionary<IconThemeType, string[]> GetAllIcons()
             => IconStore.AllIconsByTheme.Value;
 
-        public static bool IconExists(string iconTheme = "", string iconName = "")
+        public static bool IconExists(IconThemeType iconTheme = IconThemeType.Outline, string iconName = "")
         {
             var icon = IconStore.GetIcon(iconName, iconTheme);
 

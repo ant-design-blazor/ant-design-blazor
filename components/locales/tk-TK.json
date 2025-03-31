@@ -1,0 +1,230 @@
+{
+  "locale": "tk",
+  "Pagination": {
+    "items_per_page": "/ sahypa",
+    "jump_to": "Git",
+    "jump_to_confirm": "tassykla",
+    "page": "Sahypa",
+    "prev_page": "Öňki sahypa",
+    "next_page": "Soňky sahypa",
+    "prev_5": "Öňki 5 sahypa",
+    "next_5": "Soňky 5 sahypa",
+    "prev_3": "Öňki 3 sahypa",
+    "next_3": "Soňky 3 sahypa",
+    "page_size": "Sahypa sany"
+  },
+  "DatePicker": {
+    "lang": {
+      "placeholder": "Wagt saýlaň",
+      "rangePlaceholder": [ "Başlanýan wagty", "Gutarýan wagty" ],
+      "yearPlaceholder": "Ýyl saýlaň",
+      "quarterPlaceholder": "Çärýek saýlaň",
+      "monthPlaceholder": "Aý saýlaň",
+      "weekPlaceholder": "Hepde saýlaň",
+      "rangeYearPlaceholder": [ "Başlanýan ýyly", "Gutarýan ýyly" ],
+      "rangeQuarterPlaceholder": [ "Başlanýan çärýegi", "Gutarýan çärýegi" ],
+      "rangeMonthPlaceholder": [ "Başlanýan aýy", "Gutarýan aýy" ],
+      "rangeWeekPlaceholder": [ "Başlanýan hepdesi", "Gutarýan hepdesi" ],
+      "yearFormat": "YYYY",
+      "dayFormat": "D",
+      "cellMeridiemFormat": "A",
+      "monthBeforeYear": true,
+      "locale": "tk_TK",
+      "today": "Şugün",
+      "now": "Şuwagt",
+      "backToToday": "Şugüne gaýt",
+      "ok": "Bolýar",
+      "clear": "Arassala",
+      "month": "Aý",
+      "year": "Ýyl",
+      "timeSelect": "Wagt saýla",
+      "dateSelect": "Gün saýla",
+      "monthSelect": "Aý saýla",
+      "yearSelect": "Ýyl saýla",
+      "decadeSelect": "On ýyllygy saýla",
+
+      "dateFormat": "D/M/YYYY",
+
+      "dateTimeFormat": "D/M/YYYY HH:mm:ss",
+
+      "previousMonth": "Öňki aý (PageUp)",
+      "nextMonth": "Soňky aý (PageDown)",
+      "previousYear": "Öňki ýyl (Control + çep)",
+      "nextYear": "Soňky ýyl (Control + sag)",
+      "previousDecade": "Öňki on ýyl",
+      "nextDecade": "Soňky on ýyl",
+      "previousCentury": "Öňki asyr",
+      "nextCentury": "Soňky asyr"
+    },
+    "timePickerLocale": {
+      "placeholder": "Wagty saýlaň",
+      "rangePlaceholder": [ "Başlanýan wagty", "Gutarýan wagty" ]
+    }
+  },
+  "TimePicker": {
+    "placeholder": "Wagty saýlaň",
+    "rangePlaceholder": [ "Başlanýan wagty", "Gutarýan wagty" ]
+  },
+  "Calendar": {
+    "lang": {
+      "placeholder": "Wagt saýlaň",
+      "rangePlaceholder": [ "Başlanýan wagty", "Gutarýan wagty" ],
+      "yearPlaceholder": "Ýyl saýlaň",
+      "quarterPlaceholder": "Çärýek saýlaň",
+      "monthPlaceholder": "Aý saýlaň",
+      "weekPlaceholder": "Hepde saýlaň",
+      "rangeYearPlaceholder": [ "Başlanýan ýyly", "Gutarýan ýyly" ],
+      "rangeQuarterPlaceholder": [ "Başlanýan çärýegi", "Gutarýan çärýegi" ],
+      "rangeMonthPlaceholder": [ "Başlanýan aýy", "Gutarýan aýy" ],
+      "rangeWeekPlaceholder": [ "Başlanýan hepdesi", "Gutarýan hepdesi" ],
+      "yearFormat": "YYYY",
+      "dayFormat": "D",
+      "cellMeridiemFormat": "A",
+      "monthBeforeYear": true,
+      "locale": "tk_TK",
+      "today": "Şugün",
+      "now": "Şuwagt",
+      "backToToday": "Şugüne gaýt",
+      "ok": "Bolýar",
+      "clear": "Arassala",
+      "month": "Aý",
+      "year": "Ýyl",
+      "timeSelect": "Wagt saýla",
+      "dateSelect": "Gün saýla",
+      "monthSelect": "Aý saýla",
+      "yearSelect": "Ýyl saýla",
+      "decadeSelect": "On ýyllygy saýla",
+
+      "dateFormat": "D/M/YYYY",
+
+      "dateTimeFormat": "D/M/YYYY HH:mm:ss",
+
+      "previousMonth": "Öňki aý (PageUp)",
+      "nextMonth": "Soňky aý (PageDown)",
+      "previousYear": "Öňki ýyl (Control + çep)",
+      "nextYear": "Soňky ýyl (Control + sag)",
+      "previousDecade": "Öňki on ýyl",
+      "nextDecade": "Soňky on ýyl",
+      "previousCentury": "Öňki asyr",
+      "nextCentury": "Soňky asyr"
+    },
+    "timePickerLocale": {
+      "placeholder": "Wagty saýlaň",
+      "rangePlaceholder": [ "Başlanýan wagty", "Gutarýan wagty" ]
+    }
+  },
+  "global": {
+    "placeholder": "Saýlaň"
+  },
+  "Table": {
+    "filterTitle": "Filter",
+    "filterConfirm": "Bolýar",
+    "filterReset": "Arassala",
+    "filterEmptyText": "Filtersiz",
+    "emptyText": "Maglumat ýok",
+    "selectAll": "Ählisini saýla",
+    "selectInvert": "Tersini saýlaň",
+    "selectNone": "Ähli maglumatlary arassala",
+    "selectionAll": "Ähli maglumatlary saýla",
+    "sortTitle": "Tertiple",
+    "expand": "Setirleri aç",
+    "collapse": "Setirleri ýygna",
+    "triggerDesc": "Kemelýän tertipde tertiple",
+    "triggerAsc": "Artýan tertipde tertiple",
+    "cancelSort": "Tertipleri arassala"
+  },
+  "Modal": {
+    "okText": "Bolýar",
+    "cancelText": "Ýatyr",
+    "justOkText": "Bolýar"
+  },
+  "Popconfirm": {
+    "okText": "Bolýar",
+    "cancelText": "Ýatyr"
+  },
+  "Transfer": {
+    "titles": [ "", "" ],
+    "searchPlaceholder": "Gözle",
+    "itemUnit": "elem.",
+    "itemsUnit": "elem.",
+    "remove": "Poz",
+    "selectAll": "Ähli maglumatlary saýla",
+    "selectCurrent": "Şu sahypany saýlaň",
+    "selectInvert": "Ters tertipde görkez",
+    "removeAll": "Ähli maglumatlary poz",
+    "removeCurrent": "Şu sahypany poz"
+  },
+  "Upload": {
+    "uploading": "Ugradylýar...",
+    "removeFile": "Faýly poz",
+    "uploadError": "Ugratmakda näsazlyk ýüze çykdy",
+    "previewFile": "Faýly görmek",
+    "downloadFile": "Faýly ýükle"
+  },
+  "Empty": {
+    "description": "Maglumat ýok"
+  },
+  "Icon": {
+    "icon": "nyşan"
+  },
+  "Text": {
+    "edit": "Üýtgetmek",
+    "copy": "Göçürmek",
+    "copied": "Göçürildi",
+    "expand": "Ýygnamak"
+  },
+  "PageHeader": {
+    "back": "Yza"
+  },
+  "Form": {
+    "defaultValidateMessages": {
+      "default": "${label} meýdany barlanmady",
+      "required": "${label} meýdany giriziň",
+      "enum": "${label} meýdan şulardan biri bolmaly: [${enum}]",
+      "whitespace": "${label} meýdany boş bolup bilmeýär",
+      "date": {
+        "format": "${label} ýalňyş wagt formaty",
+        "parse": "${label} meýdany wagta çalşyp bolmady",
+        "invalid": "${label} meýdany nädogry wagt"
+      },
+      "types": {
+        "string": "${label} ${type} görnüşinde däl",
+        "method": "${label} ${type} görnüşinde däl",
+        "array": "${label} ${type} görnüşinde däl",
+        "object": "${label} ${type} görnüşinde däl",
+        "number": "${label} ${type} görnüşinde däl",
+        "date": "${label} ${type} görnüşinde däl",
+        "boolean": "${label} ${type} görnüşinde däl",
+        "integer": "${label} ${type} görnüşinde däl",
+        "float": "${label} ${type} görnüşinde däl",
+        "regexp": "${label} ${type} görnüşinde däl",
+        "email": "${label} ${type} görnüşinde däl",
+        "url": "${label} ${type} görnüşinde däl",
+        "hex": "${label} ${type} görnüşinde däl"
+      },
+      "string": {
+        "len": "${label} meýdany ${len} simwol bolmaly",
+        "min": "${label} meýdany ${min} simwoldan az bolmaly däl",
+        "max": "${label} meýdany ${max} simwoldan köp bolmaly däl",
+        "range": "${label} meýdany ${min}-${max} simwol aralygynda bolmaly"
+      },
+      "number": {
+        "len": "${label} meýdan ${len} simwol bolmaly",
+        "min": "${label} meýdany ${min} simwoldan az bolmaly däl",
+        "max": "${label} meýdany ${max} simwoldan köp bolmaly däl"
+      },
+      "array": {
+        "len": "${label} meýdanynyň elementleriniň sany ${len} deň bolmaly",
+        "min": "${label} meýdanynyň elementleriniň sany ${min} az bolmaly däl",
+        "max": "${label} meýdanynyň elementleriniň sany ${max} köp bolmaly däl",
+        "range": "${label} meýdanynyň elementleriniň sany ${min} we ${max} aralykda bolmaly"
+      },
+      "pattern": {
+        "mismatch": "${label} meýdany ${pattern} şablony bilen gabat gelmeýär"
+      }
+    }
+  },
+  "Image": {
+    "preview": "Öňünden görmek"
+  }
+}

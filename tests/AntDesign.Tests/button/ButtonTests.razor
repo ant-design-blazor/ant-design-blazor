@@ -39,7 +39,7 @@
             Button = 0
         });
         cut.MarkupMatches(@<button class="ant-btn ant-btn-default" id:ignore type="button" ant-click-animating-without-extra-node="true"></button>);
-        await Task.Delay(AntDesign.Button.RemoveAnimationAfter + 50); 
+        await Task.Delay(550);
         cut.MarkupMatches(@<button class="ant-btn ant-btn-default" id:ignore type="button" ant-click-animating-without-extra-node="false"></button>); 
     }
 
@@ -55,7 +55,7 @@
 
         Model _model = new() { Name = "modelValue" };
 		var cut = Render<AntDesign.Form<Model>>(
-			@<AntDesign.Form Model="@_model" Size="small">       
+			@<AntDesign.Form Model="@_model" Size="FormSize.Small">       
 				<AntDesign.FormItem Label="Test">
 						<AntDesign.Button>Test</AntDesign.Button>
 				</AntDesign.FormItem>
@@ -63,9 +63,9 @@
         );
 
         var button = cut.FindComponent<AntDesign.Button>();
-        cut.Instance.Size.Should().Be("small");
+        cut.Instance.Size.Should().Be(FormSize.Small);
         cut.Instance.Size.Should().Be(cut.Instance.Size);
-        button.Instance.FormSize.Should().Be("small");
+        button.Instance.FormSize.Should().Be(FormSize.Small);
     }
 
     [Fact]

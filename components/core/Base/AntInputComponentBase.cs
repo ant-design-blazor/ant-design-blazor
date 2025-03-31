@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -38,6 +42,8 @@ namespace AntDesign
 
         internal PropertyReflector? PopertyReflector => _propertyReflector;
 
+        internal Type ValueUnderlyingType => _nullableUnderlyingType ?? typeof(TValue);
+
         [CascadingParameter(Name = "FormItem")]
         protected IFormItem FormItem { get; set; }
 
@@ -50,21 +56,21 @@ namespace AntDesign
 
         protected IForm Form => FormItem?.Form;
 
-        public string[] ValidationMessages { get; private set; } = Array.Empty<string>();
+        /// <summary>
+        /// Validation messages for the FormItem
+        /// </summary>
+        public string[] ValidationMessages { get; private set; } = [];
 
-        private string _formSize;
+        private FormSize _formSize;
 
         [CascadingParameter(Name = "FormSize")]
-        public string FormSize
+        public FormSize? FormSize
         {
-            get
-            {
-                return _formSize;
-            }
+            get => _formSize;
             set
             {
-                _formSize = value;
-                Size = value;
+                _formSize = value.GetValueOrDefault(AntDesign.FormSize.Default);
+                Size = _formSizeMap[_formSize];
             }
         }
 
@@ -98,31 +104,36 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Gets or sets a callback that updates the bound value.
+        /// Callback that updates the bound value.
         /// </summary>
         [Parameter]
         public virtual EventCallback<TValue> ValueChanged { get; set; }
 
         /// <summary>
-        /// Gets or sets an expression that identifies the bound value.
+        /// An expression that identifies the bound value.
         /// </summary>
         [Parameter]
         public Expression<Func<TValue>> ValueExpression { get; set; }
 
+        /// <summary>
+        /// An expression that identifies the enumerable of bound values.
+        /// </summary>
         [Parameter]
         public Expression<Func<IEnumerable<TValue>>> ValuesExpression { get; set; }
 
         /// <summary>
         /// The size of the input box. Note: in the context of a form,
-        /// the `large` size is used. Available: `large` `default` `small`
+        /// `InputSize.Large` is used. Available: `InputSize.Large` `InputSize.Default` `InputSize.Small`
         /// </summary>
+        /// <default value="InputSize.Default"/>
         [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public InputSize Size { get; set; } = InputSize.Default;
 
         /// <summary>
         /// What Culture will be used when converting string to value and value to string
         /// Useful for InputNumber component.
         /// </summary>
+        /// <default value="CultureInfo.CurrentCulture"/>
         [Parameter]
         public virtual CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
 
@@ -303,9 +314,6 @@ namespace AntDesign
         {
             _isValueGuid = THelper.GetUnderlyingType<TValue>() == typeof(Guid);
 
-            if (ValueExpression is not null)
-                _propertyReflector = PropertyReflector.Create(ValueExpression);
-
             base.OnInitialized();
 
             if (Form != null && !string.IsNullOrWhiteSpace(FormItem?.Name))
@@ -370,7 +378,13 @@ namespace AntDesign
             }
         }
 
-        FieldIdentifier IControlValueAccessor.FieldIdentifier => FieldIdentifier;
+        private static readonly Dictionary<FormSize, InputSize> _formSizeMap = new()
+        {
+            [AntDesign.FormSize.Large] = InputSize.Large,
+            [AntDesign.FormSize.Default] = InputSize.Default,
+            [AntDesign.FormSize.Small] = InputSize.Small,
+        };
+
 
         /// <inheritdoc />
         public override Task SetParametersAsync(ParameterView parameters)
@@ -403,19 +417,21 @@ namespace AntDesign
                     }
 
                     EditContext = Form?.EditContext;
-
-                    _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
                 }
+
+                _nullableUnderlyingType = Nullable.GetUnderlyingType(typeof(TValue));
 
                 EditContext.OnValidationStateChanged += _validationStateChangedHandler;
 
                 if (ValueExpression != null)
                 {
                     FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                    _propertyReflector = PropertyReflector.Create(ValueExpression);
                 }
                 else if (ValuesExpression != null)
                 {
                     FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
+                    _propertyReflector = PropertyReflector.Create(ValuesExpression);
                 }
                 else if (Form?.Model != null && FormItem?.Name != null)
                 {
@@ -483,11 +499,6 @@ namespace AntDesign
                 CurrentValue = _getValueDelegate.Invoke(Form.Model);
                 InvokeAsync(StateHasChanged);
             }
-        }
-
-        void IControlValueAccessor.OnValidated(string[] validationMessages)
-        {
-            OnValidated(validationMessages);
         }
     }
 }

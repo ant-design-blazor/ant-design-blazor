@@ -1,4 +1,4 @@
----
+﻿---
 category: Components
 type: Data Entry
 cols: 1
@@ -30,6 +30,7 @@ High performance Form component with data scope management. Including data colle
 | Method | Http method used to submit form | string | get |
 | Model | Generic Object of Operation | T |-|
 | Loading | Is the form loading | bool | false |
+| Locale | Localization object | FormLocale | - |
 | OnFinish | Submit Event | EventCallback\<EditContext\> |-|
 | OnFinishFailed | Submission failure (verification failure) callback event | EventCallback\<EditContext\> |-|
 | ValidateOnChange | Whether to verify when changing | bool | false |
@@ -61,13 +62,14 @@ Rules supports a config FormValidationRule[]
 
 | Name | Description | Type |
 | --- | --- | --- |
-| DefaultField | Validate rule for all array elements, valid when `type` is `Array`(FormItem not support now) | [FormValidationRule](en-US/components/form#Rule) |
-| OneOf | Whether the value is in specified values | object\[] |
+| DefaultField | Validate rule for all array elements. (FormItem not support now) | [FormValidationRule](en-US/components/form#Rule) |
+| OneOf | Whether the value is one of specified values. | object\[] |
+| Enum | The type of enum value, validte the value is one of the enum values | object\[] |
 | Fields | Validate rule for child elements, valid when `type` is `Array` or `Object`(FormItem not support now) | Dictionary&lt;object, [FormValidationRule](en-US/components/form#Rule)> |
 | Len | Length of String, Number, Array | decimal |
-| Max | `type` required: max length of `String`, `Number`, `Array` | decimal |
+| Max | max length of `String`, `Number`, `Array` | decimal |
 | Message | Error message. Will auto generate by ValidateMessages(see below) if not provided | string |
-| Min | `type` required: min length of `String`, `Number`, `Array` | decimal |
+| Min | min length of `String`, `Number`, `Array` | decimal |
 | Pattern | Regex pattern | string |
 | Required | Required field | bool |
 | Transform | Transform value to the rule before validation | Func&lt;object,object> |
@@ -76,21 +78,52 @@ Rules supports a config FormValidationRule[]
 | Validator |Customize validation rule. Accept ValidationResult as return see [example](en-US/components/form#components-form-demo-dynamic-rule) | Func&lt;FormValidationContext,ValidationResult> |
 
 
-### ValidateMessages
-(only support Rules validate mode)
+### FormValidateErrorMessages
 
-Form provides default verification error messages(FormValidateErrorMessages). You can modify the template by configuring `ValidateMessages` property. A common usage is to configure localization:
+For the Form component's multiple validation Settings, such as the DataAnnotations, Rules, and Requireed parameter, the error message template is obtained by default from the globalization file built into the component library. The following customizations are also supported:
+
+1. The default value of the globalized language of the component can be modified by the Locale property of the Form
+2. Implement the validation configuration using the DataAnnotations feature on the model, supporting the customization of ErrorMessage or ErrorMessageResourceName for modifying the feature.
+3. The validation configuration is implemented using the FormItem setting Rules, which are customized via the Message attribute in the FormValidationRule.
+4. Pass an error prompt template to a child component through the Form property in the ConfigProvider.
+
+
+Example of custom message templates for DataAnnotations:
 
 ```csharp
-var validateMessages = new FormValidateErrorMessages {
-  Required = "'{0}' is required!",
-  // ...
-};
+public class Model
+{
+    [MaxLength(12,ErrorMessage ="A maximum of 12 characters can be entered")]
+    [DisplayName("User Name")]
+    public string Username { get; set; }
 
-<Form ValidateMessages="validateMessages" />;
+    [Required(ErrorMessageResourceName = nameof(Resources.App.PasswordValidation), ErrorMessageResourceType = typeof(Resources.App))]
+    [Display(Name = nameof(Resources.App.Password), ResourceType = typeof(Resources.App))]
+    [MaxLength(16)]
+    public string Password { get; set; }
+}
 ```
 
-Besides, [ConfigProvider](Demo TODO) also provides a global configuration scheme that allows for uniform configuration error notification templates:
+Example of modifying Locale:
+
+```csharp
+@using AntDesign.Form.Locale
+
+<Form Locale="locale" />;
+
+@code
+{
+    FormLocale locale = LocaleProvider.CurrentLocale.Form;
+
+    protected override void OnInitialized()
+    {
+        locale.DefaultValidateMessages.Required = "❌ {0} is required.";
+    }
+}
+```
+
+Example of setting the ConfigProvider:
+
 ```csharp
 //in App.Razor
 var validateMessages = new FormValidateErrorMessages {

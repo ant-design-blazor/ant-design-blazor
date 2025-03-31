@@ -54,6 +54,7 @@ Since 0.16.0, Table has supported ordinary classes, record, interface, and abstr
 | Title | Table title | string | - |
 | TitleTemplate | Title template | RenderFragment | - |
 | GroupTitleTemplate | Row group title template | RenderFragment | - |
+| GroupFooterTemplate | Group foot template, often used to aggregate statistics | RenderFragment<GroupResult<TItem>> | - |
 | Footer | Table Footer | string | - |
 | FooterTemplate | Footer Template | RenderFragment | - |
 | Size | Table Size | [TableSize](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/table/TableSize.cs) | - |
@@ -74,6 +75,7 @@ Since 0.16.0, Table has supported ordinary classes, record, interface, and abstr
 | HidePagination| To hide the pager, PageSize would equals the number of rows in the data source | bool | false |
 | Resizable | Enable resizable column | bool | false |
 | FieldFilterTypeResolver | Used to resolve filter types for columns | `IFilterTypeResolver` | Injected |
+
 
 ### Column
 
@@ -99,6 +101,8 @@ The Column definition of the previous version, For .NET 6 and above, `PropertyCo
 | FilterDropdown | Custom Filter Dropdown Template | RenderFragment | - |
 | FieldFilterType | Specifies what filter options to display and how to filter the data | `IFieldFilterType` | Resolved using Table's `FieldFilterTypeResolver` |
 | Filtered   |  Whether the dataSource is filtered. Filter icon will be actived when it is true. | bool |  false |
+| Grouping | Specify that this column is used for grouping | bool | - |
+| GroupBy | A delegate that converts the value of a group | Func<TData, object> | - |
 
 ### PropertyColumn
 

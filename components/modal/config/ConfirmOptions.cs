@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Globalization;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 
 namespace AntDesign
@@ -20,6 +21,8 @@ namespace AntDesign
             Mask = true;
             MaskClosable = false;
             Locale = LocaleProvider.CurrentLocale.Confirm;
+            OkText = Locale.OkText;
+            CancelText = Locale.CancelText;
         }
 
         #region internal
@@ -77,7 +80,7 @@ namespace AntDesign
         /// <summary>
         /// set OK button type for the leftmost button: OK or Yes button
         /// </summary>
-        public new string OkType
+        public new ButtonType OkType
         {
             get
             {

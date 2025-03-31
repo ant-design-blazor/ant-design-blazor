@@ -1,8 +1,8 @@
 ﻿@inject IMessageService _message
 
 <div>
-    <Button Type="primary" @onclick="_=>open()">Open</Button>
-    <Drawer Width="500" Closable="true" Visible="visible" Placement="right" Title='("Basic Drawer")' OnClose="_=>close()">
+    <Button Type="ButtonType.Primary" @onclick="_=>open()">Open</Button>
+    <Drawer Width="500" Closable="true" Visible="visible" Placement="DrawerPlacement.Right" Title='("Basic Drawer")' OnClose="_=>close()">
         <b>Select:</b><br />
 
         <Form Model="_formModal">
@@ -43,7 +43,7 @@
             </Overlay>
             <ChildContent>
                 <a class="ant-dropdown-link" @onclick:preventDefault>
-                    Hover me <Icon Type="down" />
+                    Hover me <Icon Type="@IconType.Outline.Down" />
                 </a>
             </ChildContent>
         </Dropdown>
@@ -51,7 +51,7 @@
         <div style="margin: 64px" />
 
         <b>DatePicker:</b><br />
-        <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" />
+        <DatePicker TValue="DateTime?" Picker="DatePickerType.Date" />
 
         <div style="margin: 64px" />
 

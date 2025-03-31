@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -16,20 +19,17 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// Whether use compact style
+        /// Whether to use compact style or not
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Compact
         {
             get { return _compact; }
-            set 
-            { 
+            set
+            {
                 _compact = value;
-                if (_compact)
-                    _compactStyleOverride = "display: flex;";
-                else
-                    _compactStyleOverride = "";
-
+                _compactStyleOverride = _compact ? "display: flex;" : string.Empty;
             }
         }
 
@@ -38,7 +38,7 @@ namespace AntDesign
         /// Available: large default small
         /// </summary>
         [Parameter]
-        public string Size { get; set; }
+        public InputSize Size { get; set; }
 
         protected override void OnInitialized()
         {

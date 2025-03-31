@@ -1,4 +1,8 @@
-﻿using System.Net.Http;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -32,7 +36,7 @@ namespace AntDesign.Docs.Shared
             }
         }
 
-        private class GithubResponse
+        private sealed class GithubResponse
         {
             [JsonPropertyName("stargazers_count")]
             public int StargazersCount { get; set; }

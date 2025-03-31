@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
@@ -14,11 +18,11 @@ namespace AntDesign
 
         public bool Loading { get; set; } = false;
 
-        public string Type { get; set; } = ButtonType.Default;
+        public ButtonType Type { get; set; } = ButtonType.Default;
 
-        public string Shape { get; set; } = null;
+        public ButtonShape Shape { get; set; } = ButtonShape.Rectangle;
 
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public ButtonSize Size { get; set; } = ButtonSize.Default;
 
         public string Icon { get; set; }
 

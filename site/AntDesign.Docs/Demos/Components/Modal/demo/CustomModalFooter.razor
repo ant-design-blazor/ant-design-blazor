@@ -1,14 +1,14 @@
 ﻿@inject ModalService modalService
 
-<Space Direction="DirectionVHType.Vertical">
+<Space Direction="SpaceDirection.Vertical">
     <SpaceItem>
-        <Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+        <Button Type="ButtonType.Primary" OnClick="@(()=>{ _visible = true; })">
             Open Modal With Only OK button
         </Button>
     </SpaceItem>
 
     <SpaceItem>
-        <Button Type="primary" OnClick="@OpenModal">
+        <Button Type="ButtonType.Primary" OnClick="@OpenModal">
             Open Modal With Only Cancel button
         </Button>
     </SpaceItem>

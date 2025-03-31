@@ -20,13 +20,13 @@
     }
     <Select Class=@($"{PrefixCls}-year-select")
             @bind-Value="@_yearValue"
-            Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
+            Size=@(Calendar.FullScreen ? InputSize.Default : InputSize.Small)
             DefaultValue=@Calendar.Value.Year
             TItemValue="int"
             TItem="string"
             Style="width: unset;"
             SortByLabel="@SortDirection.Ascending"
-            OnSelectedItemChanged="@(async (item) => await OnSelectYear(item))">
+            OnSelectedItemChanged="@OnSelectYear">
             <SelectOptions>
                 @for (int year = startYear; year <= endYear; year++)
                 {
@@ -36,7 +36,7 @@
             </SelectOptions>        
     </Select>
 
-    @if (Calendar.Mode == DatePickerType.Month)
+    @if (Calendar.Mode == CalendarMode.Month)
     {
         int startMonth = 1;
         int endMonth = 12;
@@ -51,12 +51,12 @@
 
         <Select class=@($"{PrefixCls}-month-select")
                 @bind-Value="@_monthValue"
-                Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
+                Size=@(Calendar.FullScreen ? InputSize.Default : InputSize.Small)
                 DefaultValue=@Calendar.Value.Month
                 Style="width: unset;"
                 TItemValue="int"
                 TItem="string"
-                OnSelectedItemChanged="@(async (item) => await OnSelectMonth(item))">
+                OnSelectedItemChanged="@OnSelectMonth">
                 <SelectOptions>
                     @for (int month = startMonth; month <= endMonth; month++)
                     {
@@ -68,11 +68,11 @@
     }
 
     <RadioGroup class=@($"{PrefixCls}-mode-switch")
-                Size=@(Calendar.FullScreen ? AntSizeLDSType.Default : AntSizeLDSType.Small)
+                Size=@(Calendar.FullScreen ? InputSize.Default : InputSize.Small)
                 Value="@Calendar.Mode"
-                OnChange="OnModeChange" TValue="string">
-        <Radio RadioButton Value="@DatePickerType.Month">@(Calendar.Locale.Lang.Month)</Radio>
-        <Radio RadioButton Value="@DatePickerType.Year">@(Calendar.Locale.Lang.Year)</Radio>
+                OnChange="OnModeChange" TValue="CalendarMode">
+        <Radio RadioButton Value="@CalendarMode.Month">@(Calendar.Locale.Lang.Month)</Radio>
+        <Radio RadioButton Value="@CalendarMode.Year">@(Calendar.Locale.Lang.Year)</Radio>
     </RadioGroup>
 </div>
 
@@ -95,20 +95,20 @@
         currentDate = Calendar.Value;
     }
 
-    private void OnModeChange(string value)
+    private void OnModeChange(CalendarMode value)
     {
-        Calendar.ChangePickerType(value);
+        Calendar.ChangeMode(value);
     }
 
-    private async Task OnSelectYear(string value)
+    private void OnSelectYear(string value)
     {      
         int year = Convert.ToInt32(value);
-        await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, year: year));
+        Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, year: year));
     }
 
-    private async Task OnSelectMonth(string value)
+    private void OnSelectMonth(string value)
     {
         int month = Convert.ToInt32(value);
-        await Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, month: month));
+        Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, month: month));
     }
 }

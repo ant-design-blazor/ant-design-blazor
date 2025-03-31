@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign
 {
@@ -15,7 +14,7 @@ namespace AntDesign
         private readonly NavigationManager _navmgr;
         private Dictionary<string, MenuItem> _titleCache = [];
         private Dictionary<string, BreadcrumbOption[]> _breadcrumbCache = [];
-        private IEnumerable<MenuItem> _menuItems = [];
+        private List<MenuItem> _menuItems = [];
 
         internal event Action MenuItemLoaded;
 
@@ -24,9 +23,9 @@ namespace AntDesign
             this._navmgr = navmgr;
         }
 
-        internal void SetMenuItems(IEnumerable<MenuItem> menuItems)
+        internal void SetMenuItem(MenuItem menuItem)
         {
-            _menuItems = menuItems;
+            _menuItems.Add(menuItem);
             MenuItemLoaded?.Invoke();
         }
 
@@ -64,7 +63,7 @@ namespace AntDesign
                 return _titleCache[url];
             }
 
-            var matchedMenuItem = _menuItems.FirstOrDefault(x => MenuHelper.ShouldMatch(NavLinkMatch.All, url.TrimStart('/'), x.RouterLink.TrimStart('/')));
+            var matchedMenuItem = _menuItems.FirstOrDefault(x => x.RouterLink != null && MenuHelper.ShouldMatch(x.RouterMatch, url.TrimStart('/'), x.RouterLink.TrimStart('/')));
             if (matchedMenuItem == null)
             {
                 return null;

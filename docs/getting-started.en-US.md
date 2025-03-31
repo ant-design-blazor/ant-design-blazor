@@ -87,10 +87,12 @@ public void ConfigureServices(IServiceCollection services)
 - Finally, it can be referenced in the `.razor' component!
 
   ```html
-  <Button Type="primary">Hello World!</Button>
+  <Button Type="ButtonType.Primary">Hello World!</Button>
   ```
 
 ### Specify the style/script auto-import location
+
+Note: Currently, static and Auto modes do not support automatic import, please import manually.
 
 After version 0.17.0, AntDesign Blazor component library utilizes [`JavaScript Initializers`](https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/startup?view=aspnetcore-8.0#javascript-initializers) support automatic introduction of styles and scripts. CSS is introduced before the original `<link>` element of the page by default, and JS is introduced before all `<script>` elements by default. If you need to specify the location, simply add `<link antblazor-css>` or `<script antblazor-js></script>` to the specified location in `index.html`` or `App.razor`, and it will be automatically introduced before these two elements.
 

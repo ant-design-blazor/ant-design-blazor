@@ -47,21 +47,39 @@
 
 @code{
 
+    /// <summary>
+    /// Title string
+    /// </summary>
     [Parameter]
     public string Title { get; set; }
 
+    /// <summary>
+    /// Title content. Takes priority over <see cref="Title"/>
+    /// </summary>
     [Parameter]
     public RenderFragment TitleTemplate { get; set; }
 
+    /// <summary>
+    /// Description string
+    /// </summary>
     [Parameter]
     public string Description { get; set; }
 
+    /// <summary>
+    /// Description content. Takes priority over <see cref="Description"/>
+    /// </summary>
     [Parameter]
     public RenderFragment DescriptionTemplate { get; set; }
 
+    /// <summary>
+    /// Avatar string. Will be passed to <see cref="AntDesign.Avatar"/> component's <see cref="AntDesign.Avatar.Src"/>
+    /// </summary>
     [Parameter]
     public string Avatar { get; set; }
 
+    /// <summary>
+    /// Avatar content. Takes priority over <see cref="Avatar"/>
+    /// </summary>
     [Parameter]
     public RenderFragment AvatarTemplate { get; set; }
 

@@ -1,5 +1,10 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
@@ -7,10 +12,35 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>To select or input a date.</para>
+
+    <h2>When To Use</h2>
+
+    <para>By clicking the input box, you can select a date from a popup calendar.</para>
+    </summary>
+    <seealso cref="MonthPicker{TValue}"/>
+    <seealso cref="RangePicker{TValue}"/>
+    <seealso cref="WeekPicker{TValue}"/>
+    <seealso cref="YearPicker{TValue}"/>
+    <seealso cref="QuarterPicker{TValue}"/>
+    <seealso cref="TriggerBoundaryAdjustMode"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg", Title = "DatePicker", SubTitle = "日期选择框")]
     public partial class DatePicker<TValue> : DatePickerBase<TValue>
     {
+        /// <summary>
+        /// Callback executed when the selected value changes
+        /// </summary>
         [Parameter]
         public EventCallback<DateTimeChangedEventArgs<TValue>> OnChange { get; set; }
+
+        /// <summary>
+        /// Disable the date picker. 
+        /// </summary>
+        [Parameter]
+        public bool Disabled { get; set; }
 
         private DateTime _pickerValuesAfterInit;
 
@@ -19,6 +49,27 @@ namespace AntDesign
             base.OnInitialized();
             ProcessDefaults();
             _pickerValuesAfterInit = PickerValues[0];
+        }
+
+
+        /// <summary>
+        /// Add focus to picker input
+        /// </summary>
+        /// <returns></returns>
+        [PublicApi("1.0.0")]
+        public async Task FocusAsync()
+        {
+            await base.Focus();
+        }
+
+        /// <summary>
+        /// Remove focus from picker input
+        /// </summary>
+        /// <returns></returns>
+        [PublicApi("1.0.0")]
+        public async Task BlurAsync()
+        {
+            await base.Blur();
         }
 
         private void ProcessDefaults()
@@ -98,6 +149,7 @@ namespace AntDesign
                 return;
 
             AutoFocus = false;
+            _duringManualInput = false;
 
             if (!_dropDown.IsOverlayShow())
             {
@@ -114,6 +166,10 @@ namespace AntDesign
         protected async Task OnKeyDown(KeyboardEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
+
+            // Key is not always present with autoprefill so we skip
+            if (e.Key == null) return;
+
             var key = e.Key.ToUpperInvariant();
 
             var isEnter = key == "ENTER";
@@ -166,7 +222,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public override DateTime? GetIndexValue(int index = 0)
+        internal override DateTime? GetIndexValue(int index = 0)
         {
             if (index != 0)
             {
@@ -196,7 +252,7 @@ namespace AntDesign
             return null;
         }
 
-        public override void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true)
+        internal override void ChangeValue(DateTime value, int index = 0, bool closeDropdown = true)
         {
             if (index != 0)
             {
@@ -236,7 +292,7 @@ namespace AntDesign
             _dropDown?.SetShouldRender(true);
         }
 
-        public override void ClearValue(int index = 0, bool closeDropdown = true)
+        internal override void ClearValue(int index = 0, bool closeDropdown = true)
         {
             _isSetPicker = false;
 
@@ -289,6 +345,11 @@ namespace AntDesign
                 Date = Value,
                 DateString = GetInputValue(0)
             });
+        }
+
+        protected override bool IsDisabled(int? index = null)
+        {
+            return Disabled;
         }
     }
 }

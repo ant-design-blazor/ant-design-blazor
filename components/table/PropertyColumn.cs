@@ -3,9 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
@@ -16,7 +14,8 @@ namespace AntDesign
         /// <summary>
         /// Defines the value to be displayed in this column's cells.
         /// </summary>
-        [Parameter] public Expression<Func<TItem, TProp>> Property { get; set; } = default!;
+        [Parameter]
+        public Expression<Func<TItem, TProp>> Property { get; set; } = default!;
 
         protected override void OnInitialized()
         {
@@ -29,7 +28,15 @@ namespace AntDesign
                 else if (IsBody)
                 {
                     var compliedProperty = Property.Compile();
-                    GetValue = rowData => compliedProperty.Invoke(((RowData<TItem>)rowData).DataItem.Data);
+                    GetValue = rowData =>
+                    {
+                        var data = ((RowData<TItem>)rowData).DataItem.Data;
+                        if (data != null)
+                        {
+                            return compliedProperty.Invoke(data);
+                        }
+                        return default;
+                    };
                 }
                 base.OnInitialized();
             }

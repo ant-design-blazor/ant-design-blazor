@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using AntDesign.Form.Locale;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -16,7 +20,7 @@ namespace AntDesign
 
         internal FormValidateMode ValidateMode { get; }
 
-        internal string Size { get; }
+        internal FormSize Size { get; }
 
         internal bool UseLocaleValidateMessage { get; }
 
@@ -70,11 +74,28 @@ namespace AntDesign
         /// <summary>
         /// Validate all fields.
         /// </summary>
-        /// <returns></returns>
+        /// <returns> true if all fields are valid, otherwise false. </returns>
         bool Validate();
 
         /// <summary>
         /// Set validation messages for a specific field.
+        /// <code>
+        /// <![CDATA[
+        /// <Form @ref="form">
+        ///     <FormItem>
+        ///         <Input @bind-value="model.Name" />
+        ///     </FormItem>
+        /// </Form>
+        ///
+        /// @code {
+        ///     private IForm _form;
+        ///     private void SetError()
+        ///     {
+        ///         _form.SetValidationMessages("name", new[] { "error message" });
+        ///     }
+        /// }
+        /// ]]>
+        /// </code>
         /// </summary>
         /// <param name="field"></param>
         /// <param name="errorMessages"></param>

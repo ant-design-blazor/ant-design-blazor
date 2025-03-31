@@ -1,0 +1,26 @@
+﻿@inherits AntDesignTestBase
+
+@code {
+
+  [Theory]
+  [InlineData(BadgeColor.Pink)]
+  [InlineData(BadgeColor.Red)]
+  [InlineData(BadgeColor.Yellow)]
+  [InlineData(BadgeColor.Orange)]
+  [InlineData(BadgeColor.Cyan)]
+  [InlineData(BadgeColor.Green)]
+  [InlineData(BadgeColor.Blue)]
+  [InlineData(BadgeColor.Purple)]
+  [InlineData(BadgeColor.Geekblue)]
+  [InlineData(BadgeColor.Magenta)]
+  [InlineData(BadgeColor.Volcano)]
+  [InlineData(BadgeColor.Gold)]
+  [InlineData(BadgeColor.Lime)]
+  public void ItShouldRenderBadgeWithColors(BadgeColor color)
+  {
+    var cut = Render<Badge>(@<Badge Color="@color"></Badge> );
+    cut.MarkupMatches(@<span class="ant-badge ant-badge-status ant-badge-not-a-wrapper" id:ignore>
+        <span class="ant-badge-status-dot ant-badge-status-@color.ToString().ToLower()" style=""></span>
+      </span>);
+  }
+}

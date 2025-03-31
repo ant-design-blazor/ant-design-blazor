@@ -21,7 +21,7 @@
                           Multiple="@Multiple"
                           Data="@Data"
                           Headers="@Headers"
-                          Disabled="Disabled"
+                          Disabled="@Disabled"
                           Method="@Method"
                           ShowButton="@ShowButton">
                     @ChildContent
@@ -35,9 +35,9 @@
             @{
                 var containerClass = ListType switch
                 {
-                    "picture-card" => "ant-upload-list-picture-card-container",
-                    "text" => "ant-upload-list-text-container",
-                    "picture" => "ant-upload-list-picture-container",
+                    UploadListType.PictureCard => "ant-upload-list-picture-card-container",
+                    UploadListType.Text => "ant-upload-list-text-container",
+                    UploadListType.Picture => "ant-upload-list-picture-container",
                     _ => ""
                 };
 
@@ -64,7 +64,7 @@
                         break;
                 }
 
-                <Tooltip Title="tips" Disabled="file.State != UploadState.Fail">
+                <Tooltip Title="@tips" Disabled="file.State != UploadState.Fail">
                     <Unbound>
                         <div Class="@containerClass" Style="@(IsPictureCard ? "" : "display: list-item;")">
                             @if (IsPictureCard && file.State == UploadState.Uploading)

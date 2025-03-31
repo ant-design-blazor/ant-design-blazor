@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Globalization;
 
 namespace AntDesign
@@ -167,7 +171,7 @@ namespace AntDesign
             return new DateTime(yearValue, monthValue, dayValue, hour ?? date.Hour, minute ?? date.Minute, second ?? date.Second, date.Kind);
         }
 
-        public static DateTime? FormatDateByPicker(DateTime? dateTime, string picker)
+        public static DateTime? FormatDateByPicker(DateTime? dateTime, DatePickerType picker)
         {
             if (dateTime == null)
             {
@@ -177,7 +181,7 @@ namespace AntDesign
             return FormatDateByPicker((DateTime)dateTime, picker);
         }
 
-        public static DateTime FormatDateByPicker(DateTime dateTime, string picker)
+        public static DateTime FormatDateByPicker(DateTime dateTime, DatePickerType picker)
         {
             switch (picker)
             {
@@ -279,7 +283,7 @@ namespace AntDesign
             return num1 == num2;
         }
 
-        public static DateTime GetPreviousStartDateOfPeriod(DateTime dateTime, string picker)
+        public static DateTime GetPreviousStartDateOfPeriod(DateTime dateTime, DatePickerType picker)
         {
             return picker switch
             {
@@ -292,7 +296,7 @@ namespace AntDesign
             };
         }
 
-        public static DateTime GetNextStartDateOfPeriod(DateTime dateTime, string picker)
+        public static DateTime GetNextStartDateOfPeriod(DateTime dateTime, DatePickerType picker)
         {
             return picker switch
             {
