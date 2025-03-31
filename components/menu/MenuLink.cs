@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -56,7 +55,7 @@ namespace AntDesign
 
         [Inject] private NavigationManager NavigationManger { get; set; }
 
-        private readonly static Hashtable _targetMap = new()
+        private readonly static Dictionary<MenuTarget, string> _targetMap = new()
         {
             [MenuTarget.Self] = "_self",
             [MenuTarget.Blank] = "_blank",

@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using AntDesign.Core.Documentation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -49,7 +49,7 @@ namespace AntDesign
                     Direction = FlexDirection.Horizontal;
             }
         }
-        
+
         /// <summary>
         /// Sets the direction of the flex, either horizontal or vertical
         /// </summary>
@@ -96,14 +96,14 @@ namespace AntDesign
         /// </summary>
         [Parameter] public RenderFragment ChildContent { get; set; }
 
-        private readonly Hashtable _wrapMap = new Hashtable()
+        private static readonly Dictionary<FlexWrap, string> _wrapMap = new()
         {
             [FlexWrap.NoWrap] = "nowrap",
             [FlexWrap.Wrap] = "wrap",
             [FlexWrap.WrapReverse] = "wrap-reverse",
         };
 
-        private readonly Hashtable _alignMap = new Hashtable()
+        private static readonly Dictionary<FlexAlign, string> _alignMap = new()
         {
             [FlexAlign.Normal] = "normal",
             [FlexAlign.Center] = "center",
@@ -122,7 +122,7 @@ namespace AntDesign
             [FlexAlign.FlexEnd] = "flex-end",
         };
 
-        private readonly Hashtable _justifyMap = new Hashtable()
+        private static readonly Dictionary<FlexJustify, string> _justifyMap = new()
         {
             [FlexJustify.Start] = "start",
             [FlexJustify.End] = "end",
@@ -140,7 +140,7 @@ namespace AntDesign
             [FlexJustify.Unsafe] = "unsafe"
         };
 
-        private readonly Hashtable _gapMap = new Hashtable()
+        private static readonly Dictionary<FlexGap, string> _gapMap = new()
         {
             [FlexGap.Small] = "small",
             [FlexGap.Middle] = "middle",
