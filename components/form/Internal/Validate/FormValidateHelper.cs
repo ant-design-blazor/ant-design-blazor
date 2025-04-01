@@ -339,6 +339,7 @@ namespace AntDesign.Internal.Form.Validate
                     Rule = validationContext.Rule.DefaultField,
                     FieldName = validationContext.FieldName,
                     FieldType = validationContext.FieldType,
+                    Model = validationContext.Model
                 };
 
                 int index = 0;
@@ -379,6 +380,7 @@ namespace AntDesign.Internal.Form.Validate
                 DisplayName = validationContext.DisplayName,
                 FieldName = validationContext.FieldName,
                 FieldType = validationContext.FieldType,
+                Model = validationContext.Model
             };
 
             Array arrValues = validationContext.Value as Array;
