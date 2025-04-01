@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -32,7 +32,7 @@ public class DictionaryConverter : JsonConverter<Dictionary<string, object>>
                 throw new JsonException();
             }
 
-            string propertyName = reader.GetString();
+            var propertyName = reader.GetString();
 
             reader.Read();
 
@@ -42,22 +42,22 @@ public class DictionaryConverter : JsonConverter<Dictionary<string, object>>
         throw new JsonException();
     }
 
-    private object ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
+    private static object ReadValue(ref Utf8JsonReader reader, JsonSerializerOptions options)
     {
         switch (reader.TokenType)
         {
             case JsonTokenType.String:
                 return reader.GetString();
             case JsonTokenType.Number:
-                if (reader.TryGetInt32(out int intValue))
+                if (reader.TryGetInt32(out var intValue))
                 {
                     return intValue;
                 }
-                if (reader.TryGetInt64(out long longValue))
+                if (reader.TryGetInt64(out var longValue))
                 {
                     return longValue;
                 }
-                if (reader.TryGetDouble(out double doubleValue))
+                if (reader.TryGetDouble(out var doubleValue))
                 {
                     return doubleValue;
                 }
