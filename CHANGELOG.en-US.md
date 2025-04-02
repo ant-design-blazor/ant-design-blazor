@@ -14,6 +14,15 @@ timeline: true
 - Major version release is not included in this schedule for breaking change and new features.
 
 ---
+### 1.3.1
+
+`2025-04-02`
+
+- 🛠 Refactor Form add Model property to validation context. [#4525](https://github.com/ant-design-blazor/ant-design-blazor/pull/4525) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Refactor Form validation logic. [#4523](https://github.com/ant-design-blazor/ant-design-blazor/pull/4523) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Refactor Table streamline row expand logic and improve readability. [#4519](https://github.com/ant-design-blazor/ant-design-blazor/pull/4519) [@ElderJames](https://github.com/ElderJames)
+- ⚡️ Improve Regex with Source Generator. [#4524](https://github.com/ant-design-blazor/ant-design-blazor/pull/4524) [@LeaFrock](https://github.com/LeaFrock)
+- ⚡️ Replace HashTable with Dictionary<TKey, TValue>. [#4520](https://github.com/ant-design-blazor/ant-design-blazor/pull/4520) [@LeaFrock](https://github.com/LeaFrock)
 
 ### 1.3.0
 

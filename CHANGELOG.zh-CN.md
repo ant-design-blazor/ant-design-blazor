@@ -15,6 +15,16 @@ timeline: true
 
 ---
 
+### 1.3.1
+
+`2025-04-02`
+
+- 🛠 重构 Form 补充遗漏的 Model 到 ValidationContext。[#4525](https://github.com/ant-design-blazor/ant-design-blazor/pull/4525) [@ElderJames](https://github.com/ElderJames)
+- 🛠 重构 Form 自定义验证 Attribute 传入 ValidationContext。[#4523](https://github.com/ant-design-blazor/ant-design-blazor/pull/4523) [@ElderJames](https://github.com/ElderJames)
+- 🐞 重构 Table 优化行展开并提高可读性。[#4519](https://github.com/ant-design-blazor/ant-design-blazor/pull/4519) [@ElderJames](https://github.com/ElderJames)
+- ⚡️ 使用源生成器提升Regex性能。[#4524](https://github.com/ant-design-blazor/ant-design-blazor/pull/4524) [@LeaFrock](https://github.com/LeaFrock)
+- ⚡️ 使用Dictionary<TKey, TValue>替换HashTable。[#4520](https://github.com/ant-design-blazor/ant-design-blazor/pull/4520) [@LeaFrock](https://github.com/LeaFrock)
+
 ### 1.3.0
 
 `2025-03-29`
