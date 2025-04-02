@@ -127,7 +127,7 @@ namespace AntDesign
 
         internal void RowGutterChanged((int horizontalGutter, int verticalGutter) gutter)
         {
-            GutterStyle = "";
+            GutterStyle = string.Empty;
             if (gutter.horizontalGutter > 0)
             {
                 GutterStyle = $"padding-left: {gutter.horizontalGutter / 2}px; padding-right: {gutter.horizontalGutter / 2}px;";
@@ -171,14 +171,26 @@ namespace AntDesign
             });
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("^\\d+(\\.\\d+)?(px|em|rem|%)$")]
+        private static partial Regex FlexRegex();
+#else
+        private static readonly Regex _flexRegex = new("^\\d+(\\.\\d+)?(px|em|rem|%)$");
+#endif
+
         private void SetHostFlexStyle()
         {
             if (this.Flex.Value == null)
                 return;
-
+            var flexRegex =
+#if NET7_0_OR_GREATER
+                FlexRegex();
+#else
+                _flexRegex;
+#endif
             this._hostFlexStyle = this.Flex.Match(str =>
                 {
-                    if (Regex.Match(str, "^\\d+(\\.\\d+)?(px|em|rem|%)$").Success)
+                    if (flexRegex.IsMatch(str))
                     {
                         return $"flex: 0 0 {str};";
                     }

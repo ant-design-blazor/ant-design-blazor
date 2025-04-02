@@ -37,8 +37,6 @@ namespace AntDesign
         private string _circlePathStyle;
         private string _circleSuccessStyle;
 
-        private static readonly Regex _hexColor = new(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$");
-
         #region Parameters
 
         /// <summary>
@@ -309,9 +307,20 @@ namespace AntDesign
             return style.ToString();
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$")]
+        private static partial Regex HexColor();
+#else
+        private static readonly Regex _hexColor = new(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$");
+#endif
+
         private string ToRGB(string color)
         {
+#if NET7_0_OR_GREATER
+            var hexMatch = HexColor().Match(color);
+#else
             var hexMatch = _hexColor.Match(color);
+#endif
             if (!hexMatch.Success)
             {
                 throw new ArgumentOutOfRangeException($"{nameof(StrokeColor)}'s value must be like \"#ffffff\"");
