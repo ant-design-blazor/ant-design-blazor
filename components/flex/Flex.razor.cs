@@ -142,6 +142,7 @@ namespace AntDesign
 
         private static readonly Dictionary<FlexGap, string> _gapMap = new()
         {
+            [FlexGap.Normal] = "normal",
             [FlexGap.Small] = "small",
             [FlexGap.Middle] = "middle",
             [FlexGap.Large] = "large",
