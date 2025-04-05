@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AntDesign.core.Extensions
+namespace AntDesign.Core.Extensions
 {
     internal static class HttpClientExtensions
     {
