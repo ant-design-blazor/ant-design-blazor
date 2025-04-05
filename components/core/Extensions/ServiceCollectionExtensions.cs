@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text.Encodings.Web;
 using AntDesign;
-using AntDesign.core.Services;
+using AntDesign.Core.Services;
 using AntDesign.Filters;
 using AntDesign.JsInterop;
 using Microsoft.Extensions.DependencyInjection.Extensions;

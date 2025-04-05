@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Threading.Tasks;
-using AntDesign.core.Services;
+using AntDesign.Core.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;

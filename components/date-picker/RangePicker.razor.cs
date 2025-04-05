@@ -4,7 +4,7 @@
 
 using System;
 using System.Threading.Tasks;
-using AntDesign.core.Extensions;
+using AntDesign.Core.Extensions;
 using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.Internal;
