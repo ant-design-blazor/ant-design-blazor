@@ -15,6 +15,16 @@ timeline: true
 
 ---
 
+### 1.3.2
+
+`2025-04-07`
+
+- 🐞 修复 Upload 文件列表删除时渲染问题。[#4533](https://github.com/ant-design-blazor/ant-design-blazor/pull/4533) [@ElderJames](https://github.com/ElderJames)
+- 🐞 All Flex components that have the default FlexGap now no longer give an KeyNotFoundException。[#4529](https://github.com/ant-design-blazor/ant-design-blazor/pull/4529) [@MauritsDodo](https://github.com/MauritsDodo)
+- ⚡️ 新增 `params ReadOnlySpan<>` 重载。[#4531](https://github.com/ant-design-blazor/ant-design-blazor/pull/4531) [@LeaFrock](https://github.com/LeaFrock)
+- 📖 修复 组件搜索。[#4530](https://github.com/ant-design-blazor/ant-design-blazor/pull/4530) [@CAPCHIK](https://github.com/CAPCHIK)
+
+
 ### 1.3.1
 
 `2025-04-02`

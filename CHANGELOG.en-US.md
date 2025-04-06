@@ -14,6 +14,16 @@ timeline: true
 - Major version release is not included in this schedule for breaking change and new features.
 
 ---
+
+### 1.3.2
+
+`2025-04-07`
+
+- 🐞 Fixed Upload the rendering issue when deleting items from the  file list. [#4533](https://github.com/ant-design-blazor/ant-design-blazor/pull/4533) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Flex that have the default FlexGap now no longer give an KeyNotFoundException. [#4529](https://github.com/ant-design-blazor/ant-design-blazor/pull/4529) [@MauritsDodo](https://github.com/MauritsDodo)
+- ⚡️ Add `params ReadOnlySpan<>` override. [#4531](https://github.com/ant-design-blazor/ant-design-blazor/pull/4531) [@LeaFrock](https://github.com/LeaFrock)
+- 📖 Docs fixed broken components search. [#4530](https://github.com/ant-design-blazor/ant-design-blazor/pull/4530) [@CAPCHIK](https://github.com/CAPCHIK)
+
 ### 1.3.1
 
 `2025-04-02`
