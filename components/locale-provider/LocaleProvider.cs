@@ -21,24 +21,39 @@ namespace AntDesign
 {
     public partial class LocaleProvider
     {
-        public static Locale CurrentLocale => GetCurrentLocale();
-
         public static string DefaultLanguage { get; set; } = "en-US";
 
-        private static readonly ConcurrentDictionary<string, Locale> _localeCache = new();
         private static readonly Assembly _resourcesAssembly = typeof(LocaleProvider).Assembly;
-
-#if NET8_0_OR_GREATER
-        private static readonly FrozenDictionary<string, string> _availableResources = GetAvailableResources().ToFrozenDictionary();
-#else
-        private static readonly Dictionary<string, string> _availableResources = GetAvailableResources();
-#endif
 
 #if NET7_0_OR_GREATER
         [GeneratedRegex(@"^.*locales\.(.+)\.json")]
         private static partial Regex LocaleJsonRegex();
 #else
         private static readonly Regex _localeJsonRegex = new(@"^.*locales\.(.+)\.json");
+#endif
+
+        private static readonly JsonSerializerOptions _localeJsonOpt = InitLocaleJsonOpt();
+
+        private static JsonSerializerOptions InitLocaleJsonOpt()
+        {
+            var opt = new JsonSerializerOptions()
+            {
+#if NET7_0_OR_GREATER
+                TypeInfoResolver = LocaleSourceGenerationContext.Default,
+#endif
+                PropertyNameCaseInsensitive = true,
+            };
+            opt.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+            return opt;
+        }
+
+
+        private static readonly ConcurrentDictionary<string, Locale> _localeCache = new();
+
+#if NET8_0_OR_GREATER
+        private static readonly FrozenDictionary<string, string> _availableResources = GetAvailableResources().ToFrozenDictionary();
+#else
+        private static readonly Dictionary<string, string> _availableResources = GetAvailableResources();
 #endif
 
         private static Dictionary<string, string> GetAvailableResources()
@@ -67,6 +82,8 @@ namespace AntDesign
 
             return availableResources;
         }
+
+        public static Locale CurrentLocale => GetCurrentLocale();
 
         public static Locale GetCurrentLocale()
         {
@@ -136,21 +153,6 @@ namespace AntDesign
                 locale.SetCultureInfo(cultureName);
                 _localeCache.AddOrUpdate(cultureName, locale, (name, original) => locale);
             }
-        }
-
-        private static readonly JsonSerializerOptions _localeJsonOpt = InitLocaleJsonOpt();
-
-        private static JsonSerializerOptions InitLocaleJsonOpt()
-        {
-            var opt = new JsonSerializerOptions()
-            {
-#if NET7_0_OR_GREATER
-                TypeInfoResolver = LocaleSourceGenerationContext.Default,
-#endif
-                PropertyNameCaseInsensitive = true,
-            };
-            opt.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-            return opt;
         }
 
         private static bool TryGetSpecifiedLocale(string cultureName, out Locale locale)
