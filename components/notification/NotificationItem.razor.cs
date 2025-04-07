@@ -17,6 +17,12 @@ namespace AntDesign
         [Parameter]
         public Func<NotificationConfig, Task> OnClose { get; set; }
 
+        [Parameter]
+        public EventCallback<NotificationItem> OnMouseEnter { get; set; }
+
+        [Parameter]
+        public EventCallback<NotificationItem> OnMouseLeave { get; set; }
+
         private string GetIconClassName()
         {
             if (Config.NotificationType != NotificationType.None
@@ -50,6 +56,16 @@ namespace AntDesign
         private void OnClick()
         {
             Config.InvokeOnClick();
+        }
+
+        private void HandleMouseEnter()
+        {
+            OnMouseEnter.InvokeAsync(this);
+        }
+
+        private void HandleMouseLeave()
+        {
+            OnMouseLeave.InvokeAsync(this);
         }
     }
 }
