@@ -105,10 +105,8 @@ namespace AntDesign
                 }
             }
 
-            if (_configDict.ContainsKey(config.Key))
+            if (_configDict.TryGetValue(config.Key, out var oldConfig))
             {
-                var oldConfig = _configDict[config.Key];
-
                 oldConfig.Cts?.Cancel();
                 oldConfig.Type = config.Type;
                 oldConfig.Content = config.Content;
