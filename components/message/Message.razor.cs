@@ -133,12 +133,12 @@ namespace AntDesign
                 var task = Task.Delay(TimeSpan.FromSeconds(config.Duration.Value), cts.Token);
 
                 return task.ContinueWith((result) =>
+                {
+                    if (!cts.IsCancellationRequested)
                     {
-                        if (!cts.IsCancellationRequested)
-                        {
-                            RemoveItem(config);
-                        }
-                    }, TaskScheduler.Current);
+                        RemoveItem(config);
+                    }
+                }, TaskScheduler.Current);
             }
             else
             {
@@ -175,5 +175,17 @@ namespace AntDesign
             InvokeAsync(StateHasChanged);
         }
 
+        private void OnMouseEnter(MessageItem item)
+        {
+            item.Config.Cts?.Cancel();
+        }
+
+        private void OnMouseLeave(MessageItem item)
+        {
+            if (item.Config.Duration > 0)
+            {
+                TimingRemove(item.Config);
+            }
+        }
     }
 }
