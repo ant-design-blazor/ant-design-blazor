@@ -338,7 +338,7 @@ namespace AntDesign
 
         private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
 
-        private Queue<Func<Task>> _afterValueChangedQueue = new();
+        private readonly Queue<Func<Task>> _afterValueChangedQueue = new();
 
         protected override void OnInitialized()
         {
@@ -358,11 +358,11 @@ namespace AntDesign
 
         protected void SetAttributes()
         {
-            Attributes ??= new Dictionary<string, object>();
+            Attributes ??= [];
 
-            if (MaxLength >= 0 && !Attributes.ContainsKey("maxlength"))
+            if (MaxLength >= 0)
             {
-                Attributes?.Add("maxlength", MaxLength);
+                Attributes.TryAdd("maxlength", MaxLength);
             }
         }
 

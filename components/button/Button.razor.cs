@@ -191,7 +191,7 @@ namespace AntDesign
 
         private bool _animating = false;
 
-        private string _btnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
+        private const string BtnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
 
         protected void SetClassMap()
         {
