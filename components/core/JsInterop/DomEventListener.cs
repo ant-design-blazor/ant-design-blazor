@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
+using AntDesign.Core.Helpers;
 using AntDesign.Core.JsInterop.ObservableApi;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -80,12 +81,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
                     if (!domEventSubscriptionStore.TryGetValue(key, out var tempList))
                         return;
 
-                    var jsonOpt =
-#if NET9_0_OR_GREATER
-                        JsonSerializerOptions.Web;
-#else
-                        new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-#endif
+                    var jsonOpt = JsonSerializerHelper.DefaultOptions;
                     foreach (var subscription in tempList)
                     {
                         var tP = JsonSerializer.Deserialize(p, subscription.Type, jsonOpt);
