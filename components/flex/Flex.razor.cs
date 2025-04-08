@@ -151,7 +151,7 @@ namespace AntDesign
         private string FlexStyle => new CssStyleBuilder()
             .AddStyle("flex-wrap", Wrap.IsT0 ? _wrapMap[Wrap.AsT0].ToString() : Wrap.AsT1)
             .AddStyle("align-items", Align.IsT0 ? _alignMap[Align.AsT0].ToString() : Align.AsT1)
-            .AddStyle("justify-content", Justify.IsT0 ? _justifyMap[Justify.AsT0].ToString() : Align.AsT1)
+            .AddStyle("justify-content", Justify.IsT0 ? _justifyMap[Justify.AsT0].ToString() : Justify.AsT1)
             .AddStyle("flex", FlexCss)
             .AddStyle("gap", Gap.IsT0 ? "" : (CssSizeLength)Gap.AsT1)
             .Build();
