@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Helpers;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -213,10 +214,13 @@ namespace AntDesign.Internal
         [Parameter]
         public Trigger[] Trigger //TODO: this should probably be a flag not an array
         {
-            get { return _trigger.Select(t => t.Trigger).ToArray(); }
+            get
+            {
+                return [.. _trigger.Select(t => t.Trigger)];
+            }
             set
             {
-                _trigger = value.Select(t => TriggerType.Create(t)).ToArray();
+                _trigger = [.. value.Select(TriggerType.Create)];
             }
         }
 
@@ -266,7 +270,7 @@ namespace AntDesign.Internal
         private bool _mouseUpInOverlay = false;
 
         protected Overlay _overlay = null;
-        private TriggerType[] _trigger = new TriggerType[] { TriggerType.Hover };
+        private TriggerType[] _trigger = [TriggerType.Hover];
         private bool _shouldRender = true;
 
         internal void SetShouldRender(bool shouldRender) => _shouldRender = shouldRender;
@@ -342,15 +346,13 @@ namespace AntDesign.Internal
 
         protected async void OnUnboundClick(JsonElement jsonElement)
         {
-            var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(), JsonSerializerHelper.DefaultOptions);
             await OnClickDiv(eventArgs);
         }
 
         protected async void OnContextMenu(JsonElement jsonElement)
         {
-            var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(),
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(), JsonSerializerHelper.DefaultOptions);
 
             await OnTriggerContextmenu(eventArgs);
         }
