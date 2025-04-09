@@ -581,7 +581,7 @@ namespace AntDesign
 
             if (_fieldValueGetter == null)
             {
-                return[];
+                return [];
             }
 
             List<ValidationResult> results = [];
