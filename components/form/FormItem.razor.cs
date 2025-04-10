@@ -559,7 +559,7 @@ namespace AntDesign
             SetRules();
         }
 
-        ValidationResult[] IFormItem.ValidateFieldWithRules()
+        IEnumerable<ValidationResult>  IFormItem.ValidateFieldWithRules()
         {
             if (_propertyReflector is null)
             {
@@ -616,7 +616,7 @@ namespace AntDesign
                 }
             }
             
-            return results.ToArray();
+            return results;
         }
 
         FieldIdentifier IFormItem.GetFieldIdentifier() => _fieldIdentifier;
