@@ -4,17 +4,11 @@
     Display normal message
 </Button>
 
-@code{
+@code {
     private async Task OnClick()
     {
-        await _message.Loading("Action in progress..", 2.5)
-            .ContinueWith((result) =>
-            {
-                _message.Info("Loading finished", 2.5)
-                .ContinueWith((result) =>
-                {
-                    _message.Info("Loading finished is finished", 2.5);
-                });
-            });
+        await _message.LoadingAsync("Action in progress..", 2.5);
+        await _message.InfoAsync("Loading finished", 2.5);
+        await _message.InfoAsync("Loading finished is finished", 2.5);
     }
 }

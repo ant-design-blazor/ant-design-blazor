@@ -158,12 +158,25 @@ namespace AntDesign
                 InvokeAsync(StateHasChanged);
                 config.InvokeOnClose();
 
-                Task.Delay(500)
-                    .ContinueWith((result) =>
+                if (config.WaitForAnimation)
+                {
+                    return Task.Delay(500)
+                        .ContinueWith((result) =>
+                        {
+                            _configDict.TryRemove(config.Key, out _);
+                            InvokeAsync(StateHasChanged);
+                        }, TaskScheduler.Current);
+                }
+                else
+                {
+                    _ = Task.Run(async () =>
                     {
+                        await Task.Delay(500);
                         _configDict.TryRemove(config.Key, out _);
-                        InvokeAsync(StateHasChanged);
-                    }, TaskScheduler.Current);
+                        await InvokeAsync(StateHasChanged);
+                    });
+                    return Task.CompletedTask;
+                }
             }
 
             return Task.CompletedTask;
