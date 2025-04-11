@@ -203,7 +203,8 @@ namespace AntDesign.Internal
                 url = Action,
                 name = Name,
                 instance = _currentInstance,
-                method = MethodString
+                method = MethodString,
+                withCredentials = Upload.WithCredentials
             });
         }
 
@@ -228,7 +229,8 @@ namespace AntDesign.Internal
                     url = Action,
                     name = Name,
                     instance = _currentInstance,
-                    method = MethodString
+                    method = MethodString,
+                    withCredentials = Upload.WithCredentials
                 });
             }
         }
