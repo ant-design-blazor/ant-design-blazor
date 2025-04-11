@@ -1,0 +1,40 @@
+﻿@page "/test"
+
+<Button OnClick=OnClick>OnClick</Button>
+
+@inject ModalService ModalService
+@code {
+
+    async Task OnClick()
+    {
+        ModalService.CreateAsync<ExampleDialogue>(new ModalOptions()
+            {
+                Title = "Test",
+                Width = 800,
+                DestroyOnClose = true,
+                MaskClosable = false,
+                Class = "test"
+            });
+    }
+
+public class ExampleDialogue : FeedbackComponent<int?>, IDisposable
+{
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("This gets logged first, options:"+ Options);
+
+        await Task.Delay(200);
+
+        Console.WriteLine("This gets logged third");
+
+        await base.OnInitializedAsync();
+    }
+
+    public new void Dispose()
+    {
+        Console.WriteLine("This gets logged second, but should not be logged at all");
+        base.Dispose();
+    }
+}
+
+}
