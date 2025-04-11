@@ -21,6 +21,7 @@ interface UploadConfig {
   name: string;
   instance: any;
   method: string;
+  withCredentials?: boolean;
 }
 
 export class uploadHelper {
@@ -75,7 +76,7 @@ export class uploadHelper {
     return url;
   }
 
-  static uploadFile({ element, index, data, headers, fileIds, url, name, instance, method }: UploadConfig) {
+  static uploadFile({ element, index, data, headers, fileIds, url, name, instance, method, withCredentials }: UploadConfig) {
     const formData = new FormData();
     const files = index === -1 ? Array.from(element.files) : [element.files[index]];
 
@@ -127,6 +128,10 @@ export class uploadHelper {
       });
     }
     req.open(method, url, true)
+    // Set withCredentials if provided
+    if (withCredentials === true) {
+      req.withCredentials = true;
+    }
     if (headers != null) {
       for (const header in headers) {
         req.setRequestHeader(header, headers[header]);
