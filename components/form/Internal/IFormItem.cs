@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -24,7 +25,7 @@ namespace AntDesign.Internal
 
         internal void AddControl<TValue>(AntInputComponentBase<TValue> control);
 
-        internal ValidationResult[] ValidateFieldWithRules();
+        internal IEnumerable<ValidationResult> ValidateFieldWithRules();
 
         internal FieldIdentifier GetFieldIdentifier();
 

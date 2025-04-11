@@ -559,7 +559,7 @@ namespace AntDesign
             SetRules();
         }
 
-        ValidationResult[] IFormItem.ValidateFieldWithRules()
+        IEnumerable<ValidationResult>  IFormItem.ValidateFieldWithRules()
         {
             if (_propertyReflector is null)
             {
@@ -574,47 +574,49 @@ namespace AntDesign
                 return [];
             }
 
-            if (IsRequired)
-            {
-                _rules ??= [];
-            }
-
             if (_rules?.Any() != true)
             {
                 return [];
             }
 
-            var results = new List<ValidationResult>();
-
-            if (_fieldValueGetter != null)
+            if (_fieldValueGetter == null)
             {
-                var propertyValue = _fieldValueGetter.Invoke(_fieldIdentifier.Model);
-
-                var validateMessages = Form?.Locale.DefaultValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
-
-                foreach (var rule in _rules)
-                {
-                    var validationContext = new FormValidationContext()
-                    {
-                        Rule = rule,
-                        Value = propertyValue,
-                        FieldName = _fieldIdentifier.FieldName,
-                        DisplayName = DisplayName ?? _propertyReflector.PropertyName,
-                        FieldType = _valueUnderlyingType,
-                        ValidateMessages = validateMessages,
-                        Model = Form.Model
-                    };
-
-                    var result = FormValidateHelper.GetValidationResult(validationContext);
-
-                    if (result != null)
-                    {
-                        results.Add(result);
-                    }
-                }
+                return [];
             }
 
-            return results.ToArray();
+            List<ValidationResult> results = [];
+
+            var propertyValue = _fieldValueGetter.Invoke(_fieldIdentifier.Model);
+
+            var validateMessages = Form?.Locale.DefaultValidateMessages ?? ConfigProvider?.Form?.ValidateMessages ?? new FormValidateErrorMessages();
+
+            foreach (var rule in _rules)
+            {
+                if (rule.Required == true && !IsRequired)
+                {
+                    continue;
+                }
+
+                var validationContext = new FormValidationContext()
+                {
+                    Rule = rule,
+                    Value = propertyValue,
+                    FieldName = _fieldIdentifier.FieldName,
+                    DisplayName = DisplayName ?? _propertyReflector.PropertyName,
+                    FieldType = _valueUnderlyingType,
+                    ValidateMessages = validateMessages,
+                    Model = Form.Model
+                };
+
+                var result = FormValidateHelper.GetValidationResult(validationContext);
+
+                if (result != null)
+                {
+                    results.Add(result);
+                }
+            }
+            
+            return results;
         }
 
         FieldIdentifier IFormItem.GetFieldIdentifier() => _fieldIdentifier;

@@ -390,7 +390,7 @@ namespace AntDesign
 
             var result = formItem.ValidateFieldWithRules();
 
-            if (result.Length > 0)
+            if (result.Any())
             {
                 var errors = new Dictionary<FieldIdentifier, List<string>>();
                 errors[args.FieldIdentifier] = result.Select(r => r.ErrorMessage).ToList();
@@ -411,7 +411,7 @@ namespace AntDesign
             foreach (var formItem in _formItems)
             {
                 var result = formItem.ValidateFieldWithRules();
-                if (result.Length > 0)
+                if (result.Any())
                 {
                     errors[formItem.GetFieldIdentifier()] = result.Select(r => r.ErrorMessage).ToList();
                 }
