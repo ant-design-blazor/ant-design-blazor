@@ -31,7 +31,7 @@ public static class MessageExtensions
         {
             content.AsT2.Duration = 0;
         }
-        var task = messageService.Loading(content, 0, onClose);
+        var task = messageService.LoadingAsync(content, 0, onClose);
         try
         {
             return await asyncFunc();
@@ -60,7 +60,7 @@ public static class MessageExtensions
         {
             content.AsT2.Duration = 0;
         }
-        var task = messageService.Loading(content, 0, onClose);
+        var task = messageService.LoadingAsync(content, 0, onClose);
         try
         {
             await asyncFunc();
