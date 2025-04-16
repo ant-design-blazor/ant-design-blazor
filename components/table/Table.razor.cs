@@ -1072,6 +1072,11 @@ namespace AntDesign
                 return TreeChildren(rowData.Data)?.Any() == true || OnExpand.HasDelegate;
             }
 
+            if (ExpandTemplate != null)
+            {
+                return true;
+            }
+
             return OnExpand.HasDelegate;
         }
 
