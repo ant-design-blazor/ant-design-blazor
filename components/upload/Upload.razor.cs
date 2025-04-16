@@ -235,9 +235,14 @@ namespace AntDesign
         [Parameter]
         public bool BatchUpload { get; set; }
 
-        private bool IsText => ListType == UploadListType.Text;
+        /// <summary>
+        /// Whether to send cookies when making upload requests
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool WithCredentials { get; set; }
 
-        // private bool IsPicture => ListType == UploadListType.Picture;
+        private bool IsText => ListType == UploadListType.Text;
 
         private bool IsPictureCard => ListType == UploadListType.PictureCard;
 
