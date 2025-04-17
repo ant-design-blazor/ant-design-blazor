@@ -5,7 +5,6 @@ name: Preview Deploy
 on:
   workflow_run:
     workflows: ["Preview Build"]
-    branches: master
     types:
       - completed
 
