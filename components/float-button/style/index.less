@@ -1,0 +1,86 @@
+﻿:root {
+    --ant-color-bg-elevated: #ffffff;
+    --ant-motion-duration-mid: 0.2s;
+    --ant-control-height-lg: 40px;
+    --ant-color-text: rgba(0, 0, 0, 0.88);
+    --ant-font-size: 14px;
+    --ant-line-height: 1.5714285714285714;
+    --ant-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --ant-margin-lg: 24px;
+    --ant-margin-xxl: 48px;
+    --ant-box-shadow-secondary: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    --ant-padding-xxs: 4px;
+    --ant-font-size-icon: 12px;
+}
+
+.ant-float-btn-default {
+    background-color: var(--ant-color-bg-elevated);
+    transition: background-color var(--ant-motion-duration-mid);
+}
+
+.ant-float-btn-circle {
+    height: var(--ant-control-height-lg);
+    border-radius: 50%;
+}
+
+.ant-float-btn {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: var(--ant-color-text);
+    font-size: var(--ant-font-size);
+    line-height: var(--ant-line-height);
+    list-style: none;
+    font-family: var(--ant-font-family);
+    border: none;
+    position: fixed;
+    cursor: pointer;
+    z-index: 99;
+    display: block;
+    width: var(--ant-control-height-lg);
+    height: var(--ant-control-height-lg);
+    inset-inline-end: var(--ant-margin-lg);
+    inset-block-end: var(--ant-margin-xxl);
+    box-shadow: var(--ant-box-shadow-secondary);
+}
+
+.ant-float-btn-default .ant-float-btn-body {
+    background-color: var(--ant-color-bg-elevated);
+    transition: background-color var(--ant-motion-duration-mid);
+}
+
+.ant-float-btn-circle .ant-float-btn-body {
+    border-radius: 50%;
+}
+
+.ant-float-btn .ant-float-btn-body {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all var(--ant-motion-duration-mid);
+}
+
+.ant-float-btn .ant-float-btn-body .ant-float-btn-content {
+    overflow: hidden;
+    text-align: center;
+    min-height: var(--ant-control-height-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: calc(var(--ant-padding-xxs) / 2) var(--ant-padding-xxs);
+}
+
+.ant-float-btn-default .ant-float-btn-body .ant-float-btn-content .ant-float-btn-icon {
+    color: var(--ant-color-text);
+}
+
+.ant-float-btn .ant-float-btn-body .ant-float-btn-content .ant-float-btn-icon {
+    text-align: center;
+    margin: auto;
+    width: calc(var(--ant-font-size-icon)* 1.5);
+    font-size: calc(var(--ant-font-size-icon) * 1.5);
+    line-height: 1;
+}
