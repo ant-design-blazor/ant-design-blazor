@@ -138,6 +138,7 @@ While we recommend the official localization solution, you can also use the solu
     builder.Services.AddSimpleEmbeddedJsonLocalization(options =>
     {
         options.ResourcesPath = "Resources";
+        options.Resources = SimpleStringLocalizerOptions.BuildResources("Resources", Assembly.GetExecutingAssembly());
     });
     ```
 
