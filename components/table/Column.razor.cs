@@ -293,7 +293,7 @@ namespace AntDesign
 
         private RenderFragment _renderDefaultFilterDropdown;
 
-        private bool IsFixedEllipsis => Ellipsis && Fixed is ColumnFixPlacement.Left or ColumnFixPlacement.Right;
+        private bool IsFixedEllipsis => ShouldShowEllipsis && Fixed is ColumnFixPlacement.Left or ColumnFixPlacement.Right;
 
         private bool IsFiltered => _hasFilterSelected || Filtered;
 

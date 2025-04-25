@@ -102,11 +102,19 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// Cut off header title with ellipsis when set to true
+        /// Cut off content with ellipsis when set to true
         /// </summary>
         /// <default value="false" />
         [Parameter]
         public bool Ellipsis { get; set; }
+
+        /// <summary>
+        /// Whether to show native title attribute (true)
+        /// Setting this property will automatically enable ellipsis.
+        /// </summary>
+        /// <default value="null" />
+        [Parameter]
+        public bool? EllipsisShowTitle { get; set; }
 
         /// <summary>
         /// If the column is hidden or not
@@ -153,6 +161,8 @@ namespace AntDesign
 
         private int ColEndIndex => ColIndex + ActualColumnSpan;
 
+        protected bool ShouldShowEllipsis => Ellipsis || EllipsisShowTitle.HasValue;
+
         private void SetClass()
         {
             ClassMapper
@@ -162,7 +172,7 @@ namespace AntDesign
                 .If($"ant-table-cell-fix-right-first", () => Context?.Columns.FirstOrDefault(x => x.Fixed == ColumnFixPlacement.Right) is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
                 .If($"ant-table-cell-fix-left-last", () => Context?.Columns.LastOrDefault(x => x.Fixed == ColumnFixPlacement.Left) is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
                 .If($"ant-table-cell-with-append", () => IsBody && Table.TreeMode && Table.TreeExpandIconColumnIndex >= ColIndex && Table.TreeExpandIconColumnIndex < ColEndIndex)
-                .If($"ant-table-cell-ellipsis", () => Ellipsis)
+                .If($"ant-table-cell-ellipsis", () => ShouldShowEllipsis)
                 ;
         }
 
@@ -189,7 +199,7 @@ namespace AntDesign
                     Table?.HasFixRight();
                 }
 
-                if (Ellipsis)
+                if (ShouldShowEllipsis)
                 {
                     Table?.TableLayoutIsFixed();
                 }
