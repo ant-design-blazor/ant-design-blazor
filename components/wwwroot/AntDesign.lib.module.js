@@ -21,8 +21,8 @@ function loadScriptAndStyle() {
         customScript.setAttribute('src', '_content/AntDesign/js/ant-design-blazor.js');
         const jsmark = document.querySelector('[antblazor-js]') || document.querySelector('script');
 
-        if (jsmark) {
-            jsmark.before(customScript);
+        if (jsmark && jsmark.parentNode) {
+            jsmark.parentNode.insertBefore(customScript, jsmark);
         } else {
             document.body.appendChild(customScript);
         }
@@ -34,8 +34,8 @@ function loadScriptAndStyle() {
         customStyle.setAttribute('rel', 'stylesheet');
 
         const cssMark = document.querySelector('[antblazor-css]') || document.querySelector('link');
-        if (cssMark) {
-            cssMark.before(customStyle);
+        if (cssMark && cssMark.parentNode) {
+            cssMark.parentNode.insertBefore(customStyle, cssMark);
         } else {
             document.head.appendChild(customStyle);
         }
