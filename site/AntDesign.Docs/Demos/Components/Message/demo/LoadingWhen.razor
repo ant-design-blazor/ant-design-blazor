@@ -8,33 +8,32 @@
 </Button>
 
 @code {
+
     private async Task OnFetchData()
     {
         var data = await _message.LoadingWhen(
-            async () => 
+            async () =>
             {
                 await Task.Delay(2000);
                 return new[] { "Item 1", "Item 2", "Item 3" };
             },
             "Fetching data..."
         );
-        
-        await _message.Success($"Fetched {data.Length} items: {string.Join(", ", data)}");
+
+        _message.Success($"Fetched {data.Length} items: {string.Join(", ", data)}");
     }
 
     private async Task OnSaveData()
     {
         await _message.LoadingWhen(
-            async () => 
+            async () => { await Task.Delay(2000); },
+            new MessageConfig
             {
-                await Task.Delay(2000);
-            },
-            new MessageConfig 
-            { 
                 Content = "Saving data...",
             }
         );
-        
-        await _message.Success("Data saved successfully!");
+
+        _message.Success("Data saved successfully!");
     }
+
 }

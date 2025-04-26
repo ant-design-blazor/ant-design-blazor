@@ -21,7 +21,7 @@
 
     public async Task OnSearch()
     {
-        await message.Loading($"searching {txtValue}", 2);
+        await message.LoadingAsync($"searching {txtValue}", 2);
     }
 
     private async Task OnEnter(KeyboardEventArgs e)
