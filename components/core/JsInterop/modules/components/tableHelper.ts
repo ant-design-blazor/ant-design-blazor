@@ -207,6 +207,14 @@
       bodyRef.observer.observe(target, config);
       tableHelper.setBodyHeight(bodyRef);
     }
+
+    if (scrollX) {
+      const stickyRef = wrapperRef.querySelector('.ant-table-sticky-scroll');
+      const stickyBarRef = wrapperRef.querySelector('.ant-table-sticky-scroll-bar');
+      if (stickyRef && stickyBarRef) {
+        tableHelper.enableStickyScroll(wrapperRef, bodyRef, stickyRef, stickyBarRef);
+      }
+    }
   }
 
   static unbindTableScroll(bodyRef) {
@@ -215,6 +223,14 @@
       window.removeEventListener('resize', bodyRef.bindScroll);
       if (bodyRef.observer) {
         bodyRef.observer.disconnect();
+      }
+
+      const wrapperRef = bodyRef.closest('.ant-table-wrapper');
+      if (wrapperRef) {
+        const stickyRef = wrapperRef.querySelector('.ant-table-sticky-scroll');
+        if (stickyRef && stickyRef.cleanup) {
+          stickyRef.cleanup();
+        }
       }
     }
   }
@@ -322,5 +338,159 @@
         }
       }
     });
+  }
+
+  static isTableBottomVisible(tableElement) {
+    if (!tableElement) return true;
+
+    // Find the viewport height
+    const viewportHeight = window.innerHeight;
+    const tableRect = tableElement.getBoundingClientRect();
+
+    // 检查表格底部是否在视口之外
+    return tableRect.bottom <= viewportHeight;
+  }
+
+  static enableStickyScroll(wrapperRef, bodyRef, stickyRef, stickyBarRef) {
+    if (!stickyRef || !stickyBarRef || !bodyRef) return;
+
+    const updateStickyScroll = () => {
+      const { clientWidth, scrollWidth, scrollLeft } = bodyRef;
+      
+      // Check both scroll width and table bottom visibility
+      const isScrollable = scrollWidth > clientWidth;
+      const isBottomVisible = tableHelper.isTableBottomVisible(wrapperRef);
+      
+      // Only show sticky scroll when content is scrollable AND table bottom is not visible
+      if (!isScrollable || isBottomVisible) {
+        if (stickyRef.style.display !== 'none') {
+          stickyRef.style.display = 'none';
+        }
+        return;
+      }
+
+      // Show sticky scroll
+      if (stickyRef.style.display !== 'block') {
+        stickyRef.style.display = 'block';
+      }
+      
+      // Sync sticky scroll width with table width
+      stickyRef.style.width = `${clientWidth}px`;
+      
+      // Calculate bar position based on scroll position
+      const scrollRatio = scrollLeft / (scrollWidth - clientWidth);
+      const maxBarOffset = stickyRef.clientWidth - stickyBarRef.clientWidth;
+      const barLeft = scrollRatio * maxBarOffset;
+      
+      stickyBarRef.style.transform = `translate3d(${barLeft}px, 0px, 0px)`;
+    };
+
+    // Handle sticky bar dragging
+    let isDragging = false;
+    let startMouseX = 0;
+    let startBarLeft = 0;
+
+    const onMouseDown = (e) => {
+      e.preventDefault();
+      isDragging = true;
+      startMouseX = e.clientX;
+      
+      const transform = window.getComputedStyle(stickyBarRef).transform;
+      const matrix = new DOMMatrix(transform);
+      startBarLeft = matrix.m41;
+      
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+      stickyBarRef.classList.add('ant-table-sticky-scroll-bar-active');
+    };
+
+    const onMouseMove = (e) => {
+      if (!isDragging) return;
+      
+      e.preventDefault();
+      const { clientWidth, scrollWidth } = bodyRef;
+      const maxBarOffset = stickyRef.clientWidth - stickyBarRef.clientWidth;
+      
+      const mouseDelta = e.clientX - startMouseX;
+      const newBarLeft = Math.max(0, Math.min(maxBarOffset, startBarLeft + mouseDelta));
+      
+      const scrollRatio = newBarLeft / maxBarOffset;
+      const maxScroll = scrollWidth - clientWidth;
+      bodyRef.scrollLeft = scrollRatio * maxScroll;
+    };
+
+    const updateStickyBarWidth = () => {
+      const { clientWidth, scrollWidth } = bodyRef;
+      if (scrollWidth > clientWidth) {
+        const ratio = clientWidth / scrollWidth;
+        const barWidth = Math.max(ratio * stickyRef.clientWidth, 20);
+        stickyBarRef.style.width = `${barWidth}px`;
+      }
+    };
+
+    const onMouseUp = () => {
+      isDragging = false;
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+      stickyBarRef.classList.remove('ant-table-sticky-scroll-bar-active');
+    };
+
+    // Create ResizeObserver to monitor table width changes
+    const resizeObserver = new ResizeObserver(() => {
+      requestAnimationFrame(updateStickyScroll);
+      requestAnimationFrame(updateStickyBarWidth);
+    });
+
+    // Create IntersectionObserver to monitor table visibility
+    const visibilityObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            requestAnimationFrame(updateStickyScroll);
+          }
+        });
+      },
+      {
+        threshold: [0, 1],
+        root: null
+      }
+    );
+
+    // Observe both the table body and wrapper for size changes
+    resizeObserver.observe(bodyRef);
+    resizeObserver.observe(wrapperRef);
+
+    // Observe the table wrapper
+    visibilityObserver.observe(wrapperRef);
+
+    // Add scroll event listener to window
+    const scrollHandler = () => {
+      requestAnimationFrame(updateStickyScroll);
+    };
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+
+    // Bind events
+    stickyBarRef.addEventListener('mousedown', onMouseDown);
+    bodyRef.addEventListener('scroll', scrollHandler, { passive: true });
+    window.addEventListener('resize', () => {
+      requestAnimationFrame(() => {
+        updateStickyBarWidth();
+        updateStickyScroll();
+      });
+    });
+
+    // Store cleanup function
+    stickyRef.cleanup = () => {
+      stickyBarRef.removeEventListener('mousedown', onMouseDown);
+      bodyRef.removeEventListener('scroll', scrollHandler);
+      window.removeEventListener('scroll', scrollHandler);
+      window.removeEventListener('resize', updateStickyScroll);
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
+    };
+
+    // Initial update
+    updateStickyBarWidth();
+    updateStickyScroll();
   }
 }

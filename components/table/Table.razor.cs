@@ -380,6 +380,8 @@ namespace AntDesign
         public bool EnableVirtualization { get; set; }
 
 #endif
+        [Parameter]
+        public int? StickyOffsetHeader { get; set; }
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
@@ -416,6 +418,8 @@ namespace AntDesign
 
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
+        private string StickyHolderStyle => StickyOffsetHeader.HasValue ? $"top: {StickyOffsetHeader.Value}px;" : "";
+
         private ElementReference _wrapperRef;
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
@@ -430,7 +434,7 @@ namespace AntDesign
 
         private HashSet<string> _outsideParameters;
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
-
+        private bool IsSticky => StickyOffsetHeader.HasValue;
         private bool IsEntityFrameworkCore => _dataSource is IQueryable<TItem> query && query.Provider.ToString().Contains("EntityFrameworkCore");
 
         private bool UseItemsProvider
@@ -455,6 +459,8 @@ namespace AntDesign
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
+
+        bool ITable.IsSticky => IsSticky;
 
         void ITable.AddGroupColumn(IFieldColumn column) => AddGroupColumn(column);
 
