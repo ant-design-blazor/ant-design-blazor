@@ -163,16 +163,21 @@ namespace AntDesign
 
         protected bool ShouldShowEllipsis => Ellipsis || EllipsisShowTitle.HasValue;
 
+        private bool IsFixRight => Context.Columns.Any(x => x.Fixed == ColumnFixPlacement.Right && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex);
+
+        private bool IsFixLeft => Context.Columns.Any(x => x.Fixed == ColumnFixPlacement.Left && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex);
+
         private void SetClass()
         {
             ClassMapper
                 .Add("ant-table-cell")
-                .If("ant-table-cell-fix-right", () => Context.Columns.Any(x => x.Fixed == ColumnFixPlacement.Right && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex))
-                .If("ant-table-cell-fix-left", () => Context.Columns.Any(x => x.Fixed == ColumnFixPlacement.Left && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex))
+                .If("ant-table-cell-fix-right", () => IsFixRight)
+                .If("ant-table-cell-fix-left", () => IsFixLeft)
                 .If($"ant-table-cell-fix-right-first", () => Context?.Columns.FirstOrDefault(x => x.Fixed == ColumnFixPlacement.Right) is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
                 .If($"ant-table-cell-fix-left-last", () => Context?.Columns.LastOrDefault(x => x.Fixed == ColumnFixPlacement.Left) is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
                 .If($"ant-table-cell-with-append", () => IsBody && Table.TreeMode && Table.TreeExpandIconColumnIndex >= ColIndex && Table.TreeExpandIconColumnIndex < ColEndIndex)
                 .If($"ant-table-cell-ellipsis", () => ShouldShowEllipsis)
+                .If("ant-table-cell-fix-sticky", () => Table.IsSticky && (IsFixRight || IsFixLeft))
                 ;
         }
 

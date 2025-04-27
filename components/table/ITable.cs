@@ -96,5 +96,7 @@ namespace AntDesign
         internal bool RebuildColumns(bool add);
 
         internal bool AutoColIndexes { get; }
+
+        internal bool IsSticky { get; }
     }
 }
