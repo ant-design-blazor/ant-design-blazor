@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.Internal;
@@ -116,16 +117,26 @@ namespace AntDesign
             }
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex("@([^@\\s]+)\\s")]
+        private static partial Regex MentionNamesRegex();
+#else
+        private static readonly Regex _mentionNamesRegex = new("@([^@\\s]+)\\s");
+#endif
+
         public List<string> GetMentionNames()
         {
-            var r = new List<string>();
-            var regex = new System.Text.RegularExpressions.Regex("@([^@\\s]+)\\s");
-            regex.Matches(Value).ToList().ForEach(m =>
+#if NET7_0_OR_GREATER
+            var matches = MentionNamesRegex().Matches(Value);
+#else
+            var matches = _mentionNamesRegex.Matches(Value);
+#endif
+            var names = new List<string>(matches.Count);
+            foreach (Match m in matches)
             {
-                var name = m.Groups[1].Value;
-                r.Add(name);
-            });
-            return r;
+                names.Add(m.Groups[1].Value);
+            }
+            return names;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -208,7 +219,8 @@ namespace AntDesign
             {
                 await HideOverlay();
                 return;
-            };
+            }
+            ;
 
             var v = Value.Substring(0, focusPosition);  //从光标处切断,向前找匹配项
             var lastIndex = v.LastIndexOf(Prefix);

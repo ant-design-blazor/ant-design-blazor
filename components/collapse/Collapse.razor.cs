@@ -56,6 +56,18 @@ namespace AntDesign
         public string[] DefaultActiveKey { get; set; } = Array.Empty<string>();
 
         /// <summary>
+        /// Currently active panel keys with two-way binding support
+        /// </summary>
+        [Parameter]
+        public string[] ActiveKeys { get; set; }
+
+        /// <summary>
+        /// Two-way binding parameter callback for ActiveKeys
+        /// </summary>
+        [Parameter]
+        public EventCallback<string[]> ActiveKeysChanged { get; set; }
+
+        /// <summary>
         /// Callback executed when open panels change
         /// </summary>
         [Parameter]
@@ -92,6 +104,13 @@ namespace AntDesign
 
         private IList<Panel> Items { get; } = new List<Panel>();
 
+        private string[] _internalActiveKeys;
+
+        /// <summary>
+        /// Get the effective active keys, either from external binding or internal state
+        /// </summary>
+        private string[] EffectiveActiveKeys => ActiveKeys ?? _internalActiveKeys;
+
         private void SetClassMap()
         {
             ClassMapper
@@ -105,13 +124,31 @@ namespace AntDesign
         protected override async Task OnInitializedAsync()
         {
             SetClassMap();
+            _internalActiveKeys = DefaultActiveKey;
             await base.OnInitializedAsync();
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (ActiveKeys != null)
+            {
+                foreach (var item in Items)
+                {
+                    var shouldBeActive = item.Key.IsIn(ActiveKeys);
+                    if (item.Active != shouldBeActive)
+                    {
+                        item.SetActiveInt(shouldBeActive);
+                    }
+                }
+            }
         }
 
         internal void AddPanel(Panel panel)
         {
             this.Items.Add(panel);
-            if (panel.Key.IsIn(DefaultActiveKey))
+            if (panel.Key.IsIn(EffectiveActiveKeys))
             {
                 panel.SetActiveInt(true);
             }
@@ -124,25 +161,60 @@ namespace AntDesign
             this.Items.Remove(panel);
         }
 
-        internal void Click(Panel panel)
+        internal void TogglePanelState(Panel panel)
         {
             if (panel == null)
             {
                 return;
             }
 
+            var newActiveKeys = new List<string>(EffectiveActiveKeys);
+
             if (this.Accordion && !panel.Active)
             {
                 this.Items.Where(item => item != panel && item.Active)
                     .ForEach(item => item.SetActiveInt(false));
+                newActiveKeys.Clear();
             }
 
-            panel.SetActiveInt(!panel.Active);
+            var isActive = !panel.Active;
+            panel.SetActiveInt(isActive);
 
-            var selectedKeys = this.Items.Where(x => x.Active).Select(x => x.Key).ToArray();
-            OnChange.InvokeAsync(selectedKeys);
+            if (isActive)
+            {
+                if (!newActiveKeys.Contains(panel.Key))
+                {
+                    newActiveKeys.Add(panel.Key);
+                }
+            }
+            else
+            {
+                newActiveKeys.Remove(panel.Key);
+            }
 
-            panel.OnActiveChange.InvokeAsync(panel.Active);
+            var selectedKeys = newActiveKeys.ToArray();
+
+            if (ActiveKeys != null)
+            {
+                if (ActiveKeysChanged.HasDelegate)
+                {
+                    ActiveKeysChanged.InvokeAsync(selectedKeys);
+                }
+            }
+            else
+            {
+                _internalActiveKeys = selectedKeys;
+            }
+
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(selectedKeys);
+            }
+
+            if (panel.OnActiveChange.HasDelegate)
+            {
+                panel.OnActiveChange.InvokeAsync(panel.Active);
+            }
         }
 
         /// <summary>
@@ -150,14 +222,17 @@ namespace AntDesign
         /// </summary>
         /// <param name="activeKeys"></param>
         public void Activate(params string[] activeKeys)
+            => Activate(activeKeys.AsSpan());
+
+        private void Activate(params ReadOnlySpan<string> activeKeys)
         {
-            var selectedKeys = new List<string>(activeKeys.Length);
+            var newActiveKeys = new List<string>();
 
             foreach (var item in Items)
             {
                 if (item.Key.IsIn(activeKeys))
                 {
-                    selectedKeys.Add(item.Key);
+                    newActiveKeys.Add(item.Key);
                     item.SetActiveInt(true);
                 }
                 else if (this.Accordion)
@@ -166,7 +241,24 @@ namespace AntDesign
                 }
             }
 
-            OnChange.InvokeAsync(selectedKeys.ToArray());
+            var selectedKeys = newActiveKeys.ToArray();
+
+            if (ActiveKeys != null)
+            {
+                if (ActiveKeysChanged.HasDelegate)
+                {
+                    ActiveKeysChanged.InvokeAsync(selectedKeys);
+                }
+            }
+            else
+            {
+                _internalActiveKeys = selectedKeys;
+            }
+
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(selectedKeys);
+            }
         }
 
         /// <summary>
@@ -174,22 +266,39 @@ namespace AntDesign
         /// </summary>
         /// <param name="inactiveKeys"></param>
         public void Deactivate(params string[] inactiveKeys)
+            => Deactivate(inactiveKeys.AsSpan());
+
+        private void Deactivate(params ReadOnlySpan<string> inactiveKeys)
         {
-            var selectedKeys = new List<string>();
+            var newActiveKeys = new List<string>(EffectiveActiveKeys);
 
             foreach (var item in Items)
             {
                 if (item.Key.IsIn(inactiveKeys))
                 {
                     item.SetActiveInt(false);
-                }
-                else if (item.Active)
-                {
-                    selectedKeys.Add(item.Key);
+                    newActiveKeys.Remove(item.Key);
                 }
             }
 
-            OnChange.InvokeAsync(selectedKeys.ToArray());
+            var selectedKeys = newActiveKeys.ToArray();
+
+            if (ActiveKeys != null)
+            {
+                if (ActiveKeysChanged.HasDelegate)
+                {
+                    ActiveKeysChanged.InvokeAsync(selectedKeys);
+                }
+            }
+            else
+            {
+                _internalActiveKeys = selectedKeys;
+            }
+
+            if (OnChange.HasDelegate)
+            {
+                OnChange.InvokeAsync(selectedKeys);
+            }
         }
     }
 }

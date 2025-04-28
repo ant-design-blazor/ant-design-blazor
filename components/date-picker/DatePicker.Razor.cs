@@ -36,6 +36,12 @@ namespace AntDesign
         [Parameter]
         public EventCallback<DateTimeChangedEventArgs<TValue>> OnChange { get; set; }
 
+        /// <summary>
+        /// Disable the date picker. 
+        /// </summary>
+        [Parameter]
+        public bool Disabled { get; set; }
+
         private DateTime _pickerValuesAfterInit;
 
         protected override void OnInitialized()
@@ -143,6 +149,7 @@ namespace AntDesign
                 return;
 
             AutoFocus = false;
+            _duringManualInput = false;
 
             if (!_dropDown.IsOverlayShow())
             {
@@ -337,6 +344,11 @@ namespace AntDesign
                 Date = Value,
                 DateString = GetInputValue(0)
             });
+        }
+
+        protected override bool IsDisabled(int? index = null)
+        {
+            return Disabled;
         }
     }
 }

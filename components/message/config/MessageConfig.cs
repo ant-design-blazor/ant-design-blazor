@@ -51,5 +51,10 @@ namespace AntDesign
         /// Style of message
         /// </summary>
         public MessageType Type { get; set; }
+
+        /// <summary>
+        /// Whether to wait for animation completion when awaited externally
+        /// </summary>
+        public bool WaitForAnimation { get; set; } = true;
     }
 }

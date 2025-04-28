@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -59,8 +59,8 @@ namespace AntDesign
                     Size = _formSize.Value switch
                     {
                         AntDesign.FormSize.Large => ButtonSize.Large,
-                        AntDesign.FormSize.Default => ButtonSize.Default,
                         AntDesign.FormSize.Small => ButtonSize.Small,
+                        _ => ButtonSize.Default,
                     };
                 }
                 else
@@ -174,7 +174,7 @@ namespace AntDesign
         [Parameter]
         public ButtonType? Type { get; set; } = ButtonType.Default;
 
-        private readonly Hashtable _typeMap = new Hashtable()
+        private static readonly Dictionary<ButtonType, string> _typeMap = new()
         {
             [ButtonType.Default] = "default",
             [ButtonType.Primary] = "primary",
@@ -191,7 +191,7 @@ namespace AntDesign
 
         private bool _animating = false;
 
-        private string _btnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
+        private const string BtnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
 
         protected void SetClassMap()
         {
@@ -199,9 +199,9 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(prefixName)
-                .GetIf(() => $"{prefixName}-{_typeMap[Type]}", () => Type.HasValue)
+                .GetIf(() => $"{prefixName}-{_typeMap[Type.GetValueOrDefault(ButtonType.Default)]}", () => Type.HasValue)
                 .If($"{prefixName}-dangerous", () => Danger)
-                .GetIf(() => $"{prefixName}-{Shape.ToString().ToLower()}", () => Shape != ButtonShape.Rectangle)
+                .GetIf(() => $"{prefixName}-{Shape.ToString().ToLowerInvariant()}", () => Shape != ButtonShape.Rectangle)
                 .If($"{prefixName}-lg", () => Size == ButtonSize.Large)
                 .If($"{prefixName}-sm", () => Size == ButtonSize.Small)
                 .If($"{prefixName}-loading", () => Loading)

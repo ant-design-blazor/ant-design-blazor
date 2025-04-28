@@ -26,6 +26,9 @@ namespace AntDesign
         [Parameter]
         public string Href { get; set; }
 
+        [Parameter]
+        public MenuTarget? Target { get; set; }
+
         /// <summary>
         /// Gets or sets the child content of the component.
         /// </summary>
@@ -51,6 +54,14 @@ namespace AntDesign
         internal Button Button { get; set; }
 
         [Inject] private NavigationManager NavigationManger { get; set; }
+
+        private readonly static Dictionary<MenuTarget, string> _targetMap = new()
+        {
+            [MenuTarget.Self] = "_self",
+            [MenuTarget.Blank] = "_blank",
+            [MenuTarget.Parent] = "_parent",
+            [MenuTarget.Top] = "_top",
+        };
 
         /// <inheritdoc />
         protected override void OnInitialized()
@@ -127,6 +138,10 @@ namespace AntDesign
                 builder.AddAttribute(1, "href", Href);
                 builder.AddAttribute(2, "class", ClassMapper.Class);
                 builder.AddAttribute(3, "style", Style);
+
+                if (Target.HasValue)
+                    builder.AddAttribute(4, "target", _targetMap[Target.Value]);
+
                 builder.SetKey(MenuItem.Key);
                 builder.AddMultipleAttributes(5, Attributes);
                 builder.AddContent(6, ChildContent);

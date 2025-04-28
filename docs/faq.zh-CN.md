@@ -55,6 +55,18 @@ Blazor 内部会对 Parameters 进行浅比较实现性能优化。当状态变�
 
 这里是一些你在使用 antd 的过程中可能会遇到的错误和警告，但是其中一些并不是 antd 的 bug。
 
+### 绑定组件的事件时，引发编译错误 CS1503：无法将“方法组”转换为“EventCallback”
+
+这是因为组件是泛型，需要显示设置组件的泛型类型参数("T"开头)
+
+```html
+<Select TItem="string"
+        TItemValue="string"
+        DataSource="@_personNames"
+        OnSelectedItemChanged="@((personName) => {...}))">
+</Select>
+```
+
 ### Col 组件的告警
 
 由于 `Col` 组件会被 VS 识别为 `col` 元素，所以可以使用 `AntDesign.Col` 来避免告警。
@@ -62,3 +74,4 @@ Blazor 内部会对 Parameters 进行浅比较实现性能优化。当状态变�
 ### 表格组件中的 Column 与 AntDesign Charts 里的 Column 命名冲突
 
 也是可以使用命名空间 `AntDesign.Column` 或 `AntDesign.Charts.Column` 来避免告警。
+

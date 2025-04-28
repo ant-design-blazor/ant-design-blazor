@@ -4,6 +4,9 @@
 
 using System;
 using System.Collections.Concurrent;
+#if NET8_0_OR_GREATER
+using System.Collections.Frozen;
+#endif
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -16,22 +19,54 @@ using AntDesign.Locales;
 
 namespace AntDesign
 {
-    public class LocaleProvider
+    public partial class LocaleProvider
     {
-        public static Locale CurrentLocale => GetCurrentLocale();
+        public static string DefaultLanguage { get; set; } = "en-US";
 
-        public static string DefaultLanguage = "en-US";
+        private static readonly Assembly _resourcesAssembly = typeof(LocaleProvider).Assembly;
 
-        private static readonly ConcurrentDictionary<string, Locale> _localeCache = new ConcurrentDictionary<string, Locale>();
-        private static Assembly _resourcesAssembly = typeof(LocaleProvider).Assembly;
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"^.*locales\.(.+)\.json")]
+        private static partial Regex LocaleJsonRegex();
+#else
+        private static readonly Regex _localeJsonRegex = new(@"^.*locales\.(.+)\.json");
+#endif
 
-        private static readonly IDictionary<string, string> _availableResources = GetAvailableResources();
+        private static readonly JsonSerializerOptions _localeJsonOpt = InitLocaleJsonOpt();
 
-        private static IDictionary<string, string> GetAvailableResources()
+        private static JsonSerializerOptions InitLocaleJsonOpt()
         {
+            var opt = new JsonSerializerOptions()
+            {
+#if NET7_0_OR_GREATER
+                TypeInfoResolver = LocaleSourceGenerationContext.Default,
+#endif
+                PropertyNameCaseInsensitive = true,
+            };
+            opt.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+            return opt;
+        }
+
+
+        private static readonly ConcurrentDictionary<string, Locale> _localeCache = new();
+
+#if NET8_0_OR_GREATER
+        private static readonly FrozenDictionary<string, string> _availableResources = GetAvailableResources().ToFrozenDictionary();
+#else
+        private static readonly Dictionary<string, string> _availableResources = GetAvailableResources();
+#endif
+
+        private static Dictionary<string, string> GetAvailableResources()
+        {
+            var regex =
+#if NET7_0_OR_GREATER
+                LocaleJsonRegex();
+#else
+                _localeJsonRegex;
+#endif
             var availableResources = _resourcesAssembly
                 .GetManifestResourceNames()
-                .Select(x => Regex.Match(x, @"^.*locales\.(.+)\.json"))
+                .Select(x => regex.Match(x))
                 .Where(x => x.Success)
                 .ToDictionary(x => x.Groups[1].Value, x => x.Value);
 
@@ -40,16 +75,15 @@ namespace AntDesign
                 var parentCultureName = GetParentCultureName(resource.Key);
                 while (parentCultureName != string.Empty)
                 {
-                    if (!availableResources.ContainsKey(parentCultureName))
-                    {
-                        availableResources.Add(parentCultureName, resource.Value);
-                    }
+                    availableResources.TryAdd(parentCultureName, resource.Value);
                     parentCultureName = GetParentCultureName(parentCultureName);
                 }
             }
 
             return availableResources;
         }
+
+        public static Locale CurrentLocale => GetCurrentLocale();
 
         public static Locale GetCurrentLocale()
         {
@@ -124,20 +158,15 @@ namespace AntDesign
         private static bool TryGetSpecifiedLocale(string cultureName, out Locale locale)
         {
             if (!_availableResources.ContainsKey(cultureName)) return _localeCache.TryGetValue(cultureName, out locale);
-            locale = _localeCache.GetOrAdd(cultureName, key =>
+            locale = _localeCache.GetOrAdd(cultureName, static key =>
             {
-                string fileName = _availableResources[key];
+                var fileName = _availableResources[key];
                 using var fileStream = _resourcesAssembly.GetManifestResourceStream(fileName);
                 if (fileStream == null) return null;
                 using var streamReader = new StreamReader(fileStream);
                 var content = streamReader.ReadToEnd();
 
-                var serializerOptions = new JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true,
-                };
-                serializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-                var result = JsonSerializer.Deserialize<Locale>(content, serializerOptions);
+                var result = JsonSerializer.Deserialize<Locale>(content, _localeJsonOpt);
                 result.SetCultureInfo(key);
                 return result;
             });
@@ -153,16 +182,22 @@ namespace AntDesign
 
         private static string GetParentCultureName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name)) return "";
+            if (string.IsNullOrWhiteSpace(name)) return string.Empty;
             try
             {
                 return CultureInfo.GetCultureInfo(name).Parent.Name;
             }
             catch (Exception)
             {
-                if (name.Contains("-")) return name[0..name.LastIndexOf("-")];
-                else return "";
+                return name.Contains('-') ? name[0..name.LastIndexOf('-')] : string.Empty;
             }
         }
     }
+
+#if NET7_0_OR_GREATER
+    [JsonSerializable(typeof(Locale))]
+    internal partial class LocaleSourceGenerationContext : JsonSerializerContext
+    {
+    }
+#endif
 }

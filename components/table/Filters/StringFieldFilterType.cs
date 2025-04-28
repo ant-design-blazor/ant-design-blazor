@@ -24,6 +24,7 @@ namespace AntDesign.Filters
             TableFilterCompareOperator.Equals,
             TableFilterCompareOperator.NotEquals,
             TableFilterCompareOperator.Contains,
+            TableFilterCompareOperator.NotContains,
             TableFilterCompareOperator.StartsWith,
             TableFilterCompareOperator.EndsWith,
         };
@@ -35,8 +36,25 @@ namespace AntDesign.Filters
 
         public override Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
-            MethodCallExpression lowerLeftExpr = Expression.Call(leftExpr, _stringToLower);
-            MethodCallExpression lowerRightExpr = Expression.Call(rightExpr, _stringToLower);
+            // Helper function to convert expression to string if necessary
+            Expression ConvertToStringIfNecessary(Expression expr)
+            {
+                if (expr.Type == typeof(object))
+                {
+                    // Check if the actual value is a string
+                    var stringExpr = Expression.TypeAs(expr, typeof(string));
+                    var condition = Expression.NotEqual(stringExpr, Expression.Constant(null, typeof(string)));
+                    return Expression.Condition(condition, stringExpr, Expression.Constant(string.Empty));
+                }
+                return expr;
+            }
+
+            // Convert left and right expressions to string type if necessary
+            var leftStringExpr = ConvertToStringIfNecessary(leftExpr);
+            var rightStringExpr = ConvertToStringIfNecessary(rightExpr);
+
+            MethodCallExpression lowerLeftExpr = Expression.Call(leftStringExpr, _stringToLower);
+            MethodCallExpression lowerRightExpr = Expression.Call(rightStringExpr, _stringToLower);
 
             return compareOperator switch
             {
@@ -44,6 +62,8 @@ namespace AntDesign.Filters
                     compareOperator, leftExpr, rightExpr),
                 TableFilterCompareOperator.Contains => NotNullAnd(GetMethodExpression(nameof(string.Contains),
                     lowerLeftExpr, lowerRightExpr)),
+                TableFilterCompareOperator.NotContains => NotNullAnd(Expression.Not(GetMethodExpression(nameof(string.Contains),
+                    lowerLeftExpr, lowerRightExpr))),
                 TableFilterCompareOperator.StartsWith => NotNullAnd(GetMethodExpression(nameof(string.StartsWith),
                     lowerLeftExpr, lowerRightExpr)),
                 TableFilterCompareOperator.EndsWith => NotNullAnd(GetMethodExpression(nameof(string.EndsWith),

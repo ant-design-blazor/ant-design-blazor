@@ -5,6 +5,25 @@
   type: string
 }
 
+const CALLBACK_METHODS = {
+  PERCENT: "UploadChanged",
+  SUCCESS: "UploadSuccess",
+  ERROR: "UploadError"
+} as const;
+
+interface UploadConfig {
+  element: HTMLInputElement;
+  index: number;
+  data: any;
+  headers: any;
+  fileIds: string[];
+  url: string;
+  name: string;
+  instance: any;
+  method: string;
+  withCredentials?: boolean;
+}
+
 export class uploadHelper {
   static addFileClickEventListener(btn: HTMLElement) {
     if (btn.addEventListener) {
@@ -57,11 +76,16 @@ export class uploadHelper {
     return url;
   }
 
-  static uploadFile(element, index, data, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod, method: string) {
+  static uploadFile({ element, index, data, headers, fileIds, url, name, instance, method, withCredentials }: UploadConfig) {
     const formData = new FormData();
-    const file = element.files[index];
-    const size = file.size;
-    formData.append(name, file);
+    const files = index === -1 ? Array.from(element.files) : [element.files[index]];
+
+    files.forEach((file, i) => {
+      formData.append(name, file);
+      // Add file ID to track individual file progress
+      formData.append(`${name}_id`, fileIds[i]);
+    });
+
     if (data != null) {
       for (const key in data) {
         formData.append(key, data[key]);
@@ -81,21 +105,33 @@ export class uploadHelper {
         // #1655 Any 2xx response code is okay
         if (req.status < 200 || req.status > 299) {
           // #2857 should get error raw response
-          instance.invokeMethodAsync(errorMethod, fileId, req.responseText);
+          fileIds.forEach(id => {
+            instance.invokeMethodAsync(CALLBACK_METHODS.ERROR, id, req.responseText);
+          });
           return;
         }
-        instance.invokeMethodAsync(successMethod, fileId, req.responseText);
+        fileIds.forEach(id => {
+          instance.invokeMethodAsync(CALLBACK_METHODS.SUCCESS, id, req.responseText);
+        });
       }
     }
     req.upload.onprogress = function (event) {
-      const percent = Math.floor(event.loaded / size * 100);
-      instance.invokeMethodAsync(percentMethod, fileId, percent);
+      const percent = Math.floor(event.loaded / event.total * 100);
+      fileIds.forEach(id => {
+        instance.invokeMethodAsync(CALLBACK_METHODS.PERCENT, id, percent);
+      });
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    req.onerror = function (e) {
-      instance.invokeMethodAsync(errorMethod, fileId, "error");
+    req.onerror = function (e: ProgressEvent) {
+      const errorMessage = `Upload failed: ${e.type} (${req.status} ${req.statusText})${req.responseText ? ` - ${req.responseText}` : ''}`;
+      fileIds.forEach(id => {
+        instance.invokeMethodAsync(CALLBACK_METHODS.ERROR, id, errorMessage);
+      });
     }
     req.open(method, url, true)
+    // Set withCredentials if provided
+    if (withCredentials === true) {
+      req.withCredentials = true;
+    }
     if (headers != null) {
       for (const header in headers) {
         req.setRequestHeader(header, headers[header]);

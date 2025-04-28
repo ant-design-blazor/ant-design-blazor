@@ -7,7 +7,7 @@
 @typeparam TItem
 
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
-    <Spin Spinning="Loading">
+    <Spin Spinning="Loading" WrapperClassName="ant-table-spin-wrapper">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
             if (PaginationTemplate == null)
@@ -44,7 +44,7 @@
                         <div class="ant-table-container">
                             @if (ScrollY != null)
                             {
-                                <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
+                                <div class="ant-table-header @(IsSticky?"ant-table-sticky-holder":"")" style="overflow: hidden; @StickyHolderStyle" @ref="_tableHeaderRef">
                                     <table style="@TableLayoutStyle">
                                         @colGroup(this, true)
                                         @header()
@@ -100,6 +100,12 @@
                                         </tbody>
                                         @tfoot()
                                     </table>
+                                </div>
+                            }
+                            @if (IsSticky)
+                            {
+                                <div class="ant-table-sticky-scroll" style="height: 15px; bottom: 0px;">
+                                    <div class="ant-table-sticky-scroll-bar" style="transform: translate3d(0px, 0px, 0px);"></div>
                                 </div>
                             }
                         </div>
@@ -300,7 +306,7 @@
                     @body(SortFilterChildren(currentDataItem.Children), currentRowData);
                     @groupFooter(currentRowData);
                 }
-                @if (!currentDataItem.HasChildren && ExpandTemplate != null && RowExpandable(currentRowData) && currentRowData.Expanded)
+                @if (!currentDataItem.HasChildren && ExpandTemplate != null && InternalRowExpandable(currentRowData) && currentRowData.Expanded)
                 {
                     <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @ExpandedRowClassName(currentRowData)"
                         style="@(currentRowData.Expanded?"":"display: none;")">

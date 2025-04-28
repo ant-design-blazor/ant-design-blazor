@@ -5,6 +5,7 @@
     </Button>
 
 @code{
+
     private async Task OnClick()
     {
         var cofig = new MessageConfig()
@@ -12,8 +13,9 @@
             Content = "Action in progress..",
             Duration = 0
         };
-        var task =  _message.Loading(cofig);
+        var task = _message.LoadingAsync(cofig);
         await Task.Delay(2000);
         task.Start();
     }
+
 }

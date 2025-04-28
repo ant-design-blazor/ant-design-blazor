@@ -80,7 +80,7 @@
         var title = "Info";
         var confirmResult = await _confirmService.Show(content, title, confirmButtons);
 
-        var _ = _message.Info($"{confirmResult} button is clicked", 2);
+        _message.Info($"{confirmResult} button is clicked", 2);
     }
 
     private async Task ShowConfirmIcon(ConfirmIcon confirmIcon)
@@ -89,7 +89,7 @@
         var title = confirmIcon.ToString();
         var confirmResult = await _confirmService.Show(content, title, ConfirmButtons.OK, confirmIcon);
 
-        var _ = _message.Info($"{confirmResult} button is clicked", 2);
+        _message.Info($"{confirmResult} button is clicked", 2);
     }
 
     private async Task ShowAbortRetryIgnore()
@@ -116,6 +116,7 @@
                 }
             );
 
-        var _ = _message.Info($"{confirmResult} button is clicked", 2);
+        _message.Info($"{confirmResult} button is clicked", 2);
     }
+
 }

@@ -56,22 +56,22 @@
                     <Icon RefBack="context" Type="@(_copied ? IconType.Outline.Check : IconType.Outline.Snippets)" Class="code-box-code-copy code-box-code-action" OnClick="Copy" />
                 </Unbound>
             </Tooltip>
-            <Tooltip Title="@(CodeExpand?Localizer["app.demo.code.hide"] : Localizer["app.demo.code.show"])">
+            <Tooltip Title="@(_innerExpand?Localizer["app.demo.code.hide"] : Localizer["app.demo.code.show"])">
                 <Unbound>
-                    <span @ref="context.Current" class="code-expand-icon code-box-code-action" @onclick="_ => CodeExpand = !CodeExpand">
-                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(CodeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
-                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="@(!CodeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
+                    <span @ref="context.Current" class="code-expand-icon code-box-code-action" @onclick="_ => _innerExpand = !_innerExpand">
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(_innerExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="@(!_innerExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
                     </span>
                 </Unbound>
             </Tooltip>
-            @DebugIcon
+            @_debugIcon
         </div>
     </section>
-    <section class="highlight-wrapper @(CodeExpand?"highlight-wrapper-expand":"")">
+    <section class="highlight-wrapper @(_innerExpand?"highlight-wrapper-expand":"")">
       @*   <div class="highlight">
-            <HighlightedCode Code="@Demo.Code" CanLoad="CodeExpand" Language="html"></HighlightedCode>
+            <HighlightedCode Code="@Demo.Code" CanLoad="_innerExpand" Language="html"></HighlightedCode>
         </div> *@
-        @if (CodeExpand || _codeViewRendered)
+        @if (_innerExpand || _codeViewRendered)
         {
             _codeViewRendered = true;
             <CodeView @bind-Value="@Demo.Code" Compiled="OnCompiled" />
@@ -96,16 +96,29 @@
     public DemoItem Demo { get; set; }
 
     [Parameter]
-    public bool CodeExpand { get; set; }
+    public bool CodeExpand
+    {
+        get => _codeExpand;
+        set
+        {
+            if (_codeExpand != value)
+            {
+                _codeExpand = value;
+                _innerExpand = value;
+            }
+        }
+    }
 
     private Type _demoType;
 
-    RenderFragment DebugIcon;
+    RenderFragment _debugIcon;
 
     private bool _copied;
     private bool _rendered;
     private bool _codeViewRendered;
     private ErrorBoundary _errorBoundary;
+    private bool _innerExpand;
+    private bool _codeExpand;
 
     protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
 
@@ -116,7 +129,7 @@
         await base.OnInitializedAsync();
         lang.LanguageChanged += OnLangeChanged;
 #if DEBUG
-        DebugIcon =
+        _debugIcon =
     @<a href="@(Demo.Link??$"mock?type={Demo.Type}")" class="code-box-code-action" target="_blank">
             <Icon Type="@IconType.Outline.Bug" />
     </a>
@@ -145,7 +158,6 @@
         if (firstRender)
         {
             _rendered = true;
-            await Task.Yield();
             StateHasChanged();
             return;
         }

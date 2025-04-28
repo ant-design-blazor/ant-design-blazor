@@ -5,7 +5,11 @@
     <PropertyColumn Property="c=>c.Age" Width="80" />
     <PropertyColumn Property="c=>c.Address" Ellipsis />
     <PropertyColumn Property="c=>c.Address" Ellipsis Title="Long Column Long Column Long Column" />
-    <PropertyColumn Property="c=>c.Address" Ellipsis Title="Long Column Long Column" />
+    <PropertyColumn Property="c=>c.Address" EllipsisShowTitle="false" Title="Long Column Long Column" >
+        <Tooltip Placement="Placement.TopLeft" Title="@context.Address" Style="display: inline;">
+            @context.Address
+        </Tooltip>
+    </PropertyColumn>
     <PropertyColumn Property="c=>c.Address" Ellipsis Title="Long Column" />
 </Table>
 

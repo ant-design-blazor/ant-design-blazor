@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AntDesign.core.Extensions;
+using AntDesign.Core.Extensions;
 using AntDesign.Core.Helpers;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;

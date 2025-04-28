@@ -12,7 +12,7 @@
 
     @if (DataSource?.Any() == true)
     {
-        <Spin Spinning="Loading">
+        <Spin Spinning="Loading" WrapperClassName="ant-list-spin-wrapper">
             @if (Grid != null)
             {
 				  <Row Gutter="Grid.Gutter" OnBreakpoint="OnBreakpoint">

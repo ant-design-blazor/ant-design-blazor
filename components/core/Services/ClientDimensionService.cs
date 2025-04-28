@@ -5,7 +5,7 @@
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
-namespace AntDesign.core.Services;
+namespace AntDesign.Core.Services;
 
 public class ClientDimensionService
 {

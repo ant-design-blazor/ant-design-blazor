@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -230,15 +229,28 @@ namespace AntDesign
         [Parameter]
         public OneOf<HttpMethod, string> Method { get; set; } = HttpMethod.Post;
 
+        /// <summary>
+        /// Whether to upload multiple files in a single request (only for multiple file upload)
+        /// </summary>
+        [Parameter]
+        public bool BatchUpload { get; set; }
+
+        /// <summary>
+        /// Whether to send cookies when making upload requests
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool WithCredentials { get; set; }
+
         private bool IsText => ListType == UploadListType.Text;
-        private bool IsPicture => ListType == UploadListType.Picture;
+
         private bool IsPictureCard => ListType == UploadListType.PictureCard;
 
-        private ClassMapper _listClassMapper = new ClassMapper();
+        private readonly ClassMapper _listClassMapper = new();
 
         internal bool _dragHover;
 
-        private readonly Hashtable _typeMap = new Hashtable()
+        private static readonly Dictionary<UploadListType, string> _typeMap = new()
         {
             [UploadListType.Text] = "text",
             [UploadListType.Picture] = "picture",
@@ -249,16 +261,16 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            var prefixCls = "ant-upload";
+            const string PrefixCls = "ant-upload";
 
             ClassMapper
-                .GetIf(() => $"{prefixCls}-picture-card-wrapper", () => IsPictureCard)
-                .GetIf(() => $"{prefixCls}-no-btn", () => ChildContent == null);
+                .GetIf(() => $"{PrefixCls}-picture-card-wrapper", () => IsPictureCard)
+                .GetIf(() => $"{PrefixCls}-no-btn", () => ChildContent == null);
 
             _listClassMapper
-                .Add($"{prefixCls}-list")
-                .Get(() => $"{prefixCls}-list-{_typeMap[ListType]}")
-                .If($"{prefixCls}-list-rtl", () => RTL);
+                .Add($"{PrefixCls}-list")
+                .Get(() => $"{PrefixCls}-list-{_typeMap[ListType]}")
+                .If($"{PrefixCls}-list-rtl", () => RTL);
 
             FileList.InsertRange(0, DefaultFileList);
         }

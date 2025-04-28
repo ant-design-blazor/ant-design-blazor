@@ -1,0 +1,178 @@
+@page "/support"
+@page "/zh-CN/support"
+
+
+<section class="main-container">
+    <article>
+
+        @{
+            var title = $"服务与支持 - Ant Design of Blazor";
+        }
+        <PageTitle>@title</PageTitle>
+        <h1>社区支持</h1>
+
+        <Paragraph> AntDesign Blazor 一直以来是开源社区驱动的免费项目，我们鼓励社区成员的互相支持，当使用中遇到问题时可在 Github 发起 issue，也可在社区群组中提问。 </Paragraph>
+
+        <h1>付费高级支持服务</h1>
+
+        <Paragraph>
+            但是由于我们团队的精力投入有限，我们只优先解决紧急的问题。对于不紧急的问题，需要等待新版本的发布。周期从数周到数月不等，甚至往期有的不紧急功能要在提出数年后才得以实现。这对于追求高效的企业和商业项目来说，可能是不便的。
+        </Paragraph>
+        <Paragraph> 因此，我们为希望从 AntDesign Blazor 核心团队获得24小时专业支持的开发人员提供付费高级支持服务。</Paragraph>
+
+        <Row Gutter="(16, 16)" Style="max-width:900px">
+            <GridCol Span="8">
+                <Card Title="3个月服务期">
+
+                    <Body>
+                        <p>每月仅约999元</p>
+                        <h3>2999元</h3>
+                        <Button Type="@ButtonType.Primary" OnClick="@(() => { modalVisible = true; })">立即购买</Button>
+                    </Body>
+                </Card>
+            </GridCol>
+            <GridCol Span="8">
+                <Card Title="6个月服务期">
+
+                    <Body>
+                        <p>每月仅约966元</p>
+                        <h3>5799元</h3>
+                        <Button Type="@ButtonType.Primary" OnClick="@(() => { modalVisible = true; })">立即购买</Button>
+                    </Body>
+                </Card>
+            </GridCol>
+            <GridCol Span="8">
+                <Card Title="1年服务期">
+
+                    <Body>
+                        <p>每月仅约933元</p>
+                        <h3>11199元</h3>
+                        <Button Type="@ButtonType.Primary" OnClick="@(() => { modalVisible = true; })">立即购买</Button>
+                    </Body>
+                </Card>
+            </GridCol>
+            <GridCol Span="24">
+                <AntList Bordered DataSource="@benefits">
+                    <Header>包含权益</Header>
+                    <ChildContent Context="item">
+                        <ListItem>
+                            <span>@item.Item1</span>
+                            <span style="width: 200px;font-size: large;">@(item.Item2 ? "✅" : "❌")</span>
+                        </ListItem>
+                    </ChildContent>
+                </AntList>
+            </GridCol>
+            <GridCol Span="24">
+                <AntList Bordered DataSource="@generalTerms">
+                    <Header>一般性条款</Header>
+                    <ChildContent Context="item">
+                        <ListItem>
+                            <span>@item.Item1</span>
+                            <span>@item.Item2</span>
+                        </ListItem>
+                    </ChildContent>
+                </AntList>
+            </GridCol>
+            <GridCol Span="24">
+                <Paragraph>
+                    注意：
+                    <ul>
+                        <li>
+                            以上定价未含税，如需开具增值税发票，客户需额外支付以上定价的10%。
+                        </li>
+                        <li>
+                            我们同意解决当前客户发现并经客户与我们的授权代表之间的共同协议确定为 Bug 的任何
+                            Bug。我们同意在双方同意确认错误之日起的5个工作日内，提供纠正或缓解该错误所引起的行为的修复程序。该修复程序可能需要客户升级到最新的 AntDesign
+                            版本，并且可以由我们决定以补丁程序，手动更新或完整版本的形式提供。
+                        </li>
+                        <li>
+                            如果您需要一些个性化定制、自定义组件或者框架功能，我们欢迎定制开发服务。请微信联系 <a
+                                @onclick="@(() => { modalVisible = true; })">JamesYeungMVP</a> 沟通具体的需求和报价。
+                        </li>
+                    </ul>
+                </Paragraph>
+            </GridCol>
+        </Row>
+    </article>
+
+    <article style="margin-top: 48px;">
+        <h1>客户信赖</h1>
+        <Paragraph>感谢这些优秀企业对我们的信任与支持</Paragraph>
+        
+        <Row Gutter="(24, 24)" Style="max-width:1200px">
+            <GridCol Span="8">
+                <Card>
+                    <Body>
+                        <Flex Gap="FlexGap.Middle" Direction="FlexDirection.Vertical" Align="@FlexAlign.Center">
+                            <img src="/docs/assets/customers/FIH.png" style="height: 60px; max-width: 200px; object-fit: contain; overflow: hidden;" />
+                            <h3>富智康（富士康旗下）</h3>
+                            <p style="text-align: center; color: #666;">
+                                "我们的主力开发语言是 C#，正好在做实时数据的可视化工具，这些条件都很适合我们来使用 AntDesign Blazor。"
+                            </p>
+                        </Flex>
+                    </Body>
+                </Card>
+            </GridCol>
+            @* <GridCol Span="8">
+                <Card>
+                    <Body>
+                        <Flex Gap="FlexGap.Middle" Direction="FlexDirection.Vertical" Align="@FlexAlign.Center">
+                            <img src="/docs/assets/clients/client2.png" style="height: 60px; max-width: 200px; object-fit: contain; overflow: hidden;" />
+                            <h3>某科技公司</h3>
+                            <p style="text-align: center; color: #666;">
+                                "使用 AntDesign Blazor 开发后台管理系统，开发效率提升显著，用户体验也非常好。"
+                            </p>
+                        </Flex>
+                    </Body>
+                </Card>
+            </GridCol>
+            <GridCol Span="8">
+                <Card>
+                    <Body>
+                        <Flex Gap="FlexGap.Middle" Direction="FlexDirection.Vertical" Align="@FlexAlign.Center">
+                            <img src="/docs/assets/clients/client3.png" style="height: 60px; max-width: 200px; object-fit: contain; overflow: hidden;" />
+                            <h3>某制造企业</h3>
+                            <p style="text-align: center; color: #666;">
+                                "AntDesign Blazor 的组件库非常完善，能够满足我们复杂的业务需求，是值得信赖的选择。"
+                            </p>
+                        </Flex>
+                    </Body>
+                </Card>
+            </GridCol> *@
+        </Row>
+    </article>
+</section>
+
+<Modal @bind-Visible="@modalVisible" Width="360" Centered>
+    <Flex Gap="FlexGap.Middle" Direction="FlexDirection.Vertical" Align="@FlexAlign.Center">
+        <p>感谢支持，请加微信联系合作事宜：</p>
+        <img src="/docs/assets/wechat.jpg" width="200" />
+    </Flex>
+</Modal>
+
+
+@code {
+    private bool modalVisible = false;
+    public List<(string, bool)> benefits =
+    [
+        ("核心团队的支持",true),
+        ("一般问题（配置，安装和升级问题，优化等）",true),
+        ("组件开发和定制问题",true),
+        ("Bug修复",true),
+        ("架构建议",true),
+        ("自定义代码审查",true),
+        ("第三方插件和主题支持", false),
+        ("底层技术问题", false),
+        ("复杂的定制化需求",false),
+    ];
+
+    public List<(string, string)> generalTerms =
+    [
+       ("服务周期","付费金额对应周期"),
+       ("保证响应时间", "24小时内（1个工作日）"),
+       ("保证Bug修复时间", "5个工作日内"),
+       ("允许的服务请求", "不限"),
+       ("支持语音","普通话，粤语"),
+       ("支持联系方式", "微信及视频会议")
+    ];
+}

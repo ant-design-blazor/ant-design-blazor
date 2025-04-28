@@ -2,10 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AntDesign.core.Services;
+using AntDesign.Core.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -321,11 +319,11 @@ namespace AntDesign
             {(Transform != null ? $"transform:{Transform};" : "")}
             {(PlacementChanging ? "transition:none;" : "")}";
 
-        private static Regex _renderInCurrentContainerRegex = new Regex("position:[\\s]*absolute");
+        // private static Regex _renderInCurrentContainerRegex = new Regex("position:[\\s]*absolute");
 
         private string _drawerStyle = "";
 
-        private bool _isPlacementFirstChange = true;
+        // private bool _isPlacementFirstChange = true;
 
         private void SetClass()
         {
@@ -388,13 +386,13 @@ namespace AntDesign
                     }
                 case ComponentStatus.Closing:
                     {
-                        StateHasChanged();
                         if (!_hasInvokeClosed)
                         {
                             await HandleClose();
                         }
 
                         _status = ComponentStatus.Closed;
+                        StateHasChanged();
                         break;
                     }
             }

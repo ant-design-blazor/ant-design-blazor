@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@PrefixCls-notice @Config.AnimationClass">
+<div class="@PrefixCls-notice @Config.AnimationClass" @onmouseenter="HandleMouseEnter" @onmouseleave="HandleMouseLeave">
     <div class="@PrefixCls-notice-content" @ref="Ref">
         <div class="@PrefixCls-custom-content @GetClassName()">
             @{

@@ -390,13 +390,16 @@ namespace AntDesign
 
             var result = formItem.ValidateFieldWithRules();
 
-            if (result.Length > 0)
+            if (result.Any())
             {
                 var errors = new Dictionary<FieldIdentifier, List<string>>();
                 errors[args.FieldIdentifier] = result.Select(r => r.ErrorMessage).ToList();
 
                 _rulesValidator.DisplayErrors(errors);
             }
+
+            // invoke StateHasChanged to update the form state like error message and IsModified
+            StateHasChanged();
         }
 
         private void RulesModeOnValidationRequested(object sender, ValidationRequestedEventArgs args)
@@ -408,7 +411,7 @@ namespace AntDesign
             foreach (var formItem in _formItems)
             {
                 var result = formItem.ValidateFieldWithRules();
-                if (result.Length > 0)
+                if (result.Any())
                 {
                     errors[formItem.GetFieldIdentifier()] = result.Select(r => r.ErrorMessage).ToList();
                 }

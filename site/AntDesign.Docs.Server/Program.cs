@@ -14,7 +14,11 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton(sp =>
 {
     var httpContext = sp.GetService<IHttpContextAccessor>()?.HttpContext;
-    var customHandler = new HttpClientCustom() { InnerHandler = new HttpClientHandler() };
+    var handler = new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+    };
+    var customHandler = new HttpClientCustom() { InnerHandler = handler };
     if (httpContext != null)
     {
         var request = httpContext.Request;
@@ -57,6 +61,7 @@ app.UseBlazorPolyfill();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.MapControllers();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

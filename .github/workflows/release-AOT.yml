@@ -31,7 +31,7 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: "16.x"
+          node-version: "18.x"
 
       - name: Prepare AOT workload
         run: |
