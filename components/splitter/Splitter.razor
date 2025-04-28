@@ -18,16 +18,16 @@
 
         @if (_panes.Count == 2)
         {
-            @if (_panes[0].Collapsible)
+            @if (_panes[0].Collapsible && !_panes[0].IsCollapsed)
             {
                 <div class="ant-splitter-bar-collapse-bar ant-splitter-bar-collapse-bar-start" @onclick="_panes[0].ToggleCollapse">
-                    <Icon Class=" ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-start" Type="@(Layout== SplitterLayout.Horizontal?"left":"up")"></Icon>
+                    <Icon Class="ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-start" Type="@(Layout== SplitterLayout.Horizontal?"left":"up")"></Icon>
                 </div>
             }
-            @if (_panes[1].Collapsible)
+            @if (_panes[1].Collapsible && !_panes[1].IsCollapsed)
             {
                 <div class="ant-splitter-bar-collapse-bar ant-splitter-bar-collapse-bar-end" @onclick="_panes[1].ToggleCollapse">
-                    <Icon Class=" ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-end" Type="@(Layout== SplitterLayout.Horizontal?"right":"down")"></Icon>
+                    <Icon Class="ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-end" Type="@(Layout== SplitterLayout.Horizontal?"right":"down")"></Icon>
                 </div>
             }
         }

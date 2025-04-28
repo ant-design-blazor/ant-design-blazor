@@ -1,14 +1,17 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+
+#if NET5_0_OR_GREATER
+using System.Diagnostics.CodeAnalysis;
+#endif
 
 namespace AntDesign;
 
@@ -82,8 +85,9 @@ public partial class Splitter : AntDomComponentBase
 
     private DotNetObjectReference<Splitter> _thisRef;
 
+#if NET5_0_OR_GREATER
     private IJSObjectReference _handler;
-
+#endif
     /// <summary>
     /// Determines if the spliter is vertical or horizontal.
     /// </summary>
@@ -97,10 +101,17 @@ public partial class Splitter : AntDomComponentBase
 
     private string[] _paneSizes = [];
 
+    internal int GetPaneIndex(SplitterPanel panel) => _panes.IndexOf(panel);
+
+    internal IList<SplitterPanel> GetPanes() => _panes;
+
     /// <summary>
     /// Represents a component consisting of a movable bar that divides a container's display area into two resizable panes.
     /// </summary>
+
+#if NET5_0_OR_GREATER
     [DynamicDependency(nameof(UpdateSize))]
+#endif
     public Splitter()
     {
     }
@@ -167,7 +178,10 @@ public partial class Splitter : AntDomComponentBase
         if (firstRender)
         {
             this._thisRef = DotNetObjectReference.Create(this);
+
+#if NET5_0_OR_GREATER
             this._handler = await JsInvokeAsync<IJSObjectReference>(JSInteropConstants.SplitterHelper.Attach, this._thisRef, this.Ref);
+#endif
         }
     }
 
@@ -186,6 +200,7 @@ public partial class Splitter : AntDomComponentBase
 
     protected override void Dispose(bool disposing)
     {
+#if NET5_0_OR_GREATER
         if (this._handler != null)
         {
             try
@@ -198,7 +213,7 @@ public partial class Splitter : AntDomComponentBase
 #endif
             catch { }
         }
-
+#endif
         this._thisRef?.Dispose();
         base.Dispose(disposing);
     }

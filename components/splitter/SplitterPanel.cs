@@ -34,20 +34,44 @@ public class SplitterPanel : ComponentBase, IDisposable
     private Splitter Splitter { get; set; }
 
     private bool _isCollapsed;
+    public bool IsCollapsed => _isCollapsed;
 
     private string _prevSize;
 
     internal void ToggleCollapse()
     {
+        var isSecondPane = Splitter.GetPaneIndex(this) == 1;
+        var otherPane = Splitter.GetPanes()[isSecondPane ? 0 : 1];
+        
+        // If the other panel is collapsed, restore it first
+        if (otherPane._isCollapsed)
+        {
+            otherPane._isCollapsed = false;
+            otherPane.Size = otherPane._prevSize;
+        }
+        
         _isCollapsed = !_isCollapsed;
         if (_isCollapsed)
         {
             _prevSize = Size;
             Size = Min ?? "0px";
+            
+            if (isSecondPane)
+            {
+                // When second panel is collapsed, first panel should take full size
+                otherPane.Size = "100%";
+            }
+            else
+            {
+                // When first panel is collapsed, second panel should take full size
+                otherPane.Size = "100%";
+            }
         }
         else
         {
             Size = _prevSize;
+            // Restore other panel to default size
+            otherPane.Size = "50%";
         }
 
         Splitter.UpdatePaneState();

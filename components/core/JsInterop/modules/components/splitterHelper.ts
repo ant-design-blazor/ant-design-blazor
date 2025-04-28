@@ -12,6 +12,7 @@ export class splitterHelper {
     let disposed = false;
     const splitter = container.querySelector(":scope > .ant-splitter-bar > .spliter-bar");
     const panes = [...container.querySelectorAll(":scope > .pane-of-split-container")];
+    const collapseBars = [...container.querySelectorAll(":scope > .ant-splitter-bar > .ant-splitter-bar-collapse-bar")];
     const round = Math.round;
     const getPos = (ev) => round(state.isHorizontal === 0 ? ev.clientX : ev.clientY);
     const getSize = (element) => round(((rect) => state.isHorizontal === 0 ? rect.width : rect.height)(element.getBoundingClientRect()));
@@ -27,30 +28,71 @@ export class splitterHelper {
         removeEventListenerToSplitter(pointerup, onPointerUp);
         removeEventListenerToSplitter(touchstart, preventDefault);
     };
+
+    const updateButtonVisibility = (pos) => {
+        const containerRect = container.getBoundingClientRect();
+        const containerSize = state.isHorizontal === 0 ? containerRect.width : containerRect.height;
+        const threshold = 20; // 20px threshold for showing/hiding buttons
+        
+        collapseBars.forEach((bar, index) => {
+            if (index === 0) { // Left/Top button
+                if (pos <= threshold) {
+                    bar.style.display = 'none';
+                } else {
+                    bar.style.display = '';
+                }
+            } else { // Right/Bottom button
+                if (pos >= containerSize - threshold) {
+                    bar.style.display = 'none';
+                } else {
+                    bar.style.display = '';
+                }
+            }
+        });
+    };
+
     const updateSize = (ev) => {
         const targetPaneIndex = state.targetPaneIndex;
         const resizeTarget = panes[targetPaneIndex] || NULL;
         const otherPane = panes[targetPaneIndex == 0 ? 1 : 0] || NULL;
         if (resizeTarget === NULL || otherPane === NULL)
-            return [0, 0];
+            return ["0px", "0px"];
+
         const resizeTargetStyle = resizeTarget.style;
         const currentPos = getPos(ev);
         const delta = currentPos - state.pos;
-        const nextPxSize = (state.sizeOfTargetPane + (targetPaneIndex == 0 ? +1 : -1) * delta);
+        let nextPxSize = (state.sizeOfTargetPane + (targetPaneIndex == 0 ? +1 : -1) * delta);
+        
+        // Calculate min and max sizes based on container size
+        const minSize = 0;
+        const maxSize = state.sizeOfContainer;
+        
+        // If dragging beyond boundaries, return current sizes
+        if (nextPxSize <= minSize || nextPxSize >= maxSize) {
+            return [resizeTargetStyle.width || resizeTargetStyle.height, otherPane.style.width || otherPane.style.height];
+        }
+        
         const nextSize = nextPxSize + "px";
-        const otherSize= (state.sizeOfContainer - nextPxSize) + "px";
+        const otherSize = (state.sizeOfContainer - nextPxSize) + "px";
 
-        if (state.isHorizontal === 0){
+        if (state.isHorizontal === 0) {
             resizeTargetStyle.width = nextSize;
             otherPane.style.width = otherSize;
-            return [nextSize, otherSize]
+            return [nextSize, otherSize];
         } else {
             resizeTargetStyle.height = nextSize;
             otherPane.style.height = otherSize;
-            return [otherSize, nextSize]
+            return [nextSize, otherSize];
         }
     };
-    const onPointerMove = (ev) => { updateSize(ev); };
+
+    const onPointerMove = (ev) => { 
+        const sizes = updateSize(ev);
+        const currentPos = getPos(ev);
+        updateButtonVisibility(currentPos);
+        component.invokeMethodAsync("UpdateSize", sizes);
+    };
+
     const onPointerDown = (ev) => {
         if (!document.contains(splitter)) {
             dispose();
@@ -70,13 +112,16 @@ export class splitterHelper {
         addEventListenerToSplitter(pointermove, onPointerMove);
         splitter.setPointerCapture(ev.pointerId);
     };
+
     const onPointerUp = (ev) => {
         splitter.releasePointerCapture(ev.pointerId);
         removeEventListenerToSplitter(pointermove, onPointerMove);
-        const paneSizes = updateSize(ev);
-        console.log(paneSizes);
-        component.invokeMethodAsync("UpdateSize", paneSizes);
+        const sizes = updateSize(ev);
+        const currentPos = getPos(ev);
+        updateButtonVisibility(currentPos);
+        component.invokeMethodAsync("UpdateSize", sizes);
     };
+
     addEventListenerToSplitter(pointerdown, onPointerDown);
     addEventListenerToSplitter(pointerup, onPointerUp);
     addEventListenerToSplitter(touchstart, preventDefault, { passive: false });
