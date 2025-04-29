@@ -1,5 +1,3 @@
-import { stat } from "fs";
-
 const pointerdown = "pointerdown";
 const pointermove = "pointermove";
 const pointerup = "pointerup";
@@ -32,17 +30,22 @@ export class splitterHelper {
     const updateButtonVisibility = (pos) => {
         const containerRect = container.getBoundingClientRect();
         const containerSize = state.isHorizontal === 0 ? containerRect.width : containerRect.height;
-        const threshold = 20; // 20px threshold for showing/hiding buttons
+        const threshold = 2; // 2px threshold for edge detection
+        
+        // Calculate the actual position relative to the container
+        const relativePos = state.isHorizontal === 0 
+            ? pos - containerRect.left 
+            : pos - containerRect.top;
         
         collapseBars.forEach((bar, index) => {
             if (index === 0) { // Left/Top button
-                if (pos <= threshold) {
+                if (relativePos <= threshold) {
                     bar.style.display = 'none';
                 } else {
                     bar.style.display = '';
                 }
             } else { // Right/Bottom button
-                if (pos >= containerSize - threshold) {
+                if (relativePos >= containerSize - threshold) {
                     bar.style.display = 'none';
                 } else {
                     bar.style.display = '';
@@ -60,7 +63,11 @@ export class splitterHelper {
 
         const resizeTargetStyle = resizeTarget.style;
         const currentPos = getPos(ev);
-        const delta = currentPos - state.pos;
+        const containerRect = container.getBoundingClientRect();
+        const relativePos = state.isHorizontal === 0 
+            ? currentPos - containerRect.left 
+            : currentPos - containerRect.top;
+        const delta = relativePos - state.pos;
         let nextPxSize = (state.sizeOfTargetPane + (targetPaneIndex == 0 ? +1 : -1) * delta);
         
         // Calculate min and max sizes based on container size
@@ -106,7 +113,11 @@ export class splitterHelper {
             return;
         state.isHorizontal = container.classList.contains("splitter-orientation-vertical") ? 0 : 1;
         state.targetPaneIndex = targetPaneIndex;
-        state.pos = getPos(ev);
+        const containerRect = container.getBoundingClientRect();
+        const currentPos = getPos(ev);
+        state.pos = state.isHorizontal === 0 
+            ? currentPos - containerRect.left 
+            : currentPos - containerRect.top;
         state.sizeOfTargetPane = getSizeOfPane(targetPaneIndex);
         state.sizeOfContainer = getSize(container);
         addEventListenerToSplitter(pointermove, onPointerMove);
