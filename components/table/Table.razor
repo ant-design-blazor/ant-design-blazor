@@ -6,7 +6,7 @@
 
 @typeparam TItem
 
-<div class="@_wrapperClassMapper.Class" @ref="Ref">
+<div class="@_wrapperClassMapper.Class" @ref="Ref" data-sticky-offset-scroll="@StickyOffsetScroll">
     <Spin Spinning="Loading" WrapperClassName="ant-table-spin-wrapper">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {

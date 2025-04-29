@@ -380,8 +380,19 @@ namespace AntDesign
         public bool EnableVirtualization { get; set; }
 
 #endif
+
+
+        /// <summary>
+        /// Sets the offset of the sticky header from the top of the viewport, in pixels
+        /// </summary>
         [Parameter]
         public int? StickyOffsetHeader { get; set; }
+
+        /// <summary>
+        /// Sets the offset of the virtual scrollbar from the bottom of the viewport, in pixels
+        /// </summary>
+        [Parameter]
+        public int? StickyOffsetScroll { get; set; }
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
