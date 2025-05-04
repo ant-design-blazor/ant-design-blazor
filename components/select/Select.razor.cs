@@ -995,8 +995,6 @@ namespace AntDesign
                         if (HideSelected)
                             result.IsHidden = true;
                         SelectedOptionItems.Add(result);
-                        await OnSelectedItemChanged.InvokeAsync(result.Item);
-                        await ValueChanged.InvokeAsync(result.Value);
                     }
                 }
             }
@@ -1027,9 +1025,6 @@ namespace AntDesign
                             newSelectedItems.Add(i.Item);
                             SelectedOptionItems.Add(i);
                         });
-
-                    await OnSelectedItemsChanged.InvokeAsync(newSelectedItems);
-                    await ValuesChanged.InvokeAsync(newSelectedValues);
                 }
             }
         }
