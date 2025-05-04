@@ -47,6 +47,20 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         _exclusiveDotNetObjectStore.Add(key, dotNetObject);
     }
 
+    public void AddExclusive<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false, bool stopPropagation = false)
+    {
+        var key = FormatKey(dom, eventName);
+        if (_exclusiveDotNetObjectStore.ContainsKey(key))
+            return;
+
+        var dotNetObject = DotNetObjectReference.Create(new AsyncInvoker<T>((p) =>
+        {
+            return callback(p);
+        }));
+        jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject, stopPropagation);
+        _exclusiveDotNetObjectStore.Add(key, dotNetObject);
+    }
+
     public void RemoveExclusive(object dom, string eventName)
     {
         var key = FormatKey(dom, eventName);
@@ -101,7 +115,60 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         list.Add(new DomEventSubscription(callback, typeof(T), _id));
     }
 
+    public virtual void AddShared<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false)
+    {
+        var key = FormatKey(dom, eventName);
+        if (!domEventSubscriptionStore.TryGetValue(key, out var list))
+        {
+            list = [];
+            if (domEventSubscriptionStore.TryAdd(key, list))
+            {
+                var dotNetObject = DotNetObjectReference.Create(new AsyncInvoker<string>(async (p) =>
+                {
+                    if (!domEventSubscriptionStore.TryGetValue(key, out var tempList))
+                        return;
+
+                    var jsonOpt = JsonSerializerHelper.DefaultOptions;
+                    foreach (var subscription in tempList)
+                    {
+                        var tP = JsonSerializer.Deserialize(p, subscription.Type, jsonOpt);
+                        if (subscription.IsAsync)
+                        {
+                            await (Task)subscription.Delegate.DynamicInvoke(tP);
+                        }
+                        else
+                        {
+                            subscription.Delegate.DynamicInvoke(tP);
+                        }
+                    }
+                }));
+
+                _sharedDotNetObjectStore.Add(key, dotNetObject);
+
+                jsRuntime.InvokeVoidAsync(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
+            }
+            else
+            {
+                _ = domEventSubscriptionStore.TryGetValue(key, out list);
+            }
+        }
+        list.Add(new DomEventSubscription(callback, typeof(T), _id, true));
+    }
+
     public void RemoveShared<T>(object dom, string eventName, Action<T> callback)
+    {
+        var key = FormatKey(dom, eventName);
+        if (domEventSubscriptionStore.TryGetValue(key, out var subscriptions))
+        {
+            var index = subscriptions.FindIndex(s => s.Id == _id && s.Delegate == (Delegate)callback);
+            if (index >= 0)
+            {
+                subscriptions.RemoveAt(index);
+            }
+        }
+    }
+
+    public void RemoveShared<T>(object dom, string eventName, Func<T, Task> callback)
     {
         var key = FormatKey(dom, eventName);
         if (domEventSubscriptionStore.TryGetValue(key, out var subscriptions))
@@ -276,5 +343,21 @@ public class Invoker<T>(Action<T> invoker)
     public void Invoke(T param)
     {
         invoker.Invoke(param);
+    }
+}
+
+public class AsyncInvoker<T>
+{
+    private readonly Func<T, Task> _invoker;
+
+    public AsyncInvoker(Func<T, Task> invoker)
+    {
+        _invoker = invoker;
+    }
+
+    [JSInvokable]
+    public Task Invoke(T param)
+    {
+        return _invoker(param);
     }
 }

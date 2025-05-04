@@ -19,9 +19,13 @@ namespace AntDesign.JsInterop
 
         void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false);
 
+        void AddExclusive<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false, bool stopPropagation = false);
+
         ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback);
 
         void AddShared<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false);
+
+        void AddShared<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false);
 
         ValueTask DisconnectResizeObserver(ElementReference dom);
 
@@ -34,6 +38,8 @@ namespace AntDesign.JsInterop
         ValueTask RemoveResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback);
 
         void RemoveShared<T>(object dom, string eventName, Action<T> callback);
+
+        void RemoveShared<T>(object dom, string eventName, Func<T, Task> callback);
 
         void DisposeShared();
     }
