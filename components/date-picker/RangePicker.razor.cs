@@ -631,7 +631,7 @@ namespace AntDesign
             OnClearClick.InvokeAsync(null);
 
             _dropDown.SetShouldRender(true);
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         internal override void ResetValue()
