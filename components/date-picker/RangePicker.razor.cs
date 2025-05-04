@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
 using AntDesign.Core.Documentation;
@@ -47,7 +48,7 @@ namespace AntDesign
 
                 TValue orderedValue = SortValue(value);
 
-                var hasChanged = _lastValue is null || !InternalConvert.SequenceEqual(orderedValue, _lastValue);
+                var hasChanged = _lastValue is null || !EqualityComparer<TValue>.Default.Equals(orderedValue, _lastValue);
 
                 if (hasChanged)
                 {
@@ -55,7 +56,10 @@ namespace AntDesign
 
                     _lastValue ??= CreateInstance();
 
-                    Array.Copy(orderedValue as Array, _lastValue as Array, 2);
+                    if (orderedValue is Array sourceArray && _lastValue is Array targetArray)
+                    {
+                        Array.Copy(sourceArray, targetArray, 2);
+                    }
 
                     GetIfNotNull(_value, 0, (notNullValue) => PickerValues[0] = notNullValue);
                     GetIfNotNull(_value, 1, (notNullValue) => PickerValues[1] = notNullValue);
@@ -389,7 +393,12 @@ namespace AntDesign
             if (_value == null)
             {
                 _value = CreateInstance();
+                _lastValue = CreateInstance();
                 ValueChanged.InvokeAsync(_value);
+            }
+            else
+            {
+                _lastValue = (TValue)(_value as Array).Clone();
             }
             ResetPlaceholder();
 
@@ -554,9 +563,11 @@ namespace AntDesign
 
             if (isValueChanged && startDate is not null && endDate is not null)
             {
-                CurrentValue = DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
-
+                var newCurrentValue = DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
+                _value = newCurrentValue;
+                _lastValue = (TValue)(currentValueArray.Clone());
                 InvokeOnChange();
+                ValueChanged.InvokeAsync(newCurrentValue);
             }
 
             _pickerStatus[index].IsValueSelected = true;
@@ -573,7 +584,7 @@ namespace AntDesign
         {
             _isSetPicker = false;
 
-            var array = CurrentValue as Array;
+            var array = Value as Array;
             ReadOnlySpan<int> indexToClear;
             if (index == -1)
             {
@@ -609,13 +620,18 @@ namespace AntDesign
 
             if (array.GetValue(0) is null || array.GetValue(1) is null)
             {
+                var newValue = DataConversionExtensions.Convert<Array, TValue>(array);
+                _value = newValue;
+                _lastValue = (TValue)(array.Clone());
                 InvokeOnChange();
+                ValueChanged.InvokeAsync(newValue);
             }
 
             OnClear.InvokeAsync(null);
             OnClearClick.InvokeAsync(null);
 
             _dropDown.SetShouldRender(true);
+            StateHasChanged();
         }
 
         internal override void ResetValue()
