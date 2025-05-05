@@ -28,6 +28,9 @@ namespace AntDesign
         <item>Utilizing <see cref="Radio{TValue}"/> is recommended when there are fewer total options (less than 5).</item>
     </list>
     </summary>
+    <seealso cref="SelectOption{TItemValue, TItem}"/>
+    <seealso cref="EnumSelect{TEnum}" />
+    <inheritdoc/>
     */
     [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg", Title = "Select", SubTitle = "选择器")]
 #if NET6_0_OR_GREATER
