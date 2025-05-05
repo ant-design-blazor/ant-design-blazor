@@ -463,7 +463,7 @@ namespace AntDesign
             return base.OnFirstAfterRenderAsync();
         }
 
-        protected override async void OnInputAsync(ChangeEventArgs e)
+        protected override async Task OnInputAsync(ChangeEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             if (!IsSearchEnabled)

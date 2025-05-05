@@ -344,13 +344,13 @@ namespace AntDesign.Internal
 
         protected void OnUnboundFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
 
-        protected async void OnUnboundClick(JsonElement jsonElement)
+        protected async Task OnUnboundClick(JsonElement jsonElement)
         {
             var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(), JsonSerializerHelper.DefaultOptions);
             await OnClickDiv(eventArgs);
         }
 
-        protected async void OnContextMenu(JsonElement jsonElement)
+        protected async Task OnContextMenu(JsonElement jsonElement)
         {
             var eventArgs = JsonSerializer.Deserialize<MouseEventArgs>(jsonElement.ToString(), JsonSerializerHelper.DefaultOptions);
 

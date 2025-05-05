@@ -67,7 +67,7 @@
         await base.OnInitializedAsync();
     }
 
-    private async void OnTabChanged(string activeKey)
+    private async Task OnTabChanged(string activeKey)
     {
         if (activeKey == "5")
         {

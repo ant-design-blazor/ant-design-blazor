@@ -585,7 +585,7 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        protected async void OnWindowResize(JsonElement element)
+        protected async Task OnWindowResize(JsonElement element)
         {
             await SetDropdownStyleAsync();
         }
@@ -1141,7 +1141,7 @@ namespace AntDesign
         /// Method is called via EventCallBack if the value of the Input element was changed by keyboard
         /// </summary>
         /// <param name="e">Contains the value of the Input element</param>
-        protected override async void OnInputAsync(ChangeEventArgs e)
+        protected override async Task OnInputAsync(ChangeEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             if (!IsSearchEnabled)

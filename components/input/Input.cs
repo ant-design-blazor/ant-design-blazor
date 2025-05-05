@@ -522,7 +522,7 @@ namespace AntDesign
             }
         }
 
-        private async void OnFocusInternal(JsonElement e) => await OnFocusAsync(new());
+        private async Task OnFocusInternal(JsonElement e) => await OnFocusAsync(new());
 
         internal virtual async Task OnFocusAsync(FocusEventArgs e)
         {

@@ -493,9 +493,9 @@ namespace AntDesign
             }
         }
 
-        protected override void OnInputAsync(ChangeEventArgs e)
+        protected override Task OnInputAsync(ChangeEventArgs e)
         {
-
+            return Task.CompletedTask;
         }
 
         protected override async Task OnKeyUpAsync(KeyboardEventArgs e)

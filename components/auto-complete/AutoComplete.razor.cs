@@ -500,7 +500,7 @@ namespace AntDesign
             this.ClosePanel();
         }
 
-        private async void OnOverlayTriggerVisibleChange(bool visible)
+        private async Task OnOverlayTriggerVisibleChange(bool visible)
         {
             if (OnPanelVisibleChange.HasDelegate && _parPanelVisible != visible)
             {
@@ -514,7 +514,7 @@ namespace AntDesign
             }
         }
 
-        private async void UpdateWidth(List<ResizeObserverEntry> entry)
+        private async Task UpdateWidth(List<ResizeObserverEntry> entry)
         {
             await SetOverlayWidth();
             InvokeStateHasChanged();

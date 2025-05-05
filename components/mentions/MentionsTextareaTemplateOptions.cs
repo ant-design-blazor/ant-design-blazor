@@ -13,7 +13,7 @@ namespace AntDesign
     {
         public string Value { get; set; }
         public ForwardRef RefBack { get; set; }
-        public Action<KeyboardEventArgs> OnKeyDown { get; set; }
+        public Func<KeyboardEventArgs, Task> OnKeyDown { get; set; }
         public Func<ChangeEventArgs, Task> OnInput { get; set; }
     }
 }

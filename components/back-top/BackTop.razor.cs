@@ -111,7 +111,7 @@ namespace AntDesign
             BackTopIconClassMapper.Add($"{prefixCls}-icon");
         }
 
-        private async void OnScroll(JsonElement obj)
+        private async Task OnScroll(JsonElement obj)
         {
             JsonElement scrollInfo = await JsInvokeAsync<JsonElement>(JSInteropConstants.GetScroll);
             double offset = scrollInfo.GetProperty("y").GetDouble();
