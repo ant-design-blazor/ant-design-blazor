@@ -1286,7 +1286,7 @@ namespace AntDesign
 
         protected abstract Task OnOverlayVisibleChangeAsync(bool visible);
 
-        protected abstract void OnInputAsync(ChangeEventArgs e);
+        protected abstract Task OnInputAsync(ChangeEventArgs e);
 
         protected virtual async Task OnKeyUpAsync(KeyboardEventArgs e)
         {

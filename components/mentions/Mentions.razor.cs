@@ -196,7 +196,7 @@ namespace AntDesign
             await InvokeStateHasChangedAsync();
         }
 
-        private async void OnKeyDown(KeyboardEventArgs args)
+        private async Task OnKeyDown(KeyboardEventArgs args)
         {   //↑、↓、回车键只能放进js里判断，不然在Sever异步模式下无法拦截原键功能
             //开启浮窗的判断放在oninput里，不然会有问题
             if (args.Key == "Escape") await HideOverlay();

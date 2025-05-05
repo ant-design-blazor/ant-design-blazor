@@ -7,6 +7,7 @@ using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
+using System.Threading.Tasks;
 
 namespace AntDesign
 {
@@ -145,7 +146,7 @@ namespace AntDesign
             _isCompact = domRect.Width < 768;
         }
 
-        private async void OnBackClick(MouseEventArgs eventArgs)
+        private async Task OnBackClick(MouseEventArgs eventArgs)
         {
             if (OnBack.HasDelegate)
             {

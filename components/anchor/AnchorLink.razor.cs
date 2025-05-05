@@ -164,7 +164,7 @@ namespace AntDesign
             return domRect;
         }
 
-        private async void OnClick(MouseEventArgs args)
+        private async Task OnClick(MouseEventArgs args)
         {
             await Root.OnLinkClickAsync(args, this);
         }
@@ -176,7 +176,7 @@ namespace AntDesign
 
         void IAnchor.Remove(AnchorLink anchorLink)
         {
-           Remove(anchorLink);
+            Remove(anchorLink);
         }
 
         void IAnchor.Clear()

@@ -440,7 +440,7 @@ namespace AntDesign
             }
         }
 
-        private async void HandleChange(int p)
+        private async Task HandleChange(int p)
         {
             var disabled = Disabled;
 

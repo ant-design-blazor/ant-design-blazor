@@ -39,7 +39,7 @@ namespace AntDesign.Docs.Services
             }));
         }
 
-        private async void PreFetchDemoMenuItems(ConcurrentCache<string, AsyncLazy<DemoMenuItem[]>> cache, string language, Func<string, string> srcUrl)
+        private async Task PreFetchDemoMenuItems(ConcurrentCache<string, AsyncLazy<DemoMenuItem[]>> cache, string language, Func<string, string> srcUrl)
         {
             cache.GetOrAdd(language, (lang) => new(async () =>
             {

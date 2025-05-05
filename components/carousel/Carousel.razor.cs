@@ -173,7 +173,7 @@ namespace AntDesign
             }
         }
 
-        private async void Resize(JsonElement e = default)
+        private async Task Resize(JsonElement e = default)
         {
             DomRect listRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
             if ((SlickWidth != (int)listRect.Width && IsHorizontal)

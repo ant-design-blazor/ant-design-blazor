@@ -55,7 +55,7 @@ namespace AntDesign.Select.Internal
             return base.OnAfterRenderAsync(firstRender);
         }
 
-        private async void OnClear(JsonElement jsonElement)
+        private async Task OnClear(JsonElement jsonElement)
         {
             if (OnClearClick.HasDelegate)
             {

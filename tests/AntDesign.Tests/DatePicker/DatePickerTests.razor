@@ -25,7 +25,7 @@
     }
 
     [Fact]
-    public async void Picker_is_focused_on_value()
+    public async Task Picker_is_focused_on_value()
     {
         //Arrange
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
@@ -53,7 +53,7 @@
     }
 
     [Fact]
-    public async void Picker_Should_Picked_First_Day_In_Next_Month()
+    public async Task Picker_Should_Picked_First_Day_In_Next_Month()
     {
         const string dateTimeFormat = "yyyy-MM-dd";
 

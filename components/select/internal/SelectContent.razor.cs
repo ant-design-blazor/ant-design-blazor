@@ -142,7 +142,7 @@ namespace AntDesign.Select.Internal
                 }
 
                 DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "compositionstart", OnCompositionStart);
-                DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "compositionend", OnCompositionEnd);
+                DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "compositionend", OnCompositionEndAsync);
                 DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focusout", OnBlurInternal);
                 DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focus", OnFocusInternal);
             }
@@ -155,7 +155,7 @@ namespace AntDesign.Select.Internal
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        protected async void OnOveralyResize(List<ResizeObserverEntry> entries)
+        protected async Task OnOveralyResize(List<ResizeObserverEntry> entries)
         {
             await CalculateResponsiveTags(false, entries[0].ContentRect);
         }
@@ -290,9 +290,18 @@ namespace AntDesign.Select.Internal
             _compositionInputting = true;
         }
 
-        internal virtual void OnCompositionEnd(JsonElement e)
+        internal virtual Task OnCompositionEndAsync(JsonElement e)
         {
             _compositionInputting = false;
+
+            // Trigger search with current input value after IME composition ends
+            if (!string.IsNullOrEmpty(_inputString))
+            {
+                var changeArgs = new ChangeEventArgs { Value = _inputString };
+                return OnInputChange(changeArgs);
+            }
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -472,10 +481,10 @@ namespace AntDesign.Select.Internal
         }
 
         //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
-        private async void OnFocusInternal(JsonElement e) => await OnFocus.InvokeAsync(new());
+        private async Task OnFocusInternal(JsonElement e) => await OnFocus.InvokeAsync(new());
 
         //TODO: Use built in @onblur once https://github.com/dotnet/aspnetcore/issues/30070 is solved
-        private async void OnBlurInternal(JsonElement e)
+        private async Task OnBlurInternal(JsonElement e)
         {
             if (_compositionInputting)
             {

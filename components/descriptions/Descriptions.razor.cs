@@ -139,7 +139,7 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        private async void OnResize(object o)
+        private async Task OnResize(object o)
         {
             await SetRealColumn();
             PrepareMatrix();
