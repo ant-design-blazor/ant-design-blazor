@@ -181,25 +181,27 @@ namespace AntDesign
         private async Task ShowOverlay(bool reCalcPosition)
         {
             await JS.InvokeAsync<double[]>(JSInteropConstants.SetPopShowFlag, true);
-            ActiveOptionValue = ShowOptions.First().Value;
-            if (reCalcPosition)
-            {
-                var pos = await JS.InvokeAsync<double[]>(JSInteropConstants.GetCursorXY, _overlayTrigger.RefBack.Current);
-                var x = (int)Math.Round(pos[0]);
-                var y = (int)Math.Round(pos[1]);
-                await _overlayTrigger.Show(x, y);
-            }
-            else
-            {
-                await _overlayTrigger.Show();
-            }
+
+            // 总是选择第一个选项
+            ActiveOptionValue = ShowOptions.FirstOrDefault()?.Value;
+
+            // 每次显示时都重新计算位置
+            var pos = await JS.InvokeAsync<double[]>(JSInteropConstants.GetCursorXY, _overlayTrigger.RefBack.Current);
+            var x = (int)Math.Round(pos[0]);
+            var y = (int)Math.Round(pos[1]);
+            await _overlayTrigger.Show(x, y);
+
             await InvokeStateHasChangedAsync();
         }
 
         private async Task OnKeyDown(KeyboardEventArgs args)
-        {   //↑、↓、回车键只能放进js里判断，不然在Sever异步模式下无法拦截原键功能
-            //开启浮窗的判断放在oninput里，不然会有问题
-            if (args.Key == "Escape") await HideOverlay();
+        {
+            //↑、↓、回车键只能放进js里判断，不然在Sever异步模式下无法拦截原键功能
+            if (args.Key == "Escape")
+            {
+                await HideOverlay();
+                return;
+            }
         }
 
         private async Task OnInput(ChangeEventArgs args)
@@ -207,30 +209,55 @@ namespace AntDesign
             Value = args.Value.ToString();
             await ValueChanged.InvokeAsync(Value);
 
-            if (Value.EndsWith(Prefix))
-            {
-                await LoadItems(string.Empty);
-                await ShowOrHideBasedOnAvailableShowOptions();
-                return;
-            }
-
             var focusPosition = await JS.InvokeAsync<int>(JSInteropConstants.GetProp, _overlayTrigger.Ref, "selectionStart");
             if (focusPosition == 0)
             {
                 await HideOverlay();
                 return;
             }
-            ;
 
-            var v = Value.Substring(0, focusPosition);  //从光标处切断,向前找匹配项
-            var lastIndex = v.LastIndexOf(Prefix);
-            if (lastIndex >= 0)
+            // 检查光标前的文本中是否存在 @ 符号
+            var textBeforeCursor = Value.Substring(0, focusPosition);
+            var lastAtIndex = textBeforeCursor.LastIndexOf(Prefix);
+
+            // 如果没有 @ 符号，隐藏选项
+            if (lastAtIndex == -1)
             {
-                var lastOption = v.Substring(lastIndex + 1);
-                await LoadItems(lastOption);
+                await HideOverlay();
+                return;
             }
 
-            await ShowOrHideBasedOnAvailableShowOptions();
+            // 如果光标正好在 @ 后面，显示所有选项
+            if (lastAtIndex == focusPosition - 1)
+            {
+                await LoadItems(string.Empty);
+                if (ShowOptions.Count > 0)
+                {
+                    await ShowOverlay(true);
+                }
+                return;
+            }
+
+            // 获取 @ 后面的搜索文本
+            var searchText = textBeforeCursor.Substring(lastAtIndex + 1);
+
+            // 如果搜索文本中包含空格，说明已经选择完成，隐藏选项
+            if (searchText.Contains(" "))
+            {
+                await HideOverlay();
+                return;
+            }
+
+            // 加载并显示匹配的选项
+            await LoadItems(searchText);
+            if (ShowOptions.Count > 0)
+            {
+                await ShowOverlay(true);
+            }
+            else
+            {
+                await HideOverlay();
+            }
         }
 
         private async Task LoadItems(string searchValue)
