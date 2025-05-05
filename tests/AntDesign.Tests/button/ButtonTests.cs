@@ -1,4 +1,8 @@
-﻿using Bunit;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Bunit;
 using Xunit;
 
 namespace AntDesign.Tests.Button
@@ -31,7 +35,7 @@ namespace AntDesign.Tests.Button
             var cut = Context.RenderComponent<AntDesign.Button>(p =>
             {
                 p.AddChildContent("Save");
-                p.Add(x=>x.AriaLabel, "Save");
+                p.Add(x => x.AriaLabel, "Save");
             });
 
             cut.MarkupMatches(@"
@@ -56,14 +60,14 @@ namespace AntDesign.Tests.Button
         [InlineData(ButtonType.Default)]
         [InlineData(ButtonType.Primary)]
         [InlineData(ButtonType.Link)]
-        public void Renders_buttons_of_different_types(string type)
+        public void Renders_buttons_of_different_types(ButtonType type)
         {
             var cut = Context.RenderComponent<AntDesign.Button>(p =>
                 p.Add(x => x.Type, type)
             );
 
             cut.MarkupMatches($@"
-                <button class=""ant-btn ant-btn-{type.ToLower()}"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
+                <button class=""ant-btn ant-btn-{type.ToString().ToLower()}"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
             ");
         }
 

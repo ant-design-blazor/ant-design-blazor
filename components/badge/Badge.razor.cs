@@ -3,27 +3,38 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
-    /// <summary>
-    /// Small numerical value or status descriptor for UI elements.
-    /// </summary>
+    /**
+    <summary>
+        <para>Small numerical value or status descriptor for UI elements.</para>
+
+        <h2>When To Use</h2>
+
+        <para>Badge normally appears in proximity to notifications or user avatars with eye-catching appeal, typically displaying unread messages count.</para>
+    </summary>
+    <seealso cref="AntDesign.BadgeRibbon" />
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/6%26GF9WHwvY/Badge.svg", Title = "Badge", SubTitle = "徽标数")]
     public partial class Badge : AntDomComponentBase
     {
         /// <summary>
         /// Customize Badge status dot color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
-        public string Color { get; set; }
+        public OneOf<BadgeColor?, string> Color { get; set; }
 
         /// <summary>
         /// Set Badge status dot to a preset color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
+        [Obsolete("Use Color instead")]
         public PresetColor? PresetColor { get; set; }
 
         /// <summary>
@@ -58,6 +69,7 @@ namespace AntDesign
         /// <summary>
         /// Whether to display a dot instead of count
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Dot { get; set; }
 
@@ -70,6 +82,7 @@ namespace AntDesign
         /// <summary>
         /// Max count to show
         /// </summary>
+        /// <default value="99"/>
         [Parameter]
         public int OverflowCount
         {
@@ -93,6 +106,7 @@ namespace AntDesign
         /// <summary>
         /// Whether to show badge when count is zero
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool ShowZero { get; set; } = false;
 
@@ -100,7 +114,7 @@ namespace AntDesign
         /// Set Badge dot to a status color. Usage of this parameter will make the badge a status dot.
         /// </summary>
         [Parameter]
-        public string Status { get; set; }
+        public BadgeStatus? Status { get; set; }
 
         /// <summary>
         /// The display text next to the status dot
@@ -118,7 +132,7 @@ namespace AntDesign
         /// Size of the badge
         /// </summary>
         [Parameter]
-        public string Size { get; set; }
+        public BadgeSize? Size { get; set; }
 
         /// <summary>
         /// Wrapping this item.
@@ -126,27 +140,36 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private ClassMapper CountClassMapper { get; set; } = new ClassMapper();
+        private ClassMapper CountClassMapper { get; set; } = new();
 
-        private ClassMapper DotClassMapper { get; set; } = new ClassMapper();
+        private ClassMapper DotClassMapper { get; set; } = new();
 
-        private int[] _countArray = Array.Empty<int>();
+        private int[] _countArray = [];
 
-        private readonly int[] _countSingleArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        private char[] _maxNumberArray = [];
 
-        private char[] _maxNumberArray = Array.Empty<char>();
+        private static readonly int[] _countSingleArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-        private string StatusOrPresetColor => Status.IsIn(_badgeStatusTypes)
-            ? Status
-            : (PresetColor.HasValue
-                ? Enum.GetName(typeof(PresetColor), PresetColor)
-                : "");
+        private static readonly Dictionary<BadgeStatus, string> _statusMap = new()
+        {
+            [BadgeStatus.Default] = "default",
+            [BadgeStatus.Success] = "success",
+            [BadgeStatus.Processing] = "processing",
+            [BadgeStatus.Error] = "error",
+            [BadgeStatus.Warning] = "warning",
+        };
 
-        private bool HasStatusOrColor => !string.IsNullOrWhiteSpace(Status) || !string.IsNullOrWhiteSpace(Color) || PresetColor.HasValue;
+        private string StatusOrPresetColor => Status.HasValue
+            ? _statusMap[Status.Value]
+            : (Color.IsT0 && Color.AsT0.HasValue
+                ? Enum.GetName(typeof(BadgeColor), Color.AsT0)
+                : string.Empty);
 
-        private string CountStyle => Offset == default ? "" : $"{$"right:{-Offset.Left}px"};{$"margin-top:{Offset.Top}px"};";
+        private bool HasStatusOrColor => Status.HasValue || ((Color.IsT0 && Color.AsT0.HasValue) || (Color.IsT1 && !string.IsNullOrWhiteSpace(Color.AsT1)));
 
-        private string DotColorStyle => (PresetColor == null && !string.IsNullOrWhiteSpace(Color) ? $"background:{Color};" : "");
+        private string CountStyle => Offset == default ? string.Empty : $"{$"right:{-Offset.Left}px"};{$"margin-top:{Offset.Top}px"};";
+
+        private string DotColorStyle => Color.IsT1 ? $"background:{Color.AsT1};" : string.Empty;
 
         private bool RealShowSup => (Dot && (!Count.HasValue || (Count > 0 || Count == 0 && ShowZero)))
                                 || Count > 0
@@ -163,15 +186,6 @@ namespace AntDesign
         private int _overflowCount = 99;
 
         private bool _showOverflowCount = false;
-
-        private static readonly string[] _badgeStatusTypes =
-        {
-            "success",
-            "processing",
-            "default",
-            "error",
-            "warning"
-        };
 
         /// <summary>
         /// Sets the default CSS classes.
@@ -190,7 +204,7 @@ namespace AntDesign
                 .Add("ant-scroll-number")
                 .If($"{prefixName}-count", () => !Dot && !HasStatusOrColor)
                 .If($"{prefixName}-dot", () => Dot || HasStatusOrColor)
-                .If($"{prefixName}-count-sm", () => !string.IsNullOrWhiteSpace(Size) && Size.Equals("small", StringComparison.OrdinalIgnoreCase))
+                .If($"{prefixName}-count-sm", () => Size == BadgeSize.Small)
                 .GetIf(() => $"ant-badge-status-{StatusOrPresetColor}", () => !string.IsNullOrWhiteSpace(StatusOrPresetColor))
                 .If($"{prefixName}-multiple-words", () => _countArray.Length >= 2)
                 .If($"{prefixName}-zoom-enter {prefixName}-zoom-enter-active", () => _dotEnter)

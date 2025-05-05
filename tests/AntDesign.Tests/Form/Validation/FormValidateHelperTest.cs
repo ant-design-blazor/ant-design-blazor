@@ -1,10 +1,12 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.Json;
-using AntDesign;
-using AntDesign.Internal;
 using AntDesign.Internal.Form.Validate;
 using Xunit;
 
@@ -390,6 +392,7 @@ namespace AntDesign.Tests.Form.Validation
                 Value = value,
                 FieldName = _fieldName,
                 DisplayName = _displayName,
+                Model = new FieldsTestObj(),
             };
 
             var resultMessage = FormValidateHelper.GetValidationResult(validationContext)?.ErrorMessage;
@@ -473,7 +476,8 @@ namespace AntDesign.Tests.Form.Validation
                     FormFieldType.Number => typeof(int),
                     FormFieldType.Array => typeof(string[]),
                     _ => typeof(object)
-                }
+                },
+                Model = new FieldsTestObj(),
             };
 
             return FormValidateHelper.GetValidationResult(validationContext);
@@ -482,7 +486,7 @@ namespace AntDesign.Tests.Form.Validation
     }
 }
 
-class CustomValidationAttribute : ValidationAttribute
+internal sealed class CustomValidationAttribute : ValidationAttribute
 {
     public int Max { get; set; }
     public CustomValidationAttribute(int max) : base("The field {0} should not max than {1}.")
@@ -511,7 +515,7 @@ class CustomValidationAttribute : ValidationAttribute
     }
 }
 
-class FieldsTestObj
+internal sealed class FieldsTestObj
 {
     public string _fieldName = "one";
     public int _fieldAge = 10;
@@ -519,7 +523,7 @@ class FieldsTestObj
     public int PropertyAge { get; set; } = 10;
 }
 
-enum FormValidateHelperEnum
+internal enum FormValidateHelperEnum
 {
     None,
 }

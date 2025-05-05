@@ -6,7 +6,7 @@
     Action ClosePanel = () => { DatePicker.Close(); };
     Action<DateTime, int?> ChangePickerValue = (date, index) => { DatePicker.ChangePickerValue(date, index); };
     Action<DateTime, int> ChangeValue = (date, index) => { DatePicker.ChangeValue(date, index); };
-    Action<string, int> ChangePickerType = (type, index) => { DatePicker.ChangePickerType(type, index); };
+    Action<DatePickerType, int> ChangePickerType = (type, index) => { DatePicker.ChangePickerType(type, index); };
     Func<int, DateTime> GetIndexPickerValue = (index) => DatePicker.GetIndexPickerValue(index);
     Func<int, DateTime?> GetIndexValue = (index) => DatePicker.GetIndexValue(index);
 
@@ -34,6 +34,7 @@
 
     Dictionary<string, object> dateAttributes = new Dictionary<string, object>(attributes);
     dateAttributes.Add("ShowToday", DatePicker.ShowToday);	
+    dateAttributes.Add("ShowWeek", DatePicker.ShowWeek);
 
     Dictionary<string, object> dateTimeAttributes = new Dictionary<string, object>(dateAttributes);
     dateTimeAttributes.Add("ShowTimeFormat", DatePicker.ShowTimeFormat);

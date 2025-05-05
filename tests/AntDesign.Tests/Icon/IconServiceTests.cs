@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Collections.Generic;
 using System.Linq;
 using Bunit;
 using FluentAssertions;
@@ -11,7 +15,7 @@ namespace AntDesign.Tests.Icon
     {
         [Theory]
         [MemberData(nameof(IconTestData))]
-        public void AllIconsShouldHaveSameWrappingSvgCode(string iconName, string type)
+        public void AllIconsShouldHaveSameWrappingSvgCode(string iconName, IconThemeType type)
         {
             RenderFragment fragment = builder =>
             {
@@ -28,7 +32,7 @@ namespace AntDesign.Tests.Icon
 
         [Theory]
         [MemberData(nameof(IconTestData))]
-        public void AllIconsShouldContainAtLeastOnePath(string iconName, string type)
+        public void AllIconsShouldContainAtLeastOnePath(string iconName, IconThemeType type)
         {
             RenderFragment fragment = builder =>
             {
@@ -40,38 +44,38 @@ namespace AntDesign.Tests.Icon
         }
 
         [Theory]
-        [MemberData(nameof(InvalidIconTestData))]
-        public void InvalidIconNameOrTypeShouldReturnNull(string iconName, string type)
+        [InlineData(IconThemeType.Outline, "bad-icon")]
+        public void InvalidIconNameOrTypeShouldReturnNull(IconThemeType themeType, string iconName)
         {
-            IconService.GetIconImg(iconName, type).Should().BeNull();
+            IconService.GetIconImg(iconName, themeType).Should().BeNull();
         }
 
         [Fact]
         public void GetAllIconsShouldReturnDictionaryKeyedByThemeType()
         {
-            IconService.GetAllIcons().Keys.Should().BeEquivalentTo(new[]
-            {
+            IconService.GetAllIcons().Keys.Should().BeEquivalentTo(
+            [
                 IconThemeType.Outline,
                 IconThemeType.Fill,
-                IconThemeType.Twotone
-            });
+                IconThemeType.TwoTone
+            ]);
         }
 
         [Theory]
         [InlineData(IconThemeType.Outline, "alert")]
         [InlineData(IconThemeType.Fill, "alert")]
-        [InlineData(IconThemeType.Twotone, "alert")]
-        public void GetAllIconsShouldReturnDictionaryValuedWithIconNames(string themeType, string iconName)
+        [InlineData(IconThemeType.TwoTone, "alert")]
+        public void GetAllIconsShouldReturnDictionaryValuedWithIconNames(IconThemeType themeType, string iconName)
         {
             IconService.GetAllIcons()[themeType].Should().Contain(iconName);
         }
 
         [Theory]
-        [InlineData("bad-type", "alert", false)]
-        [InlineData("bad-type", "bad-icon", false)]
-        [InlineData(IconThemeType.Twotone, "bad-icon", false)]
-        [InlineData(IconThemeType.Twotone, "alert", true)]
-        public void IconExistsShouldReturnProperValue(string themeType, string iconName, bool exists)
+        [InlineData(IconThemeType.Outline, "alert", true)]
+        [InlineData(IconThemeType.Outline, "bad-icon", false)]
+        [InlineData(IconThemeType.TwoTone, "bad-icon", false)]
+        [InlineData(IconThemeType.TwoTone, "alert", true)]
+        public void IconExistsShouldReturnProperValue(IconThemeType themeType, string iconName, bool exists)
         {
             IconService.IconExists(themeType, iconName).Should().Be(exists);
         }
@@ -85,18 +89,6 @@ namespace AntDesign.Tests.Icon
                     yield return new object[] { singleIconName, type };
                 }
             }
-        }
-
-        public static IEnumerable<object[]> InvalidIconTestData()
-        {
-            // Bad icon, correct type
-            yield return new object[] { "bad-icon-name", IconThemeType.Twotone };
-
-            // Correct icon, bad type
-            yield return new object[] { "alert", "bad-type-name" };
-
-            // Bad icon, bad type
-            yield return new object[] { "bad-icon-name", "bad-type-name" };
         }
     }
 }

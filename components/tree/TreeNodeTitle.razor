@@ -25,7 +25,7 @@
                 <span class="ant-tree-iconEle ant-tree-icon__customize">
                     @if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false)
                     {
-                        <Icon Type="@SelfNode.Icon" Theme="outline" />
+                        <Icon Type="@SelfNode.Icon" Theme="@IconThemeType.Outline" />
                     }
                 </span>
             </span>
@@ -36,7 +36,7 @@
         }
         else
         {
-            <span class="ant-tree-title" style="pointer-events: none;">
+            <span class="ant-tree-title">
                 @if (SelfNode.TitleTemplate != null)
                 {
                     @SelfNode.TitleTemplate
@@ -96,7 +96,7 @@ else
                     }
                     else if (!string.IsNullOrWhiteSpace(SelfNode.Icon))
                     {
-                        <Icon Type="@SelfNode.Icon" Theme="outline" />
+                        <Icon Type="@SelfNode.Icon" Theme="@IconThemeType.Outline" />
                     }
                 </span>
             </span>

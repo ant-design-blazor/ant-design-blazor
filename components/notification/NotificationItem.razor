@@ -5,6 +5,8 @@
      class="@(ClassPrefix)-notice @(ClassPrefix)-notice-closable @GetClassName()"
      style="@Config.Style"
      @onclick="OnClick"
+     @onmouseenter="HandleMouseEnter"
+     @onmouseleave="HandleMouseLeave"
      @ref="Ref">
 
     <div class="@(ClassPrefix)-notice-content">
@@ -22,7 +24,7 @@
                     case NotificationType.Success:
                         {
                             <span role="img" aria-label="check-circle" class="anticon anticon-check-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-success">
-                                <Icon Type="check-circle" Theme="outline"></Icon>
+                                <Icon Type="@IconType.Outline.CheckCircle" />
                             </span>
 
                             break;
@@ -30,7 +32,7 @@
                     case NotificationType.Warning:
                         {
                             <span role="img" aria-label="exclamation-circle" class="anticon anticon-exclamation-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-warning">
-                                <Icon Type="exclamation-circle" Theme="outline"></Icon>
+                                <Icon Type="@IconType.Outline.ExclamationCircle" />
                             </span>
 
                             break;
@@ -38,7 +40,7 @@
                     case NotificationType.Error:
                         {
                             <span role="img" aria-label="close-circle" class="anticon anticon-close-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-error">
-                                <Icon Type="close-circle" Theme="outline"></Icon>
+                                <Icon Type="@IconType.Outline.CloseCircle" />
                             </span>
 
                             break;
@@ -46,7 +48,7 @@
                     case NotificationType.Info:
                         {
                             <span role="img" aria-label="info-circle" class="anticon anticon-info-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-info">
-                                <Icon Type="info-circle" Theme="outline"></Icon>
+                                <Icon Type="@IconType.Outline.InfoCircle" />
                             </span>
 
                             break;

@@ -1,20 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8</TargetFrameworks>
+    <TargetFramework>net9</TargetFramework>
     <OutputType>Exe</OutputType>
+    <UserSecretsId>33c60f39-db4b-41a0-92e0-08692e55f0e1</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Shared\DemoComponent.cs" Link="Shared\DemoComponent.cs" />
-    <Compile Include="..\Shared\DemoMenuItem.cs" Link="Shared\DemoMenuItem.cs" />
-    <Compile Include="..\Shared\DocsFile.cs" Link="Shared\DocsFile.cs" />
+    <PackageReference Include="LoxSmoke.DocXml" Version="3.5.0" />
+    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.0" />
+    <PackageReference Include="YamlDotnet" Version="11.2.1" />
+    <PackageReference Include="Markdig" Version="0.25.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="YamlDotnet" Version="11.2.1" />
-    <PackageReference Include="Markdig" Version="0.25.0" />
+    <ProjectReference Include="..\..\components\AntDesign.csproj" />
+    <ProjectReference Include="..\AntDesign.Docs\AntDesign.Docs.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.private.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

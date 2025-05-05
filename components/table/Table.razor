@@ -7,7 +7,7 @@
 @typeparam TItem
 
 <div class="@_wrapperClassMapper.Class" @ref="Ref">
-    <Spin Spinning="Loading">
+    <Spin Spinning="Loading" WrapperClassName="ant-table-spin-wrapper">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {
             if (PaginationTemplate == null)
@@ -15,13 +15,13 @@
                 <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
                             Class="@_paginationClass.Class"
                             Total="_total"
-                            PageSize="PageSize"
-                            Current="PageIndex"
+                            PageSize="_pageSize"
+                            Current="_pageIndex"
                             OnChange="HandlePageChange" />
             }
             else
             {
-                @PaginationTemplate((PageSize,PageIndex,_total,_paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
+                @PaginationTemplate((_pageSize, _pageIndex, _total, _paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
             }
         }
 
@@ -44,13 +44,13 @@
                         <div class="ant-table-container">
                             @if (ScrollY != null)
                             {
-                                <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
+                                <div class="ant-table-header @(IsSticky?"ant-table-sticky-holder":"")" style="overflow: hidden; @StickyHolderStyle" @ref="_tableHeaderRef">
                                     <table style="@TableLayoutStyle">
                                         @colGroup(this, true)
                                         @header()
                                     </table>
                                 </div>
-                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") max-height: @((CssSizeLength)ScrollY); @(UseItemsProvider?$"min-height:{(CssSizeLength)ScrollY};":"") @(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")">
+                                <div class="ant-table-body" @ref="_tableBodyRef" style="@(ScrollX!=null?" overflow: auto scroll;":"overflow-y: scroll;") @(AutoHeight?"":$"max-height:{(CssSizeLength)ScrollY};") @((UseItemsProvider&&!AutoHeight)?$"min-height:{(CssSizeLength)ScrollY};":"") @(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")">
                                     <table style="@(ScrollX!=null?$"width: {(CssSizeLength)ScrollX}; min-width: 100%;":"") @TableLayoutStyle" @ref="_tableRef">
                                         @colGroup(this, false)
                                         <tbody class="ant-table-tbody">
@@ -91,7 +91,7 @@
                             }
                             else
                             {
-                                <div class="ant-table-content">
+                                <div class="ant-table-content" @ref="_tableBodyRef" style="@( AutoHeight ? $"overflow-y: scroll;":$"")">
                                     <table style="@TableLayoutStyle;@(ScrollBarWidth == null ? "" : $"--scrollbar-width: {(CssSizeLength)_scrollBarWidth};")" @ref="_tableRef">
                                         @colGroup(this, true)
                                         @header()
@@ -100,6 +100,12 @@
                                         </tbody>
                                         @tfoot()
                                     </table>
+                                </div>
+                            }
+                            @if (IsSticky)
+                            {
+                                <div class="ant-table-sticky-scroll" style="height: 15px; bottom: 0px;">
+                                    <div class="ant-table-sticky-scroll-bar" style="transform: translate3d(0px, 0px, 0px);"></div>
                                 </div>
                             }
                         </div>
@@ -120,13 +126,13 @@
                 <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
                             Class="@_paginationClass.Class"
                             Total="_total"
-                            PageSize="PageSize"
-                            Current="PageIndex"
+                            PageSize="_pageSize"
+                            Current="_pageIndex"
                             OnChange="HandlePageChange" />
             }
             else
             {
-                @PaginationTemplate((PageSize,PageIndex,_total,_paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
+                @PaginationTemplate((_pageSize,_pageIndex,_total,_paginationClass.Class, EventCallback.Factory.Create<PaginationEventArgs>(this, HandlePageChange)))
             }
         }
     </Spin>
@@ -300,7 +306,7 @@
                     @body(SortFilterChildren(currentDataItem.Children), currentRowData);
                     @groupFooter(currentRowData);
                 }
-                @if (!currentDataItem.HasChildren && ExpandTemplate != null && RowExpandable(currentRowData) && currentRowData.Expanded)
+                @if (!currentDataItem.HasChildren && ExpandTemplate != null && InternalRowExpandable(currentRowData) && currentRowData.Expanded)
                 {
                     <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @ExpandedRowClassName(currentRowData)"
                         style="@(currentRowData.Expanded?"":"display: none;")">

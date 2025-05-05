@@ -1,5 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
@@ -17,32 +20,45 @@ namespace AntDesign
      * (int, Dictionary<string, int>)                       - horizontal gutter, vertical gutter for different screen sizes
      * (Dictionary<string, int>, Dictionary<string, int>)   - horizontal gutters for different screen sizes, vertical gutter for different screen sizes
      */
-
     using GutterType = OneOf<int, Dictionary<string, int>, (int, int), (Dictionary<string, int>, int), (int, Dictionary<string, int>), (Dictionary<string, int>, Dictionary<string, int>)>;
 
     public partial class Row : AntDomComponentBase
     {
+        /// <summary>
+        /// Content of the row, generally contains <see cref="Col"/> elements.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Currently unused
+        /// </summary>
         [Parameter]
         public string Type { get; set; }
 
         /// <summary>
-        /// 'top' | 'middle' | 'bottom'
+        /// Vertical alignment for the flex layout: 'top' | 'middle' | 'bottom'
         /// </summary>
         [Parameter]
-        public string Align { get; set; }
+        public RowAlign Align { get; set; }
 
         /// <summary>
-        /// 'start' | 'end' | 'center' | 'space-around' | 'space-between'
+        /// Hotizontal alignment for the flex layout: 'start' | 'end' | 'center' | 'space-around' | 'space-between'
         /// </summary>
         [Parameter]
-        public string Justify { get; set; }
+        public RowJustify Justify { get; set; }
 
+        /// <summary>
+        /// Allow the row's content to wrap or not
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool Wrap { get; set; } = true;
 
+        /// <summary>
+        /// Spacing between grids, could be a number or a dictionary like 
+        /// <c>{ xs: 8, sm: 16, md: 24 }</c>, an array to make horizontal and vertical spacing work at the same time <c>[horizontal, vertical]</c>
+        /// </summary>
         [Parameter]
         public GutterType Gutter
         {
@@ -65,11 +81,14 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when a screen size breakpoint is triggered
+        /// </summary>
         [Parameter]
         public EventCallback<BreakpointType> OnBreakpoint { get; set; }
 
         /// <summary>
-        /// Used to set gutter during pre-rendering
+        /// Default screen size breakpoint. Used to set gutter during pre-rendering
         /// </summary>
         [Parameter]
         public BreakpointType? DefaultBreakpoint { get; set; } = BreakpointType.Xxl;
@@ -81,29 +100,29 @@ namespace AntDesign
         private BreakpointType? _currentBreakPoint;
         private GutterType _gutter;
 
-        private IList<Col> _cols = new List<Col>();
+        private readonly List<Col> _cols = [];
 
-        private static BreakpointType[] _breakpoints = new[] {
+        private static readonly BreakpointType[] _breakpoints = [
             BreakpointType.Xs,
             BreakpointType.Sm,
             BreakpointType.Md,
             BreakpointType.Lg,
             BreakpointType.Xl,
             BreakpointType.Xxl
-        };
+        ];
 
         protected override async Task OnInitializedAsync()
         {
             var prefixCls = "ant-row";
             ClassMapper.Add(prefixCls)
-                .If($"{prefixCls}-top", () => Align == "top")
-                .If($"{prefixCls}-middle", () => Align == "middle")
-                .If($"{prefixCls}-bottom", () => Align == "bottom")
-                .If($"{prefixCls}-start", () => Justify == "start")
-                .If($"{prefixCls}-end", () => Justify == "end")
-                .If($"{prefixCls}-center", () => Justify == "center")
-                .If($"{prefixCls}-space-around", () => Justify == "space-around")
-                .If($"{prefixCls}-space-between", () => Justify == "space-between")
+                .If($"{prefixCls}-top", () => Align == RowAlign.Top)
+                .If($"{prefixCls}-middle", () => Align == RowAlign.Middle)
+                .If($"{prefixCls}-bottom", () => Align == RowAlign.Bottom)
+                .If($"{prefixCls}-start", () => Justify == RowJustify.Start)
+                .If($"{prefixCls}-end", () => Justify == RowJustify.End)
+                .If($"{prefixCls}-center", () => Justify == RowJustify.Center)
+                .If($"{prefixCls}-space-around", () => Justify == RowJustify.SpaceAround)
+                .If($"{prefixCls}-space-between", () => Justify == RowJustify.SpaceBetween)
                 .If($"{prefixCls}-no-wrap", () => !Wrap)
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
@@ -147,8 +166,8 @@ namespace AntDesign
 
         private void OptimizeSize(decimal windowWidth)
         {
-            BreakpointType actualBreakpoint = _breakpoints[_breakpoints.Length - 1];
-            for (int i = 0; i < _breakpoints.Length; i++)
+            var actualBreakpoint = _breakpoints[^1];
+            for (var i = 0; i < _breakpoints.Length; i++)
             {
                 if (windowWidth <= (int)_breakpoints[i] && (windowWidth >= (i > 0 ? (int)_breakpoints[i - 1] : 0)))
                 {
@@ -189,11 +208,11 @@ namespace AntDesign
 
             return _gutter.Match(
                 num => (num, 0),
-                dic => dic.ContainsKey(breakPointName) ? (dic[breakPointName], 0) : (0, 0),
+                dic => dic.TryGetValue(breakPointName, out var val) ? (val, 0) : (0, 0),
                 tuple => tuple,
-                tupleDicInt => (tupleDicInt.Item1.ContainsKey(breakPointName) ? tupleDicInt.Item1[breakPointName] : 0, tupleDicInt.Item2),
-                tupleIntDic => (tupleIntDic.Item1, tupleIntDic.Item2.ContainsKey(breakPointName) ? tupleIntDic.Item2[breakPointName] : 0),
-                tupleDicDic => (tupleDicDic.Item1.ContainsKey(breakPointName) ? tupleDicDic.Item1[breakPointName] : 0, tupleDicDic.Item2.ContainsKey(breakPointName) ? tupleDicDic.Item2[breakPointName] : 0)
+                tupleDicInt => (tupleDicInt.Item1.TryGetValue(breakPointName, out var val) ? val : 0, tupleDicInt.Item2),
+                tupleIntDic => (tupleIntDic.Item1, tupleIntDic.Item2.TryGetValue(breakPointName, out var val) ? val : 0),
+                tupleDicDic => (tupleDicDic.Item1.TryGetValue(breakPointName, out var val1) ? val1 : 0, tupleDicDic.Item2.TryGetValue(breakPointName, out var val2) ? val2 : 0)
             );
         }
 

@@ -1,7 +1,10 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net.Sockets;
 
 namespace AntDesign.JsInterop
 {
@@ -34,15 +37,17 @@ namespace AntDesign.JsInterop
 
     public class DomEventSubscription
     {
-        internal Delegate Delegate { get; set; }
-        internal Type Type { get; set; }
-        internal string Id { get; set; }
+        public Delegate Delegate { get; }
+        public Type Type { get; }
+        public string Id { get; }
+        public bool IsAsync { get; }
 
-        public DomEventSubscription(Delegate @delegate, Type type, string id)
+        public DomEventSubscription(Delegate @delegate, Type type, string id, bool isAsync = false)
         {
             Delegate = @delegate;
             Type = type;
             Id = id;
+            IsAsync = isAsync;
         }
     }
 

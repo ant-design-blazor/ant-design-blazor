@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Bunit;
 using FluentAssertions;
@@ -21,7 +25,7 @@ namespace AntDesign.Tests.Alert
         [InlineData(AlertType.Success, "ant-alert-success")]
         [InlineData(AlertType.Error, "ant-alert-error")]
         [InlineData(AlertType.Info, "ant-alert-info")]
-        public void ItShouldSetProperClassForTypeParameter(string type, string expectedClass)
+        public void ItShouldSetProperClassForTypeParameter(AlertType type, string expectedClass)
         {
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters.Add(x => x.Type, type));
 
@@ -35,7 +39,7 @@ namespace AntDesign.Tests.Alert
         [InlineData(AlertType.Success, MessageOnlySuccessIcon)]
         [InlineData(AlertType.Error, MessageOnlyErrorIcon)]
         [InlineData(AlertType.Info, MessageOnlyInfoIcon)]
-        public void ItShouldShowIconWithMessage(string type, string expectedMarkup)
+        public void ItShouldShowIconWithMessage(AlertType type, string expectedMarkup)
         {
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters
                 .Add(x => x.Message, "Test")
@@ -50,7 +54,7 @@ namespace AntDesign.Tests.Alert
         [InlineData(AlertType.Success, MessageAndDescriptionSuccessIcon)]
         [InlineData(AlertType.Error, MessageAndDescriptionErrorIcon)]
         [InlineData(AlertType.Info, MessageAndDescriptionInfoIcon)]
-        public void ItShouldShowIconWithDescription(string type, string expectedMarkup)
+        public void ItShouldShowIconWithDescription(AlertType type, string expectedMarkup)
         {
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters
                 .Add(x => x.Message, "Test")

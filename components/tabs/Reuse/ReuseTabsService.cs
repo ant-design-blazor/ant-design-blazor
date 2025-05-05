@@ -10,14 +10,18 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
-    public partial class ReuseTabsService
+    /// <summary>
+    /// The service for reuse tabs
+    /// </summary>
+    public partial class ReuseTabsService : IDisposable
     {
         private readonly NavigationManager _navmgr;
         private readonly MenuService _menusService;
-        private readonly Dictionary<string, ReuseTabsPageItem> _pageMap = [];
-        private IReadOnlyCollection<ReuseTabsPageItem> _pages;
+        private ICollection<ReuseTabsPageItem> _pages = new List<ReuseTabsPageItem>();
 
         internal event Action OnStateHasChanged;
+
+        private ReuseTabsPageItem _currentPage;
 
         internal string CurrentUrl
         {
@@ -35,16 +39,38 @@ namespace AntDesign
             }
         }
 
+        private string _activeKey;
+
+        internal string ActiveKey
+        {
+            get => _activeKey;
+            set
+            {
+                _activeKey = value;
+                var pageItem = _pages.FirstOrDefault(r => r.Key == value);
+                if (pageItem != null && (pageItem.Url != CurrentUrl))
+                {
+                    CurrentUrl = pageItem.Url;
+                }
+            }
+        }
+
         /// <summary>
         /// The page information list of the currently opened page, which can be used for caching and recovery
         /// </summary>
-        public IReadOnlyCollection<ReuseTabsPageItem> Pages => _pages;
+        public ICollection<ReuseTabsPageItem> Pages => _pages;
 
         public ReuseTabsService(NavigationManager navmgr, MenuService menusService)
         {
             _navmgr = navmgr;
             _menusService = menusService;
+
+            // Because the menu would be loaded asynchronously sometimes,
+            // So need to refresh the title after menu loaded.
+            _menusService.MenuItemLoaded += StateHasChanged;
         }
+
+        internal ReuseTabsPageItem CurrentPage => _currentPage;
 
         /// <summary>
         /// Create a tab without navigation, the page doesn't really render until the tab is clicked
@@ -53,11 +79,9 @@ namespace AntDesign
         /// <param name="titleTemplate">The title show on the tab</param>
         public void CreateTab(string pageUrl, RenderFragment titleTemplate = null)
         {
-            if (_pageMap.ContainsKey(pageUrl))
-            {
+            if (_pages.Any(x => x.Url == pageUrl))
                 return;
-            }
-            AddPage(pageUrl, new ReuseTabsPageItem() { Url = pageUrl, Title = titleTemplate ?? pageUrl.ToRenderFragment(), CreatedAt = DateTime.MinValue });
+            AddPage(new ReuseTabsPageItem() { Url = pageUrl, Title = titleTemplate ?? pageUrl.ToRenderFragment(), CreatedAt = DateTime.MinValue });
             OnStateHasChanged?.Invoke();
         }
 
@@ -68,12 +92,7 @@ namespace AntDesign
         /// <param name="title">The title show on the tab</param>
         public void CreateTab(string pageUrl, string title)
         {
-            if (_pageMap.ContainsKey(pageUrl))
-            {
-                return;
-            }
-            AddPage(pageUrl, new ReuseTabsPageItem() { Url = pageUrl, Title = title.ToRenderFragment(), CreatedAt = DateTime.MinValue });
-            OnStateHasChanged?.Invoke();
+            CreateTab(pageUrl, title.ToRenderFragment());
         }
 
         //public void Pin(string key)
@@ -88,32 +107,51 @@ namespace AntDesign
         //}
 
         /// <summary>
-        /// Close the page corresponding to the specified key
+        /// Close the page corresponding to the specified url
         /// </summary>
-        /// <param name="key">The specified page's key</param>
-        public bool ClosePage(string key)
+        /// <param name="url">The specified page's url</param>
+        public bool ClosePage(string url)
         {
-            var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == key);
+            var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == url);
             if (reuseTabsPageItem?.Closable != true)
             {
                 return false;
             }
 
-            RemovePageBase(key);
+            RemovePageBase(reuseTabsPageItem.Url);
             StateHasChanged();
 
             return true;
         }
 
         /// <summary>
-        /// Close all pages except the page with the specified key
+        /// Close the page corresponding to the specified key
         /// </summary>
         /// <param name="key">The specified page's key</param>
-        public void CloseOther(string key)
+        internal bool ClosePageByKey(string key)
         {
-            foreach (var item in _pages?.Where(x => x.Closable && x.Url != key && !x.Pin))
+            var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Key == key);
+            if (reuseTabsPageItem?.Closable != true)
             {
-                RemovePageBase(item.Url);
+                return false;
+            }
+
+            RemovePageBase(reuseTabsPageItem.Url);
+            StateHasChanged();
+
+            return true;
+        }
+
+        /// <summary>
+        /// Close all pages except the page with the specified url
+        /// </summary>
+        /// <param name="url">The specified page's url</param>
+        public void CloseOther(string url)
+        {
+            var closablePages = _pages?.Where(x => x.Closable && x.Url != url && !x.Pin).Select(x => x.Url).ToArray();
+            foreach (var item in closablePages)
+            {
+                RemovePageBase(item);
             }
             StateHasChanged();
         }
@@ -123,9 +161,10 @@ namespace AntDesign
         /// </summary>
         public void CloseAll()
         {
-            foreach (var item in _pages?.Where(x => x.Closable && !x.Pin))
+            var closablePages = _pages?.Where(x => x.Closable && !x.Pin).Select(x => x.Url).ToArray();
+            foreach (var item in closablePages)
             {
-                RemovePageBase(item.Url);
+                RemovePageBase(item);
             }
             StateHasChanged();
         }
@@ -147,23 +186,51 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Reload the page corresponding to the specified key
+        /// Reload the page corresponding to the specified url
         /// </summary>
-        /// <param name="key"></param>
-        public void ReloadPage(string key)
+        /// <param name="url"></param>
+        public void ReloadPage(string url)
         {
-            key ??= CurrentUrl;
-            _pageMap[key].Body = null;
-            if (CurrentUrl == key)
+            url ??= CurrentUrl;
+            var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == url);
+            reuseTabsPageItem.Body = null;
+            reuseTabsPageItem.Rendered = false;
+
+            // only reload current page, and other page would be load by tab navigation
+            if (reuseTabsPageItem?.Key == ActiveKey)
             {
-                CurrentUrl = key; // auto reload current page, and other page would be load by tab navigation.
+                StateHasChanged();
             }
-            StateHasChanged();
         }
 
+        /// <summary>
+        /// Update the state of the <see cref="ReuseTabs"/>
+        /// </summary>
         public void Update()
         {
             StateHasChanged();
+        }
+
+        /// <summary>
+        /// Update the options of the specified page
+        /// </summary>
+        /// <param name="url"> The url of the page </param>
+        /// <param name="optionsAction"></param>
+        public void UpdatePage(string url, Action<ReuseTabsPageItem> optionsAction)
+        {
+            var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == url);
+            if (reuseTabsPageItem == null)
+            {
+                return;
+            }
+
+            optionsAction?.Invoke(reuseTabsPageItem);
+            StateHasChanged();
+        }
+
+        public void UpdatePage(Action<ReuseTabsPageItem> optionsAction)
+        {
+            UpdatePage(CurrentUrl, optionsAction);
         }
 
         internal void StateHasChanged()
@@ -175,23 +242,19 @@ namespace AntDesign
         {
             if (reuse)
             {
-                ScanReuseTabsPageAttribute();
+                ScanPinnedPageAttribute();
             }
         }
 
         internal void TrySetRouteData(RouteData routeData, bool reuse)
         {
-            if (routeData == null)
-            {
-                return;
-            }
-
             if (!reuse)
             {
-                _pageMap.Clear();
+                _pages.Clear();
             }
 
-            var reuseTabsPageItem = _pageMap.ContainsKey(CurrentUrl) ? _pageMap[CurrentUrl] : null;
+            var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == CurrentUrl || (w.Singleton && w.TypeName == routeData.PageType?.FullName));
+
             if (reuseTabsPageItem == null)
             {
                 reuseTabsPageItem = new ReuseTabsPageItem
@@ -200,17 +263,42 @@ namespace AntDesign
                     CreatedAt = DateTime.Now,
                 };
 
-                AddPage(CurrentUrl, reuseTabsPageItem);
+                AddPage(reuseTabsPageItem);
+            }
+            else if (reuseTabsPageItem.Singleton)
+            {
+                reuseTabsPageItem.Url = CurrentUrl; // singleton page would change url
+                reuseTabsPageItem.RouteData = routeData; // to update component parameters
             }
 
-            reuseTabsPageItem.Body ??= CreateBody(routeData, reuseTabsPageItem);
+            reuseTabsPageItem.Rendered = true;
+
+            if (routeData == null)
+            {
+                reuseTabsPageItem.Title ??= b =>
+                {
+                    var url = reuseTabsPageItem.Url;
+                    b.AddContent(0, _menusService.GetMenuTitle(url) ?? url.ToRenderFragment());
+                };
+            }
+            else
+            {
+                reuseTabsPageItem.RouteData = routeData;
+                reuseTabsPageItem.TypeName = routeData.PageType.FullName;
+                reuseTabsPageItem.Body ??= CreateBody(reuseTabsPageItem);
+            }
+
+            ActiveKey = reuseTabsPageItem.Key;
+            _currentPage = reuseTabsPageItem;
+
             OnStateHasChanged?.Invoke();
         }
 
-        private RenderFragment CreateBody(RouteData routeData, ReuseTabsPageItem item)
+        private RenderFragment CreateBody(ReuseTabsPageItem item)
         {
             return builder =>
             {
+                var routeData = item.RouteData;
                 builder.OpenComponent(0, routeData.PageType);
                 foreach (var routeValue in routeData.RouteValues)
                 {
@@ -235,29 +323,39 @@ namespace AntDesign
 
             var attributes = pageType.GetCustomAttributes(true);
 
-            if (attributes.FirstOrDefault(x => x is ReuseTabsPageTitleAttribute) is ReuseTabsPageTitleAttribute titleAttr && titleAttr != null)
+            if (attributes.FirstOrDefault(x => x is ReuseTabsPageTitleAttribute) is ReuseTabsPageTitleAttribute titleAttr && titleAttr is { Title.Length: > 0 })
             {
                 pageItem.Title ??= titleAttr.Title?.ToRenderFragment();
             }
 
             if (attributes.FirstOrDefault(x => x is ReuseTabsPageAttribute) is ReuseTabsPageAttribute attr && attr != null)
             {
-                pageItem.Title ??= attr.Title?.ToRenderFragment();
+                if (!string.IsNullOrWhiteSpace(attr.Title))
+                {
+                    pageItem.Title ??= attr.Title?.ToRenderFragment();
+                }
+
                 pageItem.Ignore = attr.Ignore;
                 pageItem.Closable = attr.Closable;
                 pageItem.Pin = attr.Pin;
                 pageItem.KeepAlive = attr.KeepAlive;
                 pageItem.Order = attr.Order;
+                pageItem.Singleton = attr.Singleton;
             }
 
-            pageItem.Title ??= _menusService.GetMenuTitle(url) ?? url.ToRenderFragment();
+            pageItem.Title ??= b =>
+            {
+                b.AddContent(0, _menusService.GetMenuTitle(url) ?? url.ToRenderFragment());
+            };
+
+            FilterPages();
         }
 
         /// <summary>
-        /// 获取所有程序集
+        /// Get all assembly
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<Assembly> GetAllAssembly()
+        private static IEnumerable<Assembly> GetAllAssembly()
         {
             IEnumerable<Assembly> assemblies = new List<Assembly>();
             var entryAssembly = Assembly.GetEntryAssembly();
@@ -268,9 +366,9 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 扫描 ReuseTabsPageAttribute 特性
+        /// Scan ReuseTabsPageAttribute
         /// </summary>
-        private void ScanReuseTabsPageAttribute()
+        private void ScanPinnedPageAttribute()
         {
             var list = GetAllAssembly();
 
@@ -280,45 +378,62 @@ namespace AntDesign
                     .Where(w => w.GetCustomAttribute<ReuseTabsPageAttribute>()?.Pin == true);
                 foreach (var pageType in allClass)
                 {
-                    this.AddReuseTabsPageItem(pageType);
+                    this.AddPinnedPageItem(pageType);
                 }
             }
-
-            CurrentUrl ??= _pages.FirstOrDefault()?.Url;
+            if (CurrentUrl == null)
+                ActiveKey = _pages.FirstOrDefault()?.Key;
         }
 
-        private void AddReuseTabsPageItem(Type pageType)
+        private void AddPinnedPageItem(Type pageType)
         {
             var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
             var reuseTabsAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
 
             var url = reuseTabsAttribute?.PinUrl ?? routeAttribute.Template;
-            var reuseTabsPageItem = new ReuseTabsPageItem();
+            if (_pages.Any(p => p.Url == url || (p.Singleton && p.TypeName == pageType.FullName)))
+            {
+                return;
+            }
+
+            var reuseTabsPageItem = new ReuseTabsPageItem
+            {
+                Url = url,
+                CreatedAt = DateTime.MinValue,
+                TypeName = pageType.FullName
+            };
             GetPageInfo(reuseTabsPageItem, pageType, url, Activator.CreateInstance(pageType));
-            reuseTabsPageItem.CreatedAt = DateTime.MinValue;
-            reuseTabsPageItem.Url = url;
-            AddPage(url, reuseTabsPageItem);
+            AddPage(reuseTabsPageItem);
         }
 
-        private void AddPage(string key, ReuseTabsPageItem pageItem)
+        private void AddPage(ReuseTabsPageItem pageItem)
         {
-            _pageMap.TryAdd(key, pageItem);
-            _pages = _pageMap.Values.Where(x => !x.Ignore)
-                .OrderBy(x => x.CreatedAt)
-                .ThenByDescending(x => x.Pin ? 1 : 0)
-                .ThenBy(x => x.Order)
-                .ToList();
+            pageItem.Key = pageItem.GetHashCode().ToString();
+            _pages.Add(pageItem);
+        }
+
+        private void FilterPages()
+        {
+            _pages = _pages.Where(x => !x.Ignore)
+               .OrderBy(x => x.CreatedAt)
+               .ThenByDescending(x => x.Pin ? 1 : 0)
+               .ThenBy(x => x.Order)
+               .ToList();
         }
 
         private void RemovePageBase(string key)
         {
-            _pageMap[key].Body = null;
-            _pageMap.Remove(key);
-            _pages = _pageMap.Values.Where(x => !x.Ignore)
-                .OrderBy(x => x.CreatedAt)
-                .ThenByDescending(x => x.Pin ? 1 : 0)
-                .ThenBy(x => x.Order)
-                .ToList();
+            var pageItem = _pages.Where(x => x.Url == key).FirstOrDefault();
+            if (pageItem != null)
+            {
+                pageItem.Body = null;
+                _pages.Remove(pageItem);
+            }
+        }
+
+        public void Dispose()
+        {
+            _menusService.MenuItemLoaded -= StateHasChanged;
         }
     }
 }

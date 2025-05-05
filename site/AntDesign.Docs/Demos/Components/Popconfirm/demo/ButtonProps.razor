@@ -1,0 +1,34 @@
+<Popconfirm Title="Are you sure delete this task?"
+            OnConfirm="Confirm"
+            OkButtonProps="new(){ Loading = _loading }"
+            CancelButtonProps="new(){ Disabled = true }">
+    <a>Delete a task</a>
+</Popconfirm>
+
+<br />
+
+<Popconfirm Title="Are you sure delete this task?"
+            OnConfirm="Confirm"
+            OkButtonProps="new(){ Loading = _loading }"
+            CancelButtonProps="null">
+    <a>Hide cancel button</a>
+</Popconfirm>
+
+
+@inject IMessageService _message;
+@code{
+    private bool _loading = false;
+    private bool _visible;
+    private async Task Confirm()
+    {
+        _loading = true;
+        StateHasChanged();
+
+        await Task.Delay(1000);
+
+        _visible = false;
+        _message.Success("Next step.");
+
+        _loading = false;
+    }
+}

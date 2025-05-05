@@ -1,7 +1,10 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AntDesign
 {
@@ -56,7 +59,7 @@ namespace AntDesign
                         }
                     }
                 }
-            }
+            } 
             while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
             column.ColIndex = CurrentColIndex;
@@ -137,7 +140,11 @@ namespace AntDesign
             }
             while (ColIndexOccupied != null && ColIndexOccupied[CurrentColIndex] > 0);
 
-            column.ColIndex = CurrentColIndex;
+            if (_table.AutoColIndexes)
+            {
+                column.ColIndex = CurrentColIndex;
+            }
+
             CurrentColIndex += columnSpan - 1;
 
             if (column.RowSpan > 1)
@@ -150,7 +157,7 @@ namespace AntDesign
             }
         }
 
-        internal void HeaderColumnInitialed(IColumn column)
+        internal void HeaderColumnInitialized(IColumn column)
         {
             if (column.ColIndex == Columns.Count - 1)
             {

@@ -1,40 +1,75 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
-using OneOf;
 
 namespace AntDesign
 {
     public partial class Panel : AntDomComponentBase
     {
+        /// <summary>
+        /// If the panel is active or not
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Active { get; set; }
 
+        /// <summary>
+        /// Unique identifier for the panel
+        /// </summary>
         [Parameter]
         public string Key { get; set; }
 
+        /// <summary>
+        /// If true, the panel cannot be opened or closed.
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Display an arrow or not for the panel
+        /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool ShowArrow { get; set; } = true;
 
+        /// <summary>
+        /// Extra string for the corner of the panel
+        /// </summary>
         [Parameter]
         public string Extra { get; set; }
 
+        /// <summary>
+        /// Extra content for the corner of the panel. Takes priority over <see cref="Extra"/>
+        /// </summary>
         [Parameter]
         public RenderFragment ExtraTemplate { get; set; }
 
+        /// <summary>
+        /// Header string for the panel
+        /// </summary>
         [Parameter]
         public string Header { get; set; }
 
+        /// <summary>
+        /// Header content for the panel. Takes priority over <see cref="Header"/>
+        /// </summary>
         [Parameter]
         public RenderFragment HeaderTemplate { get; set; }
 
+        /// <summary>
+        /// Callback executed when this panel's active status changes
+        /// </summary>
         [Parameter]
         public EventCallback<bool> OnActiveChange { get; set; }
 
+        /// <summary>
+        /// Content for the panel.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
@@ -97,7 +132,7 @@ namespace AntDesign
         {
             if (!this.Disabled)
             {
-                this.Collapse?.Click(this);
+                this.Collapse?.TogglePanelState(this);
             }
         }
 
@@ -145,6 +180,10 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Set the active state of the panel
+        /// </summary>
+        /// <param name="active"></param>
         public void SetActive(bool active)
         {
             if (!active || this.Collapse is null)
@@ -153,10 +192,13 @@ namespace AntDesign
             }
             else
             {
-                this.Collapse.Click(this);
+                this.Collapse.TogglePanelState(this);
             }
         }
 
+        /// <summary>
+        /// Toggle the active state of the panel
+        /// </summary>
         public void Toggle() => SetActive(!this.Active);
 
         private async Task UpdateHeight()

@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -14,6 +16,12 @@ namespace AntDesign
 
         [Parameter]
         public Func<NotificationConfig, Task> OnClose { get; set; }
+
+        [Parameter]
+        public EventCallback<NotificationItem> OnMouseEnter { get; set; }
+
+        [Parameter]
+        public EventCallback<NotificationItem> OnMouseLeave { get; set; }
 
         private string GetIconClassName()
         {
@@ -48,6 +56,16 @@ namespace AntDesign
         private void OnClick()
         {
             Config.InvokeOnClick();
+        }
+
+        private void HandleMouseEnter()
+        {
+            OnMouseEnter.InvokeAsync(this);
+        }
+
+        private void HandleMouseLeave()
+        {
+            OnMouseLeave.InvokeAsync(this);
         }
     }
 }

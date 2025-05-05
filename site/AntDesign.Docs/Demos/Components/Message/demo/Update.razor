@@ -1,6 +1,6 @@
 ﻿@inject IMessageService _message
 
-<Button Type="primary" OnClick="OnClick">
+<Button Type="ButtonType.Primary" OnClick="OnClick">
     Display normal message
 </Button>
 
@@ -19,6 +19,6 @@
 
         config.Content = "Loaded";
         config.Duration = 2;
-        await _message.Success(config);
+        _message.Success(config);
     }
 }

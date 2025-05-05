@@ -1,9 +1,9 @@
 ﻿<div style="margin: 10px; overflow: scroll; height: 200px">
     <div style="padding: 100px; height: 1000px; background: #eee; position: relative " id="area">
-        <AutoComplete PopupContainerSelector="#area"
+        <AutoComplete PopupContainerSelector="body"
                       @bind-Value="@value"
                       Options="@options"
-                      BoundaryAdjustMode="@TriggerBoundaryAdjustMode.InScroll"/>
+                      BoundaryAdjustMode="@TriggerBoundaryAdjustMode.InView"/>
     </div>
 </div>
 

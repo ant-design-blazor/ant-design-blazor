@@ -1,5 +1,5 @@
 ---
-order: 6
+order: 98
 title: Change Log
 toc: false
 timeline: true
@@ -14,6 +14,377 @@ timeline: true
 - Major version release is not included in this schedule for breaking change and new features.
 
 ---
+
+### 1.3.2
+
+`2025-04-07`
+
+- 🐞 Fixed Upload the rendering issue when deleting items from the  file list. [#4533](https://github.com/ant-design-blazor/ant-design-blazor/pull/4533) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Flex that have the default FlexGap now no longer give an KeyNotFoundException. [#4529](https://github.com/ant-design-blazor/ant-design-blazor/pull/4529) [@MauritsDodo](https://github.com/MauritsDodo)
+- ⚡️ Add `params ReadOnlySpan<>` override. [#4531](https://github.com/ant-design-blazor/ant-design-blazor/pull/4531) [@LeaFrock](https://github.com/LeaFrock)
+- 📖 Docs fixed broken components search. [#4530](https://github.com/ant-design-blazor/ant-design-blazor/pull/4530) [@CAPCHIK](https://github.com/CAPCHIK)
+
+### 1.3.1
+
+`2025-04-02`
+
+- 🛠 Refactor Form add Model property to validation context. [#4525](https://github.com/ant-design-blazor/ant-design-blazor/pull/4525) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Refactor Form validation logic. [#4523](https://github.com/ant-design-blazor/ant-design-blazor/pull/4523) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Refactor Table streamline row expand logic and improve readability. [#4519](https://github.com/ant-design-blazor/ant-design-blazor/pull/4519) [@ElderJames](https://github.com/ElderJames)
+- ⚡️ Improve Regex with Source Generator. [#4524](https://github.com/ant-design-blazor/ant-design-blazor/pull/4524) [@LeaFrock](https://github.com/LeaFrock)
+- ⚡️ Replace HashTable with Dictionary<TKey, TValue>. [#4520](https://github.com/ant-design-blazor/ant-design-blazor/pull/4520) [@LeaFrock](https://github.com/LeaFrock)
+
+### 1.3.0
+
+`2025-03-29`
+
+- Table
+  - 🐞 Fixed avoid duplicated expand button while both RowExpandable and OnExpand was set. [#4508](https://github.com/ant-design-blazor/ant-design-blazor/pull/4508) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add string table filter option Not Contains. [#4494](https://github.com/ant-design-blazor/ant-design-blazor/pull/4494) [@rtrocmn](https://github.com/rtrocmn)
+  - 🐞 Fixed prevent trigger SelectedRowsChanged when the SelectedRows was changed outside. [#4486](https://github.com/ant-design-blazor/ant-design-blazor/pull/4486) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 Add DatePicker Enable display of week column in DatePicker. [#4507](https://github.com/ant-design-blazor/ant-design-blazor/pull/4507) [@duseo](https://github.com/duseo)
+- 🆕 Add Message Implement LoadingWhen API for IMessageService. [#4493](https://github.com/ant-design-blazor/ant-design-blazor/pull/4493) [@XmmShp](https://github.com/XmmShp)
+- 🆕 Add Menu the Target parameter. [#4502](https://github.com/ant-design-blazor/ant-design-blazor/pull/4502) [@pathartl](https://github.com/pathartl)
+- 🆕 Add ReuseTabs the title would be collected after the menu load. [#4487](https://github.com/ant-design-blazor/ant-design-blazor/pull/4487) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Form invoke StateHasChanged to update form state after validation. [#4514](https://github.com/ant-design-blazor/ant-design-blazor/pull/4514) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Drawer leaves a shadow after being closed. [#4512](https://github.com/ant-design-blazor/ant-design-blazor/pull/4512) [@thirking](https://github.com/thirking)
+- 💄 Add Spin wrapper classes for form, list, and table. [#4500](https://github.com/ant-design-blazor/ant-design-blazor/pull/4500) [@pathartl](https://github.com/pathartl)
+- 🐞 Fixed the System.ArgumentException caused by implicit conversion. [#4498](https://github.com/ant-design-blazor/ant-design-blazor/pull/4498) [@XmmShp](https://github.com/XmmShp)
+- 🌐 LocaleProvider support json source generator for locale file Deserialization. [#4489](https://github.com/ant-design-blazor/ant-design-blazor/pull/4489) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Upgrade Node.js version to meet dependency requirements. [#4499](https://github.com/ant-design-blazor/ant-design-blazor/pull/4499) [@XmmShp](https://github.com/XmmShp)
+- 🐞 Fixed the startup script of node.js to adapt to the .net9.0. [#4495](https://github.com/ant-design-blazor/ant-design-blazor/pull/4495) [@XmmShp](https://github.com/XmmShp)
+
+
+### 1.2.1
+
+`2025-02-25`
+
+- 🛠 Optimize Tag preset colors. [#4479](https://github.com/ant-design-blazor/ant-design-blazor/pull/4479) [@LeaFrock](https://github.com/LeaFrock)
+- 🐞 Fixed Progress Status parameter is incorrect. [#4475](https://github.com/ant-design-blazor/ant-design-blazor/pull/4475) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Overlay position is not correctly adjusted when it is opened beyond the boundary. [#4483](https://github.com/ant-design-blazor/ant-design-blazor/pull/4483) [@ElderJames](https://github.com/ElderJames) 
+- 🛠 Refactor Datepicker that separate the Disabled parameter of DatePicker and RangePicker. [#4474](https://github.com/ant-design-blazor/ant-design-blazor/pull/4474) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs Table describe the behavior of HidePagination. [#4473](https://github.com/ant-design-blazor/ant-design-blazor/pull/4473) [@ElderJames](https://github.com/ElderJames)
+- 🌐 i18n: Update some missing properties for fa-IR. [#4464](https://github.com/ant-design-blazor/ant-design-blazor/pull/4464) [@zandiarash](https://github.com/zandiarash)
+
+
+### 1.2.0
+
+`2025-02-02`
+
+Happy Chinese New Year!
+
+- Cascader
+  - 🆕 Add support keyboard navigation. [#4414](https://github.com/ant-design-blazor/ant-design-blazor/pull/4414) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Refactor inherits from SelectBase. [#4408](https://github.com/ant-design-blazor/ant-design-blazor/pull/4408) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add support custom trigger. [#4404](https://github.com/ant-design-blazor/ant-design-blazor/pull/4404) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed activation the selected option from Value. [#4415](https://github.com/ant-design-blazor/ant-design-blazor/pull/4415) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 Refactor Vertical property on Flex to Direction. [#4410](https://github.com/ant-design-blazor/ant-design-blazor/pull/4410) [@pathartl](https://github.com/pathartl)
+- 🆕 Add Select `Placement` parameter for select-base components. [#4409](https://github.com/ant-design-blazor/ant-design-blazor/pull/4409) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add WrapperClass for Input. [#4403](https://github.com/ant-design-blazor/ant-design-blazor/pull/4403) [@zandiarash](https://github.com/zandiarash)
+- 🌐 Update tr-TR locale. [#4460](https://github.com/ant-design-blazor/ant-design-blazor/pull/4460) [@gunesoguzhan](https://github.com/gunesoguzhan)
+
+### 1.1.4
+
+`2025-01-24`
+
+- Table
+  - 🆕 Add dynamic column support recognizes the type of filter by the object column type. [#4439](https://github.com/ant-design-blazor/ant-design-blazor/pull/4439) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add confirm filter on enter press. [#4441](https://github.com/ant-design-blazor/ant-design-blazor/pull/4441) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the check-all state can't be updated correctly. [#4449](https://github.com/ant-design-blazor/ant-design-blazor/pull/4449) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed checked selection would be cleared by disabled one on paging. [#4450](https://github.com/ant-design-blazor/ant-design-blazor/pull/4450) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed error was thrown when changing the filter operation from between to equals. [#4447](https://github.com/ant-design-blazor/ant-design-blazor/pull/4447) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed possible infinite loop when pager is hidden and pagesize is set. [#4446](https://github.com/ant-design-blazor/ant-design-blazor/pull/4446) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the BoundaryAdjustMode of filter components. [#4445](https://github.com/ant-design-blazor/ant-design-blazor/pull/4445) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed QueryModel deserialize. [#4443](https://github.com/ant-design-blazor/ant-design-blazor/pull/4443) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the modal/drawer was not excluded when calculating the automatic height. [#4440](https://github.com/ant-design-blazor/ant-design-blazor/pull/4440) [@pankey888](https://github.com/pankey888)
+
+- 🐞 Fixed Tabs when a tab is closed, the context menu of the tab to its right does not work. [#4456](https://github.com/ant-design-blazor/ant-design-blazor/pull/4456) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Form change Help message dynamically. [#4452](https://github.com/ant-design-blazor/ant-design-blazor/pull/4452) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Icon generate twotone color when TwoToneColor is set. [#4451](https://github.com/ant-design-blazor/ant-design-blazor/pull/4451) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed ReuseTabs throwing NRE when any route value is null. [#4438](https://github.com/ant-design-blazor/ant-design-blazor/pull/4438) [@ElderJames](https://github.com/ElderJames)
+- 🗑 Remove FluentAssertions from TestKit. [#4444](https://github.com/ant-design-blazor/ant-design-blazor/pull/4444) [@ElderJames](https://github.com/ElderJames)
+
+Breaking changes:
+
+- Table: When the HidePagination is set to true, PageSize should not be set, so all the data will be displayed. Otherwise, if PageSize is set, the number of rows per page will be displayed according to PageSize. This requires the user to handle the logic of the pagging themselves.
+
+### 1.1.3
+
+`2025-01-15`
+
+- 🐞 Fixed Modal shouldn't show padding without scrollbar. [#4434](https://github.com/ant-design-blazor/ant-design-blazor/pull/4434) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Timeline color incorrectly. [#4433](https://github.com/ant-design-blazor/ant-design-blazor/pull/4433) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Datepicker can't open after manual input. [#4431](https://github.com/ant-design-blazor/ant-design-blazor/pull/4431) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed ReuseTabs the navigation when routedata changed after the location changed. [#4429](https://github.com/ant-design-blazor/ant-design-blazor/pull/4429) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Breadcrumb  auto-generating should be matched against the MenuItem's RouterMatch. [#4428](https://github.com/ant-design-blazor/ant-design-blazor/pull/4428) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed AutoComplete show panel when adding options asynchronously. [#4425](https://github.com/ant-design-blazor/ant-design-blazor/pull/4425) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Badge Ribbon preset color. [#4426](https://github.com/ant-design-blazor/ant-design-blazor/pull/4426) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Table that min-width for filter input. [#4424](https://github.com/ant-design-blazor/ant-design-blazor/pull/4424) [@ElderJames](https://github.com/ElderJames)
+- 💄 Fixed Space size and align style. [#4421](https://github.com/ant-design-blazor/ant-design-blazor/pull/4421) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs fix codebox expand. [#4430](https://github.com/ant-design-blazor/ant-design-blazor/pull/4430) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs add peter cat. [#4420](https://github.com/ant-design-blazor/ant-design-blazor/pull/4420) [@ElderJames](https://github.com/ElderJames)
+
+
+### 1.1.2
+
+`2025-01-08`
+
+- Overlay
+  - 🆕 Add Overlay support control visiblity by Visible parameter. [#4418](https://github.com/ant-design-blazor/ant-design-blazor/pull/4418) [@ElderJames](https://github.com/ElderJames)
+  - 💄 Fixed inline style for overlay trigger warpper with inline child element. [#4405](https://github.com/ant-design-blazor/ant-design-blazor/pull/4405) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🐞 Fixed default sort directions was wrong. [#4411](https://github.com/ant-design-blazor/ant-design-blazor/pull/4411) [@ElderJames](https://github.com/ElderJames)
+  - 📖 Docs update treedata demo and orders. [#4398](https://github.com/ant-design-blazor/ant-design-blazor/pull/4398) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 Add Typography article type component. [#4400](https://github.com/ant-design-blazor/ant-design-blazor/pull/4400) [@ElderJames](https://github.com/ElderJames)
+- 💄 Add Cascader missing dropdown class name. [#4407](https://github.com/ant-design-blazor/ant-design-blazor/pull/4407) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Reusetabs parameters updating for singleton page. [#4399](https://github.com/ant-design-blazor/ant-design-blazor/pull/4399) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Result Http status image are unavailable. [#4396](https://github.com/ant-design-blazor/ant-design-blazor/pull/4396) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Menu wrong layout of submenu. [#4417](https://github.com/ant-design-blazor/ant-design-blazor/pull/4417) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Refactor AutoComplete make ShowPanel obsoleted. [#4393](https://github.com/ant-design-blazor/ant-design-blazor/pull/4393) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs clean the unused Dropdown code for demo. [#4401](https://github.com/ant-design-blazor/ant-design-blazor/pull/4401) [@zandiarash](https://github.com/zandiarash)
+
+
+### 1.1.1
+
+`2025-01-02`
+
+- 🛠 Refactor Badge changed the type of Size and Color of BadgeRibbon to be enum. [#4389](https://github.com/ant-design-blazor/ant-design-blazor/pull/4389) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed BackTop scrolling in a dead loop. [#4391](https://github.com/ant-design-blazor/ant-design-blazor/pull/4391) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Upload error cause by OneOf converting. [#4390](https://github.com/ant-design-blazor/ant-design-blazor/pull/4390) [@ElderJames](https://github.com/ElderJames)
+
+### 1.1.0
+
+`2024-12-31`
+
+Happy new year!
+
+- Table
+  - 🆕 Add `Striped` parameter. [#4372](https://github.com/ant-design-blazor/ant-design-blazor/pull/4372) [@zandiarash](https://github.com/zandiarash)
+  - 🆕 Add support lazy load for tree data. [#4228](https://github.com/ant-design-blazor/ant-design-blazor/pull/4228) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add disable auto column index feature. [#4343](https://github.com/ant-design-blazor/ant-design-blazor/pull/4343) [@GoldSucc](https://github.com/GoldSucc)
+  - 🐞 Fixed the issue that grouped sub-data is not refreshed is fixed. [#4368](https://github.com/ant-design-blazor/ant-design-blazor/pull/4368) [@GlodenBoy](https://github.com/GlodenBoy)
+  - 🐞 Fixed the issue that the column could not be deleted when compiling colums, and colIndex was used to delete it. [#4366](https://github.com/ant-design-blazor/ant-design-blazor/pull/4366) [@GlodenBoy](https://github.com/GlodenBoy)
+  - 🐞 Fixed row grouping cannot be expanded programmatically because it is not cached correctly. [#4358](https://github.com/ant-design-blazor/ant-design-blazor/pull/4358) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Add allow to disable RebuildColumns in table. [#4242](https://github.com/ant-design-blazor/ant-design-blazor/pull/4242) [@agolub-s](https://github.com/agolub-s)
+  - 🛠 Add IColumn Hidden. [#4344](https://github.com/ant-design-blazor/ant-design-blazor/pull/4344) [@pathartl](https://github.com/pathartl)
+
+- 🛠 Refactor: standardize arguments. [#4352](https://github.com/ant-design-blazor/ant-design-blazor/pull/4352) [@pathartl](https://github.com/pathartl)
+- 🆕 Add Icon support custom svg string. [#4380](https://github.com/ant-design-blazor/ant-design-blazor/pull/4380) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Typography level 5 for title. [#4377](https://github.com/ant-design-blazor/ant-design-blazor/pull/4377) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Modal a parameter `AfterOpen`. [#4353](https://github.com/ant-design-blazor/ant-design-blazor/pull/4353) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tabs ink rendering when adding tabs. [#4387](https://github.com/ant-design-blazor/ant-design-blazor/pull/4387) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Statistic overflow exception cause by int extraction. [#4383](https://github.com/ant-design-blazor/ant-design-blazor/pull/4383) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Input the `OnPressEnter` doesn't work for TextArea. [#4381](https://github.com/ant-design-blazor/ant-design-blazor/pull/4381) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Spin show text style. [#4351](https://github.com/ant-design-blazor/ant-design-blazor/pull/4351) [@ElderJames](https://github.com/ElderJames)
+- 📖 docs: fix layout demo for menu title. [#4367](https://github.com/ant-design-blazor/ant-design-blazor/pull/4367) [@ElderJames](https://github.com/ElderJames)
+- 📖 docs: Using DelegatingHandler for all Http requests and Fixed error of fetching for dynamic table. [#4379](https://github.com/ant-design-blazor/ant-design-blazor/pull/4379) [@zandiarash](https://github.com/zandiarash)
+- 📖 docs: fix demo clearing when navigating. [#4386](https://github.com/ant-design-blazor/ant-design-blazor/pull/4386) [@ElderJames](https://github.com/ElderJames)
+
+#### Breaking Changes
+
+Please see [#4352](https://github.com/ant-design-blazor/ant-design-blazor/pull/4352) for detail.
+
+### 1.0.1
+
+`2024-11-18`
+
+- 🔥 Update to .NET 9 GA. [#4330](https://github.com/ant-design-blazor/ant-design-blazor/pull/4330) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Update the building staff to .NET 9 target. [#4335](https://github.com/ant-design-blazor/ant-design-blazor/pull/4335) [@ElderJames](https://github.com/ElderJames)
+
+- TreeSelect
+  - 🐞 Fixed tree/node's null value may cause exception. [#4316](https://github.com/ant-design-blazor/ant-design-blazor/pull/4316) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed the selection doesn't bind default values. [#4315](https://github.com/ant-design-blazor/ant-design-blazor/pull/4315) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Checkbox make ItemValue available when customizing CheckboxGroup. [#4333](https://github.com/ant-design-blazor/ant-design-blazor/pull/4333) [@pankey888](https://github.com/pankey888)
+- 📖 Various updates to English documentation for Table. [#4331](https://github.com/ant-design-blazor/ant-design-blazor/pull/4331) [@pathartl](https://github.com/pathartl)
+- 📖 Update localization.en-US.md. [#4319](https://github.com/ant-design-blazor/ant-design-blazor/pull/4319) [@JackLovel](https://github.com/JackLovel)
+- 🌐 Add dutch translation for ReuseTabs Reload property. [#4323](https://github.com/ant-design-blazor/ant-design-blazor/pull/4323) [@rtrocmn](https://github.com/rtrocmn)
+
+
+### 1.0.0
+
+`2024-11-01`
+
+- Modal
+  - 🐞 Fixed calling js interop after renderering. [#4311](https://github.com/ant-design-blazor/ant-design-blazor/pull/4311) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed only hide scrollbar when enable mask. [#4302](https://github.com/ant-design-blazor/ant-design-blazor/pull/4302) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Move Dialog MaskClick Function into MouseUp Event Callback. [#4294](https://github.com/ant-design-blazor/ant-design-blazor/pull/4294) [@chazikaifa](https://github.com/chazikaifa)
+
+
+- ⚡️ Imporeve Table avoid load data when the PageIndex is less than 1. [#4305](https://github.com/ant-design-blazor/ant-design-blazor/pull/4305) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Grid that end col inline style with semicolon. [#4301](https://github.com/ant-design-blazor/ant-design-blazor/pull/4301) [@pathartl](https://github.com/pathartl)
+- 🐞 Fixed Modal using css var to hide/show the scroll bar of body. [#4299](https://github.com/ant-design-blazor/ant-design-blazor/pull/4299) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Form setting dictionary as model would thrown NRE. [#4296](https://github.com/ant-design-blazor/ant-design-blazor/pull/4296) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Improve Tabs make it possible to work without setting keys of TabPane. [#4297](https://github.com/ant-design-blazor/ant-design-blazor/pull/4297) [@ElderJames](https://github.com/ElderJames)
+- 🌐 Add missing translation items for Dutch. [#4313](https://github.com/ant-design-blazor/ant-design-blazor/pull/4313) [@rtrocmn](https://github.com/rtrocmn)
+- 🌐 Add missing number range message of It_LT locale. [#4303](https://github.com/ant-design-blazor/ant-design-blazor/pull/4303) [@ElderJames](https://github.com/ElderJames)
+
+
+### 1.0.0 RC 3
+
+`2024-10-22`
+
+- 🆕 Add Upload setting up AntiforgeryToken automatically. [#4271](https://github.com/ant-design-blazor/ant-design-blazor/pull/4271) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add steps constants. [#4267](https://github.com/ant-design-blazor/ant-design-blazor/pull/4267) [@pathartl](https://github.com/pathartl)
+- 🆕 Add space string constants。[#4263](https://github.com/ant-design-blazor/ant-design-blazor/pull/4263) [@pathartl](https://github.com/pathartl)
+
+- TreeSelect
+  - 🆕 Add some public methods for controling the inner tree. [#4283](https://github.com/ant-design-blazor/ant-design-blazor/pull/4283) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed that the clear button cannot deselect the selected item when TItemValue is a non-nullable type. [#4283](https://github.com/ant-design-blazor/ant-design-blazor/pull/4283) [@pankey888](https://github.com/pankey888)
+
+- Select
+  - 🐞 Fixed issues with search input. [#4286](https://github.com/ant-design-blazor/ant-design-blazor/pull/4286) [@pankey888](https://github.com/pankey888)
+  - 🐞 Fixed clear and discovery the search value. [#4281](https://github.com/ant-design-blazor/ant-design-blazor/pull/4281) [#4276](https://github.com/ant-design-blazor/ant-design-blazor/pull/4276) [@ElderJames](https://github.com/ElderJames)
+
+- 💄 Fixed Tree the style of line indent. [#4290](https://github.com/ant-design-blazor/ant-design-blazor/pull/4290) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Overlay that dropdown should follow the scrolling with trigger. [#4285](https://github.com/ant-design-blazor/ant-design-blazor/pull/4285) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Empty image doesn't show in dropdown. [#4282](https://github.com/ant-design-blazor/ant-design-blazor/pull/4282) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed AutoComplete prevent opening empty panel. [#4284](https://github.com/ant-design-blazor/ant-design-blazor/pull/4284) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Modal Buttons size default to Default. [#4268](https://github.com/ant-design-blazor/ant-design-blazor/pull/4268) [@wangj90](https://github.com/wangj90)
+- 🐞 Fixed Tabbs the issue where TabPanes cannot render. [#4269](https://github.com/ant-design-blazor/ant-design-blazor/pull/4269) [@ysj265](https://github.com/ysj265)
+
+- 🐞 Fixed Cascader wrong placement and selected node order. [#4265](https://github.com/ant-design-blazor/ant-design-blazor/pull/4265) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed ReuseTabs page filter after getting the config from pages. [#4266](https://github.com/ant-design-blazor/ant-design-blazor/pull/4266) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Update net9 target usage. [#4262](https://github.com/ant-design-blazor/ant-design-blazor/pull/4262) [@WeihanLi](https://github.com/WeihanLi)
+
+### 1.0.0 RC 2
+
+`2024-10-09`
+
+- 🔥 Support .NET 9.0, the doc site is runing on RC2. [#4196](https://github.com/ant-design-blazor/ant-design-blazor/pull/4196) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - ⚡️ Optimized make tab pane only render once. [#4255](https://github.com/ant-design-blazor/ant-design-blazor/pull/4255) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed tab size issue. [#4253](https://github.com/ant-design-blazor/ant-design-blazor/pull/4253) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the ink size when adding new tabPane. [#4239](https://github.com/ant-design-blazor/ant-design-blazor/pull/4239) [@agolub-s](https://github.com/agolub-s)
+  - 🐞 Fixed getting size indefinitely when it is rendered but hidden. [#4225](https://github.com/ant-design-blazor/ant-design-blazor/pull/4225) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed GoTo method would throwing null reference exception. [#4217](https://github.com/ant-design-blazor/ant-design-blazor/pull/4217) [@ElderJames](https://github.com/ElderJames)
+  
+- Table
+  - 🐞 Fixed table layout default to fixed when the auto heigh…. [#4258](https://github.com/ant-design-blazor/ant-design-blazor/pull/4258) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed AutoHeight algorithm. [#4238](https://github.com/ant-design-blazor/ant-design-blazor/pull/4238) [@ysj265](https://github.com/ysj265)
+
+- Form
+  - 🆕 Add support field validation. [#4240](https://github.com/ant-design-blazor/ant-design-blazor/pull/4240) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed prevent building edit context in dead loop. [#4254](https://github.com/ant-design-blazor/ant-design-blazor/pull/4254) [@ElderJames](https://github.com/ElderJames)
+
+- Input
+  - 🆕 Add ShowClear parameter allows overriding when the clear button is shown. [#4221](https://github.com/ant-design-blazor/ant-design-blazor/pull/4221) [@rhodon-jargon](https://github.com/rhodon-jargon)
+  - 🐞 Fixed Disabled  parameter for search component button. [#4214](https://github.com/ant-design-blazor/ant-design-blazor/pull/4214) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
+
+- 🆕 Add Popconfirm supports for hiding buttons. [#3895](https://github.com/ant-design-blazor/ant-design-blazor/pull/3895) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Tree Selectable and SelectableExpression to mark whether TreeNode can be selected or not. [#4229](https://github.com/ant-design-blazor/ant-design-blazor/pull/4229) [@pankey888](https://github.com/pankey888)
+- 🐞 Fixed treeselect a bug which may trigger OnSelectedItemChanged twice. [#4232](https://github.com/ant-design-blazor/ant-design-blazor/pull/4232) [@pankey888](https://github.com/pankey888)
+- 🐞 ifxed DatePicker prevent from crash when browser autoprefills…. [#4251](https://github.com/ant-design-blazor/ant-design-blazor/pull/4251) [@ogix](https://github.com/ogix)
+- 🐞 Fixed Menu tooltip doesn't work. [#4222](https://github.com/ant-design-blazor/ant-design-blazor/pull/4222) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Modal the locale of buttons when it's created by  modal service. [#4215](https://github.com/ant-design-blazor/ant-design-blazor/pull/4215) [@ElderJames](https://github.com/ElderJames)
+
+
+### 1.0.0 RC 1
+
+`2024-09-19`
+
+- ReuseTabs 
+  - 🔥 Add allow reusetabs to operate independently of cascaded routing data. [#4205](https://github.com/ant-design-blazor/ant-design-blazor/pull/4205) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Refactor that inherts tabs. [#4200](https://github.com/ant-design-blazor/ant-design-blazor/pull/4200) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add Singleton parameter to ReuseTabsPageAttribute. [#4151](https://github.com/ant-design-blazor/ant-design-blazor/pull/4151) [@pankey888](https://github.com/pankey888)
+
+- Tabs
+  - 🐞 Fixed draggable and contextmenu incottectly. [#4199](https://github.com/ant-design-blazor/ant-design-blazor/pull/4199) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed that should active previous tab when the actived tab was remove. [#4197](https://github.com/ant-design-blazor/ant-design-blazor/pull/4197) [@ElderJames](https://github.com/ElderJames)
+
+- Form
+  - 🆕 Add Tooltip to FormItem component. [#4211](https://github.com/ant-design-blazor/ant-design-blazor/pull/4211) [@jeffersyuan1976](https://github.com/jeffersyuan1976)
+  - 🆕 Add `GenerateFormItem` automatically generates forms and recognizes the ReadOnlyAttribute. [#4191](https://github.com/ant-design-blazor/ant-design-blazor/pull/4191) [@lishewen](https://github.com/lishewen)
+
+- 🐞 Fixed Table conflicts between AutoHeight and Resizable. [#4195](https://github.com/ant-design-blazor/ant-design-blazor/pull/4195) [@ysj265](https://github.com/ysj265)
+- 🐞 Fixed Menu avoid the SelectedKeys set to null when it was not bound. [#4194](https://github.com/ant-design-blazor/ant-design-blazor/pull/4194) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Button AutoLoading parameter. [#4193](https://github.com/ant-design-blazor/ant-design-blazor/pull/4193) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs enable static pre-rendering on the WebAssembly site. [#4207](https://github.com/ant-design-blazor/ant-design-blazor/pull/4207) [@jsakamoto](https://github.com/jsakamoto)
+
+Breaking Changes:
+
+- ReuseTabs: The `Body` parameter in previous versions was renamed to the `TabPaneTemplate`, and the `Body` parameter after this version versions is only used to bind the `Body` parameter of the Layout component.
+
+### 0.20.4
+
+`2024-09-09`
+
+- 🔥 Add Table AutoHeight parameter to fill the height of the page automatically. [#4168](https://github.com/ant-design-blazor/ant-design-blazor/pull/4168) [@ysj265](https://github.com/ysj265)
+- 🐞 Fixed Tree recover pointer events. [#4176](https://github.com/ant-design-blazor/ant-design-blazor/pull/4176) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tabs adding and removing. [#4173](https://github.com/ant-design-blazor/ant-design-blazor/pull/4173) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Select reference and remove the duplicaed div. [#4175](https://github.com/ant-design-blazor/ant-design-blazor/pull/4175) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Auto-complete open panel immediately when options was changed. [#4172](https://github.com/ant-design-blazor/ant-design-blazor/pull/4172) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Drawer closing effects. [#4166](https://github.com/ant-design-blazor/ant-design-blazor/pull/4166) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Card within Tabs cannot keep the input status. [#4164](https://github.com/ant-design-blazor/ant-design-blazor/pull/4164) [@ysj265](https://github.com/ysj265)
+- 🐞 Refactor DatePicker that make some methods public. [#4153](https://github.com/ant-design-blazor/ant-design-blazor/pull/4153) [@youcaiyouyoucai](https://github.com/youcaiyouyoucai)
+- 🛠 Refactor Form that make validate mode default to Complex. [#4163](https://github.com/ant-design-blazor/ant-design-blazor/pull/4163) [@ElderJames](https://github.com/ElderJames)
+
+### 0.20.3
+
+`2024-09-03`
+
+- 🔥 Documentation is generated from the code files now so the site should match the library much closer.  [#3013](https://github.com/ant-design-blazor/ant-design-blazor/pull/3013) [@kooliokey](https://github.com/kooliokey)
+
+- Table
+  - 🆕 Add SelectAll event callback. [#4142](https://github.com/ant-design-blazor/ant-design-blazor/pull/4142) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Refactor reduce rendering for dynamic columns. [#4138](https://github.com/ant-design-blazor/ant-design-blazor/pull/4138) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - 🐞 Fixed reusetabs update title after menus were loaded. [#4112](https://github.com/ant-design-blazor/ant-design-blazor/pull/4112) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed Tabs the Drag & Drop. [#4147](https://github.com/ant-design-blazor/ant-design-blazor/pull/4147) [@ElderJames](https://github.com/ElderJames)
+
+- Form
+  - 🐞 Fixed check if _editContext exists when disposing. [#4136](https://github.com/ant-design-blazor/ant-design-blazor/pull/4136) [@ogix](https://github.com/ogix)
+  - 🐞 Fixed exception during validation for some nullable types. [#4137](https://github.com/ant-design-blazor/ant-design-blazor/pull/4137) [@ElderJames](https://github.com/ElderJames)
+
+- Drawer
+  - 🛠 Refactor Change the Height and Width of the Drawer to the string type to support the percentage argument. [#4120](https://github.com/ant-design-blazor/ant-design-blazor/pull/4120) [@kx500](https://github.com/kx500)
+  - 🐞 Fixed closing animation effect. [#4122](https://github.com/ant-design-blazor/ant-design-blazor/pull/4122) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Select An exception is raised when values change in some cases. [#4117](https://github.com/ant-design-blazor/ant-design-blazor/pull/4117) [@pankey888](https://github.com/pankey888)
+- 🐞 Refactor Menu that hiding overlay before handling OnClick event. [#4121](https://github.com/ant-design-blazor/ant-design-blazor/pull/4121) [@pankey888](https://github.com/pankey888)
+- 🛠 Refactor the DI lifetime. [#4123](https://github.com/ant-design-blazor/ant-design-blazor/pull/4123) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed comments from locale json file. [#4116](https://github.com/ant-design-blazor/ant-design-blazor/pull/4116) [@ogix](https://github.com/ogix)
+
+- Codebase
+  - 🛠 Enable CA1852/IDE0040/IDE0005 code analyzer rules. [#4126](https://github.com/ant-design-blazor/ant-design-blazor/pull/4126) [@WeihanLi](https://github.com/WeihanLi)
+  - 🛠 Reduce nuget package size by copying intellisense files before build. [#4129](https://github.com/ant-design-blazor/ant-design-blazor/pull/4129) [@stratosblue](https://github.com/stratosblue)
+  - 🛠 Remove duplicated InternalsVisibleTo. [#4124](https://github.com/ant-design-blazor/ant-design-blazor/pull/4124) [@WeihanLi](https://github.com/WeihanLi)
+  - 🛠 Remove Microsoft.SourceLink.GitHub package reference. [#4125](https://github.com/ant-design-blazor/ant-design-blazor/pull/4125) [@WeihanLi](https://github.com/WeihanLi)
+
+**Breaking Changes**
+
+- Card: The CardTabs parameter has been removed, and Tabs should be placed directly in the Card's ChildContent.
+- Darwer: The type of `Height` and `Width` parameters are changed to string, so the int variable you originally bound needs to be converted and assigned.
+
+
+### 0.20.2
+
+`2024-08-20`
+
+- 🔥 Add localized intellisense for zh-CN,ja-JP,ko-KR. [#4107](https://github.com/ant-design-blazor/ant-design-blazor/pull/4107) [@ElderJames](https://github.com/ElderJames)
+
+- Form
+  - 🆕 Add support nest property validation. [#4102](https://github.com/ant-design-blazor/ant-design-blazor/pull/4102) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed validation for CompareAttribute. [#4098](https://github.com/ant-design-blazor/ant-design-blazor/pull/4098) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Refactor: remove complex object validator. [#4098](https://github.com/ant-design-blazor/ant-design-blazor/pull/4098) [@ElderJames](https://github.com/ElderJames)
+  - 📖 docs: Add a demo fro table edit validation. [#4102](https://github.com/ant-design-blazor/ant-design-blazor/pull/4102) 
+  - 📖 docs: Add a demo for static form validation. [#4105](https://github.com/ant-design-blazor/ant-design-blazor/pull/4105) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🐞 Fixed style would be messy when columns skipped fixed or no width was set. [#4097](https://github.com/ant-design-blazor/ant-design-blazor/pull/4097) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed messy style when column changes. [#4093](https://github.com/ant-design-blazor/ant-design-blazor/pull/4093) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 Fixed Tabs ink is not rendered when changing active page through ActiveKey. [#4094](https://github.com/ant-design-blazor/ant-design-blazor/pull/4094) [@pankey888](https://github.com/pankey888)
+- 💄 Fixed Upload to hide the 'no file chosen' tooltip. [#4096](https://github.com/ant-design-blazor/ant-design-blazor/pull/4096) [@pankey888](https://github.com/pankey888)
+- 📖 docs: Update GroupedColumn_.razor. [#3524](https://github.com/ant-design-blazor/ant-design-blazor/pull/3524) [@SuperQuestions](https://github.com/SuperQuestions)
+
 
 ### 0.20.1
 
@@ -345,7 +716,7 @@ The Spring Equinox
 `2024-01-14`
 
 - Table
-  - 🐞 Fixed should flush cache only pagging. [#3620](https://github.com/ant-design-blazor/ant-design-blazor/pull/3620) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed should flush cache only paging. [#3620](https://github.com/ant-design-blazor/ant-design-blazor/pull/3620) [@ElderJames](https://github.com/ElderJames)
   - 🐞 Fixed UnselectAll() was not work. [#3618](https://github.com/ant-design-blazor/ant-design-blazor/pull/3618) [@ElderJames](https://github.com/ElderJames)
   - 🐞 Fixed thrown exception when property type is `Char`. [#3617](https://github.com/ant-design-blazor/ant-design-blazor/pull/3617) [@ElderJames](https://github.com/ElderJames)
 

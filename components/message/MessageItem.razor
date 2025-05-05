@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@PrefixCls-notice @Config.AnimationClass">
+<div class="@PrefixCls-notice @Config.AnimationClass" @onmouseenter="HandleMouseEnter" @onmouseleave="HandleMouseLeave">
     <div class="@PrefixCls-notice-content" @ref="Ref">
         <div class="@PrefixCls-custom-content @GetClassName()">
             @{
@@ -9,28 +9,28 @@
                 {
                     case MessageType.Success:
                         {
-                            <Icon Type="check-circle" Theme="fill" Class="anticon anticon-check-circle" ></Icon>
+                            <Icon Type="@IconType.Fill.CheckCircle" />
 
                             break;
                         }
                     case MessageType.Warning:
                         {
-                            <Icon Type="exclamation-circle" Theme="fill" Class="anticon anticon-exclamation-circle"></Icon>
+                            <Icon Type="@IconType.Fill.ExclamationCircle" />
                             break;
                         }
                     case MessageType.Error:
                         {
-                            <Icon Type="close-circle" Theme="fill"  Class="anticon anticon-close-circle"></Icon>
+                            <Icon Type="@IconType.Fill.CloseCircle" />
                             break;
                         }
                     case MessageType.Info:
                         {
-                            <Icon Type="info-circle" Theme="fill" Class="anticon anticon-info-circle"></Icon>
+                            <Icon Type="@IconType.Fill.InfoCircle" />
                             break;
                         }
                     default:
                         {
-                            <Icon Type="loading" Theme="outline" Class="anticon anticon-loading"></Icon>
+                            <Icon Type="@IconType.Outline.Loading" />
                             break;
                         }
                 }

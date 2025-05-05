@@ -1,9 +1,12 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.Core.Helpers;
@@ -13,20 +16,54 @@ using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Enter a number within certain range with the mouse or keyboard.</para>
+
+    <h2>When To Use</h2>
+
+    <list type="bullet">
+        <item>When a numeric value needs to be provided.</item>
+    </list>
+
+    <h3>Types Supported</h3>
+
+    <para><c>sbyte</c>, <c>byte</c>, <c>short</c>, <c>ushort</c>, <c>int</c>, <c>uint</c>, <c>long</c>, <c>ulong</c>, <c>float</c>, <c>double</c>, <c>decimal</c></para>
+
+    <para>Nullable types of the above types are also supported. For example, <c>ushort?</c>, <c>int?</c>, etc.</para>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg", Title = "InputNumber", SubTitle = "数字输入框")]
     public partial class InputNumber<TValue> : AntInputComponentBase<TValue>
     {
+        /// <summary>
+        /// Number of decimal places to use for number and display
+        /// </summary>
+        /// <default value="0"/>
         [Parameter]
         public int Precision { get; set; } = 0;
 
+        /// <summary>
+        /// Formatter from number to string for displaying
+        /// </summary>
         [Parameter]
         public Func<TValue, string> Formatter { get; set; }
 
+        /// <summary>
+        /// Parser to extract number from the formatter
+        /// </summary>
         [Parameter]
         public string Format { get; set; }
 
+        /// <summary>
+        /// Specifies the value extracted from formatter
+        /// </summary>
         [Parameter]
         public Func<string, string> Parser { get; set; }
 
+        /// <summary>
+        /// The number to which the current value is increased or decreased with the input arrows. It can be an integer or decimal.
+        /// </summary>
         [Parameter]
         public TValue Step
         {
@@ -46,6 +83,9 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Initial value
+        /// </summary>
         [Parameter]
         public TValue DefaultValue
         {
@@ -57,48 +97,78 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Max alloable number
+        /// </summary>
         [Parameter]
         public TValue Max { get; set; }
 
+        /// <summary>
+        /// Min allowable number
+        /// </summary>
         [Parameter]
         public TValue Min { get; set; }
 
+        /// <summary>
+        ///  Max length of input
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public int? MaxLength { get; set; }
 
+        /// <summary>
+        /// Disable the input or not
+        /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Callback executed when the input value changes
+        /// </summary>
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
 
+        /// <summary>
+        /// Callback executed when the input gains focus
+        /// </summary>
         [Parameter]
         public EventCallback<FocusEventArgs> OnFocus { get; set; }
 
+        /// <summary>
+        /// Placeholder value
+        /// </summary>
         [Parameter]
         public string PlaceHolder { get; set; }
 
+        /// <summary>
+        /// Whether to show border
+        /// </summary>
         [Parameter]
         public bool Bordered { get; set; } = true;
 
+        /// <summary>
+        /// Setting prefix content to the input
+        /// </summary>
         [Parameter]
         public OneOf<string, RenderFragment> Prefix { get; set; }
 
-
+        /// <summary>
+        /// The width of the input
+        /// </summary>
         [Parameter]
         public string Width { get; set; }
 
         private static readonly Type _surfaceType = typeof(TValue);
 
-        private static readonly Type[] _smallIntegerType = new Type[]
-        {
+        private static readonly Type[] _smallIntegerType =
+        [
             typeof(sbyte),
             typeof(byte),
             typeof(short),
             typeof(ushort),
-        };
+        ];
 
-        private static readonly Type[] _supportTypes = new Type[] {
+        private static readonly Type[] _supportTypes = [
              typeof(sbyte),
              typeof(byte),
 
@@ -114,9 +184,9 @@ namespace AntDesign
              typeof(float),
              typeof(double),
              typeof(decimal)
-        };
+        ];
 
-        private static readonly Dictionary<Type, object> _defaultMaximum = new Dictionary<Type, object>()
+        private static readonly Dictionary<Type, object> _defaultMaximum = new()
         {
             { typeof(sbyte), sbyte.MaxValue },
             { typeof(byte), byte.MaxValue },
@@ -135,7 +205,7 @@ namespace AntDesign
             { typeof(decimal), decimal.MaxValue },
         };
 
-        private static readonly Dictionary<Type, object> _defaultMinimum = new Dictionary<Type, object>()
+        private static readonly Dictionary<Type, object> _defaultMinimum = new()
         {
             { typeof(sbyte), sbyte.MinValue },
             { typeof(byte), byte.MinValue },
@@ -154,7 +224,7 @@ namespace AntDesign
             { typeof(decimal), decimal.MinValue },
         };
 
-        private static Type[] _floatTypes = new Type[] { typeof(float), typeof(double), typeof(decimal) };
+        private static readonly Type[] _floatTypes = [typeof(float), typeof(double), typeof(decimal)];
 
         private readonly bool _isNullable;
         private readonly int _interval = 200;
@@ -178,10 +248,10 @@ namespace AntDesign
         private TValue _step;
         private TValue _defaultValue;
 
-        private string _prefixCls = "ant-input-number";
-        private string _inputNumberMode = "numeric";
+        private const string PrefixCls = "ant-input-number";
+        private readonly string _inputNumberMode = "numeric";
 
-        private ClassMapper _affixWarrperClass = new ClassMapper();
+        private readonly ClassMapper _affixWarrperClass = new();
 
         private bool HasAffixWarrper => FormItem?.FeedbackIcon != null;
 
@@ -227,14 +297,14 @@ namespace AntDesign
             {
                 ParameterExpression num = Expression.Parameter(_surfaceType, "num");
                 ParameterExpression decimalPlaces = Expression.Parameter(typeof(int), "decimalPlaces");
-                MethodCallExpression expRound = Expression.Call(null, typeof(InputNumberMath).GetMethod(nameof(InputNumberMath.Round), new Type[] { _surfaceType, typeof(int) }), num, decimalPlaces);
+                MethodCallExpression expRound = Expression.Call(null, typeof(InputNumberMath).GetMethod(nameof(InputNumberMath.Round), [_surfaceType, typeof(int)]), num, decimalPlaces);
                 var lambdaRound = Expression.Lambda<Func<TValue, int, TValue>>(expRound, num, decimalPlaces);
                 _roundFunc = lambdaRound.Compile();
                 _inputNumberMode = "decimal";
             }
 
-            if (_defaultMaximum.ContainsKey(underlyingType)) Max = (TValue)_defaultMaximum[underlyingType];
-            if (_defaultMinimum.ContainsKey(underlyingType)) Min = (TValue)_defaultMinimum[underlyingType];
+            if (_defaultMaximum.TryGetValue(underlyingType, out var maxVal)) Max = (TValue)maxVal;
+            if (_defaultMinimum.TryGetValue(underlyingType, out var minVal)) Min = (TValue)minVal;
 
             _step = (TValue)Convert.ChangeType(1, underlyingType);
         }
@@ -246,7 +316,7 @@ namespace AntDesign
             // 数字解析 Digital analysis
             ParameterExpression input = Expression.Parameter(typeof(string), "input");
             ParameterExpression defaultValue = Expression.Parameter(typeof(TValue), "defaultValue");
-            MethodCallExpression inputParse = Expression.Call(null, typeof(InputNumberMath).GetMethod(nameof(InputNumberMath.Parse), new Type[] { typeof(string), typeof(TValue), typeof(CultureInfo) }), input, defaultValue, Expression.Constant(CultureInfo));
+            MethodCallExpression inputParse = Expression.Call(null, typeof(InputNumberMath).GetMethod(nameof(InputNumberMath.Parse), [typeof(string), typeof(TValue), typeof(CultureInfo)]), input, defaultValue, Expression.Constant(CultureInfo));
             var lambdaParse = Expression.Lambda<Func<string, TValue, TValue>>(inputParse, input, defaultValue);
             _parseFunc = lambdaParse.Compile();
 
@@ -258,7 +328,7 @@ namespace AntDesign
                 expValue = Expression.Property(value, "Value");
             else
                 expValue = value;
-            MethodCallExpression expToString = Expression.Call(expValue, expValue.Type.GetMethod("ToString", new Type[] { typeof(string), typeof(IFormatProvider) }), format, Expression.Constant(CultureInfo));
+            MethodCallExpression expToString = Expression.Call(expValue, expValue.Type.GetMethod("ToString", [typeof(string), typeof(IFormatProvider)]), format, Expression.Constant(CultureInfo));
             var lambdaToString = Expression.Lambda<Func<TValue, string, string>>(expToString, value, format);
             _toStringFunc = lambdaToString.Compile();
 
@@ -314,14 +384,14 @@ namespace AntDesign
             ;
 
             ClassMapper
-                .Add(_prefixCls)
-                .If($"{_prefixCls}-lg", () => Size == InputSize.Large)
-                .If($"{_prefixCls}-sm", () => Size == InputSize.Small)
-                .If($"{_prefixCls}-focused", () => _focused)
-                .If($"{_prefixCls}-disabled", () => this.Disabled)
-                .If($"{_prefixCls}-borderless", () => !Bordered)
-                .GetIf(() => $"{_prefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
-                .If($"{_prefixCls}-rtl", () => RTL);
+                .Add(PrefixCls)
+                .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
+                .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
+                .If($"{PrefixCls}-focused", () => _focused)
+                .If($"{PrefixCls}-disabled", () => this.Disabled)
+                .If($"{PrefixCls}-borderless", () => !Bordered)
+                .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
 
         #region Value Increase and Decrease Methods

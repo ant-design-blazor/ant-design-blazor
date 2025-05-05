@@ -1,14 +1,32 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Display the current progress of an operation flow.</para>
+
+    <h2>When To Use</h2>
+
+    <para>If it will take a long time to complete an operation, you can use `Progress` to show the current progress and status.</para>
+
+    <list type="bullet">
+        <item>When an operation will interrupt the current interface, or it needs to run in the background for more than 2 seconds.</item>
+        <item>When you need to display the completion percentage of an operation.</item>
+    </list>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/xqsDu4ZyR/Progress.svg", Title = "Progress", SubTitle = "进度条")]
     public partial class Progress : AntDomComponentBase
     {
         private const string PrefixCls = "ant-progress";
@@ -19,25 +37,26 @@ namespace AntDesign
         private string _circlePathStyle;
         private string _circleSuccessStyle;
 
-        private static readonly Regex _hexColor = new(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$");
-
         #region Parameters
 
         /// <summary>
         /// progress size
         /// </summary>
+        /// <default value="ProgressSize.Default" />
         [Parameter]
         public ProgressSize Size { get; set; } = ProgressSize.Default;
 
         /// <summary>
         /// to set the type, options: line circle dashboard
         /// </summary>
+        /// <default value="ProgressType.Line" />
         [Parameter]
         public ProgressType Type { get; set; } = ProgressType.Line;
 
         /// <summary>
         /// template function of the content
         /// </summary>
+        /// <default value="i%" />
         [Parameter]
         public Func<double, string> Format { get; set; } = (i) => i + "%";
 
@@ -50,24 +69,28 @@ namespace AntDesign
         /// <summary>
         /// whether to display the progress value and the status icon
         /// </summary>
+        /// <default value="true" />
         [Parameter]
         public bool ShowInfo { get; set; } = true;
 
         /// <summary>
         /// to set the status of the Progress, options: success exception normal active(line only)
         /// </summary>
+        /// <default value="ProgressStatus.Normal" />
         [Parameter]
-        public ProgressStatus Status { get; set; } = ProgressStatus.Normal;
+        public ProgressStatus? Status { get; set; }
 
         /// <summary>
         /// to set the style of the progress linecap
         /// </summary>
+        /// <default value="ProgressStrokeLinecap.Round" />
         [Parameter]
         public ProgressStrokeLinecap StrokeLinecap { get; set; } = ProgressStrokeLinecap.Round;
 
         /// <summary>
         /// segmented success percent
         /// </summary>
+        /// <default value="0" />
         [Parameter]
         public double SuccessPercent { get; set; }
 
@@ -82,6 +105,7 @@ namespace AntDesign
         /// to set the width of the circular progress, unit: percentage of the canvas width
         /// to set the width of the dashboard progress, unit: percentage of the canvas width
         /// </summary>
+        /// <default value="Type = line: 10, Type = circle or dashboard: 6" />
         [Parameter]
         public int StrokeWidth { get; set; }
 
@@ -95,6 +119,7 @@ namespace AntDesign
         /// <summary>
         /// the total step count
         /// </summary>
+        /// <default value="0" />
         [Parameter]
         public int Steps { get; set; }
 
@@ -102,22 +127,31 @@ namespace AntDesign
         /// to set the canvas width of the circular progress, unit: px
         /// to set the canvas width of the dashboard progress, unit: px
         /// </summary>
+        /// <default value="120" />
         [Parameter]
         public int Width { get; set; } = 120;
 
         /// <summary>
         /// the gap degree of half circle, 0 ~ 295
         /// </summary>
+        /// <default value="75" />
         [Parameter]
         public int GapDegree { get; set; } = 75;
 
         /// <summary>
         /// the gap position, options: top bottom left right
         /// </summary>
+        /// <default value="ProgressGapPosition.Bottom" />
         [Parameter]
         public ProgressGapPosition GapPosition { get; set; } = ProgressGapPosition.Bottom;
 
         #endregion Parameters
+
+        private static readonly Dictionary<ProgressSize, int> _sizeMap = new()
+        {
+            [ProgressSize.Small] = 6,
+            [ProgressSize.Default] = 8,
+        };
 
         protected override void OnInitialized()
         {
@@ -131,24 +165,20 @@ namespace AntDesign
 
             if (StrokeWidth <= 0)
             {
-                if (Type == ProgressType.Line)
+                var size = Type switch
                 {
-                    StrokeWidth = Size.Value;
-                }
-                else // Type is Circle or Dashboard
-                {
-                    StrokeWidth = 6;
-                }
+                    ProgressType.Line => Size,
+                    _ => ProgressSize.Small // Type is Circle or Dashboard
+                };
+                StrokeWidth = _sizeMap[size];
             }
 
-            if (Percent is double percent && percent == 100)
+            if (Status is null && Percent is double percent && percent == 100)
             {
                 Status = ProgressStatus.Success;
             }
-            else
-            {
-                Status = ProgressStatus.Normal;
-            }
+
+            Status ??= ProgressStatus.Normal;
 
             SetStyle();
         }
@@ -157,10 +187,11 @@ namespace AntDesign
         {
             ClassMapper
                 .Add(PrefixCls)
-                .Get(() => $"{PrefixCls}-{Size.Name}")
-                .GetIf(() => $"{PrefixCls}-{Type.Name}", () => Type != ProgressType.Dashboard)
-                .GetIf(() => $"{PrefixCls}-{ProgressType.Circle.Name}", () => Type == ProgressType.Dashboard)
-                .GetIf(() => $"{PrefixCls}-status-{Status.Name}", () => Status != null)
+                .Get(() => $"{PrefixCls}-status-{Status.ToString().ToLowerInvariant()}")
+                .GetIf(() => $"{PrefixCls}-small", () => Size == ProgressSize.Small)
+                .GetIf(() => $"{PrefixCls}-default", () => Size == ProgressSize.Default)
+                .GetIf(() => $"{PrefixCls}-{Type.ToString().ToLowerInvariant()}", () => Type != ProgressType.Dashboard)
+                .GetIf(() => $"{PrefixCls}-circle", () => Type == ProgressType.Dashboard)
                 .GetIf(() => $"{PrefixCls}-show-info", () => ShowInfo)
                 .GetIf(() => $"{PrefixCls}-steps", () => Steps > 0)
                 .GetIf(() => $"{PrefixCls}-rtl", () => RTL);
@@ -210,7 +241,7 @@ namespace AntDesign
 
         private string GetCircleColor()
         {
-            var baseColor = "";
+            var baseColor = string.Empty;
             if (StrokeColor.Value == null)
             {
                 return baseColor;
@@ -276,14 +307,20 @@ namespace AntDesign
             return style.ToString();
         }
 
-        private string GetCircleBGStyle()
-        {
-            throw new NotImplementedException();
-        }
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$")]
+        private static partial Regex HexColor();
+#else
+        private static readonly Regex _hexColor = new(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$");
+#endif
 
         private string ToRGB(string color)
         {
+#if NET7_0_OR_GREATER
+            var hexMatch = HexColor().Match(color);
+#else
             var hexMatch = _hexColor.Match(color);
+#endif
             if (!hexMatch.Success)
             {
                 throw new ArgumentOutOfRangeException($"{nameof(StrokeColor)}'s value must be like \"#ffffff\"");

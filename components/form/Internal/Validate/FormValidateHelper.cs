@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -335,6 +339,7 @@ namespace AntDesign.Internal.Form.Validate
                     Rule = validationContext.Rule.DefaultField,
                     FieldName = validationContext.FieldName,
                     FieldType = validationContext.FieldType,
+                    Model = validationContext.Model
                 };
 
                 int index = 0;
@@ -375,6 +380,7 @@ namespace AntDesign.Internal.Form.Validate
                 DisplayName = validationContext.DisplayName,
                 FieldName = validationContext.FieldName,
                 FieldType = validationContext.FieldType,
+                Model = validationContext.Model
             };
 
             Array arrValues = validationContext.Value as Array;
@@ -478,17 +484,8 @@ namespace AntDesign.Internal.Form.Validate
 
         private static bool IsValid(ValidationAttribute validationAttribute, FormValidationContext validationContext, out ValidationResult result)
         {
-            result = null;
-
-            if (validationAttribute is CompareAttribute compareAttribute)
-            {
-                result = validationAttribute.GetValidationResult(validationContext.Value, new ValidationContext(validationContext.Model));
-                if (result == null)
-                {
-                    return true;
-                }
-            }
-            else if (validationAttribute?.IsValid(validationContext.Value) != false)
+            result = validationAttribute?.GetValidationResult(validationContext.Value, new ValidationContext(validationContext.Model));
+            if (result == null)
             {
                 return true;
             }

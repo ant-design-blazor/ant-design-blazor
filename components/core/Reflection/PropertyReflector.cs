@@ -1,5 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,6 +13,7 @@ namespace AntDesign.Core.Reflection
 {
     internal class PropertyReflector
     {
+        public PropertyInfo PropertyInfo { get; set; }
         public RequiredAttribute RequiredAttribute { get; set; }
 
         public ValidationAttribute[] ValidationAttributes { get; set; }
@@ -31,7 +35,7 @@ namespace AntDesign.Core.Reflection
         public PropertyReflector(MemberInfo propertyInfo, PropertyReflector parentReflector = null)
         {
             ParentReflector = parentReflector;
-
+            PropertyInfo = propertyInfo as PropertyInfo;
             ValidationAttributes = propertyInfo?.GetCustomAttributes<ValidationAttribute>(true).ToArray();
             if (parentReflector?.ValidationAttributes?.Length > 0)
             {
@@ -54,6 +58,10 @@ namespace AntDesign.Core.Reflection
             if (propertyInfo is PropertyInfo property)
             {
                 GetValueDelegate = property.GetValue;
+            }
+            else if (propertyInfo is FieldInfo field)
+            {
+                GetValueDelegate = field.GetValue;
             }
         }
 
@@ -85,6 +93,10 @@ namespace AntDesign.Core.Reflection
                 if (memberExpression.Expression is MemberExpression parentMemberExpression)
                 {
                     parentProperty = Create(parentMemberExpression);
+                }
+                else if (memberExpression.Expression is ConstantExpression constantExpression)
+                {
+                    parentProperty = Create(constantExpression);
                 }
 
                 return new PropertyReflector(memberExpression.Member, parentProperty);

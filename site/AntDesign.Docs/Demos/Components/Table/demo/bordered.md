@@ -1,7 +1,7 @@
 ---
 order: 4
 title:
-  en-US: border, title and footer
+  en-US: Border, Title and Footer
   zh-CN: 带边框
 ---
 
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Add border, title and footer for table.
+Use the `Bordered` attribute to enable borders on cells. The table's title and footer can also be customized using the `Title` and `Footer` attributes.

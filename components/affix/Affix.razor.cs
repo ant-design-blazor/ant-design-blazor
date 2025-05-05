@@ -1,10 +1,27 @@
-﻿using System.Text.Json;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Wrap Affix around another component to make it stick the viewport.</para>
+    <h2>When To Use</h2>
+    <list type="bullet">
+        <item>On longer web pages, its helpful for some content to stick to the viewport. This is common for menus and actions.</item>
+        <item>Please note that Affix should not cover other content on the page, especially when the size of the viewport is small.</item>
+    </list>
+    <para><strong>Important</strong>: Children of <c>Affix</c> must not have the property <c>position: absolute</c>, but you can set <c>position: absolute</c> on <c>Affix</c> itself</para>
+    </summary> 
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/alicdn/tX6-md4H6/Affix.svg", Title = "Affix", SubTitle = "图钉")]
     public partial class Affix : AntDomComponentBase
     {
         private const string PrefixCls = "ant-affix";
@@ -53,12 +70,22 @@ namespace AntDesign
         [Parameter]
         public int OffsetTop { get; set; }
 
+        /// <summary>
+        /// The CSS selector that specifies the scrollable area DOM node
+        /// </summary>
+        /// <default value="window" />
         [Parameter]
         public string TargetSelector { get; set; }
 
+        /// <summary>
+        /// Additional Content
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Callback for when Affix state is changed. A boolean indicating if the Affix is currently affixed is passed.
+        /// </summary>
         [Parameter]
         public EventCallback<bool> OnChange { get; set; }
 
@@ -104,13 +131,13 @@ namespace AntDesign
             }
         }
 
-        private async void OnWindowScroll(JsonElement obj) => await RenderAffixAsync();
+        private async Task OnWindowScroll(JsonElement obj) => await RenderAffixAsync();
 
-        private async void OnWindowResize(JsonElement obj) => await RenderAffixAsync();
+        private async Task OnWindowResize(JsonElement obj) => await RenderAffixAsync();
 
-        private async void OnTargetScroll(JsonElement obj) => await RenderAffixAsync();
+        private async Task OnTargetScroll(JsonElement obj) => await RenderAffixAsync();
 
-        private async void OnTargetResize(JsonElement obj) => await RenderAffixAsync();
+        private async Task OnTargetResize(JsonElement obj) => await RenderAffixAsync();
 
         private async Task RenderAffixAsync()
         {

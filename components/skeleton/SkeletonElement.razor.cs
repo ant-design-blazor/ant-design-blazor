@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -11,17 +11,31 @@ namespace AntDesign
     {
         #region Parameters
 
+        /// <summary>
+        /// If the skeleton is active
+        /// </summary>
+        /// <default value="false" />
         [Parameter]
         public bool Active { get; set; } = false;
 
+        /// <summary>
+        /// Type of the element. Possible values: input, avatar, button
+        /// </summary>
         [Parameter]
-        public string Type { get; set; }
+        public SkeletonElementType Type { get; set; }
 
+        /// <summary>
+        /// Size of element. Possible values: large, small, default. If type is avatar then an integer can be provided as well.
+        /// </summary>
         [Parameter]
-        public OneOf<int?, string> Size { get; set; } = "default";
+        public OneOf<SkeletonElementSize, string> Size { get; set; } = SkeletonElementSize.Default;
 
+        /// <summary>
+        /// Shape of the avatar. Not used for input type.
+        /// </summary>
+        /// <default value="SkeletonElementShape.Default" />
         [Parameter]
-        public string Shape { get; set; } = SkeletonButtonShape.Default;
+        public SkeletonElementShape Shape { get; set; } = SkeletonElementShape.Default;
 
         #endregion Parameters
 
@@ -53,26 +67,26 @@ namespace AntDesign
         private void SetButtonMap()
         {
             _spanClassMapper.Clear().If("ant-skeleton-button", () => true)
-                .If("ant-skeleton-button-round", () => Shape == SkeletonButtonShape.Round)
-                .If("ant-skeleton-button-circle", () => Shape == SkeletonButtonShape.Circle)
-                .If("ant-skeleton-button-lg", () => Size.AsT1 == SkeletonElementSize.Large)
-                .If("ant-skeleton-button-sm", () => Size.AsT1 == SkeletonElementSize.Small);
+                .If("ant-skeleton-button-round", () => Shape == SkeletonElementShape.Round)
+                .If("ant-skeleton-button-circle", () => Shape == SkeletonElementShape.Circle)
+                .If("ant-skeleton-button-lg", () => Size.AsT0 == SkeletonElementSize.Large)
+                .If("ant-skeleton-button-sm", () => Size.AsT0 == SkeletonElementSize.Small);
         }
 
         private void SetAvatarMap()
         {
             _spanClassMapper.Clear().If("ant-skeleton-avatar", () => true)
-                .If("ant-skeleton-avatar-square", () => Shape == AvatarShape.Square)
-                .If("ant-skeleton-avatar-circle", () => Shape == AvatarShape.Circle)
-                .If("ant-skeleton-avatar-lg", () => Size.AsT1 == SkeletonElementSize.Large)
-                .If("ant-skeleton-avatar-sm", () => Size.AsT1 == SkeletonElementSize.Small);
+                .If("ant-skeleton-avatar-square", () => Shape == SkeletonElementShape.Square)
+                .If("ant-skeleton-avatar-circle", () => Shape == SkeletonElementShape.Circle)
+                .If("ant-skeleton-avatar-lg", () => Size.AsT0 == SkeletonElementSize.Large)
+                .If("ant-skeleton-avatar-sm", () => Size.AsT0 == SkeletonElementSize.Small);
         }
 
         private void SetInputMap()
         {
             _spanClassMapper.Clear().If("ant-skeleton-input", () => true)
-               .If("ant-skeleton-input-lg", () => Size.AsT1 == SkeletonElementSize.Large)
-               .If("ant-skeleton-input-sm", () => Size.AsT1 == SkeletonElementSize.Small);
+               .If("ant-skeleton-input-lg", () => Size.AsT0 == SkeletonElementSize.Large)
+               .If("ant-skeleton-input-sm", () => Size.AsT0 == SkeletonElementSize.Small);
         }
 
         protected override void OnParametersSet()

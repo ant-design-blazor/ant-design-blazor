@@ -4,10 +4,11 @@
 
 namespace AntDesign
 {
-    public static class ButtonShape
+    public enum ButtonShape
     {
-        public const string Circle = "circle";
-        public const string CircleOutline = "circle-outline";
-        public const string Round = "round";
+        Circle,
+        CircleOutline,
+        Round,
+        Rectangle,
     }
 }

@@ -1,10 +1,14 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AntDesign.core.Extensions;
+using AntDesign.Core.Extensions;
 using AntDesign.Core.Helpers;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -12,6 +16,17 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>A Slider component for displaying current value and intervals in range.</para>
+
+    <h2>When To Use</h2>
+
+    <para>To input a value in a range.</para>
+    </summary>
+    <seealso cref="SliderMark"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/HZ3meFc6W/Silder.svg", Title = "Slider", SubTitle = "滑动输入条")]
     public partial class Slider<TValue> : AntInputComponentBase<TValue>
     {
         private const string PreFixCls = "ant-slider";
@@ -137,7 +152,8 @@ namespace AntDesign
         public bool Disabled { get; set; }
 
         /// <summary>
-        /// Whether the thumb can drag over tick only
+        /// Currently not implemented. 
+        /// Whether the thumb can drag over ticks only
         /// </summary>
         [Parameter]
         public bool Dots { get; set; }
@@ -145,11 +161,12 @@ namespace AntDesign
         /// <summary>
         /// Make effect when <see cref="Marks"/> not null, true means containment and false means coordinative
         /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool Included { get; set; } = true;
 
         /// <summary>
-        /// Tick mark of Slider, type of key must be number, and must in closed interval [min, max], each mark can declare its own style
+        /// Tick mark of Slider
         /// </summary>
         [Parameter]
         public SliderMark[] Marks { get; set; }
@@ -157,12 +174,14 @@ namespace AntDesign
         /// <summary>
         /// The maximum value the slider can slide to
         /// </summary>
+        /// <default value="100"/>
         [Parameter]
         public double Max { get; set; } = 100;
 
         /// <summary>
         /// The minimum value the slider can slide to
         /// </summary>
+        /// <default value="0"/>
         [Parameter]
         public double Min { get; set; } = 0;
 
@@ -171,9 +190,11 @@ namespace AntDesign
         /// <summary>
         /// dual thumb mode
         /// </summary>
-        //[Parameter]
         private bool? _range;
 
+        /// <summary>
+        /// If the slider is a range slider or not. Determined by type of <c>TValue</c>
+        /// </summary>
         public bool Range
         {
             get
@@ -198,14 +219,16 @@ namespace AntDesign
                 }
                 return _range.Value;
             }
-            //private set { _range = value; }
         }
 
-        /// <summary>
-        /// reverse the component
-        /// </summary>
         private bool _reverse;
 
+        /// <summary>
+        /// Order and direction of numbers and min/max. 
+        /// <para>When true, Max is on the left and Min is on the right</para>
+        /// <para>When false, Min is on the left and Max is on the right</para>
+        /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Reverse
         {
@@ -220,13 +243,13 @@ namespace AntDesign
             }
         }
 
-        /// <summary>
-        /// The granularity the slider can step through values. Must greater than 0, and be divided by (<see cref="Max"/> - <see cref="Min"/>) . When <see cref="Marks"/> no null, <see cref="Step"/> can be null.
-        /// </summary>
         private double? _step = 1;
 
         private int _precision;
 
+        /// <summary>
+        /// The granularity the slider can step through values. Must greater than 0, and be divided by (<see cref="Max"/> - <see cref="Min"/>). When <see cref="Marks"/> is not null, <see cref="Step"/> can be null.
+        /// </summary>
         [Parameter]
         public double? Step
         {
@@ -307,8 +330,7 @@ namespace AntDesign
             }
         }
 
-        private double Clamp(
-            double value, double inclusiveMinimum, double inclusiveMaximum)
+        private double Clamp(double value, double inclusiveMinimum, double inclusiveMaximum)
         {
             if (value < inclusiveMinimum)
             {
@@ -322,33 +344,39 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// If true, the slider will be vertical.
+        /// If true, the slider will be vertical. If false, it will be horizontal.
         /// </summary>
+        /// <default value="false"/>
         [Parameter]
         public bool Vertical { get; set; }
 
         /// <summary>
-        /// Fire when onmouseup is fired.
+        /// Callback executed when onmouseup is fired.
         /// </summary>
         [Parameter]
         public EventCallback<TValue> OnAfterChange { get; set; }
 
         /// <summary>
-        /// Callback function that is fired when the user changes the slider's value.
+        /// Callback executed when the user changes the slider's value.
         /// </summary>
         [Parameter]
         public EventCallback<TValue> OnChange { get; set; }
 
+        /// <summary>
+        /// Whether markers should have tooltips or not
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool HasTooltip { get; set; } = true;
 
-        /// <summary>
-        /// Slider will pass its value to tipFormatter, and display its value in Tooltip
-        /// </summary>
         private bool _isTipFormatterDefault = true;
 
         private Func<double, string> _tipFormatter = (d) => d.ToString(LocaleProvider.CurrentLocale.CurrentCulture);
 
+        /// <summary>
+        /// Method to get display value for tooltip. Will pass slider value and get string for display back
+        /// </summary>
+        /// <default value="(value) => value.ToString()"/>
         [Parameter]
         public Func<double, string> TipFormatter
         {
@@ -361,19 +389,20 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Set Tooltip display position. Ref Tooltip
+        /// Set Tooltip display position. See <see cref="Tooltip"/> for more information
         /// </summary>
+        /// <default value="Right for vertical. Top for horizontal"/>
         [Parameter]
         public Placement TooltipPlacement { get; set; }
 
-        /// <summary>
-        /// If true, Tooltip will show always, or it will not show anyway, even if dragging or hovering.
-        /// </summary>
         private bool _tooltipVisible;
 
         private bool _tooltipRightVisible;
         private bool _tooltipLeftVisible;
 
+        /// <summary>
+        /// If true Tooltip will always show
+        /// </summary>
         [Parameter]
         public bool TooltipVisible
         {
@@ -395,7 +424,7 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// The DOM container of the Tooltip, the default behavior is to create a div element in body.
+        /// Not currently implemented. The DOM container of the Tooltip
         /// </summary>
         [Parameter]
         public object GetTooltipPopupContainer { get; set; }
@@ -557,7 +586,7 @@ namespace AntDesign
             return (clientX == _trackedClientX && clientY == _trackedClientY);
         }
 
-        private async void OnMouseMove(JsonElement jsonElement)
+        private async Task OnMouseMove(JsonElement jsonElement)
         {
             if (_mouseDown)
             {
@@ -571,7 +600,7 @@ namespace AntDesign
             }
         }
 
-        private async void OnMouseUp(JsonElement jsonElement)
+        private async Task OnMouseUp(JsonElement jsonElement)
         {
             bool isMoveInEdgeBoundary = IsMoveInEdgeBoundary(jsonElement);
             if (_mouseDown)

@@ -7,16 +7,16 @@
     <PropertyColumn Property="c=>c.Age" Hidden="@hidden"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address">
         <TitleTemplate>
-            <span> <Icon Type="environment" /> Address </span>
+            <span><Icon Type="@IconType.Outline.Environment" /> Address</span>
         </TitleTemplate>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Tags">
         @foreach (var tag in context.Tags)
         {
-            var color = tag.Length > 5 ? "geekblue" : "green";
+            var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
             if (tag == "loser")
             {
-                color = "volcano";
+                color = TagColor.Volcano;
             }
             <Tag Color="@color">@tag</Tag>
         }
@@ -24,7 +24,7 @@
 </Table>
 
 <div style="margin: 15px 0;">
-    <Button Type="primary" OnClick="@OnToggle">Toggle</Button>
+    <Button Type="ButtonType.Primary" OnClick="@OnToggle">Toggle</Button>
 </div>
 
 @code{

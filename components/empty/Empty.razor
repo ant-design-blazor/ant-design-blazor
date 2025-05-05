@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <div class="@ClassMapper.Class" @ref="@Ref" style="@Style" id="@Id">
-    <div class="@(PrefixCls)-image" style="@ImageStyle">
+    <div class="@(_prefixCls)-image" style="@ImageStyle">
         @if (ImageTemplate != null)
         {
             @ImageTemplate
@@ -25,13 +25,13 @@
 
     @if (DescriptionTemplate != null)
     {
-        <p class="@(PrefixCls)-description">@DescriptionTemplate</p>
+        <p class="@(_prefixCls)-description">@DescriptionTemplate</p>
     }
     else if (Description.IsT1 == false || Description.AsT1 == true)
     {
-        <p class="@(PrefixCls)-description">@Description.AsT0</p>
+        <p class="@(_prefixCls)-description">@Description.AsT0</p>
     }
-    <div class="@(PrefixCls)-footer">
+    <div class="@(_prefixCls)-footer">
         @ChildContent
     </div>
 </div>

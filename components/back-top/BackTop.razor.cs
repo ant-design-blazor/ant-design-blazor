@@ -1,4 +1,8 @@
-﻿using System.Text.Json;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -6,23 +10,50 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
+    /** 
+    <summary>
+    <para>Makes it easy to go back to the top of the page.</para>
+    
+    <h2>When To Use</h2>
+    <list type="bullet">
+        <item>When the page content is very long.</item>
+        <item>When you need to go back to the top very frequently in order to view the contents.</item>
+    </list>
+    </summary>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Other, "https://gw.alipayobjects.com/zos/alicdn/tJZ5jbTwX/BackTop.svg", Title = "BackTop", SubTitle = "回到顶部")]
     public partial class BackTop : AntDomComponentBase
     {
+        /// <summary>
+        /// Icon for the button
+        /// </summary>
+        /// <default value="vertical-align-top" />
         [Parameter]
         public string Icon { get; set; } = "vertical-align-top";
 
+        /// <summary>
+        /// Content for the button. Takes priority over icon.
+        /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Scroll offset at which the button becomes visible, in px
+        /// </summary>
+        /// <default value="400" />
         [Parameter]
         public double VisibilityHeight { get; set; } = 400;
 
         /// <summary>
-        /// 回到顶部的目标控件
+        /// The scrollable area the button is for
         /// </summary>
+        /// <default value="window" />
         [Parameter]
-        public string TargetSelector { get; set; }
+        public string TargetSelector { get; set; } = "window";
 
+        /// <summary>
+        /// Callback executed when BackTop gets clicked. Won't override default functionality.
+        /// </summary>
         [Parameter]
         public EventCallback OnClick { get; set; }
 
@@ -80,7 +111,7 @@ namespace AntDesign
             BackTopIconClassMapper.Add($"{prefixCls}-icon");
         }
 
-        private async void OnScroll(JsonElement obj)
+        private async Task OnScroll(JsonElement obj)
         {
             JsonElement scrollInfo = await JsInvokeAsync<JsonElement>(JSInteropConstants.GetScroll);
             double offset = scrollInfo.GetProperty("y").GetDouble();

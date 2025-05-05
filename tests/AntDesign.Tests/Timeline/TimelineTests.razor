@@ -6,7 +6,7 @@
 		var cut = Context.Render(
 			@<Timeline>
 			  <TimelineItem>Create a services site 2015-09-01</TimelineItem>
-			  <TimelineItem Color="red" >Solve initial network problems 2015-09-01</TimelineItem>
+			  <TimelineItem Color="TimelineDotColor.Red" >Solve initial network problems 2015-09-01</TimelineItem>
 			</Timeline>);		
 		cut.MarkupMatches(
 			@<ul class="ant-timeline" id:ignore >
@@ -35,7 +35,7 @@
 		var cut = Context.Render(
 			@<Timeline Mode="@TimelineMode.Right">
 			  <TimelineItem>Create a services site 2015-09-01</TimelineItem>
-			  <TimelineItem Color="red" >Solve initial network problems 2015-09-01</TimelineItem>
+			  <TimelineItem Color="TimelineDotColor.Red" >Solve initial network problems 2015-09-01</TimelineItem>
 			</Timeline>);		
 		cut.MarkupMatches(
 			@<ul class="ant-timeline ant-timeline-right" id:ignore >
@@ -100,7 +100,7 @@
 		var cut = Context.Render(
 			@<Timeline Mode="@mode">
 			  <TimelineItem Label="2015-09-01">Create a services site</TimelineItem>
-			  <TimelineItem Label="2015-09-02" Color="red" >Solve initial network problems</TimelineItem>
+			  <TimelineItem Label="2015-09-02" Color="TimelineDotColor.Red" >Solve initial network problems</TimelineItem>
 			</Timeline>);
 
 		cut.MarkupMatches(
@@ -125,4 +125,72 @@
 			  </li>
 			</ul> );
 	}
+    
+    [Theory]
+    [InlineData(TimelineDotColor.Red,"red")]
+    [InlineData(TimelineDotColor.Green,"green")]
+    public void Renders_timeline_with_color(TimelineDotColor color, string expectedColor)
+    {
+        var cut = Context.Render(
+            @<Timeline >
+                <TimelineItem Label="2015-09-01" >Create a services site</TimelineItem>
+                <TimelineItem Label="2015-09-02" Color="@color" >Solve initial network problems</TimelineItem>
+            </Timeline>);
+
+        cut.MarkupMatches(
+            @<ul class="ant-timeline ant-timeline-label" id:ignore >
+                <li class="ant-timeline-item" id:ignore >
+                    <div class="ant-timeline-item-label">2015-09-01</div>
+                    <div class="ant-timeline-item-tail"></div>
+                    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
+                    </div>
+                    <div class="ant-timeline-item-content">
+                        Create a services site 
+                    </div>
+                </li>
+                <li class="ant-timeline-item ant-timeline-item-last" id:ignore >
+                    <div class="ant-timeline-item-label">2015-09-02</div>
+                    <div class="ant-timeline-item-tail"></div>
+                    <div class="ant-timeline-item-head ant-timeline-item-head-@expectedColor" style="">
+                    </div>
+                    <div class="ant-timeline-item-content">
+                        Solve initial network problems 
+                    </div>
+                </li>
+            </ul> );
+    }
+    
+    [Theory]
+    [InlineData("#fff")]
+    [InlineData("green")]
+    public void Renders_timeline_with_custom_color(string color)
+    {
+        var cut = Context.Render(
+            @<Timeline >
+                <TimelineItem Label="2015-09-01" >Create a services site</TimelineItem>
+                <TimelineItem Label="2015-09-02" Color="@color" >Solve initial network problems</TimelineItem>
+            </Timeline>);
+
+        cut.MarkupMatches(
+            @<ul class="ant-timeline ant-timeline-label" id:ignore >
+                <li class="ant-timeline-item" id:ignore >
+                    <div class="ant-timeline-item-label">2015-09-01</div>
+                    <div class="ant-timeline-item-tail"></div>
+                    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
+                    </div>
+                    <div class="ant-timeline-item-content">
+                        Create a services site 
+                    </div>
+                </li>
+                <li class="ant-timeline-item ant-timeline-item-last" id:ignore >
+                    <div class="ant-timeline-item-label">2015-09-02</div>
+                    <div class="ant-timeline-item-tail"></div>
+                    <div class="ant-timeline-item-head" style="border-color:@color">
+                    </div>
+                    <div class="ant-timeline-item-content">
+                        Solve initial network problems 
+                    </div>
+                </li>
+            </ul> );
+    }
 }

@@ -1,13 +1,10 @@
 {
   "locale": "uz-UZ",
   "Pagination": {
-    // Options
     "items_per_page": "/ sah.",
     "jump_to": "O'tish",
     "jump_to_confirm": "tasdiqlash",
     "page": "Sahifa",
-
-    // Pagination
     "prev_page": "Orqaga",
     "next_page": "Oldinga",
     "prev_5": "Oldingi 5",

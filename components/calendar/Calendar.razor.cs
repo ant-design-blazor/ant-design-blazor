@@ -1,21 +1,41 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+    <para>Container for displaying data in calendar form.</para>
+
+    <h2>When To Use</h2>
+
+    <para>When data is in the form of dates, such as schedules, timetables, prices calendar, lunar calendar. This component also supports Year/Month switch.</para>
+    </summary>
+     */
+    [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/dPQmLq08DI/Calendar.svg", Columns = 1, Title = "Calendar", SubTitle = "日历")]
     public partial class Calendar : AntDomComponentBase, IDatePicker
     {
         DateTime IDatePicker.CurrentDate { get; set; } = DateTime.Now;
         DateTime? IDatePicker.HoverDateTime { get; set; }
 
+        /// <summary>
+        /// Selected value for calendar
+        /// </summary>
+        /// <default value="DateTime.Now"/>
         [Parameter]
         public DateTime Value { get; set; } = DateTime.Now;
 
         private DateTime _defaultValue;
 
+        /// <summary>
+        /// Default value for selected date. When set, will set <see cref="Value"/>
+        /// </summary>
         [Parameter]
         public DateTime DefaultValue
         {
@@ -30,54 +50,98 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Validate range of dates or selection
+        /// </summary>
         [Parameter]
         public DateTime[] ValidRange { get; set; }
 
+        /// <summary>
+        /// Display mode. See <see cref="CalendarMode"/> for valid options
+        /// </summary>
+        /// <default value="CalendarMode.Month"/>
         [Parameter]
-        public string Mode { get; set; } = DatePickerType.Month;
+        public CalendarMode Mode { get; set; } = CalendarMode.Month;
 
+        /// <summary>
+        /// Whether the calendar should take up all available space or not
+        /// </summary>
+        /// <default value="true"/>
         [Parameter]
         public bool FullScreen { get; set; } = true;
 
+        /// <summary>
+        /// Callback executed when a date is selected
+        /// </summary>
         [Obsolete("Use OnChange instead")]
         [Parameter]
         public EventCallback<DateTime> OnSelect { get; set; }
 
+        /// <summary>
+        /// Callback executed when a date is selected
+        /// </summary>
         [Parameter]
         public EventCallback<DateTime> OnChange { get; set; }
 
+        /// <summary>
+        /// Function to render a custom header
+        /// </summary>
         [Parameter]
         public Func<CalendarHeaderRenderArgs, RenderFragment> HeaderRender { get; set; }
 
+        /// <summary>
+        /// Customize the display of the date cell, the returned content will be appended to the cell
+        /// </summary>
         [Parameter]
         public Func<DateTime, RenderFragment> DateCellRender { get; set; }
 
+        /// <summary>
+        /// Customize the display of the date cell, the returned content will override the cell
+        /// </summary>
         [Parameter]
         public Func<DateTime, RenderFragment> DateFullCellRender { get; set; }
 
+        /// <summary>
+        /// Customize the display of the month cell, the returned content will be appended to the cell
+        /// </summary>
         [Parameter]
         public Func<DateTime, RenderFragment> MonthCellRender { get; set; }
 
+        /// <summary>
+        /// Customize the display of the month cell, the returned content will override the cell
+        /// </summary>
         [Parameter]
         public Func<DateTime, RenderFragment> MonthFullCellRender { get; set; }
 
+        /// <summary>
+        /// Callback executed when the type of calendar being viewed changes
+        /// </summary>
         [Parameter]
-        public Action<DateTime, string> OnPanelChange { get; set; }
+        public Action<DateTime, DatePickerType> OnPanelChange { get; set; }
 
+        /// <summary>
+        /// Function to determine if a specific date is disabled
+        /// </summary>
         [Parameter]
         public Func<DateTime, bool> DisabledDate { get; set; } = null;
 
+        /// <summary>
+        /// Locale information for UI and date formatting
+        /// </summary>
         [Parameter]
         public DatePickerLocale Locale { get; set; } = LocaleProvider.CurrentLocale.DatePicker;
 
+        /// <summary>
+        /// Culture information used for formatting
+        /// </summary>
         [Parameter]
         public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
 
-        protected string _picker;
+        protected DatePickerType _picker;
         protected readonly DateTime[] PickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
-        protected Stack<string> _prePickerStack = new Stack<string>();
+        protected Stack<DatePickerType> _prePickerStack = new Stack<DatePickerType>();
 
-        public readonly string PrefixCls = "ant-picker-calendar";
+        internal readonly string PrefixCls = "ant-picker-calendar";
 
         event EventHandler<bool> IDatePicker.OverlayVisibleChanged
         {
@@ -98,9 +162,9 @@ namespace AntDesign
 
             _picker = Mode switch
             {
-                DatePickerType.Month => DatePickerType.Date,
-                DatePickerType.Year => DatePickerType.Month,
-                _ => DatePickerType.Date,
+                CalendarMode.Month => DatePickerType.Date,
+                CalendarMode.Year => DatePickerType.Month,
+                _ => DatePickerType.Date
             };
 
             if (ValidRange != null)
@@ -132,52 +196,50 @@ namespace AntDesign
                ;
         }
 
-        protected async Task OnSelectValue(DateTime date)
+        protected void OnSelectValue(DateTime date)
         {
             Value = date;
 
-            await OnSelect.InvokeAsync(date);
-            await OnChange.InvokeAsync(date);
+            OnSelect.InvokeAsync(date);
+            OnChange.InvokeAsync(date);
             StateHasChanged();
         }
 
-        public async Task ChangeValue(DateTime date)
+        internal void ChangeValue(DateTime date)
         {
-            await OnSelectValue(date);
-            StateHasChanged();
+            OnSelectValue(date);
         }
 
-        public void ChangePickerType(string type, int index)
+        internal void OnSelectValue(DateTime date, int index)
         {
-            Mode = type;
+            OnSelectValue(date);
+        }
 
-            string mode = type switch
+        internal void ChangeMode(CalendarMode mode)
+        {
+            Mode = mode;
+
+            DatePickerType picker = Mode switch
             {
-                DatePickerType.Year => DatePickerType.Month,
-                DatePickerType.Month => DatePickerType.Date,
-                _ => DatePickerType.Date,
+                CalendarMode.Month => DatePickerType.Date,
+                CalendarMode.Year => DatePickerType.Month,
+                _ => DatePickerType.Date
             };
 
             _prePickerStack.Push(_picker);
-            _picker = mode;
+            _picker = picker;
 
-            OnPanelChange?.Invoke(PickerValues[index], _picker);
+            OnPanelChange?.Invoke(PickerValues[0], _picker);
 
             StateHasChanged();
         }
 
-        public void ChangePickerType(string type)
-        {
-            ChangePickerType(type, 0);
-        }
-
-        public void Close()
+        public void ChangePickerType(DatePickerType type, int index)
         {
         }
 
-        public int GetOnFocusPickerIndex()
+        public void ChangePickerType(DatePickerType type)
         {
-            return 0;
         }
 
         string IDatePicker.GetFormatValue(DateTime value, int index)
@@ -189,10 +251,21 @@ namespace AntDesign
         {
         }
 
-        public void ResetPlaceholder(int rangePickerIndex = -1)
+        int IDatePicker.GetOnFocusPickerIndex()
         {
+            return 0;
         }
 
-        public string Picker { get { return _picker; } }
+        void IDatePicker.ResetPlaceholder(int index)
+        {
+
+        }
+
+        void IDatePicker.Close()
+        {
+
+        }
+
+        internal DatePickerType Picker { get { return _picker; } }
     }
 }

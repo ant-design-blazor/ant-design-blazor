@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 
 namespace AntDesign
 {
@@ -307,6 +311,12 @@ namespace AntDesign
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "watermarkHelper.";
 
             public static string GenerateBase64Url => $"{FUNC_PREFIX}generateBase64Url";
+        }
+
+        public static class SplitterHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "splitterHelper.";
+            public static string Attach => $"{FUNC_PREFIX}attach";
         }
     }
 }

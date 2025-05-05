@@ -1,14 +1,40 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
 namespace AntDesign
 {
+    /**
+    <summary>
+        <para>Display a notification message globally.</para>
+
+        <h2>When To Use</h2>
+
+        <para>To display a notification message at any of the four corners of the viewport. Typically it can be used in the following cases:</para>
+
+        <list type="bullet">
+            <item>A notification with complex content.</item>
+            <item>A notification providing a feedback based on the user interaction. Or it may show some details about upcoming steps the user may have to follow.</item>
+            <item>A notification that is pushed by the application.</item>
+        </list>
+
+        <para>Note: Please confirm that the <c><AntContainer /></c> component has been added to <c>App.Razor</c>. If notifications are not displaying this is a common problem.</para>
+    </summary>
+    <seealso cref="AntDesign.NotificationService"/>
+    <seealso cref="NotificationConfig"/>
+    <seealso cref="NotificationRef"/>
+    */
+    [Documentation(DocumentationCategory.Components, DocumentationType.Feedback, "https://gw.alipayobjects.com/zos/alicdn/Jxm5nw61w/Notification.svg", Title = "Notification", SubTitle = "通知提醒框")]
     public partial class Notification
     {
         [Inject]
@@ -136,7 +162,7 @@ namespace AntDesign
         /// </summary>
         /// <param name="defaultConfig"></param>
         private void Config(
-            [NotNull]NotificationGlobalConfig defaultConfig)
+            [NotNull] NotificationGlobalConfig defaultConfig)
         {
             if (defaultConfig == null)
             {
@@ -213,42 +239,61 @@ namespace AntDesign
             }
         }
 
-        private async Task Remove(NotificationConfig option)
+        private Task Remove(NotificationConfig option)
         {
             if (option.Duration > 0)
             {
-                await Task.Delay(TimeSpan.FromSeconds(option.Duration.Value));
-                await RemoveItem(option);
+                var cts = new CancellationTokenSource();
+                option.Cts = cts;
+
+                var task = Task.Delay(TimeSpan.FromSeconds(option.Duration.Value), cts.Token);
+
+                return task.ContinueWith((result) =>
+                {
+                    if (!cts.IsCancellationRequested)
+                    {
+                        RemoveItem(option);
+                    }
+                }, TaskScheduler.Current);
+            }
+            else
+            {
+                return new Task(() =>
+                {
+                    RemoveItem(option);
+                });
             }
         }
 
-        private async Task RemoveItem(NotificationConfig option)
+        private Task RemoveItem(NotificationConfig option)
         {
             //avoid user do click and option.Duration toggle twice
             if (option.AnimationClass == AnimationType.Enter)
             {
                 option.AnimationClass = AnimationType.Leave;
-                await InvokeStateHasChangedAsync();
+                InvokeAsync(StateHasChanged);
 
                 option.InvokeOnClose();
 
-                await Task.Delay(500);
-                Debug.Assert(option.Placement != null, "option.Placement != null");
-                if (_configDict.TryGetValue(option.Placement.Value, out var configList))
+                Task.Delay(500).ContinueWith((result) =>
                 {
-                    configList.Remove(option);
-                }
+                    Debug.Assert(option.Placement != null, "option.Placement != null");
+                    if (_configDict.TryGetValue(option.Placement.Value, out var configList))
+                    {
+                        configList.Remove(option);
+                    }
 
-                if (!string.IsNullOrWhiteSpace(option.Key))
-                {
-                    _configKeyDict.TryRemove(option.Key, out var _);
-                }
+                    if (!string.IsNullOrWhiteSpace(option.Key))
+                    {
+                        _configKeyDict.TryRemove(option.Key, out var _);
+                    }
 
-                //when next notification item fade out or add new notice item, item will toggle StateHasChanged
-                await InvokeStateHasChangedAsync();
+                    //when next notification item fade out or add new notice item, item will toggle StateHasChanged
+                    InvokeAsync(StateHasChanged);
+                });
             }
 
-            //return Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         private void Destroying()
@@ -262,6 +307,19 @@ namespace AntDesign
             if (_configKeyDict.TryGetValue(key, out var config))
             {
                 await RemoveItem(config);
+            }
+        }
+
+        private void OnMouseEnter(NotificationItem item)
+        {
+            item.Config.Cts?.Cancel();
+        }
+
+        private async Task OnMouseLeave(NotificationItem item)
+        {
+            if (item.Config.Duration > 0)
+            {
+                await Remove(item.Config);
             }
         }
     }

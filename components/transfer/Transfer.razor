@@ -78,8 +78,8 @@
         </div>
     </div>
     <div class="ant-transfer-operation">
-        <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@AntSizeLDSType.Small" Icon="left" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))" NoSpanWrap="@(String.IsNullOrEmpty(Operations[0]))">@Operations[0]</Button>
-        <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@AntSizeLDSType.Small" Icon="right" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))" NoSpanWrap="@(String.IsNullOrEmpty(Operations[1]))">@Operations[1]</Button>
+        <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="left" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))" NoSpanWrap="@(String.IsNullOrEmpty(Operations[0]))">@Operations[0]</Button>
+        <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="right" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))" NoSpanWrap="@(String.IsNullOrEmpty(Operations[1]))">@Operations[1]</Button>
     </div>
     <div class="ant-transfer-list @((FooterTemplate != null || Footer != null)?FooterClass:"")" @onscroll="@(e => HandleScroll(TransferDirection.Right, e))" style="@(ListStyle(TransferDirection.Right))">
         <div class="ant-transfer-list-header">

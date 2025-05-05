@@ -311,6 +311,11 @@ export class manipulationHelper {
       document.body.removeChild(outer);
       cachedScrollBarSize = widthContained - widthScroll;
     }
+
+    if (manipulationHelper.hasScrollbar()){
+      document.documentElement.style.setProperty('--ant-scrollbar-width', `${cachedScrollBarSize}px`);
+    }
+  
     return cachedScrollBarSize;
   };
 }

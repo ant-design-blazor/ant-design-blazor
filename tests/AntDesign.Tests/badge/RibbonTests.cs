@@ -1,4 +1,8 @@
-﻿using Bunit;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Bunit;
 using Microsoft.AspNetCore.Components;
 using Xunit;
 
@@ -63,7 +67,7 @@ namespace AntDesign.Tests.Badge
         {
             var cut = Context.RenderComponent<BadgeRibbon>(p =>
                 {
-                    p.Add(x => x.Color, "green");
+                    p.Add(x => x.Color, BadgeColor.Green);
                     p.AddChildContent("<div />");
                 }
             );

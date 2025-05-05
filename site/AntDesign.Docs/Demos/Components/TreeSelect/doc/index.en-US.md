@@ -91,6 +91,7 @@ Tree selection control.
 | ChildrenExpression  | Specifies a method  to return a child node  | Func  |   |   |
 | DisabledExpression  |  Specifies a method to return a disabled node | Func  |   |   |
 | CheckableExpression  |  Specifies a method to return a checkable node | Func  |   |   |
+| SelectableExpression  |  Specifies a method to return a selectable node | Func  |   |   |
 | TreeDefaultExpandAll  |  All tree nodes are expanded by default |  boolean  | false  |   |
 | TreeDefaultExpandParent  |  The parent node is expanded by default | boolean  | false  |   |
 | TreeDefaultExpandedKeys  |  Expand the specified tree nodes by default | string[]  | null |   |
@@ -120,6 +121,7 @@ Tree selection control.
 | Checkable | Checkable  |  boolean |  true |   |
 | Checked | checked (Supports two-way binding)  |  boolean |  false |   |
 | DisableCheckbox |   |  boolean |  false |   |
+| Selectable | Selectable  |  boolean |  true |   |
 | Selected | selected (Supports two-way binding)  |  boolean |  false |   |
 | Expanded | expanded (Supports two-way binding)  |  boolean |  false |   |
 | Title | title  |  string |  false |   |

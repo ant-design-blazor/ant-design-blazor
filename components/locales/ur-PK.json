@@ -1,13 +1,10 @@
 {
   "locale": "ur-PK",
   "Pagination": {
-    // Options
     "items_per_page": "/ صفحہ",
     "jump_to": "پاس جاؤ",
     "jump_to_confirm": "تصدیق کریں",
     "page": "",
-
-    // Pagination
     "prev_page": "پچھلا صفحہ",
     "next_page": "اگلا صفحہ",
     "prev_5": "پچھلے 5 صفحات",

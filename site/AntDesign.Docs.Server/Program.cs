@@ -1,5 +1,9 @@
-﻿using Blazor.Polyfill.Server;
-using Microsoft.AspNetCore.Builder;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using AntDesign.Docs.Services;
+using Blazor.Polyfill.Server;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,21 +14,27 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton(sp =>
 {
     var httpContext = sp.GetService<IHttpContextAccessor>()?.HttpContext;
+    var handler = new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+    };
+    var customHandler = new HttpClientCustom() { InnerHandler = handler };
     if (httpContext != null)
     {
         var request = httpContext.Request;
         var host = request.Host.ToUriComponent();
         var scheme = request.Scheme;
         var baseAddress = $"{scheme}://{host}";
-        return new HttpClient() { BaseAddress = new Uri(baseAddress) };
+        return new HttpClient(customHandler) { BaseAddress = new Uri(baseAddress) };
     }
     else
     {
-        return new HttpClient() { BaseAddress = new Uri("http://0.0.0.0:8181") };
+        return new HttpClient(customHandler) { BaseAddress = new Uri("http://0.0.0.0:8181") };
     }
 });
 
 builder.Services.AddAntDesignDocs();
+
 #if NET5_0_OR_GREATER
 builder.Services.AddBlazorPolyfill();
 #endif
@@ -51,6 +61,7 @@ app.UseBlazorPolyfill();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.MapControllers();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

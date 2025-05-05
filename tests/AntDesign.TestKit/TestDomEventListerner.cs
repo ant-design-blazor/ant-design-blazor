@@ -1,6 +1,9 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.JsInterop.ObservableApi;
@@ -9,7 +12,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Tests
 {
-    class TestDomEventListerner : IDomEventListener
+    internal sealed class TestDomEventListerner : IDomEventListener
     {
         public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
         {
@@ -26,7 +29,17 @@ namespace AntDesign.Tests
             return;
         }
 
+        public void AddExclusive<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false, bool stopPropagation = false)
+        {
+            return;
+        }
+
         public void AddShared<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
+        {
+            return;
+        }
+
+        public void AddShared<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false)
         {
             return;
         }
@@ -56,8 +69,18 @@ namespace AntDesign.Tests
             return;
         }
 
+        public void RemoveShared<T>(object dom, string eventName, Func<T, Task> callback)
+        {
+            return;
+        }
+
 #if NET5_0_OR_GREATER
         public ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
+        {
+            return ValueTask.CompletedTask;
+        }
+
+        public ValueTask AddResizeObserver(ElementReference dom, Func<List<ResizeObserverEntry>, Task> callback)
         {
             return ValueTask.CompletedTask;
         }
@@ -76,8 +99,18 @@ namespace AntDesign.Tests
         {
             return ValueTask.CompletedTask;
         }
+
+        public ValueTask RemoveResizeObserver(ElementReference dom, Func<List<ResizeObserverEntry>, Task> callback)
+        {
+            return ValueTask.CompletedTask;
+        }
 #else
         public async ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
+        {
+            await Task.CompletedTask;
+        }
+
+        public async ValueTask AddResizeObserver(ElementReference dom, Func<List<ResizeObserverEntry>, Task> callback)
         {
             await Task.CompletedTask;
         }
@@ -93,6 +126,11 @@ namespace AntDesign.Tests
         }
 
         public async ValueTask RemoveResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
+        {
+            await Task.CompletedTask;
+        }
+
+        public async ValueTask RemoveResizeObserver(ElementReference dom, Func<List<ResizeObserverEntry>, Task> callback)
         {
             await Task.CompletedTask;
         }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net5;net6;net8</TargetFrameworks>
+    <TargetFrameworks>net5;net6;net8;net9</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <UseDataCollector>true</UseDataCollector>
@@ -19,6 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="FluentAssertions" Version="6.1.0" />
   </ItemGroup>
 
   <ItemGroup>

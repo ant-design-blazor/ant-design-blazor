@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -7,12 +11,17 @@ namespace AntDesign
 {
     public partial class Table<TItem> : ITable
     {
+        /// <summary>
+        /// Whether to hide pagination or not.
+        /// <para> Note: When the HidePagination is set to true, PageSize should not be set, so all the data will be displayed. Otherwise, if PageSize is set, the number of rows per page will be displayed according to PageSize. This requires the user to handle the logic of the pagging themselves. </para>
+        /// </summary>
         [Parameter]
         public bool HidePagination { get; set; }
 
         /// <summary>
-        /// topLeft | topCenter | topRight |bottomLeft | bottomCenter | bottomRight
+        /// Position of the pagination. Valid values: topLeft, topCenter, topRight, bottomLeft, bottomCenter, bottomRight
         /// </summary>
+        /// <default value="bottomRight"/>
         [Parameter]
         public string PaginationPosition
         {
@@ -24,15 +33,28 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Custom rendering for pagination
+        /// </summary>
         [Parameter]
         public RenderFragment<(int PageSize, int PageIndex, int Total, string PaginationClass, EventCallback<PaginationEventArgs> HandlePageChange)> PaginationTemplate { get; set; }
 
+        /// <summary>
+        /// Total records
+        /// </summary>
         [Parameter]
         public int Total { get; set; }
 
+        /// <summary>
+        /// Callback executed when total records changes
+        /// </summary>
         [Parameter]
         public EventCallback<int> TotalChanged { get; set; }
 
+        /// <summary>
+        /// Currently visible page. The first page is 1. If it is set to less than 1, the <see cref="OnChange"/> callback won't be invoked.
+        /// </summary>
+        /// <default value="1"/>
         [Parameter]
         public int PageIndex
         {
@@ -47,9 +69,16 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when currently visible page changes
+        /// </summary>
         [Parameter]
         public EventCallback<int> PageIndexChanged { get; set; }
 
+        /// <summary>
+        /// Number of records per page
+        /// </summary>
+        /// <default value="10"/>
         [Parameter]
         public int PageSize
         {
@@ -64,12 +93,17 @@ namespace AntDesign
             }
         }
 
+        /// <summary>
+        /// Callback executed when page size changes
+        /// </summary>
         [Parameter]
         public EventCallback<int> PageSizeChanged { get; set; }
 
+        /// <inheritdoc cref="PageIndexChanged"/>
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageIndexChange { get; set; }
 
+        /// <inheritdoc cref="PageSizeChanged"/>
         [Parameter]
         public EventCallback<PaginationEventArgs> OnPageSizeChange { get; set; }
 

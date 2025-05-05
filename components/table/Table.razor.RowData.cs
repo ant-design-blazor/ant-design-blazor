@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AntDesign.TableModels;
@@ -67,7 +71,7 @@ namespace AntDesign
                 rowIndex += PageSize * (PageIndex - 1);
             }
 
-            var hashCode = grouping.GetHashCode();
+            var hashCode = grouping.Key.GetHashCode() ^ rowIndex;
             rowCache ??= _rootRowDataCache;
 
             if (!rowCache.TryGetValue(hashCode, out var groupRowData) || groupRowData == null)
@@ -83,12 +87,16 @@ namespace AntDesign
                     {
                         Table = this,
                     },
-                    Children = grouping.Children.SelectMany(x => x.Key == null ? x.Items.Select((data, index) => GetRowData(data, index + rowIndex, level + 1, rowCache)) : [GetGroupRowData(x, index + rowIndex, level + 1, rowCache)])
-                    .ToDictionary(x => x.Data != null ? GetHashCode(x.Data) : x.GroupResult.GetHashCode(), x => x)
                 };
 
                 rowCache.Add(hashCode, groupRowData);
             }
+            
+            groupRowData.Children = grouping.Children.SelectMany(x =>
+                    x.Key == null
+                        ? x.Items.Select((data, index) => GetRowData(data, index + rowIndex, level + 1, rowCache))
+                        : [GetGroupRowData(x, index + rowIndex, level + 1, rowCache)])
+                .ToDictionary(x => x.Data != null ? GetHashCode(x.Data) : x.GroupResult.GetHashCode(), x => x);
 
             return groupRowData;
         }
@@ -112,7 +120,7 @@ namespace AntDesign
             }
 
             currentDataItem.Data = data;
-            currentDataItem.Children = TreeChildren(data);
+            currentDataItem.Children = TreeChildren?.Invoke(data);
             // this row cache may be for children rows
             rowCache ??= _rootRowDataCache;
 

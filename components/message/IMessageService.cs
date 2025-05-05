@@ -12,12 +12,109 @@ namespace AntDesign;
 
 public interface IMessageService
 {
+    /// <summary>
+    /// Configure global message options
+    /// </summary>
+    /// <param name="config"></param>
     void Config(MessageGlobalConfig config);
+
     void Destroy();
-    Task Error(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
-    Task Info(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
-    Task Loading(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
-    Task Open([NotNull] MessageConfig config);
-    Task Success(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
-    Task Warning(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
+    
+    /// <summary>
+    /// Show error message
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="duration"></param>
+    /// <param name="onClose"></param>
+    void Error(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
+    
+    /// <summary>
+    /// Show error message asynchronously
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="duration"></param>
+    /// <param name="onClose"></param>
+    /// <returns></returns>
+    Task ErrorAsync(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
+    
+    /// <summary>
+    /// Show info message
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="duration"></param>
+    /// <param name="onClose"></param>
+    void Info(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
+    
+    /// <summary>
+    /// Show info message asynchronously
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="duration"></param>
+    /// <param name="onClose"></param>
+    /// <returns></returns>
+    Task InfoAsync(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
+    
+    /// <summary>
+    /// Show loading message
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="duration"></param>
+    /// <param name="onClose"></param>
+    void Loading(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
+    
+    /// <summary>
+    /// Show loading message asynchronously
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="duration"></param>
+    /// <param name="onClose"></param>
+    /// <returns></returns>
+    Task LoadingAsync(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
+    
+    /// <summary>
+    /// Open message with provided configuration
+    /// </summary>
+    /// <param name="config"></param>
+    void Open([NotNull] MessageConfig config);
+    
+    /// <summary>
+    /// Open message with provided configuration asynchronously
+    /// </summary>
+    /// <param name="config"></param>
+    /// <returns></returns>
+    Task OpenAsync([NotNull] MessageConfig config);
+    
+    /// <summary>
+    /// Show success message
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="duration"></param>
+    /// <param name="onClose"></param>
+    void Success(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
+    
+    /// <summary>
+    /// Show success message asynchronously
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="duration"></param>
+    /// <param name="onClose"></param>
+    /// <returns></returns>
+    Task SuccessAsync(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
+    
+    /// <summary>
+    /// Show warning message
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="duration"></param>
+    /// <param name="onClose"></param>
+    void Warning(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
+    
+    /// <summary>
+    /// Show warning message asynchronously
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="duration"></param>
+    /// <param name="onClose"></param>
+    /// <returns></returns>
+    Task WarningAsync(OneOf<string, RenderFragment, MessageConfig> content, double? duration = null, Action onClose = null);
 }

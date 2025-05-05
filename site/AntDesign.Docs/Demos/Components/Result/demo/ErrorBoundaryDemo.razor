@@ -1,15 +1,15 @@
 ﻿<ErrorBoundary @ref="errorBoundary">
     <ChildContent>
-        <Button Danger OnClick="@OnClick">
+        <Button Danger OnClick="OnClick">
             Click me to throw a error
         </Button>
     </ChildContent>
     <ErrorContent Context="ex">
-        <Result Status="error"
+        <Result Status="ResultStatus.Error"
                 Title="@ex.Message"
                 SubTitle="@ex.StackTrace">
             <Extra>
-                <Button Type="primary" OnClick="errorBoundary.Recover"> Recover </Button>
+                <Button Type="ButtonType.Primary" OnClick="errorBoundary.Recover"> Recover </Button>
             </Extra>
         </Result>
     </ErrorContent>
