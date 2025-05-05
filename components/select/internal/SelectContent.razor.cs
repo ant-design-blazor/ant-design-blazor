@@ -237,6 +237,11 @@ namespace AntDesign.Select.Internal
             _inputString = e.Value.ToString();
             SetInputWidth();
 
+            if (_compositionInputting)
+            {
+                return; // Don't trigger search during IME composition
+            }
+
             if (SearchDebounceMilliseconds == 0)
             {
                 await InvokeOnInput(e);
@@ -257,7 +262,6 @@ namespace AntDesign.Select.Internal
             if (_debounceTimer != null)
             {
                 await _debounceTimer.DisposeAsync();
-
                 _debounceTimer = null;
             }
 
@@ -268,7 +272,7 @@ namespace AntDesign.Select.Internal
         {
             if (_compositionInputting)
             {
-                return;
+                return; // Double check to prevent search during IME composition
             }
 
             await OnInput.InvokeAsync(e);
@@ -282,6 +286,11 @@ namespace AntDesign.Select.Internal
 
         private void DebounceTimerIntervalOnTick(object state)
         {
+            if (_compositionInputting)
+            {
+                return; // Don't trigger search if still in IME composition
+            }
+
             InvokeAsync(async () => await DebounceInputChange((ChangeEventArgs)state, true));
         }
 
