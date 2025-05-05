@@ -28,33 +28,27 @@ namespace AntDesign.Docs.Services
 
         public void PreFetch(string language)
         {
-            List<Task> tasks =
-            [
-                PreFetchDemoMenuItems(_menuCache, language, lang => $"_content/AntDesign.Docs/meta/menu.{lang}.json"),
-                // PreFetchDemoMenuItems(_demoMenuCache, language, lang => $"_content/AntDesign.Docs/meta/demos.{lang}.json"),
-                PreFetchDemoMenuItems(_docMenuCache, language, lang => $"_content/AntDesign.Docs/meta/docs.{lang}.json"),
-                PreFetchComponent(language),
-            ];
-
-            Task.WaitAll([.. tasks]);
+            PreFetchDemoMenuItems(_menuCache, language, lang => $"_content/AntDesign.Docs/meta/menu.{lang}.json");
+            PreFetchDemoMenuItems(_docMenuCache, language, lang => $"_content/AntDesign.Docs/meta/docs.{lang}.json");
+            PreFetchComponent(language);
         }
 
-        private async Task PreFetchComponent(string language)
+        private void PreFetchComponent(string language)
         {
-            await _componentCache.GetOrAdd(language, (lang) => new(async () =>
+            _componentCache.GetOrAdd(language, (lang) => new(async () =>
             {
                 var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>($"_content/AntDesign.Docs/meta/components.{lang}.json");
                 return components.ToDictionary(x => $"{x.Category.ToLower()}/{x.Title.ToLower()}", x => x);
             }));
         }
 
-        private async Task PreFetchDemoMenuItems(ConcurrentCache<string, AsyncLazy<DemoMenuItem[]>> cache, string language, Func<string, string> srcUrl)
+        private void PreFetchDemoMenuItems(ConcurrentCache<string, AsyncLazy<DemoMenuItem[]>> cache, string language, Func<string, string> srcUrl)
         {
-            await cache.GetOrAdd(language, (lang) => new(async () =>
-             {
-                 var items = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(srcUrl(lang));
-                 return items;
-             }));
+            cache.GetOrAdd(language, (lang) => new(async () =>
+            {
+                var items = await _httpClient.GetFromJsonAsync<DemoMenuItem[]>(srcUrl(lang));
+                return items;
+            }));
         }
 
         public async Task<DemoMenuItem[]> GetMenuAsync(string language)
