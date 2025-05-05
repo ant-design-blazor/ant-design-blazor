@@ -247,12 +247,70 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         }
     }
 
+    public async ValueTask AddResizeObserver(ElementReference dom, Func<List<ResizeObserverEntry>, Task> callback)
+    {
+        var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+        if (!await IsResizeObserverSupported())
+        {
+            AddShared<JsonElement>("window", "resize", AsyncCallback, false);
+
+            async void AsyncCallback(JsonElement _) => await callback.Invoke([new ResizeObserverEntry()]);
+        }
+        else
+        {
+            if (!domEventSubscriptionStore.TryGetValue(key, out var subscriptions))
+            {
+                subscriptions = [];
+                if (domEventSubscriptionStore.TryAdd(key, subscriptions))
+                {
+                    await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), DotNetObjectReference.Create(new AsyncInvoker<string>(async (p) =>
+                    {
+                        foreach (var subscription in subscriptions)
+                        {
+                            var tP = JsonSerializer.Deserialize(p, subscription.Type);
+                            if (subscription.IsAsync)
+                            {
+                                await (Task)subscription.Delegate.DynamicInvoke(tP);
+                            }
+                            else
+                            {
+                                subscription.Delegate.DynamicInvoke(tP);
+                            }
+                        }
+                    })));
+                    await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Observe, key.ToString(), dom);
+                }
+                else
+                {
+                    _ = domEventSubscriptionStore.TryGetValue(key, out subscriptions);
+                }
+            }
+
+            subscriptions.Add(new DomEventSubscription(callback, typeof(List<ResizeObserverEntry>), _id, true));
+        }
+    }
+
     public async ValueTask RemoveResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
     {
         var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
         if (domEventSubscriptionStore.TryGetValue(key, out var list))
         {
             var index = list.FindIndex(s => s.Delegate == (Delegate)callback);
+            if (index >= 0)
+            {
+                list.RemoveAt(index);
+            }
+        }
+
+        await Task.CompletedTask;
+    }
+
+    public async ValueTask RemoveResizeObserver(ElementReference dom, Func<List<ResizeObserverEntry>, Task> callback)
+    {
+        var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+        if (domEventSubscriptionStore.TryGetValue(key, out var list))
+        {
+            var index = list.FindIndex(s => s.Delegate == (Delegate)callback && s.IsAsync);
             if (index >= 0)
             {
                 list.RemoveAt(index);
