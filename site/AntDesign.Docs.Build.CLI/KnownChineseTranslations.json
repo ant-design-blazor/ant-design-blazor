@@ -203,6 +203,9 @@
   "Checks if overlay is currently in visible state.": {
     "Translated": "检查叠加层当前是否处于可见状态。"
   },
+  "Toggle overlay visibility.": {
+    "Translated": "切换叠加可见性。"
+  },
   "Allows to set each button's css class either to the same string or separately.": {
     "Translated": "允许将每个按钮的 css 类设置为相同的字符串或单独设置。"
   },
@@ -392,6 +395,9 @@
   "通知提醒内容，必选，string 或者 RenderFragment": {
     "Translated": "通知提醒内容，必选，string 或者 RenderFragment"
   },
+  "自动关闭的延时，单位为秒。默认 4.5 秒后自动关闭，配置为 null 则不自动关闭": {
+    "Translated": "自动关闭的延时，单位为秒。默认 4.5 秒后自动关闭，配置为 null 则不自动关闭"
+  },
   "自定义图标": {
     "Translated": "自定义图标"
   },
@@ -539,6 +545,9 @@
   "The max expand level when use DefaultExpandAllRows. This attribute is used to avoid endless loop when the tree records have circular reference. The default value is 4.": {
     "Translated": "使用 DefaultExpandAllRows 时的最大扩展级别。当树记录有循环引用时，该属性用于避免死循环。默认值为 4。"
   },
+  "Callback executed when paging, sorting, and filtering changes": {
+    "Translated": "分页、排序、过滤变化时执行的回调"
+  },
   "When set to true and the screen width is less than 960px, the table would switch to small-screen mode. In small-screen mode, only certain features are currently supported, and mis-styling will occur in tables with some features such as group, expanded columns, tree data, summary cell, etc.": {
     "Translated": "当设置为 true 并且屏幕宽度小于 960px 时，表格将切换到小屏幕模式。在小屏模式下，目前只支持部分特性，在具有分组、展开列、树状数据、汇总单元格等特性的表格中会出现样式错误。"
   },
@@ -670,6 +679,9 @@
   },
   "<p>Basic text writing, including headings, body text, lists, and more.</p><h2>When To Use</h2><ul><li>When need to display a title or paragraph contents in Articles/Blogs/Notes.</li><li>When you need copyable/editable/ellipsis texts.</li></ul>": {
     "Translated": "<p>基本文本书写，包括标题、正文、列表等。</p><h2>何时使用</h2><ul><li>当需要在文章中显示标题或段落内容时/博客/笔记。</li><li>当您需要可复制/可编辑/省略号文本时。</li></ul>"
+  },
+  "Level of heading (ex: h1 would be 1). Must be between 1 and 4, inclusive. If outside that range it will default back to 1.": {
+    "Translated": "标题级别（例如：h1 为 1）。必须介于 1 和 4 之间（含）。如果超出该范围，它将默认返回到 1。"
   },
   "<p>Upload file by selecting or dragging.</p><h2>When To Use</h2><p>Uploading is the process of publishing information (web pages, text, pictures, video, etc.) to a remote server via a web page or upload tool.</p><ul><li>When you need to upload one or more files.</li><li>When you need to show the process of uploading.</li><li>When you need to upload files by dragging and dropping.</li></ul>": {
     "Translated": "<p>通过选择或拖动上传文件。</p><h2>何时使用</h2><p>上传是将信息（网页、文本、图片、视频等）发布到远程的过程</p><ul><li>当您需要上传一个或多个文件时。</li><li>当您需要显示上传过程时。</li> <li>当您需要通过拖放方式上传文件时。</li></ul>"
@@ -883,6 +895,9 @@
   },
   "An expression that identifies the enumerable of bound values.": {
     "Translated": "标识可枚举绑定值的表达式。"
+  },
+  "The size of the input box. Note: in the context of a form, the `large` size is used. Available: `large` `default` `small`": {
+    "Translated": "输入框的大小。注意：在表单的上下文中，使用“大”尺寸。可用：`大``默认``小`"
   },
   "What Culture will be used when converting string to value and value to string Useful for InputNumber component.": {
     "Translated": "将字符串转换为值和将值转换为字符串时将使用什么文化对 InputNumber 组件有用。"
@@ -1199,8 +1214,14 @@
   "Placeholder for input": {
     "Translated": "输入占位符"
   },
+  "Element to show popup container in": {
+    "Translated": "显示弹出容器的元素"
+  },
   "Allow searching or not": {
     "Translated": "是否允许搜索"
+  },
+  "Disable input or not": {
+    "Translated": "是否禁用输入"
   },
   "Callback executed when the selected value changes": {
     "Translated": "选中值改变时执行的回调"
@@ -2261,6 +2282,9 @@
   "Callback executed on close of message": {
     "Translated": "在消息关闭时执行的回调"
   },
+  "Specify a function that will be called when modal is closed": {
+    "Translated": "指定一个将在模式关闭时调用的函数"
+  },
   "Body style for modal body element. Such as height, padding etc": {
     "Translated": "模态主体元素的主体样式。比如高度，填充等"
   },
@@ -2377,6 +2401,9 @@
   },
   "update Confirm which Visible=true": {
     "Translated": "更新确认哪个 Visible=true"
+  },
+  "close a Confirm dialog": {
+    "Translated": "关闭确认对话框"
   },
   "close the Confirm dialog": {
     "Translated": "关闭确认对话框"
@@ -3317,6 +3344,9 @@
   "If the datasource is remote or not for more complex use cases": {
     "Translated": "对于更复杂的用例，数据源是否是远程的"
   },
+  "Whether to hide pagination or not": {
+    "Translated": "是否隐藏分页"
+  },
   "Position of the pagination. Valid values: topLeft, topCenter, topRight, bottomLeft, bottomCenter, bottomRight": {
     "Translated": "分页的位置。有效值：topLeft、topCenter、topRight、bottomLeft、bottomCenter、bottomRight"
   },
@@ -3421,6 +3451,9 @@
   },
   "Content of the column": {
     "Translated": "专栏内容"
+  },
+  "Cut off header title with ellipsis when set to true": {
+    "Translated": "设置为 true 时用省略号切断标题标题"
   },
   "If the column is hidden or not": {
     "Translated": "列是否隐藏"
@@ -4085,6 +4118,9 @@
   "Specify how to show checked values when TreeCheckable is true and TreeCheckStrictly is false": {
     "Translated": "指定当 TreeCheckable 为 true 且 TreeCheckStrictly 为 false 时如何显示选中的值"
   },
+  "Datasource for the tree. Can be a list of any custom object type by providing the expressions to get children, leafs, titles, etc. Use either this or <code>AntDesign.TreeSelect`2.ChildContent</code>": {
+    "Translated": "树的数据源。可以是任何自定义对象类型的列表，方法是提供用于获取 children、leafs、titles 等的表达式。使用 this 或 <code>AntDesign.TreeSelect'2.ChildContent</code>"
+  },
   "Specifies a method to return a checkable node": {
     "Translated": "指定返回可勾选节点的方法"
   },
@@ -4438,6 +4474,9 @@
   },
   "Nodes to render in the tree. Use either this or <code>AntDesign.TreeSelect`2.DataSource</code>": {
     "Translated": "要在树中渲染的节点。使用 this 或 <code>AntDesign.TreeSelect'2.DataSource</code>"
+  },
+  "Use this to set the content of the tree. Use either this or <code>AntDesign.TreeSelect`2.DataSource</code>": {
+    "Translated": "使用此选项可设置树的内容。使用 this 或 <code>AntDesign.TreeSelect'2.DataSource</code>"
   },
   "Whether to expand all nodes by default": {
     "Translated": "是否默认展开所有节点"
