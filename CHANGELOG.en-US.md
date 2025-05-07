@@ -45,6 +45,7 @@ timeline: true
 singleton if possible. [#4538](https://github.com/ant-design-blazor/ant-design-blazor/pull/4538) [@LeaFrock](https://github.com/LeaFrock)
 - ⚡️ Improve dictionary usage. [#4537](https://github.com/ant-design-blazor/ant-design-blazor/pull/4537) [@LeaFrock](https://github.com/LeaFrock)
 - ⚡️ Refactor EventListener that add asynchronous support. [#4573](https://github.com/ant-design-blazor/ant-design-blazor/pull/4573) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tree work incorrectly after updating the data source. [#4575](https://github.com/ant-design-blazor/ant-design-blazor/pull/4575) [@DarkElfes](https://github.com/DarkElfes)
 - 🐞 Fixed Mentions overlay display logic and input handling. [#4574](https://github.com/ant-design-blazor/ant-design-blazor/pull/4574) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed DatePicker improve value comparison and cloning in RangePicker. [#4570](https://github.com/ant-design-blazor/ant-design-blazor/pull/4570) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed Cascader placeholder binding. [#4545](https://github.com/ant-design-blazor/ant-design-blazor/pull/4545) [@ElderJames](https://github.com/ElderJames)

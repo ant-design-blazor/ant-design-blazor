@@ -42,14 +42,15 @@ timeline: true
   - 🆕 新增 支持多文件在一次请求上传。[#4544](https://github.com/ant-design-blazor/ant-design-blazor/pull/4544) [@ElderJames](https://github.com/ElderJames)
   - 📖 文档 使用原生 InputFile 的 demo 增加拖拽上传示例。[#4546](https://github.com/ant-design-blazor/ant-design-blazor/pull/4546) [@ElderJames](https://github.com/ElderJames)
 
+- ⚡️ 性能提升 尽量使用 JsonSerializerOptions单例。[#4538](https://github.com/ant-design-blazor/ant-design-blazor/pull/4538) [@LeaFrock](https://github.com/LeaFrock)
+- ⚡️ 性能提升 优化字典使用。[#4537](https://github.com/ant-design-blazor/ant-design-blazor/pull/4537) [@LeaFrock](https://github.com/LeaFrock)
+- ⚡️ 性能提升 重构 Event Listener 支持异步。[#4573](https://github.com/ant-design-blazor/ant-design-blazor/pull/4573) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Tree 更新数据源后行为异常。[#4575](https://github.com/ant-design-blazor/ant-design-blazor/pull/4575) [@DarkElfes](https://github.com/DarkElfes)
 - 🐞 修复 Cascader 的 Placeholder 属性无效问题。[#4545](https://github.com/ant-design-blazor/ant-design-blazor/pull/4545) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 Flex 的 Justify 属性。[#4539](https://github.com/ant-design-blazor/ant-design-blazor/pull/4539) [@thirking](https://github.com/thirking)
 - 🐞 修复 Mentions 选项菜单展开逻辑。[#4574](https://github.com/ant-design-blazor/ant-design-blazor/pull/4574) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 DatePicker 的 RangePicker 选中值绑定。[#4570](https://github.com/ant-design-blazor/ant-design-blazor/pull/4570) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 Form 动态修改必填规则。[#4543](https://github.com/ant-design-blazor/ant-design-blazor/pull/4543) [@ElderJames](https://github.com/ElderJames)
-- ⚡️ 性能提升 尽量使用 JsonSerializerOptions单例。[#4538](https://github.com/ant-design-blazor/ant-design-blazor/pull/4538) [@LeaFrock](https://github.com/LeaFrock)
-- ⚡️ 性能提升 优化字典使用。[#4537](https://github.com/ant-design-blazor/ant-design-blazor/pull/4537) [@LeaFrock](https://github.com/LeaFrock)
-- ⚡️ 性能提升 重构 Event Listener 支持异步。[#4573](https://github.com/ant-design-blazor/ant-design-blazor/pull/4573) [@ElderJames](https://github.com/ElderJames)
 - 🗑 移除弃用方法，增强  Confirm 弹窗可编程性。[#4549](https://github.com/ant-design-blazor/ant-design-blazor/pull/4549) [@ElderJames](https://github.com/ElderJames)
 - 📖 文档 更新 Simple Json 本地化方式的使用方法。[#4563](https://github.com/ant-design-blazor/ant-design-blazor/pull/4563) [@ElderJames](https://github.com/ElderJames)
 
