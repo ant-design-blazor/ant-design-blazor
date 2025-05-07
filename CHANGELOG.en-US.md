@@ -15,6 +15,63 @@ timeline: true
 
 ---
 
+### 1.4.0
+
+`2025-05-07`
+
+- 🔥 Add Splitter component. [#4555](https://github.com/ant-design-blazor/ant-design-blazor/pull/4555) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Collapse supports two-way binding for activing panels. [#4564](https://github.com/ant-design-blazor/ant-design-blazor/pull/4564) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Notification supports pausing to disappear when the mouse moves over a notification. [#4535](https://github.com/ant-design-blazor/ant-design-blazor/pull/4535) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🆕 Add sticky scroll. [#4566](https://github.com/ant-design-blazor/ant-design-blazor/pull/4566) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add EllipsisShowTitle property for columns. [#4565](https://github.com/ant-design-blazor/ant-design-blazor/pull/4565) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed no expand icon when ExpandTemplate was set. [#4554](https://github.com/ant-design-blazor/ant-design-blazor/pull/4554) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🐞 Fixed prevent search triggering during IME composition. [#4572](https://github.com/ant-design-blazor/ant-design-blazor/pull/4572) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Refactor filtering logic and improve option creation. [#4571](https://github.com/ant-design-blazor/ant-design-blazor/pull/4571) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Refactor that remove triggering events on value initialization. [#4568](https://github.com/ant-design-blazor/ant-design-blazor/pull/4568) [@ElderJames](https://github.com/ElderJames)
+
+- Message
+  - 🆕 Add Supports pausing to disappear when the mouse moves over a message. [#4536](https://github.com/ant-design-blazor/ant-design-blazor/pull/4536) [@ElderJames](https://github.com/ElderJames)
+  - 🛠 Refactor IMessageService to support synchronous and asynchronous message methods. [#4548](https://github.com/ant-design-blazor/ant-design-blazor/pull/4548) [@ElderJames](https://github.com/ElderJames)
+
+- Upload
+  - 🆕 Add withCredentials option for file uploads. [#4547](https://github.com/ant-design-blazor/ant-design-blazor/pull/4547) [@ElderJames](https://github.com/ElderJames)  - 🆕 Add support for batch file uploads. [#4544](https://github.com/ant-design-blazor/ant-design-blazor/pull/4544) [@ElderJames](https://github.com/ElderJames)
+  - 📖 Docs add a demo for drag-and-drop inputfile support. [#4546](https://github.com/ant-design-blazor/ant-design-blazor/pull/4546) [@ElderJames](https://github.com/ElderJames)
+
+- ⚡️ Enhance that use JsonSerializerOptions 
+singleton if possible. [#4538](https://github.com/ant-design-blazor/ant-design-blazor/pull/4538) [@LeaFrock](https://github.com/LeaFrock)
+- ⚡️ Improve dictionary usage. [#4537](https://github.com/ant-design-blazor/ant-design-blazor/pull/4537) [@LeaFrock](https://github.com/LeaFrock)
+- ⚡️ Refactor EventListener that add asynchronous support. [#4573](https://github.com/ant-design-blazor/ant-design-blazor/pull/4573) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Tree work incorrectly after updating the data source. [#4575](https://github.com/ant-design-blazor/ant-design-blazor/pull/4575) [@DarkElfes](https://github.com/DarkElfes)
+- 🐞 Fixed Mentions overlay display logic and input handling. [#4574](https://github.com/ant-design-blazor/ant-design-blazor/pull/4574) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed DatePicker improve value comparison and cloning in RangePicker. [#4570](https://github.com/ant-design-blazor/ant-design-blazor/pull/4570) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Cascader placeholder binding. [#4545](https://github.com/ant-design-blazor/ant-design-blazor/pull/4545) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Flex Justify value. [#4539](https://github.com/ant-design-blazor/ant-design-blazor/pull/4539) [@thirking](https://github.com/thirking)
+- 🐞 Fixed Form changing the required rule dynamicly. [#4543](https://github.com/ant-design-blazor/ant-design-blazor/pull/4543) [@ElderJames](https://github.com/ElderJames)
+- 🛠 Refactor that remove obsolete methods and enhance Confirm dialog functionality. [#4549](https://github.com/ant-design-blazor/ant-design-blazor/pull/4549) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs localization add resource loading configuration for SimpleEmbe…. [#4563](https://github.com/ant-design-blazor/ant-design-blazor/pull/4563) [@ElderJames](https://github.com/ElderJames)
+
+#### Breaking change
+
+The MesesageService methods have been changed to support asynchronous message methods. Please migrate with the following code: 
+
+```cs
+// Before
+await _message.Success("Operation completed");
+_ = _message.Success("Operation completed");
+
+// After
+// Synchronous
+_message.Success("Operation completed");
+// Asynchronous
+await _message.SuccessAsync("Operation completed");
+```
+For more detail, see https://github.com/ant-design-blazor/ant-design-blazor/pull/4548
+
+
 ### 1.3.2
 
 `2025-04-07`
