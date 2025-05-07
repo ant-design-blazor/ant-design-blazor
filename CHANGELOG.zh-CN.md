@@ -54,6 +54,27 @@ timeline: true
 - 🗑 移除弃用方法，增强  Confirm 弹窗可编程性。[#4549](https://github.com/ant-design-blazor/ant-design-blazor/pull/4549) [@ElderJames](https://github.com/ElderJames)
 - 📖 文档 更新 Simple Json 本地化方式的使用方法。[#4563](https://github.com/ant-design-blazor/ant-design-blazor/pull/4563) [@ElderJames](https://github.com/ElderJames)
 
+#### 破坏性更新
+
+此版本之后 IMesesageService 的方法签名区分同步与异步。异步的方法带有 Async 后缀，而原来没有后缀的异步方法变为同步方法，因此更新时需求删除前面的 await 或者 _=, 或者全局增加Async后缀。请参考以下代码： 
+
+```cs
+// 之前用法
+// 同步
+_ = _message.Success("Operation completed");
+// 异步
+await _message.Success("Operation completed");
+
+// 此后语法
+// 同步
+_message.Success("Operation completed");
+// 异步
+await _message.SuccessAsync("Operation completed");
+```
+详情请参考这个Pull Request https://github.com/ant-design-blazor/ant-design-blazor/pull/4548
+
+
+
 ### 1.3.2
 
 `2025-04-07`

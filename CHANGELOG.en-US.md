@@ -54,6 +54,24 @@ singleton if possible. [#4538](https://github.com/ant-design-blazor/ant-design-b
 - 🛠 Refactor that remove obsolete methods and enhance Confirm dialog functionality. [#4549](https://github.com/ant-design-blazor/ant-design-blazor/pull/4549) [@ElderJames](https://github.com/ElderJames)
 - 📖 Docs localization add resource loading configuration for SimpleEmbe…. [#4563](https://github.com/ant-design-blazor/ant-design-blazor/pull/4563) [@ElderJames](https://github.com/ElderJames)
 
+#### Breaking change
+
+The MesesageService methods have been changed to support asynchronous message methods. Please migrate with the following code: 
+
+```cs
+// Before
+await _message.Success("Operation completed");
+_ = _message.Success("Operation completed");
+
+// After
+// Synchronous
+_message.Success("Operation completed");
+// Asynchronous
+await _message.SuccessAsync("Operation completed");
+```
+For more detail, see https://github.com/ant-design-blazor/ant-design-blazor/pull/4548
+
+
 ### 1.3.2
 
 `2025-04-07`
