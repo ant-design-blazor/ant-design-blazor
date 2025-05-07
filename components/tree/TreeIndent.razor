@@ -12,7 +12,7 @@
         else
         {
             var node = GetParentNode(SelfNode, i);
-            <span class="ant-tree-indent-unit ant-tree-indent-unit-start @(node.IsLastNode?"ant-tree-indent-unit-end":"")"></span>
+            <span class="ant-tree-indent-unit ant-tree-indent-unit-start @(node.IsLastNode()?"ant-tree-indent-unit-end":"")"></span>
         }
     }
 </span>
