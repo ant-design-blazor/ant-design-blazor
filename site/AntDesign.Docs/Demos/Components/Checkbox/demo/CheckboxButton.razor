@@ -1,0 +1,12 @@
+<div>
+    <CheckboxGroup @bind-Value="_value" TValue="string" ButtonStyle="@CheckboxButtonStyle.Solid">
+        <Checkbox CheckboxButton Label="@("A")">Hangzhou</Checkbox>
+        <Checkbox CheckboxButton Label="@("B")">Shanghai</Checkbox>
+        <Checkbox CheckboxButton Label="@("C")">Beijing</Checkbox>
+        <Checkbox CheckboxButton Label="@("D")">Chengdu</Checkbox>
+    </CheckboxGroup>
+</div>
+@code
+{
+    string[] _value = new[] { "D" };
+}
