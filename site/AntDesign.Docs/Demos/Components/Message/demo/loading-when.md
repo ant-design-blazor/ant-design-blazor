@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-在异步操作执行期间显示加载提示，操作完成后自动关闭提示。使用 `LoadingWhen` 扩展方法可以简化这一过程。
+在异步操作执行期间显示加载提示，操作完成后自动关闭提示。使用 `Task.WrappedBy(messageService).LoadingAsync()` 方式可以简化这一过程。
 
 ## en-US
 
-Display a loading indicator during asynchronous operations, which is automatically dismissed when the operation completes. The `LoadingWhen` extension method simplifies this process.
+Display a loading indicator during asynchronous operations, which is automatically dismissed when the operation completes. Use `Task.WrappedBy(messageService).LoadingAsync()` to simplify this process.
