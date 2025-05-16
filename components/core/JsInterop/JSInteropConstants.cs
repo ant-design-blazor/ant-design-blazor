@@ -318,5 +318,11 @@ namespace AntDesign
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "splitterHelper.";
             public static string Attach => $"{FUNC_PREFIX}attach";
         }
+
+        public static class Carousel
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "carouselHelper.";
+            public static string InitializeTouch => $"{FUNC_PREFIX}initializeTouch";
+        }
     }
 }

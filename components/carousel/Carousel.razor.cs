@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -68,6 +69,9 @@ namespace AntDesign
         private ClassMapper SlickSliderClassMapper { get; } = new ClassMapper();
         private bool IsHorizontal => DotPosition == CarouselDotPosition.Top || DotPosition == CarouselDotPosition.Bottom;
 
+        private DotNetObjectReference<Carousel> _dotNetHelper;
+        private IJSObjectReference _cleanup;
+
         #region Parameters
 
         /// <summary>
@@ -104,6 +108,19 @@ namespace AntDesign
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
+
+        [JSInvokable]
+        public void HandleSwipe(string direction)
+        {
+            if (direction == "right")
+            {
+                Previous();
+            }
+            else if (direction == "left")
+            {
+                Next();
+            }
+        }
 
         /// <summary>
         /// Slides the carousel to the next slide
@@ -168,9 +185,46 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
+                try
+                {
+                    _dotNetHelper = DotNetObjectReference.Create(this);
+                    _cleanup = await Js.InvokeAsync<IJSObjectReference>(JSInteropConstants.Carousel.InitializeTouch, new object[]
+                    {
+                        new { element = Ref, dotNetHelper = _dotNetHelper, minSwipeDistance = 50 }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error initializing touch events: {ex.Message}");
+                }
+
                 Resize();
                 DomEventListener.AddShared<JsonElement>("window", "resize", Resize);
             }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            try
+            {
+                if (_cleanup != null)
+                {
+                    await _cleanup.InvokeVoidAsync("dispose");
+                    await _cleanup.DisposeAsync();
+                }
+                _dotNetHelper?.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error disposing carousel: {ex.Message}");
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventListener?.Dispose();
+            _slicks.Clear();
+            base.Dispose(disposing);
         }
 
         private async Task Resize(JsonElement e = default)
@@ -218,6 +272,7 @@ namespace AntDesign
         private void Activate(CarouselSlick slick)
         {
             this.ActiveSlick = slick;
+            InvokeStateHasChanged();
         }
 
         private async void AutoplaySlick(object state)
@@ -243,13 +298,6 @@ namespace AntDesign
             }
 
             await InvokeAsync(() => StateHasChanged());
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            DomEventListener?.Dispose();
-            _slicks.Clear();
-            base.Dispose(disposing);
         }
     }
 }
