@@ -59,6 +59,15 @@ jobs:
           directory: .
           wranglerVersion: '3'
 
+      - name: Install EdgeOne CLI
+        run: npm install -g edgeone
+
+      - name: Deploy to EdgeOne Pages
+        env:
+          EDGEONE_API_TOKEN: ${{ secrets.EDGEONE_API_TOKEN }}
+        run: |
+          edgeone pages deploy . -t $EDGEONE_API_TOKEN -e preview
+
       - name: update status comment
         uses: actions-cool/maintain-one-comment@v1.1.0
         with:
