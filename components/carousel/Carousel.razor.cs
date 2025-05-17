@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -106,6 +107,7 @@ namespace AntDesign
         /// Whether to enable swipe gestures for the carousel
         /// </summary>
         [Parameter]
+        [PublicApi("1.5.0")]
         public bool EnableSwipe { get; set; }
 
         #endregion Parameters
