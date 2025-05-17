@@ -207,6 +207,13 @@ namespace AntDesign
         [Parameter]
         public bool Centered { get; set; }
 
+        /// <summary>
+        /// Enable swipe to switch tabs
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        public bool EnableSwipe { get; set; }
+
         [CascadingParameter]
         private Card Card { get; set; }
 
@@ -583,9 +590,11 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                _dotNetHelper = DotNetObjectReference.Create(this);
-                await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.initializeTouch", new { element = _contentHolderRef, dotNetHelper = _dotNetHelper, minSwipeDistance = 50, vertical = !IsHorizontal });
-
+                if (EnableSwipe)
+                {
+                    _dotNetHelper = DotNetObjectReference.Create(this);
+                    await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.initializeTouch", new { element = _contentHolderRef, dotNetHelper = _dotNetHelper, minSwipeDistance = 50, vertical = !IsHorizontal });
+                }
                 _afterFirstRender = true;
             }
 
@@ -603,6 +612,8 @@ namespace AntDesign
         [JSInvokable]
         public void HandleSwipe(string direction)
         {
+            if (!EnableSwipe) return;
+
             switch (direction)
             {
                 case "left":
@@ -624,8 +635,11 @@ namespace AntDesign
         {
             try
             {
-                await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.dispose", _contentHolderRef);
-                _dotNetHelper?.Dispose();
+                if (EnableSwipe)
+                {
+                    await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.dispose", _contentHolderRef);
+                    _dotNetHelper?.Dispose();
+                }
             }
             catch (Exception ex)
             {
