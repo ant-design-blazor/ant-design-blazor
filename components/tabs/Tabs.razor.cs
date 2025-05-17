@@ -212,6 +212,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="false" />
         [Parameter]
+        [PublicApi("1.5.0")]
         public bool EnableSwipe { get; set; }
 
         [CascadingParameter]
