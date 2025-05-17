@@ -1,6 +1,6 @@
 export { state } from './modules/stateProvider';
 export * as observable from './ObservableApi/observableApi';
-export { domInfoHelper, domTypes, domManipulationHelper, eventHelper } from './modules/dom/exports';
+export { domInfoHelper, domTypes, domManipulationHelper, eventHelper, touchHelper } from './modules/dom/exports';
 export { styleHelper } from './modules/styleHelper';
 export {
   backtopHelper,
@@ -15,7 +15,6 @@ export {
   downloadHelper,
   watermarkHelper,
   splitterHelper,
-  carouselHelper
 } from './modules/components/export'
 
 

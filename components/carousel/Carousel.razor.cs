@@ -70,8 +70,6 @@ namespace AntDesign
         private bool IsHorizontal => DotPosition == CarouselDotPosition.Top || DotPosition == CarouselDotPosition.Bottom;
 
         private DotNetObjectReference<Carousel> _dotNetHelper;
-        private IJSObjectReference _cleanup;
-
         #region Parameters
 
         /// <summary>
@@ -112,13 +110,20 @@ namespace AntDesign
         [JSInvokable]
         public void HandleSwipe(string direction)
         {
-            if (direction == "right")
+            switch (direction)
             {
-                Previous();
-            }
-            else if (direction == "left")
-            {
-                Next();
+                case "left":
+                    if (IsHorizontal) Next();
+                    break;
+                case "right":
+                    if (IsHorizontal) Previous();
+                    break;
+                case "up":
+                    if (!IsHorizontal) Next();
+                    break;
+                case "down":
+                    if (!IsHorizontal) Previous();
+                    break;
             }
         }
 
@@ -185,20 +190,11 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                try
-                {
-                    _dotNetHelper = DotNetObjectReference.Create(this);
-                    _cleanup = await Js.InvokeAsync<IJSObjectReference>(JSInteropConstants.Carousel.InitializeTouch, new object[]
-                    {
-                        new { element = Ref, dotNetHelper = _dotNetHelper, minSwipeDistance = 50 }
-                    });
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error initializing touch events: {ex.Message}");
-                }
+                await Resize();
 
-                Resize();
+                _dotNetHelper = DotNetObjectReference.Create(this);
+                await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.initializeTouch", new { element = Ref, dotNetHelper = _dotNetHelper, minSwipeDistance = 50, vertical = !IsHorizontal });
+
                 DomEventListener.AddShared<JsonElement>("window", "resize", Resize);
             }
         }
@@ -207,11 +203,7 @@ namespace AntDesign
         {
             try
             {
-                if (_cleanup != null)
-                {
-                    await _cleanup.InvokeVoidAsync("dispose");
-                    await _cleanup.DisposeAsync();
-                }
+                await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.dispose", Ref);
                 _dotNetHelper?.Dispose();
             }
             catch (Exception ex)
