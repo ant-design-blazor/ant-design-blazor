@@ -102,6 +102,12 @@ namespace AntDesign
         [Parameter]
         public string DotsClass { get; set; }
 
+        /// <summary>
+        /// Whether to enable swipe gestures for the carousel
+        /// </summary>
+        [Parameter]
+        public bool EnableSwipe { get; set; }
+
         #endregion Parameters
 
         [Inject]
@@ -193,7 +199,10 @@ namespace AntDesign
                 await Resize();
 
                 _dotNetHelper = DotNetObjectReference.Create(this);
-                await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.initializeTouch", new { element = Ref, dotNetHelper = _dotNetHelper, minSwipeDistance = 50, vertical = !IsHorizontal });
+                if (EnableSwipe)
+                {
+                    await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.initializeTouch", new { element = Ref, dotNetHelper = _dotNetHelper, minSwipeDistance = 50, vertical = !IsHorizontal });
+                }
 
                 DomEventListener.AddShared<JsonElement>("window", "resize", Resize);
             }
@@ -203,8 +212,11 @@ namespace AntDesign
         {
             try
             {
-                await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.dispose", Ref);
-                _dotNetHelper?.Dispose();
+                if (EnableSwipe)
+                {
+                    await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.dispose", Ref);
+                    _dotNetHelper?.Dispose();
+                }
             }
             catch (Exception ex)
             {
