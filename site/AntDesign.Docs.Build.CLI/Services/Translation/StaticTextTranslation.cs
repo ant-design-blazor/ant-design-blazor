@@ -30,6 +30,8 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
 
         public const string Faq = "FAQs";
 
+        public const string Version = "Version";
+
         private static readonly Dictionary<string, Dictionary<string, string>> _translations = new()
         {
             {
@@ -46,7 +48,8 @@ namespace AntDesign.Docs.Build.CLI.Services.Translation
                     { Name, "名称" },
                     { Parameter, "属性" },
                     { UnderlyingType, "基础类型" },
-                    { Faq, "常问问题" }
+                    { Faq, "常问问题" },
+                    { Version , "版本" }
                 }
             }
         };

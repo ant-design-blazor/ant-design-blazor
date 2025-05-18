@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +14,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AntDesign;
 
+/**
+<summary>
+    <para>Split panels to isolate</para>
+
+    <h2>When To Use</h2>
+
+    <para>Can be used to separate areas horizontally or vertically. When you need to freely drag and adjust the size of each area. When you need to specify the maximum and minimum width and height of an area.</para>
+</summary>
+*/
+[Documentation(DocumentationCategory.Components, DocumentationType.Layout, "https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*f0SISaETY0wAAAAAAAAAAAAADrJ8AQ/original", Title = "Splitter", SubTitle = "分隔面板", ReleaseVersion = "1.4.0")]
 public partial class Splitter : AntDomComponentBase
 {
     /// <summary>

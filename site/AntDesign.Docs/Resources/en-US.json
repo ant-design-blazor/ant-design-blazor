@@ -151,5 +151,6 @@
   "app.components.overview": "Overview",
   "app.components.overview.search": "Search in components",
   "app.components.overview.description": "<code>Ant Design Blazor</code> provides plenty of UI components to enrich your web applications, and we will improve components experience consistently. We also recommend some great Third-Party Libraries additionally.",
-  "app.sponsorship-notice": "Hello, if this project has created value for you or your organization, please consider a generous sponsorship to keep this project sustainable and continue this value together."
+  "app.sponsorship-notice": "Hello, if this project has created value for you or your organization, please consider a generous sponsorship to keep this project sustainable and continue this value together.",
+  "app.components.menu.update": "Update"
 }

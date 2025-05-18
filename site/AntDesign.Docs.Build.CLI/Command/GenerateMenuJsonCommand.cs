@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using AntDesign.Core.Documentation;
 using AntDesign.Docs.Build.CLI.Extensions;
 using AntDesign.Docs.Build.CLI.Utils;
 using Microsoft.Extensions.CommandLineUtils;
@@ -138,14 +139,34 @@ namespace AntDesign.Docs.Build.CLI.Command
             var jsonOptions = new JsonSerializerOptions()
             {
                 WriteIndented = true,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             };
 
+            // 生成版本信息文件
+            var versionInfo = new
+            {
+                version = GetCurrentVersion(),
+                releaseDate = DateTime.UtcNow.ToString("yyyy-MM-dd")
+            };
+
+            var configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
+            if (!Directory.Exists(configFileDirectory))
+            {
+                Directory.CreateDirectory(configFileDirectory);
+            }
+
+            var versionFilePath = Path.Combine(configFileDirectory, "version.json");
+            if (File.Exists(versionFilePath))
+            {
+                File.Delete(versionFilePath);
+            }
+            File.WriteAllText(versionFilePath, JsonSerializer.Serialize(versionInfo, jsonOptions));
+
+            // 生成菜单文件
             IList<Dictionary<string, DemoMenuItem>> docsMenuList = GetSubMenuList(docsDirectoryInfo, true).ToList();
 
             Dictionary<string, Dictionary<string, IEnumerable<DemoMenuItem>>> categoryDemoMenuList = new Dictionary<string, Dictionary<string, IEnumerable<DemoMenuItem>>>();
-            List<Dictionary<string, DemoMenuItem>> allComponentMenuList = new List<Dictionary<string, DemoMenuItem>>();
 
             foreach (var subDemoDirectory in demoDirectoryInfo.GetFileSystemInfos())
             {
@@ -157,8 +178,6 @@ namespace AntDesign.Docs.Build.CLI.Command
                 var category = subDemoDirectory.Name;
 
                 IList<Dictionary<string, DemoMenuItem>> componentMenuList = GetSubMenuList(directory, false).ToList();
-
-                allComponentMenuList.AddRange(componentMenuList);
 
                 if (category == "Components")
                 {
@@ -221,12 +240,6 @@ namespace AntDesign.Docs.Build.CLI.Command
 
                 var json = JsonSerializer.Serialize(menu, jsonOptions);
 
-                var configFileDirectory = Path.Combine(Directory.GetCurrentDirectory(), output);
-                if (!Directory.Exists(configFileDirectory))
-                {
-                    Directory.CreateDirectory(configFileDirectory);
-                }
-
                 var configFilePath = Path.Combine(configFileDirectory, $"menu.{lang}.json");
 
                 if (File.Exists(configFilePath))
@@ -236,22 +249,7 @@ namespace AntDesign.Docs.Build.CLI.Command
 
                 File.WriteAllText(configFilePath, json);
 
-                var componentI18N = allComponentMenuList
-                    .SelectMany(x => x)
-                    .GroupBy(x => x.Key)
-                    .ToDictionary(x => x.Key, x => x.Select(o => o.Value));
 
-                var demos = componentI18N[lang];
-
-                var demosPath = Path.Combine(configFileDirectory, $"demos.{lang}.json");
-
-                if (File.Exists(demosPath))
-                {
-                    File.Delete(demosPath);
-                }
-
-                json = JsonSerializer.Serialize(demos, jsonOptions);
-                File.WriteAllText(demosPath, json);
 
                 var docs = docsMenuI18N[lang];
                 var docsPath = Path.Combine(configFileDirectory, $"docs.{lang}.json");
@@ -290,7 +288,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                             Order = float.TryParse(docData["order"], out var order) ? order : 0,
                             Title = docData["title"],
                             Url = $"docs/{segments[0]}",
-                            Type = "menuItem"
+                            Type = "menuItem",
                         }
                     });
                 }
@@ -316,6 +314,8 @@ namespace AntDesign.Docs.Build.CLI.Command
                                 Url = $"{directory.Name.ToLowerInvariant()}/{x.Value.Title.ToLower()}",
                                 Type = "menuItem",
                                 Cover = x.Value.Cover,
+                                LatestVersion = x.Value.LatestVersion,
+                                ReleaseVersion = x.Value.ReleaseVersion,
                             })
                             .OrderBy(x => x.Title)
                             .ToArray(),
@@ -325,6 +325,18 @@ namespace AntDesign.Docs.Build.CLI.Command
                     yield return menu;
                 }
             }
+        }
+
+        private string GetCurrentVersion()
+        {
+            // 优先从环境变量获取版本号
+            var version = Environment.GetEnvironmentVariable("ANTBLAZOR_VERSION");
+            if (!string.IsNullOrEmpty(version))
+            {
+                return version;
+            }
+
+            return "0.0.0";
         }
 
         private IEnumerable<KeyValuePair<string, DemoComponent>> GetComponentI18N(DirectoryInfo directory)
@@ -384,6 +396,11 @@ namespace AntDesign.Docs.Build.CLI.Command
                     continue;
                 }
 
+                var latestVersion = component.GetProperties().Select(x => x.GetCustomAttribute<PublicApiAttribute>()?.ReleaseVersion)
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .OrderByDescending(x => x, comparer: new VersionComparer())
+                    .FirstOrDefault();
+
                 componentList.Add(new(Constants.EnglishLanguage, new DemoComponent()
                 {
                     Category = docAttribute.Category.ToString(),
@@ -394,6 +411,8 @@ namespace AntDesign.Docs.Build.CLI.Command
                     ApiDoc = string.Empty,
                     Cols = docAttribute.Columns,
                     Cover = docAttribute.CoverImageUrl,
+                    LatestVersion = latestVersion,
+                    ReleaseVersion = docAttribute.ReleaseVersion
                 }));
 
                 componentList.Add(new(Constants.ChineseLanguage, new DemoComponent()
@@ -406,6 +425,8 @@ namespace AntDesign.Docs.Build.CLI.Command
                     ApiDoc = string.Empty,
                     Cols = docAttribute.Columns,
                     Cover = docAttribute.CoverImageUrl,
+                    LatestVersion = latestVersion,
+                    ReleaseVersion = docAttribute.ReleaseVersion
                 }));
             }
 
@@ -417,6 +438,21 @@ namespace AntDesign.Docs.Build.CLI.Command
             var enumName = Enum.GetName(enumType, enumValue);
             var fieldInfo = enumType.GetField(enumName);
             return fieldInfo.GetCustomAttribute<DescriptionAttribute>(true)?.Description ?? string.Empty;
+        }
+    }
+
+    internal class VersionComparer : IComparer<string>
+    {
+        public int Compare(string x, string y)
+        {
+            if (x == null)
+                return 1;
+            if (y == null)
+                return -1;
+            if (x == y)
+                return 0;
+
+            return new Version(x).CompareTo(new Version(y));
         }
     }
 }
