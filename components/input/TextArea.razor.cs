@@ -151,6 +151,7 @@ namespace AntDesign
         private ClassMapper _textareaClassMapper = new();
 
         private bool _afterFirstRender = false;
+        private PressEnterEventArgs _duringPressEnterArgs;
 
         protected override void OnInitialized()
         {
@@ -246,6 +247,45 @@ namespace AntDesign
             _isInputing = true;
             _inputString = args.Value.ToString();
             await base.OnInputAsync(args);
+
+            if (_duringPressEnterArgs != null)
+            {
+                if (_duringPressEnterArgs.ShouldPreventLineBreak)
+                {
+                    //if (_inputString?.EndsWith('\n') == true)
+                    //{
+                    //    // Remove the trailing newline temporarily
+                    //    _inputString = _inputString.TrimEnd('\r', '\n');
+                    //    ForceUpdateValueString(_inputString);
+                    //}
+                    if (_inputString?.EndsWith('\n') == true)
+                    {
+                        // Only remove the last line break
+                        if (_inputString.EndsWith("\r\n"))
+                        {
+                            _inputString = _inputString[..^2];
+                        }
+                        else
+                        {
+                            _inputString = _inputString[..^1];
+                        }
+                        ForceUpdateValueString(_inputString);
+                    }
+
+                }
+                else if (_inputString?.EndsWith('\n') != true)
+                {
+                    _inputString = _inputString + '\n';
+                    ForceUpdateValueString(_inputString);
+                }
+
+                _duringPressEnterArgs = null;
+            }
+
+            if (OnInput.HasDelegate)
+            {
+                await OnInput.InvokeAsync(args);
+            }
         }
 
         protected override void OnCurrentValueChange(string value)
@@ -329,6 +369,20 @@ namespace AntDesign
 
                 _heightStyle = $"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;";
                 StateHasChanged();
+            }
+        }
+
+        protected override async Task OnPressEnterAsync(PressEnterEventArgs args)
+        {
+            _duringPressEnterArgs = args;
+
+            await base.OnPressEnterAsync(_duringPressEnterArgs);
+
+            // add new line when pressing other key link ctrl
+            if (!_duringPressEnterArgs.ShouldPreventLineBreak && args.Key != "Enter" && args.Key != "NumpadEnter")
+            {
+                _inputString = _inputString + '\n';
+                ForceUpdateValueString(_inputString);
             }
         }
     }
