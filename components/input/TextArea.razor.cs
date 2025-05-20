@@ -252,12 +252,6 @@ namespace AntDesign
             {
                 if (_duringPressEnterArgs.ShouldPreventLineBreak)
                 {
-                    //if (_inputString?.EndsWith('\n') == true)
-                    //{
-                    //    // Remove the trailing newline temporarily
-                    //    _inputString = _inputString.TrimEnd('\r', '\n');
-                    //    ForceUpdateValueString(_inputString);
-                    //}
                     if (_inputString?.EndsWith('\n') == true)
                     {
                         // Only remove the last line break
@@ -271,7 +265,6 @@ namespace AntDesign
                         }
                         ForceUpdateValueString(_inputString);
                     }
-
                 }
                 else if (_inputString?.EndsWith('\n') != true)
                 {
