@@ -242,6 +242,7 @@ namespace AntDesign
         }
 
         /// <inheritdoc/>
+        /// OnPress -> OnInput, so we remove the line break here after pressing enter.
         protected override async Task OnInputAsync(ChangeEventArgs args)
         {
             _isInputing = true;
@@ -265,11 +266,6 @@ namespace AntDesign
                         }
                         ForceUpdateValueString(_inputString);
                     }
-                }
-                else if (_inputString?.EndsWith('\n') != true)
-                {
-                    _inputString = _inputString + '\n';
-                    ForceUpdateValueString(_inputString);
                 }
 
                 _duringPressEnterArgs = null;
