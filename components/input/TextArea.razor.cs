@@ -47,14 +47,6 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// When true, value will be set to empty string.
-        /// When false, value will be set to <c>null</c> when content is empty or whitespace. 
-        /// </summary>
-        /// <default value="false"/>
-        [Parameter]
-        public bool DefaultToEmptyString { get; set; }
-
-        /// <summary>
         /// Allow growing, but stop when visible rows = MaxRows (will not grow further).
         /// </summary>
         /// <default value="uint.MaxValue"/>
@@ -252,21 +244,6 @@ namespace AntDesign
         {
             base.OnCurrentValueChange(value);
             _inputString = value;
-        }
-
-        protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)
-        {
-            validationErrorMessage = null;
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                if (DefaultToEmptyString)
-                    result = string.Empty;
-                else
-                    result = default;
-                return true;
-            }
-            result = value;
-            return true;
         }
 
         protected override void Dispose(bool disposing)
