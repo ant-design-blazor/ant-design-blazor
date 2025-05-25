@@ -13,7 +13,7 @@ jobs:
     steps:
       - run: echo "Repository owner check passed"
 
-  build-and-test:
+  prepare:
     needs: check-owner
     uses: ./.github/workflows/shared-config.yml
     with:
@@ -26,13 +26,13 @@ jobs:
       publish_webapp: false
 
   upload-build:
-    needs: build-and-test
+    needs: prepare
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: package
+          name: build-output
           path: ./build-output
 
       - name: Upload build artifacts for preview
