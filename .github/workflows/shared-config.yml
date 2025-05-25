@@ -97,8 +97,22 @@ jobs:
           LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
           # 分割版本号
           IFS='.' read -r MAJOR MINOR PATCH <<< "${LATEST_TAG#v}"
-          # 生成时间戳作为 build 号
-          BUILD_NUMBER=$(date '+%y%m%d%H')
+          # 生成时间戳作为 build 号，确保不超过 65535
+          YEAR=$(date '+%y')
+          MONTH=$(date '+%m')
+          DAY=$(date '+%d')
+          HOUR=$(date '+%H')
+          MINUTE=$(date '+%M')
+          # 使用年月作为 build，日和时分作为 revision
+          BUILD_NUMBER="$YEAR$MONTH"
+          # 将小时和分钟组合成一个不超过 999 的数字
+          # 小时范围 0-23，分钟范围 0-59
+          # 时分格式：HHMM
+          TIME_NUMBER=$((10#$HOUR * 100 + 10#$MINUTE))
+          # 日期范围 1-31，时间范围 0-2359
+          # 格式：DD * 10000 + HHMM，确保不超过 65535
+          # 最大值：31 * 10000 + 2359 = 312359 < 65535
+          REVISION_NUMBER=$((10#$DAY * 10000 + TIME_NUMBER))
           # 获取当前 commit 号
           COMMIT_HASH=$(git rev-parse --short HEAD)
 
@@ -114,7 +128,7 @@ jobs:
             fi
             # 设置两种不同的版本号格式
             PACKAGE_VERSION="$NEW_VERSION-preview-${{ github.event.number }}"
-            ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER"
+            ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER.$REVISION_NUMBER"
           elif [[ "${{ github.event_name }}" == "push" ]]; then
             # Push 事件的版本号逻辑
             CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
@@ -128,14 +142,15 @@ jobs:
             if [[ "${{ github.ref }}" == "refs/tags/"* ]]; then
               # 正式发布版本
               PACKAGE_VERSION="$NEW_VERSION"
-              ASSEMBLY_VERSION="$NEW_VERSION.0"
+              ASSEMBLY_VERSION="$NEW_VERSION.0.0"
             else
-              PACKAGE_VERSION="$NEW_VERSION-nightly-$BUILD_NUMBER"
-              ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER"
+              # 对于 nightly build，使用完整的时间戳格式
+              PACKAGE_VERSION="$NEW_VERSION-nightly-$BUILD_NUMBER$DAY$HOUR$MINUTE"
+              ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER.$REVISION_NUMBER"
             fi
           else
             PACKAGE_VERSION="$MAJOR.$MINOR.$PATCH"
-            ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.0"
+            ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.0.0"
           fi
 
           echo "VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
