@@ -5,61 +5,33 @@ name: Preview Build
 on: pull_request
 
 jobs:
-
-  build-site:
-    name: build preview
+  check-owner:
     runs-on: ubuntu-latest
-
+    if: github.repository_owner == 'ant-design-blazor'
     steps:
-      - name: checkout
-        uses: actions/checkout@master
+      - run: echo "Repository owner check passed"
 
-      - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: |
-            3.1.x
-            5.0.x
-            6.0.x
-            7.0.x
-            8.0.x
-            9.0.x
+  build-and-publish:
+    needs: check-owner
+    uses: ./.github/workflows/shared-config.yml
+    with:
+      enable_aot: true
+      run_test: false
+      run_lint: false
+      publish_docs: true
+      publish_nuget: false
+      publish_wasm: true
+      publish_webapp: false
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: "18.x"
-
-      - name: Prepare AOT workload
-        run: |
-          dotnet workload install wasm-tools
-
-      - name: build site
-        id: site
-        run: |
-          npm install
-          dotnet build
-          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o _site
-          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll _site/wwwroot/_framework
-          find ./_site/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
-        env:
-          PACKAGE_VERSION: ${{ github.event.number }}
-
-      - name: upload site artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: site
-          path: _site/wwwroot/
-          retention-days: 5
-
+  save-pr-info:
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    steps:
       # Upload PR id for next workflow use
       - name: Save PR number
-        if: ${{ always() }}
         run: echo ${{ github.event.number }} > ./pr-id.txt
 
       - name: Upload PR number
-        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: pr

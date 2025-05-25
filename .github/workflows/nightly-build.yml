@@ -10,114 +10,34 @@ on:
       - feature
 
 jobs:
-  nightly-build:
+  check-owner:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'ant-design-blazor'
-
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2
-        with:
-          persist-credentials: false
+      - run: echo "Repository owner check passed"
 
-      - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: |
-            3.1.x
-            5.0.x
-            6.0.x
-            7.0.x
-            8.0.x
-            9.0.x
+  build-and-publish:
+    needs: check-owner
+    uses: ./.github/workflows/shared-config.yml
+    with:
+      enable_aot: true
+      run_test: true
+      run_lint: true
+      publish_docs: true
+      publish_nuget: true
+      publish_wasm: true
+      publish_webapp: false
 
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "18.x"
-
-      - name: Check Building ⚙
+  get-branch-info:
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get branch name
+        id: branch
         run: |
-          npm install
-          dotnet build
-
-      - name: Test 📝
-        run: |
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net6
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net8
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net9
-          npm install ./tests/AntDesign.Tests.Js
-          npm --prefix ./tests/AntDesign.Tests.Js run test-cov
-          find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.cobertura.xml,./cobertura-coverage.xml
-          fail_ci_if_error: false
-
-      - name: "Get Last Release"
-        id: previoustag
-        run: |
-          LAST_VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/ant-design-blazor/ant-design-blazor/tags | grep 'name' | cut -d\" -f4 | head -1)
-          echo "Last Version: ${LAST_VERSION}"
-          echo "::set-output name=previous_tag::${LAST_VERSION}"
-
-      - name: "Get Next Semantic Version"
-        id: semvers
-        uses: "WyriHaximus/github-action-next-semvers@v1"
-        with:
-          version: ${{ steps.previoustag.outputs.previous_tag }}
-
-      - name: "Get Next Version"
-        id: get_next_version
-        run: |
-          current_branch=$(git symbolic-ref --short -q HEAD)
-          echo Current git branch is $current_branch
-          next_version=''
-          if [ "$current_branch" == 'master' ] ; 
-            then
-              next_version=$patch_version
-            else
-              next_version=$minor_version
-          fi
-          echo Will release version $next_version for branch $current_branch
-          echo "::set-output name=next_version::${next_version}"
-          echo "::set-output name=current_branch::${current_branch}"
-        env:
-          patch_version: ${{ steps.semvers.outputs.patch }}
-          minor_version: ${{ steps.semvers.outputs.minor }}
-
-      - name: Package Nightly Nuget 📦
-        id: pack
-        run: |
-          FULL_VERSION=$next_version-nightly-`date "+%y%m%d%H%M"`
-          echo "Version: ${FULL_VERSION}"
-          echo "::set-output name=package_version::${FULL_VERSION}"
-          dotnet build
-          dotnet pack components/AntDesign.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
-          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
-          dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${FULL_VERSION} -c Release -o publish
-        env:
-          next_version: ${{ steps.get_next_version.outputs.next_version }}
-
-      - name: Upload package artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: publish/
-          retention-days: 5
-
-      - name: Push to MyGet package registry
-        run: dotnet nuget push './publish/*.nupkg' --source https://www.myget.org/F/ant-design-blazor/api/v3/index.json --api-key ${{ secrets.MYGET_API_KEY }} --skip-duplicate
-
-      - name: Publish Docs 🎉
-        run: |
-          npm install
-          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo
-        env:
-          PACKAGE_VERSION: ${{ steps.pack.outputs.package_version }}
+          BRANCH=${GITHUB_REF#refs/heads/}
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          echo "Current branch: $BRANCH"
 
       - name: Deploy Preview 🚀
         run: |
@@ -125,4 +45,4 @@ jobs:
           surge --project ./cargo/wwwroot --domain $BRANCH-antblazor.surge.sh
         env:
           SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-          BRANCH: ${{ steps.get_next_version.outputs.current_branch }}
+          BRANCH: ${{ steps.branch.outputs.branch }}

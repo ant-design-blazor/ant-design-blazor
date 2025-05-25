@@ -7,45 +7,20 @@ on:
       - feature
 
 jobs:
-  build:
+  check-owner:
     runs-on: ubuntu-latest
-
+    if: github.repository_owner == 'ant-design-blazor'
     steps:
-      - uses: actions/checkout@v1
+      - run: echo "Repository owner check passed"
 
-      - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: |
-            3.1.x
-            5.0.x
-            6.0.x
-            7.0.x
-            8.0.x
-            9.0.x
-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "18.x"
-
-      - name: Check Building ⚙
-        run: |
-          npm install
-          dotnet build
-
-      - name: Test 📝
-        run: |
-          npm run lint
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net6
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net8
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net9
-          npm install ./tests/AntDesign.Tests.Js
-          npm --prefix ./tests/AntDesign.Tests.Js run test-cov
-          find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.cobertura.xml,./cobertura-coverage.xml
-          fail_ci_if_error: false
+  build-and-test:
+    needs: check-owner
+    uses: ./.github/workflows/shared-config.yml
+    with:
+      enable_aot: true
+      run_test: true
+      run_lint: true
+      publish_docs: false
+      publish_nuget: false
+      publish_wasm: false
+      publish_webapp: false

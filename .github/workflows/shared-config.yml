@@ -1,0 +1,335 @@
+name: Shared Workflow Configuration
+
+on:
+  workflow_call:
+    inputs:
+      dotnet_version:
+        description: "Specific .NET version to use"
+        required: false
+        type: string
+      node_version:
+        description: "Node.js version to use"
+        required: false
+        default: "18.x"
+        type: string
+      fetch_depth:
+        description: "Git fetch depth"
+        required: false
+        default: "0"
+        type: string
+      enable_aot:
+        description: "Enable AOT compilation"
+        required: false
+        default: false
+        type: boolean
+      run_test:
+        description: "Run test suite"
+        required: false
+        default: false
+        type: boolean
+      run_lint:
+        description: "Run lint check"
+        required: false
+        default: false
+        type: boolean
+      publish_docs:
+        description: "Publish documentation"
+        required: false
+        default: false
+        type: boolean
+      publish_nuget:
+        description: "Publish NuGet packages"
+        required: false
+        default: false
+        type: boolean
+      publish_wasm:
+        description: "Publish WebAssembly docs"
+        required: false
+        default: false
+        type: boolean
+      publish_webapp:
+        description: "Publish WebApp docs"
+        required: false
+        default: false
+        type: boolean
+    outputs:
+      version:
+        description: "Generated version number"
+        value: ${{ jobs.shared-config.outputs.version }}
+
+env:
+  AZURE_WEBAPP_NAME: AntDesignDocsWebApp
+  AZURE_WEBAPP_PACKAGE_PATH: site/AntDesign.Docs.WebApp/published
+  WORKING_DIRECTORY: site/AntDesign.Docs.WebApp
+
+jobs:
+  shared-config:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ inputs.fetch_depth }}
+
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            3.1.x
+            5.0.x
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Set version number
+        id: set_version
+        run: |
+          # 获取最新的tag
+          LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+          # 分割版本号
+          IFS='.' read -r MAJOR MINOR PATCH <<< "${LATEST_TAG#v}"
+
+          # 确定版本号类型
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            # PR 版本号逻辑
+            if [[ "${{ github.base_ref }}" == "master" ]]; then
+              NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+            elif [[ "${{ github.base_ref }}" == "feature" ]]; then
+              NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
+            else
+              NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+            fi
+            FINAL_VERSION="$NEW_VERSION-preview.${{ github.event.number }}"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            # Push 事件的版本号逻辑
+            CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
+            if [[ "$CURRENT_BRANCH" == "master" ]]; then
+              NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+            elif [[ "$CURRENT_BRANCH" == "feature" ]]; then
+              NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
+            else
+              NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+            fi
+            if [[ "${{ github.ref }}" == "refs/tags/"* ]]; then
+              FINAL_VERSION="$NEW_VERSION"
+            else
+              FINAL_VERSION="$NEW_VERSION-nightly-$(date '+%y%m%d%H%M')"
+            fi
+          else
+            FINAL_VERSION="$MAJOR.$MINOR.$PATCH"
+          fi
+
+          echo "VERSION=$FINAL_VERSION" >> $GITHUB_ENV
+          echo "ANTBLAZOR_VERSION=$FINAL_VERSION" >> $GITHUB_ENV
+          echo "version=$FINAL_VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $FINAL_VERSION"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Prepare AOT workload
+        if: ${{ inputs.enable_aot }}
+        run: dotnet workload install wasm-tools
+
+      - name: Build
+        run: dotnet build /p:Version=${VERSION} /p:AssemblyVersion=${VERSION} /p:FileVersion=${VERSION} /p:InformationalVersion=${VERSION}
+
+      - name: Run lint
+        if: ${{ inputs.run_lint }}
+        run: npm run lint
+
+      - name: Run tests
+        if: ${{ inputs.run_test }}
+        run: |
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net6
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net8
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net9
+          npm install ./tests/AntDesign.Tests.Js
+          npm --prefix ./tests/AntDesign.Tests.Js run test-cov
+          find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
+
+      - name: Upload coverage to Codecov
+        if: ${{ inputs.run_test }}
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.cobertura.xml,./cobertura-coverage.xml
+          fail_ci_if_error: false
+
+      - name: Package NuGet
+        if: ${{ inputs.publish_nuget }}
+        run: |
+          dotnet pack components/AntDesign.csproj /p:PackageVersion=${VERSION} /p:ContinuousIntegrationBuild=true -c Release -o publish
+          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj /p:PackageVersion=${VERSION} /p:ContinuousIntegrationBuild=true -c Release -o publish
+          dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${VERSION} /p:ContinuousIntegrationBuild=true -c Release -o publish
+
+      - name: Create GitHub deployment for NuGet packages
+        if: ${{ inputs.publish_nuget }}
+        uses: chrnorm/deployment-action@v2
+        id: deployment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: nuget-packages
+          description: "NuGet packages deployment"
+          initial-status: in_progress
+
+      - name: Setup NuGet for GitHub Packages
+        if: ${{ inputs.publish_nuget }}
+        run: |
+          dotnet nuget add source --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ant-design-blazor/index.json"
+
+      - name: Publish to GitHub Packages
+        if: ${{ inputs.publish_nuget }}
+        run: dotnet nuget push "publish/*.nupkg" --api-key ${{ secrets.GITHUB_TOKEN }} --source github --skip-duplicate
+
+      - name: Update GitHub Packages deployment status
+        if: ${{ inputs.publish_nuget }}
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment-url: https://github.com/ant-design-blazor/ant-design-blazor/packages
+          state: success
+          deployment-id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Create NuGet.org deployment
+        if: ${{ inputs.publish_nuget && github.ref_type == 'tag' }}
+        uses: chrnorm/deployment-action@v2
+        id: nuget-deployment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: nuget-org
+          description: "NuGet.org packages deployment"
+          initial-status: in_progress
+
+      - name: Publish to NuGet.org
+        if: ${{ inputs.publish_nuget && github.ref_type == 'tag' }}
+        run: dotnet nuget push "publish/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Update NuGet.org deployment status
+        if: ${{ inputs.publish_nuget && github.ref_type == 'tag' }}
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment-url: https://www.nuget.org/packages/AntDesign
+          state: success
+          deployment-id: ${{ steps.nuget-deployment.outputs.deployment_id }}
+
+      - name: Create documentation deployment
+        if: ${{ inputs.publish_docs }}
+        uses: chrnorm/deployment-action@v2
+        id: docs-deployment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: ${{ github.ref_type == 'tag' && 'documentation' || (github.ref == 'refs/heads/master' && 'documentation-next' || 'documentation-preview') }}
+          description: ${{ github.ref_type == 'tag' && 'Documentation deployment' || (github.ref == 'refs/heads/master' && 'Next version documentation' || 'Preview version documentation') }}
+          initial-status: in_progress
+
+      - name: Build documentation
+        if: ${{ inputs.publish_docs }}
+        run: |
+          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
+          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
+          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/version.json
+          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
+          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
+
+      # 构建 WebAssembly 文档
+      - name: Build WebAssembly docs
+        if: ${{ inputs.publish_docs && inputs.publish_wasm }}
+        run: |
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=${{ inputs.enable_aot }} /p:Version=${VERSION} /p:AssemblyVersion=${VERSION} /p:FileVersion=${VERSION} /p:InformationalVersion=${VERSION}
+          cp -rf cargo/staticwebapp.config.json cargo/wwwroot
+          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll cargo/wwwroot/_framework
+          find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
+
+      # 构建 WebApp 文档
+      - name: Build WebApp docs
+        if: ${{ inputs.publish_docs && inputs.publish_webapp }}
+        run: |
+          dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration Release --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /p:Version=${VERSION} /p:AssemblyVersion=${VERSION} /p:FileVersion=${VERSION} /p:InformationalVersion=${VERSION}
+
+      # 部署到 Azure（WebApp）
+      - name: Create WebApp deployment
+        if: ${{ inputs.publish_docs && inputs.publish_webapp }}
+        uses: chrnorm/deployment-action@v2
+        id: webapp-deployment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment: webapp
+          description: "WebApp deployment"
+          initial-status: in_progress
+
+      - name: Deploy WebApp to Azure
+        if: ${{ inputs.publish_docs && inputs.publish_webapp }}
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AntDesignDocsWebApp_6BBA }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - name: Update WebApp deployment status
+        if: ${{ inputs.publish_docs && inputs.publish_webapp }}
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment-url: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net
+          state: success
+          deployment-id: ${{ steps.webapp-deployment.outputs.deployment_id }}
+
+      # 部署到 Cloudflare Pages（正式版）
+      - name: Deploy to Cloudflare Pages
+        if: ${{ inputs.publish_docs && inputs.publish_wasm && github.ref_type == 'tag' }}
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ID }}
+          projectName: "ant-design-blazor"
+          directory: "cargo/wwwroot"
+          wranglerVersion: "3"
+
+      # 部署到 Cloudflare Pages（master 分支 - next 版本）
+      - name: Deploy to Cloudflare Pages Next
+        if: ${{ inputs.publish_docs && inputs.publish_wasm && github.ref == 'refs/heads/master' }}
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ID }}
+          projectName: "ant-design-blazor-next"
+          directory: "cargo/wwwroot"
+          wranglerVersion: "3"
+
+      # 部署到 Cloudflare Pages（feature 分支 - preview 版本）
+      - name: Deploy to Cloudflare Pages Preview
+        if: ${{ inputs.publish_docs && inputs.publish_wasm && github.ref == 'refs/heads/feature' }}
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ID }}
+          projectName: "ant-design-blazor-preview"
+          directory: "cargo/wwwroot"
+          wranglerVersion: "3"
+
+      - name: Update documentation deployment status
+        if: ${{ inputs.publish_docs }}
+        uses: chrnorm/deployment-status@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          environment-url: ${{ inputs.publish_webapp && 'https://antdesigndocswebapp.azurewebsites.net' || (github.ref_type == 'tag' && 'https://antblazor.com' || (github.ref == 'refs/heads/master' && 'https://next.antblazor.com' || 'https://preview.antblazor.com')) }}
+          state: success
+          deployment-id: ${{ steps.docs-deployment.outputs.deployment_id }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event_name == 'pull_request' && 'site' || 'package' }}
+          path: ${{ github.event_name == 'pull_request' && 'cargo/wwwroot/' || 'publish/' }}
+          retention-days: 5
