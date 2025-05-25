@@ -24,3 +24,20 @@ jobs:
       publish_nuget: false
       publish_wasm: false
       publish_webapp: false
+
+  upload-build:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: package
+          path: ./build-output
+
+      - name: Upload build artifacts for preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: ./build-output
+          retention-days: 1

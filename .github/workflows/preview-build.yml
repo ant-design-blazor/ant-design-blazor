@@ -2,34 +2,52 @@
 
 name: Preview Build
 
-on: pull_request
+on:
+  workflow_run:
+    workflows: ["Pull Request Checks"]
+    types:
+      - completed
 
 jobs:
   check-owner:
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'ant-design-blazor'
+    if: github.repository_owner == 'ant-design-blazor' && github.event.workflow_run.conclusion == 'success'
     steps:
       - run: echo "Repository owner check passed"
 
-  build-and-publish:
+  prepare-preview:
     needs: check-owner
-    uses: ./.github/workflows/shared-config.yml
-    with:
-      enable_aot: true
-      run_test: false
-      run_lint: false
-      publish_docs: true
-      publish_nuget: false
-      publish_wasm: true
-      publish_webapp: false
-
-  save-pr-info:
-    needs: build-and-publish
     runs-on: ubuntu-latest
     steps:
-      # Upload PR id for next workflow use
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: ${{ github.event.workflow_run.workflow_id }}
+          workflow_conclusion: success
+          name: build-artifacts
+          path: ./build-output
+
+      - name: Copy files for preview
+        run: |
+          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./build-output/wwwroot
+          find ./build-output/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
+
+      - name: Upload preview site
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: ./build-output/wwwroot
+          retention-days: 1
+
+  save-pr-info:
+    needs: prepare-preview
+    runs-on: ubuntu-latest
+    steps:
       - name: Save PR number
-        run: echo ${{ github.event.number }} > ./pr-id.txt
+        run: echo ${{ github.event.workflow_run.pull_requests[0].number }} > ./pr-id.txt
 
       - name: Upload PR number
         uses: actions/upload-artifact@v4

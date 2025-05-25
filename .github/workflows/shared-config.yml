@@ -169,8 +169,11 @@ jobs:
         if: ${{ inputs.enable_aot }}
         run: dotnet workload install wasm-tools
 
+      - name: Restore dependencies
+        run: dotnet restore
+
       - name: Build
-        run: dotnet build /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
+        run: dotnet build --no-restore -nodeReuse:false -maxCpuCount:8 -c Release /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
 
       - name: Run lint
         if: ${{ inputs.run_lint }}
@@ -179,9 +182,9 @@ jobs:
       - name: Run tests
         if: ${{ inputs.run_test }}
         run: |
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net6
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net8
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net9
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --no-build --no-restore -c Release --collect:"XPlat Code Coverage" -f net6
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --no-build --no-restore -c Release --collect:"XPlat Code Coverage" -f net8
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --no-build --no-restore -c Release --collect:"XPlat Code Coverage" -f net9
           npm install ./tests/AntDesign.Tests.Js
           npm --prefix ./tests/AntDesign.Tests.Js run test-cov
           find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
@@ -197,9 +200,9 @@ jobs:
       - name: Package NuGet
         if: ${{ inputs.publish_nuget }}
         run: |
-          dotnet pack components/AntDesign.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
-          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
-          dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
+          dotnet pack components/AntDesign.csproj --no-build --no-restore -c Release -o publish /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true
+          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj --no-build --no-restore -c Release -o publish /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true
+          dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj --no-build --no-restore -c Release -o publish /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true
 
       - name: Create GitHub deployment for NuGet packages
         if: ${{ inputs.publish_nuget }}
@@ -276,7 +279,7 @@ jobs:
       - name: Build WebAssembly docs
         if: ${{ inputs.publish_docs && inputs.publish_wasm }}
         run: |
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=${{ inputs.enable_aot }} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release --no-build --no-restore -o cargo -p:EnableAOT=${{ inputs.enable_aot }} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
           cp -rf cargo/staticwebapp.config.json cargo/wwwroot
           cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll cargo/wwwroot/_framework
           find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
@@ -285,7 +288,7 @@ jobs:
       - name: Build WebApp docs
         if: ${{ inputs.publish_docs && inputs.publish_webapp }}
         run: |
-          dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration Release --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
+          dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration Release --no-build --no-restore --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
 
       # 部署到 Azure（WebApp）
       - name: Create WebApp deployment
