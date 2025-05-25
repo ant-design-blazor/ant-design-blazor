@@ -108,7 +108,9 @@ jobs:
             else
               NEW_VERSION="$MAJOR.$MINOR.$PATCH"
             fi
-            FINAL_VERSION="$NEW_VERSION-preview.${{ github.event.number }}"
+            PR_NUMBER=${{ github.event.number }}
+            # 使用 PR 号作为 build 号，revision 固定为 0
+            FINAL_VERSION="$NEW_VERSION.$PR_NUMBER.0"
           elif [[ "${{ github.event_name }}" == "push" ]]; then
             # Push 事件的版本号逻辑
             CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
@@ -120,12 +122,14 @@ jobs:
               NEW_VERSION="$MAJOR.$MINOR.$PATCH"
             fi
             if [[ "${{ github.ref }}" == "refs/tags/"* ]]; then
-              FINAL_VERSION="$NEW_VERSION"
+              FINAL_VERSION="$NEW_VERSION.0"
             else
-              FINAL_VERSION="$NEW_VERSION-nightly-$(date '+%y%m%d%H%M')"
+              # 使用时间戳作为 build 号，revision 固定为 0
+              BUILD_NUMBER=$(date '+%y%m%d%H')
+              FINAL_VERSION="$NEW_VERSION.$BUILD_NUMBER.0"
             fi
           else
-            FINAL_VERSION="$MAJOR.$MINOR.$PATCH"
+            FINAL_VERSION="$MAJOR.$MINOR.$PATCH.0"
           fi
 
           echo "VERSION=$FINAL_VERSION" >> $GITHUB_ENV
