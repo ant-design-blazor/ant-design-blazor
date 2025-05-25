@@ -103,16 +103,14 @@ jobs:
           DAY=$(date '+%d')
           HOUR=$(date '+%H')
           MINUTE=$(date '+%M')
-          # 使用年月作为 build，日和时分作为 revision
-          BUILD_NUMBER="$YEAR$MONTH"
-          # 将小时和分钟组合成一个不超过 999 的数字
-          # 小时范围 0-23，分钟范围 0-59
-          # 时分格式：HHMM
-          TIME_NUMBER=$((10#$HOUR * 100 + 10#$MINUTE))
-          # 日期范围 1-31，时间范围 0-2359
-          # 格式：DD * 10000 + HHMM，确保不超过 65535
-          # 最大值：31 * 10000 + 2359 = 312359 < 65535
-          REVISION_NUMBER=$((10#$DAY * 10000 + TIME_NUMBER))
+
+          # 计算 build 和 revision 号，确保每个部分都不超过 65535
+          # build = year * 100 + month (范围: 0-9999)
+          BUILD_NUMBER=$((10#$YEAR * 100 + 10#$MONTH))
+          # revision = (day * 100 + hour) * 100 + minute
+          # (范围: 日期 1-31 -> 100-3100, 小时 0-23 -> 0-23, 最终范围: 0-65535)
+          REVISION_NUMBER=$((((10#$DAY * 100 + 10#$HOUR)) * 100 + 10#$MINUTE))
+
           # 获取当前 commit 号
           COMMIT_HASH=$(git rev-parse --short HEAD)
 
@@ -126,9 +124,11 @@ jobs:
             else
               NEW_VERSION="$MAJOR.$MINOR.$PATCH"
             fi
-            # 设置两种不同的版本号格式
+            # 设置不同的版本号格式
             PACKAGE_VERSION="$NEW_VERSION-preview-${{ github.event.number }}"
-            ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER.$REVISION_NUMBER"
+            # 测试版本保持程序集版本号不变
+            ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.0"
+            FILE_VERSION="$NEW_VERSION.$BUILD_NUMBER.$REVISION_NUMBER"
           elif [[ "${{ github.event_name }}" == "push" ]]; then
             # Push 事件的版本号逻辑
             CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
@@ -140,27 +140,32 @@ jobs:
               NEW_VERSION="$MAJOR.$MINOR.$PATCH"
             fi
             if [[ "${{ github.ref }}" == "refs/tags/"* ]]; then
-              # 正式发布版本
+              # 正式发布版本，更新所有版本号
               PACKAGE_VERSION="$NEW_VERSION"
-              ASSEMBLY_VERSION="$NEW_VERSION.0.0"
+              ASSEMBLY_VERSION="$NEW_VERSION.0"
+              FILE_VERSION="$NEW_VERSION.0.0"
             else
-              # 对于 nightly build，使用完整的时间戳格式
-              PACKAGE_VERSION="$NEW_VERSION-nightly-$BUILD_NUMBER$DAY$HOUR$MINUTE"
-              ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER.$REVISION_NUMBER"
+              # 对于 nightly build，保持程序集版本号不变
+              PACKAGE_VERSION="$NEW_VERSION-nightly-$BUILD_NUMBER$REVISION_NUMBER"
+              ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.0"
+              FILE_VERSION="$NEW_VERSION.$BUILD_NUMBER.$REVISION_NUMBER"
             fi
           else
             PACKAGE_VERSION="$MAJOR.$MINOR.$PATCH"
-            ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.0.0"
+            ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.0"
+            FILE_VERSION="$MAJOR.$MINOR.$PATCH.0.0"
           fi
 
           echo "VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
           echo "ASSEMBLY_VERSION=$ASSEMBLY_VERSION" >> $GITHUB_ENV
+          echo "FILE_VERSION=$FILE_VERSION" >> $GITHUB_ENV
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
           echo "ANTBLAZOR_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
           echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
           echo "version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
           echo "Package Version: $PACKAGE_VERSION"
           echo "Assembly Version: $ASSEMBLY_VERSION"
+          echo "File Version: $FILE_VERSION"
           echo "Commit Hash: $COMMIT_HASH"
 
       - name: Install dependencies
@@ -171,7 +176,7 @@ jobs:
         run: dotnet workload install wasm-tools
 
       - name: Build
-        run: dotnet build /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
+        run: dotnet build /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${FILE_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
 
       - name: Run lint
         if: ${{ inputs.run_lint }}
@@ -198,9 +203,9 @@ jobs:
       - name: Package NuGet
         if: ${{ inputs.publish_nuget }}
         run: |
-          dotnet pack components/AntDesign.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
-          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
-          dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
+          dotnet pack components/AntDesign.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${FILE_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
+          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${FILE_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
+          dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${FILE_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
 
       - name: Create GitHub deployment for NuGet packages
         if: ${{ inputs.publish_nuget }}
@@ -277,7 +282,7 @@ jobs:
       - name: Build WebAssembly docs
         if: ${{ inputs.publish_docs && inputs.publish_wasm }}
         run: |
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=${{ inputs.enable_aot }} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=${{ inputs.enable_aot }} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${FILE_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
           cp -rf cargo/staticwebapp.config.json cargo/wwwroot
           cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll cargo/wwwroot/_framework
           find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
@@ -286,7 +291,7 @@ jobs:
       - name: Build WebApp docs
         if: ${{ inputs.publish_docs && inputs.publish_webapp }}
         run: |
-          dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration Release --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
+          dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration Release --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${FILE_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
 
       # 部署到 Azure（WebApp）
       - name: Create WebApp deployment
