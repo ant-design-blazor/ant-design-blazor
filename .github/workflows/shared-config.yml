@@ -53,8 +53,6 @@ on:
         default: false
         type: boolean
     secrets:
-      GITHUB_TOKEN:
-        required: true
       NUGET_API_KEY:
         required: false
       CODECOV_TOKEN:
@@ -137,7 +135,6 @@ jobs:
           package-version: ${{ needs.prepare.outputs.package_version }}
           assembly-version: ${{ needs.prepare.outputs.assembly_version }}
           commit-hash: ${{ needs.prepare.outputs.commit_hash }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
           cf-token: ${{ secrets.CF_TOKEN }}
           cf-id: ${{ secrets.CF_ID }}
