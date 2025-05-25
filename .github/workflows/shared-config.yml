@@ -97,8 +97,9 @@ jobs:
           LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
           # 分割版本号
           IFS='.' read -r MAJOR MINOR PATCH <<< "${LATEST_TAG#v}"
-          # 生成时间戳作为 build 号
-          BUILD_NUMBER=$(date '+%y%m%d%H')
+          # 生成时间戳作为 build 号和 revision 号
+          BUILD_NUMBER=$(date '+%y%m')
+          REVISION_NUMBER=$(date '+%d%H')
           # 获取当前 commit 号
           COMMIT_HASH=$(git rev-parse --short HEAD)
 
@@ -114,7 +115,7 @@ jobs:
             fi
             # 设置两种不同的版本号格式
             PACKAGE_VERSION="$NEW_VERSION-preview-${{ github.event.number }}"
-            ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER"
+            ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER.$REVISION_NUMBER"
           elif [[ "${{ github.event_name }}" == "push" ]]; then
             # Push 事件的版本号逻辑
             CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
@@ -126,16 +127,16 @@ jobs:
               NEW_VERSION="$MAJOR.$MINOR.$PATCH"
             fi
             if [[ "${{ github.ref }}" == "refs/tags/"* ]]; then
-              # 正式发布版本不需要 build 号
+              # 正式发布版本
               PACKAGE_VERSION="$NEW_VERSION"
-              ASSEMBLY_VERSION="$NEW_VERSION.0"
+              ASSEMBLY_VERSION="$NEW_VERSION.0.0"
             else
-              PACKAGE_VERSION="$NEW_VERSION-nightly-$BUILD_NUMBER"
-              ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER"
+              PACKAGE_VERSION="$NEW_VERSION-nightly-$BUILD_NUMBER$REVISION_NUMBER"
+              ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER.$REVISION_NUMBER"
             fi
           else
             PACKAGE_VERSION="$MAJOR.$MINOR.$PATCH"
-            ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.$BUILD_NUMBER"
+            ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.0"
           fi
 
           echo "VERSION=$ASSEMBLY_VERSION" >> $GITHUB_ENV
