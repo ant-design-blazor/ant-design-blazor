@@ -97,6 +97,10 @@ jobs:
           LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
           # 分割版本号
           IFS='.' read -r MAJOR MINOR PATCH <<< "${LATEST_TAG#v}"
+          # 生成时间戳作为 build 号
+          BUILD_NUMBER=$(date '+%y%m%d%H')
+          # 获取当前 commit 号
+          COMMIT_HASH=$(git rev-parse --short HEAD)
 
           # 确定版本号类型
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
@@ -110,7 +114,7 @@ jobs:
             fi
             # 设置两种不同的版本号格式
             PACKAGE_VERSION="$NEW_VERSION-preview-${{ github.event.number }}"
-            ASSEMBLY_VERSION="$NEW_VERSION.0"
+            ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER"
           elif [[ "${{ github.event_name }}" == "push" ]]; then
             # Push 事件的版本号逻辑
             CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
@@ -122,26 +126,27 @@ jobs:
               NEW_VERSION="$MAJOR.$MINOR.$PATCH"
             fi
             if [[ "${{ github.ref }}" == "refs/tags/"* ]]; then
+              # 正式发布版本不需要 build 号
               PACKAGE_VERSION="$NEW_VERSION"
               ASSEMBLY_VERSION="$NEW_VERSION.0"
             else
-              # 使用时间戳
-              BUILD_NUMBER=$(date '+%y%m%d%H')
               PACKAGE_VERSION="$NEW_VERSION-nightly-$BUILD_NUMBER"
-              ASSEMBLY_VERSION="$NEW_VERSION.0"
+              ASSEMBLY_VERSION="$NEW_VERSION.$BUILD_NUMBER"
             fi
           else
             PACKAGE_VERSION="$MAJOR.$MINOR.$PATCH"
-            ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.0"
+            ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.$BUILD_NUMBER"
           fi
 
-          echo "VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+          echo "VERSION=$ASSEMBLY_VERSION" >> $GITHUB_ENV
           echo "ASSEMBLY_VERSION=$ASSEMBLY_VERSION" >> $GITHUB_ENV
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
-          echo "ANTBLAZOR_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
-          echo "version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+          echo "ANTBLAZOR_VERSION=$ASSEMBLY_VERSION" >> $GITHUB_ENV
+          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
+          echo "version=$ASSEMBLY_VERSION" >> $GITHUB_OUTPUT
           echo "Package Version: $PACKAGE_VERSION"
           echo "Assembly Version: $ASSEMBLY_VERSION"
+          echo "Commit Hash: $COMMIT_HASH"
 
       - name: Install dependencies
         run: npm install
@@ -151,7 +156,7 @@ jobs:
         run: dotnet workload install wasm-tools
 
       - name: Build
-        run: dotnet build /p:Version=${PACKAGE_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${PACKAGE_VERSION}
+        run: dotnet build /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
 
       - name: Run lint
         if: ${{ inputs.run_lint }}
@@ -178,9 +183,9 @@ jobs:
       - name: Package NuGet
         if: ${{ inputs.publish_nuget }}
         run: |
-          dotnet pack components/AntDesign.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${PACKAGE_VERSION} /p:ContinuousIntegrationBuild=true -c Release -o publish
-          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${PACKAGE_VERSION} /p:ContinuousIntegrationBuild=true -c Release -o publish
-          dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${PACKAGE_VERSION} /p:ContinuousIntegrationBuild=true -c Release -o publish
+          dotnet pack components/AntDesign.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
+          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
+          dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=${PACKAGE_VERSION} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:RepositoryCommit=${COMMIT_HASH} /p:SourceRevisionId=${COMMIT_HASH} /p:ContinuousIntegrationBuild=true -c Release -o publish
 
       - name: Create GitHub deployment for NuGet packages
         if: ${{ inputs.publish_nuget }}
@@ -247,16 +252,17 @@ jobs:
         if: ${{ inputs.publish_docs }}
         run: |
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
-          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/version.json
-          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
-          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
+          sed -i s/{version}/$ASSEMBLY_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
+          sed -i s/{version}/$ASSEMBLY_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/version.json
+          sed -i s/{version}/$ASSEMBLY_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
+          sed -i s/{version}/$ASSEMBLY_VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
+          sed -i s/{commit}/$COMMIT_HASH/g ./site/AntDesign.Docs/Shared/MainFooter.razor
 
       # 构建 WebAssembly 文档
       - name: Build WebAssembly docs
         if: ${{ inputs.publish_docs && inputs.publish_wasm }}
         run: |
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=${{ inputs.enable_aot }} /p:Version=${PACKAGE_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${PACKAGE_VERSION}
+          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=${{ inputs.enable_aot }} /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
           cp -rf cargo/staticwebapp.config.json cargo/wwwroot
           cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll cargo/wwwroot/_framework
           find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
@@ -265,7 +271,7 @@ jobs:
       - name: Build WebApp docs
         if: ${{ inputs.publish_docs && inputs.publish_webapp }}
         run: |
-          dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration Release --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /p:Version=${PACKAGE_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${PACKAGE_VERSION}
+          dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration Release --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /p:Version=${ASSEMBLY_VERSION} /p:AssemblyVersion=${ASSEMBLY_VERSION} /p:FileVersion=${ASSEMBLY_VERSION} /p:InformationalVersion=${ASSEMBLY_VERSION} /p:SourceRevisionId=${COMMIT_HASH}
 
       # 部署到 Azure（WebApp）
       - name: Create WebApp deployment
