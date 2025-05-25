@@ -6,10 +6,6 @@ inputs:
     description: "Git fetch depth"
     required: false
     default: "0"
-  node-version:
-    description: "Node.js version"
-    required: false
-    default: "18.x"
   enable-aot:
     description: "Enable AOT compilation"
     required: false
@@ -32,12 +28,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup Environment
-      uses: ./.github/actions/setup
-      with:
-        fetch-depth: ${{ inputs.fetch-depth }}
-        node-version: ${{ inputs.node-version }}
-
     - name: Set version number
       id: set_version
       shell: bash

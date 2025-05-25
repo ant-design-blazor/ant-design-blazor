@@ -3,10 +3,16 @@ name: Shared Workflow Configuration
 on:
   workflow_call:
     inputs:
-      dotnet_version:
-        description: "Specific .NET version to use"
+      dotnet-versions:
+        description: "List of .NET versions to install"
         required: false
-        type: string
+        default: |
+          3.1.x
+          5.0.x
+          6.0.x
+          7.0.x
+          8.0.x
+          9.0.x
       node_version:
         description: "Node.js version"
         required: false
@@ -78,12 +84,20 @@ jobs:
       commit_hash: ${{ steps.prepare_version.outputs.commit_hash }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ inputs.fetch_depth }}
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup
+        with:
+          dotnet-versions: ${{ inputs.dotnet-versions }}
+          node-version: ${{ inputs.node_version }}
+
       - name: Prepare Version
         id: prepare_version
         uses: ./.github/actions/prepare
         with:
           fetch-depth: ${{ inputs.fetch_depth }}
-          node-version: ${{ inputs.node_version }}
           enable-aot: ${{ inputs.enable_aot }}
 
   build:
@@ -140,6 +154,7 @@ jobs:
           package-version: ${{ needs.prepare.outputs.package_version }}
           assembly-version: ${{ needs.prepare.outputs.assembly_version }}
           commit-hash: ${{ needs.prepare.outputs.commit_hash }}
+          github-token: ${{ github.token }}
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
           cf-token: ${{ secrets.CF_TOKEN }}
           cf-id: ${{ secrets.CF_ID }}
