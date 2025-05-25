@@ -77,6 +77,7 @@ jobs:
       package_version: ${{ steps.prepare_version.outputs.package_version }}
       commit_hash: ${{ steps.prepare_version.outputs.commit_hash }}
     steps:
+      - uses: actions/checkout@v4
       - name: Prepare Version
         id: prepare_version
         uses: ./.github/actions/prepare
@@ -89,6 +90,7 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Build
         uses: ./.github/actions/build
         with:
@@ -103,6 +105,7 @@ jobs:
     if: ${{ inputs.run_lint }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Lint
         uses: ./.github/actions/lint
         with:
@@ -113,6 +116,7 @@ jobs:
     if: ${{ inputs.run_test }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Test
         uses: ./.github/actions/test
         with:
@@ -124,6 +128,7 @@ jobs:
     if: ${{ always() && needs.build.result == 'success' && (needs.test.result == 'success' || needs.test.result == 'skipped') }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Publish
         uses: ./.github/actions/publish
         with:
