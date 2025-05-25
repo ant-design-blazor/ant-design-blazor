@@ -6,6 +6,7 @@ on:
       dotnet-versions:
         description: "List of .NET versions to install"
         required: false
+        type: string
         default: |
           3.1.x
           5.0.x
