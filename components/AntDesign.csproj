@@ -26,15 +26,6 @@
     <DocumentationFile>./LocalizedIntellisenseFiles/$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <!-- 从环境变量获取版本号 -->
-    <Version Condition="'$(ANTBLAZOR_VERSION)' != ''">$(ANTBLAZOR_VERSION)</Version>
-    <AssemblyVersion Condition="'$(ANTBLAZOR_VERSION)' != ''">$(ANTBLAZOR_VERSION)</AssemblyVersion>
-    <FileVersion Condition="'$(ANTBLAZOR_VERSION)' != ''">$(ANTBLAZOR_VERSION)</FileVersion>
-    <InformationalVersion Condition="'$(ANTBLAZOR_VERSION)' != ''">$(ANTBLAZOR_VERSION)</InformationalVersion>
-    <PackageVersion Condition="'$(ANTBLAZOR_VERSION)' != ''">$(ANTBLAZOR_VERSION)</PackageVersion>
-  </PropertyGroup>
-
   <ItemGroup>
     <Content Include="LocalizedIntellisenseFiles\**\*.xml" Exclude="LocalizedIntellisenseFiles/$(AssemblyName).xml" PackagePath="/content/LocalizedIntellisenseFiles" />
   </ItemGroup>
