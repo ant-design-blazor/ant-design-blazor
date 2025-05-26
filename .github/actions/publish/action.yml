@@ -22,6 +22,10 @@ inputs:
     description: "Publish WebApp docs"
     required: false
     default: "false"
+  deploy-site:
+    description: "Deploy to hosting platforms (Cloudflare/Azure)"
+    required: false
+    default: "false"
   package-version:
     description: "Package version"
     required: true
@@ -46,6 +50,21 @@ inputs:
   webapp-publish-profile:
     description: "WebApp publish profile"
     required: false
+  preview-output-path:
+    description: "Output path for site"
+    required: false
+    default: "cargo/wwwroot"
+
+outputs:
+  preview-path:
+    description: "Path to the site output"
+    value: ${{ inputs.preview-output-path }}
+  wasm-path:
+    description: "Path to the WebAssembly output"
+    value: cargo/wwwroot
+  webapp-path:
+    description: "Path to the WebApp output"
+    value: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
 runs:
   using: "composite"
@@ -92,10 +111,13 @@ runs:
       if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' }}
       shell: bash
       run: |
+        mkdir -p ${{ inputs.preview-output-path }}
         dotnet publish ./site/AntDesign.Docs.Wasm --no-build --no-restore -c Release -o cargo -p:EnableAOT=${{ inputs.enable-aot }} /p:Version=${{ inputs.assembly-version }} /p:AssemblyVersion=${{ inputs.assembly-version }} /p:FileVersion=${{ inputs.assembly-version }} /p:InformationalVersion=${{ inputs.assembly-version }} /p:SourceRevisionId=${{ inputs.commit-hash }}
         cp -rf cargo/staticwebapp.config.json cargo/wwwroot
         cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll cargo/wwwroot/_framework
+        cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa cargo/wwwroot/
         find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
+        cp -rf cargo/wwwroot/* ${{ inputs.preview-output-path }}/
 
     - name: Build WebApp docs
       if: ${{ inputs.publish-docs == 'true' && inputs.publish-webapp == 'true' }}
@@ -124,7 +146,7 @@ runs:
         retention-days: 1
 
     - name: Deploy WebApp to Azure
-      if: ${{ inputs.publish-docs == 'true' && inputs.publish-webapp == 'true' && inputs.webapp-publish-profile != '' }}
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-webapp == 'true' && inputs.deploy-site == 'true' && inputs.webapp-publish-profile != '' }}
       uses: azure/webapps-deploy@v2
       with:
         app-name: AntDesignDocsWebApp
@@ -132,7 +154,7 @@ runs:
         package: site/AntDesign.Docs.WebApp/published
 
     - name: Deploy to Cloudflare Pages
-      if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' && github.ref_type == 'tag' && inputs.cf-token != '' && inputs.cf-id != '' }}
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' && inputs.deploy-site == 'true' && github.ref_type == 'tag' && inputs.cf-token != '' && inputs.cf-id != '' }}
       uses: cloudflare/pages-action@v1
       with:
         apiToken: ${{ inputs.cf-token }}
@@ -142,7 +164,7 @@ runs:
         wranglerVersion: "3"
 
     - name: Deploy to Cloudflare Pages Next
-      if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' && github.ref == 'refs/heads/master' && inputs.cf-token != '' && inputs.cf-id != '' }}
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' && inputs.deploy-site == 'true' && github.ref == 'refs/heads/master' && inputs.cf-token != '' && inputs.cf-id != '' }}
       uses: cloudflare/pages-action@v1
       with:
         apiToken: ${{ inputs.cf-token }}
@@ -152,7 +174,7 @@ runs:
         wranglerVersion: "3"
 
     - name: Deploy to Cloudflare Pages Preview
-      if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' && github.ref == 'refs/heads/feature' && inputs.cf-token != '' && inputs.cf-id != '' }}
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' && inputs.deploy-site == 'true' && github.ref == 'refs/heads/feature' && inputs.cf-token != '' && inputs.cf-id != '' }}
       uses: cloudflare/pages-action@v1
       with:
         apiToken: ${{ inputs.cf-token }}

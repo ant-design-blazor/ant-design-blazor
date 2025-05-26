@@ -11,7 +11,10 @@ on:
 jobs:
   check-owner:
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'ant-design-blazor' && github.event.workflow_run.conclusion == 'success'
+    if: |
+      github.repository_owner == 'ant-design-blazor' && 
+      github.event.workflow_run.conclusion == 'success' &&
+      fromJson(github.event.workflow_run.outputs.build_completed)
     steps:
       - run: echo "Repository owner check passed"
 
@@ -30,16 +33,27 @@ jobs:
           name: build-artifacts
           path: ./build-output
 
-      - name: Copy files for preview
-        run: |
-          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./build-output/wwwroot
-          find ./build-output/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
+      - name: Build preview site
+        id: build_preview
+        uses: ./.github/actions/publish
+        with:
+          enable-aot: true
+          publish-docs: true
+          publish-wasm: true
+          publish-nuget: false
+          publish-webapp: false
+          deploy-site: false
+          preview-output-path: ./wwwroot
+          package-version: ${{ github.event.workflow_run.outputs.package_version }}
+          assembly-version: ${{ github.event.workflow_run.outputs.assembly_version }}
+          commit-hash: ${{ github.event.workflow_run.outputs.commit_hash }}
+          github-token: ${{ github.token }}
 
       - name: Upload preview site
         uses: actions/upload-artifact@v4
         with:
           name: site
-          path: ./build-output/wwwroot
+          path: ./wwwroot
           retention-days: 1
 
   save-pr-info:

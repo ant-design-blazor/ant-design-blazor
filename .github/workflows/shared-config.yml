@@ -74,6 +74,18 @@ on:
       version:
         description: "Generated version number"
         value: ${{ jobs.prepare.outputs.version }}
+      build_completed:
+        description: "Indicates if build job is completed"
+        value: ${{ jobs.build.result == 'success' }}
+      package_version:
+        description: "Package version"
+        value: ${{ jobs.prepare.outputs.package_version }}
+      assembly_version:
+        description: "Assembly version"
+        value: ${{ jobs.prepare.outputs.assembly_version }}
+      commit_hash:
+        description: "Commit hash"
+        value: ${{ jobs.prepare.outputs.commit_hash }}
 
 jobs:
   prepare:
@@ -116,7 +128,7 @@ jobs:
           commit-hash: ${{ needs.prepare.outputs.commit_hash }}
 
   lint:
-    needs: build
+    needs: prepare
     if: ${{ inputs.run_lint }}
     runs-on: ubuntu-latest
     steps:
