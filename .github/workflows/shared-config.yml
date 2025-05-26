@@ -62,6 +62,7 @@ on:
       artifact_name:
         description: "Name of the artifact to upload"
         required: false
+        type: string
         default: "build-output"
       skip_artifact_upload:
         description: "Skip uploading artifacts"
@@ -71,8 +72,8 @@ on:
       job_name:
         description: "Name of the current job (used for artifact naming)"
         required: false
-        default: "build"
         type: string
+        default: "build"
     secrets:
       NUGET_API_KEY:
         required: false
