@@ -6,6 +6,11 @@ on:
       - master
       - feature
 
+permissions:
+  contents: read
+  actions: write
+  pull-requests: write
+
 jobs:
   check-owner:
     runs-on: ubuntu-latest
@@ -17,7 +22,7 @@ jobs:
     needs: check-owner
     uses: ./.github/workflows/shared-config.yml
     with:
-      enable_aot: false
+      enable_aot: true
       run_test: false
       run_lint: false
       publish_docs: false
@@ -25,16 +30,28 @@ jobs:
       publish_wasm: false
       publish_webapp: false
       artifact_name: preview-build-output
+      skip_artifact_upload: false
 
   trigger-preview:
     needs: build
     if: success()
     runs-on: ubuntu-latest
     steps:
+      - name: Debug Info
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "SHA: ${{ github.sha }}"
+          echo "PR Number: ${{ github.event.pull_request.number }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Package Version: ${{ needs.build.outputs.package_version }}"
+          echo "Assembly Version: ${{ needs.build.outputs.assembly_version }}"
+          echo "Commit Hash: ${{ needs.build.outputs.commit_hash }}"
+
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:
-          token: ${{ github.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           event-type: preview-build
           client-payload: |
             {
@@ -51,14 +68,15 @@ jobs:
     needs: build
     uses: ./.github/workflows/shared-config.yml
     with:
-      enable_aot: false
+      enable_aot: true
       run_test: true
       run_lint: true
       publish_docs: false
       publish_nuget: false
       publish_wasm: false
       publish_webapp: false
-      artifact_name: verify-build-output
+      artifact_name: preview-build-output
+      skip_artifact_upload: true
 
   set-output:
     needs: verify

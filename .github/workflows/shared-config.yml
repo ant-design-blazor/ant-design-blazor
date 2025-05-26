@@ -64,6 +64,11 @@ on:
         required: false
         default: "build-output"
         type: string
+      skip_artifact_upload:
+        description: "Skip uploading build artifacts"
+        required: false
+        default: false
+        type: boolean
     secrets:
       NUGET_API_KEY:
         required: false
@@ -134,6 +139,7 @@ jobs:
           assembly-version: ${{ needs.prepare.outputs.assembly_version }}
           commit-hash: ${{ needs.prepare.outputs.commit_hash }}
       - name: Upload build output
+        if: ${{ !inputs.skip_artifact_upload }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
