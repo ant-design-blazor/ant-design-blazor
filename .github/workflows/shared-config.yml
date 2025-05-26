@@ -59,6 +59,11 @@ on:
         required: false
         default: false
         type: boolean
+      artifact_name:
+        description: "Name of the build output artifact"
+        required: false
+        default: "build-output"
+        type: string
     secrets:
       NUGET_API_KEY:
         required: false
@@ -131,8 +136,12 @@ jobs:
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
-          name: build-output
-          path: ./build-output
+          name: ${{ inputs.artifact_name }}
+          path: |
+            **/bin/Release
+            **/obj/Release
+            !**/bin/Release/refs
+            !**/obj/Release/refs
           retention-days: 1
 
   lint:
@@ -152,6 +161,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Download build output
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: .
       - name: Test
         uses: ./.github/actions/test
         with:
@@ -164,6 +178,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Download build output
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: .
       - name: Publish
         uses: ./.github/actions/publish
         with:

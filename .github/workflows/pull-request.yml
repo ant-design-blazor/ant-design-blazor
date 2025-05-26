@@ -24,6 +24,7 @@ jobs:
       publish_nuget: false
       publish_wasm: false
       publish_webapp: false
+      artifact_name: preview-build-output
 
   trigger-preview:
     needs: build
@@ -57,6 +58,7 @@ jobs:
       publish_nuget: false
       publish_wasm: false
       publish_webapp: false
+      artifact_name: verify-build-output
 
   set-output:
     needs: verify
