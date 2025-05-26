@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -133,13 +133,16 @@ namespace AntDesign
         private bool _hasSrc = true;
         private bool _hasIcon;
 
-        private string _textStyles = "";
-        private string _sizeStyles = "";
+        private string _textStyles = string.Empty;
+        private string _sizeStyles = string.Empty;
 
         protected ElementReference TextEl { get; set; }
 
-
-        private readonly Hashtable _shapeMap = new Hashtable() { [AvatarShape.Square] = "square", [AvatarShape.Circle] = "circle" };
+        private readonly Dictionary<AvatarShape, string> _shapeMap = new()
+        {
+            [AvatarShape.Square] = "square",
+            [AvatarShape.Circle] = "circle"
+        };
 
         private string _text;
         private RenderFragment _childContent;
@@ -200,7 +203,7 @@ namespace AntDesign
             ClassMapper
                 .Add(prefixCls)
                 .Add(hashId)
-                .GetIf(() => $"{prefixCls}-{_shapeMap[Shape]}", () => Shape.HasValue)
+                .GetIf(() => $"{prefixCls}-{_shapeMap[Shape.GetValueOrDefault(AvatarShape.Square)]}", () => Shape.HasValue)
                 .If($"{prefixCls}-sm", () => _size.IsT0 && _size.AsT0 == AvatarSize.Small)
                 .If($"{prefixCls}-lg", () => _size.IsT0 && _size.AsT0 == AvatarSize.Large)
                 .If($"{prefixCls}-icon", () => !string.IsNullOrEmpty(Icon))

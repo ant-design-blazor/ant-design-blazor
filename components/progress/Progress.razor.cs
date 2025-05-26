@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,8 +36,6 @@ namespace AntDesign
         private string _circleTrailStyle;
         private string _circlePathStyle;
         private string _circleSuccessStyle;
-
-        private static readonly Regex _hexColor = new(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$");
 
         #region Parameters
 
@@ -81,7 +78,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="ProgressStatus.Normal" />
         [Parameter]
-        public ProgressStatus Status { get; set; } = ProgressStatus.Normal;
+        public ProgressStatus? Status { get; set; }
 
         /// <summary>
         /// to set the style of the progress linecap
@@ -150,7 +147,7 @@ namespace AntDesign
 
         #endregion Parameters
 
-        private readonly Hashtable _sizeMap = new Hashtable()
+        private static readonly Dictionary<ProgressSize, int> _sizeMap = new()
         {
             [ProgressSize.Small] = 6,
             [ProgressSize.Default] = 8,
@@ -168,24 +165,20 @@ namespace AntDesign
 
             if (StrokeWidth <= 0)
             {
-                if (Type == ProgressType.Line)
+                var size = Type switch
                 {
-                    StrokeWidth = (int)_sizeMap[Size];
-                }
-                else // Type is Circle or Dashboard
-                {
-                    StrokeWidth = (int)_sizeMap[ProgressSize.Small];
-                }
+                    ProgressType.Line => Size,
+                    _ => ProgressSize.Small // Type is Circle or Dashboard
+                };
+                StrokeWidth = _sizeMap[size];
             }
 
-            if (Percent is double percent && percent == 100)
+            if (Status is null && Percent is double percent && percent == 100)
             {
                 Status = ProgressStatus.Success;
             }
-            else
-            {
-                Status = ProgressStatus.Normal;
-            }
+
+            Status ??= ProgressStatus.Normal;
 
             SetStyle();
         }
@@ -250,7 +243,7 @@ namespace AntDesign
 
         private string GetCircleColor()
         {
-            var baseColor = "";
+            var baseColor = string.Empty;
             if (StrokeColor.Value == null)
             {
                 return baseColor;
@@ -316,14 +309,20 @@ namespace AntDesign
             return style.ToString();
         }
 
-        private string GetCircleBGStyle()
-        {
-            throw new NotImplementedException();
-        }
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$")]
+        private static partial Regex HexColor();
+#else
+        private static readonly Regex _hexColor = new(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$");
+#endif
 
         private string ToRGB(string color)
         {
+#if NET7_0_OR_GREATER
+            var hexMatch = HexColor().Match(color);
+#else
             var hexMatch = _hexColor.Match(color);
+#endif
             if (!hexMatch.Success)
             {
                 throw new ArgumentOutOfRangeException($"{nameof(StrokeColor)}'s value must be like \"#ffffff\"");

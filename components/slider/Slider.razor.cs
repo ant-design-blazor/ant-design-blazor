@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AntDesign.core.Extensions;
+using AntDesign.Core.Extensions;
 using AntDesign.Core.Helpers;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -588,7 +588,7 @@ namespace AntDesign
             return (clientX == _trackedClientX && clientY == _trackedClientY);
         }
 
-        private async void OnMouseMove(JsonElement jsonElement)
+        private async Task OnMouseMove(JsonElement jsonElement)
         {
             if (_mouseDown)
             {
@@ -602,7 +602,7 @@ namespace AntDesign
             }
         }
 
-        private async void OnMouseUp(JsonElement jsonElement)
+        private async Task OnMouseUp(JsonElement jsonElement)
         {
             bool isMoveInEdgeBoundary = IsMoveInEdgeBoundary(jsonElement);
             if (_mouseDown)

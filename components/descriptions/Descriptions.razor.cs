@@ -78,34 +78,34 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        internal IList<IDescriptionsItem> Items { get; } = new List<IDescriptionsItem>();
+        internal IList<IDescriptionsItem> Items { get; } = [];
 
-        private List<List<(IDescriptionsItem item, int realSpan)>> _itemMatrix = new List<List<(IDescriptionsItem item, int realSpan)>>();
+        private List<List<(IDescriptionsItem item, int realSpan)>> _itemMatrix = [];
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
 
         private int _realColumn;
 
-        private static Dictionary<string, int> _defaultColumnMap = new Dictionary<string, int>
+        private static readonly Dictionary<string, int> _defaultColumnMap = new()
         {
             { "Xxl", 3 },
-            { "Xl", 3},
-            { "Lg", 3},
-            { "Md", 3},
-            { "Sm", 2},
-            { "Xs", 1}
+            { "Xl", 3 },
+            { "Lg", 3 },
+            { "Md", 3 },
+            { "Sm", 2 },
+            { "Xs", 1 }
         };
 
-        private static readonly List<(int PixelWidth, BreakpointType Breakpoint)> _descriptionsResponsiveMap = new List<(int, BreakpointType)>()
-        {
+        private static readonly List<(int PixelWidth, BreakpointType Breakpoint)> _descriptionsResponsiveMap =
+        [
             (575,BreakpointType.Xs),
             (576,BreakpointType.Sm),
             (768,BreakpointType.Md),
             (992,BreakpointType.Lg),
             (1200,BreakpointType.Xl),
             (1600,BreakpointType.Xxl)
-        };
+        ];
 
         private void SetClassMap()
         {
@@ -142,7 +142,7 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        private async void OnResize(object o)
+        private async Task OnResize(object o)
         {
             await SetRealColumn();
             PrepareMatrix();
@@ -166,14 +166,15 @@ namespace AntDesign
 
         private void PrepareMatrix()
         {
-            List<List<(IDescriptionsItem item, int realSpan)>> itemMatrix = new List<List<(IDescriptionsItem item, int realSpan)>>();
+            List<List<(IDescriptionsItem item, int realSpan)>> itemMatrix = [];
 
-            List<(IDescriptionsItem item, int realSpan)> currentRow = new List<(IDescriptionsItem item, int realSpan)>();
+            List<(IDescriptionsItem item, int realSpan)> currentRow = [];
             var width = 0;
 
-            for (int i = 0; i < this.Items.Count; i++)
+            var items = Items;
+            for (var i = 0; i < items.Count; i++)
             {
-                var item = this.Items[i];
+                var item = items[i];
                 width += item.Span;
 
                 if (width >= _realColumn)
@@ -181,7 +182,7 @@ namespace AntDesign
                     currentRow.Add((item, _realColumn - (width - item.Span)));
                     FlushRow();
                 }
-                else if (i == this.Items.Count - 1)
+                else if (i == items.Count - 1)
                 {
                     currentRow.Add((item, _realColumn - (width - item.Span)));
                     FlushRow();
@@ -196,7 +197,7 @@ namespace AntDesign
             void FlushRow()
             {
                 itemMatrix.Add(currentRow);
-                currentRow = new List<(IDescriptionsItem item, int realSpan)>();
+                currentRow = [];
                 width = 0;
             }
         }
@@ -209,10 +210,11 @@ namespace AntDesign
             }
             else
             {
-                HtmlElement element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
+                var element = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
                 var breakpointTuple = _descriptionsResponsiveMap.FirstOrDefault(x => x.PixelWidth > element.ClientWidth);
                 var bp = breakpointTuple == default ? BreakpointType.Xxl : breakpointTuple.Breakpoint;
-                _realColumn = Column.AsT1.ContainsKey(bp.ToString()) ? Column.AsT1[bp.ToString()] : _defaultColumnMap[bp.ToString()];
+                var bpKey = bp.ToString();
+                _realColumn = Column.AsT1.TryGetValue(bpKey, out var col) ? col : _defaultColumnMap[bpKey];
             }
         }
     }

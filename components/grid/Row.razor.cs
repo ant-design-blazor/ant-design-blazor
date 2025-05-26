@@ -100,16 +100,16 @@ namespace AntDesign
         private BreakpointType? _currentBreakPoint;
         private GutterType _gutter;
 
-        private IList<Col> _cols = new List<Col>();
+        private readonly List<Col> _cols = [];
 
-        private static BreakpointType[] _breakpoints = new[] {
+        private static readonly BreakpointType[] _breakpoints = [
             BreakpointType.Xs,
             BreakpointType.Sm,
             BreakpointType.Md,
             BreakpointType.Lg,
             BreakpointType.Xl,
             BreakpointType.Xxl
-        };
+        ];
 
         protected override async Task OnInitializedAsync()
         {
@@ -168,8 +168,8 @@ namespace AntDesign
 
         private void OptimizeSize(decimal windowWidth)
         {
-            BreakpointType actualBreakpoint = _breakpoints[_breakpoints.Length - 1];
-            for (int i = 0; i < _breakpoints.Length; i++)
+            var actualBreakpoint = _breakpoints[^1];
+            for (var i = 0; i < _breakpoints.Length; i++)
             {
                 if (windowWidth <= (int)_breakpoints[i] && (windowWidth >= (i > 0 ? (int)_breakpoints[i - 1] : 0)))
                 {
@@ -210,11 +210,11 @@ namespace AntDesign
 
             return _gutter.Match(
                 num => (num, 0),
-                dic => dic.ContainsKey(breakPointName) ? (dic[breakPointName], 0) : (0, 0),
+                dic => dic.TryGetValue(breakPointName, out var val) ? (val, 0) : (0, 0),
                 tuple => tuple,
-                tupleDicInt => (tupleDicInt.Item1.ContainsKey(breakPointName) ? tupleDicInt.Item1[breakPointName] : 0, tupleDicInt.Item2),
-                tupleIntDic => (tupleIntDic.Item1, tupleIntDic.Item2.ContainsKey(breakPointName) ? tupleIntDic.Item2[breakPointName] : 0),
-                tupleDicDic => (tupleDicDic.Item1.ContainsKey(breakPointName) ? tupleDicDic.Item1[breakPointName] : 0, tupleDicDic.Item2.ContainsKey(breakPointName) ? tupleDicDic.Item2[breakPointName] : 0)
+                tupleDicInt => (tupleDicInt.Item1.TryGetValue(breakPointName, out var val) ? val : 0, tupleDicInt.Item2),
+                tupleIntDic => (tupleIntDic.Item1, tupleIntDic.Item2.TryGetValue(breakPointName, out var val) ? val : 0),
+                tupleDicDic => (tupleDicDic.Item1.TryGetValue(breakPointName, out var val1) ? val1 : 0, tupleDicDic.Item2.TryGetValue(breakPointName, out var val2) ? val2 : 0)
             );
         }
 

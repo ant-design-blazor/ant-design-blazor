@@ -4,29 +4,21 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 
 namespace AntDesign
 {
-    public sealed class MenuService
+    public sealed class MenuService(NavigationManager navmgr)
     {
-        private readonly NavigationManager _navmgr;
-        private Dictionary<string, MenuItem> _titleCache = [];
-        private Dictionary<string, BreadcrumbOption[]> _breadcrumbCache = [];
-        private IEnumerable<MenuItem> _menuItems = [];
+        private readonly Dictionary<string, MenuItem> _titleCache = [];
+        private readonly Dictionary<string, BreadcrumbOption[]> _breadcrumbCache = [];
+        private readonly List<MenuItem> _menuItems = [];
 
         internal event Action MenuItemLoaded;
 
-        public MenuService(NavigationManager navmgr)
+        internal void SetMenuItem(MenuItem menuItem)
         {
-            this._navmgr = navmgr;
-        }
-
-        internal void SetMenuItems(IEnumerable<MenuItem> menuItems)
-        {
-            _menuItems = menuItems;
+            _menuItems.Add(menuItem);
             MenuItemLoaded?.Invoke();
         }
 
@@ -37,46 +29,44 @@ namespace AntDesign
 
         public BreadcrumbOption[] GetBreadcrumbOptions()
         {
-            var url = _navmgr.ToBaseRelativePath(_navmgr.Uri);
+            var url = navmgr.ToBaseRelativePath(navmgr.Uri);
             if (url.Contains('?'))
             {
                 url = url.Split('?')[0];
             }
 
-            if (_breadcrumbCache.ContainsKey(url))
+            if (!_breadcrumbCache.TryGetValue(url, out var opts))
             {
-                return _breadcrumbCache[url];
+                var menu = GetMenuItem(url);
+                if (menu is null)
+                {
+                    return [];
+                }
+                opts = [.. GetBreadcrumbOptions(menu)];
+                _breadcrumbCache.Add(url, opts);
             }
-            var matchedMenuItem = GetMenuItem(url);
-            if (matchedMenuItem == null)
-            {
-                return [];
-            }
-            _breadcrumbCache[url] = GetBreadcrumbOptions(matchedMenuItem).ToArray();
-
-            return _breadcrumbCache[url];
+            return opts;
         }
 
         private MenuItem? GetMenuItem(string url)
         {
-            if (_titleCache.ContainsKey(url))
+            if (!_titleCache.TryGetValue(url, out var title))
             {
-                return _titleCache[url];
+                title = _menuItems.Find(x => x.RouterLink != null && MenuHelper.ShouldMatch(x.RouterMatch, url.TrimStart('/'), x.RouterLink.TrimStart('/')));
+                if (title is null)
+                {
+                    return null;
+                }
+                _titleCache.TryAdd(url, title);
+                return title;
             }
-
-            var matchedMenuItem = _menuItems.FirstOrDefault(x => x.RouterLink != null && MenuHelper.ShouldMatch(NavLinkMatch.All, url.TrimStart('/'), x.RouterLink.TrimStart('/')));
-            if (matchedMenuItem == null)
-            {
-                return null;
-            }
-            _titleCache.TryAdd(url, matchedMenuItem);
-            return matchedMenuItem;
+            return title;
         }
 
-        private IEnumerable<BreadcrumbOption> GetBreadcrumbOptions(MenuItem menuItem)
+        private static List<BreadcrumbOption> GetBreadcrumbOptions(MenuItem menuItem)
         {
             List<BreadcrumbOption> options = [];
-            options.Add(new BreadcrumbOption()
+            options.Add(new()
             {
                 Title = menuItem.Title,
                 TitleTemplate = menuItem.GetTitleContent(),
@@ -87,7 +77,7 @@ namespace AntDesign
 
             while (subMenu != null)
             {
-                options.Insert(0, new BreadcrumbOption()
+                options.Insert(0, new()
                 {
                     Title = subMenu.Title,
                     TitleTemplate = subMenu.TitleTemplate,

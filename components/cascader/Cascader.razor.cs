@@ -118,7 +118,6 @@ namespace AntDesign
         private bool _initialized;
         private string _searchValue;
         private ElementReference _inputRef;
-        private string _placeHolder = LocaleProvider.CurrentLocale.Global.Placeholder;
 
         private bool _focused;
 
@@ -142,6 +141,7 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            
             SetDefaultValue(Value ?? DefaultValue);
         }
 
@@ -497,9 +497,9 @@ namespace AntDesign
             }
         }
 
-        protected override void OnInputAsync(ChangeEventArgs e)
+        protected override Task OnInputAsync(ChangeEventArgs e)
         {
-
+            return Task.CompletedTask;
         }
 
         protected override async Task OnKeyUpAsync(KeyboardEventArgs e)

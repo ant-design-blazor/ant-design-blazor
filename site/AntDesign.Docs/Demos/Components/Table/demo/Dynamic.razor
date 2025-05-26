@@ -1,11 +1,13 @@
 ﻿@using System.ComponentModel
+@using AntDesign.Core
 @using AntDesign.TableModels
+@using System.Text.Json.Serialization
 
 <Table TItem="Dictionary<string, object>" OnChange="HanleChange" DataSource="@data" Loading="data==null" ScrollX="1500"
-       PageSize="5" Size="TableSize.Small">
+    PageSize="5" Size="TableSize.Small">
     @foreach (var key in data?.FirstOrDefault()?.Keys.Take(10) ?? new string[0])
     {
-                    <PropertyColumn Property=@(c=>c[key]) Title="@key"></PropertyColumn>
+        <PropertyColumn Filterable Sortable Property=@(c=>c[key]) Title="@key" />
     }
 </Table>
 
@@ -19,8 +21,11 @@
     protected async Task HanleChange(QueryModel<Dictionary<string, object>> query)
     {
         try
-        {
-            data = await httpClient.GetFromJsonAsync<List<Dictionary<string, object>>>(githubUrl);
+        { 
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new DictionaryConverter());
+
+            data = await httpClient.GetFromJsonAsync<List<Dictionary<string, object>>>(githubUrl, options);
         }
         catch (Exception e)
         {

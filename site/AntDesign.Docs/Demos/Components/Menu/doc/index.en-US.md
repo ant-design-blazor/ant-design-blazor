@@ -52,18 +52,19 @@ More layouts with navigation: [Layout](/components/layout).
 
 ### MenuItem
 
-| Param    | Description                          | Type    | Default value | Version |
-| -------- | ------------------------------------ | ------- | ------------- | ------- |
-| ChildContent    | Set display title for collapsed item | string  |               |         |
-| Disabled | Whether menu item is disabled        | boolean | false         |         |
-| Key      | Unique ID of the menu item           | string  |               |         |
-| OnClick | Called when a menu item is clicked | EventCallback&lt;MouseEventArgs> | - |  |
-| RouterLink    |  Href route   | string |     -          |         |
-| RouterMatch    | Modifies the URL matching behavior for a NavLink  | NavLinkMatch |     -          |         |
-| Style    | Additional CSS style  | string |     -          |         |
-| Title | Title of the menu item | string |  |  |
-| Icon | The icon of the menu item | string | - | |
-| IconTemplate | Custom icon template, when `Icon` and `IconTemplate` are set at the same time, `IconTemplate` is preferred| RenderFragment | - | |
+| Param        | Description                                                                                                  | Type                          | Default value | Version |
+|--------------|--------------------------------------------------------------------------------------------------------------|-------------------------------|---------------|---------|
+| ChildContent | Set display title for collapsed item                                                                         | string                        |               |         |
+| Disabled     | Whether menu item is disabled                                                                                | boolean                       | false         |         |
+| Key          | Unique ID of the menu item                                                                                   | string                        |               |         |
+| OnClick      | Called when a menu item is clicked                                                                           | EventCallback<MouseEventArgs> | -             |         |
+| RouterLink   | Href route                                                                                                   | string                        | -             |         |
+| RouterMatch  | Modifies the URL matching behavior for a NavLink                                                             | NavLinkMatch                  | -             |         |
+| Style        | Additional CSS style                                                                                         | string                        | -             |         |
+| Target       | `Target` attribute on `<a>` tag if `RouterLink` is specified                                                 | MenuTarget?                   | -             |         |
+| Title        | Title of the menu item                                                                                       | string                        |               |         |
+| Icon         | The icon of the menu item                                                                                    | string                        | -             |         |
+| IconTemplate | Custom icon template, when `Icon` and `IconTemplate` are set at the same time, `IconTemplate` is preferred   | RenderFragment                | -             |         |
 
 ### SubMenu
 

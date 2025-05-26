@@ -664,27 +664,35 @@ namespace AntDesign
         /// <param name="label">Creation based on passed label</param>
         /// <param name="isActive">if set to <c>true</c> [is active].</param>
         /// <returns></returns>
-        protected SelectOptionItem<TItemValue, TItem> CreateSelectOptionItem(string label, bool isActive)
+        protected virtual SelectOptionItem<TItemValue, TItem> CreateSelectOptionItem(string label, bool isActive)
         {
-            var value = GetItemValueFromLabel(label);
-            TItem item;
-            if (_isPrimitive)
-            {
-                item = (TItem)TypeDescriptor.GetConverter(typeof(TItem)).ConvertFromInvariantString(_searchValue);
-            }
-            else
-            {
-                if (_setValue == null)
-                {
-                    item = THelper.ChangeType<TItem>(value);
-                }
-                else
-                {
-                    item = Activator.CreateInstance<TItem>();
-                    _setValue(item, value);
-                }
+            TItemValue value = default;
+            TItem item = default;
 
-                _setLabel?.Invoke(item, _searchValue);
+            try
+            {
+                if (typeof(TItem) == typeof(string))
+                {
+                    item = (TItem)(object)label;
+                    value = (TItemValue)(object)label;
+                }
+                else if (Mode == SelectMode.Tags && CustomTagLabelToValue != null)
+                {
+                    try
+                    {
+                        value = CustomTagLabelToValue(label);
+                    }
+                    catch
+                    {
+                        value = default;
+                    }
+                }
+            }
+            catch
+            {
+                // If any conversion fails, use default values
+                value = default;
+                item = default;
             }
 
             return new SelectOptionItem<TItemValue, TItem>
@@ -1286,7 +1294,7 @@ namespace AntDesign
 
         protected abstract Task OnOverlayVisibleChangeAsync(bool visible);
 
-        protected abstract void OnInputAsync(ChangeEventArgs e);
+        protected abstract Task OnInputAsync(ChangeEventArgs e);
 
         protected virtual async Task OnKeyUpAsync(KeyboardEventArgs e)
         {

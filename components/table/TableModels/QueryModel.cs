@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 
 namespace AntDesign.TableModels
 {
-    public class QueryModel
+    public abstract class QueryModel
     {
         public int PageIndex { get; }
 

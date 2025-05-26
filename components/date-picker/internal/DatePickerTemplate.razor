@@ -3,7 +3,7 @@
 @inherits DatePickerPanelBase<TValue>
 @using AntDesign
 
-<div class="@(PrefixCls)-@(PickerTypeMap[Picker])-panel" @ref="Ref">
+<div class="@(PrefixCls)-@PickerTypeMap[Picker]-panel @(ShowWeek ? $"{PrefixCls}-{PickerTypeMap[DatePickerType.Date]}-panel-show-week" : string.Empty)" @ref="Ref">
     @if (IsShowHeader)
     {
         @RenderPickerHeader

@@ -78,6 +78,8 @@ namespace AntDesign
                     _primaryColor = value;
                     _twoToneColorChanged = true;
                 }
+
+                Theme = IconThemeType.TwoTone;
             }
         }
 

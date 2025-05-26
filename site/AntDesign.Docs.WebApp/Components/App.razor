@@ -36,7 +36,7 @@
         window.XPrism.highlightAll = function () {
             Prism.highlightAll();
         }
-        window.DocSearchInit = window.DocSearchInit || function(){};
+        window.DocSearchInit = window.DocSearchInit || function () { };
     </script>
     <script src="@("https://fastly.jsdelivr.net/npm/@docsearch/js@3")"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
@@ -82,6 +82,20 @@
 
                 },
             },
+        });
+    </script>
+
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@@petercatai/assistant/dist/umd/assistant.min.css" />
+    <script src="https://fastly.jsdelivr.net/npm/react/umd/react.development.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/dayjs/dayjs.min.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/antd/dist/antd.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/lottie-web/build/player/lottie.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/@@petercatai/assistant/dist/umd/assistant.min.js"></script>
+    <script>
+        PetercatLUI.initAssistant({
+            apiDomain: 'https://api.petercat.ai',
+            token: '9dda22fa-1d1a-4854-a53a-5abbc5584840'
         });
     </script>
 </body>

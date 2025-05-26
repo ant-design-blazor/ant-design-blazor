@@ -58,7 +58,7 @@ namespace AntDesign
         /// <summary>
         /// The page information list of the currently opened page, which can be used for caching and recovery
         /// </summary>
-        public IReadOnlyCollection<ReuseTabsPageItem> Pages => [.. _pages];
+        public ICollection<ReuseTabsPageItem> Pages => _pages;
 
         public ReuseTabsService(NavigationManager navmgr, MenuService menusService)
         {
@@ -242,7 +242,7 @@ namespace AntDesign
         {
             if (reuse)
             {
-                ScanReuseTabsPageAttribute();
+                ScanPinnedPageAttribute();
             }
         }
 
@@ -355,7 +355,7 @@ namespace AntDesign
         /// Get all assembly
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<Assembly> GetAllAssembly()
+        private static IEnumerable<Assembly> GetAllAssembly()
         {
             IEnumerable<Assembly> assemblies = new List<Assembly>();
             var entryAssembly = Assembly.GetEntryAssembly();
@@ -368,7 +368,7 @@ namespace AntDesign
         /// <summary>
         /// Scan ReuseTabsPageAttribute
         /// </summary>
-        private void ScanReuseTabsPageAttribute()
+        private void ScanPinnedPageAttribute()
         {
             var list = GetAllAssembly();
 
@@ -378,20 +378,20 @@ namespace AntDesign
                     .Where(w => w.GetCustomAttribute<ReuseTabsPageAttribute>()?.Pin == true);
                 foreach (var pageType in allClass)
                 {
-                    this.AddReuseTabsPageItem(pageType);
+                    this.AddPinnedPageItem(pageType);
                 }
             }
             if (CurrentUrl == null)
                 ActiveKey = _pages.FirstOrDefault()?.Key;
         }
 
-        private void AddReuseTabsPageItem(Type pageType)
+        private void AddPinnedPageItem(Type pageType)
         {
             var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
             var reuseTabsAttribute = pageType.GetCustomAttribute<ReuseTabsPageAttribute>();
 
             var url = reuseTabsAttribute?.PinUrl ?? routeAttribute.Template;
-            if (_pages.Any(p => p.Url == url || !(p.Singleton && p.TypeName == pageType.FullName)))
+            if (_pages.Any(p => p.Url == url || (p.Singleton && p.TypeName == pageType.FullName)))
             {
                 return;
             }

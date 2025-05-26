@@ -1,4 +1,4 @@
-﻿---
+---
 category: Components
 subtitle: 全局提示
 type: 反馈
@@ -85,3 +85,27 @@ MessageService.Config(new MessageGlobalConfig{
 | MaxCount | 最大显示数, 超过限制时，最早的消息会被自动关闭 | int | 0 |
 | Top | 消息距离顶部的位置 | double | 24 |
 | Rtl | 是否开启 RTL 模式 | bool | `false` |
+
+### 扩展方法
+
+`MessageExtensions` 类提供了一些扩展方法，用于在异步操作执行期间显示加载提示：
+
+#### LoadingWhen<T>
+
+在执行异步操作时显示加载提示，并返回操作结果。
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| asyncFunc | 要执行的异步操作 | Func<Task<T>> | - |
+| content | 加载过程中显示的提示内容 | string\|RenderFragment\|MessageConfig | - |
+| onClose | 提示关闭时触发的回调函数 | Action | null |
+
+#### LoadingWhen (无返回值版本)
+
+在执行异步操作时显示加载提示，适用于无返回值的异步操作。
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| asyncFunc | 要执行的异步操作 | Func<Task> | - |
+| content | 加载过程中显示的提示内容 | string\|RenderFragment\|MessageConfig | - |
+| onClose | 提示关闭时触发的回调函数 | Action | null |

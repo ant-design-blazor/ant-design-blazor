@@ -327,11 +327,15 @@ namespace AntDesign
 
         public override async Task SetParametersAsync(ParameterView parameters)
         {
-            if (parameters.IsParameterChanged(nameof(Options), Options))
+            var optionsChanged = parameters.IsParameterChanged(nameof(Options), Options)
+                || parameters.IsParameterChanged(nameof(OptionDataItems), OptionDataItems);
+
+            await base.SetParametersAsync(parameters);
+
+            if (optionsChanged)
             {
                 UpdateFilteredOptions();
             }
-            await base.SetParametersAsync(parameters);
         }
 
         void IAutoCompleteRef.AddOption(AutoCompleteOption option)
@@ -365,8 +369,6 @@ namespace AntDesign
         /// </summary>
         private async Task OpenPanel()
         {
-            _filteredOptions = GetOptionItems();
-
             if (this._isOpened == false)
             {
                 this._isOpened = true;
@@ -391,7 +393,6 @@ namespace AntDesign
 
                 StateHasChanged();
             }
-            _filteredOptions = GetOptionItems();
         }
 
         private AutoCompleteOption GetActiveItem()
@@ -440,8 +441,8 @@ namespace AntDesign
 
         private void UpdateFilteredOptions()
         {
-            var filteredItems = GetOptionItems();
-            _isOptionsZero = filteredItems.Count == 0 && Options != null;
+            _filteredOptions = GetOptionItems();
+            _isOptionsZero = _filteredOptions.Count == 0;
             if (_isFocused && !_isOptionsZero)
             {
                 _ = OpenPanel();
@@ -499,7 +500,7 @@ namespace AntDesign
             this.ClosePanel();
         }
 
-        private async void OnOverlayTriggerVisibleChange(bool visible)
+        private async Task OnOverlayTriggerVisibleChange(bool visible)
         {
             if (OnPanelVisibleChange.HasDelegate && _parPanelVisible != visible)
             {
@@ -513,7 +514,7 @@ namespace AntDesign
             }
         }
 
-        private async void UpdateWidth(List<ResizeObserverEntry> entry)
+        private async Task UpdateWidth(List<ResizeObserverEntry> entry)
         {
             await SetOverlayWidth();
             InvokeStateHasChanged();

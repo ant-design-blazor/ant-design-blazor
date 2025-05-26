@@ -3,50 +3,26 @@
 
 <Switch @bind-Value="@validateOnChange" CheckedChildren="ValidateOnChange" UnCheckedChildren="ValidateOnSubmit" />
 <p />
-<Form Model="@modelDefault"
-	  ValidateMode="FormValidateMode.Default"
-	  ValidateOnChange="@validateOnChange"
-	  LabelColSpan="10"
-	  WrapperColSpan="14"
-	  Size="FormSize.Small">
-	<FormItem Label="Default-UserName">
+
+<Form Model="@model"
+	ValidateOnChange="@validateOnChange"
+	LabelColSpan="10"
+	WrapperColSpan="14"
+	Size="FormSize.Small">
+	<FormItem Label="UserName" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
 		<Input @bind-Value="@context.Username" />
 	</FormItem>
-	<FormItem WrapperColOffset="8" WrapperColSpan="16">
-		<Button Type="ButtonType.Primary" HtmlType="submit">
-			Submit
-		</Button>
+	<FormItem Label="Password">
+		<Input @bind-Value="@context.Password" />
 	</FormItem>
-</Form>
-
-
-<Form Model="@modelRules"
-	  ValidateMode="FormValidateMode.Rules"
-	  ValidateOnChange="@validateOnChange"
-	  LabelColSpan="10"
-	  WrapperColSpan="14"
-	  Size="FormSize.Small">
-	<FormItem Label="Rules-UserName" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
-		<Input @bind-Value="@context.Username" />
+	<FormItem Label="ConfirmPassword" Rules="@(new FormValidationRule[]{ new() { ValidationAttribute = new CompareAttribute(nameof(Model.Password))}})">
+		<Input @bind-Value="@context.ConfirmPassword" />
 	</FormItem>
-	<FormItem Label="Rules-Number" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Type=FormFieldType.Number, Len=100 } })>
-		<Input @bind-Value="@context.Number" />
+	<FormItem Label="Min">
+		<AntDesign.InputNumber @bind-Value="@context.Min" />
 	</FormItem>
-	<FormItem WrapperColOffset="8" WrapperColSpan="16">
-		<Button Type="ButtonType.Primary" HtmlType="submit">
-			Submit
-		</Button>
-	</FormItem>
-</Form>
-
-<Form Model="@modelComplex"
-	  ValidateMode="FormValidateMode.Complex"
-	  ValidateOnChange="@validateOnChange"
-	  LabelColSpan="10"
-	  WrapperColSpan="14"
-	  Size="FormSize.Small">
-	<FormItem Label="Complex-UserName" Rules=@(new FormValidationRule[]{ new FormValidationRule{ Required = true } })>
-		<Input @bind-Value="@context.Username" />
+	<FormItem Label="Max">
+		<AntDesign.InputNumber @bind-Value="@context.Max" />
 	</FormItem>
 	<FormItem WrapperColOffset="8" WrapperColSpan="16">
 		<Button Type="ButtonType.Primary" HtmlType="submit">
@@ -61,12 +37,86 @@
 	{
 		[StringLength(5)]
 		public string Username { get; set; }
-		public decimal Number { get; set; }
+
+		[Required]
+		public string Password { get; set; }
+
+		public string ConfirmPassword { get; set; }
+
+		[Range(1, 10)]
+		public decimal Min { get; set; }
+
+		[Comparison(nameof(Min), ComparisonOperator.GreaterThan)]
+		public decimal Max { get; set; }
 	}
 
-	private Model modelDefault = new Model();
-	private Model modelRules = new Model();
-	private Model modelComplex = new Model();
+	private Model model = new Model();
 	private bool validateOnChange = false;
-	private FormValidateMode validateMode = FormValidateMode.Complex;
+
+	/// <summary>
+	/// Custom validation attribute to compare two properties
+	/// </summary>
+	public sealed class ComparisonAttribute : ValidationAttribute
+	{
+		private readonly string _otherPropertyName;
+		private readonly ComparisonOperator _comparisonOperator;
+
+		public ComparisonAttribute(string otherPropertyName, ComparisonOperator comparisonOperator)
+		{
+			_otherPropertyName = otherPropertyName;
+			_comparisonOperator = comparisonOperator;
+			ErrorMessage = $"The field {{0}} must be {comparisonOperator.ToString().ToLower()} the field {{1}}";
+		}
+
+		protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+		{
+			var otherPropertyInfo = validationContext.ObjectType.GetProperty(_otherPropertyName);
+			if (otherPropertyInfo == null)
+			{
+				return new ValidationResult($"Cannot find property named {_otherPropertyName}");
+			}
+			var otherValue = otherPropertyInfo.GetValue(validationContext.ObjectInstance);
+			if (!IsValidValue(value) || !IsValidValue(otherValue))
+			{
+				return ValidationResult.Success;
+			}
+
+			var comparisonResult = System.Collections.Comparer.Default.Compare(value, otherValue);
+
+			return _comparisonOperator switch
+			{
+				ComparisonOperator.Equal => comparisonResult == 0 ? ValidationResult.Success : new ValidationResult(ErrorMessage),
+				ComparisonOperator.NotEqual => comparisonResult != 0 ? ValidationResult.Success : new ValidationResult(ErrorMessage),
+				ComparisonOperator.GreaterThan => comparisonResult > 0 ? ValidationResult.Success : new ValidationResult(ErrorMessage),
+				ComparisonOperator.GreaterThanOrEqual => comparisonResult >= 0 ? ValidationResult.Success : new ValidationResult(ErrorMessage),
+				ComparisonOperator.LessThan => comparisonResult < 0 ? ValidationResult.Success : new ValidationResult(ErrorMessage),
+				ComparisonOperator.LessThanOrEqual => comparisonResult <= 0 ? ValidationResult.Success : new ValidationResult(ErrorMessage),
+				_ => new ValidationResult($"Invalid operator {_comparisonOperator}")
+			};
+
+			return new ValidationResult(ErrorMessage, new[] { validationContext.MemberName ?? string.Empty });
+		}
+
+
+		private static bool IsValidValue(object? value)
+		{
+			return value is not null && value != DBNull.Value;
+		}
+
+		public override string FormatErrorMessage(string name)
+		{
+			return string.Format(ErrorMessageString, name, _otherPropertyName);
+		}
+	}
+
+	public enum ComparisonOperator
+	{
+		Equal,
+		NotEqual,
+		GreaterThan,
+		GreaterThanOrEqual,
+		LessThan,
+		LessThanOrEqual
+	}
+
 }

@@ -9,6 +9,5 @@ namespace AntDesign
         Fill,
         Outline,
         TwoTone,
-        Internal,
     }
 }

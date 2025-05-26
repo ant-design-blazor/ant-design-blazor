@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Documentation;
-using AntDesign.core.Services;
+using AntDesign.Core.Services;
 using AntDesign.Core.HashCodes;
 using AntDesign.Core.Reflection;
 using AntDesign.Filters;
@@ -21,8 +21,10 @@ using AntDesign.Table.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
 
+#if NET6_0_OR_GREATER
+using Microsoft.JSInterop;
+#endif
 
 #if NET5_0_OR_GREATER
 
@@ -161,14 +163,13 @@ namespace AntDesign
         /// </summary>
         /// <default value="true for any rows" />
         [Parameter]
-        public Func<RowData<TItem>, bool> RowExpandable { get; set; } = _ => true;
+        public Func<RowData<TItem>, bool> RowExpandable { get; set; }
 
         /// <summary>
         /// Children tree items
         /// </summary>
-        /// <default value="Enumerable.Empty&lt;TItem&gt;()" />
         [Parameter]
-        public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; } = _ => Enumerable.Empty<TItem>();
+        public Func<TItem, IEnumerable<TItem>> TreeChildren { get; set; }
 
         /// <summary>
         /// Callback executed when table initialized, paging, sorting, and filtering changes.
@@ -379,6 +380,8 @@ namespace AntDesign
         public bool EnableVirtualization { get; set; }
 
 #endif
+        [Parameter]
+        public int? StickyOffsetHeader { get; set; }
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
@@ -415,6 +418,8 @@ namespace AntDesign
 
         private string TableLayoutStyle => TableLayout == null ? "" : $"table-layout: {TableLayout};";
 
+        private string StickyHolderStyle => StickyOffsetHeader.HasValue ? $"top: {StickyOffsetHeader.Value}px;" : "";
+
         private ElementReference _wrapperRef;
         private ElementReference _tableHeaderRef;
         private ElementReference _tableBodyRef;
@@ -427,8 +432,9 @@ namespace AntDesign
         private bool _isRebuilding;
         private RenderFragment<TItem> _childContent;
 
+        private HashSet<string> _outsideParameters;
         private bool ServerSide => _hasRemoteDataSourceAttribute ? RemoteDataSource : Total > _dataSourceCount;
-
+        private bool IsSticky => StickyOffsetHeader.HasValue;
         private bool IsEntityFrameworkCore => _dataSource is IQueryable<TItem> query && query.Provider.ToString().Contains("EntityFrameworkCore");
 
         private bool UseItemsProvider
@@ -451,9 +457,10 @@ namespace AntDesign
         int ITable.ExpandIconColumnIndex => ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
         int ITable.TreeExpandIconColumnIndex => _treeExpandIconColumnIndex;
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
-        bool ITable.HasOnExpandDelegate => OnExpand.HasDelegate;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
+
+        bool ITable.IsSticky => IsSticky;
 
         void ITable.AddGroupColumn(IFieldColumn column) => AddGroupColumn(column);
 
@@ -675,6 +682,8 @@ namespace AntDesign
             }
 
             var queryModel = this.InternalReload();
+            _selection?.OnDataSourceChange();
+
             StateHasChanged();
 
             if (OnChange.HasDelegate && _pageIndex > 0)
@@ -694,7 +703,7 @@ namespace AntDesign
 
         private QueryModel<TItem> InternalReload()
         {
-            if (HidePagination && _dataSourceCount > 0)
+            if (HidePagination && !_outsideParameters.Contains(nameof(PageSize)) && _dataSourceCount > 0)
             {
                 _pageSize = _dataSourceCount;
             }
@@ -741,11 +750,11 @@ namespace AntDesign
             {
                 if (_outerSelectedRows != null)
                 {
-                    SetSelection(_outerSelectedRows);
+                    UpdateSelection(_outerSelectedRows);
                 }
             }
 
-            _treeMode = (TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true)) || _groupedColumns.Count > 0;
+            _treeMode = (TreeChildren != null && (_showItems?.Any(x => TreeChildren(x)?.Any() == true) == true || OnExpand.HasDelegate)) || _groupedColumns.Count > 0;
             if (_treeMode)
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
@@ -872,13 +881,14 @@ namespace AntDesign
                 HidePagination = true;
             }
 #endif
-
             InitializePagination();
 
             FieldFilterTypeResolver ??= InjectedFieldFilterTypeResolver;
         }
         public override async Task SetParametersAsync(ParameterView parameters)
         {
+            _outsideParameters ??= [.. parameters.ToDictionary().Keys];
+
             await base.SetParametersAsync(parameters);
 
             if (AutoHeight)
@@ -1057,9 +1067,26 @@ namespace AntDesign
             }
         }
 
-        bool ITable.RowExpandable(RowData rowData)
+        bool ITable.RowExpandable(RowData rowData) => InternalRowExpandable(rowData as RowData<TItem>);
+
+        private bool InternalRowExpandable(RowData<TItem> rowData)
         {
-            return RowExpandable(rowData as RowData<TItem>);
+            if (RowExpandable != null)
+            {
+                return RowExpandable.Invoke(rowData);
+            }
+
+            if (_treeMode && TreeChildren != null)
+            {
+                return TreeChildren(rowData.Data)?.Any() == true || OnExpand.HasDelegate;
+            }
+
+            if (ExpandTemplate != null)
+            {
+                return true;
+            }
+
+            return OnExpand.HasDelegate;
         }
 
         private IEnumerable<TItem> SortFilterChildren(IEnumerable<TItem> children)

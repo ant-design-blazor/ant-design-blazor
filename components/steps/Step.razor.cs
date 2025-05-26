@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -124,7 +123,7 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
-        private readonly Hashtable _statusMap = new Hashtable()
+        private static readonly Dictionary<StepsStatus, string> _statusMap = new()
         {
             [StepsStatus.Wait] = "wait",
             [StepsStatus.Process] = "process",
@@ -150,25 +149,19 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        internal int? GetTabIndex()
-        {
-            if (!Disabled && Clickable)
-                return 0;
-            else
-                return null;
-        }
+        internal int? GetTabIndex() => !Disabled && Clickable ? 0 : null;
 
         protected void SetClassMap()
         {
-            string prefixName = "ant-steps-item";
+            const string PrefixName = "ant-steps-item";
             ClassMapper.Clear()
-                .Add(prefixName)
-                .Get(() => $"{prefixName}-{_statusMap[Status]}")
-                .If($"{prefixName}-active", () => Parent.Current == Index)
-                .If($"{prefixName}-disabled", () => Disabled)
-                .If($"{prefixName}-custom", () => !string.IsNullOrEmpty(Icon))
+                .Add(PrefixName)
+                .Get(() => $"{PrefixName}-{_statusMap[Status]}")
+                .If($"{PrefixName}-active", () => Parent.Current == Index)
+                .If($"{PrefixName}-disabled", () => Disabled)
+                .If($"{PrefixName}-custom", () => !string.IsNullOrEmpty(Icon))
                 .If($"ant-steps-next-error", () => GroupStatus == StepsStatus.Error && Parent.Current == Index + 1)
-                .If($"{prefixName}-rtl", () => RTL)
+                .If($"{PrefixName}-rtl", () => RTL)
                 ;
         }
 

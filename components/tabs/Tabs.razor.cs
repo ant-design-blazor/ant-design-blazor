@@ -266,6 +266,8 @@ namespace AntDesign
         private bool _needUpdateScrollListPosition;
         private bool _retryingGetSize;
         private bool _hasNewTab = false;
+        private string _waittingActiveKey;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -334,6 +336,14 @@ namespace AntDesign
             {
                 ActivatePane(tabPane.Key);
                 _hasNewTab = false;
+            }
+
+            // when adding tab and active it at the same time outside,
+            // the tab may not be rendered before the ActivatePane() was called,
+            // so we need to call it again.
+            if (_waittingActiveKey == tabPane.Key)
+            {
+                ActivatePane(_waittingActiveKey);
             }
         }
         private async Task OnAddTab()
@@ -500,6 +510,8 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void ActivatePane(string key)
         {
+            _waittingActiveKey = key;
+
             if (_tabs.Count == 0)
                 return;
 
@@ -526,6 +538,7 @@ namespace AntDesign
 
             _activeTab = tab;
             _activeKey = _activeTab.Key;
+            _waittingActiveKey = null;
 
             if (ActiveKeyChanged.HasDelegate)
             {

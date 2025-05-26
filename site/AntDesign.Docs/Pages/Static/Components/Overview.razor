@@ -108,7 +108,7 @@
 
         IList<DemoMenuItem> result = new List<DemoMenuItem>();
 
-        foreach (var item in menuItems)
+        foreach (var item in menuItems.Where(mi => mi.Children != null))
         {
             var lst = item.Children.Where(x => x.Title.Contains(value, StringComparison.OrdinalIgnoreCase)).ToArray();
 

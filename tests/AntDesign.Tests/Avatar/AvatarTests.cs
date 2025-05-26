@@ -15,11 +15,7 @@ namespace AntDesign.Tests.Avatar
 {
     public class AvatarTests : AntDesignTestBase
     {
-        [Theory]
-        [InlineData(AvatarSize.Small, "ant-avatar-sm", "")]
-        [InlineData(AvatarSize.Large, "ant-avatar-lg", "")]
-        [InlineData("64.5", "", "width:64.5px;height:64.5px;line-height:64.5px;font-size:calc(64.5px / 2);")]
-        public void ItShouldSetSizeProperly(OneOf<AvatarSize, string> size, string expectedClass, string expectedStyle)
+        private void ItShouldSetSizeProperly(OneOf<AvatarSize, string> size, string expectedClass, string expectedStyle)
         {
             var systemUnderTest = RenderComponent<AntDesign.Avatar>(parameters => parameters
                 .Add(x => x.Size, size)
@@ -34,6 +30,17 @@ namespace AntDesign.Tests.Avatar
                 </span>
             </span>");
         }
+
+        [Theory]
+        [InlineData(AvatarSize.Small, "ant-avatar-sm", "")]
+        [InlineData(AvatarSize.Large, "ant-avatar-lg", "")]
+        public void ItShouldSetSizeProperlyWithAvatarSize(AvatarSize size, string expectedClass, string expectedStyle)
+            => ItShouldSetSizeProperly(size, expectedClass, expectedStyle);
+
+        [Theory]
+        [InlineData("64.5", "", "width:64.5px;height:64.5px;line-height:64.5px;font-size:calc(64.5px / 2);")]
+        public void ItShouldSetSizeProperlyWithString(string size, string expectedClass, string expectedStyle)
+            => ItShouldSetSizeProperly(size, expectedClass, expectedStyle);
 
         [Theory]
         [InlineData(AvatarShape.Square, "ant-avatar-square")]

@@ -37,5 +37,7 @@ namespace AntDesign
         internal void SetSortModel(ITableSortModel sortModel);
 
         internal Expression<Func<TItem, object>> GetGroupByExpression<TItem>();
+
+        internal void SetHeaderFilter(Type columnDataType);
     }
 }

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using AntDesign.core.Extensions;
+using AntDesign.Core.Extensions;
 using AntDesign.Core;
 using AntDesign.Core.Documentation;
 using AntDesign.Datepicker.Locale;
@@ -78,14 +78,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string PopupContainerSelector { get; set; }
-
-        /// <summary>
-        /// Disable the date picker. 
-        /// When given a single boolean, it will disable all of it. 
-        /// When given an array of booleans, it represents disabling the start/end of a range: [start, end]
-        /// </summary>
-        [Parameter]
-        public OneOf<bool, bool[]> Disabled { get; set; } = new bool[] { false, false };
 
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
@@ -395,7 +387,14 @@ namespace AntDesign
         /// <default value="false" />
         [Parameter]
         public bool Use12Hours { get; set; }
-
+        
+        /// <summary>
+        /// When true, will show week column in date panel
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        public bool ShowWeek { get; set; }
+        
         /// <summary>
         /// Date used for "Today"
         /// </summary>
@@ -834,27 +833,7 @@ namespace AntDesign
             ResetPlaceholder();
         }
 
-        protected bool IsDisabled(int? index = null)
-        {
-            bool disabled = false;
-
-            Disabled.Switch(single =>
-            {
-                disabled = single;
-            }, arr =>
-            {
-                if (index == null || index > 1 || index < 0)
-                {
-                    disabled = arr[0] && arr[1];
-                }
-                else
-                {
-                    disabled = arr[(int)index];
-                }
-            });
-
-            return disabled;
-        }
+        protected abstract bool IsDisabled(int? index = null);
 
         /// <summary>
         /// Close the popover
@@ -913,7 +892,7 @@ namespace AntDesign
             if (input != null)
             {
                 input.IsOnFocused = false;
-                await JsInvokeAsync(JSInteropConstants.Blur, input.Ref);
+                await BlurAsync(input.Ref);
                 _needRefresh = true;
             }
         }
