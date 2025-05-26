@@ -60,15 +60,19 @@ on:
         default: false
         type: boolean
       artifact_name:
-        description: "Name of the build output artifact"
+        description: "Name of the artifact to upload"
         required: false
         default: "build-output"
-        type: string
       skip_artifact_upload:
-        description: "Skip uploading build artifacts"
+        description: "Skip uploading artifacts"
         required: false
         default: false
         type: boolean
+      job_name:
+        description: "Name of the current job (used for artifact naming)"
+        required: false
+        default: "build"
+        type: string
     secrets:
       NUGET_API_KEY:
         required: false
@@ -126,8 +130,6 @@ jobs:
   build:
     needs: prepare
     runs-on: ubuntu-latest
-    outputs:
-      status: success
     steps:
       - uses: actions/checkout@v4
       - name: Build
@@ -138,16 +140,13 @@ jobs:
           package-version: ${{ needs.prepare.outputs.package_version }}
           assembly-version: ${{ needs.prepare.outputs.assembly_version }}
           commit-hash: ${{ needs.prepare.outputs.commit_hash }}
-      - name: Upload build output
+
+      - name: Upload build artifacts
         if: ${{ !inputs.skip_artifact_upload }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.artifact_name }}
-          path: |
-            **/bin/Release
-            **/obj/Release
-            !**/bin/Release/refs
-            !**/obj/Release/refs
+          name: ${{ inputs.artifact_name }}-${{ inputs.job_name }}
+          path: ./build-output
           retention-days: 1
 
   lint:
@@ -167,11 +166,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download build output
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ inputs.artifact_name }}
-          path: .
       - name: Test
         uses: ./.github/actions/test
         with:
