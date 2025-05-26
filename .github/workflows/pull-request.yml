@@ -13,11 +13,44 @@ jobs:
     steps:
       - run: echo "Repository owner check passed"
 
-  configure-workflow:
+  build:
     needs: check-owner
     uses: ./.github/workflows/shared-config.yml
     with:
-      enable_aot: true
+      enable_aot: false
+      run_test: false
+      run_lint: false
+      publish_docs: false
+      publish_nuget: false
+      publish_wasm: false
+      publish_webapp: false
+
+  trigger-preview:
+    needs: build
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ github.token }}
+          event-type: preview-build
+          client-payload: |
+            {
+              "ref": "${{ github.ref }}",
+              "sha": "${{ github.sha }}",
+              "pr_number": "${{ github.event.pull_request.number }}",
+              "run_id": "${{ github.run_id }}",
+              "package_version": "${{ needs.build.outputs.package_version }}",
+              "assembly_version": "${{ needs.build.outputs.assembly_version }}",
+              "commit_hash": "${{ needs.build.outputs.commit_hash }}"
+            }
+
+  verify:
+    needs: build
+    uses: ./.github/workflows/shared-config.yml
+    with:
+      enable_aot: false
       run_test: true
       run_lint: true
       publish_docs: false
@@ -25,9 +58,20 @@ jobs:
       publish_wasm: false
       publish_webapp: false
 
+  set-output:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set build completed output
+        run: |
+          echo "build_completed=${{ needs.verify.outputs.build_completed }}" >> "$GITHUB_OUTPUT"
+          echo "package_version=${{ needs.verify.outputs.package_version }}" >> "$GITHUB_OUTPUT"
+          echo "assembly_version=${{ needs.verify.outputs.assembly_version }}" >> "$GITHUB_OUTPUT"
+          echo "commit_hash=${{ needs.verify.outputs.commit_hash }}" >> "$GITHUB_OUTPUT"
+
   upload-build:
-    needs: configure-workflow
-    if: ${{ always() && needs.configure-workflow.outputs.build_completed == 'true' }}
+    needs: [verify, set-output]
+    if: ${{ always() && needs.verify.outputs.build_completed == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifacts

@@ -116,6 +116,8 @@ jobs:
   build:
     needs: prepare
     runs-on: ubuntu-latest
+    outputs:
+      status: success
     steps:
       - uses: actions/checkout@v4
       - name: Build
@@ -126,6 +128,12 @@ jobs:
           package-version: ${{ needs.prepare.outputs.package_version }}
           assembly-version: ${{ needs.prepare.outputs.assembly_version }}
           commit-hash: ${{ needs.prepare.outputs.commit_hash }}
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: ./build-output
+          retention-days: 1
 
   lint:
     needs: prepare

@@ -3,34 +3,24 @@
 name: Preview Build
 
 on:
-  workflow_run:
-    workflows: ["Pull Request Checks"]
-    types:
-      - completed
+  repository_dispatch:
+    types: [preview-build]
 
 jobs:
-  check-owner:
-    runs-on: ubuntu-latest
-    if: |
-      github.repository_owner == 'ant-design-blazor' && 
-      github.event.workflow_run.conclusion == 'success' &&
-      fromJson(github.event.workflow_run.outputs.build_completed)
-    steps:
-      - run: echo "Repository owner check passed"
-
   prepare-preview:
-    needs: check-owner
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.ref }}
 
       - name: Download build artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
-          workflow: ${{ github.event.workflow_run.workflow_id }}
-          workflow_conclusion: success
-          name: build-artifacts
+          name: build-output
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.client_payload.run_id }}
           path: ./build-output
 
       - name: Build preview site
@@ -44,9 +34,9 @@ jobs:
           publish-webapp: false
           deploy-site: false
           preview-output-path: ./wwwroot
-          package-version: ${{ github.event.workflow_run.outputs.package_version }}
-          assembly-version: ${{ github.event.workflow_run.outputs.assembly_version }}
-          commit-hash: ${{ github.event.workflow_run.outputs.commit_hash }}
+          package-version: ${{ github.event.client_payload.package_version }}
+          assembly-version: ${{ github.event.client_payload.assembly_version }}
+          commit-hash: ${{ github.event.client_payload.commit_hash }}
           github-token: ${{ github.token }}
 
       - name: Upload preview site
@@ -61,7 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Save PR number
-        run: echo ${{ github.event.workflow_run.pull_requests[0].number }} > ./pr-id.txt
+        run: echo ${{ github.event.client_payload.pr_number }} > ./pr-id.txt
 
       - name: Upload PR number
         uses: actions/upload-artifact@v4
