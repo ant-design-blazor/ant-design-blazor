@@ -7,7 +7,7 @@ on:
       - feature
 
 permissions:
-  contents: read
+  contents: write
   actions: write
   pull-requests: write
 
@@ -29,7 +29,7 @@ jobs:
       publish_nuget: false
       publish_wasm: false
       publish_webapp: false
-      artifact_name: preview-build-output
+      artifact_name: build-output
       skip_artifact_upload: false
 
   trigger-preview:
@@ -48,10 +48,17 @@ jobs:
           echo "Assembly Version: ${{ needs.build.outputs.assembly_version }}"
           echo "Commit Hash: ${{ needs.build.outputs.commit_hash }}"
 
+      - name: Generate token
+        id: generate_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
           event-type: preview-build
           client-payload: |
             {
@@ -75,7 +82,7 @@ jobs:
       publish_nuget: false
       publish_wasm: false
       publish_webapp: false
-      artifact_name: preview-build-output
+      artifact_name: verify-output
       skip_artifact_upload: true
 
   set-output:
