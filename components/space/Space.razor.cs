@@ -25,7 +25,7 @@ namespace AntDesign
         /// Alignment of items - start | end | center | baseline
         /// </summary>
         [Parameter]
-        public OneOf<SpaceAlign, string> Align { get; set; }
+        public SpaceAlign Align { get; set; }
 
         /// <summary>
         /// Item flow direction
@@ -79,6 +79,14 @@ namespace AntDesign
 
         private string InnerStyle => Wrap && Direction == SpaceDirection.Horizontal ? "flex-wrap: wrap;" : "";
 
+        private readonly static Dictionary<SpaceAlign, string> _alignMap = new()
+        {
+            [SpaceAlign.Start] = "start",
+            [SpaceAlign.End] = "end",
+            [SpaceAlign.Center] = "center",
+            [SpaceAlign.Baseline] = "baseline"
+        };
+
         private void SetClass()
         {
             var hashId = UseStyle(PrefixCls, SpaceStyle.UseComponentStyle);
@@ -86,7 +94,7 @@ namespace AntDesign
                 .Add(PrefixCls)
                 .Add(hashId)
                 .Get(() => $"{PrefixCls}-{Direction.ToString().ToLowerInvariant()}")
-                .GetIf(() => $"{PrefixCls}-align-{Align}", () => HasAlign)
+                .GetIf(() => $"{PrefixCls}-align-{_alignMap[Align]}", () => HasAlign)
                 .If($"{PrefixCls}-align-center", () => !HasAlign && Direction == SpaceDirection.Horizontal)
                 .If($"{PrefixCls}-rtl", () => RTL);
         }

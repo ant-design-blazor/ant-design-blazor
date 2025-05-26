@@ -43,7 +43,7 @@
 
             @if (!NoStyle)
             {
-                @foreach (var message in _validationMessages)
+                @foreach (var message in ValidationMessages)
                 {
                     <div style="display: flex; flex-wrap: nowrap;">
                         <div class="ant-form-item-explain ant-form-item-explain-connected" role="alert">
@@ -57,7 +57,7 @@
             }
         </AntDesign.Col>
     </Row>
-    @if (!NoStyle && _validationMessages.Any())
+    @if (!NoStyle && ValidationMessages.Any())
     {
         <div class="ant-form-item-margin-offset" style="margin-bottom: -24px;"></div>
     }

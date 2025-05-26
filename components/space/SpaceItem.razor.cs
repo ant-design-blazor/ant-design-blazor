@@ -55,7 +55,7 @@ namespace AntDesign
             },
             singleSize =>
             {
-                _marginStyle = direction == SpaceDirection.Horizontal ? (_index != Parent.SpaceItemCount - 1 ? $"margin-right:{singleSize};" : "") : $"margin-bottom:{singleSize};";
+                _marginStyle = direction == SpaceDirection.Horizontal ? (_index != Parent.SpaceItemCount - 1 ? $"margin-right:{GetSize(singleSize)};" : "") : $"margin-bottom:{GetSize(singleSize)};";
             },
             arraySize =>
             {

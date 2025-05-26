@@ -21,8 +21,8 @@
     "url": "https://github.com/ElderJames/ant-design-blazor/issues"
   },
   "scripts": {
-    "start": "dotnet watch -p ./site/AntDesign.Docs.Server run -f net8",
-    "start:wasm": "dotnet watch -p ./site/AntDesign.Docs.Wasm run -f net8",
+    "start": "dotnet watch -p ./site/AntDesign.Docs.Server run -f net9.0",
+    "start:wasm": "dotnet watch -p ./site/AntDesign.Docs.Wasm run -f net9.0",
     "build:lib": "gulp build:library",
     "build:doc": "gulp build:preview --max-old-space-size=81920",
     "preinstall": "dotnet tool restore",

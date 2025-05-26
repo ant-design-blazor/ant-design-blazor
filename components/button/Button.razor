@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
-    <button class="@ClassMapper.Class" style="@(this.Danger ? this._btnWave + Style : Style)" id="@Id" type="@HtmlType" @ref="@Ref"
+    <button class="@ClassMapper.Class" style="@(this.Danger ? BtnWave + Style : Style)" id="@Id" type="@HtmlType" @ref="@Ref"
             @onclick="HandleOnClick" disabled="@Disabled"
             @onclick:stopPropagation="@OnClickStopPropagation"
             @onmouseup="OnMouseUp"

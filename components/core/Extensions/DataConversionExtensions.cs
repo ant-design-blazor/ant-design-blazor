@@ -4,7 +4,7 @@
 
 using System.Runtime.CompilerServices;
 
-namespace AntDesign.core.Extensions
+namespace AntDesign.Core.Extensions
 {
     public static class DataConversionExtensions
     {

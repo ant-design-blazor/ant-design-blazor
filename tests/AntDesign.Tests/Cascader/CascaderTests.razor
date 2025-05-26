@@ -16,6 +16,7 @@
     [Fact]
     public void Renders_with_disabled()
     {
+        JSInterop.SetupVoid("AntDesign.interop.styleHelper.addClsToFirstChild", _ => true);
         var cut = Context.Render(@<AntDesign.Cascader Disabled />);
         var spanNode = cut.Nodes.QuerySelector($".ant-select-disabled");
 

@@ -44,7 +44,8 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private string PresetColor => Color.IsT0 && Color.AsT0.HasValue ? Enum.GetName(typeof(BadgeColor), Color.AsT0)
+        private string PresetColor => Color.IsT0 && Color.AsT0.HasValue ?
+            Enum.GetName(typeof(BadgeColor), Color.AsT0).ToLowerInvariant()
             : Color.IsT1 && Color.AsT1.ToLowerInvariant().IsIn(_badgePresetColors) ?
             Color.AsT1.ToLowerInvariant() : null;
 

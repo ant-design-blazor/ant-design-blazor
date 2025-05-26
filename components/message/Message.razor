@@ -10,7 +10,7 @@
                 <div class="ant-message-notice-wrapper">
                     @foreach (var config in coinfigs)
                     {
-                        <MessageItem @key="config" Config="config"></MessageItem>
+                        <MessageItem @key="config" Config="config" OnMouseEnter="OnMouseEnter" OnMouseLeave="OnMouseLeave"></MessageItem>
                     }
                 </div>
             </div>

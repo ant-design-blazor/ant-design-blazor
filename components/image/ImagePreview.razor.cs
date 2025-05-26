@@ -89,7 +89,7 @@ namespace AntDesign
             };
         }
 
-        protected override async void OnAfterRender(bool firstRender)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {

@@ -52,14 +52,22 @@ namespace AntDesign
         public int TreeLevel => (ParentNode?.TreeLevel ?? -1) + 1;
 
         /// <summary>
-        /// record the index in children nodes list of parent node.
-        /// </summary>
-        internal int NodeIndex { get; set; }
-
-        /// <summary>
         /// Determine if it is the last node in the same level nodes.
         /// </summary>
-        internal bool IsLastNode => NodeIndex == (ParentNode?.ChildNodes.Count ?? TreeComponent?.ChildNodes.Count) - 1;
+        internal bool IsLastNode()
+        {
+            if (ParentNode is not null)
+            {
+                var nodeIndex = ParentNode.ChildNodes.IndexOf(this);
+                return nodeIndex == ParentNode.ChildNodes.Count - 1;
+
+            }
+            else
+            {
+                var nodeIndex = TreeComponent.ChildNodes.IndexOf(this);
+                return nodeIndex == TreeComponent.ChildNodes.Count - 1;
+            }
+        }
 
         /// <summary>
         /// add node to parent node
@@ -67,7 +75,6 @@ namespace AntDesign
         /// <param name="treeNode"></param>
         internal void AddNode(TreeNode<TItem> treeNode)
         {
-            treeNode.NodeIndex = ChildNodes.Count;
             ChildNodes.Add(treeNode);
             IsLeaf = false;
         }
@@ -323,7 +330,7 @@ namespace AntDesign
                 .If("drag-over-gap-bottom", () => DragTarget && DragTargetBottom)
                 .If("drag-over", () => DragTarget && !DragTargetBottom)
                 .If("drop-container", () => TargetContainer)
-                .If("ant-tree-treenode-leaf-last", () => IsLastNode);
+                .If("ant-tree-treenode-leaf-last", () => IsLastNode());
         }
 
         #endregion TreeNode
@@ -544,7 +551,7 @@ namespace AntDesign
         /// <summary>
         /// Triggered when the selection box is clicked
         /// </summary>
-        private async void OnCheckBoxClick(MouseEventArgs args)
+        private async Task OnCheckBoxClick(MouseEventArgs args)
         {
             if (Disabled || DisableCheckbox)
                 return;
@@ -1124,6 +1131,24 @@ namespace AntDesign
             }
 
             return ancestorKeys;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed) return;
+
+            if (ParentNode != null)
+            {
+                ParentNode.ChildNodes.Remove(this);
+                ParentNode = null;
+            }
+            else
+            {
+                TreeComponent.ChildNodes.Remove(this);
+            }
+
+            TreeComponent.RemoveNode(this);
+            base.Dispose(disposing);
         }
     }
 }

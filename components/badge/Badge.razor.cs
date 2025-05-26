@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -140,17 +140,17 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        private ClassMapper CountClassMapper { get; set; } = new ClassMapper();
+        private ClassMapper CountClassMapper { get; set; } = new();
 
-        private ClassMapper DotClassMapper { get; set; } = new ClassMapper();
+        private ClassMapper DotClassMapper { get; set; } = new();
 
-        private int[] _countArray = Array.Empty<int>();
+        private int[] _countArray = [];
 
-        private readonly int[] _countSingleArray = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        private char[] _maxNumberArray = [];
 
-        private char[] _maxNumberArray = Array.Empty<char>();
+        private static readonly int[] _countSingleArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-        private readonly static Hashtable _statusMap = new Hashtable()
+        private static readonly Dictionary<BadgeStatus, string> _statusMap = new()
         {
             [BadgeStatus.Default] = "default",
             [BadgeStatus.Success] = "success",
@@ -160,16 +160,16 @@ namespace AntDesign
         };
 
         private string StatusOrPresetColor => Status.HasValue
-            ? _statusMap[Status.Value].ToString()
+            ? _statusMap[Status.Value]
             : (Color.IsT0 && Color.AsT0.HasValue
                 ? Enum.GetName(typeof(BadgeColor), Color.AsT0)
-                : "");
+                : string.Empty);
 
         private bool HasStatusOrColor => Status.HasValue || ((Color.IsT0 && Color.AsT0.HasValue) || (Color.IsT1 && !string.IsNullOrWhiteSpace(Color.AsT1)));
 
-        private string CountStyle => Offset == default ? "" : $"{$"right:{-Offset.Left}px"};{$"margin-top:{Offset.Top}px"};";
+        private string CountStyle => Offset == default ? string.Empty : $"{$"right:{-Offset.Left}px"};{$"margin-top:{Offset.Top}px"};";
 
-        private string DotColorStyle => Color.IsT1 ? $"background:{Color.AsT1};" : "";
+        private string DotColorStyle => Color.IsT1 ? $"background:{Color.AsT1};" : string.Empty;
 
         private bool RealShowSup => (Dot && (!Count.HasValue || (Count > 0 || Count == 0 && ShowZero)))
                                 || Count > 0

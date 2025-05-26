@@ -49,7 +49,11 @@ namespace AntDesign
             {
                 CssSizeLengthUnit.Percent => "%",
                 CssSizeLengthUnit.Calc or CssSizeLengthUnit.NoUnit => "",
+#if NET5_0_OR_GREATER
+                _ => Enum.GetName(_unit).ToLowerInvariant()
+#else
                 _ => Enum.GetName(typeof(CssSizeLengthUnit), _unit).ToLowerInvariant()
+#endif
             };
 
             return $"{numericValue ?? StringValue}{unit}";

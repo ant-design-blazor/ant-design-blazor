@@ -16,7 +16,7 @@
             new Item("Item 2"),
         };
 
-        var cut = Render<Tree<Item>>(@<Tree TItem="Item" DataSource="data"/>);
+        var cut = Render<Tree<Item>>(@<Tree TItem="Item" DataSource="data" />);
         var firstItem = cut.FindComponent<TreeNode<Item>>();
 
         var firstItemIndex = data.IndexOf(firstItem.Instance.DataItem) + 1;
@@ -35,7 +35,7 @@
             new Item("Item 2"),
         };
 
-        var cut = Render<Tree<Item>>(@<Tree TItem="Item" DataSource="data"/>);
+        var cut = Render<Tree<Item>>(@<Tree TItem="Item" DataSource="data" />);
         var firstItem = cut.FindComponent<TreeNode<Item>>();
         firstItem.Instance.Remove();
 
@@ -59,8 +59,8 @@
 
         var cut = Render<Tree<Item>>(
             @<Tree TItem="Item"
-                   DataSource="data"
-                   ChildrenExpression="node => node.DataItem.Children">
+                           DataSource="data"
+                           ChildrenExpression="node => node.DataItem.Children">
             </Tree>);
 
         var treeNodes = cut.FindComponents<TreeNode<Item>>();
@@ -90,8 +90,8 @@
 
         var cut = Render<Tree<Item>>(
             @<Tree TItem="Item"
-                   DataSource="data"
-                   ChildrenExpression="node => node.DataItem.Children">
+                           DataSource="data"
+                           ChildrenExpression="node => node.DataItem.Children">
             </Tree>);
 
         var treeNodes = cut.FindComponents<TreeNode<Item>>();
@@ -99,6 +99,25 @@
         childComponent.Instance.Remove();
 
         data[0].Children.Should().NotContain(childComponent.Instance.DataItem, "Item should be removed in DataSource");
+    }
+
+    [Fact]
+    public async Task DataSource_Update()
+    {
+        // Create a container component to hold the Tree component
+        var cut = RenderComponent<TreeContainer>();
+
+        // Find the Tree component within the container
+        var tree = cut.FindComponent<Tree<AntDesign.Tests.Tree.TreeContainer.Data>>();
+
+        // Verify the initial state of the Tree component
+        tree.Instance.AllNodes.Should().HaveCount(5, "Tree should have 5 nodes");
+
+        // Add a new item to the data source
+        await cut.InvokeAsync(() => cut.Instance.AddItem());
+
+        // Verify the updated state of the Tree component
+        tree.Instance.AllNodes.Should().HaveCount(6, "Tree should have 6 nodes");
     }
 
 }

@@ -132,46 +132,107 @@ namespace AntDesign.Internal
 
         private async Task FileNameChanged(ChangeEventArgs e)
         {
-            var value = e.Value?.ToString();
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(e.Value?.ToString()))
             {
                 return;
             }
+
             var flist = await JSRuntime.InvokeAsync<List<UploadFileItem>>(JSInteropConstants.GetFileInfo, _file);
-            var index = 0;
-            if (Upload.BeforeAllUploadAsync != null && !(await Upload.BeforeAllUploadAsync.Invoke(flist)))
-            {
-                await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
-                return;
-            }
-            if (Upload.BeforeAllUpload != null && !Upload.BeforeAllUpload.Invoke(flist))
+            if (!await ValidateFiles(flist))
             {
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
                 return;
             }
 
-            foreach (var fileItem in flist)
+            // Generate IDs for all files first
+            var fileIds = flist.Select(_ => Guid.NewGuid().ToString()).ToList();
+
+            // Initialize file items
+            for (var i = 0; i < flist.Count; i++)
             {
-                var fileName = fileItem.FileName;
-                fileItem.Ext = System.IO.Path.GetExtension(fileItem.FileName);
-                var id = Guid.NewGuid().ToString();
+                var fileItem = flist[i];
+                InitializeFileItem(fileItem, fileIds[i]);
+            }
+
+            await Upload.FileListChanged.InvokeAsync(Upload.FileList);
+            await InvokeAsync(StateHasChanged);
+
+            if (Upload.BatchUpload)
+            {
+                await UploadFilesBatch(fileIds);
+            }
+            else
+            {
+                await UploadFilesSequentially(fileIds);
+            }
+
+            await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
+        }
+
+        private async Task<bool> ValidateFiles(List<UploadFileItem> files)
+        {
+            if (Upload.BeforeAllUploadAsync != null && !await Upload.BeforeAllUploadAsync.Invoke(files))
+            {
+                return false;
+            }
+            if (Upload.BeforeAllUpload != null && !Upload.BeforeAllUpload.Invoke(files))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void InitializeFileItem(UploadFileItem fileItem, string id)
+        {
+            fileItem.Ext = System.IO.Path.GetExtension(fileItem.FileName);
+            fileItem.Percent = 0;
+            fileItem.State = UploadState.Uploading;
+            fileItem.Id = id;
+            Upload.FileList.Add(fileItem);
+        }
+
+        private async Task UploadFilesBatch(List<string> fileIds)
+        {
+            await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, new
+            {
+                element = _file,
+                index = -1,
+                data = Data,
+                headers = Headers,
+                fileIds = fileIds,
+                url = Action,
+                name = Name,
+                instance = _currentInstance,
+                method = MethodString,
+                withCredentials = Upload.WithCredentials
+            });
+        }
+
+        private async Task UploadFilesSequentially(List<string> fileIds)
+        {
+            for (var i = 0; i < fileIds.Count; i++)
+            {
+                var fileItem = Upload.FileList.First(f => f.Id == fileIds[i]);
                 if (Upload.BeforeUpload != null && !Upload.BeforeUpload.Invoke(fileItem))
                 {
                     await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
                     return;
                 }
-                fileItem.Percent = 0;
-                fileItem.State = UploadState.Uploading;
-                fileItem.Id = id;
-                Upload.FileList.Add(fileItem);
-                await Upload.FileListChanged.InvokeAsync(this.Upload.FileList);
 
-                await InvokeAsync(StateHasChanged);
-                await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError", MethodString);
-                index++;
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, new
+                {
+                    element = _file,
+                    index = i,
+                    data = Data,
+                    headers = Headers,
+                    fileIds = new[] { fileIds[i] },
+                    url = Action,
+                    name = Name,
+                    instance = _currentInstance,
+                    method = MethodString,
+                    withCredentials = Upload.WithCredentials
+                });
             }
-
-            await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
         }
 
         [JSInvokable]
@@ -201,7 +262,7 @@ namespace AntDesign.Internal
         }
 
         [JSInvokable]
-        public async Task UploadError(string id, string reponseCode)
+        public async Task UploadError(string id, string errorMessage)
         {
             var file = Upload.FileList.FirstOrDefault(x => x.Id.Equals(id));
             if (file == null)
@@ -212,7 +273,8 @@ namespace AntDesign.Internal
             file.Percent = 100;
             _uploadInfo.File = file;
             _uploadInfo.FileList = Upload.FileList;
-            file.Response ??= reponseCode;
+            file.Response = errorMessage;
+
             await UploadChanged(id, 100);
             await InvokeAsync(StateHasChanged);
             if (Upload.OnSingleCompleted.HasDelegate)

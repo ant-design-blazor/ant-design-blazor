@@ -64,7 +64,7 @@
                         break;
                 }
 
-                <Tooltip Title="@tips" Disabled="file.State != UploadState.Fail">
+                <Tooltip Title="@tips" Disabled="file.State != UploadState.Fail" @key="@file.Id">
                     <Unbound>
                         <div Class="@containerClass" Style="@(IsPictureCard ? "" : "display: list-item;")">
                             @if (IsPictureCard && file.State == UploadState.Uploading)

@@ -66,6 +66,18 @@ If you get warnings like "`::deep` is not a valid pseudo-element." then you can 
 
 Here are some errors & warnings that you may encounter while using AntDesign Blazor, although most of these are not actual bugs of antd itself.
 
+### When binding events of components, a compilation error occurs: CS1503 cannot convert from 'method group' to 'Microsoft.AspNetCore.Components.EventCallback'
+
+This is because the component is generic, and it is necessary to explicitly set the generic type parameters of the component (starting with "T").
+
+```html
+<Select TItem="string"
+        TItemValue="string"
+        DataSource="@_personNames"
+        OnSelectedItemChanged="@((personName) => {...}))">
+</Select>
+```
+
 ### Build error for Col components
 
 Since the `Col` component is recognised by VS as a `col` element, you can use `AntDesign.Col` to avoid error.

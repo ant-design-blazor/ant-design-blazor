@@ -67,7 +67,7 @@ namespace AntDesign.Tests.Badge
         {
             var cut = Context.RenderComponent<BadgeRibbon>(p =>
                 {
-                    p.Add(x => x.Color, "green");
+                    p.Add(x => x.Color, BadgeColor.Green);
                     p.AddChildContent("<div />");
                 }
             );

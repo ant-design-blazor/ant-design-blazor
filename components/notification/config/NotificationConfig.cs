@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -95,5 +96,6 @@ namespace AntDesign
         /// </summary>
         public NotificationType NotificationType { get; set; } = NotificationType.None;
 
+        internal CancellationTokenSource Cts { get; set; }
     }
 }

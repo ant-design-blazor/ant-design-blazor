@@ -33,7 +33,7 @@ namespace AntDesign.Docs.Shared
         {
             _colorHex = args.Value.ToString();
 
-            await Message.Loading(Localizer["app.footer.primary-color-changing"].Value);
+            Message.Loading(Localizer["app.footer.primary-color-changing"].Value);
 
             await JS.InvokeVoidAsync("changeColor", _colorHex, DotNetObjectReference.Create(this));
         }
