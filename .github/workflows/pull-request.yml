@@ -106,7 +106,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-output-pr-build
+          name: build-output-pr-build-${{ github.run_attempt }}
           path: ./build-output
 
       - name: Upload build artifacts for preview
