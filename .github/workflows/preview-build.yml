@@ -36,7 +36,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: preview-build-output
+          name: build-output
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.client_payload.run_id }}
           path: .

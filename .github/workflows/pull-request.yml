@@ -31,7 +31,7 @@ jobs:
       publish_webapp: false
       artifact_name: build-output
       job_name: pr-build
-      skip_artifact_upload: false
+      is_build_job: true
 
   trigger-preview:
     needs: build
@@ -85,7 +85,7 @@ jobs:
       publish_webapp: false
       artifact_name: build-output
       job_name: pr-verify
-      skip_artifact_upload: true
+      is_build_job: false
 
   set-output:
     needs: verify
@@ -106,7 +106,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-output-pr-build-${{ github.run_attempt }}
+          name: build-output
           path: ./build-output
 
       - name: Upload build artifacts for preview

@@ -64,16 +64,16 @@ on:
         required: false
         type: string
         default: "build-output"
-      skip_artifact_upload:
-        description: "Skip uploading artifacts"
-        required: false
-        default: false
-        type: boolean
       job_name:
         description: "Name of the current job (used for artifact naming)"
         required: false
         type: string
         default: "build"
+      is_build_job:
+        description: "Whether this is the main build job"
+        required: false
+        type: boolean
+        default: false
     secrets:
       NUGET_API_KEY:
         required: false
@@ -144,20 +144,16 @@ jobs:
           assembly-version: ${{ needs.prepare.outputs.assembly_version }}
           commit-hash: ${{ needs.prepare.outputs.commit_hash }}
 
-      - name: Download build artifacts
-        if: ${{ !inputs.skip_artifact_upload }}
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          name: ${{ inputs.artifact_name }}-${{ inputs.job_name }}
-          path: ./build-output
-
       - name: Upload build artifacts
-        if: ${{ !inputs.skip_artifact_upload }}
+        if: ${{ inputs.is_build_job }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.artifact_name }}-${{ inputs.job_name }}-${{ github.run_attempt }}
-          path: ./build-output
+          name: ${{ inputs.artifact_name }}
+          path: |
+            **/bin/Release
+            **/obj/Release
+            !**/bin/Release/refs
+            !**/obj/Release/refs
           retention-days: 1
 
   lint:
@@ -177,6 +173,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: .
       - name: Test
         uses: ./.github/actions/test
         with:
@@ -189,7 +190,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download build output
+      - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
