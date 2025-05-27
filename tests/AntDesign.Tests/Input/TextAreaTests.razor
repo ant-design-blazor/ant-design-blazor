@@ -233,4 +233,21 @@
         var styleAttribute = textAreaElement.GetAttribute("style");
         styleAttribute.Should().Contain($"height: {expectedHeight}px");
 	}*@
+
+    [Fact]
+    public void TextArea_Class_Attribute_Is_Rendered()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .SetResult(_textAreaInfo);
+        string customClass = "custom-textarea-class";
+        
+        //Act
+        var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea Class="@customClass" />);
+        var textAreaElement = cut.Find("textarea");
+        
+        //Assert
+        textAreaElement.ClassList.Should().Contain(customClass);
+    }
 }
