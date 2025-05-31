@@ -309,8 +309,8 @@
         var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value="@value" DefaultToEmptyString="true" />);
 
         //Act
-        cut.Find("input").Input("");
-        cut.Find("input").Change("");
+        cut.Find("input").Input(null);
+        cut.Find("input").Change(null);
 
         //Assert
         cut.Instance.Value.Should().Be(string.Empty);
@@ -325,8 +325,8 @@
         var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value="@value" DefaultToEmptyString="false" />);
 
         //Act
-        cut.Find("input").Input("");
-        cut.Find("input").Change("");
+        cut.Find("input").Input(null);
+        cut.Find("input").Change(null);
 
         //Assert
         cut.Instance.Value.Should().BeNull();
