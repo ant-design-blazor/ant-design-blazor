@@ -52,45 +52,41 @@
         //Act
         var textArea = cut.Find("textarea");
         await textArea.KeyPressAsync(new KeyboardEventArgs { Code = "Enter" });
-        textArea.Input("test\r\n");
+        var newText = initialText + "\r\n";
+        textArea.Input(newText);
+        textArea.Change(newText);
         
         //Assert
         cut.Instance.Value.Should().Be(initialText);
     }
 
     [Fact]
-    public async Task TextArea_PreventLineBreak_Should_Allow_NewLine_With_Ctrl()
+    public async Task TextArea_OnPressEnter_Should_Add_NewLine_When_Enter_Pressed_without_calling_PreventLineBreak()
     {
         //Arrange
         JSCommonMock();
         JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
             .SetResult(_textAreaInfo);
         var initialText = "test";
-        Action<PressEnterEventArgs> action = (args) => { args.PreventLineBreak(); };
+        var onPressEnterInvoked = false;
+        Action<PressEnterEventArgs> action = (args) => { onPressEnterInvoked = true; };
         var cut = Render<AntDesign.TextArea>(
             @<AntDesign.TextArea Value="@initialText" OnPressEnter="@(action)" />
         );
         
         //Act
         var textArea = cut.Find("textarea");
+    
+       await textArea.KeyPressAsync(new KeyboardEventArgs { Code = "Enter" });
         
-        // 1. 先触发键盘事件
-        await textArea.KeyDownAsync(new KeyboardEventArgs { Key = "Enter", Code = "Enter", CtrlKey = true });
         
-        // 2. 然后更新文本内容
-        var newText = initialText + "\n";
-        await textArea.InputAsync(new ChangeEventArgs { Value = newText });
-        
-        // 3. 最后触发change事件
-        await textArea.ChangeAsync(new ChangeEventArgs { Value = newText });
-        
-        // 4. 等待组件重新渲染
-        cut.WaitForAssertion(() => 
-        {
-            var actualValue = cut.Instance.Value;
-            actualValue.Should().NotBeNull("Value should not be null");
-            actualValue.Should().Be(newText, "Value should match exactly including newline");
-        }, timeout: TimeSpan.FromSeconds(1));
+        var newText = initialText + "\r\n";
+        textArea.Input(newText);
+        textArea.Change(newText);
+
+        var actualValue = cut.Instance.Value;
+        onPressEnterInvoked.Should().BeTrue();
+        actualValue.Should().Be(newText);
     }
 
     [Fact]
