@@ -184,7 +184,7 @@ namespace AntDesign
         protected override async Task OnInitializedAsync()
         {
             bool isAlreadySelected = false;
-            if (SelectParent.SelectOptions == null)
+            if (SelectParent?.HasSelectOptions != true)
             {
                 // The SelectOptionItem was already created, now only the SelectOption has to be
                 // bound to the SelectOptionItem.
@@ -293,7 +293,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (SelectParent?.SelectOptions != null)
+            if (SelectParent?.HasSelectOptions == true)
             {
                 // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource .
                 var selectOptionItem = SelectParent.SelectOptionItems

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.JsInterop;
 using AntDesign.Select.Internal;
@@ -90,6 +91,19 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public IEnumerable<TItem> DataSource { get; set; }
+
+        /// <summary>
+        /// Used for rendering select options manually.
+        /// </summary>
+        [Parameter]
+        public RenderFragment SelectOptions { get; set; }
+
+        /// <summary>
+        /// Used for rendering select options manually, alias for <see cref="SelectOptions"/>.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.5.0")]
+        public RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// EqualityComparer that will be used during DataSource change
@@ -324,6 +338,8 @@ namespace AntDesign
             get => !string.IsNullOrWhiteSpace(GroupName);
         }
 
+        internal override bool HasSelectOptions => SelectOptions != null;
+
         internal ElementReference DropDownRef => _dropDown.GetOverlayComponent().Ref;
         private ElementReference _scrollableSelectDiv;
 
@@ -379,6 +395,11 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            if (ChildContent != null)
+            {
+                SelectOptions = ChildContent;
+            }
+
             if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && ValueProperty == null && string.IsNullOrWhiteSpace(ValueName))
             {
                 throw new ArgumentNullException(nameof(ValueName));
