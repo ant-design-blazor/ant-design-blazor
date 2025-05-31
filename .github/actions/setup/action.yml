@@ -1,0 +1,31 @@
+name: "Setup Environment"
+description: "Setup .NET and Node.js environment"
+
+inputs:
+  dotnet-versions:
+    description: "List of .NET versions to install"
+    required: false
+    default: |
+      3.1.x
+      5.0.x
+      6.0.x
+      7.0.x
+      8.0.x
+      9.0.x
+  node-version:
+    description: "Node.js version"
+    required: false
+    default: "18.x"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup .NET SDKs
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ inputs.dotnet-versions }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}

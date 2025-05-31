@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Reflection;
 using System.Threading.Tasks;
 using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
@@ -20,6 +21,8 @@ namespace AntDesign.Docs.Shared
 
         [Inject] private ILocalizationService Language { get; set; }
         [Inject] private IStringLocalizer Localizer { get; set; }
+        private string _commit;
+
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -27,6 +30,9 @@ namespace AntDesign.Docs.Shared
             {
                 InvokeAsync(StateHasChanged);
             };
+
+            var assembly = Assembly.GetExecutingAssembly();
+            _commit = assembly.GetCustomAttribute<AssemblyMetadataAttribute>()?.Value;
         }
 
         private async Task ChangeColor(ChangeEventArgs args)

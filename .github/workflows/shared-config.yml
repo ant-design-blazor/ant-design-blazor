@@ -1,0 +1,213 @@
+name: Shared Workflow Configuration
+
+on:
+  workflow_call:
+    inputs:
+      dotnet-versions:
+        description: "List of .NET versions to install"
+        required: false
+        type: string
+        default: |
+          3.1.x
+          5.0.x
+          6.0.x
+          7.0.x
+          8.0.x
+          9.0.x
+      node_version:
+        description: "Node.js version"
+        required: false
+        default: "18.x"
+        type: string
+      fetch_depth:
+        description: "Git fetch depth"
+        required: false
+        default: "0"
+        type: string
+      enable_aot:
+        description: "Enable AOT compilation"
+        required: false
+        default: false
+        type: boolean
+      run_test:
+        description: "Run test suite"
+        required: false
+        default: false
+        type: boolean
+      run_lint:
+        description: "Run lint check"
+        required: false
+        default: false
+        type: boolean
+      publish_docs:
+        description: "Publish documentation"
+        required: false
+        default: false
+        type: boolean
+      publish_nuget:
+        description: "Publish NuGet packages"
+        required: false
+        default: false
+        type: boolean
+      publish_wasm:
+        description: "Publish WebAssembly docs"
+        required: false
+        default: false
+        type: boolean
+      publish_webapp:
+        description: "Publish WebApp docs"
+        required: false
+        default: false
+        type: boolean
+      artifact_name:
+        description: "Name of the artifact to upload"
+        required: false
+        type: string
+        default: "build-output"
+      job_name:
+        description: "Name of the current job (used for artifact naming)"
+        required: false
+        type: string
+        default: "build"
+      is_build_job:
+        description: "Whether this is the main build job"
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      NUGET_API_KEY:
+        required: false
+      CODECOV_TOKEN:
+        required: false
+      CF_TOKEN:
+        required: false
+      CF_ID:
+        required: false
+      AntDesignDocsWebApp_6BBA:
+        required: false
+    outputs:
+      version:
+        description: "Generated version number"
+        value: ${{ jobs.prepare.outputs.version }}
+      build_completed:
+        description: "Indicates if build job is completed"
+        value: ${{ jobs.build.result == 'success' }}
+      package_version:
+        description: "Package version"
+        value: ${{ jobs.prepare.outputs.package_version }}
+      assembly_version:
+        description: "Assembly version"
+        value: ${{ jobs.prepare.outputs.assembly_version }}
+      commit_hash:
+        description: "Commit hash"
+        value: ${{ jobs.prepare.outputs.commit_hash }}
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.prepare_version.outputs.version }}
+      assembly_version: ${{ steps.prepare_version.outputs.assembly_version }}
+      package_version: ${{ steps.prepare_version.outputs.package_version }}
+      commit_hash: ${{ steps.prepare_version.outputs.commit_hash }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ inputs.fetch_depth }}
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup
+        with:
+          dotnet-versions: ${{ inputs.dotnet-versions }}
+          node-version: ${{ inputs.node_version }}
+
+      - name: Prepare Version
+        id: prepare_version
+        uses: ./.github/actions/prepare
+        with:
+          fetch-depth: ${{ inputs.fetch_depth }}
+          enable-aot: ${{ inputs.enable_aot }}
+
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    outputs:
+      status: success
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        uses: ./.github/actions/build
+        with:
+          fetch-depth: ${{ inputs.fetch_depth }}
+          node-version: ${{ inputs.node_version }}
+          package-version: ${{ needs.prepare.outputs.package_version }}
+          assembly-version: ${{ needs.prepare.outputs.assembly_version }}
+          commit-hash: ${{ needs.prepare.outputs.commit_hash }}
+
+      - name: Upload build artifacts
+        if: ${{ inputs.is_build_job }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: |
+            **/bin/Release
+            **/obj/Release
+            !**/bin/Release/refs
+            !**/obj/Release/refs
+          retention-days: 1
+
+  lint:
+    needs: prepare
+    if: ${{ inputs.run_lint }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint
+        uses: ./.github/actions/lint
+        with:
+          node-version: ${{ inputs.node_version }}
+
+  test:
+    needs: build
+    if: ${{ inputs.run_test }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: .
+      - name: Test
+        uses: ./.github/actions/test
+        with:
+          node-version: ${{ inputs.node_version }}
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+
+  publish:
+    needs: [prepare, build, test]
+    if: ${{ always() && needs.build.result == 'success' && (needs.test.result == 'success' || needs.test.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: .
+      - name: Publish
+        uses: ./.github/actions/publish
+        with:
+          enable-aot: ${{ inputs.enable_aot }}
+          publish-docs: ${{ inputs.publish_docs }}
+          publish-nuget: ${{ inputs.publish_nuget }}
+          publish-wasm: ${{ inputs.publish_wasm }}
+          publish-webapp: ${{ inputs.publish_webapp }}
+          package-version: ${{ needs.prepare.outputs.package_version }}
+          assembly-version: ${{ needs.prepare.outputs.assembly_version }}
+          commit-hash: ${{ needs.prepare.outputs.commit_hash }}
+          github-token: ${{ github.token }}
+          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
+          cf-token: ${{ secrets.CF_TOKEN }}
+          cf-id: ${{ secrets.CF_ID }}
+          webapp-publish-profile: ${{ secrets.AntDesignDocsWebApp_6BBA }}
