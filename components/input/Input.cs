@@ -205,7 +205,7 @@ namespace AntDesign
         /// The callback function that is triggered when Enter key is pressed
         /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
+        public EventCallback<PressEnterEventArgs> OnPressEnter { get; set; }
 
         /// <summary>
         /// Provide prompt information that describes the expected value of the input field
@@ -470,17 +470,20 @@ namespace AntDesign
 
         protected void OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (EnableOnPressEnter && args?.Key == "Enter")
+            if (EnableOnPressEnter && args?.Code == "Enter")
             {
                 CallAfterValueChanged(async () =>
                 {
-                    await OnPressEnter.InvokeAsync(args);
-                    await OnPressEnterAsync();
+                    var enterArgs = new PressEnterEventArgs(args);
+                    await OnPressEnterAsync(enterArgs);
                 });
             }
         }
 
-        protected virtual Task OnPressEnterAsync() => Task.CompletedTask;
+        protected virtual async Task OnPressEnterAsync(PressEnterEventArgs args)
+        {
+            await OnPressEnter.InvokeAsync(args);
+        }
 
         protected void CallAfterValueChanged(Func<Task> workItem)
         {
@@ -491,6 +494,11 @@ namespace AntDesign
             // However, if the user wishes to use the carriage return event to get the bound value, the value needs to be bound first
             ChangeValue(InputType != "textarea");
             BindOnInput = original;
+
+            while (_afterValueChangedQueue.TryDequeue(out var task))
+            {
+                InvokeAsync(task.Invoke);
+            }
         }
 
         protected async Task OnKeyUpAsync(KeyboardEventArgs args)
@@ -619,10 +627,6 @@ namespace AntDesign
             if (!_compositionInputting && CurrentValueAsString != _inputString)
             {
                 CurrentValueAsString = _inputString;
-            }
-            while (_afterValueChangedQueue.TryDequeue(out var task))
-            {
-                InvokeAsync(task.Invoke);
             }
         }
 

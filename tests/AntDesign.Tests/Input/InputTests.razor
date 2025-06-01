@@ -332,4 +332,54 @@
         cut.Instance.Value.Should().BeNull();
         value.Should().BeNull();
     }
+
+    public async Task Input_OnPressEnter_Should_Trigger_Callback()
+    {
+        //Arrange
+        var onPressEnterInvoked = false;
+        Func<PressEnterEventArgs, Task> action = args => { onPressEnterInvoked = true; return Task.CompletedTask; };
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" OnPressEnter="@(action)" />);
+        
+        //Act
+        var input = cut.Find("input");
+        await input.KeyPressAsync(new KeyboardEventArgs { Code = "Enter" });
+        
+        //Assert
+        onPressEnterInvoked.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Input_OnPressEnter_Should_Not_Trigger_On_Other_Keys()
+    {
+        //Arrange
+        var onPressEnterInvoked = false;
+        Func<PressEnterEventArgs, Task> action = args => { onPressEnterInvoked = true; return Task.CompletedTask; };
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" OnPressEnter="@(action)" />);
+        
+        //Act
+        var input = cut.Find("input");
+        await input.KeyPressAsync(new KeyboardEventArgs { Code = "KeyA" });
+        
+        //Assert
+        onPressEnterInvoked.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Input_OnPressEnter_Should_Provide_KeyboardEventArgs()
+    {
+        //Arrange
+        KeyboardEventArgs? capturedArgs = null;
+        Action<PressEnterEventArgs> action = args => { capturedArgs = args; };
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" OnPressEnter="@(action)" />);
+        
+        //Act
+        var input = cut.Find("input");
+        await input.KeyPressAsync(new KeyboardEventArgs { Code = "Enter", CtrlKey = true });
+        
+        //Assert
+        capturedArgs.Should().NotBeNull();
+        capturedArgs!.Code.Should().Be("Enter");
+        capturedArgs.CtrlKey.Should().BeTrue();
+
+    }
 }

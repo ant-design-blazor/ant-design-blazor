@@ -228,6 +228,31 @@ namespace AntDesign
         protected bool _isNotifyFieldChanged = true;
         private bool _isValueGuid;
 
+        protected void ForceUpdateValueString(string value)
+        {
+            CurrentValueAsString = null;
+
+            CallAfterRender(async () =>
+            {
+                _value = default;
+                CurrentValueAsString = value;
+                if (TryParseValueFromString(value, out var parsedValue, out var validationErrorMessage))
+                {
+                    _value = parsedValue;
+                    _setValueDelegate?.Invoke(Form.Model, parsedValue);
+                    await ValueChanged.InvokeAsync(parsedValue);
+
+                    OnCurrentValueChange(parsedValue);
+
+                    if (_isNotifyFieldChanged && FieldIdentifier is { Model: not null, FieldName: not null })
+                    {
+                        EditContext?.NotifyFieldChanged(FieldIdentifier);
+                    }
+                }
+            });
+            StateHasChanged();
+        }
+
         /// <summary>
         /// Constructs an instance of <see cref="InputBase{TValue}"/>.
         /// </summary>

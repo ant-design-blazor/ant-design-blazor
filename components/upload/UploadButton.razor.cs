@@ -188,7 +188,20 @@ namespace AntDesign.Internal
             fileItem.Percent = 0;
             fileItem.State = UploadState.Uploading;
             fileItem.Id = id;
-            Upload.FileList.Add(fileItem);
+
+            var existingFile = Upload.FileList.FirstOrDefault(f => f.FileName == fileItem.FileName);
+            if (existingFile != null)
+            {
+                // Update existing file properties
+                existingFile.Ext = fileItem.Ext;
+                existingFile.Percent = fileItem.Percent;
+                existingFile.State = fileItem.State;
+                existingFile.Id = fileItem.Id;
+            }
+            else
+            {
+                Upload.FileList.Add(fileItem);
+            }
         }
 
         private async Task UploadFilesBatch(List<string> fileIds)
