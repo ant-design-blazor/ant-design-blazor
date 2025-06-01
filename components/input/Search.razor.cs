@@ -153,10 +153,10 @@ namespace AntDesign
             await SearchAsync();
         }
 
-        protected override async Task OnPressEnterAsync()
+        protected override async Task OnPressEnterAsync(PressEnterEventArgs args)
         {
+            await base.OnPressEnterAsync(args);
             await SearchAsync();
-            await base.OnPressEnterAsync();
         }
 
         private async Task SearchAsync()
