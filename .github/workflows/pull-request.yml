@@ -6,46 +6,112 @@ on:
       - master
       - feature
 
+permissions:
+  contents: write
+  actions: write
+  pull-requests: write
+
 jobs:
-  build:
+  check-owner:
     runs-on: ubuntu-latest
-
+    if: github.repository_owner == 'ant-design-blazor'
     steps:
-      - uses: actions/checkout@v1
+      - run: echo "Repository owner check passed"
 
-      - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: |
-            3.1.x
-            5.0.x
-            6.0.x
-            7.0.x
-            8.0.x
-            9.0.x
+  build:
+    needs: check-owner
+    uses: ./.github/workflows/shared-config.yml
+    with:
+      enable_aot: true
+      run_test: false
+      run_lint: false
+      publish_docs: false
+      publish_nuget: false
+      publish_wasm: false
+      publish_webapp: false
+      artifact_name: build-output
+      job_name: pr-build
+      is_build_job: true
 
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "18.x"
-
-      - name: Check Building ⚙
+  trigger-preview:
+    needs: build
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug Info
         run: |
-          npm install
-          dotnet build
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "SHA: ${{ github.sha }}"
+          echo "PR Number: ${{ github.event.pull_request.number }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Package Version: ${{ needs.build.outputs.package_version }}"
+          echo "Assembly Version: ${{ needs.build.outputs.assembly_version }}"
+          echo "Commit Hash: ${{ needs.build.outputs.commit_hash }}"
 
-      - name: Test 📝
-        run: |
-          npm run lint
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net6
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net8
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net9
-          npm install ./tests/AntDesign.Tests.Js
-          npm --prefix ./tests/AntDesign.Tests.Js run test-cov
-          find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Generate token
+        id: generate_token
+        uses: actions/create-github-app-token@v1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.cobertura.xml,./cobertura-coverage.xml
-          fail_ci_if_error: false
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          event-type: preview-build
+          client-payload: |
+            {
+              "ref": "${{ github.ref }}",
+              "sha": "${{ github.sha }}",
+              "pr_number": "${{ github.event.pull_request.number }}",
+              "run_id": "${{ github.run_id }}",
+              "package_version": "${{ needs.build.outputs.package_version }}",
+              "assembly_version": "${{ needs.build.outputs.assembly_version }}",
+              "commit_hash": "${{ needs.build.outputs.commit_hash }}"
+            }
+
+  verify:
+    needs: build
+    uses: ./.github/workflows/shared-config.yml
+    with:
+      enable_aot: true
+      run_test: true
+      run_lint: true
+      publish_docs: false
+      publish_nuget: false
+      publish_wasm: false
+      publish_webapp: false
+      artifact_name: build-output
+      job_name: pr-verify
+      is_build_job: false
+
+  set-output:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set build completed output
+        run: |
+          echo "build_completed=${{ needs.verify.outputs.build_completed }}" >> "$GITHUB_OUTPUT"
+          echo "package_version=${{ needs.verify.outputs.package_version }}" >> "$GITHUB_OUTPUT"
+          echo "assembly_version=${{ needs.verify.outputs.assembly_version }}" >> "$GITHUB_OUTPUT"
+          echo "commit_hash=${{ needs.verify.outputs.commit_hash }}" >> "$GITHUB_OUTPUT"
+
+  upload-build:
+    needs: [verify, set-output]
+    if: ${{ always() && needs.verify.outputs.build_completed == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: ./build-output
+
+      - name: Upload build artifacts for preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: ./build-output
+          retention-days: 1

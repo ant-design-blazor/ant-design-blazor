@@ -19,5 +19,9 @@ namespace AntDesign.Docs
         public string Cover { get; set; }
 
         public DemoMenuItem[] Children { get; set; }
+
+        public string ReleaseVersion { get; set; }
+
+        public string LatestVersion { get; set; }
     }
 }

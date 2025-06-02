@@ -2,64 +2,81 @@
 
 name: Preview Build
 
-on: pull_request
+on:
+  repository_dispatch:
+    types: [preview-build]
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
 
 jobs:
-
-  build-site:
-    name: build preview
+  prepare-preview:
     runs-on: ubuntu-latest
-
     steps:
-      - name: checkout
-        uses: actions/checkout@master
-
-      - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: |
-            3.1.x
-            5.0.x
-            6.0.x
-            7.0.x
-            8.0.x
-            9.0.x
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: "18.x"
-
-      - name: Prepare AOT workload
+      - name: Debug Info
         run: |
-          dotnet workload install wasm-tools
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Event Type: ${{ github.event.action }}"
+          echo "Client Payload:"
+          echo "  Ref: ${{ github.event.client_payload.ref }}"
+          echo "  SHA: ${{ github.event.client_payload.sha }}"
+          echo "  PR Number: ${{ github.event.client_payload.pr_number }}"
+          echo "  Run ID: ${{ github.event.client_payload.run_id }}"
+          echo "  Package Version: ${{ github.event.client_payload.package_version }}"
+          echo "  Assembly Version: ${{ github.event.client_payload.assembly_version }}"
+          echo "  Commit Hash: ${{ github.event.client_payload.commit_hash }}"
 
-      - name: build site
-        id: site
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.ref }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.client_payload.run_id }}
+          path: .
+
+      - name: List downloaded files
         run: |
-          npm install
-          dotnet build
-          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o _site
-          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll _site/wwwroot/_framework
-          find ./_site/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
-        env:
-          PACKAGE_VERSION: ${{ github.event.number }}
+          echo "Downloaded files:"
+          ls -R
 
-      - name: upload site artifact
+      - name: Build preview site
+        id: build_preview
+        uses: ./.github/actions/publish
+        with:
+          enable-aot: true
+          publish-docs: true
+          publish-wasm: true
+          publish-nuget: false
+          publish-webapp: false
+          deploy-site: false
+          preview-output-path: ./wwwroot
+          package-version: ${{ github.event.client_payload.package_version }}
+          assembly-version: ${{ github.event.client_payload.assembly_version }}
+          commit-hash: ${{ github.event.client_payload.commit_hash }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload preview site
         uses: actions/upload-artifact@v4
         with:
           name: site
-          path: _site/wwwroot/
-          retention-days: 5
+          path: ./wwwroot
+          retention-days: 1
 
-      # Upload PR id for next workflow use
+  save-pr-info:
+    needs: prepare-preview
+    runs-on: ubuntu-latest
+    steps:
       - name: Save PR number
-        if: ${{ always() }}
-        run: echo ${{ github.event.number }} > ./pr-id.txt
+        run: echo ${{ github.event.client_payload.pr_number }} > ./pr-id.txt
 
       - name: Upload PR number
-        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: pr
