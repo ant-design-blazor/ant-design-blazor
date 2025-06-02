@@ -302,6 +302,37 @@
     }
 
     [Fact]
+    public void Input_DefaultToEmptyString_True_Returns_EmptyString()
+    {
+        //Arrange
+        string? value = "test";
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value="@value" DefaultToEmptyString="true" />);
+
+        //Act
+        cut.Find("input").Input(null);
+        cut.Find("input").Change(null);
+
+        //Assert
+        cut.Instance.Value.Should().Be(string.Empty);
+        value.Should().Be(string.Empty);
+    }
+
+    [Fact]
+    public void Input_DefaultToEmptyString_False_Returns_Null()
+    {
+        //Arrange
+        string? value = "test";
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input @bind-Value="@value" DefaultToEmptyString="false" />);
+
+        //Act
+        cut.Find("input").Input(null);
+        cut.Find("input").Change(null);
+
+        //Assert
+        cut.Instance.Value.Should().BeNull();
+        value.Should().BeNull();
+    }
+
     public async Task Input_OnPressEnter_Should_Trigger_Callback()
     {
         //Arrange
@@ -349,5 +380,6 @@
         capturedArgs.Should().NotBeNull();
         capturedArgs!.Code.Should().Be("Enter");
         capturedArgs.CtrlKey.Should().BeTrue();
+
     }
 }

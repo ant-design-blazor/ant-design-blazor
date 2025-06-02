@@ -276,6 +276,14 @@ namespace AntDesign
         [Parameter]
         public string Width { get; set; }
 
+        /// <summary>
+        /// When true, value will be set to empty string.
+        /// When false, value will be set to <c>null</c> when content is empty or whitespace. 
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool DefaultToEmptyString { get; set; }
+
         protected Dictionary<string, object> Attributes { get; set; }
 
         protected ForwardRef WrapperRefBack { get; set; }
@@ -662,6 +670,18 @@ namespace AntDesign
             }
 
             base.OnCurrentValueChange(value);
+        }
+
+        protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
+        {
+            if (string.IsNullOrWhiteSpace(value) && DefaultToEmptyString && typeof(TValue) == typeof(string))
+            {
+                result = (TValue)(object)string.Empty;
+                validationErrorMessage = null;
+                return true;
+            }
+
+            return base.TryParseValueFromString(value, out result, out validationErrorMessage);
         }
 
         /// <summary>
