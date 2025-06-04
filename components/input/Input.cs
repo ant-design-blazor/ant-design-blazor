@@ -541,12 +541,20 @@ namespace AntDesign
 
         protected virtual async Task OnkeyDownAsync(KeyboardEventArgs args)
         {
-            if (args.Key == "ArrowRight" && ShowSuggestion)
+            if (ShowSuggestion && (args.Key == "ArrowRight" || args.Key == "Tab"))
             {
+                if (args.Key == "Tab")
+                {
+                    await FocusAsync(Ref, FocusBehavior.FocusAndClear, true);
+                }
+                CallAfterRender(() =>
+                {
+                    ChangeValue(true);
+                    return Task.CompletedTask;
+                });
+                ChangeValue(true);
                 _inputString = SuggestionText;
                 _internalSuggestionText = null;
-                await OnChangeAsync(new ChangeEventArgs { Value = _inputString });
-                StateHasChanged();
             }
 
             if (OnKeyDown.HasDelegate) await OnKeyDown.InvokeAsync(args);
