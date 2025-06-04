@@ -276,6 +276,18 @@ namespace AntDesign
         [Parameter]
         public string Width { get; set; }
 
+        /// <summary>
+        /// The callback function that is triggered when input changes to get suggestion text
+        /// </summary>
+        [Parameter]
+        public EventCallback<string> OnSuggestion { get; set; }
+
+        /// <summary>
+        /// The suggestion text that will be shown in gray after the input
+        /// </summary>
+        [Parameter]
+        public string SuggestionText { get; set; }
+
         protected Dictionary<string, object> Attributes { get; set; }
 
         protected ForwardRef WrapperRefBack { get; set; }
@@ -340,6 +352,31 @@ namespace AntDesign
 
         private readonly Queue<Func<Task>> _afterValueChangedQueue = new();
 
+        private string _suggestionStyle = "position: absolute; left: 0; top: 0; color: #bfbfbf; pointer-events: none; background: transparent; width: 100%; height: 100%; box-sizing: border-box; display: flex; align-items: center; font: inherit;";
+        private string _inputWrapperStyle = "position: relative; display: inline-block; width: 100%;";
+        private string _preCursorStyle = "visibility: hidden; white-space: pre; padding: 4px 11px;";
+        private string _postCursorStyle = "color: #bfbfbf; white-space: pre; margin-left: -11px;";
+        private string _internalSuggestionText;
+        private bool ShowSuggestion => !string.IsNullOrEmpty(_internalSuggestionText) && IsFocused;
+
+        private void UpdateInternalSuggestion()
+        {
+            if (string.IsNullOrEmpty(SuggestionText) || string.IsNullOrEmpty(_inputString))
+            {
+                _internalSuggestionText = null;
+                return;
+            }
+
+            if (SuggestionText.StartsWith(_inputString, StringComparison.CurrentCultureIgnoreCase))
+            {
+                _internalSuggestionText = SuggestionText[_inputString.Length..];
+            }
+            else
+            {
+                _internalSuggestionText = null;
+            }
+        }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -350,6 +387,15 @@ namespace AntDesign
             }
 
             _inputString = Value?.ToString();
+
+            ClassMapper.Clear()
+                .Add($"{PrefixCls}")
+                .If($"{PrefixCls}-borderless", () => !Bordered)
+                .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
+                .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
+                .If($"{PrefixCls}-rtl", () => RTL)
+                .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass));
 
             SetClasses();
             SetAttributes();
@@ -450,6 +496,7 @@ namespace AntDesign
                 BindOnInput = true;
             }
 
+            UpdateInternalSuggestion();
             SetClasses();
             SetAttributes();
         }
@@ -494,6 +541,14 @@ namespace AntDesign
 
         protected virtual async Task OnkeyDownAsync(KeyboardEventArgs args)
         {
+            if (args.Key == "ArrowRight" && ShowSuggestion)
+            {
+                _inputString = SuggestionText;
+                _internalSuggestionText = null;
+                await OnChangeAsync(new ChangeEventArgs { Value = _inputString });
+                StateHasChanged();
+            }
+
             if (OnKeyDown.HasDelegate) await OnKeyDown.InvokeAsync(args);
         }
 
@@ -673,6 +728,14 @@ namespace AntDesign
             {
                 await OnInput.InvokeAsync(args);
             }
+
+            if (OnSuggestion.HasDelegate)
+            {
+                await OnSuggestion.InvokeAsync(_inputString);
+            }
+
+            UpdateInternalSuggestion();
+            StateHasChanged();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -733,15 +796,19 @@ namespace AntDesign
                 builder.CloseElement();
             }
 
-            // input
-            builder.OpenElement(41, "input");
-            builder.AddAttribute(42, "class", ClassMapper.Class);
-            builder.AddAttribute(43, "style", $"{WidthStyle} {Style}");
+            // Create a wrapper for input and suggestion
+            builder.OpenElement(40, "span");
+            builder.AddAttribute(41, "style", _inputWrapperStyle);
+
+            // Real input
+            builder.OpenElement(42, "input");
+            builder.AddAttribute(43, "class", ClassMapper.Class);
+            builder.AddAttribute(44, "style", $"{WidthStyle} {Style}");
 
             bool needsDisabled = Disabled;
             if (Attributes != null)
             {
-                builder.AddMultipleAttributes(44, Attributes);
+                builder.AddMultipleAttributes(45, Attributes);
                 if (!Attributes.TryGetValue("disabled", out object disabledAttribute))
                 {
                     needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
@@ -750,7 +817,7 @@ namespace AntDesign
 
             if (AdditionalAttributes != null)
             {
-                builder.AddMultipleAttributes(45, AdditionalAttributes);
+                builder.AddMultipleAttributes(46, AdditionalAttributes);
                 if (!AdditionalAttributes.TryGetValue("disabled", out object disabledAttribute))
                 {
                     needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
@@ -759,7 +826,7 @@ namespace AntDesign
 
             if (!string.IsNullOrWhiteSpace(NameAttributeValue))
             {
-                builder.AddAttribute(46, "name", NameAttributeValue);
+                builder.AddAttribute(47, "name", NameAttributeValue);
             }
 
             builder.AddAttribute(50, "id", Id);
@@ -782,42 +849,55 @@ namespace AntDesign
                 builder.AddAttribute(65, "aria-required", true);
             }
 
-            // onchange 和 onblur 事件会导致点击 OnSearch 按钮时不触发 Click 事件，暂时取消这两个事件
-            //2022-8-3 去掉if后，search也能正常工作
-            //if (!IgnoreOnChangeAndBlur)
-            //{
             builder.AddAttribute(70, "onchange", CallbackFactory.Create(this, OnChangeAsync));
             builder.AddAttribute(71, "onblur", CallbackFactory.Create(this, OnBlurAsync));
-            //}
-
             builder.AddAttribute(72, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
             builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
             builder.AddAttribute(74, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
-
             builder.AddAttribute(75, "oninput", CallbackFactory.Create(this, OnInputAsync));
-
-            //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
-            //builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
-            builder.AddAttribute(77, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
+            builder.AddAttribute(76, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
 
             if (StopPropagation)
             {
-                builder.AddEventStopPropagationAttribute(78, "onchange", true);
-                builder.AddEventStopPropagationAttribute(79, "onblur", true);
+                builder.AddEventStopPropagationAttribute(77, "onchange", true);
+                builder.AddEventStopPropagationAttribute(78, "onblur", true);
             }
 
-            builder.AddElementReferenceCapture(90, r => Ref = r);
+            builder.AddElementReferenceCapture(80, r => Ref = r);
+            builder.CloseElement();
+
+            // Add suggestion text
+            if (ShowSuggestion)
+            {
+                builder.OpenElement(91, "div");
+                builder.AddAttribute(92, "style", _suggestionStyle);
+
+                // Pre-cursor text (invisible but maintains space)
+                builder.OpenElement(93, "span");
+                builder.AddAttribute(94, "style", _preCursorStyle);
+                builder.AddContent(95, _inputString);
+                builder.CloseElement();
+
+                // Post-cursor text (suggestion)
+                builder.OpenElement(96, "span");
+                builder.AddAttribute(97, "style", _postCursorStyle);
+                builder.AddContent(98, _internalSuggestionText);
+                builder.CloseElement();
+
+                builder.CloseElement();
+            }
+
             builder.CloseElement();
 
             if (hasSuffix)
             {
                 // suffix
-                builder.OpenElement(91, "span");
-                builder.AddAttribute(92, "class", $"{PrefixCls}-suffix");
+                builder.OpenElement(94, "span");
+                builder.AddAttribute(95, "class", $"{PrefixCls}-suffix");
 
                 if (AllowClear)
                 {
-                    builder.AddContent(93, ClearIcon);
+                    builder.AddContent(96, ClearIcon);
                 }
 
                 if (ShowCount)
@@ -827,12 +907,12 @@ namespace AntDesign
 
                 if (Suffix != null)
                 {
-                    builder.AddContent(94, Suffix);
+                    builder.AddContent(97, Suffix);
                 }
 
                 if (FormItem?.FeedbackIcon != null)
                 {
-                    builder.AddContent(95, FormItem.FeedbackIcon);
+                    builder.AddContent(98, FormItem.FeedbackIcon);
                 }
 
                 builder.CloseElement();
