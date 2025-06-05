@@ -352,11 +352,12 @@ namespace AntDesign
 
         private readonly Queue<Func<Task>> _afterValueChangedQueue = new();
 
-        private string _suggestionStyle = "position: absolute; left: 0; top: 0; color: #bfbfbf; pointer-events: none; background: transparent; width: 100%; height: 100%; box-sizing: border-box; display: flex; align-items: center; font: inherit;";
-        private string _inputWrapperStyle = "position: relative; display: inline-block; width: 100%;";
-        private string _preCursorStyle = "visibility: hidden; white-space: pre; padding: 4px 11px;";
-        private string _postCursorStyle = "color: #bfbfbf; white-space: pre; margin-left: -11px;";
+        private string _suggestionStyle = "position: absolute; top: 0; left: 0; right: 0; bottom: 0; color: #bfbfbf; pointer-events: none; background: transparent; box-sizing: border-box; padding: 4px 11px; display: flex; align-items: center; font: inherit; white-space: pre; z-index: 1;";
+        private string _inputWrapperStyle = "position: relative;display: inline-flex;";
+        private string _preCursorStyle = "visibility: hidden; white-space: pre;";
+        private string _postCursorStyle = "color: #bfbfbf; white-space: pre;";
         private string _internalSuggestionText;
+        private bool _enableSuggestion;
         private bool ShowSuggestion => !string.IsNullOrEmpty(_internalSuggestionText) && IsFocused;
 
         private void UpdateInternalSuggestion()
@@ -375,6 +376,20 @@ namespace AntDesign
             {
                 _internalSuggestionText = null;
             }
+
+            StateHasChanged();
+        }
+
+        private void ConfigureClassMapper()
+        {
+            ClassMapper.Clear()
+                .Add($"{PrefixCls}")
+                .If($"{PrefixCls}-borderless", () => !Bordered)
+                .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
+                .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
+                .If($"{PrefixCls}-rtl", () => RTL)
+                .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass));
         }
 
         protected override void OnInitialized()
@@ -387,15 +402,6 @@ namespace AntDesign
             }
 
             _inputString = Value?.ToString();
-
-            ClassMapper.Clear()
-                .Add($"{PrefixCls}")
-                .If($"{PrefixCls}-borderless", () => !Bordered)
-                .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
-                .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
-                .If($"{PrefixCls}-rtl", () => RTL)
-                .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
-                .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass));
 
             SetClasses();
             SetAttributes();
@@ -417,15 +423,7 @@ namespace AntDesign
             AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
             GroupWrapperClass = $"{PrefixCls}-group-wrapper";
 
-            ClassMapper.Clear()
-                .Add($"{PrefixCls}")
-                .If($"{PrefixCls}-borderless", () => !Bordered)
-                .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
-                .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
-                .If($"{PrefixCls}-rtl", () => RTL)
-                .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
-                .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass))
-                ;
+            ConfigureClassMapper();
 
             if (AllowClear)
             {
@@ -499,6 +497,12 @@ namespace AntDesign
             UpdateInternalSuggestion();
             SetClasses();
             SetAttributes();
+        }
+
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            _enableSuggestion = parameters.TryGetValue(nameof(SuggestionText), out string suggestionText);
+            return base.SetParametersAsync(parameters);
         }
 
         protected virtual Task OnChangeAsync(ChangeEventArgs args)
@@ -743,6 +747,12 @@ namespace AntDesign
             }
 
             UpdateInternalSuggestion();
+
+            if (BindOnInput)
+            {
+                CurrentValueAsString = _inputString;
+            }
+
             StateHasChanged();
         }
 
@@ -787,11 +797,7 @@ namespace AntDesign
                 if (container == "input")
                 {
                     container = "affixWrapper";
-                    builder.AddAttribute(23, "style", $"{WidthStyle} {WrapperStyle}");
-                }
-                if (WrapperRefBack != null)
-                {
-                    builder.AddElementReferenceCapture(24, r => WrapperRefBack.Current = r);
+                    builder.AddAttribute(23, "style", $"{WidthStyle} {WrapperStyle} {_inputWrapperStyle}");
                 }
             }
 
@@ -804,19 +810,24 @@ namespace AntDesign
                 builder.CloseElement();
             }
 
-            // Create a wrapper for input and suggestion
-            builder.OpenElement(40, "span");
-            builder.AddAttribute(41, "style", _inputWrapperStyle);
+
+            bool needsWrapper = _enableSuggestion && !_hasAffixWrapper && container == "input";            // Add a wrapper div if there's no other wrapper and we have suggestion
+            if (needsWrapper)
+            {
+                builder.OpenElement(40, "span");
+                builder.AddAttribute(41, "class", $"{PrefixCls}-wrapper");
+                builder.AddAttribute(42, "style", _inputWrapperStyle);
+            }
 
             // Real input
-            builder.OpenElement(42, "input");
-            builder.AddAttribute(43, "class", ClassMapper.Class);
-            builder.AddAttribute(44, "style", $"{WidthStyle} {Style}");
+            builder.OpenElement(43, "input");
+            builder.AddAttribute(44, "class", ClassMapper.Class);
+            builder.AddAttribute(45, "style", $"{WidthStyle} {Style} {(!_hasAffixWrapper && !needsWrapper ? _inputWrapperStyle : "")}");
 
             bool needsDisabled = Disabled;
             if (Attributes != null)
             {
-                builder.AddMultipleAttributes(45, Attributes);
+                builder.AddMultipleAttributes(46, Attributes);
                 if (!Attributes.TryGetValue("disabled", out object disabledAttribute))
                 {
                     needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
@@ -825,7 +836,7 @@ namespace AntDesign
 
             if (AdditionalAttributes != null)
             {
-                builder.AddMultipleAttributes(46, AdditionalAttributes);
+                builder.AddMultipleAttributes(47, AdditionalAttributes);
                 if (!AdditionalAttributes.TryGetValue("disabled", out object disabledAttribute))
                 {
                     needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
@@ -834,7 +845,7 @@ namespace AntDesign
 
             if (!string.IsNullOrWhiteSpace(NameAttributeValue))
             {
-                builder.AddAttribute(47, "name", NameAttributeValue);
+                builder.AddAttribute(48, "name", NameAttributeValue);
             }
 
             builder.AddAttribute(50, "id", Id);
@@ -871,6 +882,7 @@ namespace AntDesign
                 builder.AddEventStopPropagationAttribute(78, "onblur", true);
             }
 
+            // Always add Ref to input element
             builder.AddElementReferenceCapture(80, r => Ref = r);
             builder.CloseElement();
 
@@ -895,7 +907,10 @@ namespace AntDesign
                 builder.CloseElement();
             }
 
-            builder.CloseElement();
+            if (needsWrapper)
+            {
+                builder.CloseElement();
+            }
 
             if (hasSuffix)
             {
