@@ -12,7 +12,10 @@
         <br />
         Current value: @inputValue
     </SpaceItem>
-
+    <SpaceItem>
+        <Search Placeholder="input search text" OnSuggestion="HandleInputSuggestion"
+                SuggestionText="@inputSuggestion" AllowClear EnterButton="@("Search")" Size="InputSize.Large" />
+    </SpaceItem>
     <SpaceItem>
         <Text>TextArea with suggestion (press right arrow key to accept suggestion):</Text>
         <TextArea @bind-Value="@textAreaValue"
