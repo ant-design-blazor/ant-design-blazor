@@ -156,8 +156,6 @@ namespace AntDesign
 
         private bool _afterFirstRender = false;
 
-        private string _suggestionText;
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -338,8 +336,6 @@ namespace AntDesign
             }
         }
 
-        private const string TextAreaSuggestionClass = "ant-textarea-suggestion";
-
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             var attributes = new Dictionary<string, object>
@@ -405,7 +401,7 @@ namespace AntDesign
                 {
                     // Add suggestion content
                     b.OpenElement(sequence++, "div");
-                    b.AddAttribute(sequence++, "class", TextAreaSuggestionClass);
+                    b.AddAttribute(sequence++, "class", SuggestionClass);
 
                     // Pre-cursor text
                     b.OpenElement(sequence++, "span");
@@ -416,7 +412,7 @@ namespace AntDesign
                     // Post-cursor text
                     b.OpenElement(sequence++, "span");
                     b.AddAttribute(sequence++, "class", SuggestionTextClass);
-                    b.AddContent(sequence++, _suggestionText);
+                    b.AddContent(sequence++, SuggestionText);
                     b.CloseElement();
 
                     b.CloseElement();
