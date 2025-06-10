@@ -1,11 +1,12 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using System.Threading.Tasks;
-using AntDesign;
 using Microsoft.AspNetCore.Components;
+
+namespace AntDesign;
 
 public class SplitterPanel : ComponentBase, IDisposable
 {
@@ -42,20 +43,20 @@ public class SplitterPanel : ComponentBase, IDisposable
     {
         var isSecondPane = Splitter.GetPaneIndex(this) == 1;
         var otherPane = Splitter.GetPanes()[isSecondPane ? 0 : 1];
-        
+
         // If the other panel is collapsed, restore it first
         if (otherPane._isCollapsed)
         {
             otherPane._isCollapsed = false;
             otherPane.Size = otherPane._prevSize;
         }
-        
+
         _isCollapsed = !_isCollapsed;
         if (_isCollapsed)
         {
             _prevSize = Size;
             Size = Min ?? "0px";
-            
+
             if (isSecondPane)
             {
                 // When second panel is collapsed, first panel should take full size
