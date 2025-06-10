@@ -105,7 +105,7 @@ namespace AntDesign
         [PublicApi("1.2.0")]
         public RenderFragment ChildContent { get; set; }
 
-        protected override RenderFragment TriggerContent => base.TriggerContent;
+        protected override RenderFragment TriggerContent => ChildContent;
 
         private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
