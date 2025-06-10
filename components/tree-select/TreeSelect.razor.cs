@@ -263,6 +263,13 @@ namespace AntDesign
         [Parameter]
         public string[] ExpandedKeys { get; set; }
 
+        /// <summary>
+        /// Render fragment to customize the nodes in the tree.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public RenderFragment ChildContent { get; set; }
+
         private bool IsMultiple => Multiple || TreeCheckable;
 
         private bool IsTemplatedNodes => ChildContent != null;

@@ -23,8 +23,8 @@
                             OnMouseLeave="@(() => { OnMouseLeave?.Invoke(); })"
                             OnVisibleChange="@OnOverlayVisibleChangeAsync"
                             PopupContainerSelector="@PopupContainerSelector"
-                            Unbound="@(!UseChildContentAsTrigger || ChildContent == null? (RenderFragment<ForwardRef>)RenderTriggerContent : null)"
-                            ChildContent="@(UseChildContentAsTrigger && Unbound == null? ChildContent : null)"
+                            Unbound="@(!UseChildContentAsTrigger || TriggerContent == null? (RenderFragment<ForwardRef>)RenderTriggerContent : null)"
+                            ChildContent="@(UseChildContentAsTrigger && Unbound == null? TriggerContent : null)"
                             OverlayClassName="@OverlayClassName"
                             OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                             OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up">
