@@ -6,8 +6,7 @@ namespace AntDesign
 {
     public enum SpaceAlign
     {
-        Normal,
-        Start,
+        Start = 1,
         End,
         Center,
         Baseline,

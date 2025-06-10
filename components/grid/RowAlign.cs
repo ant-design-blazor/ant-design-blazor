@@ -6,9 +6,9 @@ namespace AntDesign
 {
     public enum RowAlign
     {
-        Normal,
-        Top,
+        Top = 1,
         Middle,
         Bottom,
+        Stretch
     }
 }
