@@ -1,0 +1,73 @@
+@using System.ComponentModel
+@using System.Text.RegularExpressions
+
+<Space Direction="SpaceDirection.Vertical">
+    <SpaceItem>
+        <Text>Input with suggestion (press right arrow key to accept suggestion):</Text>
+        <Input @bind-Value="@inputValue"
+               OnSuggestion="HandleInputSuggestion"
+               SuggestionText="@inputSuggestion"
+               Style="width: 300px;"
+               Placeholder="Try typing: 'he' for 'hello' or 'wo' for 'world'" />
+        <br />
+        Current value: @inputValue
+    </SpaceItem>
+    <SpaceItem>
+        <Search Placeholder="input search text" OnSuggestion="HandleInputSuggestion"
+                SuggestionText="@inputSuggestion" AllowClear EnterButton="@("Search")" Size="InputSize.Large" />
+    </SpaceItem>
+    <SpaceItem>
+        <Text>TextArea with suggestion (press right arrow key to accept suggestion):</Text>
+        <TextArea @bind-Value="@textAreaValue"
+                 OnSuggestion="HandleTextAreaSuggestion"
+                 SuggestionText="@textAreaSuggestion"
+                 Style="width: 300px;"
+                 AutoSize />
+        <br />
+        Current value: @textAreaValue
+    </SpaceItem>
+</Space>
+
+@code
+{
+    private string inputValue;
+    private string inputSuggestion;
+    private string textAreaValue;
+    private string textAreaSuggestion;
+    private Dictionary<string, string> suggestions = new()
+    {
+        { "he", "hello hello hello hello hello hello hello hello hello hello hello hello hello hello" },
+        { "wo", "world" },
+        { "go", "good morning" },
+        { "th", "thank you" }
+    };
+
+    private async Task HandleInputSuggestion(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            inputSuggestion = null;
+            return;
+        }
+
+        // 找到第一个匹配的建议
+        var suggestion = suggestions.FirstOrDefault(s => s.Value.StartsWith(value, StringComparison.CurrentCultureIgnoreCase));
+        inputSuggestion = suggestion.Value;
+    }
+
+    private async Task HandleTextAreaSuggestion(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            textAreaSuggestion = null;
+            return;
+        }
+
+        var lines = value.Split('\n');
+        var lastLine = lines[^1];
+
+        // 对每一行的最后一个词进行建议
+        var suggestion = suggestions.FirstOrDefault(s => s.Value.StartsWith(lastLine, StringComparison.CurrentCultureIgnoreCase));
+        textAreaSuggestion = suggestion.Value;
+    }
+} 

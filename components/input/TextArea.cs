@@ -2,11 +2,15 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 namespace AntDesign
@@ -330,6 +334,121 @@ namespace AntDesign
                 _heightStyle = $"height: {Rows * rowHeight + offsetHeight}px;overflow-y: auto;overflow-x: hidden;";
                 StateHasChanged();
             }
+        }
+
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
+        {
+            var attributes = new Dictionary<string, object>
+            {
+                { "onchange", CallbackFactory.Create(this, OnChangeAsync) },
+                { "onblur", CallbackFactory.Create<FocusEventArgs>(this, OnBlurAsync) },
+                { "oninput", CallbackFactory.Create(this, OnInputAsync) },
+                { "onkeypress", CallbackFactory.Create<KeyboardEventArgs>(this, OnKeyPressAsync) },
+                { "onkeyup", CallbackFactory.Create<KeyboardEventArgs>(this, OnKeyUpAsync) },
+                { "onkeydown", CallbackFactory.Create<KeyboardEventArgs>(this, OnkeyDownAsync) },
+                { "onfocus", CallbackFactory.Create<FocusEventArgs>(this, OnFocusAsync) },
+                { "value", CurrentValueAsString },
+                { "placeholder", Placeholder },
+                { "id", Id },
+                { "disabled", Disabled },
+                { "readonly", ReadOnly },
+            };
+
+            if (AutoSize == false)
+            {
+                attributes["style"] = _heightStyle + Style;
+                attributes["rows"] = Rows;
+            }
+
+            if (Attributes != null)
+            {
+                foreach (var key in Attributes.Keys)
+                {
+                    attributes[key] = Attributes[key];
+                }
+            }
+
+            if (!string.IsNullOrEmpty(NameAttributeValue))
+            {
+                attributes["name"] = NameAttributeValue;
+            }
+
+            bool hasSuffix = Suffix != null || AllowClear;
+            bool hasTextAreaWrapper = FormItem?.FeedbackIcon != null || ShowCount;
+            bool needsSuggestionWrapper = EnableSuggestion && !hasSuffix;
+
+            int sequence = 0;
+
+            // Build the core textarea element
+            void BuildTextArea(RenderTreeBuilder b)
+            {
+                b.OpenElement(sequence++, "textarea");
+                foreach (var attr in attributes)
+                {
+                    b.AddAttribute(sequence++, attr.Key, attr.Value);
+                }
+                b.AddAttribute(sequence++, "class", _textareaClassMapper.Class);
+                b.AddElementReferenceCapture(sequence++, r => Ref = r);
+
+                if (StopPropagation)
+                {
+                    b.AddEventStopPropagationAttribute(sequence++, "onchange", true);
+                    b.AddEventStopPropagationAttribute(sequence++, "onblur", true);
+                }
+                b.CloseElement();
+
+                BuildSuggestion(b, ref sequence);
+            }
+
+            // Build with suggestion wrapper if needed
+            void BuildWithSuggestion(RenderTreeBuilder b)
+            {
+                b.WrapElement2(needsSuggestionWrapper, "div", (wrapper, child) =>
+                {
+                    wrapper.AddAttribute(sequence++, "class", SuggestionWrapperClass);
+                    wrapper.AddContent(sequence++, child);
+                 
+                }, BuildTextArea, sequence);
+            }
+
+            // Build with suffix wrapper if needed
+            void BuildWithSuffix(RenderTreeBuilder b)
+            {
+                b.WrapElement2(hasSuffix, "span", (wrapper, child) =>
+                {
+                    wrapper.AddAttribute(sequence++, "class", _warpperClassMapper.Class);
+                    wrapper.AddContent(sequence++, child);
+
+                    if (AllowClear)
+                    {
+                        wrapper.AddContent(sequence++, ClearIcon);
+                    }
+
+                    wrapper.OpenElement(sequence++, "span");
+                    wrapper.AddAttribute(sequence++, "class", "ant-input-textarea-suffix");
+
+                    if (Suffix != null)
+                    {
+                        wrapper.AddContent(sequence++, Suffix);
+                    }
+
+                    if (FormItem?.FeedbackIcon != null)
+                    {
+                        wrapper.AddContent(sequence++, FormItem.FeedbackIcon);
+                    }
+
+                    wrapper.CloseElement();
+                }, BuildWithSuggestion, sequence);
+            }
+
+            // Finally wrap with textarea wrapper if needed
+            builder.WrapElement2(hasTextAreaWrapper, "div", (wrapper, child) =>
+            {
+                wrapper.AddAttribute(sequence++, "class", ClassMapper.Class);
+                wrapper.AddAttribute(sequence++, "style", Style);
+                wrapper.AddAttribute(sequence++, "data-count", Count);
+                wrapper.AddContent(sequence++, child);
+            }, BuildWithSuffix, sequence);
         }
     }
 }
