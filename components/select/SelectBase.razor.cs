@@ -251,12 +251,7 @@ namespace AntDesign
         [Parameter]
         public EventCallback OnClearSelected { get; set; }
 
-        /// <summary>
-        /// Child content to be rendered inside the <see cref="Cascader"/>.
-        /// </summary>
-        [Parameter]
-        [PublicApi("1.2.0")]
-        public RenderFragment ChildContent { get; set; }
+        protected virtual RenderFragment TriggerContent { get; }
 
         /// <summary>
         /// ChildElement with ElementReference set to avoid wrapping div.
@@ -432,18 +427,14 @@ namespace AntDesign
             }
         }
 
-        /// <summary>
-        /// Used for rendering select options manually.
-        /// </summary>
-        [Parameter]
-        public RenderFragment SelectOptions { get; set; }
-
         internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new();
 
         internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
 
         internal bool Focused { get; set; }
         internal bool HasTagCount { get; set; }
+
+        internal virtual bool HasSelectOptions => false;
 
         /// <summary>
         /// How long (number of characters) a tag will be.
@@ -836,7 +827,7 @@ namespace AntDesign
             }
             else
             {
-                if (LabelInValue && SelectOptions != null)
+                if (LabelInValue && HasSelectOptions)
                 {
                     // Embed the label into the value and return the result as json string.
                     var valueLabel = new ValueLabel<TItemValue>

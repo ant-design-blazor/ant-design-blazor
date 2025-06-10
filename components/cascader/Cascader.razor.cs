@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -96,6 +97,15 @@ namespace AntDesign
                 ProcessParentAndDefault();
             }
         }
+
+        /// <summary>
+        /// Child content to be rendered inside the <see cref="Cascader"/>.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public RenderFragment ChildContent { get; set; }
+
+        protected override RenderFragment TriggerContent => ChildContent;
 
         private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();

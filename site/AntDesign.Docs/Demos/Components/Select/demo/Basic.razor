@@ -12,9 +12,10 @@
 		TItemValue="string"
 		TItem="string"
 		Disabled>
-    <SelectOptions>
-		<SelectOption Value="@("lucy")" Label="Lucy" />
-	</SelectOptions>
+    <SelectOption Value="@("jack")" Label="Jack" />
+    <SelectOption Value="@("lucy")" Label="Lucy" />
+    <SelectOption Value="@("disabled")" Label="Disabled" Disabled />
+    <SelectOption Value="@("yaoming")" Label="Yaoming" />
 </Select>
 <Select @bind-Value="@_selectedValue3"
 		DefaultValue="@("lucy")"
@@ -22,9 +23,10 @@
 		TItemValue="string"
 		TItem="string"
 		Loading>
-	<SelectOptions>
-		<SelectOption Value="@("lucy")" Label="Lucy" />
-	</SelectOptions>
+    <SelectOption Value="@("jack")" Label="Jack" />
+    <SelectOption Value="@("lucy")" Label="Lucy" />
+    <SelectOption Value="@("disabled")" Label="Disabled" Disabled />
+    <SelectOption Value="@("yaoming")" Label="Yaoming" />
 </Select>
 <Select DataSource="@_list"
 		@bind-Value="@_selectedValue4"		
