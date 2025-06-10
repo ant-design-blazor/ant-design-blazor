@@ -30,7 +30,6 @@ textarea.antblazor-textarea-autosize-measuring {
 .@{ant-prefix}-input-suggestion-wrapper {
   position: relative;
   display: inline-flex;
-  width: 100%;
 }
 
 .@{ant-prefix}-input-suggestion {
@@ -39,24 +38,77 @@ textarea.antblazor-textarea-autosize-measuring {
   left: 0;
   right: 0;
   bottom: 0;
-  color: #bfbfbf;
   pointer-events: none;
   background: transparent;
   box-sizing: border-box;
   padding: @input-padding-vertical-base @input-padding-horizontal-base;
-  display: flex;
-  align-items: flex-start;
+  display: inline-flex;
+  align-items: center;
   font: inherit;
-  white-space: pre-wrap;
+  white-space: pre;
   z-index: 1;
+  overflow: hidden;
+
+  .@{ant-prefix}-input-lg + &,
+  textarea.@{ant-prefix}-input + & {
+    padding: @input-padding-vertical-lg @input-padding-horizontal-lg;
+  }
+
+  .@{ant-prefix}-input-sm + & {
+    padding: @input-padding-vertical-sm @input-padding-horizontal-sm;
+  }
+
+  // Handle addon cases
+  .@{ant-prefix}-input-group & {
+    left: 0;
+    right: 0;
+  }
+
+  .@{ant-prefix}-input-group-addon + .@{ant-prefix}-input-group-addon + & {
+    left: 0;
+  }
+
+  .@{ant-prefix}-input-group-addon + & {
+    left: 0;
+  }
+
+  .@{ant-prefix}-input-group & + .@{ant-prefix}-input-group-addon {
+    right: 0;
+  }
 }
 
 .@{ant-prefix}-input-suggestion-hidden {
   visibility: hidden;
-  white-space: pre-wrap;
+  white-space: pre;
+  margin-right: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .@{ant-prefix}-input-suggestion-text {
   color: #bfbfbf;
+  white-space: pre;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+}
+
+// Special handling for textarea
+textarea.@{ant-prefix}-input + .@{ant-prefix}-input-suggestion {
   white-space: pre-wrap;
+  align-items: flex-start;
+  padding-top: @input-padding-vertical-base;
+  overflow: hidden;
+  display: block;
+
+  .@{ant-prefix}-input-suggestion-hidden {
+    white-space: pre-wrap;
+  }
+
+  .@{ant-prefix}-input-suggestion-text {
+    white-space: pre-wrap;
+    display: block;
+    width: 100%;
+  }
 }

@@ -397,26 +397,7 @@ namespace AntDesign
                 }
                 b.CloseElement();
 
-                if (ShowSuggestion)
-                {
-                    // Add suggestion content
-                    b.OpenElement(sequence++, "div");
-                    b.AddAttribute(sequence++, "class", SuggestionClass);
-
-                    // Pre-cursor text
-                    b.OpenElement(sequence++, "span");
-                    b.AddAttribute(sequence++, "class", SuggestionHiddenClass);
-                    b.AddContent(sequence++, _inputString);
-                    b.CloseElement();
-
-                    // Post-cursor text
-                    b.OpenElement(sequence++, "span");
-                    b.AddAttribute(sequence++, "class", SuggestionTextClass);
-                    b.AddContent(sequence++, SuggestionText);
-                    b.CloseElement();
-
-                    b.CloseElement();
-                }
+                BuildSuggestion(b, ref sequence);
             }
 
             // Build with suggestion wrapper if needed

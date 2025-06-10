@@ -452,11 +452,6 @@ namespace AntDesign
                 GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-group-wrapper-sm");
             }
 
-            //if (ValidationMessages.Length > 0)
-            //{
-            //    AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-status-error");
-            //}
-
             if (FormItem is { ValidateStatus: not FormValidateStatus.Default })
             {
                 AffixWrapperClass += $" ant-input-affix-wrapper-status-{FormItem.ValidateStatus.ToString().ToLower()}";
@@ -761,11 +756,34 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        protected virtual void BuildSuggestion(RenderTreeBuilder builder, ref int sequence)
+        {
+            if (ShowSuggestion)
+            {
+                builder.OpenElement(sequence++, "div");
+                builder.AddAttribute(sequence++, "class", SuggestionClass);
+
+                // Hidden input text
+                builder.OpenElement(sequence++, "span");
+                builder.AddAttribute(sequence++, "class", SuggestionHiddenClass);
+                builder.AddContent(sequence++, _inputString);
+                builder.CloseElement();
+
+                // Full suggestion text
+                builder.OpenElement(sequence++, "span");
+                builder.AddAttribute(sequence++, "class", SuggestionTextClass);
+                builder.AddContent(sequence++, _inputString + _internalSuggestionText);
+                builder.CloseElement();
+
+                builder.CloseElement();
+            }
+        }
+
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             int seq = 0;
             bool hasGroup = AddOnBefore != null || AddOnAfter != null;
-            bool needsWrapper = EnableSuggestion && !_hasAffixWrapper;
+            bool needsWrapper = EnableSuggestion && !_hasAffixWrapper && !hasGroup;
             bool hasSuffix = Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount;
 
             // Build the core input element
@@ -836,26 +854,7 @@ namespace AntDesign
                     input.AddElementReferenceCapture(seq++, r => Ref = r);
                 }, _ => { }, seq);
 
-                // Add suggestion if needed
-                if (ShowSuggestion)
-                {
-                    b.OpenElement(seq++, "div");
-                    b.AddAttribute(seq++, "class", SuggestionClass);
-
-                    // Pre-cursor text
-                    b.OpenElement(seq++, "span");
-                    b.AddAttribute(seq++, "class", SuggestionHiddenClass);
-                    b.AddContent(seq++, _inputString);
-                    b.CloseElement();
-
-                    // Post-cursor text
-                    b.OpenElement(seq++, "span");
-                    b.AddAttribute(seq++, "class", SuggestionTextClass);
-                    b.AddContent(seq++, _internalSuggestionText);
-                    b.CloseElement();
-
-                    b.CloseElement();
-                }
+                BuildSuggestion(b, ref seq);
             }
 
             // Build with suggestion wrapper if needed
@@ -863,7 +862,7 @@ namespace AntDesign
             {
                 b.WrapElement2(needsWrapper, "span", (wrapper, child) =>
                 {
-                    wrapper.AddAttribute(seq++, "class", SuggestionWrapperClass);
+                    wrapper.AddAttribute(seq++, "class", $"{SuggestionWrapperClass} {WrapperClass}");
                     wrapper.AddAttribute(seq++, "style", $"{WidthStyle} {WrapperStyle}");
                     wrapper.AddContent(seq++, child);
                 }, BuildInput, seq);
@@ -874,7 +873,7 @@ namespace AntDesign
             {
                 b.WrapElement2(_hasAffixWrapper, "span", (affixWrapper, child) =>
                 {
-                    AffixWrapperClass = string.Join(" ", Class ?? "", AffixWrapperClass);
+                    AffixWrapperClass = string.Join(" ", Class ?? "", AffixWrapperClass, ShowSuggestion ? SuggestionWrapperClass : "");
                     ClassMapper.OriginalClass = "";
 
                     affixWrapper.AddAttribute(seq++, "class", AffixWrapperClass);
@@ -927,7 +926,7 @@ namespace AntDesign
             {
                 b.WrapElement2(hasGroup, "span", (wrapper, child) =>
                 {
-                    wrapper.AddAttribute(seq++, "class", string.Join(" ", GroupWrapperClass, WrapperClass));
+                    wrapper.AddAttribute(seq++, "class", string.Join(" ", GroupWrapperClass, WrapperClass, ShowSuggestion ? SuggestionWrapperClass : ""));
                     wrapper.AddAttribute(seq++, "style", $"{WidthStyle} {WrapperStyle}");
 
                     wrapper.OpenElement(seq++, "span");
