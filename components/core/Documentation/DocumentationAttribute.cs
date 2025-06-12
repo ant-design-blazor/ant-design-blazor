@@ -23,5 +23,6 @@ namespace AntDesign
         public string? SubTitle { get; set; } = null;
         public string Title { get; set; } = null;
         public DocumentationType Type { get; }
+        public string ReleaseVersion { get; set; }
     }
 }
