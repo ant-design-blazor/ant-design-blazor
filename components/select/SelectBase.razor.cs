@@ -700,6 +700,24 @@ namespace AntDesign
         protected bool IsOptionEqualToNoValue(SelectOptionItem<TItemValue, TItem> option)
             => EqualityComparer<TItemValue>.Default.Equals(option.Value, default);
 
+        internal virtual void AddOptionItem(SelectOptionItem<TItemValue, TItem> optionItem)
+        {
+            SelectOptionItems.Add(optionItem);
+        }
+
+        internal void RemoveOptionItem(SelectOptionItem<TItemValue, TItem> optionItem)
+        {
+            SelectOptionItems.Remove(optionItem);
+            if (optionItem.IsSelected)
+            {
+                SelectedOptionItems.Remove(optionItem);
+            }
+            if (optionItem.IsAddedTag)
+            {
+                AddedTags.Remove(optionItem);
+            }
+        }
+
         internal void RemoveEqualityToNoValue(SelectOptionItem<TItemValue, TItem> option)
         {
             if (TypeDefaultExistsAsSelectOption)
@@ -927,12 +945,12 @@ namespace AntDesign
                     }
                 }
 
-                await InvokeValuesChanged(selectOption);
+                InvokeValuesChanged(selectOption);
                 await UpdateOverlayPositionAsync();
             }
         }
 
-        protected async Task InvokeValuesChanged(SelectOptionItem<TItemValue, TItem> newSelection = null)
+        protected void InvokeValuesChanged(SelectOptionItem<TItemValue, TItem> newSelection = null)
         {
             List<TItemValue> newSelectedValues;
             if (newSelection is null || Values is null)

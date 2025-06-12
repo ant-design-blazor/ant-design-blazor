@@ -422,6 +422,14 @@ namespace AntDesign
             base.OnInitialized();
         }
 
+
+        internal override void AddOptionItem(SelectOptionItem<TItemValue, TItem> optionItem)
+        {
+            base.AddOptionItem(optionItem);
+
+            SetInitialValuesAsync(optionItem);
+        }
+
         protected override async Task OnParametersSetAsync()
         {
             EvaluateDataSourceChange();
@@ -557,8 +565,6 @@ namespace AntDesign
             if (firstRender)
             {
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
-
-                await SetInitialValuesAsync();
 
                 DomEventListener.AddShared<JsonElement>("window", "resize", OnWindowResize);
                 await SetDropdownStyleAsync();
@@ -886,7 +892,7 @@ namespace AntDesign
                     }
                     else
                     {
-                        await InvokeValuesChanged();
+                        InvokeValuesChanged();
 
                         if (!ValuesChanged.HasDelegate)
                             await InvokeStateHasChangedAsync();
@@ -983,7 +989,7 @@ namespace AntDesign
                 {
                     _waitingForStateChange = true;
 
-                    await InvokeValuesChanged();
+                    InvokeValuesChanged();
                 }
             }
             else if (DefaultActiveFirstOption)
@@ -1000,28 +1006,25 @@ namespace AntDesign
         /// <summary>
         /// Sets the initial values after initialization, the method should only called once.
         /// </summary>
-        private async Task SetInitialValuesAsync()
+        private void SetInitialValuesAsync(SelectOptionItem<TItemValue, TItem> selectOptionItem)
         {
-            SelectedOptionItems.Clear();
             if (Mode == SelectMode.Default)
             {
-                if (_selectedValue != null || TypeDefaultExistsAsSelectOption)
+                if (ActiveOption == null && (_selectedValue != null || TypeDefaultExistsAsSelectOption))
                 {
-                    var result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, _selectedValue));
-
-                    if (result != null)
+                    if (EqualityComparer<TItemValue>.Default.Equals(selectOptionItem.Value, _selectedValue))
                     {
-                        if (result.IsDisabled)
+                        if (selectOptionItem.IsDisabled)
                         {
-                            await TrySetDefaultValueAsync();
+                            //await TrySetDefaultValueAsync();
                             return;
                         }
 
-                        result.IsSelected = true;
-                        ActiveOption = result;
+                        selectOptionItem.IsSelected = true;
+                        ActiveOption = selectOptionItem;
                         if (HideSelected)
-                            result.IsHidden = true;
-                        SelectedOptionItems.Add(result);
+                            selectOptionItem.IsHidden = true;
+                        SelectedOptionItems.Add(selectOptionItem);
                     }
                 }
             }
@@ -1031,27 +1034,18 @@ namespace AntDesign
                 {
                     foreach (var value in _selectedValues)
                     {
-                        var result = SelectOptionItems.FirstOrDefault(c => EqualityComparer<TItemValue>.Default.Equals(c.Value, value));
+                        var result = EqualityComparer<TItemValue>.Default.Equals(selectOptionItem.Value, value);
 
-                        if (result != null && !result.IsDisabled)
+                        if (result && !selectOptionItem.IsDisabled)
                         {
-                            result.IsSelected = true;
+                            selectOptionItem.IsSelected = true;
 
                             if (HideSelected)
-                                result.IsHidden = true;
+                                selectOptionItem.IsHidden = true;
+
+                            SelectedOptionItems.Add(selectOptionItem);
                         }
                     }
-
-                    var newSelectedValues = new List<TItemValue>();
-                    var newSelectedItems = new List<TItem>();
-
-                    SelectOptionItems.Where(x => x.IsSelected)
-                        .ForEach(i =>
-                        {
-                            newSelectedValues.Add(i.Value);
-                            newSelectedItems.Add(i.Item);
-                            SelectedOptionItems.Add(i);
-                        });
                 }
             }
         }

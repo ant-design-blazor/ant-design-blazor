@@ -181,6 +181,8 @@ namespace AntDesign
 
         #endregion
 
+        private SelectOptionItem<TItemValue, TItem> _optionItem;
+
         protected override async Task OnInitializedAsync()
         {
             bool isAlreadySelected = false;
@@ -206,7 +208,7 @@ namespace AntDesign
                 // The SelectOption was not created by using a DataSource, a SelectOptionItem must be created.
                 InternalId = Guid.NewGuid();
 
-                var newSelectOptionItem = new SelectOptionItem<TItemValue, TItem>()
+                _optionItem = new SelectOptionItem<TItemValue, TItem>()
                 {
                     InternalId = InternalId,
                     Label = Label,
@@ -217,9 +219,9 @@ namespace AntDesign
                     ChildComponent = this
                 };
 
-                SelectParent.SelectOptionItems.Add(newSelectOptionItem);
-                SelectParent.AddEqualityToNoValue(newSelectOptionItem);
-                isAlreadySelected = IsAlreadySelected(newSelectOptionItem);
+                SelectParent.AddOptionItem(_optionItem);
+                SelectParent.AddEqualityToNoValue(_optionItem);
+                isAlreadySelected = IsAlreadySelected(_optionItem);
             }
 
             SetClassMap();
@@ -300,7 +302,7 @@ namespace AntDesign
                     .FirstOrDefault(x => x.InternalId == InternalId && !x.IsSelected);
                 if (selectOptionItem is not null)
                 {
-                    SelectParent.SelectOptionItems.Remove(selectOptionItem);
+                    SelectParent.RemoveOptionItem(selectOptionItem);
                     SelectParent.RemoveEqualityToNoValue(selectOptionItem);
                 }
             }
