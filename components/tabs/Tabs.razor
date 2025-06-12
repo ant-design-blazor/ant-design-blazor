@@ -9,7 +9,7 @@
     <Template>
         @{
             this.Complete();
-            if (Card is null)
+            if (!IsTabbedCard)
             {
                 @RenderTabs
             }
@@ -88,7 +88,7 @@
                 }
             </div>
             <!--Tab content-->
-            @if (Card == null)
+            @if (!IsTabbedCard)
             {                
                 @RenderTabPanels                  
             }

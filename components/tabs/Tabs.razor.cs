@@ -206,6 +206,13 @@ namespace AntDesign
         [Parameter]
         public bool Centered { get; set; }
 
+        /// <summary>
+        /// Whether to render the tabs standalone in a card, otherwise it will be rendered as a part of a TabbedCard by default.
+        /// </summary>
+        [PublicApi("1.4.1")]
+        [Parameter]
+        public bool StandaloneInCard { get; set; }
+
         [CascadingParameter]
         private Card Card { get; set; }
 
@@ -260,6 +267,8 @@ namespace AntDesign
 
         private bool IsOverflowed => _scrollListWidth <= _wrapperWidth;
 
+        private bool IsTabbedCard => Card != null && !StandaloneInCard;
+
         private readonly int _dropDownBtnWidth = 46;
         private readonly int _addBtnWidth = 40;
         private bool _shownDropdown;
@@ -283,8 +292,8 @@ namespace AntDesign
                 .If($"{PrefixCls}-line", () => Type == TabType.Line)
                 .If($"{PrefixCls}-editable-card", () => Type == TabType.EditableCard)
                 .If($"{PrefixCls}-card", () => Type.IsIn(TabType.EditableCard, TabType.Card))
-                .If($"{PrefixCls}-large", () => Size == TabSize.Large || (Card != null && Card.Size != CardSize.Small))
-                .If($"{PrefixCls}-head-tabs", () => Card != null)
+                .If($"{PrefixCls}-large", () => Size == TabSize.Large || (IsTabbedCard && Card.Size != CardSize.Small))
+                .If($"{PrefixCls}-head-tabs", () => IsTabbedCard)
                 .If($"{PrefixCls}-small", () => Size == TabSize.Small)
                 .If($"{PrefixCls}-no-animation", () => !Animated)
                 .If($"{PrefixCls}-centered", () => Centered)
@@ -308,7 +317,7 @@ namespace AntDesign
                 .Add($"{PrefixCls}-nav")
                 .If(TabBarClass, () => !string.IsNullOrWhiteSpace(TabBarClass));
 
-            if (Card is not null)
+            if (IsTabbedCard)
             {
                 Card.SetTabs(RenderTabs);
                 Card.SetTabPanels(RenderTabPanels);
@@ -549,13 +558,17 @@ namespace AntDesign
 
             _retryingGetSize = false;// each activation only can try once
             TryRenderInk();
-            if (Card?.Body == null)
+
+            if (IsTabbedCard)
             {
-                Card?.SetBody(EmptyRenderFragment);
-            }
-            else
-            {
-                Card?.InvokeStateHasChagned();
+                if (Card.Body == null)
+                {
+                    Card.SetBody(EmptyRenderFragment);
+                }
+                else
+                {
+                    Card.InvokeStateHasChagned();
+                }
             }
 
             // render the classname of the actived tab
@@ -781,7 +794,7 @@ namespace AntDesign
                 }
             }
 
-            if (Card is not null)
+            if (IsTabbedCard)
             {
                 Card.InvokeStateHasChagned();
             }
