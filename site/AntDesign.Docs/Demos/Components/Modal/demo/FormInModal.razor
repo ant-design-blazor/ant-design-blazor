@@ -15,7 +15,7 @@
          @FormTemplate()
 </Modal>
 
-@inject ModalService ModelService;
+@inject ModalService ModalService;
 @code {
 
     RenderFragment FormTemplate()
@@ -91,7 +91,7 @@
     private void ShowModalWithService()
     {
         ModalRef modalRef = default;
-        modalRef = ModelService.CreateModal(new()
+        modalRef = ModalService.CreateModal(new()
         {
             Content = FormTemplate(),
             OnOk = async e =>
@@ -112,7 +112,7 @@
             },
             OnCancel = async e =>
             {   
-                if (!_form.IsModified || await ModelService.ConfirmAsync(new() { Content = "Are you sure you want to discard the entries?" }))
+                if (!_form.IsModified || await ModalService.ConfirmAsync(new() { Content = "Are you sure you want to discard the entries?" }))
                 {   
                     await modalRef.CloseAsync();
                      _form.Reset();
