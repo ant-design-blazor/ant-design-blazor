@@ -39,14 +39,16 @@ namespace AntDesign
         /// <summary>
         /// Vertical alignment for the flex layout: 'top' | 'middle' | 'bottom'
         /// </summary>
+        /// <default value="RowAlign.Top" />
         [Parameter]
-        public RowAlign Align { get; set; }
+        public RowAlign Align { get; set; } = RowAlign.Top;
 
         /// <summary>
         /// Hotizontal alignment for the flex layout: 'start' | 'end' | 'center' | 'space-around' | 'space-between'
         /// </summary>
+        /// <default value="RowJustify.Start" />
         [Parameter]
-        public RowJustify Justify { get; set; }
+        public RowJustify Justify { get; set; } = RowJustify.Start;
 
         /// <summary>
         /// Allow the row's content to wrap or not
@@ -118,11 +120,13 @@ namespace AntDesign
                 .If($"{prefixCls}-top", () => Align == RowAlign.Top)
                 .If($"{prefixCls}-middle", () => Align == RowAlign.Middle)
                 .If($"{prefixCls}-bottom", () => Align == RowAlign.Bottom)
+                .If($"{prefixCls}-stretch", () => Align == RowAlign.Stretch)
                 .If($"{prefixCls}-start", () => Justify == RowJustify.Start)
                 .If($"{prefixCls}-end", () => Justify == RowJustify.End)
                 .If($"{prefixCls}-center", () => Justify == RowJustify.Center)
                 .If($"{prefixCls}-space-around", () => Justify == RowJustify.SpaceAround)
                 .If($"{prefixCls}-space-between", () => Justify == RowJustify.SpaceBetween)
+                .If($"{prefixCls}-space-evenly", () => Justify == RowJustify.SpaceEvenly)
                 .If($"{prefixCls}-no-wrap", () => !Wrap)
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
