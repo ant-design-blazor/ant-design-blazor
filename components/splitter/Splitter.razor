@@ -10,7 +10,7 @@
 
     <div class="pane-of-split-container ant-splitter-panel"
         style="@this.GetPaneStyle(this.FirstPaneSize, this.FirstPaneMinSize)">
-        @FirstPane
+        <AntDesign.Core.Internal.KeepAlive ChildContent="FirstPane"></AntDesign.Core.Internal.KeepAlive>
     </div>
 
     <div class="ant-splitter-bar">
@@ -36,7 +36,7 @@
 
     <div class="pane-of-split-container ant-splitter-panel"
         style="@this.GetPaneStyle(this.SecondPaneSize, this.SecondPaneMinSize)">
-        @SecondPane
+        <AntDesign.Core.Internal.KeepAlive ChildContent="SecondPane"></AntDesign.Core.Internal.KeepAlive>
     </div>
 
 </div>
