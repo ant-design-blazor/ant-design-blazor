@@ -15,6 +15,35 @@ timeline: true
 
 ---
 
+### 1.4.1
+
+`2025-06-15`
+
+父亲节快乐！
+
+- Input
+  - 🆕 新增 DefaultToEmptyString 属性以支持默认值为空字符串。[#4586](https://github.com/ant-design-blazor/ant-design-blazor/pull/4586) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 新增 TextArea 的 OnPressEnter 属性支持组合键处理。[#4585](https://github.com/ant-design-blazor/ant-design-blazor/pull/4585) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Textarea 的 Class 属性没有传递给 textarea 元素。[#4591](https://github.com/ant-design-blazor/ant-design-blazor/pull/4591) [@ElderJames](https://github.com/ElderJames)
+
+- Splitter
+  - 🛎 性能优化 利用 KeepAlive 组件避免拖拽导致 SplitterPanel 的刷新。[#4611](https://github.com/ant-design-blazor/ant-design-blazor/pull/4611) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 SplitterPanel 遗漏了命名空间, 并修复 CS8785 和 RZ3008 编译错误。[#4602](https://github.com/ant-design-blazor/ant-design-blazor/pull/4602) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🐞 修复 在用模版选项时，默认选中项不显示。[#4607](https://github.com/ant-design-blazor/ant-design-blazor/pull/4607) [@ElderJames](https://github.com/ElderJames)
+  - 🚫 重构 增加 ChildContent 属性以方便替代 SelectOptions。[#4603](https://github.com/ant-design-blazor/ant-design-blazor/pull/4603) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 新增 Tabs 属性 StandaloneInCard 来在 Card 组件中独立显示。[#4608](https://github.com/ant-design-blazor/ant-design-blazor/pull/4608) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Grid 的 RowAlign 和 SpaceAlign 补充遗漏属性。[#4604](https://github.com/ant-design-blazor/ant-design-blazor/pull/4604) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Progress 类型为 Dashboard 时 StrokeColor 属性无效。[#4610](https://github.com/ant-design-blazor/ant-design-blazor/pull/4610) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 Upload 当用户绑定 FileList 时，避免内部和外部重复增加 UploadFileItem。[#4592](https://github.com/ant-design-blazor/ant-design-blazor/pull/4592) [@ElderJames](https://github.com/ElderJames)
+- 📖 文档 增加 Carbon 广告。[#4593](https://github.com/ant-design-blazor/ant-design-blazor/pull/4593) [@ElderJames](https://github.com/ElderJames)
+
+#### Breaking Changes
+
+Input/TextArea/Search 组件的 `OnPressEnter` 事件参数从 `KeyboardEventArgs` 改为 `PressEnterEventArgs`。
+
 ### 1.4.0
 
 `2025-05-07`

@@ -15,6 +15,36 @@ timeline: true
 
 ---
 
+### 1.4.1
+
+`2025-06-15`
+
+Happy father's day!
+
+- Input
+  - 🆕 Add `DefaultToEmptyString` parameter to make empty string as the default value. [#4586](https://github.com/ant-design-blazor/ant-design-blazor/pull/4586) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add support combination key for TextArea OnPressEnter handling. [#4585](https://github.com/ant-design-blazor/ant-design-blazor/pull/4585) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the Class parameter should assign to the textarea element. [#4591](https://github.com/ant-design-blazor/ant-design-blazor/pull/4591) [@ElderJames](https://github.com/ElderJames)
+
+- Splitter
+  - 🛎 Refactor wrap pane content in KeepAlive component for improved state management. [#4611](https://github.com/ant-design-blazor/ant-design-blazor/pull/4611) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed SplitterPanel missing namespace, also fixed CS8785 and RZ3008. [#4602](https://github.com/ant-design-blazor/ant-design-blazor/pull/4602) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🐞 Fixed the default selected templated options didn't display on initialize. [#4607](https://github.com/ant-design-blazor/ant-design-blazor/pull/4607) [@ElderJames](https://github.com/ElderJames)
+  - 🚫 Refactor add ChildContent as an alias of the SelectOptions renderfargment. [#4603](https://github.com/ant-design-blazor/ant-design-blazor/pull/4603) [@ElderJames](https://github.com/ElderJames)
+
+- 🆕 Add Tabs `StandaloneInCard` parameter to Tabs component. [#4608](https://github.com/ant-design-blazor/ant-design-blazor/pull/4608) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Grid add missing properties for RowAlign and SpaceAlign. [#4604](https://github.com/ant-design-blazor/ant-design-blazor/pull/4604) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Progress the issue where StrokeColor does not work when the type is Dashboard. [#4610](https://github.com/ant-design-blazor/ant-design-blazor/pull/4610) [@pankey888](https://github.com/pankey888)
+- 🐞 Fixed Upload prevent duplicate file entries in Upload.FileList. [#4592](https://github.com/ant-design-blazor/ant-design-blazor/pull/4592) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs add carbon ads script. [#4593](https://github.com/ant-design-blazor/ant-design-blazor/pull/4593) [@ElderJames](https://github.com/ElderJames)
+
+### Breaking Changes
+
+The `OnPressEnter` event parameter of Input/TextArea/Search component has been changed from `KeyboardEventArgs` to `PressEnterEventArgs`.
+
+
 ### 1.4.0
 
 `2025-05-07`
