@@ -1,0 +1,47 @@
+name: "Build"
+description: "Build the project"
+
+inputs:
+  fetch-depth:
+    description: "Git fetch depth"
+    required: false
+    default: "0"
+  node-version:
+    description: "Node.js version"
+    required: false
+    default: "18.x"
+  package-version:
+    description: "Package version"
+    required: true
+  assembly-version:
+    description: "Assembly version"
+    required: true
+  commit-hash:
+    description: "Commit hash"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Environment
+      uses: ./.github/actions/setup
+      with:
+        fetch-depth: ${{ inputs.fetch-depth }}
+        node-version: ${{ inputs.node-version }}
+
+    - name: Restore dependencies
+      shell: bash
+      run: dotnet restore
+
+    - name: Build
+      shell: bash
+      run: dotnet build --no-restore -nodeReuse:false -maxCpuCount:8 -c Release /p:PackageVersion=${{ inputs.package-version }} /p:Version=${{ inputs.assembly-version }} /p:AssemblyVersion=${{ inputs.assembly-version }} /p:FileVersion=${{ inputs.assembly-version }} /p:InformationalVersion=${{ inputs.assembly-version }} /p:SourceRevisionId=${{ inputs.commit-hash }}
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: |
+          **/bin/Release
+          **/obj/Release
+        retention-days: 1
