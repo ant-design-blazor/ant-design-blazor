@@ -32,7 +32,7 @@ export class splitterHelper {
       const containerSize = state.isHorizontal === 0 ? containerRect.width : containerRect.height;
       const threshold = 2; // 2px threshold for edge detection
 
-            // Calculate the actual position relative to the container
+      // Calculate the actual position relative to the container
       const relativePos = state.isHorizontal === 0
         ? pos - containerRect.left
         : pos - containerRect.top;
@@ -70,11 +70,11 @@ export class splitterHelper {
       const delta = relativePos - state.pos;
       const nextPxSize = (state.sizeOfTargetPane + (targetPaneIndex == 0 ? +1 : -1) * delta);
 
-            // Calculate min and max sizes based on container size
+      // Calculate min and max sizes based on container size
       const minSize = 0;
       const maxSize = state.sizeOfContainer;
 
-            // If dragging beyond boundaries, return current sizes
+      // If dragging beyond boundaries, return current sizes
       if (nextPxSize <= minSize || nextPxSize >= maxSize) {
         return [resizeTargetStyle.width || resizeTargetStyle.height, otherPane.style.width || otherPane.style.height];
       }
@@ -94,10 +94,10 @@ export class splitterHelper {
     };
 
     const onPointerMove = (ev) => {
-      const sizes = updateSize(ev);
+      // Only update sizes in JavaScript during dragging
+      updateSize(ev);
       const currentPos = getPos(ev);
       updateButtonVisibility(currentPos);
-      component.invokeMethodAsync("UpdateSize", sizes);
     };
 
     const onPointerDown = (ev) => {
@@ -127,9 +127,11 @@ export class splitterHelper {
     const onPointerUp = (ev) => {
       splitter.releasePointerCapture(ev.pointerId);
       removeEventListenerToSplitter(pointermove, onPointerMove);
+      // Get final sizes and sync back to C#
       const sizes = updateSize(ev);
       const currentPos = getPos(ev);
       updateButtonVisibility(currentPos);
+      // Only invoke C# method when drag ends
       component.invokeMethodAsync("UpdateSize", sizes);
     };
 
