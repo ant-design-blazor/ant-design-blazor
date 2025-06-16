@@ -15,7 +15,7 @@ timeline: true
 
 ---
 
-### 1.4.1
+### 1.4.1.1
 
 `2025-06-15`
 
@@ -27,7 +27,7 @@ Happy father's day!
   - 🐞 Fixed the Class parameter should assign to the textarea element. [#4591](https://github.com/ant-design-blazor/ant-design-blazor/pull/4591) [@ElderJames](https://github.com/ElderJames)
 
 - Splitter
-  - 🛎 Refactor wrap pane content in KeepAlive component for improved state management. [#4611](https://github.com/ant-design-blazor/ant-design-blazor/pull/4611) [@ElderJames](https://github.com/ElderJames)
+  - 🛎 Ensuring invoking C# methods at the end of the drag. [#4614](https://github.com/ant-design-blazor/ant-design-blazor/pull/4614) [@ElderJames](https://github.com/ElderJames)
   - 🐞 Fixed SplitterPanel missing namespace, also fixed CS8785 and RZ3008. [#4602](https://github.com/ant-design-blazor/ant-design-blazor/pull/4602) [@ElderJames](https://github.com/ElderJames)
 
 - Select

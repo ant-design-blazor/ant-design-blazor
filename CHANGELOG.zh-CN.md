@@ -15,7 +15,7 @@ timeline: true
 
 ---
 
-### 1.4.1
+### 1.4.1.1
 
 `2025-06-15`
 
@@ -27,7 +27,7 @@ timeline: true
   - 🐞 修复 Textarea 的 Class 属性没有传递给 textarea 元素。[#4591](https://github.com/ant-design-blazor/ant-design-blazor/pull/4591) [@ElderJames](https://github.com/ElderJames)
 
 - Splitter
-  - 🛎 性能优化 利用 KeepAlive 组件避免拖拽导致 SplitterPanel 的刷新。[#4611](https://github.com/ant-design-blazor/ant-design-blazor/pull/4611) [@ElderJames](https://github.com/ElderJames)
+  - 🛎 性能优化 只当鼠标拖动结束才触发刷新。 [#4614](https://github.com/ant-design-blazor/ant-design-blazor/pull/4614) [@ElderJames](https://github.com/ElderJames)
   - 🐞 修复 SplitterPanel 遗漏了命名空间, 并修复 CS8785 和 RZ3008 编译错误。[#4602](https://github.com/ant-design-blazor/ant-design-blazor/pull/4602) [@ElderJames](https://github.com/ElderJames)
 
 - Select
