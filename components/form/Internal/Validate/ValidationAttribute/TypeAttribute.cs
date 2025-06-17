@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace AntDesign.Internal.Form.Validate;
 
-internal class TypeAttribute : ValidationAttribute
+internal sealed class TypeAttribute : ValidationAttribute
 {
     internal FormFieldType Type { get; set; }
     internal TypeAttribute(FormFieldType type)

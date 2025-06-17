@@ -6,35 +6,34 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace AntDesign.Internal.Form.Validate
+namespace AntDesign.Internal.Form.Validate;
+
+internal sealed class ArrayLengthAttribute : ValidationAttribute
 {
-    internal class ArrayLengthAttribute : ValidationAttribute
+    internal int Length { get; }
+
+    internal ArrayLengthAttribute(int length)
     {
-        internal int Length { get; }
+        Length = length;
+    }
 
-        internal ArrayLengthAttribute(int length)
+    public override string FormatErrorMessage(string name)
+    {
+        return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Length);
+    }
+
+    public override bool IsValid(object value)
+    {
+        if (value == null)
         {
-            Length = length;
+            return true;
         }
 
-        public override string FormatErrorMessage(string name)
+        if (value is not Array valueAsArray)
         {
-            return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Length);
+            return false;
         }
 
-        public override bool IsValid(object value)
-        {
-            if (value == null)
-            {
-                return true;
-            }
-
-            if (!(value is Array valueAsArray))
-            {
-                return false;
-            }
-
-            return valueAsArray.Length == Length;
-        }
+        return valueAsArray.Length == Length;
     }
 }

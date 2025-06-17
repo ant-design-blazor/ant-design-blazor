@@ -5,38 +5,37 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace AntDesign.Internal.Form.Validate
+namespace AntDesign.Internal.Form.Validate;
+
+internal sealed class StringRangeAttribute : ValidationAttribute
 {
-    internal class StringRangeAttribute : ValidationAttribute
+    public int Maximum { get; }
+
+    public int Minimum { get; }
+
+    internal StringRangeAttribute(int minimum, int maximum)
     {
-        public int Maximum { get; }
+        Minimum = minimum;
+        Maximum = maximum;
+    }
 
-        public int Minimum { get; }
+    public override string FormatErrorMessage(string name)
+    {
+        return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Maximum, Minimum);
+    }
 
-        public StringRangeAttribute(int minimum, int maximum)
+    public override bool IsValid(object value)
+    {
+        if (value == null)
         {
-            Minimum = minimum;
-            Maximum = maximum;
+            return true;
         }
 
-        public override string FormatErrorMessage(string name)
+        if (value is not string stringValue)
         {
-            return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Maximum, Minimum);
+            return true;
         }
 
-        public override bool IsValid(object value)
-        {
-            if (value == null)
-            {
-                return true;
-            }
-
-            if (value is not string stringValue)
-            {
-                return true;
-            }
-
-            return stringValue.Length >= Minimum && stringValue.Length <= Maximum;
-        }
+        return stringValue.Length >= Minimum && stringValue.Length <= Maximum;
     }
 }

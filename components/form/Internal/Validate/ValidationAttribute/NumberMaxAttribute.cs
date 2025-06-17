@@ -6,52 +6,51 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace AntDesign.Internal.Form.Validate
+namespace AntDesign.Internal.Form.Validate;
+
+internal sealed class NumberMaxAttribute : ValidationAttribute
 {
-    internal class NumberMaxAttribute : ValidationAttribute
+    internal decimal Max { get; }
+
+    internal NumberMaxAttribute(decimal max)
     {
-        internal decimal Max { get; }
+        Max = max;
+    }
 
-        internal NumberMaxAttribute(decimal max)
+    public override string FormatErrorMessage(string name)
+    {
+        return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Max);
+    }
+
+    public override bool IsValid(object value)
+    {
+        if (value == null)
         {
-            Max = max;
+            return true;
         }
 
-        public override string FormatErrorMessage(string name)
-        {
-            return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, Max);
-        }
+        var type = value.GetType();
+        var typeMinValue = GetMinValueString(type);
 
-        public override bool IsValid(object value)
-        {
-            if (value == null)
-            {
-                return true;
-            }
+        var attribute = new RangeAttribute(type, typeMinValue, Max.ToString());
 
-            var type = value.GetType();
-            var typeMinValue = GetMinValueString(type);
+        return attribute.IsValid(value);
+    }
 
-            var attribute = new RangeAttribute(type, typeMinValue, Max.ToString());
+    private static string GetMinValueString(Type type)
+    {
+        if (type == typeof(byte)) return byte.MinValue.ToString();
+        if (type == typeof(short)) return short.MinValue.ToString();
+        if (type == typeof(int)) return int.MinValue.ToString();
+        if (type == typeof(long)) return long.MinValue.ToString();
+        if (type == typeof(float)) return float.MinValue.ToString();
+        if (type == typeof(double)) return double.MinValue.ToString();
+        if (type == typeof(sbyte)) return sbyte.MinValue.ToString();
+        if (type == typeof(ushort)) return ushort.MinValue.ToString();
+        if (type == typeof(uint)) return uint.MinValue.ToString();
+        if (type == typeof(ulong)) return ulong.MinValue.ToString();
+        if (type == typeof(decimal)) return decimal.MinValue.ToString();
 
-            return attribute.IsValid(value);
-        }
-
-        private static string GetMinValueString(Type type)
-        {
-            if (type == typeof(byte)) return byte.MinValue.ToString();
-            if (type == typeof(short)) return short.MinValue.ToString();
-            if (type == typeof(int)) return int.MinValue.ToString();
-            if (type == typeof(long)) return long.MinValue.ToString();
-            if (type == typeof(float)) return float.MinValue.ToString();
-            if (type == typeof(double)) return double.MinValue.ToString();
-            if (type == typeof(sbyte)) return sbyte.MinValue.ToString();
-            if (type == typeof(ushort)) return ushort.MinValue.ToString();
-            if (type == typeof(uint)) return uint.MinValue.ToString();
-            if (type == typeof(ulong)) return ulong.MinValue.ToString();
-            if (type == typeof(decimal)) return decimal.MinValue.ToString();
-
-            return null;
-        }
+        return null;
     }
 }
