@@ -23,7 +23,7 @@ namespace AntDesign;
 
 public partial class FormItem : AntDomComponentBase, IFormItem
 {
-    private static readonly Dictionary<string, object> _noneColAttributes = new Dictionary<string, object>();
+    private static readonly Dictionary<string, object> _noneColAttributes = [];
 
     private readonly string _prefixCls = "ant-form-item";
 
@@ -228,7 +228,7 @@ public partial class FormItem : AntDomComponentBase, IFormItem
 
     private bool IsShowIcon => HasFeedback && _iconMap.ContainsKey(ValidateStatus);
 
-    private bool IsShowFeedbackOnError => (ShowFeedbackOnError && !_isValid);
+    private bool IsShowFeedbackOnError => ShowFeedbackOnError && !_isValid;
 
     private EditContext EditContext => Form?.EditContext;
 
@@ -242,7 +242,7 @@ public partial class FormItem : AntDomComponentBase, IFormItem
 
     private PropertyReflector? _propertyReflector;
 
-    private ClassMapper _labelClassMapper = new ClassMapper();
+    private readonly ClassMapper _labelClassMapper = new();
 
     private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form?.LabelAlign;
 
@@ -465,7 +465,7 @@ public partial class FormItem : AntDomComponentBase, IFormItem
         {
             return;
         }
-        _validationMessages = CurrentEditContext.GetValidationMessages(_fieldIdentifier).Distinct().ToArray();
+        _validationMessages = [.. CurrentEditContext.GetValidationMessages(_fieldIdentifier).Distinct()];
         _isValid = _validationMessages.Length == 0;
 
         _validateStatus = _isValid ? _originalValidateStatus ?? FormValidateStatus.Default : FormValidateStatus.Error;
