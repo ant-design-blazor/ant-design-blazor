@@ -4,8 +4,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -242,6 +244,14 @@ namespace AntDesign
         [Parameter]
         public bool WithCredentials { get; set; }
 
+        /// <summary>
+        /// Use the manual upload mode
+        /// </summary>
+        [Parameter]
+        public bool UseManuallyMode { get; set; } = false;
+
+        private UploadButton _uploadButton;
+
         private bool IsText => ListType == UploadListType.Text;
 
         private bool IsPictureCard => ListType == UploadListType.PictureCard;
@@ -304,6 +314,19 @@ namespace AntDesign
             if (item.State == UploadState.Success && OnDownload.HasDelegate)
             {
                 await OnDownload.InvokeAsync(item);
+            }
+        }
+
+        /// <summary>
+        /// 开始上传，仅使用手动上传有效。
+        /// </summary>
+        /// <returns></returns>
+        public async Task StartUpload()
+        {
+            if (UseManuallyMode)
+            {
+                var fileIds = FileList.Where(x => x.State == UploadState.Waiting).Select(x => x.Id).ToList();
+                await _uploadButton.StartUpload(fileIds);
             }
         }
     }
