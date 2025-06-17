@@ -64,6 +64,7 @@ internal static class FormValidateHelper
             // See https://github.com/dotnet/runtime/blob/v9.0.6/src/libraries/System.ComponentModel.Annotations/src/System/ComponentModel/DataAnnotations/StringLengthAttribute.cs#L78
             StringLengthAttribute => ReplaceLength(templates.String.Range, min: 2, max: 1),
 #if NET8_0_OR_GREATER
+            // See https://github.com/dotnet/runtime/blob/v9.0.6/src/libraries/System.ComponentModel.Annotations/src/System/ComponentModel/DataAnnotations/LengthAttribute.cs#L78
             LengthAttribute => ReplaceLength(compareMessage.Range, min: 1, max: 2),
 #endif
             CompareAttribute => ReplaceLabel(templates.Default),
