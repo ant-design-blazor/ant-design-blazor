@@ -5,7 +5,7 @@
 using System;
 using Microsoft.AspNetCore.Components;
 
-namespace AntDesign
+namespace AntDesign.Core
 {
 #if NET7_0_OR_GREATER
 #else
