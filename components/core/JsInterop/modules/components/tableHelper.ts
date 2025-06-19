@@ -1,4 +1,7 @@
-﻿export class tableHelper {
+﻿import { manipulationHelper } from '../dom/manipulationHelper'
+
+export class tableHelper {
+
   static isHidden(element) {
     if (element) {
       const computedStyle = getComputedStyle(element);
@@ -40,24 +43,23 @@
     if (parentElement) {
       const parentComputedStyle = getComputedStyle(parentElement);
       if (parentComputedStyle.rowGap && parentComputedStyle.rowGap.endsWith('px')) {
-        rowGap = parseFloat(parentComputedStyle.rowGap);        
+        rowGap = manipulationHelper.parseNumericValue(parentComputedStyle.rowGap);        
       }
       if (parentComputedStyle.borderStyle != 'none' && parentComputedStyle.borderBottom) {        
-        parentBorderBottom = parseFloat(parentComputedStyle.borderBottom);        
+        parentBorderBottom = manipulationHelper.parseNumericValue(parentComputedStyle.borderBottom);        
       }
       if (parentComputedStyle.paddingBottom) {
-        parentPaddingBottom = parseFloat(parentComputedStyle.paddingBottom);
+        parentPaddingBottom = manipulationHelper.parseNumericValue(parentComputedStyle.paddingBottom);
       }
     }
     let previousElement = element;
     let previousComputedStyle = getComputedStyle(element);
 
-
     while (currentElement) {
       const currentComputedStyle = getComputedStyle(currentElement);
       const hasSameZIndex = previousComputedStyle.getPropertyValue('z-index') == currentComputedStyle.getPropertyValue('z-index');
       if (!tableHelper.isIgnore(currentElement, currentComputedStyle, left, right) && hasSameZIndex) {
-        totalHeight += currentElement.offsetHeight + Math.max(parseFloat(currentComputedStyle.marginTop), parseFloat(previousComputedStyle.marginBottom)) + rowGap;
+        totalHeight += currentElement.offsetHeight + Math.max(manipulationHelper.parseNumericValue(currentElement, 'marginTop'), manipulationHelper.parseNumericValue(previousElement, 'marginBottom')) + rowGap;
 
         previousElement = currentElement;
         previousComputedStyle = currentComputedStyle;
@@ -66,7 +68,7 @@
    
     }
     if (!tableHelper.isIgnore(previousElement, previousComputedStyle, left, right)) {
-      marginBottom = Math.max(parseFloat(previousComputedStyle.marginBottom), marginBottom);
+      marginBottom = Math.max(manipulationHelper.parseNumericValue(previousElement, 'marginBottom'), marginBottom);
       if (parentBorderBottom > 0.1 || parentPaddingBottom>0.1) {
         totalHeight += marginBottom;
         marginBottom = 0;
