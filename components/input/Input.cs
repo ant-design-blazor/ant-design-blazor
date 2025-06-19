@@ -418,7 +418,7 @@ namespace AntDesign
 
             if (FormItem is { ValidateStatus: not FormValidateStatus.Default })
             {
-                AffixWrapperClass += $" ant-input-affix-wrapper-status-{FormItem.ValidateStatus.ToString().ToLower()}";
+                AffixWrapperClass += $" ant-input-affix-wrapper-status-{FormItem.ValidateStatus.ToString().ToLowerInvariant()}";
             }
 
             if (FormItem is { HasFeedback: true })

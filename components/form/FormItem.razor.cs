@@ -23,7 +23,7 @@ namespace AntDesign
 {
     public partial class FormItem : AntDomComponentBase, IFormItem
     {
-        private static readonly Dictionary<string, object> _noneColAttributes = new Dictionary<string, object>();
+        private static readonly Dictionary<string, object> _noneColAttributes = [];
 
         private readonly string _prefixCls = "ant-form-item";
 
@@ -218,21 +218,21 @@ namespace AntDesign
         [Parameter]
         public string ToolTip { get; set; }
 
-        private static readonly Dictionary<FormValidateStatus, (IconThemeType theme, string type)> _iconMap = new Dictionary<FormValidateStatus, (IconThemeType theme, string type)>
-        {
-            { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },
-            { FormValidateStatus.Warning, (IconThemeType.Fill, Outline.ExclamationCircle) },
-            { FormValidateStatus.Error, (IconThemeType.Fill, Outline.CloseCircle) },
-            { FormValidateStatus.Validating, (IconThemeType.Outline, Outline.Loading) }
-        };
+        private static readonly Dictionary<FormValidateStatus, (IconThemeType theme, string type)> _iconMap = new()
+    {
+        { FormValidateStatus.Success, (IconThemeType.Fill, Outline.CheckCircle) },
+        { FormValidateStatus.Warning, (IconThemeType.Fill, Outline.ExclamationCircle) },
+        { FormValidateStatus.Error, (IconThemeType.Fill, Outline.CloseCircle) },
+        { FormValidateStatus.Validating, (IconThemeType.Outline, Outline.Loading) }
+    };
 
         private bool IsShowIcon => HasFeedback && _iconMap.ContainsKey(ValidateStatus);
 
-        private bool IsShowFeedbackOnError => (ShowFeedbackOnError && !_isValid);
+        private bool IsShowFeedbackOnError => ShowFeedbackOnError && !_isValid;
 
         private EditContext EditContext => Form?.EditContext;
 
-        private string[] _validationMessages = Array.Empty<string>();
+        private string[] _validationMessages = [];
 
         private bool _isValid = true;
 
@@ -242,13 +242,13 @@ namespace AntDesign
 
         private PropertyReflector? _propertyReflector;
 
-        private ClassMapper _labelClassMapper = new ClassMapper();
+        private readonly ClassMapper _labelClassMapper = new();
 
         private AntLabelAlignType? FormLabelAlign => LabelAlign ?? Form?.LabelAlign;
 
         private string DisplayName => Label ?? _propertyReflector?.DisplayName;
 
-        private string[] ValidationMessages => _validationMessages.Any() ? _validationMessages : [Help];
+        private string[] ValidationMessages => _validationMessages.Length > 0 ? _validationMessages : [Help];
 
         private string _name;
         private Action _nameChanged;
@@ -285,10 +285,7 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (Form == null)
-            {
-                Form = ParentFormItem?.Form;
-            }
+            Form ??= ParentFormItem?.Form;
 
             if (Form == null)
             {
@@ -317,7 +314,7 @@ namespace AntDesign
                 .If($"{_prefixCls}-rtl", () => RTL)
                 .If($"{_prefixCls}-has-feedback", () => HasFeedback || IsShowFeedbackOnError)
                 .If($"{_prefixCls}-is-validating", () => ValidateStatus == FormValidateStatus.Validating)
-                .GetIf(() => $"{_prefixCls}-has-{ValidateStatus.ToString().ToLower()}", () => ValidateStatus.IsIn(FormValidateStatus.Success, FormValidateStatus.Error, FormValidateStatus.Warning))
+                .GetIf(() => $"{_prefixCls}-has-{ValidateStatus.ToString().ToLowerInvariant()}", () => ValidateStatus.IsIn(FormValidateStatus.Success, FormValidateStatus.Error, FormValidateStatus.Warning))
                 .If($"{_prefixCls}-with-help", () => !string.IsNullOrEmpty(Help))
                ;
 
@@ -468,8 +465,8 @@ namespace AntDesign
             {
                 return;
             }
-            _validationMessages = CurrentEditContext.GetValidationMessages(_fieldIdentifier).Distinct().ToArray();
-            _isValid = !_validationMessages.Any();
+            _validationMessages = [.. CurrentEditContext.GetValidationMessages(_fieldIdentifier).Distinct()];
+            _isValid = _validationMessages.Length == 0;
 
             _validateStatus = _isValid ? _originalValidateStatus ?? FormValidateStatus.Default : FormValidateStatus.Error;
 
@@ -559,7 +556,7 @@ namespace AntDesign
             SetRules();
         }
 
-        IEnumerable<ValidationResult>  IFormItem.ValidateFieldWithRules()
+        IEnumerable<ValidationResult> IFormItem.ValidateFieldWithRules()
         {
             if (_propertyReflector is null)
             {
@@ -615,7 +612,7 @@ namespace AntDesign
                     results.Add(result);
                 }
             }
-            
+
             return results;
         }
 
@@ -624,7 +621,7 @@ namespace AntDesign
         void IFormItem.SetValidationMessage(string[] errorMessages)
         {
             _validationMessages = errorMessages;
-            _isValid = !errorMessages.Any();
+            _isValid = errorMessages.Length == 0;
             _validateStatus = _isValid ? FormValidateStatus.Default : FormValidateStatus.Error;
 
             _onValidated(_validationMessages);

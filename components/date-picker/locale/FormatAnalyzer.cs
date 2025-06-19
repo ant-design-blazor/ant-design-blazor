@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace AntDesign.Datepicker.Locale
 {
@@ -20,8 +19,8 @@ namespace AntDesign.Datepicker.Locale
         private int _amPmDesignatorLength;
         private int _formatLength;
 
-        private List<string> _separators = new();
-        private List<DateTimePartialType> _partialsOrder = new();
+        private List<string> _separators = [];
+        private List<DateTimePartialType> _partialsOrder = [];
         private Dictionary<DateTimePartialType, int> _parsedMap;
         private readonly DatePickerType _analyzerType;
         private bool _hasPrefix;
@@ -55,7 +54,7 @@ namespace AntDesign.Datepicker.Locale
 
         private void AnalyzeFormat(string format)
         {
-            _parsedMap = new();
+            _parsedMap = [];
             bool? inDate = null;
             bool isLastSeparator = false;
             int partialOrder = 0;
@@ -97,7 +96,7 @@ namespace AntDesign.Datepicker.Locale
                     }
                     else
                     {
-                        _separators[_separators.Count - 1] += format[i];
+                        _separators[^1] += format[i];
                     }
                     isLastSeparator = true;
                 }
@@ -126,8 +125,8 @@ namespace AntDesign.Datepicker.Locale
             if (string.IsNullOrEmpty(forEvaluation) || forEvaluation.Length < _formatLength)
                 return false;
 
-            int startPosition = _startPosition, endingPosition, parsed;
-            for (int i = 0; i < _partialsOrder.Count; i++)
+            int startPosition = _startPosition, endingPosition;
+            for (var i = 0; i < _partialsOrder.Count; i++)
             {
                 if (i < (_separators.Count - _separatorPrefixOffset))
                     endingPosition = forEvaluation.IndexOf(_separators[i + _separatorPrefixOffset], startPosition);
@@ -136,8 +135,8 @@ namespace AntDesign.Datepicker.Locale
                 //handles situation when separator was removed from date
                 if (endingPosition < 0)
                     return false;
-                string partial = forEvaluation.Substring(startPosition, endingPosition - startPosition);
-                (int minLen, int maxLen) borders = _partialsOrder[i] switch
+                var partial = forEvaluation.AsSpan(startPosition, endingPosition - startPosition);
+                (var minLen, var maxLen) = _partialsOrder[i] switch
                 {
                     DateTimePartialType.Year => (minLen: _yearLength, maxLen: 4),
                     DateTimePartialType.Month => (minLen: _monthLength, maxLen: 2),
@@ -149,18 +148,18 @@ namespace AntDesign.Datepicker.Locale
                     _ => throw new ArgumentException("Partial not covered")
                 };
                 //check width of the partial
-                if (!(borders.minLen <= partial.Length && partial.Length <= borders.maxLen))
+                if (!(minLen <= partial.Length && partial.Length <= maxLen))
                     return false;
 
                 if (_partialsOrder[i] == DateTimePartialType.AmPmDesignator)
                 {
-                    if (CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator.StartsWith(partial,
-                                                                                          StringComparison.InvariantCultureIgnoreCase))
+                    if (CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator.AsSpan()
+                        .StartsWith(partial, StringComparison.InvariantCultureIgnoreCase))
                     {
                         _parsedMap[_partialsOrder[i]] = 0;
                     }
-                    else if (CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator.StartsWith(partial,
-                                                                                              StringComparison.InvariantCultureIgnoreCase))
+                    else if (CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator.AsSpan()
+                        .StartsWith(partial, StringComparison.InvariantCultureIgnoreCase))
                     {
                         _parsedMap[_partialsOrder[i]] = 1;
                     }
@@ -172,7 +171,7 @@ namespace AntDesign.Datepicker.Locale
                 else
                 {
                     //check if partial is pars-able and grater than 0
-                    if (int.TryParse(partial, out parsed))
+                    if (int.TryParse(partial, out var parsed))
                     {
                         if ((parsed <= 0 && _partialsOrder[i] >= DateTimePartialType.Day)
                             || (parsed < 0 && _partialsOrder[i] < DateTimePartialType.Day))
@@ -184,8 +183,13 @@ namespace AntDesign.Datepicker.Locale
                     }
 
                     //check if all characters in partial are digits (exclude for example partial = "201 ")
-                    if (partial.Count(c => char.IsDigit(c)) != partial.Length)
-                        return false;
+                    foreach (var c in partial)
+                    {
+                        if (!char.IsDigit(c))
+                        {
+                            return false;
+                        }
+                    }
 
                     if (endingPosition < forEvaluation.Length)
                         startPosition = endingPosition + _separators[i + _separatorPrefixOffset].Length;
@@ -202,15 +206,15 @@ namespace AntDesign.Datepicker.Locale
             if (arr.Length != 2)
                 return (false, default);
 
-            if (!ExtractYearPartial(forEvaluation, arr[0], out int year))
+            if (!ExtractYearPartial(forEvaluation, arr[0], out var year))
                 return (false, default);
 
-            if (!arr[1].StartsWith(quarterPrefix.ToUpper()) && !arr[1].StartsWith(quarterPrefix.ToLower()))
+            if (!arr[1].StartsWith(quarterPrefix, StringComparison.InvariantCultureIgnoreCase))
                 return (false, default);
 
-            string quarterAsString = arr[1].Substring(quarterPrefix.Length).Trim();
+            var quarterAsString = arr[1].AsSpan(quarterPrefix.Length).Trim();
             if (quarterAsString.Length == 1
-                && int.TryParse(quarterAsString, out int quarter)
+                && int.TryParse(quarterAsString, out var quarter)
                 && quarter > 0 && quarter <= 4)
             {
                 //pick first day/month of the quarter
@@ -226,16 +230,16 @@ namespace AntDesign.Datepicker.Locale
             if (arr.Length != 2)
                 return (false, default);
 
-            if (!ExtractYearPartial(forEvaluation, arr[0], out int year))
+            if (!ExtractYearPartial(forEvaluation, arr[0], out var year))
                 return (false, default);
 
             if (!arr[1].EndsWith(_locale.Lang.Week))
                 return (false, default);
 
-            string weekAsString = arr[1].Substring(0, arr[1].Length - _locale.Lang.Week.Length).Trim();
+            var weekAsString = arr[1].AsSpan(0, arr[1].Length - _locale.Lang.Week.Length).Trim();
 
             if (!(weekAsString.Length > 0 && weekAsString.Length <= 2
-                && int.TryParse(weekAsString, out int week)
+                && int.TryParse(weekAsString, out var week)
                 && week > 0 && week < 55))
                 return (false, default);
 
@@ -243,7 +247,7 @@ namespace AntDesign.Datepicker.Locale
             var resultDate = new DateTime(year, 1, 1, _cultureInfo.Calendar).AddDays(week * 7 - 7);
             if (week > 1)
             {
-                int mondayOffset = (7 + (resultDate.DayOfWeek - DayOfWeek.Monday)) % 7;
+                var mondayOffset = (7 + (resultDate.DayOfWeek - DayOfWeek.Monday)) % 7;
                 resultDate = resultDate.AddDays(-1 * mondayOffset);
             }
             //cover scenario of 54 weeks when most of times years do not have 54 weeks
@@ -261,7 +265,7 @@ namespace AntDesign.Datepicker.Locale
 
             int startPosition = _startPosition, endingPosition;
             endingPosition = forEvaluation.IndexOf(_separators[_separatorPrefixOffset][0], startPosition);
-            string yearPartial = partial.Substring(startPosition, endingPosition - startPosition).Trim();
+            var yearPartial = partial.AsSpan(startPosition, endingPosition - startPosition).Trim();
             if (!(_yearLength <= yearPartial.Length && yearPartial.Length <= 4))
                 return false;
 
@@ -278,24 +282,13 @@ namespace AntDesign.Datepicker.Locale
             {
                 if (_converter is null)
                 {
-                    switch (_analyzerType)
+                    _converter = _analyzerType switch
                     {
-                        case DatePickerType.Year:
-                            _converter = (pickerString) => TryParseYear(pickerString);
-                            break;
-
-                        case DatePickerType.Quarter:
-                            _converter = (pickerString) => TryParseQuarterString(pickerString);
-                            break;
-
-                        case DatePickerType.Week:
-                            _converter = (pickerString) => TryParseWeekString(pickerString);
-                            break;
-
-                        default:
-                            _converter = (pickerString) => TryParseDate(pickerString);
-                            break;
-                    }
+                        DatePickerType.Year => TryParseYear,
+                        DatePickerType.Quarter => (pickerString) => TryParseQuarterString(pickerString),
+                        DatePickerType.Week => (pickerString) => TryParseWeekString(pickerString),
+                        _ => TryParseDate,
+                    };
                 }
                 return _converter;
             }
