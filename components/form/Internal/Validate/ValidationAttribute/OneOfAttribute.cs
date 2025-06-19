@@ -9,17 +9,11 @@ using System.Text.Json;
 
 namespace AntDesign.Internal.Form.Validate;
 
-internal sealed class OneOfAttribute : ValidationAttribute
+internal sealed class OneOfAttribute(object[] values, string[] enumOptions = null) : ValidationAttribute
 {
-    internal object[] Values { get; set; }
+    internal object[] Values { get; set; } = values;
 
-    internal string EnumOptions { get; set; }
-
-    internal OneOfAttribute(object[] values, string[] enumOptions = null)
-    {
-        Values = values;
-        EnumOptions = enumOptions != null ? string.Join(',', enumOptions) : null;
-    }
+    internal string EnumOptions { get; set; } = enumOptions != null ? string.Join(',', enumOptions) : null;
 
     public override string FormatErrorMessage(string name)
     {

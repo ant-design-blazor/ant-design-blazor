@@ -7,17 +7,11 @@ using System.Globalization;
 
 namespace AntDesign.Internal.Form.Validate;
 
-internal sealed class StringRangeAttribute : ValidationAttribute
+internal sealed class StringRangeAttribute(int minimum, int maximum) : ValidationAttribute
 {
-    public int Maximum { get; }
+    public int Maximum { get; } = maximum;
 
-    public int Minimum { get; }
-
-    internal StringRangeAttribute(int minimum, int maximum)
-    {
-        Minimum = minimum;
-        Maximum = maximum;
-    }
+    public int Minimum { get; } = minimum;
 
     public override string FormatErrorMessage(string name)
     {

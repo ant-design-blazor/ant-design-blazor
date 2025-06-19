@@ -26,7 +26,7 @@ internal sealed class ArrayRangeAttribute(int minLength, int maxLength) : Valida
             return true;
         }
 
-        if (!(value is Array valueAsArray))
+        if (value is not Array valueAsArray)
         {
             return false;
         }

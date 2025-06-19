@@ -7,14 +7,9 @@ using System.Globalization;
 
 namespace AntDesign.Internal.Form.Validate;
 
-internal sealed class NumberAttribute : ValidationAttribute
+internal sealed class NumberAttribute(decimal number) : ValidationAttribute
 {
-    internal decimal Number { get; }
-
-    internal NumberAttribute(decimal number)
-    {
-        Number = number;
-    }
+    internal decimal Number { get; } = number;
 
     public override string FormatErrorMessage(string name)
     {

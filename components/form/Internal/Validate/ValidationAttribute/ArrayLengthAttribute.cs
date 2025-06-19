@@ -8,14 +8,9 @@ using System.Globalization;
 
 namespace AntDesign.Internal.Form.Validate;
 
-internal sealed class ArrayLengthAttribute : ValidationAttribute
+internal sealed class ArrayLengthAttribute(int length) : ValidationAttribute
 {
-    internal int Length { get; }
-
-    internal ArrayLengthAttribute(int length)
-    {
-        Length = length;
-    }
+    internal int Length { get; } = length;
 
     public override string FormatErrorMessage(string name)
     {

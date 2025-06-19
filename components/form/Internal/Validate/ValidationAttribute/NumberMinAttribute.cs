@@ -8,14 +8,9 @@ using System.Globalization;
 
 namespace AntDesign.Internal.Form.Validate;
 
-internal sealed class NumberMinAttribute : ValidationAttribute
+internal sealed class NumberMinAttribute(decimal min) : ValidationAttribute
 {
-    internal decimal Min { get; }
-
-    internal NumberMinAttribute(decimal min)
-    {
-        Min = min;
-    }
+    internal decimal Min { get; } = min;
 
     public override string FormatErrorMessage(string name)
     {

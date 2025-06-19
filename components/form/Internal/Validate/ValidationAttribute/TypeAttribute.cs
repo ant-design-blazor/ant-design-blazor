@@ -9,13 +9,9 @@ using System.Text.RegularExpressions;
 
 namespace AntDesign.Internal.Form.Validate;
 
-internal sealed class TypeAttribute : ValidationAttribute
+internal sealed class TypeAttribute(FormFieldType type) : ValidationAttribute
 {
-    internal FormFieldType Type { get; set; }
-    internal TypeAttribute(FormFieldType type)
-    {
-        Type = type;
-    }
+    internal FormFieldType Type { get; set; } = type;
 
     public override string FormatErrorMessage(string name)
     {

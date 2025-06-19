@@ -8,14 +8,9 @@ using System.Globalization;
 
 namespace AntDesign.Internal.Form.Validate;
 
-internal sealed class NumberMaxAttribute : ValidationAttribute
+internal sealed class NumberMaxAttribute(decimal max) : ValidationAttribute
 {
-    internal decimal Max { get; }
-
-    internal NumberMaxAttribute(decimal max)
-    {
-        Max = max;
-    }
+    internal decimal Max { get; } = max;
 
     public override string FormatErrorMessage(string name)
     {
