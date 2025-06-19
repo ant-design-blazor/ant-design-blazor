@@ -624,18 +624,40 @@ namespace AntDesign
 
         private async Task ResetSizes()
         {
-            ElementReference[] refs = [_navListRef, _navWarpRef, .. _tabs.Select(x => x.TabRef).ToArray()];
-            _itemRefs = await JsInvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, refs);
-            var navList = _itemRefs[Id + "-nav-list"];
-            var navWarp = _itemRefs[Id + "-nav-warpper"];
+            if (IsDisposed)
+                return;
+                
+            try
+            {
+                ElementReference[] refs = [_navListRef, _navWarpRef, .. _tabs.Select(x => x.TabRef).ToArray()];
+                _itemRefs = await JsInvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, refs);
+                
+                if (_itemRefs == null)
+                {
+                    return;
+                }
+                
+                var navListKey = Id + "-nav-list";
+                var navWrapperKey = Id + "-nav-wrapper";
+                
+                // Use TryGetValue to safely access dictionary keys
+                if (_itemRefs.TryGetValue(navListKey, out var navList) && 
+                    _itemRefs.TryGetValue(navWrapperKey, out var navWarp))
+                {
+                    _scrollListWidth = navList.ClientWidth;
+                    _scrollListHeight = navList.ClientHeight;
+                    _wrapperWidth = navWarp.ClientWidth;
+                    _wrapperHeight = navWarp.ClientHeight;
 
-            _scrollListWidth = navList.ClientWidth;
-            _scrollListHeight = navList.ClientHeight;
-            _wrapperWidth = navWarp.ClientWidth;
-            _wrapperHeight = navWarp.ClientHeight;
-
-            _itemRefs.Remove(Id + "-nav-list");
-            _itemRefs.Remove(Id + "-nav-warpper");
+                    _itemRefs.Remove(navListKey);
+                    _itemRefs.Remove(navWrapperKey);
+                }
+            }
+            catch (Exception)
+            {
+                // Silently handle JS interop errors during component disposal or other edge cases
+                // The component will retry on the next render cycle if needed
+            }
         }
 
         private void UpdateScrollListPosition()
