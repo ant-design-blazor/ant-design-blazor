@@ -304,8 +304,13 @@
                     currentRowData.Children ??= new();
                     currentDataItem.Children ??= [];
                     @body(SortFilterChildren(currentDataItem.Children), currentRowData);
+                }
+
+                if (currentRowData.IsGrouping && currentRowData.Expanded)
+                {
                     @groupFooter(currentRowData);
                 }
+                
                 @if (!currentDataItem.HasChildren && ExpandTemplate != null && InternalRowExpandable(currentRowData) && currentRowData.Expanded)
                 {
                     <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @ExpandedRowClassName(currentRowData)"
