@@ -1,6 +1,8 @@
 ﻿import { domTypes } from './exports'
+import { manipulationHelper } from './manipulationHelper'
 
 export class infoHelper {
+
   static getWindow() {
     return {
       innerWidth: window.innerWidth,
@@ -33,11 +35,10 @@ export class infoHelper {
     let elementMarginLeft = 0;
     let elementMarginRight = 0;
     if (domElement instanceof HTMLElement) {
-      const style = window.getComputedStyle(domElement);
-      elementMarginTop = parseFloat(style.marginTop);
-      elementMarginBottom = parseFloat(style.marginBottom);
-      elementMarginLeft = parseFloat(style.marginLeft);
-      elementMarginRight = parseFloat(style.marginRight);
+      elementMarginTop = manipulationHelper.parseNumericValue(domElement, 'marginTop');
+      elementMarginBottom = manipulationHelper.parseNumericValue(domElement, 'marginBottom');
+      elementMarginLeft = manipulationHelper.parseNumericValue(domElement, 'marginLeft');
+      elementMarginRight = manipulationHelper.parseNumericValue(domElement, 'marginRight');
     }
 
     const result: domTypes.domInfo = {
