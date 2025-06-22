@@ -26,7 +26,7 @@ export class manipulationHelper {
       const element = elementOrValue;
       const style = window.getComputedStyle(element);
       const value = style[property];
-      
+
       // Check if the element's inline style has the property set to inherit
       // This is needed because in some test environments, getComputedStyle
       // returns empty string for inherit values
@@ -35,35 +35,35 @@ export class manipulationHelper {
       if (inlineValue === 'inherit') {
         return this.calculateInheritValue(element, property);
       }
-      
+
       if (!value) {
         return 0;
       }
-      
+
       // Handle special CSS values
       if (value === 'auto') {
         return this.calculateAutoValue(element, property);
       } else if (value === 'inherit') {
         return this.calculateInheritValue(element, property);
       } else if (value === 'initial' || value === 'unset') {
-        return this.calculateInitialValue(property);
+        return 0;
       }
-      
+
       const parsed = parseFloat(value);
       return isNaN(parsed) ? 0 : parsed;
     }
-    
+
     // Legacy support: if first parameter is string, parse it directly
     if (typeof elementOrValue === 'string') {
       const value = elementOrValue;
       if (!value || value === 'auto' || value === 'inherit' || value === 'initial' || value === 'unset') {
         return 0;
       }
-      
+
       const parsed = parseFloat(value);
       return isNaN(parsed) ? 0 : parsed;
     }
-    
+
     return 0;
   }
 
@@ -77,34 +77,34 @@ export class manipulationHelper {
     try {
       const rect = element.getBoundingClientRect();
       const parent = element.parentElement;
-      
+
       if (!parent) return 0;
-      
+
       const parentRect = parent.getBoundingClientRect();
-      
+
       switch (property) {
         case 'marginTop':
           // Calculate actual top margin
           return Math.max(0, rect.top - parentRect.top - element.offsetTop);
-          
+
         case 'marginBottom':
           // Calculate actual bottom margin
           const parentBottom = parentRect.bottom;
           const elementBottom = rect.bottom;
           return Math.max(0, parentBottom - elementBottom - (parent.offsetHeight - element.offsetTop - element.offsetHeight));
-          
+
         case 'marginLeft':
           // For auto left margin, calculate actual left margin
           const parentLeft = parentRect.left;
           const elementLeft = rect.left;
           return Math.max(0, elementLeft - parentLeft - element.offsetLeft);
-          
+
         case 'marginRight':
           // For auto right margin, calculate actual right margin
           const parentRight = parentRect.right;
           const elementRight = rect.right;
           return Math.max(0, parentRight - elementRight - (parent.offsetWidth - element.offsetLeft - element.offsetWidth));
-          
+
         default:
           return 0;
       }
@@ -124,11 +124,11 @@ export class manipulationHelper {
     try {
       const parent = element.parentElement;
       if (!parent) return 0;
-      
+
       // First try to get the parent's computed style value
       const parentStyle = window.getComputedStyle(parent);
       const parentValue = parentStyle[property];
-      
+
       // If parent has a valid numeric value, parse it directly
       if (parentValue && parentValue !== 'inherit' && parentValue !== 'auto' && parentValue !== 'initial' && parentValue !== 'unset' && parentValue.trim() !== '') {
         const parsed = parseFloat(parentValue);
@@ -136,7 +136,7 @@ export class manipulationHelper {
           return parsed;
         }
       }
-      
+
       // If getComputedStyle doesn't work (empty string in test environments),
       // try to get the value from the parent's inline style
       if (parent instanceof HTMLElement && parent.style) {
@@ -148,28 +148,17 @@ export class manipulationHelper {
           }
         }
       }
-      
+
       // If parent value is also inherit/auto/etc, recursively parse it
       if (parentValue === 'inherit' || parentValue === 'auto' || parentValue === 'initial' || parentValue === 'unset') {
         return this.parseNumericValue(parent, property);
       }
-      
+
       // If we still can't get the parent value, return 0 as fallback
       return 0;
     } catch (error) {
       return 0;
     }
-  }
-
-  /**
-   * Calculate the initial value for CSS properties set to "initial" or "unset"
-   * @param property The CSS property name
-   * @returns The initial value for the property (always 0 for the properties we handle)
-   */
-  private static calculateInitialValue(property: string): number {
-    // For the CSS properties we handle (margin, padding, border width),
-    // the initial value is always 0
-    return 0;
   }
 
   static addElementToBody(element) {
@@ -477,10 +466,10 @@ export class manipulationHelper {
       cachedScrollBarSize = widthContained - widthScroll;
     }
 
-    if (manipulationHelper.hasScrollbar()){
+    if (manipulationHelper.hasScrollbar()) {
       document.documentElement.style.setProperty('--ant-scrollbar-width', `${cachedScrollBarSize}px`);
     }
-  
+
     return cachedScrollBarSize;
   };
 }
