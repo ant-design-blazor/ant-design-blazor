@@ -83,27 +83,31 @@ export class manipulationHelper {
       const parentRect = parent.getBoundingClientRect();
 
       switch (property) {
-        case 'marginTop':
+        case 'marginTop': {
           // Calculate actual top margin
           return Math.max(0, rect.top - parentRect.top - element.offsetTop);
+        }
 
-        case 'marginBottom':
+        case 'marginBottom': {
           // Calculate actual bottom margin
           const parentBottom = parentRect.bottom;
           const elementBottom = rect.bottom;
           return Math.max(0, parentBottom - elementBottom - (parent.offsetHeight - element.offsetTop - element.offsetHeight));
+        }
 
-        case 'marginLeft':
+        case 'marginLeft': {
           // For auto left margin, calculate actual left margin
           const parentLeft = parentRect.left;
           const elementLeft = rect.left;
           return Math.max(0, elementLeft - parentLeft - element.offsetLeft);
+        }
 
-        case 'marginRight':
+        case 'marginRight': {
           // For auto right margin, calculate actual right margin
           const parentRight = parentRect.right;
           const elementRight = rect.right;
           return Math.max(0, parentRight - elementRight - (parent.offsetWidth - element.offsetLeft - element.offsetWidth));
+        }
 
         default:
           return 0;
