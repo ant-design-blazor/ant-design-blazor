@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -248,7 +249,7 @@ namespace AntDesign
         /// Use the manual upload mode
         /// </summary>
         [Parameter]
-        public bool UseManuallyMode { get; set; } = false;
+        public bool Defer { get; set; } = false;
 
         private UploadButton _uploadButton;
 
@@ -318,12 +319,13 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// 开始上传，仅使用手动上传有效。
+        /// Start uploading. Manual uploading is only valid after Defer is set.
         /// </summary>
         /// <returns></returns>
+        [PublicApi("1.5.0")]
         public async Task StartUpload()
         {
-            if (UseManuallyMode)
+            if (Defer)
             {
                 var fileIds = FileList.Where(x => x.State == UploadState.Waiting).Select(x => x.Id).ToList();
                 await _uploadButton.StartUpload(fileIds);
