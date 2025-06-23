@@ -248,6 +248,7 @@ namespace AntDesign
         /// <summary>
         /// Use the manual upload mode
         /// </summary>
+        [PublicApi("1.5.0")]
         [Parameter]
         public bool Defer { get; set; } = false;
 
