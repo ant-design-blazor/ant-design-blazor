@@ -16,6 +16,8 @@ const { window } = new JSDOM('<!doctype html><html><body></body></html>');
 global.document = window.document;
 global.window = global.document.defaultView;
 global.Node = window.Node;
+global.HTMLElement = window.HTMLElement;
+global.getComputedStyle = window.getComputedStyle;
 
 export class Guid {
   static newGuid() {
