@@ -14,6 +14,7 @@
         {
             <CascadingValue Value="this" IsFixed>
                 <UploadButton Action="@Action"
+                          @ref="_uploadButton"
                           Accept="@Accept"
                           ListType="@ListType"
                           Name="@Name"
@@ -177,6 +178,7 @@
             {
                 <CascadingValue Value="this" IsFixed>
                     <UploadButton Action="@Action"
+                          @ref="_uploadButton"
                           Accept="@Accept"
                           ListType="@ListType"
                           Name="@Name"

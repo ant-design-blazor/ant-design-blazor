@@ -157,6 +157,14 @@ namespace AntDesign.Internal
             await Upload.FileListChanged.InvokeAsync(Upload.FileList);
             await InvokeAsync(StateHasChanged);
 
+            if (!Upload.Defer)
+            {
+                await StartUpload(fileIds);
+            }
+        }
+
+        public async Task StartUpload(List<string> fileIds)
+        {
             if (Upload.BatchUpload)
             {
                 await UploadFilesBatch(fileIds);
@@ -186,7 +194,7 @@ namespace AntDesign.Internal
         {
             fileItem.Ext = System.IO.Path.GetExtension(fileItem.FileName);
             fileItem.Percent = 0;
-            fileItem.State = UploadState.Uploading;
+            fileItem.State = Upload.Defer ? UploadState.Waiting : UploadState.Uploading;
             fileItem.Id = id;
 
             var existingFile = Upload.FileList.FirstOrDefault(f => f.FileName == fileItem.FileName);
@@ -231,7 +239,10 @@ namespace AntDesign.Internal
                     await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
                     return;
                 }
-
+                if (Upload.Defer)
+                {
+                    fileItem.State = UploadState.Uploading;
+                }
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, new
                 {
                     element = _file,
