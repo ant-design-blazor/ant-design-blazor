@@ -626,37 +626,28 @@ namespace AntDesign
         {
             if (IsDisposed)
                 return;
-                
-            try
-            {
-                ElementReference[] refs = [_navListRef, _navWarpRef, .. _tabs.Select(x => x.TabRef).ToArray()];
-                _itemRefs = await JsInvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, refs);
-                
-                if (_itemRefs == null)
-                {
-                    return;
-                }
-                
-                var navListKey = Id + "-nav-list";
-                var navWrapperKey = Id + "-nav-wrapper";
-                
-                // Use TryGetValue to safely access dictionary keys
-                if (_itemRefs.TryGetValue(navListKey, out var navList) && 
-                    _itemRefs.TryGetValue(navWrapperKey, out var navWarp))
-                {
-                    _scrollListWidth = navList.ClientWidth;
-                    _scrollListHeight = navList.ClientHeight;
-                    _wrapperWidth = navWarp.ClientWidth;
-                    _wrapperHeight = navWarp.ClientHeight;
 
-                    _itemRefs.Remove(navListKey);
-                    _itemRefs.Remove(navWrapperKey);
-                }
-            }
-            catch (Exception)
+            ElementReference[] refs = [_navListRef, _navWarpRef, .. _tabs.Select(x => x.TabRef).ToArray()];
+            _itemRefs = await JsInvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, refs);
+
+            if (_itemRefs == null)
             {
-                // Silently handle JS interop errors during component disposal or other edge cases
-                // The component will retry on the next render cycle if needed
+                return;
+            }
+
+            var navListKey = Id + "-nav-list";
+            var navWrapperKey = Id + "-nav-wrapper";
+
+            // Use TryGetValue to safely access dictionary keys
+            if (_itemRefs.TryGetValue(navListKey, out var navList) && _itemRefs.TryGetValue(navWrapperKey, out var navWarp))
+            {
+                _scrollListWidth = navList.ClientWidth;
+                _scrollListHeight = navList.ClientHeight;
+                _wrapperWidth = navWarp.ClientWidth;
+                _wrapperHeight = navWarp.ClientHeight;
+
+                _itemRefs.Remove(navListKey);
+                _itemRefs.Remove(navWrapperKey);
             }
         }
 
