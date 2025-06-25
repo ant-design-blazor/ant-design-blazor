@@ -97,7 +97,6 @@
 .@{table-prefix-cls}.@{table-prefix-cls}-striped {
     &:not(.@{table-prefix-cls}-fixed-header):not(.@{table-prefix-cls}-fixed-column) {
 
-        // 默认情况：偶数行灰色
         .@{table-prefix-cls}-tbody tr:nth-child(2n) {
             background-color: @table-header-bg;
 
@@ -108,7 +107,6 @@
         }
     }
 
-    // 当同时有固定列和固定头部时：奇数行灰色
     &.@{table-prefix-cls}-fixed-column,
     &.@{table-prefix-cls}-fixed-header {
         .@{table-prefix-cls}-tbody tr:nth-child(2n+1) {
