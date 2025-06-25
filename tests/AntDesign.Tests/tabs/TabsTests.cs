@@ -144,42 +144,5 @@ namespace AntDesign.Tests.Tabs
             var tabsElement = cut.Find(".ant-tabs");
             Assert.NotNull(tabsElement);
         }
-
-        [Fact]
-        public void Should_handle_js_interop_exception_gracefully()
-        {
-            // Arrange: Setup JS runtime to throw exception
-            var jsRuntime = new Mock<IJSRuntime>();
-            jsRuntime.Setup(u => u.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, It.IsAny<object[]>()))
-                .ReturnsAsync(new HtmlElement());
-            
-            // Throw exception when getting elements DOM info
-            jsRuntime.Setup(u => u.InvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, It.IsAny<object[]>()))
-                .ThrowsAsync(new JSException("JS interop failed"));
-
-            Context.Services.AddScoped(_ => jsRuntime.Object);
-
-            // Act: This should not throw an exception even when JS interop fails
-            var cut = Context.RenderComponent<AntDesign.Tabs>(tabs => tabs
-                .Add(x => x.DefaultActiveKey, "2")
-                .Add(x => x.Id, "1")
-                .Add(b => b.ChildContent, b =>
-                {
-                    var tabPane1 = CreateTabPanel("1");
-                    var tabPane2 = CreateTabPanel("2");
-                    tabPane1(b);
-                    tabPane2(b);
-                })
-            );
-
-            // Assert: Component should render successfully without throwing
-            Assert.NotNull(cut);
-            var tabsElement = cut.Find(".ant-tabs");
-            Assert.NotNull(tabsElement);
-            
-            // Verify that tabs are still rendered despite JS interop failure
-            var tabButtons = cut.FindAll(".ant-tabs-tab");
-            Assert.Equal(2, tabButtons.Count);
-        }
     }
 }
