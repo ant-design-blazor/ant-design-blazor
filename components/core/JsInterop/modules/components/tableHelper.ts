@@ -1,4 +1,6 @@
 ﻿export class tableHelper {
+  private static readonly STICKY_OFFSET_SCROLL_ATTR = 'data-sticky-offset-scroll';
+
   static isHidden(element) {
     if (element) {
       const computedStyle = getComputedStyle(element);
@@ -212,7 +214,8 @@
       const stickyRef = wrapperRef.querySelector('.ant-table-sticky-scroll');
       const stickyBarRef = wrapperRef.querySelector('.ant-table-sticky-scroll-bar');
       if (stickyRef && stickyBarRef) {
-        tableHelper.enableStickyScroll(wrapperRef, bodyRef, stickyRef, stickyBarRef);
+        const stickyOffsetScroll = tableRef.getAttribute(tableHelper.STICKY_OFFSET_SCROLL_ATTR) ? parseInt(tableRef.getAttribute(tableHelper.STICKY_OFFSET_SCROLL_ATTR)) : 0;
+        tableHelper.enableStickyScroll(wrapperRef, bodyRef, stickyRef, stickyBarRef, stickyOffsetScroll);
       }
     }
   }
@@ -351,7 +354,7 @@
     return tableRect.bottom <= viewportHeight;
   }
 
-  static enableStickyScroll(wrapperRef, bodyRef, stickyRef, stickyBarRef) {
+  static enableStickyScroll(wrapperRef, bodyRef, stickyRef, stickyBarRef, stickyOffsetScroll = 0) {
     if (!stickyRef || !stickyBarRef || !bodyRef) return;
 
     const updateStickyScroll = () => {
@@ -376,6 +379,13 @@
       
       // Sync sticky scroll width with table width
       stickyRef.style.width = `${clientWidth}px`;
+      
+      // Set sticky scroll position with offset
+      if (stickyOffsetScroll > 0) {
+        stickyRef.style.bottom = `${stickyOffsetScroll}px`;
+      } else {
+        stickyRef.style.bottom = '0';
+      }
       
       // Calculate bar position based on scroll position
       const scrollRatio = scrollLeft / (scrollWidth - clientWidth);
