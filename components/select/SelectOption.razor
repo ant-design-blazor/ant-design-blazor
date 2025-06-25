@@ -14,7 +14,11 @@
       @onclick:stopPropagation
       @onmouseenter="@OnMouseEnter">
     <div class="@ClassPrefix-content">
-        @if (ItemTemplate != null)
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+        else if (ItemTemplate != null)
         {
              @ItemTemplate(Model.Item)
         }
