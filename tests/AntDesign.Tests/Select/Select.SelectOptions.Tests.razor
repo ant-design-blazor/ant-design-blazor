@@ -214,5 +214,90 @@
         // All items except John should be visible because John is selected and HideSelected is true
         cut.FindAll(".ant-select-item-option").Where(x => !x.Attributes["style"]?.Value?.Trim()?.Contains("display:none") ?? true).Count().Should().Be(3);
     }
-}
+
+    [Fact]
+    public void SelectOption_Disabled_Should_Not_Be_Selectable()
+    {
+        // Arrange
+        Person value = null;
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select TItemValue="Person" TItem="Person" @bind-Value="@value">
+                <SelectOptions>
+                    @foreach (var item in _persons)
+                    {
+                        <SelectOption @key="item"
+                                    TItemValue="Person"
+                                    TItem="Person"
+                                    Value="@item"
+                                    Label="@item.Name"
+                                    Disabled="@(item.Id == 2)" />
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Act
+        var disabledOption = cut.FindAll(".ant-select-item-option").First(x => x.ClassList.Contains("ant-select-item-option-disabled"));
+        disabledOption.Click();
+
+        // Assert
+        value.Should().BeNull();
+        cut.Find("span.ant-select-selection-placeholder").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void SelectOption_Should_Use_ItemTemplate_When_Provided()
+    {
+        // Arrange
+        Person value = null;
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select TItemValue="Person" TItem="Person" @bind-Value="@value">
+                <SelectOptions>
+                    @foreach (var item in _persons)
+                    {
+                        <SelectOption @key="item"
+                                    TItemValue="Person"
+                                    TItem="Person"
+                                    Value="@item">
+                            <span class="custom-template">@item.Id - @item.Name</span>
+                        </SelectOption>
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        cut.FindAll(".custom-template").Should().HaveCount(4);
+        cut.FindAll(".custom-template").First().TextContent.Should().Be("1 - John");
+    }
+
+    [Fact]
+    public void SelectOption_Should_Be_Removed_When_Disposed()
+    {
+        // Arrange
+        Person value = null;
+        var showAll = true;
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select TItemValue="Person" TItem="Person" @bind-Value="@value">
+                <SelectOptions>
+                    @foreach (var item in showAll ? _persons : _persons.Take(2))
+                    {
+                        <SelectOption @key="item"
+                                    TItemValue="Person"
+                                    TItem="Person"
+                                    Value="@item"
+                                    Label="@item.Name" />
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Act
+        showAll = false;
+        cut.SetParametersAndRender();
+
+        // Assert
+        cut.Instance.SelectOptionItems.Should().HaveCount(2);
+        cut.FindAll(".ant-select-item-option").Should().HaveCount(2);
+    }
 }

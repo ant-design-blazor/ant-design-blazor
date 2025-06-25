@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 
@@ -83,6 +84,14 @@ namespace AntDesign
                 _itemSet = true;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the content to be rendered inside the option.
+        /// </summary>
+        [PublicApi("1.5.0")]
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
         #endregion
 
         # region Properties
