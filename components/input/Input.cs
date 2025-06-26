@@ -470,7 +470,7 @@ namespace AntDesign
 
         protected void OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (EnableOnPressEnter && args?.Code == "Enter")
+            if (EnableOnPressEnter && args?.Key == "Enter")
             {
                 CallAfterValueChanged(async () =>
                 {
