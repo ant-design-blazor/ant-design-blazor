@@ -449,13 +449,13 @@ namespace AntDesign
 
         internal async Task HandleTabClick(TabPane tabPane)
         {
-            if (tabPane.IsActive)
-                return;
-
             if (OnTabClick.HasDelegate)
             {
                 await OnTabClick.InvokeAsync(tabPane.Key);
             }
+
+            if (tabPane.IsActive)
+                return;
 
             ActivatePane(tabPane.Key);
         }
