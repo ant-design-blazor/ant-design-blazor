@@ -400,8 +400,6 @@ namespace AntDesign
             {
                 InternalMode = Mode;
             }
-
-            SetClass();
         }
 
         private void HandleOpenChange(string[] openKeys)
