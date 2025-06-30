@@ -338,8 +338,6 @@ namespace AntDesign
                 .If($"{PrefixCls}-inline-collapsed", () => _inlineCollapsed)
                 .If($"{PrefixCls}-unselectable", () => !Selectable)
                 .If($"{PrefixCls}-rtl", () => RTL);
-
-            StateHasChanged();
         }
 
         protected override void OnInitialized()
@@ -400,6 +398,8 @@ namespace AntDesign
             {
                 InternalMode = Mode;
             }
+
+            StateHasChanged();
         }
 
         private void HandleOpenChange(string[] openKeys)
