@@ -15,6 +15,31 @@ timeline: true
 
 ---
 
+### 1.4.2
+
+`2025-06-30`
+
+- Tabs
+  - 🐞 修复 Tabs 点击激活的Tab时应触发 OnTabClick 事件。[#4634](https://github.com/ant-design-blazor/ant-design-blazor/pull/4634) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Tabs 执行 ResetSizes 时wrapper id 相关错误。[#4629](https://github.com/ant-design-blazor/ant-design-blazor/pull/4629) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - ⚡️ 性能提升 Table 利用缓存机制改进反射性能。[#4627](https://github.com/ant-design-blazor/ant-design-blazor/pull/4627) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 在固定头或列时斑马纹展示问题。[#4630](https://github.com/ant-design-blazor/ant-design-blazor/pull/4630) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 Table 分组 GroupFooterTemplate 渲染。[#4623](https://github.com/ant-design-blazor/ant-design-blazor/pull/4623) [@GlodenBoy](https://github.com/GlodenBoy)
+
+- Form
+  - 🐞 重构 Form 内部数字相关的验证特性。[#4624](https://github.com/ant-design-blazor/ant-design-blazor/pull/4624) [@LeaFrock](https://github.com/LeaFrock)
+  - 🐞 修复 Form `StringLengthAttribute` 验证信息，新增 `LengthAttribute` 特性验证。[#4616](https://github.com/ant-design-blazor/ant-design-blazor/pull/4616) [@LeaFrock](https://github.com/LeaFrock)
+
+- 🐞 修复 Overlay 相关组件在鼠标快速略过时不会关闭 (#4636)。[#4637](https://github.com/ant-design-blazor/ant-design-blazor/pull/4637) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Menu 内联收起时状态未刷新。[#4636](https://github.com/ant-design-blazor/ant-design-blazor/pull/4636) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Input 按键编码兼容性。[#4633](https://github.com/ant-design-blazor/ant-design-blazor/pull/4633) [@Qingmei16](https://github.com/Qingmei16)
+- 🐞 修复 manipulationHelper 安全解析CSS 值。[#4619](https://github.com/ant-design-blazor/ant-design-blazor/pull/4619) [@ElderJames](https://github.com/ElderJames)
+- 🌐 新增 eu_ES 巴斯克语。[#4617](https://github.com/ant-design-blazor/ant-design-blazor/pull/4617) [@izurza](https://github.com/izurza)
+- 📖 文档增加 AI 组件链接。[#4635](https://github.com/ant-design-blazor/ant-design-blazor/pull/4635) [@ElderJames](https://github.com/ElderJames)
+
+
 ### 1.4.1.1
 
 `2025-06-15`
