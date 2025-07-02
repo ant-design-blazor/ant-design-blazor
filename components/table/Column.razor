@@ -232,7 +232,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             @ColumnTitle()
         }
 
-        <Dropdown Trigger="new[] { Trigger.Click }" Visible="_filterOpened" Placement="Placement.BottomRight" OnMaskClick="() => { if (_filterOpened) FilterConfirm(); }" OnVisibleChange="FilterDropdownOnVisibleChange">
+        <Dropdown Trigger="new[] { Trigger.Click }" Visible="_filterOpened" Placement="Placement.BottomRight" OnMaskClick="() => { if (_filterOpened && !_preventClose) FilterConfirm(); }" VisibleChanged="FilterDropdownOnVisibleChange">
             <Unbound>
                 <span @ref="context.Current" role="button" tabindex="-1" class="ant-dropdown-trigger ant-table-filter-trigger@((_filterOpened ? " ant-dropdown-open" : "") + (IsFiltered ? " active" : ""))"
                       @onclick="() => { if (_filterOpened) FilterConfirm(); else _filterOpened = true; }">
@@ -242,13 +242,13 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             <Overlay>
                 <div class="ant-table-filter-dropdown">
                     @if (FilterDropdown != null)
-                {
-                    @FilterDropdown
-                }
-                else
-                {
-                    @_renderDefaultFilterDropdown
-                }
+                    {
+                        @FilterDropdown(new(() => { _filterOpened = false; _preventClose = false; }, () => { _preventClose = true; }))
+                    }
+                    else
+                    {
+                        @_renderDefaultFilterDropdown
+                    }
                 </div>
             </Overlay>
         </Dropdown>
