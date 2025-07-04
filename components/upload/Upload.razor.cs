@@ -255,6 +255,7 @@ namespace AntDesign
         /// <summary>
         /// Upload mode trigger
         /// </summary>
+        [PublicApi("1.5.0")]
         [Parameter]
         public UploadTrigger Trigger { get; set; } = UploadTrigger.Click;
 
