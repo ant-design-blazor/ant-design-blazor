@@ -15,7 +15,7 @@
             Description = "description.",
         });
         await Task.Delay(1000);
-        await _notice.Open(new NotificationConfig()
+        _notice.Open(new NotificationConfig()
         {
             Message = "New Title",
             Key = key,

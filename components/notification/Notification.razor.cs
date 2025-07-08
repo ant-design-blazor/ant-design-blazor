@@ -248,21 +248,16 @@ namespace AntDesign
 
                 var task = Task.Delay(TimeSpan.FromSeconds(option.Duration.Value), cts.Token);
 
-                return task.ContinueWith((result) =>
+                return task.ContinueWith(async (result) =>
                 {
                     if (!cts.IsCancellationRequested)
                     {
-                        RemoveItem(option);
+                        await RemoveItem(option);
                     }
                 }, TaskScheduler.Current);
             }
-            else
-            {
-                return new Task(() =>
-                {
-                    RemoveItem(option);
-                });
-            }
+
+            return Task.CompletedTask;
         }
 
         private Task RemoveItem(NotificationConfig option)

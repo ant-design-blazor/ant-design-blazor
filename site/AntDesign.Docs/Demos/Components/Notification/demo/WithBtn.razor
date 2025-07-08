@@ -12,7 +12,7 @@
         RenderFragment btn = @<Button Type="ButtonType.Primary" OnClick="() => { _notice.Close(key); }">
                                 confirm
                             </Button>;
-        await _notice.Open(new NotificationConfig()
+        _notice.Open(new NotificationConfig()
         {
             Message = "Notification Title",
             Key = key,

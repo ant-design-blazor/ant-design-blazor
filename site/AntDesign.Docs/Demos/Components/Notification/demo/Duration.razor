@@ -7,11 +7,11 @@
 @code {
     private async Task OnClick()
     {
-        await _notice.Open(new NotificationConfig()
-            {
-                Message = "Notification Title",
-                Duration = 0,
-                Description = "I will never close automatically. This is a purposely very very long description that has many many characters and words."
-            });
+        _notice.Open(new NotificationConfig()
+        {
+            Message = "Notification Title",
+            Duration = 0,
+            Description = "I will never close automatically. This is a purposely very very long description that has many many characters and words."
+        });
     }
 }

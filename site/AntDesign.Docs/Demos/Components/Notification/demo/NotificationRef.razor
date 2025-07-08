@@ -15,7 +15,7 @@
             Description = "This is the content of the notification. This is the content of the notification. This is the content of the notification."
         };
 
-        var notificationRef = await _notice.CreateRefAsync(config);
+        var notificationRef = _notice.CreateRef(config);
         // create a notificationRef and open the notification box
         // var notificationRef = await _notice.Open(config);
 

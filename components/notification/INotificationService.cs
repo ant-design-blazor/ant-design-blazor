@@ -11,15 +11,20 @@ namespace AntDesign;
 
 public interface INotificationService
 {
-    Task Close(string key);
+    void Close(string key);
     void Config(NotificationGlobalConfig config);
-    Task<NotificationRef> CreateRefAsync([NotNull] NotificationConfig config);
+    NotificationRef CreateRef([NotNull] NotificationConfig config);
     void Destroy();
-    Task<NotificationRef> Error(NotificationConfig config);
-    Task<NotificationRef> Info(NotificationConfig config);
-    Task<NotificationRef> Open([NotNull] NotificationConfig config);
-    Task<NotificationRef> Success(NotificationConfig config);
-    Task UpdateAsync(string key, OneOf<string, RenderFragment> description, OneOf<string, RenderFragment>? message = null);
-    Task<NotificationRef> Warn(NotificationConfig config);
-    Task<NotificationRef> Warning(NotificationConfig config);
+    NotificationRef Error(NotificationConfig config);
+    Task<NotificationRef> ErrorAsync(NotificationConfig config);
+    NotificationRef Info(NotificationConfig config);
+    Task<NotificationRef> InfoAsync(NotificationConfig config);
+    NotificationRef Open([NotNull] NotificationConfig config);
+    Task<NotificationRef> OpenAsync([NotNull] NotificationConfig config);
+    NotificationRef Success(NotificationConfig config);
+    Task<NotificationRef> SuccessAsync(NotificationConfig config);
+    void Update(string key, OneOf<string, RenderFragment> description, OneOf<string, RenderFragment>? message = null);
+    NotificationRef Warn(NotificationConfig config);
+    Task<NotificationRef> WarnAsync(NotificationConfig config);
+    NotificationRef Warning(NotificationConfig config);
 }

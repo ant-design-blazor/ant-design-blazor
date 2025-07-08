@@ -112,7 +112,7 @@
             Task.Run(async () =>
             {
                 await Task.Delay(60 * 1000);
-                await _notice.Open(new NotificationConfig()
+                 _notice.Open(new NotificationConfig()
                 {
                     Icon = @<Icon Type="@IconType.Outline.Smile" Style="color:hotpink" />,
                     Description = (RenderFragment)(b => Description(b)),

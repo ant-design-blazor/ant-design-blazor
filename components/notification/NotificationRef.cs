@@ -32,7 +32,7 @@ namespace AntDesign
         /// <returns></returns>
         public override async Task OpenAsync()
         {
-            await _service.InternalOpen(Config);
+            await _service.InternalOpenAsync(Config);
             if (OnOpen != null) await OnOpen.Invoke();
         }
 
@@ -75,7 +75,7 @@ namespace AntDesign
         /// <returns></returns>
         public override async Task CloseAsync()
         {
-            await _service.Close(Config.Key);
+            await _service.CloseAsync(Config.Key);
             if (OnClose != null) await OnClose.Invoke();
         }
     }
