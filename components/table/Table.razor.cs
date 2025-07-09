@@ -357,7 +357,7 @@ namespace AntDesign
         public RenderFragment EmptyTemplate { get; set; }
 
         /// <summary>
-        /// Specify the identifier of each row
+        /// Specify the identifier of each row. Default is the hash code of the row item.
         /// </summary>
         [Parameter] public Func<TItem, object> RowKey { get; set; } = default!;
 
@@ -459,7 +459,7 @@ namespace AntDesign
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
-
+        bool ITable.ServerSide => ServerSide;
         bool ITable.IsSticky => IsSticky;
 
         void ITable.AddGroupColumn(IFieldColumn column) => AddGroupColumn(column);
