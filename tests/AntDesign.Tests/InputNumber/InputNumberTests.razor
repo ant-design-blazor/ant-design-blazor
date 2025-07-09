@@ -157,14 +157,13 @@
         );
 
         //Act
-        if (isUpHandler)
-        {
-            cut.Find(".ant-input-number-handler-up").Click();
-        }
-        else
-        {
-            cut.Find(".ant-input-number-handler-down").Click();
-        }
+        var handler = isUpHandler ? 
+            cut.Find(".ant-input-number-handler-up") : 
+            cut.Find(".ant-input-number-handler-down");
+        
+        // Simulate mouse down and up events
+        handler.MouseDown();
+        handler.MouseUp();
 
         //Assert
         bindValue.Should().Be(expected);
