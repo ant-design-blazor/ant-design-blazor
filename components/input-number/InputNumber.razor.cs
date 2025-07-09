@@ -396,10 +396,33 @@ namespace AntDesign
 
         #region Value Increase and Decrease Methods
 
+        /// <summary>
+        /// Get initial value when current value is null.
+        /// </summary>
+        /// <param name="isIncrease">True when clicking up button, false when clicking down button</param>
+        /// <returns>
+        /// <para>When clicking up button (+): use Min if set, otherwise 0</para>
+        /// <para>When clicking down button (-): use Max if set, otherwise 0</para>
+        /// </returns>
+        private TValue GetInitialValue(bool isIncrease)
+        {
+            var defaultType = Nullable.GetUnderlyingType(_surfaceType);
+            var defaultMin = (TValue)_defaultMinimum[defaultType];
+            var defaultMax = (TValue)_defaultMaximum[defaultType];
+
+            if (isIncrease)
+            {
+                return !_equalToFunc(Min, defaultMin) ? Min : (TValue)Convert.ChangeType(0, defaultType);
+            }
+
+            return !_equalToFunc(Max, defaultMax) ? Max : (TValue)Convert.ChangeType(0, defaultType);
+        }
+
         private async Task IncreaseDown()
         {
             if (_isNullable && Value == null)
             {
+                await ChangeValueAsync(GetInitialValue(true));
                 return;
             }
             if (_equalToFunc(Value, Max))
@@ -439,6 +462,7 @@ namespace AntDesign
         {
             if (_isNullable && Value == null)
             {
+                await ChangeValueAsync(GetInitialValue(false));
                 return;
             }
             if (_equalToFunc(Value, Min))
@@ -472,6 +496,8 @@ namespace AntDesign
             }
         }
 
+        #endregion Value Increase and Decrease Methods
+
         private async Task OnKeyDown(KeyboardEventArgs e)
         {
             if (_isNullable && Value == null)
@@ -499,8 +525,6 @@ namespace AntDesign
                 StateHasChanged();
             }
         }
-
-        #endregion Value Increase and Decrease Methods
 
         private async Task SetFocus()
         {
@@ -573,11 +597,11 @@ namespace AntDesign
             string cls;
             if (direction == "up")
             {
-                cls = $"ant-input-number-handler ant-input-number-handler-up " + (!_greaterThanFunc(Max, Value) ? "ant-input-number-handler-up-disabled" : string.Empty);
+                cls = $"ant-input-number-handler ant-input-number-handler-up " + (!(_isNullable && Value == null) && !_greaterThanFunc(Max, Value) ? "ant-input-number-handler-up-disabled" : string.Empty);
             }
             else
             {
-                cls = $"ant-input-number-handler ant-input-number-handler-down " + (!_greaterThanFunc(Value, Min) ? "ant-input-number-handler-down-disabled" : string.Empty);
+                cls = $"ant-input-number-handler ant-input-number-handler-down " + (!(_isNullable && Value == null) && !_greaterThanFunc(Value, Min) ? "ant-input-number-handler-down-disabled" : string.Empty);
             }
 
             return cls;
