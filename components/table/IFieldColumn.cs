@@ -39,5 +39,9 @@ namespace AntDesign
         internal Expression<Func<TItem, object>> GetGroupByExpression<TItem>();
 
         internal void SetHeaderFilter(Type columnDataType);
+
+        internal void ClearClientFilter();
+
+        internal void AddClientFilter<TItem>(RowData rowData);
     }
 }

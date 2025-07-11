@@ -736,6 +736,24 @@ namespace AntDesign
                     TotalChanged.InvokeAsync(_total);
                 }
 
+                if (_hasInitialized)
+                {
+                    foreach (var fieldColumn in ColumnContext.HeaderColumns.OfType<IFieldColumn>())
+                    {
+                        if (!fieldColumn.Filterable)
+                        {
+                            continue;
+                        }
+
+                        fieldColumn.ClearClientFilter();
+
+                        for (int i = 0; i < _total; i++)
+                        {
+                            fieldColumn.AddClientFilter<TItem>(GetRowData(DataSource.ElementAt(i), i, 1));
+                        }
+                    }
+                }
+
                 _shouldRender = true;
             }
 

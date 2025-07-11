@@ -184,6 +184,8 @@ namespace AntDesign
 
         private IEnumerable<TableFilter> _filters;
 
+        private List<TableFilter> _clientFilters;
+
         private bool _hasFiltersAttribute;
 
         /// <summary>
@@ -318,7 +320,7 @@ namespace AntDesign
                 }
                 else if (DataIndex != null)
                 {
-                    (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                    (GetValue, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
                 }
 
                 if (GetFieldExpression != null)
@@ -634,6 +636,38 @@ namespace AntDesign
         private void ResetFieldFilters()
         {
             _filters = new List<TableFilter>() { GetNewFilter() };
+        }
+
+        void IFieldColumn.AddClientFilter<TItem>(RowData rowData)
+        {
+            _clientFilters ??= [];
+            if (GetValue == null && GetFieldExpression != null)
+            {
+                var compliedProperty = (Func<TItem, TData>)GetFieldExpression.Compile();
+                GetValue = rowData =>
+                {
+                    var data = ((RowData<TItem>)rowData).DataItem.Data;
+                    if (data != null)
+                    {
+                        return compliedProperty.Invoke(data);
+                    }
+                    return default;
+                };
+            }
+
+            if (GetValue != null)
+            {
+                _clientFilters.Add(new TableFilter
+                {
+                    Text = Formatter<TData>.Format(GetValue(rowData), Format),
+                    Value = GetValue(rowData),
+                });
+            }
+        }
+
+        void IFieldColumn.ClearClientFilter()
+        {
+            _clientFilters?.Clear();
         }
 
         void IFieldColumn.ClearFilters() => ResetFilters();
