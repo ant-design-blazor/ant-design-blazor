@@ -412,10 +412,36 @@ namespace AntDesign
 
             if (isIncrease)
             {
-                return !_equalToFunc(Min, defaultMin) ? Min : (TValue)Convert.ChangeType(0, defaultType);
+                return !_equalToFunc(Min, defaultMin) && Min != null ? Min : (TValue)Convert.ChangeType(0, defaultType);
             }
 
-            return !_equalToFunc(Max, defaultMax) ? Max : (TValue)Convert.ChangeType(0, defaultType);
+            return !_equalToFunc(Max, defaultMax) && Max != null ? Max : (TValue)Convert.ChangeType(0, defaultType);
+        }
+
+        private async Task IncreaseChangeValue()
+        {
+            if (_isNullable && Value == null)
+            {
+                await ChangeValueAsync(GetInitialValue(true));
+            }
+            else
+            {
+                var num = _increaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+            }
+        }
+
+        private async Task DecreaseChangeValue()
+        {
+            if (_isNullable && Value == null)
+            {
+                await ChangeValueAsync(GetInitialValue(false));
+            }
+            else
+            {
+                var num = _decreaseFunc(Value, _step);
+                await ChangeValueAsync(num);
+            }
         }
 
         private async Task IncreaseDown()
@@ -432,15 +458,7 @@ namespace AntDesign
 
             await SetFocus();
 
-            if (_isNullable && Value == null)
-            {
-                await ChangeValueAsync(GetInitialValue(true));
-            }
-            else
-            {
-                var num = _increaseFunc(Value, _step);
-                await ChangeValueAsync(num);
-            }
+            await IncreaseChangeValue();
         }
 
         private void IncreaseUp() => _increaseTokenSource?.Cancel();
@@ -470,15 +488,7 @@ namespace AntDesign
 
             await SetFocus();
 
-            if (_isNullable && Value == null)
-            {
-                await ChangeValueAsync(GetInitialValue(false));
-            }
-            else
-            {
-                var num = _decreaseFunc(Value, _step);
-                await ChangeValueAsync(num);
-            }
+            await DecreaseChangeValue();
 
             _decreaseTokenSource?.Cancel();
             _decreaseTokenSource = new CancellationTokenSource();
@@ -503,23 +513,16 @@ namespace AntDesign
             }
         }
 
-        #endregion Value Increase and Decrease Methods
-
         private async Task OnKeyDown(KeyboardEventArgs e)
         {
-            if (_isNullable && Value == null)
-            {
-                return;
-            }
             if (e.Key == "ArrowUp")
             {
                 if (_equalToFunc(Value, Max))
                 {
                     return;
                 }
-                var num = _increaseFunc(Value, _step);
-                await ChangeValueAsync(num);
-                StateHasChanged();
+
+                await IncreaseChangeValue();
             }
             else if (e.Key == "ArrowDown")
             {
@@ -527,11 +530,12 @@ namespace AntDesign
                 {
                     return;
                 }
-                var num = _decreaseFunc(Value, _step);
-                await ChangeValueAsync(num);
-                StateHasChanged();
+
+                await DecreaseChangeValue();
             }
         }
+
+        #endregion Value Increase and Decrease Methods
 
         private async Task SetFocus()
         {

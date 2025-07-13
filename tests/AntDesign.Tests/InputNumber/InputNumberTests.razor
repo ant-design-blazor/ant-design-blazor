@@ -101,7 +101,7 @@
     [InlineData(true, 10d, 20d, 10d)]  // click up button, with Min=10, Max=20, should start from Min
     [InlineData(true, null, 20d, 0d)]  // click up button, with only Max=20, should start from 0
     [InlineData(false, 10d, 20d, 20d)] // click down button, with Min=10, Max=20, should start from Max
-    [InlineData(false, 10d, null, 0d)] // click down button, with only Min=10, should start from 0
+    [InlineData(false, 10d, null, 10d)] // click down button, with only Min=10, should start from Min
     public void InputNumber_null_value_should_use_correct_initial_value_on_keyboard(bool isUpButton, double? min, double? max, double expected)
     {
         //Arrange
@@ -138,7 +138,7 @@
     [InlineData(true, 10d, 20d, 10d)]  // click up handler, with Min=10, Max=20, should start from Min
     [InlineData(true, null, 20d, 0d)]  // click up handler, with only Max=20, should start from 0
     [InlineData(false, 10d, 20d, 20d)] // click down handler, with Min=10, Max=20, should start from Max
-    [InlineData(false, 10d, null, 0d)] // click down handler, with only Min=10, should start from 0
+    [InlineData(false, 10d, null, 10d)] // click down handler, with only Min=10, should start from Min
     public void InputNumber_null_value_should_use_correct_initial_value_on_click(bool isUpHandler, double? min, double? max, double expected)
     {
         //Arrange
