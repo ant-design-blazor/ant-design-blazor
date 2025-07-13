@@ -15,6 +15,15 @@ timeline: true
 
 ---
 
+### 1.4.3
+
+`2025-07-13`
+
+- 🆕 新增 InputNumber 值为null时上下键的默认值。[#4654](https://github.com/ant-design-blazor/ant-design-blazor/pull/4654) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Table 在客户端数据源前单选时，如果选中行被移除，自动删除SelectedRows中的选中行。[#4651](https://github.com/ant-design-blazor/ant-design-blazor/pull/4651) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Checkbox 当值不变时避免不必要的更新。[#4653](https://github.com/ant-design-blazor/ant-design-blazor/pull/4653) [@ElderJames](https://github.com/ElderJames)
+- 📖 文档 Form 改进验证示例的说明。[#4643](https://github.com/ant-design-blazor/ant-design-blazor/pull/4643) [@ElderJames](https://github.com/ElderJames)
+
 ### 1.4.2
 
 `2025-06-30`

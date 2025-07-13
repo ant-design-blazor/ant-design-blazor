@@ -15,6 +15,14 @@ timeline: true
 
 ---
 
+### 1.4.3
+
+`2025-07-13`
+
+- 🆕 Add InputNumber enhance initial value handling for nullable inputs. [#4654](https://github.com/ant-design-blazor/ant-design-blazor/pull/4654) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Table auto unselect the row which was removed in clien…. [#4651](https://github.com/ant-design-blazor/ant-design-blazor/pull/4651) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Checkbox prevent unnecessary updates when the new value is the same as the current value. [#4653](https://github.com/ant-design-blazor/ant-design-blazor/pull/4653) [@ElderJames](https://github.com/ElderJames)
+- 📖 Docs Form enhance validation mode documentation and improve clarity. [#4643](https://github.com/ant-design-blazor/ant-design-blazor/pull/4643) [@ElderJames](https://github.com/ElderJames)
 
 ### 1.4.2
 
