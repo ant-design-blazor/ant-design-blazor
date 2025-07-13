@@ -46,10 +46,11 @@
         new("4","Jim Red",75,45),
   };
 
-  record FixedData(string name, string description);
+  record FixedData(int key, string name, string description);
 
   FixedData[] fixedData = Enumerable.Range(0, 6)
       .Select(i => new FixedData(
+             key: i,
              name: (i % 2) > 0 ? "Light" : "Bamboo",
              description: "Everything that has a beginning, has an end.")
       ).ToArray();
