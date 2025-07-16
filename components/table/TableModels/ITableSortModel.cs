@@ -22,5 +22,7 @@ namespace AntDesign.TableModels
         internal void SetSortDirection(SortDirection sortDirection);
 
         internal IQueryable<TItem> SortList<TItem>(IQueryable<TItem> source);
+
+        internal void BuildGetFieldExpression<TItem>();
     }
 }
