@@ -83,6 +83,13 @@ namespace AntDesign
                 _itemSet = true;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the content to be rendered as the option's label.
+        /// </summary>
+        [Parameter]
+        public RenderFragment ChildContent { get; set; }
+
         #endregion
 
         # region Properties
