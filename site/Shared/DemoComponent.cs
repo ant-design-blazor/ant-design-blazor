@@ -9,6 +9,7 @@ namespace AntDesign.Docs
     public class DemoComponent
     {
         public string Category { get; set; }
+
         public string Title { get; set; }
 
         public string SubTitle { get; set; }
@@ -26,6 +27,10 @@ namespace AntDesign.Docs
         public string Cover { get; set; }
 
         public List<DemoItem> DemoList { get; set; }
+
+        public string LatestVersion { get; set; }
+
+        public string ReleaseVersion { get; set; }
     }
 
     public class DemoItem

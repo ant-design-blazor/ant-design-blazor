@@ -78,7 +78,8 @@ namespace AntDesign.Docs.Build.CLI.Documentations
                 Faq = faqsDocumentation.ToString(),
                 Cols = docAttribute.Columns,
                 Cover = docAttribute.CoverImageUrl,
-                DemoList = demos
+                DemoList = demos,
+                ReleaseVersion = docAttribute.ReleaseVersion
             };
         }
 
@@ -147,6 +148,7 @@ namespace AntDesign.Docs.Build.CLI.Documentations
                         <th>{StaticTextTranslation.Translated(StaticTextTranslation.Description, language)}</th>
                         <th>{StaticTextTranslation.Translated(StaticTextTranslation.Type, language)}</th>
                         <th>{StaticTextTranslation.Translated(StaticTextTranslation.DefaultValue, language)}</th>
+                        <th>{StaticTextTranslation.Translated(StaticTextTranslation.Version, language)}</th>
                     </tr>
                 </thead>
                 <tbody>");
@@ -167,6 +169,7 @@ namespace AntDesign.Docs.Build.CLI.Documentations
                     <td class=""api-description"">{parameterTag}{castedMember.Summary}{obsoleteMessage}</td>
                     <td class=""api-data-type"">{castedMember.Type}</td>
                     <td class=""api-default"">{GetDefault(castedMember.Default)}</td>
+                    <td class=""api-version"">{GetDefault(castedMember.ReleaseVersion)}</td>
                 </tr>");
             }
 
