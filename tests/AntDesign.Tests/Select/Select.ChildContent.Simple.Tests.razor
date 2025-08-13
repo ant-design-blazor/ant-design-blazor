@@ -1,0 +1,167 @@
+@using AntDesign.Core.JsInterop.Modules.Components;
+@inherits AntDesignTestBase
+@code {
+    record Person(int Id, string Name);
+
+    List<Person> _persons = new List<Person>
+    {
+        new Person(1, "John"),
+        new Person(2, "Lucy"),
+        new Person(3, "Jack"),
+        new Person(4, "Emily"),
+    };
+
+    public Select_ChildContent_Simple_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());        
+    }
+
+    [Fact]
+    public void SelectOption_ChildContent_Should_Render_Custom_Content()
+    {
+        //Arrange
+        Person value = _persons[0];
+        var cut = Render<AntDesign.Select<Person, Person>>(
+        @<AntDesign.Select Mode="default"
+            TItemValue="Person"
+            TItem="Person"
+            @bind-Value="@value">
+            <SelectOptions>						
+                @foreach (var item in _persons)
+                {
+                    <SelectOption @key="item"
+                                  TItemValue="Person"
+                                  TItem="Person"
+                                  Value=@item
+                                  Label=@item.Name>
+                        <ChildContent>
+                            <div class="custom-option-content">
+                                <strong>@item.Name</strong> - ID: @item.Id
+                            </div>
+                        </ChildContent>
+                    </SelectOption>
+                }
+            </SelectOptions>
+        </AntDesign.Select>
+        );
+
+        //Assert
+        cut.Should().NotBeNull();
+        
+        // 验证组件实例存在
+        var selectInstance = cut.Instance;
+        selectInstance.Should().NotBeNull();
+        
+        // 验证SelectOption items被正确创建
+        selectInstance.SelectOptionItems.Should().HaveCount(_persons.Count);
+        
+        // 打开下拉菜单以检查实际渲染的内容
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Open, true));
+        
+        // 检查自定义内容是否渲染
+        var customContents = cut.FindAll(".custom-option-content");
+        customContents.Should().HaveCountGreaterOrEqualTo(_persons.Count, "应该至少渲染了我们的自定义选项内容");
+        
+        // 验证第一个选项的内容
+        var firstCustomContent = customContents.First();
+        firstCustomContent.TextContent.Should().Contain("John - ID: 1");
+    }
+
+    [Fact]
+    public void SelectOption_ChildContent_Should_Work_With_ItemTemplate()
+    {
+        //Arrange
+        Person value = _persons[0];
+        var cut = Render<AntDesign.Select<Person, Person>>(
+        @<AntDesign.Select Mode="default"
+            TItemValue="Person"
+            TItem="Person"
+            @bind-Value="@value">
+            <ItemTemplate Context="person">
+                <div class="item-template-content">Template: @person.Name</div>
+            </ItemTemplate>
+            <SelectOptions>						
+                @foreach (var item in _persons)
+                {
+                    <SelectOption @key="item"
+                                  TItemValue="Person"
+                                  TItem="Person"
+                                  Value=@item
+                                  Label=@item.Name>
+                        <ChildContent>
+                            <div class="child-content-with-template">
+                                Child: @item.Name - ID: @item.Id
+                            </div>
+                        </ChildContent>
+                    </SelectOption>
+                }
+            </SelectOptions>
+        </AntDesign.Select>
+        );
+
+        //Assert
+        cut.Should().NotBeNull();
+        
+        // 打开下拉菜单
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Open, true));
+        
+        // 验证ChildContent是否被渲染（应该优先于ItemTemplate）
+        var childContents = cut.FindAll(".child-content-with-template");
+        childContents.Should().HaveCountGreaterOrEqualTo(_persons.Count);
+        
+        // 验证内容
+        var firstChild = childContents.First();
+        firstChild.TextContent.Should().Contain("Child: John - ID: 1");
+    }
+
+    [Fact]
+    public void SelectOption_ChildContent_Should_Work_With_LabelTemplate()
+    {
+        //Arrange
+        Person value = _persons[0];
+        var cut = Render<AntDesign.Select<Person, Person>>(
+        @<AntDesign.Select Mode="default"
+            TItemValue="Person"
+            TItem="Person"
+            @bind-Value="@value">
+            <LabelTemplate Context="person">
+                <span class="label-template-content">Label: @person.Name</span>
+            </LabelTemplate>
+            <SelectOptions>						
+                @foreach (var item in _persons)
+                {
+                    <SelectOption @key="item"
+                                  TItemValue="Person"
+                                  TItem="Person"
+                                  Value=@item
+                                  Label=@item.Name>
+                        <ChildContent>
+                            <div class="child-content-with-label">
+                                Child: @item.Name
+                            </div>
+                        </ChildContent>
+                    </SelectOption>
+                }
+            </SelectOptions>
+        </AntDesign.Select>
+        );
+
+        //Assert
+        cut.Should().NotBeNull();
+        
+        // 打开下拉菜单
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Open, true));
+        
+        // 验证ChildContent在下拉菜单中被渲染
+        var childContents = cut.FindAll(".child-content-with-label");
+        childContents.Should().HaveCountGreaterOrEqualTo(_persons.Count);
+        
+        // 验证LabelTemplate在选中项中被渲染
+        var labelContents = cut.FindAll(".label-template-content");
+        labelContents.Should().HaveCount(1, "应该有一个选中的标签被渲染");
+        
+        var firstLabel = labelContents.First();
+        firstLabel.TextContent.Should().Contain("Label: John");
+    }
+}
