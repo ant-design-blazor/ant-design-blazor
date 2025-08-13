@@ -192,6 +192,10 @@ namespace AntDesign.Select.Internal
                     _childComponent.IsDisabled = _isDisabled;
                     _childComponent.InternalLabel = _label;
                     _childComponent.GroupName = _groupName;
+                    if (value.ChildContent != null)
+                    {
+                        LabelTemplate = value.ChildContent;
+                    }
                 }
             }
         }
