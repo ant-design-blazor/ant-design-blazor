@@ -17,6 +17,8 @@ namespace AntDesign
         private int CurrentColIndex { get; set; }
 
         private int[] ColIndexOccupied { get; set; }
+        
+        private bool _headerColumnsInitialized;
 
         private ITable _table;
 
@@ -64,6 +66,11 @@ namespace AntDesign
 
             column.ColIndex = CurrentColIndex;
             HeaderColumns.Add(column);
+            if (HeaderColumns.Count == Columns.Count)
+            {
+                _headerColumnsInitialized = true;
+            }
+
             CurrentColIndex += columnSpan - 1;
 
             if (column.RowSpan > 1)
@@ -159,7 +166,7 @@ namespace AntDesign
 
         internal void HeaderColumnInitialized(IColumn column)
         {
-            if (column.ColIndex == Columns.Count - 1)
+            if (_headerColumnsInitialized)
             {
                 // Header columns have all been initialized, then we can invoke the first change.
                 _table.OnColumnInitialized();
