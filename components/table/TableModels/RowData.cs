@@ -63,7 +63,7 @@ namespace AntDesign.TableModels
 
         public string Key { get; set; }
 
-        public ElementReference RowElementRef { get; set; }
+        internal ElementReference RowElementRef { get; set; }
 
         public bool Expanded
         {
