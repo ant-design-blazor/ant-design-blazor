@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
@@ -181,6 +182,19 @@ namespace AntDesign
             }
 
             _preventRowDataTriggerSelectedRowsChanged = false;
+        }
+
+        /// <summary>
+        /// Scroll the item into view
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task ScrollItemIntoView(TItem item)
+        {
+            if (_rootRowDataCache.TryGetValue(GetHashCode(item), out var rowData))
+            {
+                await JsInvokeAsync(JSInteropConstants.ScrollTo, rowData.RowElementRef);
+            }
         }
 
 
