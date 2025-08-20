@@ -2,7 +2,7 @@
 order: 8.5
 title:
   zh-CN: RadioGroup 组合 - 枚举方式
-  en-US: Radio group - enum type
+  en-US: Enum Radio Group
 ---
 
 ## zh-CN

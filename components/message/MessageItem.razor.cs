@@ -15,6 +15,12 @@ namespace AntDesign
         [Parameter]
         public MessageConfig Config { get; set; }
 
+        [Parameter]
+        public EventCallback<MessageItem> OnMouseEnter { get; set; }
+
+        [Parameter]
+        public EventCallback<MessageItem> OnMouseLeave { get; set; }
+
         protected const string PrefixCls = "ant-message";
 
         private string GetClassName()
@@ -26,6 +32,16 @@ namespace AntDesign
                 className += " ant-message-rtl";
             }
             return className;
+        }
+
+        private void HandleMouseEnter()
+        {
+            OnMouseEnter.InvokeAsync(this);
+        }
+
+        private void HandleMouseLeave()
+        {
+            OnMouseLeave.InvokeAsync(this);
         }
     }
 }

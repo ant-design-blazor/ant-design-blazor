@@ -1,18 +1,136 @@
 ﻿@inherits AntDesignTestBase
+
 @code {
     AntDesign.Internal.TextAreaInfo _textAreaInfo = new AntDesign.Internal.TextAreaInfo
-            {
-                LineHeight = 10,
-                PaddingTop = 1,
-                PaddingBottom = 1,
-                BorderBottom = 1,
-                BorderTop = 1
-            };
-
+    {
+        LineHeight = 10,
+        PaddingTop = 1,
+        PaddingBottom = 1,
+        BorderBottom = 1,
+        BorderTop = 1
+    };
 
     private void JSCommonMock()
     {
         JSInterop.SetupVoid(JSInteropConstants.InputComponentHelper.DisposeResizeTextArea, _ => true);
+    }
+
+    [Fact]
+    public async Task TextArea_OnPressEnter_Should_Trigger_Callback()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .SetResult(_textAreaInfo);
+        var onPressEnterInvoked = false;
+        Action<PressEnterEventArgs> action = (args) => { onPressEnterInvoked = true; };
+        var cut = Render<AntDesign.TextArea>(
+            @<AntDesign.TextArea OnPressEnter="@(action)" />
+        );
+        
+        //Act
+        var textArea = cut.Find("textarea");
+        await textArea.KeyPressAsync(new KeyboardEventArgs { Code = "Enter" });
+        
+        //Assert
+        onPressEnterInvoked.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task TextArea_PreventLineBreak_Should_Not_Add_NewLine()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .SetResult(_textAreaInfo);
+        var initialText = "test";
+        Action<PressEnterEventArgs> action = (args) => { args.PreventLineBreak(); };
+        var cut = Render<AntDesign.TextArea>(
+            @<AntDesign.TextArea Value="@initialText" OnPressEnter="@(action)" />
+        );
+        
+        //Act
+        var textArea = cut.Find("textarea");
+        await textArea.KeyPressAsync(new KeyboardEventArgs { Code = "Enter" });
+        var newText = initialText + "\r\n";
+        textArea.Input(newText);
+        textArea.Change(newText);
+        
+        //Assert
+        cut.Instance.Value.Should().Be(initialText);
+    }
+
+    [Fact]
+    public async Task TextArea_OnPressEnter_Should_Add_NewLine_When_Enter_Pressed_without_calling_PreventLineBreak()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .SetResult(_textAreaInfo);
+        var initialText = "test";
+        var onPressEnterInvoked = false;
+        Action<PressEnterEventArgs> action = (args) => { onPressEnterInvoked = true; };
+        var cut = Render<AntDesign.TextArea>(
+            @<AntDesign.TextArea Value="@initialText" OnPressEnter="@(action)" />
+        );
+        
+        //Act
+        var textArea = cut.Find("textarea");
+    
+       await textArea.KeyPressAsync(new KeyboardEventArgs { Code = "Enter" });
+        
+        
+        var newText = initialText + "\r\n";
+        textArea.Input(newText);
+        textArea.Change(newText);
+
+        var actualValue = cut.Instance.Value;
+        onPressEnterInvoked.Should().BeTrue();
+        actualValue.Should().Be(newText);
+    }
+
+    [Fact]
+    public async Task TextArea_OnPressEnter_Should_Not_Trigger_On_Other_Keys()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .SetResult(_textAreaInfo);
+        var onPressEnterInvoked = false;
+        Action<PressEnterEventArgs> action = (args) => { onPressEnterInvoked = true; };
+        var cut = Render<AntDesign.TextArea>(
+            @<AntDesign.TextArea OnPressEnter="@(action)" />
+        );
+        
+        //Act
+        var textArea = cut.Find("textarea");
+        await textArea.KeyPressAsync(new KeyboardEventArgs { Code = "KeyA" });
+        
+        //Assert
+        onPressEnterInvoked.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task TextArea_OnPressEnter_Should_Provide_KeyboardEventArgs()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .SetResult(_textAreaInfo);
+        PressEnterEventArgs? capturedArgs = null;
+        Action<PressEnterEventArgs> action = (args) => { capturedArgs = args; };
+        var cut = Render<AntDesign.TextArea>(
+            @<AntDesign.TextArea OnPressEnter="@(action)" />
+        );
+        
+        //Act
+        var textArea = cut.Find("textarea");
+        await textArea.KeyPressAsync(new KeyboardEventArgs { Code = "Enter", CtrlKey = true });
+        
+        //Assert
+        capturedArgs.Should().NotBeNull();
+        capturedArgs!.Code.Should().Be("Enter");
+        capturedArgs.CtrlKey.Should().BeTrue();
     }
 
     [Fact]
@@ -233,4 +351,21 @@
         var styleAttribute = textAreaElement.GetAttribute("style");
         styleAttribute.Should().Contain($"height: {expectedHeight}px");
 	}*@
+
+    [Fact]
+    public void TextArea_Class_Attribute_Is_Rendered()
+    {
+        //Arrange
+        JSCommonMock();
+        JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.GetTextAreaInfo, _ => true)
+            .SetResult(_textAreaInfo);
+        string customClass = "custom-textarea-class";
+        
+        //Act
+        var cut = Render<AntDesign.TextArea>(@<AntDesign.TextArea Class="@customClass" />);
+        var textAreaElement = cut.Find("textarea");
+        
+        //Assert
+        textAreaElement.ClassList.Should().Contain(customClass);
+    }
 }

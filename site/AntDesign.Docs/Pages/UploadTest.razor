@@ -1,0 +1,22 @@
+@page "/upload-test"
+@using AntDesign
+
+<PageTitle>Upload Test</PageTitle>
+
+<div class="upload-test-container" style="padding: 24px;">
+    <h1>Upload Test</h1>
+
+    <div style="margin-bottom: 16px;">
+        <h3>Single File Upload</h3>
+        <Upload Action="/api/upload" Name="file">
+            <Button Icon="@IconType.Outline.Upload">Click to Upload</Button>
+        </Upload>
+    </div>
+
+    <div style="margin-bottom: 16px;">
+        <h3>Multiple File Upload</h3>
+        <Upload Action="/api/upload/multiple" Name="files" Multiple="true" BatchUpload="true">
+            <Button Icon="@IconType.Outline.Upload">Click to Upload Multiple Files</Button>
+        </Upload>
+    </div>
+</div>

@@ -5,7 +5,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
-namespace AntDesign
+namespace AntDesign.Core
 {
     public class HtmlRenderService
     {

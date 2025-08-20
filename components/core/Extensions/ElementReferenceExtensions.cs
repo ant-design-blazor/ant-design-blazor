@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.Core.Extensions
 {
-    public static class ElementReferenceExtensions
+    internal static class ElementReferenceExtensions
     {
         public static string GetSelector(this ElementReference? elementReference)
         {

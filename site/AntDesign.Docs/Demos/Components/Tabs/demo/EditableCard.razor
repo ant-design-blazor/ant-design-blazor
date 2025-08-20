@@ -1,4 +1,4 @@
-﻿<Tabs DefaultActiveKey="1" Type="@TabType.EditableCard" OnAddClick="OnAddClick" OnClose="OnTabClose" @bind-ActiveKey="activeKey">
+﻿<Tabs DefaultActiveKey="1" Type="TabType.EditableCard" OnAddClick="OnAddClick" OnClose="OnTabClose" @bind-ActiveKey="activeKey">
     @foreach (var pane in panes)
     {
         <TabPane Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable">
@@ -7,17 +7,30 @@
     }
 </Tabs>
 
+<Tabs DefaultActiveKey="1" Type="TabType.Line">
+    <TabPane Key="0" Tab="0"></TabPane>
+    @foreach (var tab in _tabs)
+    {
+        <TabPane Key="@tab.ToString()" Tab="@tab.ToString()">
+            @tab.ToString()
+        </TabPane>
+    }
+</Tabs>
+<Button OnClick="AddNewTab">Add new</Button>
+
 @code {
     private string activeKey;
     private int newTabIndex;
+
+    List<int> _tabs = [];
 
     public record Pane(string Title, string Content, string Key, bool Closable = true);
 
     List<Pane> panes = new List<Pane>()
     {
-        new("Tab 1", "Content of Tab Pane 1","1"),
-        new("Tab 2", "Content of Tab Pane 2","2"),
-        new("Tab 3", "Content of Tab Pane 3","3",false),
+        new("Tab 1", "Content of Tab Pane 1", "1"),
+        new("Tab 2", "Content of Tab Pane 2", "2"),
+        new("Tab 3", "Content of Tab Pane 3", "3", false),
     };
 
     private void OnAddClick()
@@ -31,4 +44,10 @@
     {
         Console.WriteLine($"tab close:{key}");
     }
+
+    private void AddNewTab(MouseEventArgs obj)
+    {
+        _tabs.Add(_tabs.Count + 1);
+    }
+
 }

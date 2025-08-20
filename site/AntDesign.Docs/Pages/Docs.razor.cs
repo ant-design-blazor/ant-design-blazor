@@ -58,7 +58,11 @@ namespace AntDesign.Docs.Pages
                 var current = menus.FirstOrDefault(x => x.Url == newUrl);
                 if (current != null)
                 {
-                    NavigationManager.NavigateTo($"{CurrentLanguage}/{current.Children[0].Url}");
+                    var hostEnvironment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
+                    if (hostEnvironment != "Prerendering")
+                    {
+                        NavigationManager.NavigateTo($"{CurrentLanguage}/{current.Children[0].Url}");
+                    }
                 }
             }
         }

@@ -1,6 +1,8 @@
 ﻿import { domTypes } from './exports'
+import { manipulationHelper } from './manipulationHelper'
 
 export class infoHelper {
+
   static getWindow() {
     return {
       innerWidth: window.innerWidth,
@@ -28,7 +30,17 @@ export class infoHelper {
       domElement = {};
     }
     const absolutePosition = this.getElementAbsolutePos(domElement);
-    const style = window.getComputedStyle(domElement);
+    let elementMarginTop = 0;
+    let elementMarginBottom = 0;
+    let elementMarginLeft = 0;
+    let elementMarginRight = 0;
+    if (domElement instanceof HTMLElement) {
+      elementMarginTop = manipulationHelper.parseNumericValue(domElement, 'marginTop');
+      elementMarginBottom = manipulationHelper.parseNumericValue(domElement, 'marginBottom');
+      elementMarginLeft = manipulationHelper.parseNumericValue(domElement, 'marginLeft');
+      elementMarginRight = manipulationHelper.parseNumericValue(domElement, 'marginRight');
+    }
+
     const result: domTypes.domInfo = {
       offsetTop: domElement.offsetTop || 0,
       offsetLeft: domElement.offsetLeft || 0,
@@ -45,10 +57,10 @@ export class infoHelper {
       selectionStart: domElement.selectionStart || 0,
       absoluteTop: Math.round(absolutePosition.y),
       absoluteLeft: Math.round(absolutePosition.x),
-      marginTop: parseFloat(style.marginTop),
-      marginBottom: parseFloat(style.marginBottom),
-      marginLeft: parseFloat(style.marginLeft),
-      marginRight: parseFloat(style.marginRight)
+      marginTop: elementMarginTop,
+      marginBottom: elementMarginBottom,
+      marginLeft: elementMarginLeft,
+      marginRight: elementMarginRight
     };
     return result;
   }
@@ -159,5 +171,24 @@ export class infoHelper {
     })
 
     return infos;
+  }
+
+  /**
+   * Get all scrollable parents of an element
+   * @param element
+   * @returns
+   */
+  static getScrollableParents(element): HTMLElement[] {
+    const parents = [];
+    let node = this.get(element);
+
+    while (node && node.nodeName.toLowerCase() !== 'body') {
+      const overflowY = window.getComputedStyle(node).overflowY;
+      if (overflowY === 'auto' || overflowY === 'scroll') {
+        parents.push(node);
+      }
+      node = node.parentNode;
+    }
+    return parents;
   }
 }

@@ -8,9 +8,9 @@
       Size="@model.Size">
     <FormItem Label="Form Size">
         <RadioGroup @bind-Value="@context.Size">
-            <Radio RadioButton Value="@AntSizeLDSType.Small">Small</Radio>
-            <Radio RadioButton Value="@AntSizeLDSType.Default">Default</Radio>
-            <Radio RadioButton Value="@AntSizeLDSType.Large">Large</Radio>
+            <Radio RadioButton Value="@FormSize.Small">Small</Radio>
+            <Radio RadioButton Value="@FormSize.Default">Default</Radio>
+            <Radio RadioButton Value="@FormSize.Large">Large</Radio>
         </RadioGroup>
     </FormItem>
 
@@ -47,7 +47,7 @@
         <AutoComplete @bind-Value="@context.AutoComplete" Options="@autoCompleteOptions" Placeholder="Input here" />
     </FormItem>
     <FormItem Label="Select">
-        <Select Mode="default"
+        <Select Mode="SelectMode.Default"
             DataSource="@_persons"            
             @bind-Value="@context.Name"
             LabelName="@nameof(Person.Name)"
@@ -55,7 +55,7 @@
         </Select>
     </FormItem>
     <FormItem Label="Multiselect">
-        <Select Mode="multiple"
+        <Select Mode="SelectMode.Multiple"
             DataSource="@_persons"            
             @bind-Values="@context.Names"
             LabelName="@nameof(Person.Name)"
@@ -73,7 +73,7 @@
 {
     public class Model
     {
-        public string Size { get; set; } = AntSizeLDSType.Small;
+        public FormSize Size { get; set; } = FormSize.Small;
         public string Input { get; set; } = "input";
         public string InputArea { get; set; } = "inputArea";
         public string Cascader { get; set; } = "11";

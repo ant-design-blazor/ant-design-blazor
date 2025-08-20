@@ -10,14 +10,14 @@
           Mode=this.mode
           Theme=this.theme>
         <MenuItem Key="1">
-            <Icon Type="mail" Theme="outline"></Icon>
+            <Icon Type="@IconType.Outline.Mail" />
             Navigation One
         </MenuItem>
         <MenuItem Key="2">
-            <Icon Type="calendar" Theme="outline"></Icon>
+            <Icon Type="@IconType.Outline.Calendar" />
             Navigation Two
         </MenuItem>
-        <SubMenu Key="sub1" TitleTemplate=@sub1Title>
+        <SubMenu Key="sub1" TitleTemplate="@sub1Title">
             <MenuItem Key="3">Option 3</MenuItem>
             <MenuItem Key="4">Option 4</MenuItem>
             <SubMenu Key="sub1-2" Title="Submenu">
@@ -25,7 +25,7 @@
                 <MenuItem Key="6">Option 6</MenuItem>
             </SubMenu>
         </SubMenu>
-        <SubMenu Key="sub2" TitleTemplate=@sub2Title>
+        <SubMenu Key="sub2" TitleTemplate="@sub2Title">
             <MenuItem Key="7">Option 7</MenuItem>
             <MenuItem Key="8">Option 8</MenuItem>
             <MenuItem Key="9">Option 9</MenuItem>
@@ -38,13 +38,13 @@
 
     RenderFragment sub1Title =
         @<span>
-            <Icon Type="appstore" Theme="outline"></Icon>
+            <Icon Type="@IconType.Outline.Appstore" />
             Navigation Three
         </span>;
 
     RenderFragment sub2Title =
         @<span>
-            <Icon Type="setting" Theme="outline"></Icon>
+            <Icon Type="@IconType.Outline.Setting" />
             Navigation Four
         </span>;
 

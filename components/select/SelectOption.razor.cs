@@ -181,10 +181,12 @@ namespace AntDesign
 
         #endregion
 
+        private SelectOptionItem<TItemValue, TItem> _optionItem;
+
         protected override async Task OnInitializedAsync()
         {
             bool isAlreadySelected = false;
-            if (SelectParent.SelectOptions == null)
+            if (SelectParent?.HasSelectOptions != true)
             {
                 // The SelectOptionItem was already created, now only the SelectOption has to be
                 // bound to the SelectOptionItem.
@@ -206,7 +208,7 @@ namespace AntDesign
                 // The SelectOption was not created by using a DataSource, a SelectOptionItem must be created.
                 InternalId = Guid.NewGuid();
 
-                var newSelectOptionItem = new SelectOptionItem<TItemValue, TItem>()
+                _optionItem = new SelectOptionItem<TItemValue, TItem>()
                 {
                     InternalId = InternalId,
                     Label = Label,
@@ -217,9 +219,9 @@ namespace AntDesign
                     ChildComponent = this
                 };
 
-                SelectParent.SelectOptionItems.Add(newSelectOptionItem);
-                SelectParent.AddEqualityToNoValue(newSelectOptionItem);
-                isAlreadySelected = IsAlreadySelected(newSelectOptionItem);
+                SelectParent.AddOptionItem(_optionItem);
+                SelectParent.AddEqualityToNoValue(_optionItem);
+                isAlreadySelected = IsAlreadySelected(_optionItem);
             }
 
             SetClassMap();
@@ -232,7 +234,7 @@ namespace AntDesign
 
         private bool IsAlreadySelected(SelectOptionItem<TItemValue, TItem> selectOption)
         {
-            if (SelectParent.Mode == "default")
+            if (SelectParent.Mode == SelectMode.Default)
             {
                 return EqualityComparer<TItemValue>.Default.Equals(selectOption.Value, SelectParent.Value) ||
                     EqualityComparer<TItemValue>.Default.Equals(selectOption.Value, SelectParent.LastValueBeforeReset);
@@ -273,13 +275,15 @@ namespace AntDesign
             {
                 await SelectParent.SetValueAsync(Model);
 
-                if (SelectParent.SelectMode == SelectMode.Default)
+                if (SelectParent.Mode == SelectMode.Default)
                 {
                     await SelectParent.CloseAsync();
                 }
                 else
                 {
                     await SelectParent.UpdateOverlayPositionAsync();
+
+                    SelectParent.FocusIfInSearch();
                 }
             }
         }
@@ -291,14 +295,14 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            if (SelectParent?.SelectOptions != null)
+            if (SelectParent?.HasSelectOptions == true)
             {
                 // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource .
                 var selectOptionItem = SelectParent.SelectOptionItems
                     .FirstOrDefault(x => x.InternalId == InternalId && !x.IsSelected);
                 if (selectOptionItem is not null)
                 {
-                    SelectParent.SelectOptionItems.Remove(selectOptionItem);
+                    SelectParent.RemoveOptionItem(selectOptionItem);
                     SelectParent.RemoveEqualityToNoValue(selectOptionItem);
                 }
             }

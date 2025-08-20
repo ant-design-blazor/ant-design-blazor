@@ -392,6 +392,7 @@ namespace AntDesign.Tests.Form.Validation
                 Value = value,
                 FieldName = _fieldName,
                 DisplayName = _displayName,
+                Model = new FieldsTestObj(),
             };
 
             var resultMessage = FormValidateHelper.GetValidationResult(validationContext)?.ErrorMessage;
@@ -475,7 +476,8 @@ namespace AntDesign.Tests.Form.Validation
                     FormFieldType.Number => typeof(int),
                     FormFieldType.Array => typeof(string[]),
                     _ => typeof(object)
-                }
+                },
+                Model = new FieldsTestObj(),
             };
 
             return FormValidateHelper.GetValidationResult(validationContext);

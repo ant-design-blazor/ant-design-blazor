@@ -1,24 +1,24 @@
 ﻿<Layout>
-    <Sider Breakpoint="@BreakpointType.Lg"
+    <Sider Breakpoint="BreakpointType.Lg"
            CollapsedWidth="64"
            @bind-Collapsed=@collapsed
          >
         <div class="logo" />
         <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"4"})>
             <MenuItem Key="1">
-                <Icon Type="user" Theme="outline" />
+                <Icon Type="@IconType.Outline.User" />
                 <span class="nav-text">nav 1</span>
             </MenuItem>
             <MenuItem Key="2">
-                <Icon Type="video-camera" Theme="outline" />
+                <Icon Type="@IconType.Outline.VideoCamera" />
                 <span class="nav-text">nav 2</span>
             </MenuItem>
             <MenuItem Key="3">
-                <Icon Type="upload" Theme="outline" />
+                <Icon Type="@IconType.Outline.Upload" />
                 <span class="nav-text">nav 3</span>
             </MenuItem>
             <MenuItem Key="4">
-                <Icon Type="user" Theme="outline" />
+                <Icon Type="@IconType.Outline.User" />
                 <span class="nav-text">nav 4</span>
             </MenuItem>
         </Menu>

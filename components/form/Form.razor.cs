@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using AntDesign.Form.Locale;
@@ -57,7 +58,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="FormLayout.Horizontal"/>
         [Parameter]
-        public string Layout { get; set; } = FormLayout.Horizontal;
+        public FormLayout Layout { get; set; } = FormLayout.Horizontal;
 
         /// <summary>
         /// Content of the form. Typically contains different form inputs and layout elements.
@@ -127,7 +128,7 @@ namespace AntDesign
         /// The size of the ant components inside the form
         /// </summary>
         [Parameter]
-        public string Size { get; set; }
+        public FormSize? Size { get; set; }
 
         /// <summary>
         /// Gets or sets the form handler name. This is required for posting it to a server-side endpoint.
@@ -140,7 +141,7 @@ namespace AntDesign
         /// Http method used to submit form
         /// </summary>
         [Parameter]
-        public string Method { get; set; } = "get";
+        public HttpMethod Method { get; set; } = HttpMethod.Get;
 
         /// <summary>
         /// The model to bind the form inputs to
@@ -151,6 +152,12 @@ namespace AntDesign
             get { return _model; }
             set
             {
+                //prevent building edit context in dead loop
+                if (value is null && _isModelBuildFromNull)
+                {
+                    return;
+                }
+
                 if (!(_model?.Equals(value) ?? false))
                 {
                     var wasNull = _model is null;
@@ -249,6 +256,7 @@ namespace AntDesign
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
         private TModel _model;
         private FormRulesValidator _rulesValidator;
+        private bool _isModelBuildFromNull;
 
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
@@ -257,7 +265,7 @@ namespace AntDesign
         EditContext IForm.EditContext => _editContext;
 
         AntLabelAlignType? IForm.LabelAlign => LabelAlign;
-        string IForm.Size => Size;
+        FormSize IForm.Size => Size.GetValueOrDefault();
         string IForm.Name => Name;
         object IForm.Model => Model;
         bool IForm.ValidateOnChange => ValidateOnChange;
@@ -286,17 +294,11 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (Model == null)
-            {
-                Model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
-            }
+            Model ??= (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
 
             _editContext = new EditContext(Model);
 
-            if (FormProvider != null)
-            {
-                FormProvider.AddForm(this);
-            }
+            FormProvider?.AddForm(this);
 
             if (OnFieldChanged.HasDelegate)
                 _editContext.OnFieldChanged += OnFieldChangedHandler;
@@ -350,7 +352,7 @@ namespace AntDesign
         {
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
-                .Get(() => $"{_prefixCls}-{Layout.ToLowerInvariant()}")
+                .Get(() => $"{_prefixCls}-{Layout.ToString().ToLowerInvariant()}")
                 .If($"{_prefixCls}-rtl", () => RTL)
                ;
         }
@@ -382,13 +384,18 @@ namespace AntDesign
 
             var result = formItem.ValidateFieldWithRules();
 
-            if (result.Length > 0)
+            if (result.Any())
             {
-                var errors = new Dictionary<FieldIdentifier, List<string>>();
-                errors[args.FieldIdentifier] = result.Select(r => r.ErrorMessage).ToList();
+                var errors = new Dictionary<FieldIdentifier, List<string>>
+                {
+                    [args.FieldIdentifier] = [.. result.Select(r => r.ErrorMessage)]
+                };
 
                 _rulesValidator.DisplayErrors(errors);
             }
+
+            // invoke StateHasChanged to update the form state like error message and IsModified
+            StateHasChanged();
         }
 
         private void RulesModeOnValidationRequested(object sender, ValidationRequestedEventArgs args)
@@ -400,9 +407,9 @@ namespace AntDesign
             foreach (var formItem in _formItems)
             {
                 var result = formItem.ValidateFieldWithRules();
-                if (result.Length > 0)
+                if (result.Any())
                 {
-                    errors[formItem.GetFieldIdentifier()] = result.Select(r => r.ErrorMessage).ToList();
+                    errors[formItem.GetFieldIdentifier()] = [.. result.Select(r => r.ErrorMessage)];
                 }
             }
 
@@ -496,9 +503,12 @@ namespace AntDesign
             if (_editContext == null)
                 return;
 
+            _isModelBuildFromNull = false;
+
             if (Model == null)
             {
-                Model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
+                _model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke([]);
+                _isModelBuildFromNull = true;
             }
 
             var newContext = new EditContext(Model);
@@ -506,8 +516,7 @@ namespace AntDesign
             {
                 FieldInfo fieldInfo = kv.Value.fi;
                 EventInfo eventInfo = kv.Value.ei;
-                Delegate mdel = fieldInfo.GetValue(_editContext) as Delegate;
-                if (mdel != null)
+                if (fieldInfo.GetValue(_editContext) is Delegate mdel)
                 {
                     foreach (Delegate del in mdel.GetInvocationList())
                     {
@@ -534,7 +543,7 @@ namespace AntDesign
         {
             if (_eventInfos is null)
             {
-                _eventInfos = new();
+                _eventInfos = [];
                 Type contextType = typeof(EditContext);
                 foreach (EventInfo eventInfo in contextType.GetEvents(AllBindings))
                 {

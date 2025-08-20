@@ -32,9 +32,9 @@ namespace AntDesign
             {
                 _visible = value;
                 if (_visible)
-                    Type = "text";
+                    Type = AntDesign.InputType.Text;
                 else
-                    Type = "password";
+                    Type = AntDesign.InputType.Password;
             }
         }
 
@@ -49,7 +49,7 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            Type = "password";
+            Type = AntDesign.InputType.Password;
             ToggleVisibility(new MouseEventArgs());
         }
 
@@ -113,13 +113,13 @@ namespace AntDesign
             {
                 if (_visible)
                 {
-                    _eyeIcon = "eye";
-                    Type = "text";
+                    _eyeIcon = IconType.Outline.Eye;
+                    Type = AntDesign.InputType.Text;
                 }
                 else
                 {
-                    _eyeIcon = "eye-invisible";
-                    Type = "password";
+                    _eyeIcon = IconType.Outline.EyeInvisible;
+                    Type = AntDesign.InputType.Password;
                 }
 
                 _visible = !_visible;

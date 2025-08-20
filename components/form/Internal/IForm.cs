@@ -20,7 +20,7 @@ namespace AntDesign
 
         internal FormValidateMode ValidateMode { get; }
 
-        internal string Size { get; }
+        internal FormSize Size { get; }
 
         internal bool UseLocaleValidateMessage { get; }
 

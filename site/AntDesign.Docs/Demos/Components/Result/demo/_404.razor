@@ -1,9 +1,9 @@
-﻿<Result Status="404"
+﻿<Result Status="ResultStatus.Http404"
         Title="404"
         SubTitle="Sorry, the page you visited does not exist."
         Extra="extra" />
 
 @code
 {
-    RenderFragment extra =@<Button Type="primary">Back Home</Button>;
+    RenderFragment extra =@<Button Type="ButtonType.Primary">Back Home</Button>;
 }

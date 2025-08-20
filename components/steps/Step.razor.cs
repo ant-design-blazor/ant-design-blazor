@@ -13,7 +13,7 @@ namespace AntDesign
     /// </summary>
     public partial class Step : AntDomComponentBase
     {
-        private string _status = "wait";
+        private StepsStatus? _status = StepsStatus.Wait;
         private bool _isCustomStatus;
         private int _groupCurrent;
 
@@ -25,7 +25,7 @@ namespace AntDesign
 
         internal bool ShowProcessDot { get; set; }
 
-        internal string GroupStatus { get; set; } = string.Empty;
+        internal StepsStatus? GroupStatus { get; set; }
 
         internal int GroupCurrentIndex
         {
@@ -35,7 +35,7 @@ namespace AntDesign
                 _groupCurrent = value;
                 if (!_isCustomStatus)
                 {
-                    this._status = value > this.Index ? "finish" : value == this.Index ? GroupStatus ?? string.Empty : "wait";
+                    this._status = value > this.Index ? StepsStatus.Finish : value == this.Index ? GroupStatus ?? null : StepsStatus.Wait;
                 }
                 InvokeStateHasChanged();
             }
@@ -43,9 +43,9 @@ namespace AntDesign
 
         internal int Index { get; set; }
         internal double? Percent { get; set; }
-        internal string Size { get; set; } = "default";
+        internal StepsSize Size { get; set; } = StepsSize.Default;
         internal RenderFragment ProgressDot { get; set; }
-        internal string Direction { get; set; } = "horizontal";
+        internal StepsDirection Direction { get; set; } = StepsDirection.Horizontal;
 
         [CascadingParameter]
         public Steps Parent { get; set; }
@@ -60,9 +60,9 @@ namespace AntDesign
         /// To specify the status. It will be automatically set by current of Steps if not configured. Possible Values: wait, process, finish, error
         /// </summary>
         [Parameter]
-        public string Status
+        public StepsStatus Status
         {
-            get => _status;
+            get => _status.GetValueOrDefault();
             set
             {
                 if (_status != value)
@@ -123,6 +123,14 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
+        private static readonly Dictionary<StepsStatus, string> _statusMap = new()
+        {
+            [StepsStatus.Wait] = "wait",
+            [StepsStatus.Process] = "process",
+            [StepsStatus.Finish] = "finish",
+            [StepsStatus.Error] = "error",
+        };
+
         protected override void OnInitialized()
         {
             Parent?.AddStep(this);
@@ -141,25 +149,19 @@ namespace AntDesign
             base.Dispose(disposing);
         }
 
-        internal int? GetTabIndex()
-        {
-            if (!Disabled && Clickable)
-                return 0;
-            else
-                return null;
-        }
+        internal int? GetTabIndex() => !Disabled && Clickable ? 0 : null;
 
         protected void SetClassMap()
         {
-            string prefixName = "ant-steps-item";
+            const string PrefixName = "ant-steps-item";
             ClassMapper.Clear()
-                .Add(prefixName)
-                .GetIf(() => $"{prefixName}-{Status}", () => !string.IsNullOrEmpty(Status))
-                .If($"{prefixName}-active", () => Parent.Current == Index)
-                .If($"{prefixName}-disabled", () => Disabled)
-                .If($"{prefixName}-custom", () => !string.IsNullOrEmpty(Icon))
-                .If($"ant-steps-next-error", () => GroupStatus == "error" && Parent.Current == Index + 1)
-                .If($"{prefixName}-rtl", () => RTL)
+                .Add(PrefixName)
+                .Get(() => $"{PrefixName}-{_statusMap[Status]}")
+                .If($"{PrefixName}-active", () => Parent.Current == Index)
+                .If($"{PrefixName}-disabled", () => Disabled)
+                .If($"{PrefixName}-custom", () => !string.IsNullOrEmpty(Icon))
+                .If($"ant-steps-next-error", () => GroupStatus == StepsStatus.Error && Parent.Current == Index + 1)
+                .If($"{PrefixName}-rtl", () => RTL)
                 ;
         }
 

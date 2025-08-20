@@ -23,6 +23,7 @@ namespace AntDesign.Docs.Build.CLI.Documentations
             IEnumerable<DemoInformation> demosInformation)
         {
             var allApiDocumentation = new StringBuilder();
+            var faqsDocumentation = new StringBuilder();
 
             allApiDocumentation.AppendLine(ApiHeader(mainApi: true, title, pageUrl[language]));
             allApiDocumentation.Append(GenerateApiNonMethodDocumentation(apiDocs[language], language));
@@ -47,8 +48,8 @@ namespace AntDesign.Docs.Build.CLI.Documentations
 
             if (faqs[language] is not null)
             {
-                allApiDocumentation.AppendLine($"<h2>{StaticTextTranslation.Translated(StaticTextTranslation.Faq, language)}</h2>");
-                allApiDocumentation.AppendLine(faqs[language]);
+                faqsDocumentation.AppendLine(FaqHeader(StaticTextTranslation.Translated(StaticTextTranslation.Faq, language), pageUrl[language]));
+                faqsDocumentation.AppendLine(faqs[language]);
             }
 
             var demos = demosInformation.Select(x => new DemoItem
@@ -70,10 +71,11 @@ namespace AntDesign.Docs.Build.CLI.Documentations
             {
                 Category = docAttribute.Category.ToString(),
                 Title = title,
-                SubTitle = docAttribute.SubTitle,
+                SubTitle = language == Constants.ChineseLanguage ? docAttribute.SubTitle : "",
                 Type = docAttribute.Type.ToString(),
-                Desc = componentSummary[language],
+                Desc = componentSummary[language] ?? "no description",
                 ApiDoc = allApiDocumentation.ToString(),
+                Faq = faqsDocumentation.ToString(),
                 Cols = docAttribute.Columns,
                 Cover = docAttribute.CoverImageUrl,
                 DemoList = demos
@@ -86,6 +88,14 @@ namespace AntDesign.Docs.Build.CLI.Documentations
 
             return $"<h2 id=\"{anchorLink}\"><span>{title} API</span><a href=\"{pageUrl}#{anchorLink}\" class=\"anchor\">#</a></h2>";
         }
+
+        private static string FaqHeader(string title, string pageUrl)
+        {
+            var anchorLink = "Faq";
+
+            return $"<h2 id=\"{anchorLink}\"><span>{title}</span><a href=\"{pageUrl}#{anchorLink}\" class=\"anchor\">#</a></h2>";
+        }
+
 
         private static StringBuilder GenerateApiMethodDocumentation(IEnumerable<IApiDocumentation> apiDocumentation, string language)
         {

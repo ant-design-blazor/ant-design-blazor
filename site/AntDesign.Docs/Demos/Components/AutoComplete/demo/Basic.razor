@@ -1,4 +1,4 @@
-<AutoComplete @bind-Value="@value" Options="@options" OnSelectionChange="OnSelectionChange" OnActiveChange="OnActiveChange" Placeholder="input here"/>
+<AutoComplete @bind-Value="@value" OnInput="OnSearch" Options="@options" OnSelectionChange="OnChange" OnActiveChange="OnSelect " Placeholder="input here" />
 <Divider></Divider>
 <span>bind-Value:@value</span>
 <br />
@@ -7,25 +7,28 @@
 <span>ActiveValue:@activeItem?.Value</span>
 
 @code
-{ 
+{
+    static string mockVal(string str, int repeat) => new int[repeat].Aggregate("", (a, _) => a + str);
+
     private string value;
 
-    List<string> options = new List<string>()
-{
-        "Beijing","Shanghai","Guangzhou","Shenzhen","Chongqing","Wuhan"
-    };
-
+    List<string> options = [];
 
     private AutoCompleteOption selectItem;
+    private AutoCompleteOption activeItem;
 
-    void OnSelectionChange(AutoCompleteOption item)
+    void OnSearch(ChangeEventArgs e)
+    {
+        var searchText = e.Value.ToString();
+        options = string.IsNullOrEmpty(searchText) ? [] : [mockVal(searchText, 1), mockVal(searchText, 2), mockVal(searchText, 3)];
+    }
+
+    void OnChange(AutoCompleteOption item)
     {
         selectItem = item;
     }
 
-    private AutoCompleteOption activeItem;
-
-    void OnActiveChange(AutoCompleteOption item)
+    void OnSelect(AutoCompleteOption item)
     {
         activeItem = item;
     }

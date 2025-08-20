@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq;
+using AntDesign.Core.Documentation;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
@@ -35,7 +36,7 @@ namespace AntDesign
         [CascadingParameter(Name = "RowData")]
         public RowData RowData { get; set; }
 
-        protected TableDataItem DataItem => RowData.TableDataItem;
+        protected TableDataItem DataItem => RowData?.TableDataItem;
 
         [CascadingParameter(Name = "IsMeasure")]
         public bool IsMeasure { get; set; }
@@ -92,7 +93,7 @@ namespace AntDesign
         /// Fix a column
         /// </summary>
         [Parameter]
-        public string Fixed { get; set; }
+        public ColumnFixPlacement? Fixed { get; set; }
 
         /// <summary>
         /// Content of the column
@@ -101,11 +102,19 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
-        /// Cut off header title with ellipsis when set to true
+        /// Cut off content with ellipsis when set to true
         /// </summary>
         /// <default value="false" />
         [Parameter]
         public bool Ellipsis { get; set; }
+
+        /// <summary>
+        /// Whether to show native title attribute (true)
+        /// Setting this property will automatically enable ellipsis.
+        /// </summary>
+        /// <default value="null" />
+        [Parameter]
+        public bool? EllipsisShowTitle { get; set; }
 
         /// <summary>
         /// If the column is hidden or not
@@ -134,9 +143,13 @@ namespace AntDesign
         /// <summary>
         /// Index of this column in the table
         /// </summary>
+        [Parameter]
+        [PublicApi("1.1.0")]
         public int ColIndex { get; set; }
 
         protected bool AppendExpandColumn => Table.HasExpandTemplate && ColIndex == (Table.TreeMode ? Table.TreeExpandIconColumnIndex : Table.ExpandIconColumnIndex);
+
+        protected bool RowExpandable => Table.RowExpandable(RowData);
 
         private string _fixedStyle;
 
@@ -148,16 +161,23 @@ namespace AntDesign
 
         private int ColEndIndex => ColIndex + ActualColumnSpan;
 
+        protected bool ShouldShowEllipsis => Ellipsis || EllipsisShowTitle.HasValue;
+
+        private bool IsFixRight => Context.Columns.Any(x => x.Fixed == ColumnFixPlacement.Right && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex);
+
+        private bool IsFixLeft => Context.Columns.Any(x => x.Fixed == ColumnFixPlacement.Left && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex);
+
         private void SetClass()
         {
             ClassMapper
                 .Add("ant-table-cell")
-                .If("ant-table-cell-fix-right", () => Context.Columns.Any(x => x.Fixed == "right" && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex))
-                .If("ant-table-cell-fix-left", () => Context.Columns.Any(x => x.Fixed == "left" && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex))
-                .If($"ant-table-cell-fix-right-first", () => Context?.Columns.FirstOrDefault(x => x.Fixed == "right") is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
-                .If($"ant-table-cell-fix-left-last", () => Context?.Columns.LastOrDefault(x => x.Fixed == "left") is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
+                .If("ant-table-cell-fix-right", () => IsFixRight)
+                .If("ant-table-cell-fix-left", () => IsFixLeft)
+                .If($"ant-table-cell-fix-right-first", () => Context?.Columns.FirstOrDefault(x => x.Fixed == ColumnFixPlacement.Right) is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
+                .If($"ant-table-cell-fix-left-last", () => Context?.Columns.LastOrDefault(x => x.Fixed == ColumnFixPlacement.Left) is var column && column?.ColIndex >= ColIndex && column?.ColIndex < ColEndIndex)
                 .If($"ant-table-cell-with-append", () => IsBody && Table.TreeMode && Table.TreeExpandIconColumnIndex >= ColIndex && Table.TreeExpandIconColumnIndex < ColEndIndex)
-                .If($"ant-table-cell-ellipsis", () => Ellipsis)
+                .If($"ant-table-cell-ellipsis", () => ShouldShowEllipsis)
+                .If("ant-table-cell-fix-sticky", () => Table.IsSticky && (IsFixRight || IsFixLeft))
                 ;
         }
 
@@ -175,16 +195,16 @@ namespace AntDesign
 
                 Context?.AddColumn(this);
 
-                if (Fixed == "left")
+                if (Fixed == ColumnFixPlacement.Left)
                 {
                     Table?.HasFixLeft();
                 }
-                else if (Fixed == "right")
+                else if (Fixed == ColumnFixPlacement.Right)
                 {
                     Table?.HasFixRight();
                 }
 
-                if (Ellipsis)
+                if (ShouldShowEllipsis)
                 {
                     Table?.TableLayoutIsFixed();
                 }
@@ -242,14 +262,14 @@ namespace AntDesign
             }
 
             Fixed ??= Context.Columns.FirstOrDefault(x => x.Fixed != null && x.ColIndex >= ColIndex && x.ColIndex < ColEndIndex)?.Fixed;
-            if (string.IsNullOrWhiteSpace(Fixed))
+            if (!Fixed.HasValue)
             {
                 return cssStyleBuilder.Build();
             }
 
             var fixedWidths = Array.Empty<string>();
 
-            if (Fixed == "left" && Context?.Columns.Count >= ColIndex)
+            if (Fixed == ColumnFixPlacement.Left && Context?.Columns.Count >= ColIndex)
             {
                 for (int i = 0; i < ColIndex; i++)
                 {
@@ -259,7 +279,7 @@ namespace AntDesign
                     }
                 }
             }
-            else if (Fixed == "right")
+            else if (Fixed == ColumnFixPlacement.Right)
             {
                 for (int i = (Context?.Columns.Count ?? 1) - 1; i > ColIndex; i--)
                 {
@@ -270,7 +290,7 @@ namespace AntDesign
                 }
             }
 
-            if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == "right")
+            if (IsHeader && Table.ScrollY != null && Table.ScrollX != null && Fixed == ColumnFixPlacement.Right)
             {
                 fixedWidths = fixedWidths.Append($"{(CssSizeLength)Table.ScrollBarWidth}");
             }
@@ -282,9 +302,13 @@ namespace AntDesign
                 _ => "0px"
             };
 
-            cssStyleBuilder
-                .AddStyle("position", "sticky")
-                .AddStyle(Fixed, fixedWidth);
+
+            cssStyleBuilder.AddStyle("position", "sticky");
+
+            if (Fixed == ColumnFixPlacement.Left)
+                cssStyleBuilder.AddStyle("left", fixedWidth);
+            else if (Fixed == ColumnFixPlacement.Right)
+                cssStyleBuilder.AddStyle("right", fixedWidth);
 
             return cssStyleBuilder.Build();
         }

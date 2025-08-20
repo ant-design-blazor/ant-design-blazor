@@ -2,19 +2,20 @@
 @inherits AntDomComponentBase
 
 <div @ref="@_element" id="@Id">
-    <div class=@($"{Config.PrefixCls}-root")>
+    <div class="@($"{Config.PrefixCls}-root {(Visible?$"{Config.PrefixCls}-open":"")}")">
         @if (Config.Mask)
         {
             <div class=@($"{Config.PrefixCls}-mask {GetMaskClsName()}") style="@Config.MaskStyle"></div>
         }
         <div tabindex="-1" class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended(this.Status)}") role="dialog"
-             @onclick="@EventUtil.AsNonRenderingEventHandler(OnMaskClick)"
              @onmouseup="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseUp)"
+             @onmousedown="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseDown)"
              @onkeydown="@(EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(OnKeyDown))"
              style="@_wrapStyle">
             <div @ref="@_modal" role="document" 
                  class=@($"{Config.PrefixCls} {GetModalClsName()}")
                  @onclick:stopPropagation
+                 @onmousedown:stopPropagation
                  @onmousedown="@EventUtil.AsNonRenderingEventHandler(OnDialogMouseDown)"
                  style="@GetStyle()"
                  >

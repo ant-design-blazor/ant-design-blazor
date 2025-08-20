@@ -45,19 +45,19 @@
     };
 
     Dictionary<string, object> attrs = new Dictionary<string, object>
-{
+    {
         {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
         {"Name", "files" },
         {"DefaultFileList", fileList},
-        {"ListType", "picture" }
+        {"ListType", UploadListType.Picture }
     };
 
     Dictionary<string, object> attrs1 = new Dictionary<string, object>
-{
+    {
         {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
         {"Name", "files" },
         {"DefaultFileList", fileList},
-        {"ListType", "picture" },
+        {"ListType", UploadListType.Picture },
         {"Class", "upload-list-inline" }
     };
 
@@ -72,7 +72,7 @@
 
     async Task<bool> HandleRemove(UploadFileItem file)
     {
-        await _message.Loading($"removing {file.FileName}",2);
+        await _message.LoadingAsync($"removing {file.FileName}",2);
         return await Task.FromResult(true);
     }
 

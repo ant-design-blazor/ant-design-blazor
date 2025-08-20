@@ -22,7 +22,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "fullscreen");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -30,7 +30,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "fullscreen-exit");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -41,7 +41,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "close");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -124,7 +124,7 @@ namespace AntDesign
         /// <summary>
         /// Button type of the OK button
         /// </summary>
-        public string OkType { get; set; } = ButtonType.Primary;
+        public ButtonType OkType { get; set; } = ButtonType.Primary;
 
         /// <summary>
         /// The modal dialog's title of String

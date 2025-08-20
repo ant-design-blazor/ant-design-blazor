@@ -213,7 +213,7 @@ namespace AntDesign
             return results;
         }
 
-        private async void OnScroll(JsonElement obj)
+        private async Task OnScroll(JsonElement obj)
         {
             if (!_activatedByClick && _flatLinks != null)
             {

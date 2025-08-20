@@ -1,5 +1,5 @@
 ---
-order: 11
+order: 99
 title: How to Contribute
 ---
 

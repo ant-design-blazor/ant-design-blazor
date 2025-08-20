@@ -92,12 +92,6 @@
   "<p>A divider line separates different content.</p><h2>When To Use</h2><ul><li>Divide sections of article.</li><li>Divide inline text and links such as the operation column of table.</li></ul>": {
     "Translated": "<p>分隔线分隔不同的内容。</p><h2>何时使用</h2><ul><li>分隔文章的各个部分。</li><li>分隔行内文本和链接，例如表的操作列。</li></ul>"
   },
-  "Type of divider - 'horizontal' | 'vertical'": {
-    "Translated": "分隔线类型 - '水平' | '垂直的'"
-  },
-  "Content/Text orientation - 'left' | 'right' | 'center'. Ignored when not using `Text` or `ChildContent`": {
-    "Translated": "内容/文本方向 - '左' | '正确' | '中央'。不使用 Text 或 ChildContent 时忽略"
-  },
   "<p>A panel which slides in from the edge of the screen.</p><h2>When To Use</h2><p> A Drawer is a panel that is typically overlaid on top of a page and slides in from the side. It contains a set of information or actions. Since the user can interact with the Drawer without leaving the current page, tasks can be achieved more efficiently within the same context. </p><ul><li>Use a Form to create or edit a set of information.</li><li>Processing subtasks. When subtasks are too heavy for a Popover and we still want to keep the subtasks in the context of the main task, Drawer comes very handy.</li><li>When the same Form is needed in multiple places.</li></ul>": {
     "Translated": "<p>从屏幕边缘滑入的面板。</p><h2>何时使用</h2><p>抽屉是通常覆盖在页面顶部并从屏幕边缘滑入的面板旁边。它包含一组信息或操作。由于用户可以在不离开当前页面的情况下与 Drawer 进行交互，因此可以在相同的上下文中更有效地完成任务。 </p><ul><li>使用表单创建或编辑一组信息。</li><li>处理子任务。当子任务对于 Popover 而言过于繁重，而我们仍希望将子任务保留在主任务的上下文中时，Drawer 会非常方便。</li><li>当多个地方需要同一个 Form 时。</li> </ul>"
   },
@@ -596,9 +590,6 @@
   "<p>Tag for categorizing or markup.</p><h2>When To Use</h2><ul><li>It can be used to tag by dimension or property.</li><li>When categorizing.</li></ul>": {
     "Translated": "<p>用于分类或标记的标记。</p><h2>何时使用</h2><ul><li>可用于按维度或属性标记。</li><li>在分类时。 </li></ul>"
   },
-  "Use Color instead by passing the string of the enum value": {
-    "Translated": "Use Color instead by passing the string of the enum value"
-  },
   "Parameter is not used and does not affect functionality": {
     "Translated": "Parameter is not used and does not affect functionality"
   },
@@ -940,9 +931,6 @@
   },
   "Shape of the avatar": {
     "Translated": "头像的形状"
-  },
-  "Size of the avatar. See <code>AntSizeLDSType</code> for possible values.": {
-    "Translated": "头像的大小。有关可能的值，请参阅 <code>AntSizeLDSType</code>。"
   },
   "Text string to display in the avatar. Typical use is for displaying initials.": {
     "Translated": "要在头像中显示的文本字符串。典型用途是显示首字母。"
@@ -2195,9 +2183,6 @@
   "Callback when the open sub menus change. Passed the array of open keys.": {
     "Translated": "当打开的子菜单改变时回调。传递了一组打开的键。"
   },
-  "Array with the keys of currently selected menu items": {
-    "Translated": "包含当前选定菜单项的键的数组"
-  },
   "Callback when the selected items change. Passed array of open keys.": {
     "Translated": "所选项目更改时回调。传递的打开键数组。"
   },
@@ -3374,9 +3359,6 @@
   "Callback executed when total records changes": {
     "Translated": "记录总数变化时执行的回调"
   },
-  "Currently visible page": {
-    "Translated": "当前可见页面"
-  },
   "Number of records per page": {
     "Translated": "每页记录数"
   },
@@ -3580,9 +3562,6 @@
   },
   "Callback executed when Tag is checked/unchecked": {
     "Translated": "选中/取消选中 Tag 时执行的回调"
-  },
-  "Tag color. Can either be a predefined color (string) or hex color.": {
-    "Translated": "标记颜色。可以是预定义颜色（字符串）或十六进制颜色。"
   },
   "Tag color from the PresetColor list": {
     "Translated": "PresetColor 列表中的标记颜色"
@@ -3887,9 +3866,6 @@
   "Additional data to be uploaded with the files": {
     "Translated": "与文件一起上传的附加数据"
   },
-  "Built-in stylesheets, support for three types: <code>text</code>, <code>picture</code> or <code>picture-card</code>": {
-    "Translated": "内置样式表，支持三种类型：<code>text</code>、<code>picture</code>或<code>picture-card</code>"
-  },
   "Support upload whole directory. See <see href=\"https://caniuse.com/input-file-directory\">Can I Use</see> for browser support": {
     "Translated": "支持上传整个目录。请参阅 <see href=\"https://caniuse.com/input-file-directory\">Can I Use</see> 了解浏览器支持"
   },
@@ -4112,9 +4088,6 @@
   "Customize dropdown content. The context is the original content.": {
     "Translated": "自定义下拉内容。上下文是原始内容。"
   },
-  "Render mode of table. See <see cref=\"!:AntDesign.RenderMode\" /> documentation for details.": {
-    "Translated": "表的渲染模式。有关详细信息，请参见<参见 cref=“！：AntDesign.RenderMode” /> 文档。"
-  },
   "Enable resizable column": {
     "Translated": "启用可调整大小的列"
   },
@@ -4139,9 +4112,6 @@
   "Whether the dataSource is filtered. Filter icon will be actived when it is true.": {
     "Translated": "dataSource 是否被过滤。当为 true 时，过滤器图标将被激活。"
   },
-  "'fill' | 'outline' | 'twotone';": {
-    "Translated": "'填充' |'大纲' |'双音';"
-  },
   "A custom CSS style used for rendering the transfer columns": {
     "Translated": "用于呈现传输列的自定义 CSS 样式"
   },
@@ -4152,7 +4122,10 @@
     "Translated": "树的数据源。可以是任何自定义对象类型的列表，方法是提供用于获取 children、leafs、titles 等的表达式。使用 this 或 <code>AntDesign.TreeSelect'2.ChildContent</code>"
   },
   "Specifies a method to return a checkable node": {
-    "Translated": "指定返回可检查节点的方法"
+    "Translated": "指定返回可勾选节点的方法"
+  },
+  "Specifies a method to return a selectable node": {
+    "Translated": "指定返回可选择节点的方法"
   },
   "Check or uncheck the node by click TreeNodeTitle if checkable": {
     "Translated": "如果可选中，请单击 TreeNodeTitle 来检查或取消选中节点"
@@ -4249,12 +4222,6 @@
   },
   "Get current filters' expression for ORMs like Entity Framework. And you can get the filtered data by executing the expression with the data source.": {
     "Translated": "获取 Entity Framework 等 ORM 的当前过滤器表达式。您可以通过对数据源执行表达式来获取筛选后的数据。"
-  },
-  "A <code>ForwardRef</code> instance. Used to get a reference to the internal DOM.": {
-    "Translated": "<code>一个 ForwardRef</code> 实例。用于获取对内部 DOM 的引用。"
-  },
-  "Placement of the overlay": {
-    "Translated": "叠加层的放置"
   },
   "Whether need both auto-off and Visible control closing.": {
     "Translated": "是否需要自动关闭和可见控件关闭。"
@@ -4403,9 +4370,6 @@
   "Toggle the active state of the panel": {
     "Translated": "切换面板的活动状态"
   },
-  "Sets the direction of the comment. <code>left</code> or <code>right</code>.": {
-    "Translated": "设置注释的方向。<code>left</code> 或 <code>right</code>。"
-  },
   "Change default props <code>Colon</code> value of <code>DescriptionsItem</code>.": {
     "Translated": "更改 <code>DescriptionsItem</code> 的默认 props <code>冒号</code>值。"
   },
@@ -4471,9 +4435,6 @@
   },
   "Set the column content to be displayed in the table": {
     "Translated": "设置表中显示的列内容"
-  },
-  "Type of selection column, checkbox or radio.": {
-    "Translated": "选择列、复选框或 Radio 的类型。"
   },
   "Whether the selection column is disabled.": {
     "Translated": "选择列是否被禁用。"
@@ -4643,9 +4604,6 @@
   "The content of option.": {
     "Translated": "选项的内容。"
   },
-  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
-    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
-  },
   "Check all nodes": {
     "Translated": "检查所有节点"
   },
@@ -4657,5 +4615,41 @@
   },
   "Get the sibling nodes": {
     "Translated": "获取同级节点"
+  },
+  "A <code>ForwardRef</code> instance. You can get a reference to the internal DOM by using <code>AntDesign.ForwardRef.Current</code>.": {
+    "Translated": "<code>一个 ForwardRef</code> 实例。您可以使用 <code>AntDesign.ForwardRef.Current</code> 获取对内部 DOM 的引用。"
+  },
+  "Close the popover": {
+    "Translated": "关闭弹出窗口"
+  },
+  "Whether to trigger and keep the loading state until the event callback is done.": {
+    "Translated": "是否触发并保持加载状态，直到事件回调完成。"
+  },
+  "Array with the keys of currently selected menu items, set empty array to clear selection instead of null.": {
+    "Translated": "Array 替换为当前选中的菜单项的键，设置 empty array 来清除选择，而不是 null。"
+  },
+  "Activate the tab with the specified index": {
+    "Translated": "使用指定索引激活选项卡"
+  },
+  "Move to next tab": {
+    "Translated": "移至下一个选项卡"
+  },
+  "Move to previous tab": {
+    "Translated": "移至上一个选项卡"
+  },
+  "Activate the specified tab": {
+    "Translated": "激活指定的选项卡"
+  },
+  "FormItem Help Tooltip information": {
+    "Translated": "设置表单字段的帮助提示信息"
+  },
+  "Overrides whether the clear icon is shown. When <see langword=\"null\" />, it is shown if and only if the input string is not empty.": {
+    "Translated": "覆盖是否显示清除图标。当 <see langword=“null” /> 时，当且仅当输入字符串不为空时，才会显示它。"
+  },
+  "Placement of the overlay. Defaults to <code>AntDesign.Placement.BottomLeft</code>.": {
+    "Translated": "叠加层的放置。默认为 <code>AntDesign.Placement.BottomLeft</code>。"
+  },
+  "Get TreeNode by Key": {
+    "Translated": "按键获取 TreeNode"
   }
 }

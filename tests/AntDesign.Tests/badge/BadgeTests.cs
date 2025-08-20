@@ -235,13 +235,13 @@ namespace AntDesign.Tests.Badge
         }
 
         [Theory]
-        [InlineData(PresetColor.Red, "ant-badge-status-red")]
-        [InlineData(PresetColor.Pink, "ant-badge-status-pink")]
-        public void ItShouldRenderPresetColor(PresetColor color, string expectedClass)
+        [InlineData(BadgeColor.Red, "ant-badge-status-red")]
+        [InlineData(BadgeColor.Pink, "ant-badge-status-pink")]
+        public void ItShouldRenderPresetColor(BadgeColor color, string expectedClass)
         {
             var systemUnderTest = RenderComponent<AntDesign.Badge>(parameters => parameters
                 .Add(x => x.Count, 10)
-                .Add(x => x.PresetColor, color)
+                .Add(x => x.Color, color)
                 .Add(x => x.Dot, true));
 
             systemUnderTest.MarkupMatches($@"<span class=""ant-badge ant-badge-status ant-badge-not-a-wrapper"" id:ignore>
@@ -252,7 +252,7 @@ namespace AntDesign.Tests.Badge
         [Theory]
         [InlineData(BadgeStatus.Success, "ant-badge-status-success")]
         [InlineData(BadgeStatus.Processing, "ant-badge-status-processing")]
-        public void ItShouldRenderStatusColor(string status, string expectedClass)
+        public void ItShouldRenderStatusColor(BadgeStatus status, string expectedClass)
         {
             var systemUnderTest = RenderComponent<AntDesign.Badge>(parameters => parameters
                 .Add(x => x.Count, 10)

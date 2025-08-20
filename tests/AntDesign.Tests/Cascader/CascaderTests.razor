@@ -3,9 +3,9 @@
 @code{
 
     [Theory]
-    [InlineData(AntSizeLDSType.Large,"lg")]
-    [InlineData(AntSizeLDSType.Small,"sm")]
-    public void Renders_with_each_size(string size,string cls)
+    [InlineData(InputSize.Large, "lg")]
+    [InlineData(InputSize.Small, "sm")]
+    public void Renders_with_each_size(InputSize size, string cls)
     {
         var cut = Context.Render(@<AntDesign.Cascader Size="@size" />);
         var spanNode = cut.Nodes.QuerySelector($".ant-select-{cls}");
@@ -16,6 +16,7 @@
     [Fact]
     public void Renders_with_disabled()
     {
+        JSInterop.SetupVoid("AntDesign.interop.styleHelper.addClsToFirstChild", _ => true);
         var cut = Context.Render(@<AntDesign.Cascader Disabled />);
         var spanNode = cut.Nodes.QuerySelector($".ant-select-disabled");
 

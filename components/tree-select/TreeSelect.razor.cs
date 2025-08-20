@@ -49,7 +49,7 @@ namespace AntDesign
                 _multiple = value;
                 if (_multiple)
                 {
-                    Mode = SelectMode.Multiple.ToString("G");
+                    Mode = SelectMode.Multiple;
                 }
             }
         }
@@ -67,7 +67,7 @@ namespace AntDesign
                 _treeCheckable = value;
                 if (_treeCheckable)
                 {
-                    Mode = SelectMode.Multiple.ToString("G");
+                    Mode = SelectMode.Multiple;
                 }
             }
         }
@@ -116,11 +116,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public IEnumerable<TItem> DataSource { get; set; }
-
-        /// <summary>
-        /// Use this to set the content of the tree. Use either this or <see cref="DataSource"/>
-        /// </summary>
-        [Parameter] public RenderFragment ChildContent { get; set; }
 
         /// <summary>
         /// Whether to expand all nodes by default
@@ -257,22 +252,35 @@ namespace AntDesign
         public Func<TreeNode<TItem>, bool> CheckableExpression { get; set; }
 
         /// <summary>
+        /// Specifies a method to return a selectable node
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> SelectableExpression { get; set; }
+
+        /// <summary>
         /// (Controlled) expands the specified tree node
         /// </summary>
         [Parameter]
         public string[] ExpandedKeys { get; set; }
 
+        /// <summary>
+        /// Render fragment to customize the nodes in the tree.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public RenderFragment ChildContent { get; set; }
+
         private bool IsMultiple => Multiple || TreeCheckable;
 
         private bool IsTemplatedNodes => ChildContent != null;
-
-        internal override SelectMode SelectMode => IsMultiple ? SelectMode.Multiple : base.SelectMode;
 
         private bool _multiple;
         private bool _treeCheckable;
         private readonly string _dir = "ltr";
         private Tree<TItem> _tree;
         private bool _checkedEventDisabled = false;
+
+        protected override bool UseChildContentAsTrigger => false;
 
         /// <summary>
         /// 
@@ -342,7 +350,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void CheckAll()
         {
-            TreeComponent.CheckAll();
+            TreeComponent?.CheckAll();
         }
 
         /// <summary>
@@ -351,7 +359,53 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void UncheckAll()
         {
-            TreeComponent.UncheckAll();
+            TreeComponent?.UncheckAll();
+        }
+
+        /// <summary>
+        /// Select all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void SelectAll()
+        {
+            TreeComponent?.SelectAll();
+        }
+
+        /// <summary>
+        /// Deselect all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void DeselectAll()
+        {
+            TreeComponent?.DeselectAll();
+        }
+
+        /// <summary>
+        /// Expand all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void ExpandAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
+        {
+            TreeComponent?.ExpandAll(predicate, recursive);
+        }
+
+        /// <summary>
+        /// Collapse all nodes
+        /// </summary>
+        [PublicApi("1.0.0")]
+        public void CollapseAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
+        {
+            TreeComponent?.CollapseAll(predicate, recursive);
+        }
+
+        /// <summary>
+        /// Get TreeNode by Key
+        /// </summary>
+        /// <param name="key">Key</param>
+        [PublicApi("1.0.0")]
+        public TreeNode<TItem> GetNode(TItemValue key)
+        {
+            return TreeComponent?.GetNode(GetTreeKeyFormValue(key));
         }
 
         private void ClearOptions()
@@ -368,7 +422,7 @@ namespace AntDesign
         {
             values.ForEach(value =>
             {
-                var d = _tree._allNodes.FirstOrDefault(m => GetValueFromNode(m).Equals(value));
+                var d = _tree?._allNodes.FirstOrDefault(m => GetValueFromNode(m).Equals(value));
                 if (d != null)
                 {
                     _ = CreateOption(d, true);
@@ -388,7 +442,7 @@ namespace AntDesign
                     LabelTemplate = node.TitleTemplate,
                     Value = GetValueFromNode(node),
                     Item = node.DataItem,
-                    IsAddedTag = SelectMode != SelectMode.Default,
+                    IsAddedTag = Mode != SelectMode.Default,
                 };
                 if (append && !SelectOptionItems.Any(m => m.Value.AllNullOrEquals(o.Value)))
                     SelectOptionItems.Add(o);
@@ -416,7 +470,7 @@ namespace AntDesign
             return base.OnFirstAfterRenderAsync();
         }
 
-        protected override async void OnInputAsync(ChangeEventArgs e)
+        protected override async Task OnInputAsync(ChangeEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             if (!IsSearchEnabled)
@@ -436,6 +490,7 @@ namespace AntDesign
 
             _searchValue = e.Value?.ToString();
             StateHasChanged();
+            FocusIfInSearch();
         }
 
         protected override async Task SetInputBlurAsync()
@@ -456,13 +511,15 @@ namespace AntDesign
         {
             if (visible)
             {
-                await SetDropdownStyleAsync();
+                OnOverlayShow();
 
-                await SetInputFocusAsync();
+                await SetDropdownStyleAsync();
+                FocusIfInSearch();
             }
             else
             {
                 OnOverlayHide();
+                await SetInputBlurAsync();
             }
         }
 
@@ -471,13 +528,14 @@ namespace AntDesign
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
             await SetValueAsync(selectOption);
             var key = GetTreeKeyFormValue(selectOption.Value);
-            var item = _tree._allNodes.Where(x => x.Key == key).FirstOrDefault();
+            var item = _tree?._allNodes.Where(x => x.Key == key).FirstOrDefault();
             if (item == null)
                 return;
             if (TreeCheckable)
                 item.SetChecked(false);
             else
                 item.SetSelected(false);
+            FocusIfInSearch();
         }
 
         private TItemValue GetValueFromNode(TreeNode<TItem> node)
@@ -496,8 +554,6 @@ namespace AntDesign
                 return;
             var node = args.Node;
 
-            _searchValue = string.Empty;
-
             var key = node.Key;
             if (Multiple)
             {
@@ -508,24 +564,26 @@ namespace AntDesign
                 }
                 var selectedNodes = _tree._allNodes.Where(x => _tree.SelectedKeys.Contains(x.Key));
                 Values = selectedNodes.Select(GetValueFromNode).ToArray();
+                if (IsSearchEnabled && AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
+                {
+                    ClearSearch();
+                }
             }
             else
             {
                 if (node.Selected)
                 {
-                    var option = CreateOption(node, true);
-                    await SetValueAsync(option);
+                    Value = GetValueFromNode(node);
                 }
             }
 
-            if (SelectMode == SelectMode.Default)
+            if (Mode == SelectMode.Default)
             {
                 await CloseAsync();
             }
-
-            if (EnableSearch)
+            else
             {
-                await SetInputFocusAsync();
+                FocusIfInSearch();
             }
         }
 
@@ -563,7 +621,7 @@ namespace AntDesign
         protected async Task SetDropdownStyleAsync()
         {
             string maxWidth = "", minWidth = "", definedWidth = "";
-            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
+            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _selectContent.Ref);
             var width = domRect.Width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
             minWidth = $"min-width: {width}px;";
             if (DropdownMatchSelectWidth.IsT0 && DropdownMatchSelectWidth.AsT0)
@@ -589,8 +647,8 @@ namespace AntDesign
                 }
                 else
                 {
-                    _tree._allNodes.ForEach(n => n.DoSelect(checkedKeys.Contains(n.Key), true, false));
-                    _tree.UpdateSelectedKeys();
+                    _tree?._allNodes.ForEach(n => n.DoSelect(checkedKeys.Contains(n.Key), true, false));
+                    _tree?.UpdateSelectedKeys();
                 }
             }
             else
@@ -604,9 +662,9 @@ namespace AntDesign
         private void UpdateTreeCheckedKeys(IEnumerable<string> checkedKeys)
         {
             _checkedEventDisabled = true;
-            _tree._allNodes.ForEach(n => n.DoCheck(false, true, false));
-            _tree._allNodes.Where(n => checkedKeys.Contains(n.Key)).ForEach(n => n.DoCheck(true, false, false));
-            _tree.UpdateCheckedKeys();
+            _tree?._allNodes.ForEach(n => n.DoCheck(false, true, false));
+            _tree?._allNodes.Where(n => checkedKeys.Contains(n.Key)).ForEach(n => n.DoCheck(true, false, false));
+            _tree?.UpdateCheckedKeys();
             _checkedEventDisabled = false;
         }
 
@@ -617,10 +675,10 @@ namespace AntDesign
                 .Add($"{ClassPrefix}")
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
-                .If($"{ClassPrefix}-single", () => SelectMode == SelectMode.Default)
-                .If($"{ClassPrefix}-multiple", () => SelectMode != SelectMode.Default)
-                .If($"{ClassPrefix}-sm", () => Size == AntSizeLDSType.Small)
-                .If($"{ClassPrefix}-lg", () => Size == AntSizeLDSType.Large)
+                .If($"{ClassPrefix}-single", () => Mode == SelectMode.Default)
+                .If($"{ClassPrefix}-multiple", () => Mode != SelectMode.Default)
+                .If($"{ClassPrefix}-sm", () => Size == InputSize.Small)
+                .If($"{ClassPrefix}-lg", () => Size == InputSize.Large)
                 .If($"{ClassPrefix}-show-arrow", () => ShowArrowIcon)
                 .If($"{ClassPrefix}-show-search", () => IsSearchEnabled)
                 .If($"{ClassPrefix}-loading", () => Loading)
@@ -640,7 +698,7 @@ namespace AntDesign
                 StateHasChanged();
             }
 
-            if (_cachedValues != null && !_cachedValues.SequenceEqual(Values))
+            if (_cachedValues != null && Values != null && !_cachedValues.SequenceEqual(Values))
             {
                 UpdateValuesSelection();
                 StateHasChanged();
@@ -671,6 +729,10 @@ namespace AntDesign
                     {
                         var o = CreateOption(data, true);
                         _ = SetValueAsync(o);
+                    }
+                    else
+                    {
+                        ClearOptions();
                     }
                 }
             }
@@ -710,7 +772,7 @@ namespace AntDesign
             if (DataSource == null)
                 return null;
 
-            var node = _tree._allNodes.Where(x => _getValue(x.DataItem).Equals(value)).FirstOrDefault();
+            var node = _tree?._allNodes.Where(x => _getValue(x.DataItem).Equals(value)).FirstOrDefault();
 
             if (node == null)
                 return null;

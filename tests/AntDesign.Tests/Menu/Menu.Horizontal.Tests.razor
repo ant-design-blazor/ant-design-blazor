@@ -38,6 +38,35 @@
         </Menu>;
     }
 
+    private RenderFragment GetBasicVerticalRender()
+    {
+        return 
+        @<Menu Mode=MenuMode.Vertical>
+        <MenuItem>Navigation One</MenuItem>
+        <SubMenu Title="Navigation Two">
+            <MenuItemGroup Title="Item 1">
+                <MenuItem Key="nest:2:1">Option 1</MenuItem>
+                <MenuItem>Option 2</MenuItem>
+            </MenuItemGroup>
+        </SubMenu>
+        <MenuItem>Navigation Three</MenuItem>
+        </Menu>;
+    }
+
+    private RenderFragment GetBasicInlineRender()
+    {
+        return 
+        @<Menu Mode=MenuMode.Inline>
+        <MenuItem>Navigation One</MenuItem>
+        <SubMenu Title="Navigation Two">
+            <MenuItemGroup Title="Item 1">
+                <MenuItem Key="nest:2:1">Option 1</MenuItem>
+                <MenuItem>Option 2</MenuItem>
+            </MenuItemGroup>
+        </SubMenu>
+        <MenuItem>Navigation Three</MenuItem>
+        </Menu>;
+    }
 
     [Fact]
     public void Basic_horizontal_top_nested_menu_renders_correctly()
@@ -83,6 +112,43 @@
         var topOverlay = topExpandable.FindComponent<AntDesign.Internal.Overlay>();
         topOverlay.Find(".ant-menu-submenu").ClassList.Contains("ant-menu-submenu-hidden");
     }
+
+    [Fact]
+    public async Task Horizontal_menu_mode_submenu_should_be_vertical()
+    {
+        //Arrange
+        var cut = Render<AntDesign.Menu>(GetBasicHorizontalRender());
+        //Act
+        var topExpandable = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        await cut.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
+        await cut.InvokeAsync(() => topExpandable.Instance.Show());
+        // Assert
+        var topOverlay = topExpandable.FindComponent<AntDesign.Internal.Overlay>();
+        topOverlay.Find(".ant-menu-sub").ClassList.Contains("ant-menu-vertical");
+    }
+
+    [Fact]
+    public async Task Vertical_menu_mode_submenu_should_be_vertical()
+    {
+        //Arrange
+        var cut = Render<AntDesign.Menu>(GetBasicVerticalRender());
+        //Act
+        var topExpandable = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        await cut.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
+        await cut.InvokeAsync(() => topExpandable.Instance.Show());
+        // Assert
+        var topOverlay = topExpandable.FindComponent<AntDesign.Internal.Overlay>();
+        topOverlay.Find(".ant-menu-sub").ClassList.Contains("ant-menu-vertical");
+    }
+
+    [Fact]
+    public async Task Inline_menu_mode_submenu_should_be_inline()
+    {
+        //Arrange
+        var cut = Render<AntDesign.Menu>(GetBasicInlineRender());
+        cut.Find(".ant-menu-sub").ClassList.Contains("ant-menu-inline");
+    }
+
 
     [Fact]
     public async Task Basic_horizontal_first_nested_menu_with_groups_renders_correctly()

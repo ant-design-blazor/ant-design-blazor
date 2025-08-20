@@ -27,8 +27,9 @@ namespace AntDesign
 
         /// <summary>
         /// Returned ElementRef reference for DOM element.
+        /// It would set the value into <see cref="AntComponentBase.RefBack"/> that user can get the <see cref="ElementReference"/> outside.
         /// </summary>
-        internal virtual ElementReference Ref
+        internal protected virtual ElementReference Ref
         {
             get => _ref;
             set
@@ -73,10 +74,14 @@ namespace AntDesign
             get => _style;
             set
             {
-                _style = value;
-                if (!string.IsNullOrWhiteSpace(_style) && !_style.EndsWith(";"))
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    _style += ";";
+                    _style = string.Empty;
+                }
+                else
+                {
+                    var trimmed = value.Trim();
+                    _style = trimmed.EndsWith(';') ? trimmed : trimmed + ";";
                 }
             }
         }

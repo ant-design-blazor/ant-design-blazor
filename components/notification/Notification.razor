@@ -12,7 +12,7 @@
             <div>
                 @foreach (var itemConfig in configs)
                 {
-                    <NotificationItem @key="itemConfig" Config="itemConfig" OnClose="RemoveItem"/>
+                    <NotificationItem @key="itemConfig" Config="itemConfig" OnClose="RemoveItem" OnMouseEnter="OnMouseEnter" OnMouseLeave="OnMouseLeave" />
                 }
             </div>
         </div>

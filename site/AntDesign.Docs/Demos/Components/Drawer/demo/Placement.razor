@@ -1,13 +1,13 @@
 ﻿<div>
     <RadioGroup @bind-Value="placement">
-        <Radio Value="@("top")">top</Radio>
-        <Radio Value="@("right")">right</Radio>
-        <Radio Value="@("bottom")">bottom</Radio>
-        <Radio Value="@("left")">left</Radio>
+        <Radio Value="DrawerPlacement.Top">Top</Radio>
+        <Radio Value="DrawerPlacement.Right">Right</Radio>
+        <Radio Value="DrawerPlacement.Bottom">Bottom</Radio>
+        <Radio Value="DrawerPlacement.Left">Left</Radio>
     </RadioGroup>
 
-    <Button Type="primary" @onclick="_ => open()">Open</Button>
-    <Drawer Visible="@visible" Placement="@placement" Title='("Basic Drawer")' OnClose="_ => close()">
+    <Button Type="ButtonType.Primary" OnClick="open">Open</Button>
+    <Drawer Visible="@visible" Placement="@placement" Title='("Basic Drawer")' OnClose="close">
         <p>Some contents...</p>
         <p>Some contents...</p>
         <p>Some contents...</p>
@@ -16,7 +16,7 @@
 
 @code{
 
-    string placement = "right";
+    DrawerPlacement placement = DrawerPlacement.Right;
 
     bool visible = false;
 

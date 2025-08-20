@@ -80,7 +80,7 @@ namespace AntDesign
         /// The position of the dots, which can be one of Top, Bottom, Left or Right, <see cref="CarouselDotPosition"/>
         /// </summary>
         [Parameter]
-        public string DotPosition { get; set; } = CarouselDotPosition.Bottom;
+        public CarouselDotPosition DotPosition { get; set; } = CarouselDotPosition.Bottom;
 
         /// <summary>
         /// Whether to scroll automatically
@@ -92,7 +92,7 @@ namespace AntDesign
         /// Transition effect, <see cref="CarouselEffect"/>
         /// </summary>
         [Parameter]
-        public string Effect { get; set; } = CarouselEffect.ScrollX;
+        public CarouselEffect Effect { get; set; } = CarouselEffect.ScrollX;
 
         [Parameter]
         public bool Dots { get; set; }
@@ -173,7 +173,7 @@ namespace AntDesign
             }
         }
 
-        private async void Resize(JsonElement e = default)
+        private async Task Resize(JsonElement e = default)
         {
             DomRect listRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, Ref);
             if ((SlickWidth != (int)listRect.Width && IsHorizontal)

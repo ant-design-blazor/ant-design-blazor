@@ -1,0 +1,35 @@
+﻿<Tree TItem="Data"
+      Selectable
+      TitleExpression="x => x.DataItem.Title"
+      DataSource="dataSource" />
+
+<Button OnClick="AddItem">Add new item</Button>
+
+@code {
+    private List<Data> dataSource = [];
+
+    protected override void OnInitialized()
+    {
+        dataSource = GetNewData(5);
+    }
+
+
+    private List<Data> GetNewData(int count)
+    {
+        return [
+            ..dataSource,
+            ..Enumerable.Range(1, count)
+                .Select(i => new Data($"Data {dataSource.Count + i}"))
+                .ToList()
+        ];
+    }
+
+    public void AddItem()
+    {
+        dataSource = GetNewData(1);
+        StateHasChanged();
+    }
+
+
+    public record Data(string Title);
+}
