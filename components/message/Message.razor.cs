@@ -105,10 +105,8 @@ namespace AntDesign
                 }
             }
 
-            if (_configDict.ContainsKey(config.Key))
+            if (_configDict.TryGetValue(config.Key, out var oldConfig))
             {
-                var oldConfig = _configDict[config.Key];
-
                 oldConfig.Cts?.Cancel();
                 oldConfig.Type = config.Type;
                 oldConfig.Content = config.Content;
@@ -135,12 +133,12 @@ namespace AntDesign
                 var task = Task.Delay(TimeSpan.FromSeconds(config.Duration.Value), cts.Token);
 
                 return task.ContinueWith((result) =>
+                {
+                    if (!cts.IsCancellationRequested)
                     {
-                        if (!cts.IsCancellationRequested)
-                        {
-                            RemoveItem(config);
-                        }
-                    }, TaskScheduler.Current);
+                        RemoveItem(config);
+                    }
+                }, TaskScheduler.Current);
             }
             else
             {
@@ -160,12 +158,25 @@ namespace AntDesign
                 InvokeAsync(StateHasChanged);
                 config.InvokeOnClose();
 
-                Task.Delay(500)
-                    .ContinueWith((result) =>
+                if (config.WaitForAnimation)
+                {
+                    return Task.Delay(500)
+                        .ContinueWith((result) =>
+                        {
+                            _configDict.TryRemove(config.Key, out _);
+                            InvokeAsync(StateHasChanged);
+                        }, TaskScheduler.Current);
+                }
+                else
+                {
+                    _ = Task.Run(async () =>
                     {
+                        await Task.Delay(500);
                         _configDict.TryRemove(config.Key, out _);
-                        InvokeAsync(StateHasChanged);
-                    }, TaskScheduler.Current);
+                        await InvokeAsync(StateHasChanged);
+                    });
+                    return Task.CompletedTask;
+                }
             }
 
             return Task.CompletedTask;
@@ -177,5 +188,17 @@ namespace AntDesign
             InvokeAsync(StateHasChanged);
         }
 
+        private void OnMouseEnter(MessageItem item)
+        {
+            item.Config.Cts?.Cancel();
+        }
+
+        private void OnMouseLeave(MessageItem item)
+        {
+            if (item.Config.Duration > 0)
+            {
+                TimingRemove(item.Config);
+            }
+        }
     }
 }

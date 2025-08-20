@@ -2,7 +2,7 @@
 order: 6.5
 title:
   zh-CN: 内置筛选器
-  en-US: Build-in Filters
+  en-US: Built-in Filters
 ---
 
 ## zh-CN

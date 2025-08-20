@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -40,6 +41,13 @@ namespace AntDesign
 
         protected override bool EnableOnPressEnter => OnSearch.HasDelegate || OnPressEnter.HasDelegate;
 
+        private static readonly Dictionary<InputSize, ButtonSize> _buttonSizeMap = new()
+        {
+            [InputSize.Large] = ButtonSize.Large,
+            [InputSize.Default] = ButtonSize.Default,
+            [InputSize.Small] = ButtonSize.Small,
+        };
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -54,11 +62,11 @@ namespace AntDesign
                         builder.AddAttribute(2, "Class", $"{PrefixCls}-search-icon");
                         if (Loading)
                         {
-                            builder.AddAttribute(3, "Type", "loading");
+                            builder.AddAttribute(3, "Type", IconType.Outline.Loading);
                         }
                         else
                         {
-                            builder.AddAttribute(4, "Type", "search");
+                            builder.AddAttribute(4, "Type", IconType.Outline.Search);
                         }
                         builder.AddAttribute(5, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                         builder.CloseComponent();
@@ -70,14 +78,15 @@ namespace AntDesign
                     {
                         builder.OpenComponent<Button>(6);
                         builder.AddAttribute(7, "Class", $"{PrefixCls}-search-button");
-                        builder.AddAttribute(8, "Type", "default");
-                        builder.AddAttribute(9, "Size", Size);
+                        builder.AddAttribute(8, "Type", ButtonType.Default);
+                        builder.AddAttribute(9, "Size", _buttonSizeMap[Size]);
                         builder.AddAttribute(10, "Loading", Loading);
+                        builder.AddAttribute(11, "Disabled", this.Disabled);
                         if (!Loading)
                         {
                             builder.AddAttribute(12, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, HandleSearch));
                         }
-                        builder.AddAttribute(13, "Icon", "search");
+                        builder.AddAttribute(13, "Icon", IconType.Outline.Search);
 
                         builder.CloseComponent();
                     };
@@ -89,8 +98,8 @@ namespace AntDesign
                 {
                     builder.OpenComponent<Button>(11);
                     builder.AddAttribute(12, "Class", $"{PrefixCls}-search-button");
-                    builder.AddAttribute(13, "Type", "primary");
-                    builder.AddAttribute(14, "Size", Size);
+                    builder.AddAttribute(13, "Type", ButtonType.Primary);
+                    builder.AddAttribute(14, "Size", _buttonSizeMap[Size]);
                     builder.AddAttribute(15, "Loading", Loading);
                     if (!Loading)
                     {
@@ -104,7 +113,7 @@ namespace AntDesign
                             builder.AddAttribute(17, "ChildContent", new RenderFragment((b) =>
                             {
                                 b.OpenComponent<Icon>(20);
-                                b.AddAttribute(21, "Type", "search");
+                                b.AddAttribute(21, "Type", IconType.Outline.Search);
                                 b.CloseComponent();
                             }));
                         }
@@ -115,7 +124,7 @@ namespace AntDesign
                             b.AddContent(19, str);
                         }));
                     });
-
+                    builder.AddAttribute(20, "Disabled", this.Disabled);
                     builder.CloseComponent();
                 };
             }
@@ -144,10 +153,10 @@ namespace AntDesign
             await SearchAsync();
         }
 
-        protected override async Task OnPressEnterAsync()
+        protected override async Task OnPressEnterAsync(PressEnterEventArgs args)
         {
+            await base.OnPressEnterAsync(args);
             await SearchAsync();
-            await base.OnPressEnterAsync();
         }
 
         private async Task SearchAsync()

@@ -2,11 +2,11 @@
 @using AntDesign.TableModels
 @using AntDesign.Core.Extensions
 
-<Table TItem="Data" DataSource="@data">
+<Table TItem="Data" DataSource="@data" AutoColIndexes="false">
 
     <GenerateColumns Range="1.." HideColumnsByName="@(new []{ "IdCard" })" Definitions=definitions />
 
-    <ActionColumn Title="Action">
+    <ActionColumn ColIndex="4" Title="Action">
         <Space Size=@("middle")>
             <SpaceItem>
                 <a>Invite @context.Name</a>
@@ -86,10 +86,10 @@
             @<span>
                 @foreach (var tag in cellData.FieldValue)
                 {
-                    var color = tag.Length > 5 ? "geekblue" : "green";
+                    var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
                     if (tag == "loser")
                     {
-                        color = "volcano";
+                        color = TagColor.Volcano;
                     }
                     <Tag Color="@color">@tag</Tag>
                 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using AntDesign.Core.Documentation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -13,7 +14,15 @@ namespace AntDesign
 {
     public partial class GenerateColumns<TItem> : ComponentBase
     {
-        private PropertyInfo[] _propertyInfos = { };
+        private static readonly PropertyInfo[] _typeProperties = typeof(TItem).GetProperties();
+        private static readonly Dictionary<(string PropertyName, Type PropertyType), ColumnTypeInfo> _columnTypeCache = new();
+
+        private class ColumnTypeInfo
+        {
+            public Type ColumnType { get; set; }
+            public PropertyInfo[] Parameters { get; set; }
+            public Func<IFieldColumn> CreateInstance { get; set; }
+        }
 
         /// <summary>
         /// Specific the range of the columns that need to display.
@@ -35,37 +44,70 @@ namespace AntDesign
         [Parameter]
         public Action<string, IFieldColumn> Definitions { get; set; }
 
+        /// <summary>
+        /// Specify start column index, use it if auto indexes disabled and there are columns before generated ones
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.1.0")]
+        public int StartColumnIndex { get; set; }
 
-        protected override void OnInitialized()
+        private static ColumnTypeInfo GetColumnTypeInfo(string propertyName, Type propertyType)
         {
-            _propertyInfos = typeof(TItem).GetProperties();
+            var cacheKey = (propertyName, propertyType);
+            if (_columnTypeCache.TryGetValue(cacheKey, out var cached))
+            {
+                return cached;
+            }
 
-            base.OnInitialized();
+            var underlyingType = propertyType.GetUnderlyingType();
+            var columnType = typeof(Column<>).MakeGenericType(underlyingType);
+            var parameters = columnType.GetProperties()
+                .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null)
+                .Where(x => !x.Name.IsIn("DataIndex"))
+                .ToArray();
+
+            // Create a compiled factory delegate
+            var constructor = columnType.GetConstructor(Type.EmptyTypes);
+            var createInstance = () => (IFieldColumn)constructor.Invoke(null);
+
+            var result = new ColumnTypeInfo
+            {
+                ColumnType = columnType,
+                Parameters = parameters,
+                CreateInstance = createInstance
+            };
+
+            _columnTypeCache[cacheKey] = result;
+            return result;
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             var i = 0;
-            var showPropertys = _propertyInfos;
-            if (Range != null)
+            var showProperties = Range != null ? _typeProperties[Range.Value] : _typeProperties;
+
+            var colIndex = StartColumnIndex;
+            foreach (var property in showProperties)
             {
-                showPropertys = _propertyInfos[Range.Value];
-            }
-            foreach (var property in showPropertys)
-            {
-                if (HideColumnsByName.Contains(property.Name)) continue;
-                var columnType = typeof(Column<>).MakeGenericType(property.PropertyType.GetUnderlyingType());
-                var instance = Activator.CreateInstance(columnType) as IFieldColumn;
+                if (HideColumnsByName?.Contains(property.Name) == true) continue;
+
+                var typeInfo = GetColumnTypeInfo(property.Name, property.PropertyType);
+                var instance = typeInfo.CreateInstance();
+
+                if (instance != null)
+                {
+                    instance.ColIndex = colIndex;
+                }
+
+                colIndex++;
 
                 Definitions?.Invoke(property.Name, instance);
 
-                var attributes = columnType.GetProperties()
-                    .Where(x => x.GetCustomAttribute<ParameterAttribute>() != null)
-                    .Where(x => !x.Name.IsIn("DataIndex"))
+                var attributes = typeInfo.Parameters
                     .ToDictionary(x => x.Name, x => x.GetValue(instance))
                     .Where(x => x.Value != null);
 
-                builder.OpenComponent(++i, columnType);
+                builder.OpenComponent(++i, typeInfo.ColumnType);
                 builder.AddAttribute(++i, "DataIndex", property.Name);
                 builder.AddMultipleAttributes(++i, attributes);
 

@@ -82,7 +82,7 @@ namespace AntDesign
                 decimalValue = Convert.ToDecimal(Value, CultureInfo.InvariantCulture);
             }
 
-            var intValue = (int)decimalValue;
+            var intValue = decimalValue - decimalValue % 1;
 
             var intString = intValue == 0 ? (decimalValue >= 0 ? "0" : "-0") : intValue.ToString($"###{GroupSeparator}###", CultureInfo.InvariantCulture);
 

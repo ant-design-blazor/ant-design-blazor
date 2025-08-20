@@ -1,14 +1,14 @@
 ﻿@inject IconService iconService
 
 <div style="width: 256px;">
-	<Button Type="primary" OnClick="ToggleCollapsed" Style="margin-bottom: 16px">
+	<Button Type="ButtonType.Primary" OnClick="ToggleCollapsed" Style="margin-bottom: 16px">
 		@if (collapsed)
 		{
-			<Icon Type="menu-unfold" Theme="outline"></Icon>
+			<Icon Type="@IconType.Outline.MenuUnfold" />
 		}
 		else
 		{
-			<Icon Type="menu-fold" Theme="outline"></Icon>
+			<Icon Type="@IconType.Outline.MenuFold" />
 		}
 	</Button>
 	<Menu DefaultSelectedKeys=@(new[] { "1" })
@@ -16,7 +16,7 @@
 		  Mode=MenuMode.Inline
 		  Theme=MenuTheme.Dark
 		  InlineCollapsed=collapsed>
-		<MenuItem Key="1" Icon="pie-chart">
+		<MenuItem Key="1" Icon="@IconType.Outline.PieChart">
 			<IconTemplate>
 				<IconFont Type="icon-c-sharp-l" />
 			</IconTemplate>
@@ -24,19 +24,19 @@
 				Option 1
 			</ChildContent>
 		</MenuItem>
-		<MenuItem Key="2" Icon="desktop">
+        <MenuItem Key="2" Icon="@IconType.Outline.Desktop">
 			Option 2
 		</MenuItem>
-		<MenuItem Key="3" Icon="container">
+        <MenuItem Key="3" Icon="@IconType.Outline.Container">
 			Option 3
 		</MenuItem>
-		<SubMenu Key="sub1" TitleTemplate=@sub1Title>
+		<SubMenu Key="sub1" TitleTemplate="@sub1Title">
 			<MenuItem Key="5">Option 5</MenuItem>
 			<MenuItem Key="6">Option 6</MenuItem>
 			<MenuItem Key="7">Option 7</MenuItem>
 			<MenuItem Key="8">Option 8</MenuItem>
 		</SubMenu>
-		<SubMenu Key="sub2" TitleTemplate=@sub2Title>
+		<SubMenu Key="sub2" TitleTemplate="@sub2Title">
 			<MenuItem Key="9">Option 9</MenuItem>
 			<MenuItem Key="10">Option 10</MenuItem>
 			<SubMenu Key="sub3" Title="Submenu">
@@ -52,13 +52,13 @@
 
 	RenderFragment sub1Title =
 	@<span>
-		<Icon Type="mail" Theme="outline"></Icon>
+        <Icon Type="@IconType.Outline.Mail" />
 		<span>Navigation One</span>
 	</span>;
 
 	RenderFragment sub2Title =
 	@<span>
-		<Icon Type="appstore" Theme="outline"></Icon>
+        <Icon Type="@IconType.Outline.Appstore" />
 		<span>Navigation Two</span>
 	</span>;
 

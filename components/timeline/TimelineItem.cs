@@ -2,8 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Linq;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 
 namespace AntDesign
 {
@@ -24,8 +24,9 @@ namespace AntDesign
         /// <summary>
         /// The color of the timeline item.
         /// </summary>
+        /// <default value="TimelineDotColor.Blue" />
         [Parameter]
-        public string Color { get; set; } = "blue";
+        public OneOf<TimelineDotColor, string> Color { get; set; } = TimelineDotColor.Blue;
 
         /// <summary>
         /// The label of the timeline item.
@@ -40,14 +41,11 @@ namespace AntDesign
 
         internal bool IsLast { get; set; } = false;
 
-        //'left' | 'alternate' | 'right'
-        internal string Position { get; set; } = "";
+        internal TimelineMode? Position { get; set; }
 
         internal string HeadStyle { get; set; } = "";
 
         internal string ItemClass => ClassMapper.Class;
-
-        private readonly string[] _defaultColors = new[] { "blue", "red", "green", "gray" };
 
         protected override void Dispose(bool disposing)
         {
@@ -60,31 +58,31 @@ namespace AntDesign
             ParentTimeline?.AddItem(this);
             this.TryUpdateCustomColor();
             base.OnInitialized();
+            SetClassMap();
         }
 
         protected override void OnParametersSet()
         {
-            this.SetClassMap();
             this.TryUpdateCustomColor();
             base.OnParametersSet();
         }
 
         private void TryUpdateCustomColor()
         {
-            HeadStyle = !_defaultColors.Contains(Color) ? $"border-color:{Color}" : "";
+            HeadStyle = Color.IsT1 ? $"border-color:{Color.AsT1}" : "";
         }
 
         internal void SetClassMap()
         {
             var prefix = "ant-timeline-item";
             ClassMapper.Clear().Add(prefix)
-                .If($"{prefix}-right", () => Position == "right")
-                .If($"{prefix}-left", () => Position == "left")
+                .If($"{prefix}-right", () => Position == TimelineMode.Right)
+                .If($"{prefix}-left", () => Position == TimelineMode.Left)
                 .If($"{prefix}-last", () => IsLast);
 
             var headPrefix = "ant-timeline-item-head";
-            _headClassMapper.Clear().Add(headPrefix)
-                .If($"{headPrefix}-{Color}", () => _defaultColors.Contains(Color))
+            _headClassMapper.Add(headPrefix)
+                .GetIf(() => $"{headPrefix}-{Color.AsT0.ToString().ToLowerInvariant()}", () => Color.IsT0)
                 .If($"{headPrefix}-custom", () => Dot != null);
         }
 

@@ -8,18 +8,32 @@
         if (_hasClosed)
             return;
 
-        var ondragoverPreventDefault = _isActive;
+        @if (Parent.Draggable)
+        {
+            var ondragoverPreventDefault = _isActive;
+
+            <div style=" @TabStyles" 
+                @ondragover:preventDefault="@ondragoverPreventDefault" draggable="@Parent.Draggable.ToString()"
+                @ondragstart="@(EventUtil.AsNonRenderingEventHandler<DragEventArgs>(e => Parent.HandleDragStart(e, this)))"
+                 @ondrop="@(()=> Parent.HandleDrop(this))">
+                 @RenderTabInner
+            </div>
+        }
+        else
+        {
+            @RenderTabInner
+        }
+    }
+
+    internal void RenderTabInner(RenderTreeBuilder __builder)
+    {
         var onclickStopPropagation = !_isActive;
 
         <div @key="Key"
              @ref="_tabRef"
              @onclick:stopPropagation="@onclickStopPropagation"
              @onclick="@(() => Parent.HandleTabClick(this))"
-             @ondragover:preventDefault="@ondragoverPreventDefault"
-             @ondragstart="@(EventUtil.AsNonRenderingEventHandler<DragEventArgs>(e => Parent.HandleDragStart(e, this)))"
-             @ondrop="@(()=> Parent.HandleDrop(this))"
-             class="@ClassMapper.Class"
-             draggable="@Parent.Draggable.ToString()"
+             class="@_tabClassMapper.Class"
              id="@TabId"
              ondragover="event.preventDefault();">
             <div @onkeydown="@HandleKeydown"
@@ -48,7 +62,7 @@
 
         @if (TabContextMenu != null)
         {
-            <Dropdown Trigger="new[]{ Trigger.ContextMenu }" TriggerReference="_tabRef">
+            <Dropdown @key="@($"tab-menu-{Key}")" Trigger="new[]{ Trigger.ContextMenu }" TriggerReference="_tabRef">
                 <Overlay>
                     @TabContextMenu
                 </Overlay>
@@ -63,15 +77,17 @@
 
         <div @key="Key"
              tabindex="@(_isActive ? "0" : "-1")"
-             class="@_tabPaneClassMapper.Class"
+             class="@ClassMapper.Class"
+             style="@Style"
              id="@($"rc-tabs-{Id}-panel-{Key}")"
              role="tabpanel"
              aria-hidden="@(_isActive ? "false" : "true")"
              aria-labelledby="@($"rc-tabs-{Id}-tab-{Key}")">
-            @if (_isActive || _hasRendered || ForceRender)
+            @if (ChildContent != null && (_isActive || _hasRendered || ForceRender))
             {
                 _hasRendered = true;
-                @ChildContent
+                <AntDesign.Core.Internal.KeepAlive ChildContent="ChildContent" IsActive="@_isActive"></AntDesign.Core.Internal.KeepAlive>
+                
             }
         </div>
     }

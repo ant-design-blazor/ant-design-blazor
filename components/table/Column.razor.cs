@@ -137,7 +137,7 @@ namespace AntDesign
         /// Default sort direction
         /// </summary>
         [Parameter]
-        public SortDirection DefaultSortOrder { get; set; }
+        public SortDirection? DefaultSortOrder { get; set; }
 
         /// <summary>
         /// Set cell attributes
@@ -293,7 +293,7 @@ namespace AntDesign
 
         private RenderFragment _renderDefaultFilterDropdown;
 
-        private bool IsFiexedEllipsis => Ellipsis && Fixed is "left" or "right";
+        private bool IsFixedEllipsis => ShouldShowEllipsis && Fixed is ColumnFixPlacement.Left or ColumnFixPlacement.Right;
 
         private bool IsFiltered => _hasFilterSelected || Filtered;
 
@@ -332,7 +332,7 @@ namespace AntDesign
 
                 if (Sortable && GetFieldExpression != null)
                 {
-                    SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder, SorterCompare);
+                    SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, DefaultSortOrder ?? SortDirection.None, SorterCompare);
                 }
 
                 if (Grouping)
@@ -421,9 +421,19 @@ namespace AntDesign
                     }
                 }
 
-                Context.HeaderColumnInitialed(this);
+                Context.HeaderColumnInitialized(this);
 
                 _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
+            }
+            // When the column type is object, the filter type is recognized by the type of the value
+            else if (IsBody && _hasFilterableAttribute && _fieldFilterType is null && Field is not null)
+            {
+                var headerColumn = Context.HeaderColumns[ColIndex];
+                if (headerColumn is IFieldColumn fieldColumn)
+                {
+                    var columnDataType = Field.GetType();
+                    fieldColumn.SetHeaderFilter(columnDataType);
+                }
             }
 
             ClassMapper
@@ -475,12 +485,13 @@ namespace AntDesign
             get
             {
                 var next = NextSortDirection();
-                return next?.Value switch
+
+                return next switch
                 {
-                    0 => Table.Locale.CancelSort,
-                    1 => Table.Locale.TriggerAsc,
-                    2 => Table.Locale.TriggerDesc,
-                    _ => Table.Locale.CancelSort
+                    SortDirection.None => Table.Locale.CancelSort,
+                    SortDirection.Ascending => Table.Locale.TriggerAsc,
+                    SortDirection.Descending => Table.Locale.TriggerDesc,
+                    _ => Table.Locale.CancelSort,
                 };
             }
         }
@@ -529,6 +540,7 @@ namespace AntDesign
 
         private void SetFilterCompareOperator(TableFilter filter, TableFilterCompareOperator compareOperator)
         {
+            filter.Value = default;
             filter.FilterCompareOperator = compareOperator;
         }
 
@@ -606,7 +618,7 @@ namespace AntDesign
                 return new TableFilter()
                 {
                     FilterCondition = TableFilterCondition.And,
-                    FilterCompareOperator = _fieldFilterType.DefaultCompareOperator
+                    FilterCompareOperator = _fieldFilterType?.DefaultCompareOperator ?? TableFilterCompareOperator.Equals
                 };
             }
             else
@@ -656,8 +668,8 @@ namespace AntDesign
 
         void IFieldColumn.SetSortModel(ITableSortModel sortModel)
         {
-            SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, SortDirection.Parse(sortModel.Sort), SorterCompare);
-            this.SetSorter(SortDirection.Parse(sortModel.Sort));
+            SortModel = new SortModel<TData>(this, GetFieldExpression, FieldName, SorterMultiple, sortModel.SortDirection, SorterCompare);
+            this.SetSorter(sortModel.SortDirection);
         }
 
         protected object _filterInputRef;
@@ -702,6 +714,26 @@ namespace AntDesign
                 } while (!filterInputFocused);
             });
 #endif
+        }
+
+        void IFieldColumn.SetHeaderFilter(Type columnDataType)
+        {
+            if (IsHeader && _fieldFilterType is null)
+            {
+                _columnDataType = columnDataType;
+                _fieldFilterType = Table.FieldFilterTypeResolver.Resolve(columnDataType);
+
+                var getValue = GetValue;
+                GetValue = rowData =>
+                {
+                    var value = getValue(rowData);
+                    return (TData)Convert.ChangeType(value, columnDataType);
+                };
+
+                var getFieldExpression = GetFieldExpression;
+
+                StateHasChanged();
+            }
         }
     }
 }

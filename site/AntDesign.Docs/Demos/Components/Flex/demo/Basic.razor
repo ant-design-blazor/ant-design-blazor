@@ -1,9 +1,9 @@
-﻿<Flex Gap="middle" Vertical>
-    <RadioGroup @bind-Value="value">
-        <Radio Value=@("horizontal")>horizontal</Radio>
-        <Radio Value=@("vertical")>vertical</Radio>
+﻿<Flex Gap="FlexGap.Middle" Direction="FlexDirection.Vertical">
+    <RadioGroup @bind-Value="direction">
+        <Radio Value="FlexDirection.Horizontal">Horizontal</Radio>
+        <Radio Value="FlexDirection.Vertical">Vertical</Radio>
     </RadioGroup>
-    <Flex Vertical=@(value == "vertical")>
+    <Flex Direction="direction">
         @foreach (var i in Enumerable.Range(0, 4))
         {
             <div @key="i" style="@($"width:25%;height:54px; background-color: {(i % 2 == 1 ? "#1677ff" : "#1677ffbf")} ;")" />
@@ -12,5 +12,5 @@
 </Flex>
 
 @code {
-    string value = "horizontal";
+    FlexDirection direction = FlexDirection.Horizontal;
 }

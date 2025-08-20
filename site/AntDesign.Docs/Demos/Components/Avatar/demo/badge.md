@@ -2,7 +2,7 @@
 order: 3
 title:
   zh-CN: 带徽标的头像
-  en-US: With Badge
+  en-US: Badged
 ---
 
 ## zh-CN
@@ -11,6 +11,6 @@ title:
 
 ## en-US
 
-Usually used for messages remind.
+Typically used for showing a count of notifications, avatars can be given badges.
 
 

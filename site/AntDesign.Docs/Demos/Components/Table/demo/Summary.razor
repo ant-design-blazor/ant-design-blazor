@@ -9,16 +9,16 @@
   <SummaryRow>
     <SummaryCell>Total</SummaryCell>
     <SummaryCell>
-      <Text Type="danger">@totalBorrow</Text>
+      <Text Type="TextElementType.Danger">@totalBorrow</Text>
     </SummaryCell>
     <SummaryCell>
-      <Text Type="danger">@totalRepayment</Text>
+      <Text Type="TextElementType.Danger">@totalRepayment</Text>
     </SummaryCell>
   </SummaryRow>
   <SummaryRow>
     <SummaryCell>Balance</SummaryCell>
     <SummaryCell ColSpan="2">
-      <Text Type="danger">@(totalBorrow - totalRepayment)</Text>
+      <Text Type="TextElementType.Danger">@(totalBorrow - totalRepayment)</Text>
       </SummaryCell>
     </SummaryRow>
   </Table>
@@ -26,10 +26,10 @@
   <br />
 
   <Table DataSource="fixedData" ScrollX="2000" Bordered HidePagination>
-    <PropertyColumn Title="Name" Property="c=>c.name" Fixed="left" Width="100"></PropertyColumn>
-    <PropertyColumn Title="Description" Property="c=>c.description"></PropertyColumn>
+    <PropertyColumn Title="Name" Property="c=>c.name" Fixed="ColumnFixPlacement.Left" Width="100" />
+    <PropertyColumn Title="Description" Property="c=>c.description" />
     <SummaryRow>
-      <SummaryCell Fixed="left">Summary</SummaryCell>
+      <SummaryCell Fixed="ColumnFixPlacement.Left">Summary</SummaryCell>
       <SummaryCell>This is a summary content</SummaryCell>
     </SummaryRow>
   </Table>
@@ -46,10 +46,11 @@
         new("4","Jim Red",75,45),
   };
 
-  record FixedData(string name, string description);
+  record FixedData(int key, string name, string description);
 
   FixedData[] fixedData = Enumerable.Range(0, 6)
       .Select(i => new FixedData(
+             key: i,
              name: (i % 2) > 0 ? "Light" : "Bamboo",
              description: "Everything that has a beginning, has an end.")
       ).ToArray();

@@ -1,5 +1,5 @@
 ---
-order: 4.1
+order: 3
 title: Localization
 ---
 
@@ -18,7 +18,7 @@ dotnet add package AntDesign.Extensions.Localization
 
     ```csharp
     builder.Services.AddInteractiveStringLocalizer();
-    services.AddLocalization(options =>
+    builder.Services.AddLocalization(options =>
     {
         options.ResourcesPath = "Resources";
     });
@@ -138,6 +138,7 @@ While we recommend the official localization solution, you can also use the solu
     builder.Services.AddSimpleEmbeddedJsonLocalization(options =>
     {
         options.ResourcesPath = "Resources";
+        options.Resources = SimpleStringLocalizerOptions.BuildResources("Resources", Assembly.GetExecutingAssembly());
     });
     ```
 

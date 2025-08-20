@@ -1,7 +1,7 @@
 ﻿@using System.ComponentModel
 <Table DataSource="data" PageSize="50" ScrollX="1300">
-    <PropertyColumn Property="c=>c.Name" Width="100" Fixed="left" />
-    <PropertyColumn Property="c=>c.Age" Width="100" Fixed="left" />
+    <PropertyColumn Property="c=>c.Name" Width="100" Fixed="ColumnFixPlacement.Left" />
+    <PropertyColumn Property="c=>c.Age" Width="100" Fixed="ColumnFixPlacement.Left" />
     <PropertyColumn Title="Column 1" Property="c=>c.Address" />
     <PropertyColumn Title="Column 2" Property="c=>c.Address" />
     <PropertyColumn Title="Column 3" Property="c=>c.Address" />
@@ -10,7 +10,7 @@
     <PropertyColumn Title="Column 6" Property="c=>c.Address" />
     <PropertyColumn Title="Column 7" Property="c=>c.Address" />
     <PropertyColumn Title="Column 8" Property="c=>c.Address" />
-    <ActionColumn Title="Action" Width="100" Fixed="right">
+    <ActionColumn Title="Action" Width="100" Fixed="ColumnFixPlacement.Right">
         <a>action</a>
     </ActionColumn>
 </Table>

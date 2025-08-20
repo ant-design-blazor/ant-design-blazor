@@ -4,9 +4,9 @@
 
 namespace AntDesign
 {
-    public static class AvatarShape
+    public enum AvatarShape
     {
-        public const string Square = "square";
-        public const string Circle = "circle";
+        Square,
+        Circle
     }
 }

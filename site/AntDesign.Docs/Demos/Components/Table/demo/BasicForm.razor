@@ -3,9 +3,9 @@
 
 <Table @ref="_table" TItem="ItemData" PageSize="5" Total="_total" DataSource="_dataSource" @bind-SelectedRows="_selectedRows" OnChange="OnChange">
     <TitleTemplate>
-        <Flex Justify="end" Gap="10">
-            <Button Type="primary" @onclick="()=> StartEdit(default)">New</Button>
-            <Button Disabled="!_selectedRows.Any()" Danger @onclick="DeleteAll">Delete</Button>
+        <Flex Justify="FlexJustify.End" Gap="@("10")">
+            <Button Type="ButtonType.Primary" OnClick="() => StartEdit(default)">New</Button>
+            <Button Disabled="!_selectedRows.Any()" Danger OnClick="DeleteAll">Delete</Button>
         </Flex>
     </TitleTemplate>
     <ColumnDefinitions Context="row">

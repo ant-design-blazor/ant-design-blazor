@@ -4,15 +4,15 @@
 <br />
 <RangePicker TValue="DateTime?[]" ShowTime="@true" />
 <br />
-<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Week" />
+<RangePicker TValue="DateTime?[]" Picker="DatePickerType.Week" />
 <br />
-<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Month" />
+<RangePicker TValue="DateTime?[]" Picker="DatePickerType.Month" />
 <br />
-<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Quarter" />
+<RangePicker TValue="DateTime?[]" Picker="DatePickerType.Quarter" />
 <br />
-<RangePicker TValue="DateTime?[]" Picker="@DatePickerType.Year" />
+<RangePicker TValue="DateTime?[]" Picker="DatePickerType.Year" />
 
-<RangePicker TValue="DateTime?[]" ShowTime='@("HH:mm")' OnChange="OnTimeRangeChange" />
+<RangePicker TValue="DateTime?[]" ShowTime="@("HH:mm")" OnChange="OnTimeRangeChange" />
 
 @code {
     private void OnTimeRangeChange(DateRangeChangedEventArgs<DateTime?[]> args)

@@ -1,7 +1,7 @@
 ---
 order: 11
 title:
-  en-US: size
+  en-US: Size
   zh-CN: 紧凑型
 ---
 

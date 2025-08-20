@@ -54,8 +54,6 @@ namespace AntDesign.Docs.Build.CLI.Command
             "StateHasChanged"
         };
 
-        private readonly Type _staticComponentPageType = typeof(IStaticComponentPage);
-
         private readonly IEnumerable<MemberTypes> _supportedMemberTypes = new List<MemberTypes>
         {
             MemberTypes.Field,
@@ -183,47 +181,6 @@ namespace AntDesign.Docs.Build.CLI.Command
                 { Constants.ChineseLanguage, new List<DemoComponent>() }
             };
 
-            // recognize components by component attribute
-            var docsStaticComponents = Assembly.Load(DocsAssemblyName).GetTypes().Where(x => x != _staticComponentPageType && x.IsAssignableTo(_staticComponentPageType));
-            foreach (var component in docsStaticComponents)
-            {
-                var docAttribute = component.GetCustomAttribute<DocumentationAttribute>();
-                if (docAttribute is null)
-                {
-                    continue;
-                }
-
-                var componentName = GetNameWithoutGenerics(component);
-                var title = docAttribute.Title ?? componentName;
-
-                var staticComponent = new DemoComponent()
-                {
-                    Category = docAttribute.Category.ToString(),
-                    Title = title,
-                    SubTitle = docAttribute.SubTitle,
-                    Type = docAttribute.Type.ToString(),
-                    Desc = string.Empty,
-                    ApiDoc = string.Empty,
-                    Cols = docAttribute.Columns,
-                    Cover = docAttribute.CoverImageUrl,
-                    DemoList = new List<DemoItem>() {
-                        new()
-                        {
-                            Order = 0,
-                            Name = componentName,
-                            Title = title,
-                            Description = string.Empty,
-                            Type = component.Namespace.Replace(DocsAssemblyName + ".", string.Empty) + "." + component.Name,
-                            Style = "",
-                            Docs = true,
-                            Debug = false
-                        }
-                    }
-                };
-                componentsDocsByLanguage[Constants.EnglishLanguage].Add(staticComponent);
-                componentsDocsByLanguage[Constants.ChineseLanguage].Add(staticComponent);
-            }
-
             var libraryComponents = _libraryAssembly.GetTypes().Where(x => x.GetType() != _componentBaseType);
             foreach (var component in libraryComponents)
             {
@@ -243,7 +200,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 var seeAlso = await GetAllLanguagesSeeAlsoDocs(componentDocs);
                 var faqs = GetAllLanguagesFaqDocs(componentName);
                 var demos = GetAllLanguagesDemos(componentName);
-                var docs = GetAllLanguagesComponentDocs(componentName);
+                var docs = GetAllLanguagesComponentDocs(title);
 
                 // Build docs for multiple languages
                 componentsDocsByLanguage[Constants.EnglishLanguage].Add(GenerateApiDocumentation.ForComponent(Constants.EnglishLanguage, docAttribute, title, docs, pageUrl, apiDocs, seeAlso, faqs, demos));
@@ -342,7 +299,7 @@ namespace AntDesign.Docs.Build.CLI.Command
 
         private string GetFaqDocs(string componentName, string language)
         {
-            var faqFile = new FileInfo(Path.Join(_demoDirectory, $"Components\\{componentName}\\faq.{language}.md"));
+            var faqFile = new FileInfo(Path.Combine(_demoDirectory, "Components", componentName, $"faq.{language}.md"));
             if (faqFile.Exists)
             {
                 var faqFileContent = File.ReadAllText(faqFile.FullName);
@@ -354,7 +311,7 @@ namespace AntDesign.Docs.Build.CLI.Command
 
         private string GetComponentDocs(string componentName, string language)
         {
-            var componentFile = new FileInfo(Path.Join(_demoDirectory, $"Components\\{componentName}\\doc\\index.{language}.md"));
+            var componentFile = new FileInfo(Path.Combine(_demoDirectory, "Components", componentName, "doc", $"index.{language}.md"));
             if (componentFile.Exists)
             {
                 var faqFileContent = File.ReadAllText(componentFile.FullName);
@@ -362,7 +319,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 return docData.desc;
             }
 
-            return null;
+            return componentFile.FullName;
         }
 
         private string GetMemberXmlName(MemberInfo member)
@@ -732,7 +689,7 @@ namespace AntDesign.Docs.Build.CLI.Command
             IList<string> demoTypes = null;
 
             var directories = demoDirectoryInfo.GetFileSystemInfos().Where(x => x.Name != "Components")
-                .SelectMany(x => (x as DirectoryInfo).GetFileSystemInfos());
+                .SelectMany(x => x is DirectoryInfo directory ? directory.GetFileSystemInfos() : []);
 
             foreach (FileSystemInfo component in directories)
             {

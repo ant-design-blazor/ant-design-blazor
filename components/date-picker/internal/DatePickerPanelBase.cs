@@ -93,6 +93,9 @@ namespace AntDesign
         [Parameter]
         public bool Use12Hours { get; set; }
 
+        [Parameter]
+        public bool ShowWeek { get; set; }
+
         protected Dictionary<string, object> GetAttributes() => new Dictionary<string, object>()
             {
                 { "PrefixCls", PrefixCls },
@@ -116,7 +119,19 @@ namespace AntDesign
                 { "IsCalendar", IsCalendar },
                 { "IsShowHeader", IsShowHeader },
                 { "IsShowTime", IsShowTime },
+                { "ShowWeek", ShowWeek} 
             };
+
+        protected static Dictionary<DatePickerType, string> PickerTypeMap = new()
+        {
+            [DatePickerType.Date] = "date",
+            [DatePickerType.Decade] = "decade",
+            [DatePickerType.Month] = "month",
+            [DatePickerType.Quarter] = "quarter",
+            [DatePickerType.Time] = "time",
+            [DatePickerType.Week] = "week",
+            [DatePickerType.Year] = "year"
+        };
 
         protected void OnSelectTime(DateTime date) => OnSelect?.Invoke(date, GetPickerIndex());
 
@@ -167,11 +182,11 @@ namespace AntDesign
             }
             else
             {
-                baseDate = Picker.Name switch
+                baseDate = Picker switch
                 {
-                    DatePickerType.DATE => PickerValue.AddMonths(-1),
-                    DatePickerType.WEEK => PickerValue.AddMonths(-1),
-                    DatePickerType.YEAR => PickerValue.AddYears(-10),
+                    DatePickerType.Date => PickerValue.AddMonths(-1),
+                    DatePickerType.Week => PickerValue.AddMonths(-1),
+                    DatePickerType.Year => PickerValue.AddYears(-10),
                     _ => PickerValue.AddYears(-1)
                 };
             }

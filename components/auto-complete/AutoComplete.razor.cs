@@ -93,7 +93,6 @@ namespace AntDesign
             {
                 _options = value;
                 _optionDataItems = _options?.Select(x => new AutoCompleteDataItem<TOption>(x, x.ToString())).ToList() ?? new List<AutoCompleteDataItem<TOption>>();
-                UpdateFilteredOptions();
             }
         }
 
@@ -176,9 +175,9 @@ namespace AntDesign
         /// <summary>
         /// Allow filtering
         /// </summary>
-        /// <default value="true" />
+        /// <default value="false" />
         [Parameter]
-        public bool AllowFilter { get; set; } = true;
+        public bool AllowFilter { get; set; }
 
         /// <summary>
         /// Width of input, pixels when an int is given, full value given to CSS width property when a string is given
@@ -211,8 +210,6 @@ namespace AntDesign
         [Parameter]
         public AutoCompleteOption SelectedItem { get; set; }
 
-
-
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening). Check 
         /// </summary>
@@ -225,6 +222,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="false" />
         [Parameter]
+        [Obsolete("This property is useless, please remove it.")]
         public bool ShowPanel { get; set; } = false;
 
         [Inject] private IDomEventListener DomEventListener { get; set; }
@@ -246,6 +244,8 @@ namespace AntDesign
         private object _activeValue;
         private bool _isFocused = false;
 
+        private bool _isOpened = false;
+
         void IAutoCompleteRef.SetInputComponent(IAutoCompleteInput input)
         {
             _inputComponent = input;
@@ -253,15 +253,13 @@ namespace AntDesign
 
         #region 子控件触发事件 / Child controls trigger events
 
-        Task IAutoCompleteRef.InputFocus(FocusEventArgs e)
+        async Task IAutoCompleteRef.InputFocus(FocusEventArgs e)
         {
             _isFocused = true;
             if (!_isOptionsZero)
             {
-                this.OpenPanel();
+                await this.OpenPanel();
             }
-
-            return Task.CompletedTask;
         }
 
         Task IAutoCompleteRef.InputBlur(FocusEventArgs e)
@@ -286,11 +284,11 @@ namespace AntDesign
         {
             var key = args.Key;
 
-            if (this.ShowPanel)
+            if (this._isOpened)
             {
                 if (key == "Escape" || key == "Tab")
                 {
-                    this.ClosePanel();
+                    await this.ClosePanel();
                 }
                 else if (key == "Enter" && this._activeValue != null)
                 {
@@ -299,7 +297,7 @@ namespace AntDesign
             }
             else if (!_isOptionsZero)
             {
-                this.OpenPanel();
+                await this.OpenPanel();
             }
 
             if (key == "ArrowUp")
@@ -325,6 +323,19 @@ namespace AntDesign
             await SetOverlayWidth();
             await DomEventListener.AddResizeObserver(_overlayTrigger.RefBack.Current, UpdateWidth);
             await base.OnFirstAfterRenderAsync();
+        }
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            var optionsChanged = parameters.IsParameterChanged(nameof(Options), Options)
+                || parameters.IsParameterChanged(nameof(OptionDataItems), OptionDataItems);
+
+            await base.SetParametersAsync(parameters);
+
+            if (optionsChanged)
+            {
+                UpdateFilteredOptions();
+            }
         }
 
         void IAutoCompleteRef.AddOption(AutoCompleteOption option)
@@ -356,15 +367,15 @@ namespace AntDesign
         /// <summary>
         /// Open panel
         /// </summary>
-        private void OpenPanel()
+        private async Task OpenPanel()
         {
-            if (this.ShowPanel == false)
+            if (this._isOpened == false)
             {
-                this.ShowPanel = true;
+                this._isOpened = true;
 
-                _overlayTrigger.Show();
+                await _overlayTrigger.Show();
 
-                ResetActiveItem();
+                await ResetActiveItem();
                 StateHasChanged();
             }
         }
@@ -372,13 +383,13 @@ namespace AntDesign
         /// <summary>
         /// Close panel
         /// </summary>
-        private void ClosePanel()
+        private async Task ClosePanel()
         {
-            if (this.ShowPanel == true)
+            if (this._isOpened == true)
             {
-                this.ShowPanel = false;
+                this._isOpened = false;
 
-                _overlayTrigger.Close();
+                await _overlayTrigger.Close();
 
                 StateHasChanged();
             }
@@ -431,15 +442,29 @@ namespace AntDesign
         private void UpdateFilteredOptions()
         {
             _filteredOptions = GetOptionItems();
-            _isOptionsZero = _filteredOptions.Count == 0 && Options != null;
+            _isOptionsZero = _filteredOptions.Count == 0;
             if (_isFocused && !_isOptionsZero)
             {
-                OpenPanel();
+                _ = OpenPanel();
             }
         }
 
         private async Task ResetActiveItem()
         {
+            if (_overlayTrigger != null)
+            {
+                // if options count == 0 then close overlay
+                if (_isOptionsZero && _overlayTrigger.IsOverlayShow())
+                {
+                    await ClosePanel();
+                }
+                // if options count > 0 then open overlay
+                else if (!_isOptionsZero && !_overlayTrigger.IsOverlayShow())
+                {
+                    await OpenPanel();
+                }
+            }
+
             var items = _filteredOptions;
 
             if (items.Any(x => CompareWith(x.Value, this._activeValue)) == false)
@@ -460,19 +485,6 @@ namespace AntDesign
                 }
             }
 
-            if (_overlayTrigger != null)
-            {
-                // if options count == 0 then close overlay
-                if (_isOptionsZero && _overlayTrigger.IsOverlayShow())
-                {
-                    await _overlayTrigger.Close();
-                }
-                // if options count > 0 then open overlay
-                else if (!_isOptionsZero && !_overlayTrigger.IsOverlayShow())
-                {
-                    await _overlayTrigger.Show();
-                }
-            }
         }
 
         private async Task SetSelectedItem(AutoCompleteOption item)
@@ -488,7 +500,7 @@ namespace AntDesign
             this.ClosePanel();
         }
 
-        private async void OnOverlayTriggerVisibleChange(bool visible)
+        private async Task OnOverlayTriggerVisibleChange(bool visible)
         {
             if (OnPanelVisibleChange.HasDelegate && _parPanelVisible != visible)
             {
@@ -496,13 +508,13 @@ namespace AntDesign
                 await OnPanelVisibleChange.InvokeAsync(visible);
             }
 
-            if (this.ShowPanel != visible)
+            if (this._isOpened != visible)
             {
-                this.ShowPanel = visible;
+                this._isOpened = visible;
             }
         }
 
-        private async void UpdateWidth(List<ResizeObserverEntry> entry)
+        private async Task UpdateWidth(List<ResizeObserverEntry> entry)
         {
             await SetOverlayWidth();
             InvokeStateHasChanged();

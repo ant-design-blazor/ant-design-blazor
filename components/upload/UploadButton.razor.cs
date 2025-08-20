@@ -5,9 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using OneOf;
 
 namespace AntDesign.Internal
 {
@@ -20,7 +22,7 @@ namespace AntDesign.Internal
         public RenderFragment ChildContent { get; set; }
 
         [Parameter]
-        public string ListType { get; set; }
+        public UploadListType ListType { get; set; }
 
         [Parameter]
         public bool ShowButton { get; set; }
@@ -47,7 +49,7 @@ namespace AntDesign.Internal
         public string Action { get; set; }
 
         [Parameter]
-        public string Method { get; set; }
+        public OneOf<HttpMethod, string> Method { get; set; }
 
         [Parameter]
         public bool Disabled
@@ -78,9 +80,18 @@ namespace AntDesign.Internal
 
         private bool _disabled;
 
-        private UploadInfo _uploadInfo = new UploadInfo();
+        private UploadInfo _uploadInfo = new();
 
         protected override bool ShouldRender() => Upload != null;
+
+        private string MethodString => Method.IsT0 ? Method.AsT0.ToString().ToLowerInvariant() : Method.AsT1.ToLowerInvariant();
+
+        private static readonly Dictionary<UploadListType, string> _typeMap = new()
+        {
+            [UploadListType.Text] = "text",
+            [UploadListType.Picture] = "picture",
+            [UploadListType.PictureCard] = "picture-card",
+        };
 
         protected override void OnInitialized()
         {
@@ -89,7 +100,7 @@ namespace AntDesign.Internal
 
             ClassMapper
                 .Add(prefixCls)
-                .Get(() => $"{prefixCls}-select-{ListType}")
+                .Get(() => $"{prefixCls}-select-{_typeMap[ListType]}")
                 .If($"{prefixCls}-drag", () => Upload?.Drag == true)
                 .If($"{prefixCls}-drag-hover", () => Upload?._dragHover == true)
                 .Add($"{prefixCls}-select")
@@ -120,46 +131,120 @@ namespace AntDesign.Internal
 
         private async Task FileNameChanged(ChangeEventArgs e)
         {
-            var value = e.Value?.ToString();
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(e.Value?.ToString()))
             {
                 return;
             }
+
             var flist = await JSRuntime.InvokeAsync<List<UploadFileItem>>(JSInteropConstants.GetFileInfo, _file);
-            var index = 0;
-            if (Upload.BeforeAllUploadAsync != null && !(await Upload.BeforeAllUploadAsync.Invoke(flist)))
-            {
-                await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
-                return;
-            }
-            if (Upload.BeforeAllUpload != null && !Upload.BeforeAllUpload.Invoke(flist))
+            if (!await ValidateFiles(flist))
             {
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
                 return;
             }
 
-            foreach (var fileItem in flist)
+            // Generate IDs for all files first
+            var fileIds = flist.Select(_ => Guid.NewGuid().ToString()).ToList();
+
+            // Initialize file items
+            for (var i = 0; i < flist.Count; i++)
             {
-                var fileName = fileItem.FileName;
-                fileItem.Ext = System.IO.Path.GetExtension(fileItem.FileName);
-                var id = Guid.NewGuid().ToString();
+                var fileItem = flist[i];
+                InitializeFileItem(fileItem, fileIds[i]);
+            }
+
+            await Upload.FileListChanged.InvokeAsync(Upload.FileList);
+            await InvokeAsync(StateHasChanged);
+
+            if (Upload.BatchUpload)
+            {
+                await UploadFilesBatch(fileIds);
+            }
+            else
+            {
+                await UploadFilesSequentially(fileIds);
+            }
+
+            await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
+        }
+
+        private async Task<bool> ValidateFiles(List<UploadFileItem> files)
+        {
+            if (Upload.BeforeAllUploadAsync != null && !await Upload.BeforeAllUploadAsync.Invoke(files))
+            {
+                return false;
+            }
+            if (Upload.BeforeAllUpload != null && !Upload.BeforeAllUpload.Invoke(files))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void InitializeFileItem(UploadFileItem fileItem, string id)
+        {
+            fileItem.Ext = System.IO.Path.GetExtension(fileItem.FileName);
+            fileItem.Percent = 0;
+            fileItem.State = UploadState.Uploading;
+            fileItem.Id = id;
+
+            var existingFile = Upload.FileList.FirstOrDefault(f => f.FileName == fileItem.FileName);
+            if (existingFile != null)
+            {
+                // Update existing file properties
+                existingFile.Ext = fileItem.Ext;
+                existingFile.Percent = fileItem.Percent;
+                existingFile.State = fileItem.State;
+                existingFile.Id = fileItem.Id;
+            }
+            else
+            {
+                Upload.FileList.Add(fileItem);
+            }
+        }
+
+        private async Task UploadFilesBatch(List<string> fileIds)
+        {
+            await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, new
+            {
+                element = _file,
+                index = -1,
+                data = Data,
+                headers = Headers,
+                fileIds = fileIds,
+                url = Action,
+                name = Name,
+                instance = _currentInstance,
+                method = MethodString,
+                withCredentials = Upload.WithCredentials
+            });
+        }
+
+        private async Task UploadFilesSequentially(List<string> fileIds)
+        {
+            for (var i = 0; i < fileIds.Count; i++)
+            {
+                var fileItem = Upload.FileList.First(f => f.Id == fileIds[i]);
                 if (Upload.BeforeUpload != null && !Upload.BeforeUpload.Invoke(fileItem))
                 {
                     await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
                     return;
                 }
-                fileItem.Percent = 0;
-                fileItem.State = UploadState.Uploading;
-                fileItem.Id = id;
-                Upload.FileList.Add(fileItem);
-                await Upload.FileListChanged.InvokeAsync(this.Upload.FileList);
 
-                await InvokeAsync(StateHasChanged);
-                await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, _file, index, Data, Headers, id, Action, Name, _currentInstance, "UploadChanged", "UploadSuccess", "UploadError", Method);
-                index++;
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.UploadFile, new
+                {
+                    element = _file,
+                    index = i,
+                    data = Data,
+                    headers = Headers,
+                    fileIds = new[] { fileIds[i] },
+                    url = Action,
+                    name = Name,
+                    instance = _currentInstance,
+                    method = MethodString,
+                    withCredentials = Upload.WithCredentials
+                });
             }
-
-            await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
         }
 
         [JSInvokable]
@@ -189,7 +274,7 @@ namespace AntDesign.Internal
         }
 
         [JSInvokable]
-        public async Task UploadError(string id, string reponseCode)
+        public async Task UploadError(string id, string errorMessage)
         {
             var file = Upload.FileList.FirstOrDefault(x => x.Id.Equals(id));
             if (file == null)
@@ -200,7 +285,8 @@ namespace AntDesign.Internal
             file.Percent = 100;
             _uploadInfo.File = file;
             _uploadInfo.FileList = Upload.FileList;
-            file.Response ??= reponseCode;
+            file.Response = errorMessage;
+
             await UploadChanged(id, 100);
             await InvokeAsync(StateHasChanged);
             if (Upload.OnSingleCompleted.HasDelegate)

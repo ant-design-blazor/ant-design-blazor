@@ -1,7 +1,7 @@
 ﻿<div>
     <RadioGroup @bind-Value="selectionType">
-        <Radio Value="@("checkbox")">Checkbox</Radio>
-        <Radio Value="@("radio")">radio</Radio>
+        <Radio Value="SelectionType.Checkbox">Checkbox</Radio>
+        <Radio Value="SelectionType.Radio">Radio</Radio>
     </RadioGroup>
 
     <h5>
@@ -10,14 +10,14 @@
         {
             @foreach (var selected in selectedRows)
             {
-                <Tag @key="selected" Closable OnClose="e=>RemoveSelection(selected.Name)">@selected.Name</Tag>
+                <Tag @key="selected" Closable OnClose="e => RemoveSelection(selected.Name)">@selected.Name</Tag>
             }
-            <Button Danger Size="small" OnClick="@(e => { table.SetSelection([]); })">Clear</Button>
+            <Button Danger Size="ButtonSize.Small" OnClick="@(e => { table.SetSelection([]); })">Clear</Button>
         }
     </h5>
 
-    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x=>x.Name" OnSelectAll="OnSelectAll" >
-        <Selection Key="@context.Name" Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
+    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x => x.Name" OnSelectAll="OnSelectAll">
+        <Selection Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
         <PropertyColumn Property="c=>c.Name">
             <a>@context.Name</a>
         </PropertyColumn>
@@ -68,7 +68,7 @@
     };
 
     IEnumerable<Column> selectedRows;
-    string selectionType = "checkbox";
+    SelectionType selectionType = SelectionType.Checkbox;
 
     protected override void OnInitialized()
     {
@@ -76,8 +76,7 @@
 
     public void RemoveSelection(string key)
     {
-        var selected = selectedRows.Where(x => x.Name != key).ToList();
-        table.SetSelection(selected.Select(x => x.Name).ToArray());
+        this.selectedRows = selectedRows.Where(x => x.Name != key).ToList();
     }
 
     void OnSelectAll(bool selectAll)

@@ -37,12 +37,17 @@ namespace AntDesign
         [CascadingParameter(Name = "TreeSelect")]
         private ITreeSelect TreeSelect { get; set; }
 
-        #region fields
+        #region Fields
 
         /// <summary>
         /// All of the node
         /// </summary>
         internal List<TreeNode<TItem>> _allNodes = new List<TreeNode<TItem>>();
+
+        /// <summary>
+        /// Readonly collection of all nodes
+        /// </summary>
+        public IReadOnlyCollection<TreeNode<TItem>> AllNodes => _allNodes.AsReadOnly();
 
         /// <summary>
         /// All the checked nodes
@@ -162,15 +167,27 @@ namespace AntDesign
         internal List<TreeNode<TItem>> ChildNodes { get; set; } = new List<TreeNode<TItem>>();
 
         /// <summary>
-        /// Add a node
+        /// Add a child node
         /// </summary>
         /// <param name="treeNode"></param>
         internal void AddChildNode(TreeNode<TItem> treeNode)
         {
-            treeNode.NodeIndex = ChildNodes.Count;
             ChildNodes.Add(treeNode);
         }
 
+        /// <summary>
+        /// Remove a child node
+        /// </summary>
+        /// <param name="treeNode"></param>
+        internal void RemoveChildNode(TreeNode<TItem> treeNode)
+        {
+            ChildNodes.Remove(treeNode);
+        }
+
+        /// <summary>
+        /// Add a node to the collection of all tree nodes
+        /// </summary>
+        /// <param name="treeNode"></param>
         internal void AddNode(TreeNode<TItem> treeNode)
         {
             _allNodes.Add(treeNode);
@@ -186,6 +203,24 @@ namespace AntDesign
             });
         }
 
+        /// <summary>
+        /// Remove a node from the collection of all tree nodes
+        /// </summary>
+        /// <param name="treeNode"></param>
+        internal void RemoveNode(TreeNode<TItem> treeNode)
+        {
+            _allNodes.Remove(treeNode);
+            _nodeHasChanged = true;
+            CallAfterRender(() =>
+            {
+                if (_nodeHasChanged)
+                {
+                    _nodeHasChanged = false;
+                    TreeSelect?.UpdateValueAfterDataSourceChanged();
+                }
+                return Task.CompletedTask;
+            });
+        }
         #endregion Node
 
         #region Selected
@@ -658,6 +693,12 @@ namespace AntDesign
         [Parameter]
         public Func<TreeNode<TItem>, bool> CheckableExpression { get; set; }
 
+        /// <summary>
+        /// Specifies a method to return a selectable node
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> SelectableExpression { get; set; }
+
         #endregion DataBind
 
         #region Event
@@ -873,8 +914,6 @@ namespace AntDesign
                     else
                         CachedExpandedKeys = null;
                 }
-                _allNodes.Clear();
-                ChildNodes.Clear();
                 ResetSelectedKeys();
                 CheckedKeys = [];
                 ExpandedKeys = [];
@@ -1012,7 +1051,7 @@ namespace AntDesign
         public void ExpandAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
             if (predicate != null)
-                _ = FindFirstOrDefaultNode(predicate, recursive).ExpandAll();
+                _ = FindFirstOrDefaultNode(predicate, recursive)?.ExpandAll();
             else
                 ChildNodes.ForEach(node => _ = node.ExpandAll());
         }
@@ -1023,7 +1062,7 @@ namespace AntDesign
         public void CollapseAll(Func<TreeNode<TItem>, bool> predicate = null, bool recursive = true)
         {
             if (predicate != null)
-                _ = FindFirstOrDefaultNode(predicate, recursive).CollapseAll();
+                _ = FindFirstOrDefaultNode(predicate, recursive)?.CollapseAll();
             else
                 ChildNodes.ForEach(node => _ = node.CollapseAll());
         }

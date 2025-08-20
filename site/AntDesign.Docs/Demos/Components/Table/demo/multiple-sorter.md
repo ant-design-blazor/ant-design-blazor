@@ -1,7 +1,7 @@
 ---
 order: 7
 title:
-  en-US: Multiple sorter
+  en-US: Multiple Sorters
   zh-CN: 多列排序
 ---
 
@@ -11,5 +11,5 @@ title:
 
 ## en-US
 
-`Column` support `SorterMultiple` to config the priority of sort columns. Though `SorterCompare` to customize compare function. You can also leave it empty to use the interactive only.
+`Column` supports `SorterMultiple` to config the priority of sort columns. Though `SorterCompare` to customize compare function. You can also leave it empty to use the interactive only.
 

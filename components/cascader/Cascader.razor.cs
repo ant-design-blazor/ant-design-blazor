@@ -6,10 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AntDesign.JsInterop;
+using AntDesign.Core.Documentation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -29,24 +28,8 @@ namespace AntDesign
     <seealso cref="TriggerBoundaryAdjustMode"/>
     */
     [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/UdS8y8xyZ/Cascader.svg", Title = "Cascader", SubTitle = "级联选择")]
-    public partial class Cascader : AntInputComponentBase<string>
+    public partial class Cascader : SelectBase<string, string>
     {
-        /// <summary>
-        /// Whether to allow clearing or not
-        /// </summary>
-        /// <summary xml:lang="zh-CN">
-        /// 是否允许清算
-        /// </summary>
-        /// <default value="true" />
-        [Parameter]
-        public bool AllowClear { get; set; } = true;
-
-        /// <summary>
-        /// Overlay adjustment strategy (when for example browser resize is happening)
-        /// </summary>
-        [Parameter]
-        public TriggerBoundaryAdjustMode BoundaryAdjustMode { get; set; } = TriggerBoundaryAdjustMode.InView;
-
         /// <summary>
         /// Change value on each selection if set to true, only chage on final selection if false.
         /// </summary>
@@ -74,34 +57,10 @@ namespace AntDesign
         public string NotFoundContent { get; set; } = LocaleProvider.CurrentLocale.Empty.Description;
 
         /// <summary>
-        /// Placeholder for input
-        /// </summary>
-        /// <default value="Please select (in current locacle)" />
-        [Parameter]
-        public string Placeholder
-        {
-            get => _placeHolder;
-            set => _placeHolder = value;
-        }
-
-        /// <summary>
-        /// Element to show popup container in
-        /// </summary>
-        /// <deault value="body"/>
-        [Parameter]
-        public string PopupContainerSelector { get; set; } = "body";
-
-        /// <summary>
         /// Allow searching or not
         /// </summary>
         [Parameter]
         public bool ShowSearch { get; set; }
-
-        /// <summary>
-        /// Disable input or not
-        /// </summary>
-        [Parameter]
-        public bool Disabled { get; set; }
 
         /// <summary>
         /// Callback executed when the selected value changes
@@ -140,10 +99,13 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Placement of the overlay
+        /// Child content to be rendered inside the <see cref="Cascader"/>.
         /// </summary>
         [Parameter]
-        public Placement Placement { get; set; }
+        [PublicApi("1.2.0")]
+        public RenderFragment ChildContent { get; set; }
+
+        protected override RenderFragment TriggerContent => ChildContent;
 
         private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
@@ -166,50 +128,30 @@ namespace AntDesign
         private bool _initialized;
         private string _searchValue;
         private ElementReference _inputRef;
-        private string _placeHolder = LocaleProvider.CurrentLocale.Global.Placeholder;
 
         private bool _focused;
-        private string _menuStyle;
 
-        private static Dictionary<string, string> _sizeMap = new Dictionary<string, string>()
+        protected override string OverlayClassName => "ant-cascader-dropdown";
+
+        protected override string DefaultWidth => "";
+
+        private Trigger[] OpenTriggers => ExpandTrigger switch
         {
-            ["large"] = "lg",
-            ["small"] = "sm"
+            _ when Disabled => [],
+            "hover" => [Trigger.Hover],
+            _ => [Trigger.Click]
+        };
+
+        private static Dictionary<InputSize, string> _sizeMap = new Dictionary<InputSize, string>()
+        {
+            [InputSize.Large] = "lg",
+            [InputSize.Small] = "sm"
         };
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            string prefixCls = "ant-cascader";
-            string selectCls = "ant-select";
-
-            ClassMapper
-                .Add("ant-select ant-cascader ant-select-single ant-select-show-arrow")
-                .Add($"{prefixCls}-picker")
-                .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
-                .If("ant-select-open", () => _dropdownOpened)
-                .If("ant-select-focused", () => _focused)
-                .If($"{prefixCls}-picker-show-search ant-select-show-search", () => ShowSearch)
-                .If($"{prefixCls}-picker-with-value", () => !string.IsNullOrEmpty(_searchValue))
-                .If($"ant-select-lg", () => Size == "large")
-                .If($"ant-select-sm", () => Size == "small")
-                .If($"ant-select-disabled", () => Disabled)
-                .If("ant-select-allow-clear ", () => AllowClear)
-                .If($"{selectCls}-in-form-item ", () => FormItem != null)
-                .If($"{selectCls}-has-feedback", () => FormItem?.HasFeedback == true)
-                .GetIf(() => $"{selectCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
-                .If($"{prefixCls}-picker-rtl", () => RTL);
-
-            _inputClassMapper
-                .Add("ant-input")
-                .GetIf(() => $"ant-input-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
-                .Add($"{prefixCls}-input")
-                .If($"{prefixCls}-input-rtl", () => RTL);
-
-            _menuClassMapper
-                .Add($"{prefixCls}-menu")
-                .If($"{prefixCls}-menu-rtl", () => RTL);
-
+            
             SetDefaultValue(Value ?? DefaultValue);
         }
 
@@ -217,31 +159,20 @@ namespace AntDesign
         {
             base.OnValueChange(value);
             RefreshNodeValue(value);
-            RefreshDisplayText();
+            SetValue(value);
         }
 
         /// <summary>
         /// 输入框单击(显示/隐藏浮层)
         /// </summary>
-        private async Task InputOnToggle()
+        private void InputOnToggle()
         {
             if (Disabled)
                 return;
 
             _selectedType = SelectedTypeEnum.Click;
             _hoverSelectedNodes.Clear();
-            if (!_dropdownOpened)
-            {
-                var inputElemnet = await Js.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputRef);
-                _menuStyle = $"width:{inputElemnet.ClientWidth}px;";
-                if (!_nodelist.Any())
-                {
-                    _menuStyle += "height:auto;";
-                }
-
-                _dropdownOpened = true;
-                _focused = true;
-            }
+            _focused = true;
         }
 
         /// <summary>
@@ -251,7 +182,6 @@ namespace AntDesign
         {
             if (!_isOnCascader)
             {
-                _dropdownOpened = false;
                 _renderNodes = _selectedNodes;
                 _searchValue = string.Empty;
             }
@@ -268,30 +198,9 @@ namespace AntDesign
             _hoverSelectedNodes.Clear();
             _displayText = string.Empty;
             SetValue(string.Empty);
-            _dropdownOpened = false;
-
+            _ = CloseAsync();
             _searchValue = string.Empty;
             await this.FocusAsync(_inputRef);
-        }
-
-        /// <summary>
-        /// 浮层移入
-        /// </summary>
-        private void NodesOnMouseOver()
-        {
-            if (!AllowClear) return;
-
-            _isOnCascader = true;
-        }
-
-        /// <summary>
-        /// 浮层移出
-        /// </summary>
-        private void NodesOnMouseOut()
-        {
-            if (!AllowClear) return;
-
-            _isOnCascader = false;
         }
 
         /// <summary>
@@ -324,7 +233,7 @@ namespace AntDesign
             _searchValue = e.Value?.ToString();
         }
 
-        private async Task OnSearchKeyUp(KeyboardEventArgs e)
+        private void OnSearchKeyUp(KeyboardEventArgs e)
         {
             if (string.IsNullOrEmpty(_searchValue))
             {
@@ -332,14 +241,8 @@ namespace AntDesign
                 return;
             }
 
-            var inputElemnet = await Js.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, _inputRef);
-            _menuStyle = $"width:{inputElemnet.ClientWidth}px;";
             _matchList = _searchList.Where(x => x.Label.Contains(_searchValue, StringComparison.OrdinalIgnoreCase));
             _showClearIcon = true;
-            if (!_matchList.Any())
-            {
-                _menuStyle += "height:auto;";
-            }
         }
 
         /// <summary>
@@ -354,8 +257,17 @@ namespace AntDesign
             _selectedType = selectedType;
             if (selectedType == SelectedTypeEnum.Click)
             {
-                _selectedNodes.Clear();
-                SetSelectedNodeWithParent(cascaderNode, ref _selectedNodes);
+                var index = _selectedNodes.FindIndex(x => x.Value == cascaderNode.Value);
+                if (index != -1)
+                {
+                    _selectedNodes.RemoveRange(index, _selectedNodes.Count - index);
+                }
+                else
+                {
+                    _selectedNodes.RemoveAll(x => x.Level >= cascaderNode.Level);
+                    _selectedNodes.Add(cascaderNode);
+                }
+
                 _renderNodes = _selectedNodes;
 
                 if (ChangeOnSelect || !cascaderNode.HasChildren)
@@ -365,15 +277,25 @@ namespace AntDesign
             }
             else
             {
-                _hoverSelectedNodes.Clear();
-                SetSelectedNodeWithParent(cascaderNode, ref _hoverSelectedNodes);
+                var index = _hoverSelectedNodes.FindIndex(x => x.Value == cascaderNode.Value);
+
+                if (index != -1)
+                {
+                    _hoverSelectedNodes.RemoveRange(index, _hoverSelectedNodes.Count - index);
+                }
+                else
+                {
+                    _hoverSelectedNodes.RemoveAll(x => x.Level >= cascaderNode.Level);
+                    _hoverSelectedNodes.Add(cascaderNode);
+                }
+
                 _renderNodes = _hoverSelectedNodes;
             }
             _renderNodes.Sort((x, y) => x.Level.CompareTo(y.Level));  //Level 升序排序
 
             if (!cascaderNode.HasChildren)
             {
-                _dropdownOpened = false;
+                CloseAsync();
                 _isOnCascader = false;
             }
         }
@@ -527,6 +449,156 @@ namespace AntDesign
                 }
             }
             return null;
+        }
+
+        protected override void SetClassMap()
+        {
+            string prefixCls = "ant-cascader";
+            string selectCls = "ant-select";
+
+            ClassMapper
+                .Add("ant-select ant-cascader ant-select-single ant-select-show-arrow")
+                .Add($"{prefixCls}-picker")
+                .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
+                .If("ant-select-open", () => _dropdownOpened)
+                .If("ant-select-focused", () => _focused)
+                .If($"{prefixCls}-picker-show-search ant-select-show-search", () => ShowSearch)
+                .If($"{prefixCls}-picker-with-value", () => !string.IsNullOrEmpty(_searchValue))
+                .If($"ant-select-lg", () => Size == InputSize.Large)
+                .If($"ant-select-sm", () => Size == InputSize.Small)
+                .If($"ant-select-disabled", () => Disabled)
+                .If("ant-select-allow-clear ", () => AllowClear)
+                .If($"{selectCls}-in-form-item ", () => FormItem != null)
+                .If($"{selectCls}-has-feedback", () => FormItem?.HasFeedback == true)
+                .GetIf(() => $"{selectCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .If($"{prefixCls}-picker-rtl", () => RTL);
+
+            _inputClassMapper
+                .Add("ant-input")
+                .GetIf(() => $"ant-input-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
+                .Add($"{prefixCls}-input")
+                .If($"{prefixCls}-input-rtl", () => RTL);
+
+            _menuClassMapper
+                .Add($"{prefixCls}-menu")
+                .If($"{prefixCls}-menu-rtl", () => RTL);
+        }
+
+        protected override async Task OnOverlayVisibleChangeAsync(bool visible)
+        {
+            _dropdownOpened = visible;
+
+            if (OpenChanged.HasDelegate)
+            {
+                await OpenChanged.InvokeAsync(visible);
+            }
+
+            if (visible)
+            {
+                InputOnToggle();
+            }
+            else
+            {
+                CascaderOnBlur();
+            }
+        }
+
+        protected override Task OnInputAsync(ChangeEventArgs e)
+        {
+            return Task.CompletedTask;
+        }
+
+        protected override async Task OnKeyUpAsync(KeyboardEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case "ArrowUp":
+                    ActivePrevNode();
+                    break;
+                case "ArrowDown":
+                    ActiveNextNode();
+                    break;
+                case "ArrowLeft":
+                    ActiveParentNode();
+                    break;
+                case "ArrowRight":
+                    ActiveChildNode();
+                    break;
+                default:
+                    OnSearchKeyUp(e);
+                    break;
+            }
+
+        }
+
+        private void ActiveNextNode()
+        {
+            if (!_dropdownOpened)
+            {
+                _ = OpenAsync();
+                return;
+            }
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
+                return;
+            }
+
+            var siblingNodes = (node.ParentNode == null ? _nodelist.Where(x => x.ParentNode == null) : node.ParentNode.Children).ToList();
+            var currentIndex = siblingNodes.FindIndex(x => x.Value == node.Value);
+
+            var nextIndex = currentIndex + 1 > siblingNodes.Count - 1 ? 0 : currentIndex + 1;
+            var nextNode = siblingNodes.ElementAt(nextIndex);
+            SetSelectedNode(nextNode, SelectedTypeEnum.Click);
+        }
+
+        private void ActivePrevNode()
+        {
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
+                return;
+            }
+
+            var siblingNodes = (node.ParentNode == null ? _nodelist.Where(x => x.ParentNode == null) : node.ParentNode.Children).ToList();
+            var currentIndex = siblingNodes.FindIndex(x => x.Value == node.Value);
+
+            var prevIndex = currentIndex - 1 < 0 ? siblingNodes.Count - 1 : currentIndex - 1;
+            var prevNode = siblingNodes.ElementAt(prevIndex);
+            SetSelectedNode(prevNode, SelectedTypeEnum.Click);
+        }
+
+        private void ActiveChildNode()
+        {
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
+                return;
+            }
+
+            if (node != null && node.HasChildren)
+            {
+                var childNode = node.Children.FirstOrDefault();
+                SetSelectedNode(childNode, SelectedTypeEnum.Click);
+            }
+        }
+
+        private void ActiveParentNode()
+        {
+            var node = _renderNodes.LastOrDefault();
+            if (node == null)
+            {
+                SetSelectedNode(_nodelist.FirstOrDefault(), SelectedTypeEnum.Click);
+                return;
+            }
+
+            if (node != null)
+            {
+                SetSelectedNode(node, SelectedTypeEnum.Click);
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -67,6 +68,15 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool AllowClear { get; set; }
+
+        /// <summary>
+        /// Overrides whether the clear icon is shown. When <see langword="null"/>, it is shown if and only if the input string is not empty.
+        /// </summary>
+        /// <remarks>
+        /// Requires <see cref="AllowClear"/> to be <see langword="true"/>, otherwise this has no effect.
+        /// </remarks>
+        [Parameter]
+        public bool? ShowClear { get; set; }
 
         /// <summary>
         /// Callback when the content is cleared by clicking the "ClearIcon"
@@ -177,13 +187,13 @@ namespace AntDesign
         /// Callback when a key is pressed
         /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyDown { get; set; }
+        public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
 
         /// <summary>
         /// Callback when a key is released
         /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnkeyUp { get; set; }
+        public EventCallback<KeyboardEventArgs> OnKeyUp { get; set; }
 
         /// <summary>
         /// Callback when a mouse button is released
@@ -195,7 +205,7 @@ namespace AntDesign
         /// The callback function that is triggered when Enter key is pressed
         /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
+        public EventCallback<PressEnterEventArgs> OnPressEnter { get; set; }
 
         /// <summary>
         /// Provide prompt information that describes the expected value of the input field
@@ -231,7 +241,7 @@ namespace AntDesign
         /// The type of input, see: MDN(use `Input.TextArea` instead of type=`textarea`)
         /// </summary>
         [Parameter]
-        public string Type { get; set; } = "text";
+        public InputType Type { get; set; } = AntDesign.InputType.Text;
 
         /// <summary>
         /// Set CSS style of wrapper. Is used when component has visible: Prefix/Suffix
@@ -244,6 +254,17 @@ namespace AntDesign
         public string WrapperStyle { get; set; }
 
         /// <summary>
+        /// Set Class of wrapper. Is used when component has visible: Prefix/Suffix
+        /// or has paramter set <seealso cref="AllowClear"/> or for components: <see cref="InputPassword"/>
+        /// and <see cref="Search"/>. In these cases, html span elements is used
+        /// to wrap the html input element.
+        /// <seealso cref="WrapperClass"/> is used on the span element.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public string WrapperClass { get; set; }
+
+        /// <summary>
         /// Show count of characters in the input
         /// </summary>
         [Parameter]
@@ -254,6 +275,14 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string Width { get; set; }
+
+        /// <summary>
+        /// When true, value will be set to empty string.
+        /// When false, value will be set to <c>null</c> when content is empty or whitespace. 
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool DefaultToEmptyString { get; set; }
 
         protected Dictionary<string, object> Attributes { get; set; }
 
@@ -317,6 +346,8 @@ namespace AntDesign
 
         private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
 
+        private readonly Queue<Func<Task>> _afterValueChangedQueue = new();
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -335,11 +366,11 @@ namespace AntDesign
 
         protected void SetAttributes()
         {
-            Attributes ??= new Dictionary<string, object>();
+            Attributes ??= [];
 
-            if (MaxLength >= 0 && !Attributes.ContainsKey("maxlength"))
+            if (MaxLength >= 0)
             {
-                Attributes?.Add("maxlength", MaxLength);
+                Attributes.TryAdd("maxlength", MaxLength);
             }
         }
 
@@ -387,7 +418,7 @@ namespace AntDesign
 
             if (FormItem is { ValidateStatus: not FormValidateStatus.Default })
             {
-                AffixWrapperClass += $" ant-input-affix-wrapper-status-{FormItem.ValidateStatus.ToString().ToLower()}";
+                AffixWrapperClass += $" ant-input-affix-wrapper-status-{FormItem.ValidateStatus.ToString().ToLowerInvariant()}";
             }
 
             if (FormItem is { HasFeedback: true })
@@ -437,31 +468,49 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
-        protected async Task OnKeyPressAsync(KeyboardEventArgs args)
+        protected void OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (args?.Key == "Enter" && InputType != "textarea")
+            if (EnableOnPressEnter && (args?.Code == "Enter"||args?.Key == "Enter"))
             {
-                ChangeValue(true);
-                if (EnableOnPressEnter)
+                CallAfterValueChanged(async () =>
                 {
-                    await OnPressEnter.InvokeAsync(args);
-                    await OnPressEnterAsync();
-                }
+                    var enterArgs = new PressEnterEventArgs(args);
+                    await OnPressEnterAsync(enterArgs);
+                });
             }
         }
 
-        protected virtual Task OnPressEnterAsync() => Task.CompletedTask;
+        protected virtual async Task OnPressEnterAsync(PressEnterEventArgs args)
+        {
+            await OnPressEnter.InvokeAsync(args);
+        }
+
+        protected void CallAfterValueChanged(Func<Task> workItem)
+        {
+            _afterValueChangedQueue.Enqueue(workItem);
+            var original = BindOnInput;
+            BindOnInput = true;
+            // Ignoring textarea is to avoid ongoing line breaks being withdrawn due to bindings
+            // However, if the user wishes to use the carriage return event to get the bound value, the value needs to be bound first
+            ChangeValue(InputType != "textarea");
+            BindOnInput = original;
+
+            while (_afterValueChangedQueue.TryDequeue(out var task))
+            {
+                InvokeAsync(task.Invoke);
+            }
+        }
 
         protected async Task OnKeyUpAsync(KeyboardEventArgs args)
         {
             ChangeValue();
 
-            if (OnkeyUp.HasDelegate) await OnkeyUp.InvokeAsync(args);
+            if (OnKeyUp.HasDelegate) await OnKeyUp.InvokeAsync(args);
         }
 
         protected virtual async Task OnkeyDownAsync(KeyboardEventArgs args)
         {
-            if (OnkeyDown.HasDelegate) await OnkeyDown.InvokeAsync(args);
+            if (OnKeyDown.HasDelegate) await OnKeyDown.InvokeAsync(args);
         }
 
         protected async Task OnMouseUpAsync(MouseEventArgs args)
@@ -489,7 +538,7 @@ namespace AntDesign
             }
         }
 
-        private async void OnFocusInternal(JsonElement e) => await OnFocusAsync(new());
+        private async Task OnFocusInternal(JsonElement e) => await OnFocusAsync(new());
 
         internal virtual async Task OnFocusAsync(FocusEventArgs e)
         {
@@ -517,12 +566,12 @@ namespace AntDesign
             builder.OpenElement(31, "span");
             builder.AddAttribute(32, "class", $"{PrefixCls}-clear-icon " +
                 (Suffix != null ? $"{PrefixCls}-clear-icon-has-suffix " : "") +
-                (string.IsNullOrEmpty(_inputString) || Disabled ? $"{PrefixCls}-clear-icon-hidden " : ""));
+                (!ShowClear ?? string.IsNullOrEmpty(_inputString) || Disabled ? $"{PrefixCls}-clear-icon-hidden " : ""));
 
             builder.OpenComponent<Icon>(33);
 
-            builder.AddAttribute(34, "Type", "close-circle");
-            builder.AddAttribute(35, "Theme", "fill");
+            builder.AddAttribute(34, "Type", IconType.Fill.CloseCircle);
+            builder.AddAttribute(35, "Theme", IconThemeType.Fill);
 
             builder.AddAttribute(36, "OnClick", CallbackFactory.Create<MouseEventArgs>(this, async (args) =>
             {
@@ -623,6 +672,18 @@ namespace AntDesign
             base.OnCurrentValueChange(value);
         }
 
+        protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
+        {
+            if (string.IsNullOrWhiteSpace(value) && DefaultToEmptyString && typeof(TValue) == typeof(string))
+            {
+                result = (TValue)(object)string.Empty;
+                validationErrorMessage = null;
+                return true;
+            }
+
+            return base.TryParseValueFromString(value, out result, out validationErrorMessage);
+        }
+
         /// <summary>
         /// Invoked when user add/remove content
         /// </summary>
@@ -649,7 +710,7 @@ namespace AntDesign
             {
                 container = "groupWrapper";
                 builder.OpenElement(1, "span");
-                builder.AddAttribute(2, "class", GroupWrapperClass);
+                builder.AddAttribute(2, "class", string.Join(" ", GroupWrapperClass, WrapperClass));
                 builder.AddAttribute(3, "style", $"{WidthStyle} {WrapperStyle}");
                 builder.OpenElement(4, "span");
                 builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");

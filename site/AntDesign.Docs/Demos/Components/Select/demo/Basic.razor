@@ -1,8 +1,8 @@
 <Select DataSource="@_list"
 		@bind-Value="@_selectedValue1"
 		DefaultValue="@("lucy")"
-		ValueProperty="c=>c.Value"
-        LabelProperty="c=>c.Name"
+		ItemValue="c=>c.Value"
+        ItemLabel="c=>c.Name"
 		DisabledName="@nameof(Person.IsDisabled)"
 		Style="width:120px">
 </Select>
@@ -12,9 +12,10 @@
 		TItemValue="string"
 		TItem="string"
 		Disabled>
-    <SelectOptions>
-		<SelectOption Value="@("lucy")" Label="Lucy" />
-	</SelectOptions>
+    <SelectOption Value="@("jack")" Label="Jack" />
+    <SelectOption Value="@("lucy")" Label="Lucy" />
+    <SelectOption Value="@("disabled")" Label="Disabled" Disabled />
+    <SelectOption Value="@("yaoming")" Label="Yaoming" />
 </Select>
 <Select @bind-Value="@_selectedValue3"
 		DefaultValue="@("lucy")"
@@ -22,9 +23,10 @@
 		TItemValue="string"
 		TItem="string"
 		Loading>
-	<SelectOptions>
-		<SelectOption Value="@("lucy")" Label="Lucy" />
-	</SelectOptions>
+    <SelectOption Value="@("jack")" Label="Jack" />
+    <SelectOption Value="@("lucy")" Label="Lucy" />
+    <SelectOption Value="@("disabled")" Label="Disabled" Disabled />
+    <SelectOption Value="@("yaoming")" Label="Yaoming" />
 </Select>
 <Select DataSource="@_list"
 		@bind-Value="@_selectedValue4"		
@@ -46,8 +48,8 @@
 
 <Select DataSource="@_dict"
         @bind-Value="@_selectedValue6"
-        LabelProperty="c=>c.Key"
-        ValueProperty="c=>c.Value"
+        ItemLabel="c=>c.Key"
+        ItemValue="c=>c.Value"
         DisabledPredicate="@(c=>c.Key == "Disabled")"
         Style="width: 120px;"
         Placeholder="Dictionary options">
@@ -62,7 +64,7 @@
     string _selectedValue1, _selectedValue2, _selectedValue3;
     string _selectedValue4 = "lucy";
     string _selectedValue5 = "Lucy";
-    string _selectedValue6 = "Lucy";
+    string _selectedValue6 = "lucy";
     class Person
     {
         public string Value { get; set; }

@@ -5,9 +5,9 @@
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
-namespace AntDesign.core.Services;
+namespace AntDesign.Core.Services;
 
-public class ClientDimensionService
+internal class ClientDimensionService
 {
     private double? _scrollBarSize;
     private readonly IJSRuntime _js;

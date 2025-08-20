@@ -6,13 +6,13 @@
 <p />
 
 <Form Model="@modelRules"
-      ValidateMode="@FormValidateMode.Rules"
+      ValidateMode="FormValidateMode.Rules"
       ValidateOnChange="@validateOnChange"
       LabelColSpan="10"
       WrapperColSpan="14"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed"
-      Size="@AntSizeLDSType.Small">
+      Size="FormSize.Small">
     <FormItem Label="Rules-UserName" Rules=@(userNameRules)>
         <Input @bind-Value="@context.Username" />
     </FormItem>
@@ -40,7 +40,7 @@
         </InputGroup>
     </FormItem>
     <FormItem WrapperColOffset="8" WrapperColSpan="16">
-        <Button Type="@ButtonType.Primary" HtmlType="submit">
+        <Button Type="ButtonType.Primary" HtmlType="submit">
             Submit
         </Button>
     </FormItem>
@@ -63,7 +63,6 @@
         public decimal Number { get; set; }
         public decimal Transform { get; set; } = 3;
 
-        // [ValidateComplexType]
         public Person Person { get; set; } = new();
     }
 

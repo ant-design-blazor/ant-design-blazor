@@ -198,31 +198,9 @@ namespace AntDesign
         /// </summary>
         /// <param name="confirmRef"></param>
         /// <returns></returns>
-        [Obsolete("Use the UpdateConfirmAsync method instead")]
-        public Task Update(ConfirmRef confirmRef)
-        {
-            return UpdateConfirmAsync(confirmRef);
-        }
-
-        /// <summary>
-        /// update Confirm which Visible=true
-        /// </summary>
-        /// <param name="confirmRef"></param>
-        /// <returns></returns>
         public async Task UpdateConfirmAsync(ConfirmRef confirmRef)
         {
             await (OnConfirmUpdateEvent?.Invoke(confirmRef) ?? Task.CompletedTask);
-        }
-
-        /// <summary>
-        /// close a Confirm dialog
-        /// </summary>
-        /// <param name="confirmRef"></param>
-        /// <returns></returns>
-        [Obsolete("Use the DestroyConfirmAsync method instead")]
-        public Task Destroy(ConfirmRef confirmRef)
-        {
-            return DestroyConfirmAsync(confirmRef);
         }
 
         /// <summary>
@@ -239,16 +217,6 @@ namespace AntDesign
         /// close all Confirm dialog
         /// </summary>
         /// <returns></returns>
-        [Obsolete("Use the DestroyAllConfirmAsync method instead")]
-        public Task DestroyAll()
-        {
-            return DestroyAllConfirmAsync();
-        }
-
-        /// <summary>
-        /// close all Confirm dialog
-        /// </summary>
-        /// <returns></returns>
         public async Task DestroyAllConfirmAsync()
         {
             await (OnConfirmCloseAllEvent?.Invoke() ?? Task.CompletedTask);
@@ -259,21 +227,10 @@ namespace AntDesign
         /// </summary>
         /// <param name="config">Options</param>
         /// <returns></returns>
-        [Obsolete("Use the CreateAsync method instead")]
-        public Task<ConfirmRef> CreateAsync(ConfirmOptions config)
-        {
-            return CreateConfirmAsync(config);
-        }
-
-        /// <summary>
-        /// Create and open a OK-Cancel Confirm asynchronous
-        /// </summary>
-        /// <param name="config">Options</param>
-        /// <returns></returns>
-        public Task<ConfirmRef> CreateConfirmAsync(ConfirmOptions config)
+        public ConfirmRef CreateConfirm(ConfirmOptions config)
         {
             var confirmRef = Confirm(config);
-            return Task.FromResult(confirmRef);
+            return confirmRef;
         }
 
         /// <summary>
@@ -285,39 +242,112 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="componentOptions"></param>
         /// <returns></returns>
-        [Obsolete("Use the CreateAsync method instead")]
-        public Task<ConfirmRef<TResult>> CreateAsync<TComponent, TComponentOptions, TResult>
-        (ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions, TResult>
-        {
-            return CreateConfirmAsync<TComponent, TComponentOptions, TResult>(config, componentOptions);
-        }
-
-        /// <summary>
-        /// Create and open template Confirm dialog
-        /// </summary>
-        /// <typeparam name="TComponent"></typeparam>
-        /// <typeparam name="TComponentOptions"></typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="config"></param>
-        /// <param name="componentOptions"></param>
-        /// <returns></returns>
-        public Task<ConfirmRef<TResult>> CreateConfirmAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions, TResult>
+        public ConfirmRef<TResult> CreateConfirm<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             CheckConfirmOptionsIsNull(config);
             config.CreateByService = true;
             ConfirmRef<TResult> confirmRef = new ConfirmRef<TResult>(config, this);
             OnConfirmOpenEvent?.Invoke(confirmRef);
 
-            RenderFragment child = (builder) =>
-            {
-                builder.OpenComponent<TComponent>(0);
-                builder.AddAttribute(1, "FeedbackRef", confirmRef);
-                builder.AddAttribute(2, "Options", componentOptions);
-                builder.CloseComponent();
-            };
-            config.Content = child;
+            config.Content = CreateChildRenderFragment<TComponent, TComponentOptions>(confirmRef, componentOptions);
 
-            return Task.FromResult(confirmRef);
+            return confirmRef;
+        }
+
+        public ConfirmRef CreateConfirm<TComponent, TComponentOptions>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions>
+        {
+            CheckConfirmOptionsIsNull(config);
+            config.CreateByService = true;
+
+            ConfirmRef confirmRef = new ConfirmRef(config, this);
+            OnConfirmOpenEvent?.Invoke(confirmRef);
+
+            config.Content = CreateChildRenderFragment<TComponent, TComponentOptions>(confirmRef, componentOptions);
+
+            return confirmRef;
+        }
+
+        /// <summary>
+        /// Create and open a OK-Cancel Confirm asynchronously and wait until confirm is closed
+        /// </summary>
+        /// <param name="config">Options</param>
+        /// <returns>ConfirmRef with initialized TaskCompletionSource</returns>
+        public async Task<ConfirmRef> CreateConfirmAsync(ConfirmOptions config)
+        {
+            CheckConfirmOptionsIsNull(config);
+            config.CreateByService = true;
+            
+            ConfirmRef confirmRef = new ConfirmRef(config, this);
+            confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
+            
+            if (OnConfirmOpenEvent != null)
+            {
+                await OnConfirmOpenEvent.Invoke(confirmRef);
+            }
+            
+            // 等待确认对话框关闭后的结果
+            await confirmRef.TaskCompletionSource.Task;
+            
+            return confirmRef;
+        }
+
+        /// <summary>
+        /// Create and open template Confirm dialog asynchronously and wait until confirm is closed
+        /// </summary>
+        /// <typeparam name="TComponent"></typeparam>
+        /// <typeparam name="TComponentOptions"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="componentOptions"></param>
+        /// <returns>ConfirmRef with initialized TaskCompletionSource</returns>
+        public async Task<ConfirmRef<TResult>> CreateConfirmAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions, TResult>
+        {
+            CheckConfirmOptionsIsNull(config);
+            config.CreateByService = true;
+            
+            ConfirmRef<TResult> confirmRef = new ConfirmRef<TResult>(config, this);
+            confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
+            
+            config.Content = CreateChildRenderFragment<TComponent, TComponentOptions>(confirmRef, componentOptions);
+            
+            if (OnConfirmOpenEvent != null)
+            {
+                await OnConfirmOpenEvent.Invoke(confirmRef);
+            }
+            
+            // 等待确认对话框关闭后的结果
+            await confirmRef.TaskCompletionSource.Task;
+            
+            return confirmRef;
+        }
+
+        /// <summary>
+        /// Create and open template Confirm dialog asynchronously and wait until confirm is closed
+        /// </summary>
+        /// <typeparam name="TComponent"></typeparam>
+        /// <typeparam name="TComponentOptions"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="componentOptions"></param>
+        /// <returns>ConfirmRef with initialized TaskCompletionSource</returns>
+        public async Task<ConfirmRef> CreateConfirmAsync<TComponent, TComponentOptions>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions>
+        {
+            CheckConfirmOptionsIsNull(config);
+            config.CreateByService = true;
+
+            ConfirmRef confirmRef = new ConfirmRef(config, this);
+            confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
+
+            config.Content = CreateChildRenderFragment<TComponent, TComponentOptions>(confirmRef, componentOptions);
+
+            if (OnConfirmOpenEvent != null)
+            {
+                await OnConfirmOpenEvent.Invoke(confirmRef);
+            }
+
+            // 等待确认对话框关闭后的结果
+            await confirmRef.TaskCompletionSource.Task;
+            
+            return confirmRef;
         }
 
         /// <summary>
@@ -343,6 +373,25 @@ namespace AntDesign
             {
                 throw new ArgumentNullException(nameof(options));
             }
+        }
+
+        /// <summary>
+        /// Create child render fragment for component
+        /// </summary>
+        /// <typeparam name="TComponent">Component type</typeparam>
+        /// <typeparam name="TComponentOptions">Component options type</typeparam>
+        /// <param name="feedbackRef">FeedbackRef to pass to component</param>
+        /// <param name="componentOptions">Component options</param>
+        /// <returns>RenderFragment for component</returns>
+        private RenderFragment CreateChildRenderFragment<TComponent, TComponentOptions>(FeedbackRefBase feedbackRef, TComponentOptions componentOptions) where TComponent : IComponent
+        {
+            return (builder) =>
+            {
+                builder.OpenComponent<TComponent>(0);
+                builder.AddAttribute(1, "FeedbackRef", feedbackRef);
+                builder.AddAttribute(2, "Options", componentOptions);
+                builder.CloseComponent();
+            };
         }
     }
 }

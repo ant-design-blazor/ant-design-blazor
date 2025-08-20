@@ -1,9 +1,9 @@
 ﻿[
   {
-    "title": "Blazor 全栈渲染模式的原理与应用 - .NET Conf China 2023 实录",
-    "description": "远赴北京大冬天，为大家带来最新的 Blazor 原创成果。首先讲解了 Blazor 在 .NET 8 全新的渲染模式，然后深度解析静态服务端渲染的优势和局限，最后讲解实际应用 SSR + Auto 架构，.NET 8 终于可以 All in Blazor！",
-    "img": "/docs/assets/news/dotNetConf2023.jpg",
-    "href": "https://www.bilibili.com/video/BV1vg4y1m78w",
+    "title": "Ant Design X Blazor 隆重发布，引领 AI 全栈开发体验新秩序",
+    "description": "基于 Ant Design RICH 设计范式，深度整合微软全栈 AI 生态，为全球企业及开发者打造卓越 AI 界面解决方案，引领智能新体验。",
+    "img": "/docs/assets/news/x-cn.png",
+    "href": "https://x.antblazor.com/",
     "popularize": false
   },
   {

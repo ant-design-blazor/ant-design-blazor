@@ -249,7 +249,7 @@ namespace AntDesign
             }
         }
 
-        internal async void Select(SegmentedItem<TValue> item, bool noAnimation = false)
+        internal async Task Select(SegmentedItem<TValue> item, bool noAnimation = false)
         {
             _items[_activeIndex].SetSelected(false);
             _value = item.Value;

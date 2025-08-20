@@ -1,7 +1,7 @@
-<RadioGroup @bind-Value="@_sizeValue" OnChange="OnChangeSize" TValue="string">
-    <Radio RadioButton Value="@("large")">Large</Radio>
-    <Radio RadioButton Value="@("default")">Default</Radio>
-    <Radio RadioButton Value="@("small")">Small</Radio>
+<RadioGroup @bind-Value="@_sizeValue" OnChange="OnChangeSize" TValue="InputSize">
+    <Radio RadioButton Value="InputSize.Large">Large</Radio>
+    <Radio RadioButton Value="InputSize.Default">Default</Radio>
+    <Radio RadioButton Value="InputSize.Small">Small</Radio>
 </RadioGroup>
 <br /><br />
 <Select @bind-Value="@_selectedValue"
@@ -18,7 +18,7 @@
 			}
 		</SelectOptions>
 </Select>
-<Select Mode="multiple"
+<Select Mode="SelectMode.Multiple"
 		@bind-Values="@_selectedValues1"
 		Placeholder="Please select"
 		TItemValue="string"
@@ -33,7 +33,7 @@
 			}
 		</SelectOptions>
 </Select>
-<Select Mode="tags"
+<Select Mode="SelectMode.Tags"
 		@bind-Values="@_selectedValues2"
 		Placeholder="Please select"
 		TItemValue="string"
@@ -53,7 +53,7 @@
 	List<string> _items;
 	string _selectedValue;
     IEnumerable<string> _selectedValues1, _selectedValues2;
-    private string _sizeValue = AntSizeLDSType.Default;
+    private InputSize _sizeValue = InputSize.Default;
 
 	protected override void OnInitialized()
     {
@@ -71,7 +71,7 @@
 		_selectedValues2 = new List<string> { "0a10" , "0c12"};
     }
 
-    private void OnChangeSize(string value)
+    private void OnChangeSize(InputSize value)
     {
         _sizeValue = value;
         Console.WriteLine($"selected size: ${value}");

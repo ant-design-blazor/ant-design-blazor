@@ -3,11 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -60,23 +62,25 @@ namespace AntDesign
         public EventCallback<bool> CheckedChanged { get; set; }
 
         /// <summary>
-        /// Tag color. Can either be a predefined color (string)
+        /// Tag color. Can either be a predefined color (TagColor)
         /// or hex color.
         /// </summary>
-        /// <default value="default" />
+        /// <default value="TagColor.Default" />
         [Parameter]
-        public string Color
+        public OneOf<TagColor, string> Color
         {
-            get => _color;
+            get => _isPresetColor ? _presetColor : _customColor;
+
             set
             {
-                if (_color != value)
+                if (value.IsT0)
                 {
-                    _color = string.IsNullOrWhiteSpace(value)
-                        ? "default"
-                        : value.ToLowerInvariant();
-                    _isPresetColor = IsPresetColor(_color);
-                    _isCustomColor = !_isPresetColor; //if it's not a preset color, we can assume that the input is a HTML5 color or Hex or RGB value                      
+                    _isPresetColor = true;
+                    _presetColor = value.AsT0;
+                }
+                else
+                {
+                    ResolveColorStrInput(value.AsT1);
                 }
             }
         }
@@ -85,25 +89,8 @@ namespace AntDesign
         /// Tag color from the PresetColor list
         /// </summary>
         [Parameter]
-        [Obsolete($"Use {nameof(Color)} instead by passing the string of the enum value")]
-        public PresetColor? PresetColor
-        {
-            get
-            {
-                object result;
-
-                if (Enum.TryParse(typeof(PresetColor), _color, true, out result) == false)
-                {
-                    return null;
-                }
-
-                return (PresetColor)result;
-            }
-            set
-            {
-                Color = Enum.GetName(typeof(PresetColor), value).ToLowerInvariant();
-            }
-        }
+        [Obsolete("Use Color instead")]
+        public string PresetColor { get; set; }
 
         /// <summary>
         /// Set the tag's icon 
@@ -112,10 +99,11 @@ namespace AntDesign
         public string Icon { get; set; }
 
         /// <summary>
-        /// 'fill' | 'outline' | 'twotone';
+        /// Define the icon theme.
         /// </summary>
+        /// <default value="IconThemeType.Outline" />
         [Parameter]
-        public string IconTheme { get; set; } = IconThemeType.Outline;
+        public IconThemeType IconTheme { get; set; } = IconThemeType.Outline;
 
         [Parameter]
         [Obsolete("Parameter is not used and does not affect functionality")]
@@ -147,10 +135,10 @@ namespace AntDesign
         [Parameter]
         public bool Visible { get; set; } = true;
 
-        private bool _isPresetColor = true;
-        private bool _isCustomColor;
         private bool _closed;
-        private string _color = "default";
+        private bool _isPresetColor = true;
+        private TagColor _presetColor = TagColor.Default;
+        private string _customColor = "";
         private string _style;
 
         protected override void OnParametersSet()
@@ -165,44 +153,98 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        private static bool IsPresetColor(string color)
+        private static readonly Dictionary<TagColor, string> _colorMap = new()
         {
-            return Regex.IsMatch(color, "^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime|success|processing|error|warning|default)(-inverse)?$");
+            [TagColor.Default] = "default",
+            [TagColor.Red] = "red",
+            [TagColor.Volcano] = "volcano",
+            [TagColor.Orange] = "orange",
+            [TagColor.Gold] = "gold",
+            [TagColor.Yellow] = "yellow",
+            [TagColor.Lime] = "lime",
+            [TagColor.Green] = "green",
+            [TagColor.Cyan] = "cyan",
+            [TagColor.Blue] = "blue",
+            [TagColor.GeekBlue] = "geekblue",
+            [TagColor.Purple] = "purple",
+            [TagColor.Magenta] = "magenta",
+            [TagColor.Pink] = "pink",
+            [TagColor.Success] = "success",
+            [TagColor.Processing] = "processing",
+            [TagColor.Error] = "error",
+            [TagColor.Warning] = "warning",
+            [TagColor.DefaultInverse] = "default-inverse",
+            [TagColor.RedInverse] = "red-inverse",
+            [TagColor.VolcanoInverse] = "volcano-inverse",
+            [TagColor.OrangeInverse] = "orange-inverse",
+            [TagColor.GoldInverse] = "gold-inverse",
+            [TagColor.YellowInverse] = "yellow-inverse",
+            [TagColor.LimeInverse] = "lime-inverse",
+            [TagColor.GreenInverse] = "green-inverse",
+            [TagColor.CyanInverse] = "cyan-inverse",
+            [TagColor.BlueInverse] = "blue-inverse",
+            [TagColor.GeekBlueInverse] = "geekblue-inverse",
+            [TagColor.PurpleInverse] = "purple-inverse",
+            [TagColor.MagentaInverse] = "magenta-inverse",
+            [TagColor.PinkInverse] = "pink-inverse",
+            [TagColor.SuccessInverse] = "success-inverse",
+            [TagColor.ProcessingInverse] = "processing-inverse",
+            [TagColor.ErrorInverse] = "error-inverse",
+            [TagColor.WarningInverse] = "warning-inverse",
+        };
+
+        private void ResolveColorStrInput(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                _isPresetColor = true;
+                _presetColor = TagColor.Default;
+                return;
+            }
+            var trimmedInput = input.Trim();
+            // Fast check
+            if (trimmedInput.StartsWith('#') || trimmedInput.StartsWith("rgb(", StringComparison.OrdinalIgnoreCase))
+            {
+                _isPresetColor = false;
+                _customColor = trimmedInput;
+                return;
+            }
+            // Slow check
+            foreach (var item in _colorMap)
+            {
+                if (trimmedInput.Equals(item.Value, StringComparison.OrdinalIgnoreCase))
+                {
+                    _isPresetColor = true;
+                    _presetColor = item.Key;
+                    return;
+                }
+            }
+            _isPresetColor = false;
+            _customColor = trimmedInput;
         }
 
-        private string _prefix = "ant-tag";
+        private const string StylePrefix = "ant-tag";
 
         private void UpdateClassMap()
         {
-            this.ClassMapper.Add(_prefix)
-                .If($"{_prefix}-has-color", () => _isCustomColor)
-                .If($"{_prefix}-hidden", () => Visible == false)
-                .GetIf(() => $"{_prefix}-{_color}", () => _isPresetColor)
-                .If($"{_prefix}-checkable", () => Checkable)
-                .If($"{_prefix}-checkable-checked", () => Checked)
-                .If($"{_prefix}-rtl", () => RTL)
-                .If($"{_prefix}-clickable", () => OnClick.HasDelegate)
+            this.ClassMapper.Add(StylePrefix)
+                .If($"{StylePrefix}-has-color", () => !_isPresetColor)
+                .If($"{StylePrefix}-hidden", () => !Visible)
+                .GetIf(() => $"{StylePrefix}-{_colorMap[_presetColor]}", () => _isPresetColor)
+                .If($"{StylePrefix}-checkable", () => Checkable)
+                .If($"{StylePrefix}-checkable-checked", () => Checked)
+                .If($"{StylePrefix}-rtl", () => RTL)
+                .If($"{StylePrefix}-clickable", () => OnClick.HasDelegate)
                 ;
         }
 
         private string GetStyle()
         {
-            var styleBuilder = new StringBuilder();
+            var styleBuilder = new StringBuilder()
+                .AppendIfNotNullOrEmpty(Style)
+                .AppendIf($"background-color: {_customColor};", !_isPresetColor);
 
-            styleBuilder.Append(Style);
-
-            if (!string.IsNullOrEmpty(Style) && !Style.EndsWith(";"))
-            {
-                styleBuilder.Append(";");
-            }
-
-            if (_isCustomColor)
-            {
-                styleBuilder.Append($"background-color: {_color};");
-            }
-
-            var newStyle = styleBuilder.ToString();
-            return string.IsNullOrEmpty(newStyle) ? null : newStyle;
+            return styleBuilder.Length > 0 ? styleBuilder.ToString() : null;
         }
 
         private async Task UpdateCheckedStatus()
