@@ -1,0 +1,93 @@
+@using AntDesign.Core.JsInterop.Modules.Components;
+@using AntDesign.JsInterop;
+@using System.Linq;
+@inherits AntDesignTestBase
+@code {
+    record Person(int Id, string Name, string Email);
+
+    List<Person> _persons = new List<Person>
+    {
+        new Person(1, "John", "john@example.com"),
+        new Person(2, "Lucy", "lucy@example.com")
+    };
+
+    public Select_Basic_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<HtmlElement>("AntDesign.interop.domInfoHelper.getInfo", _ => true)
+            .SetResult(new HtmlElement());
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.scrollTo", _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.overlayHelper.updateOverlayPosition", _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.overlayHelper.deleteOverlayFromContainer", _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
+        JSInterop.Setup<bool>("AntDesign.interop.eventHelper.addDomEventListener", _ => true)
+            .SetResult(true);
+        JSInterop.SetupVoid("AntDesign.interop.eventHelper.removeDomEventListener", _ => true);
+    }
+
+    [Fact]
+    public void Should_render_basic_select()
+    {
+        // Arrange
+        Person value = _persons[0];
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select TItemValue="Person"
+                TItem="Person"
+                @bind-Value="@value">
+                <SelectOptions>
+                    @foreach (var item in _persons)
+                    {
+                        <SelectOption @key="item"
+                                      TItemValue="Person"
+                                      TItem="Person"
+                                      Value=@item
+                                      Label=@item.Name />
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        cut.Should().NotBeNull();
+        var selectComponent = cut.FindComponent<AntDesign.Select<Person, Person>>();
+        selectComponent.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Should_render_child_content_in_select_options()
+    {
+        // Arrange
+        Person value = _persons[0];
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select TItemValue="Person"
+                TItem="Person"
+                @bind-Value="@value"
+                Open="true">
+                <SelectOptions>
+                    <SelectOption TItemValue="Person"
+                                  TItem="Person"
+                                  Value="@_persons[0]"
+                                  Label="@_persons[0].Name">
+                        <ChildContent>
+                            <div class="test-child-content">
+                                <strong>@_persons[0].Name</strong>
+                                <small>@_persons[0].Email</small>
+                            </div>
+                        </ChildContent>
+                    </SelectOption>
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        cut.Should().NotBeNull();
+        // 由于Open=true，下拉菜单应该显示
+        var childContent = cut.Find(".test-child-content");
+        childContent.Should().NotBeNull();
+        childContent.TextContent.Should().Contain(_persons[0].Name);
+        childContent.TextContent.Should().Contain(_persons[0].Email);
+    }
+}

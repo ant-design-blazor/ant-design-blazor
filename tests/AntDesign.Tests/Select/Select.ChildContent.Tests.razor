@@ -1,0 +1,345 @@
+@using AntDesign.Core.JsInterop.Modules.Components;
+@using AntDesign.JsInterop;
+@using System.Linq;
+@inherits AntDesignTestBase
+@code {
+    record Person(int Id, string Name, string Email);
+
+    List<Person> _persons = new List<Person>
+    {
+        new Person(1, "John", "john@example.com"),
+        new Person(2, "Lucy", "lucy@example.com"),
+        new Person(3, "Jack", "jack@example.com"),
+        new Person(4, "Emily", "emily@example.com"),
+    };
+
+    public Select_ChildContent_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<HtmlElement>("AntDesign.interop.domInfoHelper.getInfo", _ => true)
+            .SetResult(new HtmlElement());
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.scrollTo");
+        JSInterop.SetupVoid("AntDesign.interop.overlayHelper.updateOverlayPosition");
+        JSInterop.SetupVoid("AntDesign.interop.overlayHelper.deleteOverlayFromContainer");
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus");
+        JSInterop.Setup<bool>("AntDesign.interop.eventHelper.addDomEventListener", _ => true)
+            .SetResult(true);
+        JSInterop.SetupVoid("AntDesign.interop.eventHelper.removeDomEventListener");
+    }
+
+    [Fact]
+    public void Should_render_child_content_when_provided()
+    {
+        // Arrange
+        int value = _persons[0].Id;
+        var cut = Render<AntDesign.Select<Person, int>>(
+            @<AntDesign.Select Mode="SelectMode.Default"
+                TItemValue="int"
+                TItem="Person"
+                DataSource="@_persons"
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                @bind-Value="@value"
+                Open="true">
+                <SelectOptions>
+                    @foreach (var item in _persons)
+                    {
+                        <SelectOption @key="item"
+                                      TItemValue="int"
+                                      TItem="Person"
+                                      Value="@item.Id"
+                                      Item="@item"
+                                      Label="@item.Name">
+                            <div class="custom-option">
+                                <strong>@item.Name</strong> (ID: @item.Id)
+                            </div>
+                        </SelectOption>
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        var customOptions = cut.FindAll(".custom-option");
+        customOptions.Should().HaveCountGreaterOrEqualTo(_persons.Count);
+        
+        // Check that custom content is rendered
+        var contentTexts = customOptions.Select(x => x.TextContent.Trim()).ToList();
+        contentTexts.Should().Contain(text => text.Contains("John") && text.Contains("(ID: 1)"));
+        contentTexts.Should().Contain(text => text.Contains("Lucy") && text.Contains("(ID: 2)"));
+    }
+
+    [Fact]
+    public void Should_render_child_content_with_html_elements()
+    {
+        // Arrange
+        Person value = _persons[0];
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select Mode="SelectMode.Default"
+                TItemValue="Person"
+                TItem="Person"
+                @bind-Value="@value"
+                Open="true">
+                <SelectOptions>
+                    <SelectOption TItemValue="Person"
+                                  TItem="Person"
+                                  Value="@_persons[0]"
+                                  Label="@_persons[0].Name">
+                        <div class="option-with-icon">
+                            <Icon Type="user" />
+                            <span class="option-text">@_persons[0].Name</span>
+                        </div>
+                    </SelectOption>
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        var optionWithIcon = cut.Find(".option-with-icon");
+        optionWithIcon.Should().NotBeNull();
+        
+        var icon = optionWithIcon.QuerySelector(".anticon-user");
+        icon.Should().NotBeNull();
+        
+        var optionText = optionWithIcon.QuerySelector(".option-text");
+        optionText.Should().NotBeNull();
+        optionText!.TextContent.Should().Be("John");
+    }
+
+    [Fact]
+    public void Should_fallback_to_label_when_child_content_is_null()
+    {
+        // Arrange
+        Person value = _persons[0];
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select Mode="SelectMode.Default"
+                TItemValue="Person"
+                TItem="Person"
+                @bind-Value="@value"
+                Open="true">
+                <SelectOptions>
+                    <SelectOption TItemValue="Person"
+                                  TItem="Person"
+                                  Value="@_persons[0]"
+                                  Label="@_persons[0].Name">
+                    </SelectOption>
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        var optionContent = cut.Find(".ant-select-item-option-content");
+        optionContent.TextContent.Trim().Should().Be("John");
+    }
+
+    [Fact]
+    public void Should_render_child_content_over_label_when_both_provided()
+    {
+        // Arrange
+        Person value = _persons[0];
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select Mode="SelectMode.Default"
+                TItemValue="Person"
+                TItem="Person"
+                @bind-Value="@value"
+                Open="true">
+                <SelectOptions>
+                    <SelectOption TItemValue="Person"
+                                  TItem="Person"
+                                  Value="@_persons[0]"
+                                  Label="Label Text">
+                        <span class="child-content">Child Content Text</span>
+                    </SelectOption>
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        var childContent = cut.Find(".child-content");
+        childContent.Should().NotBeNull();
+        childContent.TextContent.Should().Be("Child Content Text");
+        
+        // Ensure label text is not rendered when child content is present
+        var optionContent = cut.Find(".ant-select-item-option-content");
+        optionContent.TextContent.Should().NotContain("Label Text");
+        optionContent.TextContent.Should().Contain("Child Content Text");
+    }
+
+    [Fact]
+    public void Should_work_with_item_template()
+    {
+        // Arrange
+        int value = _persons[0].Id;
+        var cut = Render<AntDesign.Select<Person, int>>(
+            @<AntDesign.Select Mode="SelectMode.Default"
+                TItemValue="int"
+                TItem="Person"
+                DataSource="@_persons"
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                @bind-Value="@value"
+                Open="true">
+                <ItemTemplate Context="person">
+                    <div class="item-template">
+                        <strong>@person.Name</strong>
+                        <small>(@person.Email)</small>
+                    </div>
+                </ItemTemplate>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        var itemTemplates = cut.FindAll(".item-template");
+        itemTemplates.Should().HaveCount(_persons.Count);
+        
+        itemTemplates[0].TextContent.Should().Contain("John");
+        itemTemplates[0].TextContent.Should().Contain("john@example.com");
+        itemTemplates[1].TextContent.Should().Contain("Lucy");
+        itemTemplates[1].TextContent.Should().Contain("lucy@example.com");
+    }
+
+    [Fact]
+    public void Should_work_with_label_template()
+    {
+        // Arrange
+        int value = _persons[0].Id;
+        var cut = Render<AntDesign.Select<Person, int>>(
+            @<AntDesign.Select Mode="SelectMode.Default"
+                TItemValue="int"
+                TItem="Person"
+                DataSource="@_persons"
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                @bind-Value="@value">
+                <LabelTemplate Context="person">
+                    <div class="label-template">
+                        @person.Name - @person.Email
+                    </div>
+                </LabelTemplate>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        var labelTemplate = cut.Find(".label-template");
+        labelTemplate.Should().NotBeNull();
+        labelTemplate.TextContent.Should().Contain("John - john@example.com");
+    }
+
+    [Fact]
+    public void Should_child_content_override_item_template()
+    {
+        // Arrange
+        Person value = _persons[0];
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select Mode="SelectMode.Default"
+                TItemValue="Person"
+                TItem="Person"
+                @bind-Value="@value"
+                Open="true">
+                <SelectOptions>
+                    <SelectOption TItemValue="Person"
+                                  TItem="Person"
+                                  Value="@_persons[0]"
+                                  Label="@_persons[0].Name">
+                        <div class="child-content-override">
+                            Custom Content: @_persons[0].Name
+                        </div>
+                    </SelectOption>
+                </SelectOptions>
+                <ItemTemplate Context="person">
+                    <div class="item-template-should-not-show">
+                        Template: @person.Name
+                    </div>
+                </ItemTemplate>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        var childContent = cut.Find(".child-content-override");
+        childContent.Should().NotBeNull();
+        childContent.TextContent.Should().Contain("Custom Content: John");
+        
+        // ItemTemplate should not be used when ChildContent is present
+        cut.FindAll(".item-template-should-not-show").Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Should_preserve_child_content_styling_and_classes()
+    {
+        // Arrange
+        Person value = _persons[0];
+        var cut = Render<AntDesign.Select<Person, Person>>(
+            @<AntDesign.Select Mode="SelectMode.Default"
+                TItemValue="Person"
+                TItem="Person"
+                @bind-Value="@value"
+                Open="true">
+                <SelectOptions>
+                    <SelectOption TItemValue="Person"
+                                  TItem="Person"
+                                  Value="@_persons[0]"
+                                  Label="@_persons[0].Name">
+                        <div class="styled-option" style="color: red; font-weight: bold;">
+                            Styled Content
+                        </div>
+                    </SelectOption>
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        var styledOption = cut.Find(".styled-option");
+        styledOption.Should().NotBeNull();
+        styledOption.GetAttribute("style").Should().Contain("color: red");
+        styledOption.GetAttribute("style").Should().Contain("font-weight: bold");
+        styledOption.TextContent.Trim().Should().Be("Styled Content");
+    }
+
+    [Fact]
+    public void Should_work_with_multiple_select_mode()
+    {
+        // Arrange
+        IEnumerable<int> values = new List<int> { _persons[0].Id, _persons[1].Id };
+        var cut = Render<AntDesign.Select<Person, int>>(
+            @<AntDesign.Select Mode="SelectMode.Multiple"
+                TItemValue="int"
+                TItem="Person"
+                DataSource="@_persons"
+                LabelName="@nameof(Person.Name)"
+                ValueName="@nameof(Person.Id)"
+                @bind-Values="@values"
+                Open="true">
+                <SelectOptions>
+                    @foreach (var item in _persons)
+                    {
+                        <SelectOption @key="item"
+                                      TItemValue="int"
+                                      TItem="Person"
+                                      Value="@item.Id"
+                                      Item="@item"
+                                      Label="@item.Name">
+                            <div class="multi-option">
+                                <span class="person-name">@item.Name</span>
+                                <span class="person-id">(ID: @item.Id)</span>
+                            </div>
+                        </SelectOption>
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        var multiOptions = cut.FindAll(".multi-option");
+        multiOptions.Should().HaveCountGreaterOrEqualTo(2); // At least the selected items
+        
+        // Check that person names are rendered
+        var personNames = cut.FindAll(".person-name");
+        personNames.Should().HaveCountGreaterOrEqualTo(2);
+        var nameTexts = personNames.Select(x => x.TextContent.Trim()).ToList();
+        nameTexts.Should().Contain("John");
+        nameTexts.Should().Contain("Lucy");
+    }
+}
