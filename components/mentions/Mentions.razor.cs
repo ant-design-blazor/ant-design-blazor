@@ -120,14 +120,18 @@ namespace AntDesign
         private void InitializePrefixes()
         {
             _prefixes = (Prefix ?? "@")
-                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+#if NET5_0_OR_GREATER
+                .Split([','], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+#else
+                .Split([','], StringSplitOptions.RemoveEmptyEntries)
                 .Select(p => p.Trim())
                 .Where(p => !string.IsNullOrEmpty(p))
+#endif
                 .ToArray();
 
             if (_prefixes.Length == 0)
             {
-                _prefixes = new[] { "@" };
+                _prefixes = ["@"];
             }
         }
 
@@ -272,7 +276,7 @@ namespace AntDesign
             var searchText = textBeforeCursor.Substring(lastPrefixIndex + _currentPrefix.Length);
 
             // If search text contains space, selection is complete
-            if (searchText.Contains(" "))
+            if (searchText.Contains(' '))
             {
                 await HideOverlay();
                 return;
