@@ -194,6 +194,7 @@ namespace AntDesign
             url ??= CurrentUrl;
             var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == url);
             reuseTabsPageItem.Body = null;
+            reuseTabsPageItem.CachedRenderFragment = null; // Clear cached fragment to force re-render
             reuseTabsPageItem.Rendered = false;
 
             // only reload current page, and other page would be load by tab navigation
@@ -408,7 +409,9 @@ namespace AntDesign
 
         private void AddPage(ReuseTabsPageItem pageItem)
         {
-            pageItem.Key = pageItem.GetHashCode().ToString();
+            // Use a stable key to prevent re-render of other pages when one is removed.
+            // Prefer URL; for singleton pages fallback to type name.
+            pageItem.Key = pageItem.Url ?? pageItem.TypeName ?? pageItem.GetHashCode().ToString();
             _pages.Add(pageItem);
         }
 
@@ -426,7 +429,8 @@ namespace AntDesign
             var pageItem = _pages.Where(x => x.Url == key).FirstOrDefault();
             if (pageItem != null)
             {
-                pageItem.Body = null;
+                // Do not null out Body here; removing from collection is enough.
+                // Clearing Body caused other tabs to rebuild due to fragment tree changes.
                 _pages.Remove(pageItem);
             }
         }
