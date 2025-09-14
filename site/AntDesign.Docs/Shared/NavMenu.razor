@@ -1,50 +1,53 @@
-﻿
+﻿@using Microsoft.AspNetCore.Components.Rendering
+
 <Menu Class="aside-container menu-site" Theme="MenuTheme.Light" Mode="MenuMode.Inline" >
-    @menuItemTemplate((MenuItems, LocalizationService, 1))
+    @RenderMenuItem(MenuItems, 1)
 </Menu>
 
-
-@inject ILocalizationService LocalizationService
-@inject NavigationManager NavigationManager
-@inject HttpClient HttpClient
-@inject DemoService DemoService; 
-
 @code {
-    [Parameter]
-    public DemoMenuItem[] MenuItems { get; set; } = {};
 
-    static readonly RenderFragment<(DemoMenuItem[] items, ILocalizationService LocalizationService, int level)> menuItemTemplate = context =>
-        @<Template>
-            @foreach (var menu in context.items)
+    void menuItemTemplate(DemoMenuItem[] items, int level, RenderTreeBuilder __builder)
+    {
+        @foreach (var menu in items)
+        {
+            if (menu.Type == "menuItem")
             {
-                if (menu.Type == "menuItem")
-                {
-                        <MenuItem RouterLink="@($"{context.LocalizationService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
-                            <span>@menu.Title</span>
-                            @if (context.LocalizationService.CurrentCulture.Name == "zh-CN" && menu.SubTitle != null)
-                            {
-                                <span class="chinese">@menu.SubTitle</span>
-                            }
-                        </MenuItem>
-                }
-                else if (menu.Type == "subMenu")
-                {
-                    <SubMenu Title="@menu.Title" IsOpen="true">
-                        @if (menu.Children.Any())
-                        {
-                            @menuItemTemplate((menu.Children, context.LocalizationService, context.level + 1))
-                        }
-                    </SubMenu>
-                }
-                else if (menu.Type == "itemGroup")
-                {
-                    <MenuItemGroup Title="@menu.Title">
-                        @if (menu.Children.Any())
-                        {
-                            @menuItemTemplate((menu.Children, context.LocalizationService, context.level + 1))
-                        }
-                    </MenuItemGroup>
-                }
+                <MenuItem RouterLink="@($"{LocalizationService.CurrentCulture.Name}/{menu.Url}")" RouterMatch="@NavLinkMatch.All">
+                    <span>@menu.Title</span>
+                    @if (LocalizationService.CurrentCulture.Name == "zh-CN" && menu.SubTitle != null)
+                    {
+                        <span class="chinese">@menu.SubTitle</span>
+                    }
+                    @if (menu.ReleaseVersion!= null)
+                    {
+                        <Tag Color="TagColor.Green">@menu.ReleaseVersion</Tag>
+                    }
+                    else if (IsComponentUpdated(menu))
+                    {
+                        <Tag Color="TagColor.Green">@L["app.components.menu.update"]</Tag>
+                    }
+                </MenuItem>
             }
-        </Template>;
+            else if (menu.Type == "subMenu")
+            {
+                <SubMenu Title="@menu.Title" IsOpen="true">
+                    @if (menu.Children.Any())
+                    {
+                        @RenderMenuItem(menu.Children, level + 1);
+                    }
+                </SubMenu>
+            }
+            else if (menu.Type == "itemGroup")
+            {
+                <MenuItemGroup Title="@menu.Title">
+                    @if (menu.Children.Any())
+                    {
+                        @RenderMenuItem(menu.Children, level + 1);
+                    }
+                </MenuItemGroup>
+            }
+        }
+    }
+
+    RenderFragment RenderMenuItem(DemoMenuItem[] items, int level) => __builder => menuItemTemplate(items, level, __builder);
 }

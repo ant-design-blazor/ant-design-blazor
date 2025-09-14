@@ -14,6 +14,7 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
+using AntDesign.Core.Documentation;
 using AntDesign.Docs.Build.CLI.Documentations;
 using AntDesign.Docs.Build.CLI.Extensions;
 using AntDesign.Docs.Build.CLI.Services.Translation;
@@ -240,7 +241,8 @@ namespace AntDesign.Docs.Build.CLI.Command
                         Summary = await GetSummaryFromComponentDocsNode(memberDocs, language),
                         ObsoleteMessage = obsoleteMessage,
                         Type = propertyType,
-                        Default = GetDefaultFromComponentDocsNode(memberDocs, propertyType)
+                        Default = GetDefaultFromComponentDocsNode(memberDocs, propertyType),
+                        ReleaseVersion = member.GetCustomAttribute<PublicApiAttribute>()?.ReleaseVersion
                     });
                 }
             }

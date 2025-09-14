@@ -121,6 +121,10 @@
         <div class="rc-footer-bottom-container">
             This project is supported by the <a href="https://dotnetfoundation.org">.NET Foundation</a>.
             Made with <span style="color: rgb(255, 255, 255);">❤</span> by <a target="_blank" rel="noopener noreferrer" href="https://github.com/ant-design-blazor">Ant Design Blazor Team</a>
+            @if (!string.IsNullOrEmpty(_commit))
+            {
+                <span style="float: right;">Build from commit: <a target="_blank" rel="noopener noreferrer" href="https://github.com/ant-design-blazor/ant-design-blazor/commit/@_commit">@_commit</a></span>
+            }
         </div>
     </section>
 </footer>

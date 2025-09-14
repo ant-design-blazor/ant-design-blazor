@@ -1,0 +1,97 @@
+name: "Prepare Version"
+description: "Prepare version numbers for the build"
+
+inputs:
+  fetch-depth:
+    description: "Git fetch depth"
+    required: false
+    default: "0"
+  enable-aot:
+    description: "Enable AOT compilation"
+    required: false
+    default: "false"
+
+outputs:
+  version:
+    description: "Generated version number"
+    value: ${{ steps.set_version.outputs.version }}
+  assembly_version:
+    description: "Assembly version"
+    value: ${{ steps.set_version.outputs.assembly_version }}
+  package_version:
+    description: "Package version"
+    value: ${{ steps.set_version.outputs.package_version }}
+  commit_hash:
+    description: "Commit hash"
+    value: ${{ steps.set_version.outputs.commit_hash }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set version number
+      id: set_version
+      shell: bash
+      run: |
+        # 获取最新的tag
+        LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+        # 分割版本号
+        IFS='.' read -r MAJOR MINOR PATCH <<< "${LATEST_TAG#v}"
+        # 生成时间戳作为 build 号
+        YEAR=$(date '+%y')
+        MONTH=$(date '+%m')
+        DAY=$(date '+%d')
+        HOUR=$(date '+%H')
+        MINUTE=$(date '+%M')
+
+        # 计算 build 和 revision 号
+        BUILD_NUMBER=$((10#$YEAR * 100 + 10#$MONTH))
+        REVISION_NUMBER=$((((10#$DAY * 100 + 10#$HOUR)) * 100 + 10#$MINUTE))
+
+        # 获取当前 commit 号
+        COMMIT_HASH=$(git rev-parse --short HEAD)
+
+        # 确定版本号类型
+        if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          if [[ "${{ github.base_ref }}" == "master" ]]; then
+            NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+          elif [[ "${{ github.base_ref }}" == "feature" ]]; then
+            NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
+          else
+            NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          fi
+          PACKAGE_VERSION="$NEW_VERSION-preview-${{ github.event.number }}"
+          ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.0"
+        elif [[ "${{ github.event_name }}" == "push" ]]; then
+          CURRENT_BRANCH=$(git symbolic-ref --short -q HEAD)
+          if [[ "$CURRENT_BRANCH" == "master" ]]; then
+            NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+          elif [[ "$CURRENT_BRANCH" == "feature" ]]; then
+            NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
+          else
+            NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          fi
+          if [[ "${{ github.ref }}" == "refs/tags/"* ]]; then
+            PACKAGE_VERSION="$NEW_VERSION"
+            ASSEMBLY_VERSION="$NEW_VERSION.0"
+          else
+            PACKAGE_VERSION="$NEW_VERSION-nightly-$BUILD_NUMBER$REVISION_NUMBER"
+            ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.0"
+          fi
+        else
+          PACKAGE_VERSION="$MAJOR.$MINOR.$PATCH"
+          ASSEMBLY_VERSION="$MAJOR.$MINOR.$PATCH.0"
+        fi
+
+        echo "version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+        echo "assembly_version=$ASSEMBLY_VERSION" >> $GITHUB_OUTPUT
+        echo "package_version=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+        echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+
+    - name: Install dependencies
+      shell: bash
+      run: npm install
+
+    - name: Prepare AOT workload
+      if: ${{ inputs.enable-aot == 'true' }}
+      shell: bash
+      run: dotnet workload install wasm-tools

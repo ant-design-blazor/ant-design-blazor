@@ -8,98 +8,20 @@ on:
       - doc-fix
 
 jobs:
-  publish-and-deploy:
+  check-owner:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'ant-design-blazor'
-
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
+      - run: echo "Repository owner check passed"
 
-      - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: |
-            3.1.x
-            5.0.x
-            6.0.x
-            7.0.x
-            8.0.x
-            9.0.x
-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "18.x"
-
-      - name: Prepare AOT workload
-        run: |
-          dotnet workload install wasm-tools
-
-      - name: Publish Docs 🎉
-        id: publish
-        run: |
-          git fetch --all
-          VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/ant-design-blazor/ant-design-blazor/tags | grep 'name' | cut -d\" -f4 | head -1)
-          echo "::set-output name=package_version::${VERSION}"
-          npm install
-          echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
-          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/version.json
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
-          dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=true
-          cp -rf cargo/staticwebapp.config.json cargo/wwwroot
-          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll cargo/wwwroot/_framework
-          find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
-
-      - name: Deploy to Azure 🚀
-        id: deploy_azure
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PURPLE_FLOWER_0D9F2A700 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "cargo/wwwroot" 
-          output_location: "cargo/wwwroot"
-          skip_api_build: true
-          skip_app_build: true
-
-      - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CF_TOKEN }}
-          accountId: ${{ secrets.CF_ID }}
-          projectName: 'ant-design-blazor'
-          directory: "cargo/wwwroot"
-          wranglerVersion: '3'      
-
-      # - name: Deploy to Gitee 🚀
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GH_PUSH_TOKEN }}
-      #     publish_branch: gh-pages
-      #     publish_dir: ./cargo/wwwroot
-      #     force_orphan: true
-
-      # - name: Deploy to Github.io 🚀
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     personal_token: ${{ secrets.GH_PUSH_TOKEN }}
-      #     external_repository: ant-design-blazor/ant-design-blazor.github.io
-      #     publish_branch: master
-      #     publish_dir: ./cargo/wwwroot
-      #     cname: antblazor.com
-      #     force_orphan: true
-      #     tag_name: ${{ steps.publish.outputs.package_version }}
-
-      # - name: Sync to Gitee 💕
-      #   uses: wearerequired/git-mirror-action@master
-      #   env:
-      #     SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-      #   with:
-      #     source-repo: "git@github.com:ant-design-blazor/ant-design-blazor.git"
-      #     destination-repo: "git@gitee.com:ant-design-blazor/ant-design-blazor.git"
+  build-and-publish:
+    needs: check-owner
+    uses: ./.github/workflows/shared-config.yml
+    with:
+      enable_aot: true
+      run_test: false
+      run_lint: false
+      publish_docs: true
+      publish_nuget: false
+      publish_wasm: true
+      publish_webapp: false

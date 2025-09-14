@@ -13,5 +13,6 @@ namespace AntDesign.Docs.Build.CLI.Documentations
         public string Default { get; internal set; }
         public string ObsoleteMessage { get; internal set; }
         public bool IsMethod { get; internal set; }
+        public string ReleaseVersion { get; internal set; }
     }
 }

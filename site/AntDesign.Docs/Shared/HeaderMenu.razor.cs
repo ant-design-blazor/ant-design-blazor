@@ -23,6 +23,8 @@ namespace AntDesign.Docs.Shared
 
         [Inject] public IJSRuntime JsInterop { get; set; }
 
+        [Inject] public VersionService VersionService { get; set; }
+
         [CascadingParameter] public ConfigProvider ConfigProvider { get; set; }
 
         private string CurrentLanguage => LocalizationService.CurrentCulture.Name;
@@ -32,11 +34,13 @@ namespace AntDesign.Docs.Shared
         private DemoMenuItem[] _menuItems = { };
 
         private bool _firstRender;
+        private string _version;
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
             _menuItems = await DemoService.GetMenuAsync();
+            _version = await VersionService.GetCurrentVersion();
 
             LocalizationService.LanguageChanged += OnLanguageChanged;
         }

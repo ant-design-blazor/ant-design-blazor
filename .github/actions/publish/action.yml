@@ -1,0 +1,184 @@
+name: "Publish"
+description: "Publish packages and documentation"
+
+inputs:
+  enable-aot:
+    description: "Enable AOT compilation"
+    required: false
+    default: "false"
+  publish-docs:
+    description: "Publish documentation"
+    required: false
+    default: "false"
+  publish-nuget:
+    description: "Publish NuGet packages"
+    required: false
+    default: "false"
+  publish-wasm:
+    description: "Publish WebAssembly docs"
+    required: false
+    default: "false"
+  publish-webapp:
+    description: "Publish WebApp docs"
+    required: false
+    default: "false"
+  deploy-site:
+    description: "Deploy to hosting platforms (Cloudflare/Azure)"
+    required: false
+    default: "false"
+  package-version:
+    description: "Package version"
+    required: true
+  assembly-version:
+    description: "Assembly version"
+    required: true
+  commit-hash:
+    description: "Commit hash"
+    required: true
+  github-token:
+    description: "GitHub token"
+    required: true
+  nuget-api-key:
+    description: "NuGet API key"
+    required: false
+  cf-token:
+    description: "Cloudflare token"
+    required: false
+  cf-id:
+    description: "Cloudflare account ID"
+    required: false
+  webapp-publish-profile:
+    description: "WebApp publish profile"
+    required: false
+  preview-output-path:
+    description: "Output path for site"
+    required: false
+    default: "cargo/wwwroot"
+
+outputs:
+  preview-path:
+    description: "Path to the site output"
+    value: ${{ inputs.preview-output-path }}
+  wasm-path:
+    description: "Path to the WebAssembly output"
+    value: cargo/wwwroot
+  webapp-path:
+    description: "Path to the WebApp output"
+    value: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-output
+        path: .
+
+    - name: Package NuGet
+      if: ${{ inputs.publish-nuget == 'true' }}
+      shell: bash
+      run: |
+        dotnet pack components/AntDesign.csproj --no-build --no-restore -c Release -o publish /p:PackageVersion=${{ inputs.package-version }} /p:Version=${{ inputs.assembly-version }} /p:AssemblyVersion=${{ inputs.assembly-version }} /p:FileVersion=${{ inputs.assembly-version }} /p:InformationalVersion=${{ inputs.assembly-version }} /p:RepositoryCommit=${{ inputs.commit-hash }} /p:SourceRevisionId=${{ inputs.commit-hash }} /p:ContinuousIntegrationBuild=true
+        dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj --no-build --no-restore -c Release -o publish /p:PackageVersion=${{ inputs.package-version }} /p:Version=${{ inputs.assembly-version }} /p:AssemblyVersion=${{ inputs.assembly-version }} /p:FileVersion=${{ inputs.assembly-version }} /p:InformationalVersion=${{ inputs.assembly-version }} /p:RepositoryCommit=${{ inputs.commit-hash }} /p:SourceRevisionId=${{ inputs.commit-hash }} /p:ContinuousIntegrationBuild=true
+        dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj --no-build --no-restore -c Release -o publish /p:PackageVersion=${{ inputs.package-version }} /p:Version=${{ inputs.assembly-version }} /p:AssemblyVersion=${{ inputs.assembly-version }} /p:FileVersion=${{ inputs.assembly-version }} /p:InformationalVersion=${{ inputs.assembly-version }} /p:RepositoryCommit=${{ inputs.commit-hash }} /p:SourceRevisionId=${{ inputs.commit-hash }} /p:ContinuousIntegrationBuild=true
+
+    - name: Upload NuGet packages
+      if: ${{ inputs.publish-nuget == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages
+        path: publish
+        retention-days: 1
+
+    - name: Setup NuGet for GitHub Packages
+      if: ${{ inputs.publish-nuget == 'true' }}
+      shell: bash
+      run: |
+        dotnet nuget add source --username USERNAME --password ${{ inputs.github-token }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/ant-design-blazor/index.json"
+
+    - name: Publish to GitHub Packages
+      if: ${{ inputs.publish-nuget == 'true' }}
+      shell: bash
+      run: dotnet nuget push "publish/*.nupkg" --api-key ${{ inputs.github-token }} --source github --skip-duplicate
+
+    - name: Publish to NuGet.org
+      if: ${{ inputs.publish-nuget == 'true' && github.ref_type == 'tag' && inputs.nuget-api-key != '' }}
+      shell: bash
+      run: dotnet nuget push "publish/*.nupkg" --api-key ${{ inputs.nuget-api-key }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+    - name: Build WebAssembly docs
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' }}
+      shell: bash
+      run: |
+        mkdir -p ${{ inputs.preview-output-path }}
+        dotnet publish ./site/AntDesign.Docs.Wasm --no-build --no-restore -c Release -o cargo -p:EnableAOT=${{ inputs.enable-aot }} /p:Version=${{ inputs.assembly-version }} /p:AssemblyVersion=${{ inputs.assembly-version }} /p:FileVersion=${{ inputs.assembly-version }} /p:InformationalVersion=${{ inputs.assembly-version }} /p:SourceRevisionId=${{ inputs.commit-hash }}
+        cp -rf cargo/staticwebapp.config.json cargo/wwwroot
+        cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll cargo/wwwroot/_framework
+        cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa cargo/wwwroot/
+        find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
+        cp -rf cargo/wwwroot/* ${{ inputs.preview-output-path }}/
+
+    - name: Build WebApp docs
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-webapp == 'true' }}
+      shell: bash
+      env:
+        AZURE_WEBAPP_NAME: AntDesignDocsWebApp
+        AZURE_WEBAPP_PACKAGE_PATH: site/AntDesign.Docs.WebApp/published
+        WORKING_DIRECTORY: site/AntDesign.Docs.WebApp
+      run: |
+        dotnet publish "${{ env.WORKING_DIRECTORY }}" --no-build --no-restore -c Release --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}" /p:Version=${{ inputs.assembly-version }} /p:AssemblyVersion=${{ inputs.assembly-version }} /p:FileVersion=${{ inputs.assembly-version }} /p:InformationalVersion=${{ inputs.assembly-version }} /p:SourceRevisionId=${{ inputs.commit-hash }}
+
+    - name: Upload WebAssembly docs
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: wasm-docs
+        path: cargo/wwwroot
+        retention-days: 1
+
+    - name: Upload WebApp docs
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-webapp == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: webapp-docs
+        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+        retention-days: 1
+
+    - name: Deploy WebApp to Azure
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-webapp == 'true' && inputs.deploy-site == 'true' && inputs.webapp-publish-profile != '' }}
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: AntDesignDocsWebApp
+        publish-profile: ${{ inputs.webapp-publish-profile }}
+        package: site/AntDesign.Docs.WebApp/published
+
+    - name: Deploy to Cloudflare Pages
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' && inputs.deploy-site == 'true' && github.ref_type == 'tag' && inputs.cf-token != '' && inputs.cf-id != '' }}
+      uses: cloudflare/pages-action@v1
+      with:
+        apiToken: ${{ inputs.cf-token }}
+        accountId: ${{ inputs.cf-id }}
+        projectName: "ant-design-blazor"
+        directory: cargo/wwwroot
+        wranglerVersion: "3"
+
+    - name: Deploy to Cloudflare Pages Next
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' && inputs.deploy-site == 'true' && github.ref == 'refs/heads/master' && inputs.cf-token != '' && inputs.cf-id != '' }}
+      uses: cloudflare/pages-action@v1
+      with:
+        apiToken: ${{ inputs.cf-token }}
+        accountId: ${{ inputs.cf-id }}
+        projectName: "ant-design-blazor-next"
+        directory: cargo/wwwroot
+        wranglerVersion: "3"
+
+    - name: Deploy to Cloudflare Pages Preview
+      if: ${{ inputs.publish-docs == 'true' && inputs.publish-wasm == 'true' && inputs.deploy-site == 'true' && github.ref == 'refs/heads/feature' && inputs.cf-token != '' && inputs.cf-id != '' }}
+      uses: cloudflare/pages-action@v1
+      with:
+        apiToken: ${{ inputs.cf-token }}
+        accountId: ${{ inputs.cf-id }}
+        projectName: "ant-design-blazor-preview"
+        directory: cargo/wwwroot
+        wranglerVersion: "3"

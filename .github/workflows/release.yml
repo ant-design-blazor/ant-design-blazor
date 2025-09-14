@@ -9,43 +9,20 @@ on:
       - "*"
 
 jobs:
-  release-and-publish-package:
+  check-owner:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'ant-design-blazor'
-
     steps:
-      - uses: actions/checkout@v2
+      - run: echo "Repository owner check passed"
 
-      - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: |
-            3.1.x
-            5.0.x
-            6.0.x
-            7.0.x
-            8.0.x
-            9.0.x
-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "18.x"
-
-      - name: Package and publish to Nuget📦
-        id: pack
-        run: |
-          VERSION=`git describe --tags`
-          echo "Publishing Version: ${VERSION}"
-          npm install
-          dotnet build
-          dotnet pack components/AntDesign.csproj /p:PackageVersion=$VERSION /p:ContinuousIntegrationBuild=true -c Release -o publish
-          dotnet pack src/AntDesign.Extensions.Localization/AntDesign.Extensions.Localization.csproj /p:PackageVersion=$VERSION /p:ContinuousIntegrationBuild=true -c Release -o publish
-          dotnet pack tests/AntDesign.TestKit/AntDesign.TestKit.csproj /p:PackageVersion=$VERSION /p:ContinuousIntegrationBuild=true -c Release -o publish
-          dotnet nuget push 'publish/*.nupkg' -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
-
-      - name: Upload package artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: publish/
-          retention-days: 5
+  build-and-publish:
+    needs: check-owner
+    uses: ./.github/workflows/shared-config.yml
+    with:
+      enable_aot: false
+      run_test: true
+      run_lint: true
+      publish_docs: true
+      publish_nuget: true
+      publish_wasm: true
+      publish_webapp: false

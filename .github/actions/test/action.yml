@@ -1,0 +1,43 @@
+name: "Test"
+description: "Run tests"
+
+inputs:
+  node-version:
+    description: "Node.js version"
+    required: false
+    default: "18.x"
+  codecov-token:
+    description: "Codecov token"
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Environment
+      uses: ./.github/actions/setup
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-output
+        path: .
+
+    - name: Run tests
+      shell: bash
+      run: |
+        dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --no-build --no-restore -c Release --collect:"XPlat Code Coverage" -f net6
+        dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --no-build --no-restore -c Release --collect:"XPlat Code Coverage" -f net8
+        dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --no-build --no-restore -c Release --collect:"XPlat Code Coverage" -f net9
+        npm install ./tests/AntDesign.Tests.Js
+        npm --prefix ./tests/AntDesign.Tests.Js run test-cov
+        find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
+
+    - name: Upload coverage to Codecov
+      if: ${{ inputs.codecov-token != '' }}
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ inputs.codecov-token }}
+        files: ./coverage.cobertura.xml,./cobertura-coverage.xml
+        fail_ci_if_error: false
