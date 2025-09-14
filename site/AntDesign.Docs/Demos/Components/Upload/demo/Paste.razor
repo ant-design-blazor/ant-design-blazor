@@ -7,7 +7,7 @@
         Defer="true"
         @bind-FileList="fileList"
         Trigger="UploadTrigger.Paste">
-    <TextArea TValue="string" Placeholder="Paste files here (Ctrl+V)" />
+    <TextArea Placeholder="Paste files here (Ctrl+V)" />
 </Upload>
 
 <Button Type="ButtonType.Primary" OnClick="HandleUpload" Disabled="!CanUpload">Start Upload</Button>

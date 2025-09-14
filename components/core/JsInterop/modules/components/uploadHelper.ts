@@ -41,15 +41,29 @@ export class uploadHelper {
   }
 
   static addPasteEventListener(element: HTMLElement, input: HTMLInputElement, instance: any) {
-    const target = element.querySelector("input");
-    if (target && target.addEventListener) {
-      target.addEventListener("paste", (e: ClipboardEvent) => uploadHelper.handlePaste(e, input, instance));
+    const inputTarget = element.querySelector("input");
+    const textareaTarget = element.querySelector("textarea");
+    
+    if (inputTarget && inputTarget.addEventListener) {
+      inputTarget.addEventListener("paste", (e: ClipboardEvent) => uploadHelper.handlePaste(e, input, instance));
+    }
+    
+    if (textareaTarget && textareaTarget.addEventListener) {
+      textareaTarget.addEventListener("paste", (e: ClipboardEvent) => uploadHelper.handlePaste(e, input, instance));
     }
   }
 
   static removePasteEventListener(element: HTMLElement) {
-    const input = element.querySelector("input");
-    input.removeEventListener("paste", uploadHelper.handlePaste as any);
+    const inputTarget = element.querySelector("input");
+    const textareaTarget = element.querySelector("textarea");
+    
+    if (inputTarget) {
+      inputTarget.removeEventListener("paste", uploadHelper.handlePaste as any);
+    }
+    
+    if (textareaTarget) {
+      textareaTarget.removeEventListener("paste", uploadHelper.handlePaste as any);
+    }
   }
 
   private static fileClickEvent(e: MouseEvent) {
