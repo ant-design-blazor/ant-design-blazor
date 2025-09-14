@@ -86,7 +86,7 @@
             @if (ChildContent != null && (_isActive || _hasRendered || ForceRender))
             {
                 _hasRendered = true;
-                <AntDesign.Core.Internal.KeepAlive ChildContent="ChildContent" IsActive="@_isActive"></AntDesign.Core.Internal.KeepAlive>
+                <AntDesign.Core.Internal.KeepAlive ChildContent="ChildContent" IsActive="@_isActive" @key="@Key"></AntDesign.Core.Internal.KeepAlive>
                 
             }
         </div>

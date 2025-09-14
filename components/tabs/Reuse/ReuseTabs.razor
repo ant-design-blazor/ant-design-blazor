@@ -12,27 +12,35 @@
     {
         @if (ReuseTabsService.Pages?.Any() == true)
         {
-            @foreach (var item in ReuseTabsService.Pages)
+            // Create a stable list to avoid issues with collection changes during rendering
+            var pageList = ReuseTabsService.Pages.ToList();
+            @foreach (var item in pageList)
             {
-                <TabPane Id="@item.Url" @key="@item.Key" Key="@item.Key" Class="@TabPaneClass" Closable="item.Closable" ForceRender ChildContent="@PaneConent(item)">
+                // Capture the item in a local variable to ensure stable closure
+                var currentItem = item;
+                // Pre-compute the content to ensure stable reference
+                var content = GetPaneContent(currentItem);
+                var itemUrl = currentItem.Url; // Capture URL for callbacks
+                
+                <TabPane Id="@currentItem.Url" @key="@currentItem.Key" Key="@currentItem.Key" Class="@TabPaneClass" Closable="currentItem.Closable" ForceRender ChildContent="@content">
                     <TabTemplate>
-                        @if (Type == TabType.Line && item.Closable)
+                        @if (Type == TabType.Line && currentItem.Closable)
                         {
-                            <span> @item.Title</span>
-                            <Icon Style="margin-right:0;" Type="@IconType.Outline.Close" OnClick="@(()=>{ ClosePage(item.Url);})" />
+                            <span> @currentItem.Title</span>
+                            <Icon Style="margin-right:0;" Type="@IconType.Outline.Close" OnClick="@(()=>{ ClosePage(itemUrl);})" />
                         }
                         else
                         {
-                            @item.Title
+                            @currentItem.Title
                         }
                     </TabTemplate>
                     <TabContextMenu>
                         <Menu>
-                            <MenuItem OnClick="@(()=>{ReuseTabsService.ReloadPage(item.Url);})">@Locale.Reload</MenuItem>
-                            <MenuItem Disabled="!item.Closable" OnClick="@(()=>{ReuseTabsService.ClosePage(item.Url);})">@Locale.Close</MenuItem>
+                            <MenuItem OnClick="@(()=>{ReuseTabsService.ReloadPage(itemUrl);})">@Locale.Reload</MenuItem>
+                            <MenuItem Disabled="!currentItem.Closable" OnClick="@(()=>{ReuseTabsService.ClosePage(itemUrl);})">@Locale.Close</MenuItem>
                             <MenuItem OnClick="@(()=>ReuseTabsService.CloseAll())">@Locale.CloseAllTabs</MenuItem>
-                            <MenuItem OnClick="@(()=>{ ReuseTabsService.CloseOther(item.Url);})">@Locale.CloseAllButThis</MenuItem>
-                            @* <MenuItem OnClick="@(()=>{ ReuseTabsService.Pin(item.Url);})">@Locale.PinTab</MenuItem> *@
+                            <MenuItem OnClick="@(()=>{ ReuseTabsService.CloseOther(itemUrl);})">@Locale.CloseAllButThis</MenuItem>
+                            @* <MenuItem OnClick="@(()=>{ ReuseTabsService.Pin(itemUrl);})">@Locale.PinTab</MenuItem> *@
                         </Menu>
                     </TabContextMenu>
                 </TabPane>
@@ -40,20 +48,20 @@
         }
     }
 
-    private RenderFragment PaneConent(ReuseTabsPageItem item)
+    private RenderFragment GetPaneContent(ReuseTabsPageItem item)
     {
         if (!HidePages && item.Rendered)
         {
-            item.Body ??=@<AntDesign.Core.Internal.KeepAlive ChildContent="@Body" ></AntDesign.Core.Internal.KeepAlive> ;
-
-            if (TabPaneTemplate != null)
+            // Always use cached RenderFragment to ensure reference stability for KeepAlive
+            if (item.CachedRenderFragment == null && item.Body != null)
             {
-                return TabPaneTemplate(item);
+                // Create a stable cached version
+                if (TabPaneTemplate != null)
+                    item.CachedRenderFragment = TabPaneTemplate(item);
+                else
+                    item.CachedRenderFragment = item.Body;
             }
-            else
-            {
-                return item.Body;
-            }
+            return item.CachedRenderFragment;
         }
 
         return null;
