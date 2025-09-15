@@ -14,13 +14,17 @@
       @onclick:stopPropagation
       @onmouseenter="@OnMouseEnter">
     <div class="@ClassPrefix-content">
-        @if (ItemTemplate != null)
+        @if (ChildContent != null)
         {
-             @ItemTemplate(Model.Item)
+            @ChildContent
         }
-        else
+        else if (!string.IsNullOrEmpty(InternalLabel))
         {
             @InternalLabel
+        }
+        else if (ItemTemplate != null)
+        {
+            @ItemTemplate(Model.Item)
         }
     </div>
     @switch (SelectParent.Mode)
