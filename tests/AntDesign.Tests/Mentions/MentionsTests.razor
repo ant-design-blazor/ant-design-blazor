@@ -155,12 +155,14 @@
             </div>
             <div class=""ant-mentions-dropdown ant-mentions-dropdown-placement-bottomLeft ant-mentions-dropdown-hidden""
                 style=""position: absolute; display: none;"">
-                <li class=""ant-mentions-dropdown-menu-item"">
-                    Test User
-                </li>
-                <li class=""ant-mentions-dropdown-menu-item"">
-                    Another User
-                </li>
+                <ul class=""ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical"">
+                    <li class=""ant-mentions-dropdown-menu-item"">
+                        Test User
+                    </li>
+                    <li class=""ant-mentions-dropdown-menu-item"">
+                        Another User
+                    </li>
+                </ul>
             </div>");
     }
 
@@ -170,7 +172,7 @@
         SetupJavascript();
         var systemUnderTest = GetStandardRenderSystemUnderTest();
 
-        JSInterop.Setup<Double[]>("AntDesign.interop.mentionsHelper.setPopShowFlag", true);
+        JSInterop.Setup<Double[]>("AntDesign.interop.mentionsHelper.setPopShowFlag", _ => true);
 
         systemUnderTest.Find("textarea").Input("@");
 
@@ -190,7 +192,7 @@
             </AntDesign.Mentions>
         );
 
-        JSInterop.Setup<Double[]>("AntDesign.interop.mentionsHelper.setPopShowFlag", true);
+        JSInterop.Setup<Double[]>("AntDesign.interop.mentionsHelper.setPopShowFlag", _ => true);
 
         systemUnderTest.Find("textarea").Input(prefix);
 
@@ -230,9 +232,11 @@
             </div>
             <div class=""ant-mentions-dropdown ant-mentions-dropdown-placement-bottomLeft ant-mentions-dropdown-hidden"" 
                 style=""position: absolute; display: none;"">
-                <li class=""ant-mentions-dropdown-menu-item"">
-                    Test User
-                </li>
+                <ul class=""ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical"">
+                    <li class=""ant-mentions-dropdown-menu-item"">
+                        Test User
+                    </li>
+                </ul>
             </div>");
     }
 #endif
