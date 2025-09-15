@@ -252,6 +252,13 @@ namespace AntDesign
         [Parameter]
         public bool Defer { get; set; } = false;
 
+        /// <summary>
+        /// Upload mode trigger
+        /// </summary>
+        [PublicApi("1.5.0")]
+        [Parameter]
+        public UploadTrigger Trigger { get; set; } = UploadTrigger.Click;
+
         private UploadButton _uploadButton;
 
         private bool IsText => ListType == UploadListType.Text;

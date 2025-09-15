@@ -1,4 +1,8 @@
-﻿type fileInfo = {
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+type fileInfo = {
   fileName: string,
   size: number,
   objectURL: string,
@@ -8,7 +12,8 @@
 const CALLBACK_METHODS = {
   PERCENT: "UploadChanged",
   SUCCESS: "UploadSuccess",
-  ERROR: "UploadError"
+  ERROR: "UploadError",
+  PASTE_RESULT: "OnPasteResult"
 } as const;
 
 interface UploadConfig {
@@ -35,11 +40,73 @@ export class uploadHelper {
     btn.removeEventListener("click", uploadHelper.fileClickEvent);
   }
 
+  static addPasteEventListener(element: HTMLElement, input: HTMLInputElement, instance: any) {
+    const inputTarget = element.querySelector("input");
+    const textareaTarget = element.querySelector("textarea");
+    
+    if (inputTarget && inputTarget.addEventListener) {
+      inputTarget.addEventListener("paste", (e: ClipboardEvent) => uploadHelper.handlePaste(e, input, instance));
+    }
+    
+    if (textareaTarget && textareaTarget.addEventListener) {
+      textareaTarget.addEventListener("paste", (e: ClipboardEvent) => uploadHelper.handlePaste(e, input, instance));
+    }
+  }
+
+  static removePasteEventListener(element: HTMLElement) {
+    const inputTarget = element.querySelector("input");
+    const textareaTarget = element.querySelector("textarea");
+    
+    if (inputTarget) {
+      inputTarget.removeEventListener("paste", uploadHelper.handlePaste as any);
+    }
+    
+    if (textareaTarget) {
+      textareaTarget.removeEventListener("paste", uploadHelper.handlePaste as any);
+    }
+  }
+
   private static fileClickEvent(e: MouseEvent) {
     e.stopPropagation();
     const fileId = (e.currentTarget as HTMLSpanElement).attributes["data-fileid"].nodeValue;
     const element = document.getElementById(fileId) as HTMLInputElement;
     element.click();
+  }
+
+  private static async handlePaste(e: ClipboardEvent, input: HTMLInputElement, instance: any) {
+    e.preventDefault();
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    const files: File[] = [];
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.kind === 'file') {
+        const file = item.getAsFile();
+        if (file) {
+          files.push(file);
+        }
+      }
+    }
+
+    if (files.length > 0) {
+      const target = e.target as any;
+      if (!target.dataTransfer) {
+        target.dataTransfer = new DataTransfer();
+      }
+      const dataTransfer = target.dataTransfer as DataTransfer;
+      files.forEach(file => dataTransfer.items.add(file));
+      input.files = dataTransfer.files;
+
+      const fileInfo = files.map(file => ({
+        fileName: file.name,
+        size: file.size,
+        objectURL: uploadHelper.getObjectURL(file),
+        type: file.type
+      }));
+
+      await instance.invokeMethodAsync(CALLBACK_METHODS.PASTE_RESULT, fileInfo);
+    }
   }
 
   static clearFile(element) {
