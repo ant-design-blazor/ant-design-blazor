@@ -1,26 +1,32 @@
 ﻿@namespace AntDesign.Internal
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@(!ShowButton?"display:none;":"")">
+<div class="@ClassMapper.Class" style="@(!ShowButton ? "display:none;" : "")">
     <span tabindex="0" class="ant-upload" style="display: grid;" @ref="_btn" data-fileid="@_fileId" role="button">
-        <input type="file"
-        webkitdirectory="@Directory" 
-        multiple="@(Multiple || Directory)" 
-        @ref="_file" 
-        @onchange="FileNameChanged" 
-        accept="@Accept" 
-        style="@(Upload?.Drag==true?"position: absolute;width: 100%;height: 100%;opacity: 0;top: 0;left: 0;z-index:2;":"display:none;")"
-        id="@_fileId" title="" />
-
-        @if (Upload?.Drag == true)
+        @if (Upload?.Trigger == UploadTrigger.Click)
         {
-            <div class="ant-upload-drag-container">
-                 @ChildContent
-            </div>
+            @if (Upload?.Drag == true)
+            {
+                <div class="ant-upload-drag-container">
+                    @ChildContent
+                </div>
+            }
+            else
+            {
+                @ChildContent
+            }
         }
         else
         {
             @ChildContent
         }
+        <input type="file"
+               webkitdirectory="@Directory"
+               multiple="@(Multiple || Directory)"
+               @ref="_file"
+               @onchange="FileNameChanged"
+               accept="@Accept"
+               style="@(Upload?.Drag == true ? "position: absolute;width: 100%;height: 100%;opacity: 0;top: 0;left: 0;z-index:2;" : "display:none;")"
+               id="@_fileId" title="" />
     </span>
 </div>

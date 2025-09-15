@@ -3,7 +3,6 @@
         Name="files"
         Defer
         BatchUpload
-        OnChange="OnChange"
         FileListChanged="FileListChanged"
         OnSingleCompleted="OnSingleCompleted">
     <Button Icon="upload">
@@ -26,10 +25,7 @@
             fileinfo.File.Url = result.url;
         }
     }
-    void OnChange()
-    {
 
-    }
     void FileListChanged(List<UploadFileItem> files)
     {
         if (files.Count > 0)
