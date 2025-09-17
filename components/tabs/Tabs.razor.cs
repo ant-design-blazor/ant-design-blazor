@@ -423,13 +423,10 @@ namespace AntDesign
             if (IsDisposed)
                 return;
 
-            // reorder tabs
-            _tabs.OrderBy(x => x.TabIndex).ForEach((x, i) => x.SetIndex(i));
-
             // if it is active, need to activiate the previous tab, or the next one if no previous
             if (_activeKey == tab.Key)
             {
-                if (tab.TabIndex > 0)
+                if (_tabs.IndexOf(tab) > 0)
                 {
                     Previous();
                 }
