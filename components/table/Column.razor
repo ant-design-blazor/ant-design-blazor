@@ -346,7 +346,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" OnClick="ResetFilters">
                 @Table?.Locale.FilterReset
             </Button>
-            @if (_columnFilterType == TableFilterType.FieldType)
+            @if (_columnFilterType == TableFilterType.FieldType && FilterMultiple)
             {
                 <Button Size="@ButtonSize.Small" Icon="plus" Type="@ButtonType.Primary" OnClick="AddFilter" />
             }
