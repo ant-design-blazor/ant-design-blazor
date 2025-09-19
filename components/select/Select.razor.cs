@@ -400,7 +400,7 @@ namespace AntDesign
                 SelectOptions = ChildContent;
             }
 
-            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && ValueProperty == null && string.IsNullOrWhiteSpace(ValueName))
+            if (DataSource?.Any() == true && typeof(TItemValue) != typeof(TItem) && ValueProperty == null && string.IsNullOrWhiteSpace(ValueName))
             {
                 throw new ArgumentNullException(nameof(ValueName));
             }
