@@ -102,7 +102,7 @@
             <div class="@_contentClassMapper.Class">
                 @foreach (var tab in _tabs)
                 {
-                    __builder.AddContent(tab.GetHashCode(), tab.RenderPane);
+					__builder.AddContent(tab.TabIndex, tab.RenderPane);
                 }
             </div>
         </div>     

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.TableModels
 {
@@ -61,6 +62,8 @@ namespace AntDesign.TableModels
         public bool IsGrouping { get; set; }
 
         public string Key { get; set; }
+
+        internal ElementReference RowElementRef { get; set; }
 
         public bool Expanded
         {
