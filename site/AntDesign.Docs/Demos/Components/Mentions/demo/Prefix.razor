@@ -1,3 +1,79 @@
-﻿<div>
-    To do
-</div>
+﻿@using System.Text.Json
+
+
+<Mentions @bind-Value="value"
+          Prefix="@("@,#")"
+          OnSearch="HandleSearch">
+    @foreach (var option in currentOptions)
+    {
+        <MentionsOption Value="@option.Value" @key="@option.Value">
+            @if (option.Type == "user")
+            {
+                <Space>
+                    <SpaceItem>
+                        <Avatar Size="AvatarSize.Small">@option.Value[0].ToString().ToUpper()</Avatar>
+                    </SpaceItem>
+                    <SpaceItem>
+                        @option.Value
+                    </SpaceItem>
+                </Space>
+            }
+            else
+            {
+                <Space>
+                    <SpaceItem>
+                        <Icon Type="tag" />
+                    </SpaceItem>
+                    <SpaceItem>
+                        @option.Value
+                    </SpaceItem>
+                </Space>
+            }
+        </MentionsOption>
+    }
+</Mentions>
+
+@code {
+    string value = string.Empty;
+    List<OptionItem> currentOptions = new();
+
+    readonly List<OptionItem> users = new()
+    {
+        new() { Value = "afc163", Type = "user" },
+        new() { Value = "zombieJ", Type = "user" },
+        new() { Value = "yesmeck", Type = "user" },
+        new() { Value = "yangxiaodong", Type = "user" },
+        new() { Value = "cipchk", Type = "user" }
+    };
+
+    readonly List<OptionItem> tags = new()
+    {
+        new() { Value = "angular", Type = "tag" },
+        new() { Value = "ant-design", Type = "tag" },
+        new() { Value = "blazor", Type = "tag" },
+        new() { Value = "components", Type = "tag" },
+        new() { Value = "design", Type = "tag" }
+    };
+
+    private void HandleSearch((string, string) args)
+    {
+        var (searchValue, prefix) = args;
+
+        // 根据前缀选择要显示的选项列表
+        var sourceList = prefix == "@" ? users : tags;
+
+        // 根据搜索文本过滤选项
+        currentOptions = sourceList
+            .Where(item => string.IsNullOrEmpty(searchValue) ||
+                          item.Value.Contains(searchValue, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        StateHasChanged();
+    }
+
+    class OptionItem
+    {
+        public string Value { get; set; }
+        public string Type { get; set; }
+    }
+}
