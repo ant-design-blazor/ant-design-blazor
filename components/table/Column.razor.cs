@@ -49,7 +49,7 @@ namespace AntDesign
         /// Field this column represents
         /// </summary>
         [Parameter]
-        public RenderFragment FilterDropdown { get; set; }
+        public RenderFragment<TableFilterDropdownContext> FilterDropdown { get; set; }
 
         /// <summary>
         /// Use @bind-Field to bind to a property of TItem, we recommend using <see cref="PropertyColumn{TItem, TProp}"/> instead
@@ -296,6 +296,8 @@ namespace AntDesign
         private bool IsFixedEllipsis => ShouldShowEllipsis && Fixed is ColumnFixPlacement.Left or ColumnFixPlacement.Right;
 
         private bool IsFiltered => _hasFilterSelected || Filtered;
+
+        private bool _preventClose = false;
 
         protected override void OnInitialized()
         {
