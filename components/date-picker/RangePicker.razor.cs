@@ -228,6 +228,7 @@ namespace AntDesign
             }
 
             await _dropDown.Show();
+            AutoFocus = true;
 
             if (index == 0)
             {
@@ -762,7 +763,8 @@ namespace AntDesign
             {
                 // if value is changed, focus the input
                 var index = GetOnFocusPickerIndex();
-                await Focus(index);
+                await Blur(index);
+                AutoFocus = false;
             }
         }
 
