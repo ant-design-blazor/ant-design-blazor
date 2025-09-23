@@ -403,6 +403,14 @@ namespace AntDesign.Internal
         }
 
         /// <summary>
+        /// Refresh the state of the component
+        /// </summary>
+        /// <remarks>
+        /// Call to StateHasChanged()
+        /// </remarks>
+        internal void RefreshComponentState() => StateHasChanged();
+
+        /// <summary>
         /// Will probe a check predicate every given milliseconds until predicate is true or until
         /// runs out of number of probings.
         /// </summary>
