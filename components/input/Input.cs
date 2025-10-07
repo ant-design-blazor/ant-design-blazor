@@ -106,6 +106,11 @@ namespace AntDesign
                     IsFocused = _autoFocus;
             }
         }
+        /// <summary>
+        /// Delay of auto focus
+        /// </summary>
+        [Parameter]
+        public int AutoFocusDelay { get; set; }
 
         /// <summary>
         /// Whether has border style
@@ -641,6 +646,8 @@ namespace AntDesign
                 if (this.AutoFocus)
                 {
                     IsFocused = true;
+                    if(AutoFocusDelay>0)
+                        await Task.Delay(AutoFocusDelay);
                     await this.FocusAsync(Ref);
                 }
 
