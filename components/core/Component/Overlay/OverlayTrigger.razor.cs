@@ -370,6 +370,8 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
+                _overlay.SetMouseInOverlay(true);
+
                 await Show();
             }
             else
@@ -387,6 +389,8 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover) && IsOverlayShow())
             {
+                _overlay.SetMouseInOverlay(_mouseInOverlay);
+
                 await Hide();
             }
             else
@@ -404,6 +408,8 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Focus))
             {
+                _overlay.SetMouseInOverlay(true);
+
                 await Show();
             }
         }
@@ -414,6 +420,8 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Focus))
             {
+                _overlay.SetMouseInOverlay(_mouseInOverlay);
+
                 await Hide();
             }
         }
