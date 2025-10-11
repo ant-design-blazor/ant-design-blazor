@@ -470,7 +470,7 @@ namespace AntDesign
 
         protected void OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (EnableOnPressEnter && (args?.Code == "Enter"||args?.Key == "Enter"))
+            if (EnableOnPressEnter && (args?.Code == "Enter" || args?.Key == "Enter"))
             {
                 CallAfterValueChanged(async () =>
                 {
@@ -713,7 +713,7 @@ namespace AntDesign
                 builder.AddAttribute(2, "class", string.Join(" ", GroupWrapperClass, WrapperClass));
                 builder.AddAttribute(3, "style", $"{WidthStyle} {WrapperStyle}");
                 builder.OpenElement(4, "span");
-                builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
+                builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group {(RTL ? $" {PrefixCls}-group-rtl" : "")}");
             }
 
             if (AddOnBefore != null)
