@@ -1,4 +1,5 @@
 ﻿@using AntDesign.Internal
+@using AntDesign.Core.JsInterop.Modules.Components
 @using System.Threading;
 @using static AntDesign.TextArea;
 @inherits AntDesignTestBase	
@@ -197,6 +198,126 @@
         systemUnderTest.Find("textarea").Input(prefix);
 
         JSInterop.VerifyInvoke("AntDesign.interop.mentionsHelper.setPopShowFlag", 1);
+    }
+
+    [Fact]
+    public async Task ItShouldDisplayAllOptionsWhenUserTypesOnlyPrefix()
+    {
+        SetupJavascript();
+        JSInterop.Setup<int>(
+            "AntDesign.interop.mentionsHelper.getProp", 
+            invocation => (string?)invocation.Arguments[1] == "selectionStart")
+            .SetResult(1);
+
+        var systemUnderTest = GetStandardRenderSystemUnderTest();
+
+        var textArea = systemUnderTest.Find("textarea");
+        
+        await textArea.InputAsync(new ChangeEventArgs
+        {
+            Value = "@"
+        });
+
+        // 验证显示了所有选项(未筛选)
+        var options = systemUnderTest.FindAll(".ant-mentions-dropdown-menu-item");
+        options.Count.Should().Be(2);
+        
+        // 验证第一个选项是激活状态
+        systemUnderTest.FindAll(".ant-mentions-dropdown-menu-item-active").Count.Should().Be(1);
+    }
+
+    [Fact]
+    public void ItShouldSupportMultiplePrefixes()
+    {
+        const string prefixes = "@,#";
+
+        SetupJavascript();
+        
+        // Create a component with multiple prefixes
+        var systemUnderTest = Render<AntDesign.Mentions>(
+            @<AntDesign.Mentions Prefix="@prefixes">
+                <AntDesign.MentionsOption Value="user1">User 1</AntDesign.MentionsOption>
+                <AntDesign.MentionsOption Value="user2">User 2</AntDesign.MentionsOption>
+            </AntDesign.Mentions>
+        );
+
+        var textArea = systemUnderTest.Find("textarea");
+
+        // Test @ prefix
+        JSInterop.Setup<Double[]>("AntDesign.interop.mentionsHelper.setPopShowFlag", _ => true);
+        textArea.Input("@");
+        JSInterop.VerifyInvoke("AntDesign.interop.mentionsHelper.setPopShowFlag", 1);
+
+        // Test # prefix  
+        JSInterop.Setup<Double[]>("AntDesign.interop.mentionsHelper.setPopShowFlag", _ => true);
+        textArea.Input("#");
+        JSInterop.VerifyInvoke("AntDesign.interop.mentionsHelper.setPopShowFlag", 2);
+    }
+
+    [Fact]
+    public async Task ItShouldDisplayDifferentOptionsForDifferentPrefixes()
+    {
+        const string prefixes = "@,#";
+
+        SetupJavascript();
+        JSInterop.Setup<int>(
+            "AntDesign.interop.mentionsHelper.getProp", 
+            invocation => (string?)invocation.Arguments[1] == "selectionStart")
+            .SetResult(1);
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition());
+
+        // Create a component with LoadOptions that returns different data based on prefix
+        var systemUnderTest = Render<AntDesign.Mentions>(
+            @<AntDesign.Mentions Prefix="@prefixes" LoadOptions="@LoadOptionsForMultiPrefix" />
+        );
+
+        var textArea = systemUnderTest.Find("textarea");
+
+        // Test @ prefix - should show user options
+        _testPrefixContext = "@";
+        await textArea.InputAsync(new ChangeEventArgs { Value = "@" });
+        
+        var userOptions = systemUnderTest.FindAll(".ant-mentions-dropdown-menu-item");
+        userOptions.Count.Should().Be(2, "@ prefix should show 2 user options");
+        userOptions[0].TextContent.Trim().Should().Be("Alice");
+        userOptions[1].TextContent.Trim().Should().Be("Bob");
+
+        // Clear and test # prefix - should show different tag options
+        _testPrefixContext = "#";
+        await textArea.InputAsync(new ChangeEventArgs { Value = "#" });
+        
+        var tagOptions = systemUnderTest.FindAll(".ant-mentions-dropdown-menu-item");
+        tagOptions.Count.Should().Be(3, "# prefix should show 3 tag options");
+        tagOptions[0].TextContent.Trim().Should().Be("bug");
+        tagOptions[1].TextContent.Trim().Should().Be("feature");
+        tagOptions[2].TextContent.Trim().Should().Be("enhancement");
+    }
+
+    private string _testPrefixContext = "@";
+
+    private Task<IEnumerable<MentionsDynamicOption>> LoadOptionsForMultiPrefix(string searchValue, CancellationToken cancellationToken)
+    {
+        // Return different options based on the current prefix context
+        if (_testPrefixContext == "@")
+        {
+            // User options for @ prefix
+            return Task.FromResult(new[]
+            {
+                new MentionsDynamicOption { Value = "alice", Display = @<text>Alice</text> },
+                new MentionsDynamicOption { Value = "bob", Display = @<text>Bob</text> }
+            }.AsEnumerable());
+        }
+        else // # prefix
+        {
+            // Tag options for # prefix
+            return Task.FromResult(new[]
+            {
+                new MentionsDynamicOption { Value = "bug", Display = @<text>bug</text> },
+                new MentionsDynamicOption { Value = "feature", Display = @<text>feature</text> },
+                new MentionsDynamicOption { Value = "enhancement", Display = @<text>enhancement</text> }
+            }.AsEnumerable());
+        }
     }
 
 #if NET6_0_OR_GREATER
