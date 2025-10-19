@@ -147,13 +147,6 @@ namespace AntDesign
                     Value = option.Value,
                     Display = option.ChildContent
                 });
-
-                // Also add to ShowOptions if it's empty (initial state)
-                if (ShowOptions.Count == 0 || LoadOptions == null)
-                {
-                    ShowOptions.Clear();
-                    ShowOptions.AddRange(OriginalOptions);
-                }
             }
         }
 
@@ -176,13 +169,6 @@ namespace AntDesign
         {
             if (firstRender)
             {
-                // Initialize ShowOptions with OriginalOptions if not already done
-                if (ShowOptions.Count == 0 && LoadOptions == null)
-                {
-                    ShowOptions.Clear();
-                    ShowOptions.AddRange(OriginalOptions);
-                }
-
                 try
                 {
                     await JsInvokeAsync(JSInteropConstants.SetEditorKeyHandler, DotNetObjectReference.Create(this), _overlayTrigger.RefBack.Current);

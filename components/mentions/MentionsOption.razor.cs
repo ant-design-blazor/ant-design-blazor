@@ -26,8 +26,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        public bool Hidden => Mentions?.ShowOptions.Any(x => x.Value == Value) == false && 
-                              Mentions?.OriginalOptions.Any(x => x.Value == Value) == false;
+        public bool Hidden => Mentions == null || (Mentions.ShowOptions.Any() ? !Mentions.ShowOptions.Any(x => x.Value == Value) : !Mentions.OriginalOptions.Any(x => x.Value == Value));
 
         internal bool Active => Mentions?.ActiveOptionValue == Value;
 

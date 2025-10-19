@@ -11,7 +11,17 @@
         <Overlay>
             <CascadingValue Value=this IsFixed>
                 <ul class="ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical">
-                    @ChildContent
+                    @if (ShowOptions.Count > 0)
+                    {
+                        @foreach (var item in ShowOptions)
+                        {
+                            <MentionsOption Value="@item.Value">@item.Display</MentionsOption>
+                        }
+                    }
+                    else
+                    {
+                        @ChildContent
+                    }
                 </ul>
             </CascadingValue>
         </Overlay>
