@@ -9,20 +9,20 @@
                     HiddenMode=true
                     InlineFlexMode=false>
         <Overlay>
-            <CascadingValue Value=this>
-                @if (ShowOptions.Count > 0)
-                {
-                    <ul class="ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical">
+            <CascadingValue Value=this IsFixed>
+                <ul class="ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical">
+                    @if (ShowOptions.Count > 0)
+                    {
                         @foreach (var item in ShowOptions)
                         {
                             <MentionsOption Value="@item.Value">@item.Display</MentionsOption>
                         }
-                    </ul>
-                }
-                else
-                {
-                    @ChildContent
-                }
+                    }
+                    else
+                    {
+                        @ChildContent
+                    }
+                </ul>
             </CascadingValue>
         </Overlay>
 
