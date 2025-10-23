@@ -358,12 +358,7 @@ namespace AntDesign
         /// <returns></returns>
         private static IEnumerable<Assembly> GetAllAssembly()
         {
-            IEnumerable<Assembly> assemblies = new List<Assembly>();
-            var entryAssembly = Assembly.GetEntryAssembly();
-            if (entryAssembly == null) return assemblies;
-            var referencedAssemblies = entryAssembly.GetReferencedAssemblies().Select(Assembly.Load);
-            assemblies = new List<Assembly> { entryAssembly }.Union(referencedAssemblies);
-            return assemblies;
+            return AppDomain.CurrentDomain.GetAssemblies();
         }
 
         /// <summary>
