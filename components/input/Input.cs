@@ -470,7 +470,7 @@ namespace AntDesign
 
         protected void OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (EnableOnPressEnter && (args?.Code == "Enter"||args?.Key == "Enter"))
+            if (EnableOnPressEnter && (args?.Code == "Enter" || args?.Key == "Enter"))
             {
                 CallAfterValueChanged(async () =>
                 {
@@ -508,7 +508,7 @@ namespace AntDesign
             if (OnKeyUp.HasDelegate) await OnKeyUp.InvokeAsync(args);
         }
 
-        protected virtual async Task OnkeyDownAsync(KeyboardEventArgs args)
+        protected virtual async Task OnKeyDownAsync(KeyboardEventArgs args)
         {
             if (OnKeyDown.HasDelegate) await OnKeyDown.InvokeAsync(args);
         }
@@ -713,7 +713,7 @@ namespace AntDesign
                 builder.AddAttribute(2, "class", string.Join(" ", GroupWrapperClass, WrapperClass));
                 builder.AddAttribute(3, "style", $"{WidthStyle} {WrapperStyle}");
                 builder.OpenElement(4, "span");
-                builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
+                builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group {(RTL ? $" {PrefixCls}-group-rtl" : "")}");
             }
 
             if (AddOnBefore != null)
@@ -815,7 +815,7 @@ namespace AntDesign
             //}
 
             builder.AddAttribute(72, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
-            builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
+            builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnKeyDownAsync));
             builder.AddAttribute(74, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
 
             builder.AddAttribute(75, "oninput", CallbackFactory.Create(this, OnInputAsync));
