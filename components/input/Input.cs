@@ -508,7 +508,7 @@ namespace AntDesign
             if (OnKeyUp.HasDelegate) await OnKeyUp.InvokeAsync(args);
         }
 
-        protected virtual async Task OnkeyDownAsync(KeyboardEventArgs args)
+        protected virtual async Task OnKeyDownAsync(KeyboardEventArgs args)
         {
             if (OnKeyDown.HasDelegate) await OnKeyDown.InvokeAsync(args);
         }
@@ -815,7 +815,7 @@ namespace AntDesign
             //}
 
             builder.AddAttribute(72, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
-            builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
+            builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnKeyDownAsync));
             builder.AddAttribute(74, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
 
             builder.AddAttribute(75, "oninput", CallbackFactory.Create(this, OnInputAsync));
