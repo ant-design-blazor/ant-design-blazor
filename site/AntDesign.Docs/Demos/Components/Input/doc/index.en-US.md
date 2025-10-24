@@ -36,8 +36,8 @@ A basic widget for getting the user input is a text field. Keyboard and mouse ca
 | OnChange |Callback when the content changes                                | Action<TValue>        | -         |
 | OnFocus |Callback when input receives focus                              | Action<FocusEventArgs>        | -         |
 | OnInput |Callback when value is inputed                              | Action<ChangeEventArgs>        | -         |
-| OnkeyDown |Callback when a key is pressed                                | Action<KeyboardEventArgs>        | -         |
-| OnkeyUp |Callback when a key is released                                | Action<KeyboardEventArgs>        | -         |
+| OnKeyDown |Callback when a key is pressed                                | Action<KeyboardEventArgs>        | -         |
+| OnKeyUp |Callback when a key is released                                | Action<KeyboardEventArgs>        | -         |
 | OnMouseUp |Callback when a mouse button is released                                | Action<MouseEventArgs>        | -         |
 | OnPressEnter |The callback function that is triggered when Enter key is pressed.                           | Action<KeyboardEventArgs>        | -         |
 | Placeholder              | Provide prompt information that describes the expected value of the input field        | string        | -        |
