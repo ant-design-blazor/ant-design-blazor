@@ -2,7 +2,7 @@
 @inherits ComponentBase
 @typeparam TItem
 
-<span class="@ClassMapper.Class" @onclick="OnClick">
+<span class="@ClassMapper.Class" @onclick="EventUtil.AsNonRenderingEventHandler<MouseEventArgs>(OnClick)">
     @if (SelfNode.Loading)
     {
         <Icon Type="@IconType.Outline.Loading" Class="ant-tree-switcher-loading-icon" />
