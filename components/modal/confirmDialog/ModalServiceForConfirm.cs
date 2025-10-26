@@ -316,11 +316,10 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="componentOptions"></param>
         /// <returns>ConfirmRef with initialized TaskCompletionSource</returns>
-        public async Task<ConfirmRef<TResult>> CreateConfirmAsync<
-            TComponent,
-            TComponentOptions,
-            TResult
-        >(ConfirmOptions config, TComponentOptions componentOptions)
+        public async Task CreateConfirmAsync<TComponent, TComponentOptions, TResult>(
+            ConfirmOptions config,
+            TComponentOptions componentOptions
+        )
             where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             CheckConfirmOptionsIsNull(config);
@@ -349,9 +348,7 @@ namespace AntDesign
             }
 
             // 等待确认对话框关闭后的结果
-            var result = await confirmRef.TaskCompletionSource.Task;
-
-            return confirmRef;
+            await confirmRef.TaskCompletionSource.Task;
         }
 
         /// <summary>

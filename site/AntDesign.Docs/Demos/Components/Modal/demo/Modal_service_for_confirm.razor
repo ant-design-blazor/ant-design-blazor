@@ -1,12 +1,12 @@
 ﻿@inject ModalService ModalService
 
-<Input @bind-Value="@value"/>
-<br/>
-<br/>
+<Input @bind-Value="@value" />
+<br />
+<br />
 <Button OnClick="OpenComponent" Type="ButtonType.Primary">Use Component</Button>
 <Button OnClick="OpenTemplate" Type="ButtonType.Primary">Use Template</Button>
 
-@code{
+@code {
 
     private string value = "blazor";
 
@@ -14,7 +14,7 @@
 
     private async Task OpenComponent()
     {
-        RenderFragment content =@<div>value: @value <br/><Button OnClick="CloseModal">close</Button></div>;
+        RenderFragment content =@<div>value: @value <br /><Button OnClick="CloseModal">close</Button></div>;
 
         var options = new ConfirmOptions<string>()
         {
@@ -61,25 +61,6 @@
             Title = "Component",
         };
 
-        var confirmRef = await ModalService.CreateConfirmAsync<ConfirmTemplateDemo, string, string>(options, value);
-
-        confirmRef.OnOpen = () =>
-        {
-            Console.WriteLine("Open Confirm");
-            return Task.CompletedTask;
-        };
-
-        confirmRef.OnClose = () =>
-        {
-            Console.WriteLine("Close Confirm");
-            return Task.CompletedTask;
-        };
-
-        confirmRef.OnOk = (result) =>
-        {
-            Console.WriteLine($"OnOk:{result}");
-            return Task.CompletedTask;
-        };
+        await ModalService.CreateConfirmAsync<ConfirmTemplateDemo, string, string>(options, value);
     }
-
 }

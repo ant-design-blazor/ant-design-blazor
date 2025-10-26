@@ -302,22 +302,22 @@ namespace AntDesign
     public class ConfirmOptions<TResult> : ConfirmOptions
     {
         /// <summary>
-        /// 弹窗打开时
+        /// On dialog open
         /// </summary>
-        public  Func<Task>? OnOpen { get; set; }
+        public Func<Task>? OnOpen { get; set; }
 
         /// <summary>
-        /// 弹窗关闭时
+        /// On dialog close
         /// </summary>
-        public  Func<Task>? OnClose { get; set; }
+        public Func<Task>? OnClose { get; set; }
 
         /// <summary>
-        /// 点击 OK 时（支持 TResult）
+        /// On OK click (supports TResult)
         /// </summary>
         public new Func<TResult?, Task>? OnOk { get; set; }
 
         /// <summary>
-        /// 点击 Cancel 时（支持 TResult）
+        /// On Cancel click (supports TResult)
         /// </summary>
         public new Func<TResult?, Task>? OnCancel { get; set; }
     }
