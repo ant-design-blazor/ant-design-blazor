@@ -446,7 +446,7 @@ namespace AntDesign
             if (_valueHasChanged && _optionsHasInitialized)
             {
                 _valueHasChanged = false;
-                if (Form?.ValidateOnChange == true)
+                if (Form?.ValidateOnChange == true && FieldIdentifier is { Model: not null, FieldName: not null })
                 {
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
