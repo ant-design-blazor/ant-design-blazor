@@ -298,4 +298,27 @@ namespace AntDesign
             }
         }
     }
+
+    public class ConfirmOptions<TResult> : ConfirmOptions
+    {
+        /// <summary>
+        /// 弹窗打开时
+        /// </summary>
+        public  Func<Task>? OnOpen { get; set; }
+
+        /// <summary>
+        /// 弹窗关闭时
+        /// </summary>
+        public  Func<Task>? OnClose { get; set; }
+
+        /// <summary>
+        /// 点击 OK 时（支持 TResult）
+        /// </summary>
+        public new Func<TResult?, Task>? OnOk { get; set; }
+
+        /// <summary>
+        /// 点击 Cancel 时（支持 TResult）
+        /// </summary>
+        public new Func<TResult?, Task>? OnCancel { get; set; }
+    }
 }
