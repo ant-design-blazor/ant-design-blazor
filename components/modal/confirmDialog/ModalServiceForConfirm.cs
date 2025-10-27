@@ -371,10 +371,7 @@ namespace AntDesign
             ConfirmRef confirmRef = new ConfirmRef(config, this);
             confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
 
-            config.Content = CreateChildRenderFragment<TComponent, TComponentOptions>(
-                confirmRef,
-                componentOptions
-            );
+            config.Content = CreateChildRenderFragment<TComponent, TComponentOptions>(confirmRef, componentOptions);
 
             if (OnConfirmOpenEvent != null)
             {
