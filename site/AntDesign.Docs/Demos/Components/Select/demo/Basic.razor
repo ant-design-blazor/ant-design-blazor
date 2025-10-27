@@ -54,15 +54,16 @@
         Style="width: 120px;"
         Placeholder="Dictionary options">
 </Select>
-<Select TItemValue="string" TItem="Person" @bind-Value="_selectedValue7" Style="width:200px;">
+<Select TItem="string"
+        TItemValue="string"
+        @bind-Value="_selectedValue7"
+        Style="width:120px;"
+        Placeholder="Select option content">
     <SelectOptions>
         @foreach (var item in _list)
         {
-            <SelectOption Context="item" TItemValue="string" TItem="Person" Value="@item.Value">
-                <div style="display:flex;align-items:center;">
-                    <span style="width:10px;height:10px;background:#1890ff;border-radius:50%;display:inline-block;margin-right:6px"></span>
-                    <span>@item.Name (@item.Value)</span>
-                </div>
+            <SelectOption TItemValue="string" TItem="string" Value="@item.Value">
+                <span>@item.Name (@item.Value)</span>
             </SelectOption>
         }
     </SelectOptions>
