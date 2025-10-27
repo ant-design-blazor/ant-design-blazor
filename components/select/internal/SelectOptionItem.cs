@@ -14,18 +14,18 @@ namespace AntDesign.Select.Internal
     /// <typeparam name="TItem"></typeparam>
     public class SelectOptionItem<TItemValue, TItem>
     {
-        public ElementReference Ref { get => ChildComponent?.Ref ?? default; }
+        internal ElementReference Ref { get => ChildComponent?.Ref ?? default; }
         //public ForwardRef SelectedTagRefBack { get; set; } = new ForwardRef();
 
         /// <summary>
         /// ElementRef that will be used by <see cref="SelectContent{TItemValue, TItem}"/> only
         /// for selected Mode=Multiple and MaxTagCount=Responsive
         /// </summary>
-        public ElementReference SelectedTagRef { get; set; }
+        internal ElementReference SelectedTagRef { get; set; }
 
         internal decimal Width { get; set; } //TODO: rename tp Width
 
-        public Guid InternalId { get; set; } = Guid.NewGuid();
+        internal Guid InternalId { get; set; } = Guid.NewGuid();
 
         private TItemValue _value;
 
