@@ -14,6 +14,7 @@ namespace AntDesign
 {
     public partial class SelectOption<TItemValue, TItem>
     {
+        private RenderFragment<TItem> _previousChildContent;
         private const string ClassPrefix = "ant-select-item-option";
 
         # region Parameters
@@ -21,6 +22,15 @@ namespace AntDesign
         [CascadingParameter(Name = "ItemTemplate")] internal RenderFragment<TItem> ItemTemplate { get; set; }
         [CascadingParameter(Name = "Model")] internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
         [CascadingParameter] internal SelectBase<TItemValue, TItem> SelectParent { get; set; }
+        
+    /// <summary>
+    /// Optional child content of the SelectOption, used as label template for the option.
+    /// If provided it will be used for rendering the option content (when ItemTemplate is not present)
+    /// and it will be assigned to the underlying SelectOptionItem.LabelTemplate so the Select's
+    /// selected-item display can reuse it when Select.LabelTemplate is not set.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<TItem> ChildContent { get; set; }
 
         /// <summary>
         /// Disable this option
@@ -192,6 +202,12 @@ namespace AntDesign
                 // bound to the SelectOptionItem.
                 var item = SelectParent.SelectOptionItems.First(x => x.InternalId == InternalId);
                 item.ChildComponent = this;
+                // If this SelectOption provides a ChildContent label template, assign it to the underlying
+                // SelectOptionItem so the Select can reuse it for the selected-item display when needed.
+                if (ChildContent != null)
+                {
+                    item.LabelTemplate = ChildContent(item.Item);
+                }
             }
             else if (Model is not null)
             {
@@ -201,6 +217,10 @@ namespace AntDesign
                 GroupName = Model.GroupName;
                 Value = Model.Value;
                 Model.ChildComponent = this;
+                if (ChildContent != null)
+                {
+                    Model.LabelTemplate = ChildContent(Model.Item);
+                }
                 isAlreadySelected = IsAlreadySelected(Model);
             }
             else
@@ -219,6 +239,11 @@ namespace AntDesign
                     ChildComponent = this
                 };
 
+                if (ChildContent != null)
+                {
+                    _optionItem.LabelTemplate = ChildContent(_optionItem.Item);
+                }
+
                 SelectParent.AddOptionItem(_optionItem);
                 SelectParent.AddEqualityToNoValue(_optionItem);
                 isAlreadySelected = IsAlreadySelected(_optionItem);
@@ -230,6 +255,37 @@ namespace AntDesign
             {
                 await SelectParent.ProcessSelectedSelectOptions();
             }
+        }
+
+        protected override Task OnParametersSetAsync()
+        {
+            // If ChildContent changed at runtime, update the underlying model's LabelTemplate
+            if (!EqualityComparer<RenderFragment<TItem>>.Default.Equals(_previousChildContent, ChildContent))
+            {
+                _previousChildContent = ChildContent;
+
+                if (ChildContent != null)
+                {
+                    // Update existing model if present
+                    if (Model != null)
+                    {
+                        Model.LabelTemplate = ChildContent(Model.Item);
+                    }
+
+                    // If this SelectOption created its own option item, update it too
+                    if (_optionItem != null)
+                    {
+                        _optionItem.LabelTemplate = ChildContent(_optionItem.Item);
+                    }
+
+                    // Notify parent to re-render selected display if necessary.
+                    // StateHasChanged is protected on ComponentBase, so invoke it via reflection on the parent component.
+                    // Ask the parent Select to refresh its selected display using an internal method
+                    SelectParent?.RequestSelectedDisplayRefresh();
+                }
+            }
+
+            return base.OnParametersSetAsync();
         }
 
         private bool IsAlreadySelected(SelectOptionItem<TItemValue, TItem> selectOption)
