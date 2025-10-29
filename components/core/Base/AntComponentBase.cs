@@ -91,7 +91,7 @@ namespace AntDesign
             {
                 return await Js.InvokeAsync<T>(code, args);
             }
-            catch (Exception e)
+            catch
             {
                 throw;
             }
@@ -103,12 +103,13 @@ namespace AntDesign
             {
                 await Js.InvokeVoidAsync(code, args);
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
+                // Do not write to console
                 throw;
             }
         }
+
 
         /// <summary>
         /// Standard Focus. From Net5 uses Blazor extension method on ElementReference.

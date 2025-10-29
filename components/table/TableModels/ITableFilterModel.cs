@@ -22,5 +22,7 @@ namespace AntDesign.TableModels
         public IQueryable<TItem> FilterList<TItem>(IQueryable<TItem> source);
 
         public Expression<Func<TItem, bool>> FilterExpression<TItem>();
+
+        internal void BuildGetFieldExpression<TItem>();
     }
 }

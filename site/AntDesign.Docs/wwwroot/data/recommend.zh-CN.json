@@ -1,9 +1,9 @@
 ﻿[
   {
-    "title": "AntDesign Blazor 2024 年度总结",
-    "description": "在1日发布的 .NET 基金会 2024 年度最活跃社区项目榜单中，以 PR 数（428）排名第六，以新增贡献者数（35）排名第三！目前 github star 接近5.9k，fork接近1100，nuget 下载量超过150万！感谢大家的支持和贡献！",
-    "img": "/docs/assets/news/DNF2024.jpg",
-    "href": "https://mp.weixin.qq.com/s/WRs2mMSqYPus8f09BOLQ7g",
+    "title": "Ant Design X Blazor 隆重发布，引领 AI 全栈开发体验新秩序",
+    "description": "基于 Ant Design RICH 设计范式，深度整合微软全栈 AI 生态，为全球企业及开发者打造卓越 AI 界面解决方案，引领智能新体验。",
+    "img": "/docs/assets/news/x-cn.png",
+    "href": "https://x.antblazor.com/",
     "popularize": false
   },
   {

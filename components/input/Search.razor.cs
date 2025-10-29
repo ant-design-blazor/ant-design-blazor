@@ -144,7 +144,7 @@ namespace AntDesign
             }
 
             AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-search");
-            GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search ant-input-group-wrapper");
+            GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search {(RTL ? $"{PrefixCls}-search-rtl" : "")}");
             GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-enter-button");
         }
 

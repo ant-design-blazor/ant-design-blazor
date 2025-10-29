@@ -75,7 +75,7 @@
             timeFormat = Format;
         }
 
-        var use12Hours = Use12Hours || timeFormat.ToLower().Contains("t");
+        var use12Hours = Use12Hours || timeFormat.Contains("t", StringComparison.OrdinalIgnoreCase);
         var isPM = use12Hours && Value?.Hour >= 12;        
         DatePickerDisabledTime disabledTime = GetDisabledTime();
         bool isValueNull = Value is null;
@@ -103,7 +103,7 @@
         }
 
         <div class="@(PrefixCls)-content">
-            @if (timeFormat.ToLower().Contains("hh"))
+            @if (timeFormat.Contains("hh", StringComparison.OrdinalIgnoreCase))
             {
                 var selectFirstHour = Value is not null && disabledTime._disabledHours.Contains(Value.Value.Hour);
                 var hoursOffset = isPM ? 12 : 0;
@@ -135,7 +135,7 @@
                     }
                 </ul>
             }
-            @if (timeFormat.ToLower().Contains("mm"))
+            @if (timeFormat.Contains("mm", StringComparison.OrdinalIgnoreCase))
             {
                 <ul @ref="@_minutesParent" class="@(PrefixCls)-time-panel-column" style="position: relative;">
                     @for (int minute = 0; minute < 60; minute++)
@@ -155,7 +155,7 @@
                     }
                 </ul>
             }
-            @if (timeFormat.ToLower().Contains("ss"))
+            @if (timeFormat.Contains("ss", StringComparison.OrdinalIgnoreCase))
             {
                 <ul @ref="_secondsParent" class="@(PrefixCls)-time-panel-column" style="position: relative;">
                     @for (int second = 0; second < 60; second++)

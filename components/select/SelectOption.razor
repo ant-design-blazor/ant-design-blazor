@@ -16,11 +16,11 @@
     <div class="@ClassPrefix-content">
         @if (ChildContent != null)
         {
-            @ChildContent
+            @ChildContent(Model.Item)
         }
         else if (ItemTemplate != null)
         {
-             @ItemTemplate(Model.Item)
+            @ItemTemplate(Model.Item)
         }
         else
         {

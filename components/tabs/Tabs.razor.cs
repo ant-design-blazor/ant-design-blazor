@@ -435,13 +435,10 @@ namespace AntDesign
             if (IsDisposed)
                 return;
 
-            // reorder tabs
-            _tabs.OrderBy(x => x.TabIndex).ForEach((x, i) => x.SetIndex(i));
-
             // if it is active, need to activiate the previous tab, or the next one if no previous
             if (_activeKey == tab.Key)
             {
-                if (tab.TabIndex > 0)
+                if (_tabs.IndexOf(tab) > 0)
                 {
                     Previous();
                 }
@@ -461,13 +458,13 @@ namespace AntDesign
 
         internal async Task HandleTabClick(TabPane tabPane)
         {
-            if (tabPane.IsActive)
-                return;
-
             if (OnTabClick.HasDelegate)
             {
                 await OnTabClick.InvokeAsync(tabPane.Key);
             }
+
+            if (tabPane.IsActive)
+                return;
 
             ActivatePane(tabPane.Key);
         }
@@ -687,18 +684,31 @@ namespace AntDesign
 
         private async Task ResetSizes()
         {
+            if (IsDisposed)
+                return;
+
             ElementReference[] refs = [_navListRef, _navWarpRef, .. _tabs.Select(x => x.TabRef).ToArray()];
             _itemRefs = await JsInvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, refs);
-            var navList = _itemRefs[Id + "-nav-list"];
-            var navWarp = _itemRefs[Id + "-nav-warpper"];
 
-            _scrollListWidth = navList.ClientWidth;
-            _scrollListHeight = navList.ClientHeight;
-            _wrapperWidth = navWarp.ClientWidth;
-            _wrapperHeight = navWarp.ClientHeight;
+            if (_itemRefs == null)
+            {
+                return;
+            }
 
-            _itemRefs.Remove(Id + "-nav-list");
-            _itemRefs.Remove(Id + "-nav-warpper");
+            var navListKey = Id + "-nav-list";
+            var navWrapperKey = Id + "-nav-wrapper";
+
+            // Use TryGetValue to safely access dictionary keys
+            if (_itemRefs.TryGetValue(navListKey, out var navList) && _itemRefs.TryGetValue(navWrapperKey, out var navWarp))
+            {
+                _scrollListWidth = navList.ClientWidth;
+                _scrollListHeight = navList.ClientHeight;
+                _wrapperWidth = navWarp.ClientWidth;
+                _wrapperHeight = navWarp.ClientHeight;
+
+                _itemRefs.Remove(navListKey);
+                _itemRefs.Remove(navWrapperKey);
+            }
         }
 
         private void UpdateScrollListPosition()
