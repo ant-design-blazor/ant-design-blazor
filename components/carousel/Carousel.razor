@@ -36,7 +36,7 @@
         </div>
         @if (Dots)
         {
-            <ul class="@($"slick-dots slick-dots-{DotPosition.ToString().ToLower()} {DotsClass}")" style="display: block;">
+            <ul class="@($"slick-dots slick-dots-{DotPosition.ToString().ToLowerInvariant()} {DotsClass}")" style="display: block;">
                 @for (int i = 0; i < _slicks.Count; i++)
                 {
                     int index = i;

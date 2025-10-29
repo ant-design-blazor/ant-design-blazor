@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -81,13 +80,13 @@ namespace AntDesign.Internal
 
         private bool _disabled;
 
-        private UploadInfo _uploadInfo = new UploadInfo();
+        private UploadInfo _uploadInfo = new();
 
         protected override bool ShouldRender() => Upload != null;
 
-        private string MethodString => Method.IsT0 ? Method.AsT0.ToString().ToLower() : Method.AsT1.ToLower();
+        private string MethodString => Method.IsT0 ? Method.AsT0.ToString().ToLowerInvariant() : Method.AsT1.ToLowerInvariant();
 
-        private readonly Hashtable _typeMap = new Hashtable()
+        private static readonly Dictionary<UploadListType, string> _typeMap = new()
         {
             [UploadListType.Text] = "text",
             [UploadListType.Picture] = "picture",

@@ -64,6 +64,18 @@ namespace AntDesign
 
         protected SelectContent<TItemValue, TItem> _selectContent;
 
+        /// <summary>
+        /// Request the Select component to refresh its selected-item display.
+        /// This is intended to be used by child components (e.g. SelectOption) when
+        /// their label template changes at runtime. Internal visibility keeps this
+        /// callable within the assembly without exposing it publicly.
+        /// </summary>
+        internal void RequestSelectedDisplayRefresh()
+        {
+            // Use InvokeAsync to ensure this runs on the renderer synchronization context.
+            _ = InvokeAsync(() => StateHasChanged());
+        }
+
         protected TItemValue[] _selectedValues;
 
         protected Func<TItem, string> _getLabel;
@@ -349,7 +361,7 @@ namespace AntDesign
                     }
                 }
 
-                if (_isNotifyFieldChanged && Form?.ValidateOnChange == true)
+                if (_isNotifyFieldChanged && Form?.ValidateOnChange == true && FieldIdentifier is { Model: not null, FieldName: not null })
                 {
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }

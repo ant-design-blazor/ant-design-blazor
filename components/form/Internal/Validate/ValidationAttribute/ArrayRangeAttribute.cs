@@ -6,38 +6,31 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace AntDesign.Internal.Form.Validate
+namespace AntDesign.Internal.Form.Validate;
+
+internal sealed class ArrayRangeAttribute(int minLength, int maxLength) : ValidationAttribute
 {
-    internal class ArrayRangeAttribute : ValidationAttribute
+    public int MaxLength { get; } = maxLength;
+
+    public int MinLength { get; } = minLength;
+
+    public override string FormatErrorMessage(string name)
     {
-        public int MaxLength { get; }
+        return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, MinLength, MaxLength);
+    }
 
-        public int MinLength { get; }
-
-        public ArrayRangeAttribute(int minLength, int maxLength)
+    public override bool IsValid(object value)
+    {
+        if (value == null)
         {
-            MinLength = minLength;
-            MaxLength = maxLength;
+            return true;
         }
 
-        public override string FormatErrorMessage(string name)
+        if (value is not Array valueAsArray)
         {
-            return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, MinLength, MaxLength);
+            return false;
         }
 
-        public override bool IsValid(object value)
-        {
-            if (value == null)
-            {
-                return true;
-            }
-
-            if (!(value is Array valueAsArray))
-            {
-                return false;
-            }
-
-            return valueAsArray.Length >= MinLength && valueAsArray.Length <= MaxLength;
-        }
+        return valueAsArray.Length >= MinLength && valueAsArray.Length <= MaxLength;
     }
 }

@@ -31,7 +31,7 @@
                     </div>
                 }
 
-                <div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef" id="@(Id)-nav-warpper">
+                <div class="@_tabsNavWarpPingClassMapper.Class" @ref="@_navWarpRef" id="@(Id)-nav-wrapper">
                     <div class="ant-tabs-nav-list" style="@_navListStyle" @ref="@_navListRef" id="@(Id)-nav-list">
                         @foreach (var tab in _tabs)
                         {
@@ -110,7 +110,7 @@
             <div class="@_contentClassMapper.Class">
                 @foreach (var tab in _tabs)
                 {
-                    __builder.AddContent(tab.GetHashCode(), tab.RenderPane);
+					__builder.AddContent(tab.TabIndex, tab.RenderPane);
                 }
             </div>
         </div>

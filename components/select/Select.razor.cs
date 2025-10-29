@@ -400,7 +400,7 @@ namespace AntDesign
                 SelectOptions = ChildContent;
             }
 
-            if (SelectOptions == null && typeof(TItemValue) != typeof(TItem) && ValueProperty == null && string.IsNullOrWhiteSpace(ValueName))
+            if (DataSource?.Any() == true && typeof(TItemValue) != typeof(TItem) && ValueProperty == null && string.IsNullOrWhiteSpace(ValueName))
             {
                 throw new ArgumentNullException(nameof(ValueName));
             }
@@ -446,7 +446,7 @@ namespace AntDesign
             if (_valueHasChanged && _optionsHasInitialized)
             {
                 _valueHasChanged = false;
-                if (Form?.ValidateOnChange == true)
+                if (Form?.ValidateOnChange == true && FieldIdentifier is { Model: not null, FieldName: not null })
                 {
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }

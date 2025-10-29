@@ -294,17 +294,11 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (Model == null)
-            {
-                Model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
-            }
+            Model ??= (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
 
             _editContext = new EditContext(Model);
 
-            if (FormProvider != null)
-            {
-                FormProvider.AddForm(this);
-            }
+            FormProvider?.AddForm(this);
 
             if (OnFieldChanged.HasDelegate)
                 _editContext.OnFieldChanged += OnFieldChangedHandler;
@@ -392,8 +386,10 @@ namespace AntDesign
 
             if (result.Any())
             {
-                var errors = new Dictionary<FieldIdentifier, List<string>>();
-                errors[args.FieldIdentifier] = result.Select(r => r.ErrorMessage).ToList();
+                var errors = new Dictionary<FieldIdentifier, List<string>>
+                {
+                    [args.FieldIdentifier] = [.. result.Select(r => r.ErrorMessage)]
+                };
 
                 _rulesValidator.DisplayErrors(errors);
             }
@@ -413,7 +409,7 @@ namespace AntDesign
                 var result = formItem.ValidateFieldWithRules();
                 if (result.Any())
                 {
-                    errors[formItem.GetFieldIdentifier()] = result.Select(r => r.ErrorMessage).ToList();
+                    errors[formItem.GetFieldIdentifier()] = [.. result.Select(r => r.ErrorMessage)];
                 }
             }
 
@@ -511,7 +507,7 @@ namespace AntDesign
 
             if (Model == null)
             {
-                _model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
+                _model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke([]);
                 _isModelBuildFromNull = true;
             }
 
@@ -520,8 +516,7 @@ namespace AntDesign
             {
                 FieldInfo fieldInfo = kv.Value.fi;
                 EventInfo eventInfo = kv.Value.ei;
-                Delegate mdel = fieldInfo.GetValue(_editContext) as Delegate;
-                if (mdel != null)
+                if (fieldInfo.GetValue(_editContext) is Delegate mdel)
                 {
                     foreach (Delegate del in mdel.GetInvocationList())
                     {
@@ -548,7 +543,7 @@ namespace AntDesign
         {
             if (_eventInfos is null)
             {
-                _eventInfos = new();
+                _eventInfos = [];
                 Type contextType = typeof(EditContext);
                 foreach (EventInfo eventInfo in contextType.GetEvents(AllBindings))
                 {

@@ -298,4 +298,27 @@ namespace AntDesign
             }
         }
     }
+
+    public class ConfirmOptions<TResult> : ConfirmOptions
+    {
+        /// <summary>
+        /// On dialog open
+        /// </summary>
+        public Func<Task>? OnOpen { get; set; }
+
+        /// <summary>
+        /// On dialog close
+        /// </summary>
+        public Func<Task>? OnClose { get; set; }
+
+        /// <summary>
+        /// On OK click (supports TResult)
+        /// </summary>
+        public new Func<TResult?, Task>? OnOk { get; set; }
+
+        /// <summary>
+        /// On Cancel click (supports TResult)
+        /// </summary>
+        public new Func<TResult?, Task>? OnCancel { get; set; }
+    }
 }
