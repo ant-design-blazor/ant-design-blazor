@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 
@@ -22,15 +23,6 @@ namespace AntDesign
         [CascadingParameter(Name = "ItemTemplate")] internal RenderFragment<TItem> ItemTemplate { get; set; }
         [CascadingParameter(Name = "Model")] internal SelectOptionItem<TItemValue, TItem> Model { get; set; }
         [CascadingParameter] internal SelectBase<TItemValue, TItem> SelectParent { get; set; }
-
-        /// <summary>
-        /// Optional child content of the SelectOption, used as label template for the option.
-        /// If provided it will be used for rendering the option content (when ItemTemplate is not present)
-        /// and it will be assigned to the underlying SelectOptionItem.LabelTemplate so the Select's
-        /// selected-item display can reuse it when Select.LabelTemplate is not set.
-        /// </summary>
-        [Parameter]
-        public RenderFragment<TItem> ChildContent { get; set; }
 
         /// <summary>
         /// Disable this option
@@ -93,6 +85,17 @@ namespace AntDesign
                 _itemSet = true;
             }
         }
+
+        /// <summary>
+        /// Optional child content of the SelectOption, used as label template for the option.
+        /// If provided it will be used for rendering the option content (when ItemTemplate is not present)
+        /// and it will be assigned to the underlying SelectOptionItem.LabelTemplate so the Select's
+        /// selected-item display can reuse it when Select.LabelTemplate is not set.
+        /// </summary>
+        [PublicApi("1.5.0")]
+        [Parameter]
+        public RenderFragment<TItem> ChildContent { get; set; }
+
         #endregion
 
         # region Properties
