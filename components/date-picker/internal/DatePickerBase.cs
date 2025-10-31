@@ -564,7 +564,10 @@ namespace AntDesign
             base.Dispose(disposing);
             _ = InvokeAsync(async () =>
             {
-                await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, _inputStart.Ref);
+                if (_inputStart != null)
+                {
+                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, _inputStart.Ref);
+                }
             });
         }
 
