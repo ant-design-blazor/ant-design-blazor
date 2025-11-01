@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -38,8 +39,11 @@ namespace AntDesign
     [CascadingTypeParameter(nameof(TItem))]
     [CascadingTypeParameter(nameof(TItemValue))]
 #endif
-
+#if NET5_0_OR_GREATER
+    public partial class Select<TItemValue, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.NonPublicMethods)] TItem> : SelectBase<TItemValue, TItem>
+#else
     public partial class Select<TItemValue, TItem> : SelectBase<TItemValue, TItem>
+#endif
     {
         #region Parameters
 

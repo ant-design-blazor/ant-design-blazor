@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -20,6 +21,9 @@ namespace AntDesign
         [Parameter]
         public string TypeName
         {
+#if NET5_0_OR_GREATER
+            [RequiresUnreferencedCode("Component uses Type.GetType for dynamic component loading which is not trim-safe")]
+#endif
             set
             {
                 if (Type != null) return;

@@ -5,6 +5,7 @@
 #nullable enable
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.AspNetCore.Components;
@@ -248,6 +249,12 @@ public partial class GenerateFormItem<TModel> : ComponentBase
         builder.CloseComponent();
     }
 
+#if NET5_0_OR_GREATER
+    [RequiresUnreferencedCode("GenerateFormItem uses reflection to create EventCallback instances")]
+#endif
+#if NET7_0_OR_GREATER
+    [RequiresDynamicCode("GenerateFormItem uses Activator.CreateInstance for generic type instantiation")]
+#endif
     private object? CreateEventCallback(Type callbackType, object receiver, Action<object> callback)
     {
         var createMethod = typeof(EventCallbackFactory)

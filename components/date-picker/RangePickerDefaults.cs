@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using AntDesign.Internal;
 
 namespace AntDesign
@@ -13,12 +14,28 @@ namespace AntDesign
     /// </summary>
     public static class RangePickerDefaults
     {
+#if NET5_0_OR_GREATER
+        [RequiresUnreferencedCode("RangePickerDefaults uses reflection to get array element type")]
+#endif
+#if NET7_0_OR_GREATER
+        [RequiresDynamicCode("RangePickerDefaults uses Activator.CreateInstance")]
+#endif
         public static void ProcessDefaults<TValue>(TValue value, TValue defaultValue,
             TValue defaultPickerValue, DateTime[] pickerValues, bool[] useDefaultPickerValue)
         {
             var isNullable = InternalConvert.IsNullable<TValue>();
 
-            var defaultElementValue = Activator.CreateInstance(typeof(TValue).GetElementType());
+            // Get default value for the element type of TValue array
+            object defaultElementValue;
+            var elementType = typeof(TValue).GetElementType();
+            if (elementType != null)
+            {
+                defaultElementValue = Activator.CreateInstance(elementType);
+            }
+            else
+            {
+                defaultElementValue = default(TValue);
+            }
 
             DateTime?[] evaluatedPickerValue = new DateTime?[2];
 

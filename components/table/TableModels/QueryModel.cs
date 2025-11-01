@@ -6,15 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using AntDesign.Core.Helpers;
-using AntDesign.Filters;
 using AntDesign.TableModels.JsonConverters;
 
 namespace AntDesign.TableModels
 {
-    [JsonConverter(typeof(QueryModelJsonConverter))]
     public abstract class QueryModel
     {
         public int PageIndex { get; }
@@ -26,8 +22,10 @@ namespace AntDesign.TableModels
         [Obsolete("Please use StartIndex")]
         public int OffsetRecords => StartIndex;
 
+        [JsonConverter(typeof(TableSortModelListConverter))]
         public IList<ITableSortModel> SortModel { get; private set; }
 
+        [JsonConverter(typeof(TableFilterModelListConverter))]
         public IList<ITableFilterModel> FilterModel { get; private set; }
 
         public QueryModel()
@@ -57,7 +55,6 @@ namespace AntDesign.TableModels
         }
     }
 
-    [JsonConverter(typeof(QueryModelJsonConverter))]
     public class QueryModel<TItem> : QueryModel, ICloneable
     {
         internal QueryModel(int pageIndex, int pageSize, int startIndex) : base(pageIndex, pageSize, startIndex)

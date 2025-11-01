@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Components;
@@ -381,6 +382,12 @@ namespace AntDesign
                 ActiveKey = _pages.FirstOrDefault()?.Key;
         }
 
+#if NET5_0_OR_GREATER
+        [RequiresUnreferencedCode("AddPinnedPageItem uses Activator.CreateInstance which is not trim-safe")]
+#endif
+#if NET7_0_OR_GREATER
+        [RequiresDynamicCode("AddPinnedPageItem uses Activator.CreateInstance which requires runtime code generation")]
+#endif
         private void AddPinnedPageItem(Type pageType)
         {
             var routeAttribute = pageType.GetCustomAttribute<RouteAttribute>();
