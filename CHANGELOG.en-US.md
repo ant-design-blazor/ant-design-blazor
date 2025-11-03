@@ -15,6 +15,85 @@ timeline: true
 
 ---
 
+### 1.5.0
+
+- Table
+  - 🆕 Add support for controlling the closure of the panel when customizing the filter panel. [#4645](https://github.com/ant-design-blazor/ant-design-blazor/pull/4645) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add support hiding the add button of the field type filter when FilterMultiple=false is set. [#4684](https://github.com/ant-design-blazor/ant-design-blazor/pull/4684) [@alchiweb](https://github.com/alchiweb)
+  - 🆕 Add a new property, `ScrollItemIntoView`, to scroll to the specified row of data. [#4664](https://github.com/ant-design-blazor/ant-design-blazor/pull/4664) [@pankey888](https://github.com/pankey888)
+  - 🆕 Add support for directly submitting QueryModel to the backend enables correct model binding, and supports direct filtering and sorting of IQueryable. [#4658](https://github.com/ant-design-blazor/ant-design-blazor/pull/4658) [@ElderJames](https://github.com/ElderJames)
+
+- Upload
+  - 🆕 Add Defer delayed upload mode. (#4626). [#4626](https://github.com/ant-design-blazor/ant-design-blazor/pull/4626) [@stfei](https://github.com/stfei)
+  - 🆕 Added support for usesing Object URL to display images before uploading at the Defer mode. [#4680](https://github.com/ant-design-blazor/ant-design-blazor/pull/4680) [@ElderJames](https://github.com/ElderJames)
+  - 🆕 Add support for pasting and uploading via text box. [#4650](https://github.com/ant-design-blazor/ant-design-blazor/pull/4650) [@ElderJames](https://github.com/ElderJames)
+
+- Tabs
+  - 🆕 Added touching swipe page turning function. [#4581](https://github.com/ant-design-blazor/ant-design-blazor/pull/4581) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed avoid re-rendering already closed Tab pages. [#4681](https://github.com/ant-design-blazor/ant-design-blazor/pull/4681) [@ElderJames](https://github.com/ElderJames)
+
+- ReuseTabs
+  - 🐞 Fixed the issue where the Pin property of ReuseTabs becomes ineffective when the page is not in the same assembly. [#4702](https://github.com/ant-design-blazor/ant-design-blazor/pull/4702) [@shuangbaojun](https://github.com/shuangbaojun)
+  - 🛠 Refactor the page caching strategy of ReuseTabs. [#4679](https://github.com/ant-design-blazor/ant-design-blazor/pull/4679) [@ElderJames](https://github.com/ElderJames)
+
+- Select
+  - 🆕 Add enable SelectOption to support setting the ChildContent for label rendering. [#4662](https://github.com/ant-design-blazor/ant-design-blazor/pull/4662) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 Fixed the exception when the Select is not bound to a Value in FromItem. [#4700](https://github.com/ant-design-blazor/ant-design-blazor/pull/4700) [@shuangbaojun](https://github.com/shuangbaojun)[#4709](https://github.com/ant-design-blazor/ant-design-blazor/pull/4709)
+  - 🐞 Fixed Select should only require ValueName to none-null in DataSource mode. [#4683](https://github.com/ant-design-blazor/ant-design-blazor/pull/4683) [@ElderJames](https://github.com/ElderJames)
+
+- Input
+  - 🛠 Refactor to remove duplicate rendering of ant-input-group-wrapper. [#4689](https://github.com/ant-design-blazor/ant-design-blazor/pull/4689) [@zandiarash](https://github.com/zandiarash)
+  - 🛠 Refactor the naming of some APIs: OnkeyDown, OnkeyDownAsync, and OnkeyUp. [#4697](https://github.com/ant-design-blazor/ant-design-blazor/pull/4697) [@zandiarash](https://github.com/zandiarash)
+  - 🐞 Fixed the RTL style of InputGroup。 [#4694](https://github.com/ant-design-blazor/ant-design-blazor/pull/4694) [@zandiarash](https://github.com/zandiarash)
+
+- 🆕 Added Mentions support custom prefixes and multiple prefixes. [#4652](https://github.com/ant-design-blazor/ant-design-blazor/pull/4652) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Added Carousel supports touch swipe to turn pages. [#4580](https://github.com/ant-design-blazor/ant-design-blazor/pull/4580) [@ElderJames](https://github.com/ElderJames)
+
+- 🛠 Refactor Modal so that ModalService.CreateComfirmAsync() directly returns ConfirmResult and normally triggers delegates such as OnOk/OnCancel. [2ff57a1](https://github.com/ant-design-blazor/ant-design-blazor/commit/2ff57a1) [@shuangbaojun](https://github.com/shuangbaojun)
+- 🐞 Fixed Datepicker the exception that occurs when it destroys the date picker. [#4715](https://github.com/ant-design-blazor/ant-design-blazor/pull/4715) [@pankey888](https://github.com/pankey888)
+- 🐞 Fixed TreeSelect throws an exception if Value is not bound in FromItem. [#4714](https://github.com/ant-design-blazor/ant-design-blazor/pull/4714) [@shuangbaojun](https://github.com/shuangbaojun)
+
+- 🐞 Fixed Badge the missing namespace for the BadgeSize enumeration. [#4660](https://github.com/ant-design-blazor/ant-design-blazor/pull/4660) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed the JsInvokeAsync method so that it no longer prints exception stack traces to the console. [#4669](https://github.com/ant-design-blazor/ant-design-blazor/pull/4669) [@Yusuftmle](https://github.com/Yusuftmle)
+- 📖 Fixed Icons Docs the incorrect IconThemeType when copying Icons. [#4706](https://github.com/ant-design-blazor/ant-design-blazor/pull/4706) [@zandiarash](https://github.com/zandiarash)
+
+
+#### Breaking Changes
+
+- Table: By default, `FilterMultiple=false`, and the built-in Filter does not display the "+" button. To enable it, simply set "FilterMultiple=true".
+- Input: The original `Onkey*` API has been renamed to `OnKey*`.
+- Modal: 
+
+  - The return value of the method `CreateConfirmAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions);` is changed from `Task<ConfirmRef<TResult>>` to `Task<ConfirmResult>`.
+  - The settings of delegates such as `OnOk` and `OnCancel` in ModalService.CreateComfirmAsync(...) have been changed from being set in ConfirmRef to being set in ConfirmOptions:
+
+    ```cs
+      var options = new ConfirmOptions<string>()
+      {
+         Title = "Confirm",
+         Width = 350,
+         Content = content,
+         OnOpen = async () =>
+         {
+             Console.WriteLine("Open Confirm");
+         },
+         OnClose = async () =>
+         {
+             Console.WriteLine("Close Confirm");
+         },
+         OnCancel = async (result) =>
+         {
+             Console.WriteLine($"OnCancel:{result}");
+         },
+         OnOk = async (result) =>
+         {
+             Console.WriteLine($"OnOk:{result}");
+         }
+      };
+
+      await ModalService.CreateConfirmAsync(options);
+    ```
+
 ### 1.4.3
 
 `2025-07-13`
@@ -572,7 +651,7 @@ Breaking Changes:
 - 🐞 Fixed Radio can't refresh the UI in Modal. [#4023](https://github.com/ant-design-blazor/ant-design-blazor/pull/4023) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed Input can't apply Class to input element. [#4005](https://github.com/ant-design-blazor/ant-design-blazor/pull/4005) [@ElderJames](https://github.com/ElderJames)
 - 🛠 Refactor Select friendly error message for CustomTagLabelToValue. [#4049](https://github.com/ant-design-blazor/ant-design-blazor/pull/4049) [@ElderJames](https://github.com/ElderJames)
-- 🐞 Fixed Modal navigating exception (#4039). [#4039](https://github.com/ant-design-blazor/ant-design-blazor/pull/4039) [@James Yeung](https://github.com/James Yeung)
+- 🐞 Fixed Modal navigating exception (#4039). [#4039](https://github.com/ant-design-blazor/ant-design-blazor/pull/4039) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed Segmented that the bound value may be changed by AddItem if it is equal to default. [#4051](https://github.com/ant-design-blazor/ant-design-blazor/pull/4051) [@pankey888](https://github.com/pankey888)
 - 🐞 Fixed Table to avoid circular reference in caching. [#4048](https://github.com/ant-design-blazor/ant-design-blazor/pull/4048) [@ElderJames](https://github.com/ElderJames)
 
@@ -988,7 +1067,7 @@ You can set the disabled parameter to achieve the same functionality.
   - 🐞 Add commit changes after blur in Calendar. Fix click on suffix icon in DatePickerInput. [#3087](https://github.com/ant-design-blazor/ant-design-blazor/pull/3087) [@agolub-s](https://github.com/agolub-s)
 
 - ReuseTabs
-  - 🆕 Add support specific the PinUrl for the routes which contains parameters. [#3363](https://github.com/ant-design-blazor/ant-design-blazor/pull/3363) [@James Yeung](https://github.com/James Yeung)
+  - 🆕 Add support specific the PinUrl for the routes which contains parameters. [#3363](https://github.com/ant-design-blazor/ant-design-blazor/pull/3363) [@ElderJames](https://github.com/ElderJames)
   - 🆕 Add order options for pinned tabs in reusetabs. [#3335](https://github.com/ant-design-blazor/ant-design-blazor/pull/3335) [@ElderJames](https://github.com/ElderJames)
   - 🆕 Add KeepAlive parameter to choose whether to keep the page state. [#3334](https://github.com/ant-design-blazor/ant-design-blazor/pull/3334) [@ElderJames](https://github.com/ElderJames)
   - 🆕 Add support reload page inside blazor. [#3396](https://github.com/ant-design-blazor/ant-design-blazor/pull/3396) [@ElderJames](https://github.com/ElderJames)
@@ -1152,7 +1231,7 @@ Happy Father's Day!
 - 🐞 Fixed Image preview operations would be covered by the preview image. [#3170](https://github.com/ant-design-blazor/ant-design-blazor/pull/3170) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed Checkbox that CheckboxGroup will report an error when the internal Checkbox is null. [#3162](https://github.com/ant-design-blazor/ant-design-blazor/pull/3162) [@berkerdong](https://github.com/berkerdong)
 - 🐞 Fixed Pagination mini class name was changed. [#3266](https://github.com/ant-design-blazor/ant-design-blazor/pull/3266) [@ElderJames](https://github.com/ElderJames)
-- 🐞 Fixed AutoComplete that can't be selected. (#3252). [7d24d09](https://github.com/ant-design-blazor/ant-design-blazor/commit/7d24d09) [@James Yeung](https://github.com/James Yeung)
+- 🐞 Fixed AutoComplete that can't be selected. (#3252). [7d24d09](https://github.com/ant-design-blazor/ant-design-blazor/commit/7d24d09) [@ElderJames](https://github.com/ElderJames)
 - 🐞 Fixed Drawer that add `type="button"` to close button to avoid submitting form. [#3233](https://github.com/ant-design-blazor/ant-design-blazor/pull/3233) [@trafium](https://github.com/trafium)
 
 
@@ -1738,7 +1817,7 @@ Note that since the last synchronization with V4.16.9 of antd, the original scri
 - 🐞 Fixed Calendar `DateFullCellRender` throwing an exception. [#2068](https://github.com/ant-design-blazor/ant-design-blazor/pull/2068) [@szymski](https://github.com/szymski)
 - 🐞 Fixed Upload IsPicture issue. [#2049](https://github.com/ant-design-blazor/ant-design-blazor/pull/2049) [@berkerdong](https://github.com/berkerdong)
 - 🐞 Fixed Overlay premature reset of \_mouseInTrigger. [#2036](https://github.com/ant-design-blazor/ant-design-blazor/pull/2036) [@anddrzejb](https://github.com/anddrzejb)
-- 🐞 Fixed Menu make router match defaualt to all. [d8352b8](https://github.com/ant-design-blazor/ant-design-blazor/commit/d8352b8) [@James Yeung](https://github.com/James Yeung)
+- 🐞 Fixed Menu make router match defaualt to all. [d8352b8](https://github.com/ant-design-blazor/ant-design-blazor/commit/d8352b8) [@ElderJames](https://github.com/ElderJames)
 - 🌐 i18n: czech localization update. [#2030](https://github.com/ant-design-blazor/ant-design-blazor/pull/2030) [@Martin-Pucalka](https://github.com/Martin-Pucalka)
 
 ### 0.10.1
