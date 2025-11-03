@@ -41,7 +41,6 @@ timeline: true
   - 🐞 修复 Select 在 FromItem 中不绑定 Value 时会报异常。 [#4700](https://github.com/ant-design-blazor/ant-design-blazor/pull/4700) [#4709](https://github.com/ant-design-blazor/ant-design-blazor/pull/4709) [@shuangbaojun](https://github.com/shuangbaojun)
   - 🐞 修复 Select 应该只在 DataSource 模式下要求 ValueName 非空。[#4683](https://github.com/ant-design-blazor/ant-design-blazor/pull/4683) [@ElderJames](https://github.com/ElderJames)
 
-
 - Input
   - 🛠 重构 删除 ant-input-group-wrapper 的重复渲染。[#4689](https://github.com/ant-design-blazor/ant-design-blazor/pull/4689) [@zandiarash](https://github.com/zandiarash)
   - 🛠 重构 一些 API 的命名 OnkeyDown, OnkeyDownAsync and OnkeyUp。[#4697](https://github.com/ant-design-blazor/ant-design-blazor/pull/4697) [@zandiarash](https://github.com/zandiarash)
@@ -50,12 +49,49 @@ timeline: true
 - 🆕 新增 Mentions 支持自定义前缀与多前缀。[#4652](https://github.com/ant-design-blazor/ant-design-blazor/pull/4652) [@ElderJames](https://github.com/ElderJames)
 - 🆕 新增 Carousel 支持触摸滑动翻页功能。[#4580](https://github.com/ant-design-blazor/ant-design-blazor/pull/4580) [@ElderJames](https://github.com/ElderJames)
 
-- 🛠 重构 Modal 使 ModalService.CreateComfirmAsync() 直接返回 ConfirmResult 并正常触发OnOk/OnCancel 等委托。[2ff57a1](https://github.com/ant-design-blazor/ant-design-blazor/commit/2ff57a1) [@shuangbaojun](https://github.com/shuangbaojun)
+- 🛠 重构 Modal 使 ModalService.CreateComfirmAsync() 直接返回 ConfirmResult 并正常触发OnOk/OnCancel 等委托。[#4704](https://github.com/ant-design-blazor/ant-design-blazor/pull/4704) [@shuangbaojun](https://github.com/shuangbaojun)
 - 🐞 修复 Datepicker 销毁日期选择器时出现的异常。[#4715](https://github.com/ant-design-blazor/ant-design-blazor/pull/4715) [@pankey888](https://github.com/pankey888)
 - 🐞 修复 TreeSelect 在 FromItem 中如果未绑定 Value 会报异常。[#4714](https://github.com/ant-design-blazor/ant-design-blazor/pull/4714) [@shuangbaojun](https://github.com/shuangbaojun)
 - 🐞 修复 Badge 的 BadgeSize 枚举缺少命名空间。[#4660](https://github.com/ant-design-blazor/ant-design-blazor/pull/4660) [@ElderJames](https://github.com/ElderJames)
 - 🐞 修复 JsInvokeAsync 方法，不再向控制台打印异常堆栈信息。[#4669](https://github.com/ant-design-blazor/ant-design-blazor/pull/4669) [@Yusuftmle](https://github.com/Yusuftmle)
 - 📖 修复 Icon 文档在复制时 IconThemeType 不正确。[#4706](https://github.com/ant-design-blazor/ant-design-blazor/pull/4706) [@zandiarash](https://github.com/zandiarash)
+
+#### 破坏性更新
+
+- Table: 默认情况下 `FilterMultiple=false`，内置 Filter 则不显示 “+” 按钮，如需开启只需设置 “FilterMultiple=true”。
+- Input: 原来的 `Onkey*` API 重命名为 `OnKey*`。
+- Modal
+
+  - 方法 `CreateConfirmAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions);` 返回值从 `Task<ConfirmRef<TResult>>` 改为 `Task<ConfirmResult>`。
+  - ModalService.CreateComfirmAsync(...) 的 `OnOk`、`OnCancel` 等委托设置从原来的在 ConfirmRef 改为在 ConfirmOptions 设置：
+  
+    ```cs
+      var options = new ConfirmOptions<string>()
+      {
+         Title = "Confirm",
+         Width = 350,
+         Content = content,
+         OnOpen = async () =>
+         {
+             Console.WriteLine("Open Confirm");
+         },
+         OnClose = async () =>
+         {
+             Console.WriteLine("Close Confirm");
+         },
+         OnCancel = async (result) =>
+         {
+             Console.WriteLine($"OnCancel:{result}");
+         },
+         OnOk = async (result) =>
+         {
+             Console.WriteLine($"OnOk:{result}");
+         }
+      };
+
+      await ModalService.CreateConfirmAsync(options);
+    ```
+
 
 ### 1.4.3
 

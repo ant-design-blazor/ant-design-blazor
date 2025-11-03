@@ -58,6 +58,42 @@ timeline: true
 - 📖 Fixed Icons Docs the incorrect IconThemeType when copying Icons. [#4706](https://github.com/ant-design-blazor/ant-design-blazor/pull/4706) [@zandiarash](https://github.com/zandiarash)
 
 
+#### Breaking Changes
+
+- Table: By default, `FilterMultiple=false`, and the built-in Filter does not display the "+" button. To enable it, simply set "FilterMultiple=true".
+- Input: The original `Onkey*` API has been renamed to `OnKey*`.
+- Modal: 
+
+  - The return value of the method `CreateConfirmAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions);` is changed from `Task<ConfirmRef<TResult>>` to `Task<ConfirmResult>`.
+  - The settings of delegates such as `OnOk` and `OnCancel` in ModalService.CreateComfirmAsync(...) have been changed from being set in ConfirmRef to being set in ConfirmOptions:
+
+    ```cs
+      var options = new ConfirmOptions<string>()
+      {
+         Title = "Confirm",
+         Width = 350,
+         Content = content,
+         OnOpen = async () =>
+         {
+             Console.WriteLine("Open Confirm");
+         },
+         OnClose = async () =>
+         {
+             Console.WriteLine("Close Confirm");
+         },
+         OnCancel = async (result) =>
+         {
+             Console.WriteLine($"OnCancel:{result}");
+         },
+         OnOk = async (result) =>
+         {
+             Console.WriteLine($"OnOk:{result}");
+         }
+      };
+
+      await ModalService.CreateConfirmAsync(options);
+    ```
+
 ### 1.4.3
 
 `2025-07-13`
