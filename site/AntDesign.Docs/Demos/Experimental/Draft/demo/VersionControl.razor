@@ -1,0 +1,150 @@
+@using System.Text.Json
+
+<Alert Type="@AlertType.Info" ShowIcon="true" Style="margin-bottom: 16px;">
+    <MessageTemplate>
+        <Space>
+            <SpaceItem>Current Version:</SpaceItem>
+            <SpaceItem><Tag Color="@("blue")">@formData.Version</Tag></SpaceItem>
+        </Space>
+    </MessageTemplate>
+</Alert>
+
+<DraftMonitor TData="DocumentFormData"
+              @ref="monitorRef"
+              Data="@formData"
+              DataChanged="@(v => formData = v)"
+              Options="@draftOptions"
+              OnRecovered="@OnDraftRecovered"
+              OnDeleted="@OnDraftDeleted" />
+
+<Card Title="Document Editor - Version Control Demo">
+    <Alert Type="@AlertType.Warning" ShowIcon="true" Style="margin-bottom: 16px;">
+        <MessageTemplate>
+            <div>
+                <strong>Test Steps:</strong>
+                <ol style="margin: 8px 0 0 0; padding-left: 20px;">
+                    <li>Edit the document and wait for auto-save</li>
+                    <li>Click "Simulate Server Update (Version++)" to increment server version</li>
+                    <li>Refresh the page - the old draft should be deleted automatically (no recovery dialog)</li>
+                </ol>
+            </div>
+        </MessageTemplate>
+    </Alert>
+
+    <Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+        <SpaceItem>
+            <Input @bind-Value="@formData.Title" Placeholder="Document Title" />
+        </SpaceItem>
+        <SpaceItem>
+            <TextArea @bind-Value="@formData.Content" Placeholder="Document Content" Rows="4" />
+        </SpaceItem>
+        <SpaceItem>
+            <Input @bind-Value="@formData.Tags" Placeholder="Tags (comma separated)" />
+        </SpaceItem>
+        <SpaceItem>
+            <Space>
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" OnClick="SaveDocument">
+                        Save (Version++)
+                    </Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button OnClick="SimulateServerUpdate" Danger>
+                        Simulate Server Update (Version++)
+                    </Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button OnClick="ClearDraft">Clear Draft</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button OnClick="Reset">Reset</Button>
+                </SpaceItem>
+            </Space>
+        </SpaceItem>
+    </Space>
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <Alert Type="messageType" Message="@message" ShowIcon="true" Style="margin-top: 16px;" />
+    }
+</Card>
+
+@code {
+    private DocumentFormData formData = new DocumentFormData();
+    private DraftMonitor<DocumentFormData> monitorRef;
+    private string message;
+    private AlertType messageType = AlertType.Success;
+
+    public class DocumentFormData
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+        public string Tags { get; set; }
+        public int Version { get; set; } = 1;
+    }
+
+    private DraftOptions draftOptions => new DraftOptions
+    {
+        Key = "version-control-demo",
+        DelayMilliseconds = 1000,
+        RecoveryMode = DraftRecoveryMode.Confirm,
+        Version = formData.Version.ToString(),
+        EnableVersionCheck = true,
+        // Custom version comparison: only recover if draft version >= current version
+        ShouldRecoverDraft = (draftVersion, currentVersion) =>
+        {
+            if (int.TryParse(draftVersion, out var draftVer) && 
+                int.TryParse(currentVersion, out var currentVer))
+            {
+                return draftVer >= currentVer;
+            }
+            return false;
+        }
+    };
+
+    private async Task SaveDocument()
+    {
+        // Simulate saving to server and incrementing version
+        formData.Version++;
+        message = $"Document saved successfully! New version: {formData.Version}";
+        messageType = AlertType.Success;
+        
+        // Clear draft after successful save
+        await monitorRef.ClearDraftAsync();
+        StateHasChanged();
+    }
+
+    private void SimulateServerUpdate()
+    {
+        // Simulate server-side data update (e.g., another user edited)
+        formData.Version++;
+        message = $"⚠️ Server data updated! New version: {formData.Version}. The old draft (version {formData.Version - 1}) will be deleted on next page load.";
+        messageType = AlertType.Warning;
+        StateHasChanged();
+    }
+
+    private void OnDraftRecovered(DocumentFormData data)
+    {
+        message = $"✅ Draft recovered successfully! Version: {data.Version}";
+        messageType = AlertType.Success;
+    }
+
+    private void OnDraftDeleted()
+    {
+        message = "🗑️ Outdated draft deleted (version mismatch)";
+        messageType = AlertType.Info;
+    }
+
+    private async Task ClearDraft()
+    {
+        await monitorRef.ClearDraftAsync();
+        message = "Draft cleared";
+        messageType = AlertType.Info;
+    }
+
+    private void Reset()
+    {
+        formData = new DocumentFormData { Version = formData.Version };
+        message = "";
+    }
+}
