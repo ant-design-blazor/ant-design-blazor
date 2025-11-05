@@ -159,7 +159,11 @@ namespace AntDesign
 
         internal void HeaderColumnInitialized(IColumn column)
         {
-            if (column.ColIndex == Columns.Count - 1)
+            var shouldInvokeInitialized = _table.HasHeaderTemplate
+                ? column.ColIndex == Columns.Count - 1
+                : HeaderColumns.Count == Columns.Count;
+
+            if (shouldInvokeInitialized)
             {
                 // Header columns have all been initialized, then we can invoke the first change.
                 _table.OnColumnInitialized();
