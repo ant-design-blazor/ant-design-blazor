@@ -21,7 +21,7 @@ namespace AntDesign
         {
             if (Property != null)
             {
-                if (IsHeader)
+                if (IsInitialize || IsHeader)
                 {
                     GetFieldExpression = Property;
                 }
@@ -38,6 +38,7 @@ namespace AntDesign
                         return default;
                     };
                 }
+
                 base.OnInitialized();
             }
         }

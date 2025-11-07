@@ -1,0 +1,72 @@
+@namespace AntDesign.Docs.Demos.Experimental.TableEnhanced.Demo.Shared
+
+@typeparam TItem
+
+@inherits RelationComponentBase<TItem, int>
+
+@* Shared Relation Display Component - Reusable across different table types *@
+
+@if (_relationData == null)
+{
+    <span>Loading...</span>
+}
+else if (_relationData.TryGetValue(CurrentFieldValue, out var data))
+{
+    <Space Size="@SpaceSize.Small">
+        <SpaceItem>
+            <Tag Color="@data.Color">@data.Name</Tag>
+        </SpaceItem>
+        <SpaceItem>
+            <Text Type="@TextElementType.Secondary" Style="font-size: 12px">
+                (@data.Description)
+            </Text>
+        </SpaceItem>
+    </Space>
+}
+else
+{
+    <Tag Color="@("gray")">Unknown</Tag>
+}
+
+@code {
+    // Simulated relation data - can be users or departments based on context
+    private Dictionary<int, RelationData> _relationData = null;
+
+    // Batch load relation data
+    protected override Task OnLoadBatch(IEnumerable<int> ids)
+    {
+        // Determine data type based on TItem
+        if (typeof(TItem).Name == "Order")
+        {
+            // Load user data for orders
+            _relationData = new()
+            {
+                { 1, new RelationData { Name = "John Doe", Description = "john.doe@example.com", Color = "blue" } },
+                { 2, new RelationData { Name = "Jane Smith", Description = "jane.smith@example.com", Color = "green" } },
+                { 3, new RelationData { Name = "Bob Johnson", Description = "bob.johnson@example.com", Color = "orange" } },
+                { 4, new RelationData { Name = "Alice Brown", Description = "alice.brown@example.com", Color = "purple" } },
+                { 5, new RelationData { Name = "Charlie Wilson", Description = "charlie.wilson@example.com", Color = "red" } }
+            };
+        }
+        else if (typeof(TItem).Name == "Employee")
+        {
+            // Load department data for employees
+            _relationData = new()
+            {
+                { 1, new RelationData { Name = "Engineering", Description = "Beijing", Color = "blue" } },
+                { 2, new RelationData { Name = "Marketing", Description = "Shanghai", Color = "green" } },
+                { 3, new RelationData { Name = "Sales", Description = "Guangzhou", Color = "orange" } }
+            };
+        }
+
+        Console.WriteLine($"[RelationDisplay<{typeof(TItem).Name}>] Batch loading IDs: {string.Join(", ", ids.Distinct())}");
+        return Task.CompletedTask;
+    }
+
+    private class RelationData
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Color { get; set; }
+    }
+}

@@ -68,13 +68,33 @@
         </div>
     </section>
     <section class="highlight-wrapper @(_innerExpand?"highlight-wrapper-expand":"")">
-      @*   <div class="highlight">
-            <HighlightedCode Code="@Demo.Code" CanLoad="_innerExpand" Language="html"></HighlightedCode>
-        </div> *@
         @if (_innerExpand || _codeViewRendered)
         {
             _codeViewRendered = true;
-            <CodeView @bind-Value="@Demo.Code" Compiled="OnCompiled" />
+            @if (Demo.AdditionalFiles != null && Demo.AdditionalFiles.Any())
+            {
+                @* 多文件展示:使用Tabs切换 *@
+                <Tabs ActiveKey="@_activeFileTab" OnChange="OnFileTabChange" Type="@TabType.Card">
+                    <TabPane Key="@Demo.Name" Tab="@($"{Demo.Name}.razor")">
+                        <div class="highlight">
+                            <CodeView Value="@Demo.Code"></CodeView>
+                        </div>
+                    </TabPane>
+                    @foreach (var file in Demo.AdditionalFiles)
+                    {
+                        <TabPane Key="@file.Key" Tab="@file.Key">
+                            <div class="highlight">
+                                <CodeView Value="@file.Value"></CodeView>
+                            </div>
+                        </TabPane>
+                    }
+                </Tabs>
+            }
+            else
+            {
+                @* 单文件展示:使用CodeView编辑器 *@
+                <CodeView @bind-Value="@Demo.Code" Compiled="OnCompiled" />
+            }
         }
     </section>
     <style>
@@ -119,6 +139,7 @@
     private ErrorBoundary _errorBoundary;
     private bool _innerExpand;
     private bool _codeExpand;
+    private string _activeFileTab; // 当前激活的文件Tab
 
     protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
 
@@ -128,6 +149,10 @@
     {
         await base.OnInitializedAsync();
         lang.LanguageChanged += OnLangeChanged;
+        
+        // 初始化文件Tab为主文件
+        _activeFileTab = Demo.Name;
+        
 #if DEBUG
         _debugIcon =
     @<a href="@(Demo.Link??$"mock?type={Demo.Type}")" class="code-box-code-action" target="_blank">
@@ -146,6 +171,11 @@
     async Task AnchorClick()
     {
         await InteropService.JsInvokeAsync("window.eval", $"window.location.hash='{DemoId}'");
+    }
+    
+    void OnFileTabChange(string key)
+    {
+        _activeFileTab = key;
     }
 
     void IDisposable.Dispose()

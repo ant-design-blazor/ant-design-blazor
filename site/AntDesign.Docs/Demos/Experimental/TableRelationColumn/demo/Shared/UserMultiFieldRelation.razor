@@ -1,0 +1,98 @@
+@using System.Threading
+
+@namespace AntDesign.Docs.Demos.Experimental.TableRelationColumn.Demo.Shared
+
+@typeparam TItem
+
+@inherits RelationComponentBase<TItem, int>
+
+@* Multi-field relation component that can display different user fields from single data load *@
+
+@if (userData is null)
+{
+    <span>Loading...</span>
+}
+else if (userData.TryGetValue(CurrentFieldValue, out var user))
+{
+    if (DisplayField == "Name")
+    {
+        <Tag Color="@user.Color">@user.Name</Tag>
+    }
+    else if (DisplayField == "Address")
+    {
+        <span style="color: #666">@user.Address</span>
+    }
+    else if (DisplayField == "Email")
+    {
+        <span style="color: #666; font-size: 12px">@user.Email</span>
+    }
+    else
+    {
+        <span>Unknown field</span>
+    }
+}
+else
+{
+    <Tag Color="@("#d9d9d9")">Unknown User</Tag>
+}
+
+@code {
+    // Parameter to specify which field to display
+    [Parameter] public string DisplayField { get; set; } = "Name";
+
+    private Dictionary<int, UserData> userData = default;
+    
+    // Static lock to prevent duplicate data loading
+    private static readonly SemaphoreSlim _loadLock = new SemaphoreSlim(1, 1);
+
+    // Batch load user data once for all columns
+    protected override async Task OnLoadBatch(IEnumerable<int> userIds)
+    {
+        // Quick check without lock
+        if (SharedCache.TryGetValue("UserMultiFieldRelation_UserData", out var value) && value is Dictionary<int, UserData> data)
+        {
+            userData = data;
+            return;
+        }
+
+        // Use lock to prevent duplicate loading
+        await _loadLock.WaitAsync();
+        try
+        {
+            // Double-check after acquiring lock
+            if (SharedCache.TryGetValue("UserMultiFieldRelation_UserData", out value) && value is Dictionary<int, UserData> cachedData)
+            {
+                userData = cachedData;
+                return;
+            }
+
+            await Task.Delay(1000);
+
+            userData = new Dictionary<int, UserData>
+            {
+                { 1, new UserData { Name = "John Doe", Address = "123 Main St, Beijing", Email = "john.doe@example.com", Color = "blue" } },
+                { 2, new UserData { Name = "Jane Smith", Address = "456 Oak Ave, Shanghai", Email = "jane.smith@example.com", Color = "green" } },
+                { 3, new UserData { Name = "Bob Johnson", Address = "789 Pine Rd, Guangzhou", Email = "bob.johnson@example.com", Color = "orange" } },
+                { 4, new UserData { Name = "Alice Brown", Address = "321 Elm St, Shenzhen", Email = "alice.brown@example.com", Color = "purple" } },
+                { 5, new UserData { Name = "Charlie Wilson", Address = "654 Maple Dr, Hangzhou", Email = "charlie.wilson@example.com", Color = "red" } }
+            };
+
+            SharedCache["UserMultiFieldRelation_UserData"] = userData;
+            StateHasChanged();
+
+            Console.WriteLine($"[UserMultiFieldRelation<{typeof(TItem).Name}>] Batch loading user data for IDs: {string.Join(", ", userIds.Distinct())}");
+        }
+        finally
+        {
+            _loadLock.Release();
+        }
+    }
+
+    class UserData
+    {
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string Email { get; set; }
+        public string Color { get; set; }
+    }
+}
