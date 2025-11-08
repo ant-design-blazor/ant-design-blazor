@@ -41,26 +41,22 @@ else
     [Parameter] public string DisplayField { get; set; } = "Name";
 
     private Dictionary<int, UserData> userData = default;
-    
+
     // Static lock to prevent duplicate data loading
     private static readonly SemaphoreSlim _loadLock = new SemaphoreSlim(1, 1);
 
     // Batch load user data once for all columns
     protected override async Task OnLoadBatch(IEnumerable<int> userIds)
     {
-        // Quick check without lock
-        if (SharedCache.TryGetValue("UserMultiFieldRelation_UserData", out var value) && value is Dictionary<int, UserData> data)
-        {
-            userData = data;
-            return;
-        }
+        SharedCache.Remove("UserMultiFieldRelation_UserData", out _);
+        userData = null;
 
         // Use lock to prevent duplicate loading
         await _loadLock.WaitAsync();
         try
         {
             // Double-check after acquiring lock
-            if (SharedCache.TryGetValue("UserMultiFieldRelation_UserData", out value) && value is Dictionary<int, UserData> cachedData)
+            if (SharedCache.TryGetValue("UserMultiFieldRelation_UserData", out var value) && value is Dictionary<int, UserData> cachedData)
             {
                 userData = cachedData;
                 return;

@@ -1,19 +1,14 @@
 @using System.Threading.Tasks
-@using AntDesign.Docs.Demos.Experimental.TableEnhanced.Demo.Shared
-
-@* Demo: Using shared Razor relation components with different TItem types *@
+@using AntDesign.Docs.Demos.Experimental.TableRelationColumn.Demo.Shared
 
 <h4>Orders Table - Using UserNameRelation&lt;Order&gt;</h4>
 
 <Table TItem="Order" DataSource="@orders" Size="@TableSize.Small">
     <PropertyColumn Property="c=>c.OrderId" Title="Order ID" />
     <PropertyColumn Property="c=>c.Amount" Title="Amount" Format="C2" />
-
-    @* Using shared UserNameRelation component with Order as TItem *@
     <PropertyColumn Property="c=>c.UserId" Title="User">
         <UserNameRelation />
     </PropertyColumn>
-
     <PropertyColumn Property="c=>c.CreatedTime" Title="Created Time" Format="yyyy-MM-dd HH:mm" />
 </Table>
 
@@ -21,13 +16,9 @@
 
 <Table TItem="Employee" DataSource="@employees" Size="@TableSize.Small">
     <PropertyColumn Property="c=>c.EmployeeId" Title="Employee ID" />
-    <PropertyColumn Property="c=>c.Name" Title="Name" />
-
-    @* Using the same UserNameRelation component with Employee as TItem for department display *@
-    <PropertyColumn Property="c=>c.DepartmentId" Title="Department">
-        <UserNameRelation />
+    <PropertyColumn Property="c=>c.UserId" Title="Name" >
+       <UserNameRelation />
     </PropertyColumn>
-
     <PropertyColumn Property="c=>c.Salary" Title="Salary" Format="C0" />
 </Table>
 
@@ -43,22 +34,14 @@
             new Order { OrderId = "ORD001", UserId = 1, Amount = 299.50m, CreatedTime = DateTime.Now.AddDays(-5) },
             new Order { OrderId = "ORD002", UserId = 2, Amount = 150.00m, CreatedTime = DateTime.Now.AddDays(-4) },
             new Order { OrderId = "ORD003", UserId = 1, Amount = 450.00m, CreatedTime = DateTime.Now.AddDays(-3) },
-            new Order { OrderId = "ORD004", UserId = 3, Amount = 199.99m, CreatedTime = DateTime.Now.AddDays(-2) },
-            new Order { OrderId = "ORD005", UserId = 2, Amount = 350.00m, CreatedTime = DateTime.Now.AddDays(-1) },
-            new Order { OrderId = "ORD006", UserId = 4, Amount = 580.00m, CreatedTime = DateTime.Now },
-            new Order { OrderId = "ORD007", UserId = 1, Amount = 120.00m, CreatedTime = DateTime.Now.AddHours(-12) },
-            new Order { OrderId = "ORD008", UserId = 5, Amount = 890.00m, CreatedTime = DateTime.Now.AddHours(-6) },
         };
 
         // Initialize employees data
         employees = new List<Employee>
         {
-            new Employee { EmployeeId = "E001", Name = "John Doe", DepartmentId = 1, Salary = 8000 },
-            new Employee { EmployeeId = "E002", Name = "Jane Smith", DepartmentId = 2, Salary = 12000 },
-            new Employee { EmployeeId = "E003", Name = "Bob Johnson", DepartmentId = 1, Salary = 9500 },
-            new Employee { EmployeeId = "E004", Name = "Alice Brown", DepartmentId = 3, Salary = 15000 },
-            new Employee { EmployeeId = "E005", Name = "Charlie Wilson", DepartmentId = 2, Salary = 11000 },
-            new Employee { EmployeeId = "E006", Name = "David Lee", DepartmentId = 1, Salary = 8500 },
+            new Employee { EmployeeId = "E001", UserId = 1,  Salary = 8000 },
+            new Employee { EmployeeId = "E002", UserId = 2,  Salary = 12000 },
+            new Employee { EmployeeId = "E003", UserId = 3,  Salary = 9500 },
         };
     }
 
@@ -75,8 +58,7 @@
     public class Employee
     {
         public string EmployeeId { get; set; }
-        public string Name { get; set; }
-        public int DepartmentId { get; set; }
+        public int UserId { get; set; }
         public decimal Salary { get; set; }
     }
 }

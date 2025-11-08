@@ -1,52 +1,79 @@
 @using System.Threading.Tasks
-@using AntDesign.Docs.Demos.Experimental.TableEnhanced.Demo.Shared
 @using AntDesign.Docs.Demos.Experimental.TableRelationColumn.Demo.Shared
+@using AntDesign.TableModels
 
-@* Demo: Multiple columns sharing the same loaded data *@
+@* Demo: Multiple columns sharing the same loaded data with pagination *@
 
 <h4>Orders with User Details - Multiple Columns from Single Load</h4>
 
-<Table TItem="Order" DataSource="@orders" Size="@TableSize.Small">
-    <PropertyColumn Property="c=>c.OrderId" Title="Order ID" />
-    <PropertyColumn Property="c=>c.Amount" Title="Amount" Format="C2" />
+<Table TItem="Order" 
+       DataSource="@currentPageOrders" 
+       Size="@TableSize.Small" 
+       Loading="@isLoading" 
+       PageSize="5"
+       Total="30" 
+       OnChange="@OnChange">
+
+    <PropertyColumn Property="c => c.OrderId" Title="Order ID" />
+    <PropertyColumn Property="c => c.Amount" Title="Amount" Format="C2" />
 
     @* Multiple columns sharing the same user data load *@
 
     @* Column 1: User Name - displays user name from loaded data *@
-    <PropertyColumn Property="c=>c.UserId" Title="User Name">
+    <PropertyColumn Property="c => c.UserId" Title="User Name">
         <UserMultiFieldRelation TItem="Order" DisplayField="Name" />
     </PropertyColumn>
 
     @* Column 2: User Address - displays user address from the same loaded data *@
-    <PropertyColumn Property="c=>c.UserId" Title="User Address">
+    <PropertyColumn Property="c => c.UserId" Title="User Address">
         <UserMultiFieldRelation TItem="Order" DisplayField="Address" />
     </PropertyColumn>
 
     @* Column 3: User Email - displays user email from the same loaded data *@
-    <PropertyColumn Property="c=>c.UserId" Title="User Email">
+    <PropertyColumn Property="c => c.UserId" Title="User Email">
         <UserMultiFieldRelation TItem="Order" DisplayField="Email" />
     </PropertyColumn>
 
-    <PropertyColumn Property="c=>c.CreatedTime" Title="Created Time" Format="yyyy-MM-dd HH:mm" />
+    <PropertyColumn Property="c => c.CreatedTime" Title="Created Time" Format="yyyy-MM-dd HH:mm" />
 </Table>
 
 @code {
-    private List<Order> orders = new();
+    private List<Order> currentPageOrders = new();
 
-    protected override void OnInitialized()
+    private bool isLoading = false;
+
+    private async Task OnChange(QueryModel<Order> query)
     {
-        // Initialize orders data
-        orders = new List<Order>
+        isLoading = true;
+        StateHasChanged();
+
+        // Simulate loading delay
+        await Task.Delay(300);
+
+        currentPageOrders = GenerateOrders(5);
+
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private List<Order> GenerateOrders(int count)
+    {
+        var random = new Random(42); // Fixed seed for consistent demo
+        var orders = new List<Order>();
+        var baseTime = DateTime.Now.AddDays(-30);
+
+        for (int i = 1; i <= count; i++)
         {
-            new Order { OrderId = "ORD001", UserId = 1, Amount = 299.50m, CreatedTime = DateTime.Now.AddDays(-5) },
-            new Order { OrderId = "ORD002", UserId = 2, Amount = 150.00m, CreatedTime = DateTime.Now.AddDays(-4) },
-            new Order { OrderId = "ORD003", UserId = 1, Amount = 450.00m, CreatedTime = DateTime.Now.AddDays(-3) },
-            new Order { OrderId = "ORD004", UserId = 3, Amount = 199.99m, CreatedTime = DateTime.Now.AddDays(-2) },
-            new Order { OrderId = "ORD005", UserId = 2, Amount = 350.00m, CreatedTime = DateTime.Now.AddDays(-1) },
-            new Order { OrderId = "ORD006", UserId = 4, Amount = 580.00m, CreatedTime = DateTime.Now },
-            new Order { OrderId = "ORD007", UserId = 1, Amount = 120.00m, CreatedTime = DateTime.Now.AddHours(-12) },
-            new Order { OrderId = "ORD008", UserId = 5, Amount = 890.00m, CreatedTime = DateTime.Now.AddHours(-6) },
-        };
+            orders.Add(new Order
+            {
+                OrderId = $"ORD{i:D3}",
+                UserId = random.Next(1, 6), // Random user ID from 1-5
+                Amount = Math.Round((decimal)(random.NextDouble() * 900 + 100), 2), // Random amount between 100-1000
+                CreatedTime = baseTime.AddHours(random.Next(0, 720)) // Random time within 30 days
+            });
+        }
+
+        return orders.OrderByDescending(o => o.CreatedTime).ToList();
     }
 
     // Order entity

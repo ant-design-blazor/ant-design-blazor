@@ -1,4 +1,4 @@
-@namespace AntDesign.Docs.Demos.Experimental.TableEnhanced.Demo.Shared
+@namespace AntDesign.Docs.Demos.Experimental.TableRelationColumn.Demo.Shared
 
 @typeparam TItem
 
@@ -6,11 +6,11 @@
 
 @* Shared Relation Display Component - Reusable across different table types *@
 
-@if (_relationData == null)
+@if (_userData == null)
 {
     <span>Loading...</span>
 }
-else if (_relationData.TryGetValue(CurrentFieldValue, out var data))
+else if (_userData.TryGetValue(CurrentFieldValue, out var data))
 {
     <Space Size="@SpaceSize.Small">
         <SpaceItem>
@@ -30,40 +30,27 @@ else
 
 @code {
     // Simulated relation data - can be users or departments based on context
-    private Dictionary<int, RelationData> _relationData = null;
+    private Dictionary<int, UserData> _userData = null;
 
     // Batch load relation data
-    protected override Task OnLoadBatch(IEnumerable<int> ids)
+    protected override async Task OnLoadBatch(IEnumerable<int> ids)
     {
-        // Determine data type based on TItem
-        if (typeof(TItem).Name == "Order")
+        _userData = null;
+        await Task.Delay(300); // Simulate async data fetch
+        _userData = new()
         {
-            // Load user data for orders
-            _relationData = new()
-            {
-                { 1, new RelationData { Name = "John Doe", Description = "john.doe@example.com", Color = "blue" } },
-                { 2, new RelationData { Name = "Jane Smith", Description = "jane.smith@example.com", Color = "green" } },
-                { 3, new RelationData { Name = "Bob Johnson", Description = "bob.johnson@example.com", Color = "orange" } },
-                { 4, new RelationData { Name = "Alice Brown", Description = "alice.brown@example.com", Color = "purple" } },
-                { 5, new RelationData { Name = "Charlie Wilson", Description = "charlie.wilson@example.com", Color = "red" } }
-            };
-        }
-        else if (typeof(TItem).Name == "Employee")
-        {
-            // Load department data for employees
-            _relationData = new()
-            {
-                { 1, new RelationData { Name = "Engineering", Description = "Beijing", Color = "blue" } },
-                { 2, new RelationData { Name = "Marketing", Description = "Shanghai", Color = "green" } },
-                { 3, new RelationData { Name = "Sales", Description = "Guangzhou", Color = "orange" } }
-            };
-        }
+            { 1, new UserData { Name = "John Doe", Description = "john.doe@example.com", Color = "blue" } },
+            { 2, new UserData { Name = "Jane Smith", Description = "jane.smith@example.com", Color = "green" } },
+            { 3, new UserData { Name = "Bob Johnson", Description = "bob.johnson@example.com", Color = "orange" } },
+            { 4, new UserData { Name = "Alice Brown", Description = "alice.brown@example.com", Color = "purple" } },
+            { 5, new UserData { Name = "Charlie Wilson", Description = "charlie.wilson@example.com", Color = "red" } },
+            { 6, new UserData { Name = "David Lee", Description = "david.lee@example.com", Color = "cyan" } }
+        };
 
         Console.WriteLine($"[RelationDisplay<{typeof(TItem).Name}>] Batch loading IDs: {string.Join(", ", ids.Distinct())}");
-        return Task.CompletedTask;
     }
 
-    private class RelationData
+    private class UserData
     {
         public string Name { get; set; }
         public string Description { get; set; }

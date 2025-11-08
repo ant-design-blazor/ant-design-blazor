@@ -323,6 +323,13 @@ namespace AntDesign
                 {
                     (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
                 }
+                // Collect RelationColumnAttribute at Header initialization stage
+                // This allows the RenderFragment to be created once and reused across all rows
+                if (ChildContent == null && GetFieldExpression != null)
+                {
+                    var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
+                    ChildContent = member?.GetCustomAttribute<RelationColumnAttribute>()?.CreateRelationComponentContent();
+                }
             }
             else if (IsHeader)
             {
@@ -349,9 +356,6 @@ namespace AntDesign
                                ?? member?.GetCustomAttribute<DisplayAttribute>(true)?.GetName()
                                ?? member?.Name;
                     FieldName = DataIndex ?? member?.Name;
-
-                    // Check for RelationColumnAttribute and auto-create relation component
-                    ChildContent ??= member?.GetCustomAttribute<RelationColumnAttribute>()?.CreateRelationComponentContent();
                 }
 
                 if (Sortable && GetFieldExpression != null)

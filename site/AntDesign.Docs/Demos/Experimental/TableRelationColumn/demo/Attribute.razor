@@ -3,11 +3,7 @@
 <Table TItem="Product" DataSource="@products" Size="@TableSize.Small">
     <PropertyColumn Property="c=>c.ProductId" Title="Product ID" />
     <PropertyColumn Property="c=>c.Name" Title="Product Name" />
-
-    @* Method 3: Using attributes - automatically create relation components *@
-    @* Note: CategoryId property is marked with [RelationColumn] attribute *@
     <PropertyColumn Property="c=>c.CategoryId" Title="Category" />
-
     <PropertyColumn Property="c=>c.Price" Title="Price" Format="C2" />
     <PropertyColumn Property="c=>c.Stock" Title="Stock" />
 </Table>
@@ -22,9 +18,6 @@
             new Product { ProductId = "P001", Name = "MacBook Pro", CategoryId = 1, Price = 12999m, Stock = 50 },
             new Product { ProductId = "P002", Name = "iPhone 15", CategoryId = 1, Price = 6999m, Stock = 200 },
             new Product { ProductId = "P003", Name = "Office Chair", CategoryId = 2, Price = 899m, Stock = 100 },
-            new Product { ProductId = "P004", Name = "Monitor", CategoryId = 1, Price = 2999m, Stock = 80 },
-            new Product { ProductId = "P005", Name = "Office Desk", CategoryId = 2, Price = 1599m, Stock = 45 },
-            new Product { ProductId = "P006", Name = "Mouse Pad", CategoryId = 3, Price = 59m, Stock = 500 },
         };
     }
 
@@ -33,6 +26,8 @@
         public string ProductId { get; set; }
         public string Name { get; set; }
 
+        @* Method 3: Using attributes - automatically create relation components *@
+        @* Note: CategoryId property is marked with [RelationColumn] attribute *@
         [RelationColumn(typeof(CategoryNameRelation))]
         public int CategoryId { get; set; }
 
