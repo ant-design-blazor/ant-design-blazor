@@ -25,29 +25,35 @@ else if (_userData.TryGetValue(CurrentFieldValue, out var data))
 }
 else
 {
-    <Tag Color="@("gray")">Unknown</Tag>
+    <Tag Color="@("gray")">Unknown：@CurrentFieldValue</Tag>
 }
 
 @code {
     // Simulated relation data - can be users or departments based on context
-    private Dictionary<int, UserData> _userData = null;
+    private Dictionary<int, UserData> _userData = new();
 
     // Batch load relation data
     protected override async Task OnLoadBatch(IEnumerable<int> ids)
     {
-        _userData = null;
-        await Task.Delay(300); // Simulate async data fetch
-        _userData = new()
+        var idList = ids.Distinct().ToList();
+        var toLoad = idList.Where(id => !_userData.ContainsKey(id)).ToList();
+        if (toLoad.Count == 0)
         {
-            { 1, new UserData { Name = "John Doe", Description = "john.doe@example.com", Color = "blue" } },
-            { 2, new UserData { Name = "Jane Smith", Description = "jane.smith@example.com", Color = "green" } },
-            { 3, new UserData { Name = "Bob Johnson", Description = "bob.johnson@example.com", Color = "orange" } },
-            { 4, new UserData { Name = "Alice Brown", Description = "alice.brown@example.com", Color = "purple" } },
-            { 5, new UserData { Name = "Charlie Wilson", Description = "charlie.wilson@example.com", Color = "red" } },
-            { 6, new UserData { Name = "David Lee", Description = "david.lee@example.com", Color = "cyan" } }
-        };
-
-        Console.WriteLine($"[RelationDisplay<{typeof(TItem).Name}>] Batch loading IDs: {string.Join(", ", ids.Distinct())}");
+            return;
+        }
+        await Task.Delay(300); // Simulate async data fetch
+        var colors = new[] { "blue", "green", "orange", "purple", "red", "cyan", "magenta", "lime", "pink", "teal" };
+        foreach (var id in toLoad)
+        {
+            var color = colors[id % colors.Length];
+            _userData[id] = new UserData
+            {
+                Name = $"User {id}",
+                Description = $"user{id}@example.com",
+                Color = color
+            };
+        }
+        Console.WriteLine($"[RelationDisplay<{typeof(TItem).Name}>] Batch loading IDs: {string.Join(", ", toLoad)}");
     }
 
     private class UserData

@@ -1,0 +1,47 @@
+@using AntDesign.Docs.Demos.Experimental.TableRelationColumn.Demo.Shared
+
+<Divider Orientation="DividerOrientation.Left">虚拟化 + 关联列演示</Divider>
+
+<Table TItem="Data"
+       DataSource="data"
+       ScrollY="300px"
+       EnableVirtualization
+       OnChange="OnChange"
+       Total="total"
+       RemoteDataSource
+       Bordered
+       RowKey="x=>x.Name">
+    <Selection />
+    <PropertyColumn Property="c=>c.Name" Width="400" />
+    <PropertyColumn Property="c=>c.Age" Width="150" />
+    <PropertyColumn Property="c=>c.Address" />
+    <PropertyColumn Property="c=>c.UserId" Title="用户">
+        <UserNameRelation />
+    </PropertyColumn>
+</Table>
+
+@code {
+    private Data[] data = Array.Empty<Data>();
+    private int total = 0;
+
+    private async Task OnChange(TableModels.QueryModel queryModel)
+    {
+        await Task.Delay(500);
+        data = Enumerable.Range(queryModel.StartIndex, queryModel.PageSize).Select(i => new Data
+        {
+            Name = $"Edward King {i}",
+            Age = 32,
+            Address = $"Edward King {i}'s address",
+            UserId = i % 10 // 模拟10个用户
+        }).ToArray();
+        total = 10000;
+    }
+
+    public class Data
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Address { get; set; }
+        public int UserId { get; set; }
+    }
+}

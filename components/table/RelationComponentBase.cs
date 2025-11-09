@@ -260,13 +260,10 @@ namespace AntDesign
         ///     IEnumerable&lt;Order&gt; dataSource, 
         ///     QueryModel queryModel)
         /// {
-        ///     // 访问完整行数据
         ///     var ordersWithDetails = dataSource.Where(o => o.Status == "Active");
         ///     
-        ///     // 使用查询参数优化加载
         ///     Console.WriteLine($"Loading page {queryModel.PageIndex}");
         ///     
-        ///     // 批量加载
         ///     var userIds = ordersWithDetails.Select(o => o.UserId).Distinct();
         ///     var users = await UserService.GetUsersByIdsAsync(userIds);
         ///     
@@ -276,10 +273,8 @@ namespace AntDesign
         /// </example>
         protected virtual async Task OnLoadBatch(IEnumerable<TItem> dataSource, QueryModel<TItem> queryModel)
         {
-            // 默认实现：收集字段值并调用简化版
             var fieldValues = dataSource
-                .Select(item => GetFieldValue(item))
-                .Where(v => v != null && !EqualityComparer<TData>.Default.Equals(v, default))
+                .Select(GetFieldValue)
                 .Distinct()
                 .ToList();
 
@@ -345,7 +340,6 @@ namespace AntDesign
             {
                 CurrentFieldValue = fieldValue;
                 CurrentRowData = rowData;
-                // 调用 BuildRenderTree，Razor 编译器会生成这个方法的重写
                 BuildRenderTree(builder);
             };
         }
@@ -366,7 +360,7 @@ namespace AntDesign
         /// </remarks>
         protected virtual void BuildRenderTree(RenderTreeBuilder builder)
         {
-            // 默认空实现，由 Razor 文件生成的代码重写
+
         }
 
         #region IComponent implementation

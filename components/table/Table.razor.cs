@@ -1178,15 +1178,15 @@ namespace AntDesign
             return true;
         }
 
-        #region 关联数据管理
+        #region Linked Data Management
 
         /// <summary>
-        /// 关联数据的共享缓存,用于存储已加载的关联数据。
+        /// Shared cache for associated data, used to store loaded associated data.
         /// </summary>
         internal ConcurrentDictionary<string, object> RelationDataCache { get; } = [];
 
         /// <summary>
-        /// 异步加载所有关联数据。
+        /// Asynchronously load all associated data
         /// </summary>
         private async Task LoadRelationDataAsync()
         {

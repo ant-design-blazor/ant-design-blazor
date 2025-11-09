@@ -74,7 +74,7 @@
             @if (Demo.AdditionalFiles != null && Demo.AdditionalFiles.Any())
             {
                 @* 多文件展示:使用Tabs切换 *@
-                <Tabs ActiveKey="@_activeFileTab" OnChange="OnFileTabChange" Type="@TabType.Card">
+                <Tabs ActiveKey="@_activeFileTab" OnChange="OnFileTabChange" Type="@TabType.Card" Size="TabSize.Small">
                     <TabPane Key="@Demo.Name" Tab="@($"{Demo.Name}.razor")">
                         <div class="highlight">
                             <CodeView Value="@Demo.Code"></CodeView>
