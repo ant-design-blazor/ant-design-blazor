@@ -91,7 +91,7 @@ namespace AntDesign
         /// This method provides type-safe data access.
         /// The relation component can access complete row data in this method to perform complex relation data queries.
         /// </remarks>
-        Task OnLoadBatch(IEnumerable<TItem> dataSource, QueryModel queryModel);
+        Task OnLoadBatch(IEnumerable<TItem> dataSource, QueryModel<TItem> queryModel);
 
         /// <summary>
         /// Render cell (generic version)

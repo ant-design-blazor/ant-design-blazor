@@ -167,7 +167,7 @@ namespace AntDesign
 
         // Data source cache (for the non-generic interface)
         private IEnumerable<TItem> _cachedDataSource;
-        private QueryModel _cachedQueryModel;
+        private QueryModel<TItem> _cachedQueryModel;
 
         /// <summary>
         /// Get the field value (foreign key) from a row data item.
@@ -274,7 +274,7 @@ namespace AntDesign
         /// }
         /// </code>
         /// </example>
-        protected virtual async Task OnLoadBatch(IEnumerable<TItem> dataSource, QueryModel queryModel)
+        protected virtual async Task OnLoadBatch(IEnumerable<TItem> dataSource, QueryModel<TItem> queryModel)
         {
             // 默认实现：收集字段值并调用简化版
             var fieldValues = dataSource
@@ -479,7 +479,7 @@ namespace AntDesign
         /// <summary>
         /// Explicit implementation of IRelationComponent&lt;TItem&gt;.OnLoadBatch.
         /// </summary>
-        async Task IRelationComponent<TItem>.OnLoadBatch(IEnumerable<TItem> dataSource, QueryModel queryModel)
+        async Task IRelationComponent<TItem>.OnLoadBatch(IEnumerable<TItem> dataSource, QueryModel<TItem> queryModel)
         {
             await OnLoadBatch(dataSource, queryModel);
         }
@@ -503,7 +503,7 @@ namespace AntDesign
         void IRelationComponent.SetDataSource(IEnumerable dataSource, QueryModel queryModel)
         {
             _cachedDataSource = dataSource.Cast<TItem>();
-            _cachedQueryModel = queryModel;
+            _cachedQueryModel = queryModel as QueryModel<TItem>;
         }
 
         /// <summary>

@@ -413,7 +413,7 @@ namespace AntDesign
         private bool _hasFixRight;
         private int _treeExpandIconColumnIndex;
 
-        private QueryModel _currentQueryModel;
+        private QueryModel<TItem> _currentQueryModel;
         private readonly ClassMapper _wrapperClassMapper = new();
         private List<GroupResult<TItem>> _groups = [];
 
