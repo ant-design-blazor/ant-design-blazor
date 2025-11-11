@@ -60,7 +60,7 @@ namespace AntDesign
         {
         }
 
-        protected void InvokeStateHasChanged()
+        protected virtual void InvokeStateHasChanged()
         {
             InvokeAsync(() =>
             {
@@ -71,7 +71,7 @@ namespace AntDesign
             });
         }
 
-        protected async Task InvokeStateHasChangedAsync()
+        protected virtual async Task InvokeStateHasChangedAsync()
         {
             await InvokeAsync(() =>
             {

@@ -145,7 +145,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        internal void InvokeStateHasChagned()
+        protected override void InvokeStateHasChanged()
         {
             StateHasChanged();
         }
