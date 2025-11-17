@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -75,7 +76,7 @@ namespace AntDesign
         /// Gets or sets the prefix used to identify special commands or keywords, split by ',' (e.g. "@,#").
         /// </summary>
         [Parameter]
-        public string Prefix { get; set; } = "@";
+        public string Prefix { get; set; } = DefaultPrefix;
 
         /// <summary>
         /// Triggered when searching with prefix
@@ -84,12 +85,18 @@ namespace AntDesign
         [Parameter]
         public EventCallback<(string searchValue, string prefix)> OnSearch { get; set; }
 
+        private const string DefaultPrefix = "@";
+        private static readonly string[] _defaultPrefixes = [DefaultPrefix];
+        private static readonly Regex _defaultPrefixesRegex = new($@"({Regex.Escape(DefaultPrefix)})([^{Regex.Escape(DefaultPrefix)}\s]+)\s", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
         private CancellationTokenSource _cancellationTokenSource;
         private string[] _prefixes;
         private string _currentPrefix;
+        private Regex _prefixsRegex;
 
-        internal List<MentionsDynamicOption> OriginalOptions { get; set; } = new List<MentionsDynamicOption>();
-        internal List<MentionsDynamicOption> ShowOptions { get; } = new List<MentionsDynamicOption>();
+        internal List<MentionsDynamicOption> OriginalOptions { get; set; } = [];
+        internal List<MentionsDynamicOption> ShowOptions { get; } = [];
+
         private OverlayTrigger _overlayTrigger;
         internal string ActiveOptionValue { get; set; }
         internal int ActiveOptionIndex => ShowOptions.FindIndex(x => x.Value == ActiveOptionValue);
@@ -119,30 +126,47 @@ namespace AntDesign
 
         private void InitializePrefixes()
         {
-            _prefixes = (Prefix ?? "@")
-#if NET5_0_OR_GREATER
-                .Split([','], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-#else
-                .Split([','], StringSplitOptions.RemoveEmptyEntries)
-                .Select(p => p.Trim())
-                .Where(p => !string.IsNullOrEmpty(p))
-#endif
-                .ToArray();
-
-            if (_prefixes.Length == 0)
+            var p = Prefix;
+            if (p == DefaultPrefix || string.IsNullOrWhiteSpace(p))
             {
-                _prefixes = ["@"];
+                _prefixes = _defaultPrefixes;
+                _prefixsRegex = _defaultPrefixesRegex;
+                return;
             }
+
+#if NET5_0_OR_GREATER
+            _prefixes = [.. p.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .OrderByDescending(s => s.Length)
+                .ThenBy(s => s, StringComparer.InvariantCulture)];
+#else
+            _prefixes = [.. p.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Select(s => s.Trim())
+                .OrderByDescending(s => s.Length)
+                .ThenBy(s => s, StringComparer.InvariantCulture)];
+#endif
+            if (_prefixes.Length == 0 || _prefixes.SequenceEqual(_defaultPrefixes))
+            {
+                _prefixes = _defaultPrefixes;
+                _prefixsRegex = _defaultPrefixesRegex;
+                return;
+            }
+
+            var alternation = string.Join('|', _prefixes.Select(Regex.Escape));
+            var forbiddenChars = Regex.Escape(string.Concat(_prefixes)); // chars to exclude in name char class
+            var pattern = $@"({alternation})([^{forbiddenChars}\s]+)\s";
+            // Compile once for reuse. If prefixes change frequently, consider removing Compiled.
+            _prefixsRegex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
         }
 
         internal void AddOption(MentionsOption option)
         {
             if (option == null) return;
 
-            var opt = OriginalOptions.Find(x => x.Value == option.Value);
-            if (opt == null)
+            var options = OriginalOptions;
+            if (!options.Exists(x => x.Value == option.Value))
             {
-                OriginalOptions.Add(new MentionsDynamicOption
+                options.Add(new()
                 {
                     Value = option.Value,
                     Display = option.ChildContent
@@ -153,14 +177,10 @@ namespace AntDesign
         public List<(string name, string prefix)> GetMentionNames()
         {
             var result = new List<(string name, string prefix)>();
-            foreach (var prefix in _prefixes)
+            foreach (Match m in _prefixsRegex.Matches(Value))
             {
-                var pattern = $"{Regex.Escape(prefix)}([^{Regex.Escape(string.Join("", _prefixes))}\\s]+)\\s";
-                var matches = Regex.Matches(Value, pattern);
-                foreach (Match m in matches)
-                {
-                    result.Add((m.Groups[1].Value, prefix));
-                }
+                // group1 = prefix, group2 = name
+                result.Add((m.Groups[2].Value, m.Groups[1].Value));
             }
             return result;
         }
@@ -271,18 +291,14 @@ namespace AntDesign
                     return;
                 }
 
-                // Get text before cursor
-                var textBeforeCursor = Value.Substring(0, focusPosition);
-
-                // Find the last prefix that appears in the text
                 var lastPrefix = _prefixes
-                    .Select(p => new { Prefix = p, Index = textBeforeCursor.LastIndexOf(p) })
+                    .Select(p => (Prefix: p, Index: Value.AsSpan(0, focusPosition).LastIndexOf(p)))
                     .Where(x => x.Index != -1)
                     .OrderByDescending(x => x.Index)
                     .FirstOrDefault();
 
                 // If no prefix found, hide options
-                if (lastPrefix == null)
+                if (lastPrefix is not { Prefix.Length: > 0 })
                 {
                     await HideOverlay();
                     return;
@@ -303,17 +319,16 @@ namespace AntDesign
                 }
 
                 // Get search text after the prefix
-                var searchText = textBeforeCursor.Substring(lastPrefixIndex + _currentPrefix.Length);
-
+                var searchTextSpan = Value.AsSpan(0, focusPosition)[(lastPrefixIndex + _currentPrefix.Length)..];
                 // If search text contains space, selection is complete
-                if (searchText.Contains(' '))
+                if (searchTextSpan.Contains([' '], StringComparison.Ordinal))
                 {
                     await HideOverlay();
                     return;
                 }
-
                 // Load and show matching options
-                await LoadItems(searchText);
+                await LoadItems(new(searchTextSpan));
+
                 if (ShowOptions.Count > 0)
                 {
                     await ShowOverlay(true);
@@ -379,17 +394,23 @@ namespace AntDesign
             try
             {
                 var focusPosition = await JS.InvokeAsync<int>(JSInteropConstants.GetProp, _overlayTrigger.Ref, "selectionStart");
-                var preText = Value.Substring(0, focusPosition);
-                preText = preText.LastIndexOf(_currentPrefix) >= 0 ? Value.Substring(0, preText.LastIndexOf(_currentPrefix)) : preText;
-                if (preText.EndsWith(' ')) preText = preText.Substring(0, preText.Length - 1);
-                var nextText = Value.Substring(focusPosition);
-                if (nextText.StartsWith(' ')) nextText = nextText.Substring(1);
-                var option = $" {_currentPrefix}{optionValue} ";
+                var lastPrefixIndex = Value.AsSpan(0, focusPosition).LastIndexOf(_currentPrefix);
+                var preText = lastPrefixIndex >= 0
+                    ? Value.AsSpan(0, lastPrefixIndex)
+                    : Value.AsSpan(0, focusPosition);
+                if (preText.EndsWith([' '])) preText = preText[..^1];
+                var nextText = Value.AsSpan(focusPosition);
+                if (nextText.StartsWith([' '])) nextText = nextText[1..];
+                var tailLength = nextText.Length;
 
-                Value = preText + option + nextText;
+                Value = new StringBuilder()
+                    .Append(preText)
+                    .Append(' ').Append(_currentPrefix).Append(optionValue).Append(' ')
+                    .Append(nextText)
+                    .ToString();
                 await ValueChanged.InvokeAsync(Value);
 
-                var pos = preText.Length + option.Length;
+                var pos = Value.Length - tailLength;
                 var js = $"document.querySelector('[_bl_{_overlayTrigger.Ref.Id}]').selectionStart = {pos};";
                 js += $"document.querySelector('[_bl_{_overlayTrigger.Ref.Id}]').selectionEnd = {pos}";
                 await JS.InvokeVoidAsync("eval", js);
