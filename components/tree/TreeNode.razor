@@ -2,41 +2,55 @@
 @inherits AntDomComponentBase
 @typeparam TItem
 
-@if (RealDisplay)
-{
-    <CascadingValue Value="this" Name="SelfNode">
-        <div @key="NodeId" class="@ClassMapper.Class" style="@Style">
-
-            <TreeIndent TreeLevel="@TreeLevel" TItem="TItem"></TreeIndent>
-
-            @if (TreeComponent.ShowExpand)
-            {
-                <TreeNodeSwitcher OnSwitcherClick="OnSwitcherClick" TItem="TItem"></TreeNodeSwitcher>
-            }
-
-            @if (Checkable)
-            {
-                <TreeNodeCheckbox OnCheckBoxClick="OnCheckBoxClick" TItem="TItem"></TreeNodeCheckbox>
-            }
-
-            <TreeNodeTitle TItem="TItem"></TreeNodeTitle>
-        </div>
-    </CascadingValue>
-}
 <CascadingValue Value="this" Name="Node">
     @if (DataItem != null)
     {
         foreach (var item in ChildDataItems)
         {
             <TreeNode DataItem="@item" @key="item.GetHashCode()"></TreeNode>
-	    }
+        }
     }
-	@if (ChildContent != null)
-	{
-		@ChildContent
-	}
+    else if (ChildContent != null)
+    {
+        @ChildContent
+    }
     else
     {
         @Nodes
     }
 </CascadingValue>
+
+@code {
+
+    internal RenderFragment RenderTreeNote()
+    {
+        return builder => Render(builder);
+    }
+
+    void Render(RenderTreeBuilder __builder)
+    {
+        <CascadingValue Value="this" Name="Node">
+            @if (RealDisplay)
+            {
+                <div @key="NodeId" class="@ClassMapper.Class" style="@Style">
+
+                    <TreeIndent TreeLevel="@TreeLevel" TItem="TItem"></TreeIndent>
+
+                    @if (TreeComponent.ShowExpand)
+                    {
+                        <TreeNodeSwitcher OnSwitcherClick="OnSwitcherClick" TItem="TItem"></TreeNodeSwitcher>
+                    }
+
+                    @if (Checkable)
+                    {
+                        <TreeNodeCheckbox OnCheckBoxClick="OnCheckBoxClick" TItem="TItem"></TreeNodeCheckbox>
+                    }
+
+                    <TreeNodeTitle TItem="TItem"></TreeNodeTitle>
+                </div>
+            }
+
+
+        </CascadingValue>
+    }
+}
