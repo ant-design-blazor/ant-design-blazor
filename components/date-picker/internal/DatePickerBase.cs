@@ -552,8 +552,8 @@ namespace AntDesign
                 {
                     _activeBarStyle = "display: none";
                 }
-
-                StateHasChanged();
+                
+                RefreshComponentState();
             }
 
             _needRefresh = false;
@@ -919,7 +919,18 @@ namespace AntDesign
 
         protected virtual void InvokeOnChange()
         {
+        }
 
+        /// <summary>
+        /// Refresh the state of the component
+        /// </summary>
+        /// <remarks>
+        /// Call to StateHasChanged() for the overlay
+        /// </remarks>
+        protected void RefreshComponentState()
+        {
+            _dropDown.GetOverlayComponent().RefreshComponentState();
+            StateHasChanged(); // needed?
         }
 
         /// <summary>
@@ -960,7 +971,7 @@ namespace AntDesign
         {
             _placeholders[index] = placeholder;
 
-            StateHasChanged();
+            RefreshComponentState();
         }
 
         protected void ResetPlaceholder(int rangePickerIndex = -1)
@@ -1091,7 +1102,7 @@ namespace AntDesign
 
             InvokeOnPanelChange(date);
 
-            StateHasChanged();
+            RefreshComponentState();
         }
 
         internal void ChangePickerType(DatePickerType type)
@@ -1106,7 +1117,7 @@ namespace AntDesign
 
             InvokeOnPanelChange(PickerValues[index]);
 
-            StateHasChanged();
+            RefreshComponentState();
         }
 
         /// <summary>
