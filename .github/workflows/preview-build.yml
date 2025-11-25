@@ -24,6 +24,7 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
+            10.0.x
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
