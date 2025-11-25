@@ -38,8 +38,8 @@
 
   <Target Name="RunCli" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug'">
     <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10 --project $(CLIPath) demo2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/meta" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10 --project $(CLIPath) menu2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/docs $(ProjectDir)/wwwroot/meta" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10 --project $(CLIPath) docs2html $(ProjectDir)/wwwroot/docs ./site/AntDesign.Docs/wwwroot/docs" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) demo2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/meta" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) menu2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/docs $(ProjectDir)/wwwroot/meta" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) docs2html $(ProjectDir)/wwwroot/docs ./site/AntDesign.Docs/wwwroot/docs" />
   </Target>
 </Project>
