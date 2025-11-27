@@ -67,6 +67,9 @@ export class uploadHelper {
   }
 
   private static fileClickEvent(e: MouseEvent) {
+    if ((e.target as HTMLElement).tagName === "INPUT") {
+      return;
+    }
     e.stopPropagation();
     const fileId = (e.currentTarget as HTMLSpanElement).attributes["data-fileid"].nodeValue;
     const element = document.getElementById(fileId) as HTMLInputElement;
