@@ -467,7 +467,8 @@ namespace AntDesign
             if (DataSource == null && _datasource != null)
             {
                 SelectOptionItems.Clear();
-                SelectedOptionItems.Clear();
+                // Rebuild selected display list via central method after clearing options
+                RebuildSelectedOptionItems(_selectedValues ?? _defaultValues, SelectOptionItems.Where(x => x.IsSelected).ToList());
                 Value = default;
 
                 _datasource = null;
@@ -507,7 +508,8 @@ namespace AntDesign
                     {
                         // Maybe a workaound for issues 2439
                         SelectOptionItems.Clear();
-                        SelectedOptionItems.Clear();
+                        // Rebuild selected display list via central method after clearing options
+                        RebuildSelectedOptionItems(_selectedValues ?? _defaultValues, SelectOptionItems.Where(x => x.IsSelected).ToList());
 
                         _dataSourceCopy = _datasource.ToList();
                     }
@@ -645,7 +647,7 @@ namespace AntDesign
                             RemoveEqualityToNoValue(selectOption);
 
                             if (selectOption.IsSelected)
-                                SelectedOptionItems.Remove(selectOption);
+                                selectOption.IsSelected = false;
                         }
                         else
                             dataStoreToSelectOptionItemsMatch.Add(exists, selectOption);
@@ -665,6 +667,7 @@ namespace AntDesign
             else if (Mode != SelectMode.Default && _selectedValues != null)
                 processedSelectedCount = _selectedValues.Count();
 
+            var initiallySelected = new List<SelectOptionItem<TItemValue, TItem>>();
             foreach (var item in _datasource)
             {
                 TItemValue value = _getValue == null ? (TItemValue)(object)item : _getValue(item);
@@ -721,7 +724,7 @@ namespace AntDesign
                     if (isSelected)
                     {
                         processedSelectedCount--;
-                        SelectedOptionItems.Add(newItem);
+                        initiallySelected.Add(newItem);
                     }
                 }
                 else if (exists && !IgnoreItemChanges)
@@ -753,10 +756,13 @@ namespace AntDesign
                     if (tag.IsSelected)
                     {
                         processedSelectedCount--;
-                        SelectedOptionItems.Add(tag);
+                        initiallySelected.Add(tag);
                     }
                 }
             }
+
+            // Rebuild SelectedOptionItems according to ordering values (either Values or DefaultValues)
+            RebuildSelectedOptionItems(_selectedValues ?? _defaultValues, initiallySelected);
         }
 
         /// <summary>
@@ -872,14 +878,8 @@ namespace AntDesign
                     if (HideSelected)
                         firstEnabled.IsHidden = true;
 
-                    if (SelectedOptionItems.Count == 0)
-                    {
-                        SelectedOptionItems.Add(firstEnabled);
-                    }
-                    else
-                    {
-                        SelectedOptionItems[0] = firstEnabled;
-                    }
+                    // Rebuild the SelectedOptionItems list to reflect the single selected item
+                    RebuildSelectedOptionItems(new[] { firstEnabled.Value }, new[] { firstEnabled });
 
                     if (Mode == SelectMode.Default)
                     {
@@ -928,12 +928,8 @@ namespace AntDesign
                         result.IsHidden = true;
 
                     _waitingForStateChange = true;
-                    if (SelectedOptionItems.Count == 0)
-                    {
-                        SelectedOptionItems.Add(result);
-                    }
-                    else
-                        SelectedOptionItems[0] = result;
+                    // Rebuild SelectedOptionItems to ensure the single selected item is shown
+                    RebuildSelectedOptionItems(new[] { result.Value }, SelectOptionItems.Where(x => x.IsSelected).ToList());
                     await ValueChanged.InvokeAsync(result.Value);
 
                     _defaultValueApplied = true;
@@ -988,8 +984,7 @@ namespace AntDesign
                 else
                 {
                     _waitingForStateChange = true;
-
-                    InvokeValuesChanged();
+                    RebuildSelectedOptionItems(_defaultValues, SelectOptionItems.Where(x => x.IsSelected).ToList());
                 }
             }
             else if (DefaultActiveFirstOption)
@@ -1024,7 +1019,8 @@ namespace AntDesign
                         ActiveOption = selectOptionItem;
                         if (HideSelected)
                             selectOptionItem.IsHidden = true;
-                        SelectedOptionItems.Add(selectOptionItem);
+                        // Rebuild to ensure the single selected item is properly set
+                        RebuildSelectedOptionItems(new[] { selectOptionItem.Value }, new[] { selectOptionItem });
                     }
                 }
             }
@@ -1043,7 +1039,8 @@ namespace AntDesign
                             if (HideSelected)
                                 selectOptionItem.IsHidden = true;
 
-                            SelectedOptionItems.Add(selectOptionItem);
+                            // SelectedOptionItems will be rebuilt to match _selectedValues order
+                            RebuildSelectedOptionItems(_selectedValues, SelectOptionItems.Where(x => x.IsSelected).ToList());
                         }
                     }
                 }
@@ -1138,18 +1135,8 @@ namespace AntDesign
                 ActiveOption.IsSelected = false;
                 ActiveOption = optionItem;
             }
-            if (SelectedOptionItems.Count > 0)
-            {
-                if (!SelectedOptionItems[0].Value.Equals(value))
-                {
-                    SelectedOptionItems[0].IsSelected = false;
-                    SelectedOptionItems[0] = optionItem;
-                }
-            }
-            else
-            {
-                SelectedOptionItems.Add(optionItem);
-            }
+            // Rebuild the selected items list using the single value ordering
+            RebuildSelectedOptionItems(new[] { value }, new[] { optionItem });
         }
 
         /// <summary>
