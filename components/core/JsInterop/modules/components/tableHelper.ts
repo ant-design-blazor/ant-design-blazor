@@ -281,7 +281,7 @@ export class tableHelper {
       const headerCol = headerCols ? headerCols[i] : null;
       const handle = document.createElement('div');
       handle.classList.add('ant-table-resizable-handle');
-      handle.style.height = `${tableElement.offsetHeight}px`;
+      handle.style.height = `100%`;
 
       th.appendChild(handle);
 
