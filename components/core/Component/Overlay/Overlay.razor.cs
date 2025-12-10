@@ -358,7 +358,7 @@ namespace AntDesign.Internal
                 return;
             }
 
-            if (!_hasAddOverlayToBody)
+            if (Trigger.CheckPlacementChanged() || !_hasAddOverlayToBody)
             {
                 bool triggerIsWrappedInDiv = Trigger.Unbound is null;
                 _recurenceGuard++;
@@ -376,7 +376,7 @@ namespace AntDesign.Internal
                 }
 
                 _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
-                    Ref.Id, Ref, Trigger.Ref, Trigger.Placement, Trigger.PopupContainerSelector,
+                    Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
                     Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
                     VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
                 if (_position is null && _recurenceGuard <= 10) //up to 10 attempts
@@ -389,7 +389,7 @@ namespace AntDesign.Internal
                 {
                     _hasAddOverlayToBody = true;
                     _overlayStyle = _position.PositionCss + GetTransformOrigin();
-                    if (_position.Placement != Trigger.Placement)
+                    if (_position.Placement != Trigger.GetPlacementType().Placement)
                     {
                         Trigger.ChangePlacementForShow(PlacementType.Create(_position.Placement));
                     }
@@ -509,12 +509,12 @@ namespace AntDesign.Internal
             bool triggerIsWrappedInDiv = Trigger.Unbound is null;
 
             _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition,
-                Ref.Id, Ref, Trigger.Ref, Trigger.Placement, Trigger.PopupContainerSelector,
+                Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
                 Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
                 VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
             if (_position is not null)
             {
-                if (_position.Placement != Trigger.Placement)
+                if (_position.Placement != Trigger.GetPlacementType().Placement)
                 {
                     Trigger.ChangePlacementForShow(PlacementType.Create(_position.Placement));
                 }
