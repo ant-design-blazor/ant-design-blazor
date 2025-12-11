@@ -576,7 +576,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    Card.InvokeStateHasChagned();
+                    Card.Refresh();
                 }
             }
 
@@ -869,7 +869,7 @@ namespace AntDesign
 
             if (IsTabbedCard)
             {
-                Card.InvokeStateHasChagned();
+                Card.Refresh();
             }
             else
             {

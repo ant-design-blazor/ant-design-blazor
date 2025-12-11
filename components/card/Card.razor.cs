@@ -145,7 +145,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        internal void InvokeStateHasChagned()
+        internal void Refresh()
         {
             StateHasChanged();
         }
