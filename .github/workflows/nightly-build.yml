@@ -1,4 +1,4 @@
-﻿name: Nightly Build
+name: Nightly Build
 
 env:
   NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
@@ -45,6 +45,7 @@ jobs:
           dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net6
           dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net8
           dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net9
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net10.0
           npm install ./tests/AntDesign.Tests.Js
           npm --prefix ./tests/AntDesign.Tests.Js run test-cov
           find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
