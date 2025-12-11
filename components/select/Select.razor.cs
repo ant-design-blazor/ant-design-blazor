@@ -1096,9 +1096,17 @@ namespace AntDesign
                 }
                 else
                 {
-                    //Reset value if not found - needed if value changed
-                    //outside of the component
-                    await InvokeAsync(() => OnInputClearClickAsync(new()));
+                    // Reset value if not found - needed if value changed outside of the component.
+                    // In some scenarios (e.g., enum flags handled by EnumSelect) the incoming
+                    // Value setter will populate the Values collection which then asynchronously
+                    // populates SelectedOptionItems. Yielding once here gives that path a chance
+                    // to run and populate SelectedOptionItems so we don't clear them erroneously.
+                    await Task.Yield();
+
+                    if (!SelectedOptionItems.Any())
+                    {
+                        await InvokeAsync(() => OnInputClearClickAsync(new()));
+                    }
                 }
                 return;
             }

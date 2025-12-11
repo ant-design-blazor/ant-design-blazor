@@ -1199,7 +1199,7 @@ namespace AntDesign
         /// <summary>
         ///     Clears the selectValue(s) property and send the null(default) value back through the two-way binding.
         /// </summary>
-        protected async Task ClearSelectedAsync()
+        protected virtual async Task ClearSelectedAsync()
         {
             if (Mode == SelectMode.Default)
             {
