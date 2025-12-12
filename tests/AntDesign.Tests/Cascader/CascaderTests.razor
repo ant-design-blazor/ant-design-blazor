@@ -22,4 +22,141 @@
 
         Assert.NotNull(spanNode);
     }
+
+    [Fact]
+    public void DefaultValue_Show_As_DisplayText()
+    {
+        var nodes = new List<CascaderNode>
+        {
+            new CascaderNode { Label = "A", Value = "A" },
+            new CascaderNode { Label = "B", Value = "B" }
+        };
+
+        var cut = Context.Render(@<AntDesign.Cascader Options="nodes" DefaultValue="A" />);
+        var display = cut.Nodes.QuerySelector(".ant-select-selection-item");
+        Assert.NotNull(display);
+        Assert.Contains("A", display.TextContent);
+    }
+
+    [Fact]
+    public void ClearSelected_Clears_Display()
+    {
+        var nodes = new List<CascaderNode>
+        {
+            new CascaderNode { Label = "A", Value = "A" },
+            new CascaderNode { Label = "B", Value = "B" }
+        };
+        var cut = Context.Render(@<AntDesign.Cascader Options="nodes" DefaultValue="A" />);
+        var instance = cut.Instance;
+        // Act
+        instance.ClearSelected();
+
+        // Assert
+        cut.WaitForAssertion(() => cut.Nodes.QuerySelector(".ant-select-selection-item") == null);
+    }
+
+    [Fact]
+    public void Selects_MultiLevel_Leaf_Should_Show_FullPath()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+
+        var nodes = new List<CascaderNode>
+        {
+            new CascaderNode
+            {
+                Label = "Province1",
+                Value = "P1",
+                Children = new List<CascaderNode>
+                {
+                    new CascaderNode
+                    {
+                        Label = "City1",
+                        Value = "C1",
+                        Children = new List<CascaderNode>
+                        {
+                            new CascaderNode { Label = "District1", Value = "D1" }
+                        }
+                    }
+                }
+            }
+        };
+
+        var cut = Context.Render(@<AntDesign.Cascader Options="nodes" />);
+
+        // Open overlay
+        var trigger = cut.Find("div.ant-select-selector");
+        trigger.Click();
+
+        // Wait for first menu to be available then click Province
+        cut.WaitForAssertion(() => cut.Nodes.QuerySelectorAll(".ant-cascader-menu-item").Length > 0);
+        var firstItem = cut.Nodes.QuerySelectorAll(".ant-cascader-menu-item").FirstOrDefault(x => x.TextContent.Trim() == "Province1");
+        Assert.NotNull(firstItem);
+        firstItem.Click();
+
+        // Click City
+        cut.WaitForAssertion(() => cut.Nodes.QuerySelectorAll(".ant-cascader-menu-item").Any(x => x.TextContent.Trim() == "City1"));
+        var cityItem = cut.Nodes.QuerySelectorAll(".ant-cascader-menu-item").FirstOrDefault(x => x.TextContent.Trim() == "City1");
+        Assert.NotNull(cityItem);
+        cityItem.Click();
+
+        // Click District (final leaf)
+        cut.WaitForAssertion(() => cut.Nodes.QuerySelectorAll(".ant-cascader-menu-item").Any(x => x.TextContent.Trim() == "District1"));
+        var districtItem = cut.Nodes.QuerySelectorAll(".ant-cascader-menu-item").FirstOrDefault(x => x.TextContent.Trim() == "District1");
+        Assert.NotNull(districtItem);
+        districtItem.Click();
+
+        // The rendered display text should be full path
+        cut.WaitForAssertion(() => cut.Nodes.QuerySelector(".ant-select-selection-item") != null);
+        var display = cut.Nodes.QuerySelector(".ant-select-selection-item");
+        Assert.NotNull(display);
+        Assert.Contains("Province1 / City1 / District1", display.TextContent);
+    }
+
+    [Fact]
+    public void Search_Should_Flatten_Dropdown_Show_FullPath_And_Highlight()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+
+        var nodes = new List<CascaderNode>
+        {
+            new CascaderNode
+            {
+                Label = "Province1",
+                Value = "P1",
+                Children = new List<CascaderNode>
+                {
+                    new CascaderNode
+                    {
+                        Label = "City1",
+                        Value = "C1",
+                        Children = new List<CascaderNode>
+                        {
+                            new CascaderNode { Label = "District1", Value = "D1" }
+                        }
+                    }
+                }
+            }
+        };
+
+        var cut = Context.Render(@<AntDesign.Cascader Options="nodes" ShowSearch />);
+
+        // Type into search input
+        var input = cut.Find("input.ant-select-selection-search-input");
+        input.Input("District1");
+        input.KeyUp("A");
+
+        // Wait for search flatten list
+        cut.WaitForAssertion(() => cut.Nodes.QuerySelector(".ant-cascader-menus .ant-cascader-menu li.ant-cascader-menu-item") != null);
+
+        // Find flattened item containing full path
+        var flattenedItem = cut.Nodes.QuerySelectorAll(".ant-cascader-menu-item").FirstOrDefault(x => x.TextContent.Contains("Province1 / City1 / District1"));
+        Assert.NotNull(flattenedItem);
+
+        // And keyword highlight span should be present
+        var highlight = flattenedItem.QuerySelector(".ant-cascader-menu-item-keyword");
+        Assert.NotNull(highlight);
+        Assert.Contains("District1", highlight.TextContent);
+    }
 }

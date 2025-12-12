@@ -95,6 +95,103 @@
     }
 
     [Fact]
+    public void MultiSelect_InitialValues_Should_Preserve_Order_In_Display()
+    {
+        // Arrange
+        IEnumerable<string> values = new string[] { "3", "1" };
+        IEnumerable<string> options = new string[] { "1", "2", "3" };
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" Values="values" TItemValue="string" TItem="string">
+                <SelectOptions>
+                    @foreach(var value in options)
+                    {
+                        <SelectOption TItemValue="string" TItem="string" Value="@value" Label="@value" />
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Assert
+        var selectedTags = cut.FindAll("span.ant-select-selection-item-content").Select(x => x.TextContent.Trim()).ToArray();
+        selectedTags.Should().ContainInOrder(new[] { "3", "1" });
+    }
+
+    [Fact]
+    public void Values_Update_Should_Reorder_Display()
+    {
+        // Arrange
+        IEnumerable<string> values = new string[] { "1", "2", "3" };
+        IEnumerable<string> options = new string[] { "1", "2", "3" };
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" Values="values" TItemValue="string" TItem="string">
+                <SelectOptions>
+                    @foreach(var value in options)
+                    {
+                        <SelectOption TItemValue="string" TItem="string" Value="@value" Label="@value" />
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Act - update the values parameter to a different order
+        var newValues = new string[] { "3", "1", "2" };
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, newValues));
+
+        // Assert
+        var selectedTags = cut.FindAll("span.ant-select-selection-item-content").Select(x => x.TextContent.Trim()).ToArray();
+        selectedTags.Should().ContainInOrder(new[] { "3", "1", "2" });
+    }
+
+    [Fact]
+    public void Removing_Value_From_Values_Should_Remove_Display_Tag()
+    {
+        // Arrange
+        IEnumerable<string> values = new string[] { "1", "2", "3" };
+        IEnumerable<string> options = new string[] { "1", "2", "3" };
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" Values="values" TItemValue="string" TItem="string">
+                <SelectOptions>
+                    @foreach(var value in options)
+                    {
+                        <SelectOption TItemValue="string" TItem="string" Value="@value" Label="@value" />
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Act - remove value '2'
+        var newValues = new string[] { "1", "3" };
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, newValues));
+
+        // Assert
+        var selectedTags = cut.FindAll("span.ant-select-selection-item-content").Select(x => x.TextContent.Trim()).ToArray();
+        selectedTags.Should().ContainInOrder(new[] { "1", "3" });
+        selectedTags.Should().NotContain("2");
+    }
+
+    [Fact]
+    public void DefaultValues_With_AddedTag_Should_Preserve_Order()
+    {
+        // Arrange
+        IEnumerable<string> values = new string[] { "A", "B-tag" };
+        IEnumerable<string> options = new string[] { "A", "B", "C" };
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" DefaultValues="values" TItemValue="string" TItem="string" DataSource="options">
+                <SelectOptions>
+                    @foreach(var value in options)
+                    {
+                        <SelectOption TItemValue="string" TItem="string" Value="@value" Label="@value" />
+                    }
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        // Assert - ensure the order is A then B-tag (B-tag is an added tag since not in DataSource)
+        var selectedTags = cut.FindAll("span.ant-select-selection-item-content").Select(x => x.TextContent.Trim()).ToArray();
+        selectedTags.Should().ContainInOrder(new[] { "A", "B-tag" });
+    }
+
+    [Fact]
     public async Task ItShouldAddTags_WhenDatasourceIsEmpty()
     {
         //Arrange

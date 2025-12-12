@@ -1,0 +1,57 @@
+@inherits AntDesignTestBase
+
+@code {
+    public TreeSelect_Ordering_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
+    }
+
+    [Fact]
+    public void TreeSelect_MultiSelect_InitialValues_Should_Preserve_Order_In_Display()
+    {
+        // Arrange
+        var nodes = new List<TreeNode<string>>
+        {
+            new TreeNode<string>{ Key = "1", Title = "1", DataItem = "1" },
+            new TreeNode<string>{ Key = "2", Title = "2", DataItem = "2" },
+            new TreeNode<string>{ Key = "3", Title = "3", DataItem = "3" }
+        };
+        IEnumerable<string> values = new string[] { "3", "1" };
+
+        var cut = Render<AntDesign.TreeSelect<string, string>>(
+            @<AntDesign.TreeSelect DataSource="nodes" TreeCheckable Multiple Values="values" TItemValue="string" TItem="string">
+            </AntDesign.TreeSelect>
+        );
+
+        // Assert
+        var selectedTags = cut.FindAll("span.ant-select-selection-item-content").Select(x => x.TextContent.Trim()).ToArray();
+        selectedTags.Should().ContainInOrder(new[] { "3", "1" });
+    }
+
+    [Fact]
+    public void TreeSelect_ClearOptions_Should_Clear_Display()
+    {
+        var nodes = new List<TreeNode<string>>
+        {
+            new TreeNode<string>{ Key = "1", Title = "1", DataItem = "1" },
+            new TreeNode<string>{ Key = "2", Title = "2", DataItem = "2" }
+        };
+        IEnumerable<string> values = new string[] { "1" };
+        var cut = Render<AntDesign.TreeSelect<string, string>>(
+            @<AntDesign.TreeSelect DataSource="nodes" TreeCheckable Multiple Values="values" TItemValue="string" TItem="string">
+            </AntDesign.TreeSelect>
+        );
+
+        // Act: clear the DataSource
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, null));
+
+        // Assert: no selected tag displayed
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(0));
+    }
+}

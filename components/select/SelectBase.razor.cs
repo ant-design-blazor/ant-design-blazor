@@ -76,6 +76,51 @@ namespace AntDesign
             _ = InvokeAsync(() => StateHasChanged());
         }
 
+        /// <summary>
+        /// Rebuild SelectedOptionItems following the ordering specified by orderingValues.
+        /// Any selected items not present in orderingValues will be appended at the end preserving their discovery order.
+        /// </summary>
+        /// <param name="orderingValues">The ordering values to follow. If null/empty, the initiallySelected list or existing selected items will be used.</param>
+        protected void RebuildSelectedOptionItems(IEnumerable<TItemValue> orderingValues, IEnumerable<SelectOptionItem<TItemValue, TItem>> initiallySelected = null)
+        {
+            var orderingList = orderingValues?.ToList();
+            SelectedOptionItems.Clear();
+
+            if (orderingList != null && orderingList.Any())
+            {
+                foreach (var v in orderingList)
+                {
+                    var selected = SelectOptionItems.FirstOrDefault(x => x.IsSelected && EqualityComparer<TItemValue>.Default.Equals(x.Value, v));
+                    if (selected != null && !SelectedOptionItems.Contains(selected))
+                        SelectedOptionItems.Add(selected);
+                }
+
+                // Append any other selected items not included in orderingValues (preserve their existing order)
+                foreach (var s in (initiallySelected ?? SelectOptionItems.Where(x => x.IsSelected)))
+                {
+                    if (!SelectedOptionItems.Contains(s))
+                        SelectedOptionItems.Add(s);
+                }
+            }
+            else if (initiallySelected != null && initiallySelected.Any())
+            {
+                foreach (var it in initiallySelected)
+                {
+                    if (!SelectedOptionItems.Contains(it))
+                        SelectedOptionItems.Add(it);
+                }
+            }
+            else
+            {
+                // No ordering specified and no initiallySelected passed: just ensure current selected items are in list
+                foreach (var s in SelectOptionItems.Where(x => x.IsSelected))
+                {
+                    if (!SelectedOptionItems.Contains(s))
+                        SelectedOptionItems.Add(s);
+                }
+            }
+        }
+
         protected TItemValue[] _selectedValues;
 
         protected Func<TItem, string> _getLabel;
@@ -617,7 +662,7 @@ namespace AntDesign
                     if (result != null && !result.IsDisabled)
                     {
                         result.IsSelected = true;
-                        SelectedOptionItems.Add(result);
+                        // Selection will be reflected by RebuildSelectedOptionItems called later.
                     }
 
                     deselectList.Remove(value);
@@ -633,12 +678,10 @@ namespace AntDesign
                         AddedTags.Add(result);
                         SelectOptionItems.Add(result);
                         AddEqualityToNoValue(result);
-                        SelectedOptionItems.Add(result);
                     }
                     else if (result != null && !result.IsSelected && !result.IsDisabled)
                     {
                         result.IsSelected = true;
-                        SelectedOptionItems.Add(result);
                     }
 
                     deselectList.Remove(value);
@@ -650,7 +693,6 @@ namespace AntDesign
                 foreach (var item in deselectList)
                 {
                     item.Value.IsSelected = false;
-                    SelectedOptionItems.Remove(item.Value);
                     RemoveEqualityToNoValue(item.Value);
                     if (item.Value.IsAddedTag)
                     {
@@ -659,6 +701,9 @@ namespace AntDesign
                     }
                 }
             }
+
+            // Reorder the SelectedOptionItems matching order of values parameter.
+            RebuildSelectedOptionItems(values, SelectOptionItems.Where(x => x.IsSelected).ToList());
         }
 
         /// <summary>
@@ -719,15 +764,18 @@ namespace AntDesign
 
         internal void RemoveOptionItem(SelectOptionItem<TItemValue, TItem> optionItem)
         {
-            SelectOptionItems.Remove(optionItem);
+            // mark as not selected so the UI can be rebuilt consistently
             if (optionItem.IsSelected)
             {
-                SelectedOptionItems.Remove(optionItem);
+                optionItem.IsSelected = false;
             }
+            SelectOptionItems.Remove(optionItem);
             if (optionItem.IsAddedTag)
             {
                 AddedTags.Remove(optionItem);
             }
+            // Rebuild selection display after option removed
+            RebuildSelectedOptionItems(_selectedValues ?? _defaultValues, SelectOptionItems.Where(x => x.IsSelected).ToList());
         }
 
         internal void RemoveEqualityToNoValue(SelectOptionItem<TItemValue, TItem> option)
@@ -894,17 +942,12 @@ namespace AntDesign
 
             if (Mode == SelectMode.Default)
             {
-                if (SelectedOptionItems.Count > 0)
-                {
-                    SelectedOptionItems[0].IsSelected = false;
-                    SelectedOptionItems[0] = selectOption;
-                }
-                else
-                {
-                    SelectedOptionItems.Add(selectOption);
-                }
-
+                // Mark the selected option
                 selectOption.IsSelected = true;
+
+                // Rebuild SelectedOptionItems using single-value ordering
+                RebuildSelectedOptionItems(new[] { selectOption.Value }, new[] { selectOption });
+
                 CurrentValue = selectOption.Value;
                 InvokeOnSelectedItemChanged(selectOption);
             }
@@ -938,8 +981,12 @@ namespace AntDesign
 
                     if (selectOption.IsAddedTag)
                     {
+                        // mark as not selected and remove added tag option
+                        if (selectOption.IsSelected)
+                        {
+                            selectOption.IsSelected = false;
+                        }
                         SelectOptionItems.Remove(selectOption);
-                        SelectedOptionItems.Remove(selectOption);
                         AddedTags.Remove(selectOption);
                     }
 
@@ -967,14 +1014,9 @@ namespace AntDesign
             List<TItemValue> newSelectedValues;
             if (newSelection is null || Values is null)
             {
-                newSelectedValues = new List<TItemValue>();
-                SelectedOptionItems.Clear();
-                SelectOptionItems.Where(x => x.IsSelected)
-                    .ForEach(i =>
-                    {
-                        newSelectedValues.Add(i.Value);
-                        SelectedOptionItems.Add(i);
-                    });
+                // Rebuild the selected values list from the currently selected items
+                newSelectedValues = SelectOptionItems.Where(x => x.IsSelected).Select(i => i.Value).ToList();
+                RebuildSelectedOptionItems(newSelectedValues, SelectOptionItems.Where(x => x.IsSelected).ToList());
             }
             else
             {
@@ -982,12 +1024,10 @@ namespace AntDesign
                 if (newSelection.IsSelected)
                 {
                     newSelectedValues.Add(newSelection.Value);
-                    SelectedOptionItems.Add(newSelection);
                 }
                 else
                 {
                     newSelectedValues.Remove(newSelection.Value);
-                    SelectedOptionItems.Remove(newSelection);
                 }
             }
 
@@ -1071,7 +1111,7 @@ namespace AntDesign
             AddedTags.Clear();
             ActiveOption = SelectOptionItems.FirstOrDefault();
             CustomTagSelectOptionItem = null;
-            SelectedOptionItems.Clear();
+            RebuildSelectedOptionItems(_selectedValues ?? _defaultValues, SelectOptionItems.Where(x => x.IsSelected).ToList());
 
             await Task.Delay(1); // Todo - Workaround because UI does not refresh
             await UpdateOverlayPositionAsync();
@@ -1090,13 +1130,10 @@ namespace AntDesign
             }
             if (!TypeDefaultExistsAsSelectOption && !_hasValueOnClear)
             {
-                SelectedOptionItems[0].IsSelected = false;
-                SelectedOptionItems[0].IsHidden = false;
-
-                ActiveOption = SelectOptionItems.FirstOrDefault();
-                SelectedOptionItems.Clear();
-                CurrentValue = default;
+                // Clear current selection and update state
                 await ClearSelectedAsync();
+                ActiveOption = SelectOptionItems.FirstOrDefault();
+                CurrentValue = default;
             }
             else if (_hasValueOnClear)
             {
@@ -1107,21 +1144,26 @@ namespace AntDesign
                 }
                 else
                 {
-                    SelectedOptionItems[0].IsSelected = false;
-                    SelectedOptionItems[0].IsHidden = false;
-
+                    // Clear current selection and set valueOnClear
+                    await ClearSelectedAsync();
                     ActiveOption = SelectOptionItems.FirstOrDefault();
-                    SelectedOptionItems.Clear();
                     CurrentValue = _valueOnClear;
                 }
             }
             else
             {
-                if (SelectedOptionItems[0].InternalId != _selectOptionEqualToTypeDefault.InternalId)
+                if (SelectedOptionItems.Count == 0 || SelectedOptionItems[0].InternalId != _selectOptionEqualToTypeDefault.InternalId)
                 {
-                    SelectedOptionItems[0].IsSelected = false;
-                    SelectedOptionItems[0] = _selectOptionEqualToTypeDefault;
-                    SelectedOptionItems[0].IsSelected = true;
+                    // De-select any currently selected items
+                    foreach (var s in SelectOptionItems.Where(x => x.IsSelected))
+                    {
+                        if (s.InternalId != _selectOptionEqualToTypeDefault.InternalId)
+                            s.IsSelected = false;
+                    }
+
+                    _selectOptionEqualToTypeDefault.IsSelected = true;
+                    ActiveOption = _selectOptionEqualToTypeDefault;
+                    RebuildSelectedOptionItems(new[] { _selectOptionEqualToTypeDefault.Value }, new[] { _selectOptionEqualToTypeDefault });
                     CurrentValue = _selectOptionEqualToTypeDefault.Value;
                 }
                 else
