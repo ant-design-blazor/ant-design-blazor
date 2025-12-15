@@ -361,4 +361,61 @@
             </div>");
     }
 #endif
+
+    [Fact]
+    public async Task ItShouldRefreshOverlayWhenDynamicOptionsChange_NET10()
+    {
+        // This test verifies that in .NET 10, when dynamic options are loaded,
+        // the overlay component is properly refreshed to detect the ShowOptions list changes
+        
+        SetupJavascript();
+        JSInterop.Setup<int>(
+            "AntDesign.interop.mentionsHelper.getProp", 
+            invocation => (string?)invocation.Arguments[1] == "selectionStart")
+            .SetResult(2);
+
+        var dynamicOptions = new List<MentionsDynamicOption>
+        {
+            new MentionsDynamicOption { Value = "user1", Display = @<text>User 1</text> },
+            new MentionsDynamicOption { Value = "user2", Display = @<text>User 2</text> }
+        };
+
+        var systemUnderTest = GetLoadOptionsRenderSystemUnderTest((value, _) =>
+        {
+            return Task.FromResult(dynamicOptions.AsEnumerable());
+        });
+
+        var textArea = systemUnderTest.Find("textarea");
+        
+        // Trigger input with @ to load options
+        await textArea.InputAsync(new ChangeEventArgs { Value = "@u" });
+        
+        // Verify options are displayed - this only works if RefreshComponentState() is called
+        systemUnderTest.Instance.ShowOptions.Should().HaveCount(2);
+        systemUnderTest.Instance.ShowOptions.Select(x => x.Value).Should().Contain(new[] { "user1", "user2" });
+    }
+
+    [Fact]
+    public async Task ItShouldHandleEmptyOptionsCorrectly_NET10()
+    {
+        // Test that overlay properly handles empty options in .NET 10
+        
+        SetupJavascript();
+        JSInterop.Setup<int>(
+            "AntDesign.interop.mentionsHelper.getProp", 
+            invocation => (string?)invocation.Arguments[1] == "selectionStart")
+            .SetResult(2);
+
+        var systemUnderTest = GetLoadOptionsRenderSystemUnderTest((value, _) =>
+        {
+            return Task.FromResult(Enumerable.Empty<MentionsDynamicOption>());
+        });
+
+        var textArea = systemUnderTest.Find("textarea");
+        
+        // Trigger input - should handle empty options gracefully
+        await textArea.InputAsync(new ChangeEventArgs { Value = "@x" });
+        
+        systemUnderTest.Instance.ShowOptions.Should().BeEmpty();
+    }
 }

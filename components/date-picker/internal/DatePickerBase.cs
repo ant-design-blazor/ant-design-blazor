@@ -387,14 +387,14 @@ namespace AntDesign
         /// <default value="false" />
         [Parameter]
         public bool Use12Hours { get; set; }
-        
+
         /// <summary>
         /// When true, will show week column in date panel
         /// </summary>
         /// <default value="false" />
         [Parameter]
         public bool ShowWeek { get; set; }
-        
+
         /// <summary>
         /// Date used for "Today"
         /// </summary>
@@ -552,7 +552,7 @@ namespace AntDesign
                 {
                     _activeBarStyle = "display: none";
                 }
-                
+
                 RefreshComponentState();
             }
 
@@ -929,8 +929,9 @@ namespace AntDesign
         /// </remarks>
         protected void RefreshComponentState()
         {
+#if NET10_0_OR_GREATER
             _dropDown.GetOverlayComponent().RefreshComponentState();
-            StateHasChanged(); // needed?
+#endif
         }
 
         /// <summary>

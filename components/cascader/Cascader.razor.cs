@@ -293,6 +293,11 @@ namespace AntDesign
             }
             _renderNodes.Sort((x, y) => x.Level.CompareTo(y.Level));  //Level 升序排序
 
+#if NET10_0_OR_GREATER
+            // .NET 10: Refresh overlay to detect _renderNodes changes
+            RefreshComponentState();
+#endif
+
             if (!cascaderNode.HasChildren)
             {
                 CloseAsync();
