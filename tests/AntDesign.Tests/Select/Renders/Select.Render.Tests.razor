@@ -12,6 +12,15 @@
         Beijing,
     }
 
+    [Flags]
+    enum Fruits
+    {
+        None = 0,
+        Apple = 1,
+        Pear = 2,
+        Orange = 4
+    }
+
     public Select_Render_Tests()
     {
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
@@ -112,5 +121,180 @@
 #else
         JSInterop.VerifyInvoke(JSInteropConstants.Focus);
 #endif
+    }
+
+    [Fact]
+    public async Task EnumSelect_AllowClear_Multiple_value_change_keeps_selected_items()
+    {
+        // Arrange
+        Fruits value = Fruits.Apple;
+
+        var cut = Render<EnumSelect<Fruits>>(
+            @<EnumSelect TEnum="Fruits" Mode="SelectMode.Multiple" AllowClear @bind-Value="@value"></EnumSelect>
+        );
+
+        // initial render with single selected (may include default enum "None" depending on internal representation)
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, value));
+
+        // Act - external update (flags combined)
+        value |= Fruits.Pear;
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, value));
+
+        // Wait a short while for the UI to reflect the combined flags and ignore potential default 'None' tag
+        await cut.InvokeAsync(async () =>
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                var sel = cut.FindAll("span.ant-select-selection-item-content").Select(x => x.TextContent.Trim()).Where(t => t != "None").ToArray();
+                if (sel.Contains("Apple") && sel.Contains("Pear"))
+                {
+                    return;
+                }
+                await Task.Delay(20);
+            }
+        });
+
+        // Assert - at least the two expected selected items are rendered (excluding default 'None')
+        var selected = cut.FindAll("span.ant-select-selection-item-content").Select(x => x.TextContent.Trim()).Where(t => t != "None").ToArray();
+        selected.Should().Contain(new[] { "Apple", "Pear" });
+    }
+
+    [Fact]
+    public void AllowClear_clears_when_value_not_found_and_no_selected_items()
+    {
+        // Arrange
+        var dataSource = new List<PersonNullable>()
+        {
+            new PersonNullable("2", "Test 2"),
+            new PersonNullable("3", "Test 3"),
+            new PersonNullable("4", "Test 4")
+        };
+
+        string? value = null;
+
+        var cut = Render<AntDesign.Select<string?, PersonNullable>>(
+            @<AntDesign.Select DataSource="@dataSource"
+                LabelName="@nameof(PersonNullable.Name)"
+                ValueName="@nameof(PersonNullable.Id)"
+                TItem="PersonNullable"
+                TItemValue="string"
+                AllowClear
+                @bind-Value="@value"></AntDesign.Select>
+        );
+
+        // ensure initial render has no selected items
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, value));
+
+        // Act - set a value that is NOT present in the options (external change)
+        value = "missing";
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, value));
+
+        // Assert - no selected items should be rendered (cleared)
+        var selected = cut.FindAll("span.ant-select-selection-item-content");
+        Assert.Empty(selected);
+    }
+
+    [Fact]
+    public async Task Removing_all_tags_triggers_clear_on_flags_enum_select()
+    {
+        // Arrange
+        Fruits? value = Fruits.Apple | Fruits.Pear;
+
+        var cut = Render<EnumSelect<Fruits?>>(
+            @<EnumSelect TEnum="Fruits?" Mode="SelectMode.Multiple" AllowClear @bind-Value="@value"></EnumSelect>
+        );
+
+        // ensure the component reflects the combined flags
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, value));
+        var initial = cut.FindAll("span.ant-select-selection-item-content");
+        initial.Select(x => x.TextContent.Trim()).Should().Contain(new[] { "Apple", "Pear" });
+
+        // Act - remove tags via the remove control
+        // The remove control handles 'onmousedown' rather than 'onclick' in the component,
+        // and removing a tag will re-render the component and change the DOM. Re-query the
+        // remove control and trigger the event until there are no more tags left.
+        while (true)
+        {
+            var remove = cut.FindAll("span.ant-select-selection-item-remove").FirstOrDefault();
+            if (remove == null)
+            {
+                break;
+            }
+
+            // Use InvokeAsync and await to ensure the DOM updates complete before continuing
+            // (prevents UnknownEventHandlerIdException and timing races with bound value updates).
+            await cut.InvokeAsync(() => remove.TriggerEvent("onmousedown", new MouseEventArgs()));
+            // Slight delay to allow Blazor to process the event and update bound values/DOM
+            await Task.Delay(1);
+        }
+
+        // Assert - Value should be cleared (default) and no tags rendered
+        // Allow some time for the bound value to be updated via ValueChanged callbacks
+        // and for the UI to reflect the cleared state.
+        await Task.Delay(5);
+
+        value.Should().BeNull();
+        cut.FindAll("span.ant-select-selection-item-content").Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Selecting_after_clear_does_not_restore_previous_flags()
+    {
+        // Arrange - start with two flags selected
+        Fruits? value = Fruits.Apple | Fruits.Pear;
+
+        var cut = Render<EnumSelect<Fruits?>>(
+            @<EnumSelect TEnum="Fruits?" Mode="SelectMode.Multiple" AllowClear @bind-Value="@value"></EnumSelect>
+        );
+
+        // ensure the component reflects the combined flags
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, value));
+        var initial = cut.FindAll("span.ant-select-selection-item-content");
+        initial.Select(x => x.TextContent.Trim()).Should().Contain(new[] { "Apple", "Pear" });
+
+        // Act - remove tags via the remove control (handles 'onmousedown') as the
+        // clear button relies on a DOM event listener that isn't present in bUnit.
+        while (true)
+        {
+            var remove = cut.FindAll("span.ant-select-selection-item-remove").FirstOrDefault();
+            if (remove == null)
+            {
+                break;
+            }
+
+            await cut.InvokeAsync(() => remove.TriggerEvent("onmousedown", new MouseEventArgs()));
+            await Task.Delay(1);
+        }
+
+        // Confirm cleared UI/state. Allow for 'None' default tag, so ignore it in the asserts.
+        await cut.InvokeAsync(async () =>
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                var sel = cut.FindAll("span.ant-select-selection-item-content").Select(x => x.TextContent.Trim()).Where(t => t != "None").ToArray();
+                if (!sel.Any() && value == null)
+                {
+                    break;
+                }
+                await Task.Delay(20);
+            }
+        });
+
+        var afterClear = cut.FindAll("span.ant-select-selection-item-content").Select(x => x.TextContent.Trim()).Where(t => t != "None");
+        afterClear.Should().BeEmpty();
+        value.Should().BeNull();
+
+        // Act - simulate selecting 'Apple' by updating the bound value
+        // Wait briefly to ensure the clear operation fully settled
+        await Task.Delay(5);
+        value = Fruits.Apple;
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, value));
+
+        // Assert - bound value should be only Apple (previous Pear must not be restored)
+        value.Should().Be(Fruits.Apple);
+        var selectedAfter = cut.FindAll("span.ant-select-selection-item-content");
+        // The UI may briefly show duplicate tag nodes in bUnit; ensure the unique
+        // set of labels contains only Apple.
+        selectedAfter.Select(x => x.TextContent.Trim()).Distinct().Should().ContainSingle("Apple");
     }
 }

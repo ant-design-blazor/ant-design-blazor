@@ -433,6 +433,7 @@ namespace AntDesign
         protected override async Task OnParametersSetAsync()
         {
             EvaluateDataSourceChange();
+
             if (SelectOptions == null)
             {
                 if (!_optionsHasInitialized || _dataSourceHasChanged)
@@ -440,6 +441,10 @@ namespace AntDesign
                     CreateDeleteSelectOptions();
                     _optionsHasInitialized = true;
                     _dataSourceHasChanged = false;
+#if NET10_0_OR_GREATER
+                    // .NET 10: Force re-render of overlay and parent component after DataSource changes
+                    RefreshComponentState();
+#endif
                 }
             }
 
@@ -1093,9 +1098,17 @@ namespace AntDesign
                 }
                 else
                 {
-                    //Reset value if not found - needed if value changed
-                    //outside of the component
-                    await InvokeAsync(() => OnInputClearClickAsync(new()));
+                    // Reset value if not found - needed if value changed outside of the component.
+                    // In some scenarios (e.g., enum flags handled by EnumSelect) the incoming
+                    // Value setter will populate the Values collection which then asynchronously
+                    // populates SelectedOptionItems. Yielding once here gives that path a chance
+                    // to run and populate SelectedOptionItems so we don't clear them erroneously.
+                    await Task.Yield();
+
+                    if (!SelectedOptionItems.Any())
+                    {
+                        await InvokeAsync(() => OnInputClearClickAsync(new()));
+                    }
                 }
                 return;
             }

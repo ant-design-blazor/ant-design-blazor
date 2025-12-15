@@ -1,4 +1,5 @@
-﻿@inherits AntDesignTestBase
+﻿@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
 
 @code{
 
@@ -158,5 +159,65 @@
         var highlight = flattenedItem.QuerySelector(".ant-cascader-menu-item-keyword");
         Assert.NotNull(highlight);
         Assert.Contains("District1", highlight.TextContent);
+    }
+
+    public async Task Should_Render_Child_Menu_After_Selecting_Parent_Node()
+    {
+        // This test verifies that selecting a parent node triggers child menu rendering
+        // In .NET 10+, this requires RefreshComponentState() to work correctly
+        // In .NET 8/9, it works without RefreshComponentState()
+        
+        // Arrange
+        JSInterop.SetupVoid("AntDesign.interop.styleHelper.addClsToFirstChild", _ => true);
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.domInfoHelper.getOverlayPosition", _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition());
+
+        var level2Child = new CascaderNode { Value = "child2", Label = "Child 2" };
+        var level1Child = new CascaderNode 
+        { 
+            Value = "child1", 
+            Label = "Child 1",
+            Children = new[] { level2Child }
+        };
+        var parentNode = new CascaderNode
+        {
+            Value = "parent",
+            Label = "Parent",
+            Children = new[] { level1Child }
+        };
+
+        var options = new[] { parentNode };
+
+        var cut = Render<AntDesign.Cascader>(
+            @<AntDesign.Cascader Options="@options" Open="true" />
+        );
+
+        // Wait for initial render
+        cut.WaitForState(() => cut.FindAll(".ant-cascader-menu").Any(), timeout: TimeSpan.FromSeconds(2));
+        
+        // Get initial menu count (should be 1 - only root menu)
+        var initialMenus = cut.FindAll(".ant-cascader-menu");
+        initialMenus.Count.Should().Be(1, "Initially only root menu should be visible");
+
+        // Find the parent menu item from rendered elements
+        var parentMenuItem = cut.Find("li[data-path-key='Parent']");
+        parentMenuItem.Should().NotBeNull("Parent menu item should be rendered");
+
+        // Act - Click on the parent node to expand child menu
+        await parentMenuItem.ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+
+        // Small delay to allow rendering to complete
+        await Task.Delay(50);
+
+        // Assert - The second menu column should appear showing child nodes
+        var allMenus = cut.FindAll(".ant-cascader-menu");
+        allMenus.Count.Should().BeGreaterOrEqualTo(2, 
+            "After clicking parent node, child menu should be rendered.");
+        
+        // Verify the child menu item is present in DOM
+        var childMenuItem = cut.Find("li[data-path-key='Child 1']");
+        childMenuItem.Should().NotBeNull("Child 1 menu item should be visible in the second column");
     }
 }

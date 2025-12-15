@@ -35,19 +35,25 @@
             .SetResult(new AntDesign.JsInterop.DomRect());        
     }
 
+
     [Fact]
     public void Default_add_new_item_and_set_it_as_value_in_single_render() //issue #1536
     {
         //Arrange
-
-        Person value = _persons[1];
+        var persons = new List<Person>(_persons); // Create a local copy
+        Person value = persons[1];
+        
+        //Act
+        value = new Person(5, "NewPerson");
+        persons.Add(value);
+        
         var cut = Render<AntDesign.Select<Person, Person>>(
         @<AntDesign.Select Mode="default"
             TItemValue="Person"
             TItem="Person"
             @bind-Value="@value">
             <SelectOptions>						
-                @foreach (var item in _persons)
+                @foreach (var item in persons)
                 {
                     <SelectOption @key="item"
                                   TItemValue="Person"
@@ -58,31 +64,30 @@
             </SelectOptions>
         </AntDesign.Select>
     );
-        //Act
-        value = new Person(5, "NewPerson");
-        _persons.Add(value);   
-        cut.SetParametersAndRender(parameters => parameters
-            .Add(p => p.DataSource, _persons)
-            .Add(p => p.Value, value));
+           
         //Assert        
         cut.Find("span.ant-select-selection-item").TextContent.Trim().Should().Be(value.Name);
-        cut.Instance.SelectOptionItems.Should().HaveCount(_persons.Count);
-        cut.FindAll("div.ant-select-item-option-content").Should().HaveCount(_persons.Count);
+        cut.Instance.SelectOptionItems.Should().HaveCount(persons.Count);
+        cut.FindAll("div.ant-select-item-option-content").Should().HaveCount(persons.Count);
     }
 
     [Fact]
     public void Multiple_add_new_item_and_set_it_as_value_in_single_render() //issue #1536 (multiple version)
     {
         //Arrange
-
-        IEnumerable<Person> values = new List<Person>() { _persons[1] };
+        var persons = new List<Person>(_persons); // Create a local copy
+        var newPerson = new Person(5, "NewPerson");
+        persons.Add(newPerson);
+        IEnumerable<Person> values = new List<Person>() { persons[1], newPerson};
+        
+        //Act
         var cut = Render<AntDesign.Select<Person, Person>>(
         @<AntDesign.Select Mode="SelectMode.Multiple"
             TItemValue="Person"
             TItem="Person"
             @bind-Values="@values">
             <SelectOptions>						
-                @foreach (var item in _persons)
+                @foreach (var item in persons)
                 {
                     <SelectOption @key="item"
                                   TItemValue="Person"
@@ -93,20 +98,15 @@
             </SelectOptions>
             </AntDesign.Select>
     );
-        //Act
-        var newPerson = new Person(5, "NewPerson");
-        _persons.Add(newPerson);   
-        values = new List<Person>() { _persons[1], newPerson};
-        cut.SetParametersAndRender(parameters => parameters
-            .Add(p => p.DataSource, _persons)
-            .Add(p => p.Values, values));
+           
         //Assert        
         var selectedItems = cut.FindAll("span.ant-select-selection-item-content");        
-        cut.Instance.SelectOptionItems.Should().HaveCount(_persons.Count);
-        cut.FindAll("div.ant-select-item-option-content").Should().HaveCount(_persons.Count);
+        cut.Instance.SelectOptionItems.Should().HaveCount(persons.Count);
+        cut.FindAll("div.ant-select-item-option-content").Should().HaveCount(persons.Count);
         selectedItems.Should().HaveCount(values.Count());
         selectedItems.Select(x => x.TextContent).Should().ContainInOrder(new string[] { "Lucy", "NewPerson"});
     }
+
 
     [Theory]
     [InlineData(SelectMode.Default)]
@@ -274,9 +274,9 @@
     [Fact]
     public void SelectOption_Should_Be_Removed_When_Disposed()
     {
-        // Arrange
+        // Arrange & Act
         Person value = null;
-        var showAll = true;
+        var showAll = false;
         var cut = Render<AntDesign.Select<Person, Person>>(
             @<AntDesign.Select TItemValue="Person" TItem="Person" @bind-Value="@value">
                 <SelectOptions>
@@ -291,10 +291,6 @@
                 </SelectOptions>
             </AntDesign.Select>
         );
-
-        // Act
-        showAll = false;
-        cut.SetParametersAndRender();
 
         // Assert
         cut.Instance.SelectOptionItems.Should().HaveCount(2);

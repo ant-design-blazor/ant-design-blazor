@@ -24,6 +24,7 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
+            10.0.x
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
@@ -41,7 +42,7 @@ jobs:
           dotnet build
           sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o _site
-          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll _site/wwwroot/_framework
+          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net10.0/*.dll _site/wwwroot/_framework
           find ./_site/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
         env:
           PACKAGE_VERSION: ${{ github.event.number }}
