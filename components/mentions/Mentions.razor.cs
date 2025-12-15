@@ -372,6 +372,11 @@ namespace AntDesign
             {
                 ActiveOptionValue = null;
             }
+
+#if NET10_0_OR_GREATER
+            // Refresh the overlay component to detect changes in ShowOptions list (.NET 10 compatibility)
+            _overlayTrigger?.GetOverlayComponent()?.RefreshComponentState();
+#endif
         }
 
         internal async Task ItemClick(string optionValue)

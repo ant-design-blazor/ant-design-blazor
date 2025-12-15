@@ -715,6 +715,14 @@ namespace AntDesign
         internal virtual void AddOptionItem(SelectOptionItem<TItemValue, TItem> optionItem)
         {
             SelectOptionItems.Add(optionItem);
+#if NET10_0_OR_GREATER
+            // .NET 10: Schedule refresh for next render cycle to update overlay after child components change
+            // In SelectOptions mode, this automatically handles data source changes without requiring manual RefreshOptionsAsync() call
+            if (HasSelectOptions)
+            {
+                _ = InvokeAsync(() => RefreshComponentState());
+            }
+#endif
         }
 
         internal void RemoveOptionItem(SelectOptionItem<TItemValue, TItem> optionItem)
@@ -728,6 +736,30 @@ namespace AntDesign
             {
                 AddedTags.Remove(optionItem);
             }
+#if NET10_0_OR_GREATER
+            // .NET 10: Schedule refresh for next render cycle to update overlay after child components change
+            // In SelectOptions mode, this automatically handles data source changes without requiring manual RefreshOptionsAsync() call
+            if (HasSelectOptions)
+            {
+                _ = InvokeAsync(() => RefreshComponentState());
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Refresh the state of the component and its overlay
+        /// </summary>
+        /// <remarks>
+        /// Calls StateHasChanged() for both overlay and parent component
+        /// </remarks>
+        protected void RefreshComponentState()
+        {
+#if NET10_0_OR_GREATER
+            if (_dropDown?.GetOverlayComponent() != null)
+            {
+                _dropDown.GetOverlayComponent().RefreshComponentState();
+            }
+#endif
         }
 
         internal void RemoveEqualityToNoValue(SelectOptionItem<TItemValue, TItem> option)

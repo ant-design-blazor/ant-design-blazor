@@ -433,6 +433,7 @@ namespace AntDesign
         protected override async Task OnParametersSetAsync()
         {
             EvaluateDataSourceChange();
+
             if (SelectOptions == null)
             {
                 if (!_optionsHasInitialized || _dataSourceHasChanged)
@@ -440,6 +441,10 @@ namespace AntDesign
                     CreateDeleteSelectOptions();
                     _optionsHasInitialized = true;
                     _dataSourceHasChanged = false;
+#if NET10_0_OR_GREATER
+                    // .NET 10: Force re-render of overlay and parent component after DataSource changes
+                    RefreshComponentState();
+#endif
                 }
             }
 
