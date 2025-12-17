@@ -22,6 +22,7 @@ namespace Microsoft.Extensions.DependencyInjection
             // singleton services is only the app configuration, no need to distinguish between different users
             services.TryAddSingleton<IComponentIdGenerator, GuidComponentIdGenerator>();
             services.TryAddSingleton<IFieldFilterTypeResolver, DefaultFieldFilterTypeResolver>();
+            services.TryAddScoped<IDraftService, DraftService>();
 
             // scoped services within IJSRuntime
             services.TryAddScoped<DomEventService>();

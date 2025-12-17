@@ -1,0 +1,138 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+
+<Alert Type="@AlertType.Info" Message="Fill in the form and refresh the page. The system will prompt you to recover the draft." ShowIcon="true" style="margin-bottom: 16px;" />
+
+<DraftMonitor TData="FormModel"
+              @ref="draftMonitor"
+              Data="@model"
+              DataChanged="@OnModelChanged"
+              Options="@draftOptions"
+              OnRecovered="@OnDraftRecovered"
+              OnDeleted="@OnDraftDeleted" />
+
+<Form Model="@model"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      LabelColSpan="8"
+      WrapperColSpan="16">
+    <FormItem Label="Username">
+        <Input @bind-Value="@context.Username" />
+    </FormItem>
+    <FormItem Label="Email">
+        <Input @bind-Value="@context.Email" />
+    </FormItem>
+    <FormItem Label="Password">
+        <InputPassword @bind-Value="@context.Password" />
+    </FormItem>
+    <FormItem Label="Bio">
+        <TextArea @bind-Value="@context.Bio" Rows="4" />
+    </FormItem>
+    <FormItem Label="Remember me" WrapperColOffset="8" WrapperColSpan="16">
+        <Checkbox @bind-Value="context.RememberMe">Remember me</Checkbox>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Space>
+            <SpaceItem>
+                <Button Type="@ButtonType.Primary" HtmlType="submit">
+                    Submit
+                </Button>
+            </SpaceItem>
+            <SpaceItem>
+                <Button OnClick="ClearDraft">
+                    Clear Draft
+                </Button>
+            </SpaceItem>
+            <SpaceItem>
+                <Button OnClick="Reset">
+                    Reset
+                </Button>
+            </SpaceItem>
+        </Space>
+    </FormItem>
+</Form>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <Alert Type="@AlertType.Success" Message="@message" ShowIcon="true" style="margin-top: 16px;" Closable="true" OnClose="() => message = null" />
+}
+
+@code
+{
+    public class FormModel
+    {
+        [Required(ErrorMessage = "Please enter username")]
+        public string Username { get; set; }
+
+        [Required(ErrorMessage = "Please enter email")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Please enter password")]
+        [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
+        public string Password { get; set; }
+
+        public string Bio { get; set; }
+        public bool RememberMe { get; set; }
+    }
+
+    private FormModel model = new FormModel();
+    private string message;
+    private DraftMonitor<FormModel> draftMonitor;
+
+    private DraftOptions draftOptions = new DraftOptions
+    {
+        Key = "user-registration-form",
+        DelayMilliseconds = 1000,
+        RecoveryMode = DraftRecoveryMode.Confirm,
+        Version = "1.0.0"
+    };
+
+    private void OnModelChanged(FormModel newModel)
+    {
+        model = newModel;
+        StateHasChanged();
+    }
+
+    private void OnFinish(EditContext editContext)
+    {
+        message = $"Form submitted successfully! Data: {JsonSerializer.Serialize(model)}";
+        Console.WriteLine(message);
+
+        // Clear draft after successful submission
+        _ = draftMonitor?.ClearDraftAsync();
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        message = "Form validation failed, please check your input!";
+        Console.WriteLine(message);
+    }
+
+    private void OnDraftRecovered(FormModel recovered)
+    {
+        message = "Draft recovered!";
+        Console.WriteLine($"Draft recovered: {JsonSerializer.Serialize(recovered)}");
+    }
+
+    private void OnDraftDeleted()
+    {
+        message = "Draft deleted!";
+        Console.WriteLine("Draft deleted");
+    }
+
+    private async Task ClearDraft()
+    {
+        if (draftMonitor != null)
+        {
+            await draftMonitor.ClearDraftAsync();
+            message = "Draft cleared!";
+        }
+    }
+
+    private void Reset()
+    {
+        model = new FormModel();
+        message = "Form reset!";
+    }
+}
