@@ -15,7 +15,27 @@ timeline: true
 
 ---
 
+### 1.5.1
+
+`2025-12-16`
+
+- 🆕 Support .NET 10. [#4728](https://github.com/ant-design-blazor/ant-design-blazor/pull/4728) [@ElderJames](https://github.com/ElderJames)
+- 🆕 Add Button `IconFont` property. [#4730](https://github.com/ant-design-blazor/ant-design-blazor/pull/4730) [@pankey888](https://github.com/pankey888)
+- ⚡️ Improve Mentions regex. [#4722](https://github.com/ant-design-blazor/ant-design-blazor/pull/4722) [@LeaFrock](https://github.com/LeaFrock)
+- 🐞 Fixed select trigger clear incorrectly about EnumSelect AllowClear (#4737). [#4737](https://github.com/ant-design-blazor/ant-design-blazor/pull/4737) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Overlay the bug where the arrow position in the overlay is sometimes misaligned. (#4731). [#4731](https://github.com/ant-design-blazor/ant-design-blazor/pull/4731) [@pankey888](https://github.com/pankey888)
+- 🐞 Fixed Table the resizable handler's occasional invisibility. (#4735). [#4735](https://github.com/ant-design-blazor/ant-design-blazor/pull/4735) [@pankey888](https://github.com/pankey888)
+- 🐞 Fixed Datepicker event handler on .NET 10  (#4685). [#4685](https://github.com/ant-design-blazor/ant-design-blazor/pull/4685) [@alchiweb](https://github.com/alchiweb)
+- 🐞 Fixed Table header column initialization issue (#4668). [#4668](https://github.com/ant-design-blazor/ant-design-blazor/pull/4668) [@JieZheng](https://github.com/JieZheng)
+
+- Card
+  - 🛠 Refactor the naming of InvokeStateHasChanged (#4719). [#4719](https://github.com/ant-design-blazor/ant-design-blazor/pull/4719) [@zandiarash](https://github.com/zandiarash)
+  - 🐞 Fixed RTL issue fixed (#4717). [#4717](https://github.com/ant-design-blazor/ant-design-blazor/pull/4717) [@zandiarash](https://github.com/zandiarash)
+
+
 ### 1.5.0
+
+`2025-11-03`
 
 - Table
   - 🆕 Add support for controlling the closure of the panel when customizing the filter panel. [#4645](https://github.com/ant-design-blazor/ant-design-blazor/pull/4645) [@ElderJames](https://github.com/ElderJames)

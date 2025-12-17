@@ -15,7 +15,26 @@ timeline: true
 
 ---
 
+### 1.5.1
+
+`2025-12-16`
+
+- 🆕 新增 .NET 10 支持。[#4728](https://github.com/ant-design-blazor/ant-design-blazor/pull/4728) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Button 支持 `IconFont` 属性。[#4730](https://github.com/ant-design-blazor/ant-design-blazor/pull/4730) [@pankey888](https://github.com/pankey888)
+- ⚡️ 性能提示 Mentions 改进正则表达式。[#4722](https://github.com/ant-design-blazor/ant-design-blazor/pull/4722) [@LeaFrock](https://github.com/LeaFrock)
+- 🐞 修复 Select 未正确清除 EnumSelect 选项。[#4737](https://github.com/ant-design-blazor/ant-design-blazor/pull/4737) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Overlay 箭头位置有时未对齐。[#4731](https://github.com/ant-design-blazor/ant-design-blazor/pull/4731) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 Table 拖动列句柄的样式。[#4735](https://github.com/ant-design-blazor/ant-design-blazor/pull/4735) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 Datepicker 在 .Net10 使用不正常。[#4685](https://github.com/ant-design-blazor/ant-design-blazor/pull/4685) [@alchiweb](https://github.com/alchiweb)
+- 🐞 修复 Table 列初始化问题。[#4668](https://github.com/ant-design-blazor/ant-design-blazor/pull/4668) [@JieZheng](https://github.com/JieZheng)
+
+- Card
+  - 🛠 重构 InvokeStateHasChanged 命名错误。[#4719](https://github.com/ant-design-blazor/ant-design-blazor/pull/4719) [@zandiarash](https://github.com/zandiarash)
+  - 🐞 修复 RTL 样式问题。[#4717](https://github.com/ant-design-blazor/ant-design-blazor/pull/4717) [@zandiarash](https://github.com/zandiarash)
+
 ### 1.5.0
+
+`2025-11-03`
 
 - Table
   - 🆕 新增 支持自定义筛选器面板时控制面板关闭。[#4645](https://github.com/ant-design-blazor/ant-design-blazor/pull/4645) [@ElderJames](https://github.com/ElderJames)
