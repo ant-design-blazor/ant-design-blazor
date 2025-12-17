@@ -315,6 +315,7 @@ namespace AntDesign
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "watermarkHelper.";
 
             public static string GenerateBase64Url => $"{FUNC_PREFIX}generateBase64Url";
+            public static string Destroy => $"{FUNC_PREFIX}destroy";
         }
 
         public static class SplitterHelper

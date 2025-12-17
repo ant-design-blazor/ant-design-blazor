@@ -272,5 +272,26 @@ namespace AntDesign
                 InvokeStateHasChanged();
             }
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                try
+                {
+                    _ = JsInvokeAsync(JSInteropConstants.WatermarkHelper.Destroy, Ref);
+                }
+#if NET6_0_OR_GREATER
+                catch (JSDisconnectedException)
+                {
+                }
+#endif
+                catch
+                {
+                }
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
