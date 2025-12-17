@@ -1,0 +1,87 @@
+@using System.Threading.Tasks
+@using AntDesign.Docs.Demos.Experimental.TableRelationColumn.Demo.Shared
+@using AntDesign.TableModels
+
+@* Demo: Multiple columns sharing the same loaded data with pagination *@
+
+<h4>Orders with User Details - Multiple Columns from Single Load</h4>
+
+<Table TItem="Order" 
+       DataSource="@currentPageOrders" 
+       Size="@TableSize.Small" 
+       Loading="@isLoading" 
+       PageSize="5"
+       Total="30" 
+       OnChange="@OnChange">
+
+    <PropertyColumn Property="c => c.OrderId" Title="Order ID" />
+    <PropertyColumn Property="c => c.Amount" Title="Amount" Format="C2" />
+
+    @* Multiple columns sharing the same user data load *@
+
+    @* Column 1: User Name - displays user name from loaded data *@
+    <PropertyColumn Property="c => c.UserId" Title="User Name">
+        <UserMultiFieldRelation TItem="Order" DisplayField="Name" />
+    </PropertyColumn>
+
+    @* Column 2: User Address - displays user address from the same loaded data *@
+    <PropertyColumn Property="c => c.UserId" Title="User Address">
+        <UserMultiFieldRelation TItem="Order" DisplayField="Address" />
+    </PropertyColumn>
+
+    @* Column 3: User Email - displays user email from the same loaded data *@
+    <PropertyColumn Property="c => c.UserId" Title="User Email">
+        <UserMultiFieldRelation TItem="Order" DisplayField="Email" />
+    </PropertyColumn>
+
+    <PropertyColumn Property="c => c.CreatedTime" Title="Created Time" Format="yyyy-MM-dd HH:mm" />
+</Table>
+
+@code {
+    private List<Order> currentPageOrders = new();
+
+    private bool isLoading = false;
+
+    private async Task OnChange(QueryModel<Order> query)
+    {
+        isLoading = true;
+        StateHasChanged();
+
+        // Simulate loading delay
+        await Task.Delay(300);
+
+        currentPageOrders = GenerateOrders(5);
+
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private List<Order> GenerateOrders(int count)
+    {
+        var random = new Random(42); // Fixed seed for consistent demo
+        var orders = new List<Order>();
+        var baseTime = DateTime.Now.AddDays(-30);
+
+        for (int i = 1; i <= count; i++)
+        {
+            orders.Add(new Order
+            {
+                OrderId = $"ORD{i:D3}",
+                UserId = random.Next(1, 6), // Random user ID from 1-5
+                Amount = Math.Round((decimal)(random.NextDouble() * 900 + 100), 2), // Random amount between 100-1000
+                CreatedTime = baseTime.AddHours(random.Next(0, 720)) // Random time within 30 days
+            });
+        }
+
+        return orders.OrderByDescending(o => o.CreatedTime).ToList();
+    }
+
+    // Order entity
+    public class Order
+    {
+        public string OrderId { get; set; }
+        public int UserId { get; set; }
+        public decimal Amount { get; set; }
+        public DateTime CreatedTime { get; set; }
+    }
+}

@@ -14,6 +14,8 @@ namespace AntDesign
 
         public IList<IColumn> HeaderColumns { get; set; } = new List<IColumn>();
 
+        public IList<IColumn> ColumnDefs => Columns.Where(x => x.IsInitialize).ToList();
+
         private int CurrentColIndex { get; set; }
 
         private int[] ColIndexOccupied { get; set; }

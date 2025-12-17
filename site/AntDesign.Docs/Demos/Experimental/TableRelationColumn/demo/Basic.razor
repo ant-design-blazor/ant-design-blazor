@@ -1,0 +1,64 @@
+@using System.Threading.Tasks
+@using AntDesign.Docs.Demos.Experimental.TableRelationColumn.Demo.Shared
+
+<h4>Orders Table - Using UserNameRelation&lt;Order&gt;</h4>
+
+<Table TItem="Order" DataSource="@orders" Size="@TableSize.Small">
+    <PropertyColumn Property="c=>c.OrderId" Title="Order ID" />
+    <PropertyColumn Property="c=>c.Amount" Title="Amount" Format="C2" />
+    <PropertyColumn Property="c=>c.UserId" Title="User">
+        <UserNameRelation />
+    </PropertyColumn>
+    <PropertyColumn Property="c=>c.CreatedTime" Title="Created Time" Format="yyyy-MM-dd HH:mm" />
+</Table>
+
+<h4 style="margin-top: 24px">Employees Table - Using UserNameRelation&lt;Employee&gt; for Department</h4>
+
+<Table TItem="Employee" DataSource="@employees" Size="@TableSize.Small">
+    <PropertyColumn Property="c=>c.EmployeeId" Title="Employee ID" />
+    <PropertyColumn Property="c=>c.UserId" Title="Name" >
+       <UserNameRelation />
+    </PropertyColumn>
+    <PropertyColumn Property="c=>c.Salary" Title="Salary" Format="C0" />
+</Table>
+
+@code {
+    private List<Order> orders = new();
+    private List<Employee> employees = new();
+
+    protected override void OnInitialized()
+    {
+        // Initialize orders data
+        orders = new List<Order>
+        {
+            new Order { OrderId = "ORD001", UserId = 1, Amount = 299.50m, CreatedTime = DateTime.Now.AddDays(-5) },
+            new Order { OrderId = "ORD002", UserId = 2, Amount = 150.00m, CreatedTime = DateTime.Now.AddDays(-4) },
+            new Order { OrderId = "ORD003", UserId = 1, Amount = 450.00m, CreatedTime = DateTime.Now.AddDays(-3) },
+        };
+
+        // Initialize employees data
+        employees = new List<Employee>
+        {
+            new Employee { EmployeeId = "E001", UserId = 1,  Salary = 8000 },
+            new Employee { EmployeeId = "E002", UserId = 2,  Salary = 12000 },
+            new Employee { EmployeeId = "E003", UserId = 3,  Salary = 9500 },
+        };
+    }
+
+    // Order entity
+    public class Order
+    {
+        public string OrderId { get; set; }
+        public int UserId { get; set; }
+        public decimal Amount { get; set; }
+        public DateTime CreatedTime { get; set; }
+    }
+
+    // Employee entity
+    public class Employee
+    {
+        public string EmployeeId { get; set; }
+        public int UserId { get; set; }
+        public decimal Salary { get; set; }
+    }
+}

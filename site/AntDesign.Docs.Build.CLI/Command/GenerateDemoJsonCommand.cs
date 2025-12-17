@@ -207,11 +207,31 @@ namespace AntDesign.Docs.Build.CLI.Command
                 componentsDocsByLanguage[Constants.ChineseLanguage].Add(GenerateApiDocumentation.ForComponent(Constants.ChineseLanguage, docAttribute, title, docs, pageUrl, apiDocs, seeAlso, faqs, demos));
             }
 
-            // recognize componetns by doc files
+            // Track components processed from reflection to avoid duplicates
+            var processedComponentTitles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var component in libraryComponents)
+            {
+                var docAttribute = component.GetCustomAttribute<DocumentationAttribute>();
+                if (docAttribute is not null)
+                {
+                    var title = docAttribute.Title ?? GetNameWithoutGenerics(component);
+                    processedComponentTitles.Add(title.ToLower());
+                }
+            }
+
+            // Add components from doc files (skip those already processed via reflection)
             var docComponents = GenerateCompentFromDoc();
             foreach (var item in docComponents)
+            {
                 foreach (var component in item)
-                    componentsDocsByLanguage[component.Key].Add(component.Value);
+                {
+                    // Skip if this component was already added via reflection
+                    if (!processedComponentTitles.Contains(component.Value.Title.ToLower()))
+                    {
+                        componentsDocsByLanguage[component.Key].Add(component.Value);
+                    }
+                }
+            }
 
             foreach (var language in componentsDocsByLanguage)
             {
@@ -688,7 +708,8 @@ namespace AntDesign.Docs.Build.CLI.Command
             IList<Dictionary<string, DemoComponent>> componentList = null;
             IList<string> demoTypes = null;
 
-            var directories = demoDirectoryInfo.GetFileSystemInfos().Where(x => x.Name != "Components")
+            // Process all directories - Components directory is now handled consistently
+            var directories = demoDirectoryInfo.GetFileSystemInfos()
                 .SelectMany(x => x is DirectoryInfo directory ? directory.GetFileSystemInfos() : []);
 
             foreach (FileSystemInfo component in directories)
@@ -725,6 +746,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 if (demoDir != null && demoDir.Exists)
                 {
                     foreach (IGrouping<string, FileSystemInfo> demo in (demoDir as DirectoryInfo).GetFileSystemInfos()
+                        .Where(x => !string.IsNullOrEmpty(x.Extension))  // Skip directories and files without extensions
                         .GroupBy(x => x.Name
                             .Replace(x.Extension, "")
                             .Replace("-", "")
@@ -741,13 +763,56 @@ namespace AntDesign.Docs.Build.CLI.Command
 
                         (DescriptionYaml Meta, string Style, Dictionary<string, string> Descriptions) descriptionContent = descriptionFile != null ? DocParser.ParseDescription(File.ReadAllText(descriptionFile.FullName)) : default;
 
+                        // Read additional files specified in YAML metadata
+                        Dictionary<string, string> additionalFiles = null;
+                        if (descriptionContent.Meta?.AdditionalFiles != null && descriptionContent.Meta.AdditionalFiles.Count > 0)
+                        {
+                            additionalFiles = new Dictionary<string, string>();
+                            DirectoryInfo demoFolder = new DirectoryInfo(Path.GetDirectoryName(descriptionFile.FullName));
+                            
+                            foreach (string relativePath in descriptionContent.Meta.AdditionalFiles)
+                            {
+                                // Resolve path relative to demo folder
+                                string fullPath = Path.Combine(demoFolder.FullName, relativePath);
+                                
+                                if (File.Exists(fullPath))
+                                {
+                                    try
+                                    {
+                                        string content = File.ReadAllText(fullPath);
+                                        // Use relative path as the key for consistency
+                                        additionalFiles[relativePath] = content;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine($"Warning: Failed to read additional file '{relativePath}' for demo {demoType}: {ex.Message}");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Warning: Additional file not found: '{fullPath}' for demo {demoType}");
+                                }
+                            }
+                        }
+
                         demoTypes ??= new List<string>();
                         demoTypes.Add(demoType);
 
                         foreach (KeyValuePair<string, string> title in descriptionContent.Meta.Title)
                         {
                             string language = title.Key;
+                            
+                            // Skip this language if the component doesn't have documentation for it
+                            if (!componentDic.ContainsKey(language))
+                            {
+                                Console.WriteLine($"Warning: Component '{component.Name}' doesn't have documentation for language '{language}', skipping demo '{descriptionFile?.Name}'");
+                                continue;
+                            }
+
                             List<DemoItem> list = componentDic[language].DemoList ??= new List<DemoItem>();
+
+                            // Get description, use empty string if not available for this language
+                            string description = descriptionContent.Descriptions.TryGetValue(title.Key, out var desc) ? desc : string.Empty;
 
                             list.Add(new DemoItem()
                             {
@@ -755,13 +820,14 @@ namespace AntDesign.Docs.Build.CLI.Command
                                 Order = descriptionContent.Meta.Order,
                                 Iframe = descriptionContent.Meta.Iframe,
                                 Code = code,
-                                Description = descriptionContent.Descriptions[title.Key],
+                                Description = description,
                                 Name = descriptionFile?.Name.Replace(".md", ""),
                                 Style = descriptionContent.Style,
                                 Debug = descriptionContent.Meta.Debug,
                                 Docs = descriptionContent.Meta.Docs,
                                 Type = demoType,
-                                Link = descriptionContent.Meta.Link
+                                Link = descriptionContent.Meta.Link,
+                                AdditionalFiles = additionalFiles
                             });
                         }
                     }

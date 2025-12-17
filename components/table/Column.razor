@@ -9,6 +9,10 @@
 
 @if (IsInitialize)
 {
+    <CascadingValue Value="this" IsFixed>
+        @ChildContent
+    </CascadingValue>
+
     return;
 }
 else if (Hidden)
@@ -41,7 +45,6 @@ else if (IsColGroup)
 }
 else if (IsHeader && HeaderColSpan != 0)
 {
-
     @if (AppendExpandColumn)
     {
         <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
@@ -144,7 +147,12 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 
     RenderFragment CellContent(CellData<TData> cellData)
     {
-        if (CellRender != null)
+        // 优先使用关联组件渲染
+        if (CurrentRelationComponent != null)
+        {
+            return CurrentRelationComponent.RenderCell(cellData.RowData);
+        }
+        else if (CellRender != null)
         {
             return CellRender(cellData);
         }
