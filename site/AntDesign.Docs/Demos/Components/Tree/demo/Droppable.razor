@@ -1,0 +1,97 @@
+﻿<Tree Style="width:100%;"
+            DataSource="treeData"
+			Draggable
+		    OnDrop="onDrop"
+		    DraggableExpression="node=>node.DataItem.Type==NodeType.ntEmployeee"
+		    DroppableExpression="IsDroppable"
+			TItem="Data"
+            Selectable
+			BlockNode
+            DefaultExpandAll
+            ChildrenExpression="node=>node.DataItem.Children"
+            TitleExpression="node=>node.DataItem.Title"
+            KeyExpression="node=>node.DataItem.Key"
+            IsLeafExpression="node=>!node.DataItem.Children.Any()">
+</Tree>
+
+@code {
+
+	List<Data> treeData = new List<Data>
+    {
+        new()
+        {
+            Title = "Company",
+            Key = "1",
+            Type = NodeType.ntCompany,
+			Children = new List<Data>
+			{
+                new()
+                {
+                    Title = "Department1",
+                    Key = "11",
+                    Type = NodeType.ntDepartment,
+					Children = new List<Data>
+					{
+                        new()
+                        {
+                            Title = "Tom",
+                            Key = "111",
+                            Type = NodeType.ntEmployeee
+                        },
+                        new()
+                        {
+                            Title = "John",
+                            Key = "112",
+                            Type = NodeType.ntEmployeee
+                        }
+					}
+                },
+                new()
+                {
+                    Title = "Department2",
+                    Key = "12",
+                    Type = NodeType.ntDepartment,
+                    Children = new List<Data>
+					{
+                        new()
+                        {
+                            Title = "Jim",
+                            Key = "121",
+                            Type = NodeType.ntEmployeee
+                        },
+                        new()
+                        {
+                            Title = "Lili",
+                            Key = "122",
+                            Type = NodeType.ntEmployeee
+                        }
+					}
+                }
+			}
+        }
+    };
+
+	public enum NodeType
+	{
+		ntCompany, ntDepartment, ntEmployeee
+	}
+
+	public class Data
+	{
+		public string Key { get; set; }
+		public string Title { get; set; }
+		public NodeType Type { get; set; }
+		public List<Data> Children { get; set; } = new();
+	}
+
+	private bool IsDroppable(TreeNode<Data> draggingNode, TreeNode<Data> dropNode, bool dropBelow)
+	{
+		if (dropNode.Key == "111") return false;
+		if (dropBelow && dropNode.ParentNode == null) return false;
+		return dropNode.DataItem.Type != NodeType.ntEmployeee || dropBelow;
+	}
+
+	private void onDrop(TreeEventArgs<Data> e)
+	{
+	}
+}

@@ -814,6 +814,23 @@ namespace AntDesign
         [Parameter]
         public EventCallback<TreeEventArgs<TItem>> OnDragEnd { get; set; }
 
+        /// <summary>
+        /// Whether the node can be dragged
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> DraggableExpression { get; set; }
+
+
+        /// <summary>
+        /// Whether the target accepts the dragging node
+        /// <param>正在被拖动的节点（拖拽起点）</param>
+        /// <param>目标接收节点（拖放终点）</param>
+        /// <param>是否目标节点下方（true=目标节点下面/false=目标节点内部，即拖动的节点成为目标节点的子节点）</param>
+        /// <returns>返回true表示允许拖放操作，false表示拒绝</returns>
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode<TItem>, TreeNode<TItem>, bool, bool> DroppableExpression { get; set; }
+
         #endregion DragDrop
 
         protected override void OnInitialized()

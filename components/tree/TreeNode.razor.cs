@@ -27,7 +27,7 @@ namespace AntDesign
         /// Parent Node
         /// </summary>
         [CascadingParameter(Name = "Node")]
-        internal TreeNode<TItem> ParentNode { get; set; }
+        public TreeNode<TItem> ParentNode { get; set; }
 
         /// <summary>
         ///
@@ -746,11 +746,17 @@ namespace AntDesign
 
         #region Title
 
+
+        private bool _draggable = true;
         /// <summary>
         /// Whether the node is draggable
         /// </summary>
         [Parameter]
-        public bool Draggable { get; set; }
+        public bool Draggable
+        {
+            get => TreeComponent.Draggable && _draggable;
+            set => _draggable = value;
+        }
 
         private string _icon;
 
@@ -1117,6 +1123,9 @@ namespace AntDesign
                 }
                 DoSelect(isSelected, TreeComponent.Multiple, false);
             }
+
+            if (TreeComponent.DraggableExpression != null)
+                Draggable = TreeComponent.DraggableExpression(this);
             base.OnInitialized();
         }
 
