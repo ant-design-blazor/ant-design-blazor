@@ -4,134 +4,75 @@
 
 @using System.Text.RegularExpressions;
 
-@if (CanDraggable)
-{
-    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick" draggable="true" 
-      @oncontextmenu="OnContextMenu"  
-      @oncontextmenu:preventDefault="TreeComponent.OnContextMenu.HasDelegate"
-      @ondragover:preventDefault @ondragover="OnDragOver" @ondragleave="OnDragLeave" @ondragenter="OnDragEnter" @ondrop:preventDefault @ondrop="OnDrop"
-      @ondragstart="OnDragStart" @ondragend="OnDragEnd" aria-grabbed="true">
-        @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
-        {
-            <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
-                <span class="ant-tree-iconEle ant-tree-icon__customize">
-                    @TreeComponent.TitleIconTemplate(SelfNode)
-                </span>
+<span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick"
+	@oncontextmenu="OnContextMenu" @oncontextmenu:preventDefault="TreeComponent.OnContextMenu.HasDelegate"
+	draggable="@(CanDraggable ? "true" : "false")" aria-grabbed="@(CanDraggable ? "true" : "false")"
+	@ondragover:preventDefault="@TreeComponent.DragItem!=null" @ondragover="OnDragOver"
+	@ondragleave:preventDefault="@TreeComponent.DragItem!=null" @ondragleave="OnDragLeave"
+	@ondragenter:preventDefault="@TreeComponent.DragItem!=null" @ondragenter="OnDragEnter"
+	@ondrop:preventDefault="@TreeComponent.DragItem!=null" @ondrop="OnDrop"
+	@ondragstart="e => { if (CanDraggable) OnDragStart(e); }" @ondragend="e => { if (CanDraggable) OnDragEnd(e); }">
+    @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
+    {
+        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
+            <span class="ant-tree-iconEle ant-tree-icon__customize">
+                @TreeComponent.TitleIconTemplate(SelfNode)
             </span>
-        }
-        else if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false && TreeComponent.ShowIcon)
-        {
-            <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
-                <span class="ant-tree-iconEle ant-tree-icon__customize">
-                    @if (string.IsNullOrWhiteSpace(SelfNode.Icon) == false)
-                    {
-                        <Icon Type="@SelfNode.Icon" Theme="@IconThemeType.Outline" />
-                    }
-                </span>
-            </span>
-        }
-        @if (TreeComponent.TitleTemplate != null)
-        {
-            @TreeComponent.TitleTemplate(SelfNode)
-        }
-        else
-        {
-            <span class="ant-tree-title">
-                @if (SelfNode.TitleTemplate != null)
+        </span>
+    }
+    else if ((!string.IsNullOrWhiteSpace(SelfNode.Icon) || SelfNode.IconTemplate != null) && TreeComponent.ShowIcon)
+    {
+        <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
+            <span class="ant-tree-iconEle ant-tree-icon__customize">
+                @if (SelfNode.IconTemplate != null)
                 {
-                    @SelfNode.TitleTemplate
+                    @SelfNode.IconTemplate(SelfNode)
                 }
-                else
+                else if (!string.IsNullOrWhiteSpace(SelfNode.Icon))
                 {
-                    bool shouldMarkup = SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue);
-                    int index = -1;
-                    if (shouldMarkup)
-                    {
-                        index = SelfNode.Title.IndexOf(TreeComponent.SearchValue, StringComparison.InvariantCultureIgnoreCase);
-                    }
+                    <Icon Type="@SelfNode.Icon" Theme="@IconThemeType.Outline" />
+                }
+            </span>
+        </span>
+    }
+    @if (TreeComponent.TitleTemplate != null)
+    {
+        @TreeComponent.TitleTemplate(SelfNode)
+    }
+    else if (SelfNode.TitleTemplate != null)
+    {
+        @SelfNode.TitleTemplate
+    }
+    else
+    {
+        <span class="ant-tree-title">
+			@{
+				bool shouldMarkup = SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue);
+				int index = -1;
+				if (shouldMarkup)
+				{
+					index = SelfNode.Title.IndexOf(TreeComponent.SearchValue, StringComparison.InvariantCultureIgnoreCase);
+				}
 
-                    if (shouldMarkup && (index > -1))
-                    {
-                        var start = SelfNode.Title.Substring(0, index);
-                        var match = SelfNode.Title.Substring(index, TreeComponent.SearchValue.Length);
-                        var end = SelfNode.Title.Substring(index + TreeComponent.SearchValue.Length);
-                        var value = $"{start}<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{match}</span>{end}";
-                        <span>
-                            @((MarkupString)value)
-                        </span>
-                    }
-                    else
-                    {
-                        @SelfNode.Title
-                    }
-                }
- 
-            </span>
-        }
-        @if (SelfNode.DragTarget)
-        {
-            <div class="ant-tree-drop-indicator" style="left:@(SelfNode.DragTargetBottom?"4px":"28px");right:0;bottom:-3px;"></div>
-        }
-    </span>
-}
-else
-{
-    <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick"
-      @oncontextmenu="OnContextMenu" @oncontextmenu:preventDefault="TreeComponent.OnContextMenu.HasDelegate">
-        @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
-        {
-            <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
-                <span class="ant-tree-iconEle ant-tree-icon__customize">
-                    @TreeComponent.TitleIconTemplate(SelfNode)
-                </span>
-            </span>
-        }
-        else if ((!string.IsNullOrWhiteSpace(SelfNode.Icon) || SelfNode.IconTemplate != null) && TreeComponent.ShowIcon)
-        {
-            <span class="ant-tree-iconEle @(IsSwitcherOpen?"ant-tree-icon__open":"") @(IsSwitcherClose?"ant-tree-icon__close":"") @(SelfNode.Loading?"ant-tree-icon_loading":"")">
-                <span class="ant-tree-iconEle ant-tree-icon__customize">
-                    @if (SelfNode.IconTemplate != null)
-                    {
-                        @SelfNode.IconTemplate(SelfNode)
-                    }
-                    else if (!string.IsNullOrWhiteSpace(SelfNode.Icon))
-                    {
-                        <Icon Type="@SelfNode.Icon" Theme="@IconThemeType.Outline" />
-                    }
-                </span>
-            </span>
-        }
-        @if (TreeComponent.TitleTemplate != null)
-        {
-            @TreeComponent.TitleTemplate(SelfNode)
-        }
-        else if (SelfNode.TitleTemplate != null)
-        {
-            @SelfNode.TitleTemplate
-        }
-        else
-        {
-            <span class="ant-tree-title">
-                @if (SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue))
-                {
-                    int index = SelfNode.Title.IndexOf(TreeComponent.SearchValue, StringComparison.InvariantCultureIgnoreCase);
-                    var start = SelfNode.Title.Substring(0, index);
-                    var match = SelfNode.Title.Substring(index, TreeComponent.SearchValue.Length);
-                    var end = SelfNode.Title.Substring(index + TreeComponent.SearchValue.Length);
-                    var value = $"{start}<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{match}</span>{end}";
-                    <span>
-                       @((MarkupString)value)
-                    </span>
-                }
-                else
-                {
-                    @SelfNode.Title
-                }
-            </span>
-        }
-        @if (SelfNode.DragTarget)
-        {
-            <div class="ant-tree-drop-indicator" style="left:@(SelfNode.DragTargetBottom?"4px":"28px");right:0;bottom:-3px;"></div>
-        }
-    </span>
-}
+				if (shouldMarkup && (index > -1))
+				{
+					var start = SelfNode.Title.Substring(0, index);
+					var match = SelfNode.Title.Substring(index, TreeComponent.SearchValue.Length);
+					var end = SelfNode.Title.Substring(index + TreeComponent.SearchValue.Length);
+					var value = $"{start}<span class=\"{TreeComponent.MatchedClass}\" style=\"{TreeComponent.MatchedStyle}\">{match}</span>{end}";
+					<span>
+						@((MarkupString)value)
+					</span>
+				}
+				else
+				{
+					@SelfNode.Title
+				}
+			}
+        </span>
+    }
+    @if (SelfNode.DragTarget)
+    {
+        <div class="ant-tree-drop-indicator" style="left:@(SelfNode.DragTargetBottom?"4px":"28px");right:0;bottom:-3px;"></div>
+    }
+</span>

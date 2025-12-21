@@ -33,7 +33,7 @@ namespace AntDesign
         [CascadingParameter(Name = "SelfNode")]
         private TreeNode<TItem> SelfNode { get; set; }
 
-        private bool CanDraggable => TreeComponent.Draggable && !SelfNode.Disabled;
+        private bool CanDraggable => SelfNode.Draggable && !SelfNode.Disabled;
 
         private bool IsSwitcherOpen => SelfNode.Expanded && !SelfNode.IsLeaf;
 
@@ -122,6 +122,7 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDragLeave(DragEventArgs e)
         {
+            if (TreeComponent.DragItem == null) return;
             SelfNode.DragTarget = false;
             SelfNode.SetParentTargetContainer();
             if (TreeComponent.OnDragLeave.HasDelegate)
@@ -134,8 +135,8 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDragEnter(DragEventArgs e)
         {
+            if (TreeComponent.DragItem == null) return;
             if (TreeComponent.DragItem == SelfNode) return;
-            SelfNode.DragTarget = true;
             _dragTargetClientX = e.ClientX;
 
             System.Diagnostics.Debug.WriteLine($"OnDragEnter {SelfNode.Title}  {System.Text.Json.JsonSerializer.Serialize(e)}");
@@ -150,18 +151,29 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDragOver(DragEventArgs e)
         {
+            if (TreeComponent.DragItem == null) return;
             if (TreeComponent.DragItem == SelfNode) return;
             if (e.ClientX - _dragTargetClientX > OffSETX)
             {
+                if (!CanDrop(TreeComponent.DragItem, SelfNode, false)) return;
                 SelfNode.SetTargetBottom();
                 SelfNode.SetParentTargetContainer();
                 _ = SelfNode.Expand(true);
             }
             else
             {
+                if (!CanDrop(TreeComponent.DragItem, SelfNode, true)) return;
                 SelfNode.SetTargetBottom(true);
                 SelfNode.SetParentTargetContainer(true);
             }
+            SelfNode.DragTarget = true;
+        }
+
+        private bool CanDrop(TreeNode<TItem> draggingNode, TreeNode<TItem> dropNode, bool dropBelow)
+        {
+            if (TreeComponent.DroppableExpression != null)
+                return TreeComponent.DroppableExpression(draggingNode, dropNode, dropBelow);
+            return true;
         }
 
 
@@ -171,6 +183,7 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDrop(DragEventArgs e)
         {
+            if (TreeComponent.DragItem == null || !SelfNode.DragTarget) return;
             SelfNode.DragTarget = false;
             SelfNode.SetParentTargetContainer();
             if (SelfNode.DragTargetBottom)
@@ -188,6 +201,7 @@ namespace AntDesign
         /// <param name="e"></param>
         private void OnDragEnd(DragEventArgs e)
         {
+            if (TreeComponent.DragItem == null) return;
             if (TreeComponent.OnDragEnd.HasDelegate)
                 TreeComponent.OnDragEnd.InvokeAsync(new TreeEventArgs<TItem>(TreeComponent, TreeComponent.DragItem) { TargetNode = SelfNode });
         }
