@@ -1,0 +1,215 @@
+@using System.ComponentModel.DataAnnotations
+@inherits AntDesignTestBase
+@code {
+    class Model
+    {
+        [CountingRequired]
+        public DateTime?[] Range { get; set; }
+    }
+
+    class CountingRequiredAttribute : RequiredAttribute
+    {
+        public static int Count;
+
+        public override bool IsValid(object value)
+        {
+            System.Threading.Interlocked.Increment(ref Count);
+            return base.IsValid(value);
+        }
+    }
+
+    [Fact]
+    public async Task RangePicker_empty_values_validated_on_change()
+    {
+        // Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+
+        JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+            .SetResult(new AntDesign.JsInterop.Window());
+
+        var model = new Model
+        {
+            Range = new DateTime?[] { DateTime.Now, DateTime.Now.AddDays(1) }
+        };
+
+        var cut = Render<AntDesign.Form<Model>>(
+            @<AntDesign.Form Model="@model" ValidateOnChange="true">
+                <AntDesign.FormItem Name="Range" Label="Range">
+                    <AntDesign.RangePicker TValue="DateTime?[]" @bind-Value="@model.Range" />
+                </AntDesign.FormItem>
+            </AntDesign.Form>
+        );
+
+        var picker = cut.FindComponent<AntDesign.RangePicker<DateTime?[]>>();
+
+        // Precondition: no validation messages initially
+        picker.Instance.ValidationMessages.Should().BeEmpty();
+
+        // Act: clear the picker (simulate user clearing the range)
+        await cut.InvokeAsync(() => picker.Instance.ClearValue(-1));
+
+        // Poll for validation to run (avoid throwing immediately to capture diagnostics)
+        var success = false;
+        string[] msgs = [];
+        for (int i = 0; i < 20; i++)
+        {
+            msgs = cut.Instance.EditContext.GetValidationMessages(cut.Instance.EditContext.Field("Range")).ToArray();
+            if (CountingRequiredAttribute.Count > 0 || msgs.Length > 0 || picker.Instance.ValidationMessages.Length > 0)
+            {
+                success = true;
+                break;
+            }
+
+            await Task.Delay(50);
+        }
+
+        success.Should().BeTrue($"Validation should have run. Diagnostics: RequiredCount={CountingRequiredAttribute.Count}, EditContextMsgs=[{string.Join(",", msgs)}], PickerMsgs=[{string.Join(",", picker.Instance.ValidationMessages)}]");
+    }
+
+    [Fact]
+    public async Task RangePicker_required_message_correct_when_cleared()
+    {
+        // Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+
+        JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+            .SetResult(new AntDesign.JsInterop.Window());
+
+        var model = new Model
+        {
+            Range = new DateTime?[] { DateTime.Now, DateTime.Now.AddDays(1) }
+        };
+
+        var cut = Render<AntDesign.Form<Model>>(
+            @<AntDesign.Form Model="@model" ValidateOnChange="true">
+                <AntDesign.FormItem Name="Range" Label="Range">
+                    <AntDesign.RangePicker TValue="DateTime?[]" @bind-Value="@model.Range" />
+                </AntDesign.FormItem>
+            </AntDesign.Form>
+        );
+
+        var picker = cut.FindComponent<AntDesign.RangePicker<DateTime?[]>>();
+
+        // Act: clear the picker
+        await cut.InvokeAsync(() => picker.Instance.ClearValue(-1));
+
+        // Poll for validation and capture diagnostics
+        var success = false;
+        string[] msgs = [];
+        for (int i = 0; i < 20; i++)
+        {
+            msgs = cut.Instance.EditContext.GetValidationMessages(cut.Instance.EditContext.Field("Range")).ToArray();
+            if (msgs.Length == 1 || picker.Instance.ValidationMessages.Length == 1)
+            {
+                success = true;
+                break;
+            }
+            await Task.Delay(50);
+        }
+
+        success.Should().BeTrue($"Validation should have run. Diagnostics: RequiredCount={CountingRequiredAttribute.Count}, EditContextMsgs=[{string.Join(",", msgs)}], PickerMsgs=[{string.Join(",", picker.Instance.ValidationMessages)}]");
+
+        picker.Instance.ValidationMessages.Should().ContainSingle()
+            .And.Contain("Please enter Range");
+    }
+
+    [Fact]
+    public async Task RangePicker_validation_requested_called_once_on_clear()
+    {
+        // Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+
+        JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+            .SetResult(new AntDesign.JsInterop.Window());
+
+        var model = new Model
+        {
+            Range = new DateTime?[] { DateTime.Now, DateTime.Now.AddDays(1) }
+        };
+
+        int validationRequestedCount = 0;
+
+        var cut = Render<AntDesign.Form<Model>>(
+            @<AntDesign.Form Model="@model" ValidateOnChange="true" OnValidationRequested="@(async (Microsoft.AspNetCore.Components.Forms.ValidationRequestedEventArgs args) => { validationRequestedCount++; await Task.CompletedTask; })">
+                <AntDesign.FormItem Name="Range" Label="Range">
+                    <AntDesign.RangePicker TValue="DateTime?[]" @bind-Value="@model.Range" />
+                </AntDesign.FormItem>
+            </AntDesign.Form>
+        );
+
+        var picker = cut.FindComponent<AntDesign.RangePicker<DateTime?[]>>();
+
+        // Act
+        await cut.InvokeAsync(() => picker.Instance.ClearValue(-1));
+
+        // Poll for the OnValidationRequested callback count
+        var success = false;
+        for (int i = 0; i < 20; i++)
+        {
+            if (validationRequestedCount == 1)
+            {
+                success = true;
+                break;
+            }
+            await Task.Delay(50);
+        }
+
+        success.Should().BeTrue($"OnValidationRequested should have been called once. Count={validationRequestedCount}");
+        validationRequestedCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task RangePicker_bound_null_validated_on_validate()
+    {
+        // Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+
+        JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+            .SetResult(new AntDesign.JsInterop.Window());
+
+        var model = new Model
+        {
+            Range = null
+        };
+
+        var cut = Render<AntDesign.Form<Model>>(
+            @<AntDesign.Form Model="@model">
+                <AntDesign.FormItem Name="Range" Label="Range">
+                    <AntDesign.RangePicker TValue="DateTime?[]" @bind-Value="@model.Range" />
+                </AntDesign.FormItem>
+            </AntDesign.Form>
+        );
+
+        var picker = cut.FindComponent<AntDesign.RangePicker<DateTime?[]>>();
+
+        // Act: call Validate on form (no ClearValue)
+        await cut.InvokeAsync(() => cut.Instance.Validate());
+
+        // Poll for validation and capture diagnostics
+        var success = false;
+        string[] msgs = [];
+        for (int i = 0; i < 20; i++)
+        {
+            msgs = cut.Instance.EditContext.GetValidationMessages(cut.Instance.EditContext.Field("Range")).ToArray();
+            if (msgs.Length == 1 || picker.Instance.ValidationMessages.Length == 1)
+            {
+                success = true;
+                break;
+            }
+            await Task.Delay(50);
+        }
+
+        success.Should().BeTrue($"Validation should have run. Diagnostics: RequiredCount={CountingRequiredAttribute.Count}, EditContextMsgs=[{string.Join(",", msgs)}], PickerMsgs=[{string.Join(",", picker.Instance.ValidationMessages)}]");
+
+        picker.Instance.ValidationMessages.Should().ContainSingle()
+            .And.Contain("Please enter Range");
+    }
+}
