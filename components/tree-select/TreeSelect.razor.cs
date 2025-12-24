@@ -410,8 +410,14 @@ namespace AntDesign
 
         private void ClearOptions()
         {
+            // mark all option items as deselected and remove them
+            foreach (var option in SelectOptionItems)
+            {
+                option.IsSelected = false;
+            }
             SelectOptionItems.Clear();
-            SelectedOptionItems.Clear();
+            // Rebuild selection to ensure UI lists are in sync
+            RebuildSelectedOptionItems(_cachedValues ?? Array.Empty<TItemValue>(), SelectOptionItems.Where(x => x.IsSelected).ToList());
             if (TreeCheckable)
                 _tree?._allNodes.ForEach(x => x.SetChecked(false));
             else
