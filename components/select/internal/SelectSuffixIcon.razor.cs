@@ -22,6 +22,9 @@ namespace AntDesign.Select.Internal
 
         [Parameter]
         public bool ShowArrowIcon { get; set; }
+        
+        [Parameter]
+        public bool Loading { get; set; }
 
         [Parameter]
         public EventCallback<MouseEventArgs> OnClearClick { get; set; }

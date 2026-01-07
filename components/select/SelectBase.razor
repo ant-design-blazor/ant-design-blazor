@@ -64,23 +64,25 @@
                     <CascadingValue Value="@MaxTagPlaceholder" Name="ParentMaxTagPlaceholerTemplate">
                         <CascadingValue Value="@ShowSearchIcon" Name="ShowSearchIcon">
                             <CascadingValue Value="@ShowArrowIcon" Name="ShowArrowIcon">
-                                <SelectContent Prefix="@ClassPrefix"
-                                               RefBack="@context"
-                                               @ref="_selectContent"
-                                               TItemValue="TItemValue"
-                                               TItem="TItem"
-                                               SearchValue="@_searchValue"
-                                               SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
-                                               IsOverlayShow="@_dropDown.IsOverlayShow()"
-                                               MaxTagCount="@_maxTagCountAsInt"
-                                               OnInput="@OnInputAsync"
-                                               OnKeyUp="@OnKeyUpAsync"
-                                               OnKeyDown="@OnKeyDownAsync"
-                                               OnFocus="@OnInputFocusAsync"
-                                               OnBlur="@OnInputBlurAsync"
-                                               OnClearClick="@OnInputClearClickAsync"
-                                               OnRemoveSelected="@OnRemoveSelectedAsync"
-                                               Placeholder="@Placeholder" />
+                                <CascadingValue Value="@Loading" Name="Loading">
+                                    <SelectContent Prefix="@ClassPrefix"
+                                                   RefBack="@context"
+                                                   @ref="_selectContent"
+                                                   TItemValue="TItemValue"
+                                                   TItem="TItem"
+                                                   SearchValue="@_searchValue"
+                                                   SearchDebounceMilliseconds="@SearchDebounceMilliseconds"
+                                                   IsOverlayShow="@_dropDown.IsOverlayShow()"
+                                                   MaxTagCount="@_maxTagCountAsInt"
+                                                   OnInput="@OnInputAsync"
+                                                   OnKeyUp="@OnKeyUpAsync"
+                                                   OnKeyDown="@OnKeyDownAsync"
+                                                   OnFocus="@OnInputFocusAsync"
+                                                   OnBlur="@OnInputBlurAsync"
+                                                   OnClearClick="@OnInputClearClickAsync"
+                                                   OnRemoveSelected="@OnRemoveSelectedAsync"
+                                                   Placeholder="@Placeholder" />
+                                </CascadingValue>
                             </CascadingValue>
                         </CascadingValue>
                     </CascadingValue>
