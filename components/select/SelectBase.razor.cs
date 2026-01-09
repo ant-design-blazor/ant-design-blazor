@@ -278,20 +278,23 @@ namespace AntDesign
         internal List<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new();
         internal Dictionary<TItemValue, SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new();
 
+        private List<SelectOptionItem<TItemValue, TItem>> _cachedOrderedSelectedItems = null;
+
         internal List<SelectOptionItem<TItemValue, TItem>> GetOrderedSelectedItems()
         {
-            List<SelectOptionItem<TItemValue, TItem>> res = [];
+            if (_cachedOrderedSelectedItems != null) return _cachedOrderedSelectedItems;
+            _cachedOrderedSelectedItems = [];
             if (SelectedOptionItems.Count > 0 && _selectedValues != null)
             {
                 foreach (var selectedValue in _selectedValues)
                 {
                     if (SelectedOptionItems.TryGetValue(selectedValue, out var item))
                     {
-                        res.Add(item);
+                        _cachedOrderedSelectedItems.Add(item);
                     }
                 }
             }
-            return res;
+            return _cachedOrderedSelectedItems;
         }
 
         /// <summary>
@@ -593,7 +596,7 @@ namespace AntDesign
                 await OnSelectedItemsChanged.InvokeAsync(default);
                 return;
             }
-
+            _cachedOrderedSelectedItems = null;
             EvaluateValuesChangedOutsideComponent(values);
 
             if (ValuesChanged.HasDelegate)
