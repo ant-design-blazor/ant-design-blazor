@@ -19,12 +19,12 @@ public sealed class AntDesignTools
 
     // NOTE: Keep this in sync with the <PackageVersion> in the project file.
     // Resolve package id and current package version from assembly metadata
-    private static string PackageId =>
+    public static string PackageId =>
         typeof(AntDesignTools).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
             .FirstOrDefault(a => string.Equals(a.Key, "PackageId", StringComparison.OrdinalIgnoreCase))?.Value
         ?? typeof(AntDesignTools).Assembly.GetName().Name ?? "AntDesign.Docs.MCP";
 
-    private static string CurrentPackageVersion =>
+    public static string CurrentPackageVersion =>
         typeof(AntDesignTools).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
         ?? typeof(AntDesignTools).Assembly.GetName().Version?.ToString() ?? "0.0.0";
 

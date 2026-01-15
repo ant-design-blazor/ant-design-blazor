@@ -25,6 +25,12 @@
     <!-- Inject PackageVersion into assembly informational version so runtime can read it -->
     <AssemblyInformationalVersion>$(PackageVersion)</AssemblyInformationalVersion>
   
+    <!-- CLI tool command name for `dotnet tool run <name>` -->
+    <ToolCommandName>antdesign-docs-mcp</ToolCommandName>
+    <PackageTags>AI; MCP; server; stdio</PackageTags>
+    <Description>An MCP server for AntDesign Blazor.</Description>
+  </PropertyGroup>
+
   <!-- Inject PackageId into assembly metadata so runtime can read it -->
   <ItemGroup>
     <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
@@ -32,11 +38,6 @@
       <_Parameter2>$(PackageId)</_Parameter2>
     </AssemblyAttribute>
   </ItemGroup>
-    <!-- CLI tool command name for `dotnet tool run <name>` -->
-    <ToolCommandName>antdesign-docs-mcp</ToolCommandName>
-    <PackageTags>AI; MCP; server; stdio</PackageTags>
-    <Description>An MCP server using the MCP C# SDK.</Description>
-  </PropertyGroup>
 
   <!-- Include additional files for browsing the MCP server. -->
   <ItemGroup>

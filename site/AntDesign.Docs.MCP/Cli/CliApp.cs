@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
+using AntDesign.Docs.MCP.Tools;
 
 namespace AntDesign.Docs.MCP.Cli
 {
