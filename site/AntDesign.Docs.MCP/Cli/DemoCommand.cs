@@ -28,7 +28,7 @@ namespace AntDesign.Docs.MCP.Cli
 
                 var verb = args[0].ToLowerInvariant();
 
-                var tools = new AntDesignTools();
+                var tools = new AntDesignTools(new ComponentService(), svc);
 
                 if (verb == "list")
                 {

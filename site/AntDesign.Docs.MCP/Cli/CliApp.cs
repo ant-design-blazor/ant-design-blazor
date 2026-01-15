@@ -69,7 +69,74 @@ namespace AntDesign.Docs.MCP.Cli
                     });
                 });
             });
+            // debug
+            app.Command("debug", debugCmd =>
+            {
+                debugCmd.Description = "Debugging commands";
 
+                debugCmd.Command("data", dataCmd =>
+                {
+                    dataCmd.Description = "Print data files found in MCP output directories and first 2KB of each file";
+                    dataCmd.OnExecute(() =>
+                    {
+                        var roots = new[]
+                        {
+                            // runtime output
+                            AppContext.BaseDirectory,
+                            // project data directory (when running from source)
+                            System.IO.Path.Combine(Environment.CurrentDirectory, "site", "AntDesign.Docs.MCP", "data"),
+                            // repo-level MCP data (just in case)
+                            System.IO.Path.Combine(Environment.CurrentDirectory, "site", "AntDesign.Docs.MCP", "data")
+                        };
+
+                        var sb = new System.Text.StringBuilder();
+                        var seen = new HashSet<string>();
+                        foreach (var root in roots)
+                        {
+                            try
+                            {
+                                var dataDir = System.IO.Path.Combine(root, "data");
+                                if (!Directory.Exists(root) && !Directory.Exists(dataDir)) continue;
+
+                                var searchDir = Directory.Exists(dataDir) ? dataDir : root;
+                                sb.AppendLine($"Scanning: {searchDir}");
+                                var files = Directory.GetFiles(searchDir, "*.json", SearchOption.AllDirectories);
+                                foreach (var f in files)
+                                {
+                                    if (!seen.Add(f)) continue;
+                                    sb.AppendLine($"--- FILE: {f}");
+                                    try
+                                    {
+                                        var text = File.ReadAllText(f);
+                                        var snippet = text.Length <= 2048 ? text : text.Substring(0, 2048) + "...";
+                                        sb.AppendLine(snippet);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        sb.AppendLine($"(failed to read: {ex.Message})");
+                                    }
+                                }
+                            }
+                            catch { }
+                        }
+
+                        Console.WriteLine(sb.ToString());
+                        return 0;
+                    });
+                });
+
+                debugCmd.Command("version", vcmd =>
+                {
+                    vcmd.Description = "Print package id, current version and cached latest (for testing).";
+                    vcmd.OnExecute(() =>
+                    {
+                        Console.WriteLine($"PackageId: {AntDesignTools.PackageId}");
+                        Console.WriteLine($"CurrentPackageVersion: {AntDesignTools.CurrentPackageVersion}");
+                        Console.WriteLine($"CachedLatest (NuGet / env override): {AntDesign.Docs.MCP.Services.NuGetService.GetCachedLatest()}");
+                        return 0;
+                    });
+                });
+            });
             // Root-level execution for legacy options
             app.OnExecuteAsync(async cancellationToken =>
             {

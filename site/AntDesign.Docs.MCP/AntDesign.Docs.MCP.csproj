@@ -22,6 +22,16 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageId>AntDesign.Docs.MCP</PackageId>
     <PackageVersion>0.1.0</PackageVersion>
+    <!-- Inject PackageVersion into assembly informational version so runtime can read it -->
+    <AssemblyInformationalVersion>$(PackageVersion)</AssemblyInformationalVersion>
+  
+  <!-- Inject PackageId into assembly metadata so runtime can read it -->
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>PackageId</_Parameter1>
+      <_Parameter2>$(PackageId)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
     <!-- CLI tool command name for `dotnet tool run <name>` -->
     <ToolCommandName>antdesign-docs-mcp</ToolCommandName>
     <PackageTags>AI; MCP; server; stdio</PackageTags>
@@ -41,6 +51,15 @@
     <PackageReference Include="System.Text.Json" Version="9.0.4" />
     <PackageReference Include="System.CommandLine" Version="2.0.0" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="3.1.0" />
+  </ItemGroup>
+
+  <!-- Include generated data files (from AntDesign.Docs.Build.CLI) in the package and copy to output -->
+  <ItemGroup>
+    <Content Include="data\**\*.json">
+      <Pack>true</Pack>
+      <PackagePath>data\</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

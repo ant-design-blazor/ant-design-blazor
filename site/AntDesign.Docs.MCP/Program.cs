@@ -20,9 +20,16 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Logging.AddConsole(o => o.LogToStandardErrorThreshold = LogLevel.Trace);
 
 // Add the MCP services: the transport to use (stdio) and the tools to register.
+// Register Component & Demo services for DI and the hosted prefetch service
+builder.Services.AddSingleton<AntDesign.Docs.MCP.Services.ComponentService>();
+builder.Services.AddSingleton<AntDesign.Docs.MCP.Services.DemoService>();
+
 builder.Services
     .AddMcpServer()
     .WithStdioServerTransport()
     .WithTools<AntDesignTools>();
+
+// Register background prefetch service to perform initial data & NuGet checks
+builder.Services.AddHostedService<AntDesign.Docs.MCP.Services.PrefetchBackgroundService>();
 
 await builder.Build().RunAsync();

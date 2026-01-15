@@ -139,6 +139,12 @@ Examples (after installing the tool or running via `dotnet run`):
 - List demos for a component: `antdesign-docs-mcp demo list Button`
 - Print demo source (optionally narrow by scenario): `antdesign-docs-mcp demo source Button:Icon`
 
+## Packaged fallback for offline usage
+
+The MCP server prefers to download the documentation metadata from the remote site by default. If the download fails (network issues, firewall, etc.), the server will fall back to reading pre-generated JSON files shipped inside the NuGet package (under the `data/` path). You can generate these JSON files as part of your release pipeline using `AntDesign.Docs.Build.CLI` and include them in the package.
+
+A sample GitHub Actions workflow `.github/workflows/publish-mcp.yml` is included that builds the project and attempts to run the build CLI to generate JSON files into `site/AntDesign.Docs.MCP/data` before packing and publishing the NuGet package.
+
 ## More information
 
 .NET MCP servers use the [ModelContextProtocol](https://www.nuget.org/packages/ModelContextProtocol) C# SDK. For more information about MCP:

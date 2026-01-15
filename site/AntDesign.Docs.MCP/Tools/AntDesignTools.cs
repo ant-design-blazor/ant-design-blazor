@@ -7,6 +7,7 @@ using AntDesign.Docs.MCP.Services;
 using AntDesign.Docs.MCP.Models;
 using ModelContextProtocol.Server;
 using SmartComponents.LocalEmbeddings;
+using System.Reflection;
 
 namespace AntDesign.Docs.MCP.Tools;
 
@@ -16,10 +17,58 @@ public sealed class AntDesignTools
     private readonly ComponentService _componentService;
     private readonly DemoService _demoService;
 
-    public AntDesignTools()
+    // NOTE: Keep this in sync with the <PackageVersion> in the project file.
+    // Resolve package id and current package version from assembly metadata
+    private static string PackageId =>
+        typeof(AntDesignTools).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+            .FirstOrDefault(a => string.Equals(a.Key, "PackageId", StringComparison.OrdinalIgnoreCase))?.Value
+        ?? typeof(AntDesignTools).Assembly.GetName().Name ?? "AntDesign.Docs.MCP";
+
+    private static string CurrentPackageVersion =>
+        typeof(AntDesignTools).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+        ?? typeof(AntDesignTools).Assembly.GetName().Version?.ToString() ?? "0.0.0";
+
+    // Services are provided via DI. Background prefetch is handled by PrefetchBackgroundService.
+    public AntDesignTools(ComponentService componentService, DemoService demoService)
     {
-        _componentService = new ComponentService();
-        _demoService = new DemoService();
+        _componentService = componentService;
+        _demoService = demoService;
+    }
+
+    private static async Task<string> AppendUpdateNoticeIfAny(string content)
+    {
+        try
+        {
+            // Use cached version if available (background check on startup)
+            var latest = NuGetService.GetCachedLatest();
+            if (string.IsNullOrEmpty(latest))
+            {
+                // do not block for a network call here; if cached value is unavailable just return original content
+                return content;
+            }
+
+            if (!string.Equals(latest, CurrentPackageVersion, StringComparison.OrdinalIgnoreCase))
+            {
+                // Try to compare semver-ish versions. If parsing fails, fall back to string inequality.
+                if (Version.TryParse(latest, out var latestV) && Version.TryParse(CurrentPackageVersion, out var currentV))
+                {
+                    if (latestV > currentV)
+                    {
+                        var notice = $"⚠️ A newer version ({latest}) of this tool is available. Update with:\n`dotnet tool update -g {PackageId}`";
+                        return content + "\n\n" + notice;
+                    }
+                }
+                else
+                {
+                    // Unknown formats, but versions differ — still notify
+                    var notice = $"⚠️ A newer version ({latest}) of this tool may be available. Update with:\n`dotnet tool update -g {PackageId}`";
+                    return content + "\n\n" + notice;
+                }
+            }
+        }
+        catch { /* ignore */ }
+
+        return content;
     }
 
     [McpServerTool]
@@ -44,7 +93,8 @@ public sealed class AntDesignTools
             }
         }
 
-        return string.Join("\n\n", results);
+        var output = string.Join("\n\n", results);
+        return await AppendUpdateNoticeIfAny(output);
     }
 
     [McpServerTool]
@@ -54,7 +104,8 @@ public sealed class AntDesignTools
         await _componentService.LoadComponentsAsync();
         var components = _componentService.ListComponents();
         
-        return $"Available components:\n{string.Join("\n", components.Select(c => $"  {c}"))}";
+        var output = $"Available components:\n{string.Join("\n", components.Select(c => $"  {c}"))}";
+        return await AppendUpdateNoticeIfAny(output);
     }
 
     [McpServerTool]
@@ -71,7 +122,8 @@ public sealed class AntDesignTools
             return $"No components found in category '{category}'.";
         }
 
-        return $"Components in category '{category}':\n{string.Join("\n", components.Select(c => $"  {c}"))}";
+        var output = $"Components in category '{category}':\n{string.Join("\n", components.Select(c => $"  {c}"))}";
+        return await AppendUpdateNoticeIfAny(output);
     }
 
     [McpServerTool]
@@ -120,7 +172,8 @@ public sealed class AntDesignTools
                 results.Add($"### {component} - {scenario}\nDemo not found.");
             }
         }
-        return string.Join("\n\n", results);
+        var output = string.Join("\n\n", results);
+        return await AppendUpdateNoticeIfAny(output);
     }
 
     [McpServerTool]
@@ -133,7 +186,8 @@ public sealed class AntDesignTools
             return "No demos found.";
         }
         var lines = allDemos.Select(d => $"Component: {d.Component}\nScenario: {d.Scenario}\nDescription: {d.Description}\n");
-        return string.Join("\n", lines);
+        var output = string.Join("\n", lines);
+        return await AppendUpdateNoticeIfAny(output);
     }
 
     [McpServerTool]
@@ -154,7 +208,8 @@ public sealed class AntDesignTools
             sb.AppendLine($"- {d.Scenario}: {d.Description}");
         }
 
-        return sb.ToString();
+        var output = sb.ToString();
+        return await AppendUpdateNoticeIfAny(output);
     }
 
     [McpServerTool]

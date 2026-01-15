@@ -25,7 +25,7 @@ namespace AntDesign.Docs.MCP.Cli
                 return 1;
             }
 
-            var tools = new AntDesignTools();
+            var tools = new AntDesignTools(svc, new DemoService());
 
             if (args.Length == 0 || args[0].Equals("list", StringComparison.OrdinalIgnoreCase))
             {
