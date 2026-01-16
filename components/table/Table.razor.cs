@@ -1190,6 +1190,8 @@ namespace AntDesign
         /// </summary>
         private async Task LoadRelationDataAsync()
         {
+            await Task.Yield();
+
             var relationComponents = ColumnContext.ColumnDefs.Select(x => x is IColumnInternal inter ? inter.GetRelationComponent() : null)
                 .Where(x => x != null).ToList();
 
