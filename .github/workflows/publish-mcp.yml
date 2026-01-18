@@ -1,0 +1,62 @@
+name: Publish MCP package
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          # Use .NET 10 for the build CLI (targets net10.0) and packaging
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      - name: Generate docs JSON (AntDesign.Docs.Build.CLI)
+        run: |
+          echo "Generating docs JSON into site/AntDesign.Docs.MCP/data"
+          dotnet run -f net10.0 --project site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj demo2json site/AntDesign.Docs/Demos site/AntDesign.Docs/wwwroot/meta
+          dotnet run -f net10.0 --project site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj menu2json site/AntDesign.Docs/Demos site/AntDesign.Docs/wwwroot/docs site/AntDesign.Docs/wwwroot/meta
+          dotnet run -f net10.0 --project site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj docs2html site/AntDesign.Docs/wwwroot/docs ./site/AntDesign.Docs/wwwroot/docs
+
+      - name: Copy generated JSON into MCP package data
+        run: |
+          mkdir -p site/AntDesign.Docs.MCP/data
+          cp -r site/AntDesign.Docs/wwwroot/meta/* site/AntDesign.Docs.MCP/data/ || true
+
+      - name: Set package version from tag
+        id: vars
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          # strip leading v if present
+          TAG="${TAG#v}"
+          echo "package_version=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Pack MCP project
+        run: |
+          mkdir -p nupkgs
+          echo "Packing with version ${{ steps.vars.outputs.package_version }}"
+          dotnet pack site/AntDesign.Docs.MCP/AntDesign.Docs.MCP.csproj -c Release -o nupkgs -p:PackageVersion=${{ steps.vars.outputs.package_version }}
+
+      - name: Publish to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          if [ -z "$NUGET_API_KEY" ]; then
+            echo "No NUGET_API_KEY provided — skipping publish.";
+            exit 0;
+          fi
+          dotnet nuget push "nupkgs/*.nupkg" -k "$NUGET_API_KEY" -s https://api.nuget.org/v3/index.json --skip-duplicate
