@@ -1764,6 +1764,12 @@ namespace AntDesign
             if (key == "BACKSPACE" && string.IsNullOrEmpty(_searchValue) &&
                 (IsSearchEnabled || AllowClear))
             {
+                // Don't remove selected items if IME composition is in progress
+                if (_selectContent?.IsComposing == true)
+                {
+                    return;
+                }
+
                 if (string.IsNullOrEmpty(_prevSearchValue) && SelectedOptionItems.Count > 0)
                 {
                     await SetValueAsync(SelectedOptionItems.Last());
