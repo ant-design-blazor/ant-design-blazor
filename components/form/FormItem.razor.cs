@@ -345,22 +345,11 @@ namespace AntDesign
 
         private void SetEventHandlers()
         {
-            if (Form?.ValidateOnChange == true)
+            _validationRequestedHandler = (s, e) =>
             {
-                _validationStateChangedHandler = (s, e) =>
-                {
-                    UpdateValidateMessage();
-                };
-                CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
-            }
-            else
-            {
-                _validationRequestedHandler = (s, e) =>
-                {
-                    UpdateValidateMessage();
-                };
-                CurrentEditContext.OnValidationRequested += _validationRequestedHandler;
-            }
+                InvokeAsync(UpdateValidateMessage);
+            };
+            CurrentEditContext.OnValidationRequested += _validationRequestedHandler;
         }
 
         private void SetInternalIsRequired()
