@@ -1,0 +1,106 @@
+@inherits AntDesignTestBase
+@using System.ComponentModel.DataAnnotations
+@code {
+    class Model
+    {
+        [Required]
+        public string Name { get; set; }
+    }
+
+    [Fact]
+    public async Task EditContext_NotifyFieldChanged_triggers_validate_when_validateOnChange_true()
+    {
+        // Arrange
+        var model = new Model { Name = "John" };
+        int validationRequestedCount = 0;
+
+        var cut = Render<AntDesign.Form<Model>>(
+            @<AntDesign.Form Model="@model" ValidateOnChange="true" OnValidationRequested="@(async (Microsoft.AspNetCore.Components.Forms.ValidationRequestedEventArgs args) => { validationRequestedCount++; await Task.CompletedTask; })">
+                <AntDesign.FormItem Name="Name" Label="Name">
+                    <AntDesign.Input @bind-Value="@model.Name" />
+                </AntDesign.FormItem>
+            </AntDesign.Form>
+        );
+
+        // Act: trigger a field changed notification directly on the EditContext
+        cut.Instance.EditContext.NotifyFieldChanged(cut.Instance.EditContext.Field("Name"));
+
+        // Poll for validation to run
+        var success = false;
+        for (int i = 0; i < 20; i++)
+        {
+            if (validationRequestedCount > 0)
+            {
+                success = true;
+                break;
+            }
+            await Task.Delay(50);
+        }
+
+        success.Should().BeTrue("OnValidationRequested should have been called when EditContext.NotifyFieldChanged is invoked");
+        validationRequestedCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task EditContext_NotifyFieldChanged_triggers_validate_after_toggling_validateOnChange_false_to_true()
+    {
+        // Arrange
+        var model = new Model { Name = "John" };
+        int validationRequestedCount = 0;
+
+        var cut = Render<AntDesign.Form<Model>>(
+            @<AntDesign.Form Model="@model" ValidateOnChange="false" OnValidationRequested="@(async (Microsoft.AspNetCore.Components.Forms.ValidationRequestedEventArgs args) => { validationRequestedCount++; await Task.CompletedTask; })">
+                <AntDesign.FormItem Name="Name" Label="Name">
+                    <AntDesign.Input @bind-Value="@model.Name" />
+                </AntDesign.FormItem>
+            </AntDesign.Form>
+        );
+
+        // Act: toggle ValidateOnChange to true
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.ValidateOnChange, true));
+
+        // trigger a field changed notification directly on the EditContext
+        cut.Instance.EditContext.NotifyFieldChanged(cut.Instance.EditContext.Field("Name"));
+
+        // Poll for validation to run
+        var success = false;
+        for (int i = 0; i < 20; i++)
+        {
+            if (validationRequestedCount > 0)
+            {
+                success = true;
+                break;
+            }
+            await Task.Delay(50);
+        }
+
+        success.Should().BeTrue();
+        validationRequestedCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task EditContext_NotifyFieldChanged_does_not_trigger_validate_after_toggling_validateOnChange_true_to_false()
+    {
+        // Arrange
+        var model = new Model { Name = "John" };
+        int validationRequestedCount = 0;
+
+        var cut = Render<AntDesign.Form<Model>>(
+            @<AntDesign.Form Model="@model" ValidateOnChange="true" OnValidationRequested="@(async (Microsoft.AspNetCore.Components.Forms.ValidationRequestedEventArgs args) => { validationRequestedCount++; await Task.CompletedTask; })">
+                <AntDesign.FormItem Name="Name" Label="Name">
+                    <AntDesign.Input @bind-Value="@model.Name" />
+                </AntDesign.FormItem>
+            </AntDesign.Form>
+        );
+
+        // Act: toggle ValidateOnChange to false
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.ValidateOnChange, false));
+
+        // trigger a field changed notification directly on the EditContext
+        cut.Instance.EditContext.NotifyFieldChanged(cut.Instance.EditContext.Field("Name"));
+
+        // Give some time to check there was no validation
+        await Task.Delay(200);
+        validationRequestedCount.Should().Be(0);
+    }
+}

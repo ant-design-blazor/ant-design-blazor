@@ -38,8 +38,14 @@
 
   <Target Name="RunCli" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug'">
     <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) demo2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/meta" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) menu2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/docs $(ProjectDir)/wwwroot/meta" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) docs2html $(ProjectDir)/wwwroot/docs ./site/AntDesign.Docs/wwwroot/docs" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) demo2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/meta" ContinueOnError="true" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) menu2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/docs $(ProjectDir)/wwwroot/meta" ContinueOnError="true" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) docs2html $(ProjectDir)/wwwroot/docs ./site/AntDesign.Docs/wwwroot/docs" ContinueOnError="true" />
+
+    <!-- Copy generated meta JSON into the MCP project's data directory so it's included in the package -->
+    <ItemGroup>
+      <GeneratedMetaFiles Include="$(ProjectDir)\wwwroot\meta\**\*.json" />
+    </ItemGroup>
+    <Copy SourceFiles="@(GeneratedMetaFiles)" DestinationFolder="$(SolutionDir)site\AntDesign.Docs.MCP\data\%(RecursiveDir)" SkipUnchangedFiles="true" />
   </Target>
 </Project>

@@ -564,10 +564,10 @@ namespace AntDesign
             if (isValueChanged && startDate is not null && endDate is not null)
             {
                 var newCurrentValue = DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
-                _value = newCurrentValue;
-                _lastValue = (TValue)(currentValueArray.Clone());
+                // Use CurrentValue assignment so EditContext.NotifyFieldChanged will be triggered when appropriate
+                CurrentValue = newCurrentValue;
+                _lastValue = (TValue)currentValueArray.Clone();
                 InvokeOnChange();
-                ValueChanged.InvokeAsync(newCurrentValue);
             }
 
             _pickerStatus[index].IsValueSelected = true;
@@ -618,13 +618,15 @@ namespace AntDesign
                 Close();
             }
 
-            if (array.GetValue(0) is null || array.GetValue(1) is null)
+            // Only update CurrentValue and trigger validation when both range values are null
+            if (array.GetValue(0) is null && array.GetValue(1) is null)
             {
-                var newValue = DataConversionExtensions.Convert<Array, TValue>(array);
-                _value = newValue;
-                _lastValue = (TValue)(array.Clone());
+                // Use a cloned instance so assignment changes reference and triggers CurrentValue change detection
+                var newValue = (TValue)array.Clone();
+                // Assign via CurrentValue to ensure EditContext gets notified when needed
+                CurrentValue = newValue;
+                _lastValue = newValue;
                 InvokeOnChange();
-                ValueChanged.InvokeAsync(newValue);
             }
 
             OnClear.InvokeAsync(null);
