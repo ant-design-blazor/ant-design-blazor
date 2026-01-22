@@ -7,7 +7,9 @@
     <PropertyColumn Property="c=>c.OrderId" Title="Order ID" />
     <PropertyColumn Property="c=>c.Amount" Title="Amount" Format="C2" />
     <PropertyColumn Property="c=>c.UserId" Title="User">
-        <UserNameRelation />
+        <RelationContent>
+            <UserNameRelation />
+        </RelationContent>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.CreatedTime" Title="Created Time" Format="yyyy-MM-dd HH:mm" />
 </Table>
@@ -17,7 +19,9 @@
 <Table TItem="Employee" DataSource="@employees" Size="@TableSize.Small">
     <PropertyColumn Property="c=>c.EmployeeId" Title="Employee ID" />
     <PropertyColumn Property="c=>c.UserId" Title="Name" >
-       <UserNameRelation />
+        <RelationContent>
+            <UserNameRelation />
+        </RelationContent>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Salary" Title="Salary" Format="C0" />
 </Table>
