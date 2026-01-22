@@ -1750,6 +1750,12 @@ namespace AntDesign
             if (key == "BACKSPACE" && string.IsNullOrEmpty(_searchValue) &&
                 (IsSearchEnabled || AllowClear))
             {
+                // Don't remove selected items if IME composition is in progress
+                if (_selectContent?.IsComposing == true)
+                {
+                    return;
+                }
+                
                 var orderedSelectedItems = GetOrderedSelectedItems();
                 if (string.IsNullOrEmpty(_prevSearchValue) && orderedSelectedItems.Count > 0)
                 {

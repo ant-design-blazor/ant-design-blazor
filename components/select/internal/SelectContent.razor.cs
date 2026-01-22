@@ -92,6 +92,12 @@ namespace AntDesign.Select.Internal
 
         private bool _compositionInputting;
 
+        /// <summary>
+        /// Indicates whether the IME composition is in progress.
+        /// During IME composition (e.g., typing Chinese characters), this property is true.
+        /// </summary>
+        internal bool IsComposing => _compositionInputting;
+
         protected override void OnInitialized()
         {
             if (!_isInitialized)

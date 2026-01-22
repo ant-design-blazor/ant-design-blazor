@@ -6,12 +6,12 @@
 
 <h4>Orders with User Details - Multiple Columns from Single Load</h4>
 
-<Table TItem="Order" 
-       DataSource="@currentPageOrders" 
-       Size="@TableSize.Small" 
-       Loading="@isLoading" 
+<Table TItem="Order"
+       DataSource="@currentPageOrders"
+       Size="@TableSize.Small"
+       Loading="@isLoading"
        PageSize="5"
-       Total="30" 
+       Total="30"
        OnChange="@OnChange">
 
     <PropertyColumn Property="c => c.OrderId" Title="Order ID" />
@@ -21,17 +21,23 @@
 
     @* Column 1: User Name - displays user name from loaded data *@
     <PropertyColumn Property="c => c.UserId" Title="User Name">
-        <UserMultiFieldRelation TItem="Order" DisplayField="Name" />
+        <RelationContent>
+            <UserMultiFieldRelation DisplayField="Name" />
+        </RelationContent>
     </PropertyColumn>
 
     @* Column 2: User Address - displays user address from the same loaded data *@
     <PropertyColumn Property="c => c.UserId" Title="User Address">
-        <UserMultiFieldRelation TItem="Order" DisplayField="Address" />
+        <RelationContent>
+            <UserMultiFieldRelation DisplayField="Address" />
+        </RelationContent>
     </PropertyColumn>
 
     @* Column 3: User Email - displays user email from the same loaded data *@
     <PropertyColumn Property="c => c.UserId" Title="User Email">
-        <UserMultiFieldRelation TItem="Order" DisplayField="Email" />
+        <RelationContent>
+            <UserMultiFieldRelation DisplayField="Email" />
+        </RelationContent>
     </PropertyColumn>
 
     <PropertyColumn Property="c => c.CreatedTime" Title="Created Time" Format="yyyy-MM-dd HH:mm" />

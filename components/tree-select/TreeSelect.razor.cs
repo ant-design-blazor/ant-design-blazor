@@ -722,6 +722,8 @@ namespace AntDesign
 
         private void UpdateValueAndSelection()
         {
+            if (Mode != SelectMode.Default)
+                return;
             if (_tree == null)
                 return;
             if (_tree._allNodes.Count == 0)
@@ -756,6 +758,8 @@ namespace AntDesign
 
         private void UpdateValuesSelection()
         {
+            if (Mode != SelectMode.Multiple)
+                return;
             if (_tree == null)
                 return;
             if (_tree._allNodes.Count == 0)
