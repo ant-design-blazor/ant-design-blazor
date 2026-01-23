@@ -9,9 +9,12 @@
 
 @if (IsInitialize)
 {
-    <CascadingValue Value="this" IsFixed>
-        @ChildContent
-    </CascadingValue>
+    @if (RelationContent != null)
+    {
+        <CascadingValue Value="this" IsFixed>
+            @RelationContent
+        </CascadingValue>
+    }
 
     return;
 }

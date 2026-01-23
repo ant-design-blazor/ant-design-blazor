@@ -152,6 +152,15 @@ namespace AntDesign
         [Parameter]
         public Func<Dictionary<string, object>> OnHeaderCell { get; set; }
 
+        /// <summary>
+        /// Gets or sets the content to be rendered in the relation area of the component.
+        /// </summary>
+        /// <remarks>Use this property to provide custom UI or markup that will be displayed in the
+        /// relation section. This can include additional information, links, or interactive elements relevant to the
+        /// component's context.</remarks>
+        [Parameter]
+        public RenderFragment RelationContent { get; set; }
+
         private bool _filterable;
 
         private bool _hasFilterableAttribute;
@@ -328,7 +337,7 @@ namespace AntDesign
                 if (ChildContent == null && GetFieldExpression != null)
                 {
                     var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
-                    ChildContent = member?.GetCustomAttribute<RelationColumnAttribute>()?.CreateRelationComponentContent();
+                    RelationContent = member?.GetCustomAttribute<RelationColumnAttribute>()?.CreateRelationComponentContent();
                 }
             }
             else if (IsHeader)

@@ -54,7 +54,7 @@
         }
         else
         {
-          var selectedItem = ParentSelect.SelectedOptionItems.FirstOrDefault();
+          var selectedItem = ParentSelect.SelectedOptionItems.Values.FirstOrDefault();
           var canShowItem = !IsOverlayShow || string.IsNullOrEmpty(_inputString);
           if (canShowItem && selectedItem != null)
           {
@@ -99,7 +99,7 @@
           }
           @if (!showPlaceholder)
           {
-            var selectedItems = ParentSelect.SelectedOptionItems;
+            var selectedItems = ParentSelect.GetOrderedSelectedItems();
             @if (ParentSelect.HasTagCount)
             {
               @for (int i = 0; i < Math.Min(ParentSelect.MaxTagCount.AsT0, selectedItems.Count); i++)

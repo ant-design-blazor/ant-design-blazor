@@ -93,6 +93,12 @@ namespace AntDesign.Select.Internal
 
         private bool _compositionInputting;
 
+        /// <summary>
+        /// Indicates whether the IME composition is in progress.
+        /// During IME composition (e.g., typing Chinese characters), this property is true.
+        /// </summary>
+        internal bool IsComposing => _compositionInputting;
+
         protected override void OnInitialized()
         {
             if (!_isInitialized)
@@ -176,7 +182,7 @@ namespace AntDesign.Select.Internal
             int i = 0;
             bool overflowing = false;
             bool renderAgain = false;
-            foreach (var item in ParentSelect.SelectedOptionItems)
+            foreach (var item in ParentSelect.GetOrderedSelectedItems())
             {
                 if (item.Width == 0)
                 {

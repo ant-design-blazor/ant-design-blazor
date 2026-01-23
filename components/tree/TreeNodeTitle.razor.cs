@@ -72,7 +72,7 @@ namespace AntDesign
             }
             if (TreeComponent.CheckOnClickNode && TreeComponent.Checkable)
             {
-                SelfNode.SetChecked(!SelfNode.Checked);
+                await SelfNode.OnCheckBoxClick(args);
             }
             else
             {
