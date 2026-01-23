@@ -25,6 +25,7 @@ namespace AntDesign.Select.Internal
         [CascadingParameter(Name = "ParentMaxTagPlaceholerTemplate")] internal RenderFragment<IEnumerable<TItem>> ParentMaxTagPlaceholerTemplate { get; set; }
         [CascadingParameter(Name = "ShowSearchIcon")] internal bool ShowSearchIcon { get; set; }
         [CascadingParameter(Name = "ShowArrowIcon")] internal bool ShowArrowIcon { get; set; }
+        [CascadingParameter(Name = "Loading")] internal bool Loading { get; set; }
 
         [Parameter]
         public string Prefix
