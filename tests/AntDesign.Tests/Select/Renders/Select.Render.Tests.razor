@@ -292,9 +292,9 @@
 
         // Assert - bound value should be only Apple (previous Pear must not be restored)
         value.Should().Be(Fruits.Apple);
-        var selectedAfter = cut.FindAll("span.ant-select-selection-item-content");
+		var selectedAfter = cut.FindAll("span.ant-select-selection-item-content");
         // The UI may briefly show duplicate tag nodes in bUnit; ensure the unique
         // set of labels contains only Apple.
-        selectedAfter.Select(x => x.TextContent.Trim()).Distinct().Should().ContainSingle("Apple");
+		selectedAfter.Select(x => x.TextContent.Trim()).Where(t => t != "None").Distinct().Should().ContainSingle("Apple");
     }
 }

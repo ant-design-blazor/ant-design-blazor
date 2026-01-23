@@ -181,7 +181,7 @@ namespace AntDesign.Select.Internal
             int i = 0;
             bool overflowing = false;
             bool renderAgain = false;
-            foreach (var item in ParentSelect.SelectedOptionItems)
+            foreach (var item in ParentSelect.GetOrderedSelectedItems())
             {
                 if (item.Width == 0)
                 {

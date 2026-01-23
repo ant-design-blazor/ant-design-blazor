@@ -562,8 +562,15 @@ namespace AntDesign
                     Values = [];
                     return;
                 }
-                var selectedNodes = _tree._allNodes.Where(x => _tree.SelectedKeys.Contains(x.Key));
-                Values = selectedNodes.Select(GetValueFromNode).ToArray();
+                var value = GetValueFromNode(node);
+                if (_tree.SelectedKeys.Contains(key))
+                {
+                    Values = Values.Append(value);
+                }
+                else
+                {
+                    Values = Values.Where(v => !v.AllNullOrEquals(value)).ToArray();
+                }
                 if (IsSearchEnabled && AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
                 {
                     ClearSearch();
@@ -587,20 +594,28 @@ namespace AntDesign
             }
         }
 
-
-        private void DoTreeCheckedKeysChanged(string[] checkedKeys)
+        private async Task DoTreeNodeCheck(TreeEventArgs<TItem> args)
         {
             if (_checkedEventDisabled) return;
             if (!TreeCheckable)
                 return;
-
-            if (checkedKeys is not { Length: > 0 })
+            if (_tree.CheckedKeys is not { Length: > 0 })
             {
                 Values = [];
                 return;
             }
-            var checkedNodes = _tree._allNodes.Where(x => checkedKeys.Contains(x.Key));
-            Values = checkedNodes.Select(GetValueFromNode).ToArray();
+            var node = args.Node;
+
+            var key = node.Key;
+            var value = GetValueFromNode(node);
+            if (_tree.CheckedKeys.Contains(key))
+            {
+                Values = Values.Append(value);
+            }
+            else
+            {
+                Values = Values.Where(v => !v.AllNullOrEquals(value)).ToArray();
+            }
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)

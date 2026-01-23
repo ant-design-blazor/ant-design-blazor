@@ -551,7 +551,7 @@ namespace AntDesign
         /// <summary>
         /// Triggered when the selection box is clicked
         /// </summary>
-        private async Task OnCheckBoxClick(MouseEventArgs args)
+        internal async Task OnCheckBoxClick(MouseEventArgs args)
         {
             if (Disabled || DisableCheckbox)
                 return;

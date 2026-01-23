@@ -635,8 +635,9 @@ namespace AntDesign
             if (SelectOptionItems.Any())
             {
                 // Delete items from SelectOptions if it is no longer in the datastore
-                foreach (var selectOption in SelectOptionItems)
+                for (var i = SelectOptionItems.Count - 1; i >= 0; i--)
                 {
+                    var selectOption = SelectOptionItems[i];
                     if (!selectOption.IsAddedTag)
                     {
                         var exists = _datasource.FirstOrDefault(x => x.Equals(selectOption.Item));
@@ -645,12 +646,12 @@ namespace AntDesign
                         {
                             if (IgnoreItemChanges)
                             {
-                                SelectOptionItems.Remove(selectOption);
+                                SelectOptionItems.RemoveAt(i);
                             }
                             RemoveEqualityToNoValue(selectOption);
 
                             if (selectOption.IsSelected)
-                                SelectedOptionItems.Remove(selectOption);
+                                SelectedOptionItems.Remove(selectOption.Value);
                         }
                         else
                             dataStoreToSelectOptionItemsMatch.Add(exists, selectOption);
@@ -726,7 +727,7 @@ namespace AntDesign
                     if (isSelected)
                     {
                         processedSelectedCount--;
-                        SelectedOptionItems.Add(newItem);
+                        SelectedOptionItems.Add(newItem.Value, newItem);
                     }
                 }
                 else if (exists && !IgnoreItemChanges)
@@ -758,7 +759,7 @@ namespace AntDesign
                     if (tag.IsSelected)
                     {
                         processedSelectedCount--;
-                        SelectedOptionItems.Add(tag);
+                        SelectedOptionItems.Add(tag.Value, tag);
                     }
                 }
             }
@@ -876,15 +877,7 @@ namespace AntDesign
 
                     if (HideSelected)
                         firstEnabled.IsHidden = true;
-
-                    if (SelectedOptionItems.Count == 0)
-                    {
-                        SelectedOptionItems.Add(firstEnabled);
-                    }
-                    else
-                    {
-                        SelectedOptionItems[0] = firstEnabled;
-                    }
+                    SelectedOptionItems[firstEnabled.Value] = firstEnabled;
 
                     if (Mode == SelectMode.Default)
                     {
@@ -933,12 +926,7 @@ namespace AntDesign
                         result.IsHidden = true;
 
                     _waitingForStateChange = true;
-                    if (SelectedOptionItems.Count == 0)
-                    {
-                        SelectedOptionItems.Add(result);
-                    }
-                    else
-                        SelectedOptionItems[0] = result;
+                    SelectedOptionItems[result.Value] = result;
                     await ValueChanged.InvokeAsync(result.Value);
 
                     _defaultValueApplied = true;
@@ -1029,7 +1017,7 @@ namespace AntDesign
                         ActiveOption = selectOptionItem;
                         if (HideSelected)
                             selectOptionItem.IsHidden = true;
-                        SelectedOptionItems.Add(selectOptionItem);
+                        SelectedOptionItems.Add(selectOptionItem.Value, selectOptionItem);
                     }
                 }
             }
@@ -1048,7 +1036,7 @@ namespace AntDesign
                             if (HideSelected)
                                 selectOptionItem.IsHidden = true;
 
-                            SelectedOptionItems.Add(selectOptionItem);
+                            SelectedOptionItems.Add(selectOptionItem.Value, selectOptionItem);
                         }
                     }
                 }
@@ -1153,16 +1141,14 @@ namespace AntDesign
             }
             if (SelectedOptionItems.Count > 0)
             {
-                if (!SelectedOptionItems[0].Value.Equals(value))
+                var oldSelectedValue = SelectedOptionItems.Values.First();
+                if (!oldSelectedValue.Value.Equals(value))
                 {
-                    SelectedOptionItems[0].IsSelected = false;
-                    SelectedOptionItems[0] = optionItem;
+                    oldSelectedValue.IsSelected = false;
+                    SelectedOptionItems.Remove(oldSelectedValue.Value);
                 }
             }
-            else
-            {
-                SelectedOptionItems.Add(optionItem);
-            }
+            SelectedOptionItems[optionItem.Value] = optionItem;
         }
 
         /// <summary>
@@ -1769,10 +1755,11 @@ namespace AntDesign
                 {
                     return;
                 }
-
-                if (string.IsNullOrEmpty(_prevSearchValue) && SelectedOptionItems.Count > 0)
+                
+                var orderedSelectedItems = GetOrderedSelectedItems();
+                if (string.IsNullOrEmpty(_prevSearchValue) && orderedSelectedItems.Count > 0)
                 {
-                    await SetValueAsync(SelectedOptionItems.Last());
+                    await SetValueAsync(orderedSelectedItems.Last());
                     FocusIfInSearch();
                 }
                 else if (!string.IsNullOrEmpty(_prevSearchValue))

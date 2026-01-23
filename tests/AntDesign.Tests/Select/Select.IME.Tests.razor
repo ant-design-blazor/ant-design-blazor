@@ -5,14 +5,14 @@
     public Select_IME_Tests()
     {
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
-            .SetResult(new AntDesign.JsInterop.DomRect());
+        .SetResult(new AntDesign.JsInterop.DomRect());
         JSInterop.Setup<AntDesign.JsInterop.HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
-            .SetResult(new AntDesign.JsInterop.HtmlElement());
+        .SetResult(new AntDesign.JsInterop.HtmlElement());
 
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
         JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
-            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+        .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
 #if !NET6_0_OR_GREATER
 #pragma warning disable CS0618 // Type or member is obsolete
         JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
@@ -30,36 +30,31 @@
         //Arrange
         var selectedValues = new List<string> { "Lucy", "John" };
         var dataSource = new List<string> { "Lucy", "John", "Jack", "Emily" };
-        
+
         var cut = Render<AntDesign.Select<string, string>>(
-            @<AntDesign.Select Mode="SelectMode.Multiple"
-                TItemValue="string"
-                TItem="string"
-                EnableSearch
-                SearchDebounceMilliseconds="0"
-                Values="@selectedValues"
-                DataSource="@dataSource" />
+        @<AntDesign.Select Mode="SelectMode.Multiple" TItemValue="string" TItem="string" EnableSearch
+            SearchDebounceMilliseconds="0" Values="@selectedValues" DataSource="@dataSource" />
         );
 
         var input = cut.Find("input.ant-select-selection-search-input");
-        
+
         // Verify initial state - should have 2 selected items
         cut.Instance.SelectedOptionItems.Should().HaveCount(2);
-        
+
         // Simulate IME composition start (e.g., user starts typing Chinese)
         var selectContent = cut.Instance.GetType()
-            .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-            ?.GetValue(cut.Instance);
-        
+        .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+        ?.GetValue(cut.Instance);
+
         if (selectContent != null)
         {
             // Trigger composition start
             var compositionStartMethod = selectContent.GetType()
-                .GetMethod("OnCompositionStart", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            
+            .GetMethod("OnCompositionStart", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
             if (compositionStartMethod != null)
             {
-                await cut.InvokeAsync(() => 
+                await cut.InvokeAsync(() =>
                 {
                     compositionStartMethod.Invoke(selectContent, new object[] { System.Text.Json.JsonDocument.Parse("{}").RootElement });
                 });
@@ -68,11 +63,11 @@
 
         // Act: Press BACKSPACE during IME composition
         await cut.InvokeAsync(() => input.KeyUp(new KeyboardEventArgs { Key = "Backspace" }));
-        
+
         // Assert: Selected items should NOT be removed
-        cut.Instance.SelectedOptionItems.Should().HaveCount(2, 
-            "selected items should not be removed when backspace is pressed during IME composition");
-        cut.Instance.SelectedOptionItems.Select(x => x.Value).Should().ContainInOrder("Lucy", "John");
+        cut.Instance.SelectedOptionItems.Should().HaveCount(2,
+        "selected items should not be removed when backspace is pressed during IME composition");
+        cut.Instance.SelectedOptionItems.Values.Select(x => x.Value).Should().ContainInOrder("Lucy", "John");
     }
 
     /// <summary>
@@ -85,29 +80,24 @@
         //Arrange
         var selectedValues = new List<string> { "Lucy", "John" };
         var dataSource = new List<string> { "Lucy", "John", "Jack", "Emily" };
-        
+
         var cut = Render<AntDesign.Select<string, string>>(
-            @<AntDesign.Select Mode="SelectMode.Multiple"
-                TItemValue="string"
-                TItem="string"
-                EnableSearch
-                SearchDebounceMilliseconds="0"
-                Values="@selectedValues"
-                DataSource="@dataSource" />
+        @<AntDesign.Select Mode="SelectMode.Multiple" TItemValue="string" TItem="string" EnableSearch
+            SearchDebounceMilliseconds="0" Values="@selectedValues" DataSource="@dataSource" />
         );
 
         var input = cut.Find("input.ant-select-selection-search-input");
-        
+
         // Verify initial state - should have 2 selected items
         cut.Instance.SelectedOptionItems.Should().HaveCount(2);
 
         // Act: Press BACKSPACE without IME composition
         await cut.InvokeAsync(() => input.KeyUp(new KeyboardEventArgs { Key = "Backspace" }));
-        
+
         // Assert: Last selected item should be removed
-        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(1, 
-            "last selected item should be removed when backspace is pressed without IME composition"));
-        cut.Instance.SelectedOptionItems.First().Value.Should().Be("Lucy");
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(1,
+        "last selected item should be removed when backspace is pressed without IME composition"));
+        cut.Instance.SelectedOptionItems.First().Value.Value.Should().Be("Lucy");
     }
 
     /// <summary>
@@ -120,35 +110,30 @@
         //Arrange
         var selectedValues = new List<string> { "Lucy", "John" };
         var dataSource = new List<string> { "Lucy", "John", "Jack", "Emily" };
-        
+
         var cut = Render<AntDesign.Select<string, string>>(
-            @<AntDesign.Select Mode="SelectMode.Multiple"
-                TItemValue="string"
-                TItem="string"
-                EnableSearch
-                SearchDebounceMilliseconds="0"
-                Values="@selectedValues"
-                DataSource="@dataSource" />
+        @<AntDesign.Select Mode="SelectMode.Multiple" TItemValue="string" TItem="string" EnableSearch
+            SearchDebounceMilliseconds="0" Values="@selectedValues" DataSource="@dataSource" />
         );
 
         var input = cut.Find("input.ant-select-selection-search-input");
-        
+
         // Verify initial state
         cut.Instance.SelectedOptionItems.Should().HaveCount(2);
 
         var selectContent = cut.Instance.GetType()
-            .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-            ?.GetValue(cut.Instance);
-        
+        .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+        ?.GetValue(cut.Instance);
+
         if (selectContent != null)
         {
             // Start IME composition
             var compositionStartMethod = selectContent.GetType()
-                .GetMethod("OnCompositionStart", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            
+            .GetMethod("OnCompositionStart", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
             if (compositionStartMethod != null)
             {
-                await cut.InvokeAsync(() => 
+                await cut.InvokeAsync(() =>
                 {
                     compositionStartMethod.Invoke(selectContent, new object[] { System.Text.Json.JsonDocument.Parse("{}").RootElement });
                 });
@@ -156,13 +141,14 @@
 
             // End IME composition
             var compositionEndMethod = selectContent.GetType()
-                .GetMethod("OnCompositionEndAsync", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            
+            .GetMethod("OnCompositionEndAsync", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
             if (compositionEndMethod != null)
             {
-                await cut.InvokeAsync(async () => 
+                await cut.InvokeAsync(async () =>
                 {
-                    var task = compositionEndMethod.Invoke(selectContent, new object[] { System.Text.Json.JsonDocument.Parse("{}").RootElement });
+                    var task = compositionEndMethod.Invoke(selectContent, new object[] {
+System.Text.Json.JsonDocument.Parse("{}").RootElement });
                     if (task is Task taskResult)
                     {
                         await taskResult;
@@ -173,11 +159,11 @@
 
         // Act: Press BACKSPACE after IME composition ends
         await cut.InvokeAsync(() => input.KeyUp(new KeyboardEventArgs { Key = "Backspace" }));
-        
+
         // Assert: Last selected item should be removed
-        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(1, 
-            "last selected item should be removed when backspace is pressed after IME composition ends"));
-        cut.Instance.SelectedOptionItems.First().Value.Should().Be("Lucy");
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(1,
+        "last selected item should be removed when backspace is pressed after IME composition ends"));
+        cut.Instance.SelectedOptionItems.First().Value.Value.Should().Be("Lucy");
     }
 
     /// <summary>
@@ -189,39 +175,36 @@
     {
         //Arrange
         var selectedValues = new List<string> { "Tag1", "Tag2", "Tag3" };
-        
+
         var cut = Render<AntDesign.Select<string, string>>(
-            @<AntDesign.Select Mode="SelectMode.Tags"
-                TItemValue="string"
-                TItem="string"
-                SearchDebounceMilliseconds="0"
-                Values="@selectedValues">
-                <SelectOptions>
-                    <SelectOption TItemValue="string" TItem="string" Value=@("Tag1") Label="Tag1" />
-                    <SelectOption TItemValue="string" TItem="string" Value=@("Tag2") Label="Tag2" />
-                    <SelectOption TItemValue="string" TItem="string" Value=@("Tag3") Label="Tag3" />
-                </SelectOptions>
-            </AntDesign.Select>
+        @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string" SearchDebounceMilliseconds="0"
+            Values="@selectedValues">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value=@("Tag1") Label="Tag1" />
+                <SelectOption TItemValue="string" TItem="string" Value=@("Tag2") Label="Tag2" />
+                <SelectOption TItemValue="string" TItem="string" Value=@("Tag3") Label="Tag3" />
+            </SelectOptions>
+        </AntDesign.Select>
         );
 
         var input = cut.Find("input.ant-select-selection-search-input");
-        
+
         // Verify initial state
         cut.Instance.SelectedOptionItems.Should().HaveCount(3);
 
         var selectContent = cut.Instance.GetType()
-            .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-            ?.GetValue(cut.Instance);
-        
+        .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+        ?.GetValue(cut.Instance);
+
         if (selectContent != null)
         {
             // Start IME composition
             var compositionStartMethod = selectContent.GetType()
-                .GetMethod("OnCompositionStart", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            
+            .GetMethod("OnCompositionStart", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
             if (compositionStartMethod != null)
             {
-                await cut.InvokeAsync(() => 
+                await cut.InvokeAsync(() =>
                 {
                     compositionStartMethod.Invoke(selectContent, new object[] { System.Text.Json.JsonDocument.Parse("{}").RootElement });
                 });
@@ -230,10 +213,9 @@
 
         // Act: Press BACKSPACE during IME composition
         await cut.InvokeAsync(() => input.KeyUp(new KeyboardEventArgs { Key = "Backspace" }));
-        
+
         // Assert: Tags should NOT be removed
-        cut.Instance.SelectedOptionItems.Should().HaveCount(3, 
-            "tags should not be removed when backspace is pressed during IME composition");
+        cut.Instance.SelectedOptionItems.Should().HaveCount(3,
+        "tags should not be removed when backspace is pressed during IME composition");
     }
 }
-
