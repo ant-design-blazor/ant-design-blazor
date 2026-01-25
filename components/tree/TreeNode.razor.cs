@@ -27,7 +27,7 @@ namespace AntDesign
         /// Parent Node
         /// </summary>
         [CascadingParameter(Name = "Node")]
-        public TreeNode<TItem> ParentNode { get; set; }
+        internal TreeNode<TItem> ParentNode { get; set; }
 
         /// <summary>
         ///
@@ -143,6 +143,15 @@ namespace AntDesign
             var index = parentNodes.IndexOf(this);
             if (index == parentNodes.Count - 1) return null;
             else return parentNodes[index + 1];
+        }
+
+        /// <summary>
+        /// Gets the parent node.
+        /// </summary>
+        [PublicApi("1.6.0")]
+        public TreeNode<TItem> GetParentNode()
+        {
+            return ParentNode;
         }
 
         #endregion Node

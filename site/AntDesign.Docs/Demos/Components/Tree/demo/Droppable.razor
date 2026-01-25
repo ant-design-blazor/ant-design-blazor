@@ -87,7 +87,7 @@
 	private bool IsDroppable(TreeNode<Data> draggingNode, TreeNode<Data> dropNode, bool dropBelow)
 	{
 		if (dropNode.Key == "111") return false;
-		if (dropBelow && dropNode.ParentNode == null) return false;
+		if (dropBelow && dropNode.GetParentNode() == null) return false;
 		return dropNode.DataItem.Type != NodeType.ntEmployeee || dropBelow;
 	}
 
