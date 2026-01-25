@@ -1,7 +1,7 @@
 ---
 order: 100
 title:
-  en-US: Pagination Settings
+  en-US: Sticky header & footer
   zh-CN: 随页面滚动的固定表头和滚动条
 ---
 
