@@ -164,7 +164,7 @@ namespace AntDesign
 
                     OnCurrentValueChange(value);
 
-                    if (_isNotifyFieldChanged && Form?.ValidateOnChange == true && FieldIdentifier is { Model: not null, FieldName: not null })
+                    if (_isNotifyFieldChanged && FieldIdentifier is { Model: not null, FieldName: not null })
                     {
                         EditContext?.NotifyFieldChanged(FieldIdentifier);
                     }
@@ -244,7 +244,7 @@ namespace AntDesign
 
                     OnCurrentValueChange(parsedValue);
 
-                    if (_isNotifyFieldChanged && Form?.ValidateOnChange == true && FieldIdentifier is { Model: not null, FieldName: not null })
+                    if (_isNotifyFieldChanged && FieldIdentifier is { Model: not null, FieldName: not null })
                     {
                         EditContext?.NotifyFieldChanged(FieldIdentifier);
                     }
