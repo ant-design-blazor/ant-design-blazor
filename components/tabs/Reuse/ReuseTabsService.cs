@@ -366,8 +366,12 @@ namespace AntDesign
         /// </summary>
         private void ScanPinnedPageAttribute()
         {
-            var list = GetAllAssembly();
-
+            //var list = GetAllAssembly(); 
+            // Instead of scanning all loaded assemblies (which is costly and may include irrelevant ones),
+            // we only scan the entry assembly (the main application assembly where Program.cs resides).
+            // This aligns with Blazor's router behavior, which primarily scans AppAssembly.
+            var list = new List<Assembly> { typeof(Program).Assembly };
+            
             foreach (var item in list)
             {
                 var allClass = item.ExportedTypes
