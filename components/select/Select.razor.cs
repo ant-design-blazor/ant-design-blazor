@@ -654,7 +654,7 @@ namespace AntDesign
                                 SelectedOptionItems.Remove(selectOption.Value);
                         }
                         else
-                            dataStoreToSelectOptionItemsMatch.Add(exists, selectOption);
+                            dataStoreToSelectOptionItemsMatch[exists] = selectOption; // Use indexer to avoid ArgumentException on duplicate keys
                     }
                 }
             }
