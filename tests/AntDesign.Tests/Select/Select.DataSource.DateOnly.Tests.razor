@@ -1,0 +1,31 @@
+@using System
+@inherits AntDesignTestBase
+@code {
+    [Fact]
+    public void Select_DataSource_With_DateOnly_Should_Update_Without_DuplicateKeyException()
+    {
+        // Arrange
+        var dataSource = new DateOnly[]
+        {
+            new DateOnly(2026, 1, 1),
+            new DateOnly(2026, 1, 2),
+            new DateOnly(2026, 1, 3)
+        };
+
+        var cut = Render<AntDesign.Select<DateOnly, DateOnly>>(
+            @<AntDesign.Select TItem="DateOnly" TItemValue="DateOnly" DataSource="@dataSource">
+            </AntDesign.Select>
+        );
+
+        cut.Render();
+
+        // Act
+        var newData = new DateOnly[] { new DateOnly(2026, 1, 2) };
+
+        Action act = () => cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, newData));
+
+        // Assert
+        act.Should().NotThrow();
+        cut.Instance.SelectOptionItems.Where(x => !x.IsHidden).Should().HaveCount(1);
+    }
+}
