@@ -57,6 +57,12 @@ namespace AntDesign
         public string Icon { get; set; }
 
         /// <summary>
+        /// Icon template; receives the current <see cref="StepsStatus"/> as context.
+        /// </summary>
+        [Parameter]
+        public RenderFragment<StepsStatus> IconTemplate { get; set; }
+
+        /// <summary>
         /// To specify the status. It will be automatically set by current of Steps if not configured. Possible Values: wait, process, finish, error
         /// </summary>
         [Parameter]
@@ -159,7 +165,7 @@ namespace AntDesign
                 .Get(() => $"{PrefixName}-{_statusMap[Status]}")
                 .If($"{PrefixName}-active", () => Parent.Current == Index)
                 .If($"{PrefixName}-disabled", () => Disabled)
-                .If($"{PrefixName}-custom", () => !string.IsNullOrEmpty(Icon))
+                .If($"{PrefixName}-custom", () => !string.IsNullOrEmpty(Icon) || IconTemplate != null)
                 .If($"ant-steps-next-error", () => GroupStatus == StepsStatus.Error && Parent.Current == Index + 1)
                 .If($"{PrefixName}-rtl", () => RTL)
                 ;
