@@ -1,0 +1,160 @@
+@inherits AntDesignTestBase
+@code {
+    [Fact]
+    public void Renders_steps_classes_and_with_progress_and_dot()
+    {
+        RenderFragment pd = @<span>pd</span>;
+        var cut = Render(@<Steps Direction="StepsDirection.Vertical" Size="StepsSize.Small" Type="StepsType.Navigation" Percent="50" ProgressDot="@pd" Current="1">
+            <Step Title="One" />
+            <Step Title="Two" />
+            <Step Title="Three" />
+        </Steps>);
+
+        var root = cut.Find(".ant-steps");
+        Assert.Contains("ant-steps-vertical", root.ClassList);
+        Assert.Contains("ant-steps-small", root.ClassList);
+        Assert.Contains("ant-steps-navigation", root.ClassList);
+        Assert.Contains("ant-steps-with-progress", root.ClassList);
+        Assert.Contains("ant-steps-dot", root.ClassList);
+    }
+
+    [Fact]
+    public void Step_IconTemplate_and_custom_class_precedence()
+    {
+        RenderFragment<StepsStatus> tpl = s => @<span class="tpl">STATUS:@s</span>;
+        var cut = Render(@<Steps>
+            <Step Title="A" IconTemplate="@tpl" />
+        </Steps>);
+
+        var step = cut.Find(".ant-steps-item");
+        // custom class when IconTemplate present
+        Assert.Contains("ant-steps-item-custom", step.ClassList);
+        // template content rendered
+        var tplEl = cut.Find(".tpl");
+        Assert.Contains("STATUS", tplEl.TextContent);
+    }
+
+    [Fact]
+    public void Step_renders_number_and_finish_and_error_and_progress_dot()
+    {
+        var cut = Render(@<Steps Current="1" Percent="60">
+            <Step Status="StepsStatus.Process" Title="One" />
+            <Step Status="StepsStatus.Finish" Title="Two" />
+            <Step Status="StepsStatus.Error" Title="Three" />
+        </Steps>);
+
+        var items = cut.FindAll(".ant-steps-item");
+        // first step shows number because process state and no icon
+        var firstIcon = items[0].QuerySelector(".ant-steps-icon");
+        Assert.Contains("1", firstIcon.TextContent);
+        // second step finish shows check icon - check class present
+        Assert.Contains("ant-steps-item-finish", items[1].ClassList);
+        // third step error shows error class
+        Assert.Contains("ant-steps-item-error", items[2].ClassList);
+
+        // progress icon exists for current step (Current=1 so second item)
+        var progress = items[1].QuerySelector(".ant-steps-progress-icon");
+        Assert.NotNull(progress);
+    }
+
+    [Fact]
+    public void Click_triggers_OnChange_and_disabled_prevents_click()
+    {
+        int changed = -1;
+        void OnChangeHandler(int idx) => changed = idx;
+
+        var cut = Render(@<Steps OnChange="OnChangeHandler">
+            <Step Title="One" />
+            <Step Title="Two" Disabled="true" />
+            <Step Title="Three" />
+        </Steps>);
+
+        var items = cut.FindAll(".ant-steps-item-container");
+        // click first (index 0)
+        items[0].Click();
+        Assert.Equal(0, changed);
+
+        // clicking disabled second should not change value
+        changed = -1;
+        items[1].Click();
+        Assert.Equal(-1, changed);
+    }
+
+    [Fact]
+    public void Tabindex_and_role_are_set_for_clickable_steps()
+    {
+        void OnChangeHandler(int idx) { }
+        var cut = Render(@<Steps OnChange="OnChangeHandler">
+            <Step Title="One" />
+        </Steps>);
+
+        var container = cut.Find(".ant-steps-item-container");
+        Assert.Equal("0", container.GetAttribute("tabindex"));
+        // role attribute present when clickable
+        Assert.Equal("button", container.GetAttribute("role"));
+    }
+
+    [Fact]
+    public void No_role_or_tabindex_when_not_clickable()
+    {
+        var cut = Render(@<Steps>
+            <Step Title="One" />
+        </Steps>);
+
+        var container = cut.Find(".ant-steps-item-container");
+        Assert.Null(container.GetAttribute("tabindex"));
+        Assert.Null(container.GetAttribute("role"));
+    }
+
+    [Fact]
+    public void Step_renders_custom_icon_prop()
+    {
+        var cut = Render(@<Steps>
+            <Step Title="WithIcon" Icon="@IconType.Outline.User" />
+        </Steps>);
+
+        var icon = cut.Find(".ant-steps-item .anticon");
+        Assert.NotNull(icon);
+    }
+
+    [Fact]
+    public void Last_step_has_no_tail()
+    {
+        var cut = Render(@<Steps>
+            <Step Title="One" />
+            <Step Title="Two" />
+        </Steps>);
+
+        var items = cut.FindAll(".ant-steps-item");
+        // last item should not contain tail element
+        Assert.Empty(items[1].QuerySelectorAll(".ant-steps-item-tail"));
+    }
+
+    [Fact]
+    public void Next_error_class_is_applied_when_group_status_error()
+    {
+        var cut = Render(@<Steps Status="StepsStatus.Error" Current="2">
+            <Step Title="One" />
+            <Step Title="Two" />
+            <Step Title="Three" />
+        </Steps>);
+
+        var items = cut.FindAll(".ant-steps-item");
+        // the step before current (index 1) should have ant-steps-next-error class when group status is error and current==index+1
+        Assert.Contains("ant-steps-next-error", items[1].ClassList);
+    }
+
+    [Fact]
+    public void IconTemplate_precedence_over_error_status()
+    {
+        RenderFragment<StepsStatus> tpl = s => @<span class="tpl">myicon</span>;
+        var cut = Render(@<Steps>
+            <Step Title="A" IconTemplate="@tpl" Status="StepsStatus.Error" />
+        </Steps>);
+
+        var tplEl = cut.Find(".tpl");
+        Assert.Equal("myicon", tplEl.TextContent);
+        var step = cut.Find(".ant-steps-item");
+        Assert.Contains("ant-steps-item-custom", step.ClassList);
+    }
+}
