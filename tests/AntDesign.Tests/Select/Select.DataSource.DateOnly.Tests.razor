@@ -1,6 +1,7 @@
 @using System
 @inherits AntDesignTestBase
 @code {
+#if NET6_0_OR_GREATER
     [Fact]
     public void Select_DataSource_With_DateOnly_Should_Update_Without_DuplicateKeyException()
     {
@@ -28,4 +29,5 @@
         act.Should().NotThrow();
         cut.Instance.SelectOptionItems.Where(x => !x.IsHidden).Should().HaveCount(1);
     }
+#endif
 }
