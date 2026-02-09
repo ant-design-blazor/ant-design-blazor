@@ -2,6 +2,12 @@
 @inherits AntDesignTestBase
 @code {
 #if NET6_0_OR_GREATER
+    public Select_DataSource_DateOnly_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+               .SetResult(new AntDesign.JsInterop.DomRect());
+    }
+
     [Fact]
     public void Select_DataSource_With_DateOnly_Should_Update_Without_DuplicateKeyException()
     {

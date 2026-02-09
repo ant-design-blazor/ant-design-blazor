@@ -380,7 +380,10 @@ namespace AntDesign
                     typeof(DateTime),
                     typeof(DateTimeOffset),
                     typeof(TimeSpan),
-                    typeof(Guid)
+                    typeof(Guid),
+#if NET6_0_OR_GREATER
+                    typeof(DateOnly)
+#endif
                 }.Contains(type) ||
                 type.IsEnum ||
                 Convert.GetTypeCode(type) != TypeCode.Object ||
