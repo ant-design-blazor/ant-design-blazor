@@ -15,6 +15,34 @@ timeline: true
 
 ---
 
+### 1.6.0
+
+`2026-02-09`
+
+- 🔥 新增 文档 MCP Server。[#4758](https://github.com/ant-design/ant-design/pull/4758) [@ElderJames](https://github.com/ElderJames)
+- 🔥 新增 DraftMonitor “草稿监听” 组件，用于实现草稿缓存功能。[#4747](https://github.com/ant-design/ant-design/pull/4747) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Steps 支持 IconTemplate 属性来自定义图标模板。[#4770](https://github.com/ant-design/ant-design/pull/4770) [@ElderJames](https://github.com/ElderJames)
+- 🆕 新增 Tree 属性 `DraggableExpression` 和 `DroppableExpression` 控制节点拖放。[#4749](https://github.com/ant-design/ant-design/pull/4749) [@pankey888](https://github.com/pankey888)
+- 🆕 新增 Tag 属性 `IconTemplate` 支持自定义图标，且增加双色标签示例。[#4754](https://github.com/ant-design/ant-design/pull/4754) [@ElderJames](https://github.com/ElderJames)
+
+- Table
+  - 🔥 新增 列关联功能，以便展示关联数据。[#4746](https://github.com/ant-design/ant-design/pull/4746) [@ElderJames](https://github.com/ElderJames)
+  - 📖 文档 修复错别字与翻译。[#4748](https://github.com/ant-design/ant-design/pull/4748) [@ice6](https://github.com/ice6)
+
+- Select
+  - 🐞 修复 更新数据源时的重复 Key 异常。[#4767](https://github.com/ant-design/ant-design/pull/4767) [@ElderJames](https://github.com/ElderJames)
+  - 🐞 修复 当模式设置为Multiple时，没有显示初始标签。[#4763](https://github.com/ant-design/ant-design/pull/4763) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 Loading 状态变化。[#4752](https://github.com/ant-design/ant-design/pull/4752) [@Arash Zandi](https://github.com/Arash Zandi)
+  - 🐞 修复 默认选项列表未按选择时的顺序显示。[#4753](https://github.com/ant-design/ant-design/pull/4753) [@pankey888](https://github.com/pankey888)
+  - 🐞 修复 输入法候选阶段按回退键导致选中项被删除。[#4760](https://github.com/ant-design/ant-design/pull/4760) [@ElderJames](https://github.com/ElderJames)
+
+- 🐞 修复 Upload 点击了内部 input 元素时重复触发。[#4745](https://github.com/ant-design/ant-design/pull/4745) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Watermark 页面切换导致内容重复。[#4744](https://github.com/ant-design/ant-design/pull/4744) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Form 当  `ValidateOnChange` 被设置为 false 时，`OnFieldChanged` 不会触发。 (#4764)。[#4764](https://github.com/ant-design/ant-design/pull/4764) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 RangePicker 空值验证，以确保当所有元素都为 null 时，将其视为缺失。[#4743](https://github.com/ant-design/ant-design/pull/4743) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 TreeSelect 单选和多选的默认值属性互相影响。[#4750](https://github.com/ant-design/ant-design/pull/4750) [@pankey888](https://github.com/pankey888)
+- 📖 文档 Modal 更新表单验证示例。[#4755](https://github.com/ant-design/ant-design/pull/4755) [@ElderJames](https://github.com/ElderJames)
+
 ### 1.5.1
 
 `2025-12-16`
