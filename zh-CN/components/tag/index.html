@@ -1,0 +1,2190 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"/>
+    <meta no-antblazor-css=""/>
+    
+    <meta name="author" content="James Yeung"/>
+    <meta name="description" content="🌈A set of enterprise-class UI components based on Ant Design and Blazor WebAssembly."/>
+    <base href="/"/>
+    <link rel="icon" href="logo.png" type="image/x-icon"/>
+    <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin=""/>
+    <link href="_content/AntDesign.Docs/css/default.css?v=1.6.0" rel="stylesheet"/>
+    <link href="manifest.json" rel="manifest"/>
+
+
+
+<!-- %%-PRERENDERING-HEADOUTLET-BEGIN-%% -->
+<title>&#x6807;&#x7B7E; Tag - Ant Design Blazor</title>
+<!-- %%-PRERENDERING-HEADOUTLET-END-%% -->
+</head>
+
+<body>
+    <noscript>Out-of-the-box mid-stage front/design solution!</noscript>
+    <app>
+        <div id="root">
+            <style>
+                html,
+                body,
+                #root {
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                #root {
+                    /* background-image: url("_content/AntDesign.Docs/home_bg.png"); */
+                    background-repeat: no-repeat;
+                    background-size: 100% auto;
+                }
+
+                .page-loading-warp {
+                    padding: 98px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .ant-spin {
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+                    margin: 0;
+                    padding: 0;
+                    color: rgba(0, 0, 0, 0.65);
+                    font-size: 14px;
+                    font-variant: tabular-nums;
+                    line-height: 1.5;
+                    list-style: none;
+                    -webkit-font-feature-settings: 'tnum';
+                    font-feature-settings: 'tnum';
+                    position: absolute;
+                    display: none;
+                    color: #1890ff;
+                    text-align: center;
+                    vertical-align: middle;
+                    opacity: 0;
+                    -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                }
+
+                .ant-spin-spinning {
+                    position: static;
+                    display: inline-block;
+                    opacity: 1;
+                }
+
+                .ant-spin-dot {
+                    position: relative;
+                    display: inline-block;
+                    font-size: 20px;
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .ant-spin-dot-item {
+                    position: absolute;
+                    display: block;
+                    width: 9px;
+                    height: 9px;
+                    background-color: #1890ff;
+                    border-radius: 100%;
+                    -webkit-transform: scale(0.75);
+                    -ms-transform: scale(0.75);
+                    transform: scale(0.75);
+                    -webkit-transform-origin: 50% 50%;
+                    -ms-transform-origin: 50% 50%;
+                    transform-origin: 50% 50%;
+                    opacity: 0.3;
+                    -webkit-animation: antSpinMove 1s infinite linear alternate;
+                    animation: antSpinMove 1s infinite linear alternate;
+                }
+
+                .ant-spin-dot-item:nth-child(1) {
+                    top: 0;
+                    left: 0;
+                }
+
+                .ant-spin-dot-item:nth-child(2) {
+                    top: 0;
+                    right: 0;
+                    -webkit-animation-delay: 0.4s;
+                    animation-delay: 0.4s;
+                }
+
+                .ant-spin-dot-item:nth-child(3) {
+                    right: 0;
+                    bottom: 0;
+                    -webkit-animation-delay: 0.8s;
+                    animation-delay: 0.8s;
+                }
+
+                .ant-spin-dot-item:nth-child(4) {
+                    bottom: 0;
+                    left: 0;
+                    -webkit-animation-delay: 1.2s;
+                    animation-delay: 1.2s;
+                }
+
+                .ant-spin-dot-spin {
+                    -webkit-transform: rotate(45deg);
+                    -ms-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    -webkit-animation: antRotate 1.2s infinite linear;
+                    animation: antRotate 1.2s infinite linear;
+                }
+
+                .ant-spin-lg .ant-spin-dot {
+                    font-size: 32px;
+                    width: 32px;
+                    height: 32px;
+                }
+
+                .ant-spin-lg .ant-spin-dot i {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+                    .ant-spin-blur {
+                        background: #fff;
+                        opacity: 0.5;
+                    }
+                }
+
+                @-webkit-keyframes antSpinMove {
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes antSpinMove {
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                @-webkit-keyframes antRotate {
+                    to {
+                        -webkit-transform: rotate(405deg);
+                        transform: rotate(405deg);
+                    }
+                }
+
+                @keyframes antRotate {
+                    to {
+                        -webkit-transform: rotate(405deg);
+                        transform: rotate(405deg);
+                    }
+                }
+
+                .loading-progress-text:after {
+                    content: var(--blazor-load-percentage-text, "Loading");
+                }
+            </style>
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 420px; height: 100%;">
+                <img src="logo.png" alt="logo" width="256"/>
+                <div class="page-loading-warp">
+                    <div class="ant-spin ant-spin-lg ant-spin-spinning">
+                        <span class="ant-spin-dot ant-spin-dot-spin">
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                        </span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="loading-progress-text"></div>
+                </div>
+            </div>
+        </div>
+    
+<!-- %%-PRERENDERING-BEGIN-%% -->
+<div style="opacity: 0; position: fixed; z-index: -1; top: 0; left: 0; bottom: 0; right: 0;">
+    
+    <div id="react-content"><header id="header" class="clearfix ">
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  flex-flow: nowrap; height: 64px;" id="ant-blazor-d8b57ca6-bda1-4b46-a986-f660152bea55">
+        <div class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-lg-6 ant-col-xl-5 ant-col-xxl-4" style="  " id="ant-blazor-8a325fa8-dbf3-44d8-af65-c36a548d7d3a">
+    <h1><a id="logo" href="/"><img alt="logo" src="/docs/assets/logo.svg">Ant Design Blazor
+                </a></h1>
+</div><div class="menu-row ant-col ant-col-md-18 ant-col-lg-18 ant-col-xl-19 ant-col-xxl-20" style="  " id="ant-blazor-fca6cd52-5435-4186-ad6c-a1359e83252c">
+    <div id="search-box"><div id="docsearch"></div></div>
+
+
+    <ul class="menu-site ant-menu ant-menu-root ant-menu-light ant-menu-horizontal" id="nav" direction="ltr" role="menu">
+        
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/docs" class=""><span>&#x6587;&#x6863;</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item ant-menu-item-selected" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components" class=" active"><span>&#x7EC4;&#x4EF6;</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/charts" class=""><span>&#x56FE;&#x8868;</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/experimental" class=""><span>&#x9AD8;&#x9636;&#x529F;&#x80FD;</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/support" class="">支持 & 服务</a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="https://x.antblazor.com/zh-CN" class="">AI</a>
+            </span>
+        </li>
+    </ul>
+
+    <button class="header-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-cb337576-c6ef-4f49-9657-a0205ceafcef" type="button" ant-click-animating-without-extra-node="false">
+                <span>1.6.0</span>
+    </button>
+
+    <button class="header-button header-lang-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-35e31f8c-6e3e-461b-bcbd-7f0ec1ad86b5" type="button" ant-click-animating-without-extra-node="false">
+                <span>English</span>
+    </button>
+
+    <button class="header-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-30d0f768-1c5b-4da1-885a-df5f4e934372" type="button" ant-click-animating-without-extra-node="false">
+                <span>RTL</span>
+    </button>
+<span id="github-btn" class="github-btn"><a class="gh-btn" href="//github.com/ant-design-blazor/ant-design-blazor" target="_blank"><span class="gh-ico" aria-hidden="true"></span>
+        <span class="gh-text">Star</span></a></span>
+</div>
+    </div>
+</header>
+
+
+<style>            
+.DocSearch-Hit-content-wrapper {
+    overflow: hidden;
+}
+</style>    <div data-show="true" class="ant-alert ant-alert-warning ant-alert-banner" style="  " Id="ant-blazor-b53b2801-f717-4e2a-95b1-22d1a277f63a">
+                <div class="ant-alert-icon">
+                    <span class="anticon anticon-notification" id="ant-blazor-5dfcca01-320e-416b-86e6-c7ed28795354" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M880 112c-3.8 0-7.7.7-11.6 2.3L292 345.9H128c-8.8 0-16 7.4-16 16.6v299c0 9.2 7.2 16.6 16 16.6h101.7c-3.7 11.6-5.7 23.9-5.7 36.4 0 65.9 53.8 119.5 120 119.5 55.4 0 102.1-37.6 115.9-88.4l408.6 164.2c3.9 1.5 7.8 2.3 11.6 2.3 16.9 0 32-14.2 32-33.2V145.2C912 126.2 897 112 880 112zM344 762.3c-26.5 0-48-21.4-48-47.8 0-11.2 3.9-21.9 11-30.4l84.9 34.1c-2 24.6-22.7 44.1-47.9 44.1zm496 58.4L318.8 611.3l-12.9-5.2H184V417.9h121.9l12.9-5.2L840 203.3v617.4z"/></svg>
+</span>
+                </div>
+        <div class="ant-alert-content">
+                <div class="ant-alert-message">
+               为了能更好地了解您的商业使用需求，请参与 <a href="https://wj.qq.com/s2/10306537/c332/">Ant Design Blazor 商业应用调查</a>，一起建设商业应用社区，为企业系统研发赋能！
+            </div>
+
+        </div>
+    </div>
+<div class="main-wrapper">
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  " id="ant-blazor-34182b12-b168-440f-bca5-d3573b2a582d">
+        <div class="main-menu ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-lg-6 ant-col-xl-5 ant-col-xxl-4" style="  " id="ant-blazor-af7e3a65-fec3-49c5-bc02-8fe8780330d2">
+    <div>
+    <div class="">
+        <section class="main-menu-inner">
+    <ul class="aside-container menu-site ant-menu ant-menu-root ant-menu-light ant-menu-inline" id="ant-blazor-8e5e404f-5162-47e3-bb08-81b4ea1be7e6" direction="ltr" role="menu">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/overview" class=""><span>&#x7EC4;&#x4EF6;&#x603B;&#x89C8;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+<li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x901A;&#x7528;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/button" class=""><span>Button</span><span class="chinese">&#x6309;&#x94AE;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/icon" class=""><span>Icon</span><span class="chinese">&#x56FE;&#x6807;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/typography" class=""><span>Typography</span><span class="chinese">&#x6392;&#x7248;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x5E03;&#x5C40;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/divider" class=""><span>Divider</span><span class="chinese">&#x5206;&#x5272;&#x7EBF;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/flex" class=""><span>Flex</span><span class="chinese">&#x5F39;&#x6027;&#x5E03;&#x5C40;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/grid" class=""><span>Grid</span><span class="chinese">&#x6805;&#x683C;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/layout" class=""><span>Layout</span><span class="chinese">&#x5E03;&#x5C40;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/space" class=""><span>Space</span><span class="chinese">&#x95F4;&#x8DDD;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x5BFC;&#x822A;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/affix" class=""><span>Affix</span><span class="chinese">&#x56FE;&#x9489;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/breadcrumb" class=""><span>Breadcrumb</span><span class="chinese">&#x9762;&#x5305;&#x5C51;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/dropdown" class=""><span>Dropdown</span><span class="chinese">&#x4E0B;&#x62C9;&#x83DC;&#x5355;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/menu" class=""><span>Menu</span><span class="chinese">&#x5BFC;&#x822A;&#x83DC;&#x5355;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/pageheader" class=""><span>PageHeader</span><span class="chinese">&#x9875;&#x5934;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/pagination" class=""><span>Pagination</span><span class="chinese">&#x5206;&#x9875;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/steps" class=""><span>Steps</span><span class="chinese">&#x6B65;&#x9AA4;&#x6761;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x6570;&#x636E;&#x5F55;&#x5165;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/autocomplete" class=""><span>AutoComplete</span><span class="chinese">&#x81EA;&#x52A8;&#x5B8C;&#x6210;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/cascader" class=""><span>Cascader</span><span class="chinese">&#x7EA7;&#x8054;&#x9009;&#x62E9;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/checkbox" class=""><span>Checkbox</span><span class="chinese">&#x591A;&#x9009;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/datepicker" class=""><span>DatePicker</span><span class="chinese">&#x65E5;&#x671F;&#x9009;&#x62E9;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/form" class=""><span>Form</span><span class="chinese">&#x8868;&#x5355;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/input" class=""><span>Input</span><span class="chinese">&#x8F93;&#x5165;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/inputnumber" class=""><span>InputNumber</span><span class="chinese">&#x6570;&#x5B57;&#x8F93;&#x5165;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/mentions" class=""><span>Mentions</span><span class="chinese">&#x63D0;&#x53CA;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/radio" class=""><span>Radio</span><span class="chinese">&#x5355;&#x9009;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/rate" class=""><span>Rate</span><span class="chinese">&#x8BC4;&#x5206;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/select" class=""><span>Select</span><span class="chinese">&#x9009;&#x62E9;&#x5668;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/slider" class=""><span>Slider</span><span class="chinese">&#x6ED1;&#x52A8;&#x8F93;&#x5165;&#x6761;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/switch" class=""><span>Switch</span><span class="chinese">&#x5F00;&#x5173;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/timepicker" class=""><span>TimePicker</span><span class="chinese">&#x65F6;&#x95F4;&#x9009;&#x62E9;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/transfer" class=""><span>Transfer</span><span class="chinese">&#x7A7F;&#x68AD;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/treeselect" class=""><span>TreeSelect</span><span class="chinese">&#x6811;&#x9009;&#x62E9;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/upload" class=""><span>Upload</span><span class="chinese">&#x4E0A;&#x4F20;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x6570;&#x636E;&#x5C55;&#x793A;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/avatar" class=""><span>Avatar</span><span class="chinese">&#x5934;&#x50CF;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/badge" class=""><span>Badge</span><span class="chinese">&#x5FBD;&#x6807;&#x6570;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/calendar" class=""><span>Calendar</span><span class="chinese">&#x65E5;&#x5386;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/card" class=""><span>Card</span><span class="chinese">&#x5361;&#x7247;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/carousel" class=""><span>Carousel</span><span class="chinese">&#x8D70;&#x9A6C;&#x706F;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/collapse" class=""><span>Collapse</span><span class="chinese">&#x6298;&#x53E0;&#x9762;&#x677F;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/comment" class=""><span>Comment</span><span class="chinese">&#x8BC4;&#x8BBA;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/descriptions" class=""><span>Descriptions</span><span class="chinese">&#x63CF;&#x8FF0;&#x5217;&#x8868;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/empty" class=""><span>Empty</span><span class="chinese">&#x7A7A;&#x72B6;&#x6001;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/image" class=""><span>Image</span><span class="chinese">&#x56FE;&#x7247;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/list" class=""><span>List</span><span class="chinese">&#x5217;&#x8868;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/popover" class=""><span>Popover</span><span class="chinese">&#x6C14;&#x6CE1;&#x5361;&#x7247;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/segmented" class=""><span>Segmented</span><span class="chinese">&#x5206;&#x6BB5;&#x63A7;&#x5236;&#x5668;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/statistic" class=""><span>Statistic</span><span class="chinese">&#x7EDF;&#x8BA1;&#x6570;&#x503C;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/table" class=""><span>Table</span><span class="chinese">&#x8868;&#x683C;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/tabs" class=""><span>Tabs</span><span class="chinese">&#x6807;&#x7B7E;&#x9875;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item ant-menu-item-selected" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/tag" class=" active"><span>Tag</span><span class="chinese">&#x6807;&#x7B7E;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/timeline" class=""><span>Timeline</span><span class="chinese">&#x65F6;&#x95F4;&#x8F74;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/tooltip" class=""><span>Tooltip</span><span class="chinese">&#x6587;&#x5B57;&#x63D0;&#x793A;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/tree" class=""><span>Tree</span><span class="chinese">&#x6811;&#x5F62;&#x63A7;&#x4EF6;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x53CD;&#x9988;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/alert" class=""><span>Alert</span><span class="chinese">&#x8B66;&#x544A;&#x63D0;&#x793A;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/drawer" class=""><span>Drawer</span><span class="chinese">&#x62BD;&#x5C49;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/message" class=""><span>Message</span><span class="chinese">&#x5168;&#x5C40;&#x63D0;&#x793A;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/modal" class=""><span>Modal</span><span class="chinese">&#x5BF9;&#x8BDD;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/notification" class=""><span>Notification</span><span class="chinese">&#x901A;&#x77E5;&#x63D0;&#x9192;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/popconfirm" class=""><span>Popconfirm</span><span class="chinese">&#x6C14;&#x6CE1;&#x786E;&#x8BA4;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/progress" class=""><span>Progress</span><span class="chinese">&#x8FDB;&#x5EA6;&#x6761;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/result" class=""><span>Result</span><span class="chinese">&#x7ED3;&#x679C;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/skeleton" class=""><span>Skeleton</span><span class="chinese">&#x9AA8;&#x67B6;&#x5C4F;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/spin" class=""><span>Spin</span><span class="chinese">&#x52A0;&#x8F7D;&#x4E2D;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/watermark" class=""><span>Watermark</span><span class="chinese">&#x6C34;&#x5370;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x5176;&#x4ED6;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/anchor" class=""><span>Anchor</span><span class="chinese">&#x951A;&#x70B9;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/backtop" class=""><span>BackTop</span><span class="chinese">&#x56DE;&#x5230;&#x9876;&#x90E8;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li>
+    </ul>
+</section>
+    </div>
+</div>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-18 ant-col-lg-18 ant-col-xl-19 ant-col-xxl-20" style="  " id="ant-blazor-354a721a-aa0f-443b-bae6-6823106cec70">
+    <section class="main-container main-container-component"><article><div class="toc-affix"><div>
+    <div class="">
+        <div class="ant-anchor-wrapper" style="max-height: 100vh;" id="ant-blazor-b4ee1b9c-d301-4481-9b21-6417df311653">
+    <div class="ant-anchor">
+        <div class="ant-anchor-ink">
+            <span class="ant-anchor-ink-ball" style="">
+            </span>
+        </div>
+        
+            
+                <div class="ant-anchor-link" id="ant-blazor-e3c28bdc-fb4d-41ce-ae67-3b6dabac7a73">
+    <a title="&#x57FA;&#x672C;&#x7528;&#x6CD5;" class="ant-anchor-link-title">&#x57FA;&#x672C;&#x7528;&#x6CD5;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-0e0acc11-613c-4872-9491-7eb231880062">
+    <a title="&#x591A;&#x5F69;&#x6807;&#x7B7E;" class="ant-anchor-link-title">&#x591A;&#x5F69;&#x6807;&#x7B7E;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-0546a9e4-75bd-46d5-bb17-6ea4b94af13c">
+    <a title="&#x52A8;&#x6001;&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;" class="ant-anchor-link-title">&#x52A8;&#x6001;&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-df01ffde-474a-4e06-ae85-37cd3f7772d3">
+    <a title="&#x53EF;&#x9009;&#x62E9;" class="ant-anchor-link-title">&#x53EF;&#x9009;&#x62E9;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-d5daebfe-0919-4255-908d-f6ccb8ff4027">
+    <a title="&#x63A7;&#x5236;&#x5173;&#x95ED;&#x72B6;&#x6001;" class="ant-anchor-link-title">&#x63A7;&#x5236;&#x5173;&#x95ED;&#x72B6;&#x6001;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-8e4426f0-2f3a-40dd-93a6-76dc3ed9d499">
+    <a title="&#x6DFB;&#x52A0;&#x52A8;&#x753B;" class="ant-anchor-link-title">&#x6DFB;&#x52A0;&#x52A8;&#x753B;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-79fa1935-6c79-43fe-bfb6-67191506bbef">
+    <a title="&#x56FE;&#x6807;&#x6309;&#x94AE;" class="ant-anchor-link-title">&#x56FE;&#x6807;&#x6309;&#x94AE;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-cd862a07-bcb9-494d-88ec-ef6f6c1f577c">
+    <a title="&#x53CC;&#x8272;&#x6807;&#x7B7E;" class="ant-anchor-link-title">&#x53CC;&#x8272;&#x6807;&#x7B7E;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-de664e6d-c600-4f77-ac60-7ef6389dd836">
+    <a title="&#x9884;&#x8BBE;&#x72B6;&#x6001;&#x7684;&#x6807;&#x7B7E;" class="ant-anchor-link-title">&#x9884;&#x8BBE;&#x72B6;&#x6001;&#x7684;&#x6807;&#x7B7E;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-71cae210-1137-43ce-a758-917066743122">
+    <a title="&#x5173;&#x95ED;&#x524D;&#x786E;&#x8BA4;" class="ant-anchor-link-title">&#x5173;&#x95ED;&#x524D;&#x786E;&#x8BA4;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-15858ebb-99d8-4525-ab3f-61b7979b01aa">
+    <a title="API" class="ant-anchor-link-title">API</a>
+    
+        
+    
+</div>
+            
+        
+    </div>
+</div>
+    </div>
+</div></div><section class="markdown"><h1>Tag<span class="subtitle">&#x6807;&#x7B7E;</span><span class="widget"></span>
+                    <a href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Tag/doc/index.zh-CN.md" class="edit-button" rel="noopener noreferrer" target="_blank"><span class="anticon anticon-edit" id="ant-blazor-d4ccabab-373a-4475-bb3d-c95f2e992d72" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+
+                    <div style="float:right;"><script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CW7I6K7I&placement=antblazorcom&format=cover" id="_carbonads_js"></script></div></h1>
+                <section class="markdown"><p>进行标记和分类的小标签。</p>
+<h2>何时使用</h2>
+<ul>
+<li>用于标记事物的属性和维度。</li>
+<li>进行分类。</li>
+</ul>
+</section><h2 data-scrollama-index="1">Examples
+                        <span class="all-code-box-controls"><span class="code-box-expand-trigger anticon anticon-expand" id="ant-blazor-98548145-90e3-400e-990e-8b5133c263dd" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M342 88H120c-17.7 0-32 14.3-32 32v224c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V168h174c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM920 664h-48c-8.8 0-16 7.2-16 16v176H682c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h222c17.7 0 32-14.3 32-32V680c0-8.8-7.2-16-16-16zM342 856H168V680c0-8.8-7.2-16-16-16h-48c-8.8 0-16 7.2-16 16v224c0 17.7 14.3 32 32 32h222c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM904 88H682c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h174v176c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V120c0-17.7-14.3-32-32-32z" pId="13543"></path></svg>
+</span><span class="code-box-expand-trigger anticon anticon-code" id="ant-blazor-32969145-e79c-452f-8fbd-c6124223d971" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M516 673c0 4.4 3.4 8 7.5 8h185c4.1 0 7.5-3.6 7.5-8v-48c0-4.4-3.4-8-7.5-8h-185c-4.1 0-7.5 3.6-7.5 8v48zm-194.9 6.1l192-161c3.8-3.2 3.8-9.1 0-12.3l-192-160.9A7.95 7.95 0 0 0 308 351v62.7c0 2.4 1 4.6 2.9 6.1L420.7 512l-109.8 92.2a8.1 8.1 0 0 0-2.9 6.1V673c0 6.8 7.9 10.5 13.1 6.1zM880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zm-40 728H184V184h656v656z"/></svg>
+</span></span></h2></section>
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  margin-left: -8px; margin-right: -8px;" id="ant-blazor-5c96008f-4807-4e48-b570-99b002b2ab20">
+        <div class="code-boxes-col-2-1 ant-col ant-col-sm-24 ant-col-md-12" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-6473e0dc-ba34-495b-89b8-bf2993f0b23d">
+    <div class="code-box" id="components-tag-demo-Basic"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-fd4f731a-6a58-4043-a5ae-7b6d96339d60">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x57FA;&#x672C;&#x7528;&#x6CD5;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Tag/demo/Basic.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-6eead4ad-a27f-4d5e-8d04-273ef9f4b480" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>基本标签的用法，可以通过添加 closable 变为可关闭标签。可关闭标签具有 <code>OnClose</code> 和 <code>OnClosing</code> 两个事件。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-3a7b2971-b302-4de0-9a17-de0badfe1d23" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-tag-demo-Dynamic"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-516acd80-744f-4591-9ca8-6c81571091e8">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x52A8;&#x6001;&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Tag/demo/Dynamic.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-99cf7230-ba53-4a5a-a072-b2a7dc1980f3" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>用数组生成一组标签，可以动态添加和删除。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-41342b7f-ca05-414f-b605-616c6f6a3c31" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-tag-demo-Controlled"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-81dc85c3-61f0-4b39-bed5-781530cae4ea">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x63A7;&#x5236;&#x5173;&#x95ED;&#x72B6;&#x6001;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Tag/demo/Controlled.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-179671da-9a31-46b9-8b61-227dbe73e6c4" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>通过 <code>visible</code> 属性控制关闭状态。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-f0f1ff8a-345b-4721-8b0e-2e52d6eea008" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-tag-demo-IconDemo"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-00e5df1c-1101-42e5-9183-4b636a7a0085">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x56FE;&#x6807;&#x6309;&#x94AE;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Tag/demo/IconDemo.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-e4ff5b67-9859-409a-943a-a90df1edf45f" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>当需要在 <code>Tag</code> 内嵌入 <code>Icon</code> 时，可以设置 icon 属性，或者直接在 <code>Tag</code> 内使用 <code>Icon</code> 组件。</p>
+<p>如果想控制 <code>Icon</code> 具体的位置，只能直接使用 <code>Icon</code> 组件，而非 icon 属性。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-d95e36b1-208d-43ff-aaa0-c79da9758570" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-tag-demo-StatusTag"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-2865ee56-87fd-40eb-9b3b-28ac67a7096b">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x9884;&#x8BBE;&#x72B6;&#x6001;&#x7684;&#x6807;&#x7B7E;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Tag/demo/StatusTag.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-d7541a70-2c47-4ec2-a67b-ed7cecd9f70a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>预设五种状态颜色，可以通过设置 color 为 <code>success</code>、 <code>processing</code>、<code>error</code>、<code>default</code>、<code>warning</code> 来代表不同的状态。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-11652aa0-7b97-4dfb-9ae7-bf779e5a098a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div>
+                        <div class="code-boxes-col-2-1 ant-col ant-col-sm-24 ant-col-md-12" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-517ccacc-eb7b-41c5-91a9-35e657e1f6b2">
+    <div class="code-box" id="components-tag-demo-Colorful"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-b5639846-e2f5-43d7-9df5-be516b4e8ded">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x591A;&#x5F69;&#x6807;&#x7B7E;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Tag/demo/Colorful.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-d3126247-6a01-4b2b-ae1f-d0e6cb09df90" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>我们添加了多种预设色彩的标签样式，用作不同场景使用。如果预设值不能满足你的需求，可以设置为具体的色值。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-de95730a-7d23-41cb-8339-cfbb28c31b41" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-tag-demo-Checkable"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-79fee2d4-2737-4a5d-86ae-0c2b653627de">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x53EF;&#x9009;&#x62E9;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Tag/demo/Checkable.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-b86ac6c1-d148-4f8c-9af5-a5a7a5bfe6c2" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>可通过 CheckableTag 实现类似 Checkbox 的效果，点击切换选中效果。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-d4be7d54-51f5-4a4b-b8fc-5462d4b5d842" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-tag-demo-Animate"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-67f770c7-9aa4-4342-bd60-0b75c765888c">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x6DFB;&#x52A0;&#x52A8;&#x753B;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Tag/demo/Animate.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-8eea1475-d31a-463d-9247-c36fe5dd503a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>给标签增加添加或删除时的动画。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-c98e8968-e4f3-41f4-8358-3576f6cd9068" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-tag-demo-TwoTone"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-723e7db7-23f6-434d-8ab7-440bfe0c78d0">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x53CC;&#x8272;&#x6807;&#x7B7E;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Tag/demo/TwoTone.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-faa0ae97-0b8d-4240-a6ee-04aa15429580" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>使用 <code>IconTemplate</code> 参数可以自定义标签的图标部分，实现类似 shields.io 或 GitHub issue label 的双色标签效果。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-f62a81b4-fb58-4ebc-84af-2adc4a94a36b" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-tag-demo-Event"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-d8298ebb-2296-48cd-b0d6-6e63667a6036">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x5173;&#x95ED;&#x524D;&#x786E;&#x8BA4;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Tag/demo/Event.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-d9466938-53a6-4ca6-b879-0cdd5b079d86" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Tag 在关闭前，可以通过 <code>OnClosing</code> 事件中，用 <code>Cancel</code> 属性来取消关闭。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-c622322e-66b4-49ca-927c-955719132c35" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div>
+    </div>
+<section class="markdown api-container"><h2 id="API"><span>Tag API</span><a href="/zh-CN/components/tag#API" class="anchor">#</a></h2>
+<table class="api properties-api">
+<thead>
+                    <tr>
+                        <th>属性</th>
+                        <th>描述</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                    </tr>
+                </thead>
+                <tbody>
+<tr class="">
+                    <td class="api-code-identifier">ChildContent</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>标签内容</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Closable</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>标签是否可以关闭</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">false</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Checkable</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>Tag是否可以查询</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">false</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Checked</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>检查标签的状态</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">false</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">CheckedChanged</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>选中/取消选中 Tag 时执行的回调</td>
+                    <td class="api-data-type">EventCallback&lt;Boolean&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Color</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>Tag color. Can either be a predefined color (TagColor) or hex color.</td>
+                    <td class="api-data-type">OneOf&lt;TagColor, String&gt;</td>
+                    <td class="api-default">TagColor.Default</td>
+                </tr>
+<tr class="obsolete">
+                    <td class="api-code-identifier">PresetColor</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>PresetColor 列表中的标记颜色Use Color instead<br /><br /><span class="ant-tag">Obsolete</span> 将在未来的版本中删除。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Icon</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>设置标签的图标</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">IconTheme</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>Define the icon theme.</td>
+                    <td class="api-data-type">IconThemeType</td>
+                    <td class="api-default">IconThemeType.Outline</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">IconTemplate</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>Custom icon template for rendering custom content before the tag content</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="obsolete">
+                    <td class="api-code-identifier">NoAnimation</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>Parameter is not used and does not affect functionality<br /><br /><span class="ant-tag">Obsolete</span> 将在未来的版本中删除。</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnClose</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>标签关闭时执行的回调</td>
+                    <td class="api-data-type">EventCallback&lt;MouseEventArgs&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnClosing</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>在真正关闭之前触发，可以防止关闭</td>
+                    <td class="api-data-type">EventCallback&lt;CloseEventArgs&lt;MouseEventArgs&gt;&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnClick</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>单击标签时执行的回调（单击关闭图标时不调用）。</td>
+                    <td class="api-data-type">EventCallback</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Visible</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>Tag是否关闭</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">true</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Id</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>组件 HTML 的 ID</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">Uniquely Generated ID</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Class</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>为 DOM 元素指定一个或多个类名。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Style</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>指定 DOM 元素的内联样式。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">RefBack</td>
+                    <td class="api-description"><span class="ant-tag">属性</span><code>一个 ForwardRef</code> 实例。您可以使用 <code>AntDesign.ForwardRef.Current</code> 获取对内部 DOM 的引用。</td>
+                    <td class="api-data-type">ForwardRef</td>
+                    <td class="api-default">--</td>
+                </tr>
+</tbody></table>
+</section><section class="markdown api-container"></section></article>
+    <ul class="contributors-list" style="display: flex; list-style: none; margin: 0px; padding: 0px;"><div class="ant-skeleton ant-skeleton-element ant-skeleton-active" style="width: Truepx, height: Truepx, &#x27;line-height&#x27;: Truepx;">
+    <span class="ant-skeleton-avatar ant-skeleton-avatar-circle" style=""></span>
+</div><div class="ant-skeleton ant-skeleton-element ant-skeleton-active" style="width: Truepx, height: Truepx, &#x27;line-height&#x27;: Truepx;">
+    <span class="ant-skeleton-avatar ant-skeleton-avatar-circle" style=""></span>
+</div><div class="ant-skeleton ant-skeleton-element ant-skeleton-active" style="width: Truepx, height: Truepx, &#x27;line-height&#x27;: Truepx;">
+    <span class="ant-skeleton-avatar ant-skeleton-avatar-circle" style=""></span>
+</div></ul></section>
+
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
+                        <div class="fixed-widgets">
+<div class="ant-avatar ant-avatar-circle ant-avatar-icon fixed-widgets-avatar" style="width: 44px; height: 44px; line-height: 44px; font-size: 22px;"><svg class="anticon" role="img" width="21" height="21" viewBox="0 0 21 21" fill="currentColor"><g fill-rule="evenodd"><g fill-rule="nonzero"><path d="M7.02 3.635l12.518 12.518a1.863 1.863 0 010 2.635l-1.317 1.318a1.863 1.863 0 01-2.635 0L3.068 7.588A2.795 2.795 0 117.02 3.635zm2.09 14.428a.932.932 0 110 1.864.932.932 0 010-1.864zm-.043-9.747L7.75 9.635l9.154 9.153 1.318-1.317-9.154-9.155zM3.52 12.473c.514 0 .931.417.931.931v.932h.932a.932.932 0 110 1.864h-.932v.931a.932.932 0 01-1.863 0l-.001-.931h-.93a.932.932 0 010-1.864h.93v-.932c0-.514.418-.931.933-.931zm15.374-3.727a1.398 1.398 0 110 2.795 1.398 1.398 0 010-2.795zM4.385 4.953a.932.932 0 000 1.317l2.046 2.047L7.75 7 5.703 4.953a.932.932 0 00-1.318 0zM14.701.36a.932.932 0 01.931.932v.931h.932a.932.932 0 010 1.864h-.933l.001.932a.932.932 0 11-1.863 0l-.001-.932h-.93a.932.932 0 110-1.864h.93v-.931a.932.932 0 01.933-.932z"></path></g></g></svg></div>
+
+    
+        
+    
+</div>
+
+<link type="text/css" rel="stylesheet" id="docs-theme" />
+                    <section class="prev-next-nav"></section>
+                <footer class="rc-footer rc-footer-dark"><section class="rc-footer-container"><section class="rc-footer-columns"><div class="rc-footer-column"><h2>Resources</h2>
+                <div class="rc-footer-item"><a href="https://ant.design" target="_blank">Ant Design</a></div>
+                <div class="rc-footer-item"><a href="https://ng.ant.design" target="_blank">NG-ZORRO</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Ant Design of Angular</span></div>
+                <div class="rc-footer-item"><a href="https://vue.ant.design" target="_blank">Ant Design Vue</a></div>
+                <div class="rc-footer-item"><a href="https://pro.antblazor.com/" target="_blank">Ant Design Pro Blazor</a></div>
+                <div class="rc-footer-item"><a href="http://www.blazor.zone/" target="_blank">Bootstrap Blazor</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Bootstrap of Blazor</span></div>
+                <div class="rc-footer-item"><a href="https://bulmarazor.loogn.net/" target="_blank">BulmaRazor</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Bulma of Blazor</span></div></div>
+            <div class="rc-footer-column"><h2>Community</h2>
+                <div class="rc-footer-item"><a href="https://github.com/websemantics/awesome-ant-design" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="ant-design" class="anticon anticon-ant-design"><svg viewBox="64 64 896 896" focusable="false" class data-icon="ant-design" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M716.3 313.8c19-18.9 19-49.7 0-68.6l-69.9-69.9.1.1c-18.5-18.5-50.3-50.3-95.3-95.2-21.2-20.7-55.5-20.5-76.5.5L80.9 474.2a53.84 53.84 0 000 76.4L474.6 944a54.14 54.14 0 0076.5 0l165.1-165c19-18.9 19-49.7 0-68.6a48.7 48.7 0 00-68.7 0l-125 125.2c-5.2 5.2-13.3 5.2-18.5 0L189.5 521.4c-5.2-5.2-5.2-13.3 0-18.5l314.4-314.2c.4-.4.9-.7 1.3-1.1 5.2-4.1 12.4-3.7 17.2 1.1l125.2 125.1c19 19 49.8 19 68.7 0zM408.6 514.4a106.3 106.2 0 10212.6 0 106.3 106.2 0 10-212.6 0zm536.2-38.6L821.9 353.5c-19-18.9-49.8-18.9-68.7.1a48.4 48.4 0 000 68.6l83 82.9c5.2 5.2 5.2 13.3 0 18.5l-81.8 81.7a48.4 48.4 0 000 68.6 48.7 48.7 0 0068.7 0l121.8-121.7a53.93 53.93 0 00-.1-76.4z"></path></svg></span></span>
+                        Awesome Ant Design
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://github.com/AdrienTorris/awesome-blazor" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="ant-design" class="anticon"><svg viewBox="0 0 1133 1024" width="1em" height="1em" fill="currentColor"><path d="M1016.452929 325.008051a563.029686 563.029686 0 0 1-552.102137 474.312222 408.956599 408.956599 0 0 1-80.701003-4.895699 247.31566 247.31566 0 0 1-205.677843-233.140565 240.162284 240.162284 0 0 1 480.256301-3.388954c1.009372 39.804368-16.237724 74.72279-51.682775 75.727285-37.863643 0-55.617863-27.014112-55.617864-63.429525v-101.181016a61.971544 61.971544 0 0 0-61.493676-62.025182H404.612545a147.641388 147.641388 0 1 0 109.056069 246.028345l2.969601-4.422708 2.964726 4.905451a104.443189 104.443189 0 0 0 89.063675 42.413131 117.721064 117.721064 0 0 0 109.056068-123.050744 320.200125 320.200125 0 0 0-8.7869-78.209268A299.651845 299.651845 0 0 0 116.483145 559.543208a303.406514 303.406514 0 0 0 295.711881 299.651845s22.215938 2.018744 47.260068 1.443353a639.542039 639.542039 0 0 0 342.967072-102.322045c1.453106-1.009372 2.906211 1.009372 1.940725 2.486859a503.413344 503.413344 0 0 1-392.158113 160.363377A353.875117 353.875117 0 0 1 52.029619 558.075474a366.216763 366.216763 0 0 1 147.105007-293.288413A358.702549 358.702549 0 0 1 410.746797 194.930713h113.839614a320.302525 320.302525 0 0 0 236.290586-104.321285 4.422708 4.422708 0 0 1 2.403963-1.37021 4.515355 4.515355 0 0 1 4.832308 2.106515 4.57387 4.57387 0 0 1 0.629029 2.71604 321.107097 321.107097 0 0 1-49.673783 143.642909 4.354441 4.354441 0 0 0-0.536382 2.462478 4.442212 4.442212 0 0 0 2.930593 3.827812 4.412955 4.412955 0 0 0 2.506363 0.131657 344.210502 344.210502 0 0 0 239.313826-197.3298 6.29029 6.29029 0 0 1 2.213792-2.130896 6.056232 6.056232 0 0 1 5.948956 0 6.212271 6.212271 0 0 1 2.208916 2.130896 436.224273 436.224273 0 0 1 42.793475 278.211222zM411.902454 467.748865a88.551675 88.551675 0 1 0 88.537046 88.537046V473.629554a6.382937 6.382937 0 0 0-6.061108-6.061108l-82.475938 0.180419z" p-id="3785"></path></svg></span></span>
+                        Awesome Blazor
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://dotnet9.com/" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="dotnet9" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        Dotnet9
+                    </a></div></div>
+            <div class="rc-footer-column"><h2>Help</h2>
+                <div class="rc-footer-item"><a href="https://github.com/ant-design-blazor/ant-design-blazor" target="_blank" rel="noopener noreferrer"><span class="rc-footer-item-icon"><span role="img" aria-label="github" class="anticon anticon-github"><svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg></span></span>
+                        GitHub
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="dotnet9" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        ASP.NET Blazor Docs
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://docs.microsoft.com/en-us/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="Blazor Tutorial" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        Blazor Tutorial
+                    </a></div></div>
+            <div class="rc-footer-column"><h2><span class="rc-footer-column-icon"><img src="https://gw.alipayobjects.com/zos/rmsportal/nBVXkrFdWHxbZlmMbsaH.svg" alt="Ant XTech"></span>
+                    More Products</h2>
+                <div class="rc-footer-item" style="margin-top: 20px;"><div class="theme-pick-wrap"><input type="color" class="theme-pick" name="head" style="width:100%;" value="#1890ff" /></div></div></div></section></section>
+    <section class="rc-footer-bottom"><div class="rc-footer-bottom-container">
+            This project is supported by the <a href="https://dotnetfoundation.org">.NET Foundation</a>.
+            Made with <span style="color: rgb(255, 255, 255);">❤</span> by <a target="_blank" rel="noopener noreferrer" href="https://github.com/ant-design-blazor">Ant Design Blazor Team</a></div></section></footer>
+</div>
+    </div>
+</div></div><blazor-focus-on-navigate selector="h1"></blazor-focus-on-navigate>
+        
+
+
+
+
+
+
+
+</div>
+<!-- %%-PRERENDERING-END-%% -->
+</app>
+    <div id="toast-zh" class="toast ">文档已更新，请点击 <a class="reload" onclick="reload()">此处</a> 更新。</div>
+    <div id="toast-en" class="toast ">A new version of this app is available. Click <a class="reload" onclick="reload()">here</a> to update.</div>
+
+    <!-- Start Single Page Apps for GitHub Pages -->
+    <script type="text/javascript">
+        // Single Page Apps for GitHub Pages
+        // https://github.com/rafrex/spa-github-pages
+        // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
+        // ----------------------------------------------------------------------
+        // This script checks to see if a redirect is present in the query string
+        // and converts it back into the correct url and adds it to the
+        // browser's history using window.history.replaceState(...),
+        // which won't cause the browser to attempt to load the new url.
+        // When the single page app is loaded further down in this file,
+        // the correct url will be waiting in the browser's history for
+        // the single page app to route accordingly.
+        (function (l) {
+            if (l.search) {
+                var q = {};
+                l.search.slice(1).split('&').forEach(function (v) {
+                    var a = v.split('=');
+                    q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+                });
+                if (q.p !== undefined) {
+                    window.history.replaceState(null, null,
+                        l.pathname.slice(0, -1) + (q.p || '') +
+                        (q.q ? ('?' + q.q) : '') +
+                        l.hash
+                    );
+                }
+            }
+        }(window.location))
+
+        window.DocSearchInit = window.DocSearchInit || function () { };
+    </script>
+    <!-- End Single Page Apps for GitHub Pages -->
+
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="/_content/AntDesign.Charts/g2plot.min.js?v=1.6.0"></script>
+    <script src="/_content/AntDesign.Charts/ant-design-charts-blazor.js?v=1.6.0"></script>
+    <script src="/_content/AntDesign.Docs/js/prism.js?v=1.6.0"></script>
+
+    <script>
+        window.XPrism = {};
+        window.XPrism.highlight = function (code, language) {
+            return Prism.highlight(code, Prism.languages[language], language);
+        }
+
+        window.XPrism.highlightAll = function () {
+            Prism.highlightAll();
+        }
+
+        window.changeColor = function (hex, ref) {
+            window.less
+                .modifyVars({
+                    '@primary-color': hex
+                }).then(() => ref.invokeMethodAsync('OnColorChanged'))
+        }
+
+        //fetch("/version.json?t=" + new Date().getTime())
+        //    .then(response => response.json())
+        //    .then(data => {
+        //        console.log('Latest version is:' + data.version);
+        //        if (data.version != '1.6.0') {
+        //            showUpdateBar();
+        //        }
+        //    });
+    </script>
+
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@docsearch/css@3" crossorigin=""/>
+    <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/color.less"/>
+    <link rel="stylesheet" type="text/css" href="./css/toast.css"/>
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://fastly.jsdelivr.net/npm/@docsearch/js@3" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
+    <script>
+        let newWorker;
+
+        function showUpdateBar() {
+            var lang = navigator.language || navigator.userLanguage;
+            lang = lang.substr(0, 2);
+            let toast = lang == 'zh' ? document.getElementById('toast-zh') : document.getElementById('toast-en');
+            toast.classList.add('show');
+        }
+
+        function hideUpdateBar() {
+            var lang = navigator.language || navigator.userLanguage;
+            lang = lang.substr(0, 2);
+            let toast = lang == 'zh' ? document.getElementById('toast-zh') : document.getElementById('toast-en');
+            toast.classList.remove('show');
+        }
+
+        function reload() {
+            if (newWorker) {
+                newWorker.postMessage({ action: 'skipWaiting' });
+            } else {
+                navigator.serviceWorker.getRegistration().then(reg => {
+                    if (reg.waiting) {
+                        reg.waiting.postMessage({ action: 'skipWaiting' });
+                    }
+                });
+            }
+            hideUpdateBar();
+        }
+
+        if ('serviceWorker' in navigator) {
+            // The click event on the pop up notification
+
+            navigator.serviceWorker.register('/service-worker.js').then(reg => {
+                if (reg.waiting) {
+                    newWorker = reg.waiting;
+                    showUpdateBar();
+                    return;
+                }
+
+                reg.onupdatefound = function () {
+                    newWorker = reg.installing;
+                    newWorker.onstatechange = function () {
+                        switch (newWorker.state) {
+                            case 'installed':
+                                if (navigator.serviceWorker.controller) {
+                                    showUpdateBar();
+                                }
+                                break;
+                        }
+                    };
+                };
+            });
+
+            let refreshing;
+            navigator.serviceWorker.addEventListener('controllerchange', function () {
+                if (refreshing) return;
+                window.location.reload();
+                refreshing = true;
+            });
+        }
+    </script>
+    <script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } }</script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.nls.js"></script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.js"></script>
+    <script>
+        var instances = {};
+        function createEditor(element, id, ref, options) {
+            console.log(id);
+            var instance = monaco.editor.create(element, options);
+            instance.onDidChangeModelContent(function () {
+                ref.invokeMethodAsync('OnChangeAsync', instance.getValue());
+            });
+            instances[id] = instance;
+            return instance;
+        }
+
+        function copy(id) {
+            var text = instances[id].getValue();
+            navigator.clipboard.writeText(text);
+        }
+    </script>
+
+    <!-- Popup prompt for slow loads in Chinese locales -->
+    <script>
+    (function () {
+        function isChineseLang() {
+            var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+            if (lang && lang.indexOf('zh') === 0) return true;
+            if (navigator.languages) {
+                for (var i = 0; i < navigator.languages.length; i++) {
+                    if (navigator.languages[i] && navigator.languages[i].toLowerCase().indexOf('zh') === 0) return true;
+                }
+            }
+            return false;
+        }
+
+        function stillShowingLoading() {
+            var root = document.getElementById('root');
+            if (!root) return false;
+            // Common loading markers in this page
+            if (root.querySelector('.page-loading-warp')) return true;
+            if (root.querySelector('.loading-progress-text')) return true;
+            // If root is empty or only contains the initial spinner text/settings
+            var text = (root.innerText || '').trim();
+            if (text.length === 0) return true;
+            if (/loading|加载/i.test(text)) return true;
+            return false;
+        }
+
+        function showGiteePrompt() {
+            if (document.getElementById('gitee-redirect-prompt')) return;
+            var box = document.createElement('div');
+            box.id = 'gitee-redirect-prompt';
+            box.setAttribute('role', 'dialog');
+            box.setAttribute('aria-modal', 'true');
+            box.style = 'position:fixed;left:50%;top:20%;transform:translateX(-50%);z-index:99999;background:#fff;border:1px solid #ddd;padding:16px;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.12);max-width:420px;width:90%;font-family:inherit;color:#333;';
+
+            box.innerHTML = '\n                <div style="font-size:16px;margin-bottom:8px;">页面加载较慢，是否跳转至国内镜像？</div>\n                <div style="display:flex;justify-content:flex-end;gap:8px;">\n                    <a href="https://ant-design-blazor.gitee.io" style="background:#1890ff;color:#fff;padding:8px 12px;border-radius:4px;text-decoration:none;" target="_blank" rel="noopener">前往国内站点</a>\n                    <button id="gitee-close" style="background:#f5f5f5;border:1px solid #ddd;padding:8px 12px;border-radius:4px;cursor:pointer;">取消</button>\n                </div>';
+
+            document.body.appendChild(box);
+            document.getElementById('gitee-close').addEventListener('click', function () {
+                if (box && box.parentNode) box.parentNode.removeChild(box);
+            });
+        }
+
+        window.addEventListener('load', function () {
+            if (!isChineseLang()) return;
+            setTimeout(function () {
+                if (stillShowingLoading()) {
+                    showGiteePrompt();
+                }
+            }, 10000);
+        });
+    })();
+    </script>
+
+
+</body></html>

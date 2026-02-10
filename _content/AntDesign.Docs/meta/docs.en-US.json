@@ -1,0 +1,80 @@
+[
+  {
+    "Order": 99,
+    "Title": "How to Contribute",
+    "Type": "menuItem",
+    "Url": "docs/contributing"
+  },
+  {
+    "Order": 7,
+    "Title": "Customize Theme",
+    "Type": "menuItem",
+    "Url": "docs/customize-theme"
+  },
+  {
+    "Order": 2,
+    "Title": "MCP Documentation",
+    "Type": "menuItem",
+    "Url": "docs/mcp"
+  },
+  {
+    "Order": 4,
+    "Title": "FAQ",
+    "Type": "menuItem",
+    "Url": "docs/faq"
+  },
+  {
+    "Order": 7,
+    "Title": "TestKit",
+    "Type": "menuItem",
+    "Url": "docs/test-kit"
+  },
+  {
+    "Order": 98,
+    "Title": "Change Log",
+    "Type": "menuItem",
+    "Url": "docs/CHANGELOG"
+  },
+  {
+    "Order": 0,
+    "Title": "Ant Design of Blazor",
+    "Type": "menuItem",
+    "Url": "docs/introduce"
+  },
+  {
+    "Order": 5,
+    "Title": "Member path helper",
+    "Type": "menuItem",
+    "Url": "docs/member-path-helper"
+  },
+  {
+    "Order": 1,
+    "Title": "Getting Started",
+    "Type": "menuItem",
+    "Url": "docs/getting-started"
+  },
+  {
+    "Order": 3,
+    "Title": "Localization",
+    "Type": "menuItem",
+    "Url": "docs/localization"
+  },
+  {
+    "Order": 8,
+    "Title": "Try 2.0 preview (antd v5)",
+    "Type": "menuItem",
+    "Url": "docs/2-0-preview"
+  },
+  {
+    "Order": 2,
+    "Title": "Internationalization",
+    "Type": "menuItem",
+    "Url": "docs/i18n"
+  },
+  {
+    "Order": 9,
+    "Title": "Getting nightly builds",
+    "Type": "menuItem",
+    "Url": "docs/nightly-build"
+  }
+]

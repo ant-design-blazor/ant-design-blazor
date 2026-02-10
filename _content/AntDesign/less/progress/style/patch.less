@@ -1,0 +1,21 @@
+@import './index.less';
+
+.@{progress-prefix-cls} {
+    &-line {
+        font-size: 0;
+
+        .@{progress-prefix-cls}-outer,
+        .@{progress-prefix-cls}-text {
+            font-size: @font-size-base;
+        }
+    }
+
+    &-small&-line {
+        font-size: 0;
+
+        .@{progress-prefix-cls}-outer,
+        .@{progress-prefix-cls}-text {
+            font-size: @font-size-sm;
+        }
+    }
+}

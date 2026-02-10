@@ -1,0 +1,80 @@
+[
+  {
+    "Order": 4,
+    "Title": "常见问题",
+    "Type": "menuItem",
+    "Url": "docs/faq"
+  },
+  {
+    "Order": 0,
+    "Title": "Ant Design of Blazor",
+    "Type": "menuItem",
+    "Url": "docs/introduce"
+  },
+  {
+    "Order": 1,
+    "Title": "快速上手",
+    "Type": "menuItem",
+    "Url": "docs/getting-started"
+  },
+  {
+    "Order": 2,
+    "Title": "文档 MCP",
+    "Type": "menuItem",
+    "Url": "docs/mcp"
+  },
+  {
+    "Order": 3,
+    "Title": "本地化",
+    "Type": "menuItem",
+    "Url": "docs/localization"
+  },
+  {
+    "Order": 5,
+    "Title": "成员路径助手",
+    "Type": "menuItem",
+    "Url": "docs/member-path-helper"
+  },
+  {
+    "Order": 7,
+    "Title": "定制主题",
+    "Type": "menuItem",
+    "Url": "docs/customize-theme"
+  },
+  {
+    "Order": 2,
+    "Title": "国际化",
+    "Type": "menuItem",
+    "Url": "docs/i18n"
+  },
+  {
+    "Order": 99,
+    "Title": "贡献指南",
+    "Type": "menuItem",
+    "Url": "docs/contributing"
+  },
+  {
+    "Order": 8,
+    "Title": "2.0 预览版（antd v5）",
+    "Type": "menuItem",
+    "Url": "docs/2-0-preview"
+  },
+  {
+    "Order": 7,
+    "Title": "单元测试工具包",
+    "Type": "menuItem",
+    "Url": "docs/test-kit"
+  },
+  {
+    "Order": 98,
+    "Title": "更新日志",
+    "Type": "menuItem",
+    "Url": "docs/CHANGELOG"
+  },
+  {
+    "Order": 9,
+    "Title": "获取每日构建",
+    "Type": "menuItem",
+    "Url": "docs/nightly-build"
+  }
+]

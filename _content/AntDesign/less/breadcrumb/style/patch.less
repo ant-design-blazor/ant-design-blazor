@@ -1,0 +1,29 @@
+.@{breadcrumb-prefix-cls} {
+    &-link {
+        .@{iconfont-css-prefix} + span {
+            margin-left: 4px;
+        }
+    }
+    // We introduced an extra layer.
+    .ant-blazor-breadcrumb-item:last-child {
+        color: @breadcrumb-last-item-color;
+
+        a {
+            color: @breadcrumb-last-item-color;
+        }
+    }
+
+    .ant-blazor-breadcrumb-item:last-child .@{breadcrumb-prefix-cls}-separator {
+        display: none;
+    }
+
+    &-rtl {
+        > .ant-blazor-breadcrumb-item {
+            float: right;
+        }
+    }
+}
+
+.ant-blazor-breadcrum {
+    display: block;
+}
