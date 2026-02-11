@@ -19,8 +19,29 @@ async function onInstall(event) {
     const assetsRequests = self.assetsManifest.assets
         .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
         .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
-        .map(asset => new Request(asset.url, { integrity: asset.hash }));
-    await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
+        .map(asset => {
+            // Avoid setting integrity for HTML files or external URLs because they may be altered or redirected
+            const init = {};
+            const url = asset.url;
+            const isHtml = /\.html$/i.test(url);
+            const isExternal = /^https?:\/\//i.test(url);
+            if (asset.hash && !isHtml && !isExternal) {
+                init.integrity = asset.hash;
+            }
+            return new Request(url, init);
+        });
+
+    const cache = await caches.open(cacheName);
+    // Cache each asset individually and ignore failures so install can complete
+    await Promise.all(assetsRequests.map(async (request) => {
+        try {
+            const response = await fetch(request);
+            if (!response.ok) throw new Error('Request failed with status ' + response.status);
+            await cache.put(request, response);
+        } catch (err) {
+            console.warn('Service worker: Failed to cache', request.url, err);
+        }
+    }));
 }
 
 async function onActivate(event) {
