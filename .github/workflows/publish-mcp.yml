@@ -18,6 +18,14 @@ jobs:
         with:
           # Use .NET 10 for the build CLI (targets net10.0) and packaging
           dotnet-version: '10.0.x'
+          include-prerelease: true
+
+      - name: Verify .NET
+        run: |
+          echo "dotnet --info"
+          dotnet --info
+          echo "ls -la site"
+          ls -la site || true
 
       - name: Restore
         run: dotnet restore
@@ -25,17 +33,37 @@ jobs:
       - name: Build
         run: dotnet build -c Release --no-restore
 
+      - name: Prepare MCP data directory
+        run: |
+          echo "Preparing MCP data dir"
+          mkdir -p site/AntDesign.Docs.MCP/data
+          ls -la site/AntDesign.Docs.MCP || true
+
+      - name: Copy top-level docs into site
+        run: |
+          echo "Copying top-level docs into site/AntDesign.Docs/wwwroot/docs"
+          mkdir -p site/AntDesign.Docs/wwwroot/docs
+          cp -r docs/* site/AntDesign.Docs/wwwroot/docs/ || true
+          ls -la site/AntDesign.Docs/wwwroot/docs || true
+
       - name: Generate docs JSON (AntDesign.Docs.Build.CLI)
         run: |
           echo "Generating docs JSON into site/AntDesign.Docs.MCP/data"
-          dotnet run -f net10.0 --project site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj demo2json site/AntDesign.Docs/Demos site/AntDesign.Docs/wwwroot/meta
-          dotnet run -f net10.0 --project site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj menu2json site/AntDesign.Docs/Demos site/AntDesign.Docs/wwwroot/docs site/AntDesign.Docs/wwwroot/meta
-          dotnet run -f net10.0 --project site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj docs2html site/AntDesign.Docs/wwwroot/docs ./site/AntDesign.Docs/wwwroot/docs
+          dotnet run -f net10.0 --project site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj demo2json site/AntDesign.Docs/Demos site/AntDesign.Docs.MCP/data
+          dotnet run -f net10.0 --project site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj menu2json site/AntDesign.Docs/Demos site/AntDesign.Docs/wwwroot/docs site/AntDesign.Docs.MCP/data
+          dotnet run -f net10.0 --project site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj docs2html site/AntDesign.Docs/wwwroot/docs site/AntDesign.Docs.MCP/data
+          echo "Generated files:"
+          ls -la site/AntDesign.Docs.MCP/data || true
 
-      - name: Copy generated JSON into MCP package data
+      - name: Verify generated files are packaged
         run: |
-          mkdir -p site/AntDesign.Docs.MCP/data
-          cp -r site/AntDesign.Docs/wwwroot/meta/* site/AntDesign.Docs.MCP/data/ || true
+          echo "Packing preview to nupkgs for verification"
+          mkdir -p nupkgs
+          dotnet pack site/AntDesign.Docs.MCP/AntDesign.Docs.MCP.csproj -c Release -o nupkgs -p:PackageVersion=0.0.0-test
+          echo "Listing nupkg contents"
+          unzip -l nupkgs/*.nupkg || true
+          echo "Checking for data/ json files inside nupkg"
+          unzip -l nupkgs/*.nupkg | grep "data/" || true
 
       - name: Set package version from tag
         id: vars
