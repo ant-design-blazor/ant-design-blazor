@@ -12,6 +12,8 @@
     <base href="/" />
     <link rel="icon" href="logo.png" type="image/x-icon" />
     <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
+    <link rel="preload" id="webassembly" />
+    <script type="importmap"></script>
     <link href="_content/AntDesign.Docs/css/default.css?v={version}" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
 
@@ -237,7 +239,7 @@
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
 
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
     <script src="/_content/AntDesign.Charts/g2plot.min.js?v={version}"></script>
     <script src="/_content/AntDesign.Charts/ant-design-charts-blazor.js?v={version}"></script>
     <script src="/_content/AntDesign.Docs/js/prism.js?v={version}"></script>
