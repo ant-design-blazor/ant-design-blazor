@@ -1,0 +1,15 @@
+@inject AntDesign.IOverlayService OverlayService
+
+<div class="context-menu-demo-area" @oncontextmenu="HandleContextMenu" @oncontextmenu:preventDefault>
+    Right click here to open context menu
+</div>
+
+@code {
+    private async Task HandleContextMenu(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)
+    {
+        await OverlayService.OpenAsync(builder =>
+        {
+            builder.AddContent(0, "Context menu content");
+        }, e.ClientX, e.ClientY);
+    }
+}

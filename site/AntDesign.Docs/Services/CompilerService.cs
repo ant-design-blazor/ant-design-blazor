@@ -22,14 +22,14 @@ namespace AntDesign.Docs.Services
 {
     public class CompilerService
     {
-        class CollectibleAssemblyLoadContext : AssemblyLoadContext
+        sealed class CollectibleAssemblyLoadContext : AssemblyLoadContext
         {
             public CollectibleAssemblyLoadContext() : base(isCollectible: true)
             {
             }
         }
 
-        class InMemoryProjectItem : RazorProjectItem
+        sealed class InMemoryProjectItem : RazorProjectItem
         {
             private readonly string _source;
             private readonly string _fileName;

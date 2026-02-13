@@ -52,10 +52,12 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAdd(new ServiceDescriptor(typeof(ImageService), typeof(ImageService), serviceLifetime));
             services.TryAdd(new ServiceDescriptor(typeof(ReuseTabsService), typeof(ReuseTabsService), serviceLifetime));
             services.TryAdd(new ServiceDescriptor(typeof(MenuService), typeof(MenuService), serviceLifetime));
+            services.TryAdd(new ServiceDescriptor(typeof(OverlayService), typeof(OverlayService), serviceLifetime));
 
             services.TryAddScoped<INotificationService>(provider => provider.GetRequiredService<NotificationService>());
             services.TryAddScoped<IMessageService>(provider => provider.GetRequiredService<MessageService>());
             services.TryAddScoped<IConfirmService>(provider => provider.GetRequiredService<ConfirmService>());
+            services.TryAddScoped<IOverlayService>(provider => provider.GetRequiredService<OverlayService>());
 
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
 

@@ -1,0 +1,73 @@
+@using AntDesign
+@inject IOverlayService OverlayService
+
+<style>
+    .context-menu-demo-area {
+        background-color: #f5f5f5;
+        border: 2px dashed #d9d9d9;
+        border-radius: 4px;
+        padding: 100px;
+        text-align: center;
+        cursor: default;
+        user-select: none;
+    }
+
+    .context-menu-demo-area:hover {
+        border-color: #1890ff;
+    }
+
+    .context-menu-content {
+        background-color: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+</style>
+
+<div class="context-menu-demo-area" 
+     @oncontextmenu="HandleContextMenu" 
+     @oncontextmenu:preventDefault>
+    <h3>右键点击此区域</h3>
+    <p>使用 OverlayService 在鼠标位置显示上下文菜单</p>
+    @if (_clickCount > 0)
+    {
+        <p style="margin-top: 20px; color: #1890ff;">
+            <strong>已点击 @_clickCount 次</strong>
+        </p>
+    }
+</div>
+
+@code {
+    private int _clickCount = 0;
+    private OverlayReference _currentOverlay;
+
+    private async Task HandleContextMenu(MouseEventArgs e)
+    {
+        // Close previous overlay if exists
+        if (_currentOverlay != null && !_currentOverlay.IsClosed)
+        {
+            await _currentOverlay.CloseAsync();
+        }
+
+        // Open overlay at mouse position
+        _currentOverlay = await OverlayService.OpenAsync(
+            @<Menu>
+                <MenuItem>1st menu item</MenuItem>
+                <MenuItem>2nd menu item</MenuItem>
+                <MenuItem>3rd menu item</MenuItem>
+            </Menu>,
+            e.ClientX, e.ClientY);
+    }
+
+    private async Task CloseMenu()
+    {
+        if (_currentOverlay != null && !_currentOverlay.IsClosed)
+        {
+            await _currentOverlay.CloseAsync();
+        }
+    }
+
+    public void Dispose()
+    {
+        _currentOverlay?.Close();
+    }
+}

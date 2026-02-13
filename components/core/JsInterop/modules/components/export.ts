@@ -1,5 +1,6 @@
 ﻿export { backtopHelper } from './backtopHelper';
 export { overlayHelper } from './overlayHelper';
+export * from './overlayService';
 export { uploadHelper } from './uploadHelper';
 export { downloadHelper } from './downloadHelper';
 export { mentionsHelper } from './mentionsHelper';

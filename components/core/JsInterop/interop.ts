@@ -17,6 +17,9 @@ export {
   splitterHelper,
 } from './modules/components/export'
 
+// Unified export for overlayService so consumers can access `interop.overlayService`
+export * as overlayService from './modules/components/overlayService'
+
 
 export { enableDraggable, disableDraggable, resetModalPosition } from "./modules/dom/dragHelper";
 

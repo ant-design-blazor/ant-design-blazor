@@ -1,0 +1,13 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+@foreach (var config in _configs)
+{
+    <div id="@config.Id" 
+         class="ant-overlay-container" 
+         style="position: fixed; z-index: @_baseZIndex; pointer-events: none; display: none;">
+        <div style="pointer-events: auto;">
+            @config.Content
+        </div>
+    </div>
+}
