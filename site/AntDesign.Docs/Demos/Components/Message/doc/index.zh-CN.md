@@ -88,24 +88,51 @@ MessageService.Config(new MessageGlobalConfig{
 
 ### 扩展方法
 
-`MessageExtensions` 类提供了一些扩展方法，用于在异步操作执行期间显示加载提示：
+`MessageExtensions` 类提供了一些扩展方法，用于在异步操作执行期间显示提示消息：
 
-#### LoadingWhen<T>
+#### Task.WrappedBy
+
+将任务与消息服务包装在一起，允许在执行任务时显示消息。
+
+```csharp
+// 对于 Task<T>（有返回值）
+Task<T> task = ...
+var result = await task.WrappedBy(messageService).LoadingAsync("处理中...");
+
+// 对于 Task（无返回值）
+Task task = ...
+await task.WrappedBy(messageService).LoadingAsync("处理中...");
+```
+
+包装后的任务提供以下方法：
+
+- `OpenAsync` - 在任务完成后显示自定义消息
+- `ErrorAsync` - 在任务完成后显示错误消息
+- `InfoAsync` - 在任务完成后显示信息消息
+- `LoadingAsync` - 在任务完成后显示加载消息
+- `SuccessAsync` - 在任务完成后显示成功消息
+- `WarningAsync` - 在任务完成后显示警告消息
+
+#### LoadingWhen<T>（已过时）
+
+> **注意：** 此方法已被标记为过时。请使用 `Task.WrappedBy(messageService).LoadingAsync()` 代替。
 
 在执行异步操作时显示加载提示，并返回操作结果。
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| asyncFunc | 要执行的异步操作 | Func<Task<T>> | - |
-| content | 加载过程中显示的提示内容 | string\|RenderFragment\|MessageConfig | - |
-| onClose | 提示关闭时触发的回调函数 | Action | null |
+| 参数      | 说明                     | 类型                                  | 默认值 |
+| --------- | ------------------------ | ------------------------------------- | ------ |
+| asyncFunc | 要执行的异步操作         | Func<Task<T>>                         | -      |
+| content   | 加载过程中显示的提示内容 | string\|RenderFragment\|MessageConfig | -      |
+| onClose   | 提示关闭时触发的回调函数 | Action                                | null   |
 
-#### LoadingWhen (无返回值版本)
+#### LoadingWhen（无返回值版本）（已过时）
+
+> **注意：** 此方法已被标记为过时。请使用 `Task.WrappedBy(messageService).LoadingAsync()` 代替。
 
 在执行异步操作时显示加载提示，适用于无返回值的异步操作。
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| asyncFunc | 要执行的异步操作 | Func<Task> | - |
-| content | 加载过程中显示的提示内容 | string\|RenderFragment\|MessageConfig | - |
-| onClose | 提示关闭时触发的回调函数 | Action | null |
+| 参数      | 说明                     | 类型                                  | 默认值 |
+| --------- | ------------------------ | ------------------------------------- | ------ |
+| asyncFunc | 要执行的异步操作         | Func<Task>                            | -      |
+| content   | 加载过程中显示的提示内容 | string\|RenderFragment\|MessageConfig | -      |
+| onClose   | 提示关闭时触发的回调函数 | Action                                | null   |

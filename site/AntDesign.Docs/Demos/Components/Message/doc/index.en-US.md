@@ -87,24 +87,51 @@ MessageService.Config(new MessageGlobalConfig{
 
 ### Extension Methods
 
-The `MessageExtensions` class provides extension methods to display loading indicators during asynchronous operations:
+`MessageExtensions` class provides extension methods to display messages during asynchronous operations:
 
-#### LoadingWhen<T>
+#### Task.WrappedBy
+
+Wraps a Task with a message service, allowing you to display a message while the task is being executed.
+
+```csharp
+// For Task<T> (with return value)
+Task<T> task = ...
+var result = await task.WrappedBy(messageService).LoadingAsync("Processing...");
+
+// For Task (without return value)
+Task task = ...
+await task.WrappedBy(messageService).LoadingAsync("Processing...");
+```
+
+The wrapped task provides the following methods:
+
+- `OpenAsync` - Displays a custom message after the task completes
+- `ErrorAsync` - Displays an error message after the task completes
+- `InfoAsync` - Displays an info message after the task completes
+- `LoadingAsync` - Displays a loading message after the task completes
+- `SuccessAsync` - Displays a success message after the task completes
+- `WarningAsync` - Displays a warning message after the task completes
+
+#### LoadingWhen<T> (Obsolete)
+
+> **Note:** This method is now obsolete. Please use `Task.WrappedBy(messageService).LoadingAsync()` instead.
 
 Displays a loading message while an asynchronous operation is being executed, and returns the result of the operation.
 
-| Parameter | Description | Type | Default |
-| --- | --- | --- | --- |
-| asyncFunc | The asynchronous operation to execute | Func<Task<T>> | - |
-| content | The message to display during loading | string\|RenderFragment\|MessageConfig | - |
-| onClose | The action to perform when the loading message is closed | Action | null |
+| Parameter | Description                                              | Type                                  | Default |
+| --------- | -------------------------------------------------------- | ------------------------------------- | ------- |
+| asyncFunc | The asynchronous operation to execute                    | Func<Task<T>>                         | -       |
+| content   | The message to display during loading                    | string\|RenderFragment\|MessageConfig | -       |
+| onClose   | The action to perform when the loading message is closed | Action                                | null    |
 
-#### LoadingWhen (version without return value)
+#### LoadingWhen (version without return value) (Obsolete)
 
-Displays a loading message while an asynchronous operation is being executed. Suitable for operations without a return value.
+> **Note:** This method is now obsolete. Please use `Task.WrappedBy(messageService).LoadingAsync()` instead.
 
-| Parameter | Description | Type | Default |
-| --- | --- | --- | --- |
-| asyncFunc | The asynchronous operation to execute | Func<Task> | - |
-| content | The message to display during loading | string\|RenderFragment\|MessageConfig | - |
-| onClose | The action to perform when the loading message is closed | Action | null |
+Displays a loading message while an asynchronous operation is being executed (version without a return value).
+
+| Parameter | Description                                              | Type                                  | Default |
+| --------- | -------------------------------------------------------- | ------------------------------------- | ------- |
+| asyncFunc | The asynchronous operation to execute                    | Func<Task>                            | -       |
+| content   | The message to display during loading                    | string\|RenderFragment\|MessageConfig | -       |
+| onClose   | The action to perform when the loading message is closed | Action                                | null    |
