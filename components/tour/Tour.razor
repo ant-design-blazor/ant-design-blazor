@@ -1,0 +1,24 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+@using Microsoft.AspNetCore.Components
+
+@if (Open && _steps != null && _steps.Count > 0 && _currentStep != null)
+{
+    @if (_currentStep.Mask != false && Mask)
+    {
+        <div class="@GetMaskClass()" style="@GetMaskStyle()" @onclick="OnMaskClick"></div>
+    }
+
+    <TourPanel Step="@_currentStep"
+               Current="@Current"
+               Total="@_steps.Count"
+               Type="@(_currentStep.Type != TourType.Default ? _currentStep.Type : Type)"
+               CloseIcon="@CloseIcon"
+               IndicatorsRender="@IndicatorsRender"
+               X="@_panelX"
+               Y="@_panelY"
+               OnClose="HandleClose"
+               OnPrev="HandlePrev"
+               OnNext="HandleNext"
+               OnFinish="HandleFinish" />
+}

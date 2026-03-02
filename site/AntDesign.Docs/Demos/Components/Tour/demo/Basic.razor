@@ -1,0 +1,65 @@
+@using Microsoft.AspNetCore.Components.Web
+
+<div>
+    <Button Type="@ButtonType.Primary" OnClick="() => _open = true">
+        Begin Tour
+    </Button>
+
+    <Divider />
+
+    <Space>
+        <span @ref="_ref1"><Button>Upload</Button></span>
+        <span @ref="_ref2"><Button Type="@ButtonType.Primary">Save</Button></span>
+        <span @ref="_ref3">
+            <Button>
+                <Icon Type="ellipsis" Theme="IconThemeType.Outline" />
+            </Button>
+        </span>
+    </Space>
+
+    <Tour Open="@_open" 
+          Steps="@_steps" 
+          OnClose="() => _open = false" />
+</div>
+
+@code {
+    private bool _open = false;
+    private ElementReference _ref1;
+    private ElementReference _ref2;
+    private ElementReference _ref3;
+
+    private List<TourStep> _steps;
+
+    protected override void OnInitialized()
+    {
+        _steps = new List<TourStep>
+        {
+            new TourStep
+            {
+                Title = "Upload File",
+                Description = "Put your files here.",
+                Target = () => _ref1,
+                Cover = builder =>
+                {
+                    builder.OpenElement(0, "img");
+                    builder.AddAttribute(1, "alt", "tour.png");
+                    builder.AddAttribute(2, "src", "https://user-images.githubusercontent.com/5378891/197385811-55df8480-7ff4-44bd-9d43-a7dade598d70.png");
+                    builder.AddAttribute(3, "style", "width: 100%;");
+                    builder.CloseElement();
+                }
+            },
+            new TourStep
+            {
+                Title = "Save",
+                Description = "Save your changes.",
+                Target = () => _ref2
+            },
+            new TourStep
+            {
+                Title = "Other Actions",
+                Description = "Click to see other actions.",
+                Target = () => _ref3
+            }
+        };
+    }
+}

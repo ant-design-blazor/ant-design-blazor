@@ -1,0 +1,177 @@
+@import '../../style/themes/index';
+@import '../../style/mixins/index';
+
+@tour-prefix-cls: ~'@{ant-prefix}-tour';
+
+.@{tour-prefix-cls} {
+  &-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    pointer-events: auto;
+    z-index: 1000;
+  }
+
+  &-panel {
+    position: fixed;
+    background: @component-background;
+    border-radius: @border-radius-lg;
+    box-shadow: @box-shadow-base;
+    min-width: 200px;
+    max-width: 520px;
+    padding: 0;
+    z-index: 1002;
+    transform: translate(-50%, -50%);
+  }
+
+  &-section {
+    position: relative;
+    padding: @padding-md;
+  }
+
+  &-close {
+    position: absolute;
+    top: @padding-sm;
+    right: @padding-sm;
+    z-index: 1;
+    cursor: pointer;
+    color: @text-color-secondary;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: @font-size-base;
+    line-height: 1;
+    transition: color 0.3s;
+
+    &:hover {
+      color: @text-color;
+    }
+  }
+
+  &-cover {
+    margin-bottom: @margin-md;
+    text-align: center;
+
+    img {
+      max-width: 100%;
+      border-radius: @border-radius-base;
+    }
+  }
+
+  &-header {
+    margin-bottom: @margin-sm;
+  }
+
+  &-title {
+    font-size: @font-size-lg;
+    font-weight: 600;
+    color: @heading-color;
+    line-height: @line-height-base;
+  }
+
+  &-description {
+    color: @text-color;
+    font-size: @font-size-base;
+    line-height: @line-height-base;
+    margin-bottom: @margin-md;
+  }
+
+  &-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: @padding-sm;
+    border-top: 1px solid @border-color-split;
+  }
+
+  &-indicators {
+    display: flex;
+    align-items: center;
+    gap: @margin-xs;
+  }
+
+  &-indicator {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: @border-color-base;
+    transition: all 0.3s;
+
+    &-active {
+      width: 8px;
+      height: 8px;
+      background-color: @primary-color;
+    }
+  }
+
+  &-actions {
+    display: flex;
+    gap: @margin-xs;
+    flex-shrink: 0;
+  }
+
+  &-prev-btn,
+  &-next-btn {
+    // Button component styles are inherited automatically
+    min-width: auto;
+  }
+
+  // Primary type styling
+  &-primary {
+    .@{tour-prefix-cls}-panel {
+      background: @primary-color;
+      color: @text-color-inverse;
+    }
+
+    .@{tour-prefix-cls}-title {
+      color: @text-color-inverse;
+    }
+
+    .@{tour-prefix-cls}-description {
+      color: @text-color-inverse;
+    }
+
+    .@{tour-prefix-cls}-close {
+      color: @text-color-inverse;
+
+      &:hover {
+        color: @text-color-inverse;
+        opacity: 0.8;
+      }
+    }
+
+    .@{tour-prefix-cls}-footer {
+      border-top-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .@{tour-prefix-cls}-indicator {
+      background-color: rgba(255, 255, 255, 0.4);
+
+      &-active {
+        background-color: @text-color-inverse;
+      }
+    }
+  }
+
+  // Arrow (if needed for future enhancement)
+  &-arrow {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: @component-background;
+    border: 1px solid @border-color-base;
+    transform: rotate(45deg);
+    pointer-events: none;
+  }
+}
+
+// Responsive
+@media (max-width: @screen-xs-max) {
+  .@{tour-prefix-cls}-panel {
+    max-width: 90vw;
+  }
+}

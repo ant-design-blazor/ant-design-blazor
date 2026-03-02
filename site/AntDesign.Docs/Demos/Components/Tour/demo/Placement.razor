@@ -1,0 +1,43 @@
+@using Microsoft.AspNetCore.Components.Web
+
+<div>
+    <span @ref="_ref">
+        <Button Type="@ButtonType.Primary" 
+                OnClick="() => _open = true">
+            Begin Tour
+        </Button>
+    </span>
+
+    <Tour Open="@_open" 
+          Steps="@_steps" 
+          OnClose="() => _open = false" />
+</div>
+
+@code {
+    private bool _open = false;
+    private ElementReference _ref;
+
+    private List<TourStep> _steps => new List<TourStep>
+    {
+        new TourStep
+        {
+            Title = "Center",
+            Description = "Displayed in the center of screen.",
+            Target = null
+        },
+        new TourStep
+        {
+            Title = "Right",
+            Description = "On the right of target.",
+            Placement = AntDesign.Placement.Right,
+            Target = () => _ref
+        },
+        new TourStep
+        {
+            Title = "Top",
+            Description = "On the top of target.",
+            Placement = AntDesign.Placement.Top,
+            Target = () => _ref
+        }
+    };
+}

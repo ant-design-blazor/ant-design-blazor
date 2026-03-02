@@ -1,0 +1,90 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+@using Microsoft.AspNetCore.Components
+
+<div class="@GetPanelClass()" style="@GetPanelStyle()">
+    <div class="@GetSectionClass()">
+        @if (Step?.Closable ?? true)
+        {
+            <button class="@($"{PrefixCls}-close")" 
+                    type="button" 
+                    aria-label="Close"
+                    @onclick="HandleClose">
+                @if (CloseIcon != null)
+                {
+                    @CloseIcon
+                }
+                else
+                {
+                    <Icon Type="close" Theme="IconThemeType.Outline" />
+                }
+            </button>
+        }
+
+        @if (Step?.Cover != null)
+        {
+            <div class="@($"{PrefixCls}-cover")">
+                @Step.Cover
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Step?.Title))
+        {
+            <div class="@($"{PrefixCls}-header")">
+                <div class="@($"{PrefixCls}-title")">@Step.Title</div>
+            </div>
+        }
+
+        @if (Step?.DescriptionTemplate != null)
+        {
+            <div class="@($"{PrefixCls}-description")">
+                @Step.DescriptionTemplate
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(Step?.Description))
+        {
+            <div class="@($"{PrefixCls}-description")">
+                @Step.Description
+            </div>
+        }
+
+        <div class="@($"{PrefixCls}-footer")">
+            @if (Total > 1)
+            {
+                <div class="@($"{PrefixCls}-indicators")">
+                    @if (IndicatorsRender != null)
+                    {
+                        @IndicatorsRender((Current, Total))
+                    }
+                    else
+                    {
+                        @for (int i = 0; i < Total; i++)
+                        {
+                            var index = i;
+                            <span class="@GetIndicatorClass(index)"></span>
+                        }
+                    }
+                </div>
+            }
+
+            <div class="@($"{PrefixCls}-actions")">
+                @if (Current > 0)
+                {
+                    <Button Size="@ButtonSize.Small" 
+                            Type="@GetSecondaryButtonType()"
+                            OnClick="HandlePrev"
+                            Class="@GetPrevButtonClass()">
+                        @GetPrevButtonText()
+                    </Button>
+                }
+
+                <Button Size="@ButtonSize.Small" 
+                        Type="@GetMainButtonType()"
+                        OnClick="@(IsLastStep ? HandleFinish : HandleNext)"
+                        Class="@GetNextButtonClass()">
+                    @GetNextButtonText()
+                </Button>
+            </div>
+        </div>
+    </div>
+</div>

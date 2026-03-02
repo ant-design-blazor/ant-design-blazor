@@ -725,6 +725,10 @@ namespace AntDesign.Docs.Build.CLI.Command
                 {
                     foreach (FileSystemInfo docItem in (docDir as DirectoryInfo).GetFileSystemInfos())
                     {
+                        // Only process index.{lang}.md files, skip api.md and others
+                        if (!docItem.Name.StartsWith("index."))
+                            continue;
+
                         string language = docItem.Name.Replace("index.", "").Replace(docItem.Extension, "");
                         string content = File.ReadAllText(docItem.FullName);
                         (Dictionary<string, string> Meta, string desc, string apiDoc) docData = DocParser.ParseDemoDoc(content);
@@ -736,7 +740,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                             SubTitle = docData.Meta.TryGetValue("subtitle", out string subtitle) ? subtitle : null,
                             Type = docData.Meta["type"],
                             Desc = docData.desc,
-                            ApiDoc = docData.apiDoc.Replace("<h2>API</h2>", $"<h2 id=\"API\"><span>API</span><a href=\"{language}/components/{docData.Meta["title"].ToLower()}#API\" class=\"anchor\">#</a></h2>"),
+                            ApiDoc = (docData.apiDoc ?? string.Empty).Replace("<h2>API</h2>", $"<h2 id=\"API\"><span>API</span><a href=\"{language}/components/{docData.Meta["title"].ToLower()}#API\" class=\"anchor\">#</a></h2>"),
                             Cols = docData.Meta.TryGetValue("cols", out var cols) ? int.Parse(cols) : (int?)null,
                             Cover = docData.Meta.TryGetValue("cover", out var cover) ? cover : null,
                         });

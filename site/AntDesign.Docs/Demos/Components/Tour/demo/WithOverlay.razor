@@ -1,0 +1,124 @@
+@using Microsoft.AspNetCore.Components.Web
+@inject IOverlayService OverlayService
+@implements IDisposable
+
+<div @oncontextmenu="HandleContextMenu" @oncontextmenu:preventDefault="true"
+     style="width: 400px; height: 300px; border: 2px dashed #d9d9d9; border-radius: 8px; 
+            display: flex; align-items: center; justify-content: center; user-select: none;">
+    <div style="text-align: center; color: #999;">
+        <Icon Type="inbox" Style="font-size: 48px; margin-bottom: 16px;" />
+        <p>右键点击这里查看上下文菜单</p>
+        <Button Type="@ButtonType.Link" OnClick="() => _tourOpen = true">
+            或点击这里查看引导
+        </Button>
+    </div>
+</div>
+
+<Tour Open="@_tourOpen" 
+      Steps="@_tourSteps" 
+      OnClose="() => _tourOpen = false" 
+      Type="TourType.Primary" />
+
+@code {
+    private bool _tourOpen = false;
+    private OverlayReference _currentOverlay;
+    private ElementReference _contextArea;
+
+    private List<TourStep> _tourSteps = new List<TourStep>
+    {
+        new TourStep
+        {
+            Title = "右键菜单功能",
+            Description = "在这个区域右键点击可以打开上下文菜单,提供更多操作选项。",
+            Target = null // Center placement
+        }
+    };
+
+    private async Task HandleContextMenu(MouseEventArgs e)
+    {
+        // Close any existing overlay
+        if (_currentOverlay != null)
+        {
+            await _currentOverlay.CloseAsync();
+        }
+
+        // Create context menu content
+        RenderFragment menuContent = builder =>
+        {
+            builder.OpenComponent<Menu>(0);
+            builder.AddAttribute(1, "Mode", MenuMode.Vertical);
+            builder.AddAttribute(2, "Style", "min-width: 150px;");
+            builder.AddAttribute(3, "ChildContent", (RenderFragment)(b =>
+            {
+                // Menu Item 1
+                b.OpenComponent<MenuItem>(0);
+                b.AddAttribute(1, "Key", "1");
+                b.AddAttribute(2, "ChildContent", (RenderFragment)(itemBuilder =>
+                {
+                    itemBuilder.OpenElement(0, "span");
+                    itemBuilder.OpenComponent<Icon>(1);
+                    itemBuilder.AddAttribute(2, "Type", "copy");
+                    itemBuilder.CloseComponent();
+                    itemBuilder.AddContent(3, " 复制");
+                    itemBuilder.CloseElement();
+                }));
+                b.CloseComponent();
+
+                // Menu Item 2
+                b.OpenComponent<MenuItem>(10);
+                b.AddAttribute(11, "Key", "2");
+                b.AddAttribute(12, "ChildContent", (RenderFragment)(itemBuilder =>
+                {
+                    itemBuilder.OpenElement(0, "span");
+                    itemBuilder.OpenComponent<Icon>(1);
+                    itemBuilder.AddAttribute(2, "Type", "edit");
+                    itemBuilder.CloseComponent();
+                    itemBuilder.AddContent(3, " 编辑");
+                    itemBuilder.CloseElement();
+                }));
+                b.CloseComponent();
+
+                // Divider
+                b.OpenComponent<MenuDivider>(20);
+                b.CloseComponent();
+
+                // Menu Item 3
+                b.OpenComponent<MenuItem>(30);
+                b.AddAttribute(31, "Key", "3");
+                b.AddAttribute(32, "Danger", true);
+                b.AddAttribute(33, "ChildContent", (RenderFragment)(itemBuilder =>
+                {
+                    itemBuilder.OpenElement(0, "span");
+                    itemBuilder.OpenComponent<Icon>(1);
+                    itemBuilder.AddAttribute(2, "Type", "delete");
+                    itemBuilder.CloseComponent();
+                    itemBuilder.AddContent(3, " 删除");
+                    itemBuilder.CloseElement();
+                }));
+                b.CloseComponent();
+            }));
+            builder.CloseComponent();
+
+            // Add click outside to close
+            builder.OpenElement(100, "div");
+            builder.AddAttribute(101, "style", "position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;");
+            builder.AddAttribute(102, "onclick", EventCallback.Factory.Create(this, async () =>
+            {
+                if (_currentOverlay != null)
+                {
+                    await _currentOverlay.CloseAsync();
+                    _currentOverlay = null;
+                }
+            }));
+            builder.CloseElement();
+        };
+
+        // Show menu at mouse position using OverlayService
+        _currentOverlay = await OverlayService.OpenAsync(menuContent, e.ClientX, e.ClientY);
+    }
+
+    public void Dispose()
+    {
+        _currentOverlay?.Close();
+    }
+}
