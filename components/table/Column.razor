@@ -264,7 +264,96 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 
     private void RenderDefaultFilterDropdown(RenderTreeBuilder __builder)
     {
-        @if (_filters.Any() == true && _columnFilterType == TableFilterType.List)
+        @if (IsClientAutoFilterMode)
+        {
+            <Tabs Size="TabSize.Small" ActiveKey="_clientFilterActiveTabKey" ActiveKeyChanged="key => _clientFilterActiveTabKey = key">
+                <TabPane Key="selection" Tab="选择">
+                    <div style="padding: 8px 12px 4px 12px; border-bottom: 1px solid #f0f0f0;">
+                        <Checkbox Checked="IsClientSelectionAllChecked"
+                                  Indeterminate="IsClientSelectionPartiallyChecked"
+                                  CheckedChange="checkedState => SetClientSelectionAll(checkedState)">
+                            (全选)
+                        </Checkbox>
+                    </div>
+
+                    <Menu AutoCloseDropdown="false" SelectedKeys="_selectedFilterValues">
+                        @foreach (var filter in _filters)
+                        {
+                            <MenuItem Key="@filter.Value?.ToString()" OnClick="() => FilterSelected(filter)">
+                                <Checkbox Checked="filter.Selected" CheckedChange="value => FilterSelected(filter)">@filter.Text</Checkbox>
+                            </MenuItem>
+                        }
+                    </Menu>
+                </TabPane>
+                @if (HasClientAdvancedTab)
+                {
+                    <TabPane Key="advanced" Tab="高级">
+                        <div id="@("popup-container-for-" + Id)" style="position:relative!important"></div>
+                        @{ int index = 0; }
+                        @{ int filterCount = ClientAdvancedFilters.Count; }
+                        @foreach (TableFilter filter in ClientAdvancedFilters)
+                        {
+                            var noInput = filter.FilterCompareOperator is TableFilterCompareOperator.IsNull or TableFilterCompareOperator.IsNotNull;
+                            <div @key="filter" style="padding:10px;min-width:150px;@(index > 0 ? "border-top:1px solid #f0f0f0" : "")">
+                                @if (index > 0)
+                                {
+                                    <div>
+                                        <Space Style="margin-bottom:10px">
+                                            <SpaceItem>
+                                                <Select Value="filter.FilterCondition" TItemValue="TableFilterCondition" TItem="TableFilterCondition" ValueChanged="value => SetFilterCondition(filter,value)" PopupContainerSelector="@("#popup-container-for-" + Id)" BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None">
+                                                    <SelectOptions>
+                                                        <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.And" Label="@Table?.Locale.FilterOptions.And"></SelectOption>
+                                                        <SelectOption TItem="TableFilterCondition" TItemValue="TableFilterCondition" Value="@TableFilterCondition.Or" Label="@Table?.Locale.FilterOptions.Or"></SelectOption>
+                                                    </SelectOptions>
+                                                </Select>
+                                            </SpaceItem>
+                                        </Space>
+                                    </div>
+                                }
+                                <Space Style="width:100%;">
+                                    <SpaceItem Style="flex:auto">
+                                        <Select Value="filter.FilterCompareOperator" TItemValue="TableFilterCompareOperator" TItem="TableFilterCompareOperator" Style="width: 100%; overflow: visible" ValueChanged="value => SetFilterCompareOperator(filter,value)" PopupContainerSelector="@("#popup-container-for-" + Id)" BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None" DropdownMatchSelectWidth="false">
+                                            <SelectOptions>
+                                                @foreach (TableFilterCompareOperator compareOperator in _fieldFilterType.SupportedCompareOperators)
+                                                {
+                                                    if (compareOperator is TableFilterCompareOperator.IsNull or TableFilterCompareOperator.IsNotNull
+                                                    && !(THelper.IsTypeNullable<TData>() || _columnDataType == typeof(string)))
+                                                        continue;
+
+                                                    <SelectOption TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator"
+                                                                  Value="@compareOperator" Label="@Table?.Locale.FilterOptions.Operator(compareOperator)" />
+                                                }
+                                            </SelectOptions>
+                                        </Select>
+                                    </SpaceItem>
+                                    @if (!noInput)
+                                    {
+                                        <SpaceItem Style="min-width: 120px;">
+                                            <AutoComplete TOption="string"
+                                                          Value="@GetClientAdvancedInputValue(filter)"
+                                                          ValueChanged="value => SetClientAdvancedInputValue(filter, value)"
+                                                          Options="_clientFilterAutoCompleteOptions"
+                                                          AllowFilter
+                                                          PopupContainerSelector="@("#popup-container-for-" + Id)"
+                                                          Style="min-width:120px;"
+                                                          Placeholder="Search" />
+                                        </SpaceItem>
+                                    }
+                                    @if (filterCount > 1)
+                                    {
+                                        <SpaceItem>
+                                            <Button Size="@ButtonSize.Small" Icon="close" Type="@ButtonType.Primary" OnClick="()=> RemoveClientAdvancedFilter(filter)" />
+                                        </SpaceItem>
+                                    }
+                                </Space>
+                            </div>
+                            index++;
+                        }
+                    </TabPane>
+                }
+            </Tabs>
+        }
+        else if (_filters.Any() == true && _columnFilterType == TableFilterType.List)
         {
             <Menu AutoCloseDropdown="false" SelectedKeys="_selectedFilterValues">
                 @foreach (var filter in _filters)
@@ -343,12 +432,12 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             }
         }
         <div class="ant-table-filter-dropdown-btns">
-            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" OnClick="ResetFilters">
+            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" OnClick="@(IsClientAutoFilterMode ? ResetClientAutoModeFilters : ResetFilters)">
                 @Table?.Locale.FilterReset
             </Button>
-            @if (_columnFilterType == TableFilterType.FieldType)
+            @if ((IsClientAutoFilterMode && HasClientAdvancedTab && _clientFilterActiveTabKey == "advanced") || (!IsClientAutoFilterMode && _columnFilterType == TableFilterType.FieldType))
             {
-                <Button Size="@ButtonSize.Small" Icon="plus" Type="@ButtonType.Primary" OnClick="AddFilter" />
+                <Button Size="@ButtonSize.Small" Icon="plus" Type="@ButtonType.Primary" OnClick="@(IsClientAutoFilterMode ? AddClientAdvancedFilter : AddFilter)" />
             }
             <Button Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="() => FilterConfirm()">
                 @Table?.Locale.FilterConfirm

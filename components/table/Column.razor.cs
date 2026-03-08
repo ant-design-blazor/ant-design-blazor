@@ -186,6 +186,14 @@ namespace AntDesign
 
         private List<TableFilter> _clientFilters;
 
+        private HashSet<string> _clientFilterValueKeys;
+
+        private HashSet<string> _retainedClientSelectedValueKeys;
+
+        private readonly Dictionary<string, object> _clientFilterTextValueMap = new(StringComparer.Ordinal);
+
+        private readonly List<string> _clientFilterAutoCompleteOptions = [];
+
         private bool _hasFiltersAttribute;
 
         /// <summary>
@@ -291,6 +299,12 @@ namespace AntDesign
 
         private bool _hasFilterSelected;
 
+        private string _clientFilterActiveTabKey = "selection";
+
+        private List<TableFilter> _clientAdvancedFilters;
+
+        private readonly Dictionary<TableFilter, string> _clientAdvancedFilterInputValues = [];
+
         private string[] _selectedFilterValues;
 
         private RenderFragment _renderDefaultFilterDropdown;
@@ -298,6 +312,10 @@ namespace AntDesign
         private bool IsFixedEllipsis => ShouldShowEllipsis && Fixed is ColumnFixPlacement.Left or ColumnFixPlacement.Right;
 
         private bool IsFiltered => _hasFilterSelected || Filtered;
+
+        private bool IsClientAutoFilterMode => _hasFilterableAttribute && !_hasFiltersAttribute && _clientFilters?.Any() == true;
+
+        private bool HasClientAdvancedTab => IsClientAutoFilterMode && _fieldFilterType != null;
 
         protected override void OnInitialized()
         {
@@ -544,6 +562,7 @@ namespace AntDesign
         {
             filter.Value = default;
             filter.FilterCompareOperator = compareOperator;
+            _clientAdvancedFilterInputValues.Remove(filter);
         }
 
         private void SetFilterCondition(TableFilter filter, TableFilterCondition filterCondition)
@@ -568,9 +587,163 @@ namespace AntDesign
             StateHasChanged();
         }
 
+        private bool IsClientSelectionAllChecked => _filters?.Any() == true && _filters.All(x => x.Selected);
+
+        private bool IsClientSelectionPartiallyChecked => _filters?.Any(x => x.Selected) == true && !IsClientSelectionAllChecked;
+
+        private void SetClientSelectionAll(bool selected)
+        {
+            if (!IsClientAutoFilterMode || _filters is null)
+            {
+                return;
+            }
+
+            _filters.ForEach(x => x.Selected = selected);
+            _selectedFilterValues = _filters.Where(x => x.Selected).Select(x => x.Value?.ToString()).ToArray();
+            StateHasChanged();
+        }
+
+        private List<TableFilter> ClientAdvancedFilters
+        {
+            get
+            {
+                if (_clientAdvancedFilters is null || !_clientAdvancedFilters.Any())
+                {
+                    _clientAdvancedFilters = [GetClientAdvancedNewFilter()];
+                }
+
+                return _clientAdvancedFilters;
+            }
+        }
+
+        private TableFilter GetClientAdvancedNewFilter()
+        {
+            return new TableFilter
+            {
+                FilterCondition = TableFilterCondition.And,
+                FilterCompareOperator = _fieldFilterType?.DefaultCompareOperator ?? TableFilterCompareOperator.Equals,
+            };
+        }
+
+        private void AddClientAdvancedFilter()
+        {
+            ClientAdvancedFilters.Add(GetClientAdvancedNewFilter());
+        }
+
+        private void RemoveClientAdvancedFilter(TableFilter filter)
+        {
+            _clientAdvancedFilterInputValues.Remove(filter);
+            ClientAdvancedFilters.Remove(filter);
+            if (!ClientAdvancedFilters.Any())
+            {
+                ClientAdvancedFilters.Add(GetClientAdvancedNewFilter());
+            }
+        }
+
+        private string GetClientAdvancedInputValue(TableFilter filter)
+        {
+            if (_clientAdvancedFilterInputValues.TryGetValue(filter, out var cached))
+            {
+                return cached;
+            }
+
+            var input = filter.Value?.ToString();
+            _clientAdvancedFilterInputValues[filter] = input;
+            return input;
+        }
+
+        private void SetClientAdvancedInputValue(TableFilter filter, string input)
+        {
+            _clientAdvancedFilterInputValues[filter] = input;
+            filter.Value = ResolveClientAdvancedInputValue(input);
+        }
+
+        private object ResolveClientAdvancedInputValue(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return null;
+            }
+
+            if (_clientFilterTextValueMap.TryGetValue(input, out var mappedValue))
+            {
+                return mappedValue;
+            }
+
+            var targetType = THelper.GetUnderlyingType<TData>();
+
+            try
+            {
+                if (targetType == typeof(string))
+                {
+                    return input;
+                }
+
+                if (targetType.IsEnum)
+                {
+                    return Enum.Parse(targetType, input, true);
+                }
+
+                if (targetType == typeof(Guid))
+                {
+                    return Guid.Parse(input);
+                }
+
+                return Convert.ChangeType(input, targetType);
+            }
+            catch
+            {
+                return input;
+            }
+        }
+
+        private void ConfirmClientAdvancedFilters(bool isReset)
+        {
+            if (!isReset)
+            {
+                ClientAdvancedFilters.ForEach(f =>
+                {
+                    f.Selected =
+                        f.Value != null ||
+                        f.FilterCompareOperator == TableFilterCompareOperator.IsNotNull ||
+                        f.FilterCompareOperator == TableFilterCompareOperator.IsNull;
+                });
+            }
+
+            var selectedFilters = ClientAdvancedFilters.Where(x => x.Selected).ToList();
+            _hasFilterSelected = selectedFilters.Any();
+
+            FilterModel = _hasFilterSelected
+                ? new FilterModel<TData>(this, GetFieldExpression, FieldName, OnFilter, selectedFilters, TableFilterType.FieldType, _fieldFilterType)
+                : null;
+        }
+
+        private void ResetClientAutoModeFilters()
+        {
+            if (HasClientAdvancedTab && _clientFilterActiveTabKey == "advanced")
+            {
+                _clientAdvancedFilters = [GetClientAdvancedNewFilter()];
+                _clientAdvancedFilterInputValues.Clear();
+                FilterConfirm(true);
+                return;
+            }
+
+            _filters?.ForEach(x => x.Selected = false);
+            _selectedFilterValues = [];
+            FilterConfirm(true);
+        }
+
         private void FilterConfirm(bool isReset = false)
         {
             _filterOpened = false;
+
+            if (HasClientAdvancedTab && _clientFilterActiveTabKey == "advanced")
+            {
+                ConfirmClientAdvancedFilters(isReset);
+                Table?.ColumnFilterChange();
+                return;
+            }
+
             if (!isReset && _columnFilterType == TableFilterType.FieldType)
             {
                 _filters?.ForEach(f =>
@@ -657,17 +830,63 @@ namespace AntDesign
 
             if (GetValue != null)
             {
-                _clientFilters.Add(new TableFilter
+                var filter = new TableFilter
                 {
                     Text = Formatter<TData>.Format(GetValue(rowData), Format),
                     Value = GetValue(rowData),
-                });
+                };
+
+                _clientFilters.Add(filter);
+
+                if (!string.IsNullOrEmpty(filter.Text) && !_clientFilterTextValueMap.ContainsKey(filter.Text))
+                {
+                    _clientFilterTextValueMap.Add(filter.Text, filter.Value);
+                }
+
+                if (!string.IsNullOrEmpty(filter.Text) && !_clientFilterAutoCompleteOptions.Contains(filter.Text))
+                {
+                    _clientFilterAutoCompleteOptions.Add(filter.Text);
+                }
+
+                if (_hasFilterableAttribute && !_hasFiltersAttribute)
+                {
+                    _columnFilterType = TableFilterType.List;
+                    _filters ??= new List<TableFilter>();
+
+                    _clientFilterValueKeys ??= [];
+                    var valueKey = GetFilterValueKey(filter);
+
+                    if (_clientFilterValueKeys.Add(valueKey))
+                    {
+                        ((List<TableFilter>)_filters).Add(new TableFilter
+                        {
+                            Text = filter.Text,
+                            Value = filter.Value,
+                            FilterCondition = TableFilterCondition.Or,
+                            FilterCompareOperator = TableFilterCompareOperator.Equals,
+                            Selected = _retainedClientSelectedValueKeys?.Contains(valueKey) == true
+                        });
+
+                        _selectedFilterValues = _filters.Where(x => x.Selected).Select(x => x.Value?.ToString()).ToArray();
+                    }
+                }
             }
         }
 
         void IFieldColumn.ClearClientFilter()
         {
+            if (_hasFilterableAttribute && !_hasFiltersAttribute)
+            {
+                _retainedClientSelectedValueKeys = _filters?.Where(x => x.Selected).Select(GetFilterValueKey).ToHashSet() ?? [];
+                _columnFilterType = TableFilterType.List;
+                _filters = new List<TableFilter>();
+                _selectedFilterValues = [];
+            }
+
             _clientFilters?.Clear();
+            _clientFilterValueKeys?.Clear();
+            _clientFilterTextValueMap.Clear();
+            _clientFilterAutoCompleteOptions.Clear();
         }
 
         void IFieldColumn.ClearFilters() => ResetFilters();
@@ -710,6 +929,11 @@ namespace AntDesign
 
         private void FilterDropdownOnVisibleChange(bool visible)
         {
+            if (visible && IsClientAutoFilterMode)
+            {
+                _clientFilterActiveTabKey = "selection";
+            }
+
 #if NET5_0_OR_GREATER
             if (!visible ||
                 _filterInputRef is not AntDomComponentBase baseDomComponent ||
@@ -768,6 +992,17 @@ namespace AntDesign
 
                 StateHasChanged();
             }
+        }
+
+        private static string GetFilterValueKey(TableFilter filter)
+        {
+            if (filter?.Value is null)
+            {
+                return "__NULL__";
+            }
+
+            var value = filter.Value;
+            return string.Concat(value.GetType().FullName, ":", value);
         }
     }
 }
