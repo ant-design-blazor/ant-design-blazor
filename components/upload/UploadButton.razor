@@ -20,13 +20,16 @@
         {
             @ChildContent
         }
-        <input type="file"
-               webkitdirectory="@Directory"
-               multiple="@(Multiple || Directory)"
-               @ref="_file"
-               @onchange="FileNameChanged"
-               accept="@Accept"
-               style="@(Upload?.Drag == true ? "position: absolute;width: 100%;height: 100%;opacity: 0;top: 0;left: 0;z-index:2;" : "display:none;")"
-               id="@_fileId" title="" />
+        @if (!string.IsNullOrEmpty(Upload?.Action))
+        {
+            <input type="file"
+                   webkitdirectory="@Directory"
+                   multiple="@(Multiple || Directory)"
+                   @ref="_file"
+                   @onchange="FileNameChanged"
+                   accept="@Accept"
+                   style="@(Upload?.Drag == true ? "position: absolute;width: 100%;height: 100%;opacity: 0;top: 0;left: 0;z-index:2;" : "display:none;")"
+                   id="@_fileId" title="" />
+        }
     </span>
 </div>
