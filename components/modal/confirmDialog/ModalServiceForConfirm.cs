@@ -276,18 +276,18 @@ namespace AntDesign
         {
             CheckConfirmOptionsIsNull(config);
             config.CreateByService = true;
-            
+
             ConfirmRef confirmRef = new ConfirmRef(config, this);
             confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
-            
+
             if (OnConfirmOpenEvent != null)
             {
                 await OnConfirmOpenEvent.Invoke(confirmRef);
             }
-            
+
             // 等待确认对话框关闭后的结果
             await confirmRef.TaskCompletionSource.Task;
-            
+
             return confirmRef;
         }
 
@@ -300,25 +300,32 @@ namespace AntDesign
         /// <param name="config"></param>
         /// <param name="componentOptions"></param>
         /// <returns>ConfirmRef with initialized TaskCompletionSource</returns>
-        public async Task<ConfirmRef<TResult>> CreateConfirmAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions, TResult>
+        public async Task<ConfirmResult> CreateConfirmAsync<TComponent, TComponentOptions, TResult>(ConfirmOptions config, TComponentOptions componentOptions) where TComponent : FeedbackComponent<TComponentOptions, TResult>
         {
             CheckConfirmOptionsIsNull(config);
             config.CreateByService = true;
-            
+
             ConfirmRef<TResult> confirmRef = new ConfirmRef<TResult>(config, this);
             confirmRef.TaskCompletionSource = new TaskCompletionSource<ConfirmResult>();
-            
+
             config.Content = CreateChildRenderFragment<TComponent, TComponentOptions>(confirmRef, componentOptions);
-            
+
             if (OnConfirmOpenEvent != null)
             {
                 await OnConfirmOpenEvent.Invoke(confirmRef);
             }
-            
+
+            // 根据返回值简单触发 Open/Close/Ok/Cancel 回调
+            if (config is ConfirmOptions<TResult> gAction)
+            {
+                confirmRef.OnOpen ??= gAction.OnOpen;
+                confirmRef.OnClose ??= gAction.OnClose;
+                confirmRef.OnOk ??= gAction.OnOk;
+                confirmRef.OnCancel ??= gAction.OnCancel;
+            }
+
             // 等待确认对话框关闭后的结果
-            await confirmRef.TaskCompletionSource.Task;
-            
-            return confirmRef;
+            return await confirmRef.TaskCompletionSource.Task;
         }
 
         /// <summary>
@@ -346,7 +353,7 @@ namespace AntDesign
 
             // 等待确认对话框关闭后的结果
             await confirmRef.TaskCompletionSource.Task;
-            
+
             return confirmRef;
         }
 

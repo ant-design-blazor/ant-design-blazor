@@ -34,6 +34,9 @@ namespace AntDesign.Tests
             JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.blur", _ => true);
             JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.smoothScrollTo", _ => true);
 
+            // Provide a default getWindow stub so layout components calling into domInfoHelper.getWindow do not fail in tests
+            JSInterop.Setup<Window>(JSInteropConstants.GetWindow, _ => true).SetResult(new Window());
+
             JSInterop.Mode = JSRuntimeMode.Strict;
 
             LocaleProvider.SetLocale("en-US");

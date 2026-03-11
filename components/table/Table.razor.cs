@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -11,9 +12,9 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Documentation;
-using AntDesign.Core.Services;
 using AntDesign.Core.HashCodes;
 using AntDesign.Core.Reflection;
+using AntDesign.Core.Services;
 using AntDesign.Filters;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
@@ -358,7 +359,7 @@ namespace AntDesign
         public RenderFragment EmptyTemplate { get; set; }
 
         /// <summary>
-        /// Specify the identifier of each row
+        /// Specify the identifier of each row. Default is the hash code of the row item.
         /// </summary>
         [Parameter] public Func<TItem, object> RowKey { get; set; } = default!;
 
@@ -414,7 +415,7 @@ namespace AntDesign
         private bool _hasFixRight;
         private int _treeExpandIconColumnIndex;
 
-        private QueryModel _currentQueryModel;
+        private QueryModel<TItem> _currentQueryModel;
         private readonly ClassMapper _wrapperClassMapper = new();
         private List<GroupResult<TItem>> _groups = [];
 
@@ -461,7 +462,7 @@ namespace AntDesign
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
-
+        bool ITable.ServerSide => ServerSide;
         bool ITable.IsSticky => IsSticky;
 
         void ITable.AddGroupColumn(IFieldColumn column) => AddGroupColumn(column);
@@ -641,11 +642,13 @@ namespace AntDesign
             return queryModel;
         }
 
-        void ITable.Refresh()
+        private void ForceReRender()
         {
             _shouldRender = true;
             StateHasChanged();
         }
+
+        void ITable.Refresh() => ForceReRender();
 
         void ITable.ColumnFilterChange()
         {
@@ -784,6 +787,8 @@ namespace AntDesign
             {
                 _treeExpandIconColumnIndex = ExpandIconColumnIndex + (_selection != null && _selection.ColIndex <= ExpandIconColumnIndex ? 1 : 0);
             }
+
+            _ = LoadRelationDataAsync();
 
             return queryModel;
         }
@@ -1197,5 +1202,49 @@ namespace AntDesign
 
             return true;
         }
+
+        #region Linked Data Management
+
+        /// <summary>
+        /// Shared cache for associated data, used to store loaded associated data.
+        /// </summary>
+        internal ConcurrentDictionary<string, object> RelationDataCache { get; } = [];
+
+        /// <summary>
+        /// Asynchronously load all associated data
+        /// </summary>
+        private async Task LoadRelationDataAsync()
+        {
+            await Task.Yield();
+
+            var relationComponents = ColumnContext.ColumnDefs.Select(x => x is IColumnInternal inter ? inter.GetRelationComponent() : null)
+                .Where(x => x != null).ToList();
+
+            if (_showItems == null)
+            {
+                return;
+            }
+
+            try
+            {
+                RelationDataCache.Clear();
+
+                foreach (var component in relationComponents)
+                {
+                    component.SetDataSource(_showItems, _currentQueryModel);
+                }
+
+                var loadTasks = relationComponents.Select(c => c.OnLoadBatchAsync()).ToArray();
+                await Task.WhenAll(loadTasks);
+
+                ForceReRender();
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogError(ex, "Error loading relation data");
+            }
+        }
+
+        #endregion
     }
 }

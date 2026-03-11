@@ -39,7 +39,8 @@
                         }
                         @if (HasAddButton)
                         {
-                            <button type="button" class="ant-tabs-nav-add" style="@_firstAddButtonStyle" aria-label="Add tab" @onclick="OnAddTab">
+                            <button type="button" class="ant-tabs-nav-add" style="@_firstAddButtonStyle" aria-label="Add tab"
+                                @onclick="OnAddTab">
                                 <Icon Type="plus" />
                             </button>
                         }
@@ -48,10 +49,14 @@
                 </div>
                 <Dropdown OnVisibleChange="OnVisibleChange">
                     <Overlay>
-                        <ul tabindex="0" class="ant-tabs-dropdown-menu ant-tabs-dropdown-menu-root ant-tabs-dropdown-menu-vertical" id="@($"rc-tabs-{Id}-more-popup")" role="listbox" aria-label="expanded dropdown">
+                        <ul tabindex="0"
+                            class="ant-tabs-dropdown-menu ant-tabs-dropdown-menu-root ant-tabs-dropdown-menu-vertical"
+                            id="@($"rc-tabs-{Id}-more-popup")" role="listbox" aria-label="expanded dropdown">
                             @foreach (var pane in _invisibleTabs)
                             {
-                                <li class="ant-tabs-dropdown-menu-item @(pane.Disabled?$"ant-tabs-dropdown-menu-item-disabled":string.Empty)" id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false" aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
+                                <li class="ant-tabs-dropdown-menu-item @(pane.Disabled?$"ant-tabs-dropdown-menu-item-disabled":string.Empty)"
+                                    id="@($"rc-tabs-{Id}-more-popup-{pane.Key}")" role="option" aria-disabled="false"
+                                    aria-selected="false" aria-controls="@($"rc-tabs-{Id}-more-popup-{pane.Key}")"
                                     @onclick="(e)=>HandleTabClick(pane)">
                                     @if (pane.TabTemplate != null)
                                     {
@@ -67,8 +72,9 @@
                     </Overlay>
                     <Unbound>
                         <div @ref="context.Current" class="@_operationClass" @onclick:preventDefault>
-                            <button tabindex="-1" class="ant-tabs-nav-more" id="rc-tabs-0-more" aria-expanded="false" aria-haspopup="listbox" aria-hidden="true" aria-controls="rc-tabs-0-more-popup"
-                                    style="@_operationStyle" type="button">
+                            <button tabindex="-1" class="ant-tabs-nav-more" id="rc-tabs-0-more" aria-expanded="false"
+                                aria-haspopup="listbox" aria-hidden="true" aria-controls="rc-tabs-0-more-popup"
+                                style="@_operationStyle" type="button">
                                 <Icon Type="ellipsis" />
                             </button>
                         </div>
@@ -76,11 +82,13 @@
                 </Dropdown>
                 @if (HasAddButton)
                 {
-                    <button type="button" class="ant-tabs-nav-add" style="@_secondAddButtonStyle" aria-label="Add tab" @onclick="OnAddTab">
+                    <button type="button" class="ant-tabs-nav-add" style="@_secondAddButtonStyle" aria-label="Add tab"
+                        @onclick="OnAddTab">
                         <Icon Type="plus" />
                     </button>
                 }
-                @if (TabBarExtraContent != null || TabBarExtraContentRight != null || (Card?.Extra != null && Card?.Title == null && Card?.TitleTemplate == null))
+                @if (TabBarExtraContent != null || TabBarExtraContentRight != null || (Card?.Extra != null && Card?.Title ==
+                        null && Card?.TitleTemplate == null))
                 {
                     <div class="ant-tabs-extra-content">
                         @(TabBarExtraContent ?? TabBarExtraContentRight ?? Card?.Extra)
@@ -94,17 +102,17 @@
             }
         </div>
 
-    }    
+    }
 
     internal void RenderTabPanels(RenderTreeBuilder __builder)
-    {             
-        <div class="ant-tabs-content-holder ">
+    {
+        <div class="ant-tabs-content-holder" @ref="@_contentHolderRef">
             <div class="@_contentClassMapper.Class">
                 @foreach (var tab in _tabs)
                 {
-                    __builder.AddContent(tab.GetHashCode(), tab.RenderPane);
+					__builder.AddContent(tab.TabIndex, tab.RenderPane);
                 }
             </div>
-        </div>     
+        </div>
     }
 }

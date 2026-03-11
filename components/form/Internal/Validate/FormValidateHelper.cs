@@ -507,6 +507,12 @@ namespace AntDesign.Internal.Form.Validate
 
         private static bool IsValid(ValidationAttribute validationAttribute, FormValidationContext validationContext, out ValidationResult result)
         {
+            // Special-case: RequiredAttribute + array with all-null elements should be treated as missing
+            if (validationAttribute is RequiredAttribute && validationContext.Value is Array arr && arr.Cast<object>().All(v => v == null))
+            {
+                validationContext.Value = null;
+            }
+
             result = validationAttribute?.GetValidationResult(validationContext.Value, new ValidationContext(validationContext.Model));
             if (result == null)
             {

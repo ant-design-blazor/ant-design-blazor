@@ -83,7 +83,7 @@
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.Model, _model));
         //Assert		
         lastValue.Should().Be("John");
-        select.Instance.SelectedOptionItems.Should().ContainEquivalentOf(new { Label = "Lucy", Value = "Lucy" });
+        select.Instance.SelectedOptionItems.Values.Should().ContainEquivalentOf(new { Label = "Lucy", Value = "Lucy" });
     }
 #endif
 }

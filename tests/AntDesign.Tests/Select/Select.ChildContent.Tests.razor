@@ -1,0 +1,172 @@
+@using AntDesign.Core.JsInterop.Modules.Components;
+@using AntDesign
+@inherits AntDesignTestBase
+@code {
+    record Person(int Id, string Name);
+
+    public Select_ChildContent_Tests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.SetupVoid("AntDesign.interop.eventHelper.addPreventKeys", _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
+        JSInterop
+            .Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition
+            {
+                Bottom = 10,
+                Left = 10,
+                Right = 10,
+                Top = 10,
+                Placement = Placement.TopLeft,
+                ZIndex = 100
+            });
+    }
+
+    [Fact]
+    public void SelectOption_ChildContent_updates_selected_display_on_runtime_change()
+    {
+        // Arrange
+        var persons = new List<Person>
+        {
+            new Person(1, "John"),
+            new Person(2, "Lucy"),
+            new Person(3, "Jack")
+        };
+
+        Person value = persons[1];
+        string suffix = "_v1";
+
+        var cut = Render<AntDesign.Select<Person, Person>>(
+        @<AntDesign.Select Mode="default"
+            TItemValue="Person"
+            TItem="Person"
+            @bind-Value="@value">
+            <SelectOptions>
+                @foreach (var item in persons)
+                {
+                    <SelectOption Context="item" TItemValue="Person" TItem="Person" Value="@item">
+                        @item.Name@suffix
+                    </SelectOption>
+                }
+            </SelectOptions>
+        </AntDesign.Select>
+    );
+
+    // Assert initial label uses suffix (check selector content)
+    cut.Find(".ant-select-selector").TextContent.Trim().Should().Be("Lucy_v1");
+
+        // Act: change suffix and force re-render
+        suffix = "_v2";
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Disabled, false));
+
+    // Assert updated label (check selector content)
+    cut.Find(".ant-select-selector").TextContent.Trim().Should().Be("Lucy_v2");
+    }
+
+    [Fact]
+    public void SelectOption_ChildContent_is_used_for_selected_display_single()
+    {
+        // Arrange
+        var persons = new List<Person>
+        {
+            new Person(1, "John"),
+            new Person(2, "Lucy"),
+            new Person(3, "Jack")
+        };
+
+        Person value = persons[1];
+
+        var cut = Render<AntDesign.Select<Person, Person>>(
+        @<AntDesign.Select Mode="default"
+            TItemValue="Person"
+            TItem="Person"
+            @bind-Value="@value">
+            <SelectOptions>
+                @foreach (var item in persons)
+                {
+                    <SelectOption Context="item" TItemValue="Person" TItem="Person" Value="@item">
+                        <span>@item.Name - custom</span>
+                    </SelectOption>
+                }
+            </SelectOptions>
+        </AntDesign.Select>
+    );
+
+    // Assert selected display uses childcontent text (check selector content)
+    cut.Find(".ant-select-selector").TextContent.Trim().Should().Be("Lucy - custom");
+    }
+
+    [Fact]
+    public void Select_LabelTemplate_takes_precedence_over_option_ChildContent()
+    {
+        // Arrange
+        var persons = new List<Person>
+        {
+            new Person(1, "John"),
+            new Person(2, "Lucy"),
+            new Person(3, "Jack")
+        };
+
+        Person value = persons[1];
+
+        RenderFragment<Person> parentLabel = item => builder => builder.AddContent(0, $"PARENT:{item.Name}");
+
+        var cut = Render<AntDesign.Select<Person, Person>>(
+        @<AntDesign.Select Mode="default"
+            TItemValue="Person"
+            TItem="Person"
+            LabelTemplate="@parentLabel"
+            @bind-Value="@value">
+
+            <SelectOptions>
+                @foreach (var item in persons)
+                {
+                    <SelectOption Context="item" TItemValue="Person" TItem="Person" Value="@item">
+                        <span>@item.Name - option</span>
+                    </SelectOption>
+                }
+            </SelectOptions>
+        </AntDesign.Select>
+    );
+
+    // Assert parent LabelTemplate wins (LabelTemplate renders custom content directly)
+        cut.Markup.Trim().Should().Contain("PARENT:Lucy");
+    }
+
+    [Fact]
+    public void Multiple_SelectOption_ChildContent_is_used_for_selected_display()
+    {
+        // Arrange
+        var persons = new List<Person>
+        {
+            new Person(1, "John"),
+            new Person(2, "Lucy"),
+            new Person(3, "Jack")
+        };
+
+        IEnumerable<Person> values = new List<Person> { persons[1], persons[2] };
+
+        var cut = Render<AntDesign.Select<Person, Person>>(
+        @<AntDesign.Select Mode="SelectMode.Multiple"
+            TItemValue="Person"
+            TItem="Person"
+            @bind-Values="@values">
+            <SelectOptions>
+                @foreach (var item in persons)
+                {
+                    <SelectOption Context="item" TItemValue="Person" TItem="Person" Value="@item">
+                        <span>@item.Name - tag</span>
+                    </SelectOption>
+                }
+            </SelectOptions>
+        </AntDesign.Select>
+    );
+
+        // Assert each selected tag uses childcontent
+        var selectedTags = cut.FindAll("span.ant-select-selection-item-content");
+        selectedTags.Should().HaveCount(2);
+        selectedTags[0].TextContent.Trim().Should().Be("Lucy - tag");
+        selectedTags[1].TextContent.Trim().Should().Be("Jack - tag");
+    }
+}

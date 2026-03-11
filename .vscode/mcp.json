@@ -1,0 +1,28 @@
+{
+  "servers": {
+    "AntDesign.Docs.MCP (local)": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "site/AntDesign.Docs.MCP/AntDesign.Docs.MCP.csproj"
+      ]
+    },
+    "AntDesign.Docs.MCP (nuget/dnx)": {
+      "type": "stdio",
+      "command": "dnx",
+      "args": [
+        "AntDesign.Docs.MCP@0.1.0",
+        "--add-source",
+        "${workspaceFolder}/nupkgs",
+        "--yes"
+      ]
+    },
+    "AntDesign.Docs.MCP (dotnet tool)": {
+      "type": "stdio",
+      "command": "antdesign-docs-mcp",
+      "args": []
+    }
+  }
+}

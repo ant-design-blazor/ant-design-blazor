@@ -249,5 +249,11 @@
     "CloseAllButThis": "除此之外全部关闭",
     "PinTab": "固定选项卡",
     "Reload": "刷新"
+  },
+  "Draft": {
+    "RecoveryTitle": "发现草稿",
+    "RecoveryContent": "检测到未完成的草稿，是否恢复？\n\n保存时间：${time}",
+    "RecoveryOkText": "恢复",
+    "RecoveryCancelText": "删除"
   }
 }

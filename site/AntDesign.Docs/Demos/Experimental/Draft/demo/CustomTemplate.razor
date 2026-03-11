@@ -1,0 +1,63 @@
+@using System.Text.Json
+
+<DraftMonitor TData="FormModel" 
+              Data="@_model" 
+              DataChanged="@((v) => _model = v)"
+              Options="@(new DraftOptions { Key = "demo-custom-template" })"
+              RecoveryContentTemplate="@RecoveryTemplate" />
+
+<Form Model="@_model">
+    <FormItem Label="Username">
+        <Input @bind-Value="@context.Username" />
+    </FormItem>
+    <FormItem Label="Email">
+        <Input @bind-Value="@context.Email" />
+    </FormItem>
+    <FormItem Label="Remarks">
+        <TextArea @bind-Value="@context.Remarks" Rows="4" />
+    </FormItem>
+</Form>
+
+@code {
+    private FormModel _model = new FormModel();
+
+    private RenderFragment<DraftData<FormModel>> RecoveryTemplate => draft => @<div>
+        <Alert Type="@AlertType.Info" Message="Unfinished draft detected" Description="@GetDraftSummary(draft)" ShowIcon="true" />
+        <Divider />
+        <Descriptions Title="Draft Details" Bordered Size="@DescriptionsSize.Small">
+            <DescriptionsItem Title="Saved Time">@draft.SavedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</DescriptionsItem>
+            <DescriptionsItem Title="Version">@draft.Version</DescriptionsItem>
+            <DescriptionsItem Title="Username">@draft.Data.Username</DescriptionsItem>
+            <DescriptionsItem Title="Email">@draft.Data.Email</DescriptionsItem>
+            <DescriptionsItem Title="Remarks" Span="3">@draft.Data.Remarks</DescriptionsItem>
+        </Descriptions>
+        <br />
+        <p><Text Type="@TextElementType.Secondary">Click "OK" to restore the draft, or "Cancel" to delete it</Text></p>
+    </div>;
+
+    private string GetDraftSummary(DraftData<FormModel> draft)
+    {
+        var time = DateTime.Now - draft.SavedAt.ToLocalTime();
+        var timeDesc = time.TotalDays >= 1 ? $"{(int)time.TotalDays} days ago" :
+                       time.TotalHours >= 1 ? $"{(int)time.TotalHours} hours ago" :
+                       time.TotalMinutes >= 1 ? $"{(int)time.TotalMinutes} minutes ago" :
+                       "just now";
+        return $"Found draft saved {timeDesc}, containing {GetFieldCount(draft.Data)} filled field(s).";
+    }
+
+    private int GetFieldCount(FormModel model)
+    {
+        int count = 0;
+        if (!string.IsNullOrEmpty(model.Username)) count++;
+        if (!string.IsNullOrEmpty(model.Email)) count++;
+        if (!string.IsNullOrEmpty(model.Remarks)) count++;
+        return count;
+    }
+
+    public class FormModel
+    {
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string Remarks { get; set; }
+    }
+}

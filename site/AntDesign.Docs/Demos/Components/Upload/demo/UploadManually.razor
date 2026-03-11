@@ -1,0 +1,54 @@
+<Upload @ref="_upload"
+        Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        Name="files"
+        Defer
+        BatchUpload
+        FileListChanged="FileListChanged"
+		ListType="UploadListType.Picture"
+        OnSingleCompleted="OnSingleCompleted">
+    <Button Icon="upload">
+        <span>Select File</span>
+    </Button>
+</Upload>
+
+<br />
+
+<Button Type="ButtonType.Primary" Disabled="!canUpload" OnClick="HandleUpload">Start Upload</Button>
+@code {
+    Upload _upload;
+    bool canUpload = false;
+
+    void OnSingleCompleted(UploadInfo fileinfo)
+    {
+        if (fileinfo.File.State == UploadState.Success)
+        {
+            var result = fileinfo.File.GetResponse<ResponseModel>();
+            fileinfo.File.Url = result.url;
+        }
+    }
+
+    void FileListChanged(List<UploadFileItem> files)
+    {
+        if (files.Count > 0)
+            canUpload = true;
+        else
+            canUpload = false;
+        StateHasChanged();
+    }
+    async Task HandleUpload()
+    {
+        await _upload.StartUpload();
+    }
+
+    public class ResponseModel
+    {
+        public string name { get; set; }
+
+        public string status { get; set; }
+
+        public string url { get; set; }
+
+        public string thumbUrl { get; set; }
+    }
+
+}

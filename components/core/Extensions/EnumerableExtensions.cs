@@ -59,7 +59,7 @@ namespace AntDesign
             return source.IsIn(array.AsSpan());
         }
 
-        public static bool IsIn<T>(this T source, params ReadOnlySpan<T> array)
+        public static bool IsIn<T>(this T source, ReadOnlySpan<T> array)
         {
             if (array.IsEmpty)
             {

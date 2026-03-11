@@ -1,0 +1,39 @@
+@inherits AntDesignTestBase
+
+@code {
+    class Model
+    {
+        public DateTime?[]? DateRange { get; set; }
+    }
+
+    [Fact]
+    public void Required_RangePicker_with_null_value_should_show_validation_error()
+    {
+        // Arrange
+        JSInterop.Setup<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow)
+            .SetResult(new AntDesign.JsInterop.Window());
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+        var model = new Model { DateRange = null };
+        Form<Model>? form = null;
+
+        var cut = Render(
+            @<Form Model="@model" @ref="form">
+                <FormItem Name="DateRange" Label="DateRange" Required>
+                    <AntDesign.RangePicker TValue="DateTime?[]" @bind-Value="@model.DateRange" />
+                </FormItem>
+            </Form>
+        );
+
+        // Act: trigger validation
+        var validated = form!.EditContext.Validate();
+
+        // Assert: there should be at least one validation error displayed for the form item
+        var errors = cut.FindAll(".ant-form-item-explain-error");
+        errors.Should().NotBeNull();
+        errors.Should().HaveCountGreaterThan(0);
+        var text = errors.First().Text().Trim();
+        text.Should().Be("Please enter DateRange");
+        validated.Should().BeFalse();
+    }
+}

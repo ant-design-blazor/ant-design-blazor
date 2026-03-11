@@ -387,14 +387,14 @@ namespace AntDesign
         /// <default value="false" />
         [Parameter]
         public bool Use12Hours { get; set; }
-        
+
         /// <summary>
         /// When true, will show week column in date panel
         /// </summary>
         /// <default value="false" />
         [Parameter]
         public bool ShowWeek { get; set; }
-        
+
         /// <summary>
         /// Date used for "Today"
         /// </summary>
@@ -553,7 +553,7 @@ namespace AntDesign
                     _activeBarStyle = "display: none";
                 }
 
-                StateHasChanged();
+                RefreshComponentState();
             }
 
             _needRefresh = false;
@@ -564,7 +564,10 @@ namespace AntDesign
             base.Dispose(disposing);
             _ = InvokeAsync(async () =>
             {
-                await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, _inputStart.Ref);
+                if (_inputStart != null)
+                {
+                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, _inputStart.Ref);
+                }
             });
         }
 
@@ -916,7 +919,19 @@ namespace AntDesign
 
         protected virtual void InvokeOnChange()
         {
+        }
 
+        /// <summary>
+        /// Refresh the state of the component
+        /// </summary>
+        /// <remarks>
+        /// Call to StateHasChanged() for the overlay
+        /// </remarks>
+        protected void RefreshComponentState()
+        {
+#if NET10_0_OR_GREATER
+            _dropDown.GetOverlayComponent().RefreshComponentState();
+#endif
         }
 
         /// <summary>
@@ -957,7 +972,7 @@ namespace AntDesign
         {
             _placeholders[index] = placeholder;
 
-            StateHasChanged();
+            RefreshComponentState();
         }
 
         protected void ResetPlaceholder(int rangePickerIndex = -1)
@@ -1088,7 +1103,7 @@ namespace AntDesign
 
             InvokeOnPanelChange(date);
 
-            StateHasChanged();
+            RefreshComponentState();
         }
 
         internal void ChangePickerType(DatePickerType type)
@@ -1103,7 +1118,7 @@ namespace AntDesign
 
             InvokeOnPanelChange(PickerValues[index]);
 
-            StateHasChanged();
+            RefreshComponentState();
         }
 
         /// <summary>

@@ -1,0 +1,112 @@
+@using System.Text.Json
+
+<Alert Type="@AlertType.Info" Message="Modify data and refresh the page. The system will prompt you to recover the draft." ShowIcon="true" style="margin-bottom: 16px;" />
+
+<DraftMonitor TData="UserProfile"
+              @ref="monitorRef"
+              Data="@userProfile"
+              DataChanged="@(v => userProfile = v)"
+              Options="@monitorOptions"
+              OnRecovered="@OnDraftRecovered"
+              OnDeleted="@OnDraftDeleted" />
+
+<Card Title="User Profile Editor">
+    <Body>
+        <Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+            <SpaceItem>
+                <label>Nickname: </label>
+                <Input @bind-Value="@userProfile.Nickname" Placeholder="Enter nickname" Style="width: 300px;" />
+            </SpaceItem>
+            <SpaceItem>
+                <label>Bio: </label>
+                <TextArea @bind-Value="@userProfile.Bio" Placeholder="Enter bio" Rows="3" Style="width: 300px;" />
+            </SpaceItem>
+            <SpaceItem>
+                <label>Interests: </label>
+                <Input @bind-Value="@userProfile.Interests" Placeholder="Enter interests" Style="width: 300px;" />
+            </SpaceItem>
+            <SpaceItem>
+                <Space>
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" OnClick="SaveProfile">
+                            Save
+                        </Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button OnClick="ClearDraft">
+                            Clear Draft
+                        </Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button OnClick="ResetProfile">
+                            Reset
+                        </Button>
+                    </SpaceItem>
+                </Space>
+            </SpaceItem>
+        </Space>
+    </Body>
+</Card>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <Alert Type="@AlertType.Success" Message="@message" ShowIcon="true" style="margin-top: 16px;" Closable="true" OnClose="() => message = null" />
+}
+
+@code
+{
+    public class UserProfile
+    {
+        public string Nickname { get; set; }
+        public string Bio { get; set; }
+        public string Interests { get; set; }
+    }
+
+    private UserProfile userProfile = new UserProfile();
+    private string message;
+    private DraftMonitor<UserProfile> monitorRef;
+
+    private DraftOptions monitorOptions = new DraftOptions
+    {
+        Key = "user-profile-draft",
+        DelayMilliseconds = 500,
+        RecoveryMode = DraftRecoveryMode.Confirm,
+        Version = "1.0.0"
+    };
+
+    private void SaveProfile()
+    {
+        message = $"Profile saved! Data: {JsonSerializer.Serialize(userProfile)}";
+        Console.WriteLine(message);
+        
+        // Clear draft after successful save
+        _ = monitorRef?.ClearDraftAsync();
+    }
+
+    private void OnDraftRecovered(UserProfile recovered)
+    {
+        message = "Draft recovered!";
+        Console.WriteLine($"Draft recovered: {JsonSerializer.Serialize(recovered)}");
+    }
+
+    private void OnDraftDeleted()
+    {
+        message = "Draft deleted!";
+        Console.WriteLine("Draft deleted");
+    }
+
+    private async Task ClearDraft()
+    {
+        if (monitorRef != null)
+        {
+            await monitorRef.ClearDraftAsync();
+            message = "Draft cleared!";
+        }
+    }
+
+    private void ResetProfile()
+    {
+        userProfile = new UserProfile();
+        message = "Profile reset!";
+    }
+}

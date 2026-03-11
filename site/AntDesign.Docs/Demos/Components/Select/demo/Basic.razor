@@ -23,10 +23,10 @@
 		TItemValue="string"
 		TItem="string"
 		Loading>
-    <SelectOption Value="@("jack")" Label="Jack" />
-    <SelectOption Value="@("lucy")" Label="Lucy" />
-    <SelectOption Value="@("disabled")" Label="Disabled" Disabled />
-    <SelectOption Value="@("yaoming")" Label="Yaoming" />
+    <SelectOption Value="@("jack")">Jack</SelectOption>
+    <SelectOption Value="@("lucy")">Lucy</SelectOption>
+    <SelectOption Value="@("disabled")" Disabled>Disabled</SelectOption>
+    <SelectOption Value="@("yaoming")">Yaoming</SelectOption>
 </Select>
 <Select DataSource="@_list"
 		@bind-Value="@_selectedValue4"		
@@ -54,6 +54,20 @@
         Style="width: 120px;"
         Placeholder="Dictionary options">
 </Select>
+<Select TItem="string"
+        TItemValue="string"
+        @bind-Value="_selectedValue7"
+        Style="width:120px;"
+        Placeholder="Select option content">
+    <SelectOptions>
+        @foreach (var item in _list)
+        {
+            <SelectOption TItemValue="string" TItem="string" Value="@item.Value">
+                <span>@item.Name (@item.Value)</span>
+            </SelectOption>
+        }
+    </SelectOptions>
+</Select>
 
 @code
 {
@@ -65,6 +79,7 @@
     string _selectedValue4 = "lucy";
     string _selectedValue5 = "Lucy";
     string _selectedValue6 = "lucy";
+    string _selectedValue7 = "lucy";
     class Person
     {
         public string Value { get; set; }

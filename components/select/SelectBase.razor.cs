@@ -64,6 +64,18 @@ namespace AntDesign
 
         protected SelectContent<TItemValue, TItem> _selectContent;
 
+        /// <summary>
+        /// Request the Select component to refresh its selected-item display.
+        /// This is intended to be used by child components (e.g. SelectOption) when
+        /// their label template changes at runtime. Internal visibility keeps this
+        /// callable within the assembly without exposing it publicly.
+        /// </summary>
+        internal void RequestSelectedDisplayRefresh()
+        {
+            // Use InvokeAsync to ensure this runs on the renderer synchronization context.
+            _ = InvokeAsync(() => StateHasChanged());
+        }
+
         protected TItemValue[] _selectedValues;
 
         protected Func<TItem, string> _getLabel;
@@ -263,8 +275,27 @@ namespace AntDesign
 
         internal bool IsResponsive { get; set; }
 
-        internal HashSet<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new();
-        internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new();
+        internal List<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new();
+        internal Dictionary<TItemValue, SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new();
+
+        private List<SelectOptionItem<TItemValue, TItem>> _cachedOrderedSelectedItems = null;
+
+        internal List<SelectOptionItem<TItemValue, TItem>> GetOrderedSelectedItems()
+        {
+            if (_cachedOrderedSelectedItems != null) return _cachedOrderedSelectedItems;
+            _cachedOrderedSelectedItems = [];
+            if (SelectedOptionItems.Count > 0 && _selectedValues != null)
+            {
+                foreach (var selectedValue in _selectedValues)
+                {
+                    if (SelectedOptionItems.TryGetValue(selectedValue, out var item))
+                    {
+                        _cachedOrderedSelectedItems.Add(item);
+                    }
+                }
+            }
+            return _cachedOrderedSelectedItems;
+        }
 
         /// <summary>
         /// Called when the selected item changes.
@@ -349,7 +380,7 @@ namespace AntDesign
                     }
                 }
 
-                if (_isNotifyFieldChanged && Form?.ValidateOnChange == true)
+                if (_isNotifyFieldChanged && Form?.ValidateOnChange == true && FieldIdentifier is { Model: not null, FieldName: not null })
                 {
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
@@ -554,25 +585,24 @@ namespace AntDesign
                 return;
             }
 
-            //if (!SelectOptionItems.Any())
-            //{
-            //    return;
-            //}
-
             if (values == null)
             {
                 await ValuesChanged.InvokeAsync(default);
                 await OnSelectedItemsChanged.InvokeAsync(default);
                 return;
             }
-
+            if (!SelectOptionItems.Any())
+            {
+                return;
+            }
+            _cachedOrderedSelectedItems = null;
             EvaluateValuesChangedOutsideComponent(values);
 
             if (ValuesChanged.HasDelegate)
                 await ValuesChanged.InvokeAsync(Values);
-
+            var orderedSelectedItems = GetOrderedSelectedItems();
             if (OnSelectedItemsChanged.HasDelegate)
-                await OnSelectedItemsChanged.InvokeAsync(SelectedOptionItems.Select(s => s.Item));
+                await OnSelectedItemsChanged.InvokeAsync(orderedSelectedItems.Select(s => s.Item));
 
             if (_dropDown != null && _dropDown.IsOverlayShow())
             {
@@ -594,7 +624,7 @@ namespace AntDesign
         private void EvaluateValuesChangedOutsideComponent(IEnumerable<TItemValue> values)
         {
             var newSelectedItems = new List<TItem>();
-            var deselectList = SelectedOptionItems.ToDictionary(item => item.Value, item => item);
+            var deselectList = SelectedOptionItems.ToDictionary(item => item.Key, item => item.Value);
             foreach (var value in values.ToList())
             {
                 SelectOptionItem<TItemValue, TItem> result;
@@ -605,7 +635,7 @@ namespace AntDesign
                     if (result != null && !result.IsDisabled)
                     {
                         result.IsSelected = true;
-                        SelectedOptionItems.Add(result);
+                        SelectedOptionItems.Add(result.Value, result);
                     }
 
                     deselectList.Remove(value);
@@ -621,12 +651,12 @@ namespace AntDesign
                         AddedTags.Add(result);
                         SelectOptionItems.Add(result);
                         AddEqualityToNoValue(result);
-                        SelectedOptionItems.Add(result);
+                        SelectedOptionItems.Add(result.Value, result);
                     }
                     else if (result != null && !result.IsSelected && !result.IsDisabled)
                     {
                         result.IsSelected = true;
-                        SelectedOptionItems.Add(result);
+                        SelectedOptionItems.Add(result.Value, result);
                     }
 
                     deselectList.Remove(value);
@@ -638,7 +668,7 @@ namespace AntDesign
                 foreach (var item in deselectList)
                 {
                     item.Value.IsSelected = false;
-                    SelectedOptionItems.Remove(item.Value);
+                    SelectedOptionItems.Remove(item.Key);
                     RemoveEqualityToNoValue(item.Value);
                     if (item.Value.IsAddedTag)
                     {
@@ -703,6 +733,14 @@ namespace AntDesign
         internal virtual void AddOptionItem(SelectOptionItem<TItemValue, TItem> optionItem)
         {
             SelectOptionItems.Add(optionItem);
+#if NET10_0_OR_GREATER
+            // .NET 10: Schedule refresh for next render cycle to update overlay after child components change
+            // In SelectOptions mode, this automatically handles data source changes without requiring manual RefreshOptionsAsync() call
+            if (HasSelectOptions)
+            {
+                _ = InvokeAsync(() => RefreshComponentState());
+            }
+#endif
         }
 
         internal void RemoveOptionItem(SelectOptionItem<TItemValue, TItem> optionItem)
@@ -710,12 +748,36 @@ namespace AntDesign
             SelectOptionItems.Remove(optionItem);
             if (optionItem.IsSelected)
             {
-                SelectedOptionItems.Remove(optionItem);
+                SelectedOptionItems.Remove(optionItem.Value);
             }
             if (optionItem.IsAddedTag)
             {
                 AddedTags.Remove(optionItem);
             }
+#if NET10_0_OR_GREATER
+            // .NET 10: Schedule refresh for next render cycle to update overlay after child components change
+            // In SelectOptions mode, this automatically handles data source changes without requiring manual RefreshOptionsAsync() call
+            if (HasSelectOptions)
+            {
+                _ = InvokeAsync(() => RefreshComponentState());
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Refresh the state of the component and its overlay
+        /// </summary>
+        /// <remarks>
+        /// Calls StateHasChanged() for both overlay and parent component
+        /// </remarks>
+        protected void RefreshComponentState()
+        {
+#if NET10_0_OR_GREATER
+            if (_dropDown?.GetOverlayComponent() != null)
+            {
+                _dropDown.GetOverlayComponent().RefreshComponentState();
+            }
+#endif
         }
 
         internal void RemoveEqualityToNoValue(SelectOptionItem<TItemValue, TItem> option)
@@ -884,13 +946,11 @@ namespace AntDesign
             {
                 if (SelectedOptionItems.Count > 0)
                 {
-                    SelectedOptionItems[0].IsSelected = false;
-                    SelectedOptionItems[0] = selectOption;
+                    var oldSelectedValue = SelectedOptionItems.Values.First();
+                    oldSelectedValue.IsSelected = false;
+                    SelectedOptionItems.Remove(oldSelectedValue.Value);
                 }
-                else
-                {
-                    SelectedOptionItems.Add(selectOption);
-                }
+                SelectedOptionItems[selectOption.Value] = selectOption;
 
                 selectOption.IsSelected = true;
                 CurrentValue = selectOption.Value;
@@ -927,7 +987,7 @@ namespace AntDesign
                     if (selectOption.IsAddedTag)
                     {
                         SelectOptionItems.Remove(selectOption);
-                        SelectedOptionItems.Remove(selectOption);
+                        SelectedOptionItems.Remove(selectOption.Value);
                         AddedTags.Remove(selectOption);
                     }
 
@@ -958,10 +1018,10 @@ namespace AntDesign
                 newSelectedValues = new List<TItemValue>();
                 SelectedOptionItems.Clear();
                 SelectOptionItems.Where(x => x.IsSelected)
-                    .ForEach(i =>
+                    .ForEach(item =>
                     {
-                        newSelectedValues.Add(i.Value);
-                        SelectedOptionItems.Add(i);
+                        newSelectedValues.Add(item.Value);
+                        SelectedOptionItems.Add(item.Value, item);
                     });
             }
             else
@@ -970,12 +1030,12 @@ namespace AntDesign
                 if (newSelection.IsSelected)
                 {
                     newSelectedValues.Add(newSelection.Value);
-                    SelectedOptionItems.Add(newSelection);
+                    SelectedOptionItems.Add(newSelection.Value, newSelection);
                 }
                 else
                 {
                     newSelectedValues.Remove(newSelection.Value);
-                    SelectedOptionItems.Remove(newSelection);
+                    SelectedOptionItems.Remove(newSelection.Value);
                 }
             }
 
@@ -1078,8 +1138,9 @@ namespace AntDesign
             }
             if (!TypeDefaultExistsAsSelectOption && !_hasValueOnClear)
             {
-                SelectedOptionItems[0].IsSelected = false;
-                SelectedOptionItems[0].IsHidden = false;
+                var oldSelectedItem = SelectedOptionItems.First().Value;
+                oldSelectedItem.IsSelected = false;
+                oldSelectedItem.IsHidden = false;
 
                 ActiveOption = SelectOptionItems.FirstOrDefault();
                 SelectedOptionItems.Clear();
@@ -1095,8 +1156,9 @@ namespace AntDesign
                 }
                 else
                 {
-                    SelectedOptionItems[0].IsSelected = false;
-                    SelectedOptionItems[0].IsHidden = false;
+                    var oldSelectedItem = SelectedOptionItems.First().Value;
+                    oldSelectedItem.IsSelected = false;
+                    oldSelectedItem.IsHidden = false;
 
                     ActiveOption = SelectOptionItems.FirstOrDefault();
                     SelectedOptionItems.Clear();
@@ -1105,11 +1167,13 @@ namespace AntDesign
             }
             else
             {
-                if (SelectedOptionItems[0].InternalId != _selectOptionEqualToTypeDefault.InternalId)
+                var oldSelectedItem = SelectedOptionItems.First().Value;
+                if (oldSelectedItem.InternalId != _selectOptionEqualToTypeDefault.InternalId)
                 {
-                    SelectedOptionItems[0].IsSelected = false;
-                    SelectedOptionItems[0] = _selectOptionEqualToTypeDefault;
-                    SelectedOptionItems[0].IsSelected = true;
+                    oldSelectedItem.IsSelected = false;
+                    SelectedOptionItems.Remove(oldSelectedItem.Value);
+                    SelectedOptionItems[_selectOptionEqualToTypeDefault.Value] = _selectOptionEqualToTypeDefault;
+                    _selectOptionEqualToTypeDefault.IsSelected = true;
                     CurrentValue = _selectOptionEqualToTypeDefault.Value;
                 }
                 else
@@ -1187,7 +1251,7 @@ namespace AntDesign
         /// <summary>
         ///     Clears the selectValue(s) property and send the null(default) value back through the two-way binding.
         /// </summary>
-        protected async Task ClearSelectedAsync()
+        protected virtual async Task ClearSelectedAsync()
         {
             if (Mode == SelectMode.Default)
             {

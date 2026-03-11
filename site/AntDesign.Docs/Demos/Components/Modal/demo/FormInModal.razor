@@ -9,7 +9,7 @@
 </Button>
 
 <Modal Title="@("BasicModal")"
-       @bind-Visible="@_visible"
+       Visible="@_visible"
        OnOk="HandleOk"
        OnCancel="HandleCancel">
          @FormTemplate()
@@ -63,14 +63,19 @@
     /// <param name="e"></param>
     private async Task HandleOk(MouseEventArgs e)
     {
+        if (!_form.Validate())
+        {
+            return;
+        }
         _submitting = true;
         await Task.Delay(1000);
         _form.Submit();
+        _visible = false;
     }
 
     private void HandleCancel(MouseEventArgs e)
     {
-        Console.WriteLine(e);
+        _visible = false;
     }
 
     /// <summary>

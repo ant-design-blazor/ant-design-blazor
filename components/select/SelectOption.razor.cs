@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 
@@ -14,6 +15,7 @@ namespace AntDesign
 {
     public partial class SelectOption<TItemValue, TItem>
     {
+        private System.Reflection.MethodInfo _previousChildContentMethod;
         private const string ClassPrefix = "ant-select-item-option";
 
         # region Parameters
@@ -83,6 +85,17 @@ namespace AntDesign
                 _itemSet = true;
             }
         }
+
+        /// <summary>
+        /// Optional child content of the SelectOption, used as label template for the option.
+        /// If provided it will be used for rendering the option content (when ItemTemplate is not present)
+        /// and it will be assigned to the underlying SelectOptionItem.LabelTemplate so the Select's
+        /// selected-item display can reuse it when Select.LabelTemplate is not set.
+        /// </summary>
+        [PublicApi("1.5.0")]
+        [Parameter]
+        public RenderFragment<TItem> ChildContent { get; set; }
+
         #endregion
 
         # region Properties
@@ -192,6 +205,14 @@ namespace AntDesign
                 // bound to the SelectOptionItem.
                 var item = SelectParent.SelectOptionItems.First(x => x.InternalId == InternalId);
                 item.ChildComponent = this;
+                // If this SelectOption provides a ChildContent label template, assign it to the underlying
+                // SelectOptionItem so the Select can reuse it for the selected-item display when needed.
+                if (ChildContent != null)
+                {
+                    // ChildContent is a template for the item itself (TItem). Build a null-safe label template
+                    // that falls back to the explicit Label or Value when Item is null.
+                    item.LabelTemplate = BuildLabelTemplateFromChildContent(item);
+                }
             }
             else if (Model is not null)
             {
@@ -201,6 +222,10 @@ namespace AntDesign
                 GroupName = Model.GroupName;
                 Value = Model.Value;
                 Model.ChildComponent = this;
+                if (ChildContent != null)
+                {
+                    Model.LabelTemplate = BuildLabelTemplateFromChildContent(Model);
+                }
                 isAlreadySelected = IsAlreadySelected(Model);
             }
             else
@@ -215,9 +240,21 @@ namespace AntDesign
                     IsDisabled = Disabled,
                     GroupName = _groupName,
                     Value = Value,
-                    Item = _itemSet ? Item : THelper.ChangeType<TItem>(Value, CultureInfo.CurrentCulture),
+                    // Don't forcibly convert Value -> TItem. If Item was explicitly set, use it;
+                    // otherwise leave Item as default to avoid invalid conversions (e.g. string -> complex type).
+                    Item = _itemSet ? Item : (Value is TItem v ? v : default),
                     ChildComponent = this
                 };
+
+                if (ChildContent != null)
+                {
+                    _optionItem.LabelTemplate = BuildLabelTemplateFromChildContent(_optionItem);
+                }
+                else if (string.IsNullOrEmpty(_optionItem.Label))
+                {
+                    // Fallback label when no Item is available
+                    _optionItem.Label = Value?.ToString() ?? string.Empty;
+                }
 
                 SelectParent.AddOptionItem(_optionItem);
                 SelectParent.AddEqualityToNoValue(_optionItem);
@@ -232,6 +269,42 @@ namespace AntDesign
             }
         }
 
+        protected override Task OnParametersSetAsync()
+        {
+            // Compare the incoming ChildContent by its MethodInfo (stable across re-renders)
+            // rather than by delegate instance equality which can change on each render
+            // and cause an infinite refresh loop when we request parent refresh.
+            var currentMethod = ((Delegate)ChildContent)?.Method;
+
+            if (!Equals(_previousChildContentMethod, currentMethod))
+            {
+                _previousChildContentMethod = currentMethod;
+
+                if (ChildContent != null)
+                {
+                    // Update existing model if present
+                    if (Model != null)
+                    {
+                        Model.LabelTemplate = BuildLabelTemplateFromChildContent(Model);
+                    }
+
+                    // If this SelectOption created its own option item, update it too
+                    if (_optionItem != null)
+                    {
+                        _optionItem.LabelTemplate = BuildLabelTemplateFromChildContent(_optionItem);
+                    }
+
+                    // Only request parent to refresh selected display when needed.
+                    // Requesting refresh unconditionally on each render can cause
+                    // repeated re-renders if the parent recreates the ChildContent delegate
+                    // even though the template method hasn't changed.
+                    SelectParent?.RequestSelectedDisplayRefresh();
+                }
+            }
+
+            return base.OnParametersSetAsync();
+        }
+
         private bool IsAlreadySelected(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (SelectParent.Mode == SelectMode.Default)
@@ -243,6 +316,35 @@ namespace AntDesign
             {
                 return SelectParent.Values is null || SelectParent.Values.Contains(selectOption.Value);
             }
+        }
+
+        /// <summary>
+        /// Build a RenderFragment to be used as the SelectOptionItem.LabelTemplate based on the
+        /// ChildContent template. If the option's Item is null, fall back to Label or Value.ToString().
+        /// </summary>
+        private RenderFragment BuildLabelTemplateFromChildContent(SelectOptionItem<TItemValue, TItem> option)
+        {
+            if (option is null)
+            {
+                return null;
+            }
+
+            // If there is no child template provided, nothing to build here.
+            if (ChildContent == null)
+            {
+                return null;
+            }
+
+            // If the Item is null (reference type or nullable), return a simple text fragment
+            // that uses the explicit Label if present, otherwise the Value's ToString().
+            if (option.Item is null)
+            {
+                var text = !string.IsNullOrEmpty(option.Label) ? option.Label : (option.Value?.ToString() ?? string.Empty);
+                return builder => builder.AddContent(0, text);
+            }
+
+            // Otherwise, invoke the ChildContent template with the actual item.
+            return ChildContent(option.Item);
         }
 
         protected void SetClassMap()

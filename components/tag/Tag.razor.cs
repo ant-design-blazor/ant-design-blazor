@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -104,6 +105,13 @@ namespace AntDesign
         /// <default value="IconThemeType.Outline" />
         [Parameter]
         public IconThemeType IconTheme { get; set; } = IconThemeType.Outline;
+
+        /// <summary>
+        /// Custom icon template for rendering custom content before the tag content
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.5.2")]
+        public RenderFragment IconTemplate { get; set; }
 
         [Parameter]
         [Obsolete("Parameter is not used and does not affect functionality")]

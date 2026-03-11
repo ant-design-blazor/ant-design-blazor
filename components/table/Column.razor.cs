@@ -17,6 +17,7 @@ using AntDesign.Filters;
 using AntDesign.Internal;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
 
 namespace AntDesign
@@ -30,7 +31,7 @@ namespace AntDesign
     /// <typeparam name="TData">
     /// The type of a property of the TItem objec. 
     /// </typeparam>
-    public partial class Column<TData> : ColumnBase, IFieldColumn
+    public partial class Column<TData> : ColumnBase, IFieldColumn, IColumnInternal<TData>
     {
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
         internal bool Blocked { get; set; }
@@ -49,7 +50,7 @@ namespace AntDesign
         /// Field this column represents
         /// </summary>
         [Parameter]
-        public RenderFragment FilterDropdown { get; set; }
+        public RenderFragment<TableFilterDropdownContext> FilterDropdown { get; set; }
 
         /// <summary>
         /// Use @bind-Field to bind to a property of TItem, we recommend using <see cref="PropertyColumn{TItem, TProp}"/> instead
@@ -150,6 +151,15 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public Func<Dictionary<string, object>> OnHeaderCell { get; set; }
+
+        /// <summary>
+        /// Gets or sets the content to be rendered in the relation area of the component.
+        /// </summary>
+        /// <remarks>Use this property to provide custom UI or markup that will be displayed in the
+        /// relation section. This can include additional information, links, or interactive elements relevant to the
+        /// component's context.</remarks>
+        [Parameter]
+        public RenderFragment RelationContent { get; set; }
 
         private bool _filterable;
 
@@ -317,13 +327,40 @@ namespace AntDesign
 
         private bool HasClientAdvancedTab => IsClientAutoFilterMode && _fieldFilterType != null;
 
+        private bool _preventClose = false;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             Sortable = Sortable || SorterMultiple != default || SorterCompare != default || DefaultSortOrder != default || SortDirections?.Any() == true;
 
-            if (IsHeader)
+            if (IsInitialize)
+            {
+                if (FieldExpression != null)
+                {
+                    if (FieldExpression.Body is not MemberExpression memberExp)
+                    {
+                        throw new ArgumentException("'Field' parameter must be child member");
+                    }
+
+                    var paramExp = Expression.Parameter(ItemType);
+                    var bodyExp = Expression.MakeMemberAccess(paramExp, memberExp.Member);
+                    GetFieldExpression = Expression.Lambda(bodyExp, paramExp);
+                }
+                else if (DataIndex != null)
+                {
+                    (_, GetFieldExpression) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                }
+                // Collect RelationColumnAttribute at Header initialization stage
+                // This allows the RenderFragment to be created once and reused across all rows
+                if (ChildContent == null && GetFieldExpression != null)
+                {
+                    var member = ColumnExpressionHelper.GetReturnMemberInfo(GetFieldExpression);
+                    RelationContent = member?.GetCustomAttribute<RelationColumnAttribute>()?.CreateRelationComponentContent();
+                }
+            }
+            else if (IsHeader)
             {
                 if (FieldExpression != null)
                 {
@@ -363,34 +400,8 @@ namespace AntDesign
                 {
                     Table.RemoveGroupColumn(this);
                 }
-            }
-            else if (IsBody)
-            {
-                if (!Table.HasRowTemplate)
-                {
-                    SortModel = (Context.HeaderColumns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
-                }
 
-                if (DataIndex != null)
-                {
-                    (GetValue, _) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
-                }
-
-                if (RowData.IsGrouping)
-                {
-                    ColSpan = ColIndex == Table.TreeExpandIconColumnIndex ? Context.Columns.Count + 1 : 0;
-                }
-            }
-
-            SortDirections ??= Table.SortDirections;
-
-            Sortable = Sortable || SortModel != null;
-            _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
-
-            _filterable = _filterable || FilterDropdown != null;
-
-            if (IsHeader)
-            {
+                // 初始化过滤器
                 if (_hasFiltersAttribute)
                 {
                     if (!_hasFilterableAttribute) Filterable = true;
@@ -445,8 +456,33 @@ namespace AntDesign
 
                 _renderDefaultFilterDropdown = RenderDefaultFilterDropdown;
             }
+            else if (IsBody)
+            {
+                if (!Table.HasRowTemplate)
+                {
+                    SortModel = (Context.HeaderColumns.LastOrDefault(x => x.ColIndex == ColIndex) as IFieldColumn)?.SortModel;
+                }
+
+                if (DataIndex != null)
+                {
+                    (GetValue, _) = ColumnDataIndexHelper<TData>.GetDataIndexConfig(this);
+                }
+
+                if (RowData.IsGrouping)
+                {
+                    ColSpan = ColIndex == Table.TreeExpandIconColumnIndex ? Context.Columns.Count + 1 : 0;
+                }
+            }
+
+            SortDirections ??= Table.SortDirections;
+
+            Sortable = Sortable || SortModel != null;
+            _sortDirection = SortModel?.SortDirection ?? DefaultSortOrder ?? SortDirection.None;
+
+            _filterable = _filterable || FilterDropdown != null;
+
             // When the column type is object, the filter type is recognized by the type of the value
-            else if (IsBody && _hasFilterableAttribute && _fieldFilterType is null && Field is not null)
+            if (IsBody && _hasFilterableAttribute && _fieldFilterType is null && Field is not null)
             {
                 var headerColumn = Context.HeaderColumns[ColIndex];
                 if (headerColumn is IFieldColumn fieldColumn)
@@ -550,6 +586,17 @@ namespace AntDesign
             var lambda = Expression.Lambda<Func<TItem, object>>(body, param);
 
             return lambda;
+        }
+
+        internal Func<TItem, TData> GetItemValueExpression<TItem>()
+        {
+            var param = Expression.Parameter(typeof(TItem), "item");
+
+            Expression field = Expression.Invoke(GetFieldExpression, param);
+            var body = Expression.Convert(field, typeof(TData));
+            var lambda = Expression.Lambda<Func<TItem, TData>>(body, param);
+
+            return lambda.Compile();
         }
 
         private void SetSorter(SortDirection sortDirection)
@@ -1004,5 +1051,20 @@ namespace AntDesign
             var value = filter.Value;
             return string.Concat(value.GetType().FullName, ":", value);
         }
+
+        #region IColumnInternal<TData> 接口实现
+
+        private IRelationComponent _relationComponent;
+
+        void IColumnInternal.SetRelationComponent(IRelationComponent relationComponent)
+        {
+            _relationComponent = relationComponent;
+        }
+
+        IRelationComponent IColumnInternal.GetRelationComponent() => this.CurrentRelationComponent;
+
+        private IRelationComponent CurrentRelationComponent => IsInitialize ? _relationComponent : ((Context.ColumnDefs[ColIndex] is IColumnInternal columnInternal) ? columnInternal.GetRelationComponent() : null);
+
+        #endregion
     }
 }

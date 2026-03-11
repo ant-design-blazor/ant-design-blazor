@@ -11,6 +11,7 @@ using AntDesign.Core.Documentation;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -213,6 +214,14 @@ namespace AntDesign
         [Parameter]
         public bool StandaloneInCard { get; set; }
 
+        /// <summary>
+        /// Enable swipe to switch tabs
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        [PublicApi("1.5.0")]
+        public bool EnableSwipe { get; set; }
+
         [CascadingParameter]
         private Card Card { get; set; }
 
@@ -230,6 +239,7 @@ namespace AntDesign
 
         private ElementReference _navListRef;
         private ElementReference _navWarpRef;
+        private ElementReference _contentHolderRef;
 
         private string _inkStyle;
         private string _navListStyle;
@@ -276,6 +286,8 @@ namespace AntDesign
         private bool _retryingGetSize;
         private bool _hasNewTab = false;
         private string _waittingActiveKey;
+
+        private DotNetObjectReference<Tabs> _dotNetHelper;
 
         protected override void OnInitialized()
         {
@@ -423,13 +435,10 @@ namespace AntDesign
             if (IsDisposed)
                 return;
 
-            // reorder tabs
-            _tabs.OrderBy(x => x.TabIndex).ForEach((x, i) => x.SetIndex(i));
-
             // if it is active, need to activiate the previous tab, or the next one if no previous
             if (_activeKey == tab.Key)
             {
-                if (tab.TabIndex > 0)
+                if (_tabs.IndexOf(tab) > 0)
                 {
                     Previous();
                 }
@@ -567,7 +576,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    Card.InvokeStateHasChagned();
+                    Card.Refresh();
                 }
             }
 
@@ -592,6 +601,11 @@ namespace AntDesign
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
+                if (EnableSwipe)
+                {
+                    _dotNetHelper = DotNetObjectReference.Create(this);
+                    await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.initializeTouch", new { element = _contentHolderRef, dotNetHelper = _dotNetHelper, minSwipeDistance = 50, vertical = !IsHorizontal });
+                }
                 _afterFirstRender = true;
             }
 
@@ -604,6 +618,52 @@ namespace AntDesign
             }
 
             _shouldRender = false;
+        }
+
+        [JSInvokable]
+        public void HandleSwipe(string direction)
+        {
+            if (!EnableSwipe) return;
+
+            switch (direction)
+            {
+                case "left":
+                    if (IsHorizontal) Next();
+                    break;
+                case "right":
+                    if (IsHorizontal) Previous();
+                    break;
+                case "up":
+                    if (!IsHorizontal) Next();
+                    break;
+                case "down":
+                    if (!IsHorizontal) Previous();
+                    break;
+            }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            try
+            {
+                if (EnableSwipe)
+                {
+                    await Js.InvokeVoidAsync("AntDesign.interop.touchHelper.dispose", _contentHolderRef);
+                    _dotNetHelper?.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error disposing tabs: {ex.Message}");
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            DomEventListener.DisposeExclusive();
+            _tabs.Clear();
+            _invisibleTabs.Clear();
+            base.Dispose(disposing);
         }
 
         protected override void OnParametersSet()
@@ -809,7 +869,7 @@ namespace AntDesign
 
             if (IsTabbedCard)
             {
-                Card.InvokeStateHasChagned();
+                Card.Refresh();
             }
             else
             {
@@ -919,15 +979,5 @@ namespace AntDesign
         }
 
         #endregion DRAG & DROP
-
-        protected override void Dispose(bool disposing)
-        {
-            DomEventListener.DisposeExclusive();
-
-            _tabs.Clear();
-            _invisibleTabs.Clear();
-
-            base.Dispose(disposing);
-        }
     }
 }

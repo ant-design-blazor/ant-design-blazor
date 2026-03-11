@@ -44,6 +44,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg
 | ShowDownloadIcon | 是否展示下载按钮 | Boolean | true |  |
 | ShowPreviewIcon | 是否展示预览按钮 | Boolean | true |  |
 | ShowRemoveIcon | 是否展示移除按钮 | Boolean | true |  |
+| Defer | 是否使用手动上传模式 | Boolean | false |  |
 
 ### onChange
 
