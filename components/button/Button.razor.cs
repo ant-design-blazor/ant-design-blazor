@@ -157,7 +157,7 @@ namespace AntDesign
         /// Do not propagate events when button is clicked.
         /// </summary>
         [Parameter]
-        public bool OnClickStopPropagation { get; set; }
+        public bool OnClickStopPropagation { get; set; } = true;
 
         /// <summary>
         /// Can set button shape: `circle` | `round` or `null` (default, which is rectangle).
