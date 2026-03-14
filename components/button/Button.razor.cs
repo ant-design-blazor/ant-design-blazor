@@ -241,7 +241,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    _ = OnClick.InvokeAsync(args);
+                    await OnClick.InvokeAsync(args);
                 }
             }
         }
