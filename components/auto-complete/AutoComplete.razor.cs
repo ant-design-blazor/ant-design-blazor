@@ -93,6 +93,14 @@ namespace AntDesign
             {
                 _options = value;
                 _optionDataItems = _options?.Select(x => new AutoCompleteDataItem<TOption>(x, x.ToString())).ToList() ?? new List<AutoCompleteDataItem<TOption>>();
+
+                // ensure that if the data source changes while the dropdown is
+                // open (for example the caller updates Options in response to
+                // OnInput) we immediately recompute and re-render. Previously the
+                // new options would only take effect the next time the input
+                // value changed or during SetParametersAsync, which could result
+                // in stale data being shown.
+                UpdateFilteredOptions();
             }
         }
 
@@ -109,6 +117,8 @@ namespace AntDesign
             set
             {
                 _optionDataItems = value.ToList();
+                // immediately refresh when the underlying data items change
+                UpdateFilteredOptions();
             }
         }
 
@@ -234,6 +244,8 @@ namespace AntDesign
         private IAutoCompleteInput _inputComponent;
 
         private IList<AutoCompleteDataItem<TOption>> _filteredOptions;
+        // cache of the last computed labels to avoid unnecessary UI updates
+        private string[] _lastFilteredLabels = Array.Empty<string>();
 
         private string _minWidth = "";
         private bool _parPanelVisible = false;
@@ -441,12 +453,34 @@ namespace AntDesign
 
         private void UpdateFilteredOptions()
         {
-            _filteredOptions = GetOptionItems();
+            var newList = GetOptionItems();
+
+            // quick equality check by comparing labels; ensures we only update
+            // UI when actual contents change. avoids unnecessary renders when the
+            // data source is reassigned with the same items, or when input value
+            // is set programmatically to the same string.
+            var newLabels = newList.Select(x => x.Label).ToArray();
+            if (_lastFilteredLabels.SequenceEqual(newLabels))
+            {
+                // still update state flags in case IsOptionsZero changed
+                _isOptionsZero = newLabels.Length == 0;
+                return;
+            }
+
+            _filteredOptions = newList;
             _isOptionsZero = _filteredOptions.Count == 0;
+            _lastFilteredLabels = newLabels;
+
             if (_isFocused && !_isOptionsZero)
             {
                 _ = OpenPanel();
             }
+
+            // only render when content actually changed
+            StateHasChanged();
+
+            // refresh overlay component so the DOM reflects the new items
+            _overlayTrigger?.GetOverlayComponent()?.RefreshComponentState();
         }
 
         private async Task ResetActiveItem()
