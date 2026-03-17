@@ -9,7 +9,7 @@
     {
         JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
 
-        var cut = Context.Render(@<Upload>some content</Upload>);
+        var cut = Context.Render(@<Upload Action="https://example.com/upload">some content</Upload>);
 
         cut.MarkupMatches(
           @<span class="">
@@ -29,7 +29,7 @@
     {
         JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
 
-        var cut = Context.Render(@<Upload Drag>some content</Upload>);
+        var cut = Context.Render(@<Upload Action="https://example.com/upload" Drag>some content</Upload>);
 
         cut.MarkupMatches(
           @<span class="">
@@ -51,7 +51,7 @@
     {
         JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
 
-        var cut = Context.Render(@<Upload Method="HttpMethod.Put">some content</Upload>);
+        var cut = Context.Render(@<Upload Action="https://example.com/upload" Method="HttpMethod.Put">some content</Upload>);
 
         cut.MarkupMatches(
           @<span class="">
@@ -67,6 +67,16 @@
     }
 
     [Fact]
+    public void Renders_without_action()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
+
+        var cut = Context.Render(@<Upload>some content</Upload>);
+        // when no Action is provided the input element should not be rendered
+        cut.FindAll("input").Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Handles_filenames_without_extension()
     {
         JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
@@ -75,7 +85,7 @@
 
         JSInterop.Setup<List<UploadFileItem>>(JSInteropConstants.GetFileInfo, _ => true).SetResult(new List<UploadFileItem> { new UploadFileItem { FileName = "test" } });
 
-        var cut = Context.Render(@<Upload>some content</Upload>);
+        var cut = Context.Render(@<Upload Action="https://example.com/upload">some content</Upload>);
 
         var inputElement = cut.Find("input");
         
