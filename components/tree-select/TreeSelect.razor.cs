@@ -610,11 +610,11 @@ namespace AntDesign
             var value = GetValueFromNode(node);
             if (_tree.CheckedKeys.Contains(key))
             {
-                Values = Values.Append(value);
+                Values = Values == null ? [value] : Values.Append(value);
             }
             else
             {
-                Values = Values.Where(v => !v.AllNullOrEquals(value)).ToArray();
+                Values = Values?.Where(v => !v.AllNullOrEquals(value)).ToArray();
             }
         }
 
