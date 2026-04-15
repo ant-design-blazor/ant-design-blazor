@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 1.6.1
+
+`2026-04-15`
+
+- 🐞 修复 TreeSelect 由 tree-node-checking 抛出的异常[#4792](https://github.com/ant-design-blazor/ant-design-blazor/pull/4792) [@pankey888](https://github.com/pankey888)
+- 🐞 修复 Upload 根据 Upload.Action 渲染文件input[#4788](https://github.com/ant-design-blazor/ant-design-blazor/pull/4788) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Button 处理异步 OnClick 时正确抛出异常[#4790](https://github.com/ant-design-blazor/ant-design-blazor/pull/4790) [@Jtfk](https://github.com/Jtfk)
+- 🐞 修复 AutoComplete 下拉菜单刷新问题[#4787](https://github.com/ant-design-blazor/ant-design-blazor/pull/4787) [@ElderJames](https://github.com/ElderJames)
+- 🐞 修复 Breadcrumb 在 AutoGenerate 时缺少分割线[#4779](https://github.com/ant-design-blazor/ant-design-blazor/pull/4779) [@jzwo](https://github.com/jzwo)
+- 📖 修复 MCP 的发布。[#4777](https://github.com/ant-design-blazor/ant-design-blazor/pull/4777) [@ElderJames](https://github.com/ElderJames)
+- 📖 增加 preload/importmap 启用 html asset 占位符， 改进 service worker 缓存[#4776](https://github.com/ant-design-blazor/ant-design-blazor/pull/4776) [@ElderJames](https://github.com/ElderJames)
+
 ### 1.6.0
 
 `2026-02-09`

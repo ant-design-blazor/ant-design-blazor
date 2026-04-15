@@ -15,6 +15,18 @@ timeline: true
 
 ---
 
+### 1.6.1
+
+`2026-04-15`
+
+- 🐞 Fixed TreeSelect the exception thrown by tree-node-checking. [#4792](https://github.com/ant-design-blazor/ant-design-blazor/pull/4792) [@pankey888](https://github.com/pankey888)
+- 🐞Fixed Upload conditionally render file input based on Upload.Action. [#4788](https://github.com/ant-design-blazor/ant-design-blazor/pull/4788) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Button Ensure exception inside OnClick propagate with async handler. [#4790](https://github.com/ant-design-blazor/ant-design-blazor/pull/4790) [@Jtfk](https://github.com/Jtfk)
+- 🐞 Fixed AutoComplete the dropdown list does not refresh correctly. [#4787](https://github.com/ant-design-blazor/ant-design-blazor/pull/4787) [@ElderJames](https://github.com/ElderJames)
+- 🐞 Fixed Breadcrumb missing separator in AutoGenerate is true. [#4779](https://github.com/ant-design-blazor/ant-design-blazor/pull/4779) [@jzwo](https://github.com/jzwo)
+- 📖 Fixed MCP packaging. [#4777](https://github.com/ant-design-blazor/ant-design-blazor/pull/4777) [@ElderJames](https://github.com/ElderJames)
+- 📖 Improve service worker caching with integrity [#4776](https://github.com/ant-design-blazor/ant-design-blazor/pull/4776) [@ElderJames](https://github.com/ElderJames)
+
 ### 1.6.0
 
 `2026-02-09`
