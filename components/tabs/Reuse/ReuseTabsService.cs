@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Components;
@@ -239,12 +240,19 @@ namespace AntDesign
             OnStateHasChanged?.Invoke();
         }
 
-        internal void Init(bool reuse)
+        internal void Init(bool reuse, IEnumerable<Assembly> scanAssemblies = null)
         {
-            if (reuse)
+            if (!reuse)
             {
-                ScanPinnedPageAttribute();
+                return;
             }
+
+            if (scanAssemblies is null || !scanAssemblies.Any())
+            {
+                return;
+            }
+
+            ScanPinnedPageAttribute(scanAssemblies);
         }
 
         internal void TrySetRouteData(RouteData routeData, bool reuse)
@@ -353,24 +361,47 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Get all assembly
+        /// Get exported types from assembly
         /// </summary>
-        /// <returns></returns>
-        private static IEnumerable<Assembly> GetAllAssembly()
+        protected virtual Type[] GetExportedTypes(Assembly assembly)
         {
-            return AppDomain.CurrentDomain.GetAssemblies();
+            return assembly.ExportedTypes.ToArray();
         }
 
         /// <summary>
         /// Scan ReuseTabsPageAttribute
         /// </summary>
-        private void ScanPinnedPageAttribute()
+        private void ScanPinnedPageAttribute(IEnumerable<Assembly> scanAssemblies)
         {
-            var list = GetAllAssembly();
-
-            foreach (var item in list)
+            if (scanAssemblies is null || !scanAssemblies.Any())
             {
-                var allClass = item.ExportedTypes
+                return;
+            }
+
+            foreach (var item in scanAssemblies)
+            {
+                if (item.IsDynamic)
+                    continue;
+
+                Type[] exportedTypes;
+                try
+                {
+                    exportedTypes = GetExportedTypes(item);
+                }
+                catch (NotSupportedException)
+                {
+                    continue;
+                }
+                catch (FileNotFoundException)
+                {
+                    continue;
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    exportedTypes = ex.Types.Where(t => t != null).ToArray()!;
+                }
+
+                var allClass = exportedTypes
                     .Where(w => w.GetCustomAttribute<ReuseTabsPageAttribute>()?.Pin == true);
                 foreach (var pageType in allClass)
                 {

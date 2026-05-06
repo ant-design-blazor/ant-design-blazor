@@ -5,6 +5,7 @@
 
 @namespace AntDesign
 @using Microsoft.AspNetCore.Components.Routing
+@using System.Reflection
 
 
 <CascadingValue Name="AntDesign.InReusePageContent" Value="true" IsFixed>
@@ -47,7 +48,7 @@
         if (InReusePageContent)
             return;
         base.OnInitialized();
-        ReuseTabsService.Init(Reuse);
+        ReuseTabsService.Init(Reuse, GetDefaultScanAssemblies());
         ReuseTabsService.TrySetRouteData(RouteData, Reuse);
 
         NavigationManager.LocationChanged += OnLocationChanged;
@@ -71,4 +72,10 @@
     }
 
     protected override bool ShouldRender() => !InReusePageContent;
+
+    private Assembly[] GetDefaultScanAssemblies()
+    {
+        var assembly = RouteData?.PageType?.Assembly ?? Assembly.GetEntryAssembly();
+        return assembly is null ? Array.Empty<Assembly>() : new[] { assembly };
+    }
 }

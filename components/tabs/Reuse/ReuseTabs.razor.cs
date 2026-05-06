@@ -3,8 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 
@@ -38,6 +41,20 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public ReuseTabsLocale Locale { get; set; } = LocaleProvider.CurrentLocale.ReuseTabs;
+
+        /// <summary>
+        /// Assemblies to scan for pinned pages.
+        /// If not set, the page assembly that contains this component is scanned by default.
+        /// Set to an empty array to disable pinned page scanning.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// <ReuseTabs ScanAssemblies="new[] { typeof(App).Assembly }" />
+        /// </code>
+        /// </example>
+        [Parameter]
+        [PublicApi("1.6.2")]
+        public Assembly[] ScanAssemblies { get; set; }
 
         /// <summary>
         /// Whether to hide the page display and keep only the title tab. Then you can use <see cref="ReusePages" /> to show the page conent.
@@ -87,7 +104,7 @@ namespace AntDesign
 
             Navmgr.LocationChanged += OnLocationChanged;
 
-            ReuseTabsService.Init(true);
+            ReuseTabsService.Init(true, ScanAssemblies ?? GetDefaultScanAssemblies());
             ReuseTabsService.OnStateHasChanged += OnStateHasChanged;
 
             LoadPage();
@@ -171,6 +188,12 @@ namespace AntDesign
             LoadPage();
 
             ActivatePane(ReuseTabsService.ActiveKey);
+        }
+
+        private IEnumerable<Assembly> GetDefaultScanAssemblies()
+        {
+            var assembly = ActualRouteData?.PageType?.Assembly ?? Assembly.GetEntryAssembly();
+            return assembly is null ? Array.Empty<Assembly>() : new[] { assembly };
         }
 
         private void OnStateHasChanged()
