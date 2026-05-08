@@ -130,5 +130,27 @@ namespace AntDesign.Tests.Statistic
             cut.Find(".ant-statistic-content-value-int").TextContent.Trim().Should().Be("100");
             cut.FindAll(".ant-statistic-content-value-decimal").Should().BeEmpty();
         }
+
+        [Fact]
+        public void ShouldRenderRoundedValueWhenDecimalNotAllNines()
+        {
+            var cut = RenderComponent<AntDesign.Statistic<decimal>>(parameters => parameters
+                .Add(x => x.Value, 99.994m)
+                .Add(x => x.Precision, 2));
+
+            cut.Find(".ant-statistic-content-value-int").TextContent.Trim().Should().Be("99");
+            cut.Find(".ant-statistic-content-value-decimal").TextContent.Trim().Should().Be(".99");
+        }
+
+        [Fact]
+        public void ShouldRenderRoundedUpValueWhenDecimalNotAllNinesAndHalf()
+        {
+            var cut = RenderComponent<AntDesign.Statistic<decimal>>(parameters => parameters
+                .Add(x => x.Value, 99.995m)
+                .Add(x => x.Precision, 2));
+
+            cut.Find(".ant-statistic-content-value-int").TextContent.Trim().Should().Be("100");
+            cut.Find(".ant-statistic-content-value-decimal").TextContent.Trim().Should().Be(".00");
+        }
     }
 }
