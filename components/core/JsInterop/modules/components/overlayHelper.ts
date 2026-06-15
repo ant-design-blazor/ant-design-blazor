@@ -8,7 +8,8 @@ export class overlayHelper {
   static addOverlayToContainer(blazorId: string, 
     overlaySelector, triggerSelector, placement: Placement,  containerSelector: string,
     triggerBoundyAdjustMode: TriggerBoundyAdjustMode, triggerIsWrappedInDiv: boolean, triggerPrefixCls: string,
-    verticalOffset: number, horizontalOffset: number, arrowPointAtCenter: boolean,    
+    verticalOffset: number, horizontalOffset: number, arrowPointAtCenter: boolean,
+    dotNetObjectReference,
     overlayTop?: number, overlayLeft?: number
   ): overlayPosition {      
     const overlayElement = domInfoHelper.get(overlaySelector) as HTMLDivElement;    
@@ -35,7 +36,7 @@ export class overlayHelper {
       arrowPointAtCenter: arrowPointAtCenter
     };
 
-    const overlay = new Overlay(blazorId, overlayElement, containerElement, triggerElement, placement, triggerBoundyAdjustMode, triggerIsWrappedInDiv, triggerPrefixCls, overlayConstraints);   
+    const overlay = new Overlay(blazorId, overlayElement, containerElement, triggerElement, placement, triggerBoundyAdjustMode, triggerIsWrappedInDiv, triggerPrefixCls, overlayConstraints, dotNetObjectReference);
     //register object in store, so it can be retrieved during update/dispose
     this.overlayRegistry[blazorId] = overlay;
 
@@ -49,7 +50,8 @@ export class overlayHelper {
 
   static updateOverlayPosition(blazorId: string, overlaySelector, triggerSelector, placement: Placement,  containerSelector: string,
     triggerBoundyAdjustMode: TriggerBoundyAdjustMode, triggerIsWrappedInDiv: boolean, triggerPrefixCls: string,
-    verticalOffset: number, horizontalOffset: number, arrowPointAtCenter: boolean,  
+    verticalOffset: number, horizontalOffset: number, arrowPointAtCenter: boolean,
+    dotNetObjectReference,
     overlayTop?: number, overlayLeft?: number): overlayPosition {
     const overlay = this.overlayRegistry[blazorId];
     if (overlay){
@@ -67,7 +69,7 @@ export class overlayHelper {
       //blazor thinks it did happen. In such a case, when overlay object is not found, just try
       //to render it again.
       return overlayHelper.addOverlayToContainer(blazorId, overlaySelector, triggerSelector, placement,  containerSelector,triggerBoundyAdjustMode, triggerIsWrappedInDiv, triggerPrefixCls, 
-        verticalOffset, horizontalOffset, arrowPointAtCenter,  
+        verticalOffset, horizontalOffset, arrowPointAtCenter, dotNetObjectReference,
         overlayTop, overlayLeft);      
     }    
   }

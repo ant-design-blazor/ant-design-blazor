@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using AntDesign.Core.JsInterop.Modules.Components;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace AntDesign.Internal
 {
@@ -109,6 +110,7 @@ namespace AntDesign.Internal
 
         private bool _shouldRender = true;
         private bool _afterFirstRender = false;
+        private DotNetObjectReference<Overlay> _dotNetObjectReference;
 
         protected override bool ShouldRender()
         {
@@ -185,8 +187,19 @@ namespace AntDesign.Internal
                     await JsInvokeAsync(JSInteropConstants.OverlayComponentHelper.DeleteOverlayFromContainer, Ref.Id);
                 });
             }
+            else
+            {
+                _dotNetObjectReference?.Dispose();
+            }
             DomEventListener?.Dispose();
             base.Dispose(disposing);
+        }
+
+        [JSInvokable]
+        public async Task HandleOverlayMouseLeave()
+        {
+            //invoke by js only after the pointer leaves the entire overlay
+            await OnOverlayMouseLeave.InvokeAsync(null);
         }
 
         internal async Task Show(int? overlayLeft = null, int? overlayTop = null)
@@ -375,10 +388,11 @@ namespace AntDesign.Internal
                     return;
                 }
 
+                _dotNetObjectReference ??= DotNetObjectReference.Create(this);
                 _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
                     Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
                     Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
-                    VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
+                    VerticalOffset, HorizontalOffset, ArrowPointAtCenter, _dotNetObjectReference, overlayTop, overlayLeft);
                 if (_position is null && _recurenceGuard <= 10) //up to 10 attempts
                 {
                     //Console.WriteLine($"Failed to add overlay to the container. Container: {Trigger.PopupContainerSelector}, trigger: {Trigger.Ref.Id}, overlay: {Ref.Id}. Awaiting and rerunning.");
@@ -508,10 +522,11 @@ namespace AntDesign.Internal
         {
             bool triggerIsWrappedInDiv = Trigger.Unbound is null;
 
+            _dotNetObjectReference ??= DotNetObjectReference.Create(this);
             _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition,
                 Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
                 Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
-                VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
+                VerticalOffset, HorizontalOffset, ArrowPointAtCenter, _dotNetObjectReference, overlayTop, overlayLeft);
             if (_position is not null)
             {
                 if (_position.Placement != Trigger.GetPlacementType().Placement)

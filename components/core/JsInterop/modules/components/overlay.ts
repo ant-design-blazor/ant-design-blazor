@@ -173,6 +173,15 @@ export class Overlay {
   private isContainerOverBody = false;
   private isTriggerFixed: boolean; //refers to trigger or any of its parent having "position:fixed"
   private lastScrollPosition: number; //used only if isTriggerFixed === true
+  private dotNetObjectReference;
+
+  //chromium can inject a false leave when moving from the overlay root into a child
+  //use relatedTarget to ignore mouseout events that only move between elements inside the overlay
+  private onOverlayMouseOut = (event: MouseEvent): void => {
+    if (!(event.relatedTarget instanceof window.Node) ||!this.overlay.contains(event.relatedTarget)) {
+      this.dotNetObjectReference?.invokeMethodAsync("HandleOverlayMouseLeave");
+    }
+  };
 
   private scrollbarSize: {
     horizontalHeight: number,
@@ -182,9 +191,11 @@ export class Overlay {
   constructor(blazorId: string,
     overlay: HTMLDivElement, container: HTMLElement, trigger: HTMLElement, placement: Placement, 
     triggerBoundyAdjustMode: TriggerBoundyAdjustMode, triggerIsWrappedInDiv: boolean, triggerPrefixCls: string,
-    overlayConstraints: overlayConstraints) {
+    overlayConstraints: overlayConstraints, dotNetObjectReference?) {
     this.blazorId = blazorId;
-    this.overlay = overlay;  
+    this.overlay = overlay;
+    this.dotNetObjectReference = dotNetObjectReference;
+    this.overlay.addEventListener("mouseout", this.onOverlayMouseOut);
     //containerInfo & scrollbars have to be obtained here, because after
     //removal of classes, the overlay goes to left: -9999 what causes artificial 
     //scrollbars and viewport dimensions are changing
@@ -484,6 +495,9 @@ export class Overlay {
   public dispose(): void {    
     resize.dispose(`container-${this.blazorId}`);
     mutation.dispose(`trigger-${this.blazorId}`);
+    //remove the custom leave handler and release its the dotnetobject callback reference
+    this.overlay.removeEventListener("mouseout", this.onOverlayMouseOut);
+    this.dotNetObjectReference?.dispose();
     if (this.container.contains(this.overlay)) {
       this.container.removeChild(this.overlay);
     }
