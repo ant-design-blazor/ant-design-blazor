@@ -281,7 +281,14 @@ namespace AntDesign
 
                 if (index != -1)
                 {
-                    _hoverSelectedNodes.RemoveRange(index, _hoverSelectedNodes.Count - index);
+                    //remove nodes after the hovered node while keeping the hovered node active
+                    var firstNodeToRemoveIndex = index + 1;
+                    var nodesToRemoveCount = _hoverSelectedNodes.Count - firstNodeToRemoveIndex;
+
+                    if (nodesToRemoveCount > 0)//dont remove when empty
+                    {
+                        _hoverSelectedNodes.RemoveRange(firstNodeToRemoveIndex, nodesToRemoveCount);
+                    }
                 }
                 else
                 {
