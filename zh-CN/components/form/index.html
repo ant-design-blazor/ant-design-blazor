@@ -1,0 +1,3429 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"/>
+    <meta no-antblazor-css=""/>
+    
+    <meta name="author" content="James Yeung"/>
+    <meta name="description" content="🌈A set of enterprise-class UI components based on Ant Design and Blazor WebAssembly."/>
+    <base href="/"/>
+    <link rel="icon" href="logo.png" type="image/x-icon"/>
+    <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin=""/>
+    <link href="_framework/dotnet.ja7aixj03f.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-a+kwCdBMX+NdVDnkEs0te38B5Qlotl1tO/ZWNbyZkZ4="/>
+    <script type="importmap">{
+  "imports": {
+    "./_content/AntDesign/AntDesign.lib.module.js": "./_content/AntDesign/AntDesign.d05dnpfa5s.lib.module.js",
+    "./_framework/blazor.webassembly.js": "./_framework/blazor.webassembly.66stpp682q.js",
+    "./_framework/dotnet.js": "./_framework/dotnet.ja7aixj03f.js",
+    "./_framework/dotnet.native.js": "./_framework/dotnet.native.mtybdg4pu3.js",
+    "./_framework/dotnet.runtime.js": "./_framework/dotnet.runtime.a6jcqbs390.js"
+  },
+  "scopes": {},
+  "integrity": {
+    "./_content/AntDesign/AntDesign.d05dnpfa5s.lib.module.js": "sha256-Y7oJ7/rOncGnhfBrDAPc045cW9bF4cp1INbpZClDsxM=",
+    "./_content/AntDesign/AntDesign.lib.module.js": "sha256-Y7oJ7/rOncGnhfBrDAPc045cW9bF4cp1INbpZClDsxM=",
+    "./_framework/blazor.webassembly.66stpp682q.js": "sha256-3lCWrko3zwspV40aQhs2S/IMkRSarnHRKIdkHhuXIBA=",
+    "./_framework/blazor.webassembly.js": "sha256-3lCWrko3zwspV40aQhs2S/IMkRSarnHRKIdkHhuXIBA=",
+    "./_framework/dotnet.ja7aixj03f.js": "sha256-a+kwCdBMX+NdVDnkEs0te38B5Qlotl1tO/ZWNbyZkZ4=",
+    "./_framework/dotnet.js": "sha256-a+kwCdBMX+NdVDnkEs0te38B5Qlotl1tO/ZWNbyZkZ4=",
+    "./_framework/dotnet.native.js": "sha256-9o010PVWmJWgXxEpsjiCNUrUEYiYArBa+UQ++jmK+CM=",
+    "./_framework/dotnet.native.mtybdg4pu3.js": "sha256-9o010PVWmJWgXxEpsjiCNUrUEYiYArBa+UQ++jmK+CM=",
+    "./_framework/dotnet.runtime.a6jcqbs390.js": "sha256-7i3usfTrnzC/9qWO4si5Bw4w7D9fUSnSBdhQ47blX2M=",
+    "./_framework/dotnet.runtime.js": "sha256-7i3usfTrnzC/9qWO4si5Bw4w7D9fUSnSBdhQ47blX2M="
+  }
+}</script>
+    <link href="_content/AntDesign.Docs/css/default.css?v=1.6.2" rel="stylesheet"/>
+    <link href="manifest.json" rel="manifest"/>
+
+
+
+<!-- %%-PRERENDERING-HEADOUTLET-BEGIN-%% -->
+<title>&#x8868;&#x5355; Form - Ant Design Blazor</title>
+<!-- %%-PRERENDERING-HEADOUTLET-END-%% -->
+</head>
+
+<body>
+    <noscript>Out-of-the-box mid-stage front/design solution!</noscript>
+    <app>
+        <div id="root">
+            <style>
+                html,
+                body,
+                #root {
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                #root {
+                    /* background-image: url("_content/AntDesign.Docs/home_bg.png"); */
+                    background-repeat: no-repeat;
+                    background-size: 100% auto;
+                }
+
+                .page-loading-warp {
+                    padding: 98px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .ant-spin {
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+                    margin: 0;
+                    padding: 0;
+                    color: rgba(0, 0, 0, 0.65);
+                    font-size: 14px;
+                    font-variant: tabular-nums;
+                    line-height: 1.5;
+                    list-style: none;
+                    -webkit-font-feature-settings: 'tnum';
+                    font-feature-settings: 'tnum';
+                    position: absolute;
+                    display: none;
+                    color: #1890ff;
+                    text-align: center;
+                    vertical-align: middle;
+                    opacity: 0;
+                    -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                }
+
+                .ant-spin-spinning {
+                    position: static;
+                    display: inline-block;
+                    opacity: 1;
+                }
+
+                .ant-spin-dot {
+                    position: relative;
+                    display: inline-block;
+                    font-size: 20px;
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .ant-spin-dot-item {
+                    position: absolute;
+                    display: block;
+                    width: 9px;
+                    height: 9px;
+                    background-color: #1890ff;
+                    border-radius: 100%;
+                    -webkit-transform: scale(0.75);
+                    -ms-transform: scale(0.75);
+                    transform: scale(0.75);
+                    -webkit-transform-origin: 50% 50%;
+                    -ms-transform-origin: 50% 50%;
+                    transform-origin: 50% 50%;
+                    opacity: 0.3;
+                    -webkit-animation: antSpinMove 1s infinite linear alternate;
+                    animation: antSpinMove 1s infinite linear alternate;
+                }
+
+                .ant-spin-dot-item:nth-child(1) {
+                    top: 0;
+                    left: 0;
+                }
+
+                .ant-spin-dot-item:nth-child(2) {
+                    top: 0;
+                    right: 0;
+                    -webkit-animation-delay: 0.4s;
+                    animation-delay: 0.4s;
+                }
+
+                .ant-spin-dot-item:nth-child(3) {
+                    right: 0;
+                    bottom: 0;
+                    -webkit-animation-delay: 0.8s;
+                    animation-delay: 0.8s;
+                }
+
+                .ant-spin-dot-item:nth-child(4) {
+                    bottom: 0;
+                    left: 0;
+                    -webkit-animation-delay: 1.2s;
+                    animation-delay: 1.2s;
+                }
+
+                .ant-spin-dot-spin {
+                    -webkit-transform: rotate(45deg);
+                    -ms-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    -webkit-animation: antRotate 1.2s infinite linear;
+                    animation: antRotate 1.2s infinite linear;
+                }
+
+                .ant-spin-lg .ant-spin-dot {
+                    font-size: 32px;
+                    width: 32px;
+                    height: 32px;
+                }
+
+                .ant-spin-lg .ant-spin-dot i {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+                    .ant-spin-blur {
+                        background: #fff;
+                        opacity: 0.5;
+                    }
+                }
+
+                @-webkit-keyframes antSpinMove {
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes antSpinMove {
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                @-webkit-keyframes antRotate {
+                    to {
+                        -webkit-transform: rotate(405deg);
+                        transform: rotate(405deg);
+                    }
+                }
+
+                @keyframes antRotate {
+                    to {
+                        -webkit-transform: rotate(405deg);
+                        transform: rotate(405deg);
+                    }
+                }
+
+                .loading-progress-text:after {
+                    content: var(--blazor-load-percentage-text, "Loading");
+                }
+            </style>
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 420px; height: 100%;">
+                <img src="logo.png" alt="logo" width="256"/>
+                <div class="page-loading-warp">
+                    <div class="ant-spin ant-spin-lg ant-spin-spinning">
+                        <span class="ant-spin-dot ant-spin-dot-spin">
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                        </span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="loading-progress-text"></div>
+                </div>
+            </div>
+        </div>
+    
+<!-- %%-PRERENDERING-BEGIN-%% -->
+<div style="opacity: 0; position: fixed; z-index: -1; top: 0; left: 0; bottom: 0; right: 0;">
+    
+    <div id="react-content"><header id="header" class="clearfix ">
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  flex-flow: nowrap; height: 64px;" id="ant-blazor-80df6827-072d-41aa-8c6e-f3a59979cf54">
+        <div class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-lg-6 ant-col-xl-5 ant-col-xxl-4" style="  " id="ant-blazor-516a661a-92b6-4075-9ff9-a9a6d3c9d108">
+    <h1><a id="logo" href="/"><img alt="logo" src="/docs/assets/logo.svg">Ant Design Blazor
+                </a></h1>
+</div><div class="menu-row ant-col ant-col-md-18 ant-col-lg-18 ant-col-xl-19 ant-col-xxl-20" style="  " id="ant-blazor-7c6361b0-1c08-4664-aa3f-8a203c5e3215">
+    <div id="search-box"><div id="docsearch"></div></div>
+
+
+    <ul class="menu-site ant-menu ant-menu-root ant-menu-light ant-menu-horizontal" id="nav" direction="ltr" role="menu">
+        
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/docs" class=""><span>&#x6587;&#x6863;</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item ant-menu-item-selected" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components" class=" active"><span>&#x7EC4;&#x4EF6;</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/charts" class=""><span>&#x56FE;&#x8868;</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/experimental" class=""><span>&#x9AD8;&#x9636;&#x529F;&#x80FD;</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/support" class="">支持 & 服务</a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="https://x.antblazor.com/zh-CN" class="">AI</a>
+            </span>
+        </li>
+    </ul>
+
+    <button class="header-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-64b8a537-f736-4820-9f36-8f0a27e3eeaf" type="button" ant-click-animating-without-extra-node="false">
+                <span>1.6.2</span>
+    </button>
+
+    <button class="header-button header-lang-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-6d6a29dc-14ed-43f6-82fe-e96c9fef4f2c" type="button" ant-click-animating-without-extra-node="false">
+                <span>English</span>
+    </button>
+
+    <button class="header-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-edd88f00-0ab2-4322-b332-fb3debb3bef1" type="button" ant-click-animating-without-extra-node="false">
+                <span>RTL</span>
+    </button>
+<span id="github-btn" class="github-btn"><a class="gh-btn" href="//github.com/ant-design-blazor/ant-design-blazor" target="_blank"><span class="gh-ico" aria-hidden="true"></span>
+        <span class="gh-text">Star</span></a></span>
+</div>
+    </div>
+</header>
+
+
+<style>            
+.DocSearch-Hit-content-wrapper {
+    overflow: hidden;
+}
+</style>    <div data-show="true" class="ant-alert ant-alert-warning ant-alert-banner" style="  " Id="ant-blazor-4b7a640a-7f85-40cd-a912-b0e5562512d6">
+                <div class="ant-alert-icon">
+                    <span class="anticon anticon-notification" id="ant-blazor-84fca40b-2bd2-4f40-8e5e-2559c38668f6" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M880 112c-3.8 0-7.7.7-11.6 2.3L292 345.9H128c-8.8 0-16 7.4-16 16.6v299c0 9.2 7.2 16.6 16 16.6h101.7c-3.7 11.6-5.7 23.9-5.7 36.4 0 65.9 53.8 119.5 120 119.5 55.4 0 102.1-37.6 115.9-88.4l408.6 164.2c3.9 1.5 7.8 2.3 11.6 2.3 16.9 0 32-14.2 32-33.2V145.2C912 126.2 897 112 880 112zM344 762.3c-26.5 0-48-21.4-48-47.8 0-11.2 3.9-21.9 11-30.4l84.9 34.1c-2 24.6-22.7 44.1-47.9 44.1zm496 58.4L318.8 611.3l-12.9-5.2H184V417.9h121.9l12.9-5.2L840 203.3v617.4z"/></svg>
+</span>
+                </div>
+        <div class="ant-alert-content">
+                <div class="ant-alert-message">
+               为了能更好地了解您的商业使用需求，请参与 <a href="https://wj.qq.com/s2/10306537/c332/">Ant Design Blazor 商业应用调查</a>，一起建设商业应用社区，为企业系统研发赋能！
+            </div>
+
+        </div>
+    </div>
+<div class="main-wrapper">
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  " id="ant-blazor-8488f507-95dd-4b65-93e2-3f5ba54ba62f">
+        <div class="main-menu ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-lg-6 ant-col-xl-5 ant-col-xxl-4" style="  " id="ant-blazor-92035bd9-56be-4013-9743-2589da46ced3">
+    <div>
+    <div class="">
+        <section class="main-menu-inner">
+    <ul class="aside-container menu-site ant-menu ant-menu-root ant-menu-light ant-menu-inline" id="ant-blazor-cbbb00f2-998f-4725-aded-6a1e4b987bc8" direction="ltr" role="menu">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/overview" class=""><span>&#x7EC4;&#x4EF6;&#x603B;&#x89C8;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+<li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x901A;&#x7528;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/button" class=""><span>Button</span><span class="chinese">&#x6309;&#x94AE;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/icon" class=""><span>Icon</span><span class="chinese">&#x56FE;&#x6807;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/typography" class=""><span>Typography</span><span class="chinese">&#x6392;&#x7248;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x5E03;&#x5C40;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/divider" class=""><span>Divider</span><span class="chinese">&#x5206;&#x5272;&#x7EBF;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/flex" class=""><span>Flex</span><span class="chinese">&#x5F39;&#x6027;&#x5E03;&#x5C40;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/grid" class=""><span>Grid</span><span class="chinese">&#x6805;&#x683C;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/layout" class=""><span>Layout</span><span class="chinese">&#x5E03;&#x5C40;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/space" class=""><span>Space</span><span class="chinese">&#x95F4;&#x8DDD;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x5BFC;&#x822A;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/affix" class=""><span>Affix</span><span class="chinese">&#x56FE;&#x9489;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/breadcrumb" class=""><span>Breadcrumb</span><span class="chinese">&#x9762;&#x5305;&#x5C51;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/dropdown" class=""><span>Dropdown</span><span class="chinese">&#x4E0B;&#x62C9;&#x83DC;&#x5355;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/menu" class=""><span>Menu</span><span class="chinese">&#x5BFC;&#x822A;&#x83DC;&#x5355;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/pageheader" class=""><span>PageHeader</span><span class="chinese">&#x9875;&#x5934;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/pagination" class=""><span>Pagination</span><span class="chinese">&#x5206;&#x9875;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/steps" class=""><span>Steps</span><span class="chinese">&#x6B65;&#x9AA4;&#x6761;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x6570;&#x636E;&#x5F55;&#x5165;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/autocomplete" class=""><span>AutoComplete</span><span class="chinese">&#x81EA;&#x52A8;&#x5B8C;&#x6210;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/cascader" class=""><span>Cascader</span><span class="chinese">&#x7EA7;&#x8054;&#x9009;&#x62E9;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/checkbox" class=""><span>Checkbox</span><span class="chinese">&#x591A;&#x9009;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/datepicker" class=""><span>DatePicker</span><span class="chinese">&#x65E5;&#x671F;&#x9009;&#x62E9;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item ant-menu-item-selected" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/form" class=" active"><span>Form</span><span class="chinese">&#x8868;&#x5355;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/input" class=""><span>Input</span><span class="chinese">&#x8F93;&#x5165;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/inputnumber" class=""><span>InputNumber</span><span class="chinese">&#x6570;&#x5B57;&#x8F93;&#x5165;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/mentions" class=""><span>Mentions</span><span class="chinese">&#x63D0;&#x53CA;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/radio" class=""><span>Radio</span><span class="chinese">&#x5355;&#x9009;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/rate" class=""><span>Rate</span><span class="chinese">&#x8BC4;&#x5206;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/select" class=""><span>Select</span><span class="chinese">&#x9009;&#x62E9;&#x5668;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/slider" class=""><span>Slider</span><span class="chinese">&#x6ED1;&#x52A8;&#x8F93;&#x5165;&#x6761;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/switch" class=""><span>Switch</span><span class="chinese">&#x5F00;&#x5173;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/timepicker" class=""><span>TimePicker</span><span class="chinese">&#x65F6;&#x95F4;&#x9009;&#x62E9;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/transfer" class=""><span>Transfer</span><span class="chinese">&#x7A7F;&#x68AD;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/treeselect" class=""><span>TreeSelect</span><span class="chinese">&#x6811;&#x9009;&#x62E9;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/upload" class=""><span>Upload</span><span class="chinese">&#x4E0A;&#x4F20;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x6570;&#x636E;&#x5C55;&#x793A;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/avatar" class=""><span>Avatar</span><span class="chinese">&#x5934;&#x50CF;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/badge" class=""><span>Badge</span><span class="chinese">&#x5FBD;&#x6807;&#x6570;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/calendar" class=""><span>Calendar</span><span class="chinese">&#x65E5;&#x5386;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/card" class=""><span>Card</span><span class="chinese">&#x5361;&#x7247;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/carousel" class=""><span>Carousel</span><span class="chinese">&#x8D70;&#x9A6C;&#x706F;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/collapse" class=""><span>Collapse</span><span class="chinese">&#x6298;&#x53E0;&#x9762;&#x677F;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/comment" class=""><span>Comment</span><span class="chinese">&#x8BC4;&#x8BBA;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/descriptions" class=""><span>Descriptions</span><span class="chinese">&#x63CF;&#x8FF0;&#x5217;&#x8868;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/empty" class=""><span>Empty</span><span class="chinese">&#x7A7A;&#x72B6;&#x6001;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/image" class=""><span>Image</span><span class="chinese">&#x56FE;&#x7247;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/list" class=""><span>List</span><span class="chinese">&#x5217;&#x8868;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/popover" class=""><span>Popover</span><span class="chinese">&#x6C14;&#x6CE1;&#x5361;&#x7247;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/segmented" class=""><span>Segmented</span><span class="chinese">&#x5206;&#x6BB5;&#x63A7;&#x5236;&#x5668;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/statistic" class=""><span>Statistic</span><span class="chinese">&#x7EDF;&#x8BA1;&#x6570;&#x503C;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/table" class=""><span>Table</span><span class="chinese">&#x8868;&#x683C;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/tabs" class=""><span>Tabs</span><span class="chinese">&#x6807;&#x7B7E;&#x9875;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/tag" class=""><span>Tag</span><span class="chinese">&#x6807;&#x7B7E;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/timeline" class=""><span>Timeline</span><span class="chinese">&#x65F6;&#x95F4;&#x8F74;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/tooltip" class=""><span>Tooltip</span><span class="chinese">&#x6587;&#x5B57;&#x63D0;&#x793A;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/tree" class=""><span>Tree</span><span class="chinese">&#x6811;&#x5F62;&#x63A7;&#x4EF6;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x53CD;&#x9988;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/alert" class=""><span>Alert</span><span class="chinese">&#x8B66;&#x544A;&#x63D0;&#x793A;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/drawer" class=""><span>Drawer</span><span class="chinese">&#x62BD;&#x5C49;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/message" class=""><span>Message</span><span class="chinese">&#x5168;&#x5C40;&#x63D0;&#x793A;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/modal" class=""><span>Modal</span><span class="chinese">&#x5BF9;&#x8BDD;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/notification" class=""><span>Notification</span><span class="chinese">&#x901A;&#x77E5;&#x63D0;&#x9192;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/popconfirm" class=""><span>Popconfirm</span><span class="chinese">&#x6C14;&#x6CE1;&#x786E;&#x8BA4;&#x6846;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/progress" class=""><span>Progress</span><span class="chinese">&#x8FDB;&#x5EA6;&#x6761;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/result" class=""><span>Result</span><span class="chinese">&#x7ED3;&#x679C;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/skeleton" class=""><span>Skeleton</span><span class="chinese">&#x9AA8;&#x67B6;&#x5C4F;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/spin" class=""><span>Spin</span><span class="chinese">&#x52A0;&#x8F7D;&#x4E2D;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/watermark" class=""><span>Watermark</span><span class="chinese">&#x6C34;&#x5370;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+&#x5176;&#x4ED6;    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/anchor" class=""><span>Anchor</span><span class="chinese">&#x951A;&#x70B9;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="zh-CN/components/backtop" class=""><span>BackTop</span><span class="chinese">&#x56DE;&#x5230;&#x9876;&#x90E8;</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li>
+    </ul>
+</section>
+    </div>
+</div>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-18 ant-col-lg-18 ant-col-xl-19 ant-col-xxl-20" style="  " id="ant-blazor-c36e7a21-9dff-4b9b-860c-62cb3bdccd54">
+    <section class="main-container main-container-component"><article><div class="toc-affix"><div>
+    <div class="">
+        <div class="ant-anchor-wrapper" style="max-height: 100vh;" id="ant-blazor-1d92ce48-8917-4d08-b714-fe046ccf45bb">
+    <div class="ant-anchor">
+        <div class="ant-anchor-ink">
+            <span class="ant-anchor-ink-ball" style="">
+            </span>
+        </div>
+        
+            
+                <div class="ant-anchor-link" id="ant-blazor-aab1f9b4-2096-42b5-aa7d-01f6d59971c1">
+    <a title="&#x57FA;&#x672C;&#x4F7F;&#x7528;" class="ant-anchor-link-title">&#x57FA;&#x672C;&#x4F7F;&#x7528;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-87451583-6770-4400-9030-3e646e3c2a39">
+    <a title="&#x8868;&#x5355;&#x65B9;&#x6CD5;&#x8C03;&#x7528;" class="ant-anchor-link-title">&#x8868;&#x5355;&#x65B9;&#x6CD5;&#x8C03;&#x7528;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-9c4e20f5-9308-40fe-960f-9a412c9c0aaf">
+    <a title="&#x9759;&#x6001;&#x8868;&#x5355;" class="ant-anchor-link-title">&#x9759;&#x6001;&#x8868;&#x5355;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-f51fa0f3-6f17-40ff-acf6-0a843417843c">
+    <a title="&#x8868;&#x5355;&#x5E03;&#x5C40;" class="ant-anchor-link-title">&#x8868;&#x5355;&#x5E03;&#x5C40;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-30e13877-d516-4daa-b8cf-5149bff5231a">
+    <a title="&#x8868;&#x5355;&#x5C3A;&#x5BF8;" class="ant-anchor-link-title">&#x8868;&#x5355;&#x5C3A;&#x5BF8;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-36764535-8e12-4617-b70c-efc20274a640">
+    <a title="&#x5FC5;&#x9009;&#x6837;&#x5F0F;" class="ant-anchor-link-title">&#x5FC5;&#x9009;&#x6837;&#x5F0F;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-d18876c8-4930-4bc9-b311-aa1f41878aff">
+    <a title="&#x590D;&#x6742;&#x4E00;&#x70B9;&#x7684;&#x63A7;&#x4EF6;" class="ant-anchor-link-title">&#x590D;&#x6742;&#x4E00;&#x70B9;&#x7684;&#x63A7;&#x4EF6;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-16d3c593-2da1-471c-8d98-805211232649">
+    <a title="&#x81EA;&#x5B9A;&#x4E49;&#x8868;&#x5355;&#x63A7;&#x4EF6;" class="ant-anchor-link-title">&#x81EA;&#x5B9A;&#x4E49;&#x8868;&#x5355;&#x63A7;&#x4EF6;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-48b9701e-ef30-46f9-82a1-c2d7a26d91c9">
+    <a title="&#x8868;&#x683C;&#x7F16;&#x8F91;&#x4E0E;&#x9A8C;&#x8BC1;" class="ant-anchor-link-title">&#x8868;&#x683C;&#x7F16;&#x8F91;&#x4E0E;&#x9A8C;&#x8BC1;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-a60f5fc7-0d26-4875-9335-e77e69f11896">
+    <a title="&#x5224;&#x65AD;&#x8868;&#x5355;&#x662F;&#x5426;&#x88AB;&#x4FEE;&#x6539;" class="ant-anchor-link-title">&#x5224;&#x65AD;&#x8868;&#x5355;&#x662F;&#x5426;&#x88AB;&#x4FEE;&#x6539;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-cab225a9-3de4-42ba-8275-0925ae673557">
+    <a title="&#x81EA;&#x5B9A;&#x4E49;&#x8868;&#x5355;&#x9A8C;&#x8BC1;&#x5668;" class="ant-anchor-link-title">&#x81EA;&#x5B9A;&#x4E49;&#x8868;&#x5355;&#x9A8C;&#x8BC1;&#x5668;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-4d82b8d7-8766-49f7-a221-f940eafaa058">
+    <a title="&#x672C;&#x5730;&#x5316;" class="ant-anchor-link-title">&#x672C;&#x5730;&#x5316;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-b5a5a3ba-c8bc-4ee6-9da3-41d747c118bf">
+    <a title="&#x591A;&#x8868;&#x5355;&#x8054;&#x52A8;" class="ant-anchor-link-title">&#x591A;&#x8868;&#x5355;&#x8054;&#x52A8;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-44288c44-edba-48ea-ba61-34223abf9e3a">
+    <a title="&#x9AD8;&#x7EA7;&#x641C;&#x7D22;" class="ant-anchor-link-title">&#x9AD8;&#x7EA7;&#x641C;&#x7D22;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-383f3432-faad-4644-b9bf-877d976664f7">
+    <a title="&#x52A8;&#x6001;&#x6A21;&#x578B;" class="ant-anchor-link-title">&#x52A8;&#x6001;&#x6A21;&#x578B;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-0b3c8d2d-9c43-4391-89e5-5987d9595e40">
+    <a title="&#x52A8;&#x6001;&#x5C5E;&#x6027;" class="ant-anchor-link-title">&#x52A8;&#x6001;&#x5C5E;&#x6027;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-eaf6a375-3f91-468b-af50-5f82a779c19b">
+    <a title="&#x81EA;&#x52A8;&#x751F;&#x6210;&#x8868;&#x5355;" class="ant-anchor-link-title">&#x81EA;&#x52A8;&#x751F;&#x6210;&#x8868;&#x5355;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-3dc1f29f-bf37-4055-86eb-4ecd1984cb41">
+    <a title="&#x5F00;&#x542F;&#x7EC4;&#x4EF6;&#x503C;&#x53D8;&#x66F4;&#x65F6;&#x9A8C;&#x8BC1;" class="ant-anchor-link-title">&#x5F00;&#x542F;&#x7EC4;&#x4EF6;&#x503C;&#x53D8;&#x66F4;&#x65F6;&#x9A8C;&#x8BC1;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-ddadcbff-e164-4b99-8a11-750a7471578e">
+    <a title="&#x81EA;&#x5B9A;&#x4E49;&#x5217;&#x5E03;&#x5C40;" class="ant-anchor-link-title">&#x81EA;&#x5B9A;&#x4E49;&#x5217;&#x5E03;&#x5C40;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-8debe857-6eb4-4f7c-b8b1-aaa158239533">
+    <a title="&#x9A8C;&#x8BC1;&#x65B9;&#x5F0F;" class="ant-anchor-link-title">&#x9A8C;&#x8BC1;&#x65B9;&#x5F0F;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-c9205e1a-6059-4eab-aeb7-ac4154c44577">
+    <a title="&#x52A8;&#x6001;&#x6821;&#x9A8C;&#x89C4;&#x5219;" class="ant-anchor-link-title">&#x52A8;&#x6001;&#x6821;&#x9A8C;&#x89C4;&#x5219;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-b23d3c64-3204-4fca-99c3-299642a6a78f">
+    <a title="&#x81EA;&#x5B9A;&#x4E49;&#x6821;&#x9A8C;" class="ant-anchor-link-title">&#x81EA;&#x5B9A;&#x4E49;&#x6821;&#x9A8C;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-adff772b-9c0d-4f1d-bf1c-dec4f4c9be5d">
+    <a title="&#x9A8C;&#x8BC1;&#x63D0;&#x793A;" class="ant-anchor-link-title">&#x9A8C;&#x8BC1;&#x63D0;&#x793A;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-1d79cd1d-323f-4f2c-8add-7c6ff697687a">
+    <a title="&#x8BBE;&#x7F6E;&#x9A8C;&#x8BC1;&#x4FE1;&#x606F;" class="ant-anchor-link-title">&#x8BBE;&#x7F6E;&#x9A8C;&#x8BC1;&#x4FE1;&#x606F;</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-6337ee70-5f3d-4ca1-a885-24055cbbe2a5">
+    <a title="API" class="ant-anchor-link-title">API</a>
+    
+        
+    
+</div>
+            
+        
+    </div>
+</div>
+    </div>
+</div></div><section class="markdown"><h1>Form<span class="subtitle">&#x8868;&#x5355;</span><span class="widget"></span>
+                    <a href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/doc/index.zh-CN.md" class="edit-button" rel="noopener noreferrer" target="_blank"><span class="anticon anticon-edit" id="ant-blazor-c227be9e-f8e7-4a6a-9f8e-3ad2cd18d260" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+
+                    <div style="float:right;"><script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CW7I6K7I&placement=antblazorcom&format=cover" id="_carbonads_js"></script></div></h1>
+                <section class="markdown"><p>高性能表单控件，自带数据域管理。包含数据录入、校验以及对应样式。</p>
+<h2>何时使用</h2>
+<ul>
+<li>用于创建一个实体或收集信息。</li>
+<li>需要对输入的数据类型进行校验时。</li>
+</ul>
+</section><h2 data-scrollama-index="1">Examples
+                        <span class="all-code-box-controls"><span class="code-box-expand-trigger anticon anticon-code" id="ant-blazor-51c03938-e7bf-4fdd-bb5c-d46034804063" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M516 673c0 4.4 3.4 8 7.5 8h185c4.1 0 7.5-3.6 7.5-8v-48c0-4.4-3.4-8-7.5-8h-185c-4.1 0-7.5 3.6-7.5 8v48zm-194.9 6.1l192-161c3.8-3.2 3.8-9.1 0-12.3l-192-160.9A7.95 7.95 0 0 0 308 351v62.7c0 2.4 1 4.6 2.9 6.1L420.7 512l-109.8 92.2a8.1 8.1 0 0 0-2.9 6.1V673c0 6.8 7.9 10.5 13.1 6.1zM880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zm-40 728H184V184h656v656z"/></svg>
+</span></span></h2></section>
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  margin-left: -8px; margin-right: -8px;" id="ant-blazor-10c30aca-eb1c-486f-81b2-5b78e354d972">
+        <div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-ffd88249-3122-4e40-8f8f-a683c4b07359">
+    <div class="code-box" id="components-form-demo-basic"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-8d1d583c-c447-44b2-b885-c95d01c169ef">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x57FA;&#x672C;&#x4F7F;&#x7528;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/Basic.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-94bec9d5-d79a-4c60-be82-d6e8231c14a5" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>基本的表单数据域控制展示，包含布局、初始化、验证、提交。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-c6eff379-9208-41c3-b993-d5dbb8b6d9a7" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-ae6fd6aa-2728-47bb-a5b1-ea09263c6f2b">
+    <div class="code-box" id="components-form-demo-control-hooks"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-6612c813-8c3d-44dd-837c-6b5b04cc3128">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x8868;&#x5355;&#x65B9;&#x6CD5;&#x8C03;&#x7528;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/ControlHooks.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-3e9781d2-c685-4cb5-b7b4-260065f9680e" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>通过 <code>@ref</code> 获取Form引用。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-88c66ac7-1324-47c7-9b85-4204dee9c182" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-ef4d594e-4084-41f6-876d-8c424e517d80">
+    <div class="code-box" id="components-form-demo-static"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-91028e30-11be-419b-ba69-9ad476b4f885">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x9759;&#x6001;&#x8868;&#x5355;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/Static.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-f4fbc570-b1df-4437-af2f-14520681796b" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Form 支持 .NET 8 静态服务端渲染的表单验证，但有如下限制：</p>
+<ol>
+<li>必须设置 Form 的 <code>Name</code> 属性, 另外也支持设置 <code>Method</code> 和 <code>Enhance</code> (分别对应 EditForm 的 <code>FormName</code>、<code>Method</code>、<code>Enhance</code>)。</li>
+<li>表单组件的属性绑定，必须要用 <code>Model.Field</code>, 不能用 <code>@context.Field</code>。</li>
+<li>绑定的 Model 实例，需要标注 [SupplyParameterFromForm] 特性，当有多个表单时，还需要指定 <code>FormName</code> 参数与 Form 的 <code>Name</code> 一致。</li>
+</ol>
+<p>注意：</p>
+<ol>
+<li>由于在静态页面失去交互性，支持的输入组件仅限 Input、InputPassword、TextArea、Checkbox、Radio 以及使用 InputFile 的 Upload。其他的输入组件请使用原生 html 元素代替，也欢迎贡献。
+2.由于Form组件内部封装了EditForm，因此<a href="https://learn.microsoft.com/zh-cn/aspnet/core/blazor/forms/?view=aspnetcore-8.0#antiforgery-support">防伪标记</a> 会默认设置，如需取消请参考文档。</li>
+</ol>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-56e9a9be-c542-471c-87d3-73311da30f80" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-f939b7fe-5787-4590-a93a-84bf1c564e2f">
+    <div class="code-box" id="components-form-demo-layout"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-a4bef52b-58fc-428d-a21b-57ab232ea706">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x8868;&#x5355;&#x5E03;&#x5C40;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/Layout.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-add79474-3e23-4a53-b73e-e61ac6e83645" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>表单有三种布局。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-e156ba0e-e49e-4cda-b7a8-6ec5ec66f91f" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-5d1c1e3c-6970-45b6-be92-2374ae1ab3c3">
+    <div class="code-box" id="components-form-demo-size"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-1efd0260-c8f1-470d-8882-1d54b68ad2f6">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x8868;&#x5355;&#x5C3A;&#x5BF8;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/Size.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-36d55261-af05-4219-a880-95d3a76b6c2d" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>设置表单组件尺寸，仅对 antd 组件有效。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-cc62156c-cf59-4773-8026-58e68ef32382" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-bfd72cfb-f231-4835-8da3-21ab6417921e">
+    <div class="code-box" id="components-form-demo-required-mark"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-322dbe7a-1502-4220-8d3e-230d0f4d6480">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x5FC5;&#x9009;&#x6837;&#x5F0F;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/RequiredMark.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-0664f31b-57c1-441c-b18a-a5538d07b69c" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>通过 <code>RequiredMark</code> 切换必选与可选样式。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-31d6efa8-d4ba-4c75-a55b-83ffd4c727d4" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-252a9745-4081-49ce-a3a9-75966bed4b87">
+    <div class="code-box" id="components-form-demo-complex-form-control"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-310fec25-033a-4837-87b8-db35a5365d2a">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x590D;&#x6742;&#x4E00;&#x70B9;&#x7684;&#x63A7;&#x4EF6;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/ComplexFormControl.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-3c3a693c-ddf7-478e-8b32-f438c5a5c9ae" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>这里演示 <code>FormItem</code> 内有多个元素的使用方式。</p>
+<p>这里展示了三种典型场景：</p>
+<ul>
+<li><p><code>Username</code>：输入框后面有描述文案或其他组件，在 <code>FormItem</code> 内只有使用了@bind-Value的组件才会绑定到FormItem，其他组件可任意添加。</p>
+</li>
+<li><p><code>Address</code>：有两个控件，在 <code>FormItem</code> 内使用两个 <code>&lt;FormItem NoStyle /&gt;</code> 分别绑定对应控件（一个FormItem下只能出现一个使用了@bing-Value的控件），对FormItem使用NoStyle，则FormItem的Grid布局会被忽略，就算主动使用了LabelCol或WrapperCol也不会产生效果。</p>
+<p>这个场景还展示了复杂类型的表单验证，Address 属性是一个包含了两个属性的类型，当级联表单项绑定了它的属性时，会继承这个属性的所有 Attributes，但由于表单未绑定这个属性，外部表单无法获取 Required 和 Label。</p>
+</li>
+<li><p><code>BirthDate</code>：有两个内联控件，错误信息展示各自控件下，使用两个 <code>&lt;FormItem /&gt;</code> 分别绑定对应控件，并修改 <code>style</code> 使其内联布局。</p>
+</li>
+</ul>
+<p>更复杂的封装复用方式可以参考下面的 <code>自定义表单控件</code> 。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-1956e381-c685-43d5-8c80-89ab701bf2d1" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-bc1d060c-d3f6-45a8-afb2-71c003905d03">
+    <div class="code-box" id="components-form-demo-customized-form-controls"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-e9fa29b6-31f8-4cd3-8661-fdc7c3176090">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x81EA;&#x5B9A;&#x4E49;&#x8868;&#x5355;&#x63A7;&#x4EF6;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/CustomizedFormControls.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-beb9ff2b-b06f-41a7-9389-f7c06650a93b" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>自定义或第三方的表单控件，也可以与 Form 组件一起使用。只要该组件遵循以下的约定：</p>
+<blockquote>
+<ul>
+<li>继承AntInputComponentBase</li>
+<li>当需要给控件值（Value）赋值时，改为给CurrentValue赋值（Value和CurrentValue均来自AntInputComponentBase）</li>
+<li>详情可参考：参考：<a href="https://github.com/ant-design-blazor/ant-design-blazor/wiki/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%94%AF%E6%8C%81Form%E8%A1%A8%E5%8D%95%E7%9A%84%E7%BB%84%E4%BB%B6%EF%BC%9F">如何实现支持Form表单的组件？</a></li>
+</ul>
+</blockquote>
+<p>Price:</p>
+<pre><code class="language-C#">public class Price
+{
+    public int Number { get; set; }
+    public string Currency { get; set; }
+}
+</code></pre>
+<p>PriceInput.razor:</p>
+<pre><code class="language-C#">@namespace AntDesign.Docs
+@inherits AntInputComponentBase&lt;Price&gt;
+
+&lt;span&gt;
+    &lt;Input @bind-Value=&quot;@Value.Number&quot;
+           style=&quot;width: 100px&quot; /&gt;
+  
+    &lt;RadioGroup @bind-Value=&quot;@Value.Currency&quot;
+                style=&quot;width: 280px; margin: 0 8px&quot;&gt;
+        &lt;Radio RadioButton Value=@(&quot;rmb&quot;)&gt;RMB&lt;/Radio&gt;
+        &lt;Radio RadioButton Value=@(&quot;dollar&quot;)&gt;Dollar&lt;/Radio&gt;
+    &lt;/RadioGroup&gt;
+&lt;/span&gt;
+</code></pre>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-1574bd6d-05a7-4dee-9491-361979a79bb6" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-9759c0ee-9c7f-4ed4-a839-0d040e684282">
+    <div class="code-box" id="components-form-demo-nest-table"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-cdf72f3b-602c-4bf5-b513-55eba0d304b0">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x8868;&#x683C;&#x7F16;&#x8F91;&#x4E0E;&#x9A8C;&#x8BC1;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/NestTable.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-d12e5112-1a2a-4979-897d-dc3b63f706e6" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>支持使用表格作为表单组件，并验证单元格编辑。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-9d94619e-c53d-4e96-abb7-e5f7607cca2a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-eb4db515-1b39-445b-87ea-caeb6d86db50">
+    <div class="code-box" id="components-form-demo-is-modified"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-9d72fcb9-bb68-4ec1-9906-2decefc05321">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x5224;&#x65AD;&#x8868;&#x5355;&#x662F;&#x5426;&#x88AB;&#x4FEE;&#x6539;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/IsModified.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-342a3d5c-7831-49f9-9ed1-60e41b16fdf5" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>通过 <code>IForm.IsModified</code> 判断表单修改。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-f66f7c48-cc88-435c-9742-6e79611a95a2" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-b1539bfa-a381-43ad-b65c-ce003155eb6a">
+    <div class="code-box" id="components-form-demo-customized-form-validator"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-ba34ded0-d810-4454-a142-01def52396fa">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x81EA;&#x5B9A;&#x4E49;&#x8868;&#x5355;&#x9A8C;&#x8BC1;&#x5668;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/CustomizedFormValidator.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-382c50be-39d1-4299-a18d-f3603141d304" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>使用Form Validator属性或<code>&lt;Validator&gt;</code>元素设置自定义验证器，会覆盖内置验证器。当不需要验证时，可以设置为 <code>null</code> 来提高表单的性能。</p>
+<p>注意：使用<code>&lt;Validator&gt;</code>元素设置验证器时，需要将Form内其他组件用<code>&lt;ChildContent&gt;</code>包起来。</p>
+<p>自定义验证组件开发见文档：<a href="https://docs.microsoft.com/zh-cn/aspnet/core/blazor/forms-validation?view=aspnetcore-5.0&amp;WT.mc_id=DT-MVP-5003987#validator-components">ASP.NET Core Blazor 窗体和验证 - 验证器组件</a></p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-2b2481ce-2654-4f59-8ce3-fe2fbce7534c" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-efc33da2-ba7b-40ca-88c0-e19b2beff014">
+    <div class="code-box" id="components-form-demo-localization"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-37467f79-c4de-4233-9abb-9ef98ebf1253">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x672C;&#x5730;&#x5316;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/Localization.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-512c2bcc-8aa8-47a2-aaec-f059f27a1d42" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>默认会尝试从内置的全球化资源文件中获取验证信息模板，这个语言包可以通过 Locale 统一替换。也可通过 数据声明特性 的 <code>ErrorMessage</code> 、Rules 的 <code>Message</code> 来修改。</p>
+<p>另外，也支持 <a href="https://learn.microsoft.com/zh-CN/aspnet/core/fundamentals/localization/make-content-localizable?view=aspnetcore-8.0&amp;WT.mc_id=DT-MVP-5003987#dataannotations-localization">数据声明特性（DataAnnotations）的本地化方式</a>。
+当 <code>FormItem.Label</code> 未指定时，会自动从 <code>DisplayAttribute</code> 或 <code>DisplayNameAttribute</code> 获取。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-39cdc99d-f91d-4567-8cc8-c096ba048df8" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-8b4cbee6-d88b-4be3-89be-021ef0e646b0">
+    <div class="code-box" id="components-form-demo-form-context"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-0a38e26c-2376-4433-b5fd-043177c87ae6">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x591A;&#x8868;&#x5355;&#x8054;&#x52A8;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/FormContext.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-528fd18c-fb30-48e5-9651-482d1e6b025f" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>通过 <code>FormProvider</code> 在表单间处理数据。本例子中，Modal 的确认按钮在 Form 之外，通过 <code>form.Submit</code> 方法调用表单提交功能。反之，则推荐使用 <code>&lt;Button HtmlType=&quot;submit&quot; /&gt;</code> 调用 web 原生提交逻辑。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-019bfa44-f6e3-45ce-a50b-5abfc85cf51c" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-cb51b923-44d2-4126-bcde-b9c1e295960f">
+    <div class="code-box" id="components-form-demo-advanced-search"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-fa49735f-61f9-455a-863c-6b2055f9d9c7">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x9AD8;&#x7EA7;&#x641C;&#x7D22;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/AdvancedSearch.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-18afefad-0712-47ee-8353-6cd4db5cb13c" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>三列栅格式的表单排列方式，常用于数据表格的高级搜索。</p>
+<p>有部分定制的样式代码，由于输入标签长度不确定，需要根据具体情况自行调整。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-1dfcdf69-66ba-492e-9ca4-4ab2ce3a5a0a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style>&#xA;#components-form-demo-advanced-search .ant-form {&#xA;  max-width: none;&#xA;}&#xA;#components-form-demo-advanced-search .search-result-list {&#xA;  margin-top: 16px;&#xA;  border: 1px dashed #e9e9e9;&#xA;  border-radius: 2px;&#xA;  background-color: #fafafa;&#xA;  min-height: 200px;&#xA;  text-align: center;&#xA;  padding-top: 80px;&#xA;}&#xA;[data-theme=&quot;dark&quot;] .ant-advanced-search-form  {&#xA;  background: rgba(255,255,255,0.04);&#xA;  border: 1px solid #434343;&#xA;  padding: 24px;&#xA;  border-radius: 2px;&#xA;}&#xA;[data-theme=&quot;dark&quot;] #components-form-demo-advanced-search .search-result-list {&#xA;  border: 1px dashed #434343;&#xA;  background: rgba(255,255,255,0.04);&#xA;}&#xA;&#xA;</style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-bb9e5777-494b-4e46-8b7a-c539d484eb2f">
+    <div class="code-box" id="components-form-demo-dynamic-model"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-d34dc86a-c07d-4193-9818-54bf79f8fe81">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x52A8;&#x6001;&#x6A21;&#x578B;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/DynamicModel.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-db6f8465-28d6-4002-b546-5784f5cd35fc" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>使用 <code>FormItem.Name</code> 动态绑定模型属性，支持模型对象和字典。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-adfc8f43-6996-4fca-a332-8fc10501da43" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-7c57d4a0-2ff5-4690-9b69-aa6fef609f90">
+    <div class="code-box" id="components-form-demo-dynamic-field"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-e2f8f691-8b3d-41a7-845f-49a7222ac77b">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x52A8;&#x6001;&#x5C5E;&#x6027;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/DynamicField.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-a1ea9451-2d1b-4e99-9637-5f56c2e75455" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>绑定字典可以不必事先定义属性，因此能够方便地实现动态表单。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-8e5081b3-cae0-4c3f-894f-8b3a904d8199" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-72ca72a4-295d-4fdf-b0b8-318f71e61073">
+    <div class="code-box" id="components-form-demo-generate-form-item"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-861b5633-8bc5-45fa-b5eb-c6616592bc2e">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x81EA;&#x52A8;&#x751F;&#x6210;&#x8868;&#x5355;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/GenerateFormItem_.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-fc748d17-e408-46b5-9db1-9c7eca41be95" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>可通过 <code>TModel</code> 类型自动生成表单元素。当前支持string、DateTime、number、enum类型成员自动生成，根据成员是否为可空控制是否为必填</p>
+<blockquote>
+<p><strong>注意:</strong> 此功能正在迭代中，后续本版可能会存在不兼容的变更。</p>
+</blockquote>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-83ced053-18b6-42c2-ba51-cf2bd3547163" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-3cafc23d-cf78-464f-b1f4-7c2ccae79de1">
+    <div class="code-box" id="components-form-demo-validate-onchange"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-cd712bd2-7e81-41cb-9284-73c4437504f8">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x5F00;&#x542F;&#x7EC4;&#x4EF6;&#x503C;&#x53D8;&#x66F4;&#x65F6;&#x9A8C;&#x8BC1;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/ValidateOnChange.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-3e8b467c-2e20-4059-adb0-98813982997b" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>（v0.5+）为了性能考虑，默认关闭内容变更验证，在调用 <code>form.Validate()</code> 时才验证。使用 <code>ValidateOnChange</code> 属性可开启。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-45978d24-7a0f-412a-9b91-749c041abe18" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-118ba3b0-1782-441a-842d-a64022828188">
+    <div class="code-box" id="components-form-demo-colLayout"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-ffb33765-76b9-4704-82b9-fda54d5c49fa">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x81EA;&#x5B9A;&#x4E49;&#x5217;&#x5E03;&#x5C40;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/ColLayout.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-49cd99c0-d026-4dac-b10d-2d67f6cd7940" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>使用<code>ColLayoutParam</code>对列宽度自定义设置</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-e5cb6df5-2da2-43ed-b742-636ee61561c6" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-5bfb7e63-f5c0-4d11-a6a9-a577551c5a54">
+    <div class="code-box" id="components-form-demo-validate-mode"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-8c8acff0-9eb3-4c69-bf0b-18c7439e6039">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x9A8C;&#x8BC1;&#x65B9;&#x5F0F;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/ValidateMode.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-b230eac0-3c7e-47df-92a8-b20254caf103" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>表单验证同时支持两种方式：</p>
+<ul>
+<li><p><strong>Attribute</strong>: 通过在模型类上添加验证特性来添加验证规则</p>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>模型类与 API 共用验证规则，与<a href="https://learn.microsoft.com/aspnet/core/mvc/models/validation?view=aspnetcore-9.0">服务端模型验证</a>行为一致</li>
+<li>支持自定义 ValidationAttribute，实现自定义验证规则</li>
+</ul>
+</li>
+<li><p><strong>Rules</strong>: 通过在 FormItem 上的 <code>Rules</code> 属性来添加验证规则</p>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>需要复用 model 类，但不同的表单有不同的验证规则时，可以避免重复创建多个类似的 model 类</li>
+<li><code>FormValidationRule</code> 类型可定义更加丰富和灵活的验证规则，如限定枚举值、限定可选值、子属性验证等，也支持指定 ValidationAttribute</li>
+</ul>
+</li>
+</ul>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-fbcbb737-4d47-4f43-af0f-093201eb0d49" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-5dfe7ecc-eaf4-4bd5-9fa7-668e7429f267">
+    <div class="code-box" id="components-form-demo-dynamic-rule"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-96ac7b42-4d05-45a9-91cf-674da2d9dea2">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x52A8;&#x6001;&#x6821;&#x9A8C;&#x89C4;&#x5219;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/DynamicRule.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-dd40ebf4-9c44-4f95-b1d3-b19f3e528ec5" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>根据不同情况执行不同的校验规则。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-d6014a0f-602e-4b86-8381-12200b8a108c" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-50800361-31d8-4615-a8d3-74731ef98cc3">
+    <div class="code-box" id="components-form-demo-validate-static"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-148a4a13-793d-4f6d-86b1-2c315e2803d7">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x81EA;&#x5B9A;&#x4E49;&#x6821;&#x9A8C;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/ValidateStatic.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-e4caf6ba-2d26-4bf3-be96-c923b851af82" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>我们提供了 <code>validateStatus</code> <code>help</code> <code>hasFeedback</code> 等属性，你可以不通过 Form 自己定义校验的时机和内容。</p>
+<ol>
+<li><code>validateStatus</code>: 校验状态，可选 'success', 'warning', 'error', 'validating'。</li>
+<li><code>hasFeedback</code>：用于给输入框添加反馈图标。</li>
+<li><code>help</code>：设置校验文案。</li>
+</ol>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-f0844c74-2f86-4783-8c34-79a6d62775cf" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-ded25c3b-b513-4b36-9b10-3c95e0c5ea41">
+    <div class="code-box" id="components-form-demo-validate-with-feedback"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-5ebc6e15-488f-4b44-8760-33b7fe448539">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x9A8C;&#x8BC1;&#x63D0;&#x793A;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/ValidateWithFeedback.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-c1dd0cf7-b058-4a1d-9b15-a895ff068b17" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>字段无效时，显示字段级错误指示器。此指示器将在表单验证时显示。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-fdc3bffd-e8b2-4918-a9fd-94b7a5ab80db" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div><div class="code-boxes-col-1-1 ant-col ant-col-24" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-35e4a986-4efc-4d34-95b8-ec3bdc3e338c">
+    <div class="code-box" id="components-form-demo-set-validate-message"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-7e6312f5-dd29-46a7-ad1e-83d5f6cd0c00">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>&#x8BBE;&#x7F6E;&#x9A8C;&#x8BC1;&#x4FE1;&#x606F;</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Form/demo/SetValidateMessage.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-81940f24-4b33-416c-9948-6bef5c5d9d1c" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>可在任何时候设置验证信息。</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-ed053272-206b-4387-993e-54e12006c6a1" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div>
+    </div>
+<section class="markdown api-container"><h2 id="API"><span>Form API</span><a href="/zh-CN/components/form#API" class="anchor">#</a></h2>
+<table class="api properties-api">
+<thead>
+                    <tr>
+                        <th>属性</th>
+                        <th>描述</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                    </tr>
+                </thead>
+                <tbody>
+<tr class="">
+                    <td class="api-code-identifier">RequiredMark</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>更改必填/可选字段标签在表单上的显示方式。 <ul><li>Required - 将标记必填字段</li><li>Optional - 将标记可选字段</li><li>None - 将不标记任何字段，无论是必填还是可选</li></ UL></td>
+                    <td class="api-data-type">FormRequiredMark</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Layout</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>表单中表单项的布局</td>
+                    <td class="api-data-type">FormLayout</td>
+                    <td class="api-default">FormLayout.Horizontal</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ChildContent</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>表格的内容。通常包含不同的表单输入和布局元素。</td>
+                    <td class="api-data-type">RenderFragment&lt;TModel&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">LabelCol</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>控制标签的布局。通常用于为不同的屏幕尺寸设置宽度。</td>
+                    <td class="api-data-type">ColLayoutParam</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">LabelAlign</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>将标签向左或向右对齐</td>
+                    <td class="api-data-type">AntLabelAlignType?</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">LabelColSpan</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>获取/设置 <code>AntDesign.Form`1.LabelCol</code> 的 <code>Span</code> 属性。</td>
+                    <td class="api-data-type">OneOf&lt;String, Int32&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">LabelColOffset</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>获取/设置 <code>AntDesign.Form`1.LabelCol</code> 的 <code>Offset</code> 属性。</td>
+                    <td class="api-data-type">OneOf&lt;String, Int32&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">WrapperCol</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>控制输入​​元素包装器的布局。通常用于为不同的屏幕尺寸设置宽度。</td>
+                    <td class="api-data-type">ColLayoutParam</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">WrapperColSpan</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>获取/设置 <code>AntDesign.Form`1.WrapperCol</code> 的 <code>Span</code> 属性。</td>
+                    <td class="api-data-type">OneOf&lt;String, Int32&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">WrapperColOffset</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>获取/设置 <code>AntDesign.Form`1.WrapperColOffset</code> 的 <code>Offset</code> 属性。</td>
+                    <td class="api-data-type">OneOf&lt;String, Int32&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Size</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>表单内ant组件的大小</td>
+                    <td class="api-data-type">FormSize?</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Name</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>获取或设置表单处理程序名称。这是将其发布到服务器端终端节点所必需的。或者使用 for 从 <code>FormProviderFinishEventArgs</code> 获取表单实例。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Method</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>用于提交表单的 Http 方法</td>
+                    <td class="api-data-type">HttpMethod</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Model</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>将表单输入绑定到的模型</td>
+                    <td class="api-data-type">TModel</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Loading</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>表单是否正在加载</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">false</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnFinish</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>提交表单并通过验证时执行的回调。</td>
+                    <td class="api-data-type">EventCallback&lt;EditContext&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnFinishFailed</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>提交表单且验证失败时执行的回调。</td>
+                    <td class="api-data-type">EventCallback&lt;EditContext&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnFieldChanged</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>当表单中的字段更改时执行的回调</td>
+                    <td class="api-data-type">EventCallback&lt;FieldChangedEventArgs&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnValidationRequested</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>请求验证时执行的回调</td>
+                    <td class="api-data-type">EventCallback&lt;ValidationRequestedEventArgs&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnValidationStateChanged</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>验证更改时执行的回调</td>
+                    <td class="api-data-type">EventCallback&lt;ValidationStateChangedEventArgs&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Validator</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>在表单中使用的验证器。当 <code>AntDesign.Form`1.ValidateMode</code> 为 <code>FormValidateMode.Default</code> 或 <code>FormValidateMode.Complex</code> 时使用</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ValidateOnChange</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>组件值更改时启用验证</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="obsolete">
+                    <td class="api-code-identifier">ValidateMode</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>表单应使用哪种验证模式将同时使用 attributes 和 rules。<br /><br /><span class="ant-tag">Obsolete</span> 将在未来的版本中删除。</td>
+                    <td class="api-data-type">FormValidateMode</td>
+                    <td class="api-default">FormValidateMode.Complex</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Enhance</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>如果启用，则无需完全重新加载页面即可执行表单提交。这相当于将 data-enhance 添加到表单中。</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Autocomplete</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>默认情况下，input 元素是否可以由浏览器自动完成其值</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Locale</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>本地化选项</td>
+                    <td class="api-data-type">FormLocale</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">IsModified</td>
+                    <td class="api-description">指示表单是否已修改的标志</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">EditContext</td>
+                    <td class="api-description">在表单中获取 <code>AntDesign.Form'1.EditContext</code> 实例</td>
+                    <td class="api-data-type">EditContext</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Id</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>组件 HTML 的 ID</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">Uniquely Generated ID</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Class</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>为 DOM 元素指定一个或多个类名。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Style</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>指定 DOM 元素的内联样式。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">RefBack</td>
+                    <td class="api-description"><span class="ant-tag">属性</span><code>一个 ForwardRef</code> 实例。您可以使用 <code>AntDesign.ForwardRef.Current</code> 获取对内部 DOM 的引用。</td>
+                    <td class="api-data-type">ForwardRef</td>
+                    <td class="api-default">--</td>
+                </tr>
+</tbody></table>
+<table class="api methods-api">
+                <thead>
+                    <tr>
+                        <th>方法签名</th>
+                        <th>返回类型</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+<tr>
+                    <td class="api-signature">Reset()</td>
+                    <td class="api-data-type">void</td>
+                    <td class="api-description">重置表单中的所有值</td>
+                </tr>
+<tr>
+                    <td class="api-signature">Submit()</td>
+                    <td class="api-data-type">void</td>
+                    <td class="api-description">提交表格。将触发验证和 <code>AntDesign.Form`1.OnFinish</code> 或 <code>AntDesign.Form`1.OnFinishFailed</code>。</td>
+                </tr>
+<tr>
+                    <td class="api-signature">Validate()</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-description">执行验证</td>
+                </tr>
+<tr>
+                    <td class="api-signature">ValidationReset()</td>
+                    <td class="api-data-type">void</td>
+                    <td class="api-description">重置验证</td>
+                </tr>
+<tr>
+                    <td class="api-signature">SetValidationMessages(String field, String[] errorMessages)</td>
+                    <td class="api-data-type">void</td>
+                    <td class="api-description">将验证消息设置为特定字段。</td>
+                </tr>
+</tbody></table>
+<h2 id="API-FormValidateMode"><span>FormValidateMode API</span><a href="/zh-CN/components/form#API-FormValidateMode" class="anchor">#</a></h2>
+<p>基础类型: Int32</p>
+<table class="api enum-api">
+
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+<tr class="">
+                    <td class="api-code-identifier">Default</td>
+                    <td class="api-description">验证将来自提供给 <code>AntDesign.Form`1.Model</code> 的模型上的数据属性</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Rules</td>
+                    <td class="api-description">验证将来自表单中 FormItems 的规则</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Complex</td>
+                    <td class="api-description">同时使用默认模式和规则模式</td>
+                </tr>
+</tbody></table>
+<h2 id="API-FormItem"><span>FormItem API</span><a href="/zh-CN/components/form#API-FormItem" class="anchor">#</a></h2>
+<table class="api properties-api">
+<thead>
+                    <tr>
+                        <th>属性</th>
+                        <th>描述</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                    </tr>
+                </thead>
+                <tbody>
+<tr class="">
+                    <td class="api-code-identifier">Name</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>指定表单项的名称。它也可以用作 Member Path 来绑定 Model 的属性。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ChildContent</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>表单项的内容。通常将包含输入元素之一</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Label</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>项目的自定义标签。如果未提供 <code>AntDesign.FormItem.Label</code> 或 <code>AntDesign.FormItem.LabelTemplate</code>，则将使用 DisplayName 属性值或字段名称（按此顺序）。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">LabelTemplate</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>项目的自定义标签内容。优先于 <code>AntDesign.FormItem.Label</code>。如果未提供 <code>AntDesign.FormItem.Label</code> 或 <code>AntDesign.FormItem.LabelTemplate</code>，则将使用 DisplayName 属性值或字段名称（按此顺序）。</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">LabelCol</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>控制标签的布局。通常用于为不同的屏幕尺寸设置宽度。</td>
+                    <td class="api-data-type">ColLayoutParam</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">LabelAlign</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>将标签向左或向右对齐</td>
+                    <td class="api-data-type">AntLabelAlignType?</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">LabelColSpan</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>获取/设置 <code>AntDesign.FormItem.LabelCol</code> 的 <code>Span</code> 属性。</td>
+                    <td class="api-data-type">OneOf&lt;String, Int32&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">LabelColOffset</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>获取/设置 <code>AntDesign.FormItem.LabelCol</code> 的 <code>Offset</code> 属性。</td>
+                    <td class="api-data-type">OneOf&lt;String, Int32&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">WrapperCol</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>控制输入​​元素包装器的布局。通常用于为不同的屏幕尺寸设置宽度。</td>
+                    <td class="api-data-type">ColLayoutParam</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">WrapperColSpan</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>获取/设置 <code>AntDesign.FormItem.WrapperCol</code> 的 <code>Span</code> 属性。</td>
+                    <td class="api-data-type">OneOf&lt;String, Int32&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">WrapperColOffset</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>获取/设置 <code>AntDesign.FormItem.WrapperColOffset</code> 上的 <code>Offset</code> 属性。</td>
+                    <td class="api-data-type">OneOf&lt;String, Int32&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">NoStyle</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>true时无样式，用作纯字段控件</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Required</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>将此项目标记为验证所需</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">LabelStyle</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>仅应用于标签元素的样式。如果设置了 LabelTemplate，则不会应用。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Rules</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>应用于此项目的验证规则</td>
+                    <td class="api-data-type">FormValidationRule[]</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">HasFeedback</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>与<code>AntDesign.FormItem.ValidateStatus</code> 配合使用，显示验证状态图标。建议仅与 Input 组件一起使用</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ShowFeedbackOnError</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>是否在出错时显示反馈图标。如果设置为 false，则即使字段处于错误状态，它也不会显示图标。</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ValidateStatus</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>验证状态，不设置则根据验证规则自动生成</td>
+                    <td class="api-data-type">FormValidateStatus</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Help</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>提示信息</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ToolTip</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>设置表单字段的帮助提示信息</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Id</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>组件 HTML 的 ID</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">Uniquely Generated ID</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Class</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>为 DOM 元素指定一个或多个类名。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Style</td>
+                    <td class="api-description"><span class="ant-tag">属性</span>指定 DOM 元素的内联样式。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">RefBack</td>
+                    <td class="api-description"><span class="ant-tag">属性</span><code>一个 ForwardRef</code> 实例。您可以使用 <code>AntDesign.ForwardRef.Current</code> 获取对内部 DOM 的引用。</td>
+                    <td class="api-data-type">ForwardRef</td>
+                    <td class="api-default">--</td>
+                </tr>
+</tbody></table>
+<h2 id="API-FormValidationRule"><span>FormValidationRule API</span><a href="/zh-CN/components/form#API-FormValidationRule" class="anchor">#</a></h2>
+<table class="api properties-api">
+<thead>
+                    <tr>
+                        <th>属性</th>
+                        <th>描述</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                    </tr>
+                </thead>
+                <tbody>
+<tr class="">
+                    <td class="api-code-identifier">Len</td>
+                    <td class="api-description">验证长度。有效的 <code>AntDesign.FormValidationRule.Type</code>：字符串、数字或数组。</td>
+                    <td class="api-data-type">Decimal?</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Min</td>
+                    <td class="api-description">验证长度是否大于或等于此数字。有效的 <code>AntDesign.FormValidationRule.Type</code>：字符串、数字或数组。</td>
+                    <td class="api-data-type">Decimal?</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Max</td>
+                    <td class="api-description">验证长度是否小于或等于此数字。有效的 <code>AntDesign.FormValidationRule.Type</code>：字符串、数字或数组。</td>
+                    <td class="api-data-type">Decimal?</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Required</td>
+                    <td class="api-description">填写必填字段</td>
+                    <td class="api-data-type">Boolean?</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Pattern</td>
+                    <td class="api-description">验证值是否传递正则表达式模式</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Message</td>
+                    <td class="api-description">自定义错误信息。如果没有提供，将自动生成。</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Range</td>
+                    <td class="api-description">验证值是否在指定范围内</td>
+                    <td class="api-data-type">ValueTuple&lt;Double, Double??</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">DefaultField</td>
+                    <td class="api-description">验证所有数组元素的规则。有效的 <code>AntDesign.FormValidationRule.Type</code>：数组。 （现在不支持 <code>FormItem</code>）</td>
+                    <td class="api-data-type">FormValidationRule</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OneOf</td>
+                    <td class="api-description">该值是否在指定值内</td>
+                    <td class="api-data-type">Object[]</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Enum</td>
+                    <td class="api-description">验证该值是否在指定的枚举类型中。</td>
+                    <td class="api-data-type">Type</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Fields</td>
+                    <td class="api-description">Validate rule for child elements. Valid <code>AntDesign.FormValidationRule.Type</code>s: Array, Object</td>
+                    <td class="api-data-type">Dictionary&lt;Object, FormValidationRule&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Validator</td>
+                    <td class="api-description">自定义验证函数</td>
+                    <td class="api-data-type">Func&lt;FormValidationContext, ValidationResult&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Transform</td>
+                    <td class="api-description">在执行验证之前调用的转换函数。返回值将对其运行验证。</td>
+                    <td class="api-data-type">Func&lt;Object, Object&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Type</td>
+                    <td class="api-description">表单域的类型。有关所有可能的值，请参阅 <code>FormFieldType</code>。</td>
+                    <td class="api-data-type">FormFieldType?</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ValidationAttribute</td>
+                    <td class="api-description">使用指定的属性验证值。</td>
+                    <td class="api-data-type">ValidationAttribute</td>
+                    <td class="api-default">--</td>
+                </tr>
+</tbody></table>
+<h2 id="API-FormValidateErrorMessages"><span>FormValidateErrorMessages API</span><a href="/zh-CN/components/form#API-FormValidateErrorMessages" class="anchor">#</a></h2>
+<table class="api properties-api">
+<thead>
+                    <tr>
+                        <th>属性</th>
+                        <th>描述</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                    </tr>
+                </thead>
+                <tbody>
+<tr class="">
+                    <td class="api-code-identifier">Default</td>
+                    <td class="api-description">默认通用验证错误消息</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Required</td>
+                    <td class="api-description">Required 规则的默认验证消息</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Enum</td>
+                    <td class="api-description">Enum 规则的默认验证消息</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Whitespace</td>
+                    <td class="api-description">空白规则的默认验证消息</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Date</td>
+                    <td class="api-description">日期类型的消息</td>
+                    <td class="api-data-type">DateMessage</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Types</td>
+                    <td class="api-description">字段类型与预期类型不匹配时的消息</td>
+                    <td class="api-data-type">TypesMessage</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">String</td>
+                    <td class="api-description">字符串类型的消息</td>
+                    <td class="api-data-type">CompareMessage</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Number</td>
+                    <td class="api-description">字符串类型的消息</td>
+                    <td class="api-data-type">CompareMessage</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Array</td>
+                    <td class="api-description">数组类型的消息</td>
+                    <td class="api-data-type">CompareMessage</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Pattern</td>
+                    <td class="api-description">模式验证规则的消息</td>
+                    <td class="api-data-type">PatternMessage</td>
+                    <td class="api-default">--</td>
+                </tr>
+</tbody></table>
+</section><section class="markdown api-container"></section></article>
+    <ul class="contributors-list" style="display: flex; list-style: none; margin: 0px; padding: 0px;"><div class="ant-skeleton ant-skeleton-element ant-skeleton-active" style="width: Truepx, height: Truepx, &#x27;line-height&#x27;: Truepx;">
+    <span class="ant-skeleton-avatar ant-skeleton-avatar-circle" style=""></span>
+</div><div class="ant-skeleton ant-skeleton-element ant-skeleton-active" style="width: Truepx, height: Truepx, &#x27;line-height&#x27;: Truepx;">
+    <span class="ant-skeleton-avatar ant-skeleton-avatar-circle" style=""></span>
+</div><div class="ant-skeleton ant-skeleton-element ant-skeleton-active" style="width: Truepx, height: Truepx, &#x27;line-height&#x27;: Truepx;">
+    <span class="ant-skeleton-avatar ant-skeleton-avatar-circle" style=""></span>
+</div></ul></section>
+
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
+                        <div class="fixed-widgets">
+<div class="ant-avatar ant-avatar-circle ant-avatar-icon fixed-widgets-avatar" style="width: 44px; height: 44px; line-height: 44px; font-size: 22px;"><svg class="anticon" role="img" width="21" height="21" viewBox="0 0 21 21" fill="currentColor"><g fill-rule="evenodd"><g fill-rule="nonzero"><path d="M7.02 3.635l12.518 12.518a1.863 1.863 0 010 2.635l-1.317 1.318a1.863 1.863 0 01-2.635 0L3.068 7.588A2.795 2.795 0 117.02 3.635zm2.09 14.428a.932.932 0 110 1.864.932.932 0 010-1.864zm-.043-9.747L7.75 9.635l9.154 9.153 1.318-1.317-9.154-9.155zM3.52 12.473c.514 0 .931.417.931.931v.932h.932a.932.932 0 110 1.864h-.932v.931a.932.932 0 01-1.863 0l-.001-.931h-.93a.932.932 0 010-1.864h.93v-.932c0-.514.418-.931.933-.931zm15.374-3.727a1.398 1.398 0 110 2.795 1.398 1.398 0 010-2.795zM4.385 4.953a.932.932 0 000 1.317l2.046 2.047L7.75 7 5.703 4.953a.932.932 0 00-1.318 0zM14.701.36a.932.932 0 01.931.932v.931h.932a.932.932 0 010 1.864h-.933l.001.932a.932.932 0 11-1.863 0l-.001-.932h-.93a.932.932 0 110-1.864h.93v-.931a.932.932 0 01.933-.932z"></path></g></g></svg></div>
+
+    
+        
+    
+</div>
+
+<link type="text/css" rel="stylesheet" id="docs-theme" />
+                    <section class="prev-next-nav"></section>
+                <footer class="rc-footer rc-footer-dark"><section class="rc-footer-container"><section class="rc-footer-columns"><div class="rc-footer-column"><h2>Resources</h2>
+                <div class="rc-footer-item"><a href="https://ant.design" target="_blank">Ant Design</a></div>
+                <div class="rc-footer-item"><a href="https://ng.ant.design" target="_blank">NG-ZORRO</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Ant Design of Angular</span></div>
+                <div class="rc-footer-item"><a href="https://vue.ant.design" target="_blank">Ant Design Vue</a></div>
+                <div class="rc-footer-item"><a href="https://pro.antblazor.com/" target="_blank">Ant Design Pro Blazor</a></div>
+                <div class="rc-footer-item"><a href="http://www.blazor.zone/" target="_blank">Bootstrap Blazor</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Bootstrap of Blazor</span></div>
+                <div class="rc-footer-item"><a href="https://bulmarazor.loogn.net/" target="_blank">BulmaRazor</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Bulma of Blazor</span></div></div>
+            <div class="rc-footer-column"><h2>Community</h2>
+                <div class="rc-footer-item"><a href="https://github.com/websemantics/awesome-ant-design" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="ant-design" class="anticon anticon-ant-design"><svg viewBox="64 64 896 896" focusable="false" class data-icon="ant-design" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M716.3 313.8c19-18.9 19-49.7 0-68.6l-69.9-69.9.1.1c-18.5-18.5-50.3-50.3-95.3-95.2-21.2-20.7-55.5-20.5-76.5.5L80.9 474.2a53.84 53.84 0 000 76.4L474.6 944a54.14 54.14 0 0076.5 0l165.1-165c19-18.9 19-49.7 0-68.6a48.7 48.7 0 00-68.7 0l-125 125.2c-5.2 5.2-13.3 5.2-18.5 0L189.5 521.4c-5.2-5.2-5.2-13.3 0-18.5l314.4-314.2c.4-.4.9-.7 1.3-1.1 5.2-4.1 12.4-3.7 17.2 1.1l125.2 125.1c19 19 49.8 19 68.7 0zM408.6 514.4a106.3 106.2 0 10212.6 0 106.3 106.2 0 10-212.6 0zm536.2-38.6L821.9 353.5c-19-18.9-49.8-18.9-68.7.1a48.4 48.4 0 000 68.6l83 82.9c5.2 5.2 5.2 13.3 0 18.5l-81.8 81.7a48.4 48.4 0 000 68.6 48.7 48.7 0 0068.7 0l121.8-121.7a53.93 53.93 0 00-.1-76.4z"></path></svg></span></span>
+                        Awesome Ant Design
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://github.com/AdrienTorris/awesome-blazor" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="ant-design" class="anticon"><svg viewBox="0 0 1133 1024" width="1em" height="1em" fill="currentColor"><path d="M1016.452929 325.008051a563.029686 563.029686 0 0 1-552.102137 474.312222 408.956599 408.956599 0 0 1-80.701003-4.895699 247.31566 247.31566 0 0 1-205.677843-233.140565 240.162284 240.162284 0 0 1 480.256301-3.388954c1.009372 39.804368-16.237724 74.72279-51.682775 75.727285-37.863643 0-55.617863-27.014112-55.617864-63.429525v-101.181016a61.971544 61.971544 0 0 0-61.493676-62.025182H404.612545a147.641388 147.641388 0 1 0 109.056069 246.028345l2.969601-4.422708 2.964726 4.905451a104.443189 104.443189 0 0 0 89.063675 42.413131 117.721064 117.721064 0 0 0 109.056068-123.050744 320.200125 320.200125 0 0 0-8.7869-78.209268A299.651845 299.651845 0 0 0 116.483145 559.543208a303.406514 303.406514 0 0 0 295.711881 299.651845s22.215938 2.018744 47.260068 1.443353a639.542039 639.542039 0 0 0 342.967072-102.322045c1.453106-1.009372 2.906211 1.009372 1.940725 2.486859a503.413344 503.413344 0 0 1-392.158113 160.363377A353.875117 353.875117 0 0 1 52.029619 558.075474a366.216763 366.216763 0 0 1 147.105007-293.288413A358.702549 358.702549 0 0 1 410.746797 194.930713h113.839614a320.302525 320.302525 0 0 0 236.290586-104.321285 4.422708 4.422708 0 0 1 2.403963-1.37021 4.515355 4.515355 0 0 1 4.832308 2.106515 4.57387 4.57387 0 0 1 0.629029 2.71604 321.107097 321.107097 0 0 1-49.673783 143.642909 4.354441 4.354441 0 0 0-0.536382 2.462478 4.442212 4.442212 0 0 0 2.930593 3.827812 4.412955 4.412955 0 0 0 2.506363 0.131657 344.210502 344.210502 0 0 0 239.313826-197.3298 6.29029 6.29029 0 0 1 2.213792-2.130896 6.056232 6.056232 0 0 1 5.948956 0 6.212271 6.212271 0 0 1 2.208916 2.130896 436.224273 436.224273 0 0 1 42.793475 278.211222zM411.902454 467.748865a88.551675 88.551675 0 1 0 88.537046 88.537046V473.629554a6.382937 6.382937 0 0 0-6.061108-6.061108l-82.475938 0.180419z" p-id="3785"></path></svg></span></span>
+                        Awesome Blazor
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://dotnet9.com/" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="dotnet9" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        Dotnet9
+                    </a></div></div>
+            <div class="rc-footer-column"><h2>Help</h2>
+                <div class="rc-footer-item"><a href="https://github.com/ant-design-blazor/ant-design-blazor" target="_blank" rel="noopener noreferrer"><span class="rc-footer-item-icon"><span role="img" aria-label="github" class="anticon anticon-github"><svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg></span></span>
+                        GitHub
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="dotnet9" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        ASP.NET Blazor Docs
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://docs.microsoft.com/en-us/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="Blazor Tutorial" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        Blazor Tutorial
+                    </a></div></div>
+            <div class="rc-footer-column"><h2><span class="rc-footer-column-icon"><img src="https://gw.alipayobjects.com/zos/rmsportal/nBVXkrFdWHxbZlmMbsaH.svg" alt="Ant XTech"></span>
+                    More Products</h2>
+                <div class="rc-footer-item" style="margin-top: 20px;"><div class="theme-pick-wrap"><input type="color" class="theme-pick" name="head" style="width:100%;" value="#1890ff" /></div></div></div></section></section>
+    <section class="rc-footer-bottom"><div class="rc-footer-bottom-container">
+            This project is supported by the <a href="https://dotnetfoundation.org">.NET Foundation</a>.
+            Made with <span style="color: rgb(255, 255, 255);">❤</span> by <a target="_blank" rel="noopener noreferrer" href="https://github.com/ant-design-blazor">Ant Design Blazor Team</a></div></section></footer>
+</div>
+    </div>
+</div></div><blazor-focus-on-navigate selector="h1"></blazor-focus-on-navigate>
+        
+
+
+
+
+
+
+
+</div>
+<!-- %%-PRERENDERING-END-%% -->
+</app>
+    <div id="toast-zh" class="toast ">文档已更新，请点击 <a class="reload" onclick="reload()">此处</a> 更新。</div>
+    <div id="toast-en" class="toast ">A new version of this app is available. Click <a class="reload" onclick="reload()">here</a> to update.</div>
+
+    <!-- Start Single Page Apps for GitHub Pages -->
+    <script type="text/javascript">
+        // Single Page Apps for GitHub Pages
+        // https://github.com/rafrex/spa-github-pages
+        // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
+        // ----------------------------------------------------------------------
+        // This script checks to see if a redirect is present in the query string
+        // and converts it back into the correct url and adds it to the
+        // browser's history using window.history.replaceState(...),
+        // which won't cause the browser to attempt to load the new url.
+        // When the single page app is loaded further down in this file,
+        // the correct url will be waiting in the browser's history for
+        // the single page app to route accordingly.
+        (function (l) {
+            if (l.search) {
+                var q = {};
+                l.search.slice(1).split('&').forEach(function (v) {
+                    var a = v.split('=');
+                    q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+                });
+                if (q.p !== undefined) {
+                    window.history.replaceState(null, null,
+                        l.pathname.slice(0, -1) + (q.p || '') +
+                        (q.q ? ('?' + q.q) : '') +
+                        l.hash
+                    );
+                }
+            }
+        }(window.location))
+
+        window.DocSearchInit = window.DocSearchInit || function () { };
+    </script>
+    <!-- End Single Page Apps for GitHub Pages -->
+
+    <script src="_framework/blazor.webassembly.66stpp682q.js"></script>
+    <script src="/_content/AntDesign.Charts/g2plot.min.js?v=1.6.2"></script>
+    <script src="/_content/AntDesign.Charts/ant-design-charts-blazor.js?v=1.6.2"></script>
+    <script src="/_content/AntDesign.Docs/js/prism.js?v=1.6.2"></script>
+
+    <script>
+        window.XPrism = {};
+        window.XPrism.highlight = function (code, language) {
+            return Prism.highlight(code, Prism.languages[language], language);
+        }
+
+        window.XPrism.highlightAll = function () {
+            Prism.highlightAll();
+        }
+
+        window.changeColor = function (hex, ref) {
+            window.less
+                .modifyVars({
+                    '@primary-color': hex
+                }).then(() => ref.invokeMethodAsync('OnColorChanged'))
+        }
+
+        //fetch("/version.json?t=" + new Date().getTime())
+        //    .then(response => response.json())
+        //    .then(data => {
+        //        console.log('Latest version is:' + data.version);
+        //        if (data.version != '1.6.2') {
+        //            showUpdateBar();
+        //        }
+        //    });
+    </script>
+
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@docsearch/css@3" crossorigin=""/>
+    <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/color.less"/>
+    <link rel="stylesheet" type="text/css" href="./css/toast.css"/>
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://fastly.jsdelivr.net/npm/@docsearch/js@3" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
+    <script>
+        let newWorker;
+
+        function showUpdateBar() {
+            var lang = navigator.language || navigator.userLanguage;
+            lang = lang.substr(0, 2);
+            let toast = lang == 'zh' ? document.getElementById('toast-zh') : document.getElementById('toast-en');
+            toast.classList.add('show');
+        }
+
+        function hideUpdateBar() {
+            var lang = navigator.language || navigator.userLanguage;
+            lang = lang.substr(0, 2);
+            let toast = lang == 'zh' ? document.getElementById('toast-zh') : document.getElementById('toast-en');
+            toast.classList.remove('show');
+        }
+
+        function reload() {
+            if (newWorker) {
+                newWorker.postMessage({ action: 'skipWaiting' });
+            } else {
+                navigator.serviceWorker.getRegistration().then(reg => {
+                    if (reg.waiting) {
+                        reg.waiting.postMessage({ action: 'skipWaiting' });
+                    }
+                });
+            }
+            hideUpdateBar();
+        }
+
+        if ('serviceWorker' in navigator) {
+            // The click event on the pop up notification
+
+            navigator.serviceWorker.register('/service-worker.js').then(reg => {
+                if (reg.waiting) {
+                    newWorker = reg.waiting;
+                    showUpdateBar();
+                    return;
+                }
+
+                reg.onupdatefound = function () {
+                    newWorker = reg.installing;
+                    newWorker.onstatechange = function () {
+                        switch (newWorker.state) {
+                            case 'installed':
+                                if (navigator.serviceWorker.controller) {
+                                    showUpdateBar();
+                                }
+                                break;
+                        }
+                    };
+                };
+            });
+
+            let refreshing;
+            navigator.serviceWorker.addEventListener('controllerchange', function () {
+                if (refreshing) return;
+                window.location.reload();
+                refreshing = true;
+            });
+        }
+    </script>
+    <script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } }</script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.nls.js"></script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.js"></script>
+    <script>
+        var instances = {};
+        function createEditor(element, id, ref, options) {
+            console.log(id);
+            var instance = monaco.editor.create(element, options);
+            instance.onDidChangeModelContent(function () {
+                ref.invokeMethodAsync('OnChangeAsync', instance.getValue());
+            });
+            instances[id] = instance;
+            return instance;
+        }
+
+        function copy(id) {
+            var text = instances[id].getValue();
+            navigator.clipboard.writeText(text);
+        }
+    </script>
+
+    <!-- Popup prompt for slow loads in Chinese locales -->
+    <script>
+    (function () {
+        function isChineseLang() {
+            var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+            if (lang && lang.indexOf('zh') === 0) return true;
+            if (navigator.languages) {
+                for (var i = 0; i < navigator.languages.length; i++) {
+                    if (navigator.languages[i] && navigator.languages[i].toLowerCase().indexOf('zh') === 0) return true;
+                }
+            }
+            return false;
+        }
+
+        function stillShowingLoading() {
+            var root = document.getElementById('root');
+            if (!root) return false;
+            // Common loading markers in this page
+            if (root.querySelector('.page-loading-warp')) return true;
+            if (root.querySelector('.loading-progress-text')) return true;
+            // If root is empty or only contains the initial spinner text/settings
+            var text = (root.innerText || '').trim();
+            if (text.length === 0) return true;
+            if (/loading|加载/i.test(text)) return true;
+            return false;
+        }
+
+        function showGiteePrompt() {
+            if (document.getElementById('gitee-redirect-prompt')) return;
+            var box = document.createElement('div');
+            box.id = 'gitee-redirect-prompt';
+            box.setAttribute('role', 'dialog');
+            box.setAttribute('aria-modal', 'true');
+            box.style = 'position:fixed;left:50%;top:20%;transform:translateX(-50%);z-index:99999;background:#fff;border:1px solid #ddd;padding:16px;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.12);max-width:420px;width:90%;font-family:inherit;color:#333;';
+
+            box.innerHTML = '\n                <div style="font-size:16px;margin-bottom:8px;">页面加载较慢，是否跳转至国内镜像？</div>\n                <div style="display:flex;justify-content:flex-end;gap:8px;">\n                    <a href="https://ant-design-blazor.gitee.io" style="background:#1890ff;color:#fff;padding:8px 12px;border-radius:4px;text-decoration:none;" target="_blank" rel="noopener">前往国内站点</a>\n                    <button id="gitee-close" style="background:#f5f5f5;border:1px solid #ddd;padding:8px 12px;border-radius:4px;cursor:pointer;">取消</button>\n                </div>';
+
+            document.body.appendChild(box);
+            document.getElementById('gitee-close').addEventListener('click', function () {
+                if (box && box.parentNode) box.parentNode.removeChild(box);
+            });
+        }
+
+        window.addEventListener('load', function () {
+            if (!isChineseLang()) return;
+            setTimeout(function () {
+                if (stillShowingLoading()) {
+                    showGiteePrompt();
+                }
+            }, 10000);
+        });
+    })();
+    </script>
+
+
+</body></html>

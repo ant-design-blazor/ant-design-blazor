@@ -1,0 +1,5 @@
+{
+  "Order": 7,
+  "Title": "TestKit",
+  "Html": "<p>You can use the TestKit package in order to create a BUnit test context dervied from <code>AntDesignTestBase</code>.</p>\n<p>This will add the required AntDesign services to the test context so that you can create unit tests.</p>\n<pre><code class=\"language-cs\">public class ButtonTests : AntDesignTestBase\n{\n    [Fact]\n    public void Renders_an_empty_button()\n    {\n        var cut = Context.RenderComponent&lt;AntDesign.Button&gt;();\n        cut.MarkupMatches(@&quot;\n            &lt;button class=&quot;&quot;ant-btn ant-btn-default&quot;&quot; id:ignore type=&quot;&quot;button&quot;&quot; ant-click-animating-without-extra-node=&quot;&quot;false&quot;&quot;&gt;&lt;/button&gt;\n        &quot;);\n    }\n}\n</code></pre>\n"
+}

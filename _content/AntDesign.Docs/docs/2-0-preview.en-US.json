@@ -1,0 +1,5 @@
+{
+  "Order": 8,
+  "Title": "Try 2.0 preview (antd v5)",
+  "Html": "<p>Hello everyone, we are very happy that the early 2.0 version for Ant Design v5 have been released to Nuget, and you can try it by install the package:</p>\n<p>.csproj:</p>\n<pre><code class=\"language-xml\">&lt;PackageReference Include=&quot;AntDesign&quot; Version=&quot;2.0.0-nightly-*&quot; /&gt;\n</code></pre>\n<p>_import.razor:</p>\n<pre><code class=\"language-cs\">@using AntDesign\n@using CssInCSharp\n</code></pre>\n<p>App.razor:</p>\n<pre><code class=\"language-razor\">    &lt;link no-antblazor-css /&gt;\n    &lt;StyleOutlet @rendermode=&quot;InteractiveServer&quot; /&gt;\n    @* &lt;HeadOutlet @rendermode=&quot;InteractiveServer&quot; /&gt; *@\n</code></pre>\n<p>The branch of v5 is on https://github.com/ant-design-blazor/ant-design-blazor/tree/compatibility-v5 , welcome contributions!</p>\n<p>Please try and give us your feedback. We will continue the improvment for the development experience.</p>\n"
+}
