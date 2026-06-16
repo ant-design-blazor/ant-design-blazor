@@ -15,6 +15,19 @@ timeline: true
 
 ---
 
+### 1.6.2
+
+`2026-06-16`
+
+- 💄 Fixed Space RTL style (#4805). [#4805](https://github.com/ant-design-blazor/ant-design-blazor/pull/4805) [@Arash Zandi](https://github.com/Arash Zandi)
+- 🐞 Fixed Cascader sub-menu expand glitch when "ExpandTrigger" set to "hover" (#4813). [#4813](https://github.com/ant-design-blazor/ant-design-blazor/pull/4813) [@Jerry](https://github.com/Jerry)
+- 🐞 Fixed Overlay spurious mouseleave fix (Chromium 149+) (#4814). [#4814](https://github.com/ant-design-blazor/ant-design-blazor/pull/4814) [@James Yeung](https://github.com/James Yeung)
+- 📖 docs: add RTL in guide (#4811). [#4811](https://github.com/ant-design-blazor/ant-design-blazor/pull/4811) [@James Yeung](https://github.com/James Yeung)
+- 🐞 Fixed Tabs for ReuseTabsService with assembly scanning capabilities (#4801). [#4801](https://github.com/ant-design-blazor/ant-design-blazor/pull/4801) [@James Yeung](https://github.com/James Yeung)
+- 🐞 Fixed statistic rounding logic and add tests for fractional parts. (#4803). [#4803](https://github.com/ant-design-blazor/ant-design-blazor/pull/4803) [@James Yeung](https://github.com/James Yeung)
+- 📖 Docs Descriptions enhance the demo for responsiveness (#4798). [#4798](https://github.com/ant-design-blazor/ant-design-blazor/pull/4798) [@Arthur](https://github.com/Arthur)
+- 🌐 i18n: enhance ru-RU translates (#4807). [#4807](https://github.com/ant-design-blazor/ant-design-blazor/pull/4807) [@Maksim](https://github.com/Maksim)
+
 ### 1.6.1
 
 `2026-04-15`

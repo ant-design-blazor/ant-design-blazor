@@ -15,6 +15,19 @@ timeline: true
 
 ---
 
+### 1.6.2
+
+`2026-06-16`
+
+- 💄 修复 Space RTL 样式。 (#4805)。[#4805](https://github.com/ant-design-blazor/ant-design-blazor/pull/4805) [@Arash Zandi](https://github.com/Arash Zandi)
+- 🐞 修复 Cascader 当 ExpandTrigger 设置为 hover 时菜单展开卡顿。 (#4813)。[#4813](https://github.com/ant-design-blazor/ant-design-blazor/pull/4813) [@Jerry](https://github.com/Jerry)
+- 🐞 修复 Overlay 虚假 mouseleave 事件导致关闭 (Chromium 149+) (#4814)。[#4814](https://github.com/ant-design-blazor/ant-design-blazor/pull/4814) [@James Yeung](https://github.com/James Yeung)
+- 📖 文档增加 RTL 指南 (#4811)。[#4811](https://github.com/ant-design-blazor/ant-design-blazor/pull/4811) [@James Yeung](https://github.com/James Yeung)
+- 🐞 修复 Tabs 的 ReuseTabsService 程序集扫描。[#4801](https://github.com/ant-design-blazor/ant-design-blazor/pull/4801) [@James Yeung](https://github.com/James Yeung)
+- 🐞 修复 Statistic 取整逻辑，增加小数相关测试。[#4803](https://github.com/ant-design-blazor/ant-design-blazor/pull/4803) [@James Yeung](https://github.com/James Yeung)
+- 📖 文档 Descriptions 修改响应式示例的demo (#4798)。[#4798](https://github.com/ant-design-blazor/ant-design-blazor/pull/4798) [@Arthur](https://github.com/Arthur)
+- 🌐 优化 ru-RU 翻译。 (#4807)。[#4807](https://github.com/ant-design-blazor/ant-design-blazor/pull/4807) [@Maksim](https://github.com/Maksim)
+
 ### 1.6.1
 
 `2026-04-15`
