@@ -255,6 +255,7 @@ namespace AntDesign.Internal
         private bool _mouseInTrigger = false;
         private bool _mouseInOverlay = false;
         private bool _mouseUpInOverlay = false;
+        private int _overlayMouseEnterCount = 0;
 
         protected Overlay _overlay = null;
         private TriggerType[] _trigger = [TriggerType.Hover];
@@ -425,6 +426,7 @@ namespace AntDesign.Internal
 
         protected virtual void OnOverlayMouseEnter()
         {
+            _overlayMouseEnterCount++;
             _mouseInOverlay = true;
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
@@ -435,6 +437,18 @@ namespace AntDesign.Internal
 
         protected virtual async Task OnOverlayMouseLeave()
         {
+            _overlayMouseEnterCount--;
+
+            // Only hide when all enter events have been matched with leave events.
+            // This guards against spurious mouseleave events fired by the browser
+            // (e.g., during CSS transitions or in Chromium 149+) that would otherwise
+            // cause the overlay to disappear while the cursor is still over it.
+            if (_overlayMouseEnterCount > 0)
+            {
+                _mouseInOverlay = true;
+                return;
+            }
+
             _mouseInOverlay = false;
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
@@ -608,6 +622,10 @@ namespace AntDesign.Internal
             {
                 return;
             }
+
+            // Reset the enter/leave counter for a new overlay session
+            _overlayMouseEnterCount = 0;
+
             await _overlay.Show(overlayLeft, overlayTop);
         }
 
