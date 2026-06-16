@@ -141,14 +141,17 @@
       "equals": "Равно",
       "notEquals": "Не равно",
       "contains": "Содержит",
+      "notContains": "Не содержит",
       "startsWith": "Начинается с",
       "endsWith": "Заканчивается на",
       "greaterThan": "Больше",
       "lessThan": "Меньше",
-      "greaterThanOrEquals": "Больше или Равно",
+      "greaterThanOrEquals": "Больше или равно",
       "lessThanOrEquals": "Меньше или равно",
       "isNull": "Null",
-      "isNotNull": "Не Null"
+      "isNotNull": "Не Null",
+      "theSameDateWith": "Совпадает с",
+      "between": "Между"
     }
   },
   "Modal": {
@@ -240,5 +243,11 @@
   },
   "Image": {
     "preview": "Предпросмотр"
+  },
+  "ReuseTabs": {
+    "Close": "Закрыть",
+    "CloseAllTabs": "Закрыть все вкладки",
+    "CloseAllButThis": "Закрыть все кроме этой",
+    "PinTab": "Закрепить вкладку"
   }
 }
