@@ -11,29 +11,29 @@
 
     private async Task OnFetchData()
     {
-        var data = await _message.LoadingWhen(
-            async () =>
-            {
-                await Task.Delay(2000);
-                return new[] { "Item 1", "Item 2", "Item 3" };
-            },
-            "Fetching data..."
-        );
+        var fetchDataTask = Task.Run(async () =>
+        {
+            await Task.Delay(2000);
+            return new[] { "Item 1", "Item 2", "Item 3" };
+        });
+
+        var data = await fetchDataTask.WrappedBy(_message)
+            .LoadingAsync("Fetching data...");
 
         _message.Success($"Fetched {data.Length} items: {string.Join(", ", data)}");
     }
 
     private async Task OnSaveData()
     {
-        await _message.LoadingWhen(
-            async () => { await Task.Delay(2000); },
-            new MessageConfig
+        var saveTask = Task.Run(async () => { await Task.Delay(2000); });
+
+        await saveTask.WrappedBy(_message)
+            .LoadingAsync(new MessageConfig
             {
                 Content = "Saving data...",
-            }
-        );
+            });
 
         _message.Success("Data saved successfully!");
     }
-
+    
 }
