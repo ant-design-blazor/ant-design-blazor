@@ -97,6 +97,7 @@ namespace AntDesign
             set
             {
                 _waitingDataSourceReload = true;
+                _waitingClientFilterOptionsReload = true;
                 _dataSourceCount = value is IQueryable<TItem> ? 0 : value?.Count() ?? 0;
                 _dataSource = value ?? Enumerable.Empty<TItem>();
                 _fieldModel ??= _dataSource.FirstOrDefault();
@@ -407,6 +408,7 @@ namespace AntDesign
         private bool _hasInitialized;
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
+        private bool _waitingClientFilterOptionsReload = true;
         private bool _treeMode;
         private string _scrollBarWidth;
         private bool _hasFixLeft;
@@ -737,6 +739,29 @@ namespace AntDesign
                 if (_total != Total && TotalChanged.HasDelegate)
                 {
                     TotalChanged.InvokeAsync(_total);
+                }
+
+                if (_hasInitialized && _waitingClientFilterOptionsReload)
+                {
+                    foreach (var fieldColumn in ColumnContext.HeaderColumns.OfType<IFieldColumn>())
+                    {
+                        if (!fieldColumn.Filterable)
+                        {
+                            continue;
+                        }
+
+                        fieldColumn.ClearClientFilter();
+
+                        var rowIndex = 0;
+                        foreach (var item in _dataSource)
+                        {
+                            fieldColumn.AddClientFilter<TItem>(GetRowData(item, rowIndex, 1));
+                            rowIndex++;
+                        }
+
+                    }
+
+                    _waitingClientFilterOptionsReload = false;
                 }
 
                 _shouldRender = true;
