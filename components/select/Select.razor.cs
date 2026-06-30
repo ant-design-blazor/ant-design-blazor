@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Documentation;
@@ -63,27 +63,21 @@ namespace AntDesign
         private IEnumerable<TItem> _dataSourceCopy;
         private IEnumerable<TItem> _dataSourceShallowCopy;
 
-        /// <summary>
-        /// MethodInfo will contain attached MemberwiseClone protected
-        /// method. Due to its protection level, it has to be accessed
-        /// using reflection. It will be used during generation of
-        /// the DataSource shallow copy (which is a new list of DataSource
-        /// items with shallow copy of each item).
-        /// </summary>
-        private MethodInfo _dataSourceItemShallowCopyMehtod;
+        private Lazy<Func<TItem, TItem>> _dataSourceItemShallowCopyFunc;
 
-        private MethodInfo GetDataSourceItemCloneMethod()
+        private Lazy<Func<TItem, TItem>> DataSourceItemShallowCopyFunc
         {
-            if (_dataSourceItemShallowCopyMehtod is null)
+            get
             {
-                _dataSourceItemShallowCopyMehtod = typeof(TItem)
-                    .GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
-                if (DataSourceEqualityComparer is null)
+                _dataSourceItemShallowCopyFunc ??= new(() =>
                 {
-                    DataSourceEqualityComparer = this;
-                }
+                    var p = Expression.Parameter(typeof(TItem), "p");
+                    var asObj = Expression.Convert(p, typeof(object));
+                    var body = Expression.Call(asObj, "MemberwiseClone", []);
+                    return Expression.Lambda<Func<TItem, TItem>>(Expression.Convert(body, typeof(TItem)), p).Compile();
+                });
+                return _dataSourceItemShallowCopyFunc;
             }
-            return _dataSourceItemShallowCopyMehtod;
         }
 
         /// <summary>
@@ -517,8 +511,8 @@ namespace AntDesign
                         {
                             _dataSourceCopy = _datasource.ToList();
                         }
-                        var cloneMethod = GetDataSourceItemCloneMethod();
-                        _dataSourceShallowCopy = _datasource.Select(x => (TItem)cloneMethod.Invoke(x, null)).ToList();
+                        //var cloneMethod = GetDataSourceItemCloneMethod();
+                        _dataSourceShallowCopy = _datasource.Select(DataSourceItemShallowCopyFunc.Value).ToList();
                     }
 
                     OnDataSourceChanged?.Invoke();
