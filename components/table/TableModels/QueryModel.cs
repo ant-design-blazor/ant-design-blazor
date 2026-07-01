@@ -6,10 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using AntDesign.Core.Helpers;
+using AntDesign.Filters;
+using AntDesign.TableModels.JsonConverters;
 
 namespace AntDesign.TableModels
 {
+    [JsonConverter(typeof(QueryModelJsonConverter))]
     public abstract class QueryModel
     {
         public int PageIndex { get; }
@@ -52,6 +57,7 @@ namespace AntDesign.TableModels
         }
     }
 
+    [JsonConverter(typeof(QueryModelJsonConverter))]
     public class QueryModel<TItem> : QueryModel, ICloneable
     {
         internal QueryModel(int pageIndex, int pageSize, int startIndex) : base(pageIndex, pageSize, startIndex)
@@ -65,6 +71,7 @@ namespace AntDesign.TableModels
         public QueryModel(int pageIndex, int pageSize, int startIndex, IList<ITableSortModel> sortModel, IList<ITableFilterModel> filterModel)
             : base(pageIndex, pageSize, startIndex, sortModel, filterModel)
         {
+            InitializeExpression();
         }
 
         internal void AddSortModel(ITableSortModel model)
@@ -75,6 +82,28 @@ namespace AntDesign.TableModels
         internal void AddFilterModel(ITableFilterModel model)
         {
             FilterModel.Add(model);
+        }
+
+        /// <summary>
+        /// Initializes filter models with field filter types. This should be called after deserialization.
+        /// </summary>
+        private void InitializeExpression()
+        {
+            if (FilterModel?.Count > 0)
+            {
+                foreach (var filterModel in FilterModel)
+                {
+                    filterModel.BuildGetFieldExpression<TItem>();
+                }
+            }
+
+            if (SortModel?.Count > 0)
+            {
+                foreach (var sortModel in SortModel)
+                {
+                    sortModel.BuildGetFieldExpression<TItem>();
+                }
+            }
         }
 
         public IQueryable<TItem> ExecuteQuery(IQueryable<TItem> query)

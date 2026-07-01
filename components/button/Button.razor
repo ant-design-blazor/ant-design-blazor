@@ -16,7 +16,11 @@
         else if (!string.IsNullOrEmpty(Icon))
         {
             <Icon Type="@Icon" />
-        }
+		}
+		else if (!string.IsNullOrEmpty(IconFont))
+		{
+			<Icon IconFont="@IconFont" />
+		}
         @if (ChildContent != default)
         {
             @if (NoSpanWrap)

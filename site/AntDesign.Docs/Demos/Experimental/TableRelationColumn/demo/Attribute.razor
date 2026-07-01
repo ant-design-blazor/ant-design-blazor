@@ -1,0 +1,79 @@
+@using System.Threading.Tasks
+
+<Table TItem="Product" DataSource="@products" Size="@TableSize.Small">
+    <PropertyColumn Property="c=>c.ProductId" Title="Product ID" />
+    <PropertyColumn Property="c=>c.Name" Title="Product Name" />
+    <PropertyColumn Property="c=>c.CategoryId" Title="Category" />
+    <PropertyColumn Property="c=>c.Price" Title="Price" Format="C2" />
+    <PropertyColumn Property="c=>c.Stock" Title="Stock" />
+</Table>
+
+@code {
+    private List<Product> products = new();
+
+    protected override void OnInitialized()
+    {
+        products = new List<Product>
+        {
+            new Product { ProductId = "P001", Name = "MacBook Pro", CategoryId = 1, Price = 12999m, Stock = 50 },
+            new Product { ProductId = "P002", Name = "iPhone 15", CategoryId = 1, Price = 6999m, Stock = 200 },
+            new Product { ProductId = "P003", Name = "Office Chair", CategoryId = 2, Price = 899m, Stock = 100 },
+        };
+    }
+
+    public class Product
+    {
+        public string ProductId { get; set; }
+        public string Name { get; set; }
+
+        @* Method 3: Using attributes - automatically create relation components *@
+        @* Note: CategoryId property is marked with [RelationColumn] attribute *@
+        [RelationColumn(typeof(CategoryNameRelation))]
+        public int CategoryId { get; set; }
+
+        public decimal Price { get; set; }
+        public int Stock { get; set; }
+    }
+
+    // Category name relation component - automatically created via Attribute
+    public class CategoryNameRelation : RelationComponentBase<Product, int>
+    {
+        private static readonly Dictionary<int, string> _categories = new()
+        {
+            { 1, "Electronics" },
+            { 2, "Furniture" },
+            { 3, "Accessories" }
+        };
+
+        protected override Task OnLoadBatch(IEnumerable<int> categoryIds)
+        {
+            Console.WriteLine($"[CategoryNameRelation] Batch loading category IDs: {string.Join(", ", categoryIds.Distinct())}");
+            return Task.CompletedTask;
+        }
+
+        protected override RenderFragment RenderContent(int categoryId, Product product)
+        {
+            return builder =>
+            {
+                if (_categories.TryGetValue(categoryId, out var categoryName))
+                {
+                    builder.OpenComponent<Tag>(0);
+                    builder.AddAttribute(2, "ChildContent", (RenderFragment)(b => b.AddContent(3, categoryName)));
+                    builder.CloseComponent();
+                }
+                else
+                {
+                    builder.AddContent(4, "Unknown Category");
+                }
+            };
+        }
+
+        private string GetCategoryColor(int categoryId) => categoryId switch
+        {
+            1 => "blue",
+            2 => "green",
+            3 => "orange",
+            _ => "default"
+        };
+    }
+}

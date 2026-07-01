@@ -131,36 +131,11 @@
     {
         if (SavedQueryModelJson is not null)
         {
-            var settings = new JsonSerializerOptions();
-            settings.Converters.Add(new SortModelConverter());
-            settings.Converters.Add(new FilterModelConverter());
-            QueryModel<Data> queryModel = JsonSerializer.Deserialize<QueryModel<Data>>(SavedQueryModelJson, settings);
+            QueryModel<Data> queryModel = JsonSerializer.Deserialize<QueryModel<Data>>(SavedQueryModelJson);
+
+            var list = queryModel.ExecuteQuery(data.AsQueryable());
 
             Table.ReloadData(queryModel);
-        }
-    }
-
-    public class FilterModelConverter : JsonConverter<ITableFilterModel>
-    {
-        public override ITableFilterModel Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            return JsonSerializer.Deserialize<FilterModel<string>>(ref reader, options);
-        }
-
-        public override void Write(Utf8JsonWriter writer, ITableFilterModel value, JsonSerializerOptions options)
-        {
-        }
-    }
-
-    public class SortModelConverter : JsonConverter<ITableSortModel>
-    {
-        public override ITableSortModel Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            return JsonSerializer.Deserialize<SortModel<string>>(ref reader, options);
-        }
-
-        public override void Write(Utf8JsonWriter writer, ITableSortModel value, JsonSerializerOptions options)
-        {
         }
     }
 

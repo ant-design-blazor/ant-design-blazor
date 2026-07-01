@@ -91,7 +91,7 @@ namespace AntDesign
 
                 rowCache.Add(hashCode, groupRowData);
             }
-            
+
             groupRowData.Children = grouping.Children.SelectMany(x =>
                     x.Key == null
                         ? x.Items.Select((data, index) => GetRowData(data, index + rowIndex, level + 1, rowCache))
@@ -128,6 +128,7 @@ namespace AntDesign
             {
                 currentRowData = new RowData<TItem>(currentDataItem)
                 {
+                    Key = dataHashCode.ToString(),
                     Expanded = DefaultExpandAllRows && level < DefaultExpandMaxLevel
                 };
                 rowCache.Add(dataHashCode, currentRowData);

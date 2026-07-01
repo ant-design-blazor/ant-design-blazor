@@ -6,7 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using AntDesign.Core.Helpers;
+using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Filters;
 
 namespace AntDesign.TableModels
@@ -19,25 +22,29 @@ namespace AntDesign.TableModels
 
         public IList<TableFilter> Filters { get; }
 
-        public Expression<Func<TField, TField, bool>> OnFilter { get; set; }
+        [JsonIgnore]
+        public Expression<Func<TField, TField, bool>> OnFilter { get; private set; }
 
         public int ColumnIndex => _columnIndex;
 
-        private TableFilterType FilterType { get; set; } = TableFilterType.List;
+        public TableFilterType FilterType { get; private set; } = TableFilterType.List;
 
-        private readonly LambdaExpression _getFieldExpression;
+        private LambdaExpression _getFieldExpression;
         private readonly int _columnIndex;
-        private readonly IFieldFilterType _fieldFilterType;
+        private IFieldFilterType _fieldFilterType;
 
 #if NET5_0_OR_GREATER
         [JsonConstructor]
 #endif
-        public FilterModel(int columnIndex, string fieldName, IEnumerable<string> selectedValues, IList<TableFilter> filters)
+        public FilterModel(int columnIndex, string fieldName, IEnumerable<string> selectedValues, IList<TableFilter> filters, TableFilterType filterType)
         {
             this.FieldName = fieldName;
             this.SelectedValues = selectedValues;
             this.Filters = filters;
             this._columnIndex = columnIndex;
+            this.OnFilter = (value, field) => field.Equals(value);
+            this._fieldFilterType = InternalFieldFilterTypeResolver.Resolve<TField>();
+            this.FilterType = filterType;
         }
 
         public FilterModel(IFieldColumn column, LambdaExpression getFieldExpression, string fieldName,
@@ -86,6 +93,11 @@ namespace AntDesign.TableModels
 
             foreach (var filter in Filters)
             {
+                if (filter.Value is JsonElement jsonElement)
+                {
+                    filter.Value = JsonElementHelper<TField>.GetValue(jsonElement);
+                }
+
                 if (this.FilterType == TableFilterType.List)
                 {
                     lambda = Expression.OrElse(lambda!, Expression.Invoke(OnFilter, Expression.Constant(filter.Value, typeof(TField)), _getFieldExpression.Body));
@@ -101,7 +113,7 @@ namespace AntDesign.TableModels
                             or TableFilterCompareOperator.IsNotNull
                             ? null
                             : filter.Value);
-                    var expression = _fieldFilterType.GetFilterExpression(filter.FilterCompareOperator, _getFieldExpression.Body, constantExpression);
+                    var expression = _fieldFilterType?.GetFilterExpression(filter.FilterCompareOperator, _getFieldExpression.Body, constantExpression);
                     if (lambda == null)
                     {
                         lambda = expression;
@@ -121,6 +133,30 @@ namespace AntDesign.TableModels
             }
 
             return Expression.Lambda<Func<TItem, bool>>(lambda, sourceExpression);
+        }
+
+        void ITableFilterModel.BuildGetFieldExpression<TItem>()
+        {
+            if (_getFieldExpression != null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(FieldName))
+            {
+                throw new InvalidOperationException("FieldName must be set before initializing the field expression");
+            }
+
+            try
+            {
+                // Use PathHelper to build an expression for accessing the field
+                var lambda = PathHelper.GetLambda(FieldName, typeof(TItem), typeof(TItem), typeof(TField), false);
+                _getFieldExpression = lambda;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to create expression for field '{FieldName}' of type '{typeof(TItem).Name}': {ex.Message}", ex);
+            }
         }
     }
 }

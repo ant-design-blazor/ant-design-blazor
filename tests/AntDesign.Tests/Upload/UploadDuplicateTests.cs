@@ -29,6 +29,7 @@ namespace AntDesign.Tests.Upload
             };
             var fileList = new List<UploadFileItem> { existingFile };
             var component = Context.RenderComponent<AntDesign.Upload>(parameters => parameters
+                .Add(p => p.Action, "https://example.com/upload")
                 .Add(p => p.FileList, fileList)
                 .Add(p => p.ChildContent, "some content"));
 

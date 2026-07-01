@@ -129,6 +129,12 @@ namespace AntDesign
         public string Icon { get; set; }
 
         /// <summary>
+        /// Set the icon component of button using IconFont.
+        /// </summary>
+        [Parameter]
+        public string IconFont { get; set; }
+
+        /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
         /// </summary>
         /// <default value="false" />
@@ -235,7 +241,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    _ = OnClick.InvokeAsync(args);
+                    await OnClick.InvokeAsync(args);
                 }
             }
         }

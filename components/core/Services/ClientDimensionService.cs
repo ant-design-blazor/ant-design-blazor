@@ -7,7 +7,7 @@ using Microsoft.JSInterop;
 
 namespace AntDesign.Core.Services;
 
-public class ClientDimensionService
+internal class ClientDimensionService
 {
     private double? _scrollBarSize;
     private readonly IJSRuntime _js;

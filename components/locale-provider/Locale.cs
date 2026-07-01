@@ -62,5 +62,7 @@ namespace AntDesign.Locales
         public ImageLocale Image { get; set; } = new();
 
         public ReuseTabsLocale ReuseTabs { get; set; } = new();
+
+        public DraftLocale Draft { get; set; } = new();
     }
 }

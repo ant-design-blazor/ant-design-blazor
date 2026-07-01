@@ -1,0 +1,121 @@
+<div class="two-tone-demo">
+    <div>
+        <Tag Class="two-tone-tag two-tone-purple">
+            <IconTemplate>
+                <span class="two-tone-tag-icon">Bug</span>
+            </IconTemplate>
+            <ChildContent>
+                <span class="two-tone-tag-content">Issue #1234</span>
+            </ChildContent>
+        </Tag>
+
+        <Tag Class="two-tone-tag two-tone-cyan">
+            <IconTemplate>
+                <span class="two-tone-tag-icon">Feature</span>
+            </IconTemplate>
+            <ChildContent>
+                <span class="two-tone-tag-content">Request</span>
+            </ChildContent>
+        </Tag>
+
+        <Tag Class="two-tone-tag two-tone-blue">
+            <IconTemplate>
+                <span class="two-tone-tag-icon">
+                    <Icon Type="star" />
+                </span>
+            </IconTemplate>
+            <ChildContent>
+                <span class="two-tone-tag-content">Featured</span>
+            </ChildContent>
+        </Tag>
+    </div>
+
+    <div>
+        <Tag Class="two-tone-tag two-tone-green">
+            <IconTemplate>
+                <span class="two-tone-tag-icon">Build</span>
+            </IconTemplate>
+            <ChildContent>
+                <span class="two-tone-tag-content">Passing</span>
+            </ChildContent>
+        </Tag>
+
+        <Tag Class="two-tone-tag two-tone-blue">
+            <IconTemplate>
+                <span class="two-tone-tag-icon">Version</span>
+            </IconTemplate>
+            <ChildContent>
+                <span class="two-tone-tag-content">v1.0.0</span>
+            </ChildContent>
+        </Tag>
+
+        <Tag Class="two-tone-tag two-tone-orange">
+            <IconTemplate>
+                <span class="two-tone-tag-icon">Coverage</span>
+            </IconTemplate>
+            <ChildContent>
+                <span class="two-tone-tag-content">85%</span>
+            </ChildContent>
+        </Tag>
+    </div>
+</div>
+
+
+<style>
+    .two-tone-tag {
+        padding: 0;
+        border: 0;
+    }
+
+    .two-tone-tag-icon {
+        display: inline-block;
+        align-items: center;
+        padding: 0 7px;
+        background-color: rgba(0, 0, 0, 0.15);
+        border-radius: 2px 0 0 2px;
+    }
+
+    .two-tone-tag-content {
+        padding: 0 7px;
+    }
+
+    /* Different color schemes */
+    .two-tone-blue {
+        background-color: #1890ff;
+        color: white;
+    }
+
+    .two-tone-green {
+        background-color: #52c41a;
+        color: white;
+    }
+
+    .two-tone-orange {
+        background-color: #fa8c16;
+        color: white;
+    }
+
+    .two-tone-red {
+        background-color: #f5222d;
+        color: white;
+    }
+
+    .two-tone-purple {
+        background-color: #722ed1;
+        color: white;
+    }
+
+    .two-tone-cyan {
+        background-color: #13c2c2;
+        color: white;
+    }
+
+    .two-tone-demo > div > * {
+        margin-right: 8px;
+        margin-bottom: 8px;
+    }
+
+    .two-tone-demo > div {
+        margin-bottom: 12px;
+    }
+</style>

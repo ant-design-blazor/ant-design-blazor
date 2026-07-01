@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace AntDesign
+namespace AntDesign.Core
 {
     public class ComponentRenderedText
     {

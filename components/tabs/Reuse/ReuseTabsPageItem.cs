@@ -28,8 +28,13 @@ namespace AntDesign
 
         /// <summary>
         /// Page content
-        /// </summary>5
+        /// </summary>
         public RenderFragment Body { get; set; }
+
+        /// <summary>
+        /// Cached render fragment to ensure reference stability for KeepAlive
+        /// </summary>
+        internal RenderFragment CachedRenderFragment { get; set; }
 
         internal string TypeName { get; set; }
 

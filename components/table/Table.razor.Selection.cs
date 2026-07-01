@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
@@ -157,6 +158,19 @@ namespace AntDesign
             SelectionChanged();
         }
 
+        void ITable.UnSelectSelection(ISelectionColumn selectItem)
+        {
+            _preventRowDataTriggerSelectedRowsChanged = true;
+
+            ClearSelectedRows();
+            selectItem.RowData.SetSelected(false, selectItem.Type == SelectionType.Radio || selectItem.CheckStrictly);
+
+            _preventRowDataTriggerSelectedRowsChanged = false;
+
+            _selection?.StateHasChanged();
+            SelectionChanged();
+        }
+
         private void SelectItem(TItem item)
         {
             _preventRowDataTriggerSelectedRowsChanged = true;
@@ -168,6 +182,19 @@ namespace AntDesign
             }
 
             _preventRowDataTriggerSelectedRowsChanged = false;
+        }
+
+        /// <summary>
+        /// Scroll the item into view
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task ScrollItemIntoView(TItem item)
+        {
+            if (_rootRowDataCache.TryGetValue(GetHashCode(item), out var rowData))
+            {
+                await JsInvokeAsync(JSInteropConstants.ScrollTo, rowData.RowElementRef);
+            }
         }
 
 

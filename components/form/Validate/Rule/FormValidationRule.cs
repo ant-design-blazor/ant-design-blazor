@@ -61,7 +61,7 @@ namespace AntDesign
         public Type Enum { get; set; }
 
         /// <summary>
-        /// Validate rule for child elements. Valid <see cref="Type"/>s: Array, Object (<c>FormItem</c> not supported now)
+        /// Validate rule for child elements. Valid <see cref="Type"/>s: Array, Object
         /// </summary>
         public Dictionary<object, FormValidationRule> Fields { get; set; }
 

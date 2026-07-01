@@ -18,6 +18,8 @@ namespace AntDesign
 
         public bool IsColGroup { get; set; }
 
+        public bool IsBody { get; set; }
+
         public int ColIndex { get; set; }
 
         public ColumnFixPlacement? Fixed { get; set; }

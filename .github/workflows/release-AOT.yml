@@ -1,4 +1,4 @@
-﻿name: Publish Docs with AOT
+name: Publish Docs with AOT
 
 on:
   push:
@@ -28,6 +28,7 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
+            10.0.x
 
       - uses: actions/setup-node@v1
         with:
@@ -53,7 +54,7 @@ jobs:
           dotnet build
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=true
           cp -rf cargo/staticwebapp.config.json cargo/wwwroot
-          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net9.0/*.dll cargo/wwwroot/_framework
+          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net10.0/*.dll cargo/wwwroot/_framework
           find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
 
       - name: Deploy to Azure 🚀
@@ -68,33 +69,13 @@ jobs:
           skip_api_build: true
           skip_app_build: true
 
-      - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          apiToken: ${{ secrets.CF_TOKEN }}
-          accountId: ${{ secrets.CF_ID }}
-          projectName: 'ant-design-blazor'
-          directory: "cargo/wwwroot"
-          wranglerVersion: '3'      
-
-      # - name: Deploy to Gitee 🚀
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GH_PUSH_TOKEN }}
-      #     publish_branch: gh-pages
-      #     publish_dir: ./cargo/wwwroot
-      #     force_orphan: true
-
-      # - name: Deploy to Github.io 🚀
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     personal_token: ${{ secrets.GH_PUSH_TOKEN }}
-      #     external_repository: ant-design-blazor/ant-design-blazor.github.io
-      #     publish_branch: master
-      #     publish_dir: ./cargo/wwwroot
-      #     cname: antblazor.com
-      #     force_orphan: true
-      #     tag_name: ${{ steps.publish.outputs.package_version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./cargo/wwwroot
+          publish_branch: gh-pages
+          force_orphan: true
 
       # - name: Sync to Gitee 💕
       #   uses: wearerequired/git-mirror-action@master

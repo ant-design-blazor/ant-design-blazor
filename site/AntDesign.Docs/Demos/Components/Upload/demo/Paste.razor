@@ -1,0 +1,27 @@
+@inject IMessageService _message
+@inject IJSRuntime JS
+
+<Upload @ref="upload"
+        Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        Name="files"
+        Defer="true"
+        @bind-FileList="fileList"
+		ListType="UploadListType.Picture"
+        Trigger="UploadTrigger.Paste">
+    <TextArea Placeholder="Paste files here (Ctrl+V)" />
+</Upload>
+
+<Button Type="ButtonType.Primary" OnClick="HandleUpload" Disabled="!CanUpload">Start Upload</Button>
+
+@code {
+
+    Upload upload;
+
+    List<UploadFileItem> fileList = [];
+    bool CanUpload => fileList?.Any(x => x.State == UploadState.Waiting) ?? false;
+
+    async Task HandleUpload()
+    {
+        await upload.StartUpload();
+    }
+} 

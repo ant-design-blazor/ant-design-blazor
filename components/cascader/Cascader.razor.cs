@@ -281,7 +281,14 @@ namespace AntDesign
 
                 if (index != -1)
                 {
-                    _hoverSelectedNodes.RemoveRange(index, _hoverSelectedNodes.Count - index);
+                    //remove nodes after the hovered node while keeping the hovered node active
+                    var firstNodeToRemoveIndex = index + 1;
+                    var nodesToRemoveCount = _hoverSelectedNodes.Count - firstNodeToRemoveIndex;
+
+                    if (nodesToRemoveCount > 0)//dont remove when empty
+                    {
+                        _hoverSelectedNodes.RemoveRange(firstNodeToRemoveIndex, nodesToRemoveCount);
+                    }
                 }
                 else
                 {
@@ -292,6 +299,11 @@ namespace AntDesign
                 _renderNodes = _hoverSelectedNodes;
             }
             _renderNodes.Sort((x, y) => x.Level.CompareTo(y.Level));  //Level 升序排序
+
+#if NET10_0_OR_GREATER
+            // .NET 10: Refresh overlay to detect _renderNodes changes
+            RefreshComponentState();
+#endif
 
             if (!cascaderNode.HasChildren)
             {

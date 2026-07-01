@@ -1,0 +1,65 @@
+@namespace AntDesign.Docs.Demos.Experimental.TableRelationColumn.Demo.Shared
+
+@typeparam TItem
+
+@inherits RelationComponentBase<TItem, int>
+
+@* Shared Relation Display Component - Reusable across different table types *@
+
+@if (_userData == null)
+{
+    <span>Loading...</span>
+}
+else if (_userData.TryGetValue(CurrentFieldValue, out var data))
+{
+    <Space Size="@SpaceSize.Small">
+        <SpaceItem>
+            <Tag Color="@data.Color">@data.Name</Tag>
+        </SpaceItem>
+        <SpaceItem>
+            <Text Type="@TextElementType.Secondary" Style="font-size: 12px">
+                (@data.Description)
+            </Text>
+        </SpaceItem>
+    </Space>
+}
+else
+{
+    <Tag Color="@("gray")">Unknown：@CurrentFieldValue</Tag>
+}
+
+@code {
+    // Simulated relation data - can be users or departments based on context
+    private Dictionary<int, UserData> _userData = new();
+
+    // Batch load relation data
+    protected override async Task OnLoadBatch(IEnumerable<int> ids)
+    {
+        var idList = ids.Distinct().ToList();
+        var toLoad = idList.Where(id => !_userData.ContainsKey(id)).ToList();
+        if (toLoad.Count == 0)
+        {
+            return;
+        }
+        await Task.Delay(300); // Simulate async data fetch
+        var colors = new[] { "blue", "green", "orange", "purple", "red", "cyan", "magenta", "lime", "pink", "teal" };
+        foreach (var id in toLoad)
+        {
+            var color = colors[id % colors.Length];
+            _userData[id] = new UserData
+            {
+                Name = $"User {id}",
+                Description = $"user{id}@example.com",
+                Color = color
+            };
+        }
+        Console.WriteLine($"[RelationDisplay<{typeof(TItem).Name}>] Batch loading IDs: {string.Join(", ", toLoad)}");
+    }
+
+    private class UserData
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Color { get; set; }
+    }
+}

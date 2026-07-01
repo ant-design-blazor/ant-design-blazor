@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Components;
@@ -194,6 +195,7 @@ namespace AntDesign
             url ??= CurrentUrl;
             var reuseTabsPageItem = _pages?.FirstOrDefault(w => w.Url == url);
             reuseTabsPageItem.Body = null;
+            reuseTabsPageItem.CachedRenderFragment = null; // Clear cached fragment to force re-render
             reuseTabsPageItem.Rendered = false;
 
             // only reload current page, and other page would be load by tab navigation
@@ -238,12 +240,19 @@ namespace AntDesign
             OnStateHasChanged?.Invoke();
         }
 
-        internal void Init(bool reuse)
+        internal void Init(bool reuse, IEnumerable<Assembly> scanAssemblies = null)
         {
-            if (reuse)
+            if (!reuse)
             {
-                ScanPinnedPageAttribute();
+                return;
             }
+
+            if (scanAssemblies is null || !scanAssemblies.Any())
+            {
+                return;
+            }
+
+            ScanPinnedPageAttribute(scanAssemblies);
         }
 
         internal void TrySetRouteData(RouteData routeData, bool reuse)
@@ -352,29 +361,47 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Get all assembly
+        /// Get exported types from assembly
         /// </summary>
-        /// <returns></returns>
-        private static IEnumerable<Assembly> GetAllAssembly()
+        protected virtual Type[] GetExportedTypes(Assembly assembly)
         {
-            IEnumerable<Assembly> assemblies = new List<Assembly>();
-            var entryAssembly = Assembly.GetEntryAssembly();
-            if (entryAssembly == null) return assemblies;
-            var referencedAssemblies = entryAssembly.GetReferencedAssemblies().Select(Assembly.Load);
-            assemblies = new List<Assembly> { entryAssembly }.Union(referencedAssemblies);
-            return assemblies;
+            return assembly.ExportedTypes.ToArray();
         }
 
         /// <summary>
         /// Scan ReuseTabsPageAttribute
         /// </summary>
-        private void ScanPinnedPageAttribute()
+        private void ScanPinnedPageAttribute(IEnumerable<Assembly> scanAssemblies)
         {
-            var list = GetAllAssembly();
-
-            foreach (var item in list)
+            if (scanAssemblies is null || !scanAssemblies.Any())
             {
-                var allClass = item.ExportedTypes
+                return;
+            }
+
+            foreach (var item in scanAssemblies)
+            {
+                if (item.IsDynamic)
+                    continue;
+
+                Type[] exportedTypes;
+                try
+                {
+                    exportedTypes = GetExportedTypes(item);
+                }
+                catch (NotSupportedException)
+                {
+                    continue;
+                }
+                catch (FileNotFoundException)
+                {
+                    continue;
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    exportedTypes = ex.Types.Where(t => t != null).ToArray()!;
+                }
+
+                var allClass = exportedTypes
                     .Where(w => w.GetCustomAttribute<ReuseTabsPageAttribute>()?.Pin == true);
                 foreach (var pageType in allClass)
                 {
@@ -408,7 +435,9 @@ namespace AntDesign
 
         private void AddPage(ReuseTabsPageItem pageItem)
         {
-            pageItem.Key = pageItem.GetHashCode().ToString();
+            // Use a stable key to prevent re-render of other pages when one is removed.
+            // Prefer URL; for singleton pages fallback to type name.
+            pageItem.Key = pageItem.Url ?? pageItem.TypeName ?? pageItem.GetHashCode().ToString();
             _pages.Add(pageItem);
         }
 
@@ -426,7 +455,8 @@ namespace AntDesign
             var pageItem = _pages.Where(x => x.Url == key).FirstOrDefault();
             if (pageItem != null)
             {
-                pageItem.Body = null;
+                // Do not null out Body here; removing from collection is enough.
+                // Clearing Body caused other tabs to rebuild due to fragment tree changes.
                 _pages.Remove(pageItem);
             }
         }

@@ -25,6 +25,7 @@ namespace AntDesign.Select.Internal
         [CascadingParameter(Name = "ParentMaxTagPlaceholerTemplate")] internal RenderFragment<IEnumerable<TItem>> ParentMaxTagPlaceholerTemplate { get; set; }
         [CascadingParameter(Name = "ShowSearchIcon")] internal bool ShowSearchIcon { get; set; }
         [CascadingParameter(Name = "ShowArrowIcon")] internal bool ShowArrowIcon { get; set; }
+        [CascadingParameter(Name = "Loading")] internal bool Loading { get; set; }
 
         [Parameter]
         public string Prefix
@@ -91,6 +92,12 @@ namespace AntDesign.Select.Internal
         private bool _firstRender;
 
         private bool _compositionInputting;
+
+        /// <summary>
+        /// Indicates whether the IME composition is in progress.
+        /// During IME composition (e.g., typing Chinese characters), this property is true.
+        /// </summary>
+        internal bool IsComposing => _compositionInputting;
 
         protected override void OnInitialized()
         {
@@ -175,7 +182,7 @@ namespace AntDesign.Select.Internal
             int i = 0;
             bool overflowing = false;
             bool renderAgain = false;
-            foreach (var item in ParentSelect.SelectedOptionItems)
+            foreach (var item in ParentSelect.GetOrderedSelectedItems())
             {
                 if (item.Width == 0)
                 {

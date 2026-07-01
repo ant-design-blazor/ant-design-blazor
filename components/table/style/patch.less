@@ -74,7 +74,7 @@
 
 .@{table-prefix-cls}-resizable {
 
-    .ant-table-resizable-handle {
+    .@{table-prefix-cls}-resizable-handle {
         position: absolute;
         top: 0;
         right: 0;
@@ -84,27 +84,41 @@
         user-select: none;
     }
 
-    .ant-table-resizable-handle:hover {
+    .@{table-prefix-cls}-resizable-handle:hover {
         border-right: 2px dashed @primary-color-hover;
     }
 
-    .ant-table-resizing {
+    .@{table-prefix-cls}-resizing {
         border-right: 2px dashed @primary-color-active;
         z-index: 99;
     }
 }
 
 .@{table-prefix-cls}.@{table-prefix-cls}-striped {
-    tr:nth-child(2n) {
-        background-color: @table-header-bg;
+    &:not(.@{table-prefix-cls}-fixed-header):not(.@{table-prefix-cls}-fixed-column) {
+        .@{table-prefix-cls}-tbody tr:nth-child(2n) {
+            background-color: @table-header-bg;
+        }
+    }
+
+    &.@{table-prefix-cls}-fixed-column,
+    &.@{table-prefix-cls}-fixed-header {
+        .@{table-prefix-cls}-tbody tr:nth-child(2n+1) {
+            background-color: @table-header-bg;
+
+            .@{table-prefix-cls}-cell-fix-left,
+            .@{table-prefix-cls}-cell-fix-right {
+                background-color: @table-header-bg;
+            }
+        }
     }
 }
 
-tr.@{table-prefix-cls}-grouping-footer > td {
+tr.@{table-prefix-cls}-grouping-footer>td {
     padding: 0;
     line-height: inherit;
 }
 
-tr.@{table-prefix-cls}-row-grouping > td {
+tr.@{table-prefix-cls}-row-grouping>td {
     padding: @table-padding-vertical-sm @table-padding-horizontal-sm;
 }

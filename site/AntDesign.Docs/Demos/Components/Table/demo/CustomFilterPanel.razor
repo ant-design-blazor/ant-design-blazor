@@ -4,8 +4,12 @@
                         SorterCompare="@((a,b)=> a.Length - b.Length)"
                         SortDirections="new[] { SortDirection.Descending }"
                         Filtered="!string.IsNullOrWhiteSpace(searchString)">
-            <FilterDropdown>
+            <FilterDropdown Context="dropdown">
+                @{
+                    dropdown.PreventClose(); 
+                }
                 <Search Placeholder="Search Name" WrapperStyle="padding:20px;" @bind-Value="searchString" OnSearch="()=>_table?.ReloadData()" />
+                <Button Size="ButtonSize.Small" OnClick="()=> dropdown.FilterClose()">Cancel</Button>
             </FilterDropdown>
         </PropertyColumn>
         <PropertyColumn Property="c=>c.Age"

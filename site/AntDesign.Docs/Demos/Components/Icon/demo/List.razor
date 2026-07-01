@@ -118,7 +118,7 @@ else
 
     private void OnCopyClick(IconThemeType theme, string iconName)
     {
-        string htmlIcon = $"<Icon Type=\"{iconName}\" Theme=\"{theme}\"/>";
+        string htmlIcon = $"<Icon Type=\"{iconName}\" Theme=\"{nameof(IconThemeType)}.{theme}\"/>";
         JsRuntime.InvokeAsync<object>(JSInteropConstants.Copy, htmlIcon);
 
         messageService.Success(htmlIcon+ "  copied 🎉!");

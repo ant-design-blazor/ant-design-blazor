@@ -1,27 +1,5 @@
 ﻿export class watermarkHelper {
-  static generateBase64Url({
-    width,
-    height,
-    gapX,
-    gapY,
-    offsetLeft,
-    offsetTop,
-    rotate,
-    alpha,
-    watermarkContent,
-    lineSpace,
-  }: {
-        width: number,
-        height: number,
-        gapX: number,
-        gapY: number,
-        offsetLeft: number,
-        offsetTop: number,
-        rotate: number,
-        alpha: number,
-        watermarkContent: WatermarkText | WatermarkImage | Array<WatermarkText | WatermarkImage>,
-        lineSpace: number
-    }, dotnetRef, watermarkContentRef: HTMLElement, watermarkRef: HTMLElement): string {
+  static generateBase64Url(params: WatermarkParams, dotnetRef, watermarkContentRef: HTMLElement, watermarkRef: HTMLElement): string {
     const onFinish = (url: string) => {
       dotnetRef.invokeMethodAsync("load", url);
     }
@@ -29,11 +7,25 @@
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     if (!ctx) {
-            // eslint-disable-next-line no-console
+      // eslint-disable-next-line no-console
       console.warn('Current environment does not support Canvas, cannot draw watermarks.');
       onFinish('');
       return;
     }
+
+    const {
+      width,
+      height,
+      gapX,
+      gapY,
+      offsetLeft,
+      offsetTop,
+      rotate,
+      alpha,
+      watermarkContent,
+      lineSpace,
+    } = params;
+
     const ratio = window.devicePixelRatio || 1;
     const canvasWidth = (gapX + width) * ratio;
     const canvasHeight = (gapY + height) * ratio;
@@ -58,7 +50,7 @@
     contents.forEach((item: WatermarkText & WatermarkImage & { top: number }) => {
       if (item.url) {
         const { url, isGrayscale = false } = item;
-                // eslint-disable-next-line no-param-reassign
+        // eslint-disable-next-line no-param-reassign
         item.top = top;
         top += height;
         const img = new Image();
@@ -66,7 +58,7 @@
         img.referrerPolicy = 'no-referrer';
         img.src = url;
         img.onload = () => {
-                    // ctx.filter = 'grayscale(1)';
+          // ctx.filter = 'grayscale(1)';
           ctx.drawImage(img, 0, item.top * ratio, width * ratio, height * ratio);
           if (isGrayscale) {
             const imgData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -91,7 +83,7 @@
           textAlign = 'start',
           fontStyle = 'normal'
         } = item;
-                // eslint-disable-next-line no-param-reassign
+        // eslint-disable-next-line no-param-reassign
         item.top = top;
         top += lineSpace;
         const markSize = Number(fontSize) * ratio;
@@ -109,74 +101,127 @@
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const observer = new MutationObserver((mutationsList, observer) => {
+      if ((watermarkRef as any)._destroyed) {
+        observer.disconnect();
+        return;
+      }
+
       mutationsList.forEach((mutation) => {
-        if (mutation.type === 'childList') {
-          const removeNodes = mutation.removedNodes;
-          removeNodes.forEach((node) => {
-            const element = node as HTMLElement;
-            if (element === watermarkRef) {
-              parent.appendChild(element);
-            }
-            if (element === watermarkContentRef) {
-              watermarkRef.appendChild(element);
-            }
-          });
+        if (mutation.type !== 'childList') {
+          return;
         }
+
+        mutation.removedNodes.forEach((node) => {
+          const element = node as HTMLElement;
+
+          if (element === watermarkRef) {
+            // Check if parent still exists in DOM - if yes, it's manual removal, re-attach
+            // If parent is removed/detached, it's navigation/unmount, allow removal
+            if (parent && document.body.contains(parent)) {
+              parent.appendChild(element);
+            } else {
+              // Parent removed - clean up
+              (watermarkRef as any)._destroyed = true;
+              observer.disconnect();
+              delete (watermarkRef as any)._observer;
+            }
+          }
+          if (element === watermarkContentRef) {
+            // Check if watermarkRef still exists in DOM
+            if (watermarkRef && document.body.contains(watermarkRef)) {
+              watermarkRef.appendChild(element);
+            } else {
+              // watermarkRef removed - clean up
+              (watermarkRef as any)._destroyed = true;
+              observer.disconnect();
+              delete (watermarkRef as any)._observer;
+            }
+          }
+        });
       });
     });
+    if (parent) {
+      observer.observe(parent, {
+        attributes: true,
+        childList: true,
+        characterData: true,
+        subtree: true,
+      });
 
-    observer.observe(parent, {
-      attributes: true,
-      childList: true,
-      characterData: true,
-      subtree: true,
-    });
+      (watermarkRef as any)._observer = observer;
+    }
+  }
 
-    watermarkRef['_observer'] = observer;
+  static destroy(watermarkRef: HTMLElement): void {
+    if (!watermarkRef) {
+      return;
+    }
+
+    const observer = (watermarkRef as any)._observer as MutationObserver | undefined;
+
+    (watermarkRef as any)._destroyed = true;
+
+    if (observer) {
+      observer.disconnect();
+      delete (watermarkRef as any)._observer;
+    }
   }
 }
 
 export interface WatermarkText {
-    /**
-     * 水印文本文字颜色
-     * @default rgba(0,0,0,0.1)
-     */
-    fontColor?: string;
-    /**
-     * 水印文本文字大小
-     * @default 16
-     */
-    fontSize?: number;
-    /**
-     * 水印文本文字样式
-     * @default undefined
-     */
-    fontFamily?: string | undefined;
-    /**
-     * 水印文本文字粗细
-     * @default normal
-     */
-    fontWeight?: 'normal' | 'lighter' | 'bold' | 'bolder';
-    /**
-     * 水印文本内容
-     * @default ''
-     */
-    text?: string;
+  /**
+   * 水印文本文字颜色
+   * @default rgba(0,0,0,0.1)
+   */
+  fontColor?: string;
+  /**
+   * 水印文本文字大小
+   * @default 16
+   */
+  fontSize?: number;
+  /**
+   * 水印文本文字样式
+   * @default undefined
+   */
+  fontFamily?: string | undefined;
+  /**
+   * 水印文本文字粗细
+   * @default normal
+   */
+  fontWeight?: 'normal' | 'lighter' | 'bold' | 'bolder';
+  /**
+   * 水印文本内容
+   * @default ''
+   */
+  text?: string;
 
-    textAlign: 'start' | 'end';
+  textAlign: 'start' | 'end';
 
-    fontStyle?: 'normal' | 'italic' | 'oblique';
+  fontStyle?: 'normal' | 'italic' | 'oblique';
 }
 
 export interface WatermarkImage {
-    /**
-     * 水印图片是否需要灰阶显示
-     * @default false
-     */
-    isGrayscale?: boolean;
-    /**
-     * 水印图片源地址，为了显示清楚，建议导出 2 倍或 3 倍图
-     * @default ''
-     */
-    url?: string;
+  /**
+   * 水印图片是否需要灰阶显示
+   * @default false
+   */
+  isGrayscale?: boolean;
+  /**
+   * 水印图片源地址，为了显示清楚，建议导出 2 倍或 3 倍图
+   * @default ''
+   */
+  url?: string;
 }
+
+type WatermarkParams = {
+  width: number,
+  height: number,
+  gapX: number,
+  gapY: number,
+  offsetLeft: number,
+  offsetTop: number,
+  rotate: number,
+  alpha: number,
+  watermarkContent: WatermarkText | WatermarkImage | Array<WatermarkText | WatermarkImage>,
+  lineSpace: number
+};

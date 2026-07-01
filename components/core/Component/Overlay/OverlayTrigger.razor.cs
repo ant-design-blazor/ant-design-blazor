@@ -163,34 +163,21 @@ namespace AntDesign.Internal
          * 当前的placement，某些情况下可能会被Overlay组件修改（通过ChangePlacementForShow函数）
          * Current placement, would change by overlay in some cases(via ChangePlacementForShow function)
          */
-        private PlacementType _placement = PlacementType.BottomLeft;
-
-        /*
-         * 通过参数赋值的placement，不应该通过其它方式赋值
-         * Placement set by Parameter, should not be change by other way
-         */
-        private PlacementType _paramPlacement = PlacementType.BottomLeft;
+        private PlacementType _actualPlacement = PlacementType.BottomLeft;
 
         /// <summary>
         /// The position of the Dropdown overlay relative to the target. 
         /// Can be: Top, Left, Right, Bottom, TopLeft, TopRight, BottomLeft, BottomRight, LeftTop, LeftBottom, RightTop, RightBottom
         /// </summary>
-        /// <default value="PlacementType.BottomLeft" />
+        /// <default value="Placement.BottomLeft" />
         [Parameter]
-        public Placement Placement
-        {
-            get
-            {
-                return (RTL ? _placement.GetRTLPlacement() : _placement).Placement;
-            }
-            set
-            {
-                _placement = PlacementType.Create(value);
-                _paramPlacement = PlacementType.Create(value);
-            }
-        }
+        public Placement Placement { get; set; } = Placement.BottomLeft;
 
-        internal PlacementType GetPlacementType() => _placement;
+        private Placement? _placementWithRTL = null;
+
+        internal Placement PlacementWithRTL => (Placement)_placementWithRTL;
+
+        internal PlacementType GetPlacementType() => _actualPlacement;
 
         /// <summary>
         /// Override default placement class which is based on `Placement` parameter.
@@ -268,6 +255,7 @@ namespace AntDesign.Internal
         private bool _mouseInTrigger = false;
         private bool _mouseInOverlay = false;
         private bool _mouseUpInOverlay = false;
+        private int _overlayMouseEnterCount = 0;
 
         protected Overlay _overlay = null;
         private TriggerType[] _trigger = [TriggerType.Hover];
@@ -286,6 +274,24 @@ namespace AntDesign.Internal
                 return base.ShouldRender();
             _shouldRender = true;
             return false;
+        }
+
+        internal bool CheckPlacementChanged()
+        {
+            var newPlacement = RTL ? Placement.GetRTLPlacement() : Placement;
+            if (_placementWithRTL != newPlacement)
+            {
+                _placementWithRTL = newPlacement;
+                return true;
+            }
+            return false;
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            CheckPlacementChanged();
+            _actualPlacement = PlacementType.Create(PlacementWithRTL);
         }
 
         protected override void OnAfterRender(bool firstRender)
@@ -370,8 +376,6 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
             {
-                _overlay.SetMouseInOverlay(true);
-
                 await Show();
             }
             else
@@ -389,8 +393,6 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover) && IsOverlayShow())
             {
-                _overlay.SetMouseInOverlay(_mouseInOverlay);
-
                 await Hide();
             }
             else
@@ -408,8 +410,6 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Focus))
             {
-                _overlay.SetMouseInOverlay(true);
-
                 await Show();
             }
         }
@@ -420,14 +420,13 @@ namespace AntDesign.Internal
 
             if (_overlay != null && IsContainTrigger(TriggerType.Focus))
             {
-                _overlay.SetMouseInOverlay(_mouseInOverlay);
-
                 await Hide();
             }
         }
 
         protected virtual void OnOverlayMouseEnter()
         {
+            _overlayMouseEnterCount++;
             _mouseInOverlay = true;
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
@@ -438,6 +437,18 @@ namespace AntDesign.Internal
 
         protected virtual async Task OnOverlayMouseLeave()
         {
+            _overlayMouseEnterCount--;
+
+            // Only hide when all enter events have been matched with leave events.
+            // This guards against spurious mouseleave events fired by the browser
+            // (e.g., during CSS transitions or in Chromium 149+) that would otherwise
+            // cause the overlay to disappear while the cursor is still over it.
+            if (_overlayMouseEnterCount > 0)
+            {
+                _mouseInOverlay = true;
+                return;
+            }
+
             _mouseInOverlay = false;
 
             if (_overlay != null && IsContainTrigger(TriggerType.Hover))
@@ -564,7 +575,7 @@ namespace AntDesign.Internal
 
         internal void ChangePlacementForShow(PlacementType placement)
         {
-            _placement = placement;
+            _actualPlacement = placement;
         }
 
         internal virtual string GetArrowClass() => "";
@@ -575,7 +586,7 @@ namespace AntDesign.Internal
             {
                 return PlacementCls;
             }
-            return $"{PrefixCls}-placement-{_placement.Name}";
+            return $"{PrefixCls}-placement-{_actualPlacement.Name}";
         }
 
         internal virtual string GetOverlayEnterClass()
@@ -584,7 +595,7 @@ namespace AntDesign.Internal
             {
                 return OverlayEnterCls;
             }
-            return $"ant-slide-{_placement.SlideName}-enter ant-slide-{_placement.SlideName}-enter-active ant-slide-{_placement.SlideName}";
+            return $"ant-slide-{_actualPlacement.SlideName}-enter ant-slide-{_actualPlacement.SlideName}-enter-active ant-slide-{_actualPlacement.SlideName}";
         }
 
         internal virtual string GetOverlayLeaveClass()
@@ -593,7 +604,7 @@ namespace AntDesign.Internal
             {
                 return OverlayLeaveCls;
             }
-            return $"ant-slide-{_placement.SlideName}-leave ant-slide-{_placement.SlideName}-leave-active ant-slide-{_placement.SlideName}";
+            return $"ant-slide-{_actualPlacement.SlideName}-leave ant-slide-{_actualPlacement.SlideName}-leave-active ant-slide-{_actualPlacement.SlideName}";
         }
 
         internal virtual string GetOverlayHiddenClass()
@@ -611,6 +622,10 @@ namespace AntDesign.Internal
             {
                 return;
             }
+
+            // Reset the enter/leave counter for a new overlay session
+            _overlayMouseEnterCount = 0;
+
             await _overlay.Show(overlayLeft, overlayTop);
         }
 

@@ -41,7 +41,7 @@ namespace AntDesign
         public DescriptionsLayout Layout { get; set; } = DescriptionsLayout.Horizontal;
 
         /// <summary>
-        /// The number of <see cref="DescriptionsItem"/> elements in a row. Could be a number or a object like { xs: 8, sm: 16, md: 24}
+        /// The number of <see cref="DescriptionsItem"/> elements in a row. Could be a number or a object like { Xs: 8, Sm: 16, Md: 24 }
         /// </summary>
         [Parameter]
         public OneOf<int, Dictionary<string, int>> Column { get; set; }

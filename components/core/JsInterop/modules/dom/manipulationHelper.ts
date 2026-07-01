@@ -7,6 +7,164 @@ let cachedScrollBarSize: number | undefined = undefined;
 const scrollIds = new Map<HTMLElement, number>();
 
 export class manipulationHelper {
+  /**
+   * Safely parse CSS numeric values, returning 0 for "auto" or invalid values
+   * @param element The HTML element to get CSS property from
+   * @param property The CSS property name (e.g., 'marginTop', 'marginLeft')
+   * @returns Parsed number or 0 if invalid
+   */
+  static parseNumericValue(element: HTMLElement, property: string): number;
+  /**
+   * Safely parse CSS numeric values, returning 0 for "auto" or invalid values
+   * @param value CSS value to parse
+   * @returns Parsed number or 0 if invalid
+   */
+  static parseNumericValue(value: string): number;
+  static parseNumericValue(elementOrValue: HTMLElement | string, property?: string): number {
+    // If first parameter is HTMLElement, get the style value and calculate
+    if (elementOrValue instanceof HTMLElement && property) {
+      const element = elementOrValue;
+      const style = window.getComputedStyle(element);
+      const value = style[property];
+
+      // Check if the element's inline style has the property set to inherit
+      // This is needed because in some test environments, getComputedStyle
+      // returns empty string for inherit values
+      const cssProperty = property.replace(/([A-Z])/g, '-$1').toLowerCase();
+      const inlineValue = element.style[property] || element.style.getPropertyValue(cssProperty);
+      if (inlineValue === 'inherit') {
+        return this.calculateInheritValue(element, property);
+      }
+
+      if (!value) {
+        return 0;
+      }
+
+      // Handle special CSS values
+      if (value === 'auto') {
+        return this.calculateAutoValue(element, property);
+      } else if (value === 'inherit') {
+        return this.calculateInheritValue(element, property);
+      } else if (value === 'initial' || value === 'unset') {
+        return 0;
+      }
+
+      const parsed = parseFloat(value);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+
+    // Legacy support: if first parameter is string, parse it directly
+    if (typeof elementOrValue === 'string') {
+      const value = elementOrValue;
+      if (!value || value === 'auto' || value === 'inherit' || value === 'initial' || value === 'unset') {
+        return 0;
+      }
+
+      const parsed = parseFloat(value);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+
+    return 0;
+  }
+
+  /**
+   * Calculate the actual pixel value for CSS properties set to "auto"
+   * @param element The HTML element
+   * @param property The CSS property name (e.g., 'marginTop', 'marginLeft')
+   * @returns The calculated pixel value or 0 if cannot be determined
+   */
+  private static calculateAutoValue(element: HTMLElement, property: string): number {
+    try {
+      const rect = element.getBoundingClientRect();
+      const parent = element.parentElement;
+
+      if (!parent) return 0;
+
+      const parentRect = parent.getBoundingClientRect();
+
+      switch (property) {
+        case 'marginTop': {
+          // Calculate actual top margin
+          return Math.max(0, rect.top - parentRect.top - element.offsetTop);
+        }
+
+        case 'marginBottom': {
+          // Calculate actual bottom margin
+          const parentBottom = parentRect.bottom;
+          const elementBottom = rect.bottom;
+          return Math.max(0, parentBottom - elementBottom - (parent.offsetHeight - element.offsetTop - element.offsetHeight));
+        }
+
+        case 'marginLeft': {
+          // For auto left margin, calculate actual left margin
+          const parentLeft = parentRect.left;
+          const elementLeft = rect.left;
+          return Math.max(0, elementLeft - parentLeft - element.offsetLeft);
+        }
+
+        case 'marginRight': {
+          // For auto right margin, calculate actual right margin
+          const parentRight = parentRect.right;
+          const elementRight = rect.right;
+          return Math.max(0, parentRight - elementRight - (parent.offsetWidth - element.offsetLeft - element.offsetWidth));
+        }
+
+        default:
+          return 0;
+      }
+    } catch (error) {
+      // If calculation fails, return 0 as fallback
+      return 0;
+    }
+  }
+
+  /**
+   * Calculate the actual pixel value for CSS properties set to "inherit"
+   * @param element The HTML element
+   * @param property The CSS property name
+   * @returns The inherited value from parent element or 0 if cannot be determined
+   */
+  private static calculateInheritValue(element: HTMLElement, property: string): number {
+    try {
+      const parent = element.parentElement;
+      if (!parent) return 0;
+
+      // First try to get the parent's computed style value
+      const parentStyle = window.getComputedStyle(parent);
+      const parentValue = parentStyle[property];
+
+      // If parent has a valid numeric value, parse it directly
+      if (parentValue && parentValue !== 'inherit' && parentValue !== 'auto' && parentValue !== 'initial' && parentValue !== 'unset' && parentValue.trim() !== '') {
+        const parsed = parseFloat(parentValue);
+        if (!isNaN(parsed)) {
+          return parsed;
+        }
+      }
+
+      // If getComputedStyle doesn't work (empty string in test environments),
+      // try to get the value from the parent's inline style
+      if (parent instanceof HTMLElement && parent.style) {
+        const inlineValue = parent.style[property];
+        if (inlineValue && inlineValue !== 'inherit' && inlineValue !== 'auto' && inlineValue !== 'initial' && inlineValue !== 'unset') {
+          const parsed = parseFloat(inlineValue);
+          if (!isNaN(parsed)) {
+            return parsed;
+          }
+        }
+      }
+
+      // If parent value is also inherit/auto/etc, recursively parse it
+      if (parentValue === 'inherit' || parentValue === 'auto' || parentValue === 'initial' || parentValue === 'unset') {
+        return this.parseNumericValue(parent, property);
+      }
+
+      // If we still can't get the parent value, return 0 as fallback
+      return 0;
+    } catch (error) {
+      return 0;
+    }
+  }
+
   static addElementToBody(element) {
     document.body.appendChild(element);
   }
@@ -312,10 +470,10 @@ export class manipulationHelper {
       cachedScrollBarSize = widthContained - widthScroll;
     }
 
-    if (manipulationHelper.hasScrollbar()){
+    if (manipulationHelper.hasScrollbar()) {
       document.documentElement.style.setProperty('--ant-scrollbar-width', `${cachedScrollBarSize}px`);
     }
-  
+
     return cachedScrollBarSize;
   };
 }

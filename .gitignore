@@ -365,3 +365,4 @@ site/AntDesign.Docs/wwwroot/color.less
 components/LocalizedIntellisenseFiles/AntDesign.xml
 .DS_Store
 package-lock.json
+/site/AntDesign.Docs.MCP/data

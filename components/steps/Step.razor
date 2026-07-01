@@ -1,4 +1,5 @@
 @namespace AntDesign
+@using Microsoft.AspNetCore.Components.Rendering
 @inherits AntDomComponentBase
 
 <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
@@ -18,68 +19,12 @@
                                   Type=ProgressType.Circle
                                   StrokeWidth="4"
                                   Format=@((p) => "") />
-                        <span class="ant-steps-icon">
-
-                            @if (string.IsNullOrEmpty(Icon))
-                            {
-                                if (Status == StepsStatus.Finish)
-                                {
-                                    <Icon Type="check"></Icon>
-                                }
-                                else if (Status == StepsStatus.Error)
-                                {
-                                    <Icon Type="close"></Icon>
-                                }
-                                else if (Status == StepsStatus.Process || Status == StepsStatus.Wait)
-                                {
-                                    @(Index + 1)
-                                }
-                            }
-                            else
-                            {
-                                if (Status == StepsStatus.Error)
-                                {
-                                    <Icon Type="close"></Icon>
-                                }
-                                else
-                                {
-                                    <Icon Type="@Icon"></Icon>
-                                }
-                            }
-                        </span>
+                        @IconFragment
                     </div>
                 }
                 else
                 {
-                    <span class="ant-steps-icon">
-
-                        @if (string.IsNullOrEmpty(Icon))
-                        {
-                            if (Status == StepsStatus.Finish)
-                            {
-                                <Icon Type="check"></Icon>
-                            }
-                            else if (Status == StepsStatus.Error)
-                            {
-                                <Icon Type="close"></Icon>
-                            }
-                            else if (Status == StepsStatus.Process || Status == StepsStatus.Wait)
-                            {
-                                @(Index + 1)
-                            }
-                        }
-                        else
-                        {
-                            if (Status == StepsStatus.Error)
-                            {
-                                <Icon Type="close"></Icon>
-                            }
-                            else
-                            {
-                                <Icon Type="@Icon"></Icon>
-                            }
-                        }
-                    </span>
+                    @IconFragment
                 }
             }
             else
@@ -109,3 +54,41 @@
         </div>
     </div>
 </div>
+
+@code {
+    private void IconFragment(RenderTreeBuilder __builder)
+    {
+        <span class="ant-steps-icon">
+            @if (IconTemplate != null)
+            {
+                @IconTemplate(Status)
+            }
+            else if (string.IsNullOrEmpty(Icon))
+            {
+                if (Status == StepsStatus.Finish)
+                {
+                    <Icon Type="check"></Icon>
+                }
+                else if (Status == StepsStatus.Error)
+                {
+                    <Icon Type="close"></Icon>
+                }
+                else if (Status == StepsStatus.Process || Status == StepsStatus.Wait)
+                {
+                    @(Index + 1)
+                }
+            }
+            else
+            {
+                if (Status == StepsStatus.Error)
+                {
+                    <Icon Type="close"></Icon>
+                }
+                else
+                {
+                    <Icon Type="@Icon"></Icon>
+                }
+            }
+        </span>
+    }
+}

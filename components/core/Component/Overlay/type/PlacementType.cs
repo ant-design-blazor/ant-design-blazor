@@ -30,6 +30,28 @@ namespace AntDesign
         BottomRight
     }
 
+    internal static class PlacementExtensions
+    {
+        public static Placement GetRTLPlacement(this Placement placement)
+        {
+            if (placement == Placement.TopLeft) return Placement.TopRight;
+            if (placement == Placement.TopRight) return Placement.TopLeft;
+
+            if (placement == Placement.Left) return Placement.Right;
+            if (placement == Placement.LeftTop) return Placement.RightTop;
+            if (placement == Placement.LeftBottom) return Placement.RightBottom;
+
+            if (placement == Placement.Right) return Placement.Left;
+            if (placement == Placement.RightTop) return Placement.LeftTop;
+            if (placement == Placement.RightBottom) return Placement.LeftBottom;
+
+            if (placement == Placement.BottomLeft) return Placement.BottomRight;
+            if (placement == Placement.BottomRight) return Placement.BottomLeft;
+
+            return placement;
+        }
+    }
+
     internal sealed class PlacementType : EnumValue<PlacementType>
     {
         public static readonly PlacementType TopLeft = new PlacementType("topLeft", "down", "33% 100%", 0, Placement.TopLeft);
@@ -123,25 +145,6 @@ namespace AntDesign
             }
 
             return PlacementDirection.Bottom;
-        }
-
-        internal PlacementType GetRTLPlacement()
-        {
-            if (this == TopLeft) return TopRight;
-            if (this == TopRight) return TopLeft;
-
-            if (this == Left) return Right;
-            if (this == LeftTop) return RightTop;
-            if (this == LeftBottom) return RightBottom;
-
-            if (this == Right) return Left;
-            if (this == RightTop) return LeftTop;
-            if (this == RightBottom) return LeftBottom;
-
-            if (this == BottomLeft) return BottomRight;
-            if (this == BottomRight) return BottomLeft;
-
-            return this;
         }
     }
 }
