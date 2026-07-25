@@ -540,6 +540,7 @@ namespace AntDesign
         /// <summary>
         /// Disable node Checkbox
         /// </summary>
+        [Parameter]
         public string[] DisableCheckKeys { get; set; }
 
         #endregion Checkable
