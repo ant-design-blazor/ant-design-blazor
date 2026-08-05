@@ -121,5 +121,27 @@
             .Should()
             .BeEquivalentTo(new[] { "Tag1", "Tag2" }));
     }
+
+    [Fact] // Issue: #4819
+    public async Task Refreshing_DataSource_does_not_duplicate_a_selected_tag()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+
+        var dataSource = new List<string>();
+        var cut = Render<Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string" DataSource="@dataSource" EnableSearch SearchDebounceMilliseconds="0" />);
+        var input = cut.Find("input.ant-select-selection-search-input");
+
+        await cut.InvokeAsync(() => input.Input("Tag1"));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption?.Value == "Tag1"));
+        input.KeyUp("ENTER");
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(1));
+
+        dataSource.Add("Server result");
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.DataSource, dataSource));
+
+        cut.Instance.SelectedOptionItems.Should().ContainSingle().Which.Value.Value.Should().Be("Tag1");
+    }
 }
 }
