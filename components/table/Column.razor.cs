@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.Core.Helpers;
 using AntDesign.Filters;
@@ -51,6 +52,14 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public RenderFragment<TableFilterDropdownContext> FilterDropdown { get; set; }
+
+        /// <summary>
+        /// Whether the filter dropdown closes automatically when clicking outside of it.
+        /// </summary>
+        /// <default value="true" />
+        [PublicApi("1.6.3")]
+        [Parameter]
+        public bool FilterDropdownAutoClose { get; set; } = true;
 
         /// <summary>
         /// Use @bind-Field to bind to a property of TItem, we recommend using <see cref="PropertyColumn{TItem, TProp}"/> instead
