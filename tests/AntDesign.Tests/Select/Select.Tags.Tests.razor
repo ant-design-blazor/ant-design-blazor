@@ -122,6 +122,37 @@
             .BeEquivalentTo(new[] { "Tag1", "Tag2" }));
     }
 
+    [Fact] // Issue: #4818
+    public async Task Removing_last_tag_updates_bound_values()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+
+        IEnumerable<string> values = [];
+        IEnumerable<string> changedValues = null;
+        IEnumerable<string> changedItems = null;
+        var dataSource = new List<string>();
+        var cut = Render<Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string"
+                              DataSource="@dataSource" EnableSearch SearchDebounceMilliseconds="0"
+                              Values="@values"
+                              ValuesChanged="@(newValues => { changedValues = newValues; values = newValues; })"
+                              OnSelectedItemsChanged="@(newItems => changedItems = newItems)" />);
+        var input = cut.Find("input.ant-select-selection-search-input");
+
+        await cut.InvokeAsync(() => input.Input("Tag1"));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption?.Value == "Tag1"));
+        input.KeyUp("ENTER");
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(1));
+
+        await cut.InvokeAsync(() => cut.Find(".ant-select-selection-item-remove").MouseDown());
+
+        cut.WaitForAssertion(() => changedValues.Should().BeEmpty());
+        changedItems.Should().BeEmpty();
+        values.Should().BeEmpty();
+        cut.Instance.SelectedOptionItems.Should().BeEmpty();
+    }
+
     [Fact] // Issue: #4819
     public async Task Refreshing_DataSource_does_not_duplicate_a_selected_tag()
     {
