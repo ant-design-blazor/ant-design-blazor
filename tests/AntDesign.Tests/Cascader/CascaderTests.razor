@@ -84,4 +84,32 @@
         var childMenuItem = cut.Find("li[data-path-key='Child 1']");
         childMenuItem.Should().NotBeNull("Child 1 menu item should be visible in the second column");
     }
+
+    [Fact]
+    public async Task Multiple_mode_checks_a_branch_and_uses_the_checked_strategy_for_tags()
+    {
+        JSInterop.SetupVoid("AntDesign.interop.styleHelper.addClsToFirstChild", _ => true);
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.domInfoHelper.getOverlayPosition", _ => true).SetResult(new OverlayPosition());
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true).SetResult(new OverlayPosition());
+
+        var options = new[]
+        {
+            new CascaderNode { Label = "Bamboo", Value = "bamboo", Children = new[]
+            {
+                new CascaderNode { Label = "Little", Value = "little", Children = new[]
+                {
+                    new CascaderNode { Label = "Fish", Value = "fish" },
+                    new CascaderNode { Label = "Cards", Value = "cards" }
+                }}
+            }}
+        };
+        IEnumerable<string> selected = Array.Empty<string>();
+        var cut = Render<AntDesign.Cascader>(@<AntDesign.Cascader Options="@options" Multiple Open="true" ShowCheckedStrategy="CascaderCheckedStrategy.ShowParent" ValuesChanged="values => selected = values" />);
+
+        await cut.InvokeAsync(() => cut.Find("li[data-path-key='Bamboo'] input.ant-checkbox-input").ChangeAsync(new Microsoft.AspNetCore.Components.ChangeEventArgs { Value = true }));
+
+        selected.Should().BeEquivalentTo(new[] { "fish", "cards" });
+        cut.FindAll(".ant-cascader-checkbox-checked").Should().NotBeEmpty();
+        cut.Find(".ant-select-selection-item-content").TextContent.Should().Be("Bamboo");
+    }
 }

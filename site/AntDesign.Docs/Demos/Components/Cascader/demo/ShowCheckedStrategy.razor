@@ -1,0 +1,18 @@
+<Cascader Options="@options" Multiple ShowCheckedStrategy="CascaderCheckedStrategy.ShowChild"
+          Values="@allBambooLeaves" />
+<br />
+<br />
+<Cascader Options="@options" Multiple ShowCheckedStrategy="CascaderCheckedStrategy.ShowParent"
+          Values="@allBambooLeaves" />
+
+@code {
+    private readonly string[] allBambooLeaves = ["fish", "cards", "bird"];
+    private readonly CascaderNode[] options =
+    [
+        new() { Label = "Light", Value = "light", Children = Enumerable.Range(0, 20).Select(i => new CascaderNode { Label =
+$"Number {i}", Value = $"light-{i}" }) },
+        new() { Label = "Bamboo", Value = "bamboo", Children = [new() { Label = "Little", Value = "little", Children = [new() {
+Label = "Toy Fish", Value = "fish" }, new() { Label = "Toy Cards", Value = "cards" }, new() { Label = "Toy Bird", Value
+= "bird" }] }] }
+    ];
+}

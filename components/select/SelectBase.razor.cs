@@ -280,7 +280,7 @@ namespace AntDesign
 
         private List<SelectOptionItem<TItemValue, TItem>> _cachedOrderedSelectedItems = null;
 
-        internal List<SelectOptionItem<TItemValue, TItem>> GetOrderedSelectedItems()
+        internal virtual List<SelectOptionItem<TItemValue, TItem>> GetOrderedSelectedItems()
         {
             if (_cachedOrderedSelectedItems != null) return _cachedOrderedSelectedItems;
             _cachedOrderedSelectedItems = [];
@@ -397,7 +397,10 @@ namespace AntDesign
         ///     Determines if SelectOptions has any selected items
         /// </summary>
         /// <returns>true if SelectOptions has any selected Items, otherwise false</returns>
-        internal bool HasValue => SelectOptionItems.Any(x => x.IsSelected);
+        internal virtual bool HasValue => SelectOptionItems.Any(x => x.IsSelected);
+
+        /// <summary>Gets the text rendered for a selected item in the default trigger.</summary>
+        internal virtual string GetSelectedItemLabel(SelectOptionItem<TItemValue, TItem> option) => option.Label;
 
         /// <summary>
         ///     Returns whether the user can input a pattern to search matched items
