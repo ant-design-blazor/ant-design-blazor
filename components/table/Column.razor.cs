@@ -57,7 +57,7 @@ namespace AntDesign
         /// Whether the filter dropdown closes automatically when clicking outside of it.
         /// </summary>
         /// <default value="true" />
-        [PublicApi("1.6.3")]
+        [PublicApi("1.7.0")]
         [Parameter]
         public bool FilterDropdownAutoClose { get; set; } = true;
 
