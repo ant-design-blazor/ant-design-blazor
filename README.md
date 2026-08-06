@@ -84,7 +84,7 @@ We have provided the `dotnet new` template to create a [Boilerplate](https://git
 - Install the template
 
   ```bash
-  $ dotnet new --install AntDesign.Templates
+  $ dotnet new install AntDesign.Templates
   ```
 
 - Create the Boilerplate project with the template
