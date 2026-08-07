@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using AntDesign.Core.Documentation;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 
@@ -43,6 +44,7 @@ namespace AntDesign
         public CultureInfo CultureInfo { get; set; }
 
         [Parameter]
+        [PublicApi("1.7.0")]
         public System.Globalization.Calendar DateCalendar { get; set; }
 
         protected System.Globalization.Calendar Calendar => DateCalendar ?? CultureInfo.Calendar;
