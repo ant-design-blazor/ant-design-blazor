@@ -1082,7 +1082,7 @@ namespace AntDesign
             else
                 format = Format;
 
-            return CalendarFormatterProvider.FormatDate(value, format, CultureInfo, EffectiveCalendar);
+            return CalendarFormatter.FormatDate(value, format, CultureInfo, EffectiveCalendar);
         }
 
         /// <summary>

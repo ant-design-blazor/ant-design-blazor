@@ -1,5 +1,7 @@
 ---
 order: 15
+additionalFiles:
+  - ChineseLunisolarCalendarFormatter.cs
 title:
   zh-CN: 公历和农历
   en-US: Gregorian and lunar dates

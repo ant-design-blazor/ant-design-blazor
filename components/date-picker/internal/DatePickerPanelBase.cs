@@ -49,10 +49,10 @@ namespace AntDesign
 
         protected System.Globalization.Calendar Calendar => DateCalendar ?? CultureInfo.Calendar;
 
-        protected string FormatDate(DateTime date, string format) => CalendarFormatterProvider.FormatDate(date, format, CultureInfo, Calendar);
-        protected string FormatYear(DateTime date, string format) => CalendarFormatterProvider.FormatYear(date, format, CultureInfo, Calendar);
-        protected string FormatMonth(DateTime date, string format) => CalendarFormatterProvider.FormatMonth(date, format, CultureInfo, Calendar);
-        protected string FormatDay(DateTime date) => CalendarFormatterProvider.FormatDay(date, Calendar, CultureInfo);
+        protected string FormatDate(DateTime date, string format) => CalendarFormatter.FormatDate(date, format, CultureInfo, Calendar);
+        protected string FormatYear(DateTime date, string format) => CalendarFormatter.FormatYear(date, format, CultureInfo, Calendar);
+        protected string FormatMonth(DateTime date, string format) => CalendarFormatter.FormatMonth(date, format, CultureInfo, Calendar);
+        protected string FormatDay(DateTime date) => CalendarFormatter.FormatDay(date, Calendar, CultureInfo);
 
         [Parameter]
         public Action ClosePanel { get; set; }

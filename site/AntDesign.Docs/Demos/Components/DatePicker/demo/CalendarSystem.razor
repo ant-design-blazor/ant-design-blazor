@@ -22,11 +22,11 @@
     private readonly CultureInfo _chineseCulture = CultureInfo.GetCultureInfo("zh-CN");
     private readonly PersianCalendar _persianCalendar = new();
     private readonly ChineseLunisolarCalendar _chineseLunisolarCalendar = new();
-
-    // 1403/01/01 in PersianCalendar
     private DateTime _persianDate = DateTime.Now;
-
-    // Lunar New Year, 2024/01/01 in ChineseLunisolarCalendar
     private DateTime _chineseLunisolarDate = DateTime.Now;
 
+    protected override void OnInitialized()
+    {
+        ChineseLunisolarCalendarFormatter.Register();
+    }
 }

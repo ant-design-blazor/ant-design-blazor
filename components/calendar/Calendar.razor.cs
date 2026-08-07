@@ -250,7 +250,7 @@ namespace AntDesign
 
         string IDatePicker.GetFormatValue(DateTime value, int index)
         {
-            return CalendarFormatterProvider.FormatDate(value, CultureInfo.DateTimeFormat.ShortDatePattern, CultureInfo, DateCalendar ?? CultureInfo.Calendar);
+            return CalendarFormatter.FormatDate(value, CultureInfo.DateTimeFormat.ShortDatePattern, CultureInfo, DateCalendar ?? CultureInfo.Calendar);
         }
 
         void IDatePicker.ChangePlaceholder(string placeholder, int index)

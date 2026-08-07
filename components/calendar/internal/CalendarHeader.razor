@@ -32,7 +32,7 @@
                 @for (int year = startYear; year <= endYear; year++)
                 {
                     DateTime yearDate = DateHelper.CreateDate(dateCalendar, year, 1, 1, Calendar.Value);
-                    <SelectOption @key="@year" TItemValue="int" TItem="string" Value=@year Label="@(CalendarFormatterProvider.FormatYear(yearDate, yearFormat, Calendar.CultureInfo, dateCalendar))" />
+                    <SelectOption @key="@year" TItemValue="int" TItem="string" Value=@year Label="@(CalendarFormatter.FormatYear(yearDate, yearFormat, Calendar.CultureInfo, dateCalendar))" />
                 }
             </SelectOptions>        
     </Select>
@@ -62,7 +62,7 @@
                     @for (int month = startMonth; month <= endMonth; month++)
                     {
                         DateTime monthDate = DateHelper.CreateDate(dateCalendar, dateCalendar.GetYear(Calendar.Value), month, 1, Calendar.Value);
-                        <SelectOption @key="@month" TItemValue="int" TItem="string" Value=@month Label="@(CalendarFormatterProvider.FormatMonth(monthDate, monthFormat, Calendar.CultureInfo, dateCalendar))" />
+                        <SelectOption @key="@month" TItemValue="int" TItem="string" Value=@month Label="@(CalendarFormatter.FormatMonth(monthDate, monthFormat, Calendar.CultureInfo, dateCalendar))" />
                     }
                 </SelectOptions>            
         </Select>
