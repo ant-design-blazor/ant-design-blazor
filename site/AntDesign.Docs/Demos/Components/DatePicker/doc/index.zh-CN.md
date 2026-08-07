@@ -45,6 +45,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | autoFocus | 自动获取焦点 | boolean | false |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | className | 选择器 className | string | '' |  |
+| DateCalendar | 用于日期面板计算、选择和导航的 .NET `Calendar` 实例 | Calendar | `CultureInfo.Calendar` |  |
 | dateRender | 自定义日期单元格的内容 | function(currentDate: moment, today: moment) => React.ReactNode | - |  |
 | disabled | 禁用 | boolean | false |  |
 | disabledDate | 不可选择的日期 | (currentDate: moment) => boolean | 无 |  |

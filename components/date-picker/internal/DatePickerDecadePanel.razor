@@ -4,16 +4,16 @@
 @using System.Globalization;
 
 @{
-    var calendar = CultureInfo.InvariantCulture.Calendar;
+    var calendar = Calendar;
 
-    int year = PickerValue.Year / 100 * 100;
+    int year = calendar.GetYear(PickerValue) / 100 * 100;
 
-    if (year < DateTime.MinValue.Year)
+    if (year < calendar.GetYear(calendar.MinSupportedDateTime))
     {
-        year = DateTime.MinValue.Year;
+        year = calendar.GetYear(calendar.MinSupportedDateTime);
     }
 
-    DateTime startDate = DateHelper.AddYearsSafely(new DateTime(year, 1, 1), -10);
+    DateTime startDate = calendar.AddYears(DateHelper.CreateDate(calendar, year, 1, 1, PickerValue), -10);
 
     int yearIndex = 0;
     const int MAX_ROW = 4;
@@ -28,10 +28,10 @@
                         MaxCol="MAX_COL"
                         ViewStartDate="startDate"
                         IsInView="date => yearIndex != FIRST_YEAR_INDEX && yearIndex != LAST_YEAR_INDEX"
-                        IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
-                        IsSelected="date => DateHelper.IsSameYear(date, Value)"
+                        IsToday="date => calendar.GetYear(date) == calendar.GetYear(DatePicker.CurrentDate)"
+                        IsSelected="date => Value.HasValue && calendar.GetYear(date) == calendar.GetYear(Value.Value)"
                         OnValueSelect="date => OnSelectYear(date)"
-                        GetNextColValue="date => DateHelper.AddYearsSafely(date, 10)">
+                        GetNextColValue="date => calendar.AddYears(date, 10)">
         <RenderPickerHeader>
             <DatePickerHeader @attributes="GetAttributes()"
                               TValue="TValue"
@@ -44,7 +44,7 @@
         </RenderPickerHeader>
         <RenderColValue Context="currentColDate">
             @{yearIndex++;}
-            @(currentColDate.Year)-@(currentColDate.Year + 9)
+            @(calendar.GetYear(currentColDate))-@(calendar.GetYear(currentColDate) + 9)
         </RenderColValue>
     </DatePickerTemplate>
 </div>
