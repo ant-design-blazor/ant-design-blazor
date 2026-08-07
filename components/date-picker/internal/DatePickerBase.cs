@@ -166,6 +166,14 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// .NET calendar used for date selection and panel navigation. When omitted, the calendar of <see cref="CultureInfo"/> is used.
+        /// </summary>
+        [Parameter]
+        public System.Globalization.Calendar DateCalendar { get; set; }
+
+        private System.Globalization.Calendar EffectiveCalendar => DateCalendar ?? CultureInfo.Calendar;
+
+        /// <summary>
         /// If time should be shown or not. Contains the boolean decision made from setting <see cref="ShowTime" />
         /// </summary>
         internal bool IsShowTime { get; set; }
@@ -962,9 +970,9 @@ namespace AntDesign
         {
             return Picker switch
             {
-                DatePickerType.Year => pickerValue.AddYears(offset * 10),
-                DatePickerType.Quarter or DatePickerType.Decade or DatePickerType.Month => pickerValue.AddYears(offset),
-                _ => pickerValue.AddMonths(offset)
+                DatePickerType.Year => EffectiveCalendar.AddYears(pickerValue, offset * 10),
+                DatePickerType.Quarter or DatePickerType.Decade or DatePickerType.Month => EffectiveCalendar.AddYears(pickerValue, offset),
+                _ => EffectiveCalendar.AddMonths(pickerValue, offset)
             };
         }
 
@@ -1074,7 +1082,7 @@ namespace AntDesign
             else
                 format = Format;
 
-            return value.ToString(format, CultureInfo);
+            return CalendarFormatterProvider.FormatDate(value, format, CultureInfo, EffectiveCalendar);
         }
 
         /// <summary>
@@ -1326,11 +1334,11 @@ namespace AntDesign
                     return dateTime.AddMilliseconds(-dateTime.Millisecond);
 
                 case DatePickerType.Year:
-                    return new DateTime(dateTime.Year, 1, 1);
+                    return DateHelper.CreateDate(EffectiveCalendar, EffectiveCalendar.GetYear(dateTime), 1, 1, dateTime);
 
                 case DatePickerType.Month:
                 case DatePickerType.Quarter:
-                    return new DateTime(dateTime.Year, dateTime.Month, 1);
+                    return DateHelper.CreateDate(EffectiveCalendar, EffectiveCalendar.GetYear(dateTime), EffectiveCalendar.GetMonth(dateTime), 1, dateTime);
             }
 
             if (ShowTime.Value != null)

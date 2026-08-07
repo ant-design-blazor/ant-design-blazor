@@ -137,6 +137,12 @@ namespace AntDesign
         [Parameter]
         public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
 
+        /// <summary>
+        /// .NET calendar used for date selection and panel navigation. When omitted, the calendar of <see cref="CultureInfo"/> is used.
+        /// </summary>
+        [Parameter]
+        public System.Globalization.Calendar DateCalendar { get; set; }
+
         protected DatePickerType _picker;
         protected readonly DateTime[] PickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
         protected Stack<DatePickerType> _prePickerStack = new Stack<DatePickerType>();
@@ -244,7 +250,7 @@ namespace AntDesign
 
         string IDatePicker.GetFormatValue(DateTime value, int index)
         {
-            return value.ToString(CultureInfo);
+            return CalendarFormatterProvider.FormatDate(value, CultureInfo.DateTimeFormat.ShortDatePattern, CultureInfo, DateCalendar ?? CultureInfo.Calendar);
         }
 
         void IDatePicker.ChangePlaceholder(string placeholder, int index)

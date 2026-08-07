@@ -7,13 +7,14 @@
      id="@Id"
      @ref="@Ref">
     @{
-        int startYear = Calendar.Value.AddYears(-10).Year;
-        int endYear = Calendar.Value.AddYears(10).Year;
+        var dateCalendar = Calendar.DateCalendar ?? Calendar.CultureInfo.Calendar;
+        int startYear = dateCalendar.GetYear(dateCalendar.AddYears(Calendar.Value, -10));
+        int endYear = dateCalendar.GetYear(dateCalendar.AddYears(Calendar.Value, 10));
 
         if (Calendar.ValidRange != null)
         {
-            startYear = Calendar.ValidRange[0].Year;
-            endYear = Calendar.ValidRange[1].Year;
+            startYear = dateCalendar.GetYear(Calendar.ValidRange[0]);
+            endYear = dateCalendar.GetYear(Calendar.ValidRange[1]);
         }
 
         string yearFormat = Calendar.Locale.Lang.YearFormat;
@@ -21,7 +22,7 @@
     <Select Class=@($"{PrefixCls}-year-select")
             @bind-Value="@_yearValue"
             Size=@(Calendar.FullScreen ? InputSize.Default : InputSize.Small)
-            DefaultValue=@Calendar.Value.Year
+            DefaultValue=@dateCalendar.GetYear(Calendar.Value)
             TItemValue="int"
             TItem="string"
             Style="width: unset;"
@@ -30,8 +31,8 @@
             <SelectOptions>
                 @for (int year = startYear; year <= endYear; year++)
                 {
-                    DateTime yearDate = new DateTime(year, 1, 1);
-                    <SelectOption @key="@yearDate.Year" TItemValue="int" TItem="string" Value=@yearDate.Year Label="@(yearDate.ToString(yearFormat, Calendar.CultureInfo))" />
+                    DateTime yearDate = DateHelper.CreateDate(dateCalendar, year, 1, 1, Calendar.Value);
+                    <SelectOption @key="@year" TItemValue="int" TItem="string" Value=@year Label="@(CalendarFormatterProvider.FormatYear(yearDate, yearFormat, Calendar.CultureInfo, dateCalendar))" />
                 }
             </SelectOptions>        
     </Select>
@@ -43,8 +44,8 @@
 
         if (Calendar.ValidRange != null)
         {
-            startMonth = Calendar.Value.Year == Calendar.ValidRange[0].Year ? Calendar.ValidRange[0].Month : startMonth;
-            endMonth = Calendar.Value.Year == Calendar.ValidRange[1].Year ? Calendar.ValidRange[1].Month : endMonth;
+            startMonth = dateCalendar.GetYear(Calendar.Value) == dateCalendar.GetYear(Calendar.ValidRange[0]) ? dateCalendar.GetMonth(Calendar.ValidRange[0]) : startMonth;
+            endMonth = dateCalendar.GetYear(Calendar.Value) == dateCalendar.GetYear(Calendar.ValidRange[1]) ? dateCalendar.GetMonth(Calendar.ValidRange[1]) : endMonth;
         }
 
         string monthFormat = Calendar.Locale.Lang.MonthFormat;
@@ -52,7 +53,7 @@
         <Select class=@($"{PrefixCls}-month-select")
                 @bind-Value="@_monthValue"
                 Size=@(Calendar.FullScreen ? InputSize.Default : InputSize.Small)
-                DefaultValue=@Calendar.Value.Month
+                DefaultValue=@dateCalendar.GetMonth(Calendar.Value)
                 Style="width: unset;"
                 TItemValue="int"
                 TItem="string"
@@ -60,8 +61,8 @@
                 <SelectOptions>
                     @for (int month = startMonth; month <= endMonth; month++)
                     {
-                        DateTime monthDate = new DateTime(1, month, 1);
-                        <SelectOption @key="@monthDate.Month" TItemValue="int" TItem="string" Value=@monthDate.Month Label="@(monthDate.ToString(monthFormat, Calendar.CultureInfo))" />
+                        DateTime monthDate = DateHelper.CreateDate(dateCalendar, dateCalendar.GetYear(Calendar.Value), month, 1, Calendar.Value);
+                        <SelectOption @key="@month" TItemValue="int" TItem="string" Value=@month Label="@(CalendarFormatterProvider.FormatMonth(monthDate, monthFormat, Calendar.CultureInfo, dateCalendar))" />
                     }
                 </SelectOptions>            
         </Select>
@@ -103,12 +104,12 @@
     private void OnSelectYear(string value)
     {      
         int year = Convert.ToInt32(value);
-        Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, year: year));
+        Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, Calendar.DateCalendar ?? Calendar.CultureInfo.Calendar, year: year));
     }
 
     private void OnSelectMonth(string value)
     {
         int month = Convert.ToInt32(value);
-        Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, month: month));
+        Calendar.ChangeValue(DateHelper.CombineNewDate(Calendar.Value, Calendar.DateCalendar ?? Calendar.CultureInfo.Calendar, month: month));
     }
 }

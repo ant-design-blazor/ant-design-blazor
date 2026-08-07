@@ -1,0 +1,32 @@
+@using System.Globalization
+
+<Row Gutter="16">
+    <Col Span="12">
+        <Text>PersianCalendar</Text>
+        <br />
+        <DatePicker TValue="DateTime" @bind-Value="_persianDate"
+                    CultureInfo="@_persianCulture"
+                    DateCalendar="@_persianCalendar" />
+    </Col>
+    <Col Span="12">
+        <Text>ChineseLunisolarCalendar</Text>
+        <br />
+        <DatePicker TValue="DateTime" @bind-Value="_chineseLunisolarDate"
+                    CultureInfo="@_chineseCulture"
+                    DateCalendar="@_chineseLunisolarCalendar" />
+    </Col>
+</Row>
+
+@code {
+    private readonly CultureInfo _persianCulture = CultureInfo.GetCultureInfo("fa-IR");
+    private readonly CultureInfo _chineseCulture = CultureInfo.GetCultureInfo("zh-CN");
+    private readonly PersianCalendar _persianCalendar = new();
+    private readonly ChineseLunisolarCalendar _chineseLunisolarCalendar = new();
+
+    // 1403/01/01 in PersianCalendar
+    private DateTime _persianDate = DateTime.Now;
+
+    // Lunar New Year, 2024/01/01 in ChineseLunisolarCalendar
+    private DateTime _chineseLunisolarDate = DateTime.Now;
+
+}
