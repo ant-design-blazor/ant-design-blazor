@@ -1,0 +1,56 @@
+@using AntDesign.TableModels
+
+<Table TItem="CityRow"
+       DataSource="_data"
+       PageSize="5"
+       OnChange="OnChange">
+    <PropertyColumn Property="x => x.Id" Title="ID" Sortable />
+    <PropertyColumn Property="x => x.City" Title="City" Filterable />
+    <PropertyColumn Property="x => x.Category" Title="Category" />
+</Table>
+
+<div style="margin-top: 12px;">
+    <strong>Current Page:</strong> @_currentPage
+    <span style="margin-left: 16px;"><strong>Selected City Filters:</strong> @(_selectedCitiesText ?? "(none)")</span>
+</div>
+
+@code {
+    private int _currentPage = 1;
+    private string _selectedCitiesText;
+
+    private readonly List<CityRow> _data = [];
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        for (var index = 1; index <= 36; index++)
+        {
+            _data.Add(new CityRow
+            {
+                Id = index,
+                City = index % 3 == 0 ? "Shanghai" : index % 3 == 1 ? "Beijing" : "Hangzhou",
+                Category = index % 2 == 0 ? "A" : "B"
+            });
+        }
+    }
+
+    private void OnChange(QueryModel<CityRow> query)
+    {
+        _currentPage = query.PageIndex;
+
+        var cityFilter = query.FilterModel.FirstOrDefault(x => x.FieldName == nameof(CityRow.City));
+        _selectedCitiesText = cityFilter?.SelectedValues?.Any() == true
+            ? string.Join(", ", cityFilter.SelectedValues)
+            : null;
+    }
+
+    private sealed class CityRow
+    {
+        public int Id { get; set; }
+
+        public string City { get; set; }
+
+        public string Category { get; set; }
+    }
+}
