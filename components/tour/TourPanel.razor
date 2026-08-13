@@ -1,0 +1,74 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="ant-tour ant-tour-pure @Class" style="@Style" id="@Id" @ref="Ref">
+    <div class="ant-tour-panel">
+        <div class="ant-tour-section">
+            @if (Closable)
+            {
+                <button type="button" class="ant-tour-close" aria-label="Close">×</button>
+            }
+            @if (Cover != null)
+            {
+                <div class="ant-tour-cover">@Cover</div>
+            }
+            @if (Title != null)
+            {
+                <div class="ant-tour-header"><div class="ant-tour-title">@Title</div></div>
+            }
+            @if (Description != null)
+            {
+                <div class="ant-tour-description">@Description</div>
+            }
+            <div class="ant-tour-footer">
+                @if (Total > 1)
+                {
+                    <div class="ant-tour-indicators">
+                        @for (var i = 0; i < Total; i++)
+                        {
+                            <span class="ant-tour-indicator @(i == Current ? "ant-tour-indicator-active" : string.Empty)"></span>
+                        }
+                    </div>
+                }
+                <div class="ant-tour-actions">
+                    @if (Current > 0)
+                    {
+                        <Button Size="ButtonSize.Small" Type="ButtonType.Default">Previous</Button>
+                    }
+                    <Button Size="ButtonSize.Small" Type="@(Type == TourType.Primary ? ButtonType.Default : ButtonType.Primary)">@(Current == Total - 1 ? "Finish" : "Next")</Button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// Optional cover content.
+    /// </summary>
+    [Parameter] public RenderFragment Cover { get; set; }
+    /// <summary>
+    /// Panel title.
+    /// </summary>
+    [Parameter] public RenderFragment Title { get; set; }
+    /// <summary>
+    /// Panel description.
+    /// </summary>
+    [Parameter] public RenderFragment Description { get; set; }
+    /// <summary>
+    /// Zero-based current step index.
+    /// </summary>
+    [Parameter] public int Current { get; set; }
+    /// <summary>
+    /// Total number of steps.
+    /// </summary>
+    [Parameter] public int Total { get; set; } = 1;
+    /// <summary>
+    /// Visual type of the panel.
+    /// </summary>
+    [Parameter] public TourType Type { get; set; }
+    /// <summary>
+    /// Whether the close button is shown.
+    /// </summary>
+    [Parameter] public bool Closable { get; set; } = true;
+}
