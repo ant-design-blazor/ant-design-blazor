@@ -4,7 +4,10 @@
 
 using System;
 using System.Collections.Generic;
+using AntDesign.JsInterop;
 using Bunit;
+using Microsoft.AspNetCore.Components;
+using Xunit;
 
 namespace AntDesign.Tests.Table
 {
@@ -151,5 +154,100 @@ namespace AntDesign.Tests.Table
 
             cut.RecordedMarkupMatches();
         }
+
+        [Fact]
+        public void Cascaded_pagination_props_override_the_table_internal_pagination()
+        {
+            var props = new PaginationProps
+            {
+                ShowQuickJumper = true,
+                ShowSizeChanger = true,
+            };
+
+            JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+                .SetResult(new DomRect());
+
+            var cut = Context.RenderComponent<CascadingValue<PaginationProps>>(parameters => parameters
+                .Add(p => p.Value, props)
+                .Add(p => p.ChildContent, builder =>
+                {
+                    builder.OpenComponent<Table<Person>>(0);
+                    builder.AddAttribute(1, nameof(Table<Person>.DataSource), new[]
+                    {
+                        new Person { Id = 1, Name = "John", Surname = "Smith" },
+                        new Person { Id = 2, Name = "Jane", Surname = "Doe" },
+                    });
+                    builder.AddAttribute(2, nameof(Table<Person>.PageSize), 20);
+                    builder.AddAttribute(3, nameof(Table<Person>.ChildContent), (RenderFragment<Person>)(_ => builder => { }));
+                    builder.CloseComponent();
+                }));
+
+            var pagination = cut.FindComponent<Pagination>().Instance;
+            Assert.Same(props, pagination.CascadingPaginationProps);
+            Assert.True(pagination.ShowQuickJumper);
+            Assert.True(pagination.ShowSizeChanger);
+            Assert.Equal(20, pagination.PageSize);
+        }
+
+        [Fact]
+        public void Cascaded_props_collection_targets_each_table_pagination_by_key()
+        {
+            var props = new ComponentPropsCollection(new PaginationProps { ShowQuickJumper = true })
+            {
+                [Table<Person>.BottomPaginationId] = new PaginationProps { ShowSizeChanger = true },
+            };
+
+            JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+                .SetResult(new DomRect());
+
+            var cut = Context.RenderComponent<CascadingValue<ComponentPropsCollection>>(parameters => parameters
+                .Add(p => p.Value, props)
+                .Add(p => p.ChildContent, builder =>
+                {
+                    builder.OpenComponent<Table<Person>>(0);
+                    builder.AddAttribute(1, nameof(Table<Person>.DataSource), new[] { new Person { Id = 1 } });
+                    builder.AddAttribute(2, nameof(Table<Person>.PaginationPosition), "topRight,bottomRight");
+                    builder.AddAttribute(3, nameof(Table<Person>.ChildContent), (RenderFragment<Person>)(_ => builder => { }));
+                    builder.CloseComponent();
+                }));
+
+            var paginations = cut.FindComponents<Pagination>();
+            Assert.Equal(2, paginations.Count);
+            Assert.True(paginations[0].Instance.ShowQuickJumper);
+            Assert.False(paginations[0].Instance.ShowSizeChanger);
+            Assert.True(paginations[1].Instance.ShowQuickJumper);
+            Assert.True(paginations[1].Instance.ShowSizeChanger);
+        }
+
+        [Fact]
+        public void Component_props_provider_applies_global_and_id_specific_props()
+        {
+            JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+                .SetResult(new DomRect());
+
+            var cut = Context.RenderComponent<ComponentPropsProvider>(parameters => parameters
+                .Add(p => p.Props, new ComponentPropsCollection(new PaginationProps { ShowQuickJumper = true }))
+                .Add(p => p.ChildContent, builder =>
+                {
+                    builder.OpenComponent<ComponentPropsProvider>(0);
+                    builder.AddAttribute(1, nameof(ComponentPropsProvider.Props), new ComponentPropsCollection { [Table<Person>.BottomPaginationId] = new PaginationProps { ShowSizeChanger = true } });
+                    builder.AddAttribute(2, nameof(ComponentPropsProvider.ChildContent), (RenderFragment)(childBuilder =>
+                    {
+                        childBuilder.OpenComponent<Table<Person>>(0);
+                        childBuilder.AddAttribute(1, nameof(Table<Person>.DataSource), new[] { new Person { Id = 1 } });
+                        childBuilder.AddAttribute(2, nameof(Table<Person>.PaginationPosition), "topRight,bottomRight");
+                        childBuilder.AddAttribute(3, nameof(Table<Person>.ChildContent), (RenderFragment<Person>)(_ => builder => { }));
+                        childBuilder.CloseComponent();
+                    }));
+                    builder.CloseComponent();
+                }));
+
+            var paginations = cut.FindComponents<Pagination>();
+            Assert.True(paginations[0].Instance.ShowQuickJumper);
+            Assert.False(paginations[0].Instance.ShowSizeChanger);
+            Assert.True(paginations[1].Instance.ShowQuickJumper);
+            Assert.True(paginations[1].Instance.ShowSizeChanger);
+        }
+
     }
 }

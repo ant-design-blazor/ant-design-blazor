@@ -13,6 +13,13 @@ namespace AntDesign
 {
     public abstract class AntComponentBase : ComponentBase, IDisposable
     {
+        /// <summary>ID for the component's HTML and its component props override entry.</summary>
+        [Parameter]
+        public string Id { get; set; }
+
+        [CascadingParameter]
+        public ComponentPropsCollection CascadingPropsCollection { get; set; }
+
         /// <summary>
         /// A <see cref="ForwardRef" /> instance. You can get a reference to the internal DOM by using <see cref="ForwardRef.Current" />.
         /// </summary>
@@ -54,6 +61,16 @@ namespace AntDesign
         protected virtual Task OnFirstAfterRenderAsync()
         {
             return Task.CompletedTask;
+        }
+
+        protected override void OnParametersSet()
+        {
+            if (this is IComponentPropsReceiver receiver)
+            {
+                receiver.ApplyCascadingProps();
+            }
+
+            base.OnParametersSet();
         }
 
         protected AntComponentBase()

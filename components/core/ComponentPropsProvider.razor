@@ -1,0 +1,28 @@
+@namespace AntDesign
+@using Microsoft.AspNetCore.Components
+@inherits ComponentBase
+@attribute [SkipComponentPropsGeneration]
+
+<CascadingValue Value="@_propsCollection" IsFixed="false">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    private ComponentPropsCollection _propsCollection = new();
+
+    /// <summary>The strongly typed component props to apply to matching child components.</summary>
+    [Parameter]
+    public ComponentPropsCollection Props { get; set; } = new();
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [CascadingParameter]
+    private ComponentPropsCollection ParentPropsCollection { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _propsCollection = ParentPropsCollection?.Clone() ?? new ComponentPropsCollection();
+        _propsCollection.AddRange(Props);
+    }
+}
