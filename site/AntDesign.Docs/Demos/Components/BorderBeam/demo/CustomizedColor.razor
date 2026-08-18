@@ -1,0 +1,45 @@
+<Flex Direction="FlexDirection.Vertical" Gap="FlexGap.Middle" Style="max-width: 480px;">
+    <Segmented TValue="string" Block Labels="@_presetNames" @bind-Value="_currentPresetKey" />
+    <BorderBeam Color="@CurrentPreset.Color">
+        <Card Title="@CurrentPreset.Name">
+            <Extra>
+                <Tag Color="@CurrentPreset.Usage">@CurrentPreset.Usage</Tag>
+            </Extra>
+            <ChildContent>
+                <Text Type="TextElementType.Secondary">@CurrentPreset.Description</Text>
+                <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+                    @foreach (var item in CurrentPreset.Color)
+                    {
+                        <Tag Color="@item.Color">@item.Color · @item.Percent%</Tag>
+                    }
+                </Flex>
+                <Text Type="TextElementType.Secondary">Stop positions use the public 0-100 input range.</Text>
+            </ChildContent>
+        </Card>
+    </BorderBeam>
+</Flex>
+
+@code {
+    private readonly string[] _presetNames = { "Ocean", "Sunset", "Aurora", "Forest", "Ember", "Nebula" };
+    private string _currentPresetKey = "Ocean";
+
+    private Preset CurrentPreset => Presets.FirstOrDefault(x => x.Name == _currentPresetKey) ?? Presets[0];
+
+    private static readonly Preset[] Presets =
+    {
+        new("Ocean", "#1677ff", "A calm blue-green accent that works well for data views and cloud tooling.",
+            new[] { new BorderBeamGradient { Color = "#1677ff", Percent = 0 }, new BorderBeamGradient { Color = "#36cfc9", Percent = 52 }, new BorderBeamGradient { Color = "#95de64", Percent = 100 } }),
+        new("Sunset", "#ff7a45", "A warm highlight for upgrade prompts, featured cards, and marketing blocks.",
+            new[] { new BorderBeamGradient { Color = "#ff7a45", Percent = 0 }, new BorderBeamGradient { Color = "#ff4d4f", Percent = 49 }, new BorderBeamGradient { Color = "#ff85c0", Percent = 100 } }),
+        new("Aurora", "#7c3aed", "A vivid cool-toned beam suited for AI assistants, copilots, and automation panels.",
+            new[] { new BorderBeamGradient { Color = "#7c3aed", Percent = 0 }, new BorderBeamGradient { Color = "#06b6d4", Percent = 57 }, new BorderBeamGradient { Color = "#67e8f9", Percent = 100 } }),
+        new("Forest", "#22c55e", "A bright natural palette that feels good on recommendation and growth-oriented cards.",
+            new[] { new BorderBeamGradient { Color = "#22c55e", Percent = 0 }, new BorderBeamGradient { Color = "#a3e635", Percent = 54 }, new BorderBeamGradient { Color = "#facc15", Percent = 100 } }),
+        new("Ember", "#fa541c", "A high-energy warm gradient for important alerts, launch cards, and hot paths.",
+            new[] { new BorderBeamGradient { Color = "#fa541c", Percent = 0 }, new BorderBeamGradient { Color = "#ff7875", Percent = 46 }, new BorderBeamGradient { Color = "#ffd666", Percent = 100 } }),
+        new("Nebula", "#2f54eb", "A cool purple-pink mix that fits experimental modules and product lab surfaces.",
+            new[] { new BorderBeamGradient { Color = "#2f54eb", Percent = 0 }, new BorderBeamGradient { Color = "#722ed1", Percent = 44 }, new BorderBeamGradient { Color = "#ff85c0", Percent = 100 } }),
+    };
+
+    private sealed record Preset(string Name, string Usage, string Description, BorderBeamGradient[] Color);
+}

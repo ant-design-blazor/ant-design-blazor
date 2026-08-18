@@ -1,0 +1,23 @@
+<Flex Gap="FlexGap.Middle" Wrap="FlexWrap.Wrap">
+    @foreach (var item in _durations)
+    {
+        <div style="width: 220px">
+            <BorderBeam Duration="@item.Seconds">
+                <Card Title="@item.Name">
+                    <Text Type="TextElementType.Secondary">@item.Description</Text>
+                </Card>
+            </BorderBeam>
+        </div>
+    }
+</Flex>
+
+@code {
+    private readonly DurationItem[] _durations =
+    {
+        new("Fast", 3, "A quick loop for temporary highlights and active modules."),
+        new("Default", 6, "The original pacing for most emphasized containers."),
+        new("Slow", 12, "A calmer loop for persistent panels and ambient surfaces."),
+    };
+
+    private sealed record DurationItem(string Name, double Seconds, string Description);
+}
