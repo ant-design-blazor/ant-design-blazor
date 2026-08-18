@@ -1,0 +1,56 @@
+@import '../../style/themes/index';
+@import '../../style/mixins/index';
+
+@border-beam-prefix-cls: ~'@{ant-prefix}-border-beam';
+
+@keyframes antBorderBeamMove {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+
+.@{border-beam-prefix-cls} {
+  display: none;
+  position: absolute;
+  inset: var(--ant-border-beam-inset-offset, 0px);
+  border-radius: var(--ant-border-beam-border-radius, 0px);
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  padding: var(--ant-border-beam-line-width, @border-width-base);
+
+  @supports ((mask-composite: exclude) or (-webkit-mask-composite: xor)) {
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+
+    @supports (offset-path: rect(0 auto auto 0 round 1px)) {
+      display: block;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--ant-border-beam-size, 100px);
+        aspect-ratio: 1 / 1;
+        opacity: 0.95;
+        background-image: var(--ant-border-beam-beam-gradient, linear-gradient(to left, @primary-color 0%, @primary-color-hover 70%, transparent));
+        offset-anchor: 90% 50%;
+        offset-distance: 0%;
+        offset-path: rect(0 auto auto 0 round var(--ant-border-beam-size, 100px));
+        offset-rotate: auto;
+        animation-name: antBorderBeamMove;
+        animation-duration: var(--ant-border-beam-duration, 6s);
+        animation-delay: var(--ant-border-beam-delay, 0s);
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        will-change: offset-distance;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before { display: none; }
+  }
+}

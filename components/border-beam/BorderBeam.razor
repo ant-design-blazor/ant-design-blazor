@@ -1,0 +1,13 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div @ref="Ref" id="@Id" style="display: contents;">
+    @ChildContent
+    @for (var index = 0; index < MergedCount; index++)
+    {
+        var beamIndex = index;
+        <div aria-hidden="true"
+             class="ant-border-beam @PrefixCls @ClassName @Class"
+             style="@GetBeamStyle(beamIndex) @Style"></div>
+    }
+</div>
