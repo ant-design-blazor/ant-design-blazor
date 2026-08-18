@@ -103,6 +103,10 @@ export class infoHelper {
     return null;
   }
 
+  static getBoundingClientRects(elements: any[]): domTypes.domRect[] {
+    return (elements || []).map(element => this.getBoundingClientRect(element));
+  }
+
   static getFirstChildDomInfo(element: any) {
     const domElement = this.get(element);
     if (domElement) {
