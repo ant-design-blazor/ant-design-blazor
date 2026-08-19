@@ -183,6 +183,28 @@
         input.GetAttribute("value").Should().BeEmpty();
     }
 
+    [Fact] // Issue: #4825
+    public async Task Select_can_select_a_null_nullable_value()
+    {
+        int? value = 1;
+        Action<int?> valueChanged = newValue => value = newValue;
+
+        var cut = Render<AntDesign.Select<int?, string>>(
+            @<AntDesign.Select TItem="string" TItemValue="int?" Value="@value" ValueChanged="@valueChanged">
+                <SelectOption TItem="string" TItemValue="int?" Value="@(default(int?))" Label="All" />
+                <SelectOption TItem="string" TItemValue="int?" Value="1" Label="Succeeded" />
+                <SelectOption TItem="string" TItemValue="int?" Value="2" Label="Failed" />
+            </AntDesign.Select>);
+
+        cut.Render();
+        var nullOption = cut.Instance.SelectOptionItems.Single(item => item.Value is null);
+        await cut.InvokeAsync(() => cut.Instance.SetValueAsync(nullOption));
+
+        value.Should().BeNull();
+        cut.Instance.Value.Should().BeNull();
+        cut.Find("span.ant-select-selection-item").GetAttribute("title").Should().Be("All");
+    }
+
     [Fact] // Issue: #3875
     public void Exceptions_thrown_from_Event_Callbacks_are_caught()
     {
