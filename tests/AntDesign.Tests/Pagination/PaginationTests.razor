@@ -1,0 +1,357 @@
+﻿@inherits AntDesignTestBase
+@code {
+    private static readonly OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>> ShowTotalRange =
+        new Func<PaginationTotalContext, string>(context => $"{context.Range.from}-{context.Range.to} of {context.Total}");
+
+    public PaginationTests()
+    {
+        // The page size changer renders a Select, which measures its dropdown after render.
+        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true).SetResult(new DomRect());
+        // ConfigProvider writes the dir attribute on the html element when the direction changes.
+        JSInterop.SetupVoid(JSInteropConstants.DomMainpulationHelper.SetDomAttribute, _ => true);
+    }
+
+    [Theory]
+    [InlineData(50, 10, 5)]
+    [InlineData(51, 10, 6)]
+    [InlineData(50, 20, 3)]
+    [InlineData(1, 10, 1)]
+    public void Renders_one_pager_per_page(int total, int pageSize, int expectedPagers)
+    {
+        var cut = Render(@<Pagination Total="@total" PageSize="@pageSize" />);
+
+        cut.FindAll("li.ant-pagination-item").Should().HaveCount(expectedPagers);
+    }
+
+    [Fact]
+    public void Renders_a_single_disabled_pager_when_total_is_zero()
+    {
+        var cut = Render(@<Pagination Total="0" />);
+
+        var pagers = cut.FindAll("li.ant-pagination-item");
+        pagers.Should().ContainSingle();
+        pagers[0].ClassList.Should().Contain("ant-pagination-item-disabled");
+    }
+
+    [Fact]
+    public void Marks_the_current_page_as_active()
+    {
+        var cut = Render(@<Pagination Total="50" DefaultCurrent="3" />);
+
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-3");
+    }
+
+    [Fact]
+    public void Current_takes_precedence_over_default_current()
+    {
+        var cut = Render(@<Pagination Total="50" DefaultCurrent="3" Current="4" />);
+
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-4");
+    }
+
+    [Fact]
+    public void Hides_the_pagination_on_a_single_page_when_requested()
+    {
+        var cut = Render(@<Pagination Total="10" PageSize="10" HideOnSinglePage />);
+
+        cut.Markup.Trim().Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Keeps_the_pagination_on_several_pages_when_hide_on_single_page_is_set()
+    {
+        var cut = Render(@<Pagination Total="11" PageSize="10" HideOnSinglePage />);
+
+        cut.FindAll("li.ant-pagination-item").Should().HaveCount(2);
+    }
+
+    [Theory]
+    [InlineData(1, true, false)]
+    [InlineData(3, false, false)]
+    [InlineData(5, false, true)]
+    public void Disables_prev_on_the_first_page_and_next_on_the_last(int current, bool prevDisabled, bool nextDisabled)
+    {
+        var cut = Render(@<Pagination Total="50" Current="@current" />);
+
+        cut.Find("li.ant-pagination-prev").ClassList.Contains("ant-pagination-disabled").Should().Be(prevDisabled);
+        cut.Find("li.ant-pagination-next").ClassList.Contains("ant-pagination-disabled").Should().Be(nextDisabled);
+    }
+
+    [Fact]
+    public void Clicking_a_pager_raises_on_change_and_activates_that_page()
+    {
+        PaginationEventArgs? args = null;
+        var cut = Render(@<Pagination Total="50" OnChange="@((PaginationEventArgs e) => args = e)" />);
+
+        cut.Find("li.ant-pagination-item-3").Click();
+
+        args.Should().NotBeNull();
+        args!.Page.Should().Be(3);
+        args.PageSize.Should().Be(10);
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-3");
+    }
+
+    [Fact]
+    public void Clicking_the_active_pager_does_not_raise_on_change()
+    {
+        var raised = false;
+        var cut = Render(@<Pagination Total="50" Current="2" OnChange="@((PaginationEventArgs _) => raised = true)" />);
+
+        cut.Find("li.ant-pagination-item-2").Click();
+
+        raised.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Prev_and_next_move_one_page()
+    {
+        var cut = Render(@<Pagination Total="50" Current="3" />);
+
+        cut.Find("li.ant-pagination-next").Click();
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-4");
+
+        cut.Find("li.ant-pagination-prev").Click();
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-3");
+    }
+
+    [Fact]
+    public void Prev_on_the_first_page_does_nothing_and_next_stops_on_the_last()
+    {
+        var raised = false;
+        var cut = Render(@<Pagination Total="20" Current="1" OnChange="@((PaginationEventArgs _) => raised = true)" />);
+
+        cut.Find("li.ant-pagination-prev").Click();
+        raised.Should().BeFalse();
+
+        cut.Find("li.ant-pagination-next").Click();
+        raised.Should().BeTrue();
+
+        raised = false;
+        cut.Find("li.ant-pagination-next").Click();
+
+        raised.Should().BeFalse();
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-2");
+    }
+
+    [Fact]
+    public void Simple_mode_moves_one_page_with_prev_and_next()
+    {
+        var cut = Render(@<Pagination Total="50" Current="2" Simple />);
+
+        cut.Find("li.ant-pagination-next").Click();
+        cut.Find("li.ant-pagination-simple-pager input").GetAttribute("value").Should().Be("3");
+
+        cut.Find("li.ant-pagination-prev").Click();
+        cut.Find("li.ant-pagination-simple-pager input").GetAttribute("value").Should().Be("2");
+    }
+
+    [Fact]
+    public void Pressing_enter_on_a_pager_activates_it()
+    {
+        var cut = Render(@<Pagination Total="50" />);
+
+        cut.Find("li.ant-pagination-item-4").KeyPress(new KeyboardEventArgs { Code = "Enter" });
+
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-4");
+    }
+
+    [Fact]
+    public void Pressing_enter_on_prev_and_next_moves_one_page()
+    {
+        var cut = Render(@<Pagination Total="50" Current="3" />);
+
+        cut.Find("li.ant-pagination-next").KeyPress(new KeyboardEventArgs { Code = "Enter" });
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-4");
+
+        cut.Find("li.ant-pagination-prev").KeyPress(new KeyboardEventArgs { Code = "Enter" });
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-3");
+    }
+
+    [Fact]
+    public void Pressing_enter_on_a_jumper_skips_five_pages()
+    {
+        var cut = Render(@<Pagination Total="500" Current="20" />);
+
+        cut.Find("li.ant-pagination-jump-next").KeyPress(new KeyboardEventArgs { Code = "Enter" });
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-25");
+
+        cut.Find("li.ant-pagination-jump-prev").KeyPress(new KeyboardEventArgs { Code = "Enter" });
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-20");
+    }
+
+    [Fact]
+    public void Any_other_key_leaves_the_current_page_alone()
+    {
+        var cut = Render(@<Pagination Total="50" Current="3" />);
+
+        cut.Find("li.ant-pagination-next").KeyPress(new KeyboardEventArgs { Code = "Space" });
+
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-3");
+    }
+
+    [Fact]
+    public void Adds_the_rtl_class_when_the_direction_is_right_to_left()
+    {
+        var cut = Render(
+            @<ConfigProvider Direction="RTL">
+                <Pagination Total="50" />
+            </ConfigProvider>);
+
+        cut.Find("ul").ClassList.Should().Contain("ant-pagination-rtl");
+    }
+
+    [Fact]
+    public void Renders_a_custom_go_button_next_to_the_quick_jumper()
+    {
+        RenderFragment goButton = @<button class="go-now">Go</button>;
+
+        var cut = Render(@<Pagination Total="500" ShowQuickJumper GoButton="@goButton" />);
+
+        cut.Find(".ant-pagination-options-quick-jumper .go-now").TextContent.Should().Be("Go");
+    }
+
+    [Fact]
+    public void Does_not_change_the_page_when_disabled()
+    {
+        var raised = false;
+        var cut = Render(@<Pagination Total="50" Disabled OnChange="@((PaginationEventArgs _) => raised = true)" />);
+
+        cut.Find("ul").ClassList.Should().Contain("ant-pagination-disabled");
+
+        cut.Find("li.ant-pagination-item-3").Click();
+
+        raised.Should().BeFalse();
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-1");
+    }
+
+    [Fact]
+    public void Renders_only_the_next_jumper_on_the_first_page()
+    {
+        var cut = Render(@<Pagination Total="500" />);
+
+        cut.FindAll("li.ant-pagination-jump-next").Should().ContainSingle();
+        cut.FindAll("li.ant-pagination-jump-prev").Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData(false, 6)]
+    [InlineData(true, 4)]
+    public void The_next_jumper_skips_five_pages_or_three_when_showing_less_items(bool showLessItems, int expectedPage)
+    {
+        var cut = Render(@<Pagination Total="500" ShowLessItems="@showLessItems" />);
+
+        cut.Find("li.ant-pagination-jump-next").Click();
+
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain($"ant-pagination-item-{expectedPage}");
+        cut.FindAll("li.ant-pagination-jump-prev").Should().ContainSingle();
+    }
+
+    [Fact]
+    public void Hides_both_jumpers_when_show_prev_next_jumpers_is_false()
+    {
+        var cut = Render(@<Pagination Total="500" ShowPrevNextJumpers="false" />);
+
+        cut.FindAll("li.ant-pagination-jump-next").Should().BeEmpty();
+        cut.FindAll("li.ant-pagination-jump-prev").Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData(50, false)]
+    [InlineData(51, true)]
+    public void Shows_the_size_changer_only_above_the_total_boundary(int total, bool expected)
+    {
+        var cut = Render(@<Pagination Total="@total" />);
+
+        cut.FindAll(".ant-pagination-options-size-changer").Any().Should().Be(expected);
+    }
+
+    [Fact]
+    public void Show_size_changer_overrides_the_total_boundary()
+    {
+        var cut = Render(@<Pagination Total="10" ShowSizeChanger />);
+
+        cut.FindAll(".ant-pagination-options-size-changer").Should().ContainSingle();
+    }
+
+    [Theory]
+    [InlineData(10, false)]
+    [InlineData(11, true)]
+    public void Shows_the_quick_jumper_only_when_there_is_more_than_one_page(int total, bool expected)
+    {
+        var cut = Render(@<Pagination Total="@total" PageSize="10" ShowQuickJumper />);
+
+        cut.FindAll(".ant-pagination-options-quick-jumper").Any().Should().Be(expected);
+    }
+
+    [Fact]
+    public void The_quick_jumper_navigates_to_the_typed_page_on_enter()
+    {
+        var cut = Render(@<Pagination Total="500" ShowQuickJumper />);
+
+        cut.Find(".ant-pagination-options-quick-jumper input").Change("7");
+        cut.Find(".ant-pagination-options-quick-jumper input").KeyUp(new KeyboardEventArgs { Code = "Enter" });
+
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-7");
+    }
+
+    [Fact]
+    public void Simple_mode_renders_the_current_page_input_and_the_page_count()
+    {
+        var cut = Render(@<Pagination Total="50" Current="2" Simple />);
+
+        cut.Find("ul").ClassList.Should().Contain("ant-pagination-simple");
+        cut.Find("li.ant-pagination-simple-pager input").GetAttribute("value").Should().Be("2");
+        cut.Find("li.ant-pagination-simple-pager").TextContent.Should().Contain("5");
+    }
+
+    [Theory]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    public void Small_size_adds_the_mini_class_unless_simple(bool simple, bool expectedMini)
+    {
+        var cut = Render(@<Pagination Total="50" Size="PaginationSize.Small" Simple="@simple" />);
+
+        cut.Find("ul").ClassList.Contains("ant-pagination-mini").Should().Be(expectedMini);
+    }
+
+    [Theory]
+    [InlineData(2, "11-20 of 85")]
+    [InlineData(9, "81-85 of 85")]
+    public void Show_total_renders_the_range_of_the_current_page(int current, string expected)
+    {
+        var cut = Render(@<Pagination Total="85" Current="@current" ShowTotal="@ShowTotalRange" />);
+
+        cut.Find("li.ant-pagination-total-text").TextContent.Trim().Should().Be(expected);
+    }
+
+    [Fact]
+    public void Item_render_replaces_the_default_page_content()
+    {
+        RenderFragment<PaginationItemRenderContext> itemRender = context => @<span>P@(context.Page)</span>;
+
+        var cut = Render(@<Pagination Total="30" ItemRender="@itemRender" />);
+
+        cut.Find("li.ant-pagination-item-2").TextContent.Trim().Should().Be("P2");
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Show_title_toggles_the_title_attribute_of_the_pagers(bool showTitle)
+    {
+        var cut = Render(@<Pagination Total="50" ShowTitle="@showTitle" />);
+
+        cut.Find("li.ant-pagination-item-2").HasAttribute("title").Should().Be(showTitle);
+    }
+
+    [Fact]
+    public void Increasing_the_page_size_clamps_the_current_page()
+    {
+        var cut = Render<AntDesign.Pagination>(@<Pagination Total="50" Current="5" />);
+
+        cut.SetParametersAndRender(parameters => parameters.Add(x => x.PageSize, 50));
+
+        cut.FindAll("li.ant-pagination-item").Should().ContainSingle();
+        cut.Find("li.ant-pagination-item-active").ClassList.Should().Contain("ant-pagination-item-1");
+    }
+}
