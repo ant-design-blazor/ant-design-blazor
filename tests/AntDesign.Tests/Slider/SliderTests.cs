@@ -5,9 +5,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using Bunit;
 using FluentAssertions;
+using Microsoft.AspNetCore.Components.Web;
+using Moq;
 using Xunit;
 
 namespace AntDesign.Tests.Slider
@@ -196,7 +200,7 @@ namespace AntDesign.Tests.Slider
                 .Add(x => x.HasTooltip, true)
             );
 
-            systemUnderTest.Find(".ant-slider-handle").MouseDown();
+            systemUnderTest.Find(".ant-slider-handle").PointerDown(CreateTouchPointerEvent(1, 30));
 
             systemUnderTest.WaitForAssertion(() =>
             {
@@ -216,7 +220,7 @@ namespace AntDesign.Tests.Slider
                 .Add(x => x.HasTooltip, true)
             );
 
-            systemUnderTest.Find(".ant-slider-handle-1").MouseDown();
+            systemUnderTest.Find(".ant-slider-handle-1").PointerDown(CreateTouchPointerEvent(1, 10));
 
             systemUnderTest.WaitForAssertion(() =>
             {
@@ -237,7 +241,7 @@ namespace AntDesign.Tests.Slider
                 .Add(x => x.HasTooltip, true)
             );
 
-            systemUnderTest.Find(".ant-slider-handle-2").MouseDown();
+            systemUnderTest.Find(".ant-slider-handle-2").PointerDown(CreateTouchPointerEvent(1, 30));
 
             systemUnderTest.WaitForAssertion(() =>
             {
@@ -351,6 +355,97 @@ namespace AntDesign.Tests.Slider
             systemUnderTest.FindAll(".ant-slider-mark-text").Select(x => x.ClassName.Trim()).Should().BeEquivalentTo(expectedClassesInOrder, options => options.WithStrictOrdering());
 
             return Task.CompletedTask;
+        }
+
+        [Fact]
+        public async Task ItShouldDragWithTouchPointer()
+        {
+            Func<JsonElement, Task> pointerMove = null!;
+            Func<JsonElement, Task> pointerUp = null!;
+            Func<JsonElement, Task> pointerCancel = null!;
+
+            MockedDomEventListener
+                .Setup(x => x.AddShared<JsonElement>("window", "pointermove", It.IsAny<Func<JsonElement, Task>>(), false))
+                .Callback<object, string, Func<JsonElement, Task>, bool>((_, _, callback, _) => pointerMove = callback);
+            MockedDomEventListener
+                .Setup(x => x.AddShared<JsonElement>("window", "pointerup", It.IsAny<Func<JsonElement, Task>>(), false))
+                .Callback<object, string, Func<JsonElement, Task>, bool>((_, _, callback, _) => pointerUp = callback);
+            MockedDomEventListener
+                .Setup(x => x.AddShared<JsonElement>("window", "pointercancel", It.IsAny<Func<JsonElement, Task>>(), false))
+                .Callback<object, string, Func<JsonElement, Task>, bool>((_, _, callback, _) => pointerCancel = callback);
+
+            JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+                .SetResult(new HtmlElement { AbsoluteLeft = 0, ClientWidth = 100 });
+
+            double changedValue = -1;
+            double committedValue = -1;
+            int commitCount = 0;
+            var systemUnderTest = RenderComponent<Slider<double>>(parameters => parameters
+                .Add(x => x.DefaultValue, 30)
+                .Add(x => x.HasTooltip, false)
+                .Add(x => x.OnChange, value => changedValue = value)
+                .Add(x => x.OnAfterChange, value =>
+                {
+                    committedValue = value;
+                    commitCount++;
+                })
+            );
+
+            pointerMove.Should().NotBeNull();
+            pointerUp.Should().NotBeNull();
+            pointerCancel.Should().NotBeNull();
+
+            systemUnderTest.Find(".ant-slider-handle").PointerDown(CreateTouchPointerEvent(1, 30));
+
+            await systemUnderTest.InvokeAsync(() => pointerMove(CreateTouchPointerJson(2, 80)));
+            changedValue.Should().Be(-1);
+            await systemUnderTest.InvokeAsync(() => pointerUp(CreateTouchPointerJson(2, 80)));
+            committedValue.Should().Be(-1);
+
+            await systemUnderTest.InvokeAsync(() => pointerMove(CreateTouchPointerJson(1, 60)));
+            changedValue.Should().Be(60);
+            systemUnderTest.Find(".ant-slider-handle").GetAttribute("aria-valuenow").Should().Be("60");
+
+            await systemUnderTest.InvokeAsync(() => pointerUp(CreateTouchPointerJson(1, 60)));
+            committedValue.Should().Be(60);
+            commitCount.Should().Be(1);
+
+            systemUnderTest.Find(".ant-slider-handle").PointerDown(CreateTouchPointerEvent(3, 60));
+            await systemUnderTest.InvokeAsync(() => pointerCancel(CreateTouchPointerJson(3, 60)));
+            await systemUnderTest.InvokeAsync(() => pointerMove(CreateTouchPointerJson(3, 80)));
+
+            changedValue.Should().Be(60);
+            committedValue.Should().Be(60);
+            commitCount.Should().Be(1);
+        }
+
+        private static PointerEventArgs CreateTouchPointerEvent(long pointerId, double position)
+        {
+            return new PointerEventArgs
+            {
+                PointerId = pointerId,
+                PointerType = "touch",
+                IsPrimary = true,
+                Button = 0,
+                Buttons = 1,
+                ClientX = position,
+            };
+        }
+
+        private static JsonElement CreateTouchPointerJson(long pointerId, double position)
+        {
+            return JsonSerializer.SerializeToElement(new
+            {
+                pointerId,
+                pointerType = "touch",
+                isPrimary = true,
+                button = 0,
+                buttons = 1,
+                clientX = position,
+                clientY = 0,
+                pageX = position,
+                pageY = 0,
+            });
         }
     }
 }
