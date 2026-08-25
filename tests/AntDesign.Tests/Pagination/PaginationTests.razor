@@ -180,7 +180,7 @@
     }
 
     [Fact]
-    public void Any_other_key_leaves_the_current_page_alone()
+    public void Pressing_a_key_other_than_enter_does_not_change_the_page()
     {
         var cut = Render(@<Pagination Total="50" Current="3" />);
 
@@ -262,7 +262,7 @@
     {
         var cut = Render(@<Pagination Total="@total" />);
 
-        cut.FindAll(".ant-pagination-options-size-changer").Any().Should().Be(expected);
+        cut.FindAll(".ant-pagination-options-size-changer").Count.Should().Be(expected ? 1 : 0);
     }
 
     [Fact]
@@ -280,7 +280,7 @@
     {
         var cut = Render(@<Pagination Total="@total" PageSize="10" ShowQuickJumper />);
 
-        cut.FindAll(".ant-pagination-options-quick-jumper").Any().Should().Be(expected);
+        cut.FindAll(".ant-pagination-options-quick-jumper").Count.Should().Be(expected ? 1 : 0);
     }
 
     [Fact]
@@ -301,7 +301,7 @@
 
         cut.Find("ul").ClassList.Should().Contain("ant-pagination-simple");
         cut.Find("li.ant-pagination-simple-pager input").GetAttribute("value").Should().Be("2");
-        cut.Find("li.ant-pagination-simple-pager").TextContent.Should().Contain("5");
+        cut.Find("li.ant-pagination-simple-pager").GetAttribute("title").Should().Be("2/5");
     }
 
     [Theory]
