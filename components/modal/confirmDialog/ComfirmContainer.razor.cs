@@ -43,7 +43,7 @@ namespace AntDesign
 
         private void OnLocationChanged(object sender, EventArgs e)
         {
-            _confirmRefs.Clear();
+            _confirmRefs.RemoveAll(x => !x.Config.KeepOnRouteChange);
             InvokeStateHasChanged();
         }
 
