@@ -21,6 +21,9 @@ namespace AntDesign
         [Parameter]
         public FilterOptionsLocale FilterOptionsLocale { get; set; }
 
+        [CascadingParameter]
+        public AdvancedFilterLocale Locale { get; set; }
+
         [Parameter]
         public AdvancedFilterInputResolver InputResolver { get; set; }
 
@@ -41,13 +44,16 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            _locale = new AdvancedFilterLocale();
+            _locale = Locale ?? new AdvancedFilterLocale();
+            FilterOptionsLocale ??= _locale.FilterOptions ?? new FilterOptionsLocale();
             UpdateCurrentField();
         }
 
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+            _locale = Locale ?? new AdvancedFilterLocale();
+            FilterOptionsLocale ??= _locale.FilterOptions ?? new FilterOptionsLocale();
             UpdateCurrentField();
         }
 

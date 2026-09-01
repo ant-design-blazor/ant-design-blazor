@@ -77,8 +77,7 @@ namespace AntDesign
 
             ClassMapper.Add("ant-advanced-filter");
 
-            Locale ??= new AdvancedFilterLocale();
-            FilterOptionsLocale ??= new FilterOptionsLocale();
+            EnsureLocale();
             InputResolver ??= new AdvancedFilterInputResolver();
 
             _fieldList = Fields ?? FilterFieldResolver.Resolve<TItem>();
@@ -104,9 +103,15 @@ namespace AntDesign
                 _lastConditionNode = ConditionNode;
             }
 
-            Locale ??= new AdvancedFilterLocale();
-            FilterOptionsLocale ??= new FilterOptionsLocale();
+            EnsureLocale();
             InputResolver ??= new AdvancedFilterInputResolver();
+        }
+
+        private void EnsureLocale()
+        {
+            Locale ??= LocaleProvider.CurrentLocale.AdvancedFilter;
+            Locale.UseTableLocaleFallback(LocaleProvider.CurrentLocale.Table);
+            FilterOptionsLocale ??= Locale.FilterOptions ?? new FilterOptionsLocale();
         }
 
         /// <summary>

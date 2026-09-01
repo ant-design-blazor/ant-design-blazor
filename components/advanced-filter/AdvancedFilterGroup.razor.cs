@@ -21,6 +21,9 @@ namespace AntDesign
         [Parameter]
         public FilterOptionsLocale FilterOptionsLocale { get; set; }
 
+        [CascadingParameter]
+        public AdvancedFilterLocale Locale { get; set; }
+
         [Parameter]
         public AdvancedFilterInputResolver InputResolver { get; set; }
 
@@ -33,7 +36,14 @@ namespace AntDesign
         [Parameter]
         public EventCallback OnRemoveGroup { get; set; }
 
-        private AdvancedFilterLocale _locale = new();
+        private AdvancedFilterLocale _locale;
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            _locale = Locale ?? new AdvancedFilterLocale();
+            FilterOptionsLocale ??= _locale.FilterOptions ?? new FilterOptionsLocale();
+        }
 
         private void AddCondition()
         {

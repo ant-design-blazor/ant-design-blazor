@@ -30,8 +30,8 @@ A generic advanced filter component that auto-resolves properties from a data ty
 | AllowGroup | Whether to allow condition group nesting. | bool | true |
 | ShowHeader | Whether to show the "Matching all/any" header. | bool | true |
 | Size | Component size. | string | small |
-| Locale | Localization. | AdvancedFilterLocale | - |
-| FilterOptionsLocale | Filter operator localization. | FilterOptionsLocale | - |
+| Locale | Localization. `AdvancedFilterLocale` inherits `TableLocale` and falls back to Table filter locale values when AdvancedFilter-specific values are not supplied. | AdvancedFilterLocale | LocaleProvider.CurrentLocale.AdvancedFilter |
+| FilterOptionsLocale | Filter operator localization. Defaults to `Locale.FilterOptions`, so it can share Table filter text. | FilterOptionsLocale | Locale.FilterOptions |
 | InputResolver | Resolves the value input by property type and compare operator. Extend it with `Map(...)`. | AdvancedFilterInputResolver | default resolver |
 
 ### AdvancedFilter Methods

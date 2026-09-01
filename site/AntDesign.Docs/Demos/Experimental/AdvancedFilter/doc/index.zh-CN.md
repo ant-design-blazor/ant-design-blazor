@@ -30,8 +30,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | AllowGroup | 是否允许条件组嵌套（括号分组）。 | bool | true |
 | ShowHeader | 是否显示"匹配所有/任意条件"头部。 | bool | true |
 | Size | 组件尺寸。 | string | small |
-| Locale | 本地化配置。 | AdvancedFilterLocale | - |
-| FilterOptionsLocale | 筛选运算符本地化配置。 | FilterOptionsLocale | - |
+| Locale | 本地化配置。`AdvancedFilterLocale` 继承 `TableLocale`，未提供高级筛选专属配置时会回退复用 Table 的筛选本地化。 | AdvancedFilterLocale | LocaleProvider.CurrentLocale.AdvancedFilter |
+| FilterOptionsLocale | 筛选运算符本地化配置。默认使用 `Locale.FilterOptions`，因此可与 Table 筛选文案共用。 | FilterOptionsLocale | Locale.FilterOptions |
 | InputResolver | 根据属性值类型和条件类型解析值输入组件，可通过 `Map(...)` 扩展。 | AdvancedFilterInputResolver | 默认解析器 |
 
 ### AdvancedFilter 方法
