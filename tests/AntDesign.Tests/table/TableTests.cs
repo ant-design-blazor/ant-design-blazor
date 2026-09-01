@@ -5,6 +5,9 @@
 using System;
 using System.Collections.Generic;
 using Bunit;
+using Xunit;
+
+#pragma warning disable CS0612, CS0618
 
 namespace AntDesign.Tests.Table
 {
@@ -57,17 +60,18 @@ namespace AntDesign.Tests.Table
             );
         }
 
-        //[Fact]
+        [Fact]
         public void Renders_an_empty_table()
         {
             var persons = Array.Empty<Person>();
 
             var cut = CreatePersonsTable(persons);
 
-            cut.RecordedMarkupMatches();
+            Assert.Single(cut.FindAll("tbody tr.ant-table-placeholder"));
+            Assert.Contains("No Data", cut.Find("tbody").TextContent);
         }
 
-        //[Fact]
+        [Fact]
         public void Renders_a_table_with_two_rows()
         {
             var persons = new[]
@@ -78,10 +82,13 @@ namespace AntDesign.Tests.Table
 
             var cut = CreatePersonsTable(persons);
 
-            cut.RecordedMarkupMatches();
+            var rows = cut.FindAll("tbody tr.ant-table-row");
+            Assert.Equal(2, rows.Count);
+            Assert.Contains("John", rows[0].TextContent);
+            Assert.Contains("Jane", rows[1].TextContent);
         }
 
-        //[Fact]
+        [Fact]
         public void Can_render_after_changes_to_the_dataSource()
         {
             var persons = new List<Person>
@@ -98,12 +105,15 @@ namespace AntDesign.Tests.Table
 
             persons.RemoveAt(0);
 
-            cut.SetParametersAndRender(b => b.Add(q => q.DataSource, persons));
+            cut.SetParametersAndRender(b => b
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.PageIndex, 2));
 
-            cut.RecordedMarkupMatches();
+            var row = Assert.Single(cut.FindAll("tbody tr.ant-table-row"));
+            Assert.Contains("Joe", row.TextContent);
         }
 
-        //[Fact]
+        [Fact]
         public void Set_colspan_and_rowspan()
         {
             var persons = new[]
@@ -149,7 +159,10 @@ namespace AntDesign.Tests.Table
                 });
             });
 
-            cut.RecordedMarkupMatches();
+            Assert.Single(cut.FindAll("thead th"));
+            var cells = cut.FindAll("tbody td");
+            Assert.Equal(2, cells.Count);
+            Assert.All(cells, cell => Assert.Equal("2", cell.GetAttribute("colspan")));
         }
     }
 }

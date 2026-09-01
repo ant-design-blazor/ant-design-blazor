@@ -1,0 +1,40 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Simple_spin_renders_spinning_indicator()
+    {
+        var cut = Context.RenderComponent<Spin>(parameters => parameters
+            .Add(x => x.Spinning, true)
+            .Add(x => x.Size, SpinSize.Large)
+            .Add(x => x.Tip, "Loading..."));
+
+        var spinEl = cut.Find(".ant-spin");
+        spinEl.ClassList.Should().Contain("ant-spin-spinning");
+        spinEl.ClassList.Should().Contain("ant-spin-lg");
+        spinEl.ClassList.Should().Contain("ant-spin-show-text");
+
+        cut.Find(".ant-spin-text").TextContent.Should().Be("Loading...");
+    }
+
+    [Fact]
+    public void Spin_with_child_content_wraps_in_nested_loading_container()
+    {
+        var cut = Context.RenderComponent<Spin>(parameters => parameters
+            .Add(x => x.Spinning, true)
+            .AddChildContent("<div id='content'>Wrapped Content</div>"));
+
+        cut.Find(".ant-spin-nested-loading").Should().NotBeNull();
+        cut.Find("#content").TextContent.Should().Be("Wrapped Content");
+        cut.Find(".ant-spin-container").ClassList.Should().Contain("ant-spin-blur");
+    }
+
+    [Fact]
+    public void Custom_indicator_overrides_default_dots()
+    {
+        var cut = Context.RenderComponent<Spin>(parameters => parameters
+            .Add(x => x.Indicator, @<span id="custom-spinner">Loading Spinner</span>));
+
+        cut.Find("#custom-spinner").TextContent.Should().Be("Loading Spinner");
+    }
+}

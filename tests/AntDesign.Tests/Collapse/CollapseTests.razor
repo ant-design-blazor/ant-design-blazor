@@ -1,0 +1,130 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Basic_collapse_renders_panels_and_toggles_active_state_on_header_click()
+    {
+        string[] changedKeys = null;
+
+        var cut = Context.RenderComponent<Collapse>(parameters => parameters
+            .Add(x => x.OnChange, EventCallback.Factory.Create<string[]>(this, keys => changedKeys = keys))
+            .AddChildContent<Panel>(panel =>
+            {
+                panel.Add(x => x.Key, "1");
+                panel.Add(x => x.Header, "Panel 1");
+                panel.Add(x => x.ChildContent, "Content 1".ToRenderFragment());
+            })
+            .AddChildContent<Panel>(panel =>
+            {
+                panel.Add(x => x.Key, "2");
+                panel.Add(x => x.Header, "Panel 2");
+                panel.Add(x => x.ChildContent, "Content 2".ToRenderFragment());
+            }));
+
+        var headers = cut.FindAll(".ant-collapse-header");
+        headers.Count.Should().Be(2);
+
+        headers[0].Click();
+
+        changedKeys.Should().ContainSingle().Which.Should().Be("1");
+        cut.FindAll(".ant-collapse-item")[0].ClassList.Should().Contain("ant-collapse-item-active");
+        cut.FindAll(".ant-collapse-item")[1].ClassList.Should().NotContain("ant-collapse-item-active");
+
+        headers[1].Click();
+
+        changedKeys.Should().BeEquivalentTo(new[] { "1", "2" });
+        cut.FindAll(".ant-collapse-item")[0].ClassList.Should().Contain("ant-collapse-item-active");
+        cut.FindAll(".ant-collapse-item")[1].ClassList.Should().Contain("ant-collapse-item-active");
+    }
+
+    [Fact]
+    public void Accordion_mode_only_allows_one_active_panel()
+    {
+        string[] changedKeys = null;
+
+        var cut = Context.RenderComponent<Collapse>(parameters => parameters
+            .Add(x => x.Accordion, true)
+            .Add(x => x.OnChange, EventCallback.Factory.Create<string[]>(this, keys => changedKeys = keys))
+            .AddChildContent<Panel>(panel =>
+            {
+                panel.Add(x => x.Key, "1");
+                panel.Add(x => x.Header, "Panel 1");
+            })
+            .AddChildContent<Panel>(panel =>
+            {
+                panel.Add(x => x.Key, "2");
+                panel.Add(x => x.Header, "Panel 2");
+            }));
+
+        var headers = cut.FindAll(".ant-collapse-header");
+
+        headers[0].Click();
+        changedKeys.Should().ContainSingle().Which.Should().Be("1");
+
+        headers[1].Click();
+        changedKeys.Should().ContainSingle().Which.Should().Be("2");
+        cut.FindAll(".ant-collapse-item")[0].ClassList.Should().NotContain("ant-collapse-item-active");
+        cut.FindAll(".ant-collapse-item")[1].ClassList.Should().Contain("ant-collapse-item-active");
+    }
+
+    [Fact]
+    public void Disabled_panel_does_not_toggle_on_click()
+    {
+        string[] changedKeys = null;
+
+        var cut = Context.RenderComponent<Collapse>(parameters => parameters
+            .Add(x => x.OnChange, EventCallback.Factory.Create<string[]>(this, keys => changedKeys = keys))
+            .AddChildContent<Panel>(panel =>
+            {
+                panel.Add(x => x.Key, "1");
+                panel.Add(x => x.Header, "Panel 1");
+                panel.Add(x => x.Disabled, true);
+            }));
+
+        cut.Find(".ant-collapse-header").Click();
+
+        changedKeys.Should().BeNull();
+        cut.Find(".ant-collapse-item").ClassList.Should().NotContain("ant-collapse-item-active");
+    }
+
+    [Fact]
+    public void DefaultActiveKey_initializes_active_panels()
+    {
+        var cut = Context.RenderComponent<Collapse>(parameters => parameters
+            .Add(x => x.DefaultActiveKey, new[] { "2" })
+            .AddChildContent<Panel>(panel =>
+            {
+                panel.Add(x => x.Key, "1");
+                panel.Add(x => x.Header, "Panel 1");
+            })
+            .AddChildContent<Panel>(panel =>
+            {
+                panel.Add(x => x.Key, "2");
+                panel.Add(x => x.Header, "Panel 2");
+            }));
+
+        cut.FindAll(".ant-collapse-item")[0].ClassList.Should().NotContain("ant-collapse-item-active");
+        cut.FindAll(".ant-collapse-item")[1].ClassList.Should().Contain("ant-collapse-item-active");
+    }
+
+    [Fact]
+    public void Programmatic_Activate_method_updates_active_state()
+    {
+        var cut = Context.RenderComponent<Collapse>(parameters => parameters
+            .AddChildContent<Panel>(panel =>
+            {
+                panel.Add(x => x.Key, "1");
+                panel.Add(x => x.Header, "Panel 1");
+            })
+            .AddChildContent<Panel>(panel =>
+            {
+                panel.Add(x => x.Key, "2");
+                panel.Add(x => x.Header, "Panel 2");
+            }));
+
+        cut.InvokeAsync(() => cut.Instance.Activate("1", "2"));
+
+        cut.FindAll(".ant-collapse-item")[0].ClassList.Should().Contain("ant-collapse-item-active");
+        cut.FindAll(".ant-collapse-item")[1].ClassList.Should().Contain("ant-collapse-item-active");
+    }
+}

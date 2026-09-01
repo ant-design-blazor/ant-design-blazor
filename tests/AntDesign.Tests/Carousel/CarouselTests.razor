@@ -1,0 +1,72 @@
+@inherits AntDesignTestBase
+
+@code {
+    public CarouselTests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect { Width = 500, Height = 300 });
+    }
+
+    [Fact]
+    public void Carousel_renders_slides_and_dots_and_handles_dot_click()
+    {
+        var cut = Context.RenderComponent<Carousel>(parameters => parameters
+            .Add(x => x.Dots, true)
+            .AddChildContent<CarouselSlick>(slick => slick.Add(x => x.ChildContent, "Slide 1".ToRenderFragment()))
+            .AddChildContent<CarouselSlick>(slick => slick.Add(x => x.ChildContent, "Slide 2".ToRenderFragment()))
+            .AddChildContent<CarouselSlick>(slick => slick.Add(x => x.ChildContent, "Slide 3".ToRenderFragment())));
+
+        var slides = cut.FindAll(".slick-slide:not(.slick-cloned)");
+        slides.Count.Should().Be(3);
+        slides[0].ClassList.Should().Contain("slick-active");
+
+        var dots = cut.FindAll(".slick-dots li");
+        dots.Count.Should().Be(3);
+        dots[0].ClassList.Should().Contain("slick-active");
+
+        dots[1].QuerySelector("button").Click();
+
+        slides = cut.FindAll(".slick-slide:not(.slick-cloned)");
+        slides[0].ClassList.Should().NotContain("slick-active");
+        slides[1].ClassList.Should().Contain("slick-active");
+    }
+
+    [Fact]
+    public void Carousel_Next_Previous_and_GoTo_navigate_slides()
+    {
+        var cut = Context.RenderComponent<Carousel>(parameters => parameters
+            .Add(x => x.Dots, true)
+            .AddChildContent<CarouselSlick>(slick => slick.Add(x => x.ChildContent, "Slide 1".ToRenderFragment()))
+            .AddChildContent<CarouselSlick>(slick => slick.Add(x => x.ChildContent, "Slide 2".ToRenderFragment()))
+            .AddChildContent<CarouselSlick>(slick => slick.Add(x => x.ChildContent, "Slide 3".ToRenderFragment())));
+
+        cut.InvokeAsync(() => cut.Instance.Next());
+        var slides = cut.FindAll(".slick-slide:not(.slick-cloned)");
+        slides[1].ClassList.Should().Contain("slick-active");
+
+        cut.InvokeAsync(() => cut.Instance.Next());
+        slides = cut.FindAll(".slick-slide:not(.slick-cloned)");
+        slides[2].ClassList.Should().Contain("slick-active");
+
+        cut.InvokeAsync(() => cut.Instance.Previous());
+        slides = cut.FindAll(".slick-slide:not(.slick-cloned)");
+        slides[1].ClassList.Should().Contain("slick-active");
+
+        cut.InvokeAsync(() => cut.Instance.GoTo(0));
+        slides = cut.FindAll(".slick-slide:not(.slick-cloned)");
+        slides[0].ClassList.Should().Contain("slick-active");
+    }
+
+    [Fact]
+    public void Vertical_dot_position_applies_vertical_classes()
+    {
+        var cut = Context.RenderComponent<Carousel>(parameters => parameters
+            .Add(x => x.Dots, true)
+            .Add(x => x.DotPosition, CarouselDotPosition.Right)
+            .AddChildContent<CarouselSlick>(slick => slick.Add(x => x.ChildContent, "Slide 1".ToRenderFragment())));
+
+        cut.Find(".slick-slider").ClassList.Should().Contain("slick-vertical");
+        cut.Find(".ant-carousel").ClassList.Should().Contain("ant-carousel-vertical");
+        cut.Find(".slick-dots").ClassList.Should().Contain("slick-dots-right");
+    }
+}

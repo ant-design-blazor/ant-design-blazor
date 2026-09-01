@@ -1,0 +1,38 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Skeleton_renders_title_and_paragraph_by_default_when_loading()
+    {
+        var cut = Context.RenderComponent<Skeleton>(parameters => parameters
+            .Add(x => x.Loading, true)
+            .Add(x => x.Active, true));
+
+        cut.Find(".ant-skeleton").ClassList.Should().Contain("ant-skeleton-active");
+        cut.Find(".ant-skeleton-title").Should().NotBeNull();
+        cut.FindAll(".ant-skeleton-paragraph li").Count.Should().Be(3);
+    }
+
+    [Fact]
+    public void Skeleton_renders_avatar_header_when_Avatar_is_true()
+    {
+        var cut = Context.RenderComponent<Skeleton>(parameters => parameters
+            .Add(x => x.Avatar, true)
+            .Add(x => x.AvatarShape, SkeletonElementShape.Square));
+
+        cut.Find(".ant-skeleton").ClassList.Should().Contain("ant-skeleton-with-avatar");
+        cut.Find(".ant-skeleton-header").Should().NotBeNull();
+        cut.Find(".ant-skeleton-avatar-square").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Skeleton_renders_child_content_when_loading_is_false()
+    {
+        var cut = Context.RenderComponent<Skeleton>(parameters => parameters
+            .Add(x => x.Loading, false)
+            .AddChildContent("<div id='loaded'>Actual Data</div>"));
+
+        cut.FindAll(".ant-skeleton-title").Should().BeEmpty();
+        cut.Find("#loaded").TextContent.Should().Be("Actual Data");
+    }
+}

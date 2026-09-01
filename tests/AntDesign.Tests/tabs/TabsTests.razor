@@ -67,7 +67,7 @@
     @<Tabs Type="@TabType.EditableCard" OnClose="OnClose">
         <TabPane Key="tab1" Tab="Tab 1">
         </TabPane>
-        </Tabs>
+    </Tabs>
     );
 
         var removeElement = cut.Find(".ant-tabs-tab-remove");
@@ -80,7 +80,7 @@
     public async Task Render_tab_pane_with_aniamted()
     {
         var activeKey = "tab1";
-        var cut = Context.Render<Tabs>( 
+        var cut = Context.Render<Tabs>(
             @<Tabs Animated @bind-ActiveKey="activeKey">
                 <TabPane Key="tab1" Tab="Tab 1"></TabPane>
                 <TabPane Key="tab2" Tab="Tab 2"></TabPane>
@@ -90,7 +90,7 @@
         cut.FindAll(".ant-tabs-tabpane")[1].ClassList.Should().Contain("ant-tabs-tabpane-hidden");
 
         cut.FindAll("div.ant-tabs-tab")[1].Click();
-     
+
         activeKey.Should().Be("tab2");
         cut.FindAll(".ant-tabs-tabpane")[0].ClassList.Should().Contain("ant-tabs-tabpane-hidden");
         cut.FindAll(".ant-tabs-tabpane")[1].ClassList.Should().Contain("ant-tabs-tabpane-active");
@@ -101,11 +101,11 @@
     {
         var activeKey = "tab1";
         var style = "color:red";
-        var cut = Context.Render( 
+        var cut = Context.Render(
             @<Tabs Animated @bind-ActiveKey="activeKey" TabBarStyle="@style">
                 <TabPane Key="tab1" Tab="Tab 1"></TabPane>
                 <TabPane Key="tab2" Tab="Tab 2"></TabPane>
-        </Tabs>
+            </Tabs>
         );
         var paneElements = cut.FindAll(".ant-tabs-nav");
         paneElements[0].Attributes["style"]?.Value.Should().Be(style);
@@ -116,14 +116,14 @@
     {
         var activeKey = "tab1";
         var classList = "test1 test2";
-        var cut = Context.Render( 
+        var cut = Context.Render(
             @<Tabs Animated @bind-ActiveKey="activeKey" TabBarClass="@classList">
                 <TabPane Key="tab1" Tab="Tab 1"></TabPane>
                 <TabPane Key="tab2" Tab="Tab 2"></TabPane>
-        </Tabs>
+            </Tabs>
         );
         var paneElements = cut.FindAll(".ant-tabs-nav");
-            paneElements[0].Attributes["class"]?.Value.Should().Be($"ant-tabs-nav {classList}");
+        paneElements[0].Attributes["class"]?.Value.Should().Be($"ant-tabs-nav {classList}");
     }
 
     [Fact]
@@ -147,5 +147,115 @@
         clickedKey = null;
         cut.FindAll("div.ant-tabs-tab")[1].Click();
         clickedKey.Should().Be("tab2");
+    }
+
+    [Fact]
+    public void Should_change_active_tab_via_navigation_api_and_callbacks()
+    {
+        string changedKey = null;
+        var activeKey = "tab1";
+
+        var cut = Context.RenderComponent<Tabs>(parameters => parameters
+            .Add(x => x.ActiveKey, activeKey)
+            .Add(x => x.ActiveKeyChanged, EventCallback.Factory.Create<string>(this, value => activeKey = value))
+            .Add(x => x.OnChange, EventCallback.Factory.Create<string>(this, value => changedKey = value))
+            .AddChildContent<AntDesign.TabPane>(tabPane =>
+            {
+                tabPane.Add(x => x.Key, "tab1");
+                tabPane.Add(x => x.Tab, "Tab 1");
+            })
+            .AddChildContent<AntDesign.TabPane>(tabPane =>
+            {
+                tabPane.Add(x => x.Key, "tab2");
+                tabPane.Add(x => x.Tab, "Tab 2");
+            })
+            .AddChildContent<AntDesign.TabPane>(tabPane =>
+            {
+                tabPane.Add(x => x.Key, "tab3");
+                tabPane.Add(x => x.Tab, "Tab 3");
+            }));
+
+        cut.InvokeAsync(() => cut.Instance.Next());
+        activeKey.Should().Be("tab2");
+        changedKey.Should().Be("tab2");
+
+        cut.InvokeAsync(() => cut.Instance.Previous());
+        activeKey.Should().Be("tab1");
+        changedKey.Should().Be("tab1");
+
+        cut.InvokeAsync(() => cut.Instance.GoTo(2));
+        activeKey.Should().Be("tab3");
+        changedKey.Should().Be("tab3");
+    }
+
+    [Fact]
+    public void Disabled_tab_should_not_activate_on_click()
+    {
+        string changedKey = null;
+        var activeKey = "tab1";
+
+        var cut = Context.RenderComponent<Tabs>(parameters => parameters
+            .Add(x => x.ActiveKey, activeKey)
+            .Add(x => x.ActiveKeyChanged, EventCallback.Factory.Create<string>(this, value => activeKey = value))
+            .Add(x => x.OnChange, EventCallback.Factory.Create<string>(this, value => changedKey = value))
+            .AddChildContent<AntDesign.TabPane>(tabPane =>
+            {
+                tabPane.Add(x => x.Key, "tab1");
+                tabPane.Add(x => x.Tab, "Tab 1");
+            })
+            .AddChildContent<AntDesign.TabPane>(tabPane =>
+            {
+                tabPane.Add(x => x.Key, "tab2");
+                tabPane.Add(x => x.Tab, "Tab 2");
+                tabPane.Add(x => x.Disabled, true);
+            })
+            .AddChildContent<AntDesign.TabPane>(tabPane =>
+            {
+                tabPane.Add(x => x.Key, "tab3");
+                tabPane.Add(x => x.Tab, "Tab 3");
+            }));
+
+        changedKey = null;
+        cut.FindAll("div.ant-tabs-tab")[1].Click();
+
+        activeKey.Should().Be("tab1");
+        changedKey.Should().BeNull();
+        cut.FindAll(".ant-tabs-tabpane")[0].ClassList.Should().Contain("ant-tabs-tabpane-active");
+    }
+
+    [Fact]
+    public void Closing_active_tab_selects_next_tab_and_fires_close_callback()
+    {
+        string closedKey = null;
+        string activeKey = "tab2";
+
+        var cut = Context.RenderComponent<Tabs>(parameters => parameters
+            .Add(x => x.Type, TabType.EditableCard)
+            .Add(x => x.ActiveKey, activeKey)
+            .Add(x => x.ActiveKeyChanged, EventCallback.Factory.Create<string>(this, value => activeKey = value))
+            .Add(x => x.OnClose, EventCallback.Factory.Create<string>(this, value => closedKey = value))
+            .AddChildContent<AntDesign.TabPane>(tabPane =>
+            {
+                tabPane.Add(x => x.Key, "tab1");
+                tabPane.Add(x => x.Tab, "Tab 1");
+            })
+            .AddChildContent<AntDesign.TabPane>(tabPane =>
+            {
+                tabPane.Add(x => x.Key, "tab2");
+                tabPane.Add(x => x.Tab, "Tab 2");
+            })
+            .AddChildContent<AntDesign.TabPane>(tabPane =>
+            {
+                tabPane.Add(x => x.Key, "tab3");
+                tabPane.Add(x => x.Tab, "Tab 3");
+            }));
+
+        cut.FindAll(".ant-tabs-tab-remove")[1].Click();
+
+        closedKey.Should().Be("tab2");
+        // Closing the active tab advances to the previous tab when available, otherwise next tab.
+        activeKey.Should().Be("tab1");
+        cut.FindAll(".ant-tabs-tab").Count.Should().Be(2);
+        cut.FindAll(".ant-tabs-tab")[1].TextContent.Trim().Should().Be("Tab 3");
     }
 }

@@ -1,0 +1,155 @@
+@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+
+@code {
+    private sealed class Item
+    {
+        public string Key { get; init; } = string.Empty;
+        public string Title { get; init; } = string.Empty;
+        public List<Item> Children { get; init; } = new();
+    }
+
+    private static readonly Item[] _items =
+    {
+        new()
+        {
+            Key = "parent",
+            Title = "Parent",
+            Children =
+            {
+                new() { Key = "child", Title = "Child" }
+            }
+        },
+        new() { Key = "sibling", Title = "Sibling" }
+    };
+
+    public TreeSelectTests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.focus", _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition
+            {
+                Placement = Placement.BottomLeft,
+                ZIndex = 100
+            });
+    }
+
+    [Fact]
+    public void Open_renders_templated_tree_nodes()
+    {
+        var cut = Render<TreeSelect<string, string>>(
+            @<TreeSelect TItemValue="string" TItem="string" Open TreeDefaultExpandAll>
+                <TreeNode TItem="string" Key="parent" Title="Parent">
+                    <TreeNode TItem="string" Key="child" Title="Child" />
+                </TreeNode>
+            </TreeSelect>);
+
+        cut.WaitForElement(".ant-tree");
+        cut.FindAll(".ant-tree-treenode").Should().HaveCount(2);
+        cut.Markup.Should().Contain("Parent").And.Contain("Child");
+    }
+
+    [Fact]
+    public async Task Checkable_data_source_supports_check_all_and_uncheck_all()
+    {
+        var cut = Render<TreeSelect<string, Item>>(
+            @<TreeSelect TItemValue = "string" TItem = "Item" DataSource = "_items" Open TreeCheckable TreeDefaultExpandAll
+                         ItemValue = "item => item.Key" ChildrenExpression = "node => node.DataItem.Children"
+                         TitleExpression = "node => node.DataItem.Title" KeyExpression = "node => node.DataItem.Key"
+                         IsLeafExpression = "node => node.DataItem.Children.Count == 0" />);
+
+        cut.WaitForElement(".ant-tree");
+        cut.FindAll(".ant-tree-treenode").Should().HaveCount(3);
+
+        await cut.InvokeAsync(cut.Instance.CheckAll);
+        cut.Instance.TreeComponent.CheckedKeys.Should().BeEquivalentTo("parent", "child", "sibling");
+
+        await cut.InvokeAsync(cut.Instance.UncheckAll);
+        cut.Instance.TreeComponent.CheckedKeys.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Single_tree_syncs_value_selection_and_clears_when_unset()
+    {
+        var selectedKey = "parent";
+
+        var cut = Render<TreeSelect<string, Item>>(
+            @<TreeSelect TItemValue = "string" TItem = "Item" DataSource = "_items" Open TreeDefaultExpandAll Value = "@selectedKey"
+                         ItemValue = "item => item.Key" ChildrenExpression = "node => node.DataItem.Children"
+                         TitleExpression = "node => node.DataItem.Title" KeyExpression = "node => node.DataItem.Key"
+                         IsLeafExpression = "node => node.DataItem.Children.Count == 0" />);
+
+        cut.Instance.Value.Should().Be("parent");
+        cut.Instance.GetNode("parent")!.Selected.Should().BeTrue();
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, (string)null));
+
+        cut.Instance.Value.Should().BeNull();
+        cut.Instance.GetNode("parent")!.Selected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Empty_multiple_values_clears_selection_state()
+    {
+        var selectedValues = new[] { "parent", "sibling" };
+
+        var cut = Render<TreeSelect<string, Item>>(
+            @<TreeSelect TItemValue = "string" TItem = "Item" DataSource = "_items" Open Multiple TreeDefaultExpandAll
+                         Values = "@selectedValues" ItemValue = "item => item.Key" ChildrenExpression = "node => node.DataItem.Children"
+                         TitleExpression = "node => node.DataItem.Title" KeyExpression = "node => node.DataItem.Key"
+                         IsLeafExpression = "node => node.DataItem.Children.Count == 0" />);
+
+        cut.Instance.Values.Should().BeEquivalentTo("parent", "sibling");
+        cut.Instance.TreeComponent.SelectedKeys.Should().BeEquivalentTo("parent", "sibling");
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, Array.Empty<string>()));
+
+        cut.Instance.TreeComponent.SelectedKeys.Should().BeEmpty();
+        cut.Instance.SelectOptionItems.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Checkable_values_stay_in_sync_when_check_strategy_changes()
+    {
+        var values = new[] { "parent", "sibling" };
+
+        var cut = Render<TreeSelect<string, Item>>(
+            @<TreeSelect TItemValue = "string" TItem = "Item" DataSource = "_items" Open TreeCheckable TreeDefaultExpandAll
+                         Values = "@values" ShowCheckedStrategy = "TreeCheckedStrategy.ShowAll" ItemValue = "item => item.Key"
+                         ChildrenExpression = "node => node.DataItem.Children" TitleExpression = "node => node.DataItem.Title"
+                         KeyExpression = "node => node.DataItem.Key" IsLeafExpression = "node => node.DataItem.Children.Count == 0" />);
+
+        cut.Instance.Values.Should().BeEquivalentTo(values);
+        cut.Instance.TreeComponent.CheckedKeys.Should().BeEquivalentTo("parent", "child", "sibling");
+
+        cut.SetParametersAndRender(parameters =>
+        {
+            parameters.Add(p => p.TreeCheckStrictly, true);
+            parameters.Add(p => p.ShowCheckedStrategy, TreeCheckedStrategy.ShowChild);
+            parameters.Add(p => p.Values, values);
+        });
+
+        cut.Instance.TreeComponent.CheckedKeys.Should().BeEquivalentTo("parent", "child", "sibling");
+    }
+
+    [Fact]
+    public async Task Multiple_tree_supports_selection_and_node_lookup()
+    {
+        var cut = Render<TreeSelect<string, Item>>(
+            @<TreeSelect TItemValue = "string" TItem = "Item" DataSource = "_items" Open Multiple TreeDefaultExpandAll
+                         ItemValue = "item => item.Key" ChildrenExpression = "node => node.DataItem.Children"
+                         TitleExpression = "node => node.DataItem.Title" KeyExpression = "node => node.DataItem.Key" />);
+
+        cut.WaitForElement(".ant-tree");
+        cut.Instance.GetNode("child").DataItem.Title.Should().Be("Child");
+
+        await cut.InvokeAsync(cut.Instance.SelectAll);
+        cut.Instance.TreeComponent.SelectedKeys.Should().BeEquivalentTo("parent", "child", "sibling");
+
+        await cut.InvokeAsync(cut.Instance.DeselectAll);
+        cut.Instance.TreeComponent.SelectedKeys.Should().BeEmpty();
+    }
+}

@@ -1,0 +1,44 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Result_renders_status_title_subtitle_and_extra_content()
+    {
+        var cut = Context.RenderComponent<Result>(parameters => parameters
+            .Add(x => x.Status, ResultStatus.Success)
+            .Add(x => x.Title, "Successfully Purchased Item")
+            .Add(x => x.SubTitle, "Order number: 2017182818828182881")
+            .Add(x => x.Extra, @<button id="go-console">Go Console</button>)
+            .AddChildContent("<div id='details'>Order Details</div>"));
+
+        cut.Find(".ant-result").ClassList.Should().Contain("ant-result-success");
+        cut.Find(".ant-result-title").TextContent.Trim().Should().Be("Successfully Purchased Item");
+        cut.Find(".ant-result-subtitle").TextContent.Trim().Should().Be("Order number: 2017182818828182881");
+        cut.Find("#go-console").TextContent.Should().Be("Go Console");
+        cut.Find("#details").TextContent.Should().Be("Order Details");
+    }
+
+    [Fact]
+    public void Result_custom_icon_parses_type_and_theme()
+    {
+        var cut = Context.RenderComponent<Result>(parameters => parameters
+            .Add(x => x.Status, ResultStatus.Info)
+            .Add(x => x.Icon, "smile-outline")
+            .Add(x => x.Title, "Custom Icon"));
+
+        cut.Find(".ant-result-title").TextContent.Trim().Should().Be("Custom Icon");
+    }
+
+    [Fact]
+    public void TitleTemplate_and_SubTitleTemplate_override_plain_strings()
+    {
+        var cut = Context.RenderComponent<Result>(parameters => parameters
+            .Add(x => x.Title, "Plain Title")
+            .Add(x => x.TitleTemplate, @<h1 id="custom-title">Custom Header</h1>)
+            .Add(x => x.SubTitle, "Plain SubTitle")
+            .Add(x => x.SubTitleTemplate, @<p id="custom-sub">Custom Subtitle</p>));
+
+        cut.Find("#custom-title").TextContent.Should().Be("Custom Header");
+        cut.Find("#custom-sub").TextContent.Should().Be("Custom Subtitle");
+    }
+}

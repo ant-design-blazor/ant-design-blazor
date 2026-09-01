@@ -1,0 +1,59 @@
+@using AntDesign.JsInterop
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Affix_renders_child_content_unaffixed_by_default()
+    {
+        JSInterop.Setup<Window>(JSInteropConstants.GetWindow)
+            .SetResult(new Window { InnerHeight = 800 });
+        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new DomRect { Top = 100, Bottom = 140, Width = 100, Height = 40 });
+
+        var cut = Context.RenderComponent<Affix>(parameters => parameters
+            .Add(x => x.OffsetTop, 10)
+            .AddChildContent("<button id='btn'>Affixed Button</button>"));
+
+        cut.Find("#btn").TextContent.Should().Be("Affixed Button");
+        cut.FindAll(".ant-affix").Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Affix_becomes_affixed_and_invokes_OnChange_when_scrolled_past_OffsetTop()
+    {
+        bool? isAffixed = null;
+
+        JSInterop.Setup<Window>(JSInteropConstants.GetWindow)
+            .SetResult(new Window { InnerHeight = 800 });
+        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new DomRect { Top = 5, Bottom = 45, Width = 120, Height = 40 });
+
+        var cut = Context.RenderComponent<Affix>(parameters => parameters
+            .Add(x => x.OffsetTop, 20)
+            .Add(x => x.OnChange, EventCallback.Factory.Create<bool>(this, val => isAffixed = val))
+            .AddChildContent("<button id='btn'>Button</button>"));
+
+        isAffixed.Should().BeTrue();
+        cut.Find(".ant-affix").Attributes["style"]?.Value.Should().Contain("position: fixed;");
+        cut.Find(".ant-affix").Attributes["style"]?.Value.Should().Contain("top: 20px;");
+    }
+
+    [Fact]
+    public void Affix_becomes_affixed_when_OffsetBottom_is_triggered()
+    {
+        bool? isAffixed = null;
+
+        JSInterop.Setup<Window>(JSInteropConstants.GetWindow)
+            .SetResult(new Window { InnerHeight = 800 });
+        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new DomRect { Top = 770, Bottom = 810, Width = 100, Height = 40 });
+
+        var cut = Context.RenderComponent<Affix>(parameters => parameters
+            .Add(x => x.OffsetBottom, 20)
+            .Add(x => x.OnChange, EventCallback.Factory.Create<bool>(this, val => isAffixed = val))
+            .AddChildContent("<button id='btn'>Bottom Button</button>"));
+
+        isAffixed.Should().BeTrue();
+        cut.Find(".ant-affix").Attributes["style"]?.Value.Should().Contain("position: fixed;");
+    }
+}

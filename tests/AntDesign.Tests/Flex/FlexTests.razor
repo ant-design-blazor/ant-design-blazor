@@ -1,0 +1,33 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Flex_renders_correct_direction_alignment_and_gap_classes()
+    {
+        var cut = Context.RenderComponent<Flex>(parameters => parameters
+            .Add(x => x.Direction, FlexDirection.Vertical)
+            .Add(x => x.Align, FlexAlign.Center)
+            .Add(x => x.Justify, FlexJustify.SpaceBetween)
+            .Add(x => x.Gap, FlexGap.Middle)
+            .AddChildContent("<button id='b1'>Btn 1</button>"));
+
+        var el = cut.Find(".ant-flex");
+        el.ClassList.Should().Contain("ant-flex-vertical");
+        el.ClassList.Should().Contain("ant-flex-align-center");
+        el.ClassList.Should().Contain("ant-flex-justify-space-between");
+        el.ClassList.Should().Contain("ant-flex-gap-middle");
+        cut.Find("#b1").TextContent.Should().Be("Btn 1");
+    }
+
+    [Fact]
+    public void Flex_custom_component_tag_renders_custom_element()
+    {
+        var cut = Context.RenderComponent<Flex>(parameters => parameters
+            .Add(x => x.Component, "section")
+            .AddChildContent("Section Content".ToRenderFragment()));
+
+        var section = cut.Find("section.ant-flex");
+        section.Should().NotBeNull();
+        section.TextContent.Should().Be("Section Content");
+    }
+}

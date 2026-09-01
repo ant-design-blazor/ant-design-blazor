@@ -1,0 +1,75 @@
+@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+
+@code {
+    public PopconfirmTests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.Top });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true);
+    }
+
+    [Fact]
+    public async Task Click_on_child_content_opens_popconfirm_and_renders_title_and_buttons()
+    {
+        var cut = Context.RenderComponent<Popconfirm>(parameters => parameters
+            .Add(x => x.Title, "Delete item?")
+            .Add(x => x.OkText, "Yes")
+            .Add(x => x.CancelText, "No")
+            .AddChildContent("<button id='trigger'>Delete</button>"));
+
+        await cut.Find("#trigger").ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+
+        var overlay = cut.FindComponent<AntDesign.Internal.Overlay>();
+        overlay.Find(".ant-popover-message-title").TextContent.Trim().Should().Be("Delete item?");
+
+        var buttons = overlay.FindAll(".ant-popover-buttons button");
+        buttons.Count.Should().Be(2);
+        buttons[0].TextContent.Trim().Should().Be("No");
+        buttons[1].TextContent.Trim().Should().Be("Yes");
+    }
+
+    [Fact]
+    public async Task Clicking_Confirm_invokes_OnConfirm_callback()
+    {
+        var confirmed = false;
+
+        var cut = Context.RenderComponent<Popconfirm>(parameters => parameters
+            .Add(x => x.Title, "Confirm action")
+            .Add(x => x.OnConfirm, EventCallback.Factory.Create<Microsoft.AspNetCore.Components.Web.MouseEventArgs>(this, _ =>
+confirmed = true))
+            .AddChildContent("<button id='trigger'>Action</button>"));
+
+        await cut.Find("#trigger").ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+
+        var overlay = cut.FindComponent<AntDesign.Internal.Overlay>();
+        var okButton = overlay.FindAll(".ant-popover-buttons button")[1];
+
+        await okButton.ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+
+        confirmed.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Clicking_Cancel_invokes_OnCancel_callback()
+    {
+        var cancelled = false;
+
+        var cut = Context.RenderComponent<Popconfirm>(parameters => parameters
+            .Add(x => x.Title, "Confirm action")
+            .Add(x => x.OnCancel, EventCallback.Factory.Create<Microsoft.AspNetCore.Components.Web.MouseEventArgs>(this, _ =>
+cancelled = true))
+            .AddChildContent("<button id='trigger'>Action</button>"));
+
+        await cut.Find("#trigger").ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+
+        var overlay = cut.FindComponent<AntDesign.Internal.Overlay>();
+        var cancelButton = overlay.FindAll(".ant-popover-buttons button")[0];
+
+        await cancelButton.ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+
+        cancelled.Should().BeTrue();
+    }
+}

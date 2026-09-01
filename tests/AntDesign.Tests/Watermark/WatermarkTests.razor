@@ -1,0 +1,34 @@
+@inherits AntDesignTestBase
+
+@code {
+    public WatermarkTests()
+    {
+        JSInterop.Setup<string>("AntDesign.interop.watermarkHelper.generateBase64Url", _ => true)
+            .SetResult("data:image/png;base64,dummywatermark");
+    }
+
+    [Fact]
+    public void Watermark_renders_child_content_and_overlay()
+    {
+        var cut = Context.RenderComponent<Watermark>(parameters => parameters
+            .Add(x => x.Content, "Ant Design")
+            .Add(x => x.ZIndex, 10)
+            .AddChildContent("<div id='content'>Wrapped Content</div>"));
+
+        cut.Find("#content").TextContent.Should().Be("Wrapped Content");
+        var overlay = cut.FindAll("div")[1];
+        overlay.Attributes["style"]?.Value.Should().Contain("z-index: 10");
+        overlay.Attributes["style"]?.Value.Should().Contain("background-repeat: repeat");
+    }
+
+    [Fact]
+    public void Watermark_scrolling_mode_sets_non_repeating_background()
+    {
+        var cut = Context.RenderComponent<Watermark>(parameters => parameters
+            .Add(x => x.Content, "Scrolling Text")
+            .Add(x => x.Scrolling, true));
+
+        var overlay = cut.FindAll("div")[1];
+        overlay.Attributes["style"]?.Value.Should().Contain("background-repeat: no-repeat");
+    }
+}

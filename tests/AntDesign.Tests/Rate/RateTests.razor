@@ -1,0 +1,61 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Renders_full_half_and_zero_stars()
+    {
+        var cut = Render<AntDesign.Rate>(
+            @<AntDesign.Rate Count="5" AllowHalf DefaultValue="2.5M" />);
+
+        var stars = cut.FindAll("li.ant-rate-star");
+        stars.Should().HaveCount(5);
+        stars.Take(2).Should().OnlyContain(star => star.ClassList.Contains("ant-rate-star-full"));
+        stars[2].ClassList.Should().Contain("ant-rate-star-half");
+        stars.Skip(3).Should().OnlyContain(star => star.ClassList.Contains("ant-rate-star-zero"));
+    }
+
+    [Fact]
+    public void Renders_custom_character_for_both_star_halves()
+    {
+        RenderFragment<RateItemRenderContext> character = _ => @<span class="custom-rate">A</span>;
+
+        var cut = Render<AntDesign.Rate>(
+            @<AntDesign.Rate Count="3" Character="character" />);
+
+        cut.FindAll(".custom-rate").Should().HaveCount(6);
+        cut.FindAll("svg").Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Half_star_click_changes_value_and_second_click_clears()
+    {
+        decimal value = 0;
+        var cut = Render<AntDesign.Rate>(
+            @<AntDesign.Rate AllowHalf Value="value" ValueChanged="newValue => value = newValue" />);
+        var half = cut.FindAll(".ant-rate-star-first")[2];
+
+        await half.ClickAsync(new MouseEventArgs());
+        value.Should().Be(2.5M);
+
+        await cut.FindAll(".ant-rate-star-first")[2].ClickAsync(new MouseEventArgs());
+        value.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Keyboard_changes_value_but_disabled_click_does_not()
+    {
+        decimal value = 1;
+        var cut = Render<AntDesign.Rate>(
+            @<AntDesign.Rate Value="value" ValueChanged="newValue => value = newValue" />);
+
+        await cut.Find("ul").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowRight" });
+        value.Should().Be(2);
+        await cut.Find("ul").KeyDownAsync(new KeyboardEventArgs { Key = "ArrowLeft" });
+        value.Should().Be(1);
+
+        cut.SetParametersAndRender(parameters => parameters.Add(rate => rate.Disabled, true));
+        await cut.FindAll(".ant-rate-star-second")[4].ClickAsync(new MouseEventArgs());
+        value.Should().Be(1);
+        cut.Find("ul").ClassList.Should().Contain("ant-rate-disabled");
+    }
+}

@@ -1,0 +1,103 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Horizontal_unbordered_descriptions_renders_items_with_labels_and_contents()
+    {
+        var cut = Context.RenderComponent<Descriptions>(parameters => parameters
+            .Add(x => x.Title, "User Info")
+            .Add(x => x.Column, 3)
+            .Add(x => x.Colon, true)
+            .AddChildContent<DescriptionsItem>(item =>
+            {
+                item.Add(x => x.Title, "UserName");
+                item.Add(x => x.ChildContent, "Zhou Maomao".ToRenderFragment());
+            })
+            .AddChildContent<DescriptionsItem>(item =>
+            {
+                item.Add(x => x.Title, "Telephone");
+                item.Add(x => x.ChildContent, "18100000000".ToRenderFragment());
+            })
+            .AddChildContent<DescriptionsItem>(item =>
+            {
+                item.Add(x => x.Title, "Live");
+                item.Add(x => x.ChildContent, "Hangzhou, Zhejiang".ToRenderFragment());
+            }));
+
+        cut.Find(".ant-descriptions-title").TextContent.Trim().Should().Be("User Info");
+
+        var labels = cut.FindAll(".ant-descriptions-item-label");
+        labels.Count.Should().Be(3);
+        labels[0].ClassList.Should().Contain("ant-descriptions-item-colon");
+        labels[0].TextContent.Trim().Should().Be("UserName");
+
+        var contents = cut.FindAll(".ant-descriptions-item-content");
+        contents.Count.Should().Be(3);
+        contents[0].TextContent.Trim().Should().Be("Zhou Maomao");
+    }
+
+    [Fact]
+    public void Horizontal_bordered_descriptions_renders_separated_label_and_content_tds()
+    {
+        var cut = Context.RenderComponent<Descriptions>(parameters => parameters
+            .Add(x => x.Title, "Bordered User Details")
+            .Add(x => x.Bordered, true)
+            .Add(x => x.Column, 2)
+            .AddChildContent<DescriptionsItem>(item =>
+            {
+                item.Add(x => x.Title, "Product");
+                item.Add(x => x.ChildContent, "Cloud Database".ToRenderFragment());
+            })
+            .AddChildContent<DescriptionsItem>(item =>
+            {
+                item.Add(x => x.Title, "Billing");
+                item.Add(x => x.ChildContent, "Prepaid".ToRenderFragment());
+            }));
+
+        cut.Find(".ant-descriptions").ClassList.Should().Contain("ant-descriptions-bordered");
+        var labelTds = cut.FindAll("td.ant-descriptions-item-label");
+        labelTds.Count.Should().Be(2);
+
+        var contentTds = cut.FindAll("td.ant-descriptions-item-content");
+        contentTds.Count.Should().Be(2);
+    }
+
+    [Fact]
+    public void Vertical_descriptions_layout_renders_labels_above_contents()
+    {
+        var cut = Context.RenderComponent<Descriptions>(parameters => parameters
+            .Add(x => x.Layout, DescriptionsLayout.Vertical)
+            .Add(x => x.Column, 2)
+            .AddChildContent<DescriptionsItem>(item =>
+            {
+                item.Add(x => x.Title, "Name");
+                item.Add(x => x.ChildContent, "John".ToRenderFragment());
+            })
+            .AddChildContent<DescriptionsItem>(item =>
+            {
+                item.Add(x => x.Title, "Age");
+                item.Add(x => x.ChildContent, "30".ToRenderFragment());
+            }));
+
+        var rows = cut.FindAll("tr.ant-descriptions-row");
+        rows.Count.Should().Be(2);
+
+        rows[0].QuerySelectorAll(".ant-descriptions-item-label").Length.Should().Be(2);
+        rows[1].QuerySelectorAll(".ant-descriptions-item-content").Length.Should().Be(2);
+    }
+
+    [Fact]
+    public void TitleTemplate_and_item_TitleTemplate_override_plain_titles()
+    {
+        var cut = Context.RenderComponent<Descriptions>(parameters => parameters
+            .Add(x => x.TitleTemplate, @<span id="custom-title">Custom Header</span>)
+            .AddChildContent<DescriptionsItem>(item =>
+            {
+                item.Add(x => x.TitleTemplate, @<strong id="custom-label">Custom Label</strong>);
+                item.Add(x => x.ChildContent, "Value".ToRenderFragment());
+            }));
+
+        cut.Find("#custom-title").TextContent.Should().Be("Custom Header");
+        cut.Find("#custom-label").TextContent.Should().Be("Custom Label");
+    }
+}

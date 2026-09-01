@@ -1,0 +1,72 @@
+@using Microsoft.Extensions.DependencyInjection
+@inherits AntDesignTestBase
+
+@code {
+    public ConfirmTests()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.FocusDialog, _ => true);
+        JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.addElementTo", _ => true);
+    }
+
+    [Fact]
+    public async Task ConfirmService_renders_and_returns_ok()
+    {
+        var container = Render<ComfirmContainer>(@<ComfirmContainer />);
+        var service = Services.GetRequiredService<ConfirmService>();
+
+        var resultTask = service.Show("Continue?", "Confirm action");
+        container.WaitForElement(".ant-modal-confirm");
+        container.Markup.Should().Contain("Confirm action").And.Contain("Continue?");
+
+        container.Find(".ant-modal-confirm-btns button.ant-btn-primary").Click();
+
+        (await resultTask).Should().Be(ConfirmResult.OK);
+        container.Markup.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task YesNoCancel_returns_cancel_from_third_button()
+    {
+        var container = Render<ComfirmContainer>(@<ComfirmContainer />);
+        var service = Services.GetRequiredService<ConfirmService>();
+        RenderFragment content = @<em>Fragment content</em>;
+        RenderFragment title = @<strong>Fragment title</strong>;
+        var buttonOptions = new ConfirmButtonOptions
+        {
+            Button1Props = new ButtonProps { ChildContent = "Proceed" },
+            Button2Props = new ButtonProps { ChildContent = "Decline" },
+            Button3Props = new ButtonProps { ChildContent = "Later" }
+        };
+
+        var resultTask = service.Show(content, title, ConfirmButtons.YesNoCancel, ConfirmIcon.Question, buttonOptions, null);
+        var buttons = container.WaitForElements(".ant-modal-confirm-btns button", 3);
+
+        container.Find("strong").TextContent.Should().Be("Fragment title");
+        container.Find("em").TextContent.Should().Be("Fragment content");
+        buttons.Select(button => button.TextContent.Trim()).Should().Equal("Proceed", "Decline", "Later");
+        buttons[2].Click();
+
+        (await resultTask).Should().Be(ConfirmResult.Cancel);
+    }
+
+    [Fact]
+    public async Task AbortRetryIgnore_returns_retry_from_second_button()
+    {
+        var container = Render<ComfirmContainer>(@<ComfirmContainer />);
+        var service = Services.GetRequiredService<ConfirmService>();
+
+        var resultTask = service.Show(
+            "Operation failed",
+            "Try again?",
+            ConfirmButtons.AbortRetryIgnore,
+            ConfirmIcon.Error,
+            new ConfirmButtonOptions(),
+            ConfirmAutoFocusButton.Cancel);
+        var buttons = container.WaitForElements(".ant-modal-confirm-btns button", 3);
+
+        buttons.Should().HaveCount(3);
+        buttons[1].Click();
+
+        (await resultTask).Should().Be(ConfirmResult.Retry);
+    }
+}

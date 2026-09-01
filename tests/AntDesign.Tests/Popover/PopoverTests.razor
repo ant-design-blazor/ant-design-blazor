@@ -1,0 +1,47 @@
+@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+
+@code {
+    public PopoverTests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.Top });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true);
+    }
+
+    [Fact]
+    public async Task Click_on_child_content_opens_popover_and_renders_title_and_content()
+    {
+        var cut = Context.RenderComponent<Popover>(parameters => parameters
+            .Add(x => x.Trigger, new[] { AntDesign.Trigger.Click })
+            .Add(x => x.Title, "Popover Title")
+            .Add(x => x.Content, "Popover Content")
+            .AddChildContent("<button id='trigger'>Hover or Click</button>"));
+
+        await cut.Find("#trigger").ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+
+        var overlay = cut.FindComponent<AntDesign.Internal.Overlay>();
+        overlay.Find(".ant-popover-title").TextContent.Trim().Should().Be("Popover Title");
+        overlay.Find(".ant-popover-inner-content").TextContent.Trim().Should().Be("Popover Content");
+    }
+
+    [Fact]
+    public async Task Templates_override_title_and_content_strings()
+    {
+        var cut = Context.RenderComponent<Popover>(parameters => parameters
+            .Add(x => x.Trigger, new[] { AntDesign.Trigger.Click })
+            .Add(x => x.Title, "String Title")
+            .Add(x => x.TitleTemplate, @<span>Custom Title</span>)
+            .Add(x => x.Content, "String Content")
+            .Add(x => x.ContentTemplate, @<span>Custom Content</span>)
+            .AddChildContent("<button id='trigger'>Trigger</button>"));
+
+        await cut.Find("#trigger").ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+
+        var overlay = cut.FindComponent<AntDesign.Internal.Overlay>();
+        overlay.Find(".ant-popover-title").InnerHtml.Trim().Should().Be("<span>Custom Title</span>");
+        overlay.Find(".ant-popover-inner-content").InnerHtml.Trim().Should().Be("<span>Custom Content</span>");
+    }
+}

@@ -753,6 +753,17 @@ namespace AntDesign
                     }
                 }
             }
+
+            _tree?._allNodes.ForEach(node => node.DoSelect(false, Multiple, false));
+            if (_cachedValue != null)
+            {
+                var selectedNode = _tree?._allNodes.FirstOrDefault(x => x.Key == GetTreeKeyFormValue(_cachedValue));
+                if (selectedNode != null)
+                {
+                    selectedNode.DoSelect(true, Multiple, false);
+                }
+            }
+            _tree?.UpdateSelectedKeys();
             base.Value = _cachedValue;
         }
 
@@ -769,6 +780,24 @@ namespace AntDesign
             {
                 ClearOptions();
             }
+            else if (TreeCheckable)
+            {
+                UpdateTreeCheckedKeys(_cachedValues.Select(GetTreeKeyFormValue));
+            }
+            else
+            {
+                _tree?._allNodes.ForEach(node => node.DoSelect(false, Multiple, false));
+                foreach (var value in _cachedValues)
+                {
+                    var selectedNode = _tree?._allNodes.FirstOrDefault(node => node.Key == GetTreeKeyFormValue(value));
+                    if (selectedNode != null)
+                    {
+                        selectedNode.DoSelect(true, Multiple, false);
+                    }
+                }
+                _tree?.UpdateSelectedKeys();
+            }
+
             _newValues.Clear();
             CreateOptions(_cachedValues);
             base.Values = _newValues.ToArray();

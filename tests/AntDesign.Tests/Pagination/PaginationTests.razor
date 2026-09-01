@@ -1,0 +1,85 @@
+@inherits AntDesignTestBase
+
+@code {
+    public PaginationTests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+    }
+
+    [Fact]
+    public void HideOnSinglePage_omits_pager()
+    {
+        var cut = Render<AntDesign.Pagination>(
+            @<AntDesign.Pagination Total="5" PageSize="10" HideOnSinglePage />);
+
+        cut.Markup.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Long_pager_navigates_with_next_and_jump_controls()
+    {
+        var changes = new List<int>();
+        var cut = Render<AntDesign.Pagination>(
+            @<AntDesign.Pagination Total="200" Current="6" PageSize="10" OnChange="args => changes.Add(args.Page)" />);
+
+        cut.FindAll(".ant-pagination-item").Should().NotBeEmpty();
+        cut.Find(".ant-pagination-next").Click();
+        cut.Find(".ant-pagination-jump-next").Click();
+
+        await cut.InvokeAsync(() => Task.CompletedTask);
+        changes.Should().Equal(7, 12);
+        cut.Find(".ant-pagination-jump-prev").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Simple_mode_navigates_to_next_page_and_updates_input()
+    {
+        var changes = new List<int>();
+        var cut = Render<AntDesign.Pagination>(
+            @<AntDesign.Pagination Total="50" Current="2" PageSize="10" Simple OnChange="args => changes.Add(args.Page)" />);
+
+        cut.Find(".ant-pagination-next").Click();
+
+        changes.Should().Equal(3);
+        cut.Find("input").GetAttribute("value").Should().Be("3");
+    }
+
+    [Fact]
+    public void Quick_jumper_changes_page_on_blur()
+    {
+        var changes = new List<int>();
+        var cut = Render<AntDesign.Pagination>(
+            @<AntDesign.Pagination Total="50" Current="1" PageSize="10" ShowQuickJumper OnChange="args => changes.Add(args.Page)" />);
+
+        var input = cut.Find(".ant-pagination-options-quick-jumper input");
+        input.Change("4");
+        input.Blur();
+
+        changes.Should().Equal(4);
+    }
+
+    [Fact]
+    public void Renders_total_attributes_and_disabled_state()
+    {
+        Func<PaginationTotalContext, string> showTotal = context =>
+            $"{context.Range.Item1}-{context.Range.Item2} of {context.Total}";
+        var attributes = new Dictionary<string, object>
+        {
+            ["data-testid"] = "pager",
+            ["aria-label"] = "Results",
+            ["ignored"] = "not-rendered"
+        };
+
+        var cut = Render<AntDesign.Pagination>(
+            @<AntDesign.Pagination Total="25" Current="2" PageSize="10" Disabled Size="PaginationSize.Small" ShowTotal="showTotal"
+                                       UnmatchedAttributes="attributes" />);
+
+                var pager = cut.Find("ul.ant-pagination");
+                pager.GetAttribute("data-testid").Should().Be("pager");
+                pager.GetAttribute("aria-label").Should().Be("Results");
+                pager.HasAttribute("ignored").Should().BeFalse();
+                pager.ClassList.Should().Contain("ant-pagination-disabled").And.Contain("ant-pagination-mini");
+                cut.Find(".ant-pagination-total-text").TextContent.Should().Contain("11-20 of 25");
+            }
+}

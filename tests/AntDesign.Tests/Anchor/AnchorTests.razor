@@ -1,0 +1,64 @@
+@using AntDesign.JsInterop
+@inherits AntDesignTestBase
+
+@code {
+    public AnchorTests()
+    {
+        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new DomRect { Top = 10, Bottom = 50, Width = 100, Height = 30 });
+        JSInterop.SetupVoid("window.eval", _ => true);
+    }
+
+    [Fact]
+    public async Task Anchor_renders_links_and_activates_on_click()
+    {
+        Tuple<Microsoft.AspNetCore.Components.Web.MouseEventArgs, AnchorLink> clicked = null;
+        string changedHref = null;
+
+        var cut = Context.RenderComponent<Anchor>(parameters => parameters
+            .Add(x => x.OnClick, EventCallback.Factory.Create<Tuple<Microsoft.AspNetCore.Components.Web.MouseEventArgs, AnchorLink>>(this, tuple => clicked = tuple))
+            .Add(x => x.OnChange, EventCallback.Factory.Create<string>(this, href => changedHref = href))
+            .AddChildContent<AnchorLink>(link =>
+            {
+                link.Add(x => x.Href, "#components-anchor-demo-basic");
+                link.Add(x => x.Title, "Basic demo");
+            })
+            .AddChildContent<AnchorLink>(link =>
+            {
+                link.Add(x => x.Href, "#components-anchor-demo-static");
+                link.Add(x => x.Title, "Static demo");
+            }));
+
+        var links = cut.FindAll("a.ant-anchor-link-title");
+        links.Count.Should().Be(2);
+
+        await links[0].ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+
+        clicked.Should().NotBeNull();
+        clicked.Item2.Href.Should().Be("#components-anchor-demo-basic");
+        changedHref.Should().Be("#components-anchor-demo-basic");
+
+        cut.FindAll(".ant-anchor-link")[0].ClassList.Should().Contain("ant-anchor-link-active");
+    }
+
+    [Fact]
+    public void Anchor_supports_nested_AnchorLink_items()
+    {
+        var cut = Context.RenderComponent<Anchor>(parameters => parameters
+            .AddChildContent<AnchorLink>(link =>
+            {
+                link.Add(x => x.Href, "#parent");
+                link.Add(x => x.Title, "Parent Link");
+                link.AddChildContent<AnchorLink>(child =>
+                {
+                    child.Add(x => x.Href, "#child");
+                    child.Add(x => x.Title, "Child Link");
+                });
+            }));
+
+        var titles = cut.FindAll("a.ant-anchor-link-title");
+        titles.Count.Should().Be(2);
+        titles[0].TextContent.Should().Be("Parent Link");
+        titles[1].TextContent.Should().Be("Child Link");
+    }
+}

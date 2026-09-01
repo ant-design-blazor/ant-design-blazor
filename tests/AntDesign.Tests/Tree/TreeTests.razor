@@ -58,9 +58,7 @@
         };
 
         var cut = Render<Tree<Item>>(
-            @<Tree TItem="Item"
-                           DataSource="data"
-                           ChildrenExpression="node => node.DataItem.Children">
+            @<Tree TItem="Item" DataSource="data" ChildrenExpression="node => node.DataItem.Children">
             </Tree>);
 
         var treeNodes = cut.FindComponents<TreeNode<Item>>();
@@ -89,9 +87,7 @@
         };
 
         var cut = Render<Tree<Item>>(
-            @<Tree TItem="Item"
-                           DataSource="data"
-                           ChildrenExpression="node => node.DataItem.Children">
+            @<Tree TItem="Item" DataSource="data" ChildrenExpression="node => node.DataItem.Children">
             </Tree>);
 
         var treeNodes = cut.FindComponents<TreeNode<Item>>();
@@ -99,6 +95,59 @@
         childComponent.Instance.Remove();
 
         data[0].Children.Should().NotContain(childComponent.Instance.DataItem, "Item should be removed in DataSource");
+    }
+
+    [Fact]
+    public void CheckAllChildren_marks_descendants_checked()
+    {
+        var data = new List<Item>
+        {
+            new("Parent")
+            {
+                Children = new List<Item>
+                {
+                    new("Child 1"),
+                    new("Child 2")
+                }
+            }
+        };
+
+        var cut = Render<Tree<Item>>(
+            @<Tree TItem="Item" DataSource="data" Checkable ChildrenExpression="node => node.DataItem.Children">
+            </Tree>);
+
+        var parentNode = cut.FindComponents<TreeNode<Item>>().First(node => node.Instance.DataItem.Name == "Parent");
+
+        cut.InvokeAsync(() => parentNode.Instance.CheckAllChildren());
+
+        cut.FindComponents<TreeNode<Item>>().Should().OnlyContain(node => node.Instance.Checked);
+    }
+
+    [Fact]
+    public void SetChecked_updates_node_state_and_checked_keys()
+    {
+        var data = new List<Item>
+        {
+            new("Parent")
+            {
+                Children = new List<Item>
+                {
+                    new("Child 1"),
+                    new("Child 2")
+                }
+            }
+        };
+
+        var cut = Render<Tree<Item>>(
+            @<Tree TItem="Item" DataSource="data" Checkable ChildrenExpression="node => node.DataItem.Children">
+            </Tree>);
+
+        var childNode = cut.FindComponents<TreeNode<Item>>().First(node => node.Instance.DataItem.Name == "Child 1");
+
+        cut.InvokeAsync(() => childNode.Instance.SetChecked(true));
+
+        childNode.Instance.Checked.Should().BeTrue();
+        cut.FindComponents<TreeNode<Item>>().Count(node => node.Instance.Checked).Should().BeGreaterThan(0);
     }
 
     [Fact]

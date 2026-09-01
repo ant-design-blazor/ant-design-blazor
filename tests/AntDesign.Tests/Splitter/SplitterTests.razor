@@ -1,0 +1,49 @@
+@inherits AntDesignTestBase
+
+@code {
+    public SplitterTests()
+    {
+        JSInterop.Mode = Bunit.JSRuntimeMode.Loose;
+    }
+    [Fact]
+    public void Splitter_renders_horizontal_layout_with_two_panels()
+    {
+        var cut = Context.RenderComponent<Splitter>(parameters => parameters
+            .Add(x => x.Layout, SplitterLayout.Horizontal)
+            .AddChildContent<SplitterPanel>(panel =>
+            {
+                panel.Add(x => x.Size, "40%");
+                panel.Add(x => x.ChildContent, (RenderFragment)(builder => builder.AddMarkupContent(0, "<div id='p1'>Pane 1</div>")));
+            })
+            .AddChildContent<SplitterPanel>(panel =>
+            {
+                panel.Add(x => x.Size, "60%");
+                panel.Add(x => x.ChildContent, (RenderFragment)(builder => builder.AddMarkupContent(0, "<div id='p2'>Pane 2</div>")));
+            }));
+
+        cut.Find(".ant-splitter").ClassList.Should().Contain("ant-splitter-horizontal");
+        cut.Find("#p1").TextContent.Should().Be("Pane 1");
+        cut.Find("#p2").TextContent.Should().Be("Pane 2");
+    }
+
+    [Fact]
+    public void Splitter_UpdateSize_JSInvokable_updates_panel_sizes_and_triggers_OnResize()
+    {
+        string[] resizedSizes = null;
+
+        var cut = Context.RenderComponent<Splitter>(parameters => parameters
+            .Add(x => x.OnResize, EventCallback.Factory.Create<string[]>(this, sizes => resizedSizes = sizes))
+            .AddChildContent<SplitterPanel>(panel =>
+            {
+                panel.Add(x => x.ChildContent, "Pane 1".ToRenderFragment());
+            })
+            .AddChildContent<SplitterPanel>(panel =>
+            {
+                panel.Add(x => x.ChildContent, "Pane 2".ToRenderFragment());
+            }));
+
+        cut.InvokeAsync(() => cut.Instance.UpdateSize(new[] { "300px", "500px" }));
+
+        resizedSizes.Should().BeEquivalentTo(new[] { "300px", "500px" });
+    }
+}
