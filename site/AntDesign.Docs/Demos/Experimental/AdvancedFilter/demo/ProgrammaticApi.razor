@@ -1,0 +1,125 @@
+@page "/experimental/advanced-filter/programmatic-api"
+@using System.Linq.Expressions
+
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+    <SpaceItem>
+        <Alert Message="Use programmatic API to build filters in code. Click 'Add Preset Filter' to see an example."
+               Type="AlertType.Info" ShowIcon="true" />
+    </SpaceItem>
+    <SpaceItem>
+        <Space>
+            <SpaceItem>
+                <Button Type="@ButtonType.Primary" OnClick="@AddPresetFilter">
+                    Add Preset Filter (Price > 100 AND InStock = true)
+                </Button>
+            </SpaceItem>
+            <SpaceItem>
+                <Button OnClick="@ClearFilter">Clear</Button>
+            </SpaceItem>
+        </Space>
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Advanced Filter" Size="@CardSize.Small">
+
+            <Body>
+                <AdvancedFilter TItem="Product" @ref="filterRef" ConditionNode="@_rootNode"
+                                ConditionNodeChanged="@OnConditionChanged" ShowHeader="true" AllowGroup="true"
+                                OnFilterChanged="@OnFilterChanged" />
+            </Body>
+        </Card>
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Filtered Results" Size="@CardSize.Small">
+
+            <Body>
+                <Table TItem="Product" DataSource="@_filteredData" HidePagination>
+                    <Column @bind-Field="@context.Id" Title="ID" Width="80px" />
+                    <Column @bind-Field="@context.Name" Title="Name" />
+                    <Column @bind-Field="@context.Price" Title="Price" Format="C" />
+                    <Column @bind-Field="@context.InStock" Title="In Stock" />
+                </Table>
+            </Body>
+        </Card>
+    </SpaceItem>
+</Space>
+
+@code {
+    private AdvancedFilter<Product> filterRef;
+    private FilterConditionNode _rootNode;
+    private List<Product> _allData;
+    private List<Product> _filteredData;
+
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public bool InStock { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        _rootNode = FilterConditionNode.CreateGroup();
+
+        _allData = new List<Product>
+        {
+            new() { Id = 1, Name = "Budget Monitor", Price = 150m, InStock = true },
+            new() { Id = 2, Name = "Premium Keyboard", Price = 200m, InStock = true },
+            new() { Id = 3, Name = "Budget Mouse", Price = 25m, InStock = false },
+            new() { Id = 4, Name = "Premium Monitor", Price = 500m, InStock = true },
+            new() { Id = 5, Name = "Cable Set", Price = 50m, InStock = true },
+        };
+
+        _filteredData = new List<Product>(_allData);
+    }
+
+    private void AddPresetFilter()
+    {
+        _rootNode.Children.Clear();
+
+        // Add first condition: Price > 100
+        var priceCondition = FilterConditionNode.CreateCondition();
+        priceCondition.PropertyName = nameof(Product.Price);
+        priceCondition.CompareOperator = TableFilterCompareOperator.GreaterThan;
+        priceCondition.Value = 100m;
+        _rootNode.Children.Add(priceCondition);
+
+        // Add second condition: InStock = true
+        var stockCondition = FilterConditionNode.CreateCondition();
+        stockCondition.PropertyName = nameof(Product.InStock);
+        stockCondition.CompareOperator = TableFilterCompareOperator.Equals;
+        stockCondition.Value = true;
+        _rootNode.Children.Add(stockCondition);
+
+        // Set AND logic
+        _rootNode.LogicalOperator = TableFilterCondition.And;
+
+        StateHasChanged();
+        OnFilterChanged(filterRef?.BuildFilterExpression());
+    }
+
+    private void ClearFilter()
+    {
+        _rootNode.Children.Clear();
+        StateHasChanged();
+        _filteredData = new List<Product>(_allData);
+    }
+
+    private void OnFilterChanged(Expression<Func<Product, bool>> filterExpression)
+    {
+        if (filterExpression != null)
+        {
+            var compiled = filterExpression.Compile();
+            _filteredData = _allData.Where(compiled).ToList();
+        }
+        else
+        {
+            _filteredData = new List<Product>(_allData);
+        }
+    }
+
+    private void OnConditionChanged(FilterConditionNode node)
+    {
+        StateHasChanged();
+    }
+}

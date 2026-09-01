@@ -1,0 +1,138 @@
+@page "/experimental/advanced-filter/custom-components"
+@using System.Linq.Expressions
+
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+    <SpaceItem>
+        <Alert
+        Message="Configure finite-value fields with Radio or Checkbox, and use CustomInput to plug in Cascader, TreeSelect, or domain-specific inputs."
+        Type="AlertType.Info" ShowIcon="true" />
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Configurable Field Inputs" Size="@CardSize.Small">
+
+            <Body>
+                <AdvancedFilter TItem="Product" Fields="@_fields" ShowHeader="true" AllowGroup="true"
+                                OnFilterChanged="@OnFilterChanged" />
+            </Body>
+        </Card>
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Filtered Products" Size="@CardSize.Small">
+
+            <Body>
+                <Table TItem="Product" DataSource="@_filteredData" HidePagination>
+                    <Column @bind-Field="@context.Id" Title="ID" Width="80px" />
+                    <Column @bind-Field="@context.Name" Title="Name" />
+                    <Column @bind-Field="@context.Category" Title="Category" />
+                    <Column @bind-Field="@context.Channel" Title="Channel" />
+                    <Column @bind-Field="@context.Location" Title="Location" />
+                    <Column @bind-Field="@context.CreatedAt" Title="Created" Format="yyyy-MM-dd" />
+                </Table>
+            </Body>
+        </Card>
+    </SpaceItem>
+</Space>
+
+@code {
+    private IReadOnlyList<FilterFieldDescriptor> _fields;
+    private List<Product> _allData;
+    private List<Product> _filteredData;
+
+    private readonly List<CascaderNode> _locationOptions = new()
+    {
+        new()
+        {
+            Value = "China",
+            Label = "China",
+            Children = new[]
+            {
+                new CascaderNode { Value = "Hangzhou", Label = "Hangzhou" },
+                new CascaderNode { Value = "Shanghai", Label = "Shanghai" },
+            },
+        },
+        new()
+        {
+            Value = "United States",
+            Label = "United States",
+            Children = new[]
+            {
+                new CascaderNode { Value = "Seattle", Label = "Seattle" },
+                new CascaderNode { Value = "Austin", Label = "Austin" },
+            },
+        },
+    };
+
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Category { get; set; }
+        public string Channel { get; set; }
+        public string Location { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        _allData = new List<Product>
+        {
+            new() { Id = 1, Name = "Laptop Pro", Category = "Electronics", Channel = "Online", Location = "Hangzhou", CreatedAt =
+new DateTime(2024, 1, 15) },
+            new() { Id = 2, Name = "USB Cable", Category = "Accessories", Channel = "Retail", Location = "Shanghai", CreatedAt = new
+DateTime(2024, 2, 10) },
+            new() { Id = 3, Name = "Monitor 4K", Category = "Electronics", Channel = "Partner", Location = "Seattle", CreatedAt =
+new DateTime(2024, 1, 20) },
+            new() { Id = 4, Name = "Mouse Pad", Category = "Accessories", Channel = "Online", Location = "Austin", CreatedAt = new
+DateTime(2024, 3, 5) },
+            new() { Id = 5, Name = "Keyboard Mechanical", Category = "Electronics", Channel = "Retail", Location = "Hangzhou",
+CreatedAt = new DateTime(2024, 2, 28) },
+        };
+
+        _fields = FilterFieldResolver.Resolve<Product>()
+            .Select(field =>
+            {
+                if (field.PropertyName == nameof(Product.Category))
+                {
+                    field.InputComponent = AdvancedFilterValueInputKind.Radio;
+                    field.ValueOptions = CreateOptions("Electronics", "Accessories");
+                }
+                else if (field.PropertyName == nameof(Product.Channel))
+                {
+                    field.InputComponent = AdvancedFilterValueInputKind.Checkbox;
+                    field.ValueOptions = CreateOptions("Online", "Retail", "Partner");
+                }
+                else if (field.PropertyName == nameof(Product.Location))
+                {
+                    field.InputComponent = AdvancedFilterValueInputKind.Cascader;
+                    field.CustomInput = RenderLocationInput;
+                }
+
+                return field;
+            })
+            .ToList();
+
+        _filteredData = new List<Product>(_allData);
+    }
+
+    private IReadOnlyList<AdvancedFilterOption> CreateOptions(params string[] values)
+    {
+        return values.Select(value => new AdvancedFilterOption { Label = value, Value = value }).ToList();
+    }
+
+    private RenderFragment<AdvancedFilterInputContext> RenderLocationInput => context =>
+        @<Cascader Options="@_locationOptions" Value="@(context.Value as string)"
+           ValueChanged="@((string value) => context.Value = value)" Style="min-width: 180px;" />;
+
+    private void OnFilterChanged(Expression<Func<Product, bool>> filterExpression)
+    {
+        if (filterExpression != null)
+        {
+            var compiled = filterExpression.Compile();
+            _filteredData = _allData.Where(compiled).ToList();
+        }
+        else
+        {
+            _filteredData = new List<Product>(_allData);
+        }
+    }
+}
