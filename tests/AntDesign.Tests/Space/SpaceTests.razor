@@ -1,0 +1,50 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Space_renders_horizontal_layout_and_space_items()
+    {
+        var cut = Context.RenderComponent<Space>(parameters => parameters
+            .Add(x => x.Direction, SpaceDirection.Horizontal)
+            .Add(x => x.Size, SpaceSize.Middle)
+            .AddChildContent<SpaceItem>(item => item.Add(x => x.ChildContent, (RenderFragment)(builder => builder.AddMarkupContent(0, "<button id='b1'>Button 1</button>"))))
+            .AddChildContent<SpaceItem>(item => item.Add(x => x.ChildContent, (RenderFragment)(builder => builder.AddMarkupContent(0, "<button id='b2'>Button 2</button>")))));
+
+        cut.Find(".ant-space").ClassList.Should().Contain("ant-space-horizontal");
+        cut.Find(".ant-space").Attributes["style"]?.Value.Should().Contain("column-gap:16px");
+
+        var items = cut.FindAll(".ant-space-item");
+        items.Count.Should().Be(2);
+        cut.Find("#b1").TextContent.Should().Be("Button 1");
+        cut.Find("#b2").TextContent.Should().Be("Button 2");
+    }
+
+    [Fact]
+    public void Space_vertical_direction_with_align_end_applies_classes()
+    {
+        var cut = Context.RenderComponent<Space>(parameters => parameters
+            .Add(x => x.Direction, SpaceDirection.Vertical)
+            .Add(x => x.Align, SpaceAlign.End)
+            .Add(x => x.Size, SpaceSize.Large)
+            .AddChildContent<SpaceItem>(item => item.Add(x => x.ChildContent, "Item 1".ToRenderFragment())));
+
+        var spaceEl = cut.Find(".ant-space");
+        spaceEl.ClassList.Should().Contain("ant-space-vertical");
+        spaceEl.ClassList.Should().Contain("ant-space-align-end");
+        spaceEl.Attributes["style"]?.Value.Should().Contain("column-gap:24px");
+    }
+
+    [Fact]
+    public void Space_with_Split_fragment_renders_splitters_between_items()
+    {
+        var cut = Context.RenderComponent<Space>(parameters => parameters
+            .Add(x => x.Split, @<span id="divider">|</span>)
+            .AddChildContent<SpaceItem>(item => item.Add(x => x.ChildContent, "Link 1".ToRenderFragment()))
+            .AddChildContent<SpaceItem>(item => item.Add(x => x.ChildContent, "Link 2".ToRenderFragment()))
+            .AddChildContent<SpaceItem>(item => item.Add(x => x.ChildContent, "Link 3".ToRenderFragment())));
+
+        var splits = cut.FindAll(".ant-space-item-split");
+        splits.Count.Should().Be(2);
+        splits[0].TextContent.Trim().Should().Be("|");
+    }
+}

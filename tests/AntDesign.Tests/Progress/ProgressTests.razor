@@ -1,0 +1,49 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Line_progress_renders_percentage_and_status()
+    {
+        var cut = Context.RenderComponent<Progress>(parameters => parameters
+            .Add(x => x.Percent, 75)
+            .Add(x => x.Status, ProgressStatus.Active));
+
+        cut.Find(".ant-progress").ClassList.Should().Contain("ant-progress-status-active");
+        cut.Find(".ant-progress-bg").Attributes["style"]?.Value.Should().Contain("width: 75%");
+        cut.Find(".ant-progress-text").TextContent.Trim().Should().Be("75%");
+    }
+
+    [Fact]
+    public void Success_status_renders_check_circle_icon()
+    {
+        var cut = Context.RenderComponent<Progress>(parameters => parameters
+            .Add(x => x.Percent, 100));
+
+        cut.Find(".ant-progress").ClassList.Should().Contain("ant-progress-status-success");
+        cut.Find(".ant-progress-text .anticon-check-circle").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Circle_progress_type_renders_svg_circle_paths()
+    {
+        var cut = Context.RenderComponent<Progress>(parameters => parameters
+            .Add(x => x.Type, ProgressType.Circle)
+            .Add(x => x.Percent, 50));
+
+        cut.Find(".ant-progress").ClassList.Should().Contain("ant-progress-circle");
+        cut.Find("svg.ant-progress-circle").Should().NotBeNull();
+        cut.Find(".ant-progress-text").TextContent.Trim().Should().Be("50%");
+    }
+
+    [Fact]
+    public void Steps_progress_renders_steps_items()
+    {
+        var cut = Context.RenderComponent<Progress>(parameters => parameters
+            .Add(x => x.Steps, 5)
+            .Add(x => x.Percent, 60)
+            .Add(x => x.StrokeColor, "#1890ff"));
+
+        cut.Find(".ant-progress-steps-outer").Should().NotBeNull();
+        cut.FindAll(".ant-progress-steps-item").Count.Should().Be(5);
+    }
+}

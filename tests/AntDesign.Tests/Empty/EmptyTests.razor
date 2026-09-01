@@ -1,0 +1,37 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Empty_renders_default_image_and_description()
+    {
+        var cut = Context.RenderComponent<Empty>(parameters => parameters
+            .Add(x => x.Description, "No Data Available"));
+
+        cut.Find(".ant-empty").Should().NotBeNull();
+        cut.Find(".ant-empty-image svg").Should().NotBeNull();
+        cut.Find(".ant-empty-description").TextContent.Trim().Should().Be("No Data Available");
+    }
+
+    [Fact]
+    public void Empty_simple_mode_renders_simple_image()
+    {
+        var cut = Context.RenderComponent<Empty>(parameters => parameters
+            .Add(x => x.Simple, true));
+
+        cut.Find(".ant-empty").ClassList.Should().Contain("ant-empty-normal");
+        cut.Find(".ant-empty-image svg").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Empty_custom_image_and_description_template_and_child_content()
+    {
+        var cut = Context.RenderComponent<Empty>(parameters => parameters
+            .Add(x => x.Image, "https://gw.alipayobjects.com/zos/antfincdn/ZHrcA7E7QV/triangle.svg")
+            .Add(x => x.DescriptionTemplate, @<span id="custom-desc">Custom Empty Description</span>)
+            .AddChildContent("<button id='create-btn'>Create Now</button>"));
+
+        cut.Find("img").Attributes["src"]?.Value.Should().Be("https://gw.alipayobjects.com/zos/antfincdn/ZHrcA7E7QV/triangle.svg");
+        cut.Find("#custom-desc").TextContent.Should().Be("Custom Empty Description");
+        cut.Find("#create-btn").TextContent.Should().Be("Create Now");
+    }
+}
