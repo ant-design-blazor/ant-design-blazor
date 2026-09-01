@@ -9,9 +9,17 @@ using System.Reflection;
 
 namespace AntDesign.Filters;
 
-public readonly record struct TableFilterInputRenderOptions(TableFilter Filter, Dictionary<string, object> Attributes, Expression InputRefExpression, Action<bool> FilterConfirm)
+public readonly record struct TableFilterInputRenderOptions(TableFilter Filter, Dictionary<string, object> Attributes, Expression InputRefExpression, Action<bool> FilterConfirm, Action<object> OnValueChanged = null)
 {
-    public object Value { get => Filter.Value; set => Filter.Value = value; }
+    public object Value
+    {
+        get => Filter.Value;
+        set
+        {
+            Filter.Value = value;
+            OnValueChanged?.Invoke(value);
+        }
+    }
     public TableFilterCompareOperator FilterCompareOperator => Filter.FilterCompareOperator;
 
     public void Confirm()
