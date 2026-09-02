@@ -1,0 +1,120 @@
+@using AntDesign
+@using AntDesign.Core.JsInterop.Modules.Components
+@using AntDesign.Internal
+@inherits AntDesignTestBase
+
+@code {
+    public AutoCompleteCoverageTests()
+    {
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement { ClientWidth = 240 });
+        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new DomRect());
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Placement = Placement.BottomLeft });
+        JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true).SetVoidResult();
+    }
+
+    [Fact]
+    public async Task Input_filters_options_and_reports_panel_opening()
+    {
+        var inputValues = new List<string>();
+        var panelStates = new List<bool>();
+        var cut = RenderComponent<AutoComplete<string>>(parameters => parameters
+            .Add(component => component.Options, new[] { "Alpha", "Beta", "Gamma" })
+            .Add(component => component.AllowFilter, true)
+            .Add(component => component.DebounceMilliseconds, 0)
+            .Add(component => component.OnInput, args => inputValues.Add(args.Value?.ToString()))
+            .Add(component => component.OnPanelVisibleChange, visible => panelStates.Add(visible)));
+        var input = cut.Find("input");
+
+        await input.KeyDownAsync(new KeyboardEventArgs { Key = "ArrowDown" });
+        input = cut.Find("input");
+        await input.InputAsync(new ChangeEventArgs { Value = "alp" });
+        await input.KeyUpAsync(new KeyboardEventArgs { Key = "p" });
+        var filteredOptions = (IEnumerable<AutoCompleteDataItem<string>>)cut.Instance.GetType()
+            .GetField("_filteredOptions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            .GetValue(cut.Instance);
+        filteredOptions.Should().ContainSingle().Which.Label.Should().Be("Alpha");
+        inputValues.Should().ContainSingle().Which.Should().Be("alp");
+
+        input = cut.Find("input");
+        await input.InputAsync(new ChangeEventArgs { Value = "missing" });
+        await input.KeyUpAsync(new KeyboardEventArgs { Key = "g" });
+
+        filteredOptions = (IEnumerable<AutoCompleteDataItem<string>>)cut.Instance.GetType()
+            .GetField("_filteredOptions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            .GetValue(cut.Instance);
+        filteredOptions.Should().BeEmpty();
+        input = cut.Find("input");
+        await input.KeyDownAsync(new KeyboardEventArgs { Key = "Escape" });
+        panelStates.Should().Contain(true);
+    }
+
+    [Fact]
+    public async Task Clicking_options_ignores_disabled_item_and_selects_enabled_item()
+    {
+        AutoCompleteOption selectedItem = null;
+        var items = new[]
+        {
+            new AutoCompleteDataItem<string>("disabled", "Disabled") { IsDisabled = true },
+            new AutoCompleteDataItem<string>("enabled", "Enabled")
+        };
+        var cut = RenderComponent<AutoComplete<string>>(parameters => parameters
+            .Add(component => component.OptionDataItems, items)
+            .Add(component => component.DebounceMilliseconds, 0)
+            .Add(component => component.OnSelectionChange, item => selectedItem = item));
+        var input = cut.Find("input");
+
+        await input.KeyDownAsync(new KeyboardEventArgs { Key = "ArrowDown" });
+        var overlay = cut.FindComponents<global::AntDesign.Internal.Overlay>().Last();
+        cut.WaitForAssertion(() => overlay.FindAll(".ant-select-item-option").Should().HaveCount(2));
+
+        await overlay.Find(".ant-select-item-option-disabled").ClickAsync(new MouseEventArgs());
+        selectedItem.Should().BeNull();
+
+        await overlay.FindAll(".ant-select-item-option")[1].ClickAsync(new MouseEventArgs());
+
+        selectedItem.Should().NotBeNull();
+        selectedItem.Value.Should().Be("enabled");
+        input.GetAttribute("value").Should().Be("Enabled");
+    }
+
+    [Fact]
+    public async Task Keyboard_navigation_skips_disabled_options_backfills_and_selects_active_item()
+    {
+        var activeLabels = new List<string>();
+        AutoCompleteOption selectedItem = null;
+        var items = new[]
+        {
+            new AutoCompleteDataItem<string>("alpha", "Alpha"),
+            new AutoCompleteDataItem<string>("disabled", "Disabled") { IsDisabled = true },
+            new AutoCompleteDataItem<string>("beta", "Beta")
+        };
+        var cut = RenderComponent<AutoComplete<string>>(parameters => parameters
+            .Add(component => component.OptionDataItems, items)
+            .Add(component => component.Backfill, true)
+            .Add(component => component.DebounceMilliseconds, 0)
+            .Add(component => component.OnActiveChange, item => activeLabels.Add(item?.Label))
+            .Add(component => component.OnSelectionChange, item => selectedItem = item));
+        var input = cut.Find("input");
+
+        await input.KeyDownAsync(new KeyboardEventArgs { Key = "ArrowDown" });
+
+        activeLabels.Should().ContainSingle().Which.Should().Be("Beta");
+        input.GetAttribute("value").Should().Be("beta");
+
+        await input.KeyDownAsync(new KeyboardEventArgs { Key = "ArrowUp" });
+        activeLabels.Should().ContainInOrder("Beta", "Alpha");
+        input.GetAttribute("value").Should().Be("alpha");
+
+        await input.KeyDownAsync(new KeyboardEventArgs { Key = "Enter" });
+        selectedItem.Should().NotBeNull();
+        selectedItem.Value.Should().Be("alpha");
+        input.GetAttribute("value").Should().Be("Alpha");
+
+        await input.KeyDownAsync(new KeyboardEventArgs { Key = "ArrowDown" });
+        await input.KeyDownAsync(new KeyboardEventArgs { Key = "Escape" });
+        await input.KeyDownAsync(new KeyboardEventArgs { Key = "Tab" });
+    }
+}

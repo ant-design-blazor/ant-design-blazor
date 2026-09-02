@@ -1,0 +1,110 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public async Task Global_config_controls_defaults_and_keyed_open_replaces_content()
+    {
+        var service = Context.Services.GetRequiredService<NotificationService>();
+        var cut = Context.RenderComponent<AntDesign.Notification>();
+        service.Config(new NotificationGlobalConfig
+        {
+            Top = 32,
+            Rtl = true,
+            Placement = NotificationPlacement.TopLeft,
+            Duration = 0,
+            CloseIcon = builder => builder.AddContent(0, "dismiss")
+        });
+
+        var persistentOpen = service.Open(new NotificationConfig
+        {
+            Key = "configured",
+            Message = "Initial message",
+            Description = "Initial description"
+        });
+
+        cut.WaitForAssertion(() => cut.Find(".ant-notification-topLeft").TextContent.Should().Contain("Initial message"));
+        var container = cut.Find(".ant-notification-topLeft");
+        container.ClassList.Should().Contain("ant-notification-rtl");
+        container.GetAttribute("style").Should().Be("left: 0px; top:32px; bottom: auto;");
+        cut.Find(".ant-notification-notice-close-x").TextContent.Trim().Should().Be("dismiss");
+        persistentOpen.IsCompleted.Should().BeFalse();
+
+        _ = service.Open(new NotificationConfig
+        {
+            Key = "configured",
+            Message = "Replacement message",
+            Description = "Replacement description",
+            Duration = 0
+        });
+
+        cut.WaitForAssertion(() => cut.Markup.Should().Contain("Replacement message").And.Contain("Replacement description"));
+        cut.FindAll(".ant-notification-notice").Should().ContainSingle();
+    }
+
+    [Fact]
+    public async Task Update_click_and_close_change_the_rendered_notification_and_raise_callbacks_once()
+    {
+        var service = Context.Services.GetRequiredService<NotificationService>();
+        var cut = Context.RenderComponent<AntDesign.Notification>();
+        var clicked = 0;
+        var closed = 0;
+        var config = new NotificationConfig
+        {
+            Key = "interactive",
+            Message = "Original message",
+            Description = "Original description",
+            Duration = 0,
+            CloseIcon = builder => builder.AddContent(0, "close")
+        };
+        config.OnClick += () => clicked++;
+        config.OnClose += () => closed++;
+
+        _ = service.Open(config);
+        cut.WaitForElement("#interactive").Click();
+        clicked.Should().Be(1);
+
+        await service.UpdateAsync("interactive", "Updated description", "Updated message");
+        cut.WaitForAssertion(() => cut.Find("#interactive").TextContent.Should()
+            .Contain("Updated message").And.Contain("Updated description"));
+
+        await service.Close("interactive");
+        cut.Find("#interactive").ClassList.Should().Contain("ant-notification-fade-leave");
+        closed.Should().Be(1);
+
+        await service.Close("interactive");
+        closed.Should().Be(1);
+    }
+
+    [Fact]
+    public void Destroy_clears_notifications_and_disposal_unsubscribes_from_the_service()
+    {
+        var service = Context.Services.GetRequiredService<NotificationService>();
+        var cut = Context.RenderComponent<AntDesign.Notification>();
+
+        _ = service.Open(new NotificationConfig
+        {
+            Key = "destroyed",
+            Message = "Message",
+            Description = "Description",
+            Duration = 0,
+            CloseIcon = builder => builder.AddContent(0, "close")
+        });
+        cut.WaitForElement("#destroyed");
+
+        service.Destroy();
+        _ = service.Open(new NotificationConfig
+        {
+            Key = "after-destroy",
+            Message = "New message",
+            Description = "New description",
+            Duration = 0,
+            CloseIcon = builder => builder.AddContent(0, "close")
+        });
+        cut.WaitForElement("#after-destroy");
+        cut.FindAll("#destroyed").Should().BeEmpty();
+        cut.FindAll(".ant-notification-notice").Should().ContainSingle();
+
+        cut.Dispose();
+    }
+}
+}

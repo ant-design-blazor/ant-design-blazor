@@ -1,0 +1,85 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Service_call_renders_typed_message_content()
+    {
+        var service = Services.GetRequiredService<IMessageService>();
+        var cut = Context.RenderComponent<AntDesign.Message>();
+
+        service.Success("Saved successfully", duration: 0);
+
+        cut.WaitForAssertion(() =>
+        {
+            cut.FindAll(".ant-message-notice").Should().ContainSingle();
+            cut.Find(".ant-message-success").TextContent.Trim().Should().Be("Saved successfully");
+            cut.Find(".ant-message").GetAttribute("style").Should().Be("top: 24px;");
+        });
+    }
+
+    [Fact]
+    public void Global_config_controls_position_default_duration_and_maximum_count()
+    {
+        var service = Services.GetRequiredService<IMessageService>();
+        var cut = Context.RenderComponent<AntDesign.Message>();
+        var first = new MessageConfig { Content = "First", Type = MessageType.Info };
+        var second = new MessageConfig { Content = "Second", Type = MessageType.Warning };
+
+        service.Config(new MessageGlobalConfig { Duration = 30, MaxCount = 1, Top = 48 });
+        service.Open(first);
+        service.Open(second);
+
+        cut.WaitForAssertion(() =>
+        {
+            cut.Find(".ant-message").GetAttribute("style").Should().Be("top: 48px;");
+            cut.FindAll(".ant-message-notice").Should().ContainSingle();
+            cut.Markup.Should().Contain("Second").And.NotContain("First");
+        });
+        first.Duration.Should().Be(30);
+        first.Key.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
+    public void Opening_the_same_key_updates_the_existing_message()
+    {
+        var service = Services.GetRequiredService<IMessageService>();
+        var cut = Context.RenderComponent<AntDesign.Message>();
+
+        service.Open(new MessageConfig
+        {
+            Key = "operation",
+            Content = "Uploading",
+            Duration = 0,
+            Type = MessageType.Loading
+        });
+        service.Open(new MessageConfig
+        {
+            Key = "operation",
+            Content = "Upload complete",
+            Duration = 0,
+            Type = MessageType.Success
+        });
+
+        cut.WaitForAssertion(() =>
+        {
+            cut.FindAll(".ant-message-notice").Should().ContainSingle();
+            cut.Find(".ant-message-success").TextContent.Trim().Should().Be("Upload complete");
+            cut.Markup.Should().NotContain("Uploading");
+        });
+    }
+
+    [Fact]
+    public void Destroy_removes_all_visible_messages()
+    {
+        var service = Services.GetRequiredService<IMessageService>();
+        var cut = Context.RenderComponent<AntDesign.Message>();
+        service.Info("One", duration: 0);
+        service.Error("Two", duration: 0);
+        cut.WaitForAssertion(() => cut.FindAll(".ant-message-notice").Should().HaveCount(2));
+
+        service.Destroy();
+
+        cut.WaitForAssertion(() => cut.FindAll(".ant-message-notice").Should().BeEmpty());
+        cut.Markup.Should().BeEmpty();
+    }
+}

@@ -1,0 +1,131 @@
+@inherits AntDesignTestBase
+
+@code {
+    public ModalComponentCoverageTests()
+    {
+        JSInterop.Setup<double>(JSInteropConstants.DomMainpulationHelper.GetScrollBarSize, _ => true).SetResult(15);
+        JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true).SetVoidResult();
+        JSInterop.SetupVoid(JSInteropConstants.FocusDialog, _ => true).SetVoidResult();
+    }
+
+    [Fact]
+    public void Visible_modal_renders_configured_dialog_and_opens_once()
+    {
+        var afterOpenCount = 0;
+        RenderFragment title = @<strong>Template title</strong>;
+
+        var cut = RenderComponent<Modal>(parameters => parameters
+            .Add(component => component.Visible, true)
+            .Add(component => component.Title, "Ignored title")
+            .Add(component => component.TitleTemplate, title)
+            .Add(component => component.Width, "42rem")
+            .Add(component => component.Centered, true)
+            .Add(component => component.WrapClassName, "coverage-wrap")
+            .Add(component => component.BodyStyle, "padding: 12px")
+            .Add(component => component.MaxBodyHeight, "240px")
+            .Add(component => component.OkText, "Apply")
+            .Add(component => component.CancelText, "Dismiss")
+            .Add(component => component.AfterOpen, () => afterOpenCount++)
+            .AddChildContent("Modal content"));
+
+        cut.Find(".ant-modal").GetAttribute("style").Should().Contain("width:42rem");
+        cut.Find(".ant-modal-wrap").ClassList.Should().Contain("ant-modal-centered").And.Contain("coverage-wrap");
+        cut.Find(".ant-modal-body").GetAttribute("style").Should()
+            .Contain("padding: 12px")
+            .And.Contain("max-height:240px")
+            .And.Contain("overflow-y:scroll");
+        cut.Find(".ant-modal-header strong").TextContent.Should().Be("Template title");
+        cut.Find(".ant-modal-body").TextContent.Should().Contain("Modal content");
+        cut.FindAll(".ant-modal-footer button").Select(button => button.TextContent.Trim())
+            .Should().Equal("Apply", "Dismiss");
+        cut.WaitForAssertion(() =>
+        {
+            afterOpenCount.Should().Be(1);
+            JSInterop.VerifyInvoke(JSInteropConstants.FocusDialog, 1);
+        });
+
+        cut.SetParametersAndRender(parameters => parameters
+            .Add(component => component.Visible, true));
+
+        cut.WaitForAssertion(() =>
+        {
+            afterOpenCount.Should().Be(1);
+            JSInterop.VerifyInvoke(JSInteropConstants.FocusDialog, 1);
+        });
+    }
+
+    [Fact]
+    public void Footer_buttons_forward_close_requests_and_mouse_callbacks()
+    {
+        var visibilityChanges = new List<bool>();
+        var okCount = 0;
+        var cancelCount = 0;
+
+        var cut = RenderComponent<Modal>(parameters => parameters
+            .Add(component => component.Visible, true)
+            .Add(component => component.VisibleChanged, (bool visible) => visibilityChanges.Add(visible))
+            .Add(component => component.OnOk, _ => okCount++)
+            .Add(component => component.OnCancel, _ => cancelCount++));
+        var buttons = cut.FindAll(".ant-modal-footer button");
+
+        buttons[0].Click();
+        buttons[1].Click();
+
+        visibilityChanges.Should().Equal(false, false);
+        okCount.Should().Be(1);
+        cancelCount.Should().Be(1);
+    }
+
+    [Fact]
+    public void Hiding_and_reopening_preserves_content_and_invokes_close_callback()
+    {
+        var afterOpenCount = 0;
+        var afterCloseCount = 0;
+
+        var cut = RenderComponent<Modal>(parameters => parameters
+            .Add(component => component.Visible, true)
+            .Add(component => component.AfterOpen, () => afterOpenCount++)
+            .Add(component => component.AfterClose, () => afterCloseCount++));
+
+        cut.WaitForAssertion(() => afterOpenCount.Should().Be(1));
+
+        cut.SetParametersAndRender(parameters => parameters
+            .Add(component => component.Visible, false)
+            .Add(component => component.AfterOpen, () => afterOpenCount++)
+            .Add(component => component.AfterClose, () => afterCloseCount++));
+
+        cut.WaitForAssertion(() =>
+        {
+            afterCloseCount.Should().Be(1);
+            cut.Find(".ant-modal-wrap").GetAttribute("style").Should().Contain("display: none");
+        });
+
+        cut.SetParametersAndRender(parameters => parameters
+            .Add(component => component.Visible, true)
+            .Add(component => component.AfterOpen, () => afterOpenCount++)
+            .Add(component => component.AfterClose, () => afterCloseCount++));
+
+        cut.WaitForAssertion(() =>
+        {
+            afterOpenCount.Should().Be(2);
+            JSInterop.VerifyInvoke(JSInteropConstants.FocusDialog, 2);
+        });
+    }
+
+    [Fact]
+    public void Force_render_creates_hidden_content_without_opening_dialog()
+    {
+        var afterOpenCount = 0;
+
+        var cut = RenderComponent<Modal>(parameters => parameters
+            .Add(component => component.Visible, false)
+            .Add(component => component.ForceRender, true)
+            .Add(component => component.AfterOpen, () => afterOpenCount++)
+            .AddChildContent(@<span class="forced-content">Prepared content</span>));
+
+        cut.Find(".forced-content").TextContent.Should().Be("Prepared content");
+        cut.Find(".ant-modal-wrap").GetAttribute("style").Should().Contain("display: none");
+        afterOpenCount.Should().Be(0);
+        JSInterop.VerifyNotInvoke(JSInteropConstants.FocusDialog);
+    }
+}

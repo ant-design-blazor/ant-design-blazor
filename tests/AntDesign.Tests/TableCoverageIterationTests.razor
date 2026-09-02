@@ -1,0 +1,119 @@
+@using AntDesign.TableModels
+@inherits AntDesignTestBase
+
+@code {
+    private sealed record Person(int Id, string Name, int Age, bool Active);
+
+    public TableCoverageIterationTests()
+    {
+        JSInterop.SetupVoid("AntDesign.interop.styleHelper.addCls", _ => true).SetVoidResult();
+    }
+
+    private static readonly Person[] People =
+    {
+        new(1, "Charlie", 40, true),
+        new(2, "Alice", 30, false),
+        new(3, "Bob", 20, true)
+    };
+
+    [Fact]
+    public void Renders_column_metadata_custom_cells_and_table_chrome()
+    {
+        var cut = Render(@<Table TItem="Person" DataSource="People" Title="People" Footer="3 records" Bordered Striped
+                                 Size="TableSize.Small" TableLayout="fixed" OnHeaderRow="@(() => new() { ["data-header"] = "people" })"
+                                 OnRow="@(row => new() { ["data-row-id"] = row.Data.Id })">
+            <PropertyColumn Property="person => person.Name" Title="Full name" HeaderColSpan="2"
+                            OnHeaderCell="@(() => new() { ["data-column"] = "name" })"
+                            OnCell="@(cell => new() { ["data-cell"] = ((RowData<Person>)cell.RowData).Data.Id })">
+                <strong>@context.Name</strong>
+            </PropertyColumn>
+            <PropertyColumn Property="person => person.Age" HeaderColSpan="0" />
+            <PropertyColumn Property="person => person.Active" Ellipsis EllipsisShowTitle="true" />
+        </Table>);
+
+        cut.Find("table").GetAttribute("style").Should().Contain("table-layout: fixed");
+        cut.Find("thead tr").GetAttribute("data-header").Should().Be("people");
+        var nameHeader = cut.Find("thead th[data-column='name']");
+        nameHeader.GetAttribute("colspan").Should().Be("2");
+        nameHeader.TextContent.Should().Contain("Full name");
+        cut.FindAll("tbody tr.ant-table-row").Should().HaveCount(3);
+        cut.Find("tbody tr[data-row-id='1'] td[data-cell='1'] strong").TextContent.Should().Be("Charlie");
+        cut.Markup.Should().Contain("People").And.Contain("3 records");
+    }
+
+    [Fact]
+    public void Clicking_sorter_cycles_ascending_descending_and_none()
+    {
+        var changes = new List<QueryModel<Person>>();
+        var cut = Render(@<Table TItem="Person" DataSource="People" OnChange="@(query => changes.Add(query))">
+            <PropertyColumn Property="person => person.Name" Sortable ShowSorterTooltip="false" />
+            <PropertyColumn Property="person => person.Age" />
+        </Table>);
+        var sorter = cut.Find(".ant-table-column-sorters");
+
+        sorter.Click();
+        GetFirstColumnValues(cut).Should().ContainInOrder("Alice", "Bob", "Charlie");
+        cut.Find(".ant-table-column-sorter-up").ClassList.Should().Contain("active");
+
+        sorter = cut.Find(".ant-table-column-sorters");
+        sorter.Click();
+        GetFirstColumnValues(cut).Should().ContainInOrder("Charlie", "Bob", "Alice");
+        cut.Find(".ant-table-column-sorter-down").ClassList.Should().Contain("active");
+
+        sorter = cut.Find(".ant-table-column-sorters");
+        sorter.Click();
+        GetFirstColumnValues(cut).Should().ContainInOrder("Charlie", "Alice", "Bob");
+        changes.Should().HaveCountGreaterThanOrEqualTo(3);
+        cut.FindComponent<Table<Person>>().Instance.GetQueryModel().SortModel
+            .Should().ContainSingle().Which.SortDirection.Should().Be(SortDirection.None);
+    }
+
+    [Fact]
+    public async Task Default_list_filter_applies_and_reset_restores_rows()
+    {
+        var filters = new[]
+        {
+            new TableFilter<bool> { Text = "Active", Value = true, Selected = true },
+            new TableFilter<bool> { Text = "Inactive", Value = false }
+        };
+        var cut = Render(@<Table TItem="Person" DataSource="People">
+            <PropertyColumn Property="person => person.Name" />
+            <PropertyColumn Property="person => person.Active" Filters="filters"
+                            OnFilter="(value, active) => value == active" />
+        </Table>);
+
+        GetFirstColumnValues(cut).Should().ContainInOrder("Charlie", "Bob");
+        var table = cut.FindComponent<Table<Person>>().Instance;
+        table.GetQueryModel().FilterModel.Should().ContainSingle();
+
+        await cut.InvokeAsync(table.ResetData);
+
+        cut.FindAll("tbody tr.ant-table-row").Should().HaveCount(3);
+        table.GetQueryModel().FilterModel.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Checkbox_selection_updates_rows_and_header_selects_all()
+    {
+        IEnumerable<Person> selectedRows = Array.Empty<Person>();
+        var cut = Render(@<Table TItem="Person" DataSource="People" RowKey="person => person.Id" SelectedRows="selectedRows"
+                                 SelectedRowsChanged="@(rows => selectedRows = rows)">
+            <Selection />
+            <PropertyColumn Property="person => person.Name" />
+        </Table>);
+        var checkboxes = cut.FindAll("input.ant-checkbox-input");
+
+        checkboxes[1].Change(true);
+        selectedRows.Should().ContainSingle().Which.Name.Should().Be("Charlie");
+        cut.FindAll("tbody tr.ant-table-row")[0].ClassList.Should().Contain("ant-table-row-selected");
+
+        cut.FindAll("input.ant-checkbox-input")[0].Change(true);
+        selectedRows.Should().BeEquivalentTo(People);
+
+        cut.FindAll("input.ant-checkbox-input")[0].Change(false);
+        selectedRows.Should().BeEmpty();
+    }
+
+    private static IEnumerable<string> GetFirstColumnValues(IRenderedFragment cut) =>
+        cut.FindAll("tbody tr.ant-table-row").Select(row => row.QuerySelector("td")!.TextContent.Trim());
+}

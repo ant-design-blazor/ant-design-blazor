@@ -1,0 +1,137 @@
+@using AntDesign.Core.JsInterop.Modules.Components
+@using AntDesign.Select.Internal
+@inherits AntDesignTestBase
+
+@code {
+    private sealed class CoverageOption
+    {
+        public int Id { get; set; }
+        public string Label { get; set; } = string.Empty;
+        public string Group { get; set; } = string.Empty;
+        public bool Disabled { get; set; }
+    }
+
+    public SelectCoverageIterationTests()
+    {
+        JSInterop.Mode = JSRuntimeMode.Strict;
+        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new DomRect { Width = 240 });
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement());
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventEnterOnOverlayVisible, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.ScrollTo, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Placement = Placement.BottomLeft, ZIndex = 1000 });
+    }
+
+    [Fact]
+    public void DefaultActiveFirstOption_skips_disabled_item_and_hides_the_selection()
+    {
+        var dataSource = new List<CoverageOption>
+        {
+            new() { Id = 1, Label = "Unavailable", Disabled = true },
+            new() { Id = 2, Label = "Available" }
+        };
+        var changedValue = 0;
+
+        var cut = Render<Select<int, CoverageOption>>(
+            @<Select TItemValue="int" TItem="CoverageOption" DataSource="@dataSource" LabelName="@nameof(CoverageOption.Label)"
+                         ValueName="@nameof(CoverageOption.Id)" DisabledName="@nameof(CoverageOption.Disabled)" DefaultActiveFirstOption
+                         HideSelected ValueChanged="@(value => changedValue = value)" />);
+
+                cut.WaitForAssertion(() => changedValue.Should().Be(2));
+                cut.Instance.SelectedOptionItems.Should().ContainSingle();
+                cut.Instance.SelectedOptionItems[2].IsHidden.Should().BeTrue();
+                cut.Instance.SelectedOptionItems[2].Label.Should().Be("Available");
+            }
+
+        [Fact]
+    public async Task Keyboard_navigation_uses_sorted_options_and_reports_dropdown_visibility()
+    {
+        var dataSource = new List<CoverageOption>
+        {
+            new() { Id = 1, Label = "Zulu", Group = "B" },
+            new() { Id = 2, Label = "Alpha", Group = "A" },
+            new() { Id = 3, Label = "Beta", Group = "A", Disabled = true }
+        };
+        var visibilityChanges = new List<bool>();
+        var selectedValue = 0;
+
+        var cut = Render<Select<int, CoverageOption>>(
+            @<Select TItemValue="int" TItem="CoverageOption" DataSource="@dataSource" LabelName="@nameof(CoverageOption.Label)"
+                         ValueName="@nameof(CoverageOption.Id)" GroupName="@nameof(CoverageOption.Group)"
+                         DisabledName="@nameof(CoverageOption.Disabled)" SortByGroup="SortDirection.Ascending"
+                         SortByLabel="SortDirection.Descending" EnableSearch SearchDebounceMilliseconds="0"
+                         DropdownMatchSelectWidth="@("320px")" DropdownMaxWidth="480px"
+                         OnDropdownVisibleChange="@(visible => visibilityChanges.Add(visible))"
+                         ValueChanged="@(value => selectedValue = value)" />);
+
+                var input = cut.Find("input[type=search]");
+                await cut.InvokeAsync(() => input.KeyUp(new KeyboardEventArgs { Key = "ArrowDown" }));
+                await cut.InvokeAsync(() => input.KeyUp(new KeyboardEventArgs { Key = "ArrowDown" }));
+                await cut.InvokeAsync(() => input.KeyUp(new KeyboardEventArgs { Key = "Enter" }));
+
+                cut.WaitForAssertion(() => selectedValue.Should().Be(2));
+                visibilityChanges.Should().Contain(true);
+                cut.Instance.SelectedOptionItems[2].Label.Should().Be("Alpha");
+            }
+
+        [Fact]
+    public async Task Tags_token_separators_create_distinct_values_then_clear_all()
+    {
+        IEnumerable<string> values = Array.Empty<string>();
+        var clearCount = 0;
+
+        var cut = Render<Select<string, string>>(
+            @<Select TItemValue="string" TItem="string" Mode="SelectMode.Tags" DataSource="@(new[] { "known" })" Values="@values"
+                         ValuesChanged="@(changed => values = changed)" TokenSeparators="@(new[] { ',', ';' })"
+                         SearchDebounceMilliseconds="0" AllowClear OnClearSelected="@(() => clearCount++)" />);
+
+                var input = cut.Find("input[type=search]");
+                await cut.InvokeAsync(() => input.Input("known, new; new"));
+
+                cut.WaitForAssertion(() => values.Should().BeEquivalentTo("known", "new"));
+                cut.SetParametersAndRender(parameters => parameters.Add(component => component.Values, values));
+                var suffixIcon = cut.FindComponent<SelectSuffixIcon<string, string>>();
+                await cut.InvokeAsync(() => suffixIcon.Instance.OnClearClick.InvokeAsync(new MouseEventArgs()));
+
+                cut.WaitForAssertion(() => values.Should().BeNull());
+                clearCount.Should().Be(1);
+                cut.Instance.SelectedOptionItems.Should().BeEmpty();
+                cut.Instance.AddedTags.Should().BeEmpty();
+            }
+
+        [Fact]
+    public void Mutable_data_source_refreshes_labels_and_removes_a_stale_selection()
+    {
+        var first = new CoverageOption { Id = 1, Label = "Before", Group = "Old" };
+        var second = new CoverageOption { Id = 2, Label = "Second", Group = "Old" };
+        var dataSource = new List<CoverageOption> { first, second };
+        IEnumerable<int> values = new[] { 1 };
+        var dataSourceChanges = 0;
+
+        var cut = Render<Select<int, CoverageOption>>(
+            @<Select TItemValue="int" TItem="CoverageOption" Mode="SelectMode.Multiple" DataSource="@dataSource" Values="@values"
+                         LabelName="@nameof(CoverageOption.Label)" ValueName="@nameof(CoverageOption.Id)"
+                         GroupName="@nameof(CoverageOption.Group)" IgnoreItemChanges="false"
+                         OnDataSourceChanged="@(() => dataSourceChanges++)" />);
+
+                first.Label = "After";
+                first.Group = "New";
+                dataSource.Remove(second);
+                cut.SetParametersAndRender(parameters => parameters.Add(component => component.DataSource, dataSource));
+
+                cut.FindAll(".ant-select-item-option-content").Select(element => element.TextContent.Trim())
+                    .Should().Equal("After");
+                cut.Instance.SelectedOptionItems.Should().ContainKey(1);
+                cut.Instance.SelectOptionItems.Should().ContainSingle(item => item.GroupName == "New");
+                dataSourceChanges.Should().BeGreaterThan(1);
+
+                cut.SetParametersAndRender(parameters => parameters.Add(component => component.DataSource, null));
+                cut.Instance.SelectOptionItems.Should().BeEmpty();
+                cut.Instance.SelectedOptionItems.Should().BeEmpty();
+            }
+}

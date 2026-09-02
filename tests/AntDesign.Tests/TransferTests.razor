@@ -1,0 +1,98 @@
+@inherits AntDesignTestBase
+
+@code {
+    private static readonly TransferItem[] Items =
+    {
+        new() { Key = "one", Title = "One" },
+        new() { Key = "two", Title = "Two" },
+        new() { Key = "three", Title = "Three", Disabled = true }
+    };
+
+    [Fact]
+    public void Renders_source_and_target_lists_with_custom_content()
+    {
+        var cut = Context.RenderComponent<Transfer>(parameters => parameters
+            .Add(x => x.DataSource, Items)
+            .Add(x => x.TargetKeys, new[] { "two" })
+            .Add(x => x.SelectedKeys, Array.Empty<string>())
+            .Add(x => x.Titles, new[] { "Available", "Chosen" })
+            .Add(x => x.Operations, new[] { "Remove", "Add" })
+            .Add(x => x.Footer, "Footer")
+            .Add(x => x.ListStyle, direction => direction == TransferDirection.Left ? "width:200px" : "width:300px")
+            .Add(x => x.Render, item => $"Item: {item.Title}"));
+
+        var lists = cut.FindAll(".ant-transfer-list");
+        lists.Should().HaveCount(2);
+        lists[0].TextContent.Should().Contain("Available").And.Contain("Item: One").And.Contain("Item: Three").And.NotContain("Item: Two");
+        lists[1].TextContent.Should().Contain("Chosen").And.Contain("Item: Two").And.NotContain("Item: One");
+        lists[0].GetAttribute("style").Should().Be("width:200px");
+        lists[1].GetAttribute("style").Should().Be("width:300px");
+        cut.FindAll(".ant-transfer-list-footer").Should().OnlyContain(element => element.TextContent.Trim() == "Footer");
+        cut.FindAll(".ant-transfer-operation button").Select(button => button.TextContent.Trim()).Should().Equal("Remove", "Add");
+    }
+
+    [Fact]
+    public void Selecting_and_moving_an_item_updates_lists_and_callbacks()
+    {
+        TransferSelectChangeArgs selectArgs = null;
+        TransferChangeArgs changeArgs = null;
+        var cut = Context.RenderComponent<Transfer>(parameters => parameters
+            .Add(x => x.DataSource, Items)
+            .Add(x => x.TargetKeys, new[] { "two" })
+            .Add(x => x.SelectedKeys, Array.Empty<string>())
+            .Add(x => x.OnSelectChange, args => selectArgs = args)
+            .Add(x => x.OnChange, args => changeArgs = args));
+
+        var sourceList = cut.FindAll(".ant-transfer-list")[0];
+        sourceList.QuerySelectorAll("input[type=checkbox]")[1].Change(true);
+
+        selectArgs.Should().NotBeNull();
+        selectArgs.SourceSelectedKeys.Should().Equal("one");
+        cut.FindAll(".ant-transfer-operation button")[1].Click();
+
+        changeArgs.Should().NotBeNull();
+        changeArgs.Direction.Should().Be(TransferDirection.Right);
+        changeArgs.MoveKeys.Should().Equal("one");
+        changeArgs.TargetKeys.Should().BeEquivalentTo(new[] { "two", "one" });
+        cut.FindAll(".ant-transfer-list")[1].TextContent.Should().Contain("One").And.Contain("Two");
+    }
+
+    [Fact]
+    public void Search_filters_each_list_and_reports_direction()
+    {
+        var searches = new List<TransferSearchArgs>();
+        var scrolls = new List<TransferScrollArgs>();
+        var cut = Context.RenderComponent<Transfer>(parameters => parameters
+            .Add(x => x.DataSource, Items)
+            .Add(x => x.TargetKeys, new[] { "two" })
+            .Add(x => x.SelectedKeys, Array.Empty<string>())
+            .Add(x => x.ShowSearch, true)
+            .Add(x => x.OnSearch, args => searches.Add(args))
+            .Add(x => x.OnScroll, args => scrolls.Add(args)));
+
+        var inputs = cut.FindAll(".ant-transfer-list-search input");
+        inputs[0].Input("one");
+        cut.FindAll(".ant-transfer-list")[0].TextContent.Should().Contain("One").And.NotContain("Three");
+        searches.Should().ContainSingle();
+        searches[0].Direction.Should().Be(TransferDirection.Left);
+        searches[0].Value.Should().Be("one");
+
+        cut.FindAll(".ant-transfer-list")[1].Scroll();
+        scrolls.Should().ContainSingle();
+        scrolls[0].Direction.Should().Be(TransferDirection.Right);
+    }
+
+    [Fact]
+    public void Disabled_transfer_prevents_item_and_operation_interaction()
+    {
+        var cut = Context.RenderComponent<Transfer>(parameters => parameters
+            .Add(x => x.DataSource, Items)
+            .Add(x => x.TargetKeys, new[] { "two" })
+            .Add(x => x.SelectedKeys, new[] { "one" })
+            .Add(x => x.Disabled, true));
+
+        cut.FindAll(".ant-transfer-list-content-item").Should().OnlyContain(item => item.ClassList.Contains("ant-transfer-list-content-item-disabled"));
+        cut.FindAll(".ant-transfer-list-content-item input").Should().OnlyContain(input => input.HasAttribute("disabled"));
+        cut.FindAll(".ant-transfer-operation button").Should().OnlyContain(button => button.HasAttribute("disabled"));
+    }
+}
