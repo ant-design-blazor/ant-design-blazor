@@ -4,9 +4,10 @@
     {
         JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
       .SetResult(new HtmlElement());
-        JSInterop.Setup<Dictionary<string, HtmlElement>>("AntDesign.interop.domInfoHelper.getElementsInfo", _ => true);
-        JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddClsToFirstChild, _ => true);
-        JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddCls, _ => true);
+        JSInterop.Setup<Dictionary<string, HtmlElement>>("AntDesign.interop.domInfoHelper.getElementsInfo", _ => true)
+                .SetResult(new Dictionary<string, HtmlElement>());
+        JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddClsToFirstChild, _ => true).SetVoidResult();
+        JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddCls, _ => true).SetVoidResult();
     }
 
     [Fact]

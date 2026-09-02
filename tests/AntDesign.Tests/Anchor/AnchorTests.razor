@@ -6,7 +6,7 @@
     {
         JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
             .SetResult(new DomRect { Top = 10, Bottom = 50, Width = 100, Height = 30 });
-        JSInterop.SetupVoid("window.eval", _ => true);
+        JSInterop.SetupVoid("window.eval", _ => true).SetVoidResult();
     }
 
     [Fact]
@@ -16,7 +16,8 @@
         string changedHref = null;
 
         var cut = Context.RenderComponent<Anchor>(parameters => parameters
-            .Add(x => x.OnClick, EventCallback.Factory.Create<Tuple<Microsoft.AspNetCore.Components.Web.MouseEventArgs, AnchorLink>>(this, tuple => clicked = tuple))
+            .Add(x => x.OnClick, EventCallback.Factory.Create<Tuple<Microsoft.AspNetCore.Components.Web.MouseEventArgs,
+AnchorLink>>(this, tuple => clicked = tuple))
             .Add(x => x.OnChange, EventCallback.Factory.Create<string>(this, href => changedHref = href))
             .AddChildContent<AnchorLink>(link =>
             {

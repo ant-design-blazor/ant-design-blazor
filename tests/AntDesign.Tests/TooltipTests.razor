@@ -1,0 +1,42 @@
+@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+
+@code {
+    public TooltipTests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.Top });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true);
+    }
+
+    [Fact]
+    public async Task Click_trigger_opens_tooltip_with_title()
+    {
+        var cut = Context.RenderComponent<AntDesign.Tooltip>(parameters => parameters
+            .Add(x => x.Trigger, new[] { AntDesign.Trigger.Click })
+            .Add(x => x.Title, "Tooltip Title Text")
+            .AddChildContent("<button id='trigger'>Target</button>"));
+
+        await cut.Find("#trigger").ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+
+        var overlay = cut.FindComponent<AntDesign.Internal.Overlay>();
+        overlay.Find(".ant-tooltip-inner").TextContent.Trim().Should().Be("Tooltip Title Text");
+    }
+
+    [Fact]
+    public async Task TitleTemplate_overrides_plain_title_string()
+    {
+        var cut = Context.RenderComponent<AntDesign.Tooltip>(parameters => parameters
+            .Add(x => x.Trigger, new[] { AntDesign.Trigger.Click })
+            .Add(x => x.Title, "Plain Title")
+            .Add(x => x.TitleTemplate, @<span id="custom-title">Custom Title</span>)
+            .AddChildContent("<button id='trigger'>Target</button>"));
+
+        await cut.Find("#trigger").ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+
+        var overlay = cut.FindComponent<AntDesign.Internal.Overlay>();
+        overlay.Find("#custom-title").TextContent.Should().Be("Custom Title");
+    }
+}

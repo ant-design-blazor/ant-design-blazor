@@ -106,13 +106,17 @@ namespace AntDesign
             _goInputText = e.Value as string;
         }
 
-        private void HandleBlur(FocusEventArgs e)
+        private async Task HandleBlur(FocusEventArgs e)
         {
-            if (GoButton != null || string.IsNullOrEmpty(_goInputText))
+            var hasGoButton = GoButton.HasValue
+                && (GoButton.Value.IsT0 && GoButton.Value.AsT0
+                    || GoButton.Value.IsT1 && GoButton.Value.AsT1 != null);
+            if (hasGoButton || string.IsNullOrEmpty(_goInputText))
             {
                 return;
             }
 
+            var value = GetValidValue();
             _goInputText = string.Empty;
 
             // relatedTarget not implemented
@@ -123,7 +127,7 @@ namespace AntDesign
 
             if (QuickGo.HasDelegate)
             {
-                QuickGo.InvokeAsync(this.GetValidValue());
+                await QuickGo.InvokeAsync(value);
             }
         }
 
