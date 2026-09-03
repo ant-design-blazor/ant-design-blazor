@@ -34,4 +34,16 @@
         cut.Find("#custom-desc").TextContent.Should().Be("Custom Empty Description");
         cut.Find("#create-btn").TextContent.Should().Be("Create Now");
     }
+
+    [Fact]
+    public void Empty_image_template_overrides_image_url_and_simple_variant()
+    {
+        var cut = Context.RenderComponent<Empty>(parameters => parameters
+            .Add(x => x.Image, "fallback-image.svg")
+            .Add(x => x.Simple, true)
+            .Add(x => x.ImageTemplate, @<svg class="custom-empty-image"><title>Custom illustration</title></svg>));
+
+        cut.Find(".custom-empty-image").Should().NotBeNull();
+        cut.FindAll(".ant-empty-image img").Should().BeEmpty();
+    }
 }

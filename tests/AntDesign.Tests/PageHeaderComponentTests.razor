@@ -62,4 +62,31 @@
 
         JSInterop.VerifyInvoke("history.back", 1);
     }
+
+    [Fact]
+    public void Supports_custom_string_back_icon_and_legacy_title_slots()
+    {
+        var cut = RenderComponent<PageHeader>(parameters => parameters
+            .Add(component => component.BackIcon, "rollback")
+            .Add(component => component.PageHeaderTitle, @<strong class="legacy-title">Legacy title</strong>)
+            .Add(component => component.PageHeaderSubtitle, @<span class="legacy-subtitle">Legacy subtitle</span>));
+
+        cut.Find(".ant-page-header-back .anticon-rollback").Should().NotBeNull();
+        cut.Find(".legacy-title").TextContent.Should().Be("Legacy title");
+        cut.Find(".legacy-subtitle").TextContent.Should().Be("Legacy subtitle");
+    }
+
+    [Fact]
+    public async Task Resizes_to_compact_layout_when_the_container_is_narrow()
+    {
+        var cut = RenderComponent<PageHeader>(parameters => parameters
+            .Add(component => component.Title, "Responsive header"));
+        var resizeObserver = cut.FindComponent<AntDesign.Core.Component.ResizeObserver.ResizeObserver>();
+
+        await cut.InvokeAsync(() => resizeObserver.Instance.OnResize.InvokeAsync(new DomRect { Width = 640 }));
+        cut.Find(".ant-page-header").ClassList.Should().Contain("ant-page-header-compact");
+
+        await cut.InvokeAsync(() => resizeObserver.Instance.OnResize.InvokeAsync(new DomRect { Width = 1024 }));
+        cut.Find(".ant-page-header").ClassList.Should().NotContain("ant-page-header-compact");
+    }
 }
