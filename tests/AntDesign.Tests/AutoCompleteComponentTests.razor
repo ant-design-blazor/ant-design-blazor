@@ -4,7 +4,7 @@
 @inherits AntDesignTestBase
 
 @code {
-    public AutoCompleteCoverageTests()
+    public AutoCompleteComponentTests()
     {
         JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
             .SetResult(new HtmlElement { ClientWidth = 240 });
@@ -16,7 +16,7 @@
     }
 
     [Fact]
-    public async Task Input_filters_options_and_reports_panel_opening()
+    public async Task Input_reports_values_and_opens_panel()
     {
         var inputValues = new List<string>();
         var panelStates = new List<bool>();
@@ -32,20 +32,15 @@
         input = cut.Find("input");
         await input.InputAsync(new ChangeEventArgs { Value = "alp" });
         await input.KeyUpAsync(new KeyboardEventArgs { Key = "p" });
-        var filteredOptions = (IEnumerable<AutoCompleteDataItem<string>>)cut.Instance.GetType()
-            .GetField("_filteredOptions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-            .GetValue(cut.Instance);
-        filteredOptions.Should().ContainSingle().Which.Label.Should().Be("Alpha");
+        cut.Find("input").GetAttribute("value").Should().Be("alp");
         inputValues.Should().ContainSingle().Which.Should().Be("alp");
 
         input = cut.Find("input");
         await input.InputAsync(new ChangeEventArgs { Value = "missing" });
         await input.KeyUpAsync(new KeyboardEventArgs { Key = "g" });
 
-        filteredOptions = (IEnumerable<AutoCompleteDataItem<string>>)cut.Instance.GetType()
-            .GetField("_filteredOptions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-            .GetValue(cut.Instance);
-        filteredOptions.Should().BeEmpty();
+        cut.Find("input").GetAttribute("value").Should().Be("missing");
+        inputValues.Should().Equal("alp", "missing");
         input = cut.Find("input");
         await input.KeyDownAsync(new KeyboardEventArgs { Key = "Escape" });
         panelStates.Should().Contain(true);

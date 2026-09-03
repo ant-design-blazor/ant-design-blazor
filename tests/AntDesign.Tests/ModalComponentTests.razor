@@ -1,7 +1,7 @@
 @inherits AntDesignTestBase
 
 @code {
-    public ModalComponentCoverageTests()
+    public ModalComponentTests()
     {
         JSInterop.Setup<double>(JSInteropConstants.DomMainpulationHelper.GetScrollBarSize, _ => true).SetResult(15);
         JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true).SetVoidResult();

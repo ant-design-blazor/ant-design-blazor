@@ -1,0 +1,225 @@
+@using System.Globalization
+@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+
+@code {
+    public CalendarComponentTests()
+    {
+        JSInterop.Mode = JSRuntimeMode.Strict;
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventEnterOnOverlayVisible, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.RemovePreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.RemovePreventEnterOnOverlayVisible, _ => true);
+        JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new DomRect { Width = 240 });
+        JSInterop.Setup<bool>(JSInteropConstants.HasFocus, _ => true).SetResult(false);
+    }
+
+    [Fact]
+    public void Month_mode_renders_fullscreen_date_grid_and_selected_value()
+    {
+        var value = new DateTime(2024, 3, 15);
+
+        var cut = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.Mode, CalendarMode.Month)
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+
+        cut.Find(".ant-picker-calendar").ClassList.Should().Contain("ant-picker-calendar-full");
+        cut.Find(".ant-picker-date-panel").Should().NotBeNull();
+        cut.FindAll("td.ant-picker-cell").Should().HaveCount(42);
+        cut.Find("td.ant-picker-cell-selected").GetAttribute("title")
+            .Should().Be(DateTitle(cut.Instance, value));
+    }
+
+    [Fact]
+    public void Year_mode_renders_compact_month_grid_and_selected_month()
+    {
+        var value = new DateTime(2024, 3, 15);
+
+        var cut = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.Mode, CalendarMode.Year)
+            .Add(component => component.FullScreen, false)
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+
+        cut.Find(".ant-picker-calendar").ClassList.Should().NotContain("ant-picker-calendar-full");
+        cut.Find(".ant-picker-month-panel").Should().NotBeNull();
+        cut.FindAll("td.ant-picker-cell").Should().HaveCount(12);
+        cut.Find("td.ant-picker-cell-selected").GetAttribute("title")
+            .Should().Be(value.ToString(cut.Instance.Locale.Lang.MonthFormat, cut.Instance.CultureInfo));
+    }
+
+    [Fact]
+    public void DefaultValue_initializes_value_and_selected_date()
+    {
+        var defaultValue = new DateTime(2022, 8, 9);
+
+        var cut = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.DefaultValue, defaultValue)
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+
+        cut.Instance.Value.Should().Be(defaultValue);
+        cut.Find("td.ant-picker-cell-selected").GetAttribute("title")
+            .Should().Be(DateTitle(cut.Instance, defaultValue));
+    }
+
+    [Fact]
+    public void Selecting_date_updates_value_and_invokes_selection_callbacks()
+    {
+        var initialValue = new DateTime(2024, 3, 15);
+        var selectedValue = default(DateTime);
+        var changedValue = default(DateTime);
+        var target = new DateTime(2024, 3, 21);
+
+        var cut = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.Value, initialValue)
+            .Add(component => component.OnSelect, value => selectedValue = value)
+            .Add(component => component.OnChange, value => changedValue = value)
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+
+        cut.Find($"td[title='{DateTitle(cut.Instance, target)}']").Click();
+
+        cut.Instance.Value.Should().Be(target);
+        selectedValue.Should().Be(target);
+        changedValue.Should().Be(target);
+        cut.Find("td.ant-picker-cell-selected").GetAttribute("title")
+            .Should().Be(DateTitle(cut.Instance, target));
+    }
+
+    [Fact]
+    public void Custom_header_can_change_value_through_render_arguments()
+    {
+        var initialValue = new DateTime(2024, 3, 15);
+        var target = new DateTime(2024, 4, 10);
+        Func<CalendarHeaderRenderArgs, RenderFragment> headerRender = args => builder =>
+        {
+            builder.OpenElement(0, "button");
+            builder.AddAttribute(1, "class", "custom-value");
+            builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, () => args.OnChange(target)));
+            builder.AddContent(3, $"Custom {args.Value:yyyy-MM-dd}");
+            builder.CloseElement();
+        };
+
+        var cut = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.Value, initialValue)
+            .Add(component => component.HeaderRender, headerRender)
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+
+        cut.Find(".custom-value").TextContent.Should().Be("Custom 2024-03-15");
+        cut.Find(".custom-value").Click();
+
+        cut.Instance.Value.Should().Be(target);
+        cut.Find(".custom-value").TextContent.Should().Be("Custom 2024-04-10");
+        cut.Find("td.ant-picker-cell-selected").GetAttribute("title")
+            .Should().Be(DateTitle(cut.Instance, target));
+    }
+
+    [Fact]
+    public void Custom_header_can_change_mode_and_report_panel_change()
+    {
+        var panelChanges = new List<DatePickerType>();
+        Func<CalendarHeaderRenderArgs, RenderFragment> headerRender = args => builder =>
+        {
+            builder.OpenElement(0, "button");
+            builder.AddAttribute(1, "class", "custom-mode");
+            builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, () => args.OnTypeChange(CalendarMode.Year)));
+            builder.AddContent(3, args.Type.ToString());
+            builder.CloseElement();
+        };
+
+        var cut = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.Value, new DateTime(2024, 3, 15))
+            .Add(component => component.HeaderRender, headerRender)
+            .Add(component => component.OnPanelChange, (_, type) => panelChanges.Add(type))
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+
+        cut.Find(".custom-mode").TextContent.Should().Be(nameof(CalendarMode.Month));
+        cut.Find(".custom-mode").Click();
+
+        cut.Instance.Mode.Should().Be(CalendarMode.Year);
+        cut.Find(".custom-mode").TextContent.Should().Be(nameof(CalendarMode.Year));
+        cut.Find(".ant-picker-month-panel").Should().NotBeNull();
+        panelChanges.Should().Equal(DatePickerType.Month);
+    }
+
+    [Fact]
+    public void DisabledDate_marks_matching_cells_as_disabled()
+    {
+        var value = new DateTime(2024, 3, 15);
+        var disabledDate = new DateTime(2024, 3, 20);
+
+        var cut = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.Value, value)
+            .Add(component => component.DisabledDate, date => date.Date == disabledDate)
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+
+        cut.Find($"td[title='{DateTitle(cut.Instance, disabledDate)}']")
+            .ClassList.Should().Contain("ant-picker-cell-disabled");
+        cut.Find($"td[title='{DateTitle(cut.Instance, disabledDate.AddDays(1))}']")
+            .ClassList.Should().NotContain("ant-picker-cell-disabled");
+    }
+
+    [Fact]
+    public void ValidRange_clamps_the_initial_value_to_the_nearest_boundary()
+    {
+        var start = new DateTime(2024, 3, 10);
+        var end = new DateTime(2024, 3, 20);
+
+        var beforeRange = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.Value, start.AddDays(-1))
+            .Add(component => component.ValidRange, new[] { start, end })
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+        var afterRange = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.Value, end.AddDays(1))
+            .Add(component => component.ValidRange, new[] { start, end })
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+
+        beforeRange.Instance.Value.Should().Be(start);
+        afterRange.Instance.Value.Should().Be(end);
+    }
+
+    [Fact]
+    public void Date_and_month_cell_templates_render_for_the_corresponding_modes()
+    {
+        var date = new DateTime(2024, 3, 15);
+        Func<DateTime, RenderFragment> dateCell = value => @<span class="date-marker">@value.Day</span>;
+        Func<DateTime, RenderFragment> monthCell = value => @<span class="month-marker">@value.Month</span>;
+
+        var monthMode = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.Value, date)
+            .Add(component => component.DateCellRender, dateCell)
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+        var yearMode = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.Value, date)
+            .Add(component => component.Mode, CalendarMode.Year)
+            .Add(component => component.MonthCellRender, monthCell)
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+
+        monthMode.Find($"td[title='{DateTitle(monthMode.Instance, date)}'] .date-marker").TextContent.Should().Be("15");
+        yearMode.Find("td.ant-picker-cell-selected .month-marker").TextContent.Should().Be("3");
+    }
+
+    [Fact]
+    public void Parameter_updates_refresh_value_selection_and_fullscreen_class()
+    {
+        var initialValue = new DateTime(2024, 3, 15);
+        var updatedValue = new DateTime(2024, 6, 2);
+        var cut = RenderComponent<AntDesign.Calendar>(parameters => parameters
+            .Add(component => component.Value, initialValue)
+            .Add(component => component.FullScreen, true)
+            .Add(component => component.CultureInfo, CultureInfo.InvariantCulture));
+
+        cut.SetParametersAndRender(parameters => parameters
+            .Add(component => component.Value, updatedValue)
+            .Add(component => component.FullScreen, false));
+
+        cut.Instance.Value.Should().Be(updatedValue);
+        cut.Find(".ant-picker-calendar").ClassList.Should().NotContain("ant-picker-calendar-full");
+        cut.Find("td.ant-picker-cell-selected").GetAttribute("title")
+            .Should().Be(DateTitle(cut.Instance, updatedValue));
+    }
+
+    private static string DateTitle(AntDesign.Calendar calendar, DateTime value)
+        => value.ToString(calendar.Locale.Lang.DateFormat, calendar.CultureInfo);
+}

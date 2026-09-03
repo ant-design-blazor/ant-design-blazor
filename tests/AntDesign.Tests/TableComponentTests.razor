@@ -4,7 +4,7 @@
 @code {
     private sealed record Person(int Id, string Name, int Age, bool Active);
 
-    public TableCoverageIterationTests()
+    public TableComponentTests()
     {
         JSInterop.SetupVoid("AntDesign.interop.styleHelper.addCls", _ => true).SetVoidResult();
     }
@@ -42,26 +42,28 @@
     }
 
     [Fact]
-    public void Clicking_sorter_cycles_ascending_descending_and_none()
+    public async Task Clicking_sorter_cycles_ascending_descending_and_none()
     {
         var changes = new List<QueryModel<Person>>();
         var cut = Render(@<Table TItem="Person" DataSource="People" OnChange="@(query => changes.Add(query))">
-            <PropertyColumn Property="person => person.Name" Sortable ShowSorterTooltip="false" />
+            <PropertyColumn Property="person => person.Name" Sortable
+                            SorterCompare="((left, right) => string.Compare(left, right, StringComparison.Ordinal))"
+                            ShowSorterTooltip="false" />
             <PropertyColumn Property="person => person.Age" />
         </Table>);
         var sorter = cut.Find(".ant-table-column-sorters");
 
-        sorter.Click();
+        await sorter.ClickAsync(new MouseEventArgs());
         GetFirstColumnValues(cut).Should().ContainInOrder("Alice", "Bob", "Charlie");
         cut.Find(".ant-table-column-sorter-up").ClassList.Should().Contain("active");
 
         sorter = cut.Find(".ant-table-column-sorters");
-        sorter.Click();
+        await sorter.ClickAsync(new MouseEventArgs());
         GetFirstColumnValues(cut).Should().ContainInOrder("Charlie", "Bob", "Alice");
         cut.Find(".ant-table-column-sorter-down").ClassList.Should().Contain("active");
 
         sorter = cut.Find(".ant-table-column-sorters");
-        sorter.Click();
+        await sorter.ClickAsync(new MouseEventArgs());
         GetFirstColumnValues(cut).Should().ContainInOrder("Charlie", "Alice", "Bob");
         changes.Should().HaveCountGreaterThanOrEqualTo(3);
         cut.FindComponent<Table<Person>>().Instance.GetQueryModel().SortModel
@@ -93,7 +95,7 @@
     }
 
     [Fact]
-    public void Checkbox_selection_updates_rows_and_header_selects_all()
+    public async Task Checkbox_selection_updates_rows_and_header_selects_all()
     {
         IEnumerable<Person> selectedRows = Array.Empty<Person>();
         var cut = Render(@<Table TItem="Person" DataSource="People" RowKey="person => person.Id" SelectedRows="selectedRows"
@@ -103,14 +105,14 @@
         </Table>);
         var checkboxes = cut.FindAll("input.ant-checkbox-input");
 
-        checkboxes[1].Change(true);
+        await checkboxes[1].ChangeAsync(new ChangeEventArgs { Value = true });
         selectedRows.Should().ContainSingle().Which.Name.Should().Be("Charlie");
         cut.FindAll("tbody tr.ant-table-row")[0].ClassList.Should().Contain("ant-table-row-selected");
 
-        cut.FindAll("input.ant-checkbox-input")[0].Change(true);
+        await cut.FindAll("input.ant-checkbox-input")[0].ChangeAsync(new ChangeEventArgs { Value = true });
         selectedRows.Should().BeEquivalentTo(People);
 
-        cut.FindAll("input.ant-checkbox-input")[0].Change(false);
+        await cut.FindAll("input.ant-checkbox-input")[0].ChangeAsync(new ChangeEventArgs { Value = false });
         selectedRows.Should().BeEmpty();
     }
 

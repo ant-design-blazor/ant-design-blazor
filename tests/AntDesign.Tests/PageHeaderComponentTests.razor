@@ -1,0 +1,65 @@
+@inherits AntDesignTestBase
+
+@code {
+    public PageHeaderComponentTests()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+    }
+
+    [Fact]
+    public void Renders_page_context_and_standard_content_slots()
+    {
+        var cut = RenderComponent<PageHeader>(parameters => parameters
+            .Add(component => component.Title, "Project settings")
+            .Add(component => component.Subtitle, "Production")
+            .Add(component => component.Ghost, true)
+            .Add(component => component.PageHeaderBreadcrumb, @<nav class="crumbs">Home / Settings</nav>)
+            .Add(component => component.PageHeaderAvatar, @<span class="owner">JD</span>)
+            .Add(component => component.PageHeaderTags, @<span class="status">Active</span>)
+            .Add(component => component.PageHeaderExtra, @<button class="save">Save</button>)
+            .Add(component => component.PageHeaderContent, @<p class="details">Manage project settings.</p>)
+            .Add(component => component.PageHeaderFooter, @<div class="footer-tabs">Overview</div>));
+
+        var header = cut.Find(".ant-page-header");
+        header.ClassList.Should().Contain("ant-page-header-ghost").And.Contain("has-breadcrumb").And.Contain("has-footer");
+        cut.Find(".crumbs").TextContent.Should().Be("Home / Settings");
+        cut.Find(".owner").TextContent.Should().Be("JD");
+        cut.Find(".ant-page-header-heading-title").TextContent.Trim().Should().Be("Project settings");
+        cut.Find(".ant-page-header-heading-sub-title").TextContent.Trim().Should().Be("Production");
+        cut.Find(".status").TextContent.Should().Be("Active");
+        cut.Find(".save").TextContent.Should().Be("Save");
+        cut.Find(".details").TextContent.Should().Be("Manage project settings.");
+        cut.Find(".footer-tabs").TextContent.Should().Be("Overview");
+    }
+
+    [Fact]
+    public async Task Back_button_uses_callback_and_custom_icon_template()
+    {
+        var backCount = 0;
+        var cut = RenderComponent<PageHeader>(parameters => parameters
+            .Add(component => component.OnBack, () => backCount++)
+            .Add(component => component.BackIconTemplate, @<span class="custom-back">Return</span>)
+            .Add(component => component.TitleTemplate, @<strong>Template title</strong>)
+            .Add(component => component.SubtitleTemplate, @<em>Template subtitle</em>));
+
+        cut.Find(".custom-back").TextContent.Should().Be("Return");
+        cut.Find(".ant-page-header-heading-title strong").TextContent.Should().Be("Template title");
+        cut.Find(".ant-page-header-heading-sub-title em").TextContent.Should().Be("Template subtitle");
+
+        await cut.Find(".ant-page-header-back").ClickAsync(new MouseEventArgs());
+
+        backCount.Should().Be(1);
+        JSInterop.VerifyNotInvoke("history.back");
+    }
+
+    [Fact]
+    public async Task Back_button_falls_back_to_browser_history_when_no_callback_is_supplied()
+    {
+        var cut = RenderComponent<PageHeader>(parameters => parameters
+            .Add(component => component.BackIcon, true));
+
+        await cut.Find(".ant-page-header-back").ClickAsync(new MouseEventArgs());
+
+        JSInterop.VerifyInvoke("history.back", 1);
+    }
+}

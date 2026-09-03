@@ -1,0 +1,197 @@
+@inherits AntDesignTestBase
+
+@code {
+    public ImageComponentTests()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true).SetVoidResult();
+        JSInterop.SetupVoid(JSInteropConstants.ImgDragAndDrop, _ => true).SetVoidResult();
+        JSInterop.Setup<string>(JSInteropConstants.GetStyle, _ => true).SetResult("50%");
+    }
+
+    [Fact]
+    public void Renders_dimensions_placeholder_load_state_and_custom_locale()
+    {
+        var cut = RenderComponent<AntDesign.Image>(parameters => parameters
+            .Add(component => component.Alt, "Mountain lake")
+            .Add(component => component.Src, "lake-thumb.jpg")
+            .Add(component => component.PreviewSrc, "lake-full.jpg")
+            .Add(component => component.Width, "240")
+            .Add(component => component.Height, "160px")
+            .Add(component => component.Class, "gallery-image")
+            .Add(component => component.Style, "object-fit:cover")
+            .Add(component => component.Locale, new ImageLocale { Preview = "Inspect" })
+            .Add(component => component.Placeholder, @<span class="loading-template">Loading</span>));
+
+        var wrapper = cut.Find(".ant-image");
+        wrapper.ClassList.Should().Contain("gallery-image");
+        wrapper.GetAttribute("style").Should().Contain("width:240px;").And.Contain("height:160px;");
+        var image = cut.Find("img.ant-image-img");
+        image.GetAttribute("alt").Should().Be("Mountain lake");
+        image.GetAttribute("src").Should().Be("lake-thumb.jpg");
+        image.GetAttribute("style").Should().Contain("object-fit:cover").And.Contain("height:160px;");
+        cut.Find(".ant-image-placeholder .loading-template").TextContent.Should().Be("Loading");
+        cut.FindAll(".ant-image-mask").Should().BeEmpty();
+
+        image.TriggerEvent("onload", new EventArgs());
+
+        cut.FindAll(".ant-image-placeholder").Should().BeEmpty();
+        cut.Find(".ant-image-mask-info").TextContent.Should().Contain("Inspect");
+
+        cut.Find("img").TriggerEvent("onloadstart", new EventArgs());
+
+        cut.Find(".ant-image-placeholder .loading-template").Should().NotBeNull();
+        cut.FindAll(".ant-image-mask").Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Error_uses_fallback_marks_wrapper_and_suppresses_preview_mask()
+    {
+        var cut = RenderComponent<AntDesign.Image>(parameters => parameters
+            .Add(component => component.Src, "missing.jpg")
+            .Add(component => component.Fallback, "fallback.jpg")
+            .Add(component => component.Placeholder, @<em class="error-placeholder">Waiting</em>));
+
+        cut.Find("img").TriggerEvent("onerror", new ErrorEventArgs());
+
+        cut.Find("img").GetAttribute("src").Should().Be("fallback.jpg");
+        cut.Find(".ant-image").ClassList.Should().Contain("ant-image-error");
+        cut.FindAll(".ant-image-placeholder").Should().BeEmpty();
+        cut.FindAll(".ant-image-mask").Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Preview_opens_from_mask_runs_operations_and_closes_with_callbacks()
+    {
+        var visibilityChanges = new List<bool>();
+        var clickCount = 0;
+        using var previewHost = RenderComponent<ImagePreviewContainer>();
+        var cut = RenderComponent<AntDesign.Image>(parameters => parameters
+            .Add(component => component.Src, "thumb.jpg")
+            .Add(component => component.PreviewSrc, "full.jpg")
+            .Add(component => component.PreviewVisibleChanged, (bool visible) => visibilityChanges.Add(visible))
+            .Add(component => component.OnClick, _ => clickCount++));
+        cut.Find("img").TriggerEvent("onload", new EventArgs());
+
+        await cut.Find(".ant-image-mask").ClickAsync(new MouseEventArgs());
+
+        previewHost.WaitForAssertion(() =>
+        {
+            previewHost.Find("img.ant-image-preview-img").GetAttribute("src").Should().Be("full.jpg");
+            visibilityChanges.Should().Equal(true);
+            clickCount.Should().Be(1);
+            JSInterop.VerifyInvoke(JSInteropConstants.AddElementTo, 1);
+            JSInterop.VerifyInvoke(JSInteropConstants.ImgDragAndDrop, 1);
+        });
+
+        await previewHost.Find(".ant-image-preview-operations-operation-zoomIn").ClickAsync(new MouseEventArgs());
+        previewHost.Find("img.ant-image-preview-img").GetAttribute("style").Should().Contain("scale3d(2, 2, 1)");
+        await previewHost.Find(".ant-image-preview-operations-operation-zoomOut").ClickAsync(new MouseEventArgs());
+        await previewHost.Find(".ant-image-preview-operations-operation-rotateRight").ClickAsync(new MouseEventArgs());
+        previewHost.Find("img.ant-image-preview-img").GetAttribute("style").Should().Contain("rotate(90deg)");
+        await previewHost.Find(".ant-image-preview-operations-operation-rotateLeft").ClickAsync(new MouseEventArgs());
+        previewHost.Find("img.ant-image-preview-img").GetAttribute("style").Should().Contain("scale3d(1, 1, 1) rotate(0deg)");
+
+        await previewHost.Find(".ant-image-preview-operations-operation-close").ClickAsync(new MouseEventArgs());
+
+        previewHost.WaitForAssertion(() => previewHost.FindAll(".ant-image-preview-root").Should().BeEmpty());
+        visibilityChanges.Should().Equal(true, false);
+    }
+
+    [Fact]
+    public async Task Wheel_zoom_reads_position_and_respects_minimum_scale()
+    {
+        using var previewHost = RenderComponent<ImagePreviewContainer>();
+        var cut = RenderComponent<AntDesign.Image>(parameters => parameters
+            .Add(component => component.Src, "wheel.jpg"));
+        cut.Find("img").TriggerEvent("onload", new EventArgs());
+        await cut.Find(".ant-image-mask").ClickAsync(new MouseEventArgs());
+        var wrapper = previewHost.Find(".ant-image-preview-img-wrapper");
+
+        await wrapper.TriggerEventAsync("onwheel", new WheelEventArgs { DeltaY = -1 });
+        previewHost.Find("img.ant-image-preview-img").GetAttribute("style").Should().Contain("scale3d(1.1, 1.1, 1)");
+
+        for (var iteration = 0; iteration < 7; iteration++)
+        {
+            await wrapper.TriggerEventAsync("onwheel", new WheelEventArgs { DeltaY = 1 });
+        }
+
+        previewHost.Find("img.ant-image-preview-img").GetAttribute("style")
+            .Should().MatchRegex(@"scale3d\(0\.4\d*, 0\.4\d*, 1\)");
+        JSInterop.VerifyInvoke(JSInteropConstants.GetStyle, 16);
+    }
+
+    [Fact]
+    public async Task Preview_group_opens_selected_image_and_navigates_with_bounds()
+    {
+        using var previewHost = RenderComponent<ImagePreviewContainer>();
+        var group = Render(@<ImagePreviewGroup>
+            <AntDesign.Image Src="first-thumb.jpg" PreviewSrc="first-full.jpg" />
+            <AntDesign.Image Src="second-thumb.jpg" PreviewSrc="second-full.jpg" />
+        </ImagePreviewGroup>);
+        var images = group.FindAll("img.ant-image-img");
+        images[0].TriggerEvent("onload", new EventArgs());
+        images[1].TriggerEvent("onload", new EventArgs());
+
+        await group.FindAll(".ant-image-mask")[1].ClickAsync(new MouseEventArgs());
+
+        previewHost.WaitForAssertion(() =>
+        {
+            previewHost.Find(".ant-image-preview-operations-progress").TextContent.Trim().Should().Be("2 / 2");
+            previewHost.Find("img.ant-image-preview-img").GetAttribute("src").Should().Be("second-full.jpg");
+            previewHost.Find(".ant-image-preview-switch-right").ClassList.Should().Contain("ant-image-preview-switch-right-disabled");
+        });
+
+        await previewHost.Find(".ant-image-preview-switch-right").ClickAsync(new MouseEventArgs());
+        previewHost.Find("img.ant-image-preview-img").GetAttribute("src").Should().Be("second-full.jpg");
+        await previewHost.Find(".ant-image-preview-switch-left").ClickAsync(new MouseEventArgs());
+        previewHost.Find("img.ant-image-preview-img").GetAttribute("src").Should().Be("first-full.jpg");
+        previewHost.Find(".ant-image-preview-switch-left").ClassList.Should().Contain("ant-image-preview-switch-left-disabled");
+        await previewHost.Find(".ant-image-preview-switch-left").ClickAsync(new MouseEventArgs());
+        previewHost.Find("img.ant-image-preview-img").GetAttribute("src").Should().Be("first-full.jpg");
+    }
+
+    [Fact]
+    public void Controlled_group_visibility_opens_and_closes_preview_with_callbacks()
+    {
+        var visibilityChanges = new List<bool>();
+        using var previewHost = RenderComponent<ImagePreviewContainer>();
+        var group = RenderComponent<ImagePreviewGroup>(parameters => parameters
+            .Add(component => component.PreviewVisible, false)
+            .Add(component => component.PreviewVisibleChanged, (bool visible) => visibilityChanges.Add(visible))
+            .AddChildContent<AntDesign.Image>(image => image
+                .Add(component => component.Src, "controlled.jpg")));
+
+        group.SetParametersAndRender(parameters => parameters
+            .Add(component => component.PreviewVisible, true)
+            .Add(component => component.PreviewVisibleChanged, (bool visible) => visibilityChanges.Add(visible)));
+
+        previewHost.WaitForAssertion(() => previewHost.Find("img.ant-image-preview-img").GetAttribute("src").Should().Be("controlled.jpg"));
+        visibilityChanges.Should().Equal(true);
+
+        group.SetParametersAndRender(parameters => parameters
+            .Add(component => component.PreviewVisible, false)
+            .Add(component => component.PreviewVisibleChanged, (bool visible) => visibilityChanges.Add(visible)));
+
+        previewHost.WaitForAssertion(() => previewHost.FindAll(".ant-image-preview-root").Should().BeEmpty());
+        visibilityChanges.Should().Equal(true, false);
+    }
+
+    [Fact]
+    public async Task Disabled_preview_never_renders_mask_but_image_click_still_fires()
+    {
+        var clickCount = 0;
+        using var previewHost = RenderComponent<ImagePreviewContainer>();
+        var cut = RenderComponent<AntDesign.Image>(parameters => parameters
+            .Add(component => component.Src, "plain.jpg")
+            .Add(component => component.Preview, false)
+            .Add(component => component.OnClick, _ => clickCount++));
+
+        cut.Find("img").TriggerEvent("onload", new EventArgs());
+        cut.FindAll(".ant-image-mask").Should().BeEmpty();
+        await cut.Find("img").ClickAsync(new MouseEventArgs());
+
+        clickCount.Should().Be(1);
+        previewHost.FindAll(".ant-image-preview-root").Should().BeEmpty();
+        JSInterop.VerifyNotInvoke(JSInteropConstants.ImgDragAndDrop);
+    }
+}
