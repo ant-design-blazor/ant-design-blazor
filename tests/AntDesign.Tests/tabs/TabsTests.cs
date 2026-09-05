@@ -4,10 +4,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Bunit;
+using FluentAssertions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
 using Moq;
@@ -17,6 +20,16 @@ namespace AntDesign.Tests.Tabs
 {
     public partial class TabsTests : AntDesignTestBase
     {
+        public TabsTests()
+        {
+            JSInterop.Setup<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, _ => true)
+                .SetResult(new Dictionary<string, HtmlElement>());
+            JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddClsToFirstChild, _ => true).SetVoidResult();
+            JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddCls, _ => true).SetVoidResult();
+            JSInterop.SetupVoid("AntDesign.interop.touchHelper.initializeTouch", _ => true).SetVoidResult();
+            JSInterop.SetupVoid("AntDesign.interop.touchHelper.dispose", _ => true).SetVoidResult();
+        }
+
         private IRenderedComponent<AntDesign.Tabs> CreateTabs(Action<RenderTreeBuilder> childContent)
         {
             var jsRuntime = new Mock<IJSRuntime>();
@@ -78,7 +91,7 @@ namespace AntDesign.Tests.Tabs
             var jsRuntime = new Mock<IJSRuntime>();
             jsRuntime.Setup(u => u.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, It.IsAny<object[]>()))
                 .ReturnsAsync(new HtmlElement());
-            
+
             // Return dictionary without the required nav-list and nav-wrapper keys
             jsRuntime.Setup(u => u.InvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, It.IsAny<object[]>()))
                 .ReturnsAsync(new Dictionary<string, HtmlElement>()
@@ -106,7 +119,7 @@ namespace AntDesign.Tests.Tabs
             Assert.NotNull(cut);
             var tabsElement = cut.Find(".ant-tabs");
             Assert.NotNull(tabsElement);
-            
+
             // Verify that tabs are still rendered despite missing dictionary keys
             var tabButtons = cut.FindAll(".ant-tabs-tab");
             Assert.Equal(2, tabButtons.Count);
@@ -119,7 +132,7 @@ namespace AntDesign.Tests.Tabs
             var jsRuntime = new Mock<IJSRuntime>();
             jsRuntime.Setup(u => u.InvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, It.IsAny<object[]>()))
                 .ReturnsAsync(new HtmlElement());
-            
+
             // Return null dictionary
             jsRuntime.Setup(u => u.InvokeAsync<Dictionary<string, HtmlElement>>(JSInteropConstants.GetElementsDomInfo, It.IsAny<object[]>()))
                 .ReturnsAsync((Dictionary<string, HtmlElement>)null);
@@ -143,6 +156,100 @@ namespace AntDesign.Tests.Tabs
             Assert.NotNull(cut);
             var tabsElement = cut.Find(".ant-tabs");
             Assert.NotNull(tabsElement);
+        }
+
+        [Fact]
+        public void Should_support_go_next_previous_and_keyboard_navigation_with_clamping()
+        {
+            var activeKey = "2";
+            var cut = Context.RenderComponent<AntDesign.Tabs>(tabs => tabs
+                .Add(x => x.ActiveKey, activeKey)
+                .Add(x => x.ActiveKeyChanged, EventCallback.Factory.Create<string>(this, value => activeKey = value))
+                .Add(x => x.Id, "nav-tabs")
+                .Add(x => x.ChildContent, builder =>
+                {
+                    builder.AddContent(0, CreateTabPanel("1"));
+                    builder.AddContent(1, CreateTabPanel("2"));
+                    builder.AddContent(2, CreateTabPanel("3"));
+                }));
+
+            cut.InvokeAsync(() => cut.Instance.GoTo(-10));
+            activeKey.Should().Be("1");
+
+            cut.InvokeAsync(() => cut.Instance.Next());
+            activeKey.Should().Be("2");
+
+            cut.InvokeAsync(() => cut.Instance.GoTo(99));
+            activeKey.Should().Be("3");
+
+            cut.InvokeAsync(() => cut.Instance.Previous());
+            activeKey.Should().Be("2");
+
+            var tabPanes = cut.FindComponents<TabPane>();
+            cut.InvokeAsync(() => cut.Instance.HandleKeydown(new KeyboardEventArgs { Code = "ArrowRight" }, tabPanes[1].Instance));
+            activeKey.Should().Be("3");
+
+            cut.InvokeAsync(() => cut.Instance.HandleKeydown(new KeyboardEventArgs { Code = "ArrowLeft" }, tabPanes[2].Instance));
+            activeKey.Should().Be("2");
+        }
+
+        [Fact]
+        public void Should_handle_swipe_directions_for_horizontal_and_vertical_tabs()
+        {
+            var activeKey = "1";
+            var cut = Context.RenderComponent<AntDesign.Tabs>(tabs => tabs
+                .Add(x => x.ActiveKey, activeKey)
+                .Add(x => x.ActiveKeyChanged, EventCallback.Factory.Create<string>(this, value => activeKey = value))
+                .Add(x => x.Id, "swipe-tabs")
+                .Add(x => x.EnableSwipe, true)
+                .Add(x => x.TabPosition, TabPosition.Left)
+                .Add(x => x.ChildContent, builder =>
+                {
+                    builder.AddContent(0, CreateTabPanel("1"));
+                    builder.AddContent(1, CreateTabPanel("2"));
+                    builder.AddContent(2, CreateTabPanel("3"));
+                }));
+
+            cut.InvokeAsync(() => cut.Instance.HandleSwipe("left"));
+            activeKey.Should().Be("1");
+
+            cut.InvokeAsync(() => cut.Instance.HandleSwipe("up"));
+            activeKey.Should().Be("2");
+
+            cut.InvokeAsync(() => cut.Instance.HandleSwipe("down"));
+            activeKey.Should().Be("1");
+
+            cut.SetParametersAndRender(parameters => parameters
+                .Add(x => x.EnableSwipe, true)
+                .Add(x => x.TabPosition, TabPosition.Top));
+
+            cut.InvokeAsync(() => cut.Instance.HandleSwipe("right"));
+            activeKey.Should().Be("1");
+
+            cut.InvokeAsync(() => cut.Instance.HandleSwipe("left"));
+            activeKey.Should().Be("2");
+        }
+
+        [Fact]
+        public async Task Should_ignore_disabled_tabs_and_dispose_cleanly()
+        {
+            var activeKey = "1";
+            var cut = Context.RenderComponent<AntDesign.Tabs>(tabs => tabs
+                .Add(x => x.ActiveKey, activeKey)
+                .Add(x => x.ActiveKeyChanged, EventCallback.Factory.Create<string>(this, value => activeKey = value))
+                .Add(x => x.Id, "dispose-tabs")
+                .Add(x => x.ChildContent, builder =>
+                {
+                    builder.AddContent(0, CreateTabPanel("1"));
+                    builder.AddContent(1, CreateTabPanel("2", x => x.Add(y => y.Disabled, true)));
+                    builder.AddContent(2, CreateTabPanel("3"));
+                }));
+
+            cut.Instance.ActivatePane("2");
+            activeKey.Should().Be("1");
+
+            await cut.Instance.DisposeAsync();
+            Assert.True(true);
         }
     }
 }

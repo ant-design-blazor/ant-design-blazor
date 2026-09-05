@@ -164,5 +164,30 @@ namespace AntDesign.Tests.Table
             Assert.Equal(2, cells.Count);
             Assert.All(cells, cell => Assert.Equal("2", cell.GetAttribute("colspan")));
         }
+
+        [Fact]
+        public void Can_select_all_unselect_all_and_set_selection()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" },
+                new Person { Id = 2, Name = "Jane", Surname = "Doe" }
+            };
+            IEnumerable<Person>? changedRows = null;
+            var cut = CreatePersonsTable(persons, x => x
+                .Add(q => q.SelectedRowsChanged, rows => changedRows = rows), enableSelection: true);
+
+            cut.InvokeAsync(() => cut.Instance.SelectAll());
+            Assert.Equal(persons, changedRows);
+            Assert.Equal(2, cut.FindAll("tbody tr.ant-table-row-selected").Count);
+
+            cut.InvokeAsync(() => cut.Instance.UnselectAll());
+            Assert.Empty(changedRows!);
+            Assert.Empty(cut.FindAll("tbody tr.ant-table-row-selected"));
+
+            cut.InvokeAsync(() => cut.Instance.SetSelection(persons[1]));
+            Assert.Equal(new[] { persons[1] }, changedRows);
+            Assert.Single(cut.FindAll("tbody tr.ant-table-row-selected"));
+        }
     }
 }

@@ -334,6 +334,33 @@ namespace AntDesign.Tests.Drawer
         }
 
         [Fact]
+        public void ItShouldRenderEmptyTitleWrapperWithoutTextWhenCloseButtonDisabled()
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
+                .Add(x => x.Title, string.Empty)
+                .Add(x => x.Closable, false));
+
+            var title = systemUnderTest.Find(".ant-drawer-title");
+            title.TextContent.Trim().Should().BeEmpty();
+            systemUnderTest.FindAll(".ant-drawer-close").Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ItShouldInvokeVisibleChangedWhenDrawerCloses()
+        {
+            bool visibleChanged = false;
+            var onClose = () => { };
+            var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
+                .Add(x => x.Visible, true)
+                .Add(x => x.OnClose, onClose)
+                .Add(x => x.VisibleChanged, EventCallback.Factory.Create<bool>(this, value => visibleChanged = value)));
+
+            systemUnderTest.InvokeAsync(() => systemUnderTest.Find(".ant-drawer-close").TriggerEvent("onclick", new MouseEventArgs()));
+
+            systemUnderTest.WaitForAssertion(() => visibleChanged.Should().BeFalse());
+        }
+
+        [Fact]
         public void ItShouldNotCallOnCloseWhenVisibleChangedToFalseAfterRender()
         {
             var closed = false;

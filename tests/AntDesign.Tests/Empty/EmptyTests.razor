@@ -46,4 +46,13 @@
         cut.Find(".custom-empty-image").Should().NotBeNull();
         cut.FindAll(".ant-empty-image img").Should().BeEmpty();
     }
+
+    [Fact]
+    public void Empty_empty_description_does_not_render_placeholder_paragraph()
+    {
+        var cut = Context.RenderComponent<Empty>(parameters => parameters
+            .Add(x => x.Description, string.Empty));
+
+        cut.FindAll(".ant-empty-description").Should().BeEmpty();
+    }
 }

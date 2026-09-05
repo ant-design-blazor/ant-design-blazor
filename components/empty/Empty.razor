@@ -27,9 +27,16 @@
     {
         <p class="@(_prefixCls)-description">@DescriptionTemplate</p>
     }
-    else if (Description.IsT1 == false || Description.AsT1 == true)
+    else if (Description.TryPickT0(out var description, out var descriptionFlag))
     {
-        <p class="@(_prefixCls)-description">@Description.AsT0</p>
+        if (!string.IsNullOrWhiteSpace(description))
+        {
+            <p class="@(_prefixCls)-description">@description</p>
+        }
+    }
+    else if (descriptionFlag == true)
+    {
+        <p class="@(_prefixCls)-description">@LocaleProvider.CurrentLocale.Empty.Description</p>
     }
     <div class="@(_prefixCls)-footer">
         @ChildContent
