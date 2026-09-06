@@ -15,7 +15,7 @@ namespace AntDesign.Tests.Table
 {
     public class FilterModelTests
     {
-        private sealed record Person(string Name);
+        private sealed record Person(int Id, string Name);
 
         private sealed class NameFilterModel : FilterModel<string>
         {
@@ -39,10 +39,10 @@ namespace AntDesign.Tests.Table
 
             var results = queryModel.ExecuteQuery(new[]
             {
-                new Person("alice"),
-                new Person("bob"),
-                new Person("charz"),
-                new Person("other"),
+                new Person(1, "alice"),
+                new Person(2, "bob"),
+                new Person(3, "charz"),
+                new Person(4, "other"),
             }.AsQueryable()).Select(person => person.Name).ToArray();
 
             Assert.Equal(new[] { "alice", "charz" }, results);
@@ -61,9 +61,9 @@ namespace AntDesign.Tests.Table
 
             var results = queryModel.ExecuteQuery(new[]
             {
-                new Person("alice"),
-                new Person("amber"),
-                new Person("bob"),
+                new Person(1, "alice"),
+                new Person(2, "amber"),
+                new Person(3, "bob"),
             }.AsQueryable()).Select(person => person.Name).ToArray();
 
             Assert.Equal(new[] { "alice" }, results);
@@ -82,11 +82,31 @@ namespace AntDesign.Tests.Table
 
             var results = queryModel.ExecuteQuery(new[]
             {
-                new Person("alice"),
-                new Person("bob"),
+                new Person(1, "alice"),
+                new Person(2, "bob"),
             }.AsQueryable()).Select(person => person.Name).ToArray();
 
             Assert.Equal(new[] { "alice" }, results);
+        }
+
+        [Fact]
+        public void Query_model_combines_multiple_filter_expressions_with_and()
+        {
+            var nameFilter = new NameFilterModel(new List<TableFilter>
+            {
+                new() { Value = "a", Selected = true }
+            }, TableFilterType.List);
+            var idFilter = new FilterModel<int>(
+                columnIndex: 1,
+                fieldName: nameof(Person.Id),
+                selectedValues: ["1"],
+                filters: new List<TableFilter> { new() { Value = 1, Selected = true } },
+                filterType: TableFilterType.List);
+            var model = new QueryModel<Person>(1, 10, 0, [], new List<ITableFilterModel> { nameFilter, idFilter });
+            var expression = model.GetFilterExpression();
+
+            Assert.NotNull(expression);
+            Assert.Single(expression.Parameters);
         }
 
         [Fact]
@@ -94,7 +114,7 @@ namespace AntDesign.Tests.Table
         {
             var emptyListModel = new NameFilterModel([], TableFilterType.List);
             var emptyFieldModel = new NameFilterModel([], TableFilterType.FieldType);
-            var people = new[] { new Person("alice") }.AsQueryable();
+            var people = new[] { new Person(1, "alice") }.AsQueryable();
 
             Assert.Same(people, emptyListModel.FilterList(people));
             Assert.Same(people, emptyFieldModel.FilterList(people));

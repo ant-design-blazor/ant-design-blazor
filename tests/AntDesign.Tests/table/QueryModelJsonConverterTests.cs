@@ -107,6 +107,15 @@ namespace AntDesign.Tests.Table
             Assert.Equal(new[] { 5, 6 }, paged.Select(person => person.Id));
         }
 
+        [Theory]
+        [InlineData("{ \"sortModel\": {} }", "sortModel")]
+        [InlineData("{ \"filterModel\": {} }", "filterModel")]
+        public void QueryModel_deserializer_rejects_non_array_model_collections(string json, string property)
+        {
+            var exception = Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<QueryModel<Person>>(json));
+            Assert.Contains(property, exception.Message);
+        }
+
         [Fact]
         public void QueryModel_deserializer_rejects_non_object_payloads()
         {

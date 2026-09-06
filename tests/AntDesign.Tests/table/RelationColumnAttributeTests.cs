@@ -27,6 +27,12 @@ namespace AntDesign.Tests.Table
             [Parameter]
             public long? OptionalLong { get; set; }
 
+            [Parameter]
+            public double Ratio { get; set; }
+
+            [Parameter]
+            public DateTime Timestamp { get; set; }
+
             protected override RenderFragment RenderContent(string fieldValue, object rowData) => builder => builder.AddContent(0, fieldValue);
         }
 
@@ -52,6 +58,8 @@ namespace AntDesign.Tests.Table
                     [nameof(TestRelationComponent.Size)] = "42",
                     [nameof(TestRelationComponent.Prefix)] = "User-",
                     [nameof(TestRelationComponent.OptionalLong)] = "7",
+                    [nameof(TestRelationComponent.Ratio)] = "0.5",
+                    [nameof(TestRelationComponent.Timestamp)] = "2026-09-06T12:00:00",
                     ["Missing"] = "ignored",
                 }
             };
@@ -60,6 +68,7 @@ namespace AntDesign.Tests.Table
             var second = attribute.CreateRelationComponentContent();
 
             Assert.Same(first, second);
+            first(new RenderTreeBuilder());
             Assert.NotNull(first);
         }
 
@@ -67,7 +76,9 @@ namespace AntDesign.Tests.Table
         public void Attribute_supports_empty_parameter_cache_and_ignores_conversion_failures()
         {
             var emptyAttribute = new RelationColumnAttribute(typeof(TestRelationComponent));
-            Assert.NotNull(emptyAttribute.CreateRelationComponentContent());
+            var emptyFragment = emptyAttribute.CreateRelationComponentContent();
+            Assert.NotNull(emptyFragment);
+            emptyFragment(new RenderTreeBuilder());
 
             var invalidAttribute = new RelationColumnAttribute(typeof(TestRelationComponent))
             {
@@ -78,7 +89,9 @@ namespace AntDesign.Tests.Table
                 }
             };
 
-            Assert.NotNull(invalidAttribute.CreateRelationComponentContent());
+            var invalidFragment = invalidAttribute.CreateRelationComponentContent();
+            Assert.NotNull(invalidFragment);
+            invalidFragment(new RenderTreeBuilder());
         }
     }
 }

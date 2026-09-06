@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using AntDesign.TableModels;
 using Bunit;
 using Microsoft.AspNetCore.Components;
@@ -19,6 +20,17 @@ namespace AntDesign.Tests.Table
 {
     public class TableTests : AntDesignTestBase
     {
+        public TableTests()
+        {
+            JSInterop.SetupVoid(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true).SetVoidResult();
+            JSInterop.SetupVoid(JSInteropConstants.OverlayComponentHelper.DeleteOverlayFromContainer, _ => true).SetVoidResult();
+            JSInterop.SetupVoid(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true).SetVoidResult();
+            JSInterop.SetupVoid(JSInteropConstants.OverlayComponentHelper.AddPreventEnterOnOverlayVisible, _ => true).SetVoidResult();
+            JSInterop.SetupVoid(JSInteropConstants.OverlayComponentHelper.RemovePreventEnterOnOverlayVisible, _ => true).SetVoidResult();
+            JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true).SetResult(new HtmlElement());
+            JSInterop.SetupVoid(JSInteropConstants.StyleHelper.AddCls, _ => true).SetVoidResult();
+        }
+
         private sealed class Person
         {
             public int Id { get; set; }
@@ -356,6 +368,471 @@ namespace AntDesign.Tests.Table
             var headers = cut.FindAll("thead th");
             Assert.Contains(headers, cell => cell.TextContent.Contains("Action") && cell.GetAttribute("style")?.Contains("position: sticky") == true && cell.GetAttribute("style")!.Contains("right: 0px"));
             Assert.Contains(cut.FindAll("tbody td"), cell => cell.TextContent.Contains("edit"));
+        }
+
+        [Fact]
+        public async Task Set_selection_by_keys_replaces_selected_rows()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" },
+                new Person { Id = 2, Name = "Jane", Surname = "Doe" },
+                new Person { Id = 3, Name = "Joe", Surname = "Smith" }
+            };
+            IEnumerable<Person>? changedRows = null;
+            var cut = Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.SelectedRowsChanged, rows => changedRows = rows)
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<Selection>()
+                        .Add(q => q.Key, person.Id.ToString())
+                        .Build()
+                        .ToRenderFragment<Selection>());
+                    builder.AddContent(1, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Name)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                }));
+
+            await cut.InvokeAsync(() => cut.Instance.SetSelection(new List<string> { "1", "3" }));
+            Assert.Equal(new[] { persons[0], persons[2] }, changedRows);
+            Assert.Equal(2, cut.FindAll("tbody tr.ant-table-row-selected").Count);
+
+            await cut.InvokeAsync(() => cut.Instance.SetSelection((ICollection<string>?)null!));
+            Assert.Empty(changedRows!);
+            Assert.Empty(cut.FindAll("tbody tr.ant-table-row-selected"));
+        }
+
+        [Fact]
+        public async Task Sorter_multiple_keeps_existing_sorts_when_set()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" },
+                new Person { Id = 2, Name = "Jane", Surname = "Doe" }
+            };
+            var cut = Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<PropertyColumn<Person, string>>()
+                        .Add(q => q.Property, item => item.Name)
+                        .Add(q => q.Sortable, true)
+                        .Add(q => q.SorterMultiple, 1)
+                        .Build()
+                        .ToRenderFragment<PropertyColumn<Person, string>>());
+                    builder.AddContent(1, new ComponentParameterCollectionBuilder<PropertyColumn<Person, string>>()
+                        .Add(q => q.Property, item => item.Surname)
+                        .Add(q => q.Sortable, true)
+                        .Add(q => q.SorterMultiple, 2)
+                        .Build()
+                        .ToRenderFragment<PropertyColumn<Person, string>>());
+                }));
+            var sorters = cut.FindAll(".ant-table-column-sorters");
+
+            await cut.InvokeAsync(() => sorters[0].Click());
+            Assert.Single(cut.Instance.GetQueryModel().SortModel, sorter => sorter.SortDirection != SortDirection.None);
+
+            sorters = cut.FindAll(".ant-table-column-sorters");
+            await cut.InvokeAsync(() => sorters[1].Click());
+            Assert.Equal(2, cut.Instance.GetQueryModel().SortModel.Count(sorter => sorter.SortDirection != SortDirection.None));
+        }
+
+        [Fact]
+        public void Ellipsis_columns_generate_title_attributes_when_enabled()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John long", Surname = "Smith" }
+            };
+            var cut = Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Name)
+                        .Add(q => q.Ellipsis, true)
+                        .Add(q => q.EllipsisShowTitle, true)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                    builder.AddContent(1, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Surname)
+                        .Add(q => q.EllipsisShowTitle, false)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                }));
+
+            var cells = cut.FindAll("tbody td");
+            Assert.Contains(cells, cell => cell.GetAttribute("title") == "John long");
+            Assert.Contains(cells, cell => cell.GetAttribute("title") is null);
+        }
+
+        [Fact]
+        public void Column_format_applies_custom_formatting_to_cells()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" }
+            };
+            var cut = Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<Column<int>>()
+                        .Add(q => q.Field, person.Id)
+                        .Add(q => q.Format, "D4")
+                        .Build()
+                        .ToRenderFragment<Column<int>>());
+                }));
+
+            Assert.Contains("0001", cut.Find("tbody td").TextContent);
+        }
+
+        [Fact]
+        public void Empty_table_renders_custom_empty_template()
+        {
+            var cut = CreatePersonsTable(Array.Empty<Person>(), x => x
+                .Add(q => q.EmptyTemplate, builder => builder.AddContent(0, "Nothing to show")));
+
+            Assert.Contains("Nothing to show", cut.Find("tbody").TextContent);
+            Assert.Single(cut.FindAll("tbody tr.ant-table-placeholder"));
+        }
+
+        [Fact]
+        public async Task Radio_selection_disposes_cleanly_and_unselects_row()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" }
+            };
+            IEnumerable<Person>? changedRows = null;
+            var cut = Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.SelectedRowsChanged, rows => changedRows = rows)
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<Selection>()
+                        .Add(q => q.Key, person.Id.ToString())
+                        .Add(q => q.Type, SelectionType.Radio)
+                        .Build()
+                        .ToRenderFragment<Selection>());
+                    builder.AddContent(1, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Name)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                }));
+
+            await cut.FindAll("tbody .ant-radio")[0].ClickAsync(new MouseEventArgs());
+            Assert.Equal(new[] { persons[0] }, changedRows);
+
+            cut.Dispose();
+            Assert.Equal(new[] { persons[0] }, changedRows);
+        }
+
+        [Fact]
+        public async Task Select_all_and_unselect_all_raise_on_select_all_with_delegate()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" },
+                new Person { Id = 2, Name = "Jane", Surname = "Doe" }
+            };
+            var selectAllCalls = new List<bool>();
+            var cut = CreatePersonsTable(persons, x => x
+                .Add(q => q.OnSelectAll, selected => selectAllCalls.Add(selected)), enableSelection: true);
+
+            await cut.InvokeAsync(() => cut.Instance.SelectAll());
+            Assert.Equal(new[] { true }, selectAllCalls);
+
+            await cut.InvokeAsync(() => cut.Instance.UnselectAll());
+            Assert.Equal(new[] { true, false }, selectAllCalls);
+        }
+
+        [Fact]
+        public void Removing_grouping_restores_flat_rows()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" },
+                new Person { Id = 2, Name = "Jane", Surname = "Doe" }
+            };
+            var grouping = true;
+            var cut = CreatePersonsTable(persons, x => x
+                .Add(q => q.GroupTitleTemplate, group => $"Group {group.Key}".ToRenderFragment()));
+
+            cut.SetParametersAndRender(parameters => parameters
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<PropertyColumn<Person, string>>()
+                        .Add(q => q.Property, item => item.Surname)
+                        .Add(q => q.Grouping, grouping)
+                        .Build()
+                        .ToRenderFragment<PropertyColumn<Person, string>>());
+                }));
+
+            Assert.Equal(2, cut.FindAll("tbody tr.ant-table-row-grouping").Count);
+
+            grouping = false;
+            cut.SetParametersAndRender(parameters => parameters
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<PropertyColumn<Person, string>>()
+                        .Add(q => q.Property, item => item.Surname)
+                        .Add(q => q.Grouping, false)
+                        .Build()
+                        .ToRenderFragment<PropertyColumn<Person, string>>());
+                }));
+
+            cut.Instance.ResetData();
+            Assert.NotEmpty(cut.FindAll("tbody tr"));
+        }
+
+        [Fact]
+        public void Row_span_cells_assign_distinct_row_column_indexes()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" },
+                new Person { Id = 2, Name = "Jane", Surname = "Doe" }
+            };
+            var cut = Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Name)
+                        .Add(q => q.RowSpan, 2)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                    builder.AddContent(1, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Surname)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                }));
+
+            var rows = cut.FindAll("tbody tr");
+            Assert.Equal(2, rows.Count);
+            var firstRowCells = rows[0].QuerySelectorAll("td");
+            Assert.Equal("2", firstRowCells[0].GetAttribute("rowspan"));
+            Assert.Equal("1", firstRowCells[1].GetAttribute("rowspan"));
+        }
+
+        [Fact]
+        public async Task Set_selection_accepts_lazy_enumerables_and_selects_matching_rows()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" },
+                new Person { Id = 2, Name = "Jane", Surname = "Doe" }
+            };
+            IEnumerable<Person>? changedRows = null;
+            var cut = CreatePersonsTable(persons, x => x
+                .Add(q => q.SelectedRowsChanged, rows => changedRows = rows), enableSelection: true);
+
+            await cut.InvokeAsync(() => cut.Instance.SetSelection(persons.Where(person => person.Id == 2)));
+
+            Assert.Equal(new[] { persons[1] }, changedRows);
+            Assert.Single(cut.FindAll("tbody tr.ant-table-row-selected"));
+        }
+
+        [Fact]
+        public async Task Filter_trigger_opens_and_confirms_the_dropdown()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" },
+                new Person { Id = 2, Name = "Jane", Surname = "Doe" }
+            };
+            var cut = CreatePersonsTable(persons, x => x
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Name)
+                        .Add(q => q.Filters, new[]
+                        {
+                            new TableFilter<string> { Text = "John", Value = "John" },
+                            new TableFilter<string> { Text = "Jane", Value = "Jane" }
+                        })
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                }));
+            var trigger = cut.Find(".ant-table-filter-trigger");
+
+            await cut.InvokeAsync(() => trigger.Click());
+            Assert.Contains("ant-dropdown-open", cut.Find(".ant-table-filter-trigger").ClassList);
+
+            await cut.InvokeAsync(() => cut.Find(".ant-table-filter-trigger").Click());
+            Assert.DoesNotContain("ant-dropdown-open", cut.Find(".ant-table-filter-trigger").ClassList);
+        }
+
+        [Fact]
+        public async Task Disabled_selection_rows_are_skipped_by_select_all()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" },
+                new Person { Id = 2, Name = "Jane", Surname = "Doe" }
+            };
+            var selectAllCalls = new List<bool>();
+            IEnumerable<Person>? changedRows = null;
+            var cut = Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.OnSelectAll, selected => selectAllCalls.Add(selected))
+                .Add(q => q.SelectedRowsChanged, rows => changedRows = rows)
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<Selection>()
+                        .Add(q => q.Key, person.Id.ToString())
+                        .Add(q => q.Disabled, true)
+                        .Build()
+                        .ToRenderFragment<Selection>());
+                    builder.AddContent(1, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Name)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                }));
+
+            await cut.InvokeAsync(() => cut.Instance.SelectAll());
+
+            Assert.Equal(new[] { true }, selectAllCalls);
+            Assert.Empty(changedRows!);
+            Assert.Empty(cut.FindAll("tbody tr.ant-table-row-selected"));
+            Assert.True(cut.FindAll("tbody input.ant-checkbox-input").All(input => input.HasAttribute("disabled")));
+        }
+
+        [Fact]
+        public void Scroll_x_assigns_calculated_width_to_columns_without_width()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" }
+            };
+            var cut = Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.ScrollX, "1000px")
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Name)
+                        .Add(q => q.Width, "200px")
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                    builder.AddContent(1, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Surname)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                }));
+
+            var cols = cut.FindAll("colgroup col");
+            Assert.Contains(cols, col => col.GetAttribute("style")?.Contains("width: 200px") == true);
+            Assert.Contains(cols, col => col.GetAttribute("style")?.Contains("calc((1000px - (200px) ) / 1)") == true);
+        }
+
+        [Fact]
+        public async Task Radio_selection_replaces_previous_row()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" },
+                new Person { Id = 2, Name = "Jane", Surname = "Doe" }
+            };
+            IEnumerable<Person>? changedRows = null;
+            var cut = Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.SelectedRowsChanged, rows => changedRows = rows)
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<Selection>()
+                        .Add(q => q.Key, person.Id.ToString())
+                        .Add(q => q.Type, SelectionType.Radio)
+                        .Build()
+                        .ToRenderFragment<Selection>());
+                    builder.AddContent(1, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Name)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                }));
+            var radios = cut.FindAll("tbody .ant-radio");
+
+            await radios[0].ClickAsync(new MouseEventArgs());
+            Assert.Equal(new[] { persons[0] }, changedRows);
+
+            radios = cut.FindAll("tbody .ant-radio");
+            await radios[1].ClickAsync(new MouseEventArgs());
+            Assert.Equal(new[] { persons[1] }, changedRows);
+            Assert.Single(cut.FindAll("tbody tr.ant-table-row-selected"));
+        }
+
+        [Fact]
+        public void Pagination_position_applies_custom_position_class()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" }
+            };
+            var cut = CreatePersonsTable(persons, x => x
+                .Add(q => q.PaginationPosition, "bottomLeft"));
+
+            Assert.Contains(cut.FindAll(".ant-table-pagination"), element => element.ClassList.Contains("ant-table-pagination-left"));
+        }
+
+        [Fact]
+        public void Table_header_maps_colspan_and_child_content_to_title_template()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John", Surname = "Smith" }
+            };
+            var cut = Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<TableHeader<string>>()
+                        .Add(q => q.Title, "Fallback")
+                        .Add(q => q.ColSpan, 2)
+                        .Add(q => q.ChildContent, "Grouped header".ToRenderFragment())
+                        .Build()
+                        .ToRenderFragment<TableHeader<string>>());
+                    builder.AddContent(1, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Name)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                }));
+
+            var header = cut.Find("thead th");
+            Assert.Equal("2", header.GetAttribute("colspan"));
+            Assert.Contains("Grouped header", header.TextContent);
+            Assert.DoesNotContain("Fallback", header.TextContent);
+        }
+
+        [Fact]
+        public void Aligned_and_ellipsis_columns_apply_styles_and_fixed_layout_classes()
+        {
+            var persons = new[]
+            {
+                new Person { Id = 1, Name = "John with a very long name", Surname = "Smith" }
+            };
+            var cut = Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.ChildContent, person => builder =>
+                {
+                    builder.AddContent(0, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Name)
+                        .Add(q => q.Align, ColumnAlign.Center)
+                        .Add(q => q.Ellipsis, true)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                    builder.AddContent(1, new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, person.Surname)
+                        .Add(q => q.Align, ColumnAlign.Right)
+                        .Build()
+                        .ToRenderFragment<Column<string>>());
+                }));
+
+            var cells = cut.FindAll("tbody td");
+            Assert.Contains(cells, cell => cell.GetAttribute("style")?.Contains("text-align: center") == true && cell.ClassList.Contains("ant-table-cell-ellipsis"));
+            Assert.Contains(cells, cell => cell.GetAttribute("style")?.Contains("text-align: right") == true);
         }
 
         [Fact]
