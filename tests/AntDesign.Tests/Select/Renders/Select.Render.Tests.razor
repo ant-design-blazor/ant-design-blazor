@@ -1,6 +1,7 @@
 ﻿@using AntDesign.Core.JsInterop.Modules.Components
 @using System.ComponentModel.DataAnnotations
 @using System.Text.Json
+@using Moq
 @inherits AntDesignTestBase
 @code {
     public record PersonNullable(string? Id, string Name);
@@ -25,6 +26,16 @@
     {
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
                     .SetResult(new AntDesign.JsInterop.DomRect());  
+    }
+
+    private static bool IsClearClickListener(Invocation invocation)
+    {
+        return invocation.Method.Name == "AddExclusive" &&
+               invocation.Arguments.Count >= 3 &&
+               invocation.Arguments[1] is string eventName &&
+               eventName == "click" &&
+               invocation.Arguments[2] is Delegate callback &&
+               callback.Method.DeclaringType?.Name.Contains("SelectSuffixIcon") == true;
     }
 
     [Fact]
@@ -157,6 +168,40 @@
         // Assert - at least the two expected selected items are rendered (excluding default 'None')
         var selected = cut.FindAll("span.ant-select-selection-item-content").Select(x => x.TextContent.Trim()).Where(t => t != "None").ToArray();
         selected.Should().Contain(new[] { "Apple", "Pear" });
+    }
+
+    [Fact]
+    public async Task EnumSelect_clear_invokes_selected_item_and_value_changed_callbacks()
+    {
+        // Arrange
+        Fruits? value = Fruits.Apple | Fruits.Pear;
+        Fruits? changedValue = null;
+        Fruits? selectedItem = null;
+
+        var cut = Render<EnumSelect<Fruits?>>(
+            @<EnumSelect TEnum="Fruits?" Mode="SelectMode.Multiple" AllowClear
+                Value="@value"
+                ValueChanged="@(v => changedValue = v)"
+                OnSelectedItemChanged="@(item => selectedItem = item)" />
+        );
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, value));
+        cut.FindAll("span.ant-select-selection-item-content").Select(x => x.TextContent.Trim()).Should().Contain(new[] { "Apple", "Pear" });
+
+        // Act
+        while (true)
+        {
+            var remove = cut.FindAll("span.ant-select-selection-item-remove").FirstOrDefault();
+            if (remove == null)
+            {
+                break;
+            }
+            await cut.InvokeAsync(() => remove.MouseDown());
+        }
+
+        // Assert
+        changedValue.Should().BeNull();
+        selectedItem.Should().BeNull();
     }
 
     [Fact]
@@ -296,5 +341,90 @@
         // The UI may briefly show duplicate tag nodes in bUnit; ensure the unique
         // set of labels contains only Apple.
 		selectedAfter.Select(x => x.TextContent.Trim()).Where(t => t != "None").Distinct().Should().ContainSingle("Apple");
+    }
+
+    [Fact]
+    public void SelectSuffixIcon_registers_clear_click_listener_when_allow_clear_condition_is_met()
+    {
+        var dataSource = new List<string> { "1", "2" };
+
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select DataSource="@dataSource" TItemValue="string" TItem="string" AllowClear Value="@("2")">
+            </AntDesign.Select>
+        );
+
+        var clickListener = MockedDomEventListener.Invocations
+            .Where(IsClearClickListener)
+            .ToArray();
+
+        clickListener.Should().NotBeEmpty();
+
+        clickListener.Should().AllSatisfy(i =>
+        {
+            i.Arguments[3].Should().Be(true);
+            i.Arguments[4].Should().Be(true);
+        });
+    }
+
+    [Fact]
+    public void SelectSuffixIcon_does_not_register_clear_listener_without_clear_condition()
+    {
+        var dataSource = new List<string> { "1", "2" };
+
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select DataSource="@dataSource" TItemValue="string" TItem="string" Value="@("2")">
+            </AntDesign.Select>
+        );
+
+        MockedDomEventListener.Invocations.Where(IsClearClickListener).Should().BeEmpty();
+    }
+
+    [Fact]
+    public void SelectSuffixIcon_registers_clear_click_listener_when_clear_becomes_visible_after_first_render()
+    {
+        var dataSource = new List<string> { "1", "2" };
+
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select DataSource="@dataSource" TItemValue="string" TItem="string" Value="@((string?)null)" AllowClear>
+            </AntDesign.Select>
+        );
+
+        MockedDomEventListener.Invocations.Where(IsClearClickListener).Should().BeEmpty();
+
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, "1"));
+
+        var clickListeners = MockedDomEventListener.Invocations
+            .Where(IsClearClickListener)
+            .ToArray();
+
+        clickListeners.Should().NotBeEmpty();
+        clickListeners[0].Arguments[3].Should().Be(true);
+        clickListeners[0].Arguments[4].Should().Be(true);
+    }
+
+    [Fact]
+    public async Task SelectSuffixIcon_on_clear_listener_invokes_parent_callback()
+    {
+        var dataSource = new List<string> { "1", "2" };
+        var clearCount = 0;
+
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select DataSource="@dataSource" TItemValue="string" TItem="string"
+                AllowClear Value="@("2")" OnClearSelected="@(() => clearCount++)">
+            </AntDesign.Select>
+        );
+
+        var suffixIcon = cut.FindComponent<AntDesign.Select.Internal.SelectSuffixIcon<string, string>>();
+        var onClearMethod = suffixIcon.Instance.GetType()
+            .GetMethod("OnClear", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        onClearMethod.Should().NotBeNull();
+
+        await cut.InvokeAsync(() =>
+        {
+            var task = (Task)onClearMethod!.Invoke(suffixIcon.Instance, new object[] { JsonDocument.Parse("{}").RootElement })!;
+            return task;
+        });
+
+        clearCount.Should().Be(1);
     }
 }
