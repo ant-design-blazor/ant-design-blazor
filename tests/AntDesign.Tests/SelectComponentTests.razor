@@ -28,6 +28,44 @@
     }
 
     [Fact]
+    public void SortByLabel_orders_options_without_grouping()
+    {
+        var dataSource = new List<CoverageOption>
+        {
+            new() { Id = 1, Label = "Zulu", Group = "B" },
+            new() { Id = 2, Label = "Alpha", Group = "A" },
+            new() { Id = 3, Label = "Beta", Group = "A" }
+        };
+
+        var cut = Render<Select<int, CoverageOption>>(
+            @<Select TItemValue="int" TItem="CoverageOption" DataSource="@dataSource" LabelName="@nameof(CoverageOption.Label)"
+                         ValueName="@nameof(CoverageOption.Id)" GroupName="@nameof(CoverageOption.Group)"
+                         SortByLabel="SortDirection.Ascending" />);
+
+        var orderedLabels = cut.Instance.SortedSelectOptionItems.Select(option => option.Label).ToArray();
+        orderedLabels.Should().ContainInOrder("Alpha", "Beta", "Zulu");
+    }
+
+    [Fact]
+    public void SortByLabel_descending_orders_options_without_grouping()
+    {
+        var dataSource = new List<CoverageOption>
+        {
+            new() { Id = 1, Label = "Zulu", Group = "B" },
+            new() { Id = 2, Label = "Alpha", Group = "A" },
+            new() { Id = 3, Label = "Beta", Group = "A" }
+        };
+
+        var cut = Render<Select<int, CoverageOption>>(
+            @<Select TItemValue="int" TItem="CoverageOption" DataSource="@dataSource" LabelName="@nameof(CoverageOption.Label)"
+                         ValueName="@nameof(CoverageOption.Id)" GroupName="@nameof(CoverageOption.Group)"
+                         SortByLabel="SortDirection.Descending" />);
+
+        var orderedLabels = cut.Instance.SortedSelectOptionItems.Select(option => option.Label).ToArray();
+        orderedLabels.Should().ContainInOrder("Zulu", "Beta", "Alpha");
+    }
+
+    [Fact]
     public void DefaultActiveFirstOption_skips_disabled_item_and_hides_the_selection()
     {
         var dataSource = new List<CoverageOption>

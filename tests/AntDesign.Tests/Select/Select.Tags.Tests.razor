@@ -1,6 +1,12 @@
 ﻿@using AntDesign.Core.JsInterop.Modules.Components
 @inherits AntDesignTestBase
 @code {
+    private sealed class TagItem
+    {
+        public int Key { get; set; }
+        public string Title { get; set; } = string.Empty;
+    }
+
     public Select_Tags_Tests()
     {
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
@@ -52,6 +58,39 @@
             .Where(d => d.TextContent.Trim() == "B");
         addedTags.Should().HaveCount(1);
         cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(3));        
+    }
+
+    [Fact]
+    public async Task Tags_mode_uses_CustomTagLabelToValue_for_new_tags()
+    {
+        //Arrange
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+
+        var conversions = new List<string>();
+        var datasource = new List<TagItem>();
+        var cut = Render<AntDesign.Select<int, TagItem>>(
+        @<AntDesign.Select Mode="SelectMode.Tags"
+            TItemValue="int"
+            TItem="TagItem"
+            DataSource="datasource"
+            LabelName="@nameof(TagItem.Title)"
+            ValueName="@nameof(TagItem.Key)"
+            SearchDebounceMilliseconds="0"
+            EnableSearch
+            CustomTagLabelToValue="@(label => { conversions.Add(label); return label.Length; })">
+        </AntDesign.Select>
+        );
+
+        var input = cut.Find("input.ant-select-selection-search-input");
+        //Act
+        await cut.InvokeAsync(() => input.Input("abcde"));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption is not null));
+        input.KeyUp("ENTER");
+
+        //Assert
+        Assert.Contains("abcde", conversions);
+        Assert.Contains(cut.Instance.SelectedOptionItems, x => x.Key.Equals(5));
     }
 
     [Fact]
