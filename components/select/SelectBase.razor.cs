@@ -276,7 +276,7 @@ namespace AntDesign
         internal bool IsResponsive { get; set; }
 
         internal List<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new();
-        internal Dictionary<TItemValue, SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new();
+        internal NullKeyDictionary<TItemValue, SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new();
 
         private List<SelectOptionItem<TItemValue, TItem>> _cachedOrderedSelectedItems = null;
 
