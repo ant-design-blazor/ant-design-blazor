@@ -27,15 +27,6 @@
 #else
     var polyfillPath = "https://raw.githubusercontent.com/Daddoon/Blazor.Polyfill@3.0.8/Publish/Blazor.Polyfill.Publish/blazor.polyfill.min.js";
 #endif
-#if NET6_0
-  var isNET6 = true;
-#else
-    var isNET6 = false;
-#endif
-    if (isNET6)
-    {
-      <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"></script>
-    }
   }
   <script src="@polyfillPath"></script>
   <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
@@ -78,10 +69,7 @@
 
   <script src="@("https://fastly.jsdelivr.net/npm/@docsearch/js@3")"></script>
   <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
-  @if (!isNET6)
-  {
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"></script>
-  }
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.js?features=ResizeObserver"></script>
   <script antblazor-js></script>
   <script src="_framework/blazor.server.js"></script>
 </body>
