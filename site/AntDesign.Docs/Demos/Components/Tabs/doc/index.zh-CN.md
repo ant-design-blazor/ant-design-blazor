@@ -60,6 +60,8 @@ Ant Design 依次提供了三级选项卡，分别用于不同的场景。
 | 参数        | 说明                      | 类型              | 默认值 |
 | ----------- | ------------------------- | ----------------- | ------ |
 | ForceRender | 被隐藏时是否渲染 DOM 结构 | boolean           | false  |
+| Closable | 在 `Tabs.Type` 为 `TabType.EditableCard` 时，页签是否可以关闭 | boolean | true |
+| OnClosing | 页签关闭前触发的回调，可将 `CloseEventArgs.Cancel` 设置为 `true` 以阻止关闭 | `EventCallback<CloseEventArgs<MouseEventArgs>>` | 无 |
 | Key         | 对应 ActiveKey            | string            | 无     |
 | Tab         | 选项卡头显示文字          | string | 无     |
 | TabTemplate | 选项卡头显示文字模板       | RenderFargment | 无     |
