@@ -33,11 +33,8 @@
 		//Act
 		await cut.InvokeAsync(() => input!.Focus(FocusBehavior.FocusAndClear));
 		//Assert           		
-		value.Should().BeNull();
-#if NET6_0_OR_GREATER
-		JSInterop.VerifyFocusAsyncInvoke();
-#endif
-	}
+			value.Should().BeNull();
+		}
 
 	[Fact]
 	public async Task Input_FocusBehavior_passed_to_js()

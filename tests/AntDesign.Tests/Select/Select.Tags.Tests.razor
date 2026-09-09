@@ -8,13 +8,9 @@
         JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
             .SetResult(new HtmlElement());
 
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);		
-		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);		
-#if !NET6_0_OR_GREATER
-#pragma warning disable CS0618 // Type or member is obsolete
-            JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult(); ;
-#pragma warning restore CS0618 // Type or member is obsolete
-#endif
+			JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);		
+			JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);		
+			JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
     }
 
     [Fact]

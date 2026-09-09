@@ -1,0 +1,57 @@
+@page "/tree-test"
+@layout BlankLayout
+
+<h2>Tree Test - DisableCheckKeys</h2>
+<p>Key 为 "0-0-0" 和 "0-0-1" 的复选框应被禁用</p>
+<Tree TItem="string"
+      Checkable
+      DefaultExpandedKeys="@(new[] { "0-0", "0-0-0" })"
+      DisableCheckKeys="@(new[] { "0-0","0-0-0", "0-0-1" })">
+    <TreeNode Title="parent 1" Key="0-0" TItem="string">
+        <TreeNode Title="parent 1-0" Key="0-0-0" TItem="string">
+            <TreeNode Title="leaf" Key="0-0-0-0" TItem="string"></TreeNode>
+        </TreeNode>
+        <TreeNode Title="parent 1-1" Key="0-0-1" TItem="string">
+            <TreeNode Title="leaf" Key="0-0-1-0" TItem="string"></TreeNode>
+        </TreeNode>
+    </TreeNode>
+    <TreeNode Title="parent 2" Key="0-1" TItem="string">
+        <TreeNode Title="leaf" Key="0-1-0" TItem="string"></TreeNode>
+    </TreeNode>
+</Tree>
+
+<h2>Tree Test - DisabledCheckboxExpression</h2>
+<p>Key 为 "0-0" 的节点复选框应通过表达式禁用</p>
+<Tree TItem="string"
+      Checkable
+      DefaultExpandedKeys="@(new[] { "0-0" })"
+      DisabledCheckboxExpression="@(node => node.Key == "0-0")">
+    <TreeNode Title="parent 1" Key="0-0" TItem="string">
+        <TreeNode Title="child 1" Key="0-0-0" TItem="string"></TreeNode>
+    </TreeNode>
+    <TreeNode Title="parent 2" Key="0-1" TItem="string"></TreeNode>
+</Tree>
+
+<h2>Tree Test - DisabledCheckboxExpression with DataSource</h2>
+<p>Id 为 2 的节点复选框应通过表达式禁用</p>
+<Tree TItem="MyData"
+      Checkable
+      DataSource="@myDatas"
+      TitleExpression="x => x.DataItem.Name"
+      DisabledCheckboxExpression="@(node => (node.DataItem.Id == 2)||(node.DataItem.Id == 3))">
+</Tree>
+
+@code {
+    public class MyData
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+    }
+
+    private List<MyData> myDatas = new()
+    {
+        new() { Id = 1, Name = "Node 1" },
+        new() { Id = 2, Name = "Node 2 (Disabled Checkbox)" },
+        new() { Id = 3, Name = "Node 3" },
+    };
+}

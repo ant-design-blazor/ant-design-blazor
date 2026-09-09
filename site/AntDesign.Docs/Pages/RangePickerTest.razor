@@ -1,0 +1,33 @@
+@page "/RangePickerTest"
+@layout BlankLayout
+
+<h3>RangePicker 测试</h3>
+<AntDesign.RangePicker TValue="DateTime?[]" @bind-Value="@_dates"/>
+<AntDesign.RangePicker TValue="DateTime?[]" Value="@_dates"  ValueChanged="OnValueChanged" />
+
+<AntDesign.RangePicker TValue="DateTime?[]" Value="@_dates"  OnChange="OnChange" />
+
+<div style="margin-top:16px">
+    <div>开始: @(_dates?[0]?.ToString("yyyy-MM-dd"))</div>
+    <div>结束: @(_dates?[1]?.ToString("yyyy-MM-dd"))</div>
+</div>
+
+<AntDesign.Button OnClick="@LogValue">打印值</AntDesign.Button>
+
+@code {
+    private DateTime?[] _dates = new DateTime?[2];
+
+    void LogValue()
+    {
+        Console.WriteLine($"_dates: {_dates?[0]} ~ {_dates?[1]}");
+    }
+     private async Task OnChange(DateRangeChangedEventArgs newValue)
+    {
+
+        _dates = newValue.Dates;
+    }
+    private async Task OnValueChanged(DateTime?[] newValue)
+    {
+        _dates = newValue;
+    }
+}

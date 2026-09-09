@@ -549,7 +549,10 @@ namespace AntDesign
         {
             get
             {
-                return _disableCheckbox || (TreeComponent?.DisableCheckKeys?.Any(k => k == Key) ?? false);
+                if (_disableCheckbox) return true;
+                if (TreeComponent?.DisableCheckKeys?.Any(k => k == Key) ?? false) return true;
+                if (TreeComponent?.DisabledCheckboxExpression?.Invoke(this) ?? false) return true;
+                return false;
             }
             set
             {

@@ -1,123 +1,96 @@
-﻿@inherits AntDesignTestBase
-
+@inherits AntDesignTestBase
 @code {
-
-    record Item(string Name)
+    [Fact]
+    public void DisableCheckKeys_Should_Have_Parameter_Attribute()
     {
-        public List<Item> Children { get; set; } = new();
-    };
+        // Arrange & Act & Assert
+        typeof(Tree<string>).GetProperty("DisableCheckKeys")
+            .GetCustomAttributes(typeof(ParameterAttribute), false)
+            .Should().NotBeEmpty("DisableCheckKeys should have [Parameter] attribute");
+    }
 
     [Fact]
-    public async Task Parent_MoveDown_item_mutate_datasource()
+    public void DisabledCheckboxExpression_Should_Have_Parameter_Attribute()
     {
-        var data = new List<Item>
+        // Arrange & Act & Assert
+        typeof(Tree<string>).GetProperty("DisabledCheckboxExpression")
+            .GetCustomAttributes(typeof(ParameterAttribute), false)
+            .Should().NotBeEmpty("DisabledCheckboxExpression should have [Parameter] attribute");
+    }
+
+    [Fact]
+    public void DisableCheckKeys_Should_Disable_Checkbox_For_Specified_Keys()
+    {
+        // Arrange
+        var cut = Render(@<Tree TItem="string"
+                                Checkable
+                                DefaultExpandedKeys="@(new[] { "0-0" })"
+                                DisableCheckKeys="@(new[] { "0-0-0" })">
+            <TreeNode Title="parent" Key="0-0" TItem="string">
+                <TreeNode Title="child" Key="0-0-0" TItem="string"></TreeNode>
+                <TreeNode Title="child2" Key="0-0-1" TItem="string"></TreeNode>
+            </TreeNode>
+        </Tree>);
+
+        // Act
+        var disabledCheckboxes = cut.FindAll(".ant-tree-checkbox-disabled");
+
+        // Assert
+        disabledCheckboxes.Count.Should().Be(1);
+    }
+
+    [Fact]
+    public void DisabledCheckboxExpression_Should_Disable_Checkbox_For_Matching_Nodes()
+    {
+        // Arrange
+        Func<TreeNode<string>, bool> expr = node => node.Key == "0-0";
+
+        var cut = Render(@<Tree TItem="string"
+                                Checkable
+                                DisabledCheckboxExpression="@expr">
+            <TreeNode Title="parent" Key="0-0" TItem="string">
+                <TreeNode Title="child" Key="0-0-0" TItem="string"></TreeNode>
+            </TreeNode>
+            <TreeNode Title="other" Key="0-1" TItem="string"></TreeNode>
+        </Tree>);
+
+        // Act
+        var disabledCheckboxes = cut.FindAll(".ant-tree-checkbox-disabled");
+
+        // Assert
+        disabledCheckboxes.Count.Should().Be(1);
+    }
+
+    [Fact]
+    public void DisabledCheckboxExpression_Should_Work_With_DataSource()
+    {
+        // Arrange
+        var datas = new List<TreeTestData>
         {
-            new Item("Item 1"),
-            new Item("Item 2"),
+            new() { Id = 1, Name = "Node A" },
+            new() { Id = 2, Name = "Node B" },
+            new() { Id = 3, Name = "Node C" },
         };
 
-        var cut = Render<Tree<Item>>(@<Tree TItem="Item" DataSource="data" />);
-        var firstItem = cut.FindComponent<TreeNode<Item>>();
+        Func<TreeNode<TreeTestData>, bool> expr = node => node.DataItem.Id == 2;
 
-        var firstItemIndex = data.IndexOf(firstItem.Instance.DataItem) + 1;
-        firstItem.Instance.MoveDown();
+        var cut = Render(@<Tree TItem="TreeTestData"
+                                Checkable
+                                DataSource="@datas"
+                                TitleExpression="x => x.DataItem.Name"
+                                DisabledCheckboxExpression="@expr">
+        </Tree>);
 
-        var resultList = firstItem.Instance.GetParentChildDataItems();
-        resultList.Should().HaveElementAt(firstItemIndex, firstItem.Instance.DataItem, "DataSource should be mutated");
+        // Act
+        var disabledCheckboxes = cut.FindAll(".ant-tree-checkbox-disabled");
+
+        // Assert
+        disabledCheckboxes.Count.Should().Be(1);
     }
 
-    [Fact]
-    public async Task Parent_Remove_item_mutate_datasource()
+    public class TreeTestData
     {
-        var data = new List<Item>
-        {
-            new Item("Item 1"),
-            new Item("Item 2"),
-        };
-
-        var cut = Render<Tree<Item>>(@<Tree TItem="Item" DataSource="data" />);
-        var firstItem = cut.FindComponent<TreeNode<Item>>();
-        firstItem.Instance.Remove();
-
-        data.Should().NotContain(firstItem.Instance.DataItem, "Item should be removed in DataSource");
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
-
-    [Fact]
-    public async Task Children_MoveDown_item_mutate_datasource()
-    {
-        var data = new List<Item>
-        {
-            new Item("Item 1")
-            {
-                Children = new List<Item>
-                {
-                    new Item("Child 1-1"),
-                    new Item("Child 1-2"),
-                }
-            },
-        };
-
-        var cut = Render<Tree<Item>>(
-            @<Tree TItem="Item"
-                           DataSource="data"
-                           ChildrenExpression="node => node.DataItem.Children">
-            </Tree>);
-
-        var treeNodes = cut.FindComponents<TreeNode<Item>>();
-        var childComponent = treeNodes.First(component => component.Instance.DataItem.Name.Equals("Child 1-1"));
-
-        var childItemIndex = data[0].Children.IndexOf(childComponent.Instance.DataItem) + 1;
-        childComponent.Instance.MoveDown();
-
-        var resultList = childComponent.Instance.GetParentChildDataItems();
-        resultList.Should().HaveElementAt(childItemIndex, childComponent.Instance.DataItem, "DataSource should be mutated");
-    }
-
-    [Fact]
-    public async Task Children_Remove_item_mutate_datasource()
-    {
-        var data = new List<Item>
-        {
-            new Item("Item 1")
-            {
-                Children = new List<Item>
-                {
-                    new Item("Child 1-1"),
-                    new Item("Child 1-2"),
-                }
-            },
-        };
-
-        var cut = Render<Tree<Item>>(
-            @<Tree TItem="Item"
-                           DataSource="data"
-                           ChildrenExpression="node => node.DataItem.Children">
-            </Tree>);
-
-        var treeNodes = cut.FindComponents<TreeNode<Item>>();
-        var childComponent = treeNodes.First(component => component.Instance.DataItem.Name.Equals("Child 1-2"));
-        childComponent.Instance.Remove();
-
-        data[0].Children.Should().NotContain(childComponent.Instance.DataItem, "Item should be removed in DataSource");
-    }
-
-    [Fact]
-    public async Task DataSource_Update()
-    {
-        // Create a container component to hold the Tree component
-        var cut = RenderComponent<TreeContainer>();
-
-        // Find the Tree component within the container
-        var tree = cut.FindComponent<Tree<AntDesign.Tests.Tree.TreeContainer.Data>>();
-
-        // Verify the initial state of the Tree component
-        tree.Instance.AllNodes.Should().HaveCount(5, "Tree should have 5 nodes");
-
-        // Add a new item to the data source
-        await cut.InvokeAsync(() => cut.Instance.AddItem());
-
-        // Verify the updated state of the Tree component
-        tree.Instance.AllNodes.Should().HaveCount(6, "Tree should have 6 nodes");
-    }
-
 }

@@ -1,15 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
+    <TargetFrameworks>netcoreapp3.1;net5;net8.0</TargetFrameworks>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign.Charts" Version="0.5.5" />
-    <PackageReference Include="System.Net.Http.Json" Version="9.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Razor" Version="6.0.33" />
+    <PackageReference Include="AntDesign.Charts" Version="0.2.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,21 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\*.json" />
     <EmbeddedResource Include="Resources\*.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Demos\Components\List\**" />
-    <Content Remove="Demos\Components\List\**" />
-    <EmbeddedResource Remove="Demos\Components\List\**" />
-    <None Remove="Demos\Components\List\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Demos\Components\Modal\faq.en-US.md" />
-    <None Remove="Demos\Components\Modal\faq.zh-CN.md" />
-    <None Remove="Demos\Components\Upload\faq.en-US.md" />
-    <None Remove="Demos\Components\Upload\faq.zh-CN.md" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,30 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Demos\Components\Modal\faq.zh-CN.md" />
-    <Content Include="Demos\Components\Modal\faq.en-US.md" />
-    <Content Include="Demos\Components\Upload\faq.zh-CN.md" />
-    <Content Include="Demos\Components\Upload\faq.en-US.md" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
-    <ProjectReference Include="..\..\src\AntDesign.Extensions.Localization\AntDesign.Extensions.Localization.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Resources\App.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>App.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\App.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>App.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

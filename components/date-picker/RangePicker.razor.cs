@@ -578,6 +578,8 @@ namespace AntDesign
             {
                 Close();
             }
+
+            ValueChanged.InvokeAsync(Value);
         }
 
         internal override void ClearValue(int index = -1, bool closeDropdown = true)
