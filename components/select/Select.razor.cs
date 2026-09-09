@@ -762,7 +762,7 @@ namespace AntDesign
                     if (tag.IsSelected)
                     {
                         processedSelectedCount--;
-                        SelectedOptionItems.Add(tag.Value, tag);
+                        SelectedOptionItems[tag.Value] = tag;
                     }
                 }
             }
