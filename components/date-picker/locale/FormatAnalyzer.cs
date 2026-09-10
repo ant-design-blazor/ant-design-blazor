@@ -378,6 +378,51 @@ namespace AntDesign.Datepicker.Locale
             return true;
         }
 
+        /// <summary>
+        /// Returns the part of <paramref name="format"/> that contains only date
+        /// partials and their separators (everything before the first time-related
+        /// character: <c>h</c>, <c>H</c>, <c>m</c>, <c>s</c>, <c>t</c>). Trailing
+        /// separators between the date and time parts are trimmed so the result is
+        /// a valid standalone date format.
+        /// </summary>
+        /// <remarks>
+        /// Used to build a date-only <see cref="FormatAnalyzer"/> so we can parse
+        /// partial inputs that only contain a date (e.g. when a user types
+        /// <c>01.01.2024</c> into a field with format <c>dd.MM.yyyy HH:mm</c>).
+        /// Returns <c>null</c> if the format is null or empty, or contains no date
+        /// partials.
+        /// </remarks>
+        public static string GetDateOnlyFormat(string format)
+        {
+            if (string.IsNullOrEmpty(format))
+                return null;
+
+            var inDate = false;
+            var cutIndex = format.Length;
+            for (var i = 0; i < format.Length; i++)
+            {
+                var c = format[i];
+                if (c == 'h' || c == 'H' || c == 'm' || c == 's' || c == 't')
+                {
+                    cutIndex = i;
+                    break;
+                }
+
+                if (c == 'd' || c == 'M' || c == 'y')
+                {
+                    inDate = true;
+                }
+            }
+
+            if (!inDate)
+            {
+                return null;
+            }
+
+            var datePortion = format.Substring(0, cutIndex);
+            return datePortion.TrimEnd();
+        }
+
         public (bool, DateTime) TryParseYear(string pickerString)
         {
             if (IsFullString(pickerString))
