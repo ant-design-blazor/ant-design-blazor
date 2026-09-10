@@ -28,15 +28,25 @@
                     .SetResult(new AntDesign.JsInterop.DomRect());  
     }
 
-    private static bool IsClearClickListener(Invocation invocation)
+    private bool IsClearClickListener(object invocation)
     {
-        return invocation.Method.Name == "AddExclusive" &&
-               invocation.Arguments.Count >= 3 &&
-               invocation.Arguments[1] is string eventName &&
+        var invocationType = invocation.GetType();
+        var method = invocationType.GetProperty("Method")?.GetValue(invocation) as System.Reflection.MethodInfo;
+        var arguments = invocationType.GetProperty("Arguments")?.GetValue(invocation) as IList<object>;
+
+        return method is not null &&
+               method.Name == "AddExclusive" &&
+               arguments is not null &&
+               arguments.Count >= 3 &&
+               arguments[1] is string eventName &&
                eventName == "click" &&
-               invocation.Arguments[2] is Delegate callback &&
-               callback.Method.DeclaringType?.Name.Contains("SelectSuffixIcon") == true;
+               arguments[2] is Delegate callback &&
+               callback.Method.Name == "OnClear" &&
+               (callback.Method.DeclaringType?.Name.Contains("SelectSuffixIcon", StringComparison.Ordinal) == true);
     }
+
+    private int CountClearClickListeners() =>
+        MockedDomEventListener.Invocations.Count(IsClearClickListener);
 
     [Fact]
     public void Render_enum_select() 
@@ -346,6 +356,8 @@
     [Fact]
     public void SelectSuffixIcon_registers_clear_click_listener_when_allow_clear_condition_is_met()
     {
+        var before = CountClearClickListeners();
+
         var dataSource = new List<string> { "1", "2" };
 
         var cut = Render<AntDesign.Select<string, string>>(
@@ -357,7 +369,7 @@
             .Where(IsClearClickListener)
             .ToArray();
 
-        clickListener.Should().NotBeEmpty();
+        (clickListener.Length - before).Should().BeGreaterThan(0);
 
         clickListener.Should().AllSatisfy(i =>
         {
@@ -369,6 +381,8 @@
     [Fact]
     public void SelectSuffixIcon_does_not_register_clear_listener_without_clear_condition()
     {
+        var before = CountClearClickListeners();
+
         var dataSource = new List<string> { "1", "2" };
 
         var cut = Render<AntDesign.Select<string, string>>(
@@ -376,12 +390,60 @@
             </AntDesign.Select>
         );
 
-        MockedDomEventListener.Invocations.Where(IsClearClickListener).Should().BeEmpty();
+        (CountClearClickListeners() - before).Should().Be(0);
     }
 
     [Fact]
-    public void SelectSuffixIcon_registers_clear_click_listener_when_clear_becomes_visible_after_first_render()
+    public void SelectSuffixIcon_does_not_register_clear_listener_when_disabled()
     {
+        var before = CountClearClickListeners();
+        JSInterop.SetupVoid("AntDesign.interop.styleHelper.addClsToFirstChild", _ => true);
+
+        var dataSource = new List<string> { "1", "2" };
+
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select DataSource="@dataSource" TItemValue="string" TItem="string" Value="@("2")" AllowClear Disabled>
+            </AntDesign.Select>
+        );
+
+        (CountClearClickListeners() - before).Should().Be(0);
+    }
+
+    [Fact]
+    public async Task SelectSuffixIcon_re_registers_clear_listener_when_element_id_changes()
+    {
+        var before = CountClearClickListeners();
+
+        var dataSource = new List<string> { "1", "2" };
+
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select DataSource="@dataSource" TItemValue="string" TItem="string" Value="@("2")" AllowClear>
+            </AntDesign.Select>
+        );
+
+        var suffixIcon = cut.FindComponent<AntDesign.Select.Internal.SelectSuffixIcon<string, string>>().Instance;
+        var suffixType = suffixIcon.GetType();
+        var idField = suffixType.GetField("_id", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var onAfterRenderMethod = suffixType.GetMethod("OnAfterRenderAsync", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        idField.Should().NotBeNull();
+        onAfterRenderMethod.Should().NotBeNull();
+
+        idField!.SetValue(suffixIcon, "manual-id-change");
+
+        await cut.InvokeAsync(() =>
+        {
+            var task = (Task)onAfterRenderMethod!.Invoke(suffixIcon, new object[] { false });
+            return task!;
+        });
+
+        (CountClearClickListeners() - before).Should().Be(2);
+    }
+
+    [Fact]
+    public async Task SelectSuffixIcon_registers_clear_click_listener_when_clear_becomes_visible_after_first_render()
+    {
+        var before = CountClearClickListeners();
+
         var dataSource = new List<string> { "1", "2" };
 
         var cut = Render<AntDesign.Select<string, string>>(
@@ -389,17 +451,66 @@
             </AntDesign.Select>
         );
 
-        MockedDomEventListener.Invocations.Where(IsClearClickListener).Should().BeEmpty();
+        var suffixIcon = cut.FindComponent<AntDesign.Select.Internal.SelectSuffixIcon<string, string>>();
+        var suffixType = suffixIcon.Instance.GetType();
+        var onAfterRenderMethod = suffixType.GetMethod("OnAfterRenderAsync", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var idField = suffixType.GetField("_id", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        onAfterRenderMethod.Should().NotBeNull();
+        idField.Should().NotBeNull();
 
-        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, "1"));
-
-        var clickListeners = MockedDomEventListener.Invocations
+        var beforeClickListeners = MockedDomEventListener.Invocations
             .Where(IsClearClickListener)
             .ToArray();
 
-        clickListeners.Should().NotBeEmpty();
-        clickListeners[0].Arguments[3].Should().Be(true);
-        clickListeners[0].Arguments[4].Should().Be(true);
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, "1"));
+        idField!.SetValue(suffixIcon.Instance, "manual-id-before");
+        await cut.InvokeAsync(() =>
+        {
+            var task = (Task)onAfterRenderMethod!.Invoke(suffixIcon.Instance, new object[] { false })!;
+            return task;
+        });
+
+        var afterClickListeners = MockedDomEventListener.Invocations
+            .Where(IsClearClickListener)
+            .ToArray();
+
+        afterClickListeners.Length.Should().BeGreaterThan(beforeClickListeners.Length);
+        afterClickListeners.Length.Should().BeGreaterThan(before);
+        afterClickListeners.Should().AllSatisfy(i =>
+        {
+            i.Arguments[3].Should().Be(true);
+            i.Arguments[4].Should().Be(true);
+        });
+    }
+
+    [Fact]
+    public async Task SelectSuffixIcon_does_not_re_register_clear_listener_when_already_registered()
+    {
+        var dataSource = new List<string> { "1", "2" };
+
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select DataSource="@dataSource" TItemValue="string" TItem="string" AllowClear Value="@("2")">
+            </AntDesign.Select>
+        );
+
+        var suffixIcon = cut.FindComponent<AntDesign.Select.Internal.SelectSuffixIcon<string, string>>();
+        var suffixType = suffixIcon.Instance.GetType();
+        var onAfterRenderMethod = suffixType.GetMethod("OnAfterRenderAsync", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var registeredFlag = suffixType.GetField("_isClearClickListenerRegistered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        onAfterRenderMethod.Should().NotBeNull();
+        registeredFlag.Should().NotBeNull();
+
+        var before = CountClearClickListeners();
+
+        await cut.InvokeAsync(() =>
+        {
+            var task = (Task)onAfterRenderMethod!.Invoke(suffixIcon.Instance, new object[] { false })!;
+            return task;
+        });
+
+        var after = CountClearClickListeners();
+        before.Should().Be(after);
+        ((bool)registeredFlag!.GetValue(suffixIcon.Instance)!).Should().BeTrue();
     }
 
     [Fact]

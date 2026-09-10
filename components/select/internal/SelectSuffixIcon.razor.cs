@@ -35,24 +35,33 @@ namespace AntDesign.Select.Internal
 
         private string _id = "";
         private ElementReference _clearRef;
+        private bool _isClearClickListenerRegistered;
+
         protected override Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
-            {
-                _id = _clearRef.Id;
-                if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
-                {
-                    DomEventListener.AddExclusive<JsonElement>(_clearRef, "click", OnClear, true, true);
-                }
-            }
+            var shouldRegisterClearClick = !ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue;
 
             if (_clearRef.Id != _id)
             {
                 _id = _clearRef.Id;
-                if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
-                {
-                    DomEventListener.AddExclusive<JsonElement>(_clearRef, "click", OnClear, true, true);
-                }
+                _isClearClickListenerRegistered = false;
+            }
+
+            if (firstRender && shouldRegisterClearClick)
+            {
+                DomEventListener.AddExclusive<JsonElement>(_clearRef, "click", OnClear, true, true);
+                _isClearClickListenerRegistered = true;
+            }
+
+            if (!firstRender && shouldRegisterClearClick && !_isClearClickListenerRegistered)
+            {
+                DomEventListener.AddExclusive<JsonElement>(_clearRef, "click", OnClear, true, true);
+                _isClearClickListenerRegistered = true;
+            }
+
+            if (!shouldRegisterClearClick)
+            {
+                _isClearClickListenerRegistered = false;
             }
 
             return base.OnAfterRenderAsync(firstRender);

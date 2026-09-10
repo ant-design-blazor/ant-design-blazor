@@ -714,6 +714,30 @@ namespace AntDesign
 
                 if (!exists)
                 {
+                    if (Mode == SelectMode.Tags)
+                    {
+                        var duplicatedItems = SelectOptionItems
+                            .Where(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, value))
+                            .ToList();
+
+                        foreach (var duplicatedItem in duplicatedItems)
+                        {
+                            SelectOptionItems.Remove(duplicatedItem);
+
+                            if (duplicatedItem.IsAddedTag)
+                            {
+                                AddedTags.Remove(duplicatedItem);
+                            }
+
+                            if (duplicatedItem.IsSelected)
+                            {
+                                SelectedOptionItems.Remove(duplicatedItem.Value);
+                            }
+
+                            RemoveEqualityToNoValue(duplicatedItem);
+                        }
+                    }
+
                     var newItem = new SelectOptionItem<TItemValue, TItem>
                     {
                         Label = label,

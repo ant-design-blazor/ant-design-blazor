@@ -1,4 +1,6 @@
 ﻿@using AntDesign.Core.JsInterop.Modules.Components
+@using AntDesign.Core.JsInterop.ObservableApi
+@using AntDesign
 @using System.Text.Json
 @inherits AntDesignTestBase
 @code {
@@ -185,6 +187,29 @@
     }
 
     [Fact]
+    public async Task Refreshing_DataSource_with_same_label_does_not_duplicate_option_items()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+
+        var dataSource = new List<string>();
+        var cut = Render<Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string" DataSource="@dataSource" EnableSearch SearchDebounceMilliseconds="0" />);
+        var input = cut.Find("input.ant-select-selection-search-input");
+
+        await cut.InvokeAsync(() => input.Input("Tag1"));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption?.Value == "Tag1"));
+        input.KeyUp("ENTER");
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(1));
+
+        dataSource.Add("Tag1");
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.DataSource, dataSource));
+
+        cut.Instance.SelectedOptionItems.Should().ContainSingle().Which.Value.Value.Should().Be("Tag1");
+        cut.Instance.SelectOptionItems.Count(item => item.Value?.Equals("Tag1") == true).Should().Be(1);
+    }
+
+    [Fact]
     public async Task RemoveClicked_only_removes_on_left_button_and_respects_button_filter()
     {
         var values = new List<string> { "Tag1", "Tag2" };
@@ -232,9 +257,6 @@
     [Fact]
     public async Task SelectContent_focus_and_blur_paths_can_be_invoked_via_internal_methods()
     {
-        JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
-        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
-
         var values = new List<string> { "Tag1" };
 
         var cut = Render<AntDesign.Select<string, string>>(
@@ -251,32 +273,80 @@
             ?.GetValue(cut.Instance);
         selectContent.Should().NotBeNull();
 
-        var onFocusMethod = selectContent.GetType()
+        var onFocusMethod = selectContent!.GetType()
             .GetMethod("OnFocusInternal", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         var onBlurMethod = selectContent.GetType()
             .GetMethod("OnBlurInternal", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var focusedProperty = cut.Instance.GetType()
+            .GetProperty("Focused", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        focusedProperty.Should().NotBeNull();
         onFocusMethod.Should().NotBeNull();
         onBlurMethod.Should().NotBeNull();
 
         await cut.InvokeAsync(() =>
         {
-            var task = (Task)onFocusMethod.Invoke(selectContent, new object[] { JsonDocument.Parse("{}").RootElement });
-            return task!;
+            var focusTask = (Task)onFocusMethod!.Invoke(selectContent, new object[] { JsonDocument.Parse("{}").RootElement });
+            return focusTask!;
         });
-        cut.Instance.Focused.Should().BeTrue();
+        cut.WaitForAssertion(() => ((bool)focusedProperty!.GetValue(cut.Instance)!).Should().BeTrue());
 
         await cut.InvokeAsync(() =>
         {
-            var task = (Task)onBlurMethod.Invoke(selectContent, new object[] { JsonDocument.Parse("{}").RootElement });
-            return task!;
+            var blurTask = (Task)onBlurMethod!.Invoke(selectContent, new object[] { JsonDocument.Parse("{}").RootElement });
+            return blurTask!;
         });
-        cut.Instance.Focused.Should().BeFalse();
+
+        cut.WaitForAssertion(() => ((bool)focusedProperty!.GetValue(cut.Instance)!).Should().BeFalse());
     }
 
     [Fact]
     public async Task SelectContent_blur_resets_composition_state_when_typing()
     {
         JSInterop.SetupVoid(JSInteropConstants.Blur, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+        var blurCount = 0;
+
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string" EnableSearch
+                SearchDebounceMilliseconds="0">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("Tag1")" Label="Tag1" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        var selectContent = cut.Instance.GetType()
+            .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.GetValue(cut.Instance);
+        selectContent.Should().NotBeNull();
+
+        var selectContentType = selectContent!.GetType();
+        var blurCallback = EventCallback.Factory.Create<FocusEventArgs>(cut.Instance, (FocusEventArgs _) => blurCount++);
+        selectContentType.GetProperty("OnBlur")!.SetValue(selectContent, blurCallback);
+
+        var compositionField = selectContent!.GetType()
+            .GetField("_compositionInputting", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var onBlurMethod = selectContent.GetType()
+            .GetMethod("OnBlurInternal", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        compositionField.Should().NotBeNull();
+        onBlurMethod.Should().NotBeNull();
+
+        compositionField!.SetValue(selectContent, true);
+        ((bool)compositionField.GetValue(selectContent)!).Should().BeTrue();
+
+        await cut.InvokeAsync(() =>
+        {
+            var task = (Task)onBlurMethod!.Invoke(selectContent, new object[] { JsonDocument.Parse("{}").RootElement });
+            return task!;
+        });
+
+        ((bool)compositionField.GetValue(selectContent)!).Should().BeFalse();
+        blurCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task SelectContent_on_focus_internal_sets_focused_state()
+    {
         JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
 
         var cut = Render<AntDesign.Select<string, string>>(
@@ -293,45 +363,540 @@
             ?.GetValue(cut.Instance);
         selectContent.Should().NotBeNull();
 
-        var compositionField = selectContent!.GetType()
-            .GetField("_compositionInputting", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        var onBlurMethod = selectContent.GetType()
-            .GetMethod("OnBlurInternal", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        compositionField.Should().NotBeNull();
-        onBlurMethod.Should().NotBeNull();
+        var focusedProperty = cut.Instance.GetType()
+            .GetProperty("Focused", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        focusedProperty.Should().NotBeNull();
 
-        compositionField!.SetValue(selectContent, true);
+        var onFocusMethod = selectContent!.GetType()
+            .GetMethod("OnFocusInternal", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        onFocusMethod.Should().NotBeNull();
 
         await cut.InvokeAsync(() =>
         {
-            var task = (Task)onBlurMethod!.Invoke(selectContent, new object[] { JsonDocument.Parse("{}").RootElement });
+            var task = (Task)onFocusMethod!.Invoke(selectContent, new object[] { JsonDocument.Parse("{}").RootElement });
             return task!;
         });
 
-        var isComposing = (bool)compositionField.GetValue(selectContent)!;
-        isComposing.Should().BeFalse();
+        cut.WaitForAssertion(() => ((bool)focusedProperty!.GetValue(cut.Instance)!).Should().BeTrue());
     }
 
     [Fact]
-    public void AddedTags_are_removed_when_selected_values_are_replaced_with_known_options()
+    public async Task SelectContent_on_overlay_resize_recalculates_responsive_state_from_entry()
+    {
+        var maxTagCount = AntDesign.Select.ResponsiveTag.Responsive;
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string"
+                SearchDebounceMilliseconds="0" EnableSearch MaxTagCount="@maxTagCount">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("Tag1")" Label="Tag1" />
+                    <SelectOption TItemValue="string" TItem="string" Value="@("Tag2")" Label="Tag2" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        var selectContent = cut.Instance.GetType()
+            .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.GetValue(cut.Instance);
+        selectContent.Should().NotBeNull();
+        var contentType = selectContent!.GetType();
+
+        var calculatedMaxCountField = contentType.GetField("_calculatedMaxCount", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var onOverlayResizeMethod = contentType.GetMethod("OnOveralyResize", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        calculatedMaxCountField.Should().NotBeNull();
+        onOverlayResizeMethod.Should().NotBeNull();
+
+        calculatedMaxCountField!.SetValue(selectContent, 5);
+        var entries = new List<ResizeObserverEntry>
+        {
+            new ResizeObserverEntry { ContentRect = new AntDesign.JsInterop.DomRect { Width = 100, Height = 24 } }
+        };
+
+        await cut.InvokeAsync(async () =>
+        {
+            var task = (Task)onOverlayResizeMethod!.Invoke(selectContent, new object[] { entries })!;
+            await task;
+        });
+
+        ((int)calculatedMaxCountField.GetValue(selectContent)!).Should().Be(0);
+    }
+
+    [Fact]
+    public async Task SelectContent_removed_item_sets_refocus_when_responsive()
+    {
+        var values = new List<string> { "Tag1", "Tag2" };
+        var maxTagCount = AntDesign.Select.ResponsiveTag.Responsive;
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string" SearchDebounceMilliseconds="0"
+                EnableSearch MaxTagCount="@maxTagCount" Values="@values">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("Tag1")" Label="Tag1" />
+                    <SelectOption TItemValue="string" TItem="string" Value="@("Tag2")" Label="Tag2" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        var selectContent = cut.Instance.GetType()
+            .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.GetValue(cut.Instance);
+        selectContent.Should().NotBeNull();
+        var contentType = selectContent!.GetType();
+
+        var removedItemMethod = contentType.GetMethod("RemovedItem", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var refocusField = contentType.GetField("_refocus", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var aggregateTagElementField = contentType.GetField("_aggregateTagElement", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        removedItemMethod.Should().NotBeNull();
+        refocusField.Should().NotBeNull();
+        aggregateTagElementField.Should().NotBeNull();
+        aggregateTagElementField!.SetValue(selectContent, new AntDesign.JsInterop.DomRect { Width = 20, Height = 20 });
+
+        cut.Instance.SelectedOptionItems.Should().HaveCount(2);
+        foreach (var option in cut.Instance.SelectedOptionItems.Values)
+        {
+            option.Width = 40;
+        }
+
+        await cut.InvokeAsync(async () =>
+        {
+            var task = (Task)removedItemMethod!.Invoke(selectContent, null)!;
+            await task;
+        });
+
+        ((bool)refocusField!.GetValue(selectContent)!).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task SelectContent_debounce_timer_tick_respects_composition_state()
+    {
+        var searches = new List<string>();
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select TItemValue="string" TItem="string" EnableSearch SearchDebounceMilliseconds="50" OnSearch="@(value => searches.Add(value))">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("A")" Label="A" />
+                    <SelectOption TItemValue="string" TItem="string" Value="@("B")" Label="B" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        var selectContent = cut.Instance.GetType()
+            .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.GetValue(cut.Instance);
+        selectContent.Should().NotBeNull();
+        var contentType = selectContent!.GetType();
+
+        var debounceTickMethod = contentType.GetMethod("DebounceTimerIntervalOnTick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var compositionField = contentType.GetField("_compositionInputting", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        debounceTickMethod.Should().NotBeNull();
+        compositionField.Should().NotBeNull();
+
+        compositionField!.SetValue(selectContent, true);
+        await cut.InvokeAsync(() =>
+        {
+            debounceTickMethod!.Invoke(selectContent, new object[] { new ChangeEventArgs { Value = "compose" } });
+            return Task.CompletedTask;
+        });
+
+        for (var i = 0; i < 60; i++)
+        {
+            if (searches.Count == 0)
+            {
+                await Task.Delay(10);
+            }
+            else
+            {
+                break;
+            }
+        }
+        searches.Should().BeEmpty();
+
+        compositionField.SetValue(selectContent, false);
+        await cut.InvokeAsync(() =>
+        {
+            debounceTickMethod!.Invoke(selectContent, new object[] { new ChangeEventArgs { Value = "search-now" } });
+            return Task.CompletedTask;
+        });
+
+        for (var i = 0; i < 100; i++)
+        {
+            if (!searches.Contains("search-now"))
+            {
+                await Task.Delay(10);
+            }
+            else
+            {
+                break;
+            }
+        }
+        searches.Should().Contain("search-now");
+    }
+
+    [Fact]
+    public async Task SelectContent_on_composition_end_triggers_input_callback()
+    {
+        var searches = new List<string>();
+
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select TItemValue="string" TItem="string" EnableSearch
+                SearchDebounceMilliseconds="0" OnSearch="@(value => searches.Add(value))">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("A")" Label="A" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        var selectContent = cut.Instance.GetType()
+            .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.GetValue(cut.Instance);
+        selectContent.Should().NotBeNull();
+
+        var selectContentType = selectContent!.GetType();
+        var compositionStartMethod = selectContentType.GetMethod("OnCompositionStart", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var compositionEndMethod = selectContentType.GetMethod("OnCompositionEndAsync", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var inputStringField = selectContentType.GetField("_inputString", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var compositionField = selectContentType.GetField("_compositionInputting", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        compositionStartMethod.Should().NotBeNull();
+        compositionEndMethod.Should().NotBeNull();
+        inputStringField.Should().NotBeNull();
+        compositionField.Should().NotBeNull();
+
+        await cut.InvokeAsync(() =>
+        {
+            compositionStartMethod!.Invoke(selectContent, new object[] { JsonDocument.Parse("{}").RootElement });
+            return Task.CompletedTask;
+        });
+        inputStringField!.SetValue(selectContent, "tag1");
+
+        await cut.InvokeAsync(async () =>
+        {
+            var task = (Task)compositionEndMethod!.Invoke(selectContent, new object[] { JsonDocument.Parse("{}").RootElement })!;
+            await task;
+        });
+
+        ((bool)compositionField.GetValue(selectContent)!).Should().BeFalse();
+        searches.Should().Contain("tag1");
+    }
+
+    [Fact]
+    public async Task Values_setter_only_notifies_when_changed()
+    {
+        var initialValues = new List<string> { "A" };
+        var valuesChangedCallbacks = new List<IEnumerable<string>?>();
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Multiple" TItemValue="string" TItem="string"
+                EnableSearch SearchDebounceMilliseconds="0"
+                Values="@initialValues"
+                ValuesChanged="@((IEnumerable<string> values) => valuesChangedCallbacks.Add(values?.ToList()))">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("A")" Label="A" />
+                    <SelectOption TItemValue="string" TItem="string" Value="@("B")" Label="B" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Values, new List<string> { "A" }));
+        valuesChangedCallbacks.Should().HaveCount(0);
+
+        await cut.InvokeAsync(() =>
+        {
+            cut.SetParametersAndRender(parameters => parameters.Add(component => component.Values, new List<string> { "A", "B" }));
+            return Task.CompletedTask;
+        });
+        valuesChangedCallbacks.Should().HaveCount(1);
+        valuesChangedCallbacks.Last().Should().Contain(new[] { "A", "B" });
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Values, new List<string> { "A", "B" }));
+        valuesChangedCallbacks.Should().HaveCount(1);
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Values, (IEnumerable<string>)null));
+        valuesChangedCallbacks.Should().HaveCount(2);
+        valuesChangedCallbacks.Last().Should().BeNull();
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Values, (IEnumerable<string>)null));
+        valuesChangedCallbacks.Should().HaveCount(2);
+    }
+
+    [Fact]
+    public void DefaultValues_setter_tracks_has_items_and_supports_clear()
+    {
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Multiple" TItemValue="string" TItem="string"
+                SearchDebounceMilliseconds="0">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("A")" Label="A" />
+                    <SelectOption TItemValue="string" TItem="string" Value="@("B")" Label="B" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        var defaultValuesHasItemsField = cut.Instance.GetType()
+            .GetField("_defaultValuesHasItems", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var defaultValuesProperty = cut.Instance.GetType()
+            .GetProperty("DefaultValues", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        defaultValuesHasItemsField.Should().NotBeNull();
+        defaultValuesProperty.Should().NotBeNull();
+
+        ((bool)defaultValuesHasItemsField!.GetValue(cut.Instance)!).Should().BeFalse();
+        cut.Instance.DefaultValues.Should().BeNull();
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.DefaultValues, new List<string> { "A", "B" }));
+        ((bool)defaultValuesHasItemsField.GetValue(cut.Instance)!).Should().BeTrue();
+        cut.Instance.DefaultValues.Should().BeEquivalentTo(new[] { "A", "B" });
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.DefaultValues, new List<string> { "A", "B" }));
+        ((bool)defaultValuesHasItemsField.GetValue(cut.Instance)!).Should().BeTrue();
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.DefaultValues, (IEnumerable<string>)null));
+        ((bool)defaultValuesHasItemsField.GetValue(cut.Instance)!).Should().BeFalse();
+        cut.Instance.DefaultValues.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task OnOverlayShow_pushes_parent_search_value_into_select_content_input()
+    {
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string"
+                SearchDebounceMilliseconds="0" EnableSearch>
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("A")" Label="A" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        var selectContent = cut.Instance.GetType()
+            .GetField("_selectContent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.GetValue(cut.Instance);
+        selectContent.Should().NotBeNull();
+        var contentType = selectContent!.GetType();
+
+        var onOverlayShowMethod = cut.Instance.GetType()
+            .GetMethod("OnOverlayShow", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var searchValueProperty = contentType.GetProperty("SearchValue", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+        var inputStringField = contentType.GetField("_inputString", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        onOverlayShowMethod.Should().NotBeNull();
+        searchValueProperty.Should().NotBeNull();
+        inputStringField.Should().NotBeNull();
+
+        searchValueProperty!.SetValue(selectContent, "from-overlay");
+        inputStringField!.SetValue(selectContent, string.Empty);
+
+        await cut.InvokeAsync(() =>
+        {
+            onOverlayShowMethod!.Invoke(cut.Instance, null);
+            return Task.CompletedTask;
+        });
+
+        inputStringField.GetValue(selectContent)!.Should().Be("from-overlay");
+    }
+
+    [Fact]
+    public void OnOverlayHide_skips_search_cleanup_when_search_not_enabled()
+    {
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select TItemValue="string" TItem="string" SearchDebounceMilliseconds="0">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("A")" Label="A" />
+                    <SelectOption TItemValue="string" TItem="string" Value="@("B")" Label="B" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        var searchField = cut.Instance.GetType()
+            .GetField("_searchValue", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var prevSearchField = cut.Instance.GetType()
+            .GetField("_prevSearchValue", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var onOverlayHideMethod = cut.Instance.GetType()
+            .GetMethod("OnOverlayHide", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        searchField.Should().NotBeNull();
+        prevSearchField.Should().NotBeNull();
+        onOverlayHideMethod.Should().NotBeNull();
+
+        searchField!.SetValue(cut.Instance, "keep-me");
+        prevSearchField!.SetValue(cut.Instance, "keep-prev");
+
+        onOverlayHideMethod!.Invoke(cut.Instance, null);
+
+        ((string)searchField.GetValue(cut.Instance)!).Should().Be("keep-me");
+        ((string)prevSearchField.GetValue(cut.Instance)!).Should().Be("keep-prev");
+    }
+
+    [Fact]
+    public async Task AddedTags_are_removed_when_selected_values_are_replaced_with_known_options()
     {
         var datasource = new List<string> { "TagA", "TagB" };
 
         var cut = Render<AntDesign.Select<string, string>>(
             @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string" SearchDebounceMilliseconds="0"
-                EnableSearch DataSource="@datasource" />
+                EnableSearch>
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("TagA")" Label="TagA" />
+                    <SelectOption TItemValue="string" TItem="string" Value="@("TagB")" Label="TagB" />
+                </SelectOptions>
+            </AntDesign.Select>
         );
 
-        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, new List<string> { "ExternalTag" }));
+        cut.Render();
+
+        var currentType = cut.Instance.GetType();
+        System.Reflection.MethodInfo evaluateValuesChanged = null;
+        while (currentType != null)
+        {
+            evaluateValuesChanged = currentType.GetMethod("EvaluateValuesChangedOutsideComponent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (evaluateValuesChanged != null)
+            {
+                break;
+            }
+            currentType = currentType.BaseType;
+        }
+        evaluateValuesChanged.Should().NotBeNull();
+
+        await cut.InvokeAsync(() =>
+        {
+            evaluateValuesChanged!.Invoke(cut.Instance, new object[] { new List<string> { "ExternalTag" } });
+            return Task.CompletedTask;
+        });
 
         cut.WaitForAssertion(() => cut.Instance.AddedTags.Should().ContainSingle());
         cut.Instance.AddedTags.First().Label.Should().Be("ExternalTag");
 
-        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, new List<string> { "TagB" }));
+        await cut.InvokeAsync(() =>
+        {
+            evaluateValuesChanged!.Invoke(cut.Instance, new object[] { new List<string> { "TagB" } });
+            return Task.CompletedTask;
+        });
 
         cut.WaitForAssertion(() => cut.Instance.AddedTags.Should().BeEmpty());
         cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().ContainSingle());
         cut.Instance.SelectedOptionItems.First().Value.Label.Should().Be("TagB");
+    }
+
+    [Fact]
+    public async Task AddedTags_are_synchronized_when_external_values_drop_known_tags_and_custom_tags()
+    {
+        var datasource = new List<string> { "TagA", "TagB", "TagC" };
+
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string" SearchDebounceMilliseconds="0"
+                EnableSearch>
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("TagA")" Label="TagA" />
+                    <SelectOption TItemValue="string" TItem="string" Value="@("TagB")" Label="TagB" />
+                    <SelectOption TItemValue="string" TItem="string" Value="@("TagC")" Label="TagC" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        cut.Render();
+
+        var currentType = cut.Instance.GetType();
+        System.Reflection.MethodInfo evaluateValuesChanged = null;
+        while (currentType != null)
+        {
+            evaluateValuesChanged = currentType.GetMethod("EvaluateValuesChangedOutsideComponent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (evaluateValuesChanged != null)
+            {
+                break;
+            }
+            currentType = currentType.BaseType;
+        }
+        evaluateValuesChanged.Should().NotBeNull();
+
+        await cut.InvokeAsync(() =>
+        {
+            evaluateValuesChanged!.Invoke(cut.Instance, new object[] { new List<string> { "ExternalTag", "TagA", "TagB" } });
+            return Task.CompletedTask;
+        });
+
+        cut.WaitForAssertion(() => cut.Instance.AddedTags.Should().ContainSingle());
+        cut.Instance.SelectedOptionItems.Should().HaveCount(3);
+        cut.Instance.AddedTags.First().Label.Should().Be("ExternalTag");
+
+        await cut.InvokeAsync(() =>
+        {
+            evaluateValuesChanged!.Invoke(cut.Instance, new object[] { new List<string> { "TagA" } });
+            return Task.CompletedTask;
+        });
+
+        cut.WaitForAssertion(() => cut.Instance.AddedTags.Should().BeEmpty());
+        cut.Instance.SelectedOptionItems.Should().ContainSingle();
+        cut.Instance.SelectedOptionItems.First().Value.Label.Should().Be("TagA");
+    }
+
+    [Fact]
+    public async Task EvaluateValuesOutsideComponent_clears_existing_selection_when_new_single_value_is_disabled()
+    {
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select TItemValue="string" TItem="string" Value="@("TagA")" SearchDebounceMilliseconds="0">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("TagA")" Label="TagA" />
+                    <SelectOption TItemValue="string" TItem="string" Value="@("TagB")" Label="TagB" Disabled="true" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        cut.Render();
+
+        var currentType = cut.Instance.GetType();
+        System.Reflection.MethodInfo evaluateValuesChanged = null;
+        while (currentType != null)
+        {
+            evaluateValuesChanged = currentType.GetMethod("EvaluateValuesChangedOutsideComponent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (evaluateValuesChanged != null)
+            {
+                break;
+            }
+            currentType = currentType.BaseType;
+        }
+        evaluateValuesChanged.Should().NotBeNull();
+
+        cut.Instance.SelectedOptionItems.Should().HaveCount(1);
+        cut.Instance.SelectedOptionItems.First().Value.Value.Should().Be("TagA");
+
+        await cut.InvokeAsync(() =>
+        {
+            evaluateValuesChanged!.Invoke(cut.Instance, new object[] { new List<string> { "TagB" } });
+            return Task.CompletedTask;
+        });
+
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().BeEmpty());
+    }
+
+    [Fact]
+    public async Task EvaluateValuesOutsideComponent_multiple_mode_does_not_select_disabled_option()
+    {
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" SearchDebounceMilliseconds="0">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value="@("TagA")" Label="TagA" />
+                    <SelectOption TItemValue="string" TItem="string" Value="@("TagB")" Label="TagB" Disabled="true" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        cut.Render();
+
+        var currentType = cut.Instance.GetType();
+        System.Reflection.MethodInfo evaluateValuesChanged = null;
+        while (currentType != null)
+        {
+            evaluateValuesChanged = currentType.GetMethod("EvaluateValuesChangedOutsideComponent", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (evaluateValuesChanged != null)
+            {
+                break;
+            }
+            currentType = currentType.BaseType;
+        }
+        evaluateValuesChanged.Should().NotBeNull();
+
+        await cut.InvokeAsync(() =>
+        {
+            evaluateValuesChanged!.Invoke(cut.Instance, new object[] { new List<string> { "TagA", "TagB" } });
+            return Task.CompletedTask;
+        });
+
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(1));
+        cut.Instance.SelectedOptionItems.First().Value.Value.Should().Be("TagA");
+        cut.Instance.SelectedOptionItems.Should().NotContain(kv => kv.Key == "TagB");
     }
 }
 }
