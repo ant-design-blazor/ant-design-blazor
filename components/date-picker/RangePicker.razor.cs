@@ -578,6 +578,8 @@ namespace AntDesign
             {
                 Close();
             }
+
+            await ValueChanged.InvokeAsync(Value);
         }
 
         internal override void ClearValue(int index = -1, bool closeDropdown = true)
@@ -585,6 +587,10 @@ namespace AntDesign
             _isSetPicker = false;
 
             var array = Value as Array;
+            if (array == null)
+            {
+                return;
+            }
             ReadOnlySpan<int> indexToClear;
             if (index == -1)
             {
@@ -632,7 +638,7 @@ namespace AntDesign
             OnClear.InvokeAsync(null);
             OnClearClick.InvokeAsync(null);
 
-            _dropDown.SetShouldRender(true);
+            _dropDown?.SetShouldRender(true);
             InvokeAsync(StateHasChanged);
         }
 

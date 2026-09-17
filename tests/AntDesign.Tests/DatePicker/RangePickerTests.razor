@@ -3,6 +3,20 @@
 @inherits AntDesignTestBase
 
 @code {
+    [Fact]
+    public async Task Selecting_a_date_notifies_bound_value()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        DateTime?[]? changed = null;
+        var cut = Render<RangePicker<DateTime?[]>>(
+            @<RangePicker TValue="DateTime?[]" ValueChanged="@(value => changed = value)" />);
+
+        var onSelect = typeof(DatePickerBase<DateTime?[]>).GetMethod("OnSelect", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        await (Task)onSelect.Invoke(cut.Instance, new object[] { new DateTime(2026, 1, 2), 0 })!;
+
+        Assert.NotNull(changed);
+    }
+
     [Theory]
     [MemberData(nameof(RangePickerTestData.NullData), MemberType = typeof(RangePickerTestData))]
     public void Renders_custom_placeholder<T>(T value)
