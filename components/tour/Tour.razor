@@ -1,0 +1,100 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+@if (Open && CurrentStep != null)
+{
+    @if (EffectiveMask)
+    {
+        <div class="ant-tour-mask" style="@MaskOverlayStyle">
+            <svg width="100%" height="100%" aria-hidden="true">
+                <defs>
+                    <mask id="@MaskId">
+                        <rect fill="white" x="0" y="0" width="100%" height="100%" />
+                        @if (_targetRect != null)
+                        {
+                            <rect class="ant-tour-placeholder-animated" fill="black" x="@TargetLeft" y="@TargetTop" width="@TargetWidth" height="@TargetHeight" rx="@GapRadius" />
+                        }
+                    </mask>
+                </defs>
+                <rect fill="@EffectiveMaskColor" x="0" y="0" width="100%" height="100%" mask="url(#@MaskId)" />
+                @if (MaskClosable && _targetRect != null)
+                {
+                    <rect fill="transparent" pointer-events="auto" @onclick="CloseAsync" x="0" y="0" width="100%" height="@TargetTop" />
+                    <rect fill="transparent" pointer-events="auto" @onclick="CloseAsync" x="0" y="@TargetTop" width="@TargetLeft" height="@TargetHeight" />
+                    <rect fill="transparent" pointer-events="auto" @onclick="CloseAsync" x="0" y="@TargetBottom" width="100%" height="@RemainingHeight" />
+                    <rect fill="transparent" pointer-events="auto" @onclick="CloseAsync" x="@TargetRight" y="@TargetTop" width="@RemainingWidth" height="@TargetHeight" />
+                }
+                else if (MaskClosable)
+                {
+                    <rect fill="transparent" pointer-events="auto" @onclick="CloseAsync" x="0" y="0" width="100%" height="100%" />
+                }
+            </svg>
+        </div>
+    }
+    @if (EffectiveMask && _targetRect != null)
+    {
+        <div class="@TargetPlaceholderClass" style="@TargetPlaceholderStyle"></div>
+    }
+    <div class="@RootClass @PlacementClass" style="@RootStyle" id="@Id" tabindex="-1" @ref="Ref" @onkeydown="OnKeyDown">
+        @if (_targetRect != null)
+        {
+            <div class="ant-tour-arrow" style="@ArrowStyle" aria-hidden="true"></div>
+        }
+        <div class="ant-tour-panel">
+            <div class="ant-tour-section">
+                @if (EffectiveClosable)
+                {
+                    <button type="button" class="ant-tour-close" aria-label="Close" @onclick="CloseAsync">×</button>
+                }
+                @if (CurrentStep.Cover != null)
+                {
+                    <div class="ant-tour-cover">@CurrentStep.Cover</div>
+                }
+                @if (CurrentStep.Title != null)
+                {
+                    <div class="ant-tour-header"><div class="ant-tour-title">@CurrentStep.Title</div></div>
+                }
+                @if (CurrentStep.Description != null)
+                {
+                    <div class="ant-tour-description">@CurrentStep.Description</div>
+                }
+                <div class="ant-tour-footer">
+                    @if (Steps.Count > 1)
+                    {
+                        <div class="ant-tour-indicators">
+                            @if (IndicatorsRender != null)
+                            {
+                                @IndicatorsRender((Current, Steps.Count))
+                            }
+                            else
+                            {
+                                @for (var i = 0; i < Steps.Count; i++)
+                                {
+                                    <span class="ant-tour-indicator @(i == Current ? "ant-tour-indicator-active" : string.Empty)"></span>
+                                }
+                            }
+                        </div>
+                    }
+                    <div class="ant-tour-actions">
+                        @if (ActionsRender != null)
+                        {
+                            @ActionsRender(new TourActionsRenderContext
+                            {
+                                Current = Current,
+                                Total = Steps.Count,
+                                Close = CloseAsync,
+                                Next = NextAsync,
+                                Previous = PreviousAsync,
+                                Origin = @<TourActions Current="@Current" Total="@Steps.Count" Type="@EffectiveType" Step="@CurrentStep" Previous="PreviousAsync" Next="NextAsync" />
+                            })
+                        }
+                        else
+                        {
+                            <TourActions Current="@Current" Total="@Steps.Count" Type="@EffectiveType" Step="@CurrentStep" Previous="PreviousAsync" Next="NextAsync" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

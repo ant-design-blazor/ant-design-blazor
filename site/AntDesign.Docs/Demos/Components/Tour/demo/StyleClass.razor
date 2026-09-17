@@ -1,0 +1,46 @@
+<style>
+    .tour-custom-root .ant-tour-section {
+        border-radius: 8px;
+        border: 2px solid #4096ff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+    }
+
+    .tour-custom-primary .ant-tour-section {
+        background: rgba(205, 193, 255, .8);
+    }
+</style>
+
+<Space>
+    <Button Type="ButtonType.Primary" OnClick="StartObjectTour">Begin Tour Object</Button>
+    <Button Type="ButtonType.Primary" OnClick="StartPrimaryTour">Begin Tour Primary</Button>
+</Space>
+<Divider />
+<Space>
+    <span @ref="_firstTarget"><Button Type="ButtonType.Primary">Upload</Button></span>
+    <span @ref="_secondTarget"><Button>Save</Button></span>
+    <span @ref="_thirdTarget"><Button>Other Actions</Button></span>
+</Space>
+
+<Tour Class="tour-custom-root" Open="@_objectOpen" OpenChanged="OnObjectOpenChanged" Steps="@_steps" />
+<Tour Class="tour-custom-primary" Type="TourType.Primary" Open="@_primaryOpen" OpenChanged="OnPrimaryOpenChanged" Steps="@_steps" />
+
+@code {
+    private bool _objectOpen;
+    private bool _primaryOpen;
+    private ElementReference _firstTarget;
+    private ElementReference _secondTarget;
+    private ElementReference _thirdTarget;
+
+    private IReadOnlyList<TourStep> _steps => new[]
+    {
+        new TourStep { Target = _firstTarget, Title = Text("Upload File"), Description = Text("Put your files here.") },
+        new TourStep { Target = _secondTarget, Title = Text("Save"), Description = Text("Save your changes.") },
+        new TourStep { Target = _thirdTarget, Title = Text("Other Actions"), Description = Text("Click to see other actions.") }
+    };
+
+    private void StartObjectTour() => _objectOpen = true;
+    private void StartPrimaryTour() => _primaryOpen = true;
+    private Task OnObjectOpenChanged(bool value) { _objectOpen = value; return Task.CompletedTask; }
+    private Task OnPrimaryOpenChanged(bool value) { _primaryOpen = value; return Task.CompletedTask; }
+    private static RenderFragment Text(string value) => builder => builder.AddContent(0, value);
+}

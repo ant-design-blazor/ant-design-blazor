@@ -1,0 +1,57 @@
+<div @ref="_tourNode">
+    <Button Type="ButtonType.Primary" OnClick="StartTour">Begin Tour</Button>
+
+    <Flex Direction="FlexDirection.Vertical" Style="display:flex; margin-top:12px;">
+        <GridRow>
+            <GridCol Span="6"><span>Radius:</span></GridCol>
+            <GridCol Span="12"><Slider TValue="double" @bind-Value="_radius" Min="0" Max="50" /></GridCol>
+        </GridRow>
+        <GridRow>
+            <GridCol Span="6"><span>offset:</span></GridCol>
+            <GridCol Span="12"><span @onfocus="UseSharedOffset"><Slider TValue="double" @bind-Value="_offset" Min="0" Max="50" /></span></GridCol>
+        </GridRow>
+        <GridRow>
+            <GridCol Span="6"><span>Horizontal offset:</span></GridCol>
+            <GridCol Span="12"><span @onfocus="UseIndividualOffset"><Slider TValue="double" @bind-Value="_offsetX" Min="0" Max="50" /></span></GridCol>
+        </GridRow>
+        <GridRow>
+            <GridCol Span="6"><span>Vertical offset:</span></GridCol>
+            <GridCol Span="12"><span @onfocus="UseIndividualOffset"><Slider TValue="double" @bind-Value="_offsetY" Min="0" Max="50" /></span></GridCol>
+        </GridRow>
+    </Flex>
+
+    <Tour Open="@_open"
+          OpenChanged="OnOpenChanged"
+          Steps="@_steps"
+          GapRadius="@((int)_radius)"
+          GapOffset="@((int)_offset)"
+          GapOffsetX="@(_useIndividualOffset ? (int?)_offsetX : null)"
+          GapOffsetY="@(_useIndividualOffset ? (int?)_offsetY : null)" />
+</div>
+
+@code {
+    private bool _open;
+    private bool _useIndividualOffset = true;
+    private double _radius = 8;
+    private double _offset = 2;
+    private double _offsetX = 2;
+    private double _offsetY = 2;
+    private ElementReference _tourNode;
+
+    private IReadOnlyList<TourStep> _steps => new[]
+    {
+        new TourStep
+        {
+            Target = _tourNode,
+            Title = Text("Upload File"),
+            Description = Text("Put your files here."),
+            Cover = @<img draggable="false" alt="tour.png" src="https://user-images.githubusercontent.com/5378891/197385811-55df8480-7ff4-44bd-9d43-a7dade598d70.png" />
+        }
+    };
+
+    private void StartTour() => _open = true;
+    private Task OnOpenChanged(bool value) { _open = value; return Task.CompletedTask; }
+    private void UseSharedOffset() => _useIndividualOffset = false;
+    private void UseIndividualOffset() => _useIndividualOffset = true;
+    private static RenderFragment Text(string value) => builder => builder.AddContent(0, value);
+}
