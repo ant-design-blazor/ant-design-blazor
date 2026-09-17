@@ -11,13 +11,6 @@ namespace AntDesign
         [Inject]
         private IComponentIdGenerator ComponentIdGenerator { get; set; }
 
-        /// <summary>
-        /// ID for the component's HTML
-        /// </summary>
-        /// <default value="Uniquely Generated ID" />
-        [Parameter]
-        public string Id { get; set; }
-
         [CascadingParameter]
         public ConfigProvider ConfigProvider { get; set; }
 

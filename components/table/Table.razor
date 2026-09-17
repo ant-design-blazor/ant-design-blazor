@@ -12,7 +12,8 @@
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
+                <Pagination Id="@TopPaginationId"
+                            Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
                             Class="@_paginationClass.Class"
                             Total="_total"
                             PageSize="_pageSize"
@@ -125,7 +126,8 @@
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
+                <Pagination Id="@BottomPaginationId"
+                            Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
                             Class="@_paginationClass.Class"
                             Total="_total"
                             PageSize="_pageSize"
@@ -142,6 +144,12 @@
 
 @code
 {
+    /// <summary>Id of the pagination displayed above the table.</summary>
+    public const string TopPaginationId = "Table.TopPagination";
+
+    /// <summary>Id of the pagination displayed below the table.</summary>
+    public const string BottomPaginationId = "Table.BottomPagination";
+
     RenderFragment header()
     {
         var headerRowAttributes = OnHeaderRow?.Invoke();

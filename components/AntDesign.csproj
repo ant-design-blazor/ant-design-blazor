@@ -107,6 +107,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\src\AntDesign.SourceGenerators\AntDesign.SourceGenerators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+    <None Include="..\src\AntDesign.SourceGenerators\bin\$(Configuration)\netstandard2.0\AntDesign.SourceGenerators.dll"
+          Pack="true"
+          PackagePath="analyzers/dotnet/cs"
+          Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="**\*.razor">
       <Pack>false</Pack>
     </Content>
