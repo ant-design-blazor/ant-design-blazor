@@ -7,10 +7,10 @@
 <span class="@TitleClassMapper.Class" title="@SelfNode.Title" @onclick="OnClick" @ondblclick="OnDblClick"
 	@oncontextmenu="OnContextMenu" @oncontextmenu:preventDefault="TreeComponent.OnContextMenu.HasDelegate"
 	draggable="@(CanDraggable ? "true" : "false")" aria-grabbed="@(CanDraggable ? "true" : "false")"
-	@ondragover:preventDefault="@TreeComponent.DragItem!=null" @ondragover="OnDragOver"
-	@ondragleave:preventDefault="@TreeComponent.DragItem!=null" @ondragleave="OnDragLeave"
-	@ondragenter:preventDefault="@TreeComponent.DragItem!=null" @ondragenter="OnDragEnter"
-	@ondrop:preventDefault="@TreeComponent.DragItem!=null" @ondrop="OnDrop"
+	@ondragover:preventDefault="@(TreeComponent.DragItem != null)" @ondragover="OnDragOver"
+	@ondragleave:preventDefault="@(TreeComponent.DragItem != null)" @ondragleave="OnDragLeave"
+	@ondragenter:preventDefault="@(TreeComponent.DragItem != null)" @ondragenter="OnDragEnter"
+	@ondrop:preventDefault="@(TreeComponent.DragItem != null)" @ondrop="OnDrop"
 	@ondragstart="e => { if (CanDraggable) OnDragStart(e); }" @ondragend="e => { if (CanDraggable) OnDragEnd(e); }">
     @if (TreeComponent.TitleIconTemplate != null && TreeComponent.ShowIcon)
     {
