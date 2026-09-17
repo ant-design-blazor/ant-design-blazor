@@ -89,7 +89,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_TOKEN }}
           accountId: ${{ secrets.CF_ID }}
-          command: pages deploy cargo/wwwroot --project-name=ant-design-blazor --branch=main
+          command: pages deploy cargo/wwwroot --project-name=ant-design-blazor --branch=master
 
   deploy-github-pages:
     name: Push to GitHub Pages
