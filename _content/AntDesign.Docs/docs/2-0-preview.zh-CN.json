@@ -1,0 +1,5 @@
+{
+  "Order": 8,
+  "Title": "2.0 预览版（antd v5）",
+  "Html": "<p>大家好，我们很高兴地宣布 Ant Design Blazor 2.0 的早期版本已发布到 Nuget，这个版本实现了antd v5的样式，您可通过安装包进行试用。</p>\n<p>以下是与 1.0 不同的安装步骤</p>\n<p>.csproj:</p>\n<pre><code class=\"language-xml\">&lt;PackageReference Include=&quot;AntDesign&quot; Version=&quot;2.0.0-nightly-*&quot; /&gt;\n</code></pre>\n<p>_import.razor:</p>\n<pre><code class=\"language-cs\">@using AntDesign\n@using CssInCSharp\n</code></pre>\n<p>App.razor: 使用 <code>StyleOutlet</code> 替代 <code>HeadOutlet</code>。</p>\n<pre><code class=\"language-razor\">    &lt;link no-antblazor-css /&gt;\n    &lt;StyleOutlet @rendermode=&quot;InteractiveServer&quot; /&gt;\n    @* &lt;HeadOutlet @rendermode=&quot;InteractiveServer&quot; /&gt; *@\n</code></pre>\n<p>目前 2.0 的分支暂时在 https://github.com/ant-design-blazor/ant-design-blazor/tree/compatibility-v5 , 欢迎大家的贡献!</p>\n<p>请试用并提供反馈意见，我们会继续改进 Blazor 的开发体验。</p>\n"
+}

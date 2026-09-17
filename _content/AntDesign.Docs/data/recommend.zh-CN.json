@@ -1,0 +1,23 @@
+﻿[
+  {
+    "title": "Ant Design X Blazor 隆重发布，引领 AI 全栈开发体验新秩序",
+    "description": "基于 Ant Design RICH 设计范式，深度整合微软全栈 AI 生态，为全球企业及开发者打造卓越 AI 界面解决方案，引领智能新体验。",
+    "img": "/docs/assets/news/x-cn.png",
+    "href": "https://x.antblazor.com/",
+    "popularize": false
+  },
+  {
+    "title": "如何给 Ant Design Blazor 贡献代码？",
+    "description": "社区中很多朋友想给 Ant Design Blazor 贡献代码，但是受阻于不知如何操作，故录制一个视频作为参考。这个B站账号还会不定期更新组件库的各种玩法，欢迎关注！",
+    "img": "/docs/assets/news/how-to-contribute-ant-design-blazor.jpg",
+    "href": "https://www.bilibili.com/video/BV1cP41137PJ/",
+    "popularize": false
+  },
+  {
+    "title": "跟Luke一起体验强大的企业级UI框架 - Ant Design Blazor",
+    "description": "在这次演讲中，SSW 工程师 Luke 展示了流行的开源组件库是如何工作的，并进行了有见地的比较和演示。AntBlazor 得到了 .NET 基金会的完全支持，并拥有令人印象深刻的追捧。最重要的是，它有很棒的文档和代码示例，可以让你很快上手并运行起来",
+    "img": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F146529479%2F55525066651%2F1%2Foriginal.20210903-062701?w=800&auto=format%2Ccompress&q=75&sharp=10&rect=0%2C0%2C2160%2C1080&s=01e8a457183827b661d145dbaded77a8",
+    "href": "https://www.bilibili.com/video/BV1gU4y1F7WA/",
+    "popularize": false
+  }
+]
