@@ -64,7 +64,7 @@
    - 覆盖默认/暗色算法、内外层 Token 合并、作用域隔离、预构建主题 class 切换、动态变量批量更新和组件 API 编译兼容。
    - 覆盖需求 3.2-3.6、8.1-8.4、10.5-10.6。
 
-7. [ ] 接入核心组件生成 CSS 并完成 React/Blazor exact gate
+7. [x] 接入核心组件生成 CSS 并完成 React/Blazor exact gate
    - 按组件迁移现有 Less 样式到生成 CSS/变量引用，保留公共参数、事件、泛型约束和组件行为。
    - 首批覆盖 Button、Alert、Modal、Card、Input、Select、Menu、Layout、Progress、Steps、Slider、ColorPicker、Notification、Switch、Radio 等主题演示使用组件。
    - 覆盖需求 6.1-6.5、4.7-4.8。

@@ -26,6 +26,18 @@ namespace AntDesign.Theming
 
     public static class CssLayerCompiler
     {
+        public static CssLayerArtifact ImportCompiledStaticCss(
+            string css,
+            string theme = "light",
+            string scope = ":root",
+            string managedFile = "static/antd.css")
+        {
+            if (css == null) throw new ArgumentNullException(nameof(css));
+            if (css.Contains('\r')) throw new ArgumentException("CSS must use LF line endings.", nameof(css));
+            if (css.EndsWith("\n\n", StringComparison.Ordinal)) throw new ArgumentException("CSS has more than one trailing LF.", nameof(css));
+            return CreateArtifact(CssStyleLayer.Static, theme, scope, css, managedFile);
+        }
+
         public static CssLayerArtifact CompileStatic(
             IEnumerable<StyleIrEntry> entries,
             string theme = "default",
