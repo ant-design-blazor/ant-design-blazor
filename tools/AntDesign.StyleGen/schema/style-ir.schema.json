@@ -51,6 +51,7 @@
         "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*$" },
         "kind": { "enum": ["seed", "alias", "component", "semantic"] },
         "type": { "enum": ["color", "length", "number", "font", "shadow", "motion", "string", "unknown"] },
+        "sourceType": { "type": "string" },
         "value": {},
         "cssVariable": { "type": "string", "pattern": "^--[a-z0-9-]+$" },
         "component": { "type": ["string", "null"] },

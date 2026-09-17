@@ -2,6 +2,7 @@
 // Upstream: ant-design 599b251da933709d7b25fc9e9018ed7f4c093b96 (6.6.4)
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using OneOf;
 namespace AntDesign.Theming
 {
     public sealed class ComponentTokenDefinition
@@ -12,6 +13,435 @@ namespace AntDesign.Theming
         public bool Reserved { get; }
         public ComponentTokenDefinition(string component, string name, string cssVariable, bool reserved)
         { Component = component; Name = name; CssVariable = cssVariable; Reserved = reserved; }
+    }
+
+    public sealed class AffixComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class AlertComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class AnchorComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class AppComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class AvatarComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class BackTopComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class BadgeComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class BorderBeamComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class BreadcrumbComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class ButtonComponentToken
+    {
+        public string BorderColorDisabled { get; set; }
+        public double ContentFontSize { get; set; }
+        public double ContentFontSizeLG { get; set; }
+        public double ContentFontSizeSM { get; set; }
+        public double ContentLineHeight { get; set; }
+        public double ContentLineHeightLG { get; set; }
+        public double ContentLineHeightSM { get; set; }
+        public string DangerColor { get; set; }
+        public string DangerShadow { get; set; }
+        public string DashedBgDisabled { get; set; }
+        public string DefaultActiveBg { get; set; }
+        public string DefaultActiveBorderColor { get; set; }
+        public string DefaultActiveColor { get; set; }
+        public string DefaultBg { get; set; }
+        public string DefaultBgDisabled { get; set; }
+        public string DefaultBorderColor { get; set; }
+        public string DefaultColor { get; set; }
+        public string DefaultGhostBorderColor { get; set; }
+        public string DefaultGhostColor { get; set; }
+        public string DefaultHoverBg { get; set; }
+        public string DefaultHoverBorderColor { get; set; }
+        public string DefaultHoverColor { get; set; }
+        public string DefaultShadow { get; set; }
+        public OneOf<string, double> FontWeight { get; set; }
+        public string GhostBg { get; set; }
+        public OneOf<string, double> IconGap { get; set; }
+        public string LinkHoverBg { get; set; }
+        public OneOf<double, string> OnlyIconSize { get; set; }
+        public OneOf<double, string> OnlyIconSizeLG { get; set; }
+        public OneOf<double, string> OnlyIconSizeSM { get; set; }
+        public OneOf<string, double> PaddingBlock { get; set; }
+        public OneOf<string, double> PaddingBlockLG { get; set; }
+        public OneOf<string, double> PaddingBlockSM { get; set; }
+        public OneOf<string, double> PaddingInline { get; set; }
+        public OneOf<string, double> PaddingInlineLG { get; set; }
+        public OneOf<string, double> PaddingInlineSM { get; set; }
+        public string PrimaryColor { get; set; }
+        public string PrimaryShadow { get; set; }
+        public string SolidTextColor { get; set; }
+        public string TextHoverBg { get; set; }
+        public string TextTextActiveColor { get; set; }
+        public string TextTextColor { get; set; }
+        public string TextTextHoverColor { get; set; }
+    }
+
+    public sealed class CalendarComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class CardComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class CarouselComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class CascaderComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class CheckboxComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class ColComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class CollapseComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class ColorPickerComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class ConfigProviderComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class DatePickerComponentToken
+    {
+        public double PresetsMaxWidth { get; set; }
+        public double PresetsWidth { get; set; }
+        public double ZIndexPopup { get; set; }
+    }
+
+    public sealed class DescriptionsComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class DividerComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class DrawerComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class DropdownComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class EmptyComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class FlexComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class FloatButtonComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class FormComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class GridComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class ImageComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class InputNumberComponentToken
+    {
+        public double ControlWidth { get; set; }
+        public string FilledHandleBg { get; set; }
+        public string HandleActiveBg { get; set; }
+        public string HandleBg { get; set; }
+        public string HandleBorderColor { get; set; }
+        public double HandleFontSize { get; set; }
+        public string HandleHoverColor { get; set; }
+        public double HandleOpacity { get; set; }
+        public OneOf<string, bool> HandleVisible { get; set; }
+        public double HandleVisibleWidth { get; set; }
+        public double HandleWidth { get; set; }
+    }
+
+    public sealed class InputComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class LayoutComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class ListComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class ListyComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class MasonryComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class MentionsComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class MenuComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class MessageComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class ModalComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class NotificationComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class PaginationComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class PopconfirmComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class PopoverComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class ProgressComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class QrCodeComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class QrcodeComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class RadioComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class RateComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class ResultComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class RowComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class SegmentedComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class SelectComponentToken
+    {
+        public string ActiveBorderColor { get; set; }
+        public string ActiveOutlineColor { get; set; }
+        public string ClearBg { get; set; }
+        public string HoverBorderColor { get; set; }
+        public string OptionActiveBg { get; set; }
+        public double OptionFontSize { get; set; }
+        public double OptionHeight { get; set; }
+        public OneOf<string, double> OptionLineHeight { get; set; }
+        public OneOf<string, double> OptionPadding { get; set; }
+        public string OptionSelectedBg { get; set; }
+        public string OptionSelectedColor { get; set; }
+        public OneOf<string, double> OptionSelectedFontWeight { get; set; }
+        public string SelectorBg { get; set; }
+        public double ShowArrowPaddingInlineEnd { get; set; }
+        public double SingleItemHeightLG { get; set; }
+        public double ZIndexPopup { get; set; }
+    }
+
+    public sealed class SkeletonComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class SliderComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class SpaceComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class SpinComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class SplitterComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class StatisticComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class StepsComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class SwitchComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class TableComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class TabsComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class TagComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class TimelineComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class TooltipComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class TourComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class TransferComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class TreeSelectComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class TreeComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class TypographyComponentToken
+    {
+        public string ComponentToken { get; set; }
+    }
+
+    public sealed class UploadComponentToken
+    {
+        public string ComponentToken { get; set; }
     }
 
     public static class GeneratedComponentTokens

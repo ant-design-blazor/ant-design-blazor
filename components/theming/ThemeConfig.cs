@@ -11,6 +11,27 @@ namespace AntDesign.Theming
         public string ThemeScope { get; set; } = "ant-theme";
         public IDictionary<string, string> Token { get; set; } = new Dictionary<string, string>(StringComparer.Ordinal);
         public IDictionary<string, IDictionary<string, string>> Components { get; set; } = new Dictionary<string, IDictionary<string, string>>(StringComparer.Ordinal);
+        public IDictionary<string, object> ComponentTokens { get; } = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+        public ThemeConfig SetComponentToken<TToken>(string component, TToken token)
+        {
+            if (string.IsNullOrWhiteSpace(component)) throw new ArgumentException("A component name is required.", nameof(component));
+            if (token == null) throw new ArgumentNullException(nameof(token));
+            ComponentTokens[component] = token;
+            var values = new Dictionary<string, string>(StringComparer.Ordinal);
+            foreach (var property in typeof(TToken).GetProperties())
+            {
+                var value = property.GetValue(token);
+                if (value != null) values[property.Name] = value.ToString();
+            }
+            Components[component] = values;
+            return this;
+        }
+
+        public TToken GetComponentToken<TToken>(string component) where TToken : class
+        {
+            return ComponentTokens.TryGetValue(component, out var token) ? token as TToken : null;
+        }
     }
 
     public sealed class TokenView

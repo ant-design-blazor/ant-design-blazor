@@ -5,7 +5,7 @@
     "styleSource": "components/affix/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -14,7 +14,7 @@
     "styleSource": "components/alert/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -23,7 +23,7 @@
     "styleSource": "components/anchor/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -32,7 +32,7 @@
     "styleSource": "components/app/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": false
   },
   {
@@ -41,7 +41,7 @@
     "styleSource": "components/avatar/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -50,7 +50,7 @@
     "styleSource": "components/back-top/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -59,7 +59,7 @@
     "styleSource": "components/badge/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -68,7 +68,7 @@
     "styleSource": "components/border-beam/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": false
   },
   {
@@ -77,7 +77,7 @@
     "styleSource": "components/breadcrumb/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -86,50 +86,179 @@
     "styleSource": "components/button/style/index.ts",
     "tokenSource": "components/button/style/token.ts",
     "hasTokenSource": true,
-    "tokenNames": [
-      "borderColorDisabled",
-      "contentFontSize",
-      "contentFontSizeLG",
-      "contentFontSizeSM",
-      "contentLineHeight",
-      "contentLineHeightLG",
-      "contentLineHeightSM",
-      "dangerColor",
-      "dangerShadow",
-      "dashedBgDisabled",
-      "defaultActiveBg",
-      "defaultActiveBorderColor",
-      "defaultActiveColor",
-      "defaultBg",
-      "defaultBgDisabled",
-      "defaultBorderColor",
-      "defaultColor",
-      "defaultGhostBorderColor",
-      "defaultGhostColor",
-      "defaultHoverBg",
-      "defaultHoverBorderColor",
-      "defaultHoverColor",
-      "defaultShadow",
-      "fontWeight",
-      "ghostBg",
-      "iconGap",
-      "linkHoverBg",
-      "onlyIconSize",
-      "onlyIconSizeLG",
-      "onlyIconSizeSM",
-      "paddingBlock",
-      "paddingBlockLG",
-      "paddingBlockSM",
-      "paddingInline",
-      "paddingInlineLG",
-      "paddingInlineSM",
-      "primaryColor",
-      "primaryShadow",
-      "solidTextColor",
-      "textHoverBg",
-      "textTextActiveColor",
-      "textTextColor",
-      "textTextHoverColor"
+    "tokenDefinitions": [
+      {
+        "name": "borderColorDisabled",
+        "type": "string"
+      },
+      {
+        "name": "contentFontSize",
+        "type": "number"
+      },
+      {
+        "name": "contentFontSizeLG",
+        "type": "number"
+      },
+      {
+        "name": "contentFontSizeSM",
+        "type": "number"
+      },
+      {
+        "name": "contentLineHeight",
+        "type": "number"
+      },
+      {
+        "name": "contentLineHeightLG",
+        "type": "number"
+      },
+      {
+        "name": "contentLineHeightSM",
+        "type": "number"
+      },
+      {
+        "name": "dangerColor",
+        "type": "string"
+      },
+      {
+        "name": "dangerShadow",
+        "type": "string"
+      },
+      {
+        "name": "dashedBgDisabled",
+        "type": "string"
+      },
+      {
+        "name": "defaultActiveBg",
+        "type": "string"
+      },
+      {
+        "name": "defaultActiveBorderColor",
+        "type": "string"
+      },
+      {
+        "name": "defaultActiveColor",
+        "type": "string"
+      },
+      {
+        "name": "defaultBg",
+        "type": "string"
+      },
+      {
+        "name": "defaultBgDisabled",
+        "type": "string"
+      },
+      {
+        "name": "defaultBorderColor",
+        "type": "string"
+      },
+      {
+        "name": "defaultColor",
+        "type": "string"
+      },
+      {
+        "name": "defaultGhostBorderColor",
+        "type": "string"
+      },
+      {
+        "name": "defaultGhostColor",
+        "type": "string"
+      },
+      {
+        "name": "defaultHoverBg",
+        "type": "string"
+      },
+      {
+        "name": "defaultHoverBorderColor",
+        "type": "string"
+      },
+      {
+        "name": "defaultHoverColor",
+        "type": "string"
+      },
+      {
+        "name": "defaultShadow",
+        "type": "string"
+      },
+      {
+        "name": "fontWeight",
+        "type": "CSSProperties['fontWeight']"
+      },
+      {
+        "name": "ghostBg",
+        "type": "string"
+      },
+      {
+        "name": "iconGap",
+        "type": "CSSProperties['gap']"
+      },
+      {
+        "name": "linkHoverBg",
+        "type": "string"
+      },
+      {
+        "name": "onlyIconSize",
+        "type": "number | string"
+      },
+      {
+        "name": "onlyIconSizeLG",
+        "type": "number | string"
+      },
+      {
+        "name": "onlyIconSizeSM",
+        "type": "number | string"
+      },
+      {
+        "name": "paddingBlock",
+        "type": "CSSProperties['paddingBlock']"
+      },
+      {
+        "name": "paddingBlockLG",
+        "type": "CSSProperties['paddingBlock']"
+      },
+      {
+        "name": "paddingBlockSM",
+        "type": "CSSProperties['paddingBlock']"
+      },
+      {
+        "name": "paddingInline",
+        "type": "CSSProperties['paddingInline']"
+      },
+      {
+        "name": "paddingInlineLG",
+        "type": "CSSProperties['paddingInline']"
+      },
+      {
+        "name": "paddingInlineSM",
+        "type": "CSSProperties['paddingInline']"
+      },
+      {
+        "name": "primaryColor",
+        "type": "string"
+      },
+      {
+        "name": "primaryShadow",
+        "type": "string"
+      },
+      {
+        "name": "solidTextColor",
+        "type": "string"
+      },
+      {
+        "name": "textHoverBg",
+        "type": "string"
+      },
+      {
+        "name": "textTextActiveColor",
+        "type": "string"
+      },
+      {
+        "name": "textTextColor",
+        "type": "string"
+      },
+      {
+        "name": "textTextHoverColor",
+        "type": "string"
+      }
     ],
     "implementedInBlazor": true
   },
@@ -139,7 +268,7 @@
     "styleSource": "components/calendar/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -148,7 +277,7 @@
     "styleSource": "components/card/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -157,7 +286,7 @@
     "styleSource": "components/carousel/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -166,7 +295,7 @@
     "styleSource": "components/cascader/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -175,7 +304,7 @@
     "styleSource": "components/checkbox/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -184,7 +313,7 @@
     "styleSource": "components/col/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": false
   },
   {
@@ -193,7 +322,7 @@
     "styleSource": "components/collapse/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -202,7 +331,7 @@
     "styleSource": "components/color-picker/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": false
   },
   {
@@ -211,7 +340,7 @@
     "styleSource": "components/config-provider/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -220,10 +349,19 @@
     "styleSource": "components/date-picker/style/index.ts",
     "tokenSource": "components/date-picker/style/token.ts",
     "hasTokenSource": true,
-    "tokenNames": [
-      "presetsMaxWidth",
-      "presetsWidth",
-      "zIndexPopup"
+    "tokenDefinitions": [
+      {
+        "name": "presetsMaxWidth",
+        "type": "number"
+      },
+      {
+        "name": "presetsWidth",
+        "type": "number"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number"
+      }
     ],
     "implementedInBlazor": true
   },
@@ -233,7 +371,7 @@
     "styleSource": "components/descriptions/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -242,7 +380,7 @@
     "styleSource": "components/divider/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -251,7 +389,7 @@
     "styleSource": "components/drawer/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -260,7 +398,7 @@
     "styleSource": "components/dropdown/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -269,7 +407,7 @@
     "styleSource": "components/empty/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -278,7 +416,7 @@
     "styleSource": "components/flex/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -287,7 +425,7 @@
     "styleSource": "components/float-button/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": false
   },
   {
@@ -296,7 +434,7 @@
     "styleSource": "components/form/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -305,7 +443,7 @@
     "styleSource": "components/grid/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -314,7 +452,7 @@
     "styleSource": "components/image/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -323,7 +461,7 @@
     "styleSource": "components/input/style/index.ts",
     "tokenSource": "components/input/style/token.ts",
     "hasTokenSource": true,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -332,18 +470,51 @@
     "styleSource": "components/input-number/style/index.ts",
     "tokenSource": "components/input-number/style/token.ts",
     "hasTokenSource": true,
-    "tokenNames": [
-      "controlWidth",
-      "filledHandleBg",
-      "handleActiveBg",
-      "handleBg",
-      "handleBorderColor",
-      "handleFontSize",
-      "handleHoverColor",
-      "handleOpacity",
-      "handleVisible",
-      "handleVisibleWidth",
-      "handleWidth"
+    "tokenDefinitions": [
+      {
+        "name": "controlWidth",
+        "type": "number"
+      },
+      {
+        "name": "filledHandleBg",
+        "type": "string"
+      },
+      {
+        "name": "handleActiveBg",
+        "type": "string"
+      },
+      {
+        "name": "handleBg",
+        "type": "string"
+      },
+      {
+        "name": "handleBorderColor",
+        "type": "string"
+      },
+      {
+        "name": "handleFontSize",
+        "type": "number"
+      },
+      {
+        "name": "handleHoverColor",
+        "type": "string"
+      },
+      {
+        "name": "handleOpacity",
+        "type": "number"
+      },
+      {
+        "name": "handleVisible",
+        "type": "'auto' | true"
+      },
+      {
+        "name": "handleVisibleWidth",
+        "type": "number"
+      },
+      {
+        "name": "handleWidth",
+        "type": "number"
+      }
     ],
     "implementedInBlazor": true
   },
@@ -353,7 +524,7 @@
     "styleSource": "components/layout/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -362,7 +533,7 @@
     "styleSource": "components/list/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -371,7 +542,7 @@
     "styleSource": "components/listy/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": false
   },
   {
@@ -380,7 +551,7 @@
     "styleSource": "components/masonry/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": false
   },
   {
@@ -389,7 +560,7 @@
     "styleSource": "components/mentions/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -398,7 +569,7 @@
     "styleSource": "components/menu/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -407,7 +578,7 @@
     "styleSource": "components/message/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -416,7 +587,7 @@
     "styleSource": "components/modal/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -425,7 +596,7 @@
     "styleSource": "components/notification/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -434,7 +605,7 @@
     "styleSource": "components/pagination/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -443,7 +614,7 @@
     "styleSource": "components/popconfirm/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -452,7 +623,7 @@
     "styleSource": "components/popover/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -461,7 +632,7 @@
     "styleSource": "components/progress/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -470,7 +641,7 @@
     "styleSource": "components/qr-code/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": false
   },
   {
@@ -479,7 +650,7 @@
     "styleSource": "components/qrcode/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": false
   },
   {
@@ -488,7 +659,7 @@
     "styleSource": "components/radio/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -497,7 +668,7 @@
     "styleSource": "components/rate/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -506,7 +677,7 @@
     "styleSource": "components/result/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -515,7 +686,7 @@
     "styleSource": "components/row/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": false
   },
   {
@@ -524,7 +695,7 @@
     "styleSource": "components/segmented/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -533,23 +704,71 @@
     "styleSource": "components/select/style/index.ts",
     "tokenSource": "components/select/style/token.ts",
     "hasTokenSource": true,
-    "tokenNames": [
-      "activeBorderColor",
-      "activeOutlineColor",
-      "clearBg",
-      "hoverBorderColor",
-      "optionActiveBg",
-      "optionFontSize",
-      "optionHeight",
-      "optionLineHeight",
-      "optionPadding",
-      "optionSelectedBg",
-      "optionSelectedColor",
-      "optionSelectedFontWeight",
-      "selectorBg",
-      "showArrowPaddingInlineEnd",
-      "singleItemHeightLG",
-      "zIndexPopup"
+    "tokenDefinitions": [
+      {
+        "name": "activeBorderColor",
+        "type": "string"
+      },
+      {
+        "name": "activeOutlineColor",
+        "type": "string"
+      },
+      {
+        "name": "clearBg",
+        "type": "string"
+      },
+      {
+        "name": "hoverBorderColor",
+        "type": "string"
+      },
+      {
+        "name": "optionActiveBg",
+        "type": "string"
+      },
+      {
+        "name": "optionFontSize",
+        "type": "number"
+      },
+      {
+        "name": "optionHeight",
+        "type": "number"
+      },
+      {
+        "name": "optionLineHeight",
+        "type": "CSSProperties['lineHeight']"
+      },
+      {
+        "name": "optionPadding",
+        "type": "CSSProperties['padding']"
+      },
+      {
+        "name": "optionSelectedBg",
+        "type": "string"
+      },
+      {
+        "name": "optionSelectedColor",
+        "type": "string"
+      },
+      {
+        "name": "optionSelectedFontWeight",
+        "type": "CSSProperties['fontWeight']"
+      },
+      {
+        "name": "selectorBg",
+        "type": "string"
+      },
+      {
+        "name": "showArrowPaddingInlineEnd",
+        "type": "number"
+      },
+      {
+        "name": "singleItemHeightLG",
+        "type": "number"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number"
+      }
     ],
     "implementedInBlazor": true
   },
@@ -559,7 +778,7 @@
     "styleSource": "components/skeleton/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -568,7 +787,7 @@
     "styleSource": "components/slider/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -577,7 +796,7 @@
     "styleSource": "components/space/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -586,7 +805,7 @@
     "styleSource": "components/spin/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -595,7 +814,7 @@
     "styleSource": "components/splitter/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -604,7 +823,7 @@
     "styleSource": "components/statistic/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -613,7 +832,7 @@
     "styleSource": "components/steps/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -622,7 +841,7 @@
     "styleSource": "components/switch/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -631,7 +850,7 @@
     "styleSource": "components/table/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -640,7 +859,7 @@
     "styleSource": "components/tabs/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -649,7 +868,7 @@
     "styleSource": "components/tag/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -658,7 +877,7 @@
     "styleSource": "components/timeline/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -667,7 +886,7 @@
     "styleSource": "components/tooltip/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -676,7 +895,7 @@
     "styleSource": "components/tour/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": false
   },
   {
@@ -685,7 +904,7 @@
     "styleSource": "components/transfer/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -694,7 +913,7 @@
     "styleSource": "components/tree/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -703,7 +922,7 @@
     "styleSource": "components/tree-select/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -712,7 +931,7 @@
     "styleSource": "components/typography/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   },
   {
@@ -721,7 +940,7 @@
     "styleSource": "components/upload/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
-    "tokenNames": [],
+    "tokenDefinitions": [],
     "implementedInBlazor": true
   }
 ]
