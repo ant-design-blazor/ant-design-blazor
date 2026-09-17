@@ -444,6 +444,82 @@ namespace AntDesign.Theming
         public string ComponentToken { get; set; }
     }
 
+    public sealed class GeneratedComponentTokenSet
+    {
+        public AffixComponentToken Affix { get; set; } = new AffixComponentToken();
+        public AlertComponentToken Alert { get; set; } = new AlertComponentToken();
+        public AnchorComponentToken Anchor { get; set; } = new AnchorComponentToken();
+        public AppComponentToken App { get; set; } = new AppComponentToken();
+        public AvatarComponentToken Avatar { get; set; } = new AvatarComponentToken();
+        public BackTopComponentToken BackTop { get; set; } = new BackTopComponentToken();
+        public BadgeComponentToken Badge { get; set; } = new BadgeComponentToken();
+        public BorderBeamComponentToken BorderBeam { get; set; } = new BorderBeamComponentToken();
+        public BreadcrumbComponentToken Breadcrumb { get; set; } = new BreadcrumbComponentToken();
+        public ButtonComponentToken Button { get; set; } = new ButtonComponentToken();
+        public CalendarComponentToken Calendar { get; set; } = new CalendarComponentToken();
+        public CardComponentToken Card { get; set; } = new CardComponentToken();
+        public CarouselComponentToken Carousel { get; set; } = new CarouselComponentToken();
+        public CascaderComponentToken Cascader { get; set; } = new CascaderComponentToken();
+        public CheckboxComponentToken Checkbox { get; set; } = new CheckboxComponentToken();
+        public ColComponentToken Col { get; set; } = new ColComponentToken();
+        public CollapseComponentToken Collapse { get; set; } = new CollapseComponentToken();
+        public ColorPickerComponentToken ColorPicker { get; set; } = new ColorPickerComponentToken();
+        public ConfigProviderComponentToken ConfigProvider { get; set; } = new ConfigProviderComponentToken();
+        public DatePickerComponentToken DatePicker { get; set; } = new DatePickerComponentToken();
+        public DescriptionsComponentToken Descriptions { get; set; } = new DescriptionsComponentToken();
+        public DividerComponentToken Divider { get; set; } = new DividerComponentToken();
+        public DrawerComponentToken Drawer { get; set; } = new DrawerComponentToken();
+        public DropdownComponentToken Dropdown { get; set; } = new DropdownComponentToken();
+        public EmptyComponentToken Empty { get; set; } = new EmptyComponentToken();
+        public FlexComponentToken Flex { get; set; } = new FlexComponentToken();
+        public FloatButtonComponentToken FloatButton { get; set; } = new FloatButtonComponentToken();
+        public FormComponentToken Form { get; set; } = new FormComponentToken();
+        public GridComponentToken Grid { get; set; } = new GridComponentToken();
+        public ImageComponentToken Image { get; set; } = new ImageComponentToken();
+        public InputNumberComponentToken InputNumber { get; set; } = new InputNumberComponentToken();
+        public InputComponentToken Input { get; set; } = new InputComponentToken();
+        public LayoutComponentToken Layout { get; set; } = new LayoutComponentToken();
+        public ListComponentToken List { get; set; } = new ListComponentToken();
+        public ListyComponentToken Listy { get; set; } = new ListyComponentToken();
+        public MasonryComponentToken Masonry { get; set; } = new MasonryComponentToken();
+        public MentionsComponentToken Mentions { get; set; } = new MentionsComponentToken();
+        public MenuComponentToken Menu { get; set; } = new MenuComponentToken();
+        public MessageComponentToken Message { get; set; } = new MessageComponentToken();
+        public ModalComponentToken Modal { get; set; } = new ModalComponentToken();
+        public NotificationComponentToken Notification { get; set; } = new NotificationComponentToken();
+        public PaginationComponentToken Pagination { get; set; } = new PaginationComponentToken();
+        public PopconfirmComponentToken Popconfirm { get; set; } = new PopconfirmComponentToken();
+        public PopoverComponentToken Popover { get; set; } = new PopoverComponentToken();
+        public ProgressComponentToken Progress { get; set; } = new ProgressComponentToken();
+        public QrCodeComponentToken QrCode { get; set; } = new QrCodeComponentToken();
+        public QrcodeComponentToken Qrcode { get; set; } = new QrcodeComponentToken();
+        public RadioComponentToken Radio { get; set; } = new RadioComponentToken();
+        public RateComponentToken Rate { get; set; } = new RateComponentToken();
+        public ResultComponentToken Result { get; set; } = new ResultComponentToken();
+        public RowComponentToken Row { get; set; } = new RowComponentToken();
+        public SegmentedComponentToken Segmented { get; set; } = new SegmentedComponentToken();
+        public SelectComponentToken Select { get; set; } = new SelectComponentToken();
+        public SkeletonComponentToken Skeleton { get; set; } = new SkeletonComponentToken();
+        public SliderComponentToken Slider { get; set; } = new SliderComponentToken();
+        public SpaceComponentToken Space { get; set; } = new SpaceComponentToken();
+        public SpinComponentToken Spin { get; set; } = new SpinComponentToken();
+        public SplitterComponentToken Splitter { get; set; } = new SplitterComponentToken();
+        public StatisticComponentToken Statistic { get; set; } = new StatisticComponentToken();
+        public StepsComponentToken Steps { get; set; } = new StepsComponentToken();
+        public SwitchComponentToken Switch { get; set; } = new SwitchComponentToken();
+        public TableComponentToken Table { get; set; } = new TableComponentToken();
+        public TabsComponentToken Tabs { get; set; } = new TabsComponentToken();
+        public TagComponentToken Tag { get; set; } = new TagComponentToken();
+        public TimelineComponentToken Timeline { get; set; } = new TimelineComponentToken();
+        public TooltipComponentToken Tooltip { get; set; } = new TooltipComponentToken();
+        public TourComponentToken Tour { get; set; } = new TourComponentToken();
+        public TransferComponentToken Transfer { get; set; } = new TransferComponentToken();
+        public TreeSelectComponentToken TreeSelect { get; set; } = new TreeSelectComponentToken();
+        public TreeComponentToken Tree { get; set; } = new TreeComponentToken();
+        public TypographyComponentToken Typography { get; set; } = new TypographyComponentToken();
+        public UploadComponentToken Upload { get; set; } = new UploadComponentToken();
+    }
+
     public static class GeneratedComponentTokens
     {
         public static IReadOnlyList<ComponentTokenDefinition> All { get; } = new ReadOnlyCollection<ComponentTokenDefinition>(new[]
