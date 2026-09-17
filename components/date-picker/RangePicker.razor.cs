@@ -585,6 +585,10 @@ namespace AntDesign
             _isSetPicker = false;
 
             var array = Value as Array;
+            if (array == null || !_isInitialized)
+            {
+                return;
+            }
             ReadOnlySpan<int> indexToClear;
             if (index == -1)
             {

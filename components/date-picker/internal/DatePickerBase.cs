@@ -39,6 +39,7 @@ namespace AntDesign
 
         protected DatePickerType _picker;
         protected bool _isSetPicker = false;
+        protected bool _isInitialized;
         private bool _isNullableEvaluated;
         private bool _isNullable;
 
@@ -471,6 +472,8 @@ namespace AntDesign
             this.SetClass();
 
             base.OnInitialized();
+
+            _isInitialized = true;
         }
 
         protected bool _shouldRender = true;
