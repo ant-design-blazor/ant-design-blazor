@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using AntDesign.JsInterop;
 using Bunit;
 using Microsoft.AspNetCore.Components;
@@ -14,6 +16,21 @@ namespace AntDesign.Tests.Form.Validation
     {
         public FormItemTests() : base()
         {
+        }
+
+        [Fact]
+        public void NameSetter_ShouldNotifyOnlyWhenNameChanges()
+        {
+            var item = new FormItem();
+            var notifications = 0;
+            typeof(FormItem)
+                .GetField("_nameChanged", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .SetValue(item, (Action)(() => notifications++));
+
+            item.Name = "field";
+            item.Name = "field";
+
+            Assert.Equal(1, notifications);
         }
 
         [Theory]
