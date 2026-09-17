@@ -5,6 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 OUTPUT_DIR="${1:-dist}"
+ENABLE_AOT="${ENABLE_AOT:-true}"
 
 if [[ "${OUTPUT_DIR}" != /* ]]; then
   OUTPUT_DIR="${REPO_ROOT}/${OUTPUT_DIR}"
@@ -30,7 +31,9 @@ if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-sdks | grep -q '^10\.'
   export PATH="${DOTNET_INSTALL_DIR}:${PATH}"
 fi
 
-dotnet workload install wasm-tools
+if [[ "${ENABLE_AOT}" == "true" ]]; then
+  dotnet workload install wasm-tools
+fi
 npm install
 
 VERSION="${PACKAGE_VERSION:-}"
@@ -49,7 +52,11 @@ sed -i "s/{version}/${VERSION}/g" site/AntDesign.Docs.Wasm/wwwroot/index.html
 sed -i "s/{version}/${VERSION}/g" site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
 
 dotnet build
-dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o "${PUBLISH_DIR}" -p:EnableAOT=true
+PUBLISH_ARGS=(./site/AntDesign.Docs.Wasm -c Release -o "${PUBLISH_DIR}")
+if [[ "${ENABLE_AOT}" == "true" ]]; then
+  PUBLISH_ARGS+=("-p:EnableAOT=true")
+fi
+dotnet publish "${PUBLISH_ARGS[@]}"
 cp -rf "${PUBLISH_DIR}/wwwroot/." "${OUTPUT_DIR}/"
 cp -f "${PUBLISH_DIR}/staticwebapp.config.json" "${OUTPUT_DIR}/" 2>/dev/null || true
 echo "/* /index.html 200" > "${OUTPUT_DIR}/_redirects"
