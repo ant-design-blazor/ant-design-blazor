@@ -2,6 +2,23 @@
 
 @code {
     [Fact]
+    public void Row_DoesNotNotifyBreakpointWhenBreakpointIsUnchanged()
+    {
+        JSInterop.Setup<Window>("AntDesign.interop.domInfoHelper.getWindow", _ => true)
+            .SetResult(new Window { InnerWidth = 1000 });
+        var notifications = 0;
+        var cut = RenderComponent<Row>(parameters => parameters
+            .Add(x => x.OnBreakpoint, _ => notifications++));
+
+        var optimizeSize = typeof(Row).GetMethod("OptimizeSize", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        optimizeSize.Invoke(cut.Instance, new object[] { 1000m });
+        var notificationsAfterFirstResize = notifications;
+        optimizeSize.Invoke(cut.Instance, new object[] { 1000m });
+
+        Assert.Equal(notificationsAfterFirstResize, notifications);
+    }
+
+    [Fact]
     public void Render_basic_layout()
     {
         var cut = Render(
