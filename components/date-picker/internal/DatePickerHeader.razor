@@ -23,13 +23,13 @@
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
-                @(PickerValue.ToString(Locale.Lang.MonthFormat, CultureInfo))
+                @FormatMonth(PickerValue, Locale.Lang.MonthFormat)
             </button>
         }
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
-                @(PickerValue.ToString(Locale.Lang.YearFormat, CultureInfo))
+                @FormatYear(PickerValue, Locale.Lang.YearFormat)
             </button>
         }
     }
@@ -38,13 +38,13 @@
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
-                @(PickerValue.ToString(Locale.Lang.YearFormat, CultureInfo))
+                @FormatYear(PickerValue, Locale.Lang.YearFormat)
             </button>
         }
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
         {
             <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
-                @(PickerValue.ToString(Locale.Lang.MonthFormat, CultureInfo))
+                @FormatMonth(PickerValue, Locale.Lang.MonthFormat)
             </button>
         }
 
@@ -52,17 +52,17 @@
 
     @if (Picker.IsIn(DatePickerType.Year))
     {
-        int startYear = PickerValue.Year / 10 * 10;
+        int startYear = Calendar.GetYear(PickerValue) / 10 * 10;
         int showCount = 9;
 
-        if (startYear < DateTime.MinValue.Year)
+        if (startYear < Calendar.GetYear(Calendar.MinSupportedDateTime))
         {
-            startYear = DateTime.MinValue.Year;
+            startYear = Calendar.GetYear(Calendar.MinSupportedDateTime);
             showCount = 10;
         }
 
-        var startYearTitle = new DateTime(startYear, 1, 1).ToString(Locale.Lang.YearFormat, CultureInfo);
-        var endYearTitle = new DateTime(startYear + showCount, 1, 1).ToString(Locale.Lang.YearFormat, CultureInfo);
+        var startYearTitle = FormatYear(DateHelper.CreateDate(Calendar, startYear, 1, 1, PickerValue), Locale.Lang.YearFormat);
+        var endYearTitle = FormatYear(DateHelper.CreateDate(Calendar, startYear + showCount, 1, 1, PickerValue), Locale.Lang.YearFormat);
 
         <button type="button" class="@(PrefixCls)-decade-btn" @onclick="e => PopUpPicker(DatePickerType.Decade)">
             @(startYearTitle)-@(endYearTitle)
@@ -70,11 +70,11 @@
     }
     @if (Picker.IsIn(DatePickerType.Decade))
     {
-        int startYear = PickerValue.Year / 100 * 100;
+        int startYear = Calendar.GetYear(PickerValue) / 100 * 100;
 
-        if (startYear < DateTime.MinValue.Year)
+        if (startYear < Calendar.GetYear(Calendar.MinSupportedDateTime))
         {
-            startYear = DateTime.MinValue.Year + 10;
+            startYear = Calendar.GetYear(Calendar.MinSupportedDateTime) + 10;
         }
 
         <button type="button" class="@(PrefixCls)-decade-btn">

@@ -1,0 +1,18 @@
+@using System.Globalization
+@inherits AntDesignTestBase
+
+@code {
+    [Theory]
+    [InlineData(typeof(PersianCalendar), 2024, 3, 20)]
+    [InlineData(typeof(ChineseLunisolarCalendar), 2024, 2, 10)]
+    public void Calendar_uses_the_configured_dotnet_calendar(Type calendarType, int year, int month, int day)
+    {
+        var calendar = (System.Globalization.Calendar)Activator.CreateInstance(calendarType)!;
+        var value = new DateTime(year, month, day);
+
+        var cut = Render<AntDesign.Calendar>(
+            @<Calendar Value="@value" DateCalendar="@calendar" />);
+
+        cut.Find("td.ant-picker-cell-selected").TextContent.Trim().Should().Be(calendar.GetDayOfMonth(value).ToString());
+    }
+}
