@@ -593,6 +593,14 @@ namespace AntDesign
             }
             if (!SelectOptionItems.Any())
             {
+                if (!values.Any())
+                {
+                    _cachedOrderedSelectedItems = null;
+                    if (ValuesChanged.HasDelegate)
+                        await ValuesChanged.InvokeAsync(Values);
+                    if (OnSelectedItemsChanged.HasDelegate)
+                        await OnSelectedItemsChanged.InvokeAsync(Enumerable.Empty<TItem>());
+                }
                 return;
             }
             _cachedOrderedSelectedItems = null;
