@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design",
+    "revision": "599b251da9",
+    "version": "6.6.4"
+  },
+  "generator": {
+    "name": "antd",
+    "version": "6.6.4"
+  },
+  "tokens": [
+    {
+      "name": "colorPrimary",
+      "kind": "seed",
+      "type": "color",
+      "value": "#1677ff",
+      "cssVariable": "--ant-color-primary",
+      "component": null,
+      "source": "components/theme/themes/seed.ts"
+    },
+    {
+      "name": "borderRadius",
+      "kind": "alias",
+      "type": "length",
+      "value": 6,
+      "cssVariable": "--ant-border-radius",
+      "component": null,
+      "source": "components/theme/util/alias.ts"
+    },
+    {
+      "name": "primaryShadow",
+      "kind": "component",
+      "type": "shadow",
+      "value": "0 2px 0 rgba(5, 145, 255, 0.1)",
+      "cssVariable": "--ant-button-primary-shadow",
+      "component": "Button",
+      "source": "components/button/style/token.ts"
+    }
+  ],
+  "styles": [
+    {
+      "component": "Button",
+      "layer": "static",
+      "selector": ".ant-btn-primary",
+      "declarations": [
+        { "property": "background", "value": "var(--ant-color-primary)" },
+        { "property": "border-radius", "value": "var(--ant-border-radius)" }
+      ],
+      "atRules": [],
+      "source": "components/button/style/index.ts"
+    },
+    {
+      "component": "Button",
+      "layer": "token-values",
+      "selector": ".ant-theme-app",
+      "declarations": [
+        { "property": "--ant-color-primary", "value": "#1677ff" },
+        { "property": "--ant-button-primary-shadow", "value": "0 2px 0 rgba(5, 145, 255, 0.1)" }
+      ],
+      "atRules": [],
+      "source": "components/theme/themes/seed.ts"
+    }
+  ],
+  "themes": [
+    {
+      "key": "light",
+      "name": "Ant Design",
+      "appearance": "light",
+      "source": ".dumi/pages/index/components/ThemePreview/previewThemes/index.ts"
+    }
+  ],
+  "unsupported": []
+}

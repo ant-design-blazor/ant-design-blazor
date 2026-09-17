@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "version": "6.6.4"
+  },
+  "generator": {
+    "name": "@ant-design-blazor/style-generator",
+    "version": "0.1.0"
+  },
+  "generatedAt": "2026-09-17T16:55:50.921Z",
+  "sourcePath": "/Volumes/Data/GitHub/ant-design",
+  "artifacts": {
+    "ir": "style-ir.json",
+    "components": "components.json",
+    "themes": "themes.json",
+    "unsupported": "unsupported.json"
+  }
+}

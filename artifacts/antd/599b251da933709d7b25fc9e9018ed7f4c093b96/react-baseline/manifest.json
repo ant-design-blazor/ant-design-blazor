@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "version": "6.6.4"
+  },
+  "generator": {
+    "name": "antd-react-static-style-extract",
+    "version": "6.6.4"
+  },
+  "protocol": {
+    "encoding": "utf-8",
+    "lineEnding": "lf",
+    "trailingNewline": "preserve"
+  },
+  "inputDigest": "bfc35e027a02b1b053fd8a8631402f9b0ef7bbfd061efabae2b8880d2b38a4c4",
+  "artifacts": [
+    {
+      "id": "antd.light.static",
+      "path": "static/antd.css",
+      "layer": "static",
+      "component": "antd",
+      "theme": "light",
+      "encoding": "utf-8",
+      "lineEnding": "lf",
+      "trailingNewline": "none",
+      "sha256": "620ff2c0f652a06a328bdaa12327719801bd3394342aa58e7d816501b6f38a7a",
+      "byteLength": 1018549
+    }
+  ]
+}

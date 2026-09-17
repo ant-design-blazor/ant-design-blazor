@@ -1,0 +1,163 @@
+@page "/theme-migration-preview"
+@page "/zh-CN/theme-migration-preview"
+@using AntDesign.Theming
+@using Microsoft.AspNetCore.Components.Rendering
+
+<PageTitle>主题迁移测试</PageTitle>
+
+<div class="theme-preview-page">
+    <h1>Ant Design v6 主题迁移测试</h1>
+    <p class="theme-preview-lead">用于验证 Design Token、CSS 变量和组件样式在多个主题之间切换时的表现。</p>
+
+    <label class="theme-preview-selector">
+        <span>选择主题</span>
+        <select value="@_selectedTheme" @onchange="ChangeTheme">
+            @foreach (var theme in _themes.Values)
+            {
+                <option value="@theme.Key">@theme.Label</option>
+            }
+        </select>
+    </label>
+
+    <div class="theme-preview-meta">
+        当前主题：<strong>@CurrentTheme.Label</strong>
+        <span>（@CurrentTheme.Appearance，@CurrentContext.Config.Algorithm 算法）</span>
+    </div>
+
+    <style>
+        .theme-preview-page { max-width: 1100px; margin: 32px auto; padding: 0 24px; }
+        .theme-preview-lead { color: #667085; }
+        .theme-preview-selector { display: flex; align-items: center; gap: 12px; margin: 24px 0 12px; }
+        .theme-preview-selector select { min-width: 180px; padding: 6px 10px; border: 1px solid #d9d9d9; border-radius: 6px; }
+        .theme-preview-meta { margin-bottom: 16px; color: #667085; }
+        .theme-preview-surface { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr); gap: 16px; padding: 24px; border: 1px solid; border-radius: 12px; transition: background .2s, color .2s, border-color .2s; }
+        .theme-preview-card { padding: 20px; border-radius: 8px; background: color-mix(in srgb, var(--ant-color-bg-container) 92%, var(--ant-color-primary)); }
+        .theme-preview-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .theme-preview-input { margin-top: 16px; max-width: 320px; }
+        .token-inspector dl { display: grid; grid-template-columns: 1fr 1.5fr; gap: 8px 12px; margin: 0; }
+        .token-inspector dt { font-weight: 600; }
+        .token-inspector dd { margin: 0; overflow-wrap: anywhere; }
+        .token-inspector code { display: block; margin-top: 2px; color: #667085; font-size: 12px; }
+        @@media (max-width: 720px) { .theme-preview-surface { grid-template-columns: 1fr; } }
+        @((MarkupString)TokenCss)
+        @((MarkupString)ComponentCss)
+    </style>
+
+    <section class="theme-preview-surface @CurrentContext.Config.ThemeScope-@CurrentTheme.Key">
+        <div class="theme-preview-card">
+            <h2>组件预览</h2>
+            <div class="theme-preview-row">
+                <Button Type="ButtonType.Primary">主要按钮</Button>
+                <Button>默认按钮</Button>
+                <Button Type="ButtonType.Dashed">虚线按钮</Button>
+            </div>
+            <Alert Message="这是 Alert 组件的主题变量预览。" ShowIcon="true" />
+            <div class="theme-preview-input">
+                <Input Placeholder="请输入内容" TValue="string" />
+            </div>
+        </div>
+
+        <div class="theme-preview-card token-inspector">
+            <h2>Design Token</h2>
+            <dl>
+                @foreach (var token in CurrentTheme.Tokens)
+                {
+                    <dt>@token.Key</dt>
+                    <dd>@token.Value <code>var(--ant-@TokenView.ToKebabCase(token.Key))</code></dd>
+                }
+            </dl>
+        </div>
+    </section>
+</div>
+
+@code {
+    private readonly Dictionary<string, PreviewTheme> _themes = CreateThemes();
+    private readonly StyleFactory _styleFactory = new();
+    private string _selectedTheme = "light";
+
+    private PreviewTheme CurrentTheme => _themes[_selectedTheme];
+    private IThemeContext CurrentContext => new ThemeContext(new ThemeConfig
+    {
+        Key = CurrentTheme.Key,
+        Algorithm = CurrentTheme.Algorithm,
+        ThemeScope = "theme-preview",
+        Token = CurrentTheme.Tokens
+    });
+
+    private string TokenCss => TokenCssSerializer.SerializeVariables(CurrentContext.ScopeSelector, CurrentTheme.Tokens.Select(token => new DesignToken
+    {
+        Name = token.Key,
+        CssVariable = $"--ant-{TokenView.ToKebabCase(token.Key)}",
+        Value = token.Value
+    }));
+
+    private string ComponentCss => _styleFactory.Create("theme-preview", "components", CurrentContext, context => new StyleDefinition
+    {
+        Selector = ".theme-preview-surface .ant-btn-primary",
+        Declarations =
+        {
+            new StyleDeclaration { Property = "background", Value = context.CssVar("colorPrimary") },
+            new StyleDeclaration { Property = "border-color", Value = context.CssVar("colorPrimary") }
+        }
+    }).Css + _styleFactory.Create("theme-preview", "surface", CurrentContext, context => new StyleDefinition
+    {
+        Selector = ".theme-preview-surface",
+        Declarations =
+        {
+            new StyleDeclaration { Property = "background", Value = context.CssVar("colorBgContainer") },
+            new StyleDeclaration { Property = "color", Value = context.CssVar("colorText") },
+            new StyleDeclaration { Property = "border-color", Value = context.CssVar("colorBorder") }
+        }
+    }).Css;
+
+    private void ChangeTheme(ChangeEventArgs args)
+    {
+        var key = args.Value?.ToString();
+        if (!string.IsNullOrWhiteSpace(key) && _themes.ContainsKey(key)) _selectedTheme = key;
+    }
+
+    private static Dictionary<string, PreviewTheme> CreateThemes()
+    {
+        var definitions = new[]
+        {
+            new PreviewTheme("light", "Ant Design", "light", "default", "#1677ff", "#ffffff", "rgba(0,0,0,.88)", "#d9d9d9"),
+            new PreviewTheme("mui", "MUI", "light", "mui", "#1976d2", "#ffffff", "rgba(0,0,0,.87)", "#c4c4c4"),
+            new PreviewTheme("shadcn", "shadcn", "light", "shadcn", "#18181b", "#ffffff", "#18181b", "#e4e4e7"),
+            new PreviewTheme("bootstrap", "Bootstrap", "light", "bootstrap", "#0d6efd", "#ffffff", "#212529", "#dee2e6"),
+            new PreviewTheme("cartoon", "Cartoon", "light", "cartoon", "#ff6b6b", "#fff8e7", "#3d2b1f", "#ffcf70"),
+            new PreviewTheme("dark", "Dark", "dark", "dark", "#1668dc", "#141414", "rgba(255,255,255,.85)", "#424242"),
+            new PreviewTheme("illustration", "Illustration", "light", "illustration", "#7c5cff", "#fff", "#2e2459", "#d9d0ff"),
+            new PreviewTheme("glass", "Glass", "light", "glass", "#1677ff", "rgba(255,255,255,.72)", "#102a43", "rgba(255,255,255,.55)"),
+            new PreviewTheme("geek", "Geek", "dark", "geek", "#00b96b", "#101418", "#e6fffb", "#29343b"),
+            new PreviewTheme("lark", "Document", "light", "lark", "#3370ff", "#fff", "#1f2329", "#c9cdd4"),
+            new PreviewTheme("blossom", "Blossom", "light", "blossom", "#eb2f96", "#fff7fb", "#4a2036", "#ffc6e2"),
+            new PreviewTheme("v4", "Ant Design V4", "light", "v4", "#1890ff", "#fff", "rgba(0,0,0,.85)", "#d9d9d9"),
+            new PreviewTheme("serene", "Serene", "light", "serene", "#5b8c85", "#f6ffed", "#274c45", "#b7d8d0")
+        };
+        return definitions.ToDictionary(theme => theme.Key, StringComparer.Ordinal);
+    }
+
+    private sealed class PreviewTheme
+    {
+        public string Key { get; }
+        public string Label { get; }
+        public string Appearance { get; }
+        public string Algorithm { get; }
+        public Dictionary<string, string> Tokens { get; }
+
+        public PreviewTheme(string key, string label, string appearance, string algorithm, string primary, string background, string text, string border)
+        {
+            Key = key;
+            Label = label;
+            Appearance = appearance;
+            Algorithm = algorithm;
+            Tokens = new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["colorPrimary"] = primary,
+                ["colorBgContainer"] = background,
+                ["colorText"] = text,
+                ["colorBorder"] = border
+            };
+        }
+    }
+}

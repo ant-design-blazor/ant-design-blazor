@@ -1,0 +1,120 @@
+@page "/"
+@page "/theme-preview"
+
+<PageTitle>Ant Design v6 新样式预览</PageTitle>
+
+<div class="preview-shell" style="@CurrentStyle">
+    <header>
+        <div>
+            <p class="preview-eyebrow">Ant Design Blazor · v6 migration</p>
+            <h1>新 CSS 变量主题预览</h1>
+            <p>独立宿主页面：没有加载旧版 Less CSS，仅验证迁移后的 Token 变量和组件基础样式。</p>
+        </div>
+        <label class="preview-select">
+            <span>主题</span>
+            <select value="@_themeKey" @onchange="ChangeTheme">
+                @foreach (var theme in Themes)
+                {
+                    <option value="@theme.Key">@theme.Label</option>
+                }
+            </select>
+        </label>
+    </header>
+
+    <div class="preview-status">当前：<strong>@CurrentTheme.Label</strong> · @CurrentTheme.Appearance · Token 变量实时作用域</div>
+
+    <section class="preview-grid">
+        <article class="preview-card">
+            <h2>已迁移组件</h2>
+            <div class="button-row">
+                <Button Type="ButtonType.Primary">主要按钮</Button>
+                <Button>默认按钮</Button>
+                <Button Type="ButtonType.Dashed">虚线按钮</Button>
+            </div>
+            <Alert Message="Alert 使用当前主题的颜色变量。" ShowIcon="true" />
+            <div class="input-wrap">
+                <Input TValue="string" Placeholder="Input 使用当前主题的边框变量" />
+            </div>
+        </article>
+        <article class="preview-card token-card">
+            <h2>Token / CssVar</h2>
+            @foreach (var token in CurrentTheme.Tokens)
+            {
+                <div class="token-line">
+                    <code>@token.Key</code>
+                    <span>@token.Value</span>
+                    <small>var(--ant-@TokenView.ToKebabCase(token.Key))</small>
+                </div>
+            }
+        </article>
+    </section>
+</div>
+
+@code {
+    private readonly StyleFactory _styleFactory = new();
+    private readonly IReadOnlyList<PreviewTheme> Themes = PreviewTheme.CreateAll();
+    private string _themeKey = "light";
+
+    private PreviewTheme CurrentTheme => Themes.First(theme => theme.Key == _themeKey);
+    private IThemeContext CurrentContext => new ThemeContext(new ThemeConfig
+    {
+        Key = CurrentTheme.Key,
+        ThemeScope = "ant-preview",
+        Token = CurrentTheme.Tokens
+    });
+
+    private string CurrentStyle
+    {
+        get
+        {
+            var tokenStyle = string.Join("; ", CurrentTheme.Tokens.Select(token => $"--ant-{TokenView.ToKebabCase(token.Key)}: {token.Value}"));
+            var generated = _styleFactory.Create("preview", "surface", CurrentContext, context => new StyleDefinition
+            {
+                Selector = ".preview-shell",
+                Declarations = { new StyleDeclaration { Property = "--preview-primary", Value = context.CssVar("colorPrimary") } }
+            });
+            return $"{tokenStyle}; --preview-generated-class: {generated.ClassName}";
+        }
+    }
+
+    private void ChangeTheme(ChangeEventArgs args)
+    {
+        var key = args.Value?.ToString();
+        if (!string.IsNullOrWhiteSpace(key) && Themes.Any(theme => theme.Key == key)) _themeKey = key;
+    }
+
+    private sealed class PreviewTheme
+    {
+        public string Key { get; }
+        public string Label { get; }
+        public string Appearance { get; }
+        public Dictionary<string, string> Tokens { get; }
+
+        private PreviewTheme(string key, string label, string appearance, string primary, string background, string text, string border)
+        {
+            Key = key; Label = label; Appearance = appearance;
+            Tokens = new Dictionary<string, string>(StringComparer.Ordinal)
+            {
+                ["colorPrimary"] = primary, ["colorBgContainer"] = background,
+                ["colorText"] = text, ["colorBorder"] = border
+            };
+        }
+
+        public static IReadOnlyList<PreviewTheme> CreateAll() => new[]
+        {
+            new PreviewTheme("light", "Ant Design", "light", "#1677ff", "#ffffff", "#1f1f1f", "#d9d9d9"),
+            new PreviewTheme("dark", "Dark", "dark", "#1668dc", "#141414", "#ffffff", "#424242"),
+            new PreviewTheme("mui", "MUI", "light", "#1976d2", "#ffffff", "#1f1f1f", "#c4c4c4"),
+            new PreviewTheme("shadcn", "shadcn", "light", "#18181b", "#ffffff", "#18181b", "#e4e4e7"),
+            new PreviewTheme("bootstrap", "Bootstrap", "light", "#0d6efd", "#ffffff", "#212529", "#dee2e6"),
+            new PreviewTheme("cartoon", "Cartoon", "light", "#ff6b6b", "#fff8e7", "#3d2b1f", "#ffcf70"),
+            new PreviewTheme("illustration", "Illustration", "light", "#7c5cff", "#ffffff", "#2e2459", "#d9d0ff"),
+            new PreviewTheme("glass", "Glass", "light", "#1677ff", "#eef6ff", "#102a43", "#b7d7f5"),
+            new PreviewTheme("geek", "Geek", "dark", "#00b96b", "#101418", "#e6fffb", "#29343b"),
+            new PreviewTheme("lark", "Document", "light", "#3370ff", "#ffffff", "#1f2329", "#c9cdd4"),
+            new PreviewTheme("blossom", "Blossom", "light", "#eb2f96", "#fff7fb", "#4a2036", "#ffc6e2"),
+            new PreviewTheme("v4", "Ant Design V4", "light", "#1890ff", "#ffffff", "#1f1f1f", "#d9d9d9"),
+            new PreviewTheme("serene", "Serene", "light", "#5b8c85", "#f6ffed", "#274c45", "#b7d8d0")
+        };
+    }
+}

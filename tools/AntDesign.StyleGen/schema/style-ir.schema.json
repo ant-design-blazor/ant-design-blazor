@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ant-design-blazor.dev/schemas/style-ir.schema.json",
+  "title": "Ant Design Blazor Style IR",
+  "type": "object",
+  "required": ["schemaVersion", "upstream", "generator", "tokens", "styles", "themes", "unsupported"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "upstream": {
+      "type": "object",
+      "required": ["repository", "revision", "version"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "pattern": "^[0-9a-f]{7,40}$" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+" }
+      },
+      "additionalProperties": false
+    },
+    "generator": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "tokens": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/token" }
+    },
+    "styles": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/style" }
+    },
+    "themes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/theme" }
+    },
+    "unsupported": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/unsupported" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "token": {
+      "type": "object",
+      "required": ["name", "kind", "type", "value", "cssVariable", "source"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*$" },
+        "kind": { "enum": ["seed", "alias", "component", "semantic"] },
+        "type": { "enum": ["color", "length", "number", "font", "shadow", "motion", "string", "unknown"] },
+        "value": {},
+        "cssVariable": { "type": "string", "pattern": "^--[a-z0-9-]+$" },
+        "component": { "type": ["string", "null"] },
+        "source": { "type": "string", "minLength": 1 },
+        "reserved": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "style": {
+      "type": "object",
+      "required": ["component", "layer", "selector", "declarations", "atRules", "source"],
+      "properties": {
+        "component": { "type": "string", "minLength": 1 },
+        "layer": { "enum": ["static", "token-values", "runtime-overrides"] },
+        "selector": { "type": "string", "minLength": 1 },
+        "declarations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["property", "value"],
+            "properties": {
+              "property": { "type": "string", "minLength": 1 },
+              "value": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "atRules": { "type": "array", "items": { "type": "string" } },
+        "source": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "theme": {
+      "type": "object",
+      "required": ["key", "name", "appearance", "source"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "appearance": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "unsupported": {
+      "type": "object",
+      "required": ["source", "feature", "reason"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "feature": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

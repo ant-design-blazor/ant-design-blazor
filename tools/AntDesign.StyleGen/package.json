@@ -1,0 +1,12 @@
+{
+  "name": "@ant-design-blazor/style-generator",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:mvp": "node --test test/mvp.test.mjs"
+  },
+  "dependencies": {
+    "ajv": "^6.12.6"
+  }
+}
