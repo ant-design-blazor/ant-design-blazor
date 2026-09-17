@@ -8,7 +8,8 @@ on:
       - doc-fix
 
 jobs:
-  publish-and-deploy:
+  build-site:
+    name: Build docs site
     runs-on: ubuntu-latest
     if: github.repository_owner == 'ant-design-blazor'
 
@@ -38,12 +39,10 @@ jobs:
         run: |
           dotnet workload install wasm-tools
 
-      - name: Publish Docs 🎉
-        id: publish
+      - name: Build Docs 🎉
         run: |
           git fetch --all
           VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/ant-design-blazor/ant-design-blazor/tags | grep 'name' | cut -d\" -f4 | head -1)
-          echo "package_version=${VERSION}" >> $GITHUB_OUTPUT
           npm install
           echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
@@ -58,15 +57,45 @@ jobs:
           echo "/* /index.html 200" > cargo/wwwroot/_redirects
           find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
 
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-site
+          path: cargo/wwwroot/
+          retention-days: 7
+
+  deploy-cloudflare:
+    name: Publish to Cloudflare Pages
+    needs: build-site
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-site
+          path: cargo/wwwroot
+
       - name: Deploy to Cloudflare Pages 🚀
-        id: deploy_cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_TOKEN }}
           accountId: ${{ secrets.CF_ID }}
           command: pages deploy cargo/wwwroot --project-name=ant-design-blazor --branch=main
 
-      - name: Deploy
+  deploy-github-pages:
+    name: Push to GitHub Pages
+    needs: build-site
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-site
+          path: cargo/wwwroot
+
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
