@@ -8,7 +8,7 @@
 @if (ChildContent != null)
 {
     <div class="@ClassMapper.Class"
-         style="@inlineFlexDisplay @Style"
+         style="@inlineFlexDisplay @InlineHolderStyle @Style"
          id="@Id"
          @ref="@Ref"
          @onclick="OnClickDiv"
@@ -24,7 +24,16 @@
 
 @if (Unbound != null)
 {
-    @Unbound(RefBack)
+    @if (Inline)
+    {
+        <div id="@_inlineHolderId" style="@InlineHolderStyle">
+            @Unbound(RefBack)
+        </div>
+    }
+    else
+    {
+        @Unbound(RefBack)
+    }
 }
 
 <CascadingValue Value="this" Name="Trigger" IsFixed="@true">

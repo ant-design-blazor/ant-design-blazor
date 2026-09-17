@@ -87,6 +87,19 @@ namespace AntDesign.Internal
         public bool IsButton { get; set; } = false;
 
         /// <summary>
+        /// Disables enter and leave animations for this overlay.
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        public bool DisableAnimation { get; set; } = false;
+
+        /// <summary>
+        /// Keeps the overlay in a local holder, disables motion, and reserves layout space for it.
+        /// </summary>
+        [Parameter]
+        public bool Inline { get; set; }
+
+        /// <summary>
         /// Callback when triggger is clicked
         /// </summary>
         [Parameter]
@@ -193,6 +206,20 @@ namespace AntDesign.Internal
         /// <default value="body" />
         [Parameter]
         public string PopupContainerSelector { get; set; } = "body";
+
+        private readonly string _inlineHolderId = $"ant-overlay-inline-{Guid.NewGuid():N}";
+        private decimal _inlineOverlayHeight;
+        private decimal _inlineOverlayWidth;
+        private bool _inlineShown;
+        private bool _inlineMeasured;
+
+        internal string EffectivePopupContainerSelector => Inline
+            ? (Unbound is null ? $"#{Id}" : $"#{_inlineHolderId}")
+            : PopupContainerSelector;
+
+        private string InlineHolderStyle => Inline
+            ? $"position: relative; padding-bottom: {_inlineOverlayHeight}px; min-width: {_inlineOverlayWidth}px;"
+            : string.Empty;
 
         /// <summary>
         /// Trigger mode. Could be multiple by passing an array.
@@ -340,6 +367,22 @@ namespace AntDesign.Internal
             }
 
             await base.OnAfterRenderAsync(firstRender);
+
+            if (Inline && !_inlineShown)
+            {
+                _inlineShown = true;
+                await _overlay.Show();
+                return;
+            }
+
+            if (Inline && !_inlineMeasured && _overlay?.IsPopup() == true && _overlay.Ref.Id is not null)
+            {
+                var bounds = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _overlay.Ref);
+                _inlineOverlayHeight = bounds.Height + 8;
+                _inlineOverlayWidth = bounds.Width;
+                _inlineMeasured = true;
+                await InvokeAsync(StateHasChanged);
+            }
         }
 
         protected void OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
@@ -591,6 +634,11 @@ namespace AntDesign.Internal
 
         internal virtual string GetOverlayEnterClass()
         {
+            if (Inline || DisableAnimation)
+            {
+                return string.Empty;
+            }
+
             if (!string.IsNullOrEmpty(OverlayEnterCls))
             {
                 return OverlayEnterCls;
@@ -600,6 +648,11 @@ namespace AntDesign.Internal
 
         internal virtual string GetOverlayLeaveClass()
         {
+            if (Inline || DisableAnimation)
+            {
+                return string.Empty;
+            }
+
             if (!string.IsNullOrEmpty(OverlayLeaveCls))
             {
                 return OverlayLeaveCls;
@@ -631,6 +684,11 @@ namespace AntDesign.Internal
 
         internal virtual async Task Hide(bool force = false)
         {
+            if (Inline && !force)
+            {
+                return;
+            }
+
             if (Visible && !ComplexAutoCloseAndVisible && !force)
             {
                 return;

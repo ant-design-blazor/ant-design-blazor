@@ -51,7 +51,6 @@ namespace AntDesign
             _pickerValuesAfterInit = PickerValues[0];
         }
 
-
         /// <summary>
         /// Add focus to picker input
         /// </summary>
