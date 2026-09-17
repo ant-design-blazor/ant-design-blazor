@@ -15,6 +15,8 @@ jobs:
     if: >
       github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success'
+    outputs:
+      preview_url: ${{ steps.deploy.outputs.pages-deployment-alias-url || steps.deploy.outputs.deployment-url }}
     steps:
       # We need get PR id first
       - name: download pr artifact
@@ -59,7 +61,7 @@ jobs:
 
       - name: Publish to Cloudflare Pages
         id: deploy
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CF_TOKEN }}
           accountId: ${{ secrets.CF_ID }}
@@ -91,18 +93,12 @@ jobs:
           fi
           echo "id=$PR_ID" >> $GITHUB_OUTPUT
 
-      - name: set Cloudflare preview branch
-        id: preview
-        env:
-          PR_ID: ${{ steps.pr.outputs.id }}
-        run: echo "branch=preview-pr-${PR_ID}" >> $GITHUB_OUTPUT
-
       - name: Update status comment
         uses: actions-cool/maintain-one-comment@v1.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           body: |
-            [<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">](https://${{ steps.preview.outputs.branch }}.ant-design-blazor.pages.dev)
+            [<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">](${{ needs.deploy-cloudflare.outputs.preview_url }})
             <!-- AUTO_PREVIEW_HOOK -->
           body-include: '<!-- AUTO_PREVIEW_HOOK -->'
           number: ${{ steps.pr.outputs.id }}
