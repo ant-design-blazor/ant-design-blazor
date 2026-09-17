@@ -42,12 +42,13 @@ jobs:
           workflow_conclusion: success
           name: site
 
-      - name: Compress Blazor boot resources
+      - name: Use publish-generated Brotli resources
         run: |
-          sudo apt-get update
-          sudo apt-get install -y brotli
-          find _framework -type f \( -name '*.wasm' -o -name '*.dll' -o -name '*.pdb' -o -name '*.dat' \) -exec brotli -f -q 11 {} \;
-          find _framework -type f \( -name '*.wasm' -o -name '*.dll' -o -name '*.pdb' -o -name '*.dat' \) -delete
+          while IFS= read -r -d '' file; do
+            if [ -f "${file}.br" ]; then
+              rm "${file}"
+            fi
+          done < <(find _framework -type f \( -name '*.wasm' -o -name '*.dll' -o -name '*.pdb' -o -name '*.dat' \) -print0)
 
       - name: set Cloudflare preview branch
         id: preview
