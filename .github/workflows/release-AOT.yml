@@ -8,7 +8,8 @@ on:
       - doc-fix
 
 jobs:
-  publish-and-deploy:
+  build-site:
+    name: Build docs site
     runs-on: ubuntu-latest
     if: github.repository_owner == 'ant-design-blazor'
 
@@ -34,42 +35,60 @@ jobs:
         with:
           node-version: "18.x"
 
-      - name: Prepare AOT workload
-        run: |
-          dotnet workload install wasm-tools
+      - name: Build Docs 🎉
+        run: bash ./scripts/build-cloudflare-pages.sh cargo/wwwroot
+        env:
+          PACKAGE_VERSION: ${{ github.ref_name }}
+          ENABLE_AOT: true
+          KEEP_ORIGINALS: true
 
-      - name: Publish Docs 🎉
-        id: publish
-        run: |
-          git fetch --all
-          VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/ant-design-blazor/ant-design-blazor/tags | grep 'name' | cut -d\" -f4 | head -1)
-          echo "::set-output name=package_version::${VERSION}"
-          npm install
-          echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
-          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/version.json
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
-          dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=true
-          cp -rf cargo/staticwebapp.config.json cargo/wwwroot
-          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net10.0/*.dll cargo/wwwroot/_framework
-          find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
-
-      - name: Deploy to Azure 🚀
-        id: deploy_azure
-        uses: Azure/static-web-apps-deploy@v1
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PURPLE_FLOWER_0D9F2A700 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "cargo/wwwroot" 
-          output_location: "cargo/wwwroot"
-          skip_api_build: true
-          skip_app_build: true
+          name: release-site
+          path: cargo/wwwroot/
+          retention-days: 7
 
-      - name: Deploy
+  deploy-cloudflare:
+    name: Publish to Cloudflare Pages
+    needs: build-site
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-site
+          path: cargo/wwwroot
+
+      - name: Use publish-generated Brotli resources
+        run: |
+          while IFS= read -r -d '' file; do
+            if [ -f "${file}.br" ]; then
+              rm "${file}"
+            fi
+          done < <(find cargo/wwwroot/_framework -type f \( -name '*.wasm' -o -name '*.dll' -o -name '*.pdb' -o -name '*.dat' \) -print0)
+
+      - name: Deploy to Cloudflare Pages 🚀
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ID }}
+          command: pages deploy cargo/wwwroot --project-name=ant-design-blazor --branch=master
+
+  deploy-github-pages:
+    name: Push to GitHub Pages
+    needs: build-site
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ant-design-blazor'
+    steps:
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-site
+          path: cargo/wwwroot
+
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
