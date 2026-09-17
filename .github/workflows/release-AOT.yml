@@ -35,27 +35,12 @@ jobs:
         with:
           node-version: "18.x"
 
-      - name: Prepare AOT workload
-        run: |
-          dotnet workload install wasm-tools
-
       - name: Build Docs 🎉
-        run: |
-          git fetch --all
-          VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/ant-design-blazor/ant-design-blazor/tags | grep 'name' | cut -d\" -f4 | head -1)
-          npm install
-          echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
-          cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/version.json
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/index.html
-          sed -i s/{version}/$VERSION/g ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
-          dotnet build
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=true
-          cp -rf cargo/staticwebapp.config.json cargo/wwwroot
-          cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net10.0/*.dll cargo/wwwroot/_framework
-          echo "/* /index.html 200" > cargo/wwwroot/_redirects
-          find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
+        run: bash ./scripts/build-cloudflare-pages.sh cargo/wwwroot
+        env:
+          PACKAGE_VERSION: ${{ github.ref_name }}
+          ENABLE_AOT: true
+          KEEP_ORIGINALS: true
 
       - name: Upload site artifact
         uses: actions/upload-artifact@v4

@@ -6,6 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 OUTPUT_DIR="${1:-dist}"
 ENABLE_AOT="${ENABLE_AOT:-true}"
+KEEP_ORIGINALS="${KEEP_ORIGINALS:-false}"
 
 if [[ "${OUTPUT_DIR}" != /* ]]; then
   OUTPUT_DIR="${REPO_ROOT}/${OUTPUT_DIR}"
@@ -64,17 +65,19 @@ echo "/* /index.html 200" > "${OUTPUT_DIR}/_redirects"
 find "${OUTPUT_DIR}" -type f -name '*.html' -exec bash -c \
   'if [ "$(grep -o "<title>" "$1" | wc -l)" -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
 
-# Cloudflare Pages has a 25 MiB per-file limit. Blazor publish already creates
-# Brotli copies, so remove only originals that have a matching .br file.
-while IFS= read -r -d '' file; do
-  if [[ -f "${file}.br" ]]; then
-    rm "${file}"
-  else
-    echo "Missing Brotli resource: ${file}.br" >&2
-    exit 1
-  fi
-done < <(find "${OUTPUT_DIR}/_framework" -type f \( \
-  -name '*.wasm' -o -name '*.dll' -o -name '*.pdb' -o -name '*.dat' \
-  \) -print0)
+if [[ "${KEEP_ORIGINALS}" != "true" ]]; then
+  # Cloudflare Pages has a 25 MiB per-file limit. Blazor publish already creates
+  # Brotli copies, so remove only originals that have a matching .br file.
+  while IFS= read -r -d '' file; do
+    if [[ -f "${file}.br" ]]; then
+      rm "${file}"
+    else
+      echo "Missing Brotli resource: ${file}.br" >&2
+      exit 1
+    fi
+  done < <(find "${OUTPUT_DIR}/_framework" -type f \( \
+    -name '*.wasm' -o -name '*.dll' -o -name '*.pdb' -o -name '*.dat' \
+    \) -print0)
+fi
 
 echo "Cloudflare Pages files generated in ${OUTPUT_DIR}"
