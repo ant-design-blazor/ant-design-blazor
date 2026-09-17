@@ -43,7 +43,7 @@ jobs:
         run: |
           git fetch --all
           VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/ant-design-blazor/ant-design-blazor/tags | grep 'name' | cut -d\" -f4 | head -1)
-          echo "::set-output name=package_version::${VERSION}"
+          echo "package_version=${VERSION}" >> $GITHUB_OUTPUT
           npm install
           echo "/* updated `date "+%Y-%m-%d %H:%M:%S"` */" >> ./site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
           cp -rf scripts/gh-pages/* scripts/gh-pages/.nojekyll scripts/gh-pages/.spa ./site/AntDesign.Docs.Wasm/wwwroot
@@ -55,19 +55,16 @@ jobs:
           dotnet publish ./site/AntDesign.Docs.Wasm -c Release -o cargo -p:EnableAOT=true
           cp -rf cargo/staticwebapp.config.json cargo/wwwroot
           cp -rf ./site/AntDesign.Docs.Wasm/bin/Debug/net10.0/*.dll cargo/wwwroot/_framework
+          echo "/* /index.html 200" > cargo/wwwroot/_redirects
           find ./cargo/wwwroot -type f -name '*.html' -exec bash -c 'if [ $(grep -o "<title>" "$1" | wc -l) -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
 
-      - name: Deploy to Azure 🚀
-        id: deploy_azure
-        uses: Azure/static-web-apps-deploy@v1
+      - name: Deploy to Cloudflare Pages 🚀
+        id: deploy_cloudflare
+        uses: cloudflare/wrangler-action@v3
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_PURPLE_FLOWER_0D9F2A700 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "cargo/wwwroot" 
-          output_location: "cargo/wwwroot"
-          skip_api_build: true
-          skip_app_build: true
+          apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ID }}
+          command: pages deploy cargo/wwwroot --project-name=ant-design-blazor --branch=main
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4

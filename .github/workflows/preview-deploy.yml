@@ -42,29 +42,27 @@ jobs:
           workflow_conclusion: success
           name: site
 
-      - name: upload surge service
-        id: deploy
+      - name: set Cloudflare preview branch
+        id: preview
         env:
           PR_ID: ${{ steps.pr.outputs.id }}
         run: |
-          export DEPLOY_DOMAIN="https://preview-${PR_ID}-antblazor.surge.sh"
-          npx surge --project ./ --domain "${DEPLOY_DOMAIN}" --token ${{ secrets.SURGE_TOKEN }}
+          echo "branch=preview-pr-${PR_ID}" >> $GITHUB_OUTPUT
 
       - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_TOKEN }}
           accountId: ${{ secrets.CF_ID }}
-          projectName: 'ant-design-blazor'
-          directory: .
-          wranglerVersion: '3'
+          command: pages deploy . --project-name=ant-design-blazor --branch=${{ steps.preview.outputs.branch }}
 
       - name: update status comment
         uses: actions-cool/maintain-one-comment@v1.1.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           body: |
-            [<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">](https://preview-${{ steps.pr.outputs.id }}-antblazor.surge.sh)
+            [<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">](https://${{ steps.preview.outputs.branch }}.ant-design-blazor.pages.dev)
             <!-- AUTO_PREVIEW_HOOK -->
           body-include: '<!-- AUTO_PREVIEW_HOOK -->'
           number: ${{ steps.pr.outputs.id }}
