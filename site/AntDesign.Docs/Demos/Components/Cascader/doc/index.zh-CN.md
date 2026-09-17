@@ -32,6 +32,8 @@ Cascader
 | Placement            |  浮层预设位置                                      | `BottomLeft` \| `BottomRight` \| `TopLeft` \| `TopRight` |  -  |
 | Size                 |  输入框大小，可选 'large','middle' 'small'         |  string           |  无	          |
 | OnChange             |  选择完成后的回调 (List<CascaderNode>, string, string) => void  |   -   |  -            |
+| Multiple             | 启用基于复选框的多选 | bool | false |
+| ShowCheckedStrategy  | 多选时展示标签的策略：`ShowAll`、`ShowParent` 或 `ShowChild` | CascaderCheckedStrategy | ShowChild |
 
 
 CascaderNode
@@ -41,5 +43,6 @@ CascaderNode
 | Label            |  节点名称                |  string        |  -        |
 | Value            |  节点值                  |  string        |  -        |
 | Disabled         |  节点是否禁用            |  bool          |  false    |
+| DisableCheckbox  | 多选时是否禁用节点复选框 | bool | false |
 | HasChildren      |  是否存在子节点(只读)    |  bool          |  -        |
 | Children         |  子节点                  |  AntCheckbox[] |  -        |

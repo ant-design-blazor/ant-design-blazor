@@ -54,7 +54,7 @@
         }
         else
         {
-          var selectedItem = ParentSelect.SelectedOptionItems.Values.FirstOrDefault();
+          var selectedItem = ParentSelect.GetOrderedSelectedItems().FirstOrDefault();
           var canShowItem = !IsOverlayShow || string.IsNullOrEmpty(_inputString);
           if (canShowItem && selectedItem != null)
           {
@@ -267,7 +267,7 @@
         if (option.LabelTemplate != null)
             return builder => builder.AddContent(0, option.LabelTemplate);
         else
-            return builder => builder.AddContent(0, option.Label);
+            return builder => builder.AddContent(0, ParentSelect.GetSelectedItemLabel(option));
     }
 
     RenderFragment getTagLabel(SelectContent<TItemValue, TItem> content, SelectOptionItem<TItemValue, TItem> option)
@@ -275,7 +275,7 @@
         if (option.LabelTemplate != null)
             return builder => builder.AddContent(0, option.LabelTemplate);
         else
-            return builder => builder.AddContent(0, content.FormatLabel(option.Label));
+            return builder => builder.AddContent(0, content.FormatLabel(ParentSelect.GetSelectedItemLabel(option)));
 
     }
 }
