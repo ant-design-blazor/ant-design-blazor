@@ -38,8 +38,7 @@ namespace AntDesign
         private string _leftHandleStyle = "left: 0%; right: auto; transform: translateX(-50%);";
         private string _rightHandleStyle = "left: 0%; right: auto; transform: translateX(-50%);";
         private string _trackStyle = "left: 0%; width: 0%; right: auto;";
-        private bool _mouseDown;
-        private bool _mouseMove;
+        private long? _activePointerId;
         private bool _right = true;
         private bool _initialized = false;
         private double _initialLeftValue;
@@ -351,7 +350,7 @@ namespace AntDesign
         public bool Vertical { get; set; }
 
         /// <summary>
-        /// Callback executed when onmouseup is fired.
+        /// Callback executed when pointerup is fired.
         /// </summary>
         [Parameter]
         public EventCallback<TValue> OnAfterChange { get; set; }
@@ -412,9 +411,9 @@ namespace AntDesign
                 if (_tooltipVisible != value)
                 {
                     _tooltipVisible = value;
-                    //ensure parameter loading is not happening because values are changing during mouse moving
-                    //otherwise the tooltip will be vanishing when mouse moves out of the edge
-                    if (!_mouseDown)
+                    //ensure parameter loading is not happening because values are changing during pointer moving
+                    //otherwise the tooltip will be vanishing when the pointer moves out of the edge
+                    if (!_activePointerId.HasValue)
                     {
                         _tooltipRightVisible = _tooltipVisible;
                         _tooltipLeftVisible = _tooltipVisible;
@@ -502,8 +501,9 @@ namespace AntDesign
         {
             if (firstRender)
             {
-                DomEventListener.AddShared<JsonElement>("window", "mousemove", OnMouseMove);
-                DomEventListener.AddShared<JsonElement>("window", "mouseup", OnMouseUp);
+                DomEventListener.AddShared<JsonElement>("window", "pointermove", OnPointerMove);
+                DomEventListener.AddShared<JsonElement>("window", "pointerup", OnPointerUp);
+                DomEventListener.AddShared<JsonElement>("window", "pointercancel", OnPointerCancel);
             }
 
             base.OnAfterRender(firstRender);
@@ -550,16 +550,21 @@ namespace AntDesign
             }
         }
 
-        private void OnMouseDown(MouseEventArgs args)
+        private void OnPointerDown(PointerEventArgs args)
         {
-            _mouseDown = !Disabled;
+            TryBeginPointer(args);
         }
 
         private double _trackedClientX;
         private double _trackedClientY;
 
-        private void OnMouseDownEdge(MouseEventArgs args, bool right)
+        private void OnPointerDownEdge(PointerEventArgs args, bool right)
         {
+            if (!TryBeginPointer(args))
+            {
+                return;
+            }
+
             _right = right;
             _initialLeftValue = _leftValue;
             _initialRightValue = _rightValue;
@@ -578,34 +583,60 @@ namespace AntDesign
             }
         }
 
+        private bool TryBeginPointer(PointerEventArgs args)
+        {
+            if (Disabled)
+            {
+                return false;
+            }
+
+            if (!_activePointerId.HasValue)
+            {
+                _activePointerId = args.PointerId;
+            }
+
+            return _activePointerId == args.PointerId;
+        }
+
+        private bool IsActivePointer(JsonElement jsonElement)
+        {
+            return _activePointerId == jsonElement.GetProperty("pointerId").GetInt64();
+        }
+
         private bool IsMoveInEdgeBoundary(JsonElement jsonElement)
         {
             double clientX = jsonElement.GetProperty("clientX").GetDouble();
             double clientY = jsonElement.GetProperty("clientY").GetDouble();
 
-            return (clientX == _trackedClientX && clientY == _trackedClientY);
+            return clientX == _trackedClientX && clientY == _trackedClientY;
         }
 
-        private async Task OnMouseMove(JsonElement jsonElement)
+        private async Task OnPointerMove(JsonElement jsonElement)
         {
-            if (_mouseDown)
+            if (!IsActivePointer(jsonElement))
             {
-                _trackedClientX = jsonElement.GetProperty("clientX").GetDouble();
-                _trackedClientY = jsonElement.GetProperty("clientY").GetDouble();
-                _mouseMove = true;
-                await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
-
-                if (OnChange.HasDelegate)
-                    await InvokeAsync(() => OnChange.InvokeAsync(CurrentValue));
+                return;
             }
+
+            _trackedClientX = jsonElement.GetProperty("clientX").GetDouble();
+            _trackedClientY = jsonElement.GetProperty("clientY").GetDouble();
+            await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
+
+            if (OnChange.HasDelegate)
+                await InvokeAsync(() => OnChange.InvokeAsync(CurrentValue));
         }
 
-        private async Task OnMouseUp(JsonElement jsonElement)
+        private async Task OnPointerUp(JsonElement jsonElement)
         {
-            bool isMoveInEdgeBoundary = IsMoveInEdgeBoundary(jsonElement);
-            if (_mouseDown)
+            if (!IsActivePointer(jsonElement))
             {
-                _mouseDown = false;
+                return;
+            }
+
+            bool isMoveInEdgeBoundary = IsMoveInEdgeBoundary(jsonElement);
+            _activePointerId = null;
+            try
+            {
                 if (!isMoveInEdgeBoundary)
                 {
                     await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
@@ -613,6 +644,26 @@ namespace AntDesign
                 if (OnAfterChange.HasDelegate)
                     await InvokeAsync(() => OnAfterChange.InvokeAsync(CurrentValue));
             }
+            finally
+            {
+                EndPointerInteraction();
+            }
+        }
+
+        private Task OnPointerCancel(JsonElement jsonElement)
+        {
+            if (IsActivePointer(jsonElement))
+            {
+                EndPointerInteraction();
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private void EndPointerInteraction()
+        {
+            _activePointerId = null;
+
             if (_toolTipRight != null)
             {
                 if (_tooltipRightVisible != TooltipVisible)
@@ -671,7 +722,7 @@ namespace AntDesign
                 if (rightV < LeftValue)
                 {
                     _right = false;
-                    if (_mouseDown)
+                    if (_activePointerId.HasValue)
                         RightValue = _initialLeftValue;
                     LeftValue = rightV;
                     await FocusAsync(_leftHandle);
@@ -718,7 +769,7 @@ namespace AntDesign
                 if (leftV > RightValue)
                 {
                     _right = true;
-                    if (_mouseDown)
+                    if (_activePointerId.HasValue)
                         LeftValue = _initialRightValue;
                     RightValue = leftV;
                     await FocusAsync(_rightHandle);
