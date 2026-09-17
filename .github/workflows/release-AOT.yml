@@ -76,6 +76,13 @@ jobs:
           name: release-site
           path: cargo/wwwroot
 
+      - name: Compress Blazor boot resources
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y brotli
+          find cargo/wwwroot/_framework -type f \( -name '*.wasm' -o -name '*.dll' -o -name '*.pdb' -o -name '*.dat' \) -exec brotli -f -q 11 {} \;
+          find cargo/wwwroot/_framework -type f \( -name '*.wasm' -o -name '*.dll' -o -name '*.pdb' -o -name '*.dat' \) -delete
+
       - name: Deploy to Cloudflare Pages 🚀
         uses: cloudflare/wrangler-action@v3
         with:
