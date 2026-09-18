@@ -28,6 +28,16 @@ namespace AntDesign.Theming
             AddDerived(values, "sizeSM", values.Get("sizeUnit", "4"), value => Scale(value, double.Parse(values.Get("sizeStep", "4")) - 1));
             if (values.TryGetValue("colorTextBase", out var text)) values["colorText"] = ColorMath.Alpha(text, .88);
             if (values.TryGetValue("colorBgBase", out var background)) values["colorBgContainer"] = background;
+            foreach (var name in new[] { "colorPrimary", "colorSuccess", "colorWarning", "colorError", "colorInfo", "colorLink" })
+            {
+                if (!values.TryGetValue(name, out var color)) continue;
+                var palette = AntColorPalette.Generate(color);
+                for (var index = 0; index < palette.Length; index++)
+                {
+                    values[$"{name}{index + 1}"] = palette[index];
+                    values[$"{name}-{index + 1}"] = palette[index];
+                }
+            }
             return values.Select(item => new ResolvedToken(item.Key, item.Value)).OrderBy(item => item.Name, StringComparer.Ordinal);
         }
 
@@ -66,6 +76,62 @@ namespace AntDesign.Theming
                 int.TryParse(color.Substring(5, 2), System.Globalization.NumberStyles.HexNumber, null, out var b))
                 return $"rgba({r}, {g}, {b}, {alpha.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)})";
             return color;
+        }
+    }
+
+    internal static class AntColorPalette
+    {
+        private const double HueStep = 2, SaturationStep = .16, SaturationStep2 = .05, BrightnessStep1 = .05, BrightnessStep2 = .15;
+
+        public static string[] Generate(string value)
+        {
+            if (!TryHex(value, out var r, out var g, out var b)) return Array.Empty<string>();
+            ToHsv(r, g, b, out var h, out var s, out var v);
+            var colors = new List<string>();
+            for (var i = 5; i > 0; i--) colors.Add(FromHsv(Hue(h, i, true), Saturation(h, s, i, true), Value(v, i, true)));
+            colors.Add(value.ToLowerInvariant());
+            for (var i = 1; i <= 4; i++) colors.Add(FromHsv(Hue(h, i, false), Saturation(h, s, i, false), Value(v, i, false)));
+            return colors.ToArray();
+        }
+
+        private static double Hue(double h, int i, bool light)
+        {
+            var result = h >= 60 && h <= 240 ? h + (light ? -HueStep * i : HueStep * i) : h + (light ? HueStep * i : -HueStep * i);
+            return (result % 360 + 360) % 360;
+        }
+
+        private static double Saturation(double h, double s, int i, bool light)
+        {
+            if (h == 0 && s == 0) return 0;
+            var result = light ? s - SaturationStep * i : i == 4 ? s + SaturationStep : s + SaturationStep2 * i;
+            if (light && i == 5 && result > .1) result = .1;
+            return Math.Round(Math.Clamp(result, .06, 1) * 100, MidpointRounding.AwayFromZero) / 100;
+        }
+
+        private static double Value(double v, int i, bool light) => Math.Round(Math.Clamp(v + (light ? BrightnessStep1 * i : -BrightnessStep2 * i), 0, 1) * 100, MidpointRounding.AwayFromZero) / 100;
+
+        private static string FromHsv(double h, double s, double v)
+        {
+            var sector = h / 60; var i = (int)Math.Floor(sector); var f = sector - i;
+            var p = Round(v * (1 - s) * 255); var q = Round(v * (1 - s * f) * 255); var t = Round(v * (1 - s * (1 - f)) * 255); var vv = Round(v * 255);
+            var channels = i switch { 0 => (vv, t, p), 1 => (q, vv, p), 2 => (p, vv, t), 3 => (p, q, vv), 4 => (t, p, vv), _ => (vv, p, q) };
+            return $"#{channels.Item1:X2}{channels.Item2:X2}{channels.Item3:X2}".ToLowerInvariant();
+        }
+
+        private static int Round(double value) => (int)Math.Floor(value + .5);
+
+        private static bool TryHex(string value, out int r, out int g, out int b)
+        {
+            r = g = b = 0; var hex = value?.Trim().TrimStart('#');
+            if (hex?.Length == 3) hex = string.Concat(hex[0], hex[0], hex[1], hex[1], hex[2], hex[2]);
+            return hex?.Length == 6 && int.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out r) && int.TryParse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber, null, out g) && int.TryParse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out b);
+        }
+
+        private static void ToHsv(int r, int g, int b, out double h, out double s, out double v)
+        {
+            var rf = r / 255d; var gf = g / 255d; var bf = b / 255d; var max = Math.Max(rf, Math.Max(gf, bf)); var min = Math.Min(rf, Math.Min(gf, bf)); var delta = max - min;
+            h = delta == 0 ? 0 : max == rf ? 60 * ((gf - bf) / delta + (gf < bf ? 6 : 0)) : max == gf ? 60 * ((bf - rf) / delta + 2) : 60 * ((rf - gf) / delta + 4);
+            h = Math.Floor(h + .5); s = max == 0 ? 0 : delta / max; v = max;
         }
     }
 

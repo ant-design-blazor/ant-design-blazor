@@ -51,5 +51,14 @@ namespace AntDesign.Tests.Theming
             Assert.Equal("16", result.Resolved.Single(token => token.Name == "size").Value);
             Assert.Equal("rgba(0, 0, 0, 0.88)", result.Resolved.Single(token => token.Name == "colorText").Value);
         }
+
+        [Fact]
+        public void DefaultAlgorithmMatchesAntDesignPrimaryPalette()
+        {
+            var result = TokenCompiler.Compile(new[] { new SeedToken { Name = "colorPrimary", Value = "#1677ff" } }, ":root");
+            var palette = Enumerable.Range(1, 10).Select(index => result.Resolved.Single(token => token.Name == $"colorPrimary{index}").Value).ToArray();
+
+            Assert.Equal(new[] { "#e6f4ff", "#bae0ff", "#91caff", "#69b1ff", "#4096ff", "#1677ff", "#0958d9", "#003eb3", "#002c8c", "#001d66" }, palette);
+        }
     }
 }
