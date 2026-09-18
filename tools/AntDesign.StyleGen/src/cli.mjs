@@ -559,18 +559,33 @@ async function generatePreviewThemeCatalog(args) {
   if (!args.ir || !args.output) throw new Error('generate-preview-theme-catalog requires --ir and --output');
   const themes = await readJson(resolve(args.ir), 'theme catalog');
   const previewRoot = join(resolve(args['antd-path']), '.dumi/pages/index/components/ThemePreview/previewThemes');
+  const indexPath = join(previewRoot, 'index.ts');
+  const indexSource = existsSync(indexPath) ? await readFile(indexPath, 'utf8') : '';
+  const previewThemeComponents = parseThemeLiteral(findNamedObject(indexSource, 'previewThemeComponents'), { DEFAULT_COLOR: '#1677FF' });
+  const darkPreviewComponents = {
+    Layout: parseThemeLiteral(findNamedObject(indexSource, 'darkPreviewLayoutToken')),
+    Menu: parseThemeLiteral(findNamedObject(indexSource, 'darkPreviewMenuToken')),
+    Progress: parseThemeLiteral(findNamedObject(indexSource, 'darkPreviewProgressToken'), { DEFAULT_COLOR: '#1677FF' }),
+  };
   for (const theme of themes) {
     const sourcePath = join(previewRoot, `${theme.key}Theme.ts`);
     if (existsSync(sourcePath)) {
       const source = await readFile(sourcePath, 'utf8');
-      theme.tokens = extractThemeObject(source, 'token');
-      theme.components = extractThemeObject(source, 'components');
+      theme.tokens = extractThemeObject(source, 'token', { DEFAULT_COLOR: '#1677FF' });
+      theme.components = extractThemeObject(source, 'components', { DEFAULT_COLOR: '#1677FF', DEFAULT_COLOR_V4: '#1890ff' });
       theme.unresolved = [...new Set([...findUnresolvedSpreads(source, 'token'), ...findUnresolvedSpreads(source, 'components')])];
       theme.source = `.dumi/pages/index/components/ThemePreview/previewThemes/${theme.key}Theme.ts`;
     } else {
       theme.tokens = {};
       theme.components = {};
       theme.unresolved = [];
+    }
+    // The light and dark entries are created by getBasePreviewThemeProps in index.ts,
+    // so their component tokens do not live in a per-theme file. Keep that shared
+    // source in the generated catalog instead of silently generating empty themes.
+    if (theme.key === 'light' || theme.key === 'dark') {
+      theme.components = mergeThemeObjects(previewThemeComponents, theme.key === 'dark' ? darkPreviewComponents : {});
+      theme.source = '.dumi/pages/index/components/ThemePreview/previewThemes/index.ts';
     }
   }
   const quote = (value) => JSON.stringify(String(value));
@@ -640,7 +655,7 @@ function splitTopLevel(source) {
   return result;
 }
 
-function parseThemeLiteral(value) {
+function parseThemeLiteral(value, replacements = {}) {
   const object = value?.trim();
   if (!object?.startsWith('{')) return {};
   const result = {};
@@ -650,17 +665,47 @@ function parseThemeLiteral(value) {
     if (colon < 0) continue;
     const key = entry.slice(0, colon).trim().replace(/^['"]|['"]$/g, '');
     const raw = entry.slice(colon + 1).trim();
-    if (raw.startsWith('{')) result[key] = parseThemeLiteral(raw);
+    if (raw.startsWith('{')) result[key] = parseThemeLiteral(raw, replacements);
     else if (/^['"]/.test(raw)) result[key] = raw.slice(1, raw.lastIndexOf(raw[0])).replace(/\\(['"])/g, '$1');
     else if (/^(true|false)$/.test(raw)) result[key] = raw;
     else if (/^-?\d+(\.\d+)?$/.test(raw)) result[key] = raw;
-    else if (/^(theme\.)/.test(raw)) result[key] = raw.replace(/^theme\./, '');
+    else if (replacements[raw] !== undefined) result[key] = replacements[raw];
+    else if (/^.+\?\?.+$/.test(raw)) {
+      const fallback = raw.split('??').pop().trim();
+      if (replacements[fallback] !== undefined) result[key] = replacements[fallback];
+    } else if (/^(theme\.)/.test(raw)) result[key] = raw.replace(/^theme\./, '');
   }
   return result;
 }
 
-function extractThemeObject(source, property) {
-  return parseThemeLiteral(findObjectAfter(source, property));
+function extractThemeObject(source, property, replacements = {}) {
+  return parseThemeLiteral(findObjectAfter(source, property), replacements);
+}
+
+function findNamedObject(source, name) {
+  const match = new RegExp(`\\b${name}\\s*(?:=|:)`).exec(source);
+  if (!match) return null;
+  const start = source.indexOf('{', match.index + match[0].length);
+  if (start < 0) return null;
+  let depth = 0; let quote = null; let escaped = false;
+  for (let index = start; index < source.length; index += 1) {
+    const character = source[index];
+    if (quote) { if (escaped) escaped = false; else if (character === '\\') escaped = true; else if (character === quote) quote = null; continue; }
+    if (character === '"' || character === "'") { quote = character; continue; }
+    if (character === '{') depth += 1;
+    if (character === '}' && --depth === 0) return source.slice(start, index + 1);
+  }
+  return null;
+}
+
+function mergeThemeObjects(base, override) {
+  const result = structuredClone(base ?? {});
+  for (const [key, value] of Object.entries(override ?? {})) {
+    result[key] = value && typeof value === 'object' && !Array.isArray(value)
+      ? { ...(result[key] ?? {}), ...value }
+      : value;
+  }
+  return result;
 }
 
 function findUnresolvedSpreads(source, property) {

@@ -115,6 +115,7 @@
 
 9.0. [x] 同步 13 个首页主题的可静态解析 Token 配置
    - `sync-v6` 读取各主题源文件中的全局 `token`、组件 `components` 和算法来源，生成 `GeneratedPreviewThemes.cs`。
+   - 同步解析首页 `index.ts` 中 light/dark 共用的组件 Token 及暗色覆盖项，确保默认主题不再生成空组件配置。
    - 对 `spread`/运行时引用无法静态求值的部分保留 `Unresolved` 来源清单，禁止静默丢失。
    - 覆盖需求 1.3-1.5、5.3、10.1、11.1-11.4。
 

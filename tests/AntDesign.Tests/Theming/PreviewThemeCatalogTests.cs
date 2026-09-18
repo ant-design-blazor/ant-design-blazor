@@ -13,6 +13,12 @@ namespace AntDesign.Tests.Theming
             Assert.Equal(new[] { "light", "mui", "shadcn", "bootstrap", "cartoon", "dark", "illustration", "glass", "geek", "lark", "blossom", "v4", "serene" }, GeneratedPreviewThemes.All.Select(theme => theme.Key));
             Assert.Equal("dark", GeneratedPreviewThemes.All.Single(theme => theme.Key == "dark").Algorithm);
             Assert.All(GeneratedPreviewThemes.All, theme => Assert.False(string.IsNullOrWhiteSpace(theme.ReactSource)));
+            var light = GeneratedPreviewThemes.All.Single(theme => theme.Key == "light");
+            Assert.Equal("#f5f8ff", light.Components["Layout"]["bodyBg"]);
+            Assert.Equal("#1677FF", light.Components["Progress"]["defaultColor"]);
+            var dark = GeneratedPreviewThemes.All.Single(theme => theme.Key == "dark");
+            Assert.Equal("#050505", dark.Components["Layout"]["bodyBg"]);
+            Assert.Equal("rgba(255, 255, 255, 0.68)", dark.Components["Menu"]["darkItemColor"]);
             var mui = GeneratedPreviewThemes.All.Single(theme => theme.Key == "mui");
             Assert.Equal("#1976d2", mui.Tokens["colorPrimary"]);
             Assert.Equal("#fff", mui.Components["Button"]["primaryColor"]);
