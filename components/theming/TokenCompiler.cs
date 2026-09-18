@@ -40,12 +40,19 @@ namespace AntDesign.Theming
             {
                 if (!values.TryGetValue(name, out var color)) continue;
                 var palette = AntColorPalette.Generate(color);
-                for (var index = 0; index < palette.Length; index++)
+                if (palette.Length == 10)
                 {
-                    values[$"{name}{index + 1}"] = palette[index];
-                    values[$"{name}-{index + 1}"] = palette[index];
+                    var mapped = new[] { palette[0], palette[1], palette[2], palette[3], palette[4], palette[5], palette[6], palette[4], palette[5], palette[6] };
+                    for (var index = 0; index < mapped.Length; index++)
+                    {
+                        values[$"{name}{index + 1}"] = mapped[index];
+                        values[$"{name}-{index + 1}"] = mapped[index];
+                    }
                 }
             }
+            AddNeutralColorMap(values, false);
+            AddColorSemanticMap(values);
+            AddAliasMap(values);
             return values.Select(item => new ResolvedToken(item.Key, item.Value)).OrderBy(item => item.Name, StringComparer.Ordinal);
         }
 
@@ -107,6 +114,92 @@ namespace AntDesign.Theming
             values["lineWidthBold"] = Number(Parse(values.Get("lineWidth", "1"), 1) + 1);
         }
 
+        internal static void AddNeutralColorMap(IDictionary<string, string> values, bool dark)
+        {
+            var background = values.Get("colorBgBase", dark ? "#000000" : "#ffffff");
+            var text = values.Get("colorTextBase", dark ? "#ffffff" : "#000000");
+            values["colorBgBase"] = background;
+            values["colorTextBase"] = text;
+            values["colorShadow"] = values.Get("colorShadow", dark ? "rgba(255, 255, 255, 0.2)" : "#000000");
+            var textAlpha = dark ? new[] { .85, .65, .45, .25 } : new[] { .88, .65, .45, .25 };
+            values["colorText"] = ColorMath.Alpha(text, textAlpha[0]);
+            values["colorTextSecondary"] = ColorMath.Alpha(text, textAlpha[1]);
+            values["colorTextTertiary"] = ColorMath.Alpha(text, textAlpha[2]);
+            values["colorTextQuaternary"] = ColorMath.Alpha(text, textAlpha[3]);
+            var fillAlpha = dark ? new[] { .18, .12, .08, .04 } : new[] { .15, .06, .04, .02 };
+            values["colorFill"] = ColorMath.Alpha(text, fillAlpha[0]);
+            values["colorFillSecondary"] = ColorMath.Alpha(text, fillAlpha[1]);
+            values["colorFillTertiary"] = ColorMath.Alpha(text, fillAlpha[2]);
+            values["colorFillQuaternary"] = ColorMath.Alpha(text, fillAlpha[3]);
+            values["colorBgSolid"] = ColorMath.Alpha(text, dark ? .95 : 1);
+            values["colorBgSolidHover"] = ColorMath.Alpha(text, dark ? 1 : .75);
+            values["colorBgSolidActive"] = ColorMath.Alpha(text, dark ? .9 : .95);
+            values["colorBgLayout"] = ColorMath.Darken(background, dark ? 0 : 4);
+            values["colorBgContainer"] = ColorMath.Darken(background, dark ? 8 : 0);
+            values["colorBgElevated"] = ColorMath.Darken(background, dark ? 12 : 0);
+            values["colorBgSpotlight"] = dark ? ColorMath.Darken(background, 26) : ColorMath.Alpha(text, .85);
+            values["colorBgBlur"] = dark ? ColorMath.Alpha(text, .04) : "transparent";
+            values["colorBorder"] = ColorMath.Darken(background, dark ? 26 : 15);
+            values["colorBorderDisabled"] = values["colorBorder"];
+            values["colorBorderSecondary"] = ColorMath.Darken(background, dark ? 19 : 6);
+            values["colorWhite"] = "#ffffff";
+        }
+
+        internal static void AddColorSemanticMap(IDictionary<string, string> values)
+        {
+            foreach (var name in new[] { "Primary", "Success", "Warning", "Error", "Info" })
+            {
+                var prefix = "color" + name;
+                values[$"{prefix}Bg"] = values.Get(prefix + "1", "");
+                values[$"{prefix}BgHover"] = values.Get(prefix + "2", "");
+                values[$"{prefix}Border"] = values.Get(prefix + "3", "");
+                values[$"{prefix}BorderHover"] = values.Get(prefix + "4", "");
+                values[$"{prefix}Hover"] = values.Get(prefix + (name == "Error" ? "5" : "4"), "");
+                values[$"{prefix}Active"] = values.Get(prefix + "7", "");
+                values[$"{prefix}TextHover"] = values.Get(prefix + "8", "");
+                values[$"{prefix}Text"] = values.Get(prefix + "9", "");
+                values[$"{prefix}TextActive"] = values.Get(prefix + "10", "");
+            }
+            var link = values.Get("colorLink", values.Get("colorInfo", ""));
+            var linkPalette = AntColorPalette.Generate(link);
+            if (linkPalette.Length == 10)
+            {
+                values["colorLinkHover"] = linkPalette[4];
+                values["colorLink"] = linkPalette[5];
+                values["colorLinkActive"] = linkPalette[6];
+            }
+            values["colorErrorBgFilledHover"] = ColorMath.Mix(values.Get("colorError2", ""), values.Get("colorError4", ""), 50);
+            values["colorBgMask"] = ColorMath.Alpha("#000000", .45);
+        }
+
+        internal static void AddAliasMap(IDictionary<string, string> values)
+        {
+            var aliases = new[]
+            {
+                ("colorFillContent", "colorFillSecondary"), ("colorFillContentHover", "colorFill"), ("colorFillAlter", "colorFillQuaternary"),
+                ("colorBgContainerDisabled", "colorFillTertiary"), ("colorBorderBg", "colorBgContainer"), ("colorTextPlaceholder", "colorTextQuaternary"),
+                ("colorTextDisabled", "colorTextQuaternary"), ("colorTextHeading", "colorText"), ("colorTextLabel", "colorTextSecondary"),
+                ("colorTextDescription", "colorTextTertiary"), ("colorTextLightSolid", "colorWhite"), ("colorHighlight", "colorError"),
+                ("colorBgTextHover", "colorFillSecondary"), ("colorBgTextActive", "colorFill"), ("colorIcon", "colorTextTertiary"),
+                ("colorIconHover", "colorText"), ("colorErrorOutline", "colorErrorBg"), ("colorWarningOutline", "colorWarningBg"),
+                ("colorErrorAffix", "colorError"), ("colorWarningAffix", "colorWarning"), ("controlItemBgHover", "colorFillTertiary"),
+                ("controlItemBgActive", "colorPrimaryBg"), ("controlItemBgActiveHover", "colorPrimaryBgHover"), ("controlItemBgActiveDisabled", "colorFill")
+            };
+            foreach (var pair in aliases) values[pair.Item1] = values.Get(pair.Item2, "");
+            values["colorSplit"] = ColorMath.Mix(values.Get("colorBorderSecondary", ""), values.Get("colorBgContainer", ""), 50);
+            values["controlOutline"] = values.Get("colorPrimaryBg", "");
+            values["fontSizeIcon"] = values.Get("fontSizeSM", "");
+            values["fontWeightStrong"] = "600";
+            values["opacityLoading"] = ".65";
+            values["linkDecoration"] = values["linkHoverDecoration"] = values["linkFocusDecoration"] = "none";
+            values["controlPaddingHorizontal"] = "12";
+            values["controlPaddingHorizontalSM"] = "8";
+            values["controlOutlineWidth"] = Scale(values.Get("lineWidth", "1"), 2);
+            values["controlInteractiveSize"] = Scale(values.Get("controlHeight", "32"), .5);
+            values["lineWidthFocus"] = values.Get("focusOutline", "true") == "false" ? "0" : Scale(values.Get("lineWidth", "1"), 3);
+            foreach (var pair in new[] { ("paddingXXS", "sizeXXS"), ("paddingXS", "sizeXS"), ("paddingSM", "sizeSM"), ("padding", "size"), ("paddingMD", "sizeMD"), ("paddingLG", "sizeLG"), ("paddingXL", "sizeXL"), ("marginXXS", "sizeXXS"), ("marginXS", "sizeXS"), ("marginSM", "sizeSM"), ("margin", "size"), ("marginMD", "sizeMD"), ("marginLG", "sizeLG"), ("marginXL", "sizeXL"), ("marginXXL", "sizeXXL") }) values[pair.Item1] = values.Get(pair.Item2, "");
+        }
+
         private static double Parse(string value, double fallback) => double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number) ? number : fallback;
         private static double RoundJs(double value) => Math.Floor(value + .5);
         private static string Number(double value) => value.ToString("0.####################", System.Globalization.CultureInfo.InvariantCulture);
@@ -123,10 +216,15 @@ namespace AntDesign.Theming
             {
                 if (!map.TryGetValue(name, out var color)) continue;
                 var palette = AntColorPalette.GenerateDark(color, "#141414");
-                for (var index = 0; index < palette.Length; index++) map[$"{name}{index + 1}"] = palette[index];
+                if (palette.Length == 10)
+                {
+                    var mapped = new[] { palette[0], palette[1], palette[2], palette[3], palette[6], palette[5], palette[4], palette[6], palette[5], palette[4] };
+                    for (var index = 0; index < mapped.Length; index++) map[$"{name}{index + 1}"] = mapped[index];
+                }
             }
-            foreach (var key in map.Keys.Where(key => key.StartsWith("colorBg", StringComparison.Ordinal)).ToList())
-                if (map[key] == "#ffffff") map[key] = "#141414";
+            DefaultThemeAlgorithm.AddNeutralColorMap(map, true);
+            DefaultThemeAlgorithm.AddColorSemanticMap(map);
+            DefaultThemeAlgorithm.AddAliasMap(map);
             return map.Select(item => new ResolvedToken(item.Key, item.Value)).OrderBy(item => item.Name, StringComparer.Ordinal);
         }
     }
@@ -142,6 +240,27 @@ namespace AntDesign.Theming
                 int.TryParse(color.Substring(5, 2), System.Globalization.NumberStyles.HexNumber, null, out var b))
                 return $"rgba({r}, {g}, {b}, {alpha.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)})";
             return color;
+        }
+
+        public static string Darken(string color, double amount)
+        {
+            if (!TryHex(color, out var r, out var g, out var b)) return color;
+            var factor = Math.Max(0, 1 - amount / 100);
+            return $"#{Math.Floor(r * factor + .5):X2}{Math.Floor(g * factor + .5):X2}{Math.Floor(b * factor + .5):X2}".ToLowerInvariant();
+        }
+
+        public static string Mix(string first, string second, int amount)
+        {
+            if (!TryHex(first, out var r1, out var g1, out var b1) || !TryHex(second, out var r2, out var g2, out var b2)) return second;
+            var p = amount / 100d;
+            return $"#{Math.Floor(r1 + (r2 - r1) * p + .5):X2}{Math.Floor(g1 + (g2 - g1) * p + .5):X2}{Math.Floor(b1 + (b2 - b1) * p + .5):X2}".ToLowerInvariant();
+        }
+
+        private static bool TryHex(string value, out int r, out int g, out int b)
+        {
+            r = g = b = 0;
+            var hex = value?.Trim().TrimStart('#');
+            return hex?.Length == 6 && int.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out r) && int.TryParse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber, null, out g) && int.TryParse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out b);
         }
     }
 

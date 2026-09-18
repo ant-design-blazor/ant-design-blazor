@@ -73,10 +73,27 @@ namespace AntDesign.Tests.Theming
         }
 
         [Fact]
+        public void DefaultAlgorithmDerivesSemanticColorAndAliasTokens()
+        {
+            var result = TokenCompiler.Compile(new[]
+            {
+                new SeedToken { Name = "colorPrimary", Value = "#1677ff" },
+                new SeedToken { Name = "colorTextBase", Value = "#000000" },
+                new SeedToken { Name = "colorBgBase", Value = "#ffffff" }
+            }, ":root");
+
+            Assert.Equal("#e6f4ff", result.Resolved.Single(token => token.Name == "colorPrimaryBg").Value);
+            Assert.Equal("#1677ff", result.Resolved.Single(token => token.Name == "colorPrimary").Value);
+            Assert.Equal("rgba(0, 0, 0, 0.65)", result.Resolved.Single(token => token.Name == "colorTextSecondary").Value);
+            Assert.Equal("rgba(0, 0, 0, 0.06)", result.Resolved.Single(token => token.Name == "colorFillSecondary").Value);
+            Assert.Equal("#ffffff", result.Resolved.Single(token => token.Name == "colorBgContainer").Value);
+            Assert.Equal("rgba(0, 0, 0, 0.06)", result.Resolved.Single(token => token.Name == "colorFillContent").Value);
+        }
+
+        [Fact]
         public void DefaultAlgorithmMatchesAntDesignPrimaryPalette()
         {
-            var result = TokenCompiler.Compile(new[] { new SeedToken { Name = "colorPrimary", Value = "#1677ff" } }, ":root");
-            var palette = Enumerable.Range(1, 10).Select(index => result.Resolved.Single(token => token.Name == $"colorPrimary{index}").Value).ToArray();
+            var palette = AntColorPalette.Generate("#1677ff");
 
             Assert.Equal(new[] { "#e6f4ff", "#bae0ff", "#91caff", "#69b1ff", "#4096ff", "#1677ff", "#0958d9", "#003eb3", "#002c8c", "#001d66" }, palette);
         }
@@ -84,8 +101,7 @@ namespace AntDesign.Tests.Theming
         [Fact]
         public void DarkAlgorithmMatchesOfficialAntDesignColorsCases()
         {
-            var result = TokenCompiler.Compile(new[] { new SeedToken { Name = "colorPrimary", Value = "#1890ff" } }, ":root", "dark", new DarkThemeAlgorithm());
-            var palette = Enumerable.Range(1, 10).Select(index => result.Resolved.Single(token => token.Name == $"colorPrimary{index}").Value).ToArray();
+            var palette = AntColorPalette.GenerateDark("#1890ff", "#141414");
 
             Assert.Equal(new[] { "#111d2c", "#112a45", "#15395b", "#164c7e", "#1765ad", "#177ddc", "#3c9ae8", "#65b7f3", "#8dcff8", "#b7e3fa" }, palette);
         }
