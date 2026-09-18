@@ -60,7 +60,7 @@
     {
         Key = CurrentTheme.Key,
         ThemeScope = "ant-preview",
-        Token = CurrentTheme.Tokens
+        Token = new ThemeToken(CurrentTheme.Tokens)
     });
 
     private string CurrentStyle

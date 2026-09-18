@@ -51,7 +51,7 @@ namespace AntDesign
             {
                 if (ThemeConfig == null || !ThemeConfig.CssVar) return string.Empty;
                 var declarations = new System.Collections.Generic.List<string>();
-                foreach (var token in ThemeConfig.Token)
+                foreach (var token in ThemeConfig.Token.Values)
                     declarations.Add($"--ant-{TokenView.ToKebabCase(token.Key)}:{token.Value}");
                 foreach (var component in ThemeConfig.Components)
                     foreach (var token in component.Value)

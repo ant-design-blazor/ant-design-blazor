@@ -3,13 +3,41 @@ using System.Collections.Generic;
 
 namespace AntDesign.Theming
 {
+    public sealed class ThemeToken
+    {
+        private readonly IDictionary<string, string> _values = new Dictionary<string, string>(StringComparer.Ordinal);
+
+        public ThemeToken() { }
+
+        public ThemeToken(IEnumerable<KeyValuePair<string, string>> values)
+        {
+            if (values == null) return;
+            foreach (var value in values) this[value.Key] = value.Value;
+        }
+
+        public string this[string name]
+        {
+            get => name != null && _values.TryGetValue(name, out var value) ? value : null;
+            set { if (!string.IsNullOrWhiteSpace(name)) _values[name] = value; }
+        }
+
+        public string ColorPrimary { get => this["colorPrimary"]; set => this["colorPrimary"] = value; }
+        public string ColorText { get => this["colorText"]; set => this["colorText"] = value; }
+        public string ColorBgContainer { get => this["colorBgContainer"]; set => this["colorBgContainer"] = value; }
+        public string ColorBorder { get => this["colorBorder"]; set => this["colorBorder"] = value; }
+        public string BorderRadius { get => this["borderRadius"]; set => this["borderRadius"] = value; }
+        public string ControlHeight { get => this["controlHeight"]; set => this["controlHeight"] = value; }
+
+        public IReadOnlyDictionary<string, string> Values => new System.Collections.ObjectModel.ReadOnlyDictionary<string, string>(_values);
+    }
+
     public sealed class ThemeConfig
     {
         public string Key { get; set; } = "default";
         public string Algorithm { get; set; } = "default";
         public bool CssVar { get; set; } = true;
         public string ThemeScope { get; set; } = "ant-theme";
-        public IDictionary<string, string> Token { get; set; } = new Dictionary<string, string>(StringComparer.Ordinal);
+        public ThemeToken Token { get; set; } = new ThemeToken();
         public IDictionary<string, IDictionary<string, string>> Components { get; set; } = new Dictionary<string, IDictionary<string, string>>(StringComparer.Ordinal);
         public GeneratedComponentTokenSet ComponentTokens { get; set; } = new();
         public IDictionary<string, object> ComponentTokenValues { get; } = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);

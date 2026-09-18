@@ -81,7 +81,7 @@
         Key = CurrentTheme.Key,
         Algorithm = CurrentTheme.Algorithm,
         ThemeScope = "theme-preview",
-        Token = CurrentTheme.Tokens
+        Token = new ThemeToken(CurrentTheme.Tokens)
     });
 
     private string TokenCss => TokenCssSerializer.SerializeVariables(CurrentContext.ScopeSelector, CurrentTheme.Tokens.Select(token => new DesignToken

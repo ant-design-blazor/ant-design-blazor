@@ -27,7 +27,7 @@ namespace AntDesign.Theming
             {
                 foreach (var item in parent.Token.Values) values[item.Key] = item.Value;
             }
-            foreach (var item in Config.Token) values[item.Key] = item.Value;
+            foreach (var item in Config.Token.Values) values[item.Key] = item.Value;
             Token = new TokenView(values);
         }
     }
