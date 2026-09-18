@@ -33,5 +33,24 @@ namespace AntDesign.Tests.Theming
 
             Assert.Equal("#1677ff", values["Button"]["primaryColor"]);
         }
+
+        [Fact]
+        public void ChildThemeInheritsParentResolvedValuesAndOverridesExplicitTokens()
+        {
+            var parent = new ThemeConfig
+            {
+                Seed = new GeneratedSeedToken { ColorPrimary = "#1677ff" }
+            };
+            var child = new ThemeConfig
+            {
+                Seed = new GeneratedSeedToken { ColorSuccess = "#52c41a" }
+            };
+
+            var values = child.GetResolvedTokenValues(parent.GetResolvedTokenValues());
+
+            Assert.Equal("#1677ff", values["colorPrimary"]);
+            Assert.Equal("#52c41a", values["colorSuccess"]);
+            Assert.Contains("colorPrimaryBg", values.Keys);
+        }
     }
 }

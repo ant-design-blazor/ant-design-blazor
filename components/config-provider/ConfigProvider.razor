@@ -4,7 +4,11 @@
 <div class="@ThemeScopeClass" data-theme="@ThemeConfig?.Key" style="@ThemeStyle">
     <CascadingValue Value="this">
         <CascadingValue Value="ThemeConfig">
-            @ChildContent
+            <CascadingValue Name="AntDesignThemeConfig" Value="ThemeConfig">
+                <CascadingValue Name="AntDesignThemeComponents" Value="ThemeConfig.GetResolvedComponentValues()">
+                    @ChildContent
+                </CascadingValue>
+            </CascadingValue>
         </CascadingValue>
     </CascadingValue>
 </div>

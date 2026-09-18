@@ -41,6 +41,12 @@ namespace AntDesign
         [Parameter]
         public ThemeConfig ThemeConfig { get; set; } = new ThemeConfig();
 
+        [CascadingParameter(Name = "AntDesignThemeConfig")]
+        private ThemeConfig ParentThemeConfig { get; set; }
+
+        [CascadingParameter(Name = "AntDesignThemeComponents")]
+        private System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IDictionary<string, string>> ParentThemeComponents { get; set; }
+
         public string ThemeScopeClass => string.IsNullOrWhiteSpace(ThemeConfig?.ThemeScope)
             ? "ant-theme"
             : ThemeConfig.ThemeScope;
@@ -51,9 +57,10 @@ namespace AntDesign
             {
                 if (ThemeConfig == null || !ThemeConfig.CssVar) return string.Empty;
                 var declarations = new System.Collections.Generic.List<string>();
-                foreach (var token in ThemeConfig.GetResolvedTokenValues())
+                var inherited = ParentThemeConfig?.GetResolvedTokenValues();
+                foreach (var token in ThemeConfig.GetResolvedTokenValues(inherited))
                     declarations.Add($"--ant-{TokenView.ToKebabCase(token.Key)}:{token.Value}");
-                foreach (var component in ThemeConfig.GetResolvedComponentValues())
+                foreach (var component in ThemeConfig.GetResolvedComponentValues(ParentThemeComponents))
                     foreach (var token in component.Value)
                         declarations.Add($"--ant-{TokenView.ToKebabCase(component.Key)}-{TokenView.ToKebabCase(token.Key)}:{token.Value}");
                 return string.Join(";", declarations);

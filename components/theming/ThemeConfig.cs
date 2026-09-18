@@ -63,27 +63,49 @@ namespace AntDesign.Theming
             return ComponentTokenValues.TryGetValue(component, out var token) ? token as TToken : null;
         }
 
-        public IReadOnlyDictionary<string, string> GetResolvedTokenValues()
+        public IReadOnlyDictionary<string, string> GetExplicitTokenValues()
         {
-            var seed = ReadObject(Seed);
-            var algorithm = ThemeAlgorithmFactory.Create(Algorithm);
-            var resolved = algorithm.Resolve(seed.Select(item => new SeedToken { Name = item.Key, Value = item.Value }));
-            var values = resolved.ToDictionary(item => item.Name, item => item.Value, StringComparer.Ordinal);
+            var values = ReadObject(Seed);
             MergeObject(values, Map, includeNestedMaps: true);
             MergeObject(values, Alias, includeNestedMaps: false);
             foreach (var pair in Token.Values) values[pair.Key] = pair.Value;
             return values;
         }
 
-        public IReadOnlyDictionary<string, IDictionary<string, string>> GetResolvedComponentValues()
+        public IReadOnlyDictionary<string, string> GetResolvedTokenValues(IReadOnlyDictionary<string, string> inherited = null)
         {
-            var result = new Dictionary<string, IDictionary<string, string>>(Components, StringComparer.OrdinalIgnoreCase);
+            var seed = inherited == null
+                ? new Dictionary<string, string>(StringComparer.Ordinal)
+                : new Dictionary<string, string>(inherited, StringComparer.Ordinal);
+            foreach (var pair in GetExplicitTokenValues()) seed[pair.Key] = pair.Value;
+            var algorithm = ThemeAlgorithmFactory.Create(Algorithm);
+            var resolved = algorithm.Resolve(seed.Select(item => new SeedToken { Name = item.Key, Value = item.Value }));
+            var values = resolved.ToDictionary(item => item.Name, item => item.Value, StringComparer.Ordinal);
+            foreach (var pair in GetExplicitTokenValues()) values[pair.Key] = pair.Value;
+            return values;
+        }
+
+        public IReadOnlyDictionary<string, IDictionary<string, string>> GetResolvedComponentValues(IReadOnlyDictionary<string, IDictionary<string, string>> inherited = null)
+        {
+            var result = new Dictionary<string, IDictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+            if (inherited != null)
+                foreach (var item in inherited)
+                    result[item.Key] = new Dictionary<string, string>(item.Value, StringComparer.Ordinal);
+            foreach (var component in Components)
+            {
+                if (!result.TryGetValue(component.Key, out var values)) result[component.Key] = values = new Dictionary<string, string>(StringComparer.Ordinal);
+                foreach (var value in component.Value) values[value.Key] = value.Value;
+            }
             foreach (var property in typeof(GeneratedComponentTokenSet).GetProperties(BindingFlags.Instance | BindingFlags.Public))
             {
                 var token = property.GetValue(ComponentTokens);
                 if (token == null) continue;
                 var values = ReadObject(token);
-                if (values.Count > 0) result[property.Name] = values;
+                if (values.Count > 0)
+                {
+                    if (!result.TryGetValue(property.Name, out var componentValues)) result[property.Name] = componentValues = new Dictionary<string, string>(StringComparer.Ordinal);
+                    foreach (var value in values) componentValues[value.Key] = value.Value;
+                }
             }
             return result;
         }
