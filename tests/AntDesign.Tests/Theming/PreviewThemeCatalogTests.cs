@@ -17,6 +17,11 @@ namespace AntDesign.Tests.Theming
             Assert.Equal("#1976d2", mui.Tokens["colorPrimary"]);
             Assert.Equal("#fff", mui.Components["Button"]["primaryColor"]);
             Assert.Contains("defaultTheme.components", GeneratedPreviewThemes.All.Single(theme => theme.Key == "v4").Unresolved);
+
+            var config = PreviewThemeConfigFactory.Create("mui");
+            Assert.Equal("mui", config.Key);
+            Assert.Equal("#1976d2", config.Token.ColorPrimary);
+            Assert.Equal("#fff", config.Components["Button"]["primaryColor"]);
         }
     }
 }
