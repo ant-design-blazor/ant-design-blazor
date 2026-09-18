@@ -17,18 +17,12 @@ namespace AntDesign.Theming
     {
         public ThemeConfig Config { get; }
         public TokenView Token { get; }
-        public string ScopeSelector => $":where(.{Config.ThemeScope}-{Config.Key})";
+        public string ScopeSelector => $":where(.{Config.ThemeScope}[data-theme='{Config.Key}'])";
 
         public ThemeContext(ThemeConfig config, IThemeContext parent = null)
         {
             Config = config ?? new ThemeConfig();
-            var values = new Dictionary<string, string>(StringComparer.Ordinal);
-            if (parent != null)
-            {
-                foreach (var item in parent.Token.Values) values[item.Key] = item.Value;
-            }
-            foreach (var item in Config.Token.Values) values[item.Key] = item.Value;
-            Token = new TokenView(values);
+            Token = new TokenView(Config.GetResolvedTokenValues(parent?.Token.Values));
         }
     }
 

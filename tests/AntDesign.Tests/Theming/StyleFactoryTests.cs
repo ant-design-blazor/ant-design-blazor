@@ -33,5 +33,23 @@ namespace AntDesign.Tests.Theming
             Assert.Same(first, second);
             Assert.Equal("a b c", factory.Cx("a b", "b", "c"));
         }
+
+        [Fact]
+        public void UsesTypedAndInheritedThemeSnapshots()
+        {
+            var parent = new ThemeContext(new ThemeConfig
+            {
+                Seed = new GeneratedSeedToken { ColorPrimary = "#1677ff" }
+            });
+            var child = new ThemeContext(new ThemeConfig
+            {
+                Token = { ColorSuccess = "#52c41a" }
+            }, parent);
+
+            Assert.Equal("#1677ff", child.Token.Get("colorPrimary"));
+            Assert.Equal("#52c41a", child.Token.Get("colorSuccess"));
+            Assert.Equal("var(--ant-color-primary)", child.Token.CssVar("colorPrimary"));
+            Assert.Equal(":where(.ant-theme[data-theme='default'])", child.ScopeSelector);
+        }
     }
 }
