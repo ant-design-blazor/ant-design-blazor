@@ -28,6 +28,18 @@ namespace AntDesign.Tests.Theming
             Assert.Equal("mui", config.Key);
             Assert.Equal("#1976d2", config.Token.ColorPrimary);
             Assert.Equal("#fff", config.Components["Button"]["primaryColor"]);
+
+            var exporter = new StaticStyleExporter();
+            foreach (var definition in GeneratedPreviewThemes.All)
+            {
+                var css = exporter.Export(new StaticStyleRequest
+                {
+                    Theme = PreviewThemeConfigFactory.Create(definition),
+                    IncludeStyleTag = false
+                }).Css;
+                Assert.Contains($"data-theme='{definition.Key}'", css);
+                Assert.Contains("--ant-color-primary:", css);
+            }
         }
     }
 }

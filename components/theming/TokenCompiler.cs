@@ -317,14 +317,14 @@ namespace AntDesign.Theming
         {
             if (!TryHex(color, out var r, out var g, out var b)) return color;
             var factor = Math.Max(0, 1 - amount / 100);
-            return $"#{Math.Floor(r * factor + .5):X2}{Math.Floor(g * factor + .5):X2}{Math.Floor(b * factor + .5):X2}".ToLowerInvariant();
+            return $"#{(int)Math.Floor(r * factor + .5):X2}{(int)Math.Floor(g * factor + .5):X2}{(int)Math.Floor(b * factor + .5):X2}".ToLowerInvariant();
         }
 
         public static string Mix(string first, string second, int amount)
         {
             if (!TryHex(first, out var r1, out var g1, out var b1) || !TryHex(second, out var r2, out var g2, out var b2)) return second;
             var p = amount / 100d;
-            return $"#{Math.Floor(r1 + (r2 - r1) * p + .5):X2}{Math.Floor(g1 + (g2 - g1) * p + .5):X2}{Math.Floor(b1 + (b2 - b1) * p + .5):X2}".ToLowerInvariant();
+            return $"#{(int)Math.Floor(r1 + (r2 - r1) * p + .5):X2}{(int)Math.Floor(g1 + (g2 - g1) * p + .5):X2}{(int)Math.Floor(b1 + (b2 - b1) * p + .5):X2}".ToLowerInvariant();
         }
 
         private static bool TryHex(string value, out int r, out int g, out int b)

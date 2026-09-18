@@ -71,6 +71,10 @@
    - `theme-exact-check` 按主题 CSS 文件逐一比较 React 与 Blazor 产物，检查缺失/额外主题，并报告首个差异字节。
    - 测试覆盖 13 个主题的成功对比和单字节变更失败场景。
 
+4.3.2. [x] 接通 C# 主题 CSS 产物生成链
+   - `AntDesign.StyleGen.DotNet` 通过 `GeneratedPreviewThemes`、`PreviewThemeConfigFactory` 和 `StaticStyleExporter` 生成每个主题的完整 CSS。
+   - 支持 `--react-theme-css-dir` 对 C# 生成结果执行逐主题逐字节校验；不得以外部复制的 Blazor CSS 代替生成结果。
+
 5. [x] 实现 Blazor 版 antd-style 样式上下文和样式工厂
    - 创建 `AntDesign.Theming` 下的 `ThemeConfig`、`IThemeContext`、`IThemeResolver`、`IStyleFactory`、`StyleDefinition`、`StyleResult` 和 `cx` 合并逻辑。
    - 支持对象式 CSS、嵌套选择器、媒体查询、CSS Variable 引用、内容 digest class 和确定性缓存。
