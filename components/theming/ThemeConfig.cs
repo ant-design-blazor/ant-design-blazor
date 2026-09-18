@@ -38,6 +38,9 @@ namespace AntDesign.Theming
         public bool CssVar { get; set; } = true;
         public string ThemeScope { get; set; } = "ant-theme";
         public ThemeToken Token { get; set; } = new ThemeToken();
+        public GeneratedSeedToken Seed { get; set; } = new GeneratedSeedToken();
+        public GeneratedMapToken Map { get; set; } = new GeneratedMapToken();
+        public GeneratedAliasToken Alias { get; set; } = new GeneratedAliasToken();
         public IDictionary<string, IDictionary<string, string>> Components { get; set; } = new Dictionary<string, IDictionary<string, string>>(StringComparer.Ordinal);
         public GeneratedComponentTokenSet ComponentTokens { get; set; } = new();
         public IDictionary<string, object> ComponentTokenValues { get; } = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
