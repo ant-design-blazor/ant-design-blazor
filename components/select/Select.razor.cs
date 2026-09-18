@@ -1132,7 +1132,10 @@ namespace AntDesign
         private void EvaluateValueChangedOutsideComponent(SelectOptionItem<TItemValue, TItem> optionItem, TItemValue value)
         {
             //cover special case scenario when SelectItem with Value == default(TItemValue) is requested
-            if (TypeDefaultExistsAsSelectOption && ActiveOption != null && EqualityComparer<TItemValue>.Default.Equals(value, default))
+            if (TypeDefaultExistsAsSelectOption
+                && ActiveOption != null
+                && EqualityComparer<TItemValue>.Default.Equals(value, default)
+                && EqualityComparer<TItemValue>.Default.Equals(ActiveOption.Value, value))
             {
                 return; //already selected, no need to evaluate further
             }
