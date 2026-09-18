@@ -8,6 +8,20 @@ namespace AntDesign.Theming
         public IDictionary<string, string> Values { get; } = new Dictionary<string, string>(StringComparer.Ordinal);
     }
 
+    public sealed class TokenPick<T> where T : class, new()
+    {
+        public T Value { get; set; } = new T();
+    }
+
+    public sealed class TokenPartial<T> where T : class, new()
+    {
+        public T Value { get; set; } = new T();
+    }
+
+    public sealed class TokenMap<T> : Dictionary<string, T>
+    {
+    }
+
     public enum DesignTokenKind
     {
         Seed,

@@ -410,10 +410,15 @@ async function discoverStyleCompositions(root) {
     const aliasMatch = source.match(new RegExp(`type\\s+${component}Token\\s*=\\s*([^;]+);`));
     const compositionSource = match?.[1] ?? aliasMatch?.[1];
     if (!compositionSource) continue;
-    const members = compositionSource.split(/[,&]/).map((member) => member.trim()).filter(Boolean).map((member) => ({
-      name: member.replace(/<.*>/, '').replace(/[^A-Za-z0-9]/g, '') || 'Global',
-      type: member.startsWith('FullToken') ? 'GlobalToken' : 'System.Collections.Generic.Dictionary<string, string>',
-    }));
+    const members = compositionSource.split(/[,&]/).map((member) => member.trim()).filter(Boolean).map((member) => {
+      const generic = member.match(/^(Pick|Partial|Record)<([^,>]+)/);
+      const type = member.startsWith('FullToken') ? 'GlobalToken'
+        : generic?.[1] === 'Pick' ? `TokenPick<${generic[2].trim() === 'GlobalToken' ? 'GlobalToken' : 'GlobalToken'}>`
+          : generic?.[1] === 'Partial' ? `TokenPartial<${generic[2].trim() === 'GlobalToken' ? 'GlobalToken' : 'GlobalToken'}>`
+            : member.includes('[Key in') || generic?.[1] === 'Record' ? 'TokenMap<string>'
+              : 'System.Collections.Generic.Dictionary<string, string>';
+      return { name: member.replace(/<.*>/, '').replace(/[^A-Za-z0-9]/g, '') || 'Global', type };
+    });
     const styleSource = await readFile(indexPath, 'utf8');
     const arrayMatch = styleSource.match(/return\s*\[([\s\S]*?)\];/);
     const generators = arrayMatch ? [...arrayMatch[1].matchAll(/(^|,|\n)\s*([A-Za-z_$][\w$]*)\(/g)].map((item) => item[2]) : [];
