@@ -69,5 +69,21 @@ namespace AntDesign.Tests.Theming
 
             Assert.Equal(new[] { "#111d2c", "#112a45", "#15395b", "#164c7e", "#1765ad", "#177ddc", "#3c9ae8", "#65b7f3", "#8dcff8", "#b7e3fa" }, palette);
         }
+        [Fact]
+        public void MatchesOfficialPresetPaletteExportCases()
+        {
+            Assert.Equal(new[] { "red", "volcano", "orange", "gold", "yellow", "lime", "green", "cyan", "blue", "geekblue", "purple", "magenta", "grey" }, PresetColorPalettes.All.Keys);
+            Assert.Equal("#1677ff", PresetColorPalettes.Primary("blue"));
+            Assert.Equal(new[] { "#e6f4ff", "#bae0ff", "#91caff", "#69b1ff", "#4096ff", "#1677ff", "#0958d9", "#003eb3", "#002c8c", "#001d66" }, PresetColorPalettes.All["blue"]);
+            Assert.All(PresetColorPalettes.All.Values, palette => Assert.Equal(10, palette.Length));
+            Assert.All(PresetColorPalettes.Dark.Values, palette => Assert.Equal(10, palette.Length));
+        }
+
+        [Fact]
+        public void HandlesOfficialGreyBoundaryCase()
+        {
+            Assert.NotEmpty(AntColorPalette.Generate("#666666"));
+            Assert.NotEmpty(AntColorPalette.GenerateDark("#666666", "#141414"));
+        }
     }
 }

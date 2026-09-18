@@ -165,6 +165,21 @@ namespace AntDesign.Theming
         }
     }
 
+    public static class PresetColorPalettes
+    {
+        private static readonly IReadOnlyDictionary<string, string> PrimaryColors = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["red"] = "#f5222d", ["volcano"] = "#fa541c", ["orange"] = "#fa8c16", ["gold"] = "#faad14",
+            ["yellow"] = "#fadb14", ["lime"] = "#a0d911", ["green"] = "#52c41a", ["cyan"] = "#13c2c2",
+            ["blue"] = "#1677ff", ["geekblue"] = "#2f54eb", ["purple"] = "#722ed1", ["magenta"] = "#eb2f96",
+            ["grey"] = "#8c8c8c"
+        };
+
+        public static IReadOnlyDictionary<string, string[]> All { get; } = PrimaryColors.ToDictionary(item => item.Key, item => AntColorPalette.Generate(item.Value), StringComparer.Ordinal);
+        public static IReadOnlyDictionary<string, string[]> Dark { get; } = PrimaryColors.ToDictionary(item => item.Key, item => AntColorPalette.GenerateDark(item.Value, "#141414"), StringComparer.Ordinal);
+        public static string Primary(string name) => PrimaryColors.TryGetValue(name, out var color) ? color : null;
+    }
+
     public sealed class TokenCompilationManifest
     {
         public string Layer { get; set; } = "token-values";
