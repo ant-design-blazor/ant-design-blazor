@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using AntDesign.Theming;
 using Xunit;
 
@@ -32,6 +33,23 @@ namespace AntDesign.Tests.Theming
             Assert.Equal("dark", result.Manifest.Theme);
             Assert.Equal("dark", result.Manifest.Algorithm);
             Assert.Contains("data-theme='dark'", result.Manifest.Scope);
+        }
+
+        [Fact]
+        public void DefaultAlgorithmDerivesMapTokensFromSeedTokens()
+        {
+            var result = TokenCompiler.Compile(new[]
+            {
+                new SeedToken { Name = "controlHeight", Value = "32" },
+                new SeedToken { Name = "sizeUnit", Value = "4" },
+                new SeedToken { Name = "sizeStep", Value = "4" },
+                new SeedToken { Name = "colorTextBase", Value = "#000000" },
+                new SeedToken { Name = "colorBgBase", Value = "#ffffff" }
+            }, ":root");
+
+            Assert.Equal("24", result.Resolved.Single(token => token.Name == "controlHeightSM").Value);
+            Assert.Equal("16", result.Resolved.Single(token => token.Name == "size").Value);
+            Assert.Equal("rgba(0, 0, 0, 0.88)", result.Resolved.Single(token => token.Name == "colorText").Value);
         }
     }
 }
