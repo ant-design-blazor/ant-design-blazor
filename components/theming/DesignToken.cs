@@ -1,7 +1,13 @@
 using System;
+using System.Collections.Generic;
 
 namespace AntDesign.Theming
 {
+    public sealed class GlobalToken
+    {
+        public IDictionary<string, string> Values { get; } = new Dictionary<string, string>(StringComparer.Ordinal);
+    }
+
     public enum DesignTokenKind
     {
         Seed,

@@ -444,6 +444,44 @@ namespace AntDesign.Theming
         public string ComponentToken { get; set; }
     }
 
+    public sealed class ButtonStyleToken
+    {
+        public GlobalToken FullToken { get; set; } = new GlobalToken();
+        public System.Collections.Generic.Dictionary<string, string> ShadowColorMap { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
+        public System.Collections.Generic.Dictionary<string, string> PresetColorHoverActiveMap { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
+        public System.Collections.Generic.Dictionary<string, string> GroupToken { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
+        public IReadOnlyList<string> StyleGenerators { get; } = System.Array.Empty<string>();
+    }
+
+    public sealed class InputStyleToken
+    {
+        public GlobalToken FullToken { get; set; } = new GlobalToken();
+        public System.Collections.Generic.Dictionary<string, string> SharedInputToken { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
+        public IReadOnlyList<string> StyleGenerators { get; } = new[] { "genInputStyle", "genAffixStyle" };
+    }
+
+    public sealed class InputNumberStyleToken
+    {
+        public GlobalToken FullToken { get; set; } = new GlobalToken();
+        public System.Collections.Generic.Dictionary<string, string> SharedInputToken { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
+        public IReadOnlyList<string> StyleGenerators { get; } = System.Array.Empty<string>();
+    }
+
+    public sealed class SelectStyleToken
+    {
+        public GlobalToken FullToken { get; set; } = new GlobalToken();
+        public System.Collections.Generic.Dictionary<string, string> SelectorToken { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
+        public IReadOnlyList<string> StyleGenerators { get; } = new[] { "genBaseStyle", "genDropdownStyle", "genCompactItemStyle" };
+    }
+
+    public sealed class GeneratedStyleTokenSet
+    {
+        public ButtonStyleToken Button { get; set; } = new ButtonStyleToken();
+        public InputStyleToken Input { get; set; } = new InputStyleToken();
+        public InputNumberStyleToken InputNumber { get; set; } = new InputNumberStyleToken();
+        public SelectStyleToken Select { get; set; } = new SelectStyleToken();
+    }
+
     public sealed class GeneratedComponentTokenSet
     {
         public AffixComponentToken Affix { get; set; } = new AffixComponentToken();
