@@ -107,6 +107,24 @@ namespace AntDesign.Tests.Theming
         }
 
         [Fact]
+        public void CompactAlgorithmUsesCompactSizeAndHeightRules()
+        {
+            var result = TokenCompiler.Compile(new[]
+            {
+                new SeedToken { Name = "fontSize", Value = "14" },
+                new SeedToken { Name = "fontSizeSM", Value = "12" },
+                new SeedToken { Name = "sizeUnit", Value = "4" },
+                new SeedToken { Name = "sizeStep", Value = "4" },
+                new SeedToken { Name = "controlHeight", Value = "32" }
+            }, ":root", "compact", new CompactThemeAlgorithm());
+
+            Assert.Equal("12", result.Resolved.Single(token => token.Name == "fontSize").Value);
+            Assert.Equal("24", result.Resolved.Single(token => token.Name == "controlHeight").Value);
+            Assert.Equal("8", result.Resolved.Single(token => token.Name == "size").Value);
+            Assert.Equal("12", result.Resolved.Single(token => token.Name == "sizeLG").Value);
+        }
+
+        [Fact]
         public void DefaultAlgorithmMatchesAntDesignPrimaryPalette()
         {
             var palette = AntColorPalette.Generate("#1677ff");

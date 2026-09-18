@@ -457,7 +457,11 @@ async function generateCsharpThemeTokens(args) {
     '',
     '    public static class ThemeAlgorithmFactory',
     '    {',
-    '        public static IThemeAlgorithm Create(string name) => string.Equals(name, "dark", System.StringComparison.OrdinalIgnoreCase) ? new DarkThemeAlgorithm() : new DefaultThemeAlgorithm();',
+    '        public static IThemeAlgorithm Create(string name) => string.Equals(name, "dark", System.StringComparison.OrdinalIgnoreCase)'
+      + '? new DarkThemeAlgorithm()'
+      + ': string.Equals(name, "compact", System.StringComparison.OrdinalIgnoreCase)'
+      + '? new CompactThemeAlgorithm()'
+      + ': new DefaultThemeAlgorithm();',
     '    }',
     '}',
     '',

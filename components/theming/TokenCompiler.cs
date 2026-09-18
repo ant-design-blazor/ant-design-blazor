@@ -68,7 +68,7 @@ namespace AntDesign.Theming
             return (number * factor).ToString("0.####################", System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        private static void AddFontMap(IDictionary<string, string> values)
+        internal static void AddFontMap(IDictionary<string, string> values)
         {
             if (!double.TryParse(values.Get("fontSize", "14"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var baseSize)) return;
             var sizes = new double[10];
@@ -96,7 +96,7 @@ namespace AntDesign.Theming
             values["fontHeightLG"] = Number(RoundJs(Parse(values["lineHeightLG"], 0) * sizes[2]));
         }
 
-        private static void AddRadiusMap(IDictionary<string, string> values)
+        internal static void AddRadiusMap(IDictionary<string, string> values)
         {
             var radius = Parse(values.Get("borderRadius", "6"), 6);
             values["borderRadiusXS"] = Number(radius >= 6 ? 2 : radius >= 2 ? 1 : radius);
@@ -105,7 +105,7 @@ namespace AntDesign.Theming
             values["borderRadiusOuter"] = Number(radius >= 8 ? 6 : radius > 4 ? 4 : radius);
         }
 
-        private static void AddCommonMap(IDictionary<string, string> values)
+        internal static void AddCommonMap(IDictionary<string, string> values)
         {
             var baseMotion = Parse(values.Get("motionBase", "0.1"), .1);
             var unit = Parse(values.Get("motionUnit", "0.1"), .1);
@@ -189,6 +189,7 @@ namespace AntDesign.Theming
             foreach (var pair in aliases) values[pair.Item1] = values.Get(pair.Item2, "");
             values["colorSplit"] = ColorMath.Mix(values.Get("colorBorderSecondary", ""), values.Get("colorBgContainer", ""), 50);
             values["controlOutline"] = values.Get("colorPrimaryBg", "");
+            values["controlTmpOutline"] = values.Get("colorFillQuaternary", "");
             values["fontSizeIcon"] = values.Get("fontSizeSM", "");
             values["fontWeightStrong"] = "600";
             values["opacityLoading"] = ".65";
@@ -199,6 +200,12 @@ namespace AntDesign.Theming
             values["controlInteractiveSize"] = Scale(values.Get("controlHeight", "32"), .5);
             values["lineWidthFocus"] = values.Get("focusOutline", "true") == "false" ? "0" : Scale(values.Get("lineWidth", "1"), 3);
             foreach (var pair in new[] { ("paddingXXS", "sizeXXS"), ("paddingXS", "sizeXS"), ("paddingSM", "sizeSM"), ("padding", "size"), ("paddingMD", "sizeMD"), ("paddingLG", "sizeLG"), ("paddingXL", "sizeXL"), ("marginXXS", "sizeXXS"), ("marginXS", "sizeXS"), ("marginSM", "sizeSM"), ("margin", "size"), ("marginMD", "sizeMD"), ("marginLG", "sizeLG"), ("marginXL", "sizeXL"), ("marginXXL", "sizeXXL") }) values[pair.Item1] = values.Get(pair.Item2, "");
+            values["paddingContentHorizontalLG"] = values.Get("sizeLG", "");
+            values["paddingContentVerticalLG"] = values.Get("sizeMS", "");
+            values["paddingContentHorizontal"] = values.Get("sizeMS", "");
+            values["paddingContentVertical"] = values.Get("sizeSM", "");
+            values["paddingContentHorizontalSM"] = values.Get("size", "");
+            values["paddingContentVerticalSM"] = values.Get("sizeXS", "");
         }
 
         internal static void AddResponsiveAndShadowMap(IDictionary<string, string> values)
@@ -228,9 +235,9 @@ namespace AntDesign.Theming
                 values["motionDurationFast"] = values["motionDurationMid"] = values["motionDurationSlow"] = "0s";
         }
 
-        private static double Parse(string value, double fallback) => double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number) ? number : fallback;
+        internal static double Parse(string value, double fallback) => double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number) ? number : fallback;
         private static double RoundJs(double value) => Math.Floor(value + .5);
-        private static string Number(double value) => value.ToString("0.####################", System.Globalization.CultureInfo.InvariantCulture);
+        internal static string Number(double value) => value.ToString("0.####################", System.Globalization.CultureInfo.InvariantCulture);
     }
 
     public sealed class DarkThemeAlgorithm : IThemeAlgorithm
@@ -252,6 +259,35 @@ namespace AntDesign.Theming
             }
             DefaultThemeAlgorithm.AddNeutralColorMap(map, true);
             DefaultThemeAlgorithm.AddColorSemanticMap(map);
+            DefaultThemeAlgorithm.AddAliasMap(map);
+            DefaultThemeAlgorithm.AddResponsiveAndShadowMap(map);
+            return map.Select(item => new ResolvedToken(item.Key, item.Value)).OrderBy(item => item.Name, StringComparer.Ordinal);
+        }
+    }
+
+    public sealed class CompactThemeAlgorithm : IThemeAlgorithm
+    {
+        public string Name => "compact";
+
+        public IEnumerable<ResolvedToken> Resolve(IEnumerable<DesignToken> tokens)
+        {
+            var map = new DefaultThemeAlgorithm().Resolve(tokens).ToDictionary(token => token.Name, token => token.Value, StringComparer.Ordinal);
+            map["fontSize"] = map.Get("fontSizeSM", "12");
+            var compactStep = DefaultThemeAlgorithm.Parse(map.Get("sizeStep", "4"), 4) - 2;
+            var unit = DefaultThemeAlgorithm.Parse(map.Get("sizeUnit", "4"), 4);
+            map["sizeXXL"] = DefaultThemeAlgorithm.Number(unit * (compactStep + 10));
+            map["sizeXL"] = DefaultThemeAlgorithm.Number(unit * (compactStep + 6));
+            map["sizeLG"] = DefaultThemeAlgorithm.Number(unit * (compactStep + 2));
+            map["sizeMD"] = DefaultThemeAlgorithm.Number(unit * (compactStep + 2));
+            map["sizeMS"] = DefaultThemeAlgorithm.Number(unit * (compactStep + 1));
+            map["size"] = DefaultThemeAlgorithm.Number(unit * compactStep);
+            map["sizeSM"] = map["size"];
+            map["sizeXS"] = DefaultThemeAlgorithm.Number(unit * (compactStep - 1));
+            map["sizeXXS"] = map["sizeXS"];
+            map["controlHeight"] = DefaultThemeAlgorithm.Number(DefaultThemeAlgorithm.Parse(map.Get("controlHeight", "32"), 32) - 4);
+            DefaultThemeAlgorithm.AddFontMap(map);
+            DefaultThemeAlgorithm.AddRadiusMap(map);
+            DefaultThemeAlgorithm.AddCommonMap(map);
             DefaultThemeAlgorithm.AddAliasMap(map);
             DefaultThemeAlgorithm.AddResponsiveAndShadowMap(map);
             return map.Select(item => new ResolvedToken(item.Key, item.Value)).OrderBy(item => item.Name, StringComparer.Ordinal);
