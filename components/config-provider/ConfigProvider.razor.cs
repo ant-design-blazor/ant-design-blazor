@@ -4,6 +4,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using AntDesign.Theming;
 
 namespace AntDesign
 {
@@ -34,6 +35,28 @@ namespace AntDesign
                     _globalTheme = value;
                     _waitingGlobalThemeUpdate = true;
                 }
+            }
+        }
+
+        [Parameter]
+        public ThemeConfig ThemeConfig { get; set; } = new ThemeConfig();
+
+        public string ThemeScopeClass => string.IsNullOrWhiteSpace(ThemeConfig?.ThemeScope)
+            ? "ant-theme"
+            : ThemeConfig.ThemeScope;
+
+        public string ThemeStyle
+        {
+            get
+            {
+                if (ThemeConfig == null || !ThemeConfig.CssVar) return string.Empty;
+                var declarations = new System.Collections.Generic.List<string>();
+                foreach (var token in ThemeConfig.Token)
+                    declarations.Add($"--ant-{TokenView.ToKebabCase(token.Key)}:{token.Value}");
+                foreach (var component in ThemeConfig.Components)
+                    foreach (var token in component.Value)
+                        declarations.Add($"--ant-{TokenView.ToKebabCase(component.Key)}-{TokenView.ToKebabCase(token.Key)}:{token.Value}");
+                return string.Join(";", declarations);
             }
         }
 

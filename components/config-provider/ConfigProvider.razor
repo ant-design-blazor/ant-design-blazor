@@ -1,7 +1,10 @@
 ﻿@namespace AntDesign
 @inherits AntComponentBase
 
-<CascadingValue Value="this">
-    @ChildContent
-</CascadingValue>
-
+<div class="@ThemeScopeClass" data-theme="@ThemeConfig?.Key" style="@ThemeStyle">
+    <CascadingValue Value="this">
+        <CascadingValue Value="ThemeConfig">
+            @ChildContent
+        </CascadingValue>
+    </CascadingValue>
+</div>
