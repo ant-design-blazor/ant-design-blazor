@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96"
+  },
+  "outputs": {
+    "ir": ".vibedev/generated/antd-v6/ir/style-ir.json",
+    "components": "components/theming/GeneratedComponentTokens.cs",
+    "theme": "components/theming/GeneratedThemeTokens.cs",
+    "reactBaseline": ".vibedev/generated/antd-v6/react-baseline",
+    "colorTests": ".vibedev/generated/antd-v6/color-test-cases.json"
+  },
+  "command": "node tools/AntDesign.StyleGen/src/cli.mjs sync-v6 --antd-path <antd-path>"
+}

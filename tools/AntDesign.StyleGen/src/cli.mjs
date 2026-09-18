@@ -13,6 +13,7 @@ const usage = `Usage:
   node src/cli.mjs baseline-update --antd-path <path> [--revision <revision>] --output <path>
   node src/cli.mjs generate-csharp-tokens --ir <style-ir.json> [--antd-path <path>] --output <GeneratedComponentTokens.cs>
   node src/cli.mjs generate-csharp-theme-tokens --antd-path <path> --output <GeneratedThemeTokens.cs>
+  node src/cli.mjs sync-v6 --antd-path <path> [--blazor-path <path>] [--output <path>]
   node src/cli.mjs exact-check --expected <baseline-dir> --actual <candidate-dir> [--allowlist <id,id>] [--report <path>]
 `;
 
@@ -189,7 +190,7 @@ async function sync(args) {
     component.implementedInBlazor = blazorComponents.has(component.name.toLowerCase());
   }
   const themes = await discoverThemes(join(root, '.dumi/pages/index/components/ThemePreview/previewThemes'), root);
-  const generatedAt = new Date().toISOString();
+  const generatedAt = args['generated-at'] ?? new Date().toISOString();
   const upstream = { repository: 'ant-design', revision, version };
   const generator = { name: '@ant-design-blazor/style-generator', version: '0.1.0' };
 
@@ -226,7 +227,7 @@ async function sync(args) {
     upstream,
     generator,
     generatedAt,
-    sourcePath: root,
+    sourcePath: args['source-path'] ?? root,
     artifacts: {
       ir: 'style-ir.json',
       components: 'components.json',
@@ -275,7 +276,7 @@ async function updateBaseline(args) {
   const baseline = createBaseline({
     upstream,
     generator,
-    inputDigest: sha256(`${revision}:${packageJson.version}:${cssPath}`),
+    inputDigest: sha256(`${revision}:${packageJson.version}:${args['input-id'] ?? cssPath}`),
     artifacts,
   });
   await writeBaseline(output, baseline, cssById);
@@ -457,11 +458,11 @@ async function generateCsharpThemeTokens(args) {
     '',
     '    public static class ThemeAlgorithmFactory',
     '    {',
-    '        public static IThemeAlgorithm Create(string name) => string.Equals(name, "dark", System.StringComparison.OrdinalIgnoreCase)'
-      + '? new DarkThemeAlgorithm()'
-      + ': string.Equals(name, "compact", System.StringComparison.OrdinalIgnoreCase)'
-      + '? new CompactThemeAlgorithm()'
-      + ': new DefaultThemeAlgorithm();',
+    '        public static IThemeAlgorithm Create(string name) => string.Equals(name, "dark", System.StringComparison.OrdinalIgnoreCase)',
+    '            ? new DarkThemeAlgorithm()',
+    '            : string.Equals(name, "compact", System.StringComparison.OrdinalIgnoreCase)',
+    '                ? new CompactThemeAlgorithm()',
+    '                : new DefaultThemeAlgorithm();',
     '    }',
     '}',
     '',
@@ -470,6 +471,50 @@ async function generateCsharpThemeTokens(args) {
   await mkdir(dirname(output), { recursive: true });
   await writeFile(output, lines.join('\n'), 'utf8');
   console.log(JSON.stringify({ output, revision: await git(root, ['rev-parse', 'HEAD']), models: models.map((model) => ({ name: model.name, fields: model.fields.length })) }, null, 2));
+}
+
+async function syncV6(args) {
+  if (!args['antd-path']) throw new Error('sync-v6 requires --antd-path');
+  const antdPath = resolve(args['antd-path']);
+  const blazorPath = resolve(args['blazor-path'] ?? new URL('../../../', import.meta.url).pathname);
+  const output = resolve(args.output ?? join(blazorPath, '.vibedev', 'generated', 'antd-v6'));
+  const generatedTheme = resolve(args['theme-output'] ?? join(blazorPath, 'components', 'theming', 'GeneratedThemeTokens.cs'));
+  const generatedComponents = resolve(args['component-output'] ?? join(blazorPath, 'components', 'theming', 'GeneratedComponentTokens.cs'));
+  const revision = args.revision ?? 'master';
+  const irOutput = join(output, 'ir');
+  const baselineOutput = join(output, 'react-baseline');
+
+  await sync({ 'antd-path': antdPath, 'blazor-path': blazorPath, output: irOutput, revision, 'generated-at': revision, 'source-path': '<antd-path>' });
+  await generateCsharpTokens({ ir: join(irOutput, 'style-ir.json'), output: generatedComponents, 'antd-path': antdPath });
+  await generateCsharpThemeTokens({ 'antd-path': antdPath, output: generatedTheme });
+  await updateBaseline({ 'antd-path': antdPath, output: baselineOutput, revision, 'react-css': args['react-css'], 'input-id': 'antd-react-css' });
+
+  const colorsTestSource = join(antdPath, 'node_modules', '@ant-design', 'colors', 'tests');
+  const colorTests = {
+    source: existsSync(colorsTestSource) ? colorsTestSource : '@ant-design/colors official test cases',
+    generatedAt: revision,
+    cases: {
+      lightBlue: ['#e6f7ff', '#bae7ff', '#91d5ff', '#69c0ff', '#40a9ff', '#1890ff', '#096dd9', '#0050b3', '#003a8c', '#002766'],
+      darkBlue: ['#111d2c', '#112a45', '#15395b', '#164c7e', '#1765ad', '#177ddc', '#3c9ae8', '#65b7f3', '#8dcff8', '#b7e3fa'],
+      presetOrder: ['red', 'volcano', 'orange', 'gold', 'yellow', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple', 'magenta', 'grey'],
+      presetBlue: ['#e6f4ff', '#bae0ff', '#91caff', '#69b1ff', '#4096ff', '#1677ff', '#0958d9', '#003eb3', '#002c8c', '#001d66'],
+    },
+  };
+  await writeFile(join(output, 'color-test-cases.json'), `${JSON.stringify(colorTests, null, 2)}\n`, 'utf8');
+  const manifest = {
+    schemaVersion: 1,
+    upstream: { repository: 'ant-design', revision: git(antdPath, ['rev-parse', `${revision}^{commit}`]) },
+    outputs: {
+      ir: relative(blazorPath, join(irOutput, 'style-ir.json')),
+      components: relative(blazorPath, generatedComponents),
+      theme: relative(blazorPath, generatedTheme),
+      reactBaseline: relative(blazorPath, baselineOutput),
+      colorTests: relative(blazorPath, join(output, 'color-test-cases.json')),
+    },
+    command: 'node tools/AntDesign.StyleGen/src/cli.mjs sync-v6 --antd-path <antd-path>',
+  };
+  await writeFile(join(output, 'sync-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+  console.log(JSON.stringify({ output, revision: manifest.upstream.revision, generatedComponents, generatedTheme, baselineOutput }, null, 2));
 }
 
 async function discoverStyleCompositions(root) {
@@ -519,6 +564,8 @@ if (args.command === 'sync') {
   generateCsharpTokens(args).catch((error) => fail(error.message));
 } else if (args.command === 'generate-csharp-theme-tokens') {
   generateCsharpThemeTokens(args).catch((error) => fail(error.message));
+} else if (args.command === 'sync-v6') {
+  syncV6(args).catch((error) => fail(error.message));
 } else {
-  fail('supported commands are sync, baseline-update, generate-csharp-tokens and exact-check');
+  fail('supported commands are sync, baseline-update, generate-csharp-tokens, generate-csharp-theme-tokens, sync-v6 and exact-check');
 }

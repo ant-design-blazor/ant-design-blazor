@@ -1,0 +1,57 @@
+{
+  "source": "@ant-design/colors official test cases",
+  "generatedAt": "master",
+  "cases": {
+    "lightBlue": [
+      "#e6f7ff",
+      "#bae7ff",
+      "#91d5ff",
+      "#69c0ff",
+      "#40a9ff",
+      "#1890ff",
+      "#096dd9",
+      "#0050b3",
+      "#003a8c",
+      "#002766"
+    ],
+    "darkBlue": [
+      "#111d2c",
+      "#112a45",
+      "#15395b",
+      "#164c7e",
+      "#1765ad",
+      "#177ddc",
+      "#3c9ae8",
+      "#65b7f3",
+      "#8dcff8",
+      "#b7e3fa"
+    ],
+    "presetOrder": [
+      "red",
+      "volcano",
+      "orange",
+      "gold",
+      "yellow",
+      "lime",
+      "green",
+      "cyan",
+      "blue",
+      "geekblue",
+      "purple",
+      "magenta",
+      "grey"
+    ],
+    "presetBlue": [
+      "#e6f4ff",
+      "#bae0ff",
+      "#91caff",
+      "#69b1ff",
+      "#4096ff",
+      "#1677ff",
+      "#0958d9",
+      "#003eb3",
+      "#002c8c",
+      "#001d66"
+    ]
+  }
+}
