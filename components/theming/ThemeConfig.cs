@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace AntDesign.Theming
 {
-    public sealed class ThemeToken
+    public sealed partial class ThemeToken
     {
         private readonly IDictionary<string, string> _values = new Dictionary<string, string>(StringComparer.Ordinal);
 
@@ -23,13 +23,6 @@ namespace AntDesign.Theming
             get => name != null && _values.TryGetValue(name, out var value) ? value : null;
             set { if (!string.IsNullOrWhiteSpace(name)) _values[name] = value; }
         }
-
-        public string ColorPrimary { get => this["colorPrimary"]; set => this["colorPrimary"] = value; }
-        public string ColorText { get => this["colorText"]; set => this["colorText"] = value; }
-        public string ColorBgContainer { get => this["colorBgContainer"]; set => this["colorBgContainer"] = value; }
-        public string ColorBorder { get => this["colorBorder"]; set => this["colorBorder"] = value; }
-        public string BorderRadius { get => this["borderRadius"]; set => this["borderRadius"] = value; }
-        public string ControlHeight { get => this["controlHeight"]; set => this["controlHeight"] = value; }
 
         public IReadOnlyDictionary<string, string> Values => new System.Collections.ObjectModel.ReadOnlyDictionary<string, string>(_values);
     }
