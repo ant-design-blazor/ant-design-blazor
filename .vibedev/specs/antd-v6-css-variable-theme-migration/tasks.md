@@ -32,6 +32,22 @@
    - 为两类产物分别生成 manifest、digest、缓存键和 managed files，并在最终打包时按 `static -> token-values -> runtime-overrides` 顺序拼接。
    - 覆盖需求 2.2-2.4、4.7-4.8、7.2-7.4。
 
+3.3. [x] 建立可重复的 React master → Blazor v6 Token 同步脚本
+   - 新增 `sync-v6`，一次调用依次生成 Style IR、组件 Token 类型、Seed/Map/Alias 类型、ThemeToken 快捷属性、React CSS 基准和颜色算法测试快照。
+   - 固定 upstream revision、生成元数据和占位路径，重复运行不得因时间戳或本地绝对路径产生漂移。
+   - 将生成产物、同步清单和 React 基准纳入 `.vibedev/generated/antd-v6`，并提供使用说明。
+   - 覆盖需求 1.1-1.5、2.1-2.5、4.7-4.8、11.1。
+
+3.4. [x] 将强类型 Token 快捷属性纳入同步生成
+   - 自动生成 Seed、Map、Alias 及共享算法 Token 的 `ThemeToken` 快捷属性，同时保留动态索引器。
+   - `ThemeConfig` 的 Seed/Map/Alias/ComponentTokens 通过同一编译链合并，并由 ConfigProvider 输出 CSS Variables。
+   - 覆盖需求 2.1-2.5、3.1-3.3、8.2。
+
+3.5. [x] 完成同步产物的结构覆盖门禁
+   - 对比 React 上游 Seed/Map/Alias 字段、组件 Token 字段、Style Generator 成员与 C# 生成文件，禁止字段静默减少或退回占位类型。
+   - 对 `extends`、`Pick`、联合类型、TokenMap 和嵌套 Map 建立源生成器回归 fixture。
+   - 覆盖需求 1.3-1.5、2.1、2.5、11.1-11.4。
+
 4. [x] 实现 React/Blazor CSS 字节级精确校验器
    - 创建 `StyleDiff` 核心库和 CLI，按 static layer、token-value layer 和完整拼接 CSS 三类 manifest 执行 UTF-8 字节完全相等比较，再生成首个不同字节位置和结构化诊断。
    - 支持组件级、主题级、场景级和完整拼接 CSS 比较；运行时变量覆盖单独比较；未批准差异返回非零退出码。
@@ -45,6 +61,11 @@
    - 使用 Button、Alert、Input 三个代表性组件，覆盖默认/暗色主题和一个组件 Token 覆盖，端到端运行 React baseline、IR、静态 CSS、Token 变量值 CSS、完整 CSS 和 exact tests。
    - 增加故意单字节修改必须失败的回归 fixture；MVP 未通过时阻止后续全量组件、13 主题和文档任务进入执行。
    - 覆盖需求 2.6-2.8、4.7-4.8、11.1-11.4。
+
+4.3. [ ] 将 `sync-v6` 产物接入完整 Token/Style 校验
+   - 使用同步脚本生成的 React baseline、Token 测试快照和 Blazor candidate，逐主题、逐组件比较静态 CSS、Token 值 CSS、runtime override 和完整 CSS。
+   - 同步脚本成功不等于 exact gate 通过；任何未批准差异必须生成首个字节诊断并返回非零退出码。
+   - 覆盖需求 4.1-4.8、9.1-9.4、11.1-11.4。
 
 5. [x] 实现 Blazor 版 antd-style 样式上下文和样式工厂
    - 创建 `AntDesign.Theming` 下的 `ThemeConfig`、`IThemeContext`、`IThemeResolver`、`IStyleFactory`、`StyleDefinition`、`StyleResult` 和 `cx` 合并逻辑。
@@ -63,6 +84,11 @@
 6.1. [ ] 测试 ConfigProvider 主题解析和运行时切换
    - 覆盖默认/暗色算法、内外层 Token 合并、作用域隔离、预构建主题 class 切换、动态变量批量更新和组件 API 编译兼容。
    - 覆盖需求 3.2-3.6、8.1-8.4、10.5-10.6。
+
+6.2. [ ] 将同步生成的强类型 Token 作为 ConfigProvider 唯一主题输入
+   - 验证 Seed/Map/Alias/Component Token 的继承、覆盖顺序与 React ConfigProvider 一致。
+   - 验证快捷属性、动态索引器、组件 Token 对象和 CSS Variable 输出使用同一快照。
+   - 覆盖需求 2.1-2.5、3.1-3.6、8.1-8.5。
 
 7. [x] 接入核心组件生成 CSS 并完成 React/Blazor exact gate
    - 按组件迁移现有 Less 样式到生成 CSS/变量引用，保留公共参数、事件、泛型约束和组件行为。

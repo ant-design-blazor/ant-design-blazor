@@ -517,6 +517,7 @@ async function syncV6(args) {
   await sync({ 'antd-path': antdPath, 'blazor-path': blazorPath, output: irOutput, revision, 'generated-at': revision, 'source-path': '<antd-path>' });
   await generateCsharpTokens({ ir: join(irOutput, 'style-ir.json'), output: generatedComponents, 'antd-path': antdPath });
   await generateCsharpThemeTokens({ 'antd-path': antdPath, output: generatedTheme, 'shortcuts-output': generatedShortcuts });
+  const structure = await verifyGeneratedStructure({ antdPath, ir: join(irOutput, 'style-ir.json'), components: generatedComponents, theme: generatedTheme, shortcuts: generatedShortcuts });
   await updateBaseline({ 'antd-path': antdPath, output: baselineOutput, revision, 'react-css': args['react-css'], 'input-id': 'antd-react-css' });
 
   const colorsTestSource = join(antdPath, 'node_modules', '@ant-design', 'colors', 'tests');
@@ -541,11 +542,34 @@ async function syncV6(args) {
       shortcuts: relative(blazorPath, generatedShortcuts),
       reactBaseline: relative(blazorPath, baselineOutput),
       colorTests: relative(blazorPath, join(output, 'color-test-cases.json')),
+      structure: relative(blazorPath, join(output, 'structure-report.json')),
     },
     command: 'node tools/AntDesign.StyleGen/src/cli.mjs sync-v6 --antd-path <antd-path>',
   };
+  await writeFile(join(output, 'structure-report.json'), `${JSON.stringify(structure, null, 2)}\n`, 'utf8');
   await writeFile(join(output, 'sync-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
   console.log(JSON.stringify({ output, revision: manifest.upstream.revision, generatedComponents, generatedTheme, baselineOutput }, null, 2));
+}
+
+async function verifyGeneratedStructure(args) {
+  const ir = await readJson(resolve(args.ir), 'generated style IR');
+  const componentSource = await readFile(resolve(args.components), 'utf8');
+  const themeSource = await readFile(resolve(args.theme), 'utf8');
+  const shortcutSource = await readFile(resolve(args.shortcuts), 'utf8');
+  const pascal = (value) => pascalCase(value);
+  const componentExpected = [...new Set((ir.tokens ?? []).filter((token) => token.kind === 'component' && token.name).map((token) => pascal(token.name)))];
+  const componentMissing = componentExpected.filter((name) => !new RegExp(`public\\s+[^\\r\\n]+\\s+${name}\\s*\\{`).test(componentSource));
+  const upstreamFields = {};
+  for (const [name, path] of [['Seed', join(args.antdPath, 'components/theme/interface/seeds.ts')], ['Alias', join(args.antdPath, 'components/theme/interface/alias.ts')]]) {
+    const source = await readFile(path, 'utf8');
+    const match = source.match(new RegExp(`interface\\s+${name}Token[^\\{]*\\{([\\s\\S]*?)\\}`));
+    upstreamFields[name] = match ? [...match[1].matchAll(/^\s*([A-Za-z_$][\w$]*)\??\s*:/gm)].map((item) => pascal(item[1])) : [];
+  }
+  const themeMissing = Object.values(upstreamFields).flat().filter((name) => !new RegExp(`public\\s+[^\\s]+\\s+${name}\\s*\\{`).test(themeSource));
+  const shortcutMissing = [...new Set(Object.values(upstreamFields).flat())].filter((name) => !new RegExp(`public\\s+string\\s+${name}\\s*\\{`).test(shortcutSource));
+  const report = { valid: componentMissing.length === 0 && themeMissing.length === 0 && shortcutMissing.length === 0, componentTokenCount: componentExpected.length, missingComponentTokens: componentMissing, missingThemeFields: themeMissing, missingShortcuts: shortcutMissing };
+  if (!report.valid) throw new Error(`generated Token structure is incomplete: ${JSON.stringify(report)}`);
+  return report;
 }
 
 async function discoverStyleCompositions(root) {

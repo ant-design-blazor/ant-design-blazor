@@ -10,7 +10,8 @@
     "theme": "components/theming/GeneratedThemeTokens.cs",
     "shortcuts": "components/theming/ThemeTokenProperties.cs",
     "reactBaseline": ".vibedev/generated/antd-v6/react-baseline",
-    "colorTests": ".vibedev/generated/antd-v6/color-test-cases.json"
+    "colorTests": ".vibedev/generated/antd-v6/color-test-cases.json",
+    "structure": ".vibedev/generated/antd-v6/structure-report.json"
   },
   "command": "node tools/AntDesign.StyleGen/src/cli.mjs sync-v6 --antd-path <antd-path>"
 }
