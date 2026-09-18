@@ -9,6 +9,7 @@
     "components": "components/theming/GeneratedComponentTokens.cs",
     "theme": "components/theming/GeneratedThemeTokens.cs",
     "shortcuts": "components/theming/ThemeTokenProperties.cs",
+    "themes": "components/theming/GeneratedPreviewThemes.cs",
     "reactBaseline": ".vibedev/generated/antd-v6/react-baseline",
     "colorTests": ".vibedev/generated/antd-v6/color-test-cases.json",
     "structure": ".vibedev/generated/antd-v6/structure-report.json"
