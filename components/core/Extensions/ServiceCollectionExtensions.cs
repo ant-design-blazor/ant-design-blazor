@@ -10,6 +10,7 @@ using AntDesign.Core;
 using AntDesign.Core.Services;
 using AntDesign.Filters;
 using AntDesign.JsInterop;
+using AntDesign.Theming;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -39,6 +40,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<InteropService>();
             services.TryAddScoped<ClientDimensionService>();
             services.TryAddScoped<ConfigService>();
+            services.TryAddScoped<IStyleFactory, StyleFactory>();
+            services.TryAddScoped<IStaticStyleExporter, StaticStyleExporter>();
 
             // detect if it is webassembly
             var serviceLifetime = RuntimeInformation.IsOSPlatform(OSPlatform.Create("BROWSER")) ? ServiceLifetime.Singleton : ServiceLifetime.Scoped;
