@@ -53,6 +53,26 @@ namespace AntDesign.Tests.Theming
         }
 
         [Fact]
+        public void DefaultAlgorithmDerivesFontRadiusAndMotionMaps()
+        {
+            var result = TokenCompiler.Compile(new[]
+            {
+                new SeedToken { Name = "fontSize", Value = "14" },
+                new SeedToken { Name = "borderRadius", Value = "6" },
+                new SeedToken { Name = "motionBase", Value = "0.1" },
+                new SeedToken { Name = "motionUnit", Value = "0.1" },
+                new SeedToken { Name = "lineWidth", Value = "1" }
+            }, ":root");
+
+            Assert.Equal("12", result.Resolved.Single(token => token.Name == "fontSizeSM").Value);
+            Assert.Equal("16", result.Resolved.Single(token => token.Name == "fontSizeLG").Value);
+            Assert.Equal("2", result.Resolved.Single(token => token.Name == "borderRadiusXS").Value);
+            Assert.Equal("8", result.Resolved.Single(token => token.Name == "borderRadiusLG").Value);
+            Assert.Equal("0.2s", result.Resolved.Single(token => token.Name == "motionDurationFast").Value);
+            Assert.Equal("2", result.Resolved.Single(token => token.Name == "lineWidthBold").Value);
+        }
+
+        [Fact]
         public void DefaultAlgorithmMatchesAntDesignPrimaryPalette()
         {
             var result = TokenCompiler.Compile(new[] { new SeedToken { Name = "colorPrimary", Value = "#1677ff" } }, ":root");

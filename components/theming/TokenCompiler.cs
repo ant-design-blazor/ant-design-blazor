@@ -21,11 +21,19 @@ namespace AntDesign.Theming
             AddDerived(values, "controlHeightSM", values.Get("controlHeight", "32"), value => Scale(value, .75));
             AddDerived(values, "controlHeightXS", values.Get("controlHeight", "32"), value => Scale(value, .5));
             AddDerived(values, "controlHeightLG", values.Get("controlHeight", "32"), value => Scale(value, 1.25));
-            AddDerived(values, "sizeXXL", values.Get("sizeUnit", "4"), value => Scale(value, double.Parse(values.Get("sizeStep", "4")) + 8));
-            AddDerived(values, "sizeXL", values.Get("sizeUnit", "4"), value => Scale(value, double.Parse(values.Get("sizeStep", "4")) + 4));
-            AddDerived(values, "sizeLG", values.Get("sizeUnit", "4"), value => Scale(value, double.Parse(values.Get("sizeStep", "4")) + 2));
-            AddDerived(values, "size", values.Get("sizeUnit", "4"), value => Scale(value, double.Parse(values.Get("sizeStep", "4"))));
-            AddDerived(values, "sizeSM", values.Get("sizeUnit", "4"), value => Scale(value, double.Parse(values.Get("sizeStep", "4")) - 1));
+            var sizeStep = Parse(values.Get("sizeStep", "4"), 4);
+            AddDerived(values, "sizeXXL", values.Get("sizeUnit", "4"), value => Scale(value, sizeStep + 8));
+            AddDerived(values, "sizeXL", values.Get("sizeUnit", "4"), value => Scale(value, sizeStep + 4));
+            AddDerived(values, "sizeLG", values.Get("sizeUnit", "4"), value => Scale(value, sizeStep + 2));
+            AddDerived(values, "sizeMD", values.Get("sizeUnit", "4"), value => Scale(value, sizeStep + 1));
+            AddDerived(values, "sizeMS", values.Get("sizeUnit", "4"), value => Scale(value, sizeStep));
+            AddDerived(values, "size", values.Get("sizeUnit", "4"), value => Scale(value, sizeStep));
+            AddDerived(values, "sizeSM", values.Get("sizeUnit", "4"), value => Scale(value, sizeStep - 1));
+            AddDerived(values, "sizeXS", values.Get("sizeUnit", "4"), value => Scale(value, sizeStep - 2));
+            AddDerived(values, "sizeXXS", values.Get("sizeUnit", "4"), value => Scale(value, sizeStep - 3));
+            AddFontMap(values);
+            AddRadiusMap(values);
+            AddCommonMap(values);
             if (values.TryGetValue("colorTextBase", out var text)) values["colorText"] = ColorMath.Alpha(text, .88);
             if (values.TryGetValue("colorBgBase", out var background)) values["colorBgContainer"] = background;
             foreach (var name in new[] { "colorPrimary", "colorSuccess", "colorWarning", "colorError", "colorInfo", "colorLink" })
@@ -41,16 +49,67 @@ namespace AntDesign.Theming
             return values.Select(item => new ResolvedToken(item.Key, item.Value)).OrderBy(item => item.Name, StringComparer.Ordinal);
         }
 
-        protected static void AddDerived(IDictionary<string, string> values, string name, string source, Func<string, string> derive)
+        private static void AddDerived(IDictionary<string, string> values, string name, string source, Func<string, string> derive)
         {
             if (!values.ContainsKey(name)) values[name] = derive(source);
         }
 
-        protected static string Scale(string value, double factor)
+        private static string Scale(string value, double factor)
         {
             if (!double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number)) return value;
             return (number * factor).ToString("0.####################", System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        private static void AddFontMap(IDictionary<string, string> values)
+        {
+            if (!double.TryParse(values.Get("fontSize", "14"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var baseSize)) return;
+            var sizes = new double[10];
+            for (var index = 0; index < sizes.Length; index++)
+            {
+                var raw = baseSize * Math.Exp((index - 1) / 5d);
+                var integer = index > 1 ? Math.Floor(raw) : Math.Ceiling(raw);
+                sizes[index] = Math.Floor(integer / 2) * 2;
+            }
+            sizes[1] = baseSize;
+            values["fontSizeSM"] = Number(sizes[0]);
+            values["fontSize"] = Number(sizes[1]);
+            values["fontSizeLG"] = Number(sizes[2]);
+            values["fontSizeXL"] = Number(sizes[3]);
+            values["fontSizeHeading5"] = Number(sizes[4]);
+            values["fontSizeHeading4"] = Number(sizes[5]);
+            values["fontSizeHeading3"] = Number(sizes[6]);
+            values["fontSizeHeading2"] = Number(sizes[7]);
+            values["fontSizeHeading1"] = Number(sizes[8]);
+            values["lineHeight"] = Number((baseSize + 8) / baseSize);
+            values["lineHeightSM"] = Number((sizes[0] + 8) / sizes[0]);
+            values["lineHeightLG"] = Number((sizes[2] + 8) / sizes[2]);
+            values["fontHeight"] = Number(RoundJs(Parse(values["lineHeight"], 0) * baseSize));
+            values["fontHeightSM"] = Number(RoundJs(Parse(values["lineHeightSM"], 0) * sizes[0]));
+            values["fontHeightLG"] = Number(RoundJs(Parse(values["lineHeightLG"], 0) * sizes[2]));
+        }
+
+        private static void AddRadiusMap(IDictionary<string, string> values)
+        {
+            var radius = Parse(values.Get("borderRadius", "6"), 6);
+            values["borderRadiusXS"] = Number(radius >= 6 ? 2 : radius >= 2 ? 1 : radius);
+            values["borderRadiusSM"] = Number(radius >= 16 ? 8 : radius >= 14 ? 7 : radius >= 8 ? 6 : radius >= 7 ? 5 : radius >= 5 ? 4 : radius);
+            values["borderRadiusLG"] = Number(radius >= 16 ? 16 : radius >= 6 ? radius + 2 : radius >= 5 ? radius + 1 : radius);
+            values["borderRadiusOuter"] = Number(radius >= 8 ? 6 : radius > 4 ? 4 : radius);
+        }
+
+        private static void AddCommonMap(IDictionary<string, string> values)
+        {
+            var baseMotion = Parse(values.Get("motionBase", "0.1"), .1);
+            var unit = Parse(values.Get("motionUnit", "0.1"), .1);
+            values["motionDurationFast"] = (baseMotion + unit).ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "s";
+            values["motionDurationMid"] = (baseMotion + unit * 2).ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "s";
+            values["motionDurationSlow"] = (baseMotion + unit * 3).ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "s";
+            values["lineWidthBold"] = Number(Parse(values.Get("lineWidth", "1"), 1) + 1);
+        }
+
+        private static double Parse(string value, double fallback) => double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number) ? number : fallback;
+        private static double RoundJs(double value) => Math.Floor(value + .5);
+        private static string Number(double value) => value.ToString("0.####################", System.Globalization.CultureInfo.InvariantCulture);
     }
 
     public sealed class DarkThemeAlgorithm : IThemeAlgorithm
