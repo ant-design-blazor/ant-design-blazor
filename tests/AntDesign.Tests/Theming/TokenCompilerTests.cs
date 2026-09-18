@@ -91,6 +91,22 @@ namespace AntDesign.Tests.Theming
         }
 
         [Fact]
+        public void DefaultAlgorithmDerivesResponsiveAndShadowAliases()
+        {
+            var result = TokenCompiler.Compile(new[]
+            {
+                new SeedToken { Name = "colorShadow", Value = "#000000" },
+                new SeedToken { Name = "motion", Value = "false" }
+            }, ":root");
+
+            Assert.Equal("480", result.Resolved.Single(token => token.Name == "screenXS").Value);
+            Assert.Equal("575", result.Resolved.Single(token => token.Name == "screenXSMax").Value);
+            Assert.Equal("0s", result.Resolved.Single(token => token.Name == "motionDurationFast").Value);
+            Assert.Contains("rgba(0, 0, 0, 0.08)", result.Resolved.Single(token => token.Name == "boxShadow").Value);
+            Assert.Contains("drop-shadow", result.Resolved.Single(token => token.Name == "dropShadowPopover").Value);
+        }
+
+        [Fact]
         public void DefaultAlgorithmMatchesAntDesignPrimaryPalette()
         {
             var palette = AntColorPalette.Generate("#1677ff");

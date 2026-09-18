@@ -53,6 +53,7 @@ namespace AntDesign.Theming
             AddNeutralColorMap(values, false);
             AddColorSemanticMap(values);
             AddAliasMap(values);
+            AddResponsiveAndShadowMap(values);
             return values.Select(item => new ResolvedToken(item.Key, item.Value)).OrderBy(item => item.Name, StringComparer.Ordinal);
         }
 
@@ -200,6 +201,33 @@ namespace AntDesign.Theming
             foreach (var pair in new[] { ("paddingXXS", "sizeXXS"), ("paddingXS", "sizeXS"), ("paddingSM", "sizeSM"), ("padding", "size"), ("paddingMD", "sizeMD"), ("paddingLG", "sizeLG"), ("paddingXL", "sizeXL"), ("marginXXS", "sizeXXS"), ("marginXS", "sizeXS"), ("marginSM", "sizeSM"), ("margin", "size"), ("marginMD", "sizeMD"), ("marginLG", "sizeLG"), ("marginXL", "sizeXL"), ("marginXXL", "sizeXXL") }) values[pair.Item1] = values.Get(pair.Item2, "");
         }
 
+        internal static void AddResponsiveAndShadowMap(IDictionary<string, string> values)
+        {
+            var xs = 480d; var sm = 576d; var md = 768d; var lg = 992d; var xl = 1200d; var xxl = 1600d; var xxxl = 1920d;
+            foreach (var pair in new[] { ("screenXS", xs), ("screenSM", sm), ("screenMD", md), ("screenLG", lg), ("screenXL", xl), ("screenXXL", xxl), ("screenXXXL", xxxl) }) values[pair.Item1] = Number(pair.Item2);
+            foreach (var pair in new[] { ("screenXSMin", xs), ("screenSMMin", sm), ("screenMDMin", md), ("screenLGMin", lg), ("screenXLMin", xl), ("screenXXLMin", xxl), ("screenXXXLMin", xxxl) }) values[pair.Item1] = Number(pair.Item2);
+            foreach (var pair in new[] { ("screenXSMax", sm - 1), ("screenSMMax", md - 1), ("screenMDMax", lg - 1), ("screenLGMax", xl - 1), ("screenXLMax", xxl - 1), ("screenXXLMax", xxxl - 1) }) values[pair.Item1] = Number(pair.Item2);
+            var shadow = values.Get("colorShadow", "#000000");
+            string Shadow(double alpha) => ColorMath.WithAlpha(shadow, alpha);
+            var box = $"0 6px 16px 0 {Shadow(.08)}, 0 3px 6px -4px {Shadow(.12)}, 0 9px 28px 8px {Shadow(.05)}";
+            values["boxShadow"] = box;
+            values["boxShadowSecondary"] = box;
+            values["boxShadowTertiary"] = $"0 1px 2px 0 {Shadow(.05)}, 0 1px 6px -1px {Shadow(.03)}, 0 2px 4px 0 {Shadow(.03)}";
+            values["boxShadowPopoverArrow"] = $"2px 2px 5px {Shadow(.05)}";
+            values["dropShadowPopover"] = $"drop-shadow(0 6px 16px {Shadow(.08)}) drop-shadow(0 3px 6px {Shadow(.12)}) drop-shadow(0 9px 28px {Shadow(.05)})";
+            values["boxShadowCard"] = $"0 1px 2px -2px {Shadow(.16)}, 0 3px 6px 0 {Shadow(.12)}, 0 5px 12px 4px {Shadow(.09)}";
+            values["boxShadowDrawerRight"] = $"-6px 0 16px 0 {Shadow(.08)}, -3px 0 6px -4px {Shadow(.12)}, -9px 0 28px 8px {Shadow(.05)}";
+            values["boxShadowDrawerLeft"] = $"6px 0 16px 0 {Shadow(.08)}, 3px 0 6px -4px {Shadow(.12)}, 9px 0 28px 8px {Shadow(.05)}";
+            values["boxShadowDrawerUp"] = box;
+            values["boxShadowDrawerDown"] = $"0 -6px 16px 0 {Shadow(.08)}, 0 -3px 6px -4px {Shadow(.12)}, 0 -9px 28px 8px {Shadow(.05)}";
+            values["boxShadowTabsOverflowLeft"] = $"inset 10px 0 8px -8px {Shadow(.08)}";
+            values["boxShadowTabsOverflowRight"] = $"inset -10px 0 8px -8px {Shadow(.08)}";
+            values["boxShadowTabsOverflowTop"] = $"inset 0 10px 8px -8px {Shadow(.08)}";
+            values["boxShadowTabsOverflowBottom"] = $"inset 0 -10px 8px -8px {Shadow(.08)}";
+            if (string.Equals(values.Get("motion", "true"), "false", StringComparison.OrdinalIgnoreCase))
+                values["motionDurationFast"] = values["motionDurationMid"] = values["motionDurationSlow"] = "0s";
+        }
+
         private static double Parse(string value, double fallback) => double.TryParse(value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number) ? number : fallback;
         private static double RoundJs(double value) => Math.Floor(value + .5);
         private static string Number(double value) => value.ToString("0.####################", System.Globalization.CultureInfo.InvariantCulture);
@@ -225,6 +253,7 @@ namespace AntDesign.Theming
             DefaultThemeAlgorithm.AddNeutralColorMap(map, true);
             DefaultThemeAlgorithm.AddColorSemanticMap(map);
             DefaultThemeAlgorithm.AddAliasMap(map);
+            DefaultThemeAlgorithm.AddResponsiveAndShadowMap(map);
             return map.Select(item => new ResolvedToken(item.Key, item.Value)).OrderBy(item => item.Name, StringComparer.Ordinal);
         }
     }
@@ -240,6 +269,12 @@ namespace AntDesign.Theming
                 int.TryParse(color.Substring(5, 2), System.Globalization.NumberStyles.HexNumber, null, out var b))
                 return $"rgba({r}, {g}, {b}, {alpha.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)})";
             return color;
+        }
+
+        public static string WithAlpha(string color, double alpha)
+        {
+            if (color != null && color.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase)) return color;
+            return Alpha(color, alpha);
         }
 
         public static string Darken(string color, double amount)
