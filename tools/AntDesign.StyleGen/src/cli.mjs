@@ -16,6 +16,7 @@ const usage = `Usage:
   node src/cli.mjs generate-preview-theme-catalog --ir <themes.json> --output <GeneratedPreviewThemes.cs>
   node src/cli.mjs sync-v6 --antd-path <path> [--blazor-path <path>] [--output <path>]
   node src/cli.mjs exact-check --expected <baseline-dir> --actual <candidate-dir> [--allowlist <id,id>] [--report <path>]
+  node src/cli.mjs theme-exact-check --expected <react-theme-css-dir> --actual <blazor-theme-css-dir> [--themes <key,key>] [--report <path>]
 `;
 
 function parseArgs(argv) {
@@ -313,6 +314,52 @@ async function exactCheck(args) {
   }
   console.log(JSON.stringify(report, null, 2));
   if (!result.equal) process.exitCode = 1;
+}
+
+async function themeExactCheck(args) {
+  if (!args.expected || !args.actual) throw new Error('theme-exact-check requires --expected and --actual');
+  const expectedRoot = resolve(args.expected);
+  const actualRoot = resolve(args.actual);
+  const explicitThemes = String(args.themes ?? '').split(',').map((item) => item.trim()).filter(Boolean);
+  const discover = async (root) => (await readdir(root, { withFileTypes: true }))
+    .filter((entry) => entry.isFile() && entry.name.endsWith('.css'))
+    .map((entry) => entry.name.slice(0, -4));
+  const expectedThemes = explicitThemes.length ? explicitThemes : await discover(expectedRoot);
+  const actualThemes = await discover(actualRoot);
+  const allThemes = [...new Set([...expectedThemes, ...actualThemes])].sort();
+  const diagnostics = [];
+  for (const theme of allThemes) {
+    const expectedPath = join(expectedRoot, `${theme}.css`);
+    const actualPath = join(actualRoot, `${theme}.css`);
+    if (!existsSync(expectedPath)) {
+      diagnostics.push({ id: `${theme}.full`, theme, kind: 'missing-expected', actual: actualPath });
+      continue;
+    }
+    if (!existsSync(actualPath)) {
+      diagnostics.push({ id: `${theme}.full`, theme, kind: 'missing-actual', expected: expectedPath });
+      continue;
+    }
+    const result = compareCss(
+      await readFile(expectedPath, 'utf8'),
+      await readFile(actualPath, 'utf8'),
+      { id: `${theme}.full`, layer: 'full', component: null, theme },
+    );
+    if (!result.equal) diagnostics.push(result);
+  }
+  const report = {
+    equal: diagnostics.length === 0,
+    expected: expectedRoot,
+    actual: actualRoot,
+    themes: allThemes,
+    compared: allThemes.length - diagnostics.filter((item) => item.kind?.startsWith('missing-')).length,
+    diagnostics,
+  };
+  if (args.report) {
+    await mkdir(dirname(resolve(args.report)), { recursive: true });
+    await writeFile(resolve(args.report), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+  }
+  console.log(JSON.stringify(report, null, 2));
+  if (!report.equal) process.exitCode = 1;
 }
 
 async function generateCsharpTokens(args) {
@@ -791,6 +838,8 @@ if (args.command === 'sync') {
   updateBaseline(args).catch((error) => fail(error.message));
 } else if (args.command === 'exact-check') {
   exactCheck(args).catch((error) => fail(error.message));
+} else if (args.command === 'theme-exact-check') {
+  themeExactCheck(args).catch((error) => fail(error.message));
 } else if (args.command === 'generate-csharp-tokens') {
   generateCsharpTokens(args).catch((error) => fail(error.message));
 } else if (args.command === 'generate-csharp-theme-tokens') {
@@ -800,5 +849,5 @@ if (args.command === 'sync') {
 } else if (args.command === 'sync-v6') {
   syncV6(args).catch((error) => fail(error.message));
 } else {
-  fail('supported commands are sync, baseline-update, generate-csharp-tokens, generate-csharp-theme-tokens, sync-v6 and exact-check');
+  fail('supported commands are sync, baseline-update, generate-csharp-tokens, generate-csharp-theme-tokens, sync-v6, exact-check and theme-exact-check');
 }

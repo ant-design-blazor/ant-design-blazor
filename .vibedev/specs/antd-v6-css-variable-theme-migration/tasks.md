@@ -67,6 +67,10 @@
    - 同步脚本成功不等于 exact gate 通过；任何未批准差异必须生成首个字节诊断并返回非零退出码。
    - 覆盖需求 4.1-4.8、9.1-9.4、11.1-11.4。
 
+4.3.1. [x] 增加 13 个首页主题全量 CSS 逐字节比较命令与回归测试
+   - `theme-exact-check` 按主题 CSS 文件逐一比较 React 与 Blazor 产物，检查缺失/额外主题，并报告首个差异字节。
+   - 测试覆盖 13 个主题的成功对比和单字节变更失败场景。
+
 5. [x] 实现 Blazor 版 antd-style 样式上下文和样式工厂
    - 创建 `AntDesign.Theming` 下的 `ThemeConfig`、`IThemeContext`、`IThemeResolver`、`IStyleFactory`、`StyleDefinition`、`StyleResult` 和 `cx` 合并逻辑。
    - 支持对象式 CSS、嵌套选择器、媒体查询、CSS Variable 引用、内容 digest class 和确定性缓存。
