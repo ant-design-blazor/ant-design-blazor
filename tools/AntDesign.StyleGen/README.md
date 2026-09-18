@@ -22,8 +22,9 @@ node tools/AntDesign.StyleGen/src/cli.mjs sync-v6 \
 1. 从 React 项目生成组件/主题 Style IR。
 2. 生成 `GeneratedComponentTokens.cs`。
 3. 生成 `GeneratedThemeTokens.cs`。
-4. 保存 React 编译 CSS 基准。
-5. 保存 `@ant-design/colors` 迁移测试快照。
-6. 写入 `.vibedev/generated/antd-v6/sync-manifest.json`。
+4. 生成 `ThemeTokenProperties.cs` 快捷属性。
+5. 保存 React 编译 CSS 基准。
+6. 保存 `@ant-design/colors` 迁移测试快照。
+7. 写入 `.vibedev/generated/antd-v6/sync-manifest.json`。
 
 之后可以使用 `exact-check` 对 React 基准和 Blazor 产物执行字节级校验。
