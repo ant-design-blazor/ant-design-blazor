@@ -60,5 +60,14 @@ namespace AntDesign.Tests.Theming
 
             Assert.Equal(new[] { "#e6f4ff", "#bae0ff", "#91caff", "#69b1ff", "#4096ff", "#1677ff", "#0958d9", "#003eb3", "#002c8c", "#001d66" }, palette);
         }
+
+        [Fact]
+        public void DarkAlgorithmMatchesOfficialAntDesignColorsCases()
+        {
+            var result = TokenCompiler.Compile(new[] { new SeedToken { Name = "colorPrimary", Value = "#1890ff" } }, ":root", "dark", new DarkThemeAlgorithm());
+            var palette = Enumerable.Range(1, 10).Select(index => result.Resolved.Single(token => token.Name == $"colorPrimary{index}").Value).ToArray();
+
+            Assert.Equal(new[] { "#111d2c", "#112a45", "#15395b", "#164c7e", "#1765ad", "#177ddc", "#3c9ae8", "#65b7f3", "#8dcff8", "#b7e3fa" }, palette);
+        }
     }
 }

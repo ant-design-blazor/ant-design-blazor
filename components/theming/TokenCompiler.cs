@@ -59,9 +59,16 @@ namespace AntDesign.Theming
         public IEnumerable<ResolvedToken> Resolve(IEnumerable<DesignToken> tokens)
         {
             var values = new DefaultThemeAlgorithm().Resolve(tokens).ToList();
-            return values.Select(token => token.Name.StartsWith("colorBg", StringComparison.Ordinal) && token.Value == "#ffffff"
-                ? new ResolvedToken(token.Name, "#141414", token.Source)
-                : token);
+            var map = values.ToDictionary(token => token.Name, token => token.Value, StringComparer.Ordinal);
+            foreach (var name in new[] { "colorPrimary", "colorSuccess", "colorWarning", "colorError", "colorInfo", "colorLink" })
+            {
+                if (!map.TryGetValue(name, out var color)) continue;
+                var palette = AntColorPalette.GenerateDark(color, "#141414");
+                for (var index = 0; index < palette.Length; index++) map[$"{name}{index + 1}"] = palette[index];
+            }
+            foreach (var key in map.Keys.Where(key => key.StartsWith("colorBg", StringComparison.Ordinal)).ToList())
+                if (map[key] == "#ffffff") map[key] = "#141414";
+            return map.Select(item => new ResolvedToken(item.Key, item.Value)).OrderBy(item => item.Name, StringComparer.Ordinal);
         }
     }
 
@@ -94,6 +101,14 @@ namespace AntDesign.Theming
             return colors.ToArray();
         }
 
+        public static string[] GenerateDark(string value, string background)
+        {
+            var patterns = Generate(value);
+            var indexes = new[] { 7, 6, 5, 5, 5, 5, 4, 3, 2, 1 };
+            var amounts = new[] { 15, 25, 30, 45, 65, 85, 90, 95, 97, 98 };
+            return indexes.Select((index, position) => Mix(background, patterns[index], amounts[position])).ToArray();
+        }
+
         private static double Hue(double h, int i, bool light)
         {
             var result = h >= 60 && h <= 240 ? h + (light ? -HueStep * i : HueStep * i) : h + (light ? HueStep * i : -HueStep * i);
@@ -119,6 +134,13 @@ namespace AntDesign.Theming
         }
 
         private static int Round(double value) => (int)Math.Floor(value + .5);
+
+        private static string Mix(string first, string second, int amount)
+        {
+            if (!TryHex(first, out var r1, out var g1, out var b1) || !TryHex(second, out var r2, out var g2, out var b2)) return second;
+            var p = amount / 100d;
+            return $"#{Round((r2 - r1) * p + r1):X2}{Round((g2 - g1) * p + g1):X2}{Round((b2 - b1) * p + b1):X2}".ToLowerInvariant();
+        }
 
         private static bool TryHex(string value, out int r, out int g, out int b)
         {
