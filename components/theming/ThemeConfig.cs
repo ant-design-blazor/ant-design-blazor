@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
 
 namespace AntDesign.Theming
 {
@@ -66,6 +69,71 @@ namespace AntDesign.Theming
         {
             return ComponentTokenValues.TryGetValue(component, out var token) ? token as TToken : null;
         }
+
+        public IReadOnlyDictionary<string, string> GetResolvedTokenValues()
+        {
+            var seed = ReadObject(Seed);
+            var algorithm = ThemeAlgorithmFactory.Create(Algorithm);
+            var resolved = algorithm.Resolve(seed.Select(item => new SeedToken { Name = item.Key, Value = item.Value }));
+            var values = resolved.ToDictionary(item => item.Name, item => item.Value, StringComparer.Ordinal);
+            MergeObject(values, Map, includeNestedMaps: true);
+            MergeObject(values, Alias, includeNestedMaps: false);
+            foreach (var pair in Token.Values) values[pair.Key] = pair.Value;
+            return values;
+        }
+
+        public IReadOnlyDictionary<string, IDictionary<string, string>> GetResolvedComponentValues()
+        {
+            var result = new Dictionary<string, IDictionary<string, string>>(Components, StringComparer.OrdinalIgnoreCase);
+            foreach (var property in typeof(GeneratedComponentTokenSet).GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            {
+                var token = property.GetValue(ComponentTokens);
+                if (token == null) continue;
+                var values = ReadObject(token);
+                if (values.Count > 0) result[property.Name] = values;
+            }
+            return result;
+        }
+
+        private static Dictionary<string, string> ReadObject(object value)
+        {
+            var result = new Dictionary<string, string>(StringComparer.Ordinal);
+            if (value == null) return result;
+            foreach (var property in value.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            {
+                if (!property.CanRead || property.PropertyType.IsClass && property.PropertyType != typeof(string)) continue;
+                var item = property.GetValue(value);
+                var serialized = SerializeScalar(item);
+                if (serialized != null) result[ToCamelCase(property.Name)] = serialized;
+            }
+            return result;
+        }
+
+        private static void MergeObject(IDictionary<string, string> target, object value, bool includeNestedMaps)
+        {
+            foreach (var pair in ReadObject(value)) target[pair.Key] = pair.Value;
+            if (!includeNestedMaps || value == null) return;
+            foreach (var property in value.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            {
+                var nested = property.GetValue(value);
+                if (nested is System.Collections.IDictionary dictionary)
+                    foreach (System.Collections.DictionaryEntry item in dictionary)
+                        if (item.Key != null && item.Value != null) target[item.Key.ToString()] = item.Value.ToString();
+            }
+        }
+
+        private static string SerializeScalar(object value)
+        {
+            if (value == null) return null;
+            if (value is string text) return string.IsNullOrWhiteSpace(text) ? null : text;
+            if (value is bool boolean) return boolean ? "true" : null;
+            if (value is double number) return number == 0 ? null : number.ToString("0.####################", CultureInfo.InvariantCulture);
+            if (value is float single) return single == 0 ? null : single.ToString("0.####################", CultureInfo.InvariantCulture);
+            if (value is int integer) return integer == 0 ? null : integer.ToString(CultureInfo.InvariantCulture);
+            return value.ToString();
+        }
+
+        private static string ToCamelCase(string value) => string.IsNullOrEmpty(value) ? value : char.ToLowerInvariant(value[0]) + value.Substring(1);
     }
 
     public sealed class TokenView
