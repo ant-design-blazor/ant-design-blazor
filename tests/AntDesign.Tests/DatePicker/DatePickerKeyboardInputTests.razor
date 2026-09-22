@@ -195,4 +195,92 @@
         cut.Instance.Value.Should().Be(newValue);
         newValue.Offset.Should().Be(value.Offset);
     }
+
+    [Fact]
+    public void Typing_date_only_with_showTime_and_mask_uses_DefaultTime_zero()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+
+        DateTime? value = null;
+        const string mask = "dd.MM.yyyy HH:mm";
+        var cut = Render<AntDesign.DatePicker<DateTime?>>(
+			@<DatePicker @bind-Value="value" TValue="DateTime?" ShowTime="true" Mask="@mask" />);
+
+        //Act - type only the date part, then press Enter to commit.
+        var input = cut.Find("input");
+        input.Input("01.03.2024");
+        input.KeyDown("Enter");
+
+        //Assert - date is accepted and time defaults to 00:00.
+        cut.Instance.Value.Should().Be(new DateTime(2024, 3, 1, 0, 0, 0));
+        value.Should().Be(new DateTime(2024, 3, 1, 0, 0, 0));
+    }
+
+    [Fact]
+    public void Typing_date_only_with_DefaultTime_uses_provided_time()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+
+        DateTime? value = null;
+        const string mask = "dd.MM.yyyy HH:mm";
+        var defaultTime = new TimeSpan(9, 30, 0);
+        var cut = Render<AntDesign.DatePicker<DateTime?>>(
+			@<DatePicker @bind-Value="value" TValue="DateTime?" ShowTime="true" Mask="@mask" DefaultTime="defaultTime" />);
+
+        //Act
+        var input = cut.Find("input");
+        input.Input("15.07.2024");
+        input.KeyDown("Enter");
+
+        //Assert
+        cut.Instance.Value.Should().Be(new DateTime(2024, 7, 15, 9, 30, 0));
+        value.Should().Be(new DateTime(2024, 7, 15, 9, 30, 0));
+    }
+
+    [Fact]
+    public void Typing_partial_time_input_does_not_replace_existing_value_on_blur()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+        DateTime value = new DateTime(2020, 5, 10, 12, 0, 0);
+        const string mask = "dd.MM.yyyy HH:mm";
+        var cut = Render<AntDesign.DatePicker<DateTime>>(
+			@<DatePicker @bind-Value="value" ShowTime="true" Mask="@mask" />);
+
+        //Act - type something that does not match the date portion of the mask; blur should keep the original value.
+        var input = cut.Find("input");
+        input.Input("32");  // invalid day, does not satisfy the date portion
+        input.Blur();
+
+        //Assert
+        cut.Instance.Value.Should().Be(new DateTime(2020, 5, 10, 12, 0, 0));
+        value.Should().Be(new DateTime(2020, 5, 10, 12, 0, 0));
+    }
+
+    [Fact]
+    public void DateOnly_input_with_showTime_and_mask_does_not_clear_value_on_blur()
+    {
+        //Regression test for the original bug report: with
+        //ShowTime="true", Format="dd.MM.yyyy HH:mm", Mask="dd.MM.yyyy HH:mm",
+        //typing a date without time used to clear the field instead of accepting
+        //the date with default 00:00 time.
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+
+        DateTime? value = null;
+        const string mask = "dd.MM.yyyy HH:mm";
+        var cut = Render<AntDesign.DatePicker<DateTime?>>(
+			@<DatePicker @bind-Value="value" TValue="DateTime?" ShowTime="true" Format="@mask" Mask="@mask" />);
+
+        var input = cut.Find("input");
+        input.Input("05.06.2024");
+        input.Blur();
+
+        cut.Instance.Value.Should().Be(new DateTime(2024, 6, 5, 0, 0, 0));
+        value.Should().Be(new DateTime(2024, 6, 5, 0, 0, 0));
+    }
 }

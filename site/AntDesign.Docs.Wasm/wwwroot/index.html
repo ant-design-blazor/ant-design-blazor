@@ -199,7 +199,32 @@
     <script>
         window.DocSearchInit = window.DocSearchInit || function () { };
     </script>
-    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="decode.js"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script>
+        Blazor.start({
+            loadBootResource: function (type, name, defaultUri, integrity) {
+                if (type === 'dotnetjs' || type === 'configuration' || type === 'manifest') {
+                    return null;
+                }
+
+                return (async function () {
+                    const compressedResponse = await fetch(defaultUri + '.br', { cache: 'no-cache' });
+                    if (!compressedResponse.ok) {
+                        return fetch(defaultUri, { cache: 'no-cache', integrity: integrity });
+                    }
+
+                    const compressedBuffer = await compressedResponse.arrayBuffer();
+                    const decompressedBytes = BrotliDecode(new Int8Array(compressedBuffer));
+                    const contentType = type === 'dotnetwasm' ? 'application/wasm' : 'application/octet-stream';
+
+                    return new Response(decompressedBytes, {
+                        headers: { 'content-type': contentType }
+                    });
+                })();
+            }
+        });
+    </script>
     <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
 
