@@ -28,7 +28,13 @@ async function onInstall(event) {
             if (asset.hash && !isHtml && !isExternal) {
                 init.integrity = asset.hash;
             }
-            return new Request(url, init);
+
+            // Cloudflare Pages redirects /route/index.html to /route/.
+            // Cache directory index pages by their canonical route URL to
+            // avoid fetching index.html through a redirect.
+            const isRouteIndex = /(^|\/)index\.html$/i.test(url);
+            const cacheUrl = isRouteIndex ? (url.replace(/index\.html$/i, '') || './') : url;
+            return new Request(cacheUrl, init);
         });
 
     const cache = await caches.open(cacheName);
@@ -61,14 +67,15 @@ async function onFetch(event) {
 
         if (event.request.mode === 'navigate') {
             // Blazor prerendering publishes one index.html file per route.
-            // Prefer that route-specific page when a page is reloaded.
+            // Cloudflare Pages serves it at the directory URL, so look up the
+            // canonical route URL rather than requesting index.html directly.
             const url = new URL(event.request.url);
-            const routeIndexPath = `${url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`}index.html`;
-            cachedResponse = await cache.match(new URL(routeIndexPath, self.registration.scope));
+            const routePath = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
+            cachedResponse = await cache.match(new URL(routePath, self.registration.scope));
 
             // Unmatched client-side routes still use the SPA shell.
             if (!cachedResponse) {
-                cachedResponse = await cache.match(new URL('index.html', self.registration.scope));
+                cachedResponse = await cache.match(new URL('./', self.registration.scope));
             }
         } else {
             cachedResponse = await cache.match(event.request);
