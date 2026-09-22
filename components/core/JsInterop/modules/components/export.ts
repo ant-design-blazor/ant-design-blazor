@@ -9,4 +9,5 @@ export { tableHelper } from './tableHelper';
 export { iconHelper } from './iconHelper';
 export { imageHelper } from './imageHelper';
 export { watermarkHelper } from './watermarkHelper';
+export { borderBeamHelper } from './borderBeamHelper';
 export { splitterHelper } from './splitterHelper';
