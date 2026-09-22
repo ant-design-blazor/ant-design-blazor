@@ -50,6 +50,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
     <ProjectReference Include="..\..\src\AntDesign.Extensions.Localization\AntDesign.Extensions.Localization.csproj" />
+    <ProjectReference Include="..\..\src\AntDesign.SourceGenerators\AntDesign.SourceGenerators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>

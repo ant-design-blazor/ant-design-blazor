@@ -1,0 +1,24 @@
+@namespace AntDesign.Docs.Demos.Experimental.ComponentPropsProvider.demo
+@using AntDesign.Docs.Demos.Experimental.ComponentPropsProvider.demo.Shared
+
+<ComponentPropsProvider Props="@props">
+    <Space>
+        <StatusCard Id="healthy" Title="Healthy" />
+        <StatusCard Id="warning" Title="Warning" />
+    </Space>
+</ComponentPropsProvider>
+
+@code {
+    private readonly ComponentPropsCollection props = new ComponentPropsCollection(
+        new StatusCardProps
+        {
+            Description = "Provided by the outer component",
+        })
+    {
+        ["warning"] = new StatusCardProps
+        {
+            Highlighted = true,
+            Description = "This card has an id-specific override",
+        },
+    };
+}
