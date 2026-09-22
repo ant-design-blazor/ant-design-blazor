@@ -1,0 +1,3509 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"/>
+    <meta no-antblazor-css=""/>
+    
+    <meta name="author" content="James Yeung"/>
+    <meta name="description" content="🌈A set of enterprise-class UI components based on Ant Design and Blazor WebAssembly."/>
+    <base href="/"/>
+    <link rel="icon" href="logo.png" type="image/x-icon"/>
+    <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin=""/>
+    <link href="_framework/dotnet.tr8sl344yl.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-l4NGuENVp1W++8ptxhLGSBK0fFsiIKeVBzS8nMnh8As="/>
+    <script type="importmap">{
+  "imports": {
+    "./_content/AntDesign/AntDesign.lib.module.js": "./_content/AntDesign/AntDesign.d05dnpfa5s.lib.module.js",
+    "./_framework/blazor.webassembly.js": "./_framework/blazor.webassembly.66stpp682q.js",
+    "./_framework/dotnet.native.js": "./_framework/dotnet.native.7scob56l4g.js",
+    "./_framework/dotnet.runtime.js": "./_framework/dotnet.runtime.v06hirbjsv.js",
+    "./_framework/dotnet.js": "./_framework/dotnet.tr8sl344yl.js"
+  },
+  "scopes": {},
+  "integrity": {
+    "./_content/AntDesign/AntDesign.d05dnpfa5s.lib.module.js": "sha256-Y7oJ7/rOncGnhfBrDAPc045cW9bF4cp1INbpZClDsxM=",
+    "./_content/AntDesign/AntDesign.lib.module.js": "sha256-Y7oJ7/rOncGnhfBrDAPc045cW9bF4cp1INbpZClDsxM=",
+    "./_framework/blazor.webassembly.66stpp682q.js": "sha256-3lCWrko3zwspV40aQhs2S/IMkRSarnHRKIdkHhuXIBA=",
+    "./_framework/blazor.webassembly.js": "sha256-3lCWrko3zwspV40aQhs2S/IMkRSarnHRKIdkHhuXIBA=",
+    "./_framework/dotnet.js": "sha256-l4NGuENVp1W++8ptxhLGSBK0fFsiIKeVBzS8nMnh8As=",
+    "./_framework/dotnet.native.7scob56l4g.js": "sha256-txVqGukeotsUxdWCb27Ve8JjSkswrs7+60ZyLfq1nks=",
+    "./_framework/dotnet.native.js": "sha256-txVqGukeotsUxdWCb27Ve8JjSkswrs7+60ZyLfq1nks=",
+    "./_framework/dotnet.runtime.js": "sha256-QbnqrZGHtGq7wudS17/AYEPpH9JkphrsyVllD6JHmds=",
+    "./_framework/dotnet.runtime.v06hirbjsv.js": "sha256-QbnqrZGHtGq7wudS17/AYEPpH9JkphrsyVllD6JHmds=",
+    "./_framework/dotnet.tr8sl344yl.js": "sha256-l4NGuENVp1W++8ptxhLGSBK0fFsiIKeVBzS8nMnh8As="
+  }
+}</script>
+    <link href="_content/AntDesign.Docs/css/default.css?v=doc-fix" rel="stylesheet"/>
+    <link href="manifest.json" rel="manifest"/>
+
+
+
+<!-- %%-PRERENDERING-HEADOUTLET-BEGIN-%% -->
+<title>Modal - Ant Design Blazor</title>
+<!-- %%-PRERENDERING-HEADOUTLET-END-%% -->
+</head>
+
+<body>
+    <noscript>Out-of-the-box mid-stage front/design solution!</noscript>
+    <app>
+        <div id="root">
+            <style>
+                html,
+                body,
+                #root {
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                #root {
+                    /* background-image: url("_content/AntDesign.Docs/home_bg.png"); */
+                    background-repeat: no-repeat;
+                    background-size: 100% auto;
+                }
+
+                .page-loading-warp {
+                    padding: 98px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .ant-spin {
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+                    margin: 0;
+                    padding: 0;
+                    color: rgba(0, 0, 0, 0.65);
+                    font-size: 14px;
+                    font-variant: tabular-nums;
+                    line-height: 1.5;
+                    list-style: none;
+                    -webkit-font-feature-settings: 'tnum';
+                    font-feature-settings: 'tnum';
+                    position: absolute;
+                    display: none;
+                    color: #1890ff;
+                    text-align: center;
+                    vertical-align: middle;
+                    opacity: 0;
+                    -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                }
+
+                .ant-spin-spinning {
+                    position: static;
+                    display: inline-block;
+                    opacity: 1;
+                }
+
+                .ant-spin-dot {
+                    position: relative;
+                    display: inline-block;
+                    font-size: 20px;
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .ant-spin-dot-item {
+                    position: absolute;
+                    display: block;
+                    width: 9px;
+                    height: 9px;
+                    background-color: #1890ff;
+                    border-radius: 100%;
+                    -webkit-transform: scale(0.75);
+                    -ms-transform: scale(0.75);
+                    transform: scale(0.75);
+                    -webkit-transform-origin: 50% 50%;
+                    -ms-transform-origin: 50% 50%;
+                    transform-origin: 50% 50%;
+                    opacity: 0.3;
+                    -webkit-animation: antSpinMove 1s infinite linear alternate;
+                    animation: antSpinMove 1s infinite linear alternate;
+                }
+
+                .ant-spin-dot-item:nth-child(1) {
+                    top: 0;
+                    left: 0;
+                }
+
+                .ant-spin-dot-item:nth-child(2) {
+                    top: 0;
+                    right: 0;
+                    -webkit-animation-delay: 0.4s;
+                    animation-delay: 0.4s;
+                }
+
+                .ant-spin-dot-item:nth-child(3) {
+                    right: 0;
+                    bottom: 0;
+                    -webkit-animation-delay: 0.8s;
+                    animation-delay: 0.8s;
+                }
+
+                .ant-spin-dot-item:nth-child(4) {
+                    bottom: 0;
+                    left: 0;
+                    -webkit-animation-delay: 1.2s;
+                    animation-delay: 1.2s;
+                }
+
+                .ant-spin-dot-spin {
+                    -webkit-transform: rotate(45deg);
+                    -ms-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    -webkit-animation: antRotate 1.2s infinite linear;
+                    animation: antRotate 1.2s infinite linear;
+                }
+
+                .ant-spin-lg .ant-spin-dot {
+                    font-size: 32px;
+                    width: 32px;
+                    height: 32px;
+                }
+
+                .ant-spin-lg .ant-spin-dot i {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+                    .ant-spin-blur {
+                        background: #fff;
+                        opacity: 0.5;
+                    }
+                }
+
+                @-webkit-keyframes antSpinMove {
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes antSpinMove {
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                @-webkit-keyframes antRotate {
+                    to {
+                        -webkit-transform: rotate(405deg);
+                        transform: rotate(405deg);
+                    }
+                }
+
+                @keyframes antRotate {
+                    to {
+                        -webkit-transform: rotate(405deg);
+                        transform: rotate(405deg);
+                    }
+                }
+
+                .loading-progress-text:after {
+                    content: var(--blazor-load-percentage-text, "Loading");
+                }
+            </style>
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 420px; height: 100%;">
+                <img src="logo.png" alt="logo" width="256"/>
+                <div class="page-loading-warp">
+                    <div class="ant-spin ant-spin-lg ant-spin-spinning">
+                        <span class="ant-spin-dot ant-spin-dot-spin">
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                        </span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="loading-progress-text"></div>
+                </div>
+            </div>
+        </div>
+    
+<!-- %%-PRERENDERING-BEGIN-%% -->
+<div style="opacity: 0; position: fixed; z-index: -1; top: 0; left: 0; bottom: 0; right: 0;">
+    
+    <div id="react-content"><header id="header" class="clearfix ">
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  flex-flow: nowrap; height: 64px;" id="ant-blazor-d8f43347-70a8-402d-a3a6-f82fe5a0a70a">
+        <div class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-lg-6 ant-col-xl-5 ant-col-xxl-4" style="  " id="ant-blazor-765b312b-a7cb-41b6-8f49-a8a3289e40db">
+    <h1><a id="logo" href="/"><img alt="logo" src="/docs/assets/logo.svg">Ant Design Blazor
+                </a></h1>
+</div><div class="menu-row ant-col ant-col-md-18 ant-col-lg-18 ant-col-xl-19 ant-col-xxl-20" style="  " id="ant-blazor-2913886c-f46a-44d6-a4ee-20b682b88f95">
+    <div id="search-box"><div id="docsearch"></div></div>
+
+
+    <ul class="menu-site ant-menu ant-menu-root ant-menu-light ant-menu-horizontal" id="nav" direction="ltr" role="menu">
+        
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/docs" class=""><span>Docs</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item ant-menu-item-selected" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components" class=" active"><span>Components</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/charts" class=""><span>Charts</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/experimental" class=""><span>Experimental</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="https://x.antblazor.com/en-US" class="">AI</a>
+            </span>
+        </li>
+    </ul>
+
+    <button class="header-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-4555ecf7-4f63-40e6-bdb1-12e1bd06591a" type="button" ant-click-animating-without-extra-node="false">
+                <span>doc-fix</span>
+    </button>
+
+    <button class="header-button header-lang-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-f1e16075-385d-4810-9a88-8d31cf616ed7" type="button" ant-click-animating-without-extra-node="false">
+                <span>简体中文</span>
+    </button>
+
+    <button class="header-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-df0e8565-2265-4ebe-b0e2-64da671df26c" type="button" ant-click-animating-without-extra-node="false">
+                <span>RTL</span>
+    </button>
+<span id="github-btn" class="github-btn"><a class="gh-btn" href="//github.com/ant-design-blazor/ant-design-blazor" target="_blank"><span class="gh-ico" aria-hidden="true"></span>
+        <span class="gh-text">Star</span></a></span>
+</div>
+    </div>
+</header>
+
+
+<style>            
+.DocSearch-Hit-content-wrapper {
+    overflow: hidden;
+}
+</style><div class="main-wrapper">
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  " id="ant-blazor-083c22c7-ed65-47b6-97ab-5134a85062eb">
+        <div class="main-menu ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-lg-6 ant-col-xl-5 ant-col-xxl-4" style="  " id="ant-blazor-e4f3e19c-2db9-4c52-9c70-aee15e53eb5e">
+    <div>
+    <div class="">
+        <section class="main-menu-inner">
+    <ul class="aside-container menu-site ant-menu ant-menu-root ant-menu-light ant-menu-inline" id="ant-blazor-a0c7ea09-d698-4af8-8e2f-d0b85b2a03d8" direction="ltr" role="menu">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/overview" class=""><span>Components Overview</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+<li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+General    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/button" class=""><span>Button</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/icon" class=""><span>Icon</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/typography" class=""><span>Typography</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Layout    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/divider" class=""><span>Divider</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/flex" class=""><span>Flex</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/grid" class=""><span>Grid</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/layout" class=""><span>Layout</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/space" class=""><span>Space</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Navigation    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/affix" class=""><span>Affix</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/breadcrumb" class=""><span>Breadcrumb</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/dropdown" class=""><span>Dropdown</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/menu" class=""><span>Menu</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/pageheader" class=""><span>PageHeader</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/pagination" class=""><span>Pagination</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/steps" class=""><span>Steps</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Data Entry    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/autocomplete" class=""><span>AutoComplete</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/cascader" class=""><span>Cascader</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/checkbox" class=""><span>Checkbox</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/datepicker" class=""><span>DatePicker</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/form" class=""><span>Form</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/input" class=""><span>Input</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/inputnumber" class=""><span>InputNumber</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/mentions" class=""><span>Mentions</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/radio" class=""><span>Radio</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/rate" class=""><span>Rate</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/select" class=""><span>Select</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/slider" class=""><span>Slider</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/switch" class=""><span>Switch</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/timepicker" class=""><span>TimePicker</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/transfer" class=""><span>Transfer</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/treeselect" class=""><span>TreeSelect</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/upload" class=""><span>Upload</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Data Display    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/avatar" class=""><span>Avatar</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/badge" class=""><span>Badge</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/calendar" class=""><span>Calendar</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/card" class=""><span>Card</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/carousel" class=""><span>Carousel</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/collapse" class=""><span>Collapse</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/comment" class=""><span>Comment</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/descriptions" class=""><span>Descriptions</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/empty" class=""><span>Empty</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/image" class=""><span>Image</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/list" class=""><span>List</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/popover" class=""><span>Popover</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/segmented" class=""><span>Segmented</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/statistic" class=""><span>Statistic</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/table" class=""><span>Table</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/tabs" class=""><span>Tabs</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/tag" class=""><span>Tag</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/timeline" class=""><span>Timeline</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/tooltip" class=""><span>Tooltip</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/tree" class=""><span>Tree</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Feedback    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/alert" class=""><span>Alert</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/drawer" class=""><span>Drawer</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/message" class=""><span>Message</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item ant-menu-item-selected" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/modal" class=" active"><span>Modal</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/notification" class=""><span>Notification</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/popconfirm" class=""><span>Popconfirm</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/progress" class=""><span>Progress</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/result" class=""><span>Result</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/skeleton" class=""><span>Skeleton</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/spin" class=""><span>Spin</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/watermark" class=""><span>Watermark</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Other    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/anchor" class=""><span>Anchor</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/backtop" class=""><span>BackTop</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li>
+    </ul>
+</section>
+    </div>
+</div>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-18 ant-col-lg-18 ant-col-xl-19 ant-col-xxl-20" style="  " id="ant-blazor-51f7c410-5bdd-45c0-bf71-5d2955d4090f">
+    <section class="main-container main-container-component"><article><div class="toc-affix"><div>
+    <div class="">
+        <div class="ant-anchor-wrapper" style="max-height: 100vh;" id="ant-blazor-8095ff50-2c22-41cc-9fda-c59d9dfcffad">
+    <div class="ant-anchor">
+        <div class="ant-anchor-ink">
+            <span class="ant-anchor-ink-ball" style="">
+            </span>
+        </div>
+        
+            
+                <div class="ant-anchor-link" id="ant-blazor-84289959-6885-4c3a-b202-391efd361aa1">
+    <a title="Basic" class="ant-anchor-link-title">Basic</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-1770aebe-5521-4440-b565-06b9d5250197">
+    <a title="Asynchronously close" class="ant-anchor-link-title">Asynchronously close</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-17546815-a942-4154-9534-54c7c7c16942">
+    <a title="Customized Footer" class="ant-anchor-link-title">Customized Footer</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-3d9592ff-80f4-4ed8-b0fc-d7abbc0f9c27">
+    <a title="Customized Hender" class="ant-anchor-link-title">Customized Hender</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-9207c4a0-a899-4c6a-b986-ab8dd29b5425">
+    <a title="Confirmation modal dialog" class="ant-anchor-link-title">Confirmation modal dialog</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-4866b818-93cd-4a9f-ac91-200c99b8e1aa">
+    <a title="Information modal dialog" class="ant-anchor-link-title">Information modal dialog</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-e4ba115b-20a3-40a1-8bb6-df448acfd53a">
+    <a title="Promise Confirmation modal dialog" class="ant-anchor-link-title">Promise Confirmation modal dialog</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-759d8f84-c20b-4daf-ad22-2b2db1911d63">
+    <a title="Internationalization" class="ant-anchor-link-title">Internationalization</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-a2ab1b22-0ca1-44f5-8a71-6131f9c66602">
+    <a title="To customize the position of modal" class="ant-anchor-link-title">To customize the position of modal</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-6d61f7d4-4272-4f77-84f1-a69a7352a6a0">
+    <a title="Manual to update destroy" class="ant-anchor-link-title">Manual to update destroy</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-06f4f2a3-084c-4506-b3d6-0c9b8d0782c3">
+    <a title="destroy confirmation modal dialog" class="ant-anchor-link-title">destroy confirmation modal dialog</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-e8649718-1da1-4ea7-ad25-4efce0f6f1c0">
+    <a title="Customize footer buttons props" class="ant-anchor-link-title">Customize footer buttons props</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-5a364238-78d7-4c31-88be-96a9fa6d3be7">
+    <a title="Draggable Modal" class="ant-anchor-link-title">Draggable Modal</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-998b5383-1666-488b-b2a5-2ef0c9ede140">
+    <a title="OverrideLocale" class="ant-anchor-link-title">OverrideLocale</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-85448a79-ce1b-4488-8197-175c192c48b0">
+    <a title="ConfirmService" class="ant-anchor-link-title">ConfirmService</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-94cff70e-a9ff-4022-ae25-2cc3b7305e1f">
+    <a title="Maximizable" class="ant-anchor-link-title">Maximizable</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-a144110d-be58-4318-9002-79db46fb3241">
+    <a title="Form validation in Modal" class="ant-anchor-link-title">Form validation in Modal</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-66b2d751-5d58-4e09-9a3a-15d6bb7b1713">
+    <a title="MaxBodyHeight" class="ant-anchor-link-title">MaxBodyHeight</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-919d362e-2b41-43b2-ad93-5e18d72cac92">
+    <a title="Resizable" class="ant-anchor-link-title">Resizable</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-b81fef8d-fdac-4288-8934-3e9f7cfb4db8">
+    <a title="Other components" class="ant-anchor-link-title">Other components</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-88372359-bc53-4894-ab3a-121b4ac1b3d7">
+    <a title="ConfirmTemplate" class="ant-anchor-link-title">ConfirmTemplate</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-fd2f034f-8130-43de-ac8f-03f5aa06a00a">
+    <a title="ModalTemplate" class="ant-anchor-link-title">ModalTemplate</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-d2577385-6229-4e1f-ab2b-2259461c4528">
+    <a title="Custom Modal&#x27;s footer" class="ant-anchor-link-title">Custom Modal&#x27;s footer</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-787cb08e-1995-495e-888f-eaf9fa05c751">
+    <a title="API" class="ant-anchor-link-title">API</a>
+    
+        
+    
+</div><div class="ant-anchor-link" id="ant-blazor-12125c6c-f6a3-4f4e-9436-523bb3e749d8">
+    <a title="FAQ" class="ant-anchor-link-title">FAQ</a>
+    
+        
+    
+</div>
+            
+        
+    </div>
+</div>
+    </div>
+</div></div><section class="markdown"><h1>Modal<span class="widget"></span>
+                    <a href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/doc/index.en-US.md" class="edit-button" rel="noopener noreferrer" target="_blank"><span class="anticon anticon-edit" id="ant-blazor-764f19ad-f48a-4968-899b-ddb8df75e927" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+
+                    <div style="float:right;"><script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CW7I6K7I&placement=antblazorcom&format=cover" id="_carbonads_js"></script></div></h1>
+                <section class="markdown"><p>Modal dialogs.</p>
+<h2>When To Use</h2>
+<p>When requiring users to interact with the application, but without jumping to a new page and interrupting the user's workflow, you can use <code>Modal</code> to create a new floating layer over the current page to get user feedback or display information. Additionally, if you need show a simple confirmation dialog, you can use <code>ModalService.Confirm()</code>, and so on.</p>
+</section><h2 data-scrollama-index="1">Examples
+                        <span class="all-code-box-controls"><span class="code-box-expand-trigger anticon anticon-expand" id="ant-blazor-f933c220-33e1-4fb3-9fd5-74a3d34365fa" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M342 88H120c-17.7 0-32 14.3-32 32v224c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V168h174c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM920 664h-48c-8.8 0-16 7.2-16 16v176H682c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h222c17.7 0 32-14.3 32-32V680c0-8.8-7.2-16-16-16zM342 856H168V680c0-8.8-7.2-16-16-16h-48c-8.8 0-16 7.2-16 16v224c0 17.7 14.3 32 32 32h222c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM904 88H682c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h174v176c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V120c0-17.7-14.3-32-32-32z" pId="13543"></path></svg>
+</span><span class="code-box-expand-trigger anticon anticon-code" id="ant-blazor-d4910726-14f3-4c6d-a1a6-acd78e10514e" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M516 673c0 4.4 3.4 8 7.5 8h185c4.1 0 7.5-3.6 7.5-8v-48c0-4.4-3.4-8-7.5-8h-185c-4.1 0-7.5 3.6-7.5 8v48zm-194.9 6.1l192-161c3.8-3.2 3.8-9.1 0-12.3l-192-160.9A7.95 7.95 0 0 0 308 351v62.7c0 2.4 1 4.6 2.9 6.1L420.7 512l-109.8 92.2a8.1 8.1 0 0 0-2.9 6.1V673c0 6.8 7.9 10.5 13.1 6.1zM880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zm-40 728H184V184h656v656z"/></svg>
+</span></span></h2></section>
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  margin-left: -8px; margin-right: -8px;" id="ant-blazor-a9283f1d-af89-4919-874b-c75504ced032">
+        <div class="code-boxes-col-2-1 ant-col ant-col-sm-24 ant-col-md-12" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-4b8babbe-5078-4670-a9f1-1318ba01da65">
+    <div class="code-box" id="components-modal-demo-basic"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-67b32769-9d22-459c-8ddb-1b368ae3ea36">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Basic</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Basic.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-a23eb15d-5c07-4705-8c9a-9f9157ee682a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Basic modal.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-7bfac944-6195-4f47-8f07-e6a467040e1f" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-footer"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-85f128fb-5529-499b-a1da-7603f33af561">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Customized Footer</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Footer.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-4ca3c3d0-125e-4306-84b5-349d4973f6e5" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>A more complex example which define a customized footer button bar. The dialog will change to loading state after clicking the submit button, and when the loading is done, the modal dialog will be closed.</p>
+<p>You could set <code>footer</code> to <code>null</code> if you don't need default footer buttons.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-d2fee4b1-c01b-4e74-803f-4e698fc7323f" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-confirm"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-622a0dc3-6f01-41e6-b2c5-bbe443860aad">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Confirmation modal dialog</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Confirm.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-d885fae7-bc5f-47ef-a554-f630da9c111f" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Use <code>confirm()</code> to show a confirmation modal dialog.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-c6191e50-ee7a-4f9d-924b-db0141aca3de" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-confirm-promise"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-a0045962-439a-4607-8f7f-8299e4fe142a">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Promise Confirmation modal dialog</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/ConfirmPromise.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-f00320d2-7a25-4717-a28a-07fb437c7e11" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Use <code>Confirm()</code> to show a confirmation modal dialog. Asynchronous event OnCancel/OnOk can delay closing the dialog.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-72b09e25-88f4-4790-9585-d14092ca9bb7" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-position"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-8a0ff0a4-d07a-44cb-9406-247e10946fb1">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>To customize the position of modal</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Position.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-24477558-8083-4dea-9696-2cd2c868ac44" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>You can use <code>centered</code>,<code>style.top</code> or other styles to set position of modal dialog.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-20cb6712-5dd6-4c43-8921-7f61a1da33bf" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-confirm-router"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-a3540435-142a-4f23-a958-ce04f12c12f6">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>destroy confirmation modal dialog</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/ConfirmRouter.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-ebbd90b4-6157-4c5c-ae50-37a4b2ba76f2" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p><code>Modal.destroyAll()</code> will destroy all confirmation modal dialogs. Usually, you can use it in router change event to destroy confirm modal dialog automatically.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-eb9867c6-0b65-473f-b223-38f76e63f931" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-draggable_modal"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-1442d238-9fc8-4127-aa1f-995b30760c84">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Draggable Modal</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/DraggableModal.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-2ffb0676-6778-494e-a2a9-644740004f35" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Use <code>Draggable</code> to create a draggable Modal dialog, and you can control whether dragging is allowed only within the viewport through the parameter <code>DragInViewport</code>.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-bafa55fc-42e3-4337-af9b-38e1ec869566" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-confirm_service"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-750d305a-6b63-41b0-a377-05e40f3a2e9a">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>ConfirmService</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Confirm_Service.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-58250d69-c2cc-4d92-901b-34983a4650ca" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Use <code>IConfirmService.Show</code> to show a built-in confirm dialog, similar to Windows MessageBox.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-c0c60e29-8ee7-42d3-8444-c4d2bced3507" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-form-in-modal"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-2e01b378-e80e-4c3e-936f-89fe20541032">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Form validation in Modal</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/FormInModal.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-8cd1c5c3-a335-4680-a48b-3b72ad83dd17" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Clicking OK triggers Form validation, and it will close only after the validation passes.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-4f9685ab-c82a-4908-870b-e6ba2f95caed" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-resizeable"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-7baec146-6f78-4679-a62c-92c54a01dad9">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Resizable</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Resizeable.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-15714c39-e9dd-46c4-a098-ccf0d7751807" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>By setting <code>Resizable=true</code>, Modal can be resized horizontally.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-4110199d-0339-4d26-bae5-03681c201bc6" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-modal_service_for_confirm"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-10f652a0-a348-4535-a746-09de0f223d2a">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>ConfirmTemplate</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Modal_service_for_confirm.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-9f881afd-7610-4331-bde4-4489f213793d" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Create a Confirm dialog box through ModalService, examples demonstrate user-defined templates, custom components.</p>
+<p>Template code: ConfirmTemplateDemo.razor</p>
+<pre><code class="language-c#">
+@inherits FeedbackComponent&lt;string, string&gt;
+
+&lt;div&gt;
+    &lt;Text&gt;Please input &quot;@config&quot;&lt;/Text&gt;
+    value: &lt;Input @bind-Value=&quot;value&quot; Placeholder=&quot;@config&quot; /&gt;
+&lt;/div&gt;
+
+@code{
+
+    string config;
+
+    string value;
+
+    protected override void OnInitialized()
+    {
+        config = this.Options;
+        base.OnInitialized();
+    }
+
+
+    public override async Task OnFeedbackOkAsync(ModalClosingEventArgs args)
+    {
+        if (FeedbackRef is ConfirmRef confirmRef)
+        {
+            confirmRef.Config.OkButtonProps.Loading = true;
+            await confirmRef.UpdateConfigAsync();
+        }
+        else if (FeedbackRef is ModalRef modalRef)
+        {
+            modalRef.Config.ConfirmLoading = true;
+            await modalRef.UpdateConfigAsync();
+        }
+
+        await Task.Delay(1000);
+        // only the input's value equals the initialized value, the OK button will close the confirm dialog box
+        if (value != config)
+            args.Cancel = true;
+        else
+            // method 1(not recommended): await (FeedbackRef as ConfirmRef&lt;string&gt;)!.OkAsync(value);
+            // method 2: await (FeedbackRef as IOkCancelRef&lt;string&gt;)!.OkAsync(value);
+            await base.OkCancelRefWithResult!.OnOk(value);
+
+        await base.OnFeedbackOkAsync(args);
+    }
+
+    /// &lt;summary&gt;
+    /// If you want &lt;b&gt;Dispose&lt;/b&gt; to take effect every time it is closed in Modal, which created by ModalService,
+    /// set &lt;b&gt;ModalOptions.DestroyOnClose = true&lt;/b&gt;
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;disposing&quot;&gt;&lt;/param&gt;
+    protected override void Dispose(bool disposing)
+    {
+        Console.WriteLine(&quot;Dispose&quot;);
+        base.Dispose(disposing);
+    }
+}
+
+</code></pre>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-41ce26a1-3635-474a-b82f-ecff9766f41a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-custom-modal-footer"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-d9adb805-c9f0-4148-bd90-293c274289b5">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Custom Modal&#x27;s footer</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/CustomModalFooter.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-f52bcccf-0653-4e31-a040-7d522b7a3a1a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Users can customize the Footer of Modal components to realize any button and its functions. To facilitate users' use, AntDesign has built-in footers with only one OK button (ModalFooter.DefaultOkFooter) and only one Cancel button (ModalFooter.DefaultCancelFooter).</p>
+<pre><code class="language-c#">// DefaultOkFooter.razor
+@{
+    var okProps = ModalProps.OkButtonProps ?? new ButtonProps();
+    okProps.Type = ModalProps.OkType;
+    okProps.Loading = ModalProps.ConfirmLoading;
+}
+
+&lt;div&gt;
+    &lt;Button OnClick=&quot;@HandleOk&quot;
+            Loading=&quot;@okProps.Loading&quot;
+            Type=&quot;@okProps.Type&quot;
+            Block=&quot;@okProps.Block&quot;
+            Ghost=&quot;@okProps.Ghost&quot;
+            Shape=&quot;@okProps.Shape&quot;
+            Size=&quot;@okProps.Size&quot;
+            Icon=&quot;@okProps.Icon&quot;
+            Disabled=&quot;@okProps.Disabled&quot;
+            Danger=&quot;@okProps.IsDanger&quot;&gt;
+        @{
+            if (ModalProps.OkText.IsT0)
+            {
+                @(ModalProps.OkText.AsT0)
+            }
+            else
+            {
+                @(ModalProps.OkText.AsT1)
+            }
+        }
+    &lt;/Button&gt;
+&lt;/div&gt;
+
+@code{
+    /// &lt;summary&gt;
+    ///
+    /// &lt;/summary&gt;
+    [CascadingParameter]
+    public DialogOptions ModalProps { get; set; }
+
+    private async Task HandleOk(MouseEventArgs e)
+    {
+        var onOk = ModalProps.OnOk;
+        if (onOk != null)
+        {
+            await onOk.Invoke(e);
+        }
+    }
+}
+</code></pre>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-4cfc2baa-0637-4f71-b036-24960e42a096" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div>
+                        <div class="code-boxes-col-2-1 ant-col ant-col-sm-24 ant-col-md-12" style="  padding-left: 8px; padding-right: 8px;" id="ant-blazor-aab74989-5549-4f28-8591-846e90c159f2">
+    <div class="code-box" id="components-modal-demo-async"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-d80d57e1-404a-47a0-ad4a-92db982ea3a6">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Asynchronously close</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Async.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-3ac444d7-1f33-40e2-baad-c37a468d5f71" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Asynchronously close a modal dialog when a the OK button is pressed. For example, you can use this pattern when you submit a form.</p>
+<blockquote>
+<p>Use one-way binding <code>Visible</code> to control.</p>
+</blockquote>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-6b9e24c8-7ca0-47ff-bcf1-8470151c9150" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-header"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-07881434-88c1-4ecf-b2a6-ce169f0662ed">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Customized Hender</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Header_.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-d428ead1-f8d5-4389-943a-b45e2a76443c" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Set the <code>Hender</code> property to customize the header of the Modal. Default header component in <a href="https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/modal/modalDialog/ModalHender.razor">ModelHeader.razor</a>.</p>
+<p>Otherwise, if <code>Hender</code> is set to null, the header can be hidden.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-a3c29452-612e-4aca-9eb3-399c6cc1a2bf" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-info"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-3385f4a4-f068-4cd7-84b7-951beae8ae23">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Information modal dialog</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Info.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-791f7b80-07bb-4dbd-b5ad-3fd99c444e5a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>In the various types of information modal dialog, only one button to close dialog is provided.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-9514cb40-5d6a-45ed-91ba-46c4d706709f" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-locale"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-8bbf3c27-75d6-4646-b92e-89d64ea8e9b2">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Internationalization</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Locale.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-622ed4f5-e9ce-4b4c-ac3c-5a72f96cd9ab" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>To customize the text of the buttons, you need to set <code>okText</code> and <code>cancelText</code> props.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-eaebc3fa-aeba-48d1-812b-2673e5f0d437" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-manual"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-dfa63133-d98e-4b8e-a66e-f0cfd65ca398">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Manual to update destroy</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Manual.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-5594504d-daf9-4fbc-bf77-e3806580883a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Manually updating and destroying a modal from <code>Modal.method</code>.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-27d3748d-8a54-4641-b75e-dbfec8afeb51" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-button-props"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-f4069cc8-6acd-4f3c-8063-4a81cd80b20b">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Customize footer buttons props</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/ButtonProps.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-800eb5ad-2d74-4090-8df7-c133f2fc69e2" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Passing <code>okButtonProps</code> and <code>cancelButtonProps</code> will customize the OK button and cancel button props.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-53f73f0d-9af4-4b31-83c5-246d07161d16" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-OverrideLocale"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-a76c09e3-33fc-4d42-a3ef-7048a14102c4">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>OverrideLocale</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/OverrideLocale.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-e11b6415-d0f8-4872-bb12-928095d1698a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>You can customize the text of the button to override the locale</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-7cf6691a-58fa-4ad8-88e8-6573ee4ba697" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-maxable"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-d2bc9302-7550-4fa1-9219-c1cb0d6579da">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Maximizable</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Maxable.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-e433d4d9-9903-4969-a297-120c877768d6" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Allow Modal to maximize within the browser.
+The <code>Maximizable</code> parameter will display the button for maximizing Modal, and the <code>DefaultMaximized</code> parameter can control the maximization during Modal initialization.
+<code>Maximizable</code> and <code>DefaultMaximized</code> are not coupled with each other. Even if <code>Maximizable=false</code> and <code>DefaultMaximized=true</code> will ensure that the Modal is maximized during initialization.</p>
+<p>Note:</p>
+<ol>
+<li>If <code>Draggable</code> is true, the position will be reset when the size is restored</li>
+<li>It is turned off when the Modal is maximized, and it will remain maximized when it is displayed again</li>
+</ol>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-488e97cc-f9c1-411c-8aac-fe30729e855c" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-max-body-height"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-0a6d5b07-a28c-4add-8136-feb90bfb7718">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>MaxBodyHeight</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/MaxBodyHeight.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-dd0fc19a-75e4-43bb-95f4-1607839c917a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Modify the display of the scroll bar.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-d23408a2-8326-4dc6-8508-fd84093d7ee7" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-dropdown-in-modal"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-c8b6f76a-3352-4136-a286-1eb6845e8172">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>Other components</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/DropdownInModal.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-5255b4c5-105d-4b9b-9d94-8119b62fb99d" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>use dropdown or popup in modal.</p>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-c7f35272-f86d-4149-98c8-d70664f3a232" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div><div class="code-box" id="components-modal-demo-modal_service_for_modal"><section class="code-box-demo"><div class="ant-skeleton ant-skeleton-active" id="ant-blazor-5fee6257-0f6b-4ffb-8ced-a3b700003fca">
+
+        <div class="ant-skeleton-content">
+                <h3 class="ant-skeleton-title" style="width:38%"></h3>
+                <ul class="ant-skeleton-paragraph">
+                        <li style="width:"></li>
+                        <li style="width:"></li>
+                        <li style="width:61%"></li>
+                </ul>
+        </div>
+
+</div></section>
+    <section class="code-box-meta markdown"><div class="code-box-title"><a>ModalTemplate</a>
+            <a class="edit-button" href="https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/Demos/Components/Modal/demo/Modal_service_for_modal.razor" target="_blank" rel="noopener noreferrer"><span class="anticon anticon-edit" id="ant-blazor-ca63e3d5-bcd8-4de7-a122-39f4a099845a" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/></svg>
+</span></a>
+
+    
+        
+    
+</div>
+        <div class="code-box-description"><p>Create a Modal dialog box through ModalService, examples demonstrate custom components.</p>
+<p>Template code: ModalTemplateDemo.razor</p>
+<pre><code class="language-c#">@inherits FeedbackComponent&lt;Form.demo.Basic.Model&gt;
+
+&lt;Form Model=&quot;@_model&quot;
+      LabelCol=&quot;new ColLayoutParam { Span = 8 }&quot;
+      WrapperCol=&quot;new ColLayoutParam { Span = 16 }&quot;
+      OnFinish=&quot;OnFinish&quot;
+      OnFinishFailed=&quot;OnFinishFailed&quot;&gt;
+    &lt;FormItem Label=&quot;Username&quot;&gt;
+        &lt;Input @bind-Value=&quot;@context.Username&quot; /&gt;
+    &lt;/FormItem&gt;
+    &lt;FormItem Label=&quot;Password&quot;&gt;
+        &lt;InputPassword @bind-Value=&quot;@context.Password&quot; /&gt;
+    &lt;/FormItem&gt;
+    &lt;FormItem WrapperCol=&quot;new ColLayoutParam{ Offset = 8, Span = 16 }&quot;&gt;
+        &lt;Checkbox @bind-Value=&quot;context.RememberMe&quot;&gt;Remember me&lt;/Checkbox&gt;
+    &lt;/FormItem&gt;
+    &lt;FormItem WrapperCol=&quot;new ColLayoutParam{ Offset = 8, Span = 16 }&quot;&gt;
+        &lt;Button Type=&quot;ButtonType.Primary&quot; HtmlType=&quot;submit&quot;&gt;
+            Submit
+        &lt;/Button&gt;
+    &lt;/FormItem&gt;
+&lt;/Form&gt;
+
+&lt;br /&gt;
+&lt;br /&gt;
+
+
+@code{
+
+
+    private Form.demo.Basic.Model _model;
+
+    protected override void OnInitialized()
+    {
+        _model = base.Options ?? new Form.demo.Basic.Model();
+        base.OnInitialized();
+    }
+
+    private void OnFinish(EditContext editContext)
+    {
+        Console.WriteLine($&quot;Success:{JsonSerializer.Serialize(_model)}&quot;);
+        _ = base.FeedbackRef.CloseAsync();
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($&quot;Failed:{JsonSerializer.Serialize(_model)}&quot;);
+    }
+}
+
+</code></pre>
+</div>
+        <div class="code-box-actions"><span class="code-box-code-copy code-box-code-action anticon anticon-snippets" id="ant-blazor-1b47d4f4-5529-461d-ae48-1fa5bbe6b368" role="img">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M832 112H724V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H500V72c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v40H320c-17.7 0-32 14.3-32 32v120h-96c-17.7 0-32 14.3-32 32v632c0 17.7 14.3 32 32 32h512c17.7 0 32-14.3 32-32v-96h96c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM664 888H232V336h218v174c0 22.1 17.9 40 40 40h174v338zm0-402H514V336h.2L664 485.8v.2zm128 274h-56V456L544 264H360v-80h68v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h152v32c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-32h68v576z"/></svg>
+</span>
+
+    
+        
+    
+
+            <span class="code-expand-icon code-box-code-action"><img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="code-expand-icon-show" />
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="code-expand-icon-hide" /></span>
+
+    
+        
+    
+
+            </div></section>
+    <section class="highlight-wrapper "></section>
+    <style></style></div>
+</div>
+    </div>
+<section class="markdown api-container"><h2 id="API"><span>Modal API</span><a href="/en-US/components/modal#API" class="anchor">#</a></h2>
+<table class="api properties-api">
+<thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Default Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+<tr class="">
+                    <td class="api-code-identifier">AfterClose</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Callback after modal is closed.</td>
+                    <td class="api-data-type">EventCallback</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">AfterOpen</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Callback after modal is opened.</td>
+                    <td class="api-data-type">EventCallback</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">BodyStyle</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Body style for modal body element. Such as height, padding etc</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">CancelText</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Text or RenderFragment of the Cancel button, it will override the ModalLocale</td>
+                    <td class="api-data-type">OneOf&lt;String, RenderFragment??</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Centered</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>centered</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Closable</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Whether a close (x) button is visible on top right of the modal dialog or not</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">true</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Draggable</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Whether the modal dialog box be dragged</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">DragInViewport</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Drag and drop only within the Viewport</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">true</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">CloseIcon</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>closer icon RenderFragment, the default is a "X"</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">close-outline</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ConfirmLoading</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Whether to apply loading visual effect for OK button or not</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">DestroyOnClose</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Whether to unmount child components on onClose</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">false</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Header</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Header content</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Footer</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Footer content, set as Footer=null when you don't need default buttons</td>
+                    <td class="api-data-type">OneOf&lt;String, RenderFragment??</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">GetContainer</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>get or set the modal parent DOM, default is null: which is specifying document.body</td>
+                    <td class="api-data-type">ElementReference?</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Keyboard</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Whether support press esc to close</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">true</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Mask</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Whether show mask or not</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">true</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">MaskClosable</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Whether to close the modal dialog when the mask (area outside the modal) is clicked</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">true</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">MaskStyle</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Style for modal's mask element</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OkText</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Text of RenderFragment of the OK button, it will override the ModalLocale</td>
+                    <td class="api-data-type">OneOf&lt;String, RenderFragment??</td>
+                    <td class="api-default">null</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OkType</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Button type of the OK button</td>
+                    <td class="api-data-type">ButtonType</td>
+                    <td class="api-default">ButtonType.Primary</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Title</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>The modal dialog's title</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">TitleTemplate</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>The modal dialog's title. Takes priority over Title.</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Visible</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Whether the modal dialog is visible or not</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">VisibleChanged</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Specify a function invoke when the modal dialog is visible or not</td>
+                    <td class="api-data-type">EventCallback&lt;Boolean&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Width</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Width of the modal dialog, the default value is 520</td>
+                    <td class="api-data-type">OneOf&lt;String, Double&gt;</td>
+                    <td class="api-default">520</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">WrapClassName</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>The class name of the container of the modal dialog</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ZIndex</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>The z-index of the Modal</td>
+                    <td class="api-data-type">Int32</td>
+                    <td class="api-default">1000</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnCancel</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Specify a function that will be called when a user clicks mask, close button on top right or Cancel button</td>
+                    <td class="api-data-type">EventCallback&lt;MouseEventArgs&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnOk</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Specify a function that will be called when a user clicks the OK button</td>
+                    <td class="api-data-type">EventCallback&lt;MouseEventArgs&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OkButtonProps</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>The OK button props</td>
+                    <td class="api-data-type">ButtonProps</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">CancelButtonProps</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>The Cancel button props</td>
+                    <td class="api-data-type">ButtonProps</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ChildContent</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Child content</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Rtl</td>
+                    <td class="api-description">Is RTL</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Locale</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Modal Locale</td>
+                    <td class="api-data-type">ModalLocale</td>
+                    <td class="api-default">LocaleProvider.CurrentLocacle.Modal</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">MaxBodyHeight</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>max modal content body height</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Maximizable</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>show modal maximize button</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">false</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">MaximizeBtnIcon</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>The icon of the maximize button when the modal is in normal state</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">fullscreen-outline</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">RestoreBtnIcon</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>The icon of the maximize button when the modal is maximized</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">fullscreen-exit-outline</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">DefaultMaximized</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Maximize the Modal during component initialization, and it will ignore the Maximizable value.</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">false</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Resizable</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Resizable (Horizontal direction only)</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ForceRender</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Whether to force to render the Modal dom before opening.</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Id</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>ID for the component's HTML</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">Uniquely Generated ID</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Class</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Specifies one or more class names for an DOM element.</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Style</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>Specifies an inline style for a DOM element.</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">RefBack</td>
+                    <td class="api-description"><span class="ant-tag">Parameter</span>A <code>ForwardRef</code> instance. You can get a reference to the internal DOM by using <code>AntDesign.ForwardRef.Current</code>.</td>
+                    <td class="api-data-type">ForwardRef</td>
+                    <td class="api-default">--</td>
+                </tr>
+</tbody></table>
+<h2 id="API-ModalService"><span>ModalService API</span><a href="/en-US/components/modal#API-ModalService" class="anchor">#</a></h2>
+<table class="api methods-api">
+                <thead>
+                    <tr>
+                        <th>Method Signature</th>
+                        <th>Return Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+<tr>
+                    <td class="api-signature">Confirm(ConfirmOptions props)</td>
+                    <td class="api-data-type">ConfirmRef</td>
+                    <td class="api-description">create and open a OK-Cancel Confirm dialog</td>
+                </tr>
+<tr>
+                    <td class="api-signature">Info(ConfirmOptions options)</td>
+                    <td class="api-data-type">ConfirmRef</td>
+                    <td class="api-description">create and open a OK-Cancel Confirm dialog with info icon</td>
+                </tr>
+<tr>
+                    <td class="api-signature">Success(ConfirmOptions options)</td>
+                    <td class="api-data-type">ConfirmRef</td>
+                    <td class="api-description">create and open a OK-Cancel Confirm dialog with success icon</td>
+                </tr>
+<tr>
+                    <td class="api-signature">Error(ConfirmOptions options)</td>
+                    <td class="api-data-type">ConfirmRef</td>
+                    <td class="api-description">create and open a OK-Cancel Confirm dialog with error icon</td>
+                </tr>
+<tr>
+                    <td class="api-signature">Warning(ConfirmOptions options)</td>
+                    <td class="api-data-type">ConfirmRef</td>
+                    <td class="api-description">create and open a OK-Cancel Confirm dialog with Warning icon</td>
+                </tr>
+<tr>
+                    <td class="api-signature">ConfirmAsync(ConfirmOptions props)</td>
+                    <td class="api-data-type">Task&lt;Boolean&gt;</td>
+                    <td class="api-description">create and open a OK-Cancel Confirm dialog, and return a bool value which indicates whether the OK button has been clicked</td>
+                </tr>
+<tr>
+                    <td class="api-signature">InfoAsync(ConfirmOptions options)</td>
+                    <td class="api-data-type">Task&lt;Boolean&gt;</td>
+                    <td class="api-description">create and open a OK-Cancel Confirm dialog with info icon, and return a bool value which indicates whether the OK button has been clicked</td>
+                </tr>
+<tr>
+                    <td class="api-signature">SuccessAsync(ConfirmOptions options)</td>
+                    <td class="api-data-type">Task&lt;Boolean&gt;</td>
+                    <td class="api-description">create and open a OK-Cancel Confirm dialog with success icon, and return a bool value which indicates whether the OK button has been clicked</td>
+                </tr>
+<tr>
+                    <td class="api-signature">ErrorAsync(ConfirmOptions options)</td>
+                    <td class="api-data-type">Task&lt;Boolean&gt;</td>
+                    <td class="api-description">create and open a OK-Cancel Confirm dialog with error icon, and return a bool value which indicates whether the OK button has been clicked</td>
+                </tr>
+<tr>
+                    <td class="api-signature">WarningAsync(ConfirmOptions options)</td>
+                    <td class="api-data-type">Task&lt;Boolean&gt;</td>
+                    <td class="api-description">create and open a OK-Cancel Confirm dialog with warning icon, and return a bool value which indicates whether the OK button has been clicked</td>
+                </tr>
+<tr>
+                    <td class="api-signature">UpdateConfirmAsync(ConfirmRef confirmRef)</td>
+                    <td class="api-data-type">Task</td>
+                    <td class="api-description">update Confirm which Visible=true</td>
+                </tr>
+<tr>
+                    <td class="api-signature">DestroyConfirmAsync(ConfirmRef confirmRef)</td>
+                    <td class="api-data-type">Task</td>
+                    <td class="api-description">close the Confirm dialog</td>
+                </tr>
+<tr>
+                    <td class="api-signature">DestroyAllConfirmAsync()</td>
+                    <td class="api-data-type">Task</td>
+                    <td class="api-description">close all Confirm dialog</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateConfirm(ConfirmOptions config)</td>
+                    <td class="api-data-type">ConfirmRef</td>
+                    <td class="api-description">Create and open a OK-Cancel Confirm asynchronous</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateConfirm(ConfirmOptions config, TComponentOptions componentOptions)</td>
+                    <td class="api-data-type">ConfirmRef&lt;TResult&gt;</td>
+                    <td class="api-description">Create and open template Confirm dialog</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateConfirm(ConfirmOptions config, TComponentOptions componentOptions)</td>
+                    <td class="api-data-type">ConfirmRef</td>
+                    <td class="api-description"></td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateConfirmAsync(ConfirmOptions config)</td>
+                    <td class="api-data-type">Task&lt;ConfirmRef&gt;</td>
+                    <td class="api-description">Create and open a OK-Cancel Confirm asynchronously and wait until confirm is closed</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateConfirmAsync(ConfirmOptions config, TComponentOptions componentOptions)</td>
+                    <td class="api-data-type">Task&lt;ConfirmResult&gt;</td>
+                    <td class="api-description">Create and open template Confirm dialog asynchronously and wait until confirm is closed</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateConfirmAsync(ConfirmOptions config, TComponentOptions componentOptions)</td>
+                    <td class="api-data-type">Task&lt;ConfirmRef&gt;</td>
+                    <td class="api-description">Create and open template Confirm dialog asynchronously and wait until confirm is closed</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateModal(ModalOptions options)</td>
+                    <td class="api-data-type">ModalRef</td>
+                    <td class="api-description">Create and open a Modal</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateModal(ModalOptions options)</td>
+                    <td class="api-data-type">ModalRef&lt;TResult&gt;</td>
+                    <td class="api-description">Create and open a Modal</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateModal(ModalOptions options, TComponentOptions componentOptions)</td>
+                    <td class="api-data-type">ModalRef</td>
+                    <td class="api-description">Create and open a Modal with template</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateModal(ModalOptions options, TComponentOptions componentOptions)</td>
+                    <td class="api-data-type">ModalRef&lt;TResult&gt;</td>
+                    <td class="api-description">Create and open a Modal with template component</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateModalAsync(ModalOptions options)</td>
+                    <td class="api-data-type">Task&lt;ModalRef&gt;</td>
+                    <td class="api-description">Create and open a Modal</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateModalAsync(ModalOptions options)</td>
+                    <td class="api-data-type">Task&lt;ModalRef&lt;TResult&gt;&gt;</td>
+                    <td class="api-description">Create and open a Modal</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateModalAsync(ModalOptions options, TComponentOptions componentOptions)</td>
+                    <td class="api-data-type">Task&lt;ModalRef&gt;</td>
+                    <td class="api-description">Create and open a Modal with template</td>
+                </tr>
+<tr>
+                    <td class="api-signature">CreateModalAsync(ModalOptions options, TComponentOptions componentOptions)</td>
+                    <td class="api-data-type">Task&lt;ModalRef&lt;TResult&gt;&gt;</td>
+                    <td class="api-description">Create and open a Modal with template</td>
+                </tr>
+</tbody></table>
+<h2 id="API-ConfirmService"><span>ConfirmService API</span><a href="/en-US/components/modal#API-ConfirmService" class="anchor">#</a></h2>
+<table class="api methods-api">
+                <thead>
+                    <tr>
+                        <th>Method Signature</th>
+                        <th>Return Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+<tr>
+                    <td class="api-signature">Show(OneOf&lt;String, RenderFragment&gt; content, OneOf&lt;String, RenderFragment&gt; title, ConfirmButtons confirmButtons, ConfirmIcon confirmIcon, ConfirmButtonOptions options, ConfirmAutoFocusButton? autoFocusButton)</td>
+                    <td class="api-data-type">Task&lt;ConfirmResult&gt;</td>
+                    <td class="api-description">show a confirm dialog like MessageBox of Windows</td>
+                </tr>
+<tr>
+                    <td class="api-signature">Show(OneOf&lt;String, RenderFragment&gt; content, OneOf&lt;String, RenderFragment&gt; title, ConfirmButtons confirmButtons, ConfirmIcon confirmIcon)</td>
+                    <td class="api-data-type">Task&lt;ConfirmResult&gt;</td>
+                    <td class="api-description">show a confirm dialog like MessageBox of Windows</td>
+                </tr>
+</tbody></table>
+<h2 id="API-ConfirmOptions"><span>ConfirmOptions API</span><a href="/en-US/components/modal#API-ConfirmOptions" class="anchor">#</a></h2>
+<table class="api properties-api">
+<thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Default Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+<tr class="">
+                    <td class="api-code-identifier">Locale</td>
+                    <td class="api-description">Confirm Locale</td>
+                    <td class="api-data-type">ConfirmLocale</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ClassName</td>
+                    <td class="api-description">the class name of the element of ".ant-modal"</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Visible</td>
+                    <td class="api-description"></td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Content</td>
+                    <td class="api-description">ChildContent</td>
+                    <td class="api-data-type">OneOf&lt;String, RenderFragment&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Icon</td>
+                    <td class="api-description">Confirm left top icon</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Style</td>
+                    <td class="api-description">.ant-modal element's style</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">AutoFocusButton</td>
+                    <td class="api-description"></td>
+                    <td class="api-data-type">ConfirmAutoFocusButton</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OkType</td>
+                    <td class="api-description">set OK button type for the leftmost button: OK or Yes button</td>
+                    <td class="api-data-type">ButtonType</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OkText</td>
+                    <td class="api-description">set OK button content for the leftmost button: OK or Yes button, it will override the ConfirmLocale</td>
+                    <td class="api-data-type">OneOf&lt;String, RenderFragment??</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">CancelText</td>
+                    <td class="api-description">set Cancel button content for the second on the left button: Cancel or NO button, it will override the ConfirmLocale</td>
+                    <td class="api-data-type">OneOf&lt;String, RenderFragment??</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnCancel</td>
+                    <td class="api-description">for OK-Cancel Confirm dialog, cancel button clicked callback. It's only trigger in Confirm created by ModalService mode</td>
+                    <td class="api-data-type">Func&lt;ModalClosingEventArgs, Task&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OnOk</td>
+                    <td class="api-description">for OK-Cancel Confirm dialog, OK button clicked callback. It's only trigger in Confirm created by ModalService mode</td>
+                    <td class="api-data-type">Func&lt;ModalClosingEventArgs, Task&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OkButtonProps</td>
+                    <td class="api-description">OK-Cancel Confirm dialog's OK button props. It is equivalent to Button1Props.</td>
+                    <td class="api-data-type">ButtonProps</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">CancelButtonProps</td>
+                    <td class="api-description">OK-Cancel Confirm dialog's cancel button props. It is equivalent to Button2Props.</td>
+                    <td class="api-data-type">ButtonProps</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Button1Props</td>
+                    <td class="api-description">the leftmost button in LTR layout</td>
+                    <td class="api-data-type">ButtonProps</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Button2Props</td>
+                    <td class="api-description">The second button on the left is in the LTR layout</td>
+                    <td class="api-data-type">ButtonProps</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Button3Props</td>
+                    <td class="api-description">the rightmost button in LTR layout</td>
+                    <td class="api-data-type">ButtonProps</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OkCancel</td>
+                    <td class="api-description">show Cancel button for OK-Cancel Confirm dialog</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">PrefixCls</td>
+                    <td class="api-description">class name prefix</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">CancelText</td>
+                    <td class="api-description">modal default footer cancel text</td>
+                    <td class="api-data-type">OneOf&lt;String, RenderFragment&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Centered</td>
+                    <td class="api-description">whether center display</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">GetContainer</td>
+                    <td class="api-description">get or set the modal parent DOM</td>
+                    <td class="api-data-type">ElementReference?</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Keyboard</td>
+                    <td class="api-description">Whether support press esc to close</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Mask</td>
+                    <td class="api-description">Whether show mask or not</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">MaskClosable</td>
+                    <td class="api-description">Whether to close the modal dialog when the mask (area outside the modal) is clicked</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">MaskStyle</td>
+                    <td class="api-description">Style for dialog's mask element</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">OkText</td>
+                    <td class="api-description">Text of the OK button</td>
+                    <td class="api-data-type">OneOf&lt;String, RenderFragment&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Title</td>
+                    <td class="api-description">The modal dialog's title of String</td>
+                    <td class="api-data-type">String</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">TitleTemplate</td>
+                    <td class="api-description">The modal dialog's title of RenderFragment</td>
+                    <td class="api-data-type">RenderFragment</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Width</td>
+                    <td class="api-description">Width of the modal dialog</td>
+                    <td class="api-data-type">OneOf&lt;String, Double&gt;</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">ZIndex</td>
+                    <td class="api-description">The z-index of the Modal</td>
+                    <td class="api-data-type">Int32</td>
+                    <td class="api-default">--</td>
+                </tr>
+<tr class="">
+                    <td class="api-code-identifier">Rtl</td>
+                    <td class="api-description">Is RTL</td>
+                    <td class="api-data-type">Boolean</td>
+                    <td class="api-default">--</td>
+                </tr>
+</tbody></table>
+</section><section class="markdown api-container"><h2 id="Faq"><span>FAQs</span><a href="/en-US/components/modal#Faq" class="anchor">#</a></h2>
+<h3>Why does the custom component inherited from <code>FeedbackComponent&lt;&gt;</code> not execute the <code>Dispose</code> method when a Modal created by <code>ModalService.CreateModalAsync&lt;&gt;</code> is closed?</h3>
+<p>Modal will not be removed from DOM by default after closing, so the <code>Dispose</code> method of custom component will not be executed. You can change this default behavior by setting <code>modalOptions.DestroyOnClose=true</code>.</p>
+
+</section></article>
+    <ul class="contributors-list" style="display: flex; list-style: none; margin: 0px; padding: 0px;"><div class="ant-skeleton ant-skeleton-element ant-skeleton-active" style="width: Truepx, height: Truepx, &#x27;line-height&#x27;: Truepx;">
+    <span class="ant-skeleton-avatar ant-skeleton-avatar-circle" style=""></span>
+</div><div class="ant-skeleton ant-skeleton-element ant-skeleton-active" style="width: Truepx, height: Truepx, &#x27;line-height&#x27;: Truepx;">
+    <span class="ant-skeleton-avatar ant-skeleton-avatar-circle" style=""></span>
+</div><div class="ant-skeleton ant-skeleton-element ant-skeleton-active" style="width: Truepx, height: Truepx, &#x27;line-height&#x27;: Truepx;">
+    <span class="ant-skeleton-avatar ant-skeleton-avatar-circle" style=""></span>
+</div></ul></section>
+
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
+                        <div class="fixed-widgets">
+<div class="ant-avatar ant-avatar-circle ant-avatar-icon fixed-widgets-avatar" style="width: 44px; height: 44px; line-height: 44px; font-size: 22px;"><svg class="anticon" role="img" width="21" height="21" viewBox="0 0 21 21" fill="currentColor"><g fill-rule="evenodd"><g fill-rule="nonzero"><path d="M7.02 3.635l12.518 12.518a1.863 1.863 0 010 2.635l-1.317 1.318a1.863 1.863 0 01-2.635 0L3.068 7.588A2.795 2.795 0 117.02 3.635zm2.09 14.428a.932.932 0 110 1.864.932.932 0 010-1.864zm-.043-9.747L7.75 9.635l9.154 9.153 1.318-1.317-9.154-9.155zM3.52 12.473c.514 0 .931.417.931.931v.932h.932a.932.932 0 110 1.864h-.932v.931a.932.932 0 01-1.863 0l-.001-.931h-.93a.932.932 0 010-1.864h.93v-.932c0-.514.418-.931.933-.931zm15.374-3.727a1.398 1.398 0 110 2.795 1.398 1.398 0 010-2.795zM4.385 4.953a.932.932 0 000 1.317l2.046 2.047L7.75 7 5.703 4.953a.932.932 0 00-1.318 0zM14.701.36a.932.932 0 01.931.932v.931h.932a.932.932 0 010 1.864h-.933l.001.932a.932.932 0 11-1.863 0l-.001-.932h-.93a.932.932 0 110-1.864h.93v-.931a.932.932 0 01.933-.932z"></path></g></g></svg></div>
+
+    
+        
+    
+</div>
+
+<link type="text/css" rel="stylesheet" id="docs-theme" />
+                    <section class="prev-next-nav"></section>
+                <footer class="rc-footer rc-footer-dark"><section class="rc-footer-container"><section class="rc-footer-columns"><div class="rc-footer-column"><h2>Resources</h2>
+                <div class="rc-footer-item"><a href="https://ant.design" target="_blank">Ant Design</a></div>
+                <div class="rc-footer-item"><a href="https://ng.ant.design" target="_blank">NG-ZORRO</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Ant Design of Angular</span></div>
+                <div class="rc-footer-item"><a href="https://vue.ant.design" target="_blank">Ant Design Vue</a></div>
+                <div class="rc-footer-item"><a href="https://pro.antblazor.com/" target="_blank">Ant Design Pro Blazor</a></div>
+                <div class="rc-footer-item"><a href="http://www.blazor.zone/" target="_blank">Bootstrap Blazor</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Bootstrap of Blazor</span></div>
+                <div class="rc-footer-item"><a href="https://bulmarazor.loogn.net/" target="_blank">BulmaRazor</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Bulma of Blazor</span></div></div>
+            <div class="rc-footer-column"><h2>Community</h2>
+                <div class="rc-footer-item"><a href="https://github.com/websemantics/awesome-ant-design" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="ant-design" class="anticon anticon-ant-design"><svg viewBox="64 64 896 896" focusable="false" class data-icon="ant-design" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M716.3 313.8c19-18.9 19-49.7 0-68.6l-69.9-69.9.1.1c-18.5-18.5-50.3-50.3-95.3-95.2-21.2-20.7-55.5-20.5-76.5.5L80.9 474.2a53.84 53.84 0 000 76.4L474.6 944a54.14 54.14 0 0076.5 0l165.1-165c19-18.9 19-49.7 0-68.6a48.7 48.7 0 00-68.7 0l-125 125.2c-5.2 5.2-13.3 5.2-18.5 0L189.5 521.4c-5.2-5.2-5.2-13.3 0-18.5l314.4-314.2c.4-.4.9-.7 1.3-1.1 5.2-4.1 12.4-3.7 17.2 1.1l125.2 125.1c19 19 49.8 19 68.7 0zM408.6 514.4a106.3 106.2 0 10212.6 0 106.3 106.2 0 10-212.6 0zm536.2-38.6L821.9 353.5c-19-18.9-49.8-18.9-68.7.1a48.4 48.4 0 000 68.6l83 82.9c5.2 5.2 5.2 13.3 0 18.5l-81.8 81.7a48.4 48.4 0 000 68.6 48.7 48.7 0 0068.7 0l121.8-121.7a53.93 53.93 0 00-.1-76.4z"></path></svg></span></span>
+                        Awesome Ant Design
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://github.com/AdrienTorris/awesome-blazor" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="ant-design" class="anticon"><svg viewBox="0 0 1133 1024" width="1em" height="1em" fill="currentColor"><path d="M1016.452929 325.008051a563.029686 563.029686 0 0 1-552.102137 474.312222 408.956599 408.956599 0 0 1-80.701003-4.895699 247.31566 247.31566 0 0 1-205.677843-233.140565 240.162284 240.162284 0 0 1 480.256301-3.388954c1.009372 39.804368-16.237724 74.72279-51.682775 75.727285-37.863643 0-55.617863-27.014112-55.617864-63.429525v-101.181016a61.971544 61.971544 0 0 0-61.493676-62.025182H404.612545a147.641388 147.641388 0 1 0 109.056069 246.028345l2.969601-4.422708 2.964726 4.905451a104.443189 104.443189 0 0 0 89.063675 42.413131 117.721064 117.721064 0 0 0 109.056068-123.050744 320.200125 320.200125 0 0 0-8.7869-78.209268A299.651845 299.651845 0 0 0 116.483145 559.543208a303.406514 303.406514 0 0 0 295.711881 299.651845s22.215938 2.018744 47.260068 1.443353a639.542039 639.542039 0 0 0 342.967072-102.322045c1.453106-1.009372 2.906211 1.009372 1.940725 2.486859a503.413344 503.413344 0 0 1-392.158113 160.363377A353.875117 353.875117 0 0 1 52.029619 558.075474a366.216763 366.216763 0 0 1 147.105007-293.288413A358.702549 358.702549 0 0 1 410.746797 194.930713h113.839614a320.302525 320.302525 0 0 0 236.290586-104.321285 4.422708 4.422708 0 0 1 2.403963-1.37021 4.515355 4.515355 0 0 1 4.832308 2.106515 4.57387 4.57387 0 0 1 0.629029 2.71604 321.107097 321.107097 0 0 1-49.673783 143.642909 4.354441 4.354441 0 0 0-0.536382 2.462478 4.442212 4.442212 0 0 0 2.930593 3.827812 4.412955 4.412955 0 0 0 2.506363 0.131657 344.210502 344.210502 0 0 0 239.313826-197.3298 6.29029 6.29029 0 0 1 2.213792-2.130896 6.056232 6.056232 0 0 1 5.948956 0 6.212271 6.212271 0 0 1 2.208916 2.130896 436.224273 436.224273 0 0 1 42.793475 278.211222zM411.902454 467.748865a88.551675 88.551675 0 1 0 88.537046 88.537046V473.629554a6.382937 6.382937 0 0 0-6.061108-6.061108l-82.475938 0.180419z" p-id="3785"></path></svg></span></span>
+                        Awesome Blazor
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://dotnet9.com/" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="dotnet9" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        Dotnet9
+                    </a></div></div>
+            <div class="rc-footer-column"><h2>Help</h2>
+                <div class="rc-footer-item"><a href="https://github.com/ant-design-blazor/ant-design-blazor" target="_blank" rel="noopener noreferrer"><span class="rc-footer-item-icon"><span role="img" aria-label="github" class="anticon anticon-github"><svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg></span></span>
+                        GitHub
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="dotnet9" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        ASP.NET Blazor Docs
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://docs.microsoft.com/en-us/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="Blazor Tutorial" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        Blazor Tutorial
+                    </a></div></div>
+            <div class="rc-footer-column"><h2><span class="rc-footer-column-icon"><img src="https://gw.alipayobjects.com/zos/rmsportal/nBVXkrFdWHxbZlmMbsaH.svg" alt="Ant XTech"></span>
+                    More Products</h2>
+                <div class="rc-footer-item" style="margin-top: 20px;"><div class="theme-pick-wrap"><input type="color" class="theme-pick" name="head" style="width:100%;" value="#1890ff" /></div></div></div></section></section>
+    <section class="rc-footer-bottom"><div class="rc-footer-bottom-container">
+            This project is supported by the <a href="https://dotnetfoundation.org">.NET Foundation</a>.
+            Made with <span style="color: rgb(255, 255, 255);">❤</span> by <a target="_blank" rel="noopener noreferrer" href="https://github.com/ant-design-blazor">Ant Design Blazor Team</a></div></section></footer>
+</div>
+    </div>
+</div></div><blazor-focus-on-navigate selector="h1"></blazor-focus-on-navigate>
+        
+
+
+
+
+
+
+
+</div>
+<!-- %%-PRERENDERING-END-%% -->
+</app>
+    <div id="toast-zh" class="toast ">文档已更新，请点击 <a class="reload" onclick="reload()">此处</a> 更新。</div>
+    <div id="toast-en" class="toast ">A new version of this app is available. Click <a class="reload" onclick="reload()">here</a> to update.</div>
+
+    <!-- Start Single Page Apps for GitHub Pages -->
+    <script type="text/javascript">
+        // Single Page Apps for GitHub Pages
+        // https://github.com/rafrex/spa-github-pages
+        // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
+        // ----------------------------------------------------------------------
+        // This script checks to see if a redirect is present in the query string
+        // and converts it back into the correct url and adds it to the
+        // browser's history using window.history.replaceState(...),
+        // which won't cause the browser to attempt to load the new url.
+        // When the single page app is loaded further down in this file,
+        // the correct url will be waiting in the browser's history for
+        // the single page app to route accordingly.
+        (function (l) {
+            if (l.search) {
+                var q = {};
+                l.search.slice(1).split('&').forEach(function (v) {
+                    var a = v.split('=');
+                    q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+                });
+                if (q.p !== undefined) {
+                    window.history.replaceState(null, null,
+                        l.pathname.slice(0, -1) + (q.p || '') +
+                        (q.q ? ('?' + q.q) : '') +
+                        l.hash
+                    );
+                }
+            }
+        }(window.location))
+
+        window.DocSearchInit = window.DocSearchInit || function () { };
+    </script>
+    <!-- End Single Page Apps for GitHub Pages -->
+
+    <script src="decode.js"></script>
+    <script src="_framework/blazor.webassembly.66stpp682q.js" autostart="false"></script>
+    <script>
+        Blazor.start({
+            loadBootResource: function (type, name, defaultUri, integrity) {
+                if (type === 'dotnetjs' || type === 'configuration' || type === 'manifest') {
+                    return null;
+                }
+
+                return (async function () {
+                    const compressedResponse = await fetch(defaultUri + '.br', { cache: 'no-cache' });
+                    if (!compressedResponse.ok) {
+                        return fetch(defaultUri, { cache: 'no-cache', integrity: integrity });
+                    }
+
+                    const compressedBuffer = await compressedResponse.arrayBuffer();
+                    const decompressedBytes = BrotliDecode(new Int8Array(compressedBuffer));
+                    const contentType = type === 'dotnetwasm' ? 'application/wasm' : 'application/octet-stream';
+
+                    return new Response(decompressedBytes, {
+                        headers: { 'content-type': contentType }
+                    });
+                })();
+            }
+        });
+    </script>
+    <script src="/_content/AntDesign.Charts/g2plot.min.js?v=doc-fix"></script>
+    <script src="/_content/AntDesign.Charts/ant-design-charts-blazor.js?v=doc-fix"></script>
+    <script src="/_content/AntDesign.Docs/js/prism.js?v=doc-fix"></script>
+
+    <script>
+        window.XPrism = {};
+        window.XPrism.highlight = function (code, language) {
+            return Prism.highlight(code, Prism.languages[language], language);
+        }
+
+        window.XPrism.highlightAll = function () {
+            Prism.highlightAll();
+        }
+
+        window.changeColor = function (hex, ref) {
+            window.less
+                .modifyVars({
+                    '@primary-color': hex
+                }).then(() => ref.invokeMethodAsync('OnColorChanged'))
+        }
+
+        //fetch("/version.json?t=" + new Date().getTime())
+        //    .then(response => response.json())
+        //    .then(data => {
+        //        console.log('Latest version is:' + data.version);
+        //        if (data.version != 'doc-fix') {
+        //            showUpdateBar();
+        //        }
+        //    });
+    </script>
+
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@docsearch/css@3" crossorigin=""/>
+    <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/color.less"/>
+    <link rel="stylesheet" type="text/css" href="./css/toast.css"/>
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://fastly.jsdelivr.net/npm/@docsearch/js@3" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
+    <script>
+        let newWorker;
+
+        function showUpdateBar() {
+            var lang = navigator.language || navigator.userLanguage;
+            lang = lang.substr(0, 2);
+            let toast = lang == 'zh' ? document.getElementById('toast-zh') : document.getElementById('toast-en');
+            toast.classList.add('show');
+        }
+
+        function hideUpdateBar() {
+            var lang = navigator.language || navigator.userLanguage;
+            lang = lang.substr(0, 2);
+            let toast = lang == 'zh' ? document.getElementById('toast-zh') : document.getElementById('toast-en');
+            toast.classList.remove('show');
+        }
+
+        function reload() {
+            if (newWorker) {
+                newWorker.postMessage({ action: 'skipWaiting' });
+            } else {
+                navigator.serviceWorker.getRegistration().then(reg => {
+                    if (reg.waiting) {
+                        reg.waiting.postMessage({ action: 'skipWaiting' });
+                    }
+                });
+            }
+            hideUpdateBar();
+        }
+
+        if ('serviceWorker' in navigator) {
+            // The click event on the pop up notification
+
+            navigator.serviceWorker.register('/service-worker.js').then(reg => {
+                if (reg.waiting) {
+                    newWorker = reg.waiting;
+                    showUpdateBar();
+                    return;
+                }
+
+                reg.onupdatefound = function () {
+                    newWorker = reg.installing;
+                    newWorker.onstatechange = function () {
+                        switch (newWorker.state) {
+                            case 'installed':
+                                if (navigator.serviceWorker.controller) {
+                                    showUpdateBar();
+                                }
+                                break;
+                        }
+                    };
+                };
+            });
+
+            let refreshing;
+            navigator.serviceWorker.addEventListener('controllerchange', function () {
+                if (refreshing) return;
+                window.location.reload();
+                refreshing = true;
+            });
+        }
+    </script>
+    <script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } }</script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.nls.js"></script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.js"></script>
+    <script>
+        var instances = {};
+        function createEditor(element, id, ref, options) {
+            console.log(id);
+            var instance = monaco.editor.create(element, options);
+            instance.onDidChangeModelContent(function () {
+                ref.invokeMethodAsync('OnChangeAsync', instance.getValue());
+            });
+            instances[id] = instance;
+            return instance;
+        }
+
+        function copy(id) {
+            var text = instances[id].getValue();
+            navigator.clipboard.writeText(text);
+        }
+    </script>
+
+    <!-- Popup prompt for slow loads in Chinese locales -->
+    <script>
+    (function () {
+        function isChineseLang() {
+            var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+            if (lang && lang.indexOf('zh') === 0) return true;
+            if (navigator.languages) {
+                for (var i = 0; i < navigator.languages.length; i++) {
+                    if (navigator.languages[i] && navigator.languages[i].toLowerCase().indexOf('zh') === 0) return true;
+                }
+            }
+            return false;
+        }
+
+        function stillShowingLoading() {
+            var root = document.getElementById('root');
+            if (!root) return false;
+            // Common loading markers in this page
+            if (root.querySelector('.page-loading-warp')) return true;
+            if (root.querySelector('.loading-progress-text')) return true;
+            // If root is empty or only contains the initial spinner text/settings
+            var text = (root.innerText || '').trim();
+            if (text.length === 0) return true;
+            if (/loading|加载/i.test(text)) return true;
+            return false;
+        }
+
+        function showGiteePrompt() {
+            if (document.getElementById('gitee-redirect-prompt')) return;
+            var box = document.createElement('div');
+            box.id = 'gitee-redirect-prompt';
+            box.setAttribute('role', 'dialog');
+            box.setAttribute('aria-modal', 'true');
+            box.style = 'position:fixed;left:50%;top:20%;transform:translateX(-50%);z-index:99999;background:#fff;border:1px solid #ddd;padding:16px;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.12);max-width:420px;width:90%;font-family:inherit;color:#333;';
+
+            box.innerHTML = '\n                <div style="font-size:16px;margin-bottom:8px;">页面加载较慢，是否跳转至国内镜像？</div>\n                <div style="display:flex;justify-content:flex-end;gap:8px;">\n                    <a href="https://ant-design-blazor.gitee.io" style="background:#1890ff;color:#fff;padding:8px 12px;border-radius:4px;text-decoration:none;" target="_blank" rel="noopener">前往国内站点</a>\n                    <button id="gitee-close" style="background:#f5f5f5;border:1px solid #ddd;padding:8px 12px;border-radius:4px;cursor:pointer;">取消</button>\n                </div>';
+
+            document.body.appendChild(box);
+            document.getElementById('gitee-close').addEventListener('click', function () {
+                if (box && box.parentNode) box.parentNode.removeChild(box);
+            });
+        }
+
+        window.addEventListener('load', function () {
+            if (!isChineseLang()) return;
+            setTimeout(function () {
+                if (stillShowingLoading()) {
+                    showGiteePrompt();
+                }
+            }, 10000);
+        });
+    })();
+    </script>
+
+
+
+</body></html>

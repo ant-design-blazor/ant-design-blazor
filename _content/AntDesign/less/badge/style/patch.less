@@ -1,0 +1,21 @@
+@import './index.less';
+
+.@{badge-prefix-cls} {
+    &-multiple-words:not(.@{badge-prefix-cls}-count-overflow) {
+        font-size: 0;
+
+        .@{number-prefix-cls}-only {
+            font-size: @badge-font-size;
+        }
+    }
+
+    .ant-scroll-number:only-child {
+        position: relative;
+        top: auto;
+        display: block;
+    }
+
+    .ant-badge-count:only-child {
+        transform: none;
+    }
+}

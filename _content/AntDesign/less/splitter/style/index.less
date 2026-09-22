@@ -1,0 +1,235 @@
+.split-container {
+    --splitter-bar-size: 4px;
+
+    display: flex;
+
+    &.splitter-orientation-vertical {
+        flex-direction: row;
+    }
+
+    &.splitter-orientation-horizontal {
+        flex-direction: column;
+    }
+
+    .pane-of-split-container {
+        position: relative;
+        overflow: auto;
+    }
+}
+
+.spliter-bar {
+    user-select: none;
+
+    // .splitter-orientation-vertical > & {
+    //     min-width: var(--splitter-bar-size);
+    //     cursor: w-resize;
+    // }
+
+    // .splitter-orientation-horizontal > & {
+    //     min-height: var(--splitter-bar-size);
+    //     cursor: n-resize;
+    // }
+}
+
+.ant-splitter {
+    --ant-splitter-split-bar-size: 2px;
+    --ant-splitter-split-trigger-size: 6px;
+    --ant-splitter-split-bar-draggable-size: 20px;
+    --ant-splitter-resize-spinner-size: 20px;
+
+    --ant-color-fill: rgba(0, 0, 0, 0.15);
+    --ant-control-item-bg-hover: rgba(0, 0, 0, 0.04);
+    --ant-control-height-sm: 24px;
+    --ant-color-text: rgba(0, 0, 0, 0.88);
+    --ant-font-size: 14px;
+    --ant-line-height: 1.5714285714285714;
+    --ant-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --ant-font-size-sm: 12px;
+    --ant-border-radius-xs: 2px;
+    --ant-z-index-popup-base: 1000;
+    
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: var(--ant-color-text);
+    font-size: var(--ant-font-size);
+    line-height: var(--ant-line-height);
+    list-style: none;
+    font-family: var(--ant-font-family);
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: stretch;
+}
+
+.ant-splitter-horizontal {
+    flex-direction: row;
+}
+
+.ant-splitter .ant-splitter-panel {
+    overflow: auto;
+    padding: 0 1px;
+    scrollbar-width: thin;
+    box-sizing: border-box;
+}
+
+.ant-splitter-horizontal>.ant-splitter-bar {
+    width: 0;
+}
+
+.ant-splitter>.ant-splitter-bar {
+    flex: none;
+    position: relative;
+    user-select: none;
+}
+
+.ant-splitter-horizontal>.ant-splitter-bar .ant-splitter-bar-dragger {
+    cursor: col-resize;
+    height: 100%;
+    width: var(--ant-splitter-split-trigger-size);
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-dragger {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-dragger::before {
+    content: "";
+    background: var(--ant-control-item-bg-hover);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.ant-splitter-horizontal>.ant-splitter-bar .ant-splitter-bar-dragger::before {
+    height: 100%;
+    width: var(--ant-splitter-split-bar-size);
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-dragger::after {
+    content: "";
+    background: var(--ant-color-fill);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.ant-splitter-horizontal>.ant-splitter-bar .ant-splitter-bar-dragger::after {
+    height: var(--ant-splitter-split-bar-draggable-size);
+    width: var(--ant-splitter-split-bar-size);
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-dragger-disabled.ant-splitter-bar-dragger,
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-dragger-disabled.ant-splitter-bar-dragger:hover,
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-dragger-disabled.ant-splitter-bar-dragger-active {
+    cursor: default;
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-dragger-disabled.ant-splitter-bar-dragger::before,
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-dragger-disabled.ant-splitter-bar-dragger:hover::before,
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-dragger-disabled.ant-splitter-bar-dragger-active::before {
+    background: var(--ant-control-item-bg-hover);
+}
+
+.ant-splitter-vertical>.ant-splitter-bar {
+    height: 0;
+}
+
+.ant-splitter-vertical>.ant-splitter-bar .ant-splitter-bar-dragger {
+    cursor: row-resize;
+    width: 100%;
+    height: var(--ant-splitter-split-trigger-size);
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-collapse-bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: var(--ant-z-index-popup-base);
+    background: var(--ant-control-item-bg-hover);
+    font-size: var(--ant-font-size-sm);
+    border-radius: var(--ant-border-radius-xs);
+    color: var(--ant-color-text);
+    cursor: pointer;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ant-splitter-horizontal >.ant-splitter-bar .ant-splitter-bar-collapse-bar {
+    width: var(--ant-font-size-sm);
+    height: var(--ant-control-height-sm);
+}
+
+.ant-splitter-vertical>.ant-splitter-bar .ant-splitter-bar-collapse-bar-start {
+    top: auto;
+    bottom: calc(var(--ant-splitter-split-trigger-size) / 2);
+    transform: translateX(-50%);
+}
+
+.ant-splitter-vertical>.ant-splitter-bar .ant-splitter-bar-collapse-bar-end {
+    top: calc(var(--ant-splitter-split-trigger-size) / 2);
+    bottom: auto;
+    transform: translateX(-50%);
+}
+
+.ant-splitter-horizontal>.ant-splitter-bar .ant-splitter-bar-collapse-bar-start {
+    left: auto;
+    right: calc(var(--ant-splitter-split-trigger-size) / 2);
+    transform: translateY(-50%);
+}
+
+.ant-splitter-horizontal>.ant-splitter-bar .ant-splitter-bar-collapse-bar-end {
+    left: calc(var(--ant-splitter-split-trigger-size) / 2);
+    right: auto;
+    transform: translateY(-50%);
+}
+
+.ant-splitter-vertical>.ant-splitter-bar .ant-splitter-bar-collapse-bar {
+    height: var(--ant-font-size-sm);
+    width: var(--ant-control-height-sm);
+}
+
+.ant-splitter >.ant-splitter-bar .ant-splitter-bar-dragger::before {
+    content: "";
+    background: var(--ant-control-item-bg-hover);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.ant-splitter-vertical >.ant-splitter-bar .ant-splitter-bar-dragger::before {
+    width: 100%;
+    height: var(--ant-splitter-split-bar-size);
+}
+
+.ant-splitter-vertical >.ant-splitter-bar .ant-splitter-bar-dragger::after {
+    width: var(--ant-splitter-split-bar-draggable-size);
+    height: var(--ant-splitter-split-bar-size);
+}
+
+.ant-splitter >.ant-splitter-bar .ant-splitter-bar-dragger::after {
+    content: "";
+    background: var(--ant-color-fill);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.ant-splitter >.ant-splitter-bar:hover .ant-splitter-bar-collapse-bar, .ant-splitter >.ant-splitter-bar:active .ant-splitter-bar-collapse-bar {
+    opacity: 1;
+}
+
+.ant-splitter >.ant-splitter-bar:hover .ant-splitter-bar-collapse-bar, .ant-splitter >.ant-splitter-bar:active .ant-splitter-bar-collapse-bar {
+    opacity: 1;
+}

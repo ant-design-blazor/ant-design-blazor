@@ -1,0 +1,94 @@
+/* Manifest version: lLk+Y81o */
+// Caution! Be sure you understand the caveats before publishing an application with
+// offline support. See https://aka.ms/blazor-offline-considerations
+
+self.importScripts('./service-worker-assets.js');
+self.addEventListener('install', event => event.waitUntil(onInstall(event)));
+self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
+self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
+self.addEventListener('message', event => onMessage(event));
+
+const cacheNamePrefix = 'offline-cache-doc-fix';
+const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
+const offlineAssetsInclude = [ /\.dll$/, /\.pdb$/, /\.wasm/, /\.html/, /\.js$/, /\.json$/, /\.css$/, /\.woff$/, /\.png$/, /\.jpe?g$/, /\.gif$/, /\.ico$/ ];
+const offlineAssetsExclude = [ /^service-worker\.js$/, /^version\.json$/ ];
+
+async function onInstall(event) {
+    console.info('Service worker: Install');
+
+    // Fetch and cache all matching items from the assets manifest
+    const assetsRequests = self.assetsManifest.assets
+        .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
+        .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
+        .map(asset => {
+            // Avoid setting integrity for HTML files or external URLs because they may be altered or redirected
+            const init = {};
+            const url = asset.url;
+            const isHtml = /\.html$/i.test(url);
+            const isExternal = /^https?:\/\//i.test(url);
+            if (asset.hash && !isHtml && !isExternal) {
+                init.integrity = asset.hash;
+            }
+
+            // Cloudflare Pages redirects /route/index.html to /route/.
+            // Cache directory index pages by their canonical route URL to
+            // avoid fetching index.html through a redirect.
+            const isRouteIndex = /(^|\/)index\.html$/i.test(url);
+            const cacheUrl = isRouteIndex ? (url.replace(/index\.html$/i, '') || './') : url;
+            return new Request(cacheUrl, init);
+        });
+
+    const cache = await caches.open(cacheName);
+    // Cache each asset individually and ignore failures so install can complete
+    await Promise.all(assetsRequests.map(async (request) => {
+        try {
+            const response = await fetch(request);
+            if (!response.ok) throw new Error('Request failed with status ' + response.status);
+            await cache.put(request, response);
+        } catch (err) {
+            console.warn('Service worker: Failed to cache', request.url, err);
+        }
+    }));
+}
+
+async function onActivate(event) {
+    console.info('Service worker: Activate');
+
+    // Delete unused caches
+    const cacheKeys = await caches.keys();
+    await Promise.all(cacheKeys
+        .filter(key => key.startsWith(cacheNamePrefix) && key !== cacheName)
+        .map(key => caches.delete(key)));
+}
+
+async function onFetch(event) {
+    let cachedResponse = null;
+    if (event.request.method === 'GET') {
+        const cache = await caches.open(cacheName);
+
+        if (event.request.mode === 'navigate') {
+            // Blazor prerendering publishes one index.html file per route.
+            // Cloudflare Pages serves it at the directory URL, so look up the
+            // canonical route URL rather than requesting index.html directly.
+            const url = new URL(event.request.url);
+            const routePath = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
+            cachedResponse = await cache.match(new URL(routePath, self.registration.scope));
+
+            // Unmatched client-side routes still use the SPA shell.
+            if (!cachedResponse) {
+                cachedResponse = await cache.match(new URL('./', self.registration.scope));
+            }
+        } else {
+            cachedResponse = await cache.match(event.request);
+        }
+    }
+
+    return cachedResponse || fetch(event.request);
+}
+
+function onMessage(event) {
+    if (event.data.action === 'skipWaiting') {
+        self.skipWaiting();
+    }
+}
+/* updated 2026-09-22 09:15:45 */
