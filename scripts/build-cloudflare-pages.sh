@@ -60,10 +60,33 @@ fi
 dotnet publish "${PUBLISH_ARGS[@]}"
 cp -rf "${PUBLISH_DIR}/wwwroot/." "${OUTPUT_DIR}/"
 cp -f "${PUBLISH_DIR}/staticwebapp.config.json" "${OUTPUT_DIR}/" 2>/dev/null || true
-echo "/* /index.html 200" > "${OUTPUT_DIR}/_redirects"
+cp -f "${SCRIPT_DIR}/cloudflare-pages/_routes.json" "${OUTPUT_DIR}/_routes.json"
 
 find "${OUTPUT_DIR}" -type f -name '*.html' -exec bash -c \
   'if [ "$(grep -o "<title>" "$1" | wc -l)" -gt 1 ]; then perl -0777 -i -pe "s/<title>.*?<\/title>//s" "$1"; fi' _ {} \;
+
+# Rewrite prerendered routes to their generated index.html documents.
+# Exact page paths leave static JS, CSS, WASM, and other asset requests alone.
+{
+  echo "# Prerendered routes: extensionless URL -> matching index.html document"
+  while IFS= read -r -d '' file; do
+    relative="/${file#"${OUTPUT_DIR}"/}"
+    case "${relative}" in
+      "/index.html")
+        printf '/ /index.html 200\n'
+        continue
+        ;;
+    esac
+
+    case "${relative}" in
+      */index.html) route="${relative%/index.html}" ;;
+      *) continue ;;
+    esac
+
+    printf '%s %s 200\n' "${route}" "${relative}"
+    printf '%s/ %s 200\n' "${route}" "${relative}"
+  done < <(find "${OUTPUT_DIR}" -type f -name index.html -print0)
+} > "${OUTPUT_DIR}/_redirects"
 
 if [[ "${KEEP_ORIGINALS}" != "true" ]]; then
   # Cloudflare Pages has a 25 MiB per-file limit. Blazor publish already creates

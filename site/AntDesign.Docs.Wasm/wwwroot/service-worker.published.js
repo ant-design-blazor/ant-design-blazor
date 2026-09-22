@@ -57,13 +57,22 @@ async function onActivate(event) {
 async function onFetch(event) {
     let cachedResponse = null;
     if (event.request.method === 'GET') {
-        // For all navigation requests, try to serve index.html from cache
-        // If you need some URLs to be server-rendered, edit the following check to exclude those URLs
-        const shouldServeIndexHtml = event.request.mode === 'navigate';
-
-        const request = shouldServeIndexHtml ? 'index.html' : event.request;
         const cache = await caches.open(cacheName);
-        cachedResponse = await cache.match(request);
+
+        if (event.request.mode === 'navigate') {
+            // Blazor prerendering publishes one index.html file per route.
+            // Prefer that route-specific page when a page is reloaded.
+            const url = new URL(event.request.url);
+            const routeIndexPath = `${url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`}index.html`;
+            cachedResponse = await cache.match(new URL(routeIndexPath, self.registration.scope));
+
+            // Unmatched client-side routes still use the SPA shell.
+            if (!cachedResponse) {
+                cachedResponse = await cache.match(new URL('index.html', self.registration.scope));
+            }
+        } else {
+            cachedResponse = await cache.match(event.request);
+        }
     }
 
     return cachedResponse || fetch(event.request);
