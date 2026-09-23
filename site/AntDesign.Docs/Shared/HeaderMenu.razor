@@ -1,4 +1,5 @@
-﻿
+﻿@using AntDesign.Docs.Services
+
 <div id="search-box">
     <div id="docsearch"></div>
 </div>
@@ -43,7 +44,7 @@
 
 @if (!IsMobile)
 {
-    <Button Class="header-button" Size="ButtonSize.Small">{version}</Button>
+    <Button Class="header-button" Size="ButtonSize.Small">@VersionLabel</Button>
 
     @if (CurrentLanguage != "en-US")
     {
@@ -65,4 +66,37 @@
 
     <GithubButton />
 
+}
+
+<style>@((MarkupString)_searchStyles.CssText)</style>
+
+@code {
+    private static readonly CssStyleSheet _searchStyles = CssInJs.CreateStyles("docs-search", new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["portal"] = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["&#antd_algolia_search_modal .DocSearch-Hit-content-wrapper"] = new System.Collections.Generic.Dictionary<string, object> { ["overflow"] = "hidden" },
+            ["&#antd_algolia_search_modal .DocSearch"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["fontFamily"] = "Avenir, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif"
+            },
+            ["&#antd_algolia_search_modal .DocSearch-Hit-title"] = new System.Collections.Generic.Dictionary<string, object> { ["overflowY"] = "hidden" },
+            ["&#antd_algolia_search_modal .DocSearch-Hit-title mark"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = 0 },
+            ["&#antd_algolia_search_modal .DocSearch-Footer"] = new System.Collections.Generic.Dictionary<string, object> { ["boxShadow"] = "none" },
+            ["[data-theme='dark'] &#antd_algolia_search_modal"] = new System.Collections.Generic.Dictionary<string, object> { ["--docsearch-key-gradient"] = "#fafafa", ["--docsearch-logo-color"] = "#fff" },
+            ["[data-theme='dark'] &#antd_algolia_search_modal .DocSearch"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["--docsearch-primary-color"] = "var(--ant-primary-color)", ["--docsearch-text-color"] = "rgba(0, 0, 0, 0.85)",
+                ["--docsearch-muted-color"] = "rgba(0, 0, 0, 0.45)", ["--docsearch-container-background"] = "rgba(0, 0, 0, 0.45)",
+                ["--docsearch-searchbox-shadow"] = "inset 0 0 0 2px var(--ant-primary-color)", ["--docsearch-modal-background"] = "#fff",
+                ["--docsearch-searchbox-background"] = "#fff", ["--docsearch-searchbox-focus-background"] = "#fff",
+                ["--docsearch-footer-background"] = "#fff", ["--docsearch-hit-background"] = "#fff",
+                ["--docsearch-hit-color"] = "var(--ant-primary-color)", ["--docsearch-hit-active-color"] = "#fff",
+                ["--docsearch-highlight-color"] = "var(--ant-primary-color)"
+            },
+            ["[data-theme='dark'] &#antd_algolia_search_modal .DocSearch .DocSearch-Footer"] = new System.Collections.Generic.Dictionary<string, object> { ["borderTop"] = "1px solid rgba(0, 0, 0, 0.06)" },
+            ["[data-theme='dark'] &#antd_algolia_search_modal .DocSearch-Modal, [data-theme='dark'] &#antd_algolia_search_modal .DocSearch-Commands-Key"] = new System.Collections.Generic.Dictionary<string, object> { ["boxShadow"] = "none" },
+            ["[data-theme='dark'] &#antd_algolia_search_modal .DocSearch-Hit a"] = new System.Collections.Generic.Dictionary<string, object> { ["boxShadow"] = "none" }
+        }
+    });
 }

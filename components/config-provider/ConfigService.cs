@@ -36,9 +36,10 @@ namespace AntDesign
         public async Task SetTheme(GlobalTheme theme)
         {
             var js = """
-                    let item = Array.from(document.getElementsByTagName("link")).find((item) =>
-                       item.getAttribute("href")?.match("_content/AntDesign/css/ant-design-blazor")
-                    );
+                    let item = Array.from(document.getElementsByTagName("link")).find((item) => {
+                       const href = item.getAttribute("href") || "";
+                       return href.includes("_content/AntDesign/css/ant-design-blazor") || href.includes("_content/AntDesign/css/antd-v6/");
+                    });
                     if (!item) {
                         item = document.createElement('link');
                         item.rel="stylesheet";

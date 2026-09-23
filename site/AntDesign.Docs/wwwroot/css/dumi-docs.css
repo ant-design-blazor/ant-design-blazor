@@ -1,0 +1,16 @@
+/*
+ * Plain-CSS migration of the custom rules in ant-design/.dumi/global.less and
+ * .dumi/theme/common/SemanticPreview.tsx. Ant Design component visuals come
+ * exclusively from the antd-v6 theme bundle.
+ */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #eaeaea transparent;
+  overscroll-behavior-x: contain;
+}
+
+@supports (text-autospace: normal) {
+  html {
+    text-autospace: normal;
+  }
+}

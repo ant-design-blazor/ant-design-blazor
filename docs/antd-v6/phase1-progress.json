@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "phase": 1,
+  "source": {
+    "semanticInventory": "docs/antd-v6/semantic-dom-inventory.json",
+    "styleIr": ".vibedev/generated/antd-v6/ir/style-ir.json"
+  },
+  "css": {
+    "components": {
+      "total": 72,
+      "migrated": 72,
+      "pending": 0
+    },
+    "themes": {
+      "total": 13,
+      "migrated": 13,
+      "pending": 0
+    }
+  },
+  "semanticDom": {
+    "catalogComponents": {
+      "total": 59,
+      "migrated": 59,
+      "pending": 0
+    },
+    "definitions": {
+      "total": 68,
+      "migrated": 52,
+      "pending": 16
+    },
+    "paths": {
+      "total": 113,
+      "migrated": 81,
+      "pending": 32
+    }
+  },
+  "documentation": {
+    "semanticPreview": {
+      "total": 1,
+      "migrated": 1,
+      "pending": 0
+    },
+    "themePreview": {
+      "total": 1,
+      "migrated": 1,
+      "pending": 0
+    }
+  }
+}

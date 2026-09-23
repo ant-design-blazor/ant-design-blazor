@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ant-design-blazor.dev/schemas/dom-case.schema.json",
+  "title": "Ant Design React/Blazor DOM comparison cases",
+  "type": "object",
+  "required": ["schemaVersion", "upstream", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "upstream": {
+      "type": "object",
+      "required": ["repository", "revision", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "revision": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+" }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "component", "react", "blazor"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "component": { "type": "string", "minLength": 1 },
+          "react": {
+            "type": "object",
+            "required": ["snapshot", "key"],
+            "additionalProperties": false,
+            "properties": {
+              "snapshot": { "type": "string", "minLength": 1 },
+              "key": { "type": "string", "minLength": 1 }
+            }
+          },
+          "blazor": {
+            "type": "object",
+            "required": ["type"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "minLength": 1 },
+              "parameters": { "type": "object", "additionalProperties": { "type": "string" } },
+              "childContent": { "type": "string" }
+            }
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "assertions"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+                "changes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["parameter", "value"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "parameter": { "type": "string", "minLength": 1 },
+                      "value": { "type": ["string", "number", "boolean", "null"] },
+                      "csharp": { "type": "string" }
+                    }
+                  }
+                },
+                "actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["type"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "type": { "enum": ["click", "change", "focus", "blur", "wait"] },
+                      "selector": { "type": "string" },
+                      "value": { "type": ["string", "number", "boolean", "null"] },
+                      "milliseconds": { "type": "integer", "minimum": 0 }
+                    }
+                  }
+                },
+                "assertions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["type", "expected"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "type": { "enum": ["markup", "exists", "not-exists", "class", "attribute", "text", "count", "property"] },
+                      "selector": { "type": "string" },
+                      "name": { "type": "string" },
+                      "property": { "type": "string" },
+                      "expected": {},
+                      "csharp": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "ignoreAttributes": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

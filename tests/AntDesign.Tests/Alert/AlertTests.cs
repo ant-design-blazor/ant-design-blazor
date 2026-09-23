@@ -30,7 +30,7 @@ namespace AntDesign.Tests.Alert
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters.Add(x => x.Type, type));
 
             systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert {expectedClass} ant-alert-no-icon\" style=\"\" id:ignore>"
-                + "<div class=\"ant-alert-content\"></div>"
+                + "<div class=\"ant-alert-section\"></div>"
                 + "</div>");
         }
 
@@ -84,7 +84,7 @@ namespace AntDesign.Tests.Alert
                 <div class=""ant-alert-icon"">
                     <span>Icon</span>
                 </div>
-                <div class=""ant-alert-content"">
+                <div class=""ant-alert-section"">
                 </div>
             </div>");
         }
@@ -105,7 +105,7 @@ namespace AntDesign.Tests.Alert
                 .Add(x => x.ShowIcon, false));
 
             systemUnderTest.MarkupMatches(@"<div data-show=""true"" class="" ant-alert ant-alert-info ant-alert-no-icon"" style:ignore id:ignore>
-                <div class=""ant-alert-content"">
+                <div class=""ant-alert-section"">
                 </div>
             </div>");
         }
@@ -192,8 +192,8 @@ namespace AntDesign.Tests.Alert
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters.Add(x => x.Message, "Test message"));
 
             systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-info ant-alert-no-icon\" style=\"\" id:ignore>"
-                + "<div class=\"ant-alert-content\">"
-                + "<div class=\"ant-alert-message\">Test message</div>"
+                + "<div class=\"ant-alert-section\">"
+                + "<div class=\"ant-alert-title\">Test message</div>"
                 + "</div></div>");
         }
 
@@ -211,8 +211,8 @@ namespace AntDesign.Tests.Alert
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters.Add(x => x.MessageTemplate, fragment));
 
             systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-info ant-alert-no-icon\" style=\"\" id:ignore>"
-                + "<div class=\"ant-alert-content\">"
-                + "<div class=\"ant-alert-message\"><span>Test Message</span></div>"
+                + "<div class=\"ant-alert-section\">"
+                + "<div class=\"ant-alert-title\"><span>Test Message</span></div>"
                 + "</div></div>");
         }
 
@@ -230,7 +230,7 @@ namespace AntDesign.Tests.Alert
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters.Add(x => x.ChildContent, fragment));
 
             systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-info ant-alert-no-icon ant-alert-with-description\" style=\"\" id:ignore>"
-                + "<div class=\"ant-alert-content\">"
+                + "<div class=\"ant-alert-section\">"
                 + "<div class=\"ant-alert-description\"><span>Test Message</span></div>"
                 + "</div></div>");
         }
@@ -243,8 +243,8 @@ namespace AntDesign.Tests.Alert
                 .Add(x => x.Message, "Something happened"));
 
             systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-info ant-alert-no-icon ant-alert-with-description\" style=\"\" id:ignore>"
-                + "<div class=\"ant-alert-content\">"
-                + "<div class=\"ant-alert-message\">Something happened</div><div class=\"ant-alert-description\">Here is some more detail</div>"
+                + "<div class=\"ant-alert-section\">"
+                + "<div class=\"ant-alert-title\">Something happened</div><div class=\"ant-alert-description\">Here is some more detail</div>"
                 + "</div></div>");
         }
 
@@ -262,7 +262,7 @@ namespace AntDesign.Tests.Alert
                         </path>
                     </svg>
                 </span>
-                <div class=""ant-alert-content"">
+                <div class=""ant-alert-section"">
                 </div>
             </div>");
         }
@@ -275,7 +275,7 @@ namespace AntDesign.Tests.Alert
                 .Add(x => x.ShowIcon, false));
 
             systemUnderTest.MarkupMatches(@"<div data-show=""true"" class="" ant-alert ant-alert-warning ant-alert-no-icon ant-alert-banner"" style:ignore id:ignore>
-                <div class=""ant-alert-content"">
+                <div class=""ant-alert-section"">
                 </div>
             </div>");
         }

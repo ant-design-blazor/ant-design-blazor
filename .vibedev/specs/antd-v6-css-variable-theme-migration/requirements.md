@@ -6,6 +6,36 @@
 
 现有组件 API 必须保持兼容；旧主题 API 和旧样式覆盖方式不需要兼容。实施顺序是先完成核心样式迁移，再完成文档演示和主题切换。最终交付包括代码修改、自动化测试、视觉对齐、性能检查、CI 门禁和 Git 提交。
 
+## 分阶段范围与当前执行阶段
+
+当前回到第一阶段执行，第一阶段完成后作为一个可独立合并的 Pull Request：
+
+### 第一阶段：现有组件接入 v6 CSS
+
+- 以 React Ant Design v6 编译出的 CSS 为唯一样式基准，通过脚本全量生成默认 CSS 和现有 13 个预置主题 CSS。
+- 让现有 Blazor 组件使用最新 v6 CSS class、Semantic DOM 列表和 HTML 结构；包括文档站的 `ThemePreview` 与 `SemanticPreview` 展示。
+- 迁移 v6 文档站功能。先用已同步的 v6 组件 CSS 和 Blazor 组件搭建页面结构，再逐项移植 `.dumi` 中 Blazor 站没有的专属布局样式；禁止用旧版文档样式覆盖 v6 组件样式。
+- 首页迁移 Dumi `ThemePreview`，展示主题预览组件、主题配置入口和对应的交互/代码操作；文档组件页迁移 `Semantic DOM preview`、组件 GitHub 源码/元信息链接及必要的编辑入口。
+- 文档全局主题切换支持 light/dark 互斥切换，并允许 compact 与 light/dark 叠加；组合 CSS 必须由 React v6 编译器预构建并纳入来源/digest 清单，提供偏好保存、刷新后恢复和键盘/无障碍状态。支持 Happy Work Effect 的开关、组件交互效果和 reduced-motion 降级。
+- 完成现有组件的 Semantic DOM 结构调整和组件级高亮预览；第一阶段不实现任意 Design Token 编辑、运行时 Token 编译或新的 Design Token API。light/dark/compact 仅切换预置 CSS/作用域状态，不能借机引入动态 Token 编译。
+- 第一阶段的校验重点是组件 DOM/class/主题 CSS 与 React 产物一致；React 测试源码的完整转换不属于本阶段交付。
+
+### 第二阶段：Design Token 与动态主题
+
+- 手动迁移 Design Token、算法和 Token→CSS 编译关系，并以 React Token/API 作为源头进行类型映射。
+- 同步 React v6 组件 Props 命名，并逐项处理 v4→v6 的属性新增、重命名、拆分、合并、删除和语义变化；该工作与 Design Token/API 迁移一起进行。
+- 对仍保留但已被 React v6 替代的旧 Blazor 属性增加 `[Obsolete]` 标记、替代属性说明和迁移诊断，保持兼容但不再作为新入口。
+- 实现主题对象、嵌套作用域、动态 CSS Variable 覆盖、运行时编译和 ConfigProvider 主题修改。
+- 完成 Design Token 与生成 CSS 的逐项对应校验。
+
+### 第三阶段：React 测试迁移
+
+- 从 React 测试源码提取完整 API、渲染步骤、交互步骤、属性变化和断言，转换为 bUnit 测试。
+- 覆盖复杂交互、异步流程和 DOM 结构断言；禁止用占位字符串、`Assert.True` 或跳过测试替代真实迁移。
+- 测试迁移必须基于第一阶段稳定的 DOM/class/HTML 结构和第二阶段稳定的 Token/主题编译结果进行。
+
+除非明确标注为第一阶段的回归校验，第三阶段测试迁移脚本和生成测试不作为当前阶段的完成条件。
+
 ## 探索结论与来源约束
 
 - 当前参考仓库版本为 Ant Design `6.6.4`，revision 为 `599b251da9`。生成器必须支持显式指定源码路径和 revision，不能永久写死当前 revision。
@@ -143,6 +173,8 @@
 6. CI 必须先验证 React 基准，再运行 React/Blazor CSS 字符串精确比较、生成确定性检查、单元/组件测试、文档构建和支持目标框架的构建检查。
 7. 必须定义生成 CSS 体积、生成耗时、SSR 导出耗时和运行时主题切换耗时阈值，并将阈值记录在设计或 CI 配置中。
 8. 最终交付必须包含迁移指南、生成器/校验器/SSR 导出使用文档、上游 revision 策略、差异白名单策略，并完成包含实现和 specs 文档的 Git 提交。
+
+9. 第二阶段必须包含 React v6 Props、Design Token 与 Blazor 公共 API 的联合校验，覆盖 v4→v6 的属性新增、重命名、拆分、合并和弃用关系；旧属性使用时必须产生编译器警告或等价的迁移诊断。
 
 ## 非目标
 

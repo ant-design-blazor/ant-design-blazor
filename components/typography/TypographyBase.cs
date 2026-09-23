@@ -164,7 +164,7 @@ namespace AntDesign
                 builder.OpenElement(12, "div");
                 builder.AddAttribute(13, "onclick", Copy);
                 builder.AddAttribute(14, "style", "border: 0px; background: transparent; padding: 0px; line-height: inherit; display: inline-block;");
-                builder.AddAttribute(15, "class", $"{PrefixName}-copy");
+                builder.AddAttribute(15, "class", $"{PrefixName}-copy {PrefixName}-action");
                 builder.AddAttribute(16, "tabindex", 0);
                 builder.AddAttribute(17, "role", "button");
                 builder.OpenComponent<Icon>(18);
@@ -180,7 +180,7 @@ namespace AntDesign
             return builder =>
             {
                 builder.OpenElement(21, "div");
-                builder.AddAttribute(22, "class", $"{PrefixName}-edit");
+                builder.AddAttribute(22, "class", $"{PrefixName}-edit {PrefixName}-action");
                 builder.AddAttribute(23, "role", "button");
                 builder.AddAttribute(24, "tabindex", 0);
                 builder.AddAttribute(25, "aria-label", "edit");
@@ -199,12 +199,13 @@ namespace AntDesign
             return builder =>
             {
                 builder.OpenComponent<TextArea>(4);
-                builder.AddAttribute(5, nameof(TextArea.Rows), (uint)1);
-                builder.AddAttribute(6, nameof(TextArea.AutoSize), EditConfig.AutoSize);
-                builder.AddAttribute(7, nameof(TextArea.AutoFocus), true);
-                builder.AddAttribute(8, "Value", EditConfig.Text);
-                builder.AddAttribute(9, "ValueChanged", EventCallback.Factory.Create<string>(this, OnEditableValueChange));
-                builder.AddAttribute(10, nameof(TextArea.OnBlur), EventCallback.Factory.Create<FocusEventArgs>(this, ToggleEditing));
+                builder.AddAttribute(5, nameof(TextArea.Class), $"{PrefixName}-textarea");
+                builder.AddAttribute(6, nameof(TextArea.Rows), (uint)1);
+                builder.AddAttribute(7, nameof(TextArea.AutoSize), EditConfig.AutoSize);
+                builder.AddAttribute(8, nameof(TextArea.AutoFocus), true);
+                builder.AddAttribute(9, "Value", EditConfig.Text);
+                builder.AddAttribute(10, "ValueChanged", EventCallback.Factory.Create<string>(this, OnEditableValueChange));
+                builder.AddAttribute(11, nameof(TextArea.OnBlur), EventCallback.Factory.Create<FocusEventArgs>(this, ToggleEditing));
                 builder.CloseComponent();
 
                 builder.OpenComponent<Icon>(11);
@@ -254,12 +255,18 @@ namespace AntDesign
 
             if (Editable && !Editing)
             {
+                builder.OpenElement(28, "span");
+                builder.AddAttribute(29, "class", $"{PrefixName}-actions");
                 builder.AddContent(30, EditIcon());
+                if (Copyable) builder.AddContent(31, CopyIcon());
+                builder.CloseElement();
             }
-
-            if (Copyable && !Editing)
+            else if (Copyable && !Editing)
             {
+                builder.OpenElement(38, "span");
+                builder.AddAttribute(39, "class", $"{PrefixName}-actions");
                 builder.AddContent(40, CopyIcon());
+                builder.CloseElement();
             }
 
             builder.AddElementReferenceCapture(47, r => Ref = r);

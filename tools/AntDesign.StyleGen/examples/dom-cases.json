@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "working-tree",
+    "version": "6.0.0"
+  },
+  "cases": [
+    {
+      "id": "button-basic",
+      "component": "Button",
+      "react": {
+        "snapshot": "/Volumes/Data/GitHub/ant-design/components/button/__tests__/__snapshots__/index.test.tsx.snap",
+        "key": "Button renders correctly 1"
+      },
+      "blazor": {
+        "type": "AntDesign.Button",
+        "parameters": { "ChildContent": "Follow" }
+      },
+      "steps": [
+        {
+          "id": "disable-button",
+          "changes": [
+            { "parameter": "Disabled", "value": true }
+          ],
+          "assertions": [
+            { "type": "class", "selector": ".ant-btn", "expected": "ant-btn-disabled" },
+            { "type": "property", "property": "Disabled", "expected": true }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -100,6 +100,8 @@ namespace AntDesign
         // There is no need to render the tooltip if there is no inline mode. Tooltip will be only showing menu content if menu is collapsed to icon version && only for root menu
         private bool ShowTooltip => RootMenu?.Mode == MenuMode.Inline && ParentMenu is null && RootMenu?.ShowCollapsedTooltip == true;
 
+        private string MenuItemIconClass => $"{RootMenu?.PrefixCls ?? "ant-menu"}-item-icon";
+
         private void SetClass()
         {
             string prefixCls = $"{RootMenu?.PrefixCls}-item";

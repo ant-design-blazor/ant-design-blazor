@@ -1,5 +1,5 @@
 ---
-category: Experimental
+category: Components
 type: 布局
 title: Splitter
 subtitle: 分隔面板

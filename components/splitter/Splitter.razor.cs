@@ -15,6 +15,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AntDesign;
 
+[Documentation(DocumentationCategory.Components, DocumentationType.Layout, "", Columns = 1, Title = "Splitter", SubTitle = "分隔面板")]
 public partial class Splitter : AntDomComponentBase
 {
     /// <summary>

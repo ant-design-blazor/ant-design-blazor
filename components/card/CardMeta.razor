@@ -19,7 +19,7 @@
     @if (!string.IsNullOrWhiteSpace(Title) || TitleTemplate != null
             || !string.IsNullOrWhiteSpace(Description) || DescriptionTemplate != null)
     {
-        <div class="ant-card-meta-detail">
+        <div class="ant-card-meta-section">
             @if (!string.IsNullOrWhiteSpace(Title) || TitleTemplate != null)
             {
                 <div class="ant-card-meta-title">
@@ -33,14 +33,16 @@
                     }
                 </div>
             }
-            @if (DescriptionTemplate != null)
-            {
-                @DescriptionTemplate
-            }
-            else
-            {
-                @Description
-            }
+            <div class="ant-card-meta-description">
+                @if (DescriptionTemplate != null)
+                {
+                    @DescriptionTemplate
+                }
+                else
+                {
+                    @Description
+                }
+            </div>
         </div>
     }
 </div>

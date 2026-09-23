@@ -1,0 +1,1443 @@
+{
+  "schemaVersion": 1,
+  "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md",
+  "summary": {
+    "migrations": 179,
+    "components": 52,
+    "directReplacements": 176
+  },
+  "migrations": [
+    {
+      "component": "Alert",
+      "legacy": "closeText",
+      "replacement": "closable.closeIcon",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Alert",
+      "legacy": "closeIcon",
+      "replacement": "closable.closeIcon",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Alert",
+      "legacy": "message",
+      "replacement": "title",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Alert",
+      "legacy": "onClose",
+      "replacement": "closable.onClose",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Alert",
+      "legacy": "afterClose",
+      "replacement": "closable.afterClose",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Anchor",
+      "legacy": "Anchor children",
+      "replacement": "items",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "AutoComplete",
+      "legacy": "dropdownMatchSelectWidth",
+      "replacement": "popupMatchSelectWidth",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "AutoComplete",
+      "legacy": "dropdownStyle",
+      "replacement": "styles.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "AutoComplete",
+      "legacy": "dropdownClassName",
+      "replacement": "classNames.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "AutoComplete",
+      "legacy": "popupClassName",
+      "replacement": "classNames.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "AutoComplete",
+      "legacy": "dropdownRender",
+      "replacement": "popupRender",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "AutoComplete",
+      "legacy": "onDropdownVisibleChange",
+      "replacement": "onOpenChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "AutoComplete",
+      "legacy": "dataSource",
+      "replacement": "options",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Avatar",
+      "legacy": "size=\"default\"",
+      "replacement": "size=\"medium\"",
+      "kind": "renamed-or-replaced",
+      "since": "6.3.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Avatar.Group",
+      "legacy": "maxCount",
+      "replacement": "max={{ count: number }}",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Avatar.Group",
+      "legacy": "maxStyle",
+      "replacement": "max={{ style: CSSProperties }}",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Avatar.Group",
+      "legacy": "maxPopoverPlacement",
+      "replacement": "max={{ popover: PopoverProps }}",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Avatar.Group",
+      "legacy": "maxPopoverTrigger",
+      "replacement": "max={{ popover: PopoverProps }}",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "BackTop",
+      "legacy": "BackTop",
+      "replacement": "FloatButton.BackTop",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Badge",
+      "legacy": "size=\"default\"",
+      "replacement": "size=\"medium\"",
+      "kind": "renamed-or-replaced",
+      "since": "6.3.2",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Breadcrumb",
+      "legacy": "routes",
+      "replacement": "items",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Breadcrumb",
+      "legacy": "breadcrumbName",
+      "replacement": "title",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Breadcrumb",
+      "legacy": "items.children",
+      "replacement": "menu",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Button.Group",
+      "legacy": "Button.Group",
+      "replacement": "Space.Compact",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Button",
+      "legacy": "iconPosition",
+      "replacement": "iconPlacement",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Calendar",
+      "legacy": "dateFullCellRender",
+      "replacement": "fullCellRender",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Calendar",
+      "legacy": "dateCellRender",
+      "replacement": "cellRender",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Calendar",
+      "legacy": "monthFullCellRender",
+      "replacement": "fullCellRender",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Calendar",
+      "legacy": "monthCellRender",
+      "replacement": "cellRender",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Card",
+      "legacy": "headStyle",
+      "replacement": "styles.header",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Card",
+      "legacy": "bodyStyle",
+      "replacement": "styles.body",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Card",
+      "legacy": "bordered",
+      "replacement": "variant",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Card",
+      "legacy": "tab",
+      "replacement": "label",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Carousel",
+      "legacy": "dotPosition",
+      "replacement": "dotPlacement",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Cascader",
+      "legacy": "dropdownClassName",
+      "replacement": "classNames.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Cascader",
+      "legacy": "dropdownStyle",
+      "replacement": "styles.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Cascader",
+      "legacy": "dropdownRender",
+      "replacement": "popupRender",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Cascader",
+      "legacy": "dropdownMenuColumnStyle",
+      "replacement": "styles.popup.listItem",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Cascader",
+      "legacy": "onDropdownVisibleChange",
+      "replacement": "onOpenChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Cascader",
+      "legacy": "onPopupVisibleChange",
+      "replacement": "onOpenChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Cascader",
+      "legacy": "bordered",
+      "replacement": "variant",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Cascader",
+      "legacy": "showArrow",
+      "replacement": null,
+      "kind": "deprecated-without-direct-replacement",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Collapse",
+      "legacy": "destroyInactivePanel",
+      "replacement": "destroyOnHidden",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Collapse",
+      "legacy": "expandIconPosition",
+      "replacement": "expandIconPlacement",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Collapse.Panel",
+      "legacy": "disabled",
+      "replacement": "collapsible=\"disabled\"",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "ConfigProvider",
+      "legacy": "dropdownMatchSelectWidth",
+      "replacement": "popupMatchSelectWidth",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "DatePicker.RangePicker",
+      "legacy": "dropdownClassName",
+      "replacement": "classNames.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "DatePicker.RangePicker",
+      "legacy": "popupClassName",
+      "replacement": "classNames.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "DatePicker.RangePicker",
+      "legacy": "popupStyle",
+      "replacement": "styles.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "DatePicker.RangePicker",
+      "legacy": "bordered",
+      "replacement": "variant",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "DatePicker.RangePicker",
+      "legacy": "onSelect",
+      "replacement": "onCalendarChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "DatePicker",
+      "legacy": "dropdownClassName",
+      "replacement": "classNames.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "DatePicker",
+      "legacy": "popupClassName",
+      "replacement": "classNames.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "DatePicker",
+      "legacy": "popupStyle",
+      "replacement": "styles.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "DatePicker",
+      "legacy": "bordered",
+      "replacement": "variant",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "DatePicker",
+      "legacy": "onSelect",
+      "replacement": "onCalendarChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Descriptions",
+      "legacy": "children",
+      "replacement": "items",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Descriptions",
+      "legacy": "labelStyle",
+      "replacement": "styles.label",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Descriptions",
+      "legacy": "contentStyle",
+      "replacement": "styles.content",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Descriptions",
+      "legacy": "size=\"default\"",
+      "replacement": "size=\"large\"",
+      "kind": "renamed-or-replaced",
+      "since": "6.3.2",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Descriptions",
+      "legacy": "size=\"middle\"",
+      "replacement": "size=\"medium\"",
+      "kind": "renamed-or-replaced",
+      "since": "6.3.2",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Divider",
+      "legacy": "type",
+      "replacement": "orientation",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Divider",
+      "legacy": "orientationMargin",
+      "replacement": "styles.content.margin",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "headerStyle",
+      "replacement": "styles.header",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "bodyStyle",
+      "replacement": "styles.body",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "footerStyle",
+      "replacement": "styles.footer",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "contentWrapperStyle",
+      "replacement": "styles.wrapper",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "maskStyle",
+      "replacement": "styles.mask",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "drawerStyle",
+      "replacement": "styles.section",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "classNames.content",
+      "replacement": "classNames.section",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "styles.content",
+      "replacement": "styles.section",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "maskClosable",
+      "replacement": "mask.closable",
+      "kind": "renamed-or-replaced",
+      "since": "6.3.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "destroyInactivePanel",
+      "replacement": "destroyOnHidden",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "width",
+      "replacement": "size",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Drawer",
+      "legacy": "height",
+      "replacement": "size",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Dropdown.Button",
+      "legacy": "Dropdown.Button",
+      "replacement": "Space.Compact + Dropdown + Button",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Dropdown",
+      "legacy": "dropdownRender",
+      "replacement": "popupRender",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Dropdown",
+      "legacy": "destroyPopupOnHide",
+      "replacement": "destroyOnHidden",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Dropdown",
+      "legacy": "overlayClassName",
+      "replacement": "classNames.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Dropdown",
+      "legacy": "overlayStyle",
+      "replacement": "styles.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Dropdown",
+      "legacy": "placement: xxxCenter",
+      "replacement": "placement: xxx",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Empty",
+      "legacy": "imageStyle",
+      "replacement": "styles.image",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "FloatButton",
+      "legacy": "description",
+      "replacement": "content",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Image",
+      "legacy": "wrapperStyle",
+      "replacement": "styles.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Image",
+      "legacy": "visible",
+      "replacement": "open",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Image",
+      "legacy": "onVisibleChange",
+      "replacement": "onOpenChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Image",
+      "legacy": "maskClassName",
+      "replacement": "classNames.cover",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Image",
+      "legacy": "rootClassName",
+      "replacement": "classNames.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Image",
+      "legacy": "toolbarRender",
+      "replacement": "actionsRender",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Input.Group",
+      "legacy": "Input.Group",
+      "replacement": "Space.Compact",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Input",
+      "legacy": "bordered",
+      "replacement": "variant",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "InputNumber",
+      "legacy": "bordered",
+      "replacement": "variant",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "InputNumber",
+      "legacy": "addonAfter",
+      "replacement": "Space.Compact",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "InputNumber",
+      "legacy": "addonBefore",
+      "replacement": "Space.Compact",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Mentions",
+      "legacy": "Mentions.Option",
+      "replacement": "options",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Menu",
+      "legacy": "children",
+      "replacement": "items",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Modal",
+      "legacy": "bodyStyle",
+      "replacement": "styles.body",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Modal",
+      "legacy": "maskStyle",
+      "replacement": "styles.mask",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Modal",
+      "legacy": "destroyOnClose",
+      "replacement": "destroyOnHidden",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Modal",
+      "legacy": "maskClosable",
+      "replacement": "mask.closable",
+      "kind": "renamed-or-replaced",
+      "since": "6.3.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Modal",
+      "legacy": "focusTriggerAfterClose",
+      "replacement": "focusable.focusTriggerAfterClose",
+      "kind": "renamed-or-replaced",
+      "since": "6.2.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Notification",
+      "legacy": "btn",
+      "replacement": "actions",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Notification",
+      "legacy": "message",
+      "replacement": "title",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Progress",
+      "legacy": "strokeWidth",
+      "replacement": "size",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Progress",
+      "legacy": "width",
+      "replacement": "size",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Progress",
+      "legacy": "trailColor",
+      "replacement": "railColor",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Progress",
+      "legacy": "gapPosition",
+      "replacement": "gapPlacement",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Select",
+      "legacy": "dropdownMatchSelectWidth",
+      "replacement": "popupMatchSelectWidth",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Select",
+      "legacy": "dropdownStyle",
+      "replacement": "styles.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Select",
+      "legacy": "dropdownClassName",
+      "replacement": "classNames.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Select",
+      "legacy": "popupClassName",
+      "replacement": "classNames.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Select",
+      "legacy": "dropdownRender",
+      "replacement": "popupRender",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Select",
+      "legacy": "onDropdownVisibleChange",
+      "replacement": "onOpenChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Select",
+      "legacy": "bordered",
+      "replacement": "variant",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Select",
+      "legacy": "showArrow",
+      "replacement": null,
+      "kind": "deprecated-without-direct-replacement",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Slider",
+      "legacy": "tooltipPrefixCls",
+      "replacement": "tooltip.prefixCls",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Slider",
+      "legacy": "getTooltipPopupContainer",
+      "replacement": "tooltip.getPopupContainer",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Slider",
+      "legacy": "tipFormatter",
+      "replacement": "tooltip.formatter",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Slider",
+      "legacy": "tooltipPlacement",
+      "replacement": "tooltip.placement",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Slider",
+      "legacy": "tooltipVisible",
+      "replacement": "tooltip.open",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Slider",
+      "legacy": "onAfterChange",
+      "replacement": "onChangeComplete",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Slider",
+      "legacy": "handleStyle",
+      "replacement": "styles.handle",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Slider",
+      "legacy": "trackStyle",
+      "replacement": "styles.track",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Slider",
+      "legacy": "railStyle",
+      "replacement": "styles.rail",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Space.Compact",
+      "legacy": "direction",
+      "replacement": "orientation",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Space",
+      "legacy": "direction",
+      "replacement": "orientation",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Space",
+      "legacy": "split",
+      "replacement": "separator",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Spin",
+      "legacy": "tip",
+      "replacement": "description",
+      "kind": "renamed-or-replaced",
+      "since": "6.3.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Spin",
+      "legacy": "wrapperClassName",
+      "replacement": "classNames.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Spin",
+      "legacy": "size=\"default\"",
+      "replacement": "size=\"medium\"",
+      "kind": "renamed-or-replaced",
+      "since": "6.3.2",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Splitter",
+      "legacy": "layout",
+      "replacement": "orientation",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Countdown",
+      "legacy": "<Statistic.Countdown />",
+      "replacement": "<Statistic.Timer type=\"countdown\" />",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Statistic",
+      "legacy": "valueStyle",
+      "replacement": "styles.content",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Steps",
+      "legacy": "labelPlacement",
+      "replacement": "titlePlacement",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Steps",
+      "legacy": "progressDot",
+      "replacement": "type=\"dot\"",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Steps",
+      "legacy": "direction",
+      "replacement": "orientation",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Steps",
+      "legacy": "items.description",
+      "replacement": "items.content",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Steps",
+      "legacy": "size=\"default\"",
+      "replacement": "size=\"medium\"",
+      "kind": "renamed-or-replaced",
+      "since": "6.3.2",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Table",
+      "legacy": "pagination.position",
+      "replacement": "pagination.placement",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Table",
+      "legacy": "onSelectInvert",
+      "replacement": "onChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Table",
+      "legacy": "filterDropdownOpen",
+      "replacement": "filterDropdownProps.open",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Table",
+      "legacy": "onFilterDropdownOpenChange",
+      "replacement": "filterDropdownProps.onOpenChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Table",
+      "legacy": "filterCheckall",
+      "replacement": "locale.filterCheckAll",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Table",
+      "legacy": "onSelectMultiple",
+      "replacement": "onChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Table",
+      "legacy": "onSelectAll",
+      "replacement": "onChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Table",
+      "legacy": "onSelectNone",
+      "replacement": "onChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Tabs",
+      "legacy": "popupClassName",
+      "replacement": "classNames.popup",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Tabs",
+      "legacy": "tabPosition",
+      "replacement": "tabPlacement",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Tabs",
+      "legacy": "destroyInactiveTabPane",
+      "replacement": "destroyOnHidden",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Tabs",
+      "legacy": "indicatorSize",
+      "replacement": "indicator={{ size: ... }}",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Tabs",
+      "legacy": "Tabs.TabPane",
+      "replacement": "items",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Tag",
+      "legacy": "bordered={false}",
+      "replacement": "variant=\"filled\"",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Tag",
+      "legacy": "color=\"xxx-inverse\"",
+      "replacement": "variant=\"solid\"",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "TimePicker",
+      "legacy": "addon",
+      "replacement": "renderExtraFooter",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "TimePicker",
+      "legacy": "popupClassName",
+      "replacement": "classNames.popup",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "TimePicker",
+      "legacy": "popupStyle",
+      "replacement": "styles.popup",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Timeline",
+      "legacy": "Timeline.Item",
+      "replacement": "items",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Timeline",
+      "legacy": "Timeline.Item.position",
+      "replacement": "placement",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Timeline",
+      "legacy": "Timeline.Item.label",
+      "replacement": "title",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Timeline",
+      "legacy": "Timeline.Item.children",
+      "replacement": "content",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Timeline",
+      "legacy": "Timeline.Item.dot",
+      "replacement": "icon",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Timeline",
+      "legacy": "pending",
+      "replacement": "items",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Timeline",
+      "legacy": "pendingDot",
+      "replacement": "items",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Timeline",
+      "legacy": "mode=left|right",
+      "replacement": "mode=start|end",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Tooltip",
+      "legacy": "overlayStyle",
+      "replacement": "styles.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Tooltip",
+      "legacy": "overlayInnerStyle",
+      "replacement": "styles.container",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Tooltip",
+      "legacy": "overlayClassName",
+      "replacement": "classNames.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Tooltip",
+      "legacy": "destroyTooltipOnHide",
+      "replacement": "destroyOnHidden",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Transfer",
+      "legacy": "listStyle",
+      "replacement": "styles.section",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Transfer",
+      "legacy": "operationStyle",
+      "replacement": "styles.actions",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "Transfer",
+      "legacy": "operations",
+      "replacement": "actions",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "TreeSelect",
+      "legacy": "dropdownMatchSelectWidth",
+      "replacement": "popupMatchSelectWidth",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "TreeSelect",
+      "legacy": "dropdownStyle",
+      "replacement": "styles.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "TreeSelect",
+      "legacy": "dropdownClassName",
+      "replacement": "classNames.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "TreeSelect",
+      "legacy": "popupClassName",
+      "replacement": "classNames.popup.root",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "TreeSelect",
+      "legacy": "dropdownRender",
+      "replacement": "popupRender",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "TreeSelect",
+      "legacy": "onDropdownVisibleChange",
+      "replacement": "onOpenChange",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "TreeSelect",
+      "legacy": "bordered",
+      "replacement": "variant",
+      "kind": "renamed-or-replaced",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    },
+    {
+      "component": "TreeSelect",
+      "legacy": "showArrow",
+      "replacement": null,
+      "kind": "deprecated-without-direct-replacement",
+      "since": "6.0.0",
+      "source": "/Volumes/Data/GitHub/ant-design/docs/react/migration-v6.en-US.md"
+    }
+  ]
+}

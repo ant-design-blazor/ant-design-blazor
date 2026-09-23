@@ -1,5 +1,6 @@
-﻿
-<Menu Class="aside-container menu-site" Theme="MenuTheme.Light" Mode="MenuMode.Inline" >
+﻿@using AntDesign.Docs.Services
+
+<Menu Class="@MenuClass" Theme="MenuTheme.Light" Mode="MenuMode.Inline">
     @menuItemTemplate((MenuItems, LocalizationService, 1))
 </Menu>
 
@@ -47,4 +48,40 @@
                 }
             }
         </Template>;
+}
+
+<style>@((MarkupString)_styles.CssText)</style>
+
+@code {
+    private string MenuClass => $"aside-container menu-site {_styles["menu"]}";
+
+    private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-nav-menu", new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["menu"] = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["minHeight"] = "100%", ["paddingBottom"] = 48, ["transition"] = "all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)",
+            ["fontFamily"] = "Avenir, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif",
+            ["&.ant-menu-inline .ant-menu-submenu-title h4, &.ant-menu-inline > .ant-menu-item, &.ant-menu-inline .ant-menu-item a"] = new System.Collections.Generic.Dictionary<string, object> { ["overflow"] = "hidden", ["fontSize"] = 14, ["textOverflow"] = "ellipsis" },
+            ["&.ant-menu-inline > .ant-menu-item-group > .ant-menu-item-group-title"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["marginTop"] = 16, ["marginBottom"] = 16, ["fontSize"] = 13,
+                ["&::after"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["top"] = 12, ["display"] = "block", ["width"] = "calc(100% - 20px)", ["height"] = 1, ["background"] = "rgba(0, 0, 0, 0.06)", ["content"] = "''", ["transition"] = "all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)" }
+            },
+            ["&.ant-menu-inline > .ant-menu-item, &.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title, &.ant-menu-inline > .ant-menu-item-group > .ant-menu-item-group-title, &.ant-menu-inline > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item, &.ant-menu-inline.ant-menu-inline > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingLeft"] = "40px !important" },
+            [".ant-row-rtl &.ant-menu-inline > .ant-menu-item, .ant-row-rtl &.ant-menu-inline > .ant-menu-submenu > .ant-menu-submenu-title, .ant-row-rtl &.ant-menu-inline > .ant-menu-item-group > .ant-menu-item-group-title, .ant-row-rtl &.ant-menu-inline > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item, .ant-row-rtl &.ant-menu-inline.ant-menu-inline > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = "40px !important", ["paddingLeft"] = "16px !important" },
+            ["&.ant-menu-inline.ant-menu-inline .ant-menu-item-group-title"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingLeft"] = 60 },
+            [".ant-row-rtl &.ant-menu-inline.ant-menu-inline .ant-menu-item-group-title"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 60, ["paddingLeft"] = 16 },
+            ["&.ant-menu-inline.ant-menu-inline .ant-menu-item-group-list > .ant-menu-item"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingLeft"] = "80px !important" },
+            [".ant-row-rtl &.ant-menu-inline.ant-menu-inline .ant-menu-item-group-list > .ant-menu-item"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = "80px !important", ["paddingLeft"] = "16px !important" },
+            ["&.ant-menu-inline .ant-menu-item-group:first-child .ant-menu-item-group-title"] = new System.Collections.Generic.Dictionary<string, object> { ["marginTop"] = 0 },
+            ["& a[disabled]"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "#ccc" },
+            ["& .chinese"] = new System.Collections.Generic.Dictionary<string, object> { ["marginLeft"] = 6, ["fontWeight"] = "normal", ["fontSize"] = 12, ["opacity"] = 0.67 },
+            ["&.menu-site .ant-menu-item > a"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)" },
+            ["&.menu-site .ant-menu-item-selected > a, &.menu-site .ant-menu-item > a:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-primary-color)" },
+            ["@media only screen and (max-width: 767.99px)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["&"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "none", ["width"] = "auto", ["paddingBottom"] = 30, ["borderRight"] = 0 }
+            }
+        }
+    });
 }

@@ -1,9 +1,16 @@
-﻿@implements IDisposable
+﻿@using AntDesign.Docs.Services
+@implements IDisposable
 
-<div @ref="_editor" style="height: 500px; width: 100%; @(_loaded?"":"display:hidden;")"></div>
+<div @ref="_editor" class="@($"{_styles["root"]} {(!_loaded ? _styles["loading"] : string.Empty)}")"></div>
+
+<style>@((MarkupString)_styles.CssText)</style>
 
 @code {
-
+    private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-monaco", new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["root"] = new System.Collections.Generic.Dictionary<string, object> { ["height"] = 500, ["width"] = "100%" },
+        ["loading"] = new System.Collections.Generic.Dictionary<string, object> { ["visibility"] = "hidden" }
+    });
 
     [Inject]
     private IJSRuntime JSRuntime { get; set; }

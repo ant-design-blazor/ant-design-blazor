@@ -25,6 +25,16 @@ namespace AntDesign.Tests.AutoComplete
         }
 
         [Fact]
+        public void AutoComplete_renders_the_v6_semantic_root_around_its_input()
+        {
+            JSInterop.Setup<HtmlElement>("AntDesign.interop.domInfoHelper.getInfo", _ => true);
+
+            var component = RenderComponent<AutoComplete<string>>();
+
+            component.Find(".ant-select-auto-complete").QuerySelector("input").Should().NotBeNull();
+        }
+
+        [Fact]
         public async Task Dropdown_refreshes_when_Options_change()
         {
             // Arrange: DOM info interop required by the component during render

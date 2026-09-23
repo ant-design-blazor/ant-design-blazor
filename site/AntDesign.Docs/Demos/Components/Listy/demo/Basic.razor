@@ -1,0 +1,13 @@
+<Listy TItem="string"
+       DataSource="items"
+       GroupBy="GroupBy">
+    <ItemTemplate Context="item">
+        <span>@item</span>
+    </ItemTemplate>
+</Listy>
+
+@code {
+    private readonly string[] items = { "Apple", "Apricot", "Banana", "Blueberry", "Cherry" };
+
+    private string GroupBy(string item) => item[..1];
+}

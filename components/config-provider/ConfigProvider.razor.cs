@@ -8,6 +8,7 @@ using AntDesign.Theming;
 
 namespace AntDesign
 {
+    [Documentation(DocumentationCategory.Components, DocumentationType.Other, "", Title = "ConfigProvider", SubTitle = "全局化配置")]
     public partial class ConfigProvider : AntComponentBase
     {
         [Parameter]
@@ -59,12 +60,24 @@ namespace AntDesign
                 var declarations = new System.Collections.Generic.List<string>();
                 var inherited = ParentThemeConfig?.GetResolvedTokenValues();
                 foreach (var token in ThemeConfig.GetResolvedTokenValues(inherited))
-                    declarations.Add($"--ant-{TokenView.ToKebabCase(token.Key)}:{token.Value}");
+                    AddCssVariable(declarations, token.Key, token.Value);
                 foreach (var component in ThemeConfig.GetResolvedComponentValues(ParentThemeComponents))
                     foreach (var token in component.Value)
-                        declarations.Add($"--ant-{TokenView.ToKebabCase(component.Key)}-{TokenView.ToKebabCase(token.Key)}:{token.Value}");
+                        AddCssVariable(declarations, $"{component.Key}-{token.Key}", token.Value);
                 return string.Join(";", declarations);
             }
+        }
+
+        private static void AddCssVariable(System.Collections.Generic.ICollection<string> declarations, string name, string value)
+        {
+            // Default generated component tokens can contain an unset OneOf value
+            // (serialized as "System.String:") or an empty derived token. Emitting
+            // either value shadows the real v6 stylesheet variable and makes the
+            // browser discard otherwise valid declarations.
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(value) || value.StartsWith("System.", System.StringComparison.Ordinal))
+                return;
+
+            declarations.Add($"--ant-{TokenView.ToKebabCase(name)}:{value}");
         }
 
         [Parameter]

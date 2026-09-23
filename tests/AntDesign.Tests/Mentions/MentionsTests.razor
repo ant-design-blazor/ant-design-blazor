@@ -97,7 +97,7 @@
 
         systemUnderTest.MarkupMatches(@"
             <div class=""ant-mentions"">
-                <textarea value="""" class=""rc-textarea"" rows=""3""></textarea>
+                <textarea value="""" class=""rc-textarea ant-mentions-textarea"" rows=""3""></textarea>
             </div>
             <div class:ignore style:ignore>
                 <ul class:ignore>
@@ -133,7 +133,7 @@
 
         systemUnderTest.MarkupMatches(@"
             <div class=""ant-mentions"">
-                <textarea value="""" class=""rc-textarea"" rows=""3""></textarea>
+                <textarea value="""" class=""rc-textarea ant-mentions-textarea"" rows=""3""></textarea>
             </div>
             <div class:ignore style:ignore>
                 <ul class:ignore>
@@ -152,11 +152,11 @@
 
         systemUnderTest.MarkupMatches(@"
             <div class=""ant-mentions"">
-                <textarea value="""" class=""rc-textarea"" rows=""3""></textarea>
+                <textarea value="""" class=""rc-textarea ant-mentions-textarea"" rows=""3""></textarea>
             </div>
             <div class=""ant-mentions-dropdown ant-mentions-dropdown-placement-bottomLeft ant-mentions-dropdown-hidden""
                 style=""position: absolute; display: none;"">
-                <ul class=""ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical"">
+                <ul class=""ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical ant-mentions-popup"">
                     <li class=""ant-mentions-dropdown-menu-item"">
                         Test User
                     </li>
@@ -353,7 +353,7 @@
             </div>
             <div class=""ant-mentions-dropdown ant-mentions-dropdown-placement-bottomLeft ant-mentions-dropdown-hidden"" 
                 style=""position: absolute; display: none;"">
-                <ul class=""ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical"">
+                <ul class=""ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical ant-mentions-popup"">
                     <li class=""ant-mentions-dropdown-menu-item"">
                         Test User
                     </li>

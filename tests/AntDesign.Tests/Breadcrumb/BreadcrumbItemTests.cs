@@ -20,7 +20,7 @@ namespace AntDesign.Tests.Breadcrumb
                 .Add(x => x.ChildContent, "Child Content")
             );
 
-            systemUnderTest.MarkupMatches($@"<li>
+            systemUnderTest.MarkupMatches($@"<li class=""ant-breadcrumb-item"">
                 <span class=""ant-breadcrumb-link"">
                     <a href=""{Href}"">Child Content</a>
                 </span>
@@ -34,7 +34,7 @@ namespace AntDesign.Tests.Breadcrumb
                 .Add(x => x.ChildContent, "Child Content")
             );
 
-            systemUnderTest.MarkupMatches($@"<li>
+            systemUnderTest.MarkupMatches($@"<li class=""ant-breadcrumb-item"">
                 <span class=""ant-breadcrumb-link"">Child Content</span>
             </li>");
         }
@@ -47,7 +47,7 @@ namespace AntDesign.Tests.Breadcrumb
                 .AddChildContent<BreadcrumbItem>(itemParameters => itemParameters.Add(x => x.ChildContent, "Link Item"))
             );
 
-            systemUnderTest.Find("ol > li").MarkupMatches($@"<li>
+            systemUnderTest.Find("ol > li").MarkupMatches($@"<li class=""ant-breadcrumb-item"">
                 <span class=""ant-breadcrumb-link"">Link Item</span>
 		        <span class=""ant-breadcrumb-separator"">-</span>
             </li>");
@@ -78,7 +78,7 @@ namespace AntDesign.Tests.Breadcrumb
                 .Add(x => x.Overlay, "")
             );
 
-            systemUnderTest.MarkupMatches($@"<li>
+            systemUnderTest.MarkupMatches($@"<li class=""ant-breadcrumb-item"">
                 <span class=""ant-breadcrumb-overlay-link"">
 	                <span class=""ant-breadcrumb-link"">Child Content</span>
                     <span role=""img"" class="" anticon anticon-down"" id:ignore>

@@ -1,9 +1,10 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<span class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref" role="separator">
     @if (Text != null || ChildContent != null)
     {
+        <div class="ant-divider-rail ant-divider-rail-start"></div>
         <span class="ant-divider-inner-text">
             @if (Text != null)
             {
@@ -14,5 +15,6 @@
                 @ChildContent
             }
         </span>
+        <div class="ant-divider-rail ant-divider-rail-end"></div>
     }
-</span>
+</div>

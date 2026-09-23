@@ -24,6 +24,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
+    <ProjectReference Include="..\..\site\AntDesign.Docs\AntDesign.Docs.csproj" />
     <ProjectReference Include="..\AntDesign.TestKit\AntDesign.TestKit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
   </ItemGroup>
 </Project>

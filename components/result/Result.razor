@@ -18,12 +18,12 @@
     <div class="ant-result-title">
         @if (TitleTemplate != null)@TitleTemplate else @Title
     </div>
-    <div class="ant-result-subtitle">
+    <div class="ant-result-subtitle ant-result-sub-title">
         @if (SubTitleTemplate != null)@SubTitleTemplate else @SubTitle
     </div>
     @if (ChildContent != null)
     {
-        <div class="ant-result-content">
+        <div class="ant-result-body ant-result-content">
             @ChildContent
         </div>
     }

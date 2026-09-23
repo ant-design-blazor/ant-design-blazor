@@ -5,15 +5,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
-    <meta no-antblazor-css />
     <title>Ant Design of Blazor</title>
     <base href="/" />
     <link rel="icon" href="logo.png" type="image/x-icon">
     <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
-    <link href="_content/AntDesign.Docs/css/default.css" rel="stylesheet">
+    <link id="docs-theme-v6" href="_content/AntDesign/css/antd-v6/light.css" rel="stylesheet">
+    <link href="_content/AntDesign.Docs/css/docs-layout.css" rel="stylesheet">
+    <link href="_content/AntDesign.Docs/css/dumi-docs.css" rel="stylesheet">
+    <link href="AntDesign.Docs.Wasm.styles.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="css-var-_R_29n_">
     <noscript>Out-of-the-box mid-stage front/design solution!</noscript>
     <app>
         <div id="root">
@@ -229,6 +231,7 @@
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
 
     <script src="_content/AntDesign.Docs/js/prism.js"></script>
+    <link rel="stylesheet" href="_content/AntDesign.Docs/css/happy-work.css" />
     <script>
         window.XPrism = {};
         window.XPrism.highlight = function (code, language) {
@@ -239,18 +242,10 @@
             Prism.highlightAll();
         }
 
-        window.changeColor = function (hex, ref) {
-            window.less
-                .modifyVars({
-                    '@primary-color': hex
-                }).then(() => ref.invokeMethodAsync('OnColorChanged'))
-        }
     </script>
 
     <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@docsearch/css@3" />
-    <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/color.less">
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://fastly.jsdelivr.net/npm/@docsearch/js@3"></script>
     <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
 

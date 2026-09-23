@@ -1,0 +1,1453 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "oldTag": "4.24.16",
+    "newTag": "6.6.4",
+    "method": "git-tag-api-ir-diff",
+    "scope": "React Props declarations"
+  },
+  "summary": {
+    "components": 78,
+    "removedProperties": 121,
+    "addedProperties": 816
+  },
+  "components": [
+    {
+      "component": "_util",
+      "removed": [
+        "insertExtraNode",
+        "noStyle",
+        "onClick"
+      ],
+      "added": [
+        "className",
+        "colorSource",
+        "component",
+        "isSilent",
+        "strict",
+        "style",
+        "target"
+      ]
+    },
+    {
+      "component": "affix",
+      "removed": [
+        "affixPrefixCls"
+      ],
+      "added": [
+        "onTestUpdatePosition",
+        "rootClassName"
+      ]
+    },
+    {
+      "component": "alert",
+      "removed": [],
+      "added": [
+        "ariaProps",
+        "classNames",
+        "errorIcon",
+        "id",
+        "infoIcon",
+        "rootClassName",
+        "styles",
+        "successIcon",
+        "title",
+        "variant",
+        "warningIcon"
+      ]
+    },
+    {
+      "component": "anchor",
+      "removed": [
+        "anchorPrefixCls"
+      ],
+      "added": [
+        "classNames",
+        "direction",
+        "items",
+        "key",
+        "replace",
+        "rootClassName",
+        "styles"
+      ]
+    },
+    {
+      "component": "app",
+      "removed": [],
+      "added": [
+        "children",
+        "className",
+        "component",
+        "message",
+        "modal",
+        "notification",
+        "prefixCls",
+        "rootClassName",
+        "style"
+      ]
+    },
+    {
+      "component": "auto-complete",
+      "removed": [],
+      "added": [
+        "classNames",
+        "dropdownMatchSelectWidth",
+        "dropdownRender",
+        "dropdownStyle",
+        "onDropdownVisibleChange",
+        "onOpenChange",
+        "popupMatchSelectWidth",
+        "popupRender",
+        "showSearch",
+        "styles"
+      ]
+    },
+    {
+      "component": "avatar",
+      "removed": [],
+      "added": [
+        "max",
+        "rootClassName"
+      ]
+    },
+    {
+      "component": "back-top",
+      "removed": [
+        "children",
+        "rootPrefixCls",
+        "visible"
+      ],
+      "added": [
+        "rootClassName"
+      ]
+    },
+    {
+      "component": "badge",
+      "removed": [],
+      "added": [
+        "classNames",
+        "rootClassName",
+        "styles"
+      ]
+    },
+    {
+      "component": "border-beam",
+      "removed": [],
+      "added": [
+        "children",
+        "className",
+        "color",
+        "count",
+        "duration",
+        "hostDom",
+        "lineWidth",
+        "outset",
+        "prefixCls",
+        "size",
+        "style"
+      ]
+    },
+    {
+      "component": "breadcrumb",
+      "removed": [
+        "overlay"
+      ],
+      "added": [
+        "classNames",
+        "dropdownIcon",
+        "items",
+        "rootClassName",
+        "styles"
+      ]
+    },
+    {
+      "component": "button",
+      "removed": [],
+      "added": [
+        "_skipSemantic",
+        "autoInsertSpace",
+        "classNames",
+        "color",
+        "href",
+        "htmlType",
+        "iconClassName",
+        "iconPlacement",
+        "iconPosition",
+        "mount",
+        "rootClassName",
+        "styles",
+        "variant"
+      ]
+    },
+    {
+      "component": "calendar",
+      "removed": [],
+      "added": [
+        "cellRender",
+        "classNames",
+        "fullCellRender",
+        "rootClassName",
+        "showWeek",
+        "styles"
+      ]
+    },
+    {
+      "component": "card",
+      "removed": [],
+      "added": [
+        "classNames",
+        "rootClassName",
+        "styles",
+        "variant"
+      ]
+    },
+    {
+      "component": "carousel",
+      "removed": [],
+      "added": [
+        "autoplay",
+        "dotPlacement",
+        "id",
+        "rootClassName",
+        "waitForAnimate"
+      ]
+    },
+    {
+      "component": "cascader",
+      "removed": [],
+      "added": [
+        "bordered",
+        "classNames",
+        "disabled",
+        "dropdownClassName",
+        "dropdownMenuColumnStyle",
+        "dropdownRender",
+        "dropdownStyle",
+        "multiple",
+        "onDropdownVisibleChange",
+        "onOpenChange",
+        "onPopupVisibleChange",
+        "options",
+        "placement",
+        "popupClassName",
+        "popupMenuColumnStyle",
+        "popupRender",
+        "rootClassName",
+        "showArrow",
+        "showSearch",
+        "size",
+        "status",
+        "styles",
+        "suffixIcon",
+        "variant"
+      ]
+    },
+    {
+      "component": "checkbox",
+      "removed": [],
+      "added": [
+        "classNames",
+        "onBlur",
+        "onFocus",
+        "required",
+        "rootClassName",
+        "styles",
+        "title"
+      ]
+    },
+    {
+      "component": "collapse",
+      "removed": [
+        "disabled"
+      ],
+      "added": [
+        "classNames",
+        "destroyOnHidden",
+        "expandIconPlacement",
+        "rootClassName",
+        "size",
+        "styles"
+      ]
+    },
+    {
+      "component": "color-picker",
+      "removed": [],
+      "added": [
+        "activeIndex",
+        "allowClear",
+        "className",
+        "classNames",
+        "color",
+        "colors",
+        "disabled",
+        "disabledAlpha",
+        "disabledFormat",
+        "format",
+        "formatter",
+        "gradientDragging",
+        "max",
+        "min",
+        "mode",
+        "modeOptions",
+        "onActive",
+        "onChange",
+        "onChangeComplete",
+        "onClear",
+        "onClick",
+        "onDragChange",
+        "onDragStart",
+        "onFormatChange",
+        "onGradientDragging",
+        "onKeyDelete",
+        "onModeChange",
+        "onMouseEnter",
+        "onMouseLeave",
+        "open",
+        "panelRender",
+        "prefix",
+        "prefixCls",
+        "presets",
+        "range",
+        "showText",
+        "style",
+        "styles",
+        "type",
+        "value"
+      ]
+    },
+    {
+      "component": "comment",
+      "removed": [
+        "actions",
+        "author",
+        "avatar",
+        "children",
+        "className",
+        "content",
+        "datetime",
+        "prefixCls",
+        "style"
+      ],
+      "added": []
+    },
+    {
+      "component": "config-provider",
+      "removed": [
+        "displayName",
+        "pageHeader"
+      ],
+      "added": [
+        "affix",
+        "alert",
+        "anchor",
+        "app",
+        "avatar",
+        "badge",
+        "borderBeam",
+        "breadcrumb",
+        "button",
+        "calendar",
+        "card",
+        "cardMeta",
+        "carousel",
+        "cascader",
+        "checkbox",
+        "collapse",
+        "colorPicker",
+        "componentName",
+        "datePicker",
+        "descriptions",
+        "divider",
+        "drawer",
+        "dropdown",
+        "empty",
+        "flex",
+        "floatButton",
+        "floatButtonGroup",
+        "focusOutline",
+        "holderRender",
+        "image",
+        "inputNumber",
+        "inputPassword",
+        "inputSearch",
+        "layout",
+        "list",
+        "listy",
+        "masonry",
+        "mentions",
+        "menu",
+        "message",
+        "modal",
+        "notification",
+        "notificationContainerRef",
+        "otp",
+        "popconfirm",
+        "popover",
+        "popupMatchSelectWidth",
+        "popupOverflow",
+        "progress",
+        "qrcode",
+        "radio",
+        "rangePicker",
+        "rate",
+        "result",
+        "ribbon",
+        "segmented",
+        "select",
+        "setFocusOutline",
+        "skeleton",
+        "slider",
+        "spin",
+        "splitter",
+        "statistic",
+        "steps",
+        "switch",
+        "table",
+        "tabs",
+        "tag",
+        "textArea",
+        "theme",
+        "timePicker",
+        "timeline",
+        "tooltip",
+        "tour",
+        "transfer",
+        "tree",
+        "treeSelect",
+        "typography",
+        "upload",
+        "variant",
+        "warning",
+        "watermark",
+        "wave"
+      ]
+    },
+    {
+      "component": "date-picker",
+      "removed": [
+        "dropdownClassName",
+        "popupClassName",
+        "status"
+      ],
+      "added": [
+        "feedbackIcon",
+        "hasFeedback",
+        "ignoreSemantics",
+        "multipleComponent",
+        "onChange",
+        "picker",
+        "setType",
+        "singleComponent",
+        "suffixIcon",
+        "type"
+      ]
+    },
+    {
+      "component": "descriptions",
+      "removed": [],
+      "added": [
+        "classNames",
+        "items",
+        "rootClassName",
+        "styles",
+        "type"
+      ]
+    },
+    {
+      "component": "divider",
+      "removed": [],
+      "added": [
+        "classNames",
+        "rootClassName",
+        "size",
+        "styles",
+        "titlePlacement",
+        "variant",
+        "vertical"
+      ]
+    },
+    {
+      "component": "drawer",
+      "removed": [
+        "afterVisibleChange",
+        "visible"
+      ],
+      "added": [
+        "ariaId",
+        "children",
+        "classNames",
+        "content",
+        "contentWrapperStyle",
+        "destroyOnClose",
+        "destroyOnHidden",
+        "focusable",
+        "loading",
+        "mask",
+        "maskClosable",
+        "maskStyle",
+        "onClose",
+        "prefixCls",
+        "resizable",
+        "styles"
+      ]
+    },
+    {
+      "component": "dropdown",
+      "removed": [
+        "onVisibleChange",
+        "overlay",
+        "visible"
+      ],
+      "added": [
+        "classNames",
+        "destroyOnHidden",
+        "popupRender",
+        "rootClassName",
+        "styles"
+      ]
+    },
+    {
+      "component": "empty",
+      "removed": [],
+      "added": [
+        "classNames",
+        "rootClassName",
+        "styles"
+      ]
+    },
+    {
+      "component": "flex",
+      "removed": [],
+      "added": [
+        "align",
+        "component",
+        "flex",
+        "gap",
+        "justify",
+        "orientation",
+        "prefixCls",
+        "rootClassName",
+        "vertical",
+        "wrap"
+      ]
+    },
+    {
+      "component": "float-button",
+      "removed": [],
+      "added": [
+        "aria-label",
+        "backTop",
+        "badge",
+        "children",
+        "className",
+        "classNames",
+        "closeIcon",
+        "content",
+        "description",
+        "disabled",
+        "duration",
+        "href",
+        "htmlType",
+        "icon",
+        "individual",
+        "items",
+        "onClick",
+        "onOpenChange",
+        "open",
+        "placement",
+        "position",
+        "prefixCls",
+        "rootClassName",
+        "shape",
+        "showProgress",
+        "style",
+        "styles",
+        "target",
+        "tooltip",
+        "trigger",
+        "type",
+        "visibilityHeight"
+      ]
+    },
+    {
+      "component": "form",
+      "removed": [
+        "fieldKey",
+        "hideRequiredMark"
+      ],
+      "added": [
+        "attributes",
+        "classNames",
+        "control",
+        "feedbackIcons",
+        "fields",
+        "listeners",
+        "onCancel",
+        "onChange",
+        "open",
+        "prefix",
+        "rootClassName",
+        "setActivatorNodeRef",
+        "styles",
+        "variant"
+      ]
+    },
+    {
+      "component": "grid",
+      "removed": [
+        "lg",
+        "md",
+        "sm",
+        "xl",
+        "xs",
+        "xxl"
+      ],
+      "added": []
+    },
+    {
+      "component": "image",
+      "removed": [],
+      "added": [
+        "classNames",
+        "height",
+        "percent",
+        "placeholder",
+        "prefixCls",
+        "preview",
+        "render",
+        "rootClassName",
+        "rootStyle",
+        "styles",
+        "width",
+        "wrapperStyle"
+      ]
+    },
+    {
+      "component": "input",
+      "removed": [
+        "allowClear",
+        "direction",
+        "element",
+        "focused",
+        "handleReset",
+        "hidden",
+        "inputType",
+        "prefix",
+        "readOnly",
+        "showCount",
+        "triggerFocus"
+      ],
+      "added": [
+        "autoComplete",
+        "classNames",
+        "defaultValue",
+        "index",
+        "length",
+        "mask",
+        "onActiveChange",
+        "onChange",
+        "onInput",
+        "onPressEnter",
+        "rootClassName",
+        "searchIcon",
+        "separator",
+        "styles",
+        "type",
+        "variant"
+      ]
+    },
+    {
+      "component": "input-number",
+      "removed": [],
+      "added": [
+        "classNames",
+        "rootClassName",
+        "styles",
+        "suffix",
+        "variant"
+      ]
+    },
+    {
+      "component": "layout",
+      "removed": [],
+      "added": [
+        "classNames",
+        "rootClassName",
+        "styles"
+      ]
+    },
+    {
+      "component": "list",
+      "removed": [
+        "Meta"
+      ],
+      "added": [
+        "attributes",
+        "classNames",
+        "listeners",
+        "rootClassName",
+        "setActivatorNodeRef",
+        "styles"
+      ]
+    },
+    {
+      "component": "listy",
+      "removed": [],
+      "added": [
+        "className",
+        "classNames",
+        "rootClassName",
+        "style",
+        "styles"
+      ]
+    },
+    {
+      "component": "locale",
+      "removed": [],
+      "added": [
+        "_ANT_MARK__",
+        "children",
+        "locale"
+      ]
+    },
+    {
+      "component": "locale-provider",
+      "removed": [
+        "_ANT_MARK__",
+        "children",
+        "componentName",
+        "defaultLocale",
+        "locale"
+      ],
+      "added": []
+    },
+    {
+      "component": "masonry",
+      "removed": [],
+      "added": [
+        "className",
+        "classNames",
+        "column",
+        "columns",
+        "fresh",
+        "gutter",
+        "index",
+        "item",
+        "itemRender",
+        "items",
+        "onLayoutChange",
+        "onResize",
+        "prefixCls",
+        "rootClassName",
+        "style",
+        "styles"
+      ]
+    },
+    {
+      "component": "mentions",
+      "removed": [],
+      "added": [
+        "classNames",
+        "popupClassName",
+        "rootClassName",
+        "size",
+        "styles",
+        "variant"
+      ]
+    },
+    {
+      "component": "menu",
+      "removed": [
+        "antdMenuTheme",
+        "disabled",
+        "level",
+        "onTitleClick",
+        "onTitleMouseEnter",
+        "onTitleMouseLeave",
+        "popupClassName",
+        "popupOffset"
+      ],
+      "added": [
+        "classNames",
+        "item",
+        "key",
+        "rootClassName",
+        "setMode",
+        "styles",
+        "tooltip"
+      ]
+    },
+    {
+      "component": "message",
+      "removed": [
+        "getPopupContainer",
+        "rootPrefixCls"
+      ],
+      "added": [
+        "classNames",
+        "items",
+        "pauseOnHover",
+        "styles"
+      ]
+    },
+    {
+      "component": "modal",
+      "removed": [
+        "visible"
+      ],
+      "added": [
+        "_renderSemanticContent",
+        "_semanticOmit",
+        "afterOpenChange",
+        "cancelTextLocale",
+        "classNames",
+        "destroyOnHidden",
+        "focusable",
+        "isSilent",
+        "loading",
+        "locale",
+        "mergedOkCancel",
+        "okTextLocale",
+        "onClose",
+        "onConfirm",
+        "rootClassName",
+        "rootStyle",
+        "scrollLock",
+        "styles",
+        "theme"
+      ]
+    },
+    {
+      "component": "notification",
+      "removed": [],
+      "added": [
+        "actions",
+        "classNames",
+        "closable",
+        "items",
+        "pauseOnHover",
+        "role",
+        "showProgress",
+        "styles",
+        "title"
+      ]
+    },
+    {
+      "component": "page-header",
+      "removed": [
+        "avatar",
+        "backIcon",
+        "breadcrumb",
+        "breadcrumbRender",
+        "children",
+        "className",
+        "extra",
+        "footer",
+        "ghost",
+        "onBack",
+        "prefixCls",
+        "style",
+        "subTitle",
+        "tags",
+        "title"
+      ],
+      "added": []
+    },
+    {
+      "component": "pagination",
+      "removed": [],
+      "added": [
+        "classNames",
+        "components",
+        "pageSizeOptions",
+        "rootClassName",
+        "selectComponentClass",
+        "showSizeChanger",
+        "styles"
+      ]
+    },
+    {
+      "component": "popconfirm",
+      "removed": [
+        "onVisibleChange"
+      ],
+      "added": [
+        "className",
+        "classNames",
+        "description",
+        "onPopupClick",
+        "style",
+        "styles"
+      ]
+    },
+    {
+      "component": "popover",
+      "removed": [
+        "_overlay"
+      ],
+      "added": [
+        "children",
+        "classNames",
+        "hashId",
+        "onOpenChange",
+        "prefixCls",
+        "styles"
+      ]
+    },
+    {
+      "component": "progress",
+      "removed": [
+        "progress",
+        "successPercent"
+      ],
+      "added": [
+        "classNames",
+        "gapPlacement",
+        "percentPosition",
+        "railColor",
+        "rootClassName",
+        "rounding",
+        "styles"
+      ]
+    },
+    {
+      "component": "qr-code",
+      "removed": [],
+      "added": [
+        "bordered",
+        "className",
+        "classNames",
+        "errorLevel",
+        "icon",
+        "iconSize",
+        "locale",
+        "onRefresh",
+        "prefixCls",
+        "rootClassName",
+        "status",
+        "statusRender",
+        "styles",
+        "type"
+      ]
+    },
+    {
+      "component": "radio",
+      "removed": [],
+      "added": [
+        "block",
+        "classNames",
+        "orientation",
+        "styles",
+        "vertical"
+      ]
+    },
+    {
+      "component": "rate",
+      "removed": [
+        "index"
+      ],
+      "added": [
+        "rootClassName",
+        "size"
+      ]
+    },
+    {
+      "component": "result",
+      "removed": [],
+      "added": [
+        "classNames",
+        "rootClassName",
+        "styles"
+      ]
+    },
+    {
+      "component": "segmented",
+      "removed": [],
+      "added": [
+        "classNames",
+        "orientation",
+        "rootClassName",
+        "shape",
+        "styles",
+        "vertical"
+      ]
+    },
+    {
+      "component": "select",
+      "removed": [],
+      "added": [
+        "classNames",
+        "debounceTimeout",
+        "dropdownMatchSelectWidth",
+        "dropdownRender",
+        "dropdownStyle",
+        "fetchOptions",
+        "label",
+        "loadingIcon",
+        "onDropdownVisibleChange",
+        "onOpenChange",
+        "popupMatchSelectWidth",
+        "popupRender",
+        "prefix",
+        "rootClassName",
+        "showArrow",
+        "showSearch",
+        "styles",
+        "value",
+        "variant"
+      ]
+    },
+    {
+      "component": "skeleton",
+      "removed": [
+        "fullSize"
+      ],
+      "added": [
+        "classNames",
+        "element",
+        "icon",
+        "internalClassName",
+        "rootClassName",
+        "setElement",
+        "styles",
+        "text"
+      ]
+    },
+    {
+      "component": "slider",
+      "removed": [
+        "getTooltipPopupContainer",
+        "tipFormatter",
+        "tooltipPlacement",
+        "tooltipPrefixCls",
+        "tooltipVisible"
+      ],
+      "added": [
+        "ariaLabelForHandle",
+        "ariaLabelledByForHandle",
+        "ariaRequired",
+        "ariaValueTextFormatterForHandle",
+        "autoAdjustOverflow",
+        "classNames",
+        "direction",
+        "handleRender",
+        "keyboard",
+        "onBlur",
+        "onChangeComplete",
+        "onFocus",
+        "orientation",
+        "rootClassName",
+        "styles",
+        "tabIndex"
+      ]
+    },
+    {
+      "component": "space",
+      "removed": [
+        "marginDirection"
+      ],
+      "added": [
+        "classNames",
+        "disabled",
+        "orientation",
+        "prefix",
+        "rootClassName",
+        "separator",
+        "status",
+        "styles",
+        "variant",
+        "vertical"
+      ]
+    },
+    {
+      "component": "spin",
+      "removed": [
+        "spinPrefixCls"
+      ],
+      "added": [
+        "classNames",
+        "description",
+        "dotClassName",
+        "fullscreen",
+        "hasCircleCls",
+        "percent",
+        "rootClassName",
+        "styles"
+      ]
+    },
+    {
+      "component": "splitter",
+      "removed": [],
+      "added": [
+        "active",
+        "ariaMax",
+        "ariaMin",
+        "ariaNow",
+        "basicsState",
+        "className",
+        "classNames",
+        "collapsible",
+        "collapsibleIcon",
+        "containerRef",
+        "containerSize",
+        "defaultSize",
+        "destroyOnHidden",
+        "draggerClassName",
+        "draggerIcon",
+        "draggerStyle",
+        "endCollapsible",
+        "index",
+        "items",
+        "layout",
+        "lazy",
+        "max",
+        "min",
+        "onCollapse",
+        "onDraggerDoubleClick",
+        "onOffsetEnd",
+        "onOffsetStart",
+        "onOffsetUpdate",
+        "onResize",
+        "onResizeEnd",
+        "onResizeStart",
+        "orientation",
+        "panelsRef",
+        "prefixCls",
+        "resizable",
+        "reverse",
+        "rootClassName",
+        "rootPrefixCls",
+        "setBasicsState",
+        "setOffset",
+        "setResizing",
+        "setSize",
+        "showEndCollapsibleIcon",
+        "showStartCollapsibleIcon",
+        "size",
+        "startCollapsible",
+        "style",
+        "styles",
+        "supportMotion",
+        "vertical"
+      ]
+    },
+    {
+      "component": "statistic",
+      "removed": [],
+      "added": [
+        "classNames",
+        "rootClassName",
+        "styles",
+        "type"
+      ]
+    },
+    {
+      "component": "steps",
+      "removed": [
+        "children",
+        "description",
+        "disabled",
+        "icon",
+        "iconPrefix",
+        "onClick",
+        "subTitle",
+        "title"
+      ],
+      "added": [
+        "classNames",
+        "ellipsis",
+        "iconRender",
+        "itemComponent",
+        "maxCount",
+        "offset",
+        "orientation",
+        "rootClassName",
+        "rootComponent",
+        "rootPrefixCls",
+        "styles",
+        "titlePlacement",
+        "variant"
+      ]
+    },
+    {
+      "component": "switch",
+      "removed": [],
+      "added": [
+        "classNames",
+        "defaultValue",
+        "rootClassName",
+        "styles",
+        "value"
+      ]
+    },
+    {
+      "component": "table",
+      "removed": [],
+      "added": [
+        "_renderTimes",
+        "classNames",
+        "data-row-key",
+        "dataIndex",
+        "editable",
+        "editing",
+        "filterOnClose",
+        "handleSave",
+        "id",
+        "index",
+        "inputType",
+        "listeners",
+        "onOpenChange",
+        "rootClassName",
+        "setActivatorNodeRef",
+        "styles",
+        "title",
+        "virtual"
+      ]
+    },
+    {
+      "component": "tabs",
+      "removed": [],
+      "added": [
+        "className",
+        "classNames",
+        "data-node-key",
+        "destroyInactiveTabPane",
+        "indicatorSize",
+        "items",
+        "more",
+        "moreIcon",
+        "popupClassName",
+        "removeIcon",
+        "rootClassName",
+        "styles",
+        "tabPlacement",
+        "tabPosition"
+      ]
+    },
+    {
+      "component": "tag",
+      "removed": [
+        "visible"
+      ],
+      "added": [
+        "bordered",
+        "classNames",
+        "defaultValue",
+        "disabled",
+        "href",
+        "multiple",
+        "onKeyDown",
+        "rootClassName",
+        "styles",
+        "tag",
+        "target",
+        "value",
+        "variant"
+      ]
+    },
+    {
+      "component": "theme",
+      "removed": [],
+      "added": [
+        "components",
+        "cssVar",
+        "hashed",
+        "override",
+        "theme",
+        "token",
+        "zeroRuntime"
+      ]
+    },
+    {
+      "component": "time-picker",
+      "removed": [
+        "dropdownClassName"
+      ],
+      "added": [
+        "classNames",
+        "popupStyle",
+        "rootClassName",
+        "styles"
+      ]
+    },
+    {
+      "component": "timeline",
+      "removed": [
+        "__deprecated_do_not_use_it__",
+        "color",
+        "dot",
+        "label",
+        "position"
+      ],
+      "added": [
+        "classNames",
+        "items",
+        "orientation",
+        "rootClassName",
+        "styles",
+        "titleSpan",
+        "variant"
+      ]
+    },
+    {
+      "component": "tooltip",
+      "removed": [
+        "afterVisibleChange",
+        "arrowPointAtCenter",
+        "defaultVisible",
+        "onVisibleChange",
+        "visible"
+      ],
+      "added": [
+        "arrow",
+        "classNames",
+        "data-popover-inject",
+        "destroyOnHidden",
+        "destroyTooltipOnHide",
+        "overlay",
+        "overlayClassName",
+        "overlayInnerStyle",
+        "overlayStyle",
+        "rootClassName",
+        "styles",
+        "title"
+      ]
+    },
+    {
+      "component": "tour",
+      "removed": [],
+      "added": [
+        "actionsRender",
+        "className",
+        "classNames",
+        "cover",
+        "current",
+        "indicatorsRender",
+        "keyboard",
+        "nextButtonProps",
+        "prefixCls",
+        "prevButtonProps",
+        "stepProps",
+        "steps",
+        "style",
+        "styles",
+        "type"
+      ]
+    },
+    {
+      "component": "transfer",
+      "removed": [
+        "leftArrowText",
+        "rightArrowText"
+      ],
+      "added": [
+        "actions",
+        "classNames",
+        "leftColumns",
+        "removeLabel",
+        "rightColumns",
+        "rootClassName",
+        "selectionsIcon",
+        "styles",
+        "type"
+      ]
+    },
+    {
+      "component": "tree",
+      "removed": [],
+      "added": [
+        "classNames",
+        "direction",
+        "dropLevelOffset",
+        "dropPosition",
+        "indent",
+        "rootStyle",
+        "styles",
+        "switcherLoadingIcon",
+        "treeNodeProps"
+      ]
+    },
+    {
+      "component": "tree-select",
+      "removed": [],
+      "added": [
+        "classNames",
+        "dropdownMatchSelectWidth",
+        "dropdownRender",
+        "dropdownStyle",
+        "onDropdownVisibleChange",
+        "onOpenChange",
+        "popupMatchSelectWidth",
+        "popupRender",
+        "rootClassName",
+        "showArrow",
+        "styles",
+        "variant"
+      ]
+    },
+    {
+      "component": "typography",
+      "removed": [
+        "['aria-label']",
+        "enabledEllipsis",
+        "enabledMeasure",
+        "fontSize",
+        "setContentRef"
+      ],
+      "added": [
+        "actions",
+        "aria-label",
+        "classNames",
+        "copied",
+        "enableEllipsis",
+        "enableMeasure",
+        "expanded",
+        "iconOnly",
+        "loading",
+        "locale",
+        "measureDeps",
+        "miscDeps",
+        "onCopy",
+        "rootClassName",
+        "styles"
+      ]
+    },
+    {
+      "component": "upload",
+      "removed": [
+        "transformFile"
+      ],
+      "added": [
+        "classNames",
+        "extra",
+        "originNode",
+        "rootClassName",
+        "styles",
+        "value"
+      ]
+    },
+    {
+      "component": "watermark",
+      "removed": [],
+      "added": [
+        "add",
+        "children",
+        "className",
+        "content",
+        "font",
+        "gap",
+        "height",
+        "image",
+        "inherit",
+        "offset",
+        "onRemove",
+        "remove",
+        "rootClassName",
+        "rotate",
+        "style",
+        "width",
+        "zIndex"
+      ]
+    }
+  ]
+}

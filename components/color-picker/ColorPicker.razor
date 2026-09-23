@@ -1,0 +1,28 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="ant-color-picker-trigger @Class" style="@Style">
+    <button type="button" class="ant-color-picker-color-block" disabled="@Disabled" aria-label="@AriaLabel" @onclick="Toggle">
+        <span class="ant-color-picker-color-block-inner" style="background-color:@CurrentValue"></span>
+    </button>
+    @if (ShowText)
+    {
+        <span class="ant-color-picker-trigger-text">@CurrentValue</span>
+    }
+    @if (Open)
+    {
+        <div class="ant-popover ant-color-picker" role="dialog">
+            <div class="ant-popover-container">
+                <div class="ant-popover-content">
+                    <div class="ant-color-picker-inner">
+                        <div class="ant-color-picker-inner-content">
+                            <div class="ant-color-picker-panel">
+                                <input class="ant-color-picker-color-input" type="color" value="@CurrentValue" disabled="@Disabled" @oninput="OnInput" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

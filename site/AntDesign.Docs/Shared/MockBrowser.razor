@@ -1,3 +1,24 @@
-﻿<div class="@ClassMapper.Class">
+﻿<div class="@($"{ClassMapper.Class} {_styles["root"]}")">
     <iframe src="@WithUrl" height="@Height"></iframe>
 </div>
+
+<style>@((MarkupString)_styles.CssText)</style>
+
+@using AntDesign.Docs.Services
+@code {
+    private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-mock-browser", new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["root"] = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["position"] = "relative", ["borderTop"] = "2em solid rgba(230, 230, 230, 0.7)", ["borderRadius"] = "3px 3px 0 0", ["boxShadow"] = "0 0.1em 0.5em 0 rgba(0, 0, 0, 0.28)",
+            ["&::before"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["top"] = "-1.25em", ["left"] = "1em", ["display"] = "block", ["width"] = "0.5em", ["height"] = "0.5em", ["backgroundColor"] = "#f44", ["borderRadius"] = "50%", ["boxShadow"] = "0 0 0 2px #f44, 1.5em 0 0 2px #9b3, 3em 0 0 2px #fb5", ["content"] = "''" },
+            ["&.with-tab::after"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["top"] = "-2em", ["left"] = "5.5em", ["display"] = "block", ["width"] = "20%", ["height"] = 0, ["borderRight"] = "0.8em solid transparent", ["borderBottom"] = "2em solid white", ["borderLeft"] = "0.8em solid transparent", ["content"] = "''" },
+            ["&.with-url::after"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["top"] = "-1.6em", ["left"] = "5.5em", ["display"] = "block", ["width"] = "calc(100% - 6em)", ["height"] = "1.2em", ["backgroundColor"] = "white", ["borderRadius"] = 2, ["content"] = "''" },
+            ["& > *"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "block" },
+            ["[data-theme='dark'] &"] = new System.Collections.Generic.Dictionary<string, object> { ["borderTop"] = "2em solid #262626" },
+            ["[data-theme='dark'] &::before"] = new System.Collections.Generic.Dictionary<string, object> { ["backgroundColor"] = "#fb4742", ["boxShadow"] = "0 0 0 2px #fb4742, 1.5em 0 0 2px #99bc2e, 3em 0 0 2px #ffba5a" },
+            ["[data-theme='dark'] &.with-url::after"] = new System.Collections.Generic.Dictionary<string, object> { ["backgroundColor"] = "#fff" },
+            ["[data-theme='dark'] &.with-tab::after"] = new System.Collections.Generic.Dictionary<string, object> { ["borderBottom"] = "2em solid #fff" }
+        }
+    });
+}

@@ -28,9 +28,9 @@ function loadScriptAndStyle() {
         }
     }
 
-    if (!document.querySelector('[href*="_content/AntDesign/css/ant-design-blazor"]') && !document.querySelector('[no-antblazor-css]')) {
+    if (!document.querySelector('[href*="_content/AntDesign/css/ant-design-blazor"], [href*="_content/AntDesign/css/antd-v6/"]') && !document.querySelector('[no-antblazor-css]')) {
         var customStyle = document.createElement('link');
-        customStyle.setAttribute('href', `_content/AntDesign/css/ant-design-blazor.css`);
+        customStyle.setAttribute('href', `_content/AntDesign/css/antd-v6/light.css`);
         customStyle.setAttribute('rel', 'stylesheet');
 
         const cssMark = document.querySelector('[antblazor-css]') || document.querySelector('link');

@@ -10,7 +10,9 @@
     </div>
     @if (Included)
     {
-        <div class="ant-slider-track @(Range ? "ant-slider-track-1" : string.Empty)" style="@_trackStyle">
+        <div class="ant-slider-tracks">
+            <div class="ant-slider-track @(Range ? "ant-slider-track-1" : string.Empty)" style="@_trackStyle">
+            </div>
         </div>
     }
     <div class="ant-slider-step">
@@ -74,4 +76,3 @@
         }
     </div>
 </div>
-

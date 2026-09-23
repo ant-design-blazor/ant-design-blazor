@@ -1,0 +1,134 @@
+@using AntDesign.Docs.Services
+@using Microsoft.AspNetCore.Components.Web
+@namespace AntDesign.Docs.Components
+
+<style>@((MarkupString)PreviewStyles.CssText)</style>
+<div class="@PreviewStyles["root"]" data-active-semantic="@ActiveKey">
+
+    <div class="@PreviewStyles["content"]">
+        @ChildContent
+    </div>
+
+    <ul class="@PreviewStyles["list"]">
+        @foreach (var node in Nodes)
+        {
+            var key = NodeKey(node);
+            <li class="@PreviewStyles["item"] @(ActiveKey == key ? PreviewStyles["active"] : null)"
+                role="button"
+                tabindex="0"
+                aria-pressed="@(ActiveKey == key)"
+                @onclick="() => Activate(key)"
+                @onmouseenter="() => Activate(key)"
+                @onfocus="() => Activate(key)"
+                @onkeydown="(args) => ActivateFromKeyboard(args, key)">
+                <div>
+                    <strong>@node.Name</strong> <code>@node.Selector</code>
+                    @if (!string.IsNullOrWhiteSpace(node.Version))
+                    {
+                        <small>@($"v{node.Version}")</small>
+                    }
+                </div>
+                <div>@node.Description</div>
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Component { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    private string? ActiveKey { get; set; }
+
+    private IReadOnlyList<SemanticDomNode> Nodes => SemanticDomCatalog.Get(Component);
+
+    private CssStyleSheet PreviewStyles { get; set; } = null!;
+
+    protected override void OnParametersSet() => PreviewStyles = CreatePreviewStyles();
+
+    private CssStyleSheet CreatePreviewStyles()
+    {
+        var root = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["position"] = "relative",
+            ["zIndex"] = 0,
+            ["display"] = "grid",
+            ["gridTemplateColumns"] = "minmax(0, 1fr) minmax(220px, 320px)",
+            ["border"] = "1px solid var(--ant-color-border-secondary, #f0f0f0)",
+            ["borderRadius"] = "var(--ant-border-radius, 8px)",
+            ["overflow"] = "hidden"
+        };
+
+        foreach (var node in Nodes)
+        {
+            root[$"&[data-active-semantic=\"{NodeKey(node)}\"] {node.Selector}"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["outline"] = "2px solid var(--ant-color-warning, #faad14)",
+                ["outlineOffset"] = "2px",
+                ["boxShadow"] = "0 0 0 4px color-mix(in srgb, var(--ant-color-warning, #faad14) 20%, transparent)"
+            };
+        }
+
+        root["@media (max-width: 767.99px)"] = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["&"] = new System.Collections.Generic.Dictionary<string, object> { ["gridTemplateColumns"] = "minmax(0, 1fr)" },
+            ["& ." + "adb-semantic-preview-content"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["borderInlineEnd"] = 0,
+                ["borderBottom"] = "1px solid var(--ant-color-border-secondary, #f0f0f0)"
+            }
+        };
+
+        return CssInJs.CreateStyles("semantic-preview", new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["root"] = root,
+            ["content"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["position"] = "relative",
+                ["zIndex"] = 0,
+                ["display"] = "flex",
+                ["minWidth"] = 0,
+                ["minHeight"] = 180,
+                ["alignItems"] = "center",
+                ["justifyContent"] = "center",
+                ["padding"] = "var(--ant-padding-md, 16px)",
+                ["borderInlineEnd"] = "1px solid var(--ant-color-border-secondary, #f0f0f0)",
+                ["overflow"] = "hidden"
+            },
+            ["list"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["display"] = "flex",
+                ["maxHeight"] = 600,
+                ["flexDirection"] = "column",
+                ["margin"] = 0,
+                ["padding"] = 0,
+                ["overflow"] = "auto",
+                ["listStyle"] = "none"
+            },
+            ["item"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["padding"] = "var(--ant-padding-sm, 12px)",
+                ["cursor"] = "pointer",
+                ["transition"] = "background-color var(--ant-motion-duration-fast, 0.1s) ease",
+                ["& + &"] = new System.Collections.Generic.Dictionary<string, object> { ["borderTop"] = "1px solid var(--ant-color-border-secondary, #f0f0f0)" },
+                ["&:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["backgroundColor"] = "var(--ant-control-item-bg-hover, #f5f5f5)" }
+            },
+            ["active"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["backgroundColor"] = "var(--ant-color-primary-bg, #e6f4ff)"
+            }
+        });
+    }
+
+    private string NodeKey(SemanticDomNode node) => $"{Component}-{node.Name}";
+
+    private void Activate(string key) => ActiveKey = key;
+
+    private void ActivateFromKeyboard(KeyboardEventArgs args, string key)
+    {
+        if (args.Key is "Enter" or " ") Activate(key);
+    }
+}

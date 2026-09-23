@@ -189,6 +189,15 @@ namespace AntDesign
             [ButtonType.Text] = "text",
         };
 
+        private static readonly Dictionary<ButtonType, string> _variantMap = new()
+        {
+            [ButtonType.Default] = "outlined",
+            [ButtonType.Primary] = "solid",
+            [ButtonType.Dashed] = "dashed",
+            [ButtonType.Link] = "link",
+            [ButtonType.Text] = "text",
+        };
+
         /// <summary>
         /// Do not wrap with &lt;span&gt;
         /// </summary>
@@ -202,10 +211,17 @@ namespace AntDesign
         protected void SetClassMap()
         {
             var prefixName = "ant-btn";
+            var buttonType = Type.GetValueOrDefault(ButtonType.Default);
+            var color = Danger ? "dangerous" : buttonType == ButtonType.Link ? "link" : buttonType == ButtonType.Primary ? "primary" : "default";
 
             ClassMapper.Clear()
                 .Add(prefixName)
-                .GetIf(() => $"{prefixName}-{_typeMap[Type.GetValueOrDefault(ButtonType.Default)]}", () => Type.HasValue)
+                // Keep the legacy type class while also emitting the v6 color/variant
+                // classes consumed by antd-v6.css. This is the same class contract as
+                // the React implementation and lets old selectors remain compatible.
+                .GetIf(() => $"{prefixName}-{_typeMap[buttonType]}", () => Type.HasValue)
+                .GetIf(() => $"{prefixName}-color-{color}", () => Type.HasValue)
+                .GetIf(() => $"{prefixName}-variant-{_variantMap[buttonType]}", () => Type.HasValue)
                 .If($"{prefixName}-dangerous", () => Danger)
                 .GetIf(() => $"{prefixName}-{Shape.ToString().ToLowerInvariant()}", () => Shape != ButtonShape.Rectangle)
                 .If($"{prefixName}-lg", () => Size == ButtonSize.Large)
@@ -223,6 +239,12 @@ namespace AntDesign
             base.OnInitialized();
             SetClassMap();
             SetButtonColorStyle();
+        }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+            SetClassMap();
         }
 
         private async Task HandleOnClick(MouseEventArgs args)

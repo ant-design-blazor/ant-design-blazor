@@ -7,8 +7,10 @@
 }
 
 <div class="@ClassMapper.Class" style="@Style" @ref="Ref" id="@Id">
-    <div class="ant-statistic-title">
-        @if (TitleTemplate != null)@TitleTemplate else @Title
+    <div class="ant-statistic-header">
+        <div class="ant-statistic-title">
+            @if (TitleTemplate != null)@TitleTemplate else @Title
+        </div>
     </div>
     <div class="ant-statistic-content" style="@ValueStyle">
         @if (PrefixTemplate != null || Prefix != null)
@@ -17,7 +19,7 @@
                 @if (PrefixTemplate != null)@PrefixTemplate else @Prefix
             </span>
         }
-        <span class="ant-statistic-content-value">
+        <span class="ant-statistic-content-value ant-statistic-value">
             <span class="ant-statistic-content-value-int">
                 @SeparatedDecimal.integerPart
             </span>

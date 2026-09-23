@@ -1,4 +1,5 @@
 ﻿@page "/components/{name}"
+@using AntDesign.Docs.Services
 @page "/components"
 @page "/charts/{name}"
 @page "/charts"
@@ -11,7 +12,7 @@
 @page "/{locale}/charts"
 @page "/{locale}/experimental/{name}"
 @page "/{locale}/experimental"
-<section class="main-container main-container-component">
+<section class="main-container main-container-component @_styles["root"]">
     <article>
 
         @if (_demoComponent != null)
@@ -57,7 +58,14 @@
                             </a>
                         </Unbound>
                     </Tooltip>
-                    <div style="float:right;">
+                    <Tooltip Title="@Localizer["app.content.component-source"]">
+                        <Unbound>
+                            <a href="@ComponentSourceUrl" class="edit-button component-source-button" aria-label="@Localizer["app.content.component-source"]" rel="noopener noreferrer" target="_blank">
+                                <Icon Type="@IconType.Outline.Github" />
+                            </a>
+                        </Unbound>
+                    </Tooltip>
+                    <div class="@_styles["carbonAd"]">
                         <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CW7I6K7I&placement=antblazorcom&format=cover" id="_carbonads_js"></script>
                     </div>
                 </h1>
@@ -95,12 +103,12 @@
 
             @if (_demos.Any())
             {
-                <Row Style="margin-left: -8px; margin-right: -8px;">
+                <Row Class="@_styles["demoGridRow"]">
                     @if (_demoComponent.Cols == 1 || _expanded)
                     {
                         foreach (var demo in _demos)
                         {
-                            <AntDesign.Col Span="24" Class="code-boxes-col-1-1" Style="padding-left: 8px; padding-right: 8px;">
+                            <AntDesign.Col Span="24" Class="@($"code-boxes-col-1-1 {_styles["demoGridColumn"]}")">
                                 <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
                             </AntDesign.Col>
                         }
@@ -110,13 +118,13 @@
                         var leftList = _demos.Where((_, i) => i % 2 == 0);
                         var rightList = _demos.Where((_, i) => i % 2 != 0);
 
-                        <AntDesign.Col Md="12" Sm="24" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                        <AntDesign.Col Md="12" Sm="24" Class="@($"code-boxes-col-2-1 {_styles["demoGridColumn"]}")">
                             @foreach (var demo in leftList)
                             {
                                 <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
-                        <AntDesign.Col Md="12" Sm="24" Class="code-boxes-col-2-1" Style="padding-left: 8px; padding-right: 8px;">
+                        <AntDesign.Col Md="12" Sm="24" Class="@($"code-boxes-col-2-1 {_styles["demoGridColumn"]}")">
                             @foreach (var demo in rightList)
                             {
                                 <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
@@ -147,3 +155,45 @@
         scroll-behavior: smooth;
     }
 </style>
+
+<style>@((MarkupString)_styles.CssText)</style>
+
+@code {
+    private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-component-page", new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["root"] = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["& .toc-affix"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["top"] = 8, ["right"] = 20 },
+            [".ant-row-rtl & .toc-affix"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = "auto", ["left"] = 20 },
+            ["& .toc-affix .ant-affix"] = new System.Collections.Generic.Dictionary<string, object> { ["zIndex"] = 9, ["maxHeight"] = "calc(100vh - 16px)", ["overflowX"] = "hidden", ["overflowY"] = "auto", ["background"] = "#fff" },
+            ["[data-theme='dark'] & .toc-affix .ant-affix"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#fff" },
+            ["& .toc-affix .ant-anchor"] = new System.Collections.Generic.Dictionary<string, object> { ["fontSize"] = 12 },
+            ["& .toc-affix .ant-anchor .ant-anchor-ink::before"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 1, ["borderLeft"] = "1px solid rgba(0, 0, 0, 0.06)" },
+            ["& .toc-affix .ant-anchor .ant-anchor-link-active"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["zIndex"] = 2, ["marginLeft"] = -2, ["borderLeft"] = "2px solid var(--ant-primary-color)" },
+            [".ant-row-rtl & .toc-affix .ant-anchor .ant-anchor-link-active"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = -2, ["marginLeft"] = 0, ["borderRight"] = "2px solid var(--ant-primary-color)", ["borderLeft"] = "none" },
+            ["& .toc-affix .ant-anchor .ant-anchor-ink-ball.visible"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
+            ["& .toc-affix .ant-anchor .ant-anchor-link"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "0 0 4px 16px", ["lineHeight"] = 1.5 },
+            [".ant-row-rtl & .toc-affix .ant-anchor .ant-anchor-link"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "0 16px 4px 0" },
+            ["& .toc-affix .ant-anchor .ant-anchor-link.ant-anchor-link-active .ant-anchor-link-title"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-primary-color)" },
+            ["& .toc-affix .ant-anchor .ant-anchor-link .ant-anchor-link-title"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 110, ["color"] = "rgba(0, 0, 0, 0.85)", ["whiteSpace"] = "nowrap", ["textOverflow"] = "ellipsis" },
+            ["& .markdown h1 .subtitle"] = new System.Collections.Generic.Dictionary<string, object> { ["marginLeft"] = 12 },
+            ["& .all-code-box-controls"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "right" },
+            [".ant-row-rtl & .all-code-box-controls"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "left" },
+            ["& .code-box-expand-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["marginLeft"] = 12, ["color"] = "#3b4357", ["fontSize"] = 20, ["cursor"] = "pointer", ["opacity"] = 0.75, ["transition"] = "all 0.3s" },
+            ["& .code-box-expand-trigger:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 1 },
+            [".ant-row-rtl & .code-box-expand-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 8, ["marginLeft"] = 0 },
+            ["& .code-boxes-col-1-1"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%" },
+            ["& .code-boxes-col-2-1"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "inline-block", ["verticalAlign"] = "top" },
+            ["@media only screen and (max-width: 992px)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["& .code-boxes-col-2-1, & .code-boxes-col-1-1"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "none", ["width"] = "100%" }
+            },
+            ["& .markdown.api-container hr"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = "12px 0" },
+            ["[data-theme='dark'] & .markdown.api-container table tbody tr:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#262626" },
+            [".ant-row-rtl & #components-tooltip-demo-placement .code-box-demo, .ant-row-rtl & #components-popover-demo-placement .code-box-demo, .ant-row-rtl & #components-popconfirm-demo-placement .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["direction"] = "ltr" }
+        },
+        ["demoGridRow"] = new System.Collections.Generic.Dictionary<string, object> { ["marginLeft"] = -8, ["marginRight"] = -8 },
+        ["demoGridColumn"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingLeft"] = 8, ["paddingRight"] = 8 },
+        ["carbonAd"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "right" }
+    });
+}

@@ -1,5 +1,17 @@
 # Ant Design v6 CSS 变量主题迁移实施任务
 
+## 当前阶段：第一阶段——现有组件接入 v6 CSS
+
+第一阶段优先完成静态 CSS、默认主题及现有 13 个主题、现有组件 DOM/class/Semantic DOM 结构和文档预览。第二阶段的 Design Token/算法、React v4→v6 属性迁移、动态主题编译，以及第三阶段的 React 测试完整迁移，暂不作为当前执行目标。
+
+### 阶段归属
+
+- 第一阶段：任务 2、4、4.2、4.3.1、4.3.2、7、7.1、9、9.0、9.1、9.2-9.4、10、10.1-10.3，以及 CSS/DOM/class/文档站相关的必要回归门禁。
+- 第二阶段：任务 3、3.1、3.2、3.3、3.4、3.5、5、5.1、6、6.1、6.2、7.2、8、8.1，以及 Design Token、算法、React v4→v6 属性迁移、动态主题和 SSR 编译能力。
+- 第三阶段：任务 12 及其子任务，负责 React 测试源码、交互步骤和断言到 bUnit 的完整迁移。
+
+第一阶段不得为了生成测试或提前处理 v4→v6 API 差异而反向修改 React API 或组件 DOM；第一阶段只保留必要的 CSS/DOM 回归校验。
+
 1. [x] 建立上游生成器适配器和统一 Token/Style IR
    - 创建 `tools/AntDesign.StyleGen` 的 CLI 入口、参数解析、revision/lockfile 元数据和 schema 校验。
    - 实现对 `ant-design` 原生成器的 Node/TypeScript 调用适配，输出 `manifest.json`、`tokens.json`、`components.json`、`themes.json` 和 `unsupported.json`。
@@ -107,6 +119,13 @@
    - 对每个迁移组件执行 React 基准与 Blazor candidate 的组件、主题、变体、状态、RTL、紧凑尺寸、弹层和完整 CSS 比较。
    - 覆盖需求 4.1-4.8、9.2、9.4。
 
+7.2. [ ] 第二阶段：同步 React v6 Props 命名并完成 v4→v6 属性迁移
+   - 基于 React v6 API 提取结果建立组件属性命名对照表，覆盖新增、重命名、拆分、合并、删除和语义变化的属性。
+   - 将 Blazor 公共参数调整为 v6 语义和 PascalCase 命名；对继续保留的旧 v4 参数增加 `[Obsolete]`，指向替代参数并转发到同一内部状态/渲染路径。
+   - 生成 API 命名差异报告和编译兼容回归测试；禁止把类型或语义不兼容的属性仅按名称相似度映射。
+   - 在第二阶段文档中更新新属性用法、旧属性迁移说明和弃用时间线，并与 Design Token/API 迁移一起验证。
+   - 覆盖需求 1.1、2.1-2.5、8.1、8.3、11.9。
+
 8. [ ] 实现 SSR 静态样式导出
    - 创建 `IStaticStyleExporter`、`StaticStyleRequest`、`StaticStyleResult` 和 manifest/cache digest 实现。
    - 支持 `<style>`/外部 CSS、CSP nonce、默认/暗色/13 个首页主题、自定义 Token、组件集合和动态样式 fallback。
@@ -131,14 +150,47 @@
    - 在 `site/AntDesign.Docs` 中实现主题选择、当前项无障碍状态、键盘左右导航、持久化、无整页刷新切换和代表性组件预览。
    - 覆盖需求 10.1-10.6、9.4。
 
-10. [ ] 实现 Semantic DOM 预览组件
+9.2. [ ] 迁移首页 Dumi ThemePreview
+   - 对照 `../ant-design/.dumi/pages/index/components/ThemePreview/` 和其引用的 `PreviewPane/Components.tsx`、`Theme/`、`Group.tsx`；先使用 v6 CSS 与 Blazor 组件搭建功能结构，再迁移 Blazor 站缺失的专属布局样式。
+   - [x] 首页已加入组件/仪表盘视图、13 个主题色板、复制主题代码和主题预览入口；用真实 Blazor Button/Alert 示例，主题样式限制在预览容器。
+   - [x] 浏览器验证视图切换、MUI 色板变量、复制反馈。
+   - [ ] 将预览示例及主题配置与 React `PreviewPane/Components.tsx`、`Theme/` 的完整内容逐项对齐，并完成窄屏视觉回归；AI 动态生成留到第二阶段。
+   - 不在此任务实现任意 Token 的动态编译。
+
+9.3. [x] 迁移文档全局主题切换
+   - 对照 `../ant-design/.dumi/theme/common/ThemeSwitch/` 和 `theme/layouts/GlobalLayout.tsx`。
+   - [x] 扩展 React CSS 基准生成器，生成 `light-compact` 和 `dark-compact` 静态组合样式及来源/digest 清单，并在生成测试中校验输出字节一致。
+   - [x] 支持 light/dark 互斥切换、compact 独立叠加、持久化及刷新恢复；使用预构建 CSS。
+   - [x] 浏览器验证 dark + compact 组合加载 `dark-compact.css`。
+   - [ ] 补齐自动化覆盖与键盘/窄屏回归。
+
+9.4. [x] 迁移 Happy Work Effect
+   - 对照 `../ant-design/.dumi/theme/layouts/GlobalLayout.tsx` 中 `HappyProvider` 的开关语义及其上游效果包实际资源；将效果限制在文档站组件交互，不改写组件业务状态。
+   - [x] 支持用户显式启停、状态保存、按需导入 JS 模块，并尊重 `prefers-reduced-motion: reduce`。
+   - [x] 浏览器验证开关启用后真实交互生成粒子及点击目标动画。
+   - 若无法复用 React 专属运行时，使用 Blazor/CSS 实现行为等价效果并记录差异及来源。
+
+10. [x] 实现 Semantic DOM 预览组件
    - 在 `site/AntDesign.Docs` 创建 Blazor `SemanticPreview`、语义路径映射、悬停/固定高亮、版本标签、代码示例和子组件 class/style 注入。
    - 使用实际 Token/CSS Variable 主题上下文，不创建独立伪样式。
+   - [x] 浏览器验证列表渲染、键盘/悬停/点击激活与真实 DOM 高亮。
    - 覆盖需求 9.1-9.5。
 
 10.1. [ ] 编写 Semantic DOM 文档自动化测试
    - 覆盖语义列表渲染、悬停/键盘焦点/固定状态、代码示例、亮暗主题、响应式布局和控制台错误。
    - 覆盖需求 9.2-9.5、11.4。
+
+10.2. [ ] 迁移组件文档 GitHub 元信息入口
+   - 对照 `../ant-design/.dumi/theme/builtins/ComponentMeta/`、`theme/slots/Content/DocMeta.tsx` 与 `theme/common/EditButton.tsx`。
+   - [x] 在组件文档标题旁增加 Ant Design React 上游组件源码 GitHub 链接，按组件名生成 kebab-case 路径，并补充中英文 Tooltip/aria-label。
+   - [x] 浏览器验证 Button 文档指向 React 上游 `components/button`。
+   - [ ] 完成剩余元信息入口；页面、Demo 的编辑链接继续指向 Blazor 仓库中各自准确的文件路径，不得混用 React 与 Blazor 仓库地址，并验证链接目标。
+   - 对不存在上游映射的 Blazor 专属组件隐藏或给出明确链接，不生成错误的 `components/{name}` 地址。
+
+10.3. [ ] 建立 Dumi 文档布局样式迁移清单并逐项迁移
+   - 先列出 `.dumi/theme/slots`、`theme/layouts`、`theme/common`、`pages/index/components` 所需的结构/样式来源，再分类为“已有 v6 组件 CSS”“必须迁移的站点布局 CSS”“Blazor 不适用”并记录理由。
+   - 仅迁移后两类中确有必要的站点样式；保留响应式、亮暗主题和 reduced-motion 行为，避免复制整份 Dumi 全局 CSS或覆盖 v6 组件规则。
+   - 为每个迁移模块建立至少一项结构或视觉回归检查。
 
 11. [ ] 接入 CI 生成、exact gate、构建和测试门禁
    - 添加 Node/.NET 生成与测试命令，先验证 React 基准，再执行 Blazor exact CSS、确定性生成、组件/API、SSR、文档和视觉快照测试。
@@ -148,3 +200,14 @@
 11.1. [ ] 添加性能阈值测试和生成提交校验
    - 将 CSS 体积、生成耗时、SSR 导出耗时和运行时变量切换耗时作为可配置测试阈值，并验证生成元数据随代码提交更新。
    - 覆盖需求 11.5-11.7。
+
+11.2. [ ] 增加文档站迁移回归门禁
+   - 对首页 ThemePreview、主题组合切换、Happy Work Effect/reduced-motion、Semantic DOM preview 和组件 GitHub 链接执行自动化构建/交互测试。
+   - 确认 light/dark 与 compact 组合只加载第一阶段允许的预置 CSS/状态，不触发 Design Token 动态编译。
+
+12. [ ] 第三阶段：从 React 测试源码完整迁移到 bUnit
+   - 在第一阶段 DOM/class/HTML 结构和第二阶段 Token/主题编译稳定后，提取全部 React 测试源码为中间 JSON。
+   - 保留每个 React 测试的渲染步骤、参数变化、交互动作、异步等待、断言类型、断言值和原始源码，并按组件拆分生成 Blazor 测试文件。
+   - 复杂交互必须生成真实 bUnit 测试；不存在的组件或无法映射的 API 必须有明确的失败状态和迁移报告，不得使用占位字符串、`Assert.True` 或静默 Skip。
+   - 支持清理并重新生成全部测试文件，验证生成文件均来自脚本且与 React 测试一一对应。
+   - 覆盖需求 11.2、11.4、11.8；不作为第一阶段合并门禁。

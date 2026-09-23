@@ -123,7 +123,7 @@
           <span class="ant-select-selection-search">
             <input @ref="_inputRef"
                    autocomplete="off"
-                   class="ant-select-selection-search-input"
+                   class="ant-select-selection-search-input ant-select-input"
                    readonly="@(!ShowSearch)"
                    role="combobox"
                    aria-haspopup="listbox"
@@ -140,7 +140,7 @@
           }
           else
           {
-            <span class="ant-select-selection-item" title="@_displayText">@_displayText</span>
+            <span class="ant-select-selection-item ant-select-content" title="@_displayText">@_displayText</span>
           }
         </div>
         <span class="ant-select-arrow" unselectable="on" aria-hidden="true" style="user-select: none;">

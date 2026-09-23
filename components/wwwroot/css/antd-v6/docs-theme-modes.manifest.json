@@ -1,0 +1,23 @@
+{
+  "upstream": {
+    "repository": "ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "version": "6.6.4"
+  },
+  "generator": {
+    "name": "@ant-design-blazor/react-css-baseline",
+    "version": "0.1.0"
+  },
+  "modes": [
+    {
+      "key": "light-compact",
+      "file": "light-compact.css",
+      "sha256": "c3c47a419b05f1a71714ade157ed4a5936e79ec36ccaf25981487b4ccb1badf7"
+    },
+    {
+      "key": "dark-compact",
+      "file": "dark-compact.css",
+      "sha256": "1bdffe7704ca6106c15643846ae5d1d5ed132cf3046f24e8b8aa1055ff2cc191"
+    }
+  ]
+}

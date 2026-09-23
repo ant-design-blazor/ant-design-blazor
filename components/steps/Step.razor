@@ -3,7 +3,7 @@
 @inherits AntDomComponentBase
 
 <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-    <div class="ant-steps-item-container" @onclick="@HandleClick" tabindex="@GetTabIndex()" @attributes="@_containerAttributes">
+    <div class="ant-steps-item-container ant-steps-item-wrapper" @onclick="@HandleClick" tabindex="@GetTabIndex()" @attributes="@_containerAttributes">
         @if (!Last)
         {
             <div class="ant-steps-item-tail"></div>
@@ -34,23 +34,25 @@
                 </span>
             }
         </div>
-        <div class="ant-steps-item-content">
-            <div class="ant-steps-item-title">
-                @if (TitleTemplate != null)@TitleTemplate else @Title
-
-                @if (SubtitleTemplate != null || Subtitle != null)
+        <div class="ant-steps-item-section">
+            <div class="ant-steps-item-header">
+                <div class="ant-steps-item-title">
+                    @if (TitleTemplate != null)@TitleTemplate else @Title
+                    @if (SubtitleTemplate != null || Subtitle != null)
+                    {
+                        <div class="ant-steps-item-subtitle">
+                            @if (SubtitleTemplate != null)@SubtitleTemplate else @Subtitle
+                        </div>
+                    }
+                </div>
+                @if (!Last) { <div class="ant-steps-item-rail"></div> }
+            </div>
+            <div class="ant-steps-item-content">
+                @if (DescriptionTemplate != null || Description != null)
                 {
-                    <div class="ant-steps-item-subtitle">
-                        @if (SubtitleTemplate != null)@SubtitleTemplate else @Subtitle
-                    </div>
+                    @if (DescriptionTemplate != null)@DescriptionTemplate else @Description
                 }
             </div>
-            @if (DescriptionTemplate != null || Description != null)
-            {
-                <div class="ant-steps-item-description">
-                    @if (DescriptionTemplate != null)@DescriptionTemplate else @Description
-                </div>
-            }
         </div>
     </div>
 </div>

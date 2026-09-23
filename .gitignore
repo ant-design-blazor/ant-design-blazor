@@ -343,10 +343,17 @@ ASALocalRun/
 healthchecksdb
 /components/wwwroot/less
 /components/wwwroot/css
+!/components/wwwroot/css/
+/components/wwwroot/css/*
+!/components/wwwroot/css/antd-v6/
+!/components/wwwroot/css/antd-v6/**
 /components/wwwroot/js/ant-design-blazor.js
 /components/wwwroot/js/ant-design-blazor.js.map
 /components/wwwroot/js/split/**/*.js.map
 /components/wwwroot/js/split/**/*.js
+
+# Legacy React DOM baseline output; GeneratedReactSource is the authoritative suite.
+/tests/AntDesign.Tests/Generated/
 /components/AntDesign.xml
 /site/**/wwwroot/docs
 /site/AntDesign.Docs/wwwroot/css/docs.css
@@ -355,6 +362,8 @@ healthchecksdb
 coverage.cobertura.xml
 scripts/previewEditor/index.html
 /site/AntDesign.Docs/wwwroot/css
+!/site/AntDesign.Docs/wwwroot/css/
+!/site/AntDesign.Docs/wwwroot/css/docs-layout.css
 /.nyc_output
 /coverage
 /tests/AntDesign.Tests.Js/coverage.xml

@@ -1,0 +1,28 @@
+@namespace AntDesign
+@typeparam TItem
+@inherits AntDomComponentBase
+
+<div class="ant-listy @Class" style="@Style">
+    @if (DataSource != null)
+    {
+        @foreach (var group in GetGroups())
+        {
+            <div class="ant-listy-group-section" data-key="group:@group.Key">
+                @if (GroupHeaderTemplate != null)
+                {
+                    <div class="ant-listy-group-header">@GroupHeaderTemplate(group.Key)</div>
+                }
+                @foreach (var item in group.Items)
+                {
+                    <div class="ant-listy-item" data-key="item:@item.Index">
+                        @if (ItemTemplate != null) { @ItemTemplate(item.Value) } else { @item.Value }
+                    </div>
+                }
+            </div>
+        }
+    }
+    else
+    {
+        @ChildContent
+    }
+</div>

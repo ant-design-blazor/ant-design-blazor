@@ -29,14 +29,14 @@
                  OnOverlayMouseLeave="OnOverlayMouseLeave"
                  OnOverlayMouseUp="OnOverlayMouseUp">
 
-            <div class="ant-popover-content">
-                <div class="ant-popover-arrow">
-                    <span class="ant-popover-arrow-content"></span>
-                </div>
-                <div class="ant-popover-inner" role="tooltip">
-                    <div class="ant-popover-inner-content">
-                        <div class="ant-popover-message">
-                            <span class="ant-popover-message-icon">
+            <div class="ant-popover-arrow ant-popconfirm-arrow">
+                <span class="ant-popover-arrow-content"></span>
+            </div>
+            <div class="ant-popover-container ant-popconfirm-container" role="tooltip">
+                <div class="ant-popover-content">
+                    <div class="ant-popconfirm-inner-content">
+                        <div class="ant-popconfirm-message">
+                            <span class="ant-popconfirm-message-icon">
                                 @if (IconTemplate != null)
                                 {
                                     @IconTemplate
@@ -46,11 +46,13 @@
                                     <Icon Type="@Icon" />
                                 }
                             </span>
-                            <div class="ant-popover-message-title">
-                                @if (TitleTemplate != null)@TitleTemplate else @Title
+                            <div class="ant-popconfirm-message-text">
+                                <div class="ant-popconfirm-title">
+                                    @if (TitleTemplate != null)@TitleTemplate else @Title
+                                </div>
                             </div>
                         </div>
-                        <div class="ant-popover-buttons">
+                        <div class="ant-popconfirm-buttons">
                             @if (CancelButtonProps != null)
                             {
                                 <Button OnClick="@Cancel" Size="@CancelButtonProps.Size"

@@ -17,14 +17,14 @@
                 <Icon Type="@IconType" Theme="@(string.IsNullOrWhiteSpace(Description) ? IconThemeType.Fill : IconThemeType.Outline)" Class="ant-alert-icon" />
             }
         }
-        <div class="ant-alert-content">
+        <div class="ant-alert-section">
             @if (MessageTemplate != null)
             {
-                <div class="ant-alert-message">@MessageTemplate</div>
+                <div class="ant-alert-title">@MessageTemplate</div>
             }
             else if (!string.IsNullOrEmpty(Message))
             {
-                <div class="ant-alert-message">@Message</div>
+                <div class="ant-alert-title">@Message</div>
             }
 
             @if (ChildContent != null)

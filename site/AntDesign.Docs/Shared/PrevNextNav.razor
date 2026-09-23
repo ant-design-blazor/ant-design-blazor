@@ -1,4 +1,4 @@
-﻿<section class="prev-next-nav">
+﻿<section class="@_styles["root"]">
     @if (prev != null)
     {
         <NavLink class="prev-page" href="@($"{MainLayout?.CurrentLanguage}/{prev.Url}")">
@@ -27,8 +27,42 @@
     }
 </section>
 
+<style>@((MarkupString)_styles.CssText)</style>
+
 @code
 {
+    private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-prev-next", new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["root"] = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["width"] = "calc(100% - 128px)", ["marginRight"] = 64, ["marginLeft"] = 64, ["overflow"] = "hidden", ["fontSize"] = 14,
+            ["borderTop"] = "1px solid rgba(0, 0, 0, 0.06)",
+            ["& > .prev-page, & > .next-page"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "left", ["width"] = "50%", ["height"] = 72, ["lineHeight"] = "72px", ["textDecoration"] = "none" },
+            [".ant-row-rtl & > .prev-page, .ant-row-rtl & > .next-page"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "right" },
+            [".ant-row-rtl & .footer-nav-icon-before, .ant-row-rtl & .footer-nav-icon-after"] = new System.Collections.Generic.Dictionary<string, object> { ["transform"] = "rotate(180deg)" },
+            ["& > a.prev-page .footer-nav-icon-before"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["left"] = 0, ["marginRight"] = "1em", ["color"] = "rgba(0, 0, 0, 0.45)", ["fontSize"] = 12, ["transition"] = "all 0.3s" },
+            [".ant-row-rtl & > a.prev-page .footer-nav-icon-before"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = 0, ["left"] = "auto", ["marginRight"] = 0, ["marginLeft"] = "1em" },
+            ["& > a.prev-page .footer-nav-icon-after"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
+            ["& > a.prev-page:hover .footer-nav-icon-before"] = new System.Collections.Generic.Dictionary<string, object> { ["left"] = -3, ["color"] = "var(--ant-primary-color)" },
+            [".ant-row-rtl & > a.prev-page:hover .footer-nav-icon-before"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = -3, ["left"] = "auto" },
+            ["& > .next-page"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "right", ["textAlign"] = "right" },
+            [".ant-row-rtl & > .next-page"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "left", ["textAlign"] = "left" },
+            ["& > .next-page .footer-nav-icon-after"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["right"] = 0, ["marginLeft"] = "1em", ["color"] = "rgba(0, 0, 0, 0.45)", ["fontSize"] = 12, ["transition"] = "all 0.3s" },
+            [".ant-row-rtl & > .next-page .footer-nav-icon-after"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = "auto", ["left"] = 0, ["marginRight"] = "1em", ["marginLeft"] = 0 },
+            ["& > .next-page .footer-nav-icon-before"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
+            ["& > .next-page:hover .footer-nav-icon-after"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = -3, ["color"] = "var(--ant-primary-color)" },
+            [".ant-row-rtl & > .next-page:hover .footer-nav-icon-after"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = "auto", ["left"] = -3 },
+            ["& .chinese"] = new System.Collections.Generic.Dictionary<string, object> { ["marginLeft"] = "0.5em" },
+            ["[data-theme='dark'] & > a.prev-page .footer-nav-icon-before, [data-theme='dark'] & > .next-page .footer-nav-icon-after"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(255, 255, 255, 0.45)" },
+            ["[data-theme='dark'] & > a.prev-page:hover .footer-nav-icon-before, [data-theme='dark'] & > .next-page:hover .footer-nav-icon-after"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-primary-color)" },
+            ["@media only screen and (max-width: 767.99px)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["&"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "calc(100% - 32px)", ["marginLeft"] = 16 },
+                [".ant-row-rtl &"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 16, ["marginLeft"] = 64 }
+            }
+        }
+    });
+
     [CascadingParameter]
     public MainLayout MainLayout { get; set; }
 

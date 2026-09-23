@@ -6,16 +6,18 @@
     <span class="@ClassMapper.Class" style="@_style" id="@Id" @ref="Ref" @onclick="ClickTag">
         @if (IconTemplate != null)
         {
-            @IconTemplate
+            <span class="ant-tag-icon">@IconTemplate</span>
         }
         else if (!string.IsNullOrEmpty(Icon))
         {
-            <Icon Type="@Icon" Theme="@IconTheme"></Icon>
+            <span class="ant-tag-icon"><Icon Type="@Icon" Theme="@IconTheme"></Icon></span>
         }
-        @ChildContent
+        <span class="ant-tag-content">@ChildContent</span>
         @if (Closable)
         {
-            <Icon Type="close" TabIndex="-1" OnClick="CloseTag" StopPropagation="true" />
+            <span class="ant-tag-close">
+                <Icon Type="close" TabIndex="-1" OnClick="CloseTag" StopPropagation="true" />
+            </span>
         }
     </span>
 }

@@ -6,9 +6,9 @@
     {
         @if (Steps == 0)
         {
-            <div class="ant-progress-outer">
-                <div class="ant-progress-inner" style="background-color: @TrailColor">
-                    <div class="ant-progress-bg" style="@_bgStyle">
+            <div class="ant-progress-body ant-progress-outer">
+                <div class="ant-progress-rail ant-progress-inner" style="background-color: @TrailColor">
+                    <div class="ant-progress-track ant-progress-bg" style="@_bgStyle">
                     </div>
                     @if (SuccessPercent != 0)
                     {
@@ -16,6 +16,25 @@
                         </div>
                     }
                 </div>
+                @if (ShowInfo)
+                {
+                    if (Status == ProgressStatus.Success)
+                    {
+                        <span class="ant-progress-indicator ant-progress-text">
+                            <Icon Type="check-circle" Theme="@IconThemeType.Fill" />
+                        </span>
+                    }
+                    else if (Status == ProgressStatus.Exception)
+                    {
+                        <span class="ant-progress-indicator ant-progress-text">
+                            <Icon Type="close-circle" Theme="@IconThemeType.Fill" />
+                        </span>
+                    }
+                    else
+                    {
+                        <span title="@Format(Percent)" class="ant-progress-indicator ant-progress-text">@Format(Percent)</span>
+                    }
+                }
             </div>
         }
         else
@@ -47,7 +66,7 @@
                 }
                 else
                 {
-                    <span title="@Format(Percent)" class="ant-progress-text">@Format(Percent)</span>
+                    <span title="@Format(Percent)" class="ant-progress-indicator ant-progress-text">@Format(Percent)</span>
                 }
             </div>
         }
@@ -122,23 +141,4 @@
         </div>
     }
 
-    @if (ShowInfo && Type == ProgressType.Line && Steps == 0)
-    {
-        if (Status == ProgressStatus.Success)
-        {
-            <span class="ant-progress-text">
-                <Icon Type="check-circle" Theme="@IconThemeType.Fill" />
-            </span>
-        }
-        else if (Status == ProgressStatus.Exception)
-        {
-            <span class="ant-progress-text">
-                <Icon Type="close-circle" Theme="@IconThemeType.Fill" />
-            </span>
-        }
-        else
-        {
-            <span title="@Format(Percent)" class="ant-progress-text">@Format(Percent)</span>
-        }
-    }
 </div>

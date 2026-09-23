@@ -32,20 +32,18 @@
                  OnOverlayMouseUp="OnOverlayMouseUp">
             @if (TitleTemplate != null || !string.IsNullOrWhiteSpace(Title))
             {
-                <div class="ant-tooltip-content">
-                    <div class="ant-tooltip-arrow">
-                        <span class="ant-tooltip-arrow-content"></span>
-                    </div>
-                    <div class="ant-tooltip-inner" role="tooltip">
-                        @if (TitleTemplate != null)
-                        {
-                            @TitleTemplate
-                        }
-                        else
-                        {
-                            @Title
-                        }
-                    </div>
+                <div class="ant-tooltip-arrow">
+                    <span class="ant-tooltip-arrow-content"></span>
+                </div>
+                <div class="ant-tooltip-container" role="tooltip">
+                    @if (TitleTemplate != null)
+                    {
+                        @TitleTemplate
+                    }
+                    else
+                    {
+                        @Title
+                    }
                 </div>
             }
         </Overlay>

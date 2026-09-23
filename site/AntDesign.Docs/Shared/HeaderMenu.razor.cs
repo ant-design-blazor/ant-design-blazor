@@ -13,6 +13,8 @@ namespace AntDesign.Docs.Shared
 {
     public partial class HeaderMenu : ComponentBase
     {
+        private const string VersionLabel = "6.6.4";
+
         [Parameter] public bool IsMobile { get; set; }
 
         [Inject] private DemoService DemoService { get; set; }

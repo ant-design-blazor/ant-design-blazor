@@ -13,6 +13,27 @@
 - 通过上游 CSS 基准与 Blazor CSS 的规范化差异校验实现 1:1 迁移门禁。
 - 在核心组件样式完成后实现 Semantic DOM 文档展示和首页 13 个主题的演示。
 
+## 分阶段设计边界
+
+当前实现阶段是第一阶段，交付边界如下：
+
+1. React v6 CSS 编译结果是 CSS、class、Semantic DOM 和 HTML 结构的权威基准；默认主题及现有 13 个预置主题通过脚本生成静态 CSS。
+2. 第一阶段解决现有组件的 CSS 接入、DOM/class 结构适配和 v6 文档站迁移。文档迁移顺序固定为：先让页面使用 v6 组件 CSS 和 Blazor 组件，再按 Dumi 源文件逐项迁移其独有的布局/站点 CSS，避免旧文档样式把 v6 组件外观覆盖回旧版本。
+3. 文档站需包含首页 ThemePreview、Semantic DOM preview、组件 GitHub 源码/元信息入口、文档主题切换和 Happy Work Effect。主题切换只组合已有 light/dark 与 compact 预置样式（compact 可叠加到 light 或 dark），保存并恢复用户选择；不在第一阶段编译用户自定义 Token。Happy Work Effect 应由显式开关控制，并尊重系统 reduced-motion 设置。
+4. 第一阶段的主题值不支持任意运行时动态修改；Design Token/算法、React v4→v6 Props 命名迁移和动态编译不在本阶段实现。
+5. 第二阶段再实现 Design Token、算法、Token→CSS 编译、React v6 Props 命名/API 迁移、旧属性弃用标记、ConfigProvider 主题对象和运行时 CSS Variable 覆盖。该阶段允许手动迁移 Token/算法，但必须保留 React 来源、映射关系和校验结果。
+6. 第三阶段才进行 React 测试源码到 bUnit 的完整迁移。测试转换器只能消费前两个阶段已经稳定的组件 API、DOM 结构、CSS class 和主题产物，不能反过来决定组件实现。
+
+因此，第一阶段的 exact gate 以 React 编译 CSS、现有主题 CSS、组件 HTML/class/Semantic DOM 结构为主；完整 React 测试迁移不是第一阶段的阻塞条件。
+
+### 第二阶段 API 命名迁移规则
+
+- React v6 Props 是新属性命名和语义的权威来源；Blazor 参数使用 PascalCase 映射，但必须保留 React 属性的语义边界，不按名称相似度猜测类型。
+- v4→v6 的变化必须形成机器可读的映射表，至少记录 React v4 名称、React v6 名称、Blazor 参数名、变化类型、兼容策略和来源。
+- 已被 v6 替代的旧 Blazor 参数保留兼容入口，并使用 `[Obsolete("Use ... instead")]` 指向新参数；旧入口只能转发到新入口，不能产生另一套 CSS 或 DOM 行为。
+- 删除、合并或无法保持语义兼容的属性必须在迁移报告中列为 breaking/unsupported，不得静默映射到近似属性。
+- API 命名校验与 Design Token/API 校验共同构成第二阶段门禁；第一阶段不因 v4→v6 API 差异数量过大而阻塞。
+
 关键取舍：组件 CSS 与主题变量分离。组件 CSS 尽可能只生成一次，主题只负责作用域内的变量值；预构建主题通过 class/data 属性切换，动态 Token 通过受控的运行时变量覆盖。这样兼顾体积、切换性能和嵌套主题隔离。
 
 CSS 一致性是硬门禁：固定上游 revision 下，React/Ant Design 原生成器编译出的 CSS 字符串先作为不可手工修改的基准快照保存；Blazor 编译器必须对同一输入生成完全一致的 CSS 字符串。结构化 diff 只用于定位差异，不能用格式容差替代最终的字节级相等校验。

@@ -9,8 +9,9 @@
     <link rel="icon" href="logo.png" type="image/x-icon" />
     <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
     <link rel="stylesheet" href="@("https://fastly.jsdelivr.net/npm/@docsearch/css@3")" />
-    <link href="_content/AntDesign.Docs/css/default.css" rel="stylesheet" />
-    <link antblazor-css />
+    <link id="docs-theme-v6" href="_content/AntDesign/css/antd-v6/light.css" rel="stylesheet" />
+    <link href="_content/AntDesign.Docs/css/docs-layout.css" rel="stylesheet" />
+    <link href="_content/AntDesign.Docs/css/dumi-docs.css" rel="stylesheet" />
 
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="AntDesign.Docs.WebApp.styles.css" />
@@ -18,15 +19,19 @@
     <HeadOutlet @rendermode="InteractiveAuto" />
 </head>
 
-<body>
+<body class="css-var-_R_29n_">
     <app>
-        <Routes @rendermode="InteractiveAuto" />
+        @* The WebAssembly host registers AntDesign.Docs.App on the app root.
+           Keeping a second InteractiveAuto Routes marker here causes .NET 10
+           to retain the prerendered tree and append a second client tree. *@
+        <Routes />
     </app>
 
     <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
     @* <script src="_content/AntDesign/js/ant-design-blazor.js"></script> *@
     <script src="_content/AntDesign.Docs/js/prism.js"></script>
+    <link rel="stylesheet" href="_content/AntDesign.Docs/css/happy-work.css" />
     <script>
         window.XPrism = {};
         window.XPrism.highlight = function (code, language) {
@@ -63,27 +68,7 @@
         }
     </script>
     <script antblazor-js></script>
-    @* <script src="/blazor.web.js" autostart="false"></script> *@
-    <script src="/blazor.web.patched.js" autostart="false"></script>
-    <script>
-        Blazor.start({
-            webAssembly: {
-                loadBootResource: function (type, name, defaultUri, integrity) {
-                    if (type === 'dotnetjs' && name === 'dotnet.js') {
-                        return '/dotnet.patched.js';
-                    }
-                    return `_framework/${name}`;
-                },
-                configureRuntime: (builder) => {
-
-                    builder.withConfig({
-                        maxParallelDownloads: 2, // Adjust this to change the WebAssembly resource throttling amount
-                    });
-
-                },
-            },
-        });
-    </script>
+    <script src="/_framework/blazor.web.js"></script>
 </body>
 
 </html>

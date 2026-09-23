@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AntDesign.Docs.Services;
 using AntDesign.Docs.Shared;
@@ -56,12 +57,35 @@ namespace AntDesign.Docs.Pages
 
         private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/{_filePath}";
 
+        private string ComponentSourceUrl => $"https://github.com/ant-design/ant-design/tree/master/components/{ToKebabCase(_demoComponent?.Title)}";
+
         private List<DemoItem> _demos = [];
 
         private (string Name, string Title)[] _anchors = [];
 
         private string _currentPageName;
         private string _currentLocale;
+
+        private static string ToKebabCase(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return string.Empty;
+
+            var result = new StringBuilder(value.Length + 8);
+            for (var index = 0; index < value.Length; index++)
+            {
+                var character = value[index];
+                if (char.IsUpper(character) && index > 0 &&
+                    (char.IsLower(value[index - 1]) || char.IsDigit(value[index - 1]) ||
+                     (char.IsUpper(value[index - 1]) && index + 1 < value.Length && char.IsLower(value[index + 1]))))
+                {
+                    result.Append('-');
+                }
+
+                result.Append(char.ToLowerInvariant(character));
+            }
+
+            return result.ToString();
+        }
 
         protected override async Task OnInitializedAsync()
         {
@@ -105,7 +129,10 @@ namespace AntDesign.Docs.Pages
         {
             var fullPageName = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             fullPageName = fullPageName.IndexOf('/') > 0 ? fullPageName.Substring(fullPageName.IndexOf('/') + 1) : fullPageName;
-            fullPageName = fullPageName.IndexOf('#') > 0 ? fullPageName.Substring(0, fullPageName.IndexOf('#')) : fullPageName;
+            // Query strings are useful for cache busting and browser verification,
+            // but they are not part of the metadata key (components/colorpicker).
+            var suffixIndex = fullPageName.IndexOfAny(['?', '#']);
+            fullPageName = suffixIndex >= 0 ? fullPageName.Substring(0, suffixIndex) : fullPageName;
             if (fullPageName.StartsWith("docs"))
             {
                 return;
@@ -122,9 +149,9 @@ namespace AntDesign.Docs.Pages
                 {
                     var menus = await DemoService.GetMenuAsync();
                     var current = menus.FirstOrDefault(x => x.Url == fullPageName.ToLowerInvariant());
-                    var subPath = current.Children[0].Type == "menuItem" ? current.Children[0].Url : current.Children[0].Children[0].Url;
-                    if (current != null)
+                    if (current?.Children is { Length: > 0 })
                     {
+                        var subPath = current.Children[0].Type == "menuItem" ? current.Children[0].Url : current.Children[0].Children[0].Url;
                         NavigationManager.NavigateTo($"{CurrentLanguage}/{subPath}");
                     }
                 }

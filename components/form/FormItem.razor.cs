@@ -212,6 +212,10 @@ namespace AntDesign
         [Parameter]
         public string Help { get; set; }
 
+        /// <summary>Additional content rendered below the form control.</summary>
+        [Parameter]
+        public RenderFragment Extra { get; set; }
+
         /// <summary>
         /// FormItem Help Tooltip information
         /// </summary>

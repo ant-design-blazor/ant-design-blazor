@@ -1,0 +1,207 @@
+@using AntDesign
+@using AntDesign.Docs.Services
+
+<style>@((MarkupString)_styles.CssText)</style>
+<section class="@GetClass("home-theme-preview", "root")">
+    <div class="@GetClass("home-theme-heading", "heading")">
+        <div>
+            <span class="@GetClass("home-theme-eyebrow", "eyebrow")">Ant Design v6</span>
+            <h2>@Localizer["app.home.theme-title"]</h2>
+            <p>@Localizer["app.home.theme-description"]</p>
+        </div>
+        <div class="@GetClass("home-theme-controls", "controls")">
+            <div class="@GetClass("home-theme-tabs", "previewTabs")" role="tablist" aria-label="Preview mode">
+                <button class="@GetTabClass(!_dashboard)" @onclick="() => _dashboard = false">Components</button>
+                <button class="@GetTabClass(_dashboard)" @onclick="() => _dashboard = true">Dashboard</button>
+            </div>
+            <div class="@GetClass("home-theme-swatches", "swatches")" role="tablist" aria-label="Theme">
+                @foreach (var theme in Themes)
+                {
+                    <button class="@GetSwatchClass(theme.Key)"
+                            title="@theme.Label" aria-label="@theme.Label"
+                            aria-selected="@(_selected == theme.Key)"
+                            @onclick="() => SelectTheme(theme.Key)"></button>
+                }
+            </div>
+            <div class="@GetClass("home-theme-actions", "actions")">
+                <button title="@Localizer["app.home.theme-copy"]" @onclick="CopyThemeAsync">▣</button>
+                <a title="@Localizer["app.home.theme-edit"]" href="/theme-migration-preview" target="_blank" rel="noopener noreferrer">✎</a>
+                @if (_copied)
+                {
+                    <span role="status">@Localizer["app.home.theme-copied"]</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (!_dashboard)
+    {
+        <div class="@GetClass("home-theme-components", "components")">
+            <div class="@GetClass("home-theme-demo-card", "demoCard")">
+                <div class="@GetClass("home-theme-card-header", "cardHeader")"><span class="@GetClass("home-theme-avatar", "avatar")">A</span><div><strong>Ant Design</strong><small>Design system preview</small></div><span class="@GetClass("home-theme-more", "more")">•••</span></div>
+                <h3>Build better products</h3>
+                <p>Consistent, accessible components for modern applications.</p>
+                <div class="@GetClass("home-theme-button-row", "buttonRow")">
+                    <Button Type="ButtonType.Primary">Primary</Button><Button>Default</Button><Button Type="ButtonType.Dashed">Dashed</Button>
+                </div>
+                <Alert Message="Your changes have been saved." Type="AlertType.Success" ShowIcon="true" />
+                <div class="@GetClass("home-theme-progress", "progress")"><span></span></div>
+            </div>
+            <div class="@GetClass("home-theme-demo-card home-theme-form", "demoCard", "formCard")">
+                <h3>Form controls</h3>
+                <label>Project name<input class="ant-input" value="Ant Design Blazor" readonly /></label>
+                <label>Visibility<select class="ant-select-selector"><option>Public</option></select></label>
+                <div class="@GetClass("home-theme-check", "check")"><span>✓</span> Enable notifications</div>
+                <div class="@GetClass("home-theme-switch", "switch")"><span>Automatic updates</span><i></i></div>
+            </div>
+            <div class="@GetClass("home-theme-demo-card home-theme-side-card", "demoCard", "sideCard")">
+                <div class="@GetClass("home-theme-stat-label", "statLabel")">Total activity</div><strong class="@GetClass("home-theme-stat", "stat")">2,486</strong><span class="@GetClass("home-theme-trend", "trend")">↗ 12.8% this month</span>
+                <div class="@GetClass("home-theme-bars", "bars")"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="@GetClass("home-theme-dashboard", "dashboard")">
+            <aside><strong>Workspace</strong><span class="active">Overview</span><span>Projects</span><span>Analytics</span><span>Settings</span></aside>
+            <div class="@GetClass("home-theme-dashboard-content", "dashboardContent")"><h3>Overview</h3><div class="@GetClass("home-theme-metrics", "metrics")"><article><small>Total users</small><strong>8,942</strong><span>↗ 8.2%</span></article><article><small>Active projects</small><strong>36</strong><span>↗ 4.6%</span></article><article><small>Completion</small><strong>78.4%</strong><span>↗ 2.1%</span></article></div><div class="@GetClass("home-theme-chart", "chart")"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+        </div>
+    }
+</section>
+
+@code {
+    [Inject] private Microsoft.Extensions.Localization.IStringLocalizer Localizer { get; set; } = default!;
+    [Inject] private Microsoft.JSInterop.IJSRuntime JS { get; set; } = default!;
+    private string _selected = "light";
+    private bool _dashboard;
+    private bool _copied;
+    private CssStyleSheet _styles = CreatePreviewStyles(Themes[0]);
+    private ThemeSwatch SelectedTheme => Themes.First(item => item.Key == _selected);
+
+    private string GetClass(string existing, params string[] generated) => $"{existing} {string.Join(" ", generated.Select(name => _styles[name]))}";
+    private string GetTabClass(bool selected) => $"{(selected ? "selected" : string.Empty)} {_styles["tab"]}";
+    private string GetSwatchClass(string key) => $"home-theme-swatch {_styles["themeBlock"]} {_styles[$"swatch-{key}"]} {(key == _selected ? _styles["active"] : string.Empty)}";
+
+    private void SelectTheme(string key)
+    {
+        _selected = key;
+        _styles = CreatePreviewStyles(SelectedTheme);
+    }
+
+    private static CssStyleSheet CreatePreviewStyles(ThemeSwatch theme)
+    {
+        var rules = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["root"] = Css(("--home-theme-primary", theme.Primary), ("--home-theme-bg", theme.Background), ("--home-theme-text", theme.Text), ("--home-theme-border", theme.Border), ("--home-theme-muted", theme.Muted),
+                ("--ant-color-primary", theme.Primary), ("--ant-color-bg-container", theme.Background), ("--ant-color-text", theme.Text), ("--ant-color-border", theme.Border),
+                ("--preview-surface", "var(--home-theme-bg)"), ("--preview-text", "var(--home-theme-text)"), ("--preview-border", "var(--home-theme-border)"),
+                ("boxSizing", "border-box"), ("width", "100%"), ("maxWidth", 1320), ("margin", "52px 12px 64px"), ("marginInline", "auto"), ("padding", 32),
+                ("border", "1px solid var(--preview-border)"), ("borderRadius", 20), ("background", "var(--preview-surface)"), ("color", "var(--preview-text)"),
+                ("boxShadow", "0 16px 48px rgba(0,0,0,.07)"), ("transition", "background .2s, color .2s"),
+                ("@media(max-width:900px)", Css(("maxWidth", "100%"))),
+                ("@media(max-width:600px)", Css(("margin", "36px 8px"), ("padding", "20px 14px")))),
+            ["heading"] = Css(("display", "flex"), ("width", "100%"), ("alignItems", "flex-end"), ("justifyContent", "space-between"), ("gap", 24), ("marginBottom", 24),
+                ("& h2", Css(("margin", "5px 0"), ("fontSize", 28), ("fontWeight", 600), ("color", "var(--preview-text)"))),
+                ("& p", Css(("margin", 0), ("color", "var(--home-theme-muted)"))),
+                ("@media(max-width:900px)", Css(("alignItems", "flex-start"), ("flexDirection", "column"))),
+                ("@media(max-width:600px)", Css(("& h2", Css(("fontSize", 22)))))),
+            ["eyebrow"] = Css(("color", "var(--home-theme-primary)"), ("fontSize", 12), ("fontWeight", 700), ("letterSpacing", ".08em"), ("textTransform", "uppercase")),
+            ["controls"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 20), ("@media(max-width:900px)", Css(("width", "100%"), ("justifyContent", "space-between"))),
+                ("@media(max-width:600px)", Css(("alignItems", "flex-start"), ("flexDirection", "column"), ("gap", 15)))),
+            ["actions"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 8), ("& button, & a", Css(("border", 0), ("background", "transparent"), ("color", "var(--home-theme-primary)"), ("cursor", "pointer")))),
+            ["previewTabs"] = Css(("display", "flex"), ("gap", 4), ("padding", 3), ("borderRadius", 100), ("background", "var(--ant-color-fill-quaternary, color-mix(in srgb,var(--home-theme-text) 7%,var(--home-theme-bg)))"),
+                ("@media(max-width:768px)", Css(("width", "60%")))),
+            ["tab"] = Css(("minWidth", 112), ("border", 0), ("borderRadius", 100), ("padding", "7px 14px"), ("background", "transparent"),
+                ("color", "var(--ant-color-text-tertiary, var(--home-theme-muted))"), ("cursor", "pointer"), ("transition", "color .2s, background-color .2s"),
+                ("&.selected", Css(("color", "var(--ant-color-text, var(--home-theme-text))"), ("background", "var(--ant-color-bg-elevated, var(--home-theme-bg))"), ("boxShadow", "0 2px 8px rgba(0,0,0,.08)"))),
+                ("@media(max-width:768px)", Css(("minWidth", 0), ("flex", 1), ("paddingInline", 12), ("fontSize", 16)))),
+            ["swatches"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 9), ("@media(max-width:600px)", Css(("flexWrap", "wrap"), ("gap", 12)))),
+            ["themeBlock"] = Css(("width", 20), ("height", 20), ("padding", 0), ("border", "2px solid var(--home-theme-bg)"), ("borderRadius", "50%"),
+                ("background", "var(--swatch-color)"), ("boxShadow", "0 0 0 1px var(--preview-border)"), ("cursor", "pointer"),
+                ("outline", "2px solid var(--ant-color-bg-layout, var(--home-theme-bg))"), ("transition", "background-color .1s, transform .1s, opacity .1s"),
+                ("&:hover, &:focus-visible", Css(("outline", "2px solid var(--ant-color-primary-border, var(--home-theme-primary))"), ("transform", "scale(1.1)")))),
+            ["active"] = Css(("outline", "2px solid var(--ant-color-primary-border, var(--home-theme-primary))")),
+            ["components"] = Css(("display", "grid"), ("width", "100%"), ("gridTemplateColumns", "1.2fr 1fr .8fr"), ("gap", 16),
+                ("@media(max-width:900px)", Css(("gridTemplateColumns", "1fr 1fr"))), ("@media(max-width:600px)", Css(("gridTemplateColumns", "1fr")))),
+            ["demoCard"] = Css(("minWidth", 0), ("padding", 22), ("border", "1px solid var(--preview-border)"), ("borderRadius", 12),
+                ("background", "color-mix(in srgb,var(--home-theme-bg) 95%,var(--home-theme-primary))"),
+                ("& h3", Css(("margin", "0 0 8px"), ("color", "var(--preview-text)"), ("fontSize", 17))),
+                ("& p", Css(("margin", "0 0 20px"), ("color", "var(--home-theme-muted)"), ("fontSize", 13))),
+                ("& .ant-alert", Css(("marginTop", 16)))),
+            ["cardHeader"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 10), ("marginBottom", 22), ("& small", Css(("fontSize", 11), ("color", "var(--home-theme-muted)")))),
+            ["avatar"] = Css(("display", "grid"), ("width", 36), ("height", 36), ("placeItems", "center"), ("borderRadius", 10), ("background", "var(--home-theme-primary)"), ("color", "white"), ("fontWeight", 700)),
+            ["more"] = Css(("marginLeft", "auto"), ("color", "var(--home-theme-muted)")),
+            ["buttonRow"] = Css(("display", "flex"), ("gap", 8), ("flexWrap", "wrap"), ("marginBottom", 18),
+                ("& .ant-btn", Css(("padding", "7px 12px"), ("border", "1px solid var(--preview-border)"), ("borderRadius", 6), ("background", "var(--home-theme-bg)"), ("color", "var(--preview-text)"))),
+                ("& .ant-btn-primary", Css(("borderColor", "var(--home-theme-primary)"), ("background", "var(--home-theme-primary)"), ("color", "#fff"))),
+                ("& .ant-btn-dashed", Css(("borderStyle", "dashed")))),
+            ["progress"] = Css(("height", 6), ("marginTop", 18), ("borderRadius", 8), ("background", "color-mix(in srgb,var(--home-theme-text) 10%,var(--home-theme-bg))"), ("overflow", "hidden"),
+                ("& span", Css(("display", "block"), ("width", "72%"), ("height", "100%"), ("borderRadius", "inherit"), ("background", "var(--home-theme-primary)")))),
+            ["formCard"] = Css(("& label", Css(("display", "block"), ("margin", "12px 0"), ("color", "var(--home-theme-muted)"), ("fontSize", 12))),
+                ("& input, & select", Css(("display", "block"), ("width", "100%"), ("marginTop", 6), ("padding", "8px 10px"), ("border", "1px solid var(--preview-border)"), ("borderRadius", 6), ("background", "var(--home-theme-bg)"), ("color", "var(--preview-text)")))),
+            ["check"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 8), ("marginTop", 16), ("fontSize", 13),
+                ("& span", Css(("display", "grid"), ("width", 16), ("height", 16), ("placeItems", "center"), ("borderRadius", 4), ("background", "var(--home-theme-primary)"), ("color", "white")))),
+            ["switch"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 8), ("marginTop", 16), ("fontSize", 13),
+                ("& i", Css(("width", 32), ("height", 18), ("borderRadius", 20), ("background", "var(--home-theme-primary)"))),
+                ("& i::after", Css(("display", "block"), ("width", 14), ("height", 14), ("margin", "2px 0 0 16px"), ("borderRadius", "50%"), ("background", "white"), ("content", "\"\"")))),
+            ["statLabel"] = Css(("display", "block"), ("color", "var(--home-theme-muted)"), ("fontSize", 12)),
+            ["stat"] = Css(("display", "block"), ("margin", "8px 0"), ("fontSize", 32)),
+            ["trend"] = Css(("display", "block"), ("color", "#35a16b"), ("fontSize", 12)),
+            ["bars"] = Css(("display", "flex"), ("alignItems", "flex-end"), ("gap", 5), ("height", 90), ("marginTop", 20), ("borderBottom", "1px solid var(--preview-border)"),
+                ("& i", Css(("flex", 1), ("borderRadius", "4px 4px 0 0"), ("background", "color-mix(in srgb,var(--home-theme-primary) 65%,var(--home-theme-bg))"))),
+                ("& i:nth-child(3n)", Css(("height", "40%"))), ("& i:nth-child(3n + 1)", Css(("height", "66%"))), ("& i:nth-child(3n + 2)", Css(("height", "85%"))),
+                ("@media(max-width:900px)", Css(("gridColumn", "1/-1"))), ("@media(max-width:600px)", Css(("gridColumn", "auto")))),
+            ["sideCard"] = Css(("@media(max-width:900px)", Css(("gridColumn", "1/-1"))), ("@media(max-width:600px)", Css(("gridColumn", "auto")))),
+            ["dashboard"] = Css(("display", "grid"), ("width", "100%"), ("gridTemplateColumns", "180px 1fr"), ("minHeight", 250), ("border", "1px solid var(--preview-border)"), ("borderRadius", 12), ("overflow", "hidden"),
+                ("background", "color-mix(in srgb,var(--home-theme-bg) 97%,var(--home-theme-primary))"), ("& aside", Css(("display", "flex"), ("flexDirection", "column"), ("gap", 6), ("padding", 20), ("borderRight", "1px solid var(--preview-border)"))),
+                ("& aside strong", Css(("marginBottom", 12))), ("& aside span", Css(("padding", 8), ("borderRadius", 6), ("color", "var(--home-theme-muted)"), ("fontSize", 13))),
+                ("& aside span.active", Css(("background", "color-mix(in srgb,var(--home-theme-primary) 12%,var(--home-theme-bg))"), ("color", "var(--home-theme-primary)"))),
+                ("@media(max-width:600px)", Css(("gridTemplateColumns", "1fr"), ("& aside", Css(("display", "none")))))),
+            ["dashboardContent"] = Css(("padding", 22), ("& h3", Css(("margin", "0 0 16px")))),
+            ["metrics"] = Css(("display", "grid"), ("gridTemplateColumns", "repeat(3,1fr)"), ("gap", 12),
+                ("& article", Css(("display", "grid"), ("gap", 8), ("padding", 14), ("border", "1px solid var(--preview-border)"), ("borderRadius", 8))),
+                ("& small", Css(("color", "var(--home-theme-muted)"))), ("& strong", Css(("fontSize", 22))), ("& span", Css(("color", "#35a16b"), ("fontSize", 12))),
+                ("@media(max-width:600px)", Css(("gridTemplateColumns", "1fr")))),
+            ["chart"] = Css(("display", "flex"), ("alignItems", "flex-end"), ("gap", 10), ("height", 110), ("marginTop", 18), ("padding", "10px 20px"), ("border", "1px solid var(--preview-border)"), ("borderRadius", 8),
+                ("& span", Css(("height", "45%"), ("flex", 1), ("borderRadius", "4px 4px 0 0"), ("background", "color-mix(in srgb,var(--home-theme-primary) 65%,var(--home-theme-bg))"))),
+                ("& span:nth-child(3n)", Css(("height", "78%"))), ("& span:nth-child(3n + 1)", Css(("height", "60%"))), ("& span:nth-child(3n + 2)", Css(("height", "90%"))),
+                ("@media(max-width:600px)", Css(("height", 90))))
+        };
+        foreach (var swatch in Themes)
+            rules[$"swatch-{swatch.Key}"] = Css(("--swatch-color", swatch.Primary));
+        return CssInJs.CreateStyles("home-theme-preview", rules);
+    }
+
+    private static System.Collections.Generic.Dictionary<string, object> Css(params (string Key, object Value)[] declarations)
+    {
+        var result = new System.Collections.Generic.Dictionary<string, object>(declarations.Length);
+        foreach (var (key, value) in declarations) result[key] = value;
+        return result;
+    }
+
+    private async Task CopyThemeAsync()
+    {
+        var code = $"// {SelectedTheme.Label} preview theme\nconst theme = {{ token: {{ colorPrimary: '{SelectedTheme.Primary}' }} }};";
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", code);
+        _copied = true;
+    }
+
+    private static readonly ThemeSwatch[] Themes =
+    {
+        new("light", "Ant Design", "#1677ff", "#fff", "#1f1f1f", "#d9d9d9", "#8c8c8c"),
+        new("mui", "MUI", "#1976d2", "#fff", "#202124", "#dadce0", "#70757a"),
+        new("shadcn", "shadcn", "#18181b", "#fff", "#18181b", "#e4e4e7", "#71717a"),
+        new("bootstrap", "Bootstrap", "#0d6efd", "#fff", "#212529", "#dee2e6", "#6c757d"),
+        new("cartoon", "Cartoon", "#ff6b6b", "#fffaf0", "#3d2b1f", "#ffcf70", "#92765e"),
+        new("dark", "Dark", "#1668dc", "#141414", "#f5f5f5", "#424242", "#bfbfbf"),
+        new("illustration", "Illustration", "#7c5cff", "#fff", "#2e2459", "#d9d0ff", "#766e91"),
+        new("glass", "Glass", "#1677ff", "#f5f9ff", "#102a43", "#c8dcf0", "#627d98"),
+        new("geek", "Geek", "#00b96b", "#101418", "#e6fffb", "#29343b", "#9fb3ad"),
+        new("lark", "Lark", "#3370ff", "#fff", "#1f2329", "#c9cdd4", "#646a73"),
+        new("blossom", "Blossom", "#eb2f96", "#fff7fb", "#4a2036", "#ffc6e2", "#875f75"),
+        new("v4", "Ant Design V4", "#1890ff", "#fff", "#1f1f1f", "#d9d9d9", "#8c8c8c"),
+        new("serene", "Serene", "#5b8c85", "#f6ffed", "#274c45", "#b7d8d0", "#52776f")
+    };
+
+    private sealed record ThemeSwatch(string Key, string Label, string Primary, string Background, string Text, string Border, string Muted);
+}

@@ -23,7 +23,7 @@
     {
         return@<li class="@ClassMapper.Class" role="menuitem" style="@PaddingStyle @Style" @onclick="HandleOnClick" @key="Key" @ref="refBack.Current">
             @icon
-            <span class="ant-menu-title-content">
+            <span class="@(RootMenu?.PrefixCls ?? "ant-menu")-title-content">
                 @if (RouterLink == null)
                 {
                     @content
@@ -53,13 +53,13 @@
     {
         if (IconTemplate != null)
         {
-            <span role="img" class=" anticon anticon-container">
+            <span role="img" class="anticon anticon-container @MenuItemIconClass">
                 @IconTemplate
             </span>
         }
         else if (Icon != null)
         {
-            <Icon Type="@Icon" />
+            <Icon Type="@Icon" Class="@MenuItemIconClass" />
         }
     }
 

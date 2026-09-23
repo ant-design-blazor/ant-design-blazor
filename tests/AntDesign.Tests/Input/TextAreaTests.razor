@@ -180,9 +180,9 @@
         string value = "0123456789";
         var cut = Render(@<AntDesign.TextArea ShowCount Value=@value Disabled/>);
         //Act
-        var span= cut.Find("span");
+        var wrapper = cut.Find(".ant-input-affix-wrapper");
         //Assert
-        span.ClassList.Should().Contain("ant-input-affix-wrapper-disabled");
+        wrapper.ClassList.Should().Contain("ant-input-affix-wrapper-disabled");
     }
 
     [Fact]

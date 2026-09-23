@@ -1,0 +1,36 @@
+@keyframes ant-docs-happy-target {
+    0%, 100% { transform: scale(1); }
+    10% { transform: scale(1.1); }
+    35% { transform: scale(.94); }
+    60% { transform: scale(1.05); }
+    85% { transform: scale(.97); }
+}
+
+@keyframes ant-docs-happy-dot {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(.8); }
+    25% { opacity: 1; }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--happy-x)), calc(-50% + var(--happy-y))) scale(0); }
+}
+
+[data-happy-wave-target="true"] {
+    animation: ant-docs-happy-target .45s ease-in-out backwards;
+}
+
+.happy-work-effect {
+    position: fixed;
+    z-index: 999999;
+    pointer-events: none;
+}
+
+.happy-work-effect > i {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--happy-color);
+    animation: ant-docs-happy-dot .6s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-happy-wave-target="true"], .happy-work-effect { animation: none !important; }
+}

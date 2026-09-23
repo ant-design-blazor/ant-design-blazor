@@ -9,17 +9,21 @@
             ant-click-animating-without-extra-node="@(this._animating ? "true":"false")" aria-label="@AriaLabel">
         @if (Loading)
         {
-            <span class="ant-btn-loading-icon">
+            <span class="ant-btn-icon ant-btn-loading-icon">
                 <Icon Type="loading" />
             </span>
         }
         else if (!string.IsNullOrEmpty(Icon))
         {
-            <Icon Type="@Icon" />
+            <span class="ant-btn-icon">
+                <Icon Type="@Icon" />
+            </span>
 		}
 		else if (!string.IsNullOrEmpty(IconFont))
 		{
-			<Icon IconFont="@IconFont" />
+            <span class="ant-btn-icon">
+                <Icon IconFont="@IconFont" />
+            </span>
 		}
         @if (ChildContent != default)
         {
@@ -29,7 +33,7 @@
             }
             else
             {
-                <span>@ChildContent</span>
+                <span class="ant-btn-content">@ChildContent</span>
             }
         }
     </button>

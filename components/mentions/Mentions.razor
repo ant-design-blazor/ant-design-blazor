@@ -10,7 +10,7 @@
                     InlineFlexMode=false>
         <Overlay>
             <CascadingValue Value=this IsFixed>
-                <ul class="ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical">
+                <ul class="ant-mentions-dropdown-menu ant-mentions-dropdown-menu-root ant-mentions-dropdown-menu-vertical ant-mentions-popup">
                     @if (ShowOptions.Count > 0)
                     {
                         @foreach (var item in ShowOptions)
@@ -36,7 +36,7 @@
                           @onkeydown="OnKeyDown"
                           @oninput="OnInput"
                           style="@Style"
-                          class="rc-textarea"
+                          class="rc-textarea ant-mentions-textarea"
                           placeholder="@Placeholder"
                           rows="@Rows" />
                 }

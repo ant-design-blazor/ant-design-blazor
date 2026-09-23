@@ -175,14 +175,12 @@ namespace AntDesign.Theming
         public static string ToKebabCase(string value)
         {
             if (string.IsNullOrEmpty(value)) return string.Empty;
-            var result = new System.Text.StringBuilder();
-            for (var index = 0; index < value.Length; index++)
-            {
-                var character = value[index];
-                if (char.IsUpper(character) && index > 0) result.Append('-');
-                result.Append(char.ToLowerInvariant(character));
-            }
-            return result.ToString();
+
+            // Keep acronym suffixes such as LG/SM/XXS together. React's v6
+            // token names use `control-height-lg`, not `control-height-l-g`.
+            var result = System.Text.RegularExpressions.Regex.Replace(value, "([A-Z]+)([A-Z][a-z])", "$1-$2");
+            result = System.Text.RegularExpressions.Regex.Replace(result, "([a-z0-9])([A-Z])", "$1-$2");
+            return result.ToLowerInvariant();
         }
     }
 }

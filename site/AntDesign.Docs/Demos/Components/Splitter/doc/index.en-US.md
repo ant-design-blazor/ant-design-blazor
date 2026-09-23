@@ -1,5 +1,5 @@
 ﻿---
-category: Experimental
+category: Components
 type: Layout
 title: Splitter
 cols: 1

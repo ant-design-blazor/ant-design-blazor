@@ -1,4 +1,5 @@
-﻿<header id="header" class="clearfix @(IsHome?"home-header":"")">
+﻿@using AntDesign.Docs.Services
+<header id="header" class="clearfix @(IsHome?"home-header":"") @_styles["root"]">
     <Row Style="flex-flow: nowrap; height: 64px;" OnBreakpoint="OnBreakpoint">
         <GridCol Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
             <h1>
@@ -27,7 +28,113 @@
     </Row>
 </header>
 
+<style>@((MarkupString)_styles.CssText)</style>
+
 @code {
+    private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-header", new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["root"] = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["&#header"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["position"] = "relative", ["zIndex"] = 10, ["maxWidth"] = "100%", ["background"] = "#fff", ["boxShadow"] = "0 2px 8px #f0f1f2",
+                ["transition"] = "all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)"
+            },
+            ["[data-theme='dark'] &#header"] = new System.Collections.Generic.Dictionary<string, object> { ["boxShadow"] = "0 2px 8px 0 rgba(0, 0, 0, 0.65)" },
+            ["[data-theme='dark'] &#header #search-box input::placeholder"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(255, 255, 255, 0.3)" },
+            ["&#header > .ant-row > .ant-col h1"] = new System.Collections.Generic.Dictionary<string, object> { ["marginBottom"] = 0 },
+            ["&#header.home-header"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["position"] = "absolute", ["top"] = 0, ["right"] = 0, ["left"] = 0, ["maxWidth"] = 1280,
+                ["marginRight"] = "auto", ["marginLeft"] = "auto", ["background"] = "transparent", ["boxShadow"] = "none"
+            },
+            ["&#header.home-header #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 16, ["paddingLeft"] = 40 },
+            ["html.rtl &.home-header #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 40, ["paddingLeft"] = 16 },
+            ["&#header.home-header .ant-menu"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "transparent" },
+            ["&#header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["alignItems"] = "center", ["margin"] = 0 },
+            ["&#header .menu-row > *"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "none", ["margin"] = "0 12px 0 0" },
+            ["&#header .menu-row > *:last-child"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 40 },
+            ["&#header .ant-row-rtl .menu-row > *:last-child"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 12, ["marginLeft"] = 40 },
+            ["&#header .header-button"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)", ["borderColor"] = "#d9d9d9" },
+            ["&#header #nav"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["height"] = "100%", ["fontSize"] = 14,
+                ["fontFamily"] = "Avenir, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif",
+                ["border"] = 0
+            },
+            ["&#header #nav.ant-menu-horizontal"] = new System.Collections.Generic.Dictionary<string, object> { ["borderBottom"] = "none" },
+            ["&#header #nav.ant-menu-horizontal > .ant-menu-item, &#header #nav.ant-menu-horizontal > .ant-menu-submenu"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["minWidth"] = 64, ["height"] = 64, ["paddingRight"] = 12, ["paddingLeft"] = 12, ["lineHeight"] = "64px"
+            },
+            ["&#header #nav.ant-menu-horizontal > .ant-menu-item::after, &#header #nav.ant-menu-horizontal > .ant-menu-submenu::after"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["top"] = 0, ["right"] = 12, ["bottom"] = "auto", ["left"] = 12, ["borderWidth"] = 2
+            },
+            ["&#header #nav.ant-menu-horizontal .ant-menu-submenu-title .anticon"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = 0 },
+            ["&#header #nav.ant-menu-horizontal > .ant-menu-item-selected a"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-primary-color)" },
+            ["&#header #nav > .ant-menu-item, &#header #nav > .ant-menu-submenu"] = new System.Collections.Generic.Dictionary<string, object> { ["textAlign"] = "center" },
+            ["&#header #nav .ant-menu-item > a"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)" },
+            ["&#header #nav .ant-menu-item-selected > a, &#header #nav .ant-menu-item > a:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-primary-color)" },
+            ["&#header #search-box"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["position"] = "relative", ["display"] = "flex", ["flex"] = "auto !important", ["alignItems"] = "center", ["height"] = 22,
+                ["margin"] = "0 auto 0 0 !important", ["paddingLeft"] = 16, ["lineHeight"] = "22px", ["whiteSpace"] = "nowrap",
+                ["borderLeft"] = "1px solid rgba(0, 0, 0, 0.06)", ["transition"] = "width 0.5s"
+            },
+            [".ant-row-rtl &#header #search-box"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["margin"] = "0 0 0 auto !important", ["paddingRight"] = 16, ["paddingLeft"] = 0,
+                ["borderRight"] = "1px solid rgba(0, 0, 0, 0.06)", ["borderLeft"] = "none"
+            },
+            ["&#header #search-box > *"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "auto" },
+            ["&#header #search-box .anticon"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["position"] = "absolute", ["top"] = "50%", ["zIndex"] = 1, ["flex"] = "none", ["color"] = "#ced4d9",
+                ["transform"] = "translateY(-50%)", ["pointerEvents"] = "none"
+            },
+            ["&#header #search-box input"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["width"] = "100%", ["maxWidth"] = 200, ["paddingLeft"] = 20, ["fontSize"] = 14,
+                ["background"] = "transparent", ["border"] = 0, ["boxShadow"] = "none"
+            },
+            [".ant-row-rtl &#header #search-box input"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 20, ["paddingLeft"] = 11 },
+            ["&#header #search-box input::placeholder"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "#a3b1bf" },
+            ["&#header #github-btn"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["flexFlow"] = "nowrap", ["height"] = "auto" },
+            ["&#header #github-btn .gh-btn"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["height"] = "auto", ["padding"] = "1px 4px", ["background"] = "transparent", ["border"] = 0
+            },
+            ["&#header #github-btn .gh-btn .gh-ico"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 20, ["height"] = 20, ["margin"] = 0 },
+            ["&#header #github-btn .gh-btn .gh-text"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
+            ["&#header #github-btn .gh-count"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "block", ["height"] = "auto", ["padding"] = "4px 8px", ["fontWeight"] = "normal", ["background"] = "#fff" },
+            ["&#header #github-btn .gh-count:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-primary-color)" },
+            ["&#header #github-btn.responsive-mode .gh-count, .ant-row-rtl &#header #github-btn .gh-count"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none !important" },
+            ["&#header #logo"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["height"] = 64, ["paddingLeft"] = 40, ["overflow"] = "hidden", ["color"] = "rgba(0, 0, 0, 0.85)",
+                ["fontWeight"] = "bold", ["fontSize"] = 18,
+                ["fontFamily"] = "PuHuiTi, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif",
+                ["lineHeight"] = "64px", ["letterSpacing"] = "-0.18px", ["whiteSpace"] = "nowrap", ["textDecoration"] = "none"
+            },
+            ["&#header #logo img"] = new System.Collections.Generic.Dictionary<string, object> { ["height"] = 32, ["marginRight"] = 12 },
+            ["&#header .ant-row-rtl #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "right", ["paddingRight"] = 40, ["paddingLeft"] = 0 },
+            ["&#header .ant-row-rtl #logo img"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 0, ["marginLeft"] = 16 },
+            ["@media only screen and (max-width: 767.99px)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["&#header"] = new System.Collections.Generic.Dictionary<string, object> { ["textAlign"] = "center" },
+                ["&#header #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 0, ["paddingLeft"] = 0 },
+                ["&#header #search-box"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" }
+            },
+            ["@media (max-width: 576px)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["&#header.home-header .ant-row .ant-col"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = "0 auto" },
+                ["&#header.home-header .ant-row .ant-col a"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 0, ["paddingLeft"] = 0 },
+                ["&#header.home-header .ant-row .ant-col:last-child"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" }
+            }
+        }
+    });
+
     public bool _isMobile;
 
     [Parameter] public bool IsHome { get; set; }
@@ -43,9 +150,3 @@
         }
     }
 }
-
-<style>            
-.DocSearch-Hit-content-wrapper {
-    overflow: hidden;
-}
-</style>

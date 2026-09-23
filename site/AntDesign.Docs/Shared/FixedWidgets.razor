@@ -1,8 +1,9 @@
-﻿<div class="fixed-widgets">
+﻿@using AntDesign.Docs.Services
+
+<div class="@_styles["root"]">
     <Dropdown Placement="Placement.Top">
         <Unbound>
-            <div @ref="context.Current" class="ant-avatar ant-avatar-circle ant-avatar-icon fixed-widgets-avatar"
-                 style="width: 44px; height: 44px; line-height: 44px; font-size: 22px;">
+            <div @ref="context.Current" class="ant-avatar ant-avatar-circle ant-avatar-icon @_styles["avatar"]">
                 <svg class="anticon" role="img" width="21" height="21" viewBox="0 0 21 21" fill="currentColor">
                     <g fill-rule="evenodd">
                         <g fill-rule="nonzero">
@@ -14,13 +15,46 @@
         </Unbound>
         <Overlay>
             <Menu Selectable>
-                <MenuItem OnClick="@(()=>ChangeTheme("default"))">@Localizer["app.theme.switch.default"]</MenuItem>
-                <MenuItem OnClick="@(()=>ChangeTheme("dark"))">@Localizer["app.theme.switch.dark"]</MenuItem>
-                <MenuItem OnClick="@(()=>ChangeTheme("compact"))">@Localizer["app.theme.switch.compact"]</MenuItem>
-                <MenuItem OnClick="@(()=>ChangeTheme("aliyun"))">@Localizer["app.theme.switch.aliyun"]</MenuItem>
+                <MenuItem OnClick="@(()=>ChangeAppearance("light"))">@Localizer["app.theme.switch.light"]</MenuItem>
+                <MenuItem OnClick="@(()=>ChangeAppearance("dark"))">@Localizer["app.theme.switch.dark"]</MenuItem>
+                <MenuItem OnClick="@ToggleCompact">
+                    @if (_compact)
+                    {
+                        <Icon Type="@IconType.Outline.Check" />
+                    }
+                    @Localizer["app.theme.switch.compact"]
+                </MenuItem>
+                <MenuItem OnClick="@ToggleHappyWork">
+                    @if (_happyWorkEnabled)
+                    {
+                        <Icon Type="@IconType.Outline.Check" />
+                    }
+                    @Localizer["app.theme.switch.happy-work"]
+                </MenuItem>
             </Menu>
         </Overlay>
     </Dropdown>
 </div>
 
-<link type="text/css" rel="stylesheet" id="docs-theme" href="@_themeFileUrl" @ref="_linkRef">
+<style>@((MarkupString)_styles.CssText)</style>
+
+@code {
+    private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-fixed-widgets", new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["root"] = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["position"] = "fixed", ["right"] = 32, ["bottom"] = 102, ["zIndex"] = 2147483640,
+            ["display"] = "flex", ["flexDirection"] = "column", ["cursor"] = "pointer",
+            ["& > div"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "block" },
+            ["[data-direction='rtl'] &"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = "auto", ["left"] = 32 }
+        },
+        ["avatar"] = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["width"] = 44, ["height"] = 44, ["lineHeight"] = "44px", ["fontSize"] = 22,
+            ["color"] = "#000", ["backgroundColor"] = "#fff",
+            ["boxShadow"] = "0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05)",
+            ["transition"] = "color 0.3s",
+            ["&:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-primary-color)" }
+        }
+    });
+}

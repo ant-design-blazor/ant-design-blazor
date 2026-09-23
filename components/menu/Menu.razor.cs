@@ -328,6 +328,11 @@ namespace AntDesign
         {
             ClassMapper
                 .Clear()
+                // The v6 stylesheet scopes Menu component tokens to the
+                // React-generated menu variable scope. Keep the shared
+                // Blazor scope as well so global tokens continue to inherit.
+                .Add("css-var-_R_0_")
+                .Add($"{PrefixCls}-css-var")
                 .Add(PrefixCls)
                 .Add($"{PrefixCls}-root")
                 .If($"{PrefixCls}-dark", () => Theme == MenuTheme.Dark)

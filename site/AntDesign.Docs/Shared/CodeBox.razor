@@ -1,11 +1,10 @@
 ﻿@using AntDesign.JsInterop
 @using AntDesign.Docs.Services
-@using System.Reflection;
 @using System.Globalization
 @implements IDisposable
 @inherits ComponentBase
 
-<div class="code-box" id="@DemoId">
+<div class="code-box @_styles["root"]" id="@DemoId">
     <section class="code-box-demo">
         @if (_rendered)
         {
@@ -102,12 +101,76 @@
     </style>
 </div>
 
+<style>@((MarkupString)_styles.CssText)</style>
+
 @inject InteropService InteropService
 @inject DemoService demoService;
 @inject ILocalizationService lang;
 @inject IStringLocalizer Localizer;
 
 @code {
+
+    private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-code-box", new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["root"] = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["position"] = "relative", ["display"] = "inline-block", ["width"] = "100%", ["margin"] = "0 0 16px", ["backgroundColor"] = "#fff",
+            ["border"] = "1px solid rgba(0, 0, 0, 0.06)", ["borderRadius"] = 2, ["transition"] = "all 0.2s",
+            ["& .code-box-title, & .code-box-title a, & .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#fff" },
+            ["& .code-box-title, & .code-box-title a"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)" },
+            ["& .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "42px 24px 50px", ["color"] = "rgba(0, 0, 0, 0.85)", ["borderBottom"] = "1px solid rgba(0, 0, 0, 0.06)" },
+            ["& iframe"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%", ["border"] = 0 },
+            ["& .markdown pre"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = "0.5em 0", ["padding"] = "6px 12px" },
+            ["& .markdown pre code"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = 0, ["background"] = "#f5f5f5" },
+            ["& .code-box-meta.markdown"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["width"] = "100%", ["fontSize"] = 14, ["borderRadius"] = "0 0 2px 2px", ["transition"] = "background-color 0.4s" },
+            ["& .code-box-meta blockquote"] = new System.Collections.Generic.Dictionary<string, object> { ["lineHeight"] = 1.5 },
+            ["& .code-box-meta h4, & section.code-box-meta p"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = 0 },
+            ["& .code-box-meta > p"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%", ["margin"] = "0.5em 0", ["paddingRight"] = 25, ["fontSize"] = 12, ["wordBreak"] = "break-word" },
+            [".ant-row-rtl & .code-box-meta > p"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 0, ["paddingLeft"] = 25 },
+            ["& .code-box-title"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["top"] = -14, ["marginLeft"] = 16, ["padding"] = "1px 8px", ["color"] = "#777", ["borderRadius"] = "2px 2px 0 0", ["transition"] = "background-color 0.4s" },
+            [".ant-row-rtl & .code-box-title"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 16, ["marginLeft"] = 0, ["borderRadius"] = "2px 0 0 2px" },
+            ["& .code-box-title a, & .code-box-title a:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)", ["fontWeight"] = 500, ["fontSize"] = 14 },
+            ["& .code-box-description"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "18px 24px 12px" },
+            ["& a.edit-button"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["top"] = 7, ["right"] = -16, ["paddingRight"] = 6, ["fontSize"] = 12, ["textDecoration"] = "none", ["background"] = "inherit", ["transform"] = "scale(0.9)" },
+            ["& a.edit-button .anticon"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.45)", ["transition"] = "all 0.3s" },
+            ["& a.edit-button .anticon:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)" },
+            [".ant-row.ant-row-rtl & a.edit-button"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = "auto", ["left"] = -22, ["marginRight"] = 0, ["paddingRight"] = 8, ["paddingLeft"] = 6 },
+            ["& .code-expand-icon"] = new System.Collections.Generic.Dictionary<string, object> { ["cursor"] = "pointer" },
+            ["& .code-expand-icon-show, & .code-expand-icon-hide"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["top"] = 0, ["left"] = 0, ["width"] = "100%", ["maxWidth"] = "100%", ["margin"] = 0, ["boxShadow"] = "none", ["transition"] = "all 0.4s", ["userSelect"] = "none" },
+            [".ant-row-rtl & .code-expand-icon-show, .ant-row-rtl & .code-expand-icon-hide"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = 0, ["left"] = "auto" },
+            ["& .code-expand-icon-show"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 0.55, ["pointerEvents"] = "auto" },
+            ["& .code-expand-icon-show:hover, & .code-expand-icon.ant-tooltip-open .code-expand-icon-show"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 1 },
+            ["& .code-expand-icon-hide"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 0, ["pointerEvents"] = "none" },
+            ["& .code-box-actions"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["justifyContent"] = "center", ["padding"] = "12px 0", ["borderTop"] = "1px dashed rgba(0, 0, 0, 0.06)", ["opacity"] = 0.7, ["transition"] = "opacity 0.3s" },
+            ["& .code-box-actions:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 1 },
+            ["& .code-box-actions > .code-box-code-action"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["display"] = "flex", ["alignItems"] = "center", ["width"] = 16, ["height"] = 16, ["marginLeft"] = 16, ["color"] = "rgba(0, 0, 0, 0.45)", ["cursor"] = "pointer", ["transition"] = "all 0.24s" },
+            [".ant-row-rtl & .code-box-actions > .code-box-code-action"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 16, ["marginLeft"] = 0 },
+            ["& .code-box-actions > .code-box-code-action:first-child"] = new System.Collections.Generic.Dictionary<string, object> { ["marginLeft"] = 0 },
+            [".ant-row-rtl & .code-box-actions > .code-box-code-action:first-child"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 0 },
+            ["& .code-box-actions > .code-box-code-action:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)" },
+            ["& .code-box-code-copy"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 14, ["height"] = 14, ["fontSize"] = 14, ["textAlign"] = "center", ["background"] = "#fff", ["cursor"] = "pointer", ["transition"] = "transform 0.24s" },
+            ["& .code-box-code-copy:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["transform"] = "scale(1.2)" },
+            ["& .code-box-code-copy.anticon-check"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "#52c41a !important", ["fontWeight"] = "bold" },
+            ["& .highlight-wrapper"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none", ["overflow"] = "auto", ["borderRadius"] = "0 0 2px 2px" },
+            ["& .highlight-wrapper-expand"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "block" },
+            ["& .highlight"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative" },
+            ["& .highlight .ant-tabs-nav-list"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = "0 auto" },
+            ["& .highlight pre"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = 0, ["padding"] = 0, ["background"] = "#fff" },
+            ["& .highlight:not(:first-child)"] = new System.Collections.Generic.Dictionary<string, object> { ["borderTop"] = "1px dashed rgba(0, 0, 0, 0.06)" },
+            ["& pre"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "auto", ["margin"] = 0 },
+            ["& pre code"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#fff", ["border"] = "none" },
+            ["& .highlight-wrapper:hover .code-box-code-copy"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 1 },
+            ["&:target"] = new System.Collections.Generic.Dictionary<string, object> { ["border"] = "1px solid var(--ant-primary-color)" },
+            ["[data-theme='dark'] & .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["borderBottomColor"] = "rgba(0, 0, 0, 0.06)" },
+            ["[data-theme='dark'] & .code-box-title, [data-theme='dark'] & .code-box-title a"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(255, 255, 255, 0.85)", ["background"] = "#262626" },
+            ["[data-theme='dark'] & .markdown pre code"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#262626" },
+            ["[data-theme='dark'] & .markdown pre"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = "0.5em 0", ["padding"] = "6px 12px" },
+            ["[data-theme='dark'] & .code-expand-icon-show"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 0.45 },
+            ["[data-theme='dark'] & .code-expand-icon-show:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 0.65 },
+            ["[data-theme='dark'] & .code-box-actions > .code-box-code-action"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(255, 255, 255, 0.45)" },
+            ["[data-theme='dark'] & .code-box-actions > .code-box-code-action:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(255, 255, 255, 0.85)" }
+        }
+    });
 
     [Parameter]
     public string ComponentName { get; set; }
@@ -194,7 +257,9 @@
 
         if (_rendered && _demoType == null)
         {
-            _demoType = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Demo.Type}");
+            // Resolve demos through the shared service so the lookup works for
+            // both the prerendered WebApp and the WebAssembly client assembly.
+            _demoType = demoService.GetShowCase(Demo.Type);
             StateHasChanged();
         }
     }

@@ -47,15 +47,17 @@
 
 @if (Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount)
 {
-    <div class="@ClassMapper.Class" style="@Style" data-count="@Count">
-        <span class="@_warpperClassMapper.Class">
-            <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
+    <div class="@ClassMapper.Class @_warpperClassMapper.Class ant-input-textarea-affix-wrapper" style="@Style" data-count="@Count">
+        <textarea @ref="Ref" class="@_textareaClassMapper.Class" @attributes="attributes" @onchange:stopPropagation="@StopPropagation" @onblur:stopPropagation="@StopPropagation" />
+        <span class="ant-input-suffix">
             @if (AllowClear)
             {
                 @ClearIcon
             }
-        </span>
-        <span class="ant-input-textarea-suffix">
+            @if (ShowCount)
+            {
+                <span class="ant-input-data-count">@Count</span>
+            }
             @if (Suffix != null)
             {
                 @Suffix

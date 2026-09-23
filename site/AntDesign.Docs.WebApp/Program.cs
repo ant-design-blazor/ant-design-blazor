@@ -48,6 +48,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+// The docs examples use the InteractiveAuto WebAssembly runtime for dynamic
+// demo compilation. In .NET 10 those framework assets are exposed through
+// MapStaticAssets; without it blazor.boot.json is returned as a 404 and every
+// CodeBox remains stuck on its loading skeleton.
+app.MapStaticAssets();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()

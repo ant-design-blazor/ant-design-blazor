@@ -27,18 +27,22 @@ else
         @<Template>
             @if (spin._isLoading)
             {
-                <div class="@spin.ClassMapper.Class" id="@spin.Id" style="@spin.Style" @ref="spin.Ref">
-                    @if (spin.Indicator != null)
+                <div class="@spin.ClassMapper.Class @(spin.Simple ? "ant-spin-section" : string.Empty)" id="@spin.Id" style="@spin.Style" @ref="spin.Ref">
+                    @if (!spin.Simple)
                     {
-                        @spin.Indicator
+                        <div class="ant-spin-section">
+                            <span class="ant-spin-dot-holder">
+                                @if (spin.Indicator != null) { @spin.Indicator } else { @spin.defaultTemplate }
+                            </span>
+                            @if (spin.Tip != null) { <div class="ant-spin-description ant-spin-text">@spin.Tip</div> }
+                        </div>
                     }
                     else
                     {
-                        @spin.defaultTemplate
-                    }
-                    @if (spin.Tip != null)
-                    {
-                        <div class="ant-spin-text">@spin.Tip</div>
+                        <span class="ant-spin-dot-holder">
+                            @if (spin.Indicator != null) { @spin.Indicator } else { @spin.defaultTemplate }
+                        </span>
+                        @if (spin.Tip != null) { <div class="ant-spin-description ant-spin-text">@spin.Tip</div> }
                     }
                 </div>
             }

@@ -41,6 +41,11 @@
                 </div>
             </div>
 
+            @if (Extra != null)
+            {
+                <div class="ant-form-item-extra">@Extra</div>
+            }
+
             @if (!NoStyle)
             {
                 @foreach (var message in ValidationMessages)

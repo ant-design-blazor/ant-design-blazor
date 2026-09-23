@@ -28,6 +28,23 @@
       return `https://github.com/ant-design-blazor/ant-design-blazor/issues/new?title=${query}`;
     },
   })
+  observeDocSearchPortal();
+}
+
+let docSearchPortalObserver;
+
+function observeDocSearchPortal() {
+  const stylePortal = () => {
+    document.querySelectorAll('#antd_algolia_search_modal').forEach(function (modal) {
+      modal.classList.add('adb-docs-search-portal');
+    });
+  };
+
+  stylePortal();
+  if (!docSearchPortalObserver && document.body) {
+    docSearchPortalObserver = new MutationObserver(stylePortal);
+    docSearchPortalObserver.observe(document.body, { childList: true, subtree: true });
+  }
 }
 
 function debounce(func, wait = 100) {

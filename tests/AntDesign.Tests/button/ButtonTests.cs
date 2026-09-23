@@ -14,7 +14,7 @@ namespace AntDesign.Tests.Button
         {
             var cut = Context.RenderComponent<AntDesign.Button>();
             cut.MarkupMatches(@"
-                <button class=""ant-btn ant-btn-default"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
+                <button class=""css-var-_R_29n_ ant-btn ant-btn-default ant-btn-color-default ant-btn-variant-outlined"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
             ");
         }
 
@@ -26,7 +26,7 @@ namespace AntDesign.Tests.Button
             );
 
             cut.MarkupMatches(@"
-                <button class=""ant-btn ant-btn-default"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""><span>Save</span></button>
+                <button class=""css-var-_R_29n_ ant-btn ant-btn-default ant-btn-color-default ant-btn-variant-outlined"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""><span class=""ant-btn-content"">Save</span></button>
             ");
         }
         [Fact]
@@ -39,7 +39,7 @@ namespace AntDesign.Tests.Button
             });
 
             cut.MarkupMatches(@"
-                <button class=""ant-btn ant-btn-default"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false"" aria-label=""Save""><span>Save</span></button>
+                <button class=""css-var-_R_29n_ ant-btn ant-btn-default ant-btn-color-default ant-btn-variant-outlined"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false"" aria-label=""Save""><span class=""ant-btn-content"">Save</span></button>
             ");
         }
 
@@ -51,7 +51,7 @@ namespace AntDesign.Tests.Button
             );
 
             cut.MarkupMatches(@"
-                <button class=""ant-btn ant-btn-default"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false"" disabled></button>
+                <button class=""css-var-_R_29n_ ant-btn ant-btn-default ant-btn-color-default ant-btn-variant-outlined"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false"" disabled></button>
             ");
         }
 
@@ -66,8 +66,23 @@ namespace AntDesign.Tests.Button
                 p.Add(x => x.Type, type)
             );
 
+            var legacyType = type.ToString().ToLowerInvariant();
+            var color = type switch
+            {
+                ButtonType.Primary => "primary",
+                ButtonType.Link => "link",
+                _ => "default",
+            };
+            var variant = type switch
+            {
+                ButtonType.Primary => "solid",
+                ButtonType.Dashed => "dashed",
+                ButtonType.Link => "link",
+                _ => "outlined",
+            };
+
             cut.MarkupMatches($@"
-                <button class=""ant-btn ant-btn-{type.ToString().ToLower()}"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
+                <button class=""css-var-_R_29n_ ant-btn ant-btn-{legacyType} ant-btn-color-{color} ant-btn-variant-{variant}"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
             ");
         }
 
@@ -94,7 +109,7 @@ namespace AntDesign.Tests.Button
             );
 
             cut.MarkupMatches(@"
-                <button class=""ant-btn ant-btn-default ant-btn-loading"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false"">
+                <button class=""css-var-_R_29n_ ant-btn ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-loading"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false"">
                   <span diff:ignore></span>
                 </button>
             ");
@@ -113,7 +128,7 @@ namespace AntDesign.Tests.Button
             );
 
             cut.MarkupMatches($@"
-                <button class=""ant-btn ant-btn-dashed"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
+                <button class=""css-var-_R_29n_ ant-btn ant-btn-dashed ant-btn-color-default ant-btn-variant-dashed"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
             ");
         }
     }

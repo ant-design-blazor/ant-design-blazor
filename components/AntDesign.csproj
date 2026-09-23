@@ -31,11 +31,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="QRCoder" Version="1.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- The nuget package icon -->
     <None Include="..\README.md" Pack="true" PackagePath="" />
     <None Include="logo.png" Pack="true" PackagePath="" />
 
     <Content Include="AntDesign.targets" PackagePath="build\$(PackageId).targets" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\css\antd-v6\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>wwwroot\css\antd-v6\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -115,6 +127,26 @@
   <Target Name="DebugMessage" BeforeTargets="Build">
     <Message Importance="high" Text="If you have modified the style, documentation or added a new demo, please rebuild the entire solution." />
     <Message Importance="high" Text="如果您修改了样式、文档或者新增了Demo，请重新构建整个解决方案。" />
+  </Target>
+
+  <Target Name="ValidateAntDesignV6CssCatalog" BeforeTargets="Build">
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\manifest.json')" Text="The Ant Design v6 prebuilt CSS manifest is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\light.css')" Text="The Ant Design v6 light CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\dark.css')" Text="The Ant Design v6 dark CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\mui.css')" Text="The Ant Design v6 mui CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\shadcn.css')" Text="The Ant Design v6 shadcn CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\bootstrap.css')" Text="The Ant Design v6 bootstrap CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\cartoon.css')" Text="The Ant Design v6 cartoon CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\illustration.css')" Text="The Ant Design v6 illustration CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\glass.css')" Text="The Ant Design v6 glass CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\geek.css')" Text="The Ant Design v6 geek CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\lark.css')" Text="The Ant Design v6 lark CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\blossom.css')" Text="The Ant Design v6 blossom CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\v4.css')" Text="The Ant Design v6 v4 CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\serene.css')" Text="The Ant Design v6 serene CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\light-compact.css')" Text="The Ant Design v6 light+compact documentation CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\dark-compact.css')" Text="The Ant Design v6 dark+compact documentation CSS is missing." />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)wwwroot\css\antd-v6\docs-theme-modes.manifest.json')" Text="The Ant Design v6 documentation theme mode manifest is missing." />
   </Target>
 
   <ItemGroup>

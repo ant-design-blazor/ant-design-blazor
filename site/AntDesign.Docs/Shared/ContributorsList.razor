@@ -1,4 +1,6 @@
-﻿<ul class="contributors-list" style="display: flex; list-style: none; margin: 0px; padding: 0px;">
+﻿@using AntDesign.Docs.Services
+
+<ul class="@_styles["root"]">
     @if (_avatarList?.Any() == true)
     {
         @foreach (var item in _avatarList)
@@ -16,8 +18,22 @@
     {
         for (var i = 0; i < 3; i++)
         {
-            <SkeletonElement Style="margin-right: 8px;margin-bottom: 8px;" Type="SkeletonElementType.Avatar" 
+            <SkeletonElement Class="@_styles["placeholder"]" Type="SkeletonElementType.Avatar"
                              Active Size="SkeletonElementSize.Default" Shape="SkeletonElementShape.Circle" />
         }
     }
 </ul>
+
+<style>@((MarkupString)_styles.CssText)</style>
+
+@code {
+    private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-contributors", new System.Collections.Generic.Dictionary<string, object>
+    {
+        ["root"] = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["display"] = "flex", ["flexWrap"] = "wrap", ["listStyle"] = "none", ["margin"] = "120px 0 0 !important", ["padding"] = 0,
+            ["& > a, & .ant-avatar + .ant-avatar"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 8, ["marginBottom"] = 8 }
+        },
+        ["placeholder"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 8, ["marginBottom"] = 8 }
+    });
+}

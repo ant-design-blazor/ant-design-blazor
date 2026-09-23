@@ -1,0 +1,26 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="ant-qrcode @(Bordered ? "ant-qrcode-bordered" : string.Empty) @Class" style="width:@(Size)px;height:@(Size)px;@Style" role="img" aria-label="QR code for @Value">
+    @if (Status == "active")
+    {
+        @((MarkupString)SvgMarkup)
+    }
+    else
+    {
+        <div class="ant-qrcode-cover" aria-live="polite">
+            @if (Status == "loading")
+            {
+                <Spin Spinning="true" />
+            }
+            else
+            {
+                <span>@Status</span>
+                @if (Status == "expired")
+                {
+                    <button type="button" @onclick="Refresh">Refresh</button>
+                }
+            }
+        </div>
+    }
+</div>

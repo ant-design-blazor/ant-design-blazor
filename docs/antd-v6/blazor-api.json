@@ -1,0 +1,7879 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "ant-design-blazor",
+    "root": "/Volumes/Data/GitHub/ant-design-blazor"
+  },
+  "summary": {
+    "components": 68,
+    "parameters": 1505,
+    "callbacks": 213
+  },
+  "components": [
+    {
+      "component": "affix",
+      "parameters": [
+        {
+          "name": "OffsetBottom",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "OffsetTop",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "TargetSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "alert",
+      "parameters": [
+        {
+          "name": "AfterClose",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Banner",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Closable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CloseText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Message",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "MessageTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ShowIcon",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "AlertType?",
+          "optional": true
+        },
+        {
+          "name": "OnClose",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "anchor",
+      "parameters": [
+        {
+          "name": "Key",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Affix",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Bounds",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "GetContainer",
+          "type": "Func<string>",
+          "optional": true
+        },
+        {
+          "name": "OffsetBottom",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "OffsetTop",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "ShowInkInFixed",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<Tuple<MouseEventArgs, AnchorLink>>",
+          "optional": true
+        },
+        {
+          "name": "GetCurrentAnchor",
+          "type": "Func<string>",
+          "optional": true
+        },
+        {
+          "name": "TargetOffset",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "Href",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Target",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "auto-complete",
+      "parameters": [
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DefaultActiveFirstOption",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Backfill",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DebounceMilliseconds",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Options",
+          "type": "IEnumerable<TOption>",
+          "optional": true
+        },
+        {
+          "name": "OptionDataItems",
+          "type": "IEnumerable<AutoCompleteDataItem<TOption>>",
+          "optional": true
+        },
+        {
+          "name": "OnSelectionChange",
+          "type": "EventCallback<AutoCompleteOption>",
+          "optional": true
+        },
+        {
+          "name": "OnActiveChange",
+          "type": "EventCallback<AutoCompleteOption>",
+          "optional": true
+        },
+        {
+          "name": "OnInput",
+          "type": "EventCallback<ChangeEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnPanelVisibleChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OptionTemplate",
+          "type": "RenderFragment<AutoCompleteDataItem<TOption>>",
+          "optional": true
+        },
+        {
+          "name": "OptionFormat",
+          "type": "Func<AutoCompleteDataItem<TOption>, string>",
+          "optional": true
+        },
+        {
+          "name": "OverlayTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "CompareWith",
+          "type": "Func<object, object, bool>",
+          "optional": true
+        },
+        {
+          "name": "FilterExpression",
+          "type": "Func<AutoCompleteDataItem<TOption>, string, bool>",
+          "optional": true
+        },
+        {
+          "name": "AllowFilter",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Width",
+          "type": "OneOf<int?, string>",
+          "optional": true
+        },
+        {
+          "name": "OverlayClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OverlayStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupContainerSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SelectedItem",
+          "type": "AutoCompleteOption",
+          "optional": true
+        },
+        {
+          "name": "BoundaryAdjustMode",
+          "type": "TriggerBoundaryAdjustMode",
+          "optional": true
+        },
+        {
+          "name": "ShowPanel",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "LabelFragment",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "object",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "avatar",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Shape",
+          "type": "AvatarShape?",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "OneOf<AvatarSize, string>",
+          "optional": true
+        },
+        {
+          "name": "Text",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Src",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SrcSet",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Alt",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnError",
+          "type": "EventCallback<ErrorEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "MaxCount",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "MaxStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "MaxPopoverPlacement",
+          "type": "Placement",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "back-top",
+      "parameters": [
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "VisibilityHeight",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "TargetSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "badge",
+      "parameters": [
+        {
+          "name": "Color",
+          "type": "OneOf<BadgeColor?, string>",
+          "optional": true
+        },
+        {
+          "name": "PresetColor",
+          "type": "PresetColor?",
+          "optional": true
+        },
+        {
+          "name": "Count",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "CountTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Dot",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Offset",
+          "type": "(int Left, int Top)",
+          "optional": true
+        },
+        {
+          "name": "OverflowCount",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ShowZero",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "BadgeStatus?",
+          "optional": true
+        },
+        {
+          "name": "Text",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "BadgeSize?",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "TextTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "breadcrumb",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "AutoGenerate",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Separator",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Overlay",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Href",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "button",
+      "parameters": [
+        {
+          "name": "AriaLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Color",
+          "type": "Color",
+          "optional": true
+        },
+        {
+          "name": "Block",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Danger",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Ghost",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "HtmlType",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IconFont",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AutoLoading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnClickStopPropagation",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Shape",
+          "type": "ButtonShape",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "ButtonSize",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "ButtonType?",
+          "optional": true
+        },
+        {
+          "name": "NoSpanWrap",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Url",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "FileName",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "calendar",
+      "parameters": [
+        {
+          "name": "Value",
+          "type": "DateTime",
+          "optional": true
+        },
+        {
+          "name": "DefaultValue",
+          "type": "DateTime",
+          "optional": true
+        },
+        {
+          "name": "ValidRange",
+          "type": "DateTime[]",
+          "optional": true
+        },
+        {
+          "name": "Mode",
+          "type": "CalendarMode",
+          "optional": true
+        },
+        {
+          "name": "FullScreen",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnSelect",
+          "type": "EventCallback<DateTime>",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<DateTime>",
+          "optional": true
+        },
+        {
+          "name": "HeaderRender",
+          "type": "Func<CalendarHeaderRenderArgs, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "DateCellRender",
+          "type": "Func<DateTime, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "DateFullCellRender",
+          "type": "Func<DateTime, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "MonthCellRender",
+          "type": "Func<DateTime, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "MonthFullCellRender",
+          "type": "Func<DateTime, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "OnPanelChange",
+          "type": "Action<DateTime, DatePickerType>",
+          "optional": true
+        },
+        {
+          "name": "DisabledDate",
+          "type": "Func<DateTime, bool>",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "DatePickerLocale",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "Calendar",
+          "type": "Calendar",
+          "optional": true
+        },
+        {
+          "name": "PickerIndex",
+          "type": "int",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "card",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Body",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ActionTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Bordered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Hoverable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "BodyStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Cover",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Actions",
+          "type": "IList<RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "CardType",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "CardSize",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Extra",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DescriptionTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Avatar",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "AvatarTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "carousel",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "DotPosition",
+          "type": "CarouselDotPosition",
+          "optional": true
+        },
+        {
+          "name": "Autoplay",
+          "type": "TimeSpan",
+          "optional": true
+        },
+        {
+          "name": "Effect",
+          "type": "CarouselEffect",
+          "optional": true
+        },
+        {
+          "name": "Dots",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DotsClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "EnableSwipe",
+          "type": "bool",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "cascader",
+      "parameters": [
+        {
+          "name": "ChangeOnSelect",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DefaultValue",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ExpandTrigger",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "NotFoundContent",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ShowSearch",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "Action<List<CascaderNode>, string, string>",
+          "optional": true
+        },
+        {
+          "name": "SelectedNodesChanged",
+          "type": "EventCallback<CascaderNode[]>",
+          "optional": true
+        },
+        {
+          "name": "Options",
+          "type": "IEnumerable<CascaderNode>",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "checkbox",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "CheckedChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "CheckedExpression",
+          "type": "Expression<Func<bool>>",
+          "optional": true
+        },
+        {
+          "name": "Indeterminate",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Options",
+          "type": "OneOf<CheckboxOption<TValue>[], TValue[]>",
+          "optional": true
+        },
+        {
+          "name": "MixedMode",
+          "type": "CheckboxGroupMixedMode",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<TValue[]>",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "collapse",
+      "parameters": [
+        {
+          "name": "Accordion",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Bordered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ExpandIconPosition",
+          "type": "CollapseExpandIconPosition",
+          "optional": true
+        },
+        {
+          "name": "DefaultActiveKey",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "ActiveKeys",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "ActiveKeysChanged",
+          "type": "EventCallback<string[]>",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<string[]>",
+          "optional": true
+        },
+        {
+          "name": "ExpandIcon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ExpandIconTemplate",
+          "type": "RenderFragment<bool>",
+          "optional": true
+        },
+        {
+          "name": "Animation",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Active",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Key",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowArrow",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Extra",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ExtraTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Header",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "HeaderTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OnActiveChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "comment",
+      "parameters": [
+        {
+          "name": "Author",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "AuthorTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Avatar",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "AvatarTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Content",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ContentTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Datetime",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DatetimeTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Actions",
+          "type": "IList<RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "CommentPlacement",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "config-provider",
+      "parameters": [
+        {
+          "name": "Direction",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Theme",
+          "type": "GlobalTheme",
+          "optional": true
+        },
+        {
+          "name": "ThemeConfig",
+          "type": "ThemeConfig",
+          "optional": true
+        },
+        {
+          "name": "Form",
+          "type": "FormConfig",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "date-picker",
+      "parameters": [
+        {
+          "name": "OnChange",
+          "type": "EventCallback<DateTimeChangedEventArgs<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "override sealed TValue",
+          "optional": true
+        },
+        {
+          "name": "DisabledDate",
+          "type": "override Func<DateTime, bool>",
+          "optional": true
+        },
+        {
+          "name": "ChangeOnClose",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Picker",
+          "type": "DatePickerType",
+          "optional": true
+        },
+        {
+          "name": "PopupContainerSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "BoundaryAdjustMode",
+          "type": "TriggerBoundaryAdjustMode",
+          "optional": true
+        },
+        {
+          "name": "Bordered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AutoFocus",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "InputReadOnly",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowToday",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Mask",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "DatePickerLocale",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "override CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "ShowTime",
+          "type": "OneOf<bool, string>",
+          "optional": true
+        },
+        {
+          "name": "AllowClear",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Placeholder",
+          "type": "OneOf<string, string[]>",
+          "optional": true
+        },
+        {
+          "name": "PopupStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Format",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DefaultValue",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "DefaultPickerValue",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "SuffixIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Ranges",
+          "type": "Dictionary<string, DateTime?[]>",
+          "optional": true
+        },
+        {
+          "name": "RenderExtraFooter",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OnClearClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnClear",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnOk",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnOpenChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnPanelChange",
+          "type": "EventCallback<DateTimeChangedEventArgs<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "DisabledHours",
+          "type": "Func<DateTime, int[]>",
+          "optional": true
+        },
+        {
+          "name": "DisabledMinutes",
+          "type": "Func<DateTime, int[]>",
+          "optional": true
+        },
+        {
+          "name": "DisabledSeconds",
+          "type": "Func<DateTime, int[]>",
+          "optional": true
+        },
+        {
+          "name": "DisabledTime",
+          "type": "Func<DateTime, DatePickerDisabledTime>",
+          "optional": true
+        },
+        {
+          "name": "DateRender",
+          "type": "Func<DateTime, DateTime, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "MonthCellRender",
+          "type": "Func<DateTime, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "Placement",
+          "optional": true
+        },
+        {
+          "name": "Use12Hours",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowWeek",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsWeek",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowTimeFormat",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnOkClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnNowClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnRangeItemOver",
+          "type": "EventCallback<DateTime?[]>",
+          "optional": true
+        },
+        {
+          "name": "OnRangeItemOut",
+          "type": "EventCallback<DateTime?[]>",
+          "optional": true
+        },
+        {
+          "name": "OnRangeItemClicked",
+          "type": "EventCallback<DateTime?[]>",
+          "optional": true
+        },
+        {
+          "name": "SuperChangeDateInterval",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ChangeDateInterval",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ShowSuperPreChange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowPreChange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowNextChange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowSuperNextChange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "PrefixCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "ReadOnly",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsRange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowSuffixIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "HtmlInputSize",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Onfocus",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnBlur",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Onfocusout",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnKeyUp",
+          "type": "EventCallback<KeyboardEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnKeyDown",
+          "type": "EventCallback<KeyboardEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnInput",
+          "type": "EventCallback<ChangeEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnClickClear",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnSuffixIconClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "FeedbackIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Active",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsCalendar",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsShowHeader",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsShowTime",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ClosePanel",
+          "type": "Action",
+          "optional": true
+        },
+        {
+          "name": "ChangePickerValue",
+          "type": "Action<DateTime, int?>",
+          "optional": true
+        },
+        {
+          "name": "ChangeValue",
+          "type": "Action<DateTime, int>",
+          "optional": true
+        },
+        {
+          "name": "ChangePickerType",
+          "type": "Action<DatePickerType, int>",
+          "optional": true
+        },
+        {
+          "name": "GetIndexPickerValue",
+          "type": "Func<int, DateTime>",
+          "optional": true
+        },
+        {
+          "name": "GetIndexValue",
+          "type": "Func<int, DateTime?>",
+          "optional": true
+        },
+        {
+          "name": "CalendarDateRender",
+          "type": "Func<DateTime, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "CalendarMonthCellRender",
+          "type": "Func<DateTime, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "DatePicker",
+          "type": "DatePickerBase<TValue>",
+          "optional": true
+        },
+        {
+          "name": "OnSelect",
+          "type": "Action<DateTime, int>",
+          "optional": true
+        },
+        {
+          "name": "PickerIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "RenderPickerHeader",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "RenderTableHeader",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "RenderFirstCol",
+          "type": "RenderFragment<DateTime>",
+          "optional": true
+        },
+        {
+          "name": "RenderColValue",
+          "type": "RenderFragment<DateTime>",
+          "optional": true
+        },
+        {
+          "name": "RenderLastCol",
+          "type": "RenderFragment<DateTime>",
+          "optional": true
+        },
+        {
+          "name": "ViewStartDate",
+          "type": "DateTime",
+          "optional": true
+        },
+        {
+          "name": "GetColTitle",
+          "type": "Func<DateTime, string>",
+          "optional": true
+        },
+        {
+          "name": "GetRowClass",
+          "type": "Func<DateTime, string>",
+          "optional": true
+        },
+        {
+          "name": "GetNextColValue",
+          "type": "Func<DateTime, DateTime>",
+          "optional": true
+        },
+        {
+          "name": "IsInView",
+          "type": "Func<DateTime, bool>",
+          "optional": true
+        },
+        {
+          "name": "IsToday",
+          "type": "Func<DateTime, bool>",
+          "optional": true
+        },
+        {
+          "name": "IsSelected",
+          "type": "Func<DateTime, bool>",
+          "optional": true
+        },
+        {
+          "name": "OnRowSelect",
+          "type": "Action<DateTime>",
+          "optional": true
+        },
+        {
+          "name": "OnValueSelect",
+          "type": "Action<DateTime>",
+          "optional": true
+        },
+        {
+          "name": "ShowFooter",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaxRow",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "MaxCol",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "SkipDays",
+          "type": "int",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "descriptions",
+      "parameters": [
+        {
+          "name": "Bordered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Layout",
+          "type": "DescriptionsLayout",
+          "optional": true
+        },
+        {
+          "name": "Column",
+          "type": "OneOf<int, Dictionary<string, int>>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "DescriptionsSize",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Colon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Span",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "LabelStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ContentStyle",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "divider",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Text",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Plain",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "DividerType",
+          "optional": true
+        },
+        {
+          "name": "Orientation",
+          "type": "DividerOrientation",
+          "optional": true
+        },
+        {
+          "name": "Dashed",
+          "type": "bool",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "draft",
+      "parameters": [
+        {
+          "name": "Data",
+          "type": "TData",
+          "optional": true
+        },
+        {
+          "name": "DataChanged",
+          "type": "EventCallback<TData>",
+          "optional": true
+        },
+        {
+          "name": "Enabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Options",
+          "type": "DraftOptions",
+          "optional": true
+        },
+        {
+          "name": "OnRecovered",
+          "type": "EventCallback<TData>",
+          "optional": true
+        },
+        {
+          "name": "OnDeleted",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnUpdate",
+          "type": "EventCallback<TData>",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "Locales.DraftLocale",
+          "optional": true
+        },
+        {
+          "name": "RecoveryContentTemplate",
+          "type": "RenderFragment<DraftData<TData>>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "drawer",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Content",
+          "type": "OneOf<RenderFragment, string>",
+          "optional": true
+        },
+        {
+          "name": "Closable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaskClosable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Mask",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaskStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Keyboard",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "OneOf<RenderFragment, string>",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "DrawerPlacement",
+          "optional": true
+        },
+        {
+          "name": "BodyStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "HeaderStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "WrapClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Width",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Height",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ZIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "OffsetX",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "OffsetY",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Visible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "VisibleChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnOpen",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnClose",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Handler",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "dropdown",
+      "parameters": [
+        {
+          "name": "Arrow",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ArrowPointAtCenter",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Block",
+          "type": "new bool",
+          "optional": true
+        },
+        {
+          "name": "ButtonsRender",
+          "type": "new Func<RenderFragment, RenderFragment, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "ButtonsClass",
+          "type": "OneOf<string, (string LeftButton, string RightButton)>",
+          "optional": true
+        },
+        {
+          "name": "ButtonsStyle",
+          "type": "OneOf<string, (string LeftButton, string RightButton)>",
+          "optional": true
+        },
+        {
+          "name": "Danger",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Ghost",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "ButtonSize",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "OneOf<ButtonType, (ButtonType LeftButton, ButtonType RightButton)>",
+          "optional": true
+        },
+        {
+          "name": "LeftButton",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "RightButton",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "empty",
+      "parameters": [
+        {
+          "name": "ImageStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Small",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Simple",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Description",
+          "type": "OneOf<string, bool?>",
+          "optional": true
+        },
+        {
+          "name": "DescriptionTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Image",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ImageTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PrefixCls",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "flex",
+      "parameters": [
+        {
+          "name": "Vertical",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Direction",
+          "type": "FlexDirection",
+          "optional": true
+        },
+        {
+          "name": "Wrap",
+          "type": "OneOf<FlexWrap, string>",
+          "optional": true
+        },
+        {
+          "name": "Justify",
+          "type": "OneOf<FlexJustify, string>",
+          "optional": true
+        },
+        {
+          "name": "Align",
+          "type": "OneOf<FlexAlign, string>",
+          "optional": true
+        },
+        {
+          "name": "FlexCss",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Gap",
+          "type": "OneOf<FlexGap, string>",
+          "optional": true
+        },
+        {
+          "name": "Component",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "form",
+      "parameters": [
+        {
+          "name": "RequiredMark",
+          "type": "FormRequiredMark",
+          "optional": true
+        },
+        {
+          "name": "Layout",
+          "type": "FormLayout",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment<TModel>",
+          "optional": true
+        },
+        {
+          "name": "LabelCol",
+          "type": "ColLayoutParam",
+          "optional": true
+        },
+        {
+          "name": "LabelAlign",
+          "type": "AntLabelAlignType?",
+          "optional": true
+        },
+        {
+          "name": "LabelColSpan",
+          "type": "OneOf<string, int>",
+          "optional": true
+        },
+        {
+          "name": "LabelColOffset",
+          "type": "OneOf<string, int>",
+          "optional": true
+        },
+        {
+          "name": "WrapperCol",
+          "type": "ColLayoutParam",
+          "optional": true
+        },
+        {
+          "name": "WrapperColSpan",
+          "type": "OneOf<string, int>",
+          "optional": true
+        },
+        {
+          "name": "WrapperColOffset",
+          "type": "OneOf<string, int>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "FormSize?",
+          "optional": true
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Method",
+          "type": "HttpMethod",
+          "optional": true
+        },
+        {
+          "name": "Model",
+          "type": "TModel",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnFinish",
+          "type": "EventCallback<EditContext>",
+          "optional": true
+        },
+        {
+          "name": "OnFinishFailed",
+          "type": "EventCallback<EditContext>",
+          "optional": true
+        },
+        {
+          "name": "OnFieldChanged",
+          "type": "EventCallback<FieldChangedEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnValidationRequested",
+          "type": "EventCallback<ValidationRequestedEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnValidationStateChanged",
+          "type": "EventCallback<ValidationStateChangedEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Validator",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ValidateOnChange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ValidateMode",
+          "type": "FormValidateMode",
+          "optional": true
+        },
+        {
+          "name": "Enhance",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Autocomplete",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "FormLocale",
+          "optional": true
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "LabelTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "NoStyle",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Required",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "LabelStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Rules",
+          "type": "FormValidationRule[]",
+          "optional": true
+        },
+        {
+          "name": "HasFeedback",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowFeedbackOnError",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ValidateStatus",
+          "type": "FormValidateStatus",
+          "optional": true
+        },
+        {
+          "name": "Help",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ToolTip",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnFormFinish",
+          "type": "EventCallback<FormProviderFinishEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "ValidateRules",
+          "type": "Func<string, FormValidationRule[]?>?",
+          "optional": true
+        },
+        {
+          "name": "Definitions",
+          "type": "Func<string, RenderFragment?>?",
+          "optional": true
+        },
+        {
+          "name": "NotGenerate",
+          "type": "Func<string, bool>?",
+          "optional": true
+        },
+        {
+          "name": "SubformStyle",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "grid",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Flex",
+          "type": "StringNumber",
+          "optional": true
+        },
+        {
+          "name": "Span",
+          "type": "StringNumber",
+          "optional": true
+        },
+        {
+          "name": "Order",
+          "type": "StringNumber",
+          "optional": true
+        },
+        {
+          "name": "Offset",
+          "type": "StringNumber",
+          "optional": true
+        },
+        {
+          "name": "Push",
+          "type": "StringNumber",
+          "optional": true
+        },
+        {
+          "name": "Pull",
+          "type": "StringNumber",
+          "optional": true
+        },
+        {
+          "name": "Xs",
+          "type": "OneOf<int, EmbeddedProperty>",
+          "optional": true
+        },
+        {
+          "name": "Sm",
+          "type": "OneOf<int, EmbeddedProperty>",
+          "optional": true
+        },
+        {
+          "name": "Md",
+          "type": "OneOf<int, EmbeddedProperty>",
+          "optional": true
+        },
+        {
+          "name": "Lg",
+          "type": "OneOf<int, EmbeddedProperty>",
+          "optional": true
+        },
+        {
+          "name": "Xl",
+          "type": "OneOf<int, EmbeddedProperty>",
+          "optional": true
+        },
+        {
+          "name": "Xxl",
+          "type": "OneOf<int, EmbeddedProperty>",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Align",
+          "type": "RowAlign",
+          "optional": true
+        },
+        {
+          "name": "Justify",
+          "type": "RowJustify",
+          "optional": true
+        },
+        {
+          "name": "Wrap",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Gutter",
+          "type": "GutterType",
+          "optional": true
+        },
+        {
+          "name": "OnBreakpoint",
+          "type": "EventCallback<BreakpointType>",
+          "optional": true
+        },
+        {
+          "name": "DefaultBreakpoint",
+          "type": "BreakpointType?",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "icon",
+      "parameters": [
+        {
+          "name": "Alt",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Role",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "AriaLabel",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Spin",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Rotate",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Theme",
+          "type": "IconThemeType",
+          "optional": true
+        },
+        {
+          "name": "TwoToneColor",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IconFont",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Width",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Height",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Fill",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TabIndex",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "StopPropagation",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Component",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "image",
+      "parameters": [
+        {
+          "name": "Alt",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Fallback",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Height",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Width",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Placeholder",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Preview",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "PreviewVisible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Src",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PreviewSrc",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PreviewVisibleChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "ImageLocale",
+          "optional": true
+        },
+        {
+          "name": "ImageRef",
+          "type": "ImageRef",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "input",
+      "parameters": [
+        {
+          "name": "AddOnBefore",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "AddOnAfter",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "AllowClear",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowClear",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "OnClear",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "AutoComplete",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AutoFocus",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Bordered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "BindOnInput",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DebounceMilliseconds",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "DefaultValue",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "InputElementSuffixClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "MaxLength",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "OnBlur",
+          "type": "EventCallback<FocusEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "OnFocus",
+          "type": "EventCallback<FocusEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnInput",
+          "type": "EventCallback<ChangeEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnKeyDown",
+          "type": "EventCallback<KeyboardEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnKeyUp",
+          "type": "EventCallback<KeyboardEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnMouseUp",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnPressEnter",
+          "type": "EventCallback<PressEnterEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Prefix",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ReadOnly",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "StopPropagation",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Suffix",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "InputType",
+          "optional": true
+        },
+        {
+          "name": "WrapperStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "WrapperClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ShowCount",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Width",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DefaultToEmptyString",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Compact",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "IconRender",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ShowPassword",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "VisibilityToggle",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ClassicSearchIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "EnterButton",
+          "type": "OneOf<bool, string>",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnSearch",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "AutoSize",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaxRows",
+          "type": "uint",
+          "optional": true
+        },
+        {
+          "name": "MinRows",
+          "type": "uint",
+          "optional": true
+        },
+        {
+          "name": "Rows",
+          "type": "uint",
+          "optional": true
+        },
+        {
+          "name": "OnResize",
+          "type": "EventCallback<OnResizeEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "override string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "input-number",
+      "parameters": [
+        {
+          "name": "Precision",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Formatter",
+          "type": "Func<TValue, string>",
+          "optional": true
+        },
+        {
+          "name": "Format",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Parser",
+          "type": "Func<string, string>",
+          "optional": true
+        },
+        {
+          "name": "Step",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "DefaultValue",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "Max",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "Min",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "MaxLength",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "OnFocus",
+          "type": "EventCallback<FocusEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "PlaceHolder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Bordered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Prefix",
+          "type": "OneOf<string, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "Width",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "layout",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Collapsible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Trigger",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "NoTrigger",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Breakpoint",
+          "type": "BreakpointType?",
+          "optional": true
+        },
+        {
+          "name": "Theme",
+          "type": "SiderTheme",
+          "optional": true
+        },
+        {
+          "name": "Width",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "CollapsedWidth",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Collapsed",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CollapsedChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnCollapse",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnBreakpoint",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "DefaultCollapsed",
+          "type": "bool",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "list",
+      "parameters": [
+        {
+          "name": "DataSource",
+          "type": "IEnumerable<TItem>",
+          "optional": true
+        },
+        {
+          "name": "Bordered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Header",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Footer",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "LoadMore",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ItemLayout",
+          "type": "ListItemLayout",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "NoResult",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "ListSize",
+          "optional": true
+        },
+        {
+          "name": "Split",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Grid",
+          "type": "ListGridType",
+          "optional": true
+        },
+        {
+          "name": "Pagination",
+          "type": "PaginationOptions",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment<TItem>",
+          "optional": true
+        },
+        {
+          "name": "Extra",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Actions",
+          "type": "RenderFragment[]",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "NoFlex",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Avatar",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "AvatarTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DescriptionTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "mentions",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Disable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Rows",
+          "type": "uint",
+          "optional": true
+        },
+        {
+          "name": "Focused",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Readonly",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Attributes",
+          "type": "Dictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "LoadOptions",
+          "type": "Func<string, CancellationToken, Task<IEnumerable<MentionsDynamicOption>>>",
+          "optional": true
+        },
+        {
+          "name": "TextareaTemplate",
+          "type": "RenderFragment<MentionsTextareaTemplateOptions>",
+          "optional": true
+        },
+        {
+          "name": "Prefix",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnSearch",
+          "type": "EventCallback<(string searchValue, string prefix)>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "menu",
+      "parameters": [
+        {
+          "name": "Theme",
+          "type": "MenuTheme",
+          "optional": true
+        },
+        {
+          "name": "Mode",
+          "type": "MenuMode",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OnSubmenuClicked",
+          "type": "EventCallback<SubMenu>",
+          "optional": true
+        },
+        {
+          "name": "OnMenuItemClicked",
+          "type": "EventCallback<MenuItem>",
+          "optional": true
+        },
+        {
+          "name": "Accordion",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Selectable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Multiple",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "InlineCollapsed",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "InlineIndent",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "AutoCloseDropdown",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DefaultSelectedKeys",
+          "type": "IEnumerable<string>",
+          "optional": true
+        },
+        {
+          "name": "DefaultOpenKeys",
+          "type": "IEnumerable<string>",
+          "optional": true
+        },
+        {
+          "name": "OpenKeys",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "OpenKeysChanged",
+          "type": "EventCallback<string[]>",
+          "optional": true
+        },
+        {
+          "name": "OnOpenChange",
+          "type": "EventCallback<string[]>",
+          "optional": true
+        },
+        {
+          "name": "SelectedKeys",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "SelectedKeysChanged",
+          "type": "EventCallback<string[]>",
+          "optional": true
+        },
+        {
+          "name": "TriggerSubMenuAction",
+          "type": "Trigger",
+          "optional": true
+        },
+        {
+          "name": "ShowCollapsedTooltip",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Animation",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Key",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "RouterLink",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RouterMatch",
+          "type": "NavLinkMatch",
+          "optional": true
+        },
+        {
+          "name": "Target",
+          "type": "MenuTarget?",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IconTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ActiveClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Href",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Attributes",
+          "type": "Dictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "Match",
+          "type": "NavLinkMatch",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "Placement?",
+          "optional": true
+        },
+        {
+          "name": "PopupClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IsOpen",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnTitleClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "TriggerClass",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "message",
+      "parameters": [
+        {
+          "name": "Config",
+          "type": "MessageConfig",
+          "optional": true
+        },
+        {
+          "name": "OnMouseEnter",
+          "type": "EventCallback<MessageItem>",
+          "optional": true
+        },
+        {
+          "name": "OnMouseLeave",
+          "type": "EventCallback<MessageItem>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "modal",
+      "parameters": [
+        {
+          "name": "Config",
+          "type": "ConfirmOptions",
+          "optional": true
+        },
+        {
+          "name": "ConfirmRef",
+          "type": "ConfirmRef",
+          "optional": true
+        },
+        {
+          "name": "OnRemove",
+          "type": "EventCallback<ConfirmRef>",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "AdditionalContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Visible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "VisibleChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnBeforeDestroy",
+          "type": "EventCallback<CancelEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnAfterShow",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnAfterHide",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "AfterClose",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "AfterOpen",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "BodyStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "CancelText",
+          "type": "OneOf<string, RenderFragment>?",
+          "optional": true
+        },
+        {
+          "name": "Centered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Closable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Draggable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DragInViewport",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CloseIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ConfirmLoading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DestroyOnClose",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Header",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Footer",
+          "type": "OneOf<string, RenderFragment>?",
+          "optional": true
+        },
+        {
+          "name": "GetContainer",
+          "type": "ElementReference?",
+          "optional": true
+        },
+        {
+          "name": "Keyboard",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Mask",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaskClosable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaskStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OkText",
+          "type": "OneOf<string, RenderFragment>?",
+          "optional": true
+        },
+        {
+          "name": "OkType",
+          "type": "ButtonType",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Width",
+          "type": "OneOf<string, double>",
+          "optional": true
+        },
+        {
+          "name": "WrapClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ZIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "OnCancel",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnOk",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OkButtonProps",
+          "type": "ButtonProps",
+          "optional": true
+        },
+        {
+          "name": "CancelButtonProps",
+          "type": "ButtonProps",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "ModalLocale",
+          "optional": true
+        },
+        {
+          "name": "MaxBodyHeight",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Maximizable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaximizeBtnIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "RestoreBtnIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "DefaultMaximized",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Resizable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ForceRender",
+          "type": "bool",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "notification",
+      "parameters": [
+        {
+          "name": "Config",
+          "type": "NotificationConfig",
+          "optional": true
+        },
+        {
+          "name": "OnClose",
+          "type": "Func<NotificationConfig, Task>",
+          "optional": true
+        },
+        {
+          "name": "OnMouseEnter",
+          "type": "EventCallback<NotificationItem>",
+          "optional": true
+        },
+        {
+          "name": "OnMouseLeave",
+          "type": "EventCallback<NotificationItem>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "obj",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Overlay",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Href",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DescriptionTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Avatar",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "AvatarTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "If",
+          "type": "Func<bool>",
+          "optional": true
+        },
+        {
+          "name": "IsWeek",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowToday",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SuperChangeDateInterval",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ChangeDateInterval",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ShowSuperPreChange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowPreChange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowNextChange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowSuperNextChange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "PrefixCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "InputSize",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ReadOnly",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Mask",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IsRange",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AutoFocus",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowSuffixIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowTime",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "HtmlInputSize",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "SuffixIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Onfocus",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnBlur",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Onfocusout",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnKeyUp",
+          "type": "EventCallback<KeyboardEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnKeyDown",
+          "type": "EventCallback<KeyboardEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnInput",
+          "type": "EventCallback<ChangeEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "AllowClear",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClickClear",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "OnSuffixIconClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "FeedbackIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Active",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "LeftButton",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "RightButton",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ShowTitle",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Page",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "RootPrefixCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnKeyPress",
+          "type": "EventCallback<(KeyboardEventArgs e, Action callback)>",
+          "optional": true
+        },
+        {
+          "name": "ItemRender",
+          "type": "RenderFragment<PaginationItemRenderContext>",
+          "optional": true
+        },
+        {
+          "name": "UnmatchedAttributes",
+          "type": "Dictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "CellRender",
+          "type": "virtual RenderFragment<CellData>",
+          "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "Dictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "RowData",
+          "type": "RowData<TItem>",
+          "optional": true
+        },
+        {
+          "name": "Reuse",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ActivedUri",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ActivedUriChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "Context",
+          "type": "AdvancedFilterInputContext",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "page-header",
+      "parameters": [
+        {
+          "name": "Ghost",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "BackIcon",
+          "type": "OneOf<bool?, string>",
+          "optional": true
+        },
+        {
+          "name": "BackIconTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Subtitle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SubtitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OnBack",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "PageHeaderContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PageHeaderFooter",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PageHeaderBreadcrumb",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PageHeaderAvatar",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PageHeaderTitle",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PageHeaderSubtitle",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PageHeaderTags",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PageHeaderExtra",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "pagination",
+      "parameters": [
+        {
+          "name": "Total",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "DefaultCurrent",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Current",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "DefaultPageSize",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "PageSize",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "OnPageSizeChanged",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<PaginationEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "HideOnSinglePage",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowSizeChanger",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "PageSizeOptions",
+          "type": "int[]",
+          "optional": true
+        },
+        {
+          "name": "OnShowSizeChange",
+          "type": "EventCallback<PaginationEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "ShowQuickJumper",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "GoButton",
+          "type": "RenderFragment?",
+          "optional": true
+        },
+        {
+          "name": "ShowTitle",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowTotal",
+          "type": "OneOf<Func<PaginationTotalContext, string>, RenderFragment<PaginationTotalContext>>?",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "PaginationSize",
+          "optional": true
+        },
+        {
+          "name": "Responsive",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Simple",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "PaginationLocale",
+          "optional": true
+        },
+        {
+          "name": "ItemRender",
+          "type": "RenderFragment<PaginationItemRenderContext>?",
+          "optional": true
+        },
+        {
+          "name": "ShowLessItems",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowPrevNextJumpers",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Direction",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PrevIcon",
+          "type": "RenderFragment<PaginationItemRenderContext>?",
+          "optional": true
+        },
+        {
+          "name": "NextIcon",
+          "type": "RenderFragment<PaginationItemRenderContext>?",
+          "optional": true
+        },
+        {
+          "name": "JumpPrevIcon",
+          "type": "RenderFragment<PaginationItemRenderContext>?",
+          "optional": true
+        },
+        {
+          "name": "JumpNextIcon",
+          "type": "RenderFragment<PaginationItemRenderContext>?",
+          "optional": true
+        },
+        {
+          "name": "TotalBoundaryShowSizeChanger",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "UnmatchedAttributes",
+          "type": "Dictionary<string, object>?",
+          "optional": true
+        },
+        {
+          "name": "IsSmall",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "RootPrefixCls",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ChangeSize",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "QuickGo",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "Page",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Active",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "OnKeyPress",
+          "type": "EventCallback<(KeyboardEventArgs e, Action callback)>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "popconfirm",
+      "parameters": [
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "CancelText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OkText",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OkType",
+          "type": "ButtonType",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "PopconfirmLocale",
+          "optional": true
+        },
+        {
+          "name": "OkButtonProps",
+          "type": "ButtonProps",
+          "optional": true
+        },
+        {
+          "name": "CancelButtonProps",
+          "type": "ButtonProps",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IconTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OnCancel",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnConfirm",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "ArrowPointAtCenter",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MouseEnterDelay",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "MouseLeaveDelay",
+          "type": "double",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "popover",
+      "parameters": [
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Content",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ContentTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ArrowPointAtCenter",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MouseEnterDelay",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "MouseLeaveDelay",
+          "type": "double",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "progress",
+      "parameters": [
+        {
+          "name": "Size",
+          "type": "ProgressSize",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "ProgressType",
+          "optional": true
+        },
+        {
+          "name": "Format",
+          "type": "Func<double, string>",
+          "optional": true
+        },
+        {
+          "name": "Percent",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "ShowInfo",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "ProgressStatus?",
+          "optional": true
+        },
+        {
+          "name": "StrokeLinecap",
+          "type": "ProgressStrokeLinecap",
+          "optional": true
+        },
+        {
+          "name": "SuccessPercent",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "TrailColor",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "StrokeWidth",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "StrokeColor",
+          "type": "OneOf<string, Dictionary<string, string>>",
+          "optional": true
+        },
+        {
+          "name": "Steps",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Width",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "GapDegree",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "GapPosition",
+          "type": "ProgressGapPosition",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "radio",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "AutoFocus",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "RadioButton",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Checked",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DefaultChecked",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CheckedChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CheckedChange",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "ButtonStyle",
+          "type": "RadioButtonStyle?",
+          "optional": true
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DefaultValue",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "Options",
+          "type": "OneOf<string[], RadioOption<TValue>[]>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "rate",
+      "parameters": [
+        {
+          "name": "AllowClear",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AllowHalf",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AutoFocus",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Character",
+          "type": "RenderFragment<RateItemRenderContext>",
+          "optional": true
+        },
+        {
+          "name": "Count",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "decimal",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "EventCallback<decimal>",
+          "optional": true
+        },
+        {
+          "name": "DefaultValue",
+          "type": "decimal",
+          "optional": true
+        },
+        {
+          "name": "Tooltips",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "OnBlur",
+          "type": "EventCallback<FocusEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnFocus",
+          "type": "EventCallback<FocusEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnItemHover",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnItemClick",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Tooltip",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IndexOfGroup",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "HoverValue",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "HasHalf",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsFocused",
+          "type": "bool",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "result",
+      "parameters": [
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "SubTitle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SubTitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Extra",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "ResultStatus",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IsShowIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "segmented",
+      "parameters": [
+        {
+          "name": "DefaultValue",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "Options",
+          "type": "IEnumerable<SegmentedOption<TValue>>",
+          "optional": true
+        },
+        {
+          "name": "Labels",
+          "type": "IEnumerable<TValue>",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "SegmentedSize",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Block",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "select",
+      "parameters": [
+        {
+          "name": "Value",
+          "type": "override TEnum",
+          "optional": true
+        },
+        {
+          "name": "Values",
+          "type": "override IEnumerable<TEnum>",
+          "optional": true
+        },
+        {
+          "name": "Bordered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "EnableVirtualization",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DataSource",
+          "type": "IEnumerable<TItem>",
+          "optional": true
+        },
+        {
+          "name": "SelectOptions",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "DataSourceEqualityComparer",
+          "type": "IEqualityComparer<TItem>",
+          "optional": true
+        },
+        {
+          "name": "DefaultActiveFirstOption",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DisabledName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownMatchSelectWidth",
+          "type": "OneOf<bool, string>",
+          "optional": true
+        },
+        {
+          "name": "DropdownMaxWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "GroupName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IgnoreItemChanges",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ItemTemplate",
+          "type": "RenderFragment<TItem>",
+          "optional": true
+        },
+        {
+          "name": "NotFoundContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OnBlur",
+          "type": "Action",
+          "optional": true
+        },
+        {
+          "name": "OnCreateCustomTag",
+          "type": "Action<string>",
+          "optional": true
+        },
+        {
+          "name": "OnDataSourceChanged",
+          "type": "Action",
+          "optional": true
+        },
+        {
+          "name": "OnDropdownVisibleChange",
+          "type": "Action<bool>",
+          "optional": true
+        },
+        {
+          "name": "OnSearch",
+          "type": "Action<string>",
+          "optional": true
+        },
+        {
+          "name": "PopupContainerMaxHeight",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ShowArrowIcon",
+          "type": "override bool",
+          "optional": true
+        },
+        {
+          "name": "TokenSeparators",
+          "type": "char[]",
+          "optional": true
+        },
+        {
+          "name": "ValueChanged",
+          "type": "override EventCallback<TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "LabelProperty",
+          "type": "Func<TItem, string>",
+          "optional": true
+        },
+        {
+          "name": "ValueProperty",
+          "type": "Func<TItem, TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "DisabledPredicate",
+          "type": "Func<TItem, bool>",
+          "optional": true
+        },
+        {
+          "name": "DefaultValue",
+          "type": "TItemValue",
+          "optional": true
+        },
+        {
+          "name": "ListboxStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "FilterExpression",
+          "type": "Func<SelectOptionItem<TItemValue, TItem>, string, bool>",
+          "optional": true
+        },
+        {
+          "name": "BoundaryAdjustMode",
+          "type": "TriggerBoundaryAdjustMode",
+          "optional": true
+        },
+        {
+          "name": "AllowClear",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AutoClearSearchValue",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Mode",
+          "type": "SelectMode",
+          "optional": true
+        },
+        {
+          "name": "EnableSearch",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SearchDebounceMilliseconds",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Open",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OpenChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Placeholder",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnFocus",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "AutoFocus",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SortByGroup",
+          "type": "SortDirection",
+          "optional": true
+        },
+        {
+          "name": "SortByLabel",
+          "type": "SortDirection",
+          "optional": true
+        },
+        {
+          "name": "HideSelected",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ValuesChanged",
+          "type": "EventCallback<IEnumerable<TItemValue>>",
+          "optional": true
+        },
+        {
+          "name": "SuffixIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "PrefixIcon",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "AccessKey",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DefaultValues",
+          "type": "IEnumerable<TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "OnClearSelected",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Unbound",
+          "type": "RenderFragment<ForwardRef>",
+          "optional": true
+        },
+        {
+          "name": "OnSelectedItemChanged",
+          "type": "EventCallback<TItem>",
+          "optional": true
+        },
+        {
+          "name": "OnSelectedItemsChanged",
+          "type": "EventCallback<IEnumerable<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "CustomTagLabelToValue",
+          "type": "Func<string, TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "MaxTagTextLength",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "LabelInValue",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MaxTagCount",
+          "type": "OneOf<int, ResponsiveTag>",
+          "optional": true
+        },
+        {
+          "name": "ValueOnClear",
+          "type": "TItemValue",
+          "optional": true
+        },
+        {
+          "name": "ItemLabel",
+          "type": "Func<TItem, string>",
+          "optional": true
+        },
+        {
+          "name": "ItemValue",
+          "type": "Func<TItem, TItemValue>",
+          "optional": true
+        },
+        {
+          "name": "LabelName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ValueName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnMouseEnter",
+          "type": "Action",
+          "optional": true
+        },
+        {
+          "name": "OnMouseLeave",
+          "type": "Action",
+          "optional": true
+        },
+        {
+          "name": "PopupContainerSelector",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownRender",
+          "type": "RenderFragment<RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "LabelTemplate",
+          "type": "RenderFragment<TItem>",
+          "optional": true
+        },
+        {
+          "name": "MaxTagPlaceholder",
+          "type": "RenderFragment<IEnumerable<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "ShowSearchIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Placement",
+          "type": "Placement",
+          "optional": true
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Item",
+          "type": "TItem",
+          "optional": true
+        },
+        {
+          "name": "LabelTemplateItemContent",
+          "type": "RenderFragment<TItem>",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ContentStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ContentClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RemoveIconStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RemoveIconClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RefBack",
+          "type": "ForwardRef",
+          "optional": true
+        },
+        {
+          "name": "Prefix",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IsOverlayShow",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnInput",
+          "type": "EventCallback<ChangeEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnKeyUp",
+          "type": "EventCallback<KeyboardEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnKeyDown",
+          "type": "EventCallback<KeyboardEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnClearClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnRemoveSelected",
+          "type": "EventCallback<SelectOptionItem<TItemValue, TItem>>",
+          "optional": true
+        },
+        {
+          "name": "SearchValue",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "skeleton",
+      "parameters": [
+        {
+          "name": "Active",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "TitleWidth",
+          "type": "OneOf<int?, string>",
+          "optional": true
+        },
+        {
+          "name": "Avatar",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "AvatarSize",
+          "type": "OneOf<SkeletonElementSize, string>",
+          "optional": true
+        },
+        {
+          "name": "AvatarShape",
+          "type": "SkeletonElementShape",
+          "optional": true
+        },
+        {
+          "name": "Paragraph",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ParagraphRows",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "ParagraphWidth",
+          "type": "OneOf<int?, string, IList<OneOf<int?, string>>>",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "SkeletonElementType",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "OneOf<SkeletonElementSize, string>",
+          "optional": true
+        },
+        {
+          "name": "Shape",
+          "type": "SkeletonElementShape",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "slider",
+      "parameters": [
+        {
+          "name": "DefaultValue",
+          "type": "TValue",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Dots",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Included",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Marks",
+          "type": "SliderMark[]",
+          "optional": true
+        },
+        {
+          "name": "Max",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "Min",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "Reverse",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Step",
+          "type": "double?",
+          "optional": true
+        },
+        {
+          "name": "Vertical",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnAfterChange",
+          "type": "EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<TValue>",
+          "optional": true
+        },
+        {
+          "name": "HasTooltip",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "TipFormatter",
+          "type": "Func<double, string>",
+          "optional": true
+        },
+        {
+          "name": "TooltipPlacement",
+          "type": "Placement",
+          "optional": true
+        },
+        {
+          "name": "TooltipVisible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "GetTooltipPopupContainer",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "override sealed TValue",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "space",
+      "parameters": [
+        {
+          "name": "Align",
+          "type": "SpaceAlign",
+          "optional": true
+        },
+        {
+          "name": "Direction",
+          "type": "SpaceDirection",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "OneOf<SpaceSize, string, (string, string)>",
+          "optional": true
+        },
+        {
+          "name": "Wrap",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Split",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "spin",
+      "parameters": [
+        {
+          "name": "Size",
+          "type": "SpinSize",
+          "optional": true
+        },
+        {
+          "name": "Tip",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Delay",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Spinning",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "WrapperClassName",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Indicator",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "splitter",
+      "parameters": [
+        {
+          "name": "FirstPane",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "SecondPane",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "FirstPaneMinSize",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "FirstPaneSize",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "FirstPaneSizeChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "SecondPaneMinSize",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SecondPaneSize",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SecondPaneSizeChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "Layout",
+          "type": "SplitterLayout",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OnResize",
+          "type": "EventCallback<string[]>",
+          "optional": true
+        },
+        {
+          "name": "DefaultSize",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Min",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Max",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Collapsible",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Resizable",
+          "type": "bool",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "statistic",
+      "parameters": [
+        {
+          "name": "Format",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnFinish",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "RefreshInterval",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "DecimalSeparator",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "GroupSeparator",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Precision",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "CultureInfo",
+          "type": "CultureInfo",
+          "optional": true
+        },
+        {
+          "name": "Prefix",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PrefixTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Suffix",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SuffixTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "virtual T",
+          "optional": true
+        },
+        {
+          "name": "ValueStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "steps",
+      "parameters": [
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IconTemplate",
+          "type": "RenderFragment<StepsStatus>",
+          "optional": true
+        },
+        {
+          "name": "Status",
+          "type": "StepsStatus",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Subtitle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SubtitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Description",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DescriptionTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Current",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Percent",
+          "type": "double?",
+          "optional": true
+        },
+        {
+          "name": "ProgressDot",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ShowProgressDot",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Direction",
+          "type": "StepsDirection",
+          "optional": true
+        },
+        {
+          "name": "LabelPlacement",
+          "type": "StepsLabelPlacement",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "StepsType",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "StepsSize",
+          "optional": true
+        },
+        {
+          "name": "StartIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<int>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "switch",
+      "parameters": [
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CheckedChildren",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "CheckedChildrenTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Control",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "UnCheckedChildren",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "UnCheckedChildrenTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "table",
+      "parameters": [
+        {
+          "name": "CellRender",
+          "type": "virtual RenderFragment<CellData>",
+          "optional": true
+        },
+        {
+          "name": "FieldExpression",
+          "type": "Expression<Func<TData>>",
+          "optional": true
+        },
+        {
+          "name": "FilterDropdown",
+          "type": "RenderFragment<TableFilterDropdownContext>",
+          "optional": true
+        },
+        {
+          "name": "Field",
+          "type": "TData",
+          "optional": true
+        },
+        {
+          "name": "FieldChanged",
+          "type": "EventCallback<TData>",
+          "optional": true
+        },
+        {
+          "name": "DataIndex",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Format",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Sortable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SorterCompare",
+          "type": "Func<TData, TData, int>",
+          "optional": true
+        },
+        {
+          "name": "SorterMultiple",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ShowSorterTooltip",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SortDirections",
+          "type": "SortDirection[]",
+          "optional": true
+        },
+        {
+          "name": "DefaultSortOrder",
+          "type": "SortDirection?",
+          "optional": true
+        },
+        {
+          "name": "OnCell",
+          "type": "Func<CellData, Dictionary<string, object>>",
+          "optional": true
+        },
+        {
+          "name": "OnHeaderCell",
+          "type": "Func<Dictionary<string, object>>",
+          "optional": true
+        },
+        {
+          "name": "RelationContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Filterable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Grouping",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "GroupBy",
+          "type": "virtual Func<TData, object>",
+          "optional": true
+        },
+        {
+          "name": "Filters",
+          "type": "IEnumerable<TableFilter<TData>>",
+          "optional": true
+        },
+        {
+          "name": "DefaultFilters",
+          "type": "IEnumerable<TableFilter>",
+          "optional": true
+        },
+        {
+          "name": "FilterMultiple",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "FieldFilterType",
+          "type": "IFieldFilterType",
+          "optional": true
+        },
+        {
+          "name": "OnFilter",
+          "type": "Expression<Func<TData, TData, bool>>",
+          "optional": true
+        },
+        {
+          "name": "Filtered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "virtual string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Width",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "HeaderStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RowSpan",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ColSpan",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "HeaderColSpan",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Fixed",
+          "type": "ColumnFixPlacement?",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Ellipsis",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "EllipsisShowTitle",
+          "type": "bool?",
+          "optional": true
+        },
+        {
+          "name": "Hidden",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Align",
+          "type": "ColumnAlign",
+          "optional": true
+        },
+        {
+          "name": "ColIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Range",
+          "type": "Range?",
+          "optional": true
+        },
+        {
+          "name": "HideColumnsByName",
+          "type": "IEnumerable<string>",
+          "optional": true
+        },
+        {
+          "name": "Definitions",
+          "type": "Action<string, IFieldColumn>",
+          "optional": true
+        },
+        {
+          "name": "StartColumnIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Property",
+          "type": "Expression<Func<TItem, TProp>>",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "SelectionType",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Key",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "CheckStrictly",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "HidePagination",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "PaginationPosition",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PaginationTemplate",
+          "type": "RenderFragment<(int PageSize, int PageIndex, int Total, string PaginationClass, EventCallback<PaginationEventArgs> HandlePageChange)>",
+          "optional": true
+        },
+        {
+          "name": "Total",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "TotalChanged",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "PageIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "PageIndexChanged",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "PageSize",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "PageSizeChanged",
+          "type": "EventCallback<int>",
+          "optional": true
+        },
+        {
+          "name": "OnPageIndexChange",
+          "type": "EventCallback<PaginationEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnPageSizeChange",
+          "type": "EventCallback<PaginationEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "SelectedRows",
+          "type": "IEnumerable<TItem>",
+          "optional": true
+        },
+        {
+          "name": "SelectedRowsChanged",
+          "type": "EventCallback<IEnumerable<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnSelectAll",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "AutoColIndexes",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "RerenderStrategy",
+          "type": "RerenderStrategy",
+          "optional": true
+        },
+        {
+          "name": "DataSource",
+          "type": "IEnumerable<TItem>",
+          "optional": true
+        },
+        {
+          "name": "GroupTitleTemplate",
+          "type": "RenderFragment<GroupResult<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "GroupFooterTemplate",
+          "type": "RenderFragment<GroupResult<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "RowTemplate",
+          "type": "RenderFragment<RowData<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "ColumnDefinitions",
+          "type": "RenderFragment<TItem>",
+          "optional": true
+        },
+        {
+          "name": "HeaderTemplate",
+          "type": "RenderFragment<TItem>",
+          "optional": true
+        },
+        {
+          "name": "ExpandTemplate",
+          "type": "RenderFragment<RowData<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "DefaultExpandAllRows",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DefaultExpandMaxLevel",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "RowExpandable",
+          "type": "Func<RowData<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "TreeChildren",
+          "type": "Func<TItem, IEnumerable<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<QueryModel<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnRow",
+          "type": "Func<RowData<TItem>, Dictionary<string, object>>",
+          "optional": true
+        },
+        {
+          "name": "OnHeaderRow",
+          "type": "Func<Dictionary<string, object>>",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Footer",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "FooterTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "TableSize",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "TableLocale",
+          "optional": true
+        },
+        {
+          "name": "Bordered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Striped",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ScrollX",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ScrollY",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "AutoHeight",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ScrollBarWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IndentSize",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "ExpandIconColumnIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "RowClassName",
+          "type": "Func<RowData<TItem>, string>",
+          "optional": true
+        },
+        {
+          "name": "ExpandedRowClassName",
+          "type": "Func<RowData<TItem>, string>",
+          "optional": true
+        },
+        {
+          "name": "OnExpand",
+          "type": "EventCallback<RowData<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "TableLayout",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "OnRowClick",
+          "type": "EventCallback<RowData<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "RemoteDataSource",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Responsive",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "EmptyTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "RowKey",
+          "type": "Func<TItem, object>",
+          "optional": true
+        },
+        {
+          "name": "Resizable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "FieldFilterTypeResolver",
+          "type": "IFieldFilterTypeResolver",
+          "optional": true
+        },
+        {
+          "name": "EnableVirtualization",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "StickyOffsetHeader",
+          "type": "int?",
+          "optional": true
+        },
+        {
+          "name": "AdditionalAttributes",
+          "type": "Dictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "RowData",
+          "type": "RowData<TItem>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "tabs",
+      "parameters": [
+        {
+          "name": "Reuse",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Class",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Style",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ActivedUri",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ActivedUriChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "TabPaneClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TabPaneTemplate",
+          "type": "RenderFragment<ReuseTabsPageItem>",
+          "optional": true
+        },
+        {
+          "name": "Body",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "ReuseTabsLocale",
+          "optional": true
+        },
+        {
+          "name": "ScanAssemblies",
+          "type": "Assembly[]",
+          "optional": true
+        },
+        {
+          "name": "HidePages",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ReuseTabsRouteData",
+          "type": "ReuseTabsRouteData",
+          "optional": true
+        },
+        {
+          "name": "ForceRender",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Key",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Tab",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TabTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "TabContextMenu",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Closable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ActiveKey",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ActiveKeyChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "Animated",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "InkBarAnimated",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "RenderTabBar",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "DefaultActiveKey",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "HideAdd",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Size",
+          "type": "TabSize",
+          "optional": true
+        },
+        {
+          "name": "TabBarExtraContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "TabBarExtraContentLeft",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "TabBarExtraContentRight",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "TabBarGutter",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "TabBarStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TabBarClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TabPosition",
+          "type": "TabPosition",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "TabType",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "OnEdit",
+          "type": "Func<string, string, Task<bool>>",
+          "optional": true
+        },
+        {
+          "name": "OnClose",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "OnAddClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "AfterTabCreated",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "OnTabClick",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "Draggable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Centered",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "StandaloneInCard",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "EnableSwipe",
+          "type": "bool",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "tag",
+      "parameters": [
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Closable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Checkable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Checked",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CheckedChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Color",
+          "type": "OneOf<TagColor, string>",
+          "optional": true
+        },
+        {
+          "name": "PresetColor",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IconTheme",
+          "type": "IconThemeType",
+          "optional": true
+        },
+        {
+          "name": "IconTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "NoAnimation",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnClose",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnClosing",
+          "type": "EventCallback<CloseEventArgs<MouseEventArgs>>",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback",
+          "optional": true
+        },
+        {
+          "name": "Visible",
+          "type": "bool",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "timeline",
+      "parameters": [
+        {
+          "name": "Mode",
+          "type": "TimelineMode?",
+          "optional": true
+        },
+        {
+          "name": "Reverse",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Pending",
+          "type": "OneOf<string, RenderFragment>",
+          "optional": true
+        },
+        {
+          "name": "PendingDot",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Dot",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Color",
+          "type": "OneOf<TimelineDotColor, string>",
+          "optional": true
+        },
+        {
+          "name": "Label",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "tooltip",
+      "parameters": [
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ArrowPointAtCenter",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "MouseEnterDelay",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "MouseLeaveDelay",
+          "type": "double",
+          "optional": true
+        },
+        {
+          "name": "TabIndex",
+          "type": "int",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "transfer",
+      "parameters": [
+        {
+          "name": "DataSource",
+          "type": "IEnumerable<TransferItem>",
+          "optional": true
+        },
+        {
+          "name": "Titles",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "Operations",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowSearch",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowSelectAll",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "TargetKeys",
+          "type": "IEnumerable<string>",
+          "optional": true
+        },
+        {
+          "name": "SelectedKeys",
+          "type": "IEnumerable<string>",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<TransferChangeArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnScroll",
+          "type": "EventCallback<TransferScrollArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnSearch",
+          "type": "EventCallback<TransferSearchArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnSelectChange",
+          "type": "EventCallback<TransferSelectChangeArgs>",
+          "optional": true
+        },
+        {
+          "name": "Render",
+          "type": "Func<TransferItem, OneOf<string, RenderFragment>>",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "TransferLocale",
+          "optional": true
+        },
+        {
+          "name": "Footer",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "FooterTemplate",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ListStyle",
+          "type": "Func<TransferDirection, string>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "tree",
+      "parameters": [
+        {
+          "name": "ShowExpand",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowLine",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "BlockNode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Draggable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowLeafIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SwitcherIcon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Nodes",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Selectable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Multiple",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DefaultSelectedKeys",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "DefaultSelectedKey",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SelectedKey",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SelectedKeyChanged",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "SelectedNode",
+          "type": "TreeNode<TItem>",
+          "optional": true
+        },
+        {
+          "name": "SelectedNodeChanged",
+          "type": "EventCallback<TreeNode<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "SelectedData",
+          "type": "TItem",
+          "optional": true
+        },
+        {
+          "name": "SelectedDataChanged",
+          "type": "EventCallback<TItem>",
+          "optional": true
+        },
+        {
+          "name": "SelectedKeys",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "SelectedKeysChanged",
+          "type": "EventCallback<string[]>",
+          "optional": true
+        },
+        {
+          "name": "SelectedNodes",
+          "type": "TreeNode<TItem>[]",
+          "optional": true
+        },
+        {
+          "name": "SelectedNodesChanged",
+          "type": "EventCallback<TreeNode<TItem>[]>",
+          "optional": true
+        },
+        {
+          "name": "SelectedDatas",
+          "type": "TItem[]",
+          "optional": true
+        },
+        {
+          "name": "SelectedDatasChanged",
+          "type": "EventCallback<TItem[]>",
+          "optional": true
+        },
+        {
+          "name": "Checkable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CheckOnClickNode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CheckStrictly",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CheckedKeys",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "CheckedKeysChanged",
+          "type": "EventCallback<string[]>",
+          "optional": true
+        },
+        {
+          "name": "DefaultCheckedKeys",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "SearchValue",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "SearchExpression",
+          "type": "Func<TreeNode<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "MatchedStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "MatchedClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "HideUnmatched",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DataSource",
+          "type": "IEnumerable<TItem>",
+          "optional": true
+        },
+        {
+          "name": "TitleExpression",
+          "type": "Func<TreeNode<TItem>, string>",
+          "optional": true
+        },
+        {
+          "name": "KeyExpression",
+          "type": "Func<TreeNode<TItem>, string>",
+          "optional": true
+        },
+        {
+          "name": "IconExpression",
+          "type": "Func<TreeNode<TItem>, string>",
+          "optional": true
+        },
+        {
+          "name": "IsLeafExpression",
+          "type": "Func<TreeNode<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "ChildrenExpression",
+          "type": "Func<TreeNode<TItem>, IEnumerable<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "DisabledExpression",
+          "type": "Func<TreeNode<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "CheckableExpression",
+          "type": "Func<TreeNode<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "SelectableExpression",
+          "type": "Func<TreeNode<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "OnNodeLoadDelayAsync",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnClick",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnDblClick",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnContextMenu",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnCheck",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnSelect",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnUnselect",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnExpandChanged",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "IndentTemplate",
+          "type": "RenderFragment<TreeNode<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment<TreeNode<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "TitleIconTemplate",
+          "type": "RenderFragment<TreeNode<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "SwitcherIconTemplate",
+          "type": "RenderFragment<TreeNode<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnDragStart",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnDragEnter",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnDragLeave",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnDrop",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnDragEnd",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "DraggableExpression",
+          "type": "Func<TreeNode<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "DroppableExpression",
+          "type": "Func<TreeNode<TItem>, TreeNode<TItem>, bool, bool>",
+          "optional": true
+        },
+        {
+          "name": "ExpandOnClickNode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DefaultExpandAll",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DefaultExpandParent",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "DefaultExpandedKeys",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "ExpandedKeys",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "ExpandedKeysChanged",
+          "type": "EventCallback<string[]>",
+          "optional": true
+        },
+        {
+          "name": "OnExpand",
+          "type": "EventCallback<(string[] ExpandedKeys, TreeNode<TItem> Node, bool Expanded)>",
+          "optional": true
+        },
+        {
+          "name": "AutoExpandParent",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "TreeLevel",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Key",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Selected",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SelectedChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Loading",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "IsLeaf",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Expanded",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ExpandedChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "Checked",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CheckedChanged",
+          "type": "EventCallback<bool>",
+          "optional": true
+        },
+        {
+          "name": "DisableCheckbox",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Icon",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "IconTemplate",
+          "type": "RenderFragment<TreeNode<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "Title",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DataItem",
+          "type": "TItem",
+          "optional": true
+        },
+        {
+          "name": "OnCheckBoxClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        },
+        {
+          "name": "OnSwitcherClick",
+          "type": "EventCallback<MouseEventArgs>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "tree-select",
+      "parameters": [
+        {
+          "name": "Multiple",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "TreeCheckable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "TreeCheckStrictly",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowCheckedStrategy",
+          "type": "TreeCheckedStrategy",
+          "optional": true
+        },
+        {
+          "name": "CheckOnClickNode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnBlur",
+          "type": "Action",
+          "optional": true
+        },
+        {
+          "name": "TitleTemplate",
+          "type": "RenderFragment<TreeNode<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "TitleIconTemplate",
+          "type": "RenderFragment<TreeNode<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "Nodes",
+          "type": "TreeNode<TItem>[]",
+          "optional": true
+        },
+        {
+          "name": "DataSource",
+          "type": "IEnumerable<TItem>",
+          "optional": true
+        },
+        {
+          "name": "TreeDefaultExpandAll",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "TreeDefaultExpandParent",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "TreeDefaultExpandedKeys",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "ExpandOnClickNode",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "SearchExpression",
+          "type": "Func<TreeNode<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "OnSearch",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "MatchedStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "MatchedClass",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "RootValue",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "DropdownMatchSelectWidth",
+          "type": "OneOf<bool, string>",
+          "optional": true
+        },
+        {
+          "name": "DropdownMaxWidth",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "PopupContainerMaxHeight",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ShowIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowLeafIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "TreeAttributes",
+          "type": "IDictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "OnNodeLoadDelayAsync",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "OnTreeNodeSelect",
+          "type": "EventCallback<TreeEventArgs<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "TitleExpression",
+          "type": "Func<TreeNode<TItem>, string>",
+          "optional": true
+        },
+        {
+          "name": "DropdownStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ShowTreeLine",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "KeyExpression",
+          "type": "Func<TreeNode<TItem>, string>",
+          "optional": true
+        },
+        {
+          "name": "IconExpression",
+          "type": "Func<TreeNode<TItem>, string>",
+          "optional": true
+        },
+        {
+          "name": "IsLeafExpression",
+          "type": "Func<TreeNode<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "ChildrenExpression",
+          "type": "Func<TreeNode<TItem>, IEnumerable<TItem>>",
+          "optional": true
+        },
+        {
+          "name": "DisabledExpression",
+          "type": "Func<TreeNode<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "CheckableExpression",
+          "type": "Func<TreeNode<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "SelectableExpression",
+          "type": "Func<TreeNode<TItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "ExpandedKeys",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "Value",
+          "type": "override TItemValue",
+          "optional": true
+        },
+        {
+          "name": "Values",
+          "type": "override IEnumerable<TItemValue>",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "typography",
+      "parameters": [
+        {
+          "name": "Keyboard",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Level",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Code",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Copyable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "CopyConfig",
+          "type": "TypographyCopyableConfig",
+          "optional": true
+        },
+        {
+          "name": "Delete",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Editable",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "EditConfig",
+          "type": "TypographyEditableConfig",
+          "optional": true
+        },
+        {
+          "name": "Ellipsis",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "EllipsisConfig",
+          "type": "TypographyEllipsisConfig",
+          "optional": true
+        },
+        {
+          "name": "Mark",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Underline",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Strong",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<string>",
+          "optional": true
+        },
+        {
+          "name": "Type",
+          "type": "TextElementType?",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "upload",
+      "parameters": [
+        {
+          "name": "BeforeUpload",
+          "type": "Func<UploadFileItem, bool>",
+          "optional": true
+        },
+        {
+          "name": "BeforeAllUploadAsync",
+          "type": "Func<List<UploadFileItem>, Task<bool>>",
+          "optional": true
+        },
+        {
+          "name": "BeforeAllUpload",
+          "type": "Func<List<UploadFileItem>, bool>",
+          "optional": true
+        },
+        {
+          "name": "Name",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Action",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Disabled",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Data",
+          "type": "Dictionary<string, object>",
+          "optional": true
+        },
+        {
+          "name": "ListType",
+          "type": "UploadListType",
+          "optional": true
+        },
+        {
+          "name": "Directory",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Multiple",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Accept",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "ShowUploadList",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowDownloadIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowPreviewIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ShowRemoveIcon",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "FileList",
+          "type": "List<UploadFileItem>",
+          "optional": true
+        },
+        {
+          "name": "Locale",
+          "type": "UploadLocale",
+          "optional": true
+        },
+        {
+          "name": "FileListChanged",
+          "type": "EventCallback<List<UploadFileItem>>",
+          "optional": true
+        },
+        {
+          "name": "DefaultFileList",
+          "type": "List<UploadFileItem>",
+          "optional": true
+        },
+        {
+          "name": "Headers",
+          "type": "Dictionary<string, string>",
+          "optional": true
+        },
+        {
+          "name": "OnSingleCompleted",
+          "type": "EventCallback<UploadInfo>",
+          "optional": true
+        },
+        {
+          "name": "OnCompleted",
+          "type": "EventCallback<UploadInfo>",
+          "optional": true
+        },
+        {
+          "name": "OnChange",
+          "type": "EventCallback<UploadInfo>",
+          "optional": true
+        },
+        {
+          "name": "OnRemove",
+          "type": "Func<UploadFileItem, Task<bool>>",
+          "optional": true
+        },
+        {
+          "name": "OnPreview",
+          "type": "EventCallback<UploadFileItem>",
+          "optional": true
+        },
+        {
+          "name": "OnDownload",
+          "type": "EventCallback<UploadFileItem>",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        },
+        {
+          "name": "ShowButton",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Drag",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Method",
+          "type": "OneOf<HttpMethod, string>",
+          "optional": true
+        },
+        {
+          "name": "BatchUpload",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "WithCredentials",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Defer",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Trigger",
+          "type": "UploadTrigger",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "component": "watermark",
+      "parameters": [
+        {
+          "name": "Width",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Height",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Rotate",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Alpha",
+          "type": "float",
+          "optional": true
+        },
+        {
+          "name": "FontSize",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "FontColor",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "FontFamily",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "FontWeight",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "FontStyle",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Content",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Contents",
+          "type": "string[]",
+          "optional": true
+        },
+        {
+          "name": "ZIndex",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Gap",
+          "type": "(int X, int Y)",
+          "optional": true
+        },
+        {
+          "name": "Image",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "Offset",
+          "type": "(int X, int Y)",
+          "optional": true
+        },
+        {
+          "name": "LineSpace",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Scrolling",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ScrollingSpeed",
+          "type": "int",
+          "optional": true
+        },
+        {
+          "name": "Repeat",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "Grayscale",
+          "type": "bool",
+          "optional": true
+        },
+        {
+          "name": "ChildContent",
+          "type": "RenderFragment",
+          "optional": true
+        }
+      ]
+    }
+  ]
+}

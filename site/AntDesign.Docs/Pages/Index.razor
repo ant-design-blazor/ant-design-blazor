@@ -1,4 +1,5 @@
 ﻿@layout BlankLayout
+@using AntDesign.Docs.Components
 
 @page "/"
 @page "/zh-CN/"
@@ -8,8 +9,8 @@
 
 <div id="react-content">
     <MainHeader IsHome />
-    <div class="home-container">
-        <div class="home-banner">
+    <div class="home-container @_styles["root"]">
+        <div class="home-banner @_styles["banner"]">
             <div class="home-banner-background">
                 <img alt="background" src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*kJM2Q6uPXCAAAAAAAAAAAABkARQnAQ">
                 <svg viewBox="0 0 1440 448">
@@ -32,36 +33,37 @@
                     <div>
                         <div class="home-card-logo">
                             <h1 class="home-banner-mini">Ant Design Blazor</h1>
-                            <h1 class="home-banner-normal" style="font-size: 3.7em;">Ant Design Blazor</h1>
+                            <h1 class="home-banner-normal @_styles["bannerTitle"]">Ant Design Blazor</h1>
                         </div>
                     </div>
                     <p>@Localizer["app.home.introduce"]</p>
                     <div class="home-banner-content-operations">
                         <a href="/@Language.CurrentCulture.Name/docs">
-                            <Button Type="ButtonType.Primary" Shape="ButtonShape.Round">@Localizer["app.home.getting-started"]</Button>
+                            <Button Type="ButtonType.Primary" Size="ButtonSize.Large">@Localizer["app.home.getting-started"]</Button>
                         </a>
                         <a href="https://github.com/ant-design-blazor/ant-design-blazor/stargazers">
-                            <Button Shape="ButtonShape.Round" Icon="@IconType.Outline.Github">@Localizer["app.home.star-on-github"]</Button>
+                            <Button Size="ButtonSize.Large" Icon="@IconType.Outline.Github">@Localizer["app.home.star-on-github"]</Button>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-        <div style="max-width: 1256px; margin: 0px auto;">
+        <div class="@_styles["contentWidth"]">
+            <HomeThemePreview />
             @if (_recommends.Any())
             {
                 <div class="home-block-content">
-                    <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">@Localizer["app.home.recommend"]</h2>
-                    <Row Style="margin: -12px -12px -36px;">
-                        <AntDesign.Col Xs="24" Sm="14" Style="padding: 12px;">
+                    <h2 class="ant-typography @_styles["sectionTitle"]" direction="ltr">@Localizer["app.home.recommend"]</h2>
+                    <Row Class="@_styles["recommendRow"]">
+                        <AntDesign.Col Xs="24" Sm="14" Class="@_styles["recommendColumn"]">
                             <Recommend Data="_recommends[0]" Main />
                         </AntDesign.Col>
-                        <AntDesign.Col Xs="24" Sm="10" Style="padding: 12px;">
-                            <Row Style="margin: -12px -12px 12px;">
-                                <AntDesign.Col Span="24" Style="padding: 12px;">
+                        <AntDesign.Col Xs="24" Sm="10" Class="@_styles["recommendColumn"]">
+                            <Row Class="@_styles["nestedRecommendRow"]">
+                                <AntDesign.Col Span="24" Class="@_styles["recommendColumn"]">
                                     <Recommend Data="_recommends[1]" />
                                 </AntDesign.Col>
-                                <AntDesign.Col Span="24" Style="padding: 12px;">
+                                <AntDesign.Col Span="24" Class="@_styles["recommendColumn"]">
                                     <Recommend Data="_recommends[2]" />
                                 </AntDesign.Col>
                             </Row>
@@ -73,14 +75,14 @@
             @if (_products.Any())
             {
                 <div class="home-block-content">
-                    <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">@Localizer["app.home.products"]</h2>
-                    <div style="margin-bottom: -28px;">
-                        <Row Class="design-mini-panels" Style="margin: 40px -20px 20px;">
+                    <h2 class="ant-typography @_styles["sectionTitle"]" direction="ltr">@Localizer["app.home.products"]</h2>
+                    <div class="@_styles["productsContent"]">
+                        <Row Class="@($"design-mini-panels {_styles["miniPanels"]}")">
                             @foreach (var item in _products)
                             {
-                                <AntDesign.Col Xs="24" Sm="8" Style="padding: 20px;">
+                                <AntDesign.Col Xs="24" Sm="8" Class="@_styles["productColumn"]">
                                     <a href="@item.Href" target="_blank" rel="noopener noreferrer">
-                                        <Card Class="design-mini-panel" Hoverable>
+                                        <Card Class="@($"design-mini-panel {_styles["miniPanel"]}")" Hoverable>
                                             <Cover>
                                                 <img alt="@item.Title" src="@item.Img">
                                             </Cover>
@@ -99,14 +101,14 @@
             @if (_sponsors.Any())
             {
                 <div class="home-block-content">
-                    <h2 class="ant-typography" direction="ltr" style="font-weight: lighter; color: rgb(49, 70, 89);">
+                    <h2 class="ant-typography @_styles["sectionTitle"]" direction="ltr">
                         @Localizer["app.home.sponsors"]
                         <div class="home-block-content-extra"><a href="@(Localizer["app.home.sponsor-us-href"])" target="_blank">@Localizer["app.home.sponsor-us"]</a></div>
                     </h2>
-                    <div class="ant-row" style="margin: -16px -12px 16px;">
+                    <div class="ant-row @_styles["sponsorRow"]">
                         @foreach (var item in _sponsors)
                         {
-                            <div class="ant-col ant-col-xs-24 ant-col-sm-12" style="padding: 16px 12px;">
+                            <div class="ant-col ant-col-xs-24 ant-col-sm-12 @_styles["sponsorColumn"]">
                                 <a href="@item.Href" target="_blank" rel="noopener noreferrer">
                                   @*   <Card Class="more-card" Hoverable>
                                         <Cover>
@@ -122,7 +124,7 @@
                                             </div>
                                         </Body>
                                     </Card> *@
-                                    <Card Style="margin-top: 16px">
+                                    <Card Class="@_styles["sponsorCard"]">
                                         <CardMeta Avatar="@item.Logo"
                                                     Title="@item.Name"
                                                     Description="@item.Comment" />
@@ -136,6 +138,8 @@
 
         </div>
 
-        <MainFooter />
+    <MainFooter />
     </div>
 </div>
+
+<style>@((MarkupString)_styles.CssText)</style>
