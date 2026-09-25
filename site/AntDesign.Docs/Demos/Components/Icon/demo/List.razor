@@ -1,14 +1,14 @@
-﻿<h2>List of icons</h2>
+﻿
 <div style="display: flex; justify-content: space-between;">
     <RadioGroup @bind-Value="currentTheme" ButtonStyle="RadioButtonStyle.Solid" Size="InputSize.Large" TValue="IconThemeType" OnChange="OnThemeChanged">
         <Radio RadioButton Value="IconThemeType.Outline">
-            <Icon Component="OutlineSvg" />@Localizer["app.docs.components.icon.outlined"]
+            <DynamicComponent Type="@GetThemeIconType("outlined")" />@Localizer["app.docs.components.icon.outlined"]
         </Radio>
         <Radio RadioButton Value="IconThemeType.Fill">
-            <Icon Component="FilledSvg" />@Localizer["app.docs.components.icon.filled"]
+            <DynamicComponent Type="@GetThemeIconType("filled")" />@Localizer["app.docs.components.icon.filled"]
         </Radio>
         <Radio RadioButton Value="IconThemeType.TwoTone">
-            <Icon Component="TwoToneSvg" />@Localizer["app.docs.components.icon.two-tone"]
+            <DynamicComponent Type="@GetThemeIconType("twotone")" />@Localizer["app.docs.components.icon.two-tone"]
         </Radio>
     </RadioGroup>
     <Search Size="InputSize.Large"
@@ -33,7 +33,10 @@ else
             @foreach (var name in item.IconNames)
             {
                 <li class="@item.Category" @onclick="(() => OnCopyClick(currentTheme, name))">
-                    <Icon Type="@name" Theme="@currentTheme" Style="font-size:36px" @key="@($"{currentTheme}-{name}")" />
+                    @if (catalogByKey.TryGetValue(CatalogKey(currentTheme, name), out var catalogItem))
+                    {
+                        <DynamicComponent Type="@catalogItem.ComponentType" Parameters="@iconParameters" @key="@($"{currentTheme}-{name}")" />
+                    }
                     <div class="anticon-class">
                         <Badge>@name</Badge>
                     </div>
@@ -45,7 +48,6 @@ else
 
 
 @inject AntDesign.Docs.Services.IconListService iconListService
-@inject IconService IconService
 @inject ILocalizationService LocalizationService
 @inject IStringLocalizer Localizer;
 @inject IMessageService messageService
@@ -59,6 +61,25 @@ else
 
     private IList<AntDesign.Docs.Services.IconItem> lstIcons { get; set; }
     private IList<AntDesign.Docs.Services.IconItem> displayIcons { get; set; }
+    private readonly Dictionary<string, AntDesign.Icons.IconCatalogItem> catalogByKey = AntDesign.Icons.IconCatalog.Items
+        .ToDictionary(item => CatalogKey(item.Theme, item.Name), StringComparer.Ordinal);
+    private readonly IDictionary<string, object> iconParameters = new Dictionary<string, object>
+    {
+        ["Style"] = "font-size:36px"
+    };
+
+    private static Type GetThemeIconType(string theme) => AntDesign.Icons.IconCatalog.Items
+        .First(item => item.Name == "account-book" && item.Theme == theme)
+        .ComponentType;
+
+    private static string CatalogKey(IconThemeType theme, string name) => CatalogKey(theme switch
+    {
+        IconThemeType.Fill => "filled",
+        IconThemeType.TwoTone => "twotone",
+        _ => "outlined"
+    }, name);
+
+    private static string CatalogKey(string theme, string name) => $"{theme}:{name}";
 
     protected override async Task OnInitializedAsync()
     {
@@ -83,6 +104,7 @@ else
 
     private async Task OnThemeChanged(IconThemeType newTheme)
     {
+        currentTheme = newTheme;
         displayIcons = null;
 
         displayIcons = new List<Services.IconItem>();
@@ -93,7 +115,7 @@ else
             itemIcons.IconNames = new List<string>();
             foreach (var item in categorys.IconNames)
             {
-                var isExist = AntDesign.IconService.IconExists(currentTheme, item);
+                var isExist = catalogByKey.ContainsKey(CatalogKey(newTheme, item));
 
                 if (isExist)
                 {
@@ -110,15 +132,10 @@ else
         await InvokeAsync(StateHasChanged);
     }
 
-    protected override bool ShouldRender()
-    {
-        return displayIcons.Any();
-    }
-
-
     private void OnCopyClick(IconThemeType theme, string iconName)
     {
-        string htmlIcon = $"<Icon Type=\"{iconName}\" Theme=\"{nameof(IconThemeType)}.{theme}\"/>";
+        catalogByKey.TryGetValue(CatalogKey(theme, iconName), out var icon);
+        string htmlIcon = icon == null ? string.Empty : $"<{icon.ComponentType.Name} />";
         JsRuntime.InvokeAsync<object>(JSInteropConstants.Copy, htmlIcon);
 
         messageService.Success(htmlIcon+ "  copied 🎉!");
