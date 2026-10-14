@@ -29,6 +29,36 @@
     }
 
     [Fact]
+    public void Semantic_class_and_style_slots_are_applied_to_tabs_structure()
+    {
+        IReadOnlyDictionary<string, string> classes = new Dictionary<string, string>
+        {
+            ["root"] = "custom-tabs-root",
+            ["header"] = "custom-tabs-header",
+            ["item"] = "custom-tabs-item",
+            ["indicator"] = "custom-tabs-indicator",
+            ["body"] = "custom-tabs-body",
+            ["content"] = "custom-tabs-content"
+        };
+        IReadOnlyDictionary<string, string> styles = new Dictionary<string, string>
+        {
+            ["item"] = "font-weight: bold;",
+            ["content"] = "padding: 16px;"
+        };
+
+        var cut = Context.Render<Tabs>(@<Tabs ClassNames="classes" Styles="styles">
+            <TabPane Key="one" Tab="One">Panel</TabPane>
+        </Tabs>);
+
+        cut.Find(".custom-tabs-root").Should().NotBeNull();
+        cut.Find(".custom-tabs-header").Should().NotBeNull();
+        cut.Find(".custom-tabs-item").GetAttribute("style").Should().Contain("font-weight: bold");
+        cut.Find(".custom-tabs-indicator").Should().NotBeNull();
+        cut.Find(".custom-tabs-body").Should().NotBeNull();
+        cut.Find(".custom-tabs-content").GetAttribute("style").Should().Contain("padding: 16px");
+    }
+
+    [Fact]
     public void Render_tab_pane_wit_forceRender()
     {
         var cut = Context.Render(

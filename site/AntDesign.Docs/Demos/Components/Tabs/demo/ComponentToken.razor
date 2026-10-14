@@ -1,0 +1,40 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <Flex Vertical="true" Gap="FlexGap.Middle">
+        <Tabs DefaultActiveKey="1" TabBarExtraContent="@ExtraAction" Style="margin-bottom: 24px;">
+            <TabPane Key="1" Tab="Tab 1">Content of Tab Pane 1</TabPane>
+            <TabPane Key="2" Tab="Tab 2">Content of Tab Pane 2</TabPane>
+            <TabPane Key="3" Tab="Tab 3" Disabled="true">Content of Tab Pane 3</TabPane>
+        </Tabs>
+        <Tabs DefaultActiveKey="1" Type="TabType.Card" TabBarExtraContent="@ExtraAction">
+            <TabPane Key="1" Tab="Tab 1">Content of Tab Pane 1</TabPane>
+            <TabPane Key="2" Tab="Tab 2">Content of Tab Pane 2</TabPane>
+            <TabPane Key="3" Tab="Tab 3" Disabled="true">Content of Tab Pane 3</TabPane>
+        </Tabs>
+    </Flex>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Tabs"] = new Dictionary<string, string>
+            {
+                ["cardBg"] = "#f6ffed",
+                ["cardHeight"] = "60px",
+                ["cardPadding"] = "20px",
+                ["inkBarColor"] = "#52c41a",
+                ["horizontalItemGutter"] = "12px",
+                ["horizontalItemPadding"] = "20px",
+                ["itemSelectedColor"] = "#389e0d",
+                ["itemHoverColor"] = "#d9f7be",
+                ["itemActiveColor"] = "#b7eb8f",
+                ["cardGutter"] = "12px"
+            }
+        }
+    };
+
+    private RenderFragment ExtraAction => @<Button>Extra Action</Button>;
+}

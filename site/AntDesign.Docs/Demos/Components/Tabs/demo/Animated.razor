@@ -1,0 +1,23 @@
+<Flex Vertical="true" Gap="FlexGap.Middle">
+    <Space>
+        <Switch @bind-Checked="_inkBarAnimated" CheckedChildren="inkBar" UnCheckedChildren="inkBar" />
+        <Switch @bind-Checked="_paneAnimated" CheckedChildren="tabPane" UnCheckedChildren="tabPane" />
+    </Space>
+
+    <Tabs DefaultActiveKey="1" InkBarAnimated="@_inkBarAnimated" Animated="@_paneAnimated">
+        <TabPane Key="1" Tab="Bamboo">
+            <div style="height: 200px; box-shadow: 0 0 3px rgba(255, 0, 0, 0.5);">Hello Bamboo!</div>
+        </TabPane>
+        <TabPane Key="2" Tab="Little">
+            <div style="height: 300px; box-shadow: 0 0 3px rgba(0, 255, 0, 0.5);">Hi Little!</div>
+        </TabPane>
+        <TabPane Key="3" Tab="Light">
+            <div style="height: 100px; box-shadow: 0 0 3px rgba(0, 0, 255, 0.5);">Welcome Light!</div>
+        </TabPane>
+    </Tabs>
+</Flex>
+
+@code {
+    private bool _inkBarAnimated = true;
+    private bool _paneAnimated = true;
+}

@@ -1,0 +1,39 @@
+<Flex Vertical="true" Gap="FlexGap.Middle">
+    <Tabs DefaultActiveKey="1" ClassNames="@_classNames" Styles="@_styles">
+        <TabPane Key="1" Tab="Tab 1">Content of Tab Pane 1</TabPane>
+        <TabPane Key="2" Tab="Tab 2">Content of Tab Pane 2</TabPane>
+        <TabPane Key="3" Tab="Tab 3">Content of Tab Pane 3</TabPane>
+    </Tabs>
+    <Tabs DefaultActiveKey="1" Type="TabType.Card" TabPosition="TabPosition.Left" ClassNames="@_classNames" Styles="@_cardStyles">
+        <TabPane Key="1" Tab="Tab 1">Content of Tab Pane 1</TabPane>
+        <TabPane Key="2" Tab="Tab 2">Content of Tab Pane 2</TabPane>
+        <TabPane Key="3" Tab="Tab 3">Content of Tab Pane 3</TabPane>
+    </Tabs>
+</Flex>
+
+@code {
+    private readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "tabs-semantic-root"
+    };
+
+    private readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "border-width: 2px; border-style: dashed; padding: 16px; margin-bottom: 10px;",
+        ["header"] = "background-color: rgba(245,245,245,.5);",
+        ["item"] = "font-weight: bold; color: #1890ff; padding: 6px 10px;",
+        ["indicator"] = "background-color: rgba(255,77,79,.3); height: 4px;",
+        ["body"] = "background-color: rgba(230,247,255,.8);",
+        ["content"] = "padding: 16px;"
+    };
+
+    private readonly IReadOnlyDictionary<string, string> _cardStyles = new Dictionary<string, string>
+    {
+        ["root"] = "background-color: rgba(250,250,250,.8); border-color: #d9d9d9;",
+        ["header"] = "text-align: start;"
+    };
+}
+
+<style>
+    .tabs-semantic-root { border-color: #d9d9d9; }
+</style>

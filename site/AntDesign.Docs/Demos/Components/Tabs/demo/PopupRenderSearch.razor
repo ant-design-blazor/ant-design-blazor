@@ -1,0 +1,15 @@
+@using AntDesign.Docs.Shared
+
+<Tabs DefaultActiveKey="1" Type="TabType.EditableCard" HideAdd Style="max-width: 420px;" MorePopupRender="@RenderSearchPopup">
+    @for (var i = 0; i < 30; i++)
+    {
+        var index = i;
+        <TabPane @key="index" Key="@index.ToString()" Tab="@($"Tab-{index}")" Disabled="@(index == 28)">
+            Content of tab @index
+        </TabPane>
+    }
+</Tabs>
+
+@code {
+    private RenderFragment<TabsMoreContext> RenderSearchPopup => context => @<TabsSearchPopup Context="context" />;
+}

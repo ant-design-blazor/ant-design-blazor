@@ -20,9 +20,9 @@
 @code {
     internal void RenderTabs(RenderTreeBuilder __builder)
     {
-        <div class="@ClassMapper.Class" style="@Style" id="@Id">
+        <div class="@SemanticClass("root", ClassMapper.Class)" style="@SemanticStyle("root", Style)" id="@Id">
             <!--Tab bar-->
-            <div role="tablist" class="@_tabBarClassMapper.Class" style="@TabBarStyle">
+            <div role="tablist" class="@SemanticClass("header", _tabBarClassMapper.Class)" style="@SemanticStyle("header", TabBarStyle)">
 
                 @if (TabBarExtraContentLeft != null)
                 {
@@ -44,11 +44,19 @@
                                 <Icon Type="plus" />
                             </button>
                         }
-                        <div class="@_inkClassMapper.Class" style="@_inkStyle"></div>
+                        <div class="@SemanticClass("indicator", _inkClassMapper.Class)" style="@SemanticStyle("indicator", _inkStyle)"></div>
                     </div>
                 </div>
-                <Dropdown OnVisibleChange="OnVisibleChange">
+                <Dropdown @ref="_moreDropdown" OnVisibleChange="OnVisibleChange"
+                          OverlayClassName="@SemanticClass("popup.root", null)"
+                          OverlayStyle="@SemanticStyle("popup.root")">
                     <Overlay>
+                        @if (MorePopupRender != null)
+                        {
+                            @MorePopupRender(CreateMoreContext())
+                        }
+                        else
+                        {
                         <ul tabindex="0"
                             class="ant-tabs-dropdown-menu ant-tabs-dropdown-menu-root ant-tabs-dropdown-menu-vertical"
                             id="@($"rc-tabs-{Id}-more-popup")" role="listbox" aria-label="expanded dropdown">
@@ -69,6 +77,7 @@
                                 </li>
                             }
                         </ul>
+                        }
                     </Overlay>
                     <Unbound>
                         <div @ref="context.Current" class="@_operationClass" @onclick:preventDefault>
@@ -106,7 +115,7 @@
 
     internal void RenderTabPanels(RenderTreeBuilder __builder)
     {
-        <div class="ant-tabs-content-holder" @ref="@_contentHolderRef">
+        <div class="@SemanticClass("body", "ant-tabs-content-holder")" style="@SemanticStyle("body")" @ref="@_contentHolderRef">
             <div class="@_contentClassMapper.Class">
                 @foreach (var tab in _tabs)
                 {

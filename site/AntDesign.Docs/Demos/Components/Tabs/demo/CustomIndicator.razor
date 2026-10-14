@@ -1,0 +1,24 @@
+<div>
+    <Segmented Labels="@(new[] { "start", "center", "end" })" @bind-Value="_align" Style="margin-bottom: 8px;" />
+    <Tabs DefaultActiveKey="1" Indicator="@_indicator" OnChange="OnChange">
+        <TabPane Key="1" Tab="Tab 1">Content of Tab Pane 1</TabPane>
+        <TabPane Key="2" Tab="Tab 2">Content of Tab Pane 2</TabPane>
+        <TabPane Key="3" Tab="Tab 3">Content of Tab Pane 3</TabPane>
+    </Tabs>
+</div>
+
+@code {
+    private string _align = "center";
+    private TabsIndicator _indicator => new()
+    {
+        Size = origin => origin - 20,
+        Align = _align switch
+        {
+            "start" => TabsIndicatorAlign.Start,
+            "end" => TabsIndicatorAlign.End,
+            _ => TabsIndicatorAlign.Center
+        }
+    };
+
+    private void OnChange(string key) => Console.WriteLine(key);
+}

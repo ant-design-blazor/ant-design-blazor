@@ -144,6 +144,22 @@ namespace AntDesign
         [Parameter]
         public string TabBarClass { get; set; }
 
+        /// <summary>Customizes the ink indicator size and alignment.</summary>
+        [Parameter]
+        public TabsIndicator Indicator { get; set; }
+
+        /// <summary>Custom renderer for the overflow tabs popup.</summary>
+        [Parameter]
+        public RenderFragment<TabsMoreContext> MorePopupRender { get; set; }
+
+        /// <summary>Semantic class names keyed by root, header, item, indicator, body, content, remove, and popup.root.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Semantic inline CSS styles keyed by root, header, item, indicator, body, content, remove, and popup.root.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
         /// <summary>
         /// Position of tabs
         /// </summary>
@@ -469,6 +485,38 @@ namespace AntDesign
             ActivatePane(tabPane.Key);
         }
 
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return semanticStyle;
+            if (string.IsNullOrWhiteSpace(semanticStyle)) return baseStyle;
+            return $"{baseStyle.TrimEnd().TrimEnd(';')}; {semanticStyle}";
+        }
+
+        private TabsMoreContext CreateMoreContext() => new TabsMoreContext
+        {
+            RestTabs = _invisibleTabs.AsReadOnly(),
+            ActiveKey = ActiveKey,
+            OnChange = async key =>
+            {
+                var tab = _invisibleTabs.FirstOrDefault(x => x.Key == key && !x.Disabled);
+                if (tab != null) await HandleTabClick(tab);
+            },
+            OnClose = async () =>
+            {
+                if (_moreDropdown != null) await _moreDropdown.Close();
+            }
+        };
+
+        private Dropdown _moreDropdown;
+
         internal void HandleKeydown(KeyboardEventArgs e, TabPane tabPane)
         {
             switch (e.Code)
@@ -589,7 +637,8 @@ namespace AntDesign
 
         public override Task SetParametersAsync(ParameterView parameters)
         {
-            if (parameters.IsParameterChanged(nameof(TabPosition), TabPosition))
+            if (parameters.IsParameterChanged(nameof(TabPosition), TabPosition)
+                || parameters.IsParameterChanged(nameof(Indicator), Indicator))
             {
                 _needUpdateScrollListPosition = true;
             }
@@ -832,7 +881,16 @@ namespace AntDesign
 
             if (IsHorizontal)
             {
-                _inkStyle = $"left: {_activeTabElement.OffsetLeft}px; width: {_activeTabElement.ClientWidth}px";
+                var originSize = (int)_activeTabElement.ClientWidth;
+                var indicatorSize = Indicator?.Size?.Invoke(originSize) ?? originSize;
+                indicatorSize = Math.Max(0, Math.Min(originSize, indicatorSize));
+                var indicatorOffset = Indicator?.Align switch
+                {
+                    TabsIndicatorAlign.Start => 0,
+                    TabsIndicatorAlign.End => originSize - indicatorSize,
+                    _ => (originSize - indicatorSize) / 2
+                };
+                _inkStyle = $"left: {_activeTabElement.OffsetLeft + indicatorOffset}px; width: {indicatorSize}px";
 
                 var additionalWidth = HasAddButton && (IsOverflowed) ? _addBtnWidth : 0;
 
@@ -856,7 +914,16 @@ namespace AntDesign
             }
             else
             {
-                _inkStyle = $"top: {_activeTabElement.OffsetTop}px; height: {_activeTabElement.ClientHeight}px;";
+                var originSize = (int)_activeTabElement.ClientHeight;
+                var indicatorSize = Indicator?.Size?.Invoke(originSize) ?? originSize;
+                indicatorSize = Math.Max(0, Math.Min(originSize, indicatorSize));
+                var indicatorOffset = Indicator?.Align switch
+                {
+                    TabsIndicatorAlign.Start => 0,
+                    TabsIndicatorAlign.End => originSize - indicatorSize,
+                    _ => (originSize - indicatorSize) / 2
+                };
+                _inkStyle = $"top: {_activeTabElement.OffsetTop + indicatorOffset}px; height: {indicatorSize}px;";
 
                 if (_activeTabElement.OffsetTop > _scrollOffset + _activeTabElement.ClientHeight
                   || _activeTabElement.OffsetTop < _scrollOffset)
