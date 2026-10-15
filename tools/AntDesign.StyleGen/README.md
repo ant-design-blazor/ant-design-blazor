@@ -86,6 +86,7 @@ node tools/AntDesign.StyleGen/src/map-react-api-to-blazor.mjs \
 node tools/AntDesign.StyleGen/src/cli.mjs sync-v6 \
   --antd-path /path/to/ant-design \
   --blazor-path /path/to/ant-design-blazor \
+  --icons-blazor-path /path/to/ant-design-icons-blazor \
   --react-css /path/to/antd/dist/antd.css
 ```
 
@@ -104,8 +105,9 @@ node tools/AntDesign.StyleGen/src/cli.mjs sync-v6 \
 3. 生成 `GeneratedThemeTokens.cs`。
 4. 生成 `ThemeTokenProperties.cs` 快捷属性。
 5. 保存 React 编译 CSS 基准。
-6. 保存 `@ant-design/colors` 迁移测试快照。
-7. 写入 `.vibedev/generated/antd-v6/sync-manifest.json`。
+6. 从 Ant Design checkout 的 `.dumi/theme/builtins/IconSearch/fields.ts` 同步图标分类，保存到生成目录；若同级存在 `ant-design-icons-blazor` checkout，会自动更新其 `eng/icon-categories.tsv`，也可用 `--icons-blazor-path` 指定路径。
+7. 保存 `@ant-design/colors` 迁移测试快照。
+8. 写入 `.vibedev/generated/antd-v6/sync-manifest.json`。
 
 之后可以使用 `exact-check` 对 React 基准和 Blazor 产物执行字节级校验。
 
@@ -196,3 +198,20 @@ DOM matcher 也会转换为 `Change`、`Assert.Equal`、`Assert.NotEqual` 等真
 
 支持的断言类型包括 `markup`、`exists`、`not-exists`、`class`、`attribute`、
 `text`、`count` 和 `property`；生成器会把它们转换成对应的 bUnit/xUnit 断言。
+
+## 从 React 生成 Icon 搜索关键词
+
+Icon 文档搜索复用 React `.dumi/theme/builtins/IconSearch/meta` 中的关键词和别名，不要在 Blazor 侧手工复制维护。React 仓库需已安装依赖（脚本使用其中的 `tsx` 加载 TypeScript 元数据）：
+
+```sh
+node tools/AntDesign.StyleGen/src/extract-icon-search-meta.cjs \
+  /path/to/ant-design \
+  site/AntDesign.Docs/Services/IconSearchMetadata.g.cs
+
+node tools/AntDesign.StyleGen/src/extract-icon-search-meta.cjs \
+  /path/to/ant-design \
+  site/AntDesign.Docs/Services/IconSearchMetadata.g.cs \
+  --check
+```
+
+生成文件包含 `meta/index.ts` 的图标别名及标签；`IconSearchMetadataTests` 验证代表性关键词、主题后缀和大小写行为。React 更新后重新生成并运行这些测试。
