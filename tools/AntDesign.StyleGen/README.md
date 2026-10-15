@@ -36,6 +36,15 @@ node tools/AntDesign.StyleGen/src/generate-semantic-dom-catalog.mjs \
   /Volumes/Data/GitHub/ant-design-blazor
 ```
 
+CSS 生成器会在 React `ConfigProvider` 中显式设置
+`theme.cssVar.key = 'css-var-root'`，避免 React `useId()` 产生
+`css-var-_R_*_` 这种随渲染树变化的编译期标识。输出文档主题 CSS 时，脚本会将
+这个确定性的 React 内部 key 归一化为由
+`ConfigProvider` 提供的 `.ant-theme` 主题祖先作用域；主题变量仍通过
+`ThemeConfig`/`data-theme` 传递，切换主题只需替换对应主题 CSS 文件，不依赖
+React 渲染次数或随机 class。重新生成主题 CSS 后，同时更新
+`docs-theme-modes.manifest.json` 的 scope 和摘要值。
+
 第二阶段将同步 React v6 的属性命名和弃用关系。弃用清单直接来自上游 v6 迁移文档，
 当前只保留提取结果作为后续 Design Token/API 迁移的输入：
 
@@ -86,7 +95,6 @@ node tools/AntDesign.StyleGen/src/map-react-api-to-blazor.mjs \
 node tools/AntDesign.StyleGen/src/cli.mjs sync-v6 \
   --antd-path /path/to/ant-design \
   --blazor-path /path/to/ant-design-blazor \
-  --icons-blazor-path /path/to/ant-design-icons-blazor \
   --react-css /path/to/antd/dist/antd.css
 ```
 
@@ -105,7 +113,7 @@ node tools/AntDesign.StyleGen/src/cli.mjs sync-v6 \
 3. 生成 `GeneratedThemeTokens.cs`。
 4. 生成 `ThemeTokenProperties.cs` 快捷属性。
 5. 保存 React 编译 CSS 基准。
-6. 从 Ant Design checkout 的 `.dumi/theme/builtins/IconSearch/fields.ts` 同步图标分类，保存到生成目录；若同级存在 `ant-design-icons-blazor` checkout，会自动更新其 `eng/icon-categories.tsv`，也可用 `--icons-blazor-path` 指定路径。
+6. 从 Ant Design checkout 的 `.dumi/theme/builtins/IconSearch/fields.ts` 同步图标分类，保存在 Blazor 文档项目的生成目录，并生成文档侧 `IconSearchCategories.g.cs`；图标 NuGet 包仅提供 SVG 名称、主题和组件类型清单。
 7. 保存 `@ant-design/colors` 迁移测试快照。
 8. 写入 `.vibedev/generated/antd-v6/sync-manifest.json`。
 

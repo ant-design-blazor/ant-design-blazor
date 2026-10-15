@@ -8,7 +8,7 @@ import Ajv from 'ajv';
 import { createArtifact, createBaseline, readBaseline, sha256, writeBaseline } from './baseline.mjs';
 import { compareArtifactSets, compareCss } from './style-diff.mjs';
 import { generateReactCssBaseline } from './react-css-baseline.mjs';
-import { syncAntDesignIconCategories } from './icon-categories.mjs';
+import { generateIconCategoriesSource, syncAntDesignIconCategories } from './icon-categories.mjs';
 
 const usage = `Usage:
   node src/cli.mjs sync --antd-path <path> [--blazor-path <path>] [--revision <revision>] --output <path>
@@ -16,7 +16,7 @@ const usage = `Usage:
   node src/cli.mjs generate-csharp-tokens --ir <style-ir.json> [--antd-path <path>] --output <GeneratedComponentTokens.cs>
   node src/cli.mjs generate-csharp-theme-tokens --antd-path <path> --output <GeneratedThemeTokens.cs>
   node src/cli.mjs generate-preview-theme-catalog --ir <themes.json> --output <GeneratedPreviewThemes.cs>
-  node src/cli.mjs sync-v6 --antd-path <path> [--blazor-path <path>] [--icons-blazor-path <path>] [--output <path>]
+  node src/cli.mjs sync-v6 --antd-path <path> [--blazor-path <path>] [--output <path>]
   node src/cli.mjs css-baseline-update --antd-path <path> --output <path> [--docs-theme-output <path>]
   node src/cli.mjs exact-check --expected <baseline-dir> --actual <candidate-dir> [--allowlist <id,id>] [--report <path>]
   node src/cli.mjs theme-exact-check --expected <react-theme-css-dir> --actual <blazor-theme-css-dir> [--themes <key,key>] [--report <path>]
@@ -566,16 +566,12 @@ async function syncV6(args) {
   const irOutput = join(output, 'ir');
   const baselineOutput = join(output, 'react-baseline');
   const iconCategoriesOutput = join(output, 'icon-categories.tsv');
-  const inferredIconsBlazorPath = resolve(blazorPath, '..', 'ant-design-icons-blazor');
-  const iconsBlazorPath = args['icons-blazor-path']
-    ? resolve(args['icons-blazor-path'])
-    : (existsSync(join(inferredIconsBlazorPath, 'src', 'AntDesign.Icons', 'AntDesign.Icons.csproj')) ? inferredIconsBlazorPath : null);
-  if (iconsBlazorPath && !existsSync(join(iconsBlazorPath, 'src', 'AntDesign.Icons', 'AntDesign.Icons.csproj'))) {
-    throw new Error(`--icons-blazor-path does not point to ant-design-icons-blazor: ${iconsBlazorPath}`);
-  }
+  const iconCategoriesSourceOutput = resolve(args['icon-categories-source-output'] ?? join(blazorPath, 'site', 'AntDesign.Docs', 'Services', 'IconSearchCategories.g.cs'));
 
   await sync({ 'antd-path': antdPath, 'blazor-path': blazorPath, output: irOutput, revision, 'generated-at': revision, 'source-path': '<antd-path>' });
-  const iconCategories = await syncAntDesignIconCategories({ antdPath, outputPath: iconCategoriesOutput, iconsBlazorPath });
+  const iconCategories = await syncAntDesignIconCategories({ antdPath, outputPath: iconCategoriesOutput });
+  await mkdir(dirname(iconCategoriesSourceOutput), { recursive: true });
+  await writeFile(iconCategoriesSourceOutput, generateIconCategoriesSource(await readFile(iconCategoriesOutput, 'utf8')), 'utf8');
   await generateCsharpTokens({ ir: join(irOutput, 'style-ir.json'), output: generatedComponents, 'antd-path': antdPath });
   await generateCsharpThemeTokens({ 'antd-path': antdPath, output: generatedTheme, 'shortcuts-output': generatedShortcuts });
   await generatePreviewThemeCatalog({ ir: join(irOutput, 'themes.json'), 'antd-path': antdPath, output: generatedThemes });
@@ -600,6 +596,7 @@ async function syncV6(args) {
     outputs: {
       ir: relative(blazorPath, join(irOutput, 'style-ir.json')),
       iconCategories: relative(blazorPath, iconCategoriesOutput),
+      iconCategoriesSource: relative(blazorPath, iconCategoriesSourceOutput),
       components: relative(blazorPath, generatedComponents),
       theme: relative(blazorPath, generatedTheme),
       shortcuts: relative(blazorPath, generatedShortcuts),
@@ -612,7 +609,7 @@ async function syncV6(args) {
   };
   await writeFile(join(output, 'structure-report.json'), `${JSON.stringify(structure, null, 2)}\n`, 'utf8');
   await writeFile(join(output, 'sync-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
-  console.log(JSON.stringify({ output, revision: manifest.upstream.revision, generatedComponents, generatedTheme, baselineOutput, iconCategories }, null, 2));
+  console.log(JSON.stringify({ output, revision: manifest.upstream.revision, generatedComponents, generatedTheme, baselineOutput, iconCategories, iconCategoriesSourceOutput }, null, 2));
 }
 
 async function generatePreviewThemeCatalog(args) {

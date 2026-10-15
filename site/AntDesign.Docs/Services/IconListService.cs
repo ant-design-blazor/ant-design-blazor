@@ -9,8 +9,8 @@ using System.Linq;
 namespace AntDesign.Docs.Services
 {
     /// <summary>
-    /// Adapts the icon catalog emitted by AntDesign.Icons' SVG source generator
-    /// to the category/string model used by the docs and Select listbox demo.
+    /// Joins the generated SVG inventory from AntDesign.Icons with the docs-owned
+    /// category catalog synchronized from Ant Design's IconSearch metadata.
     /// </summary>
     public class IconListService
     {
@@ -18,15 +18,16 @@ namespace AntDesign.Docs.Services
 
         public IList<IconItem> GetIcons()
         {
-            _icons ??= IconCatalog.Categories
+            _icons ??= IconSearchCategories.Categories
                 .Select(category => new IconItem
                 {
                     Category = category,
                     IconNames = IconCatalog.Items
-                        .Where(icon => icon.Category == category)
-                        .Select(icon => icon.Name)
+                        .Where(icon => IconSearchCategories.GetCategory(icon.ComponentType.Name) == category)
+                        .OrderBy(icon => IconSearchCategories.GetOrder(icon.ComponentType.Name))
+                        .ThenBy(icon => icon.Name, StringComparer.Ordinal)
+                        .Select(icon => icon.ComponentType.Name)
                         .Distinct(StringComparer.Ordinal)
-                        .OrderBy(name => name, StringComparer.Ordinal)
                         .ToList()
                 })
                 .Where(item => item.IconNames.Count > 0)

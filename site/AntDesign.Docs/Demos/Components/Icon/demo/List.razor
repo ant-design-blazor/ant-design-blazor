@@ -243,10 +243,14 @@ else
                 || icon.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase)
                 || icon.ComponentType.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase)
                 || IconSearchMetadata.Matches(icon.ComponentType.Name, searchValue))
-            .GroupBy(icon => icon.Category, StringComparer.Ordinal)
-            .ToDictionary(group => group.Key, group => (IReadOnlyList<AntDesign.Icons.IconCatalogItem>)group.ToArray(), StringComparer.Ordinal);
+            .GroupBy(icon => IconSearchCategories.GetCategory(icon.ComponentType.Name), StringComparer.Ordinal)
+            .OrderBy(group => Array.IndexOf(IconSearchCategories.Categories.ToArray(), group.Key))
+            .ToDictionary(group => group.Key, group => (IReadOnlyList<AntDesign.Icons.IconCatalogItem>)group
+                .OrderBy(icon => IconSearchCategories.GetOrder(icon.ComponentType.Name))
+                .ThenBy(icon => icon.Name, StringComparer.Ordinal)
+                .ToArray(), StringComparer.Ordinal);
 
-        displayIcons = AntDesign.Icons.IconCatalog.Categories
+        displayIcons = IconSearchCategories.Categories
             .Where(categories.ContainsKey)
             .Select(category => new IconDisplayCategory(category, categories[category]))
             .ToArray();
