@@ -33,6 +33,8 @@ namespace AntDesign.Docs.Pages
 
         private string _filePath;
 
+        private string _redirectUrl;
+
         private List<string> _filePaths;
 
         private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/{_filePath}";
@@ -56,12 +58,13 @@ namespace AntDesign.Docs.Pages
                 var newUrl = currentUrl.IndexOf('/') > 0 ? currentUrl.Substring(currentUrl.IndexOf('/') + 1) : currentUrl;
                 var menus = await DemoService.GetMenuAsync();
                 var current = menus.FirstOrDefault(x => x.Url == newUrl);
-                if (current != null)
+                var firstPage = current?.Children?.FirstOrDefault();
+                if (firstPage != null)
                 {
                     var hostEnvironment = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT");
                     if (hostEnvironment != "Prerendering")
                     {
-                        NavigationManager.NavigateTo($"{CurrentLanguage}/{current.Children[0].Url}");
+                        _redirectUrl = $"/{CurrentLanguage}/{firstPage.Url}";
                     }
                 }
             }
@@ -100,6 +103,14 @@ namespace AntDesign.Docs.Pages
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            if (!string.IsNullOrEmpty(_redirectUrl))
+            {
+                var redirectUrl = _redirectUrl;
+                _redirectUrl = null;
+                NavigationManager.NavigateTo(redirectUrl);
+                return;
+            }
+
             if (_waitingHighlight)
             {
                 _waitingHighlight = false;
