@@ -1,0 +1,85 @@
+@page "/experimental/advanced-filter/basic"
+@using System.Linq.Expressions
+
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+    <SpaceItem>
+        <Alert Message="Advanced Filter - Auto-resolves properties from Product type" Type="AlertType.Info"
+               ShowIcon="true" />
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Filter Conditions" Size="@CardSize.Small">
+
+            <Body>
+                <AdvancedFilter TItem="Product" @ref="filterRef" ShowHeader="true" AllowGroup="true"
+                                OnFilterChanged="@OnFilterChanged" />
+            </Body>
+        </Card>
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Filtered Results" Size="@CardSize.Small">
+
+            <Body>
+                <Table TItem="Product" DataSource="@_filteredData" HidePagination>
+                    <Column @bind-Field="@context.Id" Title="ID" Width="80px" />
+                    <Column @bind-Field="@context.Name" Title="Product Name" />
+                    <Column @bind-Field="@context.Category" Title="Category" />
+                    <Column @bind-Field="@context.Price" Title="Price" Format="C" />
+                    <Column @bind-Field="@context.Stock" Title="Stock" />
+                    <Column @bind-Field="@context.InStock" Title="In Stock" />
+                    <Column @bind-Field="@context.CreatedAt" Title="Created" Format="yyyy-MM-dd" />
+                </Table>
+            </Body>
+        </Card>
+    </SpaceItem>
+</Space>
+
+@code {
+    private AdvancedFilter<Product> filterRef;
+    private List<Product> _allData;
+    private List<Product> _filteredData;
+
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Category { get; set; }
+        public decimal Price { get; set; }
+        public int Stock { get; set; }
+        public bool InStock { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        _allData = new List<Product>
+        {
+            new() { Id = 1, Name = "Laptop Pro", Category = "Electronics", Price = 1299.99m, Stock = 15, InStock = true, CreatedAt =
+new DateTime(2024, 1, 15) },
+            new() { Id = 2, Name = "USB Cable", Category = "Accessories", Price = 9.99m, Stock = 100, InStock = true, CreatedAt =
+new DateTime(2024, 2, 10) },
+            new() { Id = 3, Name = "Monitor 4K", Category = "Electronics", Price = 599.99m, Stock = 0, InStock = false, CreatedAt =
+new DateTime(2024, 1, 20) },
+            new() { Id = 4, Name = "Mouse Pad", Category = "Accessories", Price = 19.99m, Stock = 50, InStock = true, CreatedAt =
+new DateTime(2024, 3, 5) },
+            new() { Id = 5, Name = "Keyboard Mechanical", Category = "Electronics", Price = 149.99m, Stock = 25, InStock = true,
+CreatedAt = new DateTime(2024, 2, 28) },
+            new() { Id = 6, Name = "Screen Protector", Category = "Accessories", Price = 14.99m, Stock = 0, InStock = false,
+CreatedAt = new DateTime(2024, 1, 1) },
+        };
+
+        _filteredData = new List<Product>(_allData);
+    }
+
+    private void OnFilterChanged(Expression<Func<Product, bool>> filterExpression)
+    {
+        if (filterExpression != null)
+        {
+            var compiled = filterExpression.Compile();
+            _filteredData = _allData.Where(compiled).ToList();
+        }
+        else
+        {
+            _filteredData = new List<Product>(_allData);
+        }
+    }
+}

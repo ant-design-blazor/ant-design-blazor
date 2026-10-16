@@ -1,0 +1,151 @@
+@page "/experimental/advanced-filter/table-integration"
+@using System.Linq.Expressions
+@using System.ComponentModel.DataAnnotations
+@using AntDesign.TableModels
+
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+    <SpaceItem>
+        <Alert
+        Message="Import native Table filter state into AdvancedFilter. Table filters and AdvancedFilter share TableFilterCompareOperator, TableFilterCondition, TableFilterInputRenderOptions, and IFieldFilterType."
+        Type="AlertType.Info" ShowIcon="true" />
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Native Table Filter Source" Size="@CardSize.Small">
+
+            <Body>
+                <Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+                    <SpaceItem>
+                        <Space>
+                            <SpaceItem>
+                                <Button Type="@ButtonType.Primary" OnClick="@ImportTableFilters">Import Table
+                                    Filters</Button>
+                                </SpaceItem>
+                                <SpaceItem>
+                                    <Button OnClick="@ClearAdvancedFilter">Clear Advanced Filter</Button>
+                                </SpaceItem>
+                            </Space>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Table TItem="Employee" @ref="_table" DataSource="@_allData" HidePagination>
+                                <PropertyColumn Property="employee => employee.Name" Title="Name" Filterable />
+                                <PropertyColumn Property="employee => employee.Department" Title="Department" Filterable />
+                                <PropertyColumn Property="employee => employee.Salary" Title="Salary" Format="C"
+                                                Filterable />
+                                <PropertyColumn Property="employee => employee.IsActive" Title="Active" Filterable />
+                                <PropertyColumn Property="employee => employee.JoinDate" Title="Join Date"
+                                                Format="yyyy-MM-dd" Filterable />
+                            </Table>
+                        </SpaceItem>
+                    </Space>
+                </Body>
+            </Card>
+        </SpaceItem>
+        <SpaceItem>
+            <Card Title="Advanced Filter" Size="@CardSize.Small">
+
+                <Body>
+                    <AdvancedFilter TItem="Employee" @ref="filterRef" Fields="@_fields" ConditionNode="@_advancedNode"
+                                    ConditionNodeChanged="@OnAdvancedConditionChanged" ShowHeader="true" AllowGroup="true"
+                                    OnFilterChanged="@OnFilterChanged" />
+                </Body>
+            </Card>
+        </SpaceItem>
+        <SpaceItem>
+            <Card Title="Employees" Size="@CardSize.Small">
+
+                <Body>
+                    <Table TItem="Employee" DataSource="@_filteredData" HidePagination>
+                        <Column @bind-Field="@context.Id" Title="ID" Width="80px" />
+                        <Column @bind-Field="@context.Name" Title="Name" />
+                        <Column @bind-Field="@context.Department" Title="Department" />
+                        <Column @bind-Field="@context.Salary" Title="Salary" Format="C" />
+                        <Column @bind-Field="@context.IsActive" Title="Active" />
+                        <Column @bind-Field="@context.JoinDate" Title="Join Date" Format="yyyy-MM-dd" />
+                    </Table>
+                </Body>
+            </Card>
+        </SpaceItem>
+    </Space>
+
+@code {
+    private AdvancedFilter<Employee> filterRef;
+    private Table<Employee> _table;
+    private IReadOnlyList<FilterFieldDescriptor> _fields;
+    private FilterConditionNode _advancedNode;
+    private List<Employee> _allData;
+    private List<Employee> _filteredData;
+
+    public class Employee
+    {
+        public int Id { get; set; }
+
+        [Display(Name = "Employee Name")]
+        public string Name { get; set; }
+
+        [Display(Name = "Department")]
+        public string Department { get; set; }
+
+        public decimal Salary { get; set; }
+
+        [Display(Name = "Active Status")]
+        public bool IsActive { get; set; }
+
+        [Display(Name = "Join Date")]
+        public DateTime JoinDate { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        _fields = FilterFieldResolver.Resolve<Employee>();
+        _advancedNode = FilterConditionNode.CreateGroup();
+
+        _allData = new List<Employee>
+        {
+            new() { Id = 1, Name = "John Smith", Department = "Engineering", Salary = 95000m, IsActive = true, JoinDate = new
+DateTime(2022, 3, 15) },
+            new() { Id = 2, Name = "Sarah Johnson", Department = "Marketing", Salary = 75000m, IsActive = true, JoinDate = new
+DateTime(2021, 6, 20) },
+            new() { Id = 3, Name = "Mike Chen", Department = "Engineering", Salary = 105000m, IsActive = true, JoinDate = new
+DateTime(2020, 1, 10) },
+            new() { Id = 4, Name = "Lisa Anderson", Department = "HR", Salary = 70000m, IsActive = false, JoinDate = new
+DateTime(2023, 8, 5) },
+            new() { Id = 5, Name = "Tom Wilson", Department = "Sales", Salary = 65000m, IsActive = true, JoinDate = new
+DateTime(2022, 11, 1) },
+            new() { Id = 6, Name = "Emma Davis", Department = "Engineering", Salary = 110000m, IsActive = true, JoinDate = new
+DateTime(2019, 5, 22) },
+        };
+
+        _filteredData = new List<Employee>(_allData);
+    }
+
+    private void ImportTableFilters()
+    {
+        var queryModel = _table?.GetQueryModel() as QueryModel<Employee>;
+        _advancedNode = AdvancedFilterTableFilterConverter.FromTableFilterModels(queryModel?.FilterModel, _fields);
+        filterRef?.ReloadConditionModel(_advancedNode, notifyChanged: true);
+    }
+
+    private void ClearAdvancedFilter()
+    {
+        _advancedNode = FilterConditionNode.CreateGroup();
+        filterRef?.ReloadConditionModel(_advancedNode, notifyChanged: true);
+    }
+
+    private void OnFilterChanged(Expression<Func<Employee, bool>> filterExpression)
+    {
+        if (filterExpression != null)
+        {
+            var compiled = filterExpression.Compile();
+            _filteredData = _allData.Where(compiled).ToList();
+        }
+        else
+        {
+            _filteredData = new List<Employee>(_allData);
+        }
+    }
+
+    private void OnAdvancedConditionChanged(FilterConditionNode conditionNode)
+    {
+        _advancedNode = conditionNode;
+    }
+}

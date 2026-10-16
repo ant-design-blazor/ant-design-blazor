@@ -1,0 +1,218 @@
+@page "/experimental/advanced-filter/modal-confirm"
+@using System.Linq.Expressions
+@inject Microsoft.JSInterop.IJSRuntime JSRuntime
+
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+    <SpaceItem>
+        <Alert
+        Message="Edit filters in a Modal. The table updates only after OK, and the applied condition model is saved to localStorage for reload restore."
+        Type="AlertType.Info" ShowIcon="true" />
+    </SpaceItem>
+    <SpaceItem>
+        <Space>
+            <SpaceItem>
+                <Button Type="@ButtonType.Primary" OnClick="@OpenFilterModal">Open Filter Modal</Button>
+            </SpaceItem>
+            <SpaceItem>
+                <Button OnClick="@SaveAppliedFilter">Save JSON</Button>
+            </SpaceItem>
+            <SpaceItem>
+                <Button OnClick="@LoadSavedFilter">Load JSON</Button>
+            </SpaceItem>
+            <SpaceItem>
+                <Button Danger OnClick="@ClearAppliedFilter">Clear</Button>
+            </SpaceItem>
+        </Space>
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Applied Condition JSON" Size="@CardSize.Small">
+
+            <Body>
+                <pre style="white-space: pre-wrap; margin: 0;">@(_savedJson ?? "No saved condition")</pre>
+            </Body>
+        </Card>
+    </SpaceItem>
+    <SpaceItem>
+        <Card Title="Filtered Tickets" Size="@CardSize.Small">
+
+            <Body>
+                <Table TItem="Ticket" DataSource="@_filteredData" HidePagination>
+                    <Column @bind-Field="@context.Id" Title="ID" Width="80px" />
+                    <Column @bind-Field="@context.Title" Title="Title" />
+                    <Column @bind-Field="@context.Department" Title="Department" />
+                    <Column @bind-Field="@context.Priority" Title="Priority" />
+                    <Column @bind-Field="@context.IsOpen" Title="Open" />
+                    <Column @bind-Field="@context.CreatedAt" Title="Created" Format="yyyy-MM-dd" />
+                </Table>
+            </Body>
+        </Card>
+    </SpaceItem>
+</Space>
+
+<Modal Title="Advanced Filter" Visible="@_modalVisible" OnOk="@ApplyDraftFilter" OnCancel="@CancelDraftFilter"
+       Width="760">
+    @if (_draftNode != null)
+    {
+        <AdvancedFilter TItem="Ticket" @ref="_draftFilterRef" Fields="@_fields" ConditionNode="@_draftNode"
+                        ConditionNodeChanged="@OnDraftConditionChanged" ShowHeader="true" AllowGroup="true" />
+    }
+</Modal>
+
+@code {
+    private const string StorageKey = "ant-design-blazor-advanced-filter-modal-confirm";
+
+    private AdvancedFilter<Ticket> _draftFilterRef;
+    private IReadOnlyList<FilterFieldDescriptor> _fields;
+    private FilterConditionNode _appliedNode;
+    private FilterConditionNode _draftNode;
+    private List<Ticket> _allData;
+    private List<Ticket> _filteredData;
+    private string _savedJson;
+    private bool _modalVisible;
+
+    public class Ticket
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Department { get; set; }
+        public string Priority { get; set; }
+        public bool IsOpen { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        _allData = new List<Ticket>
+        {
+            new() { Id = 1, Title = "Payment callback failed", Department = "Engineering", Priority = "High", IsOpen = true,
+CreatedAt = new DateTime(2024, 1, 15) },
+            new() { Id = 2, Title = "Campaign landing copy", Department = "Marketing", Priority = "Low", IsOpen = false, CreatedAt =
+new DateTime(2024, 2, 10) },
+            new() { Id = 3, Title = "Quarterly billing export", Department = "Finance", Priority = "Medium", IsOpen = true,
+CreatedAt = new DateTime(2024, 2, 20) },
+            new() { Id = 4, Title = "New audit dashboard", Department = "Finance", Priority = "High", IsOpen = true, CreatedAt = new
+DateTime(2024, 3, 5) },
+            new() { Id = 5, Title = "Partner portal banner", Department = "Marketing", Priority = "Medium", IsOpen = true, CreatedAt
+= new DateTime(2024, 3, 18) },
+            new() { Id = 6, Title = "Search latency regression", Department = "Engineering", Priority = "High", IsOpen = false,
+CreatedAt = new DateTime(2024, 4, 2) },
+        };
+
+        _fields = FilterFieldResolver.Resolve<Ticket>()
+            .Select(field =>
+            {
+                if (field.PropertyName == nameof(Ticket.Department))
+                {
+                    field.InputComponent = AdvancedFilterValueInputKind.Checkbox;
+                    field.ValueOptions = CreateOptions("Engineering", "Marketing", "Finance");
+                }
+                else if (field.PropertyName == nameof(Ticket.Priority))
+                {
+                    field.InputComponent = AdvancedFilterValueInputKind.Radio;
+                    field.ValueOptions = CreateOptions("High", "Medium", "Low");
+                }
+
+                return field;
+            })
+            .ToList();
+
+        _appliedNode = FilterConditionNode.CreateGroup();
+        _draftNode = AdvancedFilterStateSerializer.Clone(_appliedNode, _fields);
+        _filteredData = new List<Ticket>(_allData);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        _savedJson = await JSRuntime.InvokeAsync<string>("localStorage.getItem", StorageKey);
+        if (!string.IsNullOrWhiteSpace(_savedJson))
+        {
+            LoadConditionJson(_savedJson);
+            StateHasChanged();
+        }
+    }
+
+    private IReadOnlyList<AdvancedFilterOption> CreateOptions(params string[] values)
+    {
+        return values.Select(value => new AdvancedFilterOption { Label = value, Value = value }).ToList();
+    }
+
+    private void OpenFilterModal()
+    {
+        _draftNode = AdvancedFilterStateSerializer.Clone(_appliedNode, _fields);
+        _modalVisible = true;
+    }
+
+    private async Task ApplyDraftFilter(MouseEventArgs _)
+    {
+        _appliedNode = _draftFilterRef?.GetConditionModel() ?? AdvancedFilterStateSerializer.Clone(_draftNode, _fields);
+        _draftNode = AdvancedFilterStateSerializer.Clone(_appliedNode, _fields);
+        ApplyConditionNode(_appliedNode);
+        await SaveAppliedFilter();
+        _modalVisible = false;
+    }
+
+    private void CancelDraftFilter(MouseEventArgs _)
+    {
+        _draftNode = AdvancedFilterStateSerializer.Clone(_appliedNode, _fields);
+        _modalVisible = false;
+    }
+
+    private void OnDraftConditionChanged(FilterConditionNode conditionNode)
+    {
+        _draftNode = conditionNode;
+    }
+
+    private async Task SaveAppliedFilter()
+    {
+        _savedJson = AdvancedFilterStateSerializer.Serialize(_appliedNode);
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", StorageKey, _savedJson);
+    }
+
+    private async Task LoadSavedFilter()
+    {
+        var json = await JSRuntime.InvokeAsync<string>("localStorage.getItem", StorageKey);
+        if (!string.IsNullOrWhiteSpace(json))
+        {
+            _savedJson = json;
+            LoadConditionJson(json);
+        }
+    }
+
+    private async Task ClearAppliedFilter()
+    {
+        _appliedNode = FilterConditionNode.CreateGroup();
+        _draftNode = AdvancedFilterStateSerializer.Clone(_appliedNode, _fields);
+        _filteredData = new List<Ticket>(_allData);
+        _savedJson = null;
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", StorageKey);
+    }
+
+    private void LoadConditionJson(string json)
+    {
+        _appliedNode = AdvancedFilterStateSerializer.Deserialize<Ticket>(json, _fields);
+        _draftNode = AdvancedFilterStateSerializer.Clone(_appliedNode, _fields);
+        ApplyConditionNode(_appliedNode);
+    }
+
+    private void ApplyConditionNode(FilterConditionNode conditionNode)
+    {
+        var expression = AdvancedFilterStateSerializer.BuildExpression<Ticket>(conditionNode, _fields);
+        ApplyFilterExpression(expression);
+    }
+
+    private void ApplyFilterExpression(Expression<Func<Ticket, bool>> filterExpression)
+    {
+        if (filterExpression != null)
+        {
+            var compiled = filterExpression.Compile();
+            _filteredData = _allData.Where(compiled).ToList();
+        }
+        else
+        {
+            _filteredData = new List<Ticket>(_allData);
+        }
+    }
+}

@@ -12,44 +12,48 @@
 
 @code {
 
-    // Unfortunately, the razor compiler currently doesn't allow setting EventCallbacks (e.g. ValueChanged) in static fields/properties
+    // Unfortunately, the razor compiler currently doesn't allow setting EventCallbacks (e.g. ValueChanged) in static
+    // fields/properties
     // (see https://github.com/dotnet/aspnetcore/issues/24655 and https://github.com/dotnet/aspnetcore/issues/18919)
     // Therefore, we need to implement them as instance properties and use a singleton pattern
     public static FilterInputs Instance { get; } = new();
 
     public readonly RenderFragment<TableFilterInputRenderOptions> GuidInput;
 
-    private FilterInputs() {
+    private FilterInputs()
+    {
         GuidInput = filter =>
-            @<Input Value="(Guid?)filter.Value" TValue="Guid?" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" @attributes="filter.Attributes" />;
-    }
+            @<Input Value="(Guid?)filter.Value" TValue="Guid?" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef"
+                        @attributes="filter.Attributes" />;
+            }
 
     public RenderFragment<TableFilterInputRenderOptions> GetDatePicker<TData>() => filter =>
     {
-        if (filter.FilterCompareOperator == TableFilterCompareOperator.Between)
-        {
-            return @<RangePicker Value="(TData[])filter.Value" TValue="TData[]" ValueChanged="value => filter.Value = value"
-                    @attributes="filter.Attributes" />;
+    if (filter.FilterCompareOperator == TableFilterCompareOperator.Between)
+    {
+        return @<RangePicker Value="(TData[])filter.Value" TValue="TData[]" ValueChanged="value => filter.Value = value"
+                                 @attributes="filter.Attributes" />;
         }
         return @<DatePicker Value="(TData)filter.Value" TValue="TData" ValueChanged="value => filter.Value = value"
-                    @attributes="filter.Attributes" />;
-    };
+                                @attributes="filter.Attributes" />;
+        };
 
     public RenderFragment<TableFilterInputRenderOptions> GetEnumInput<TData>() => filter =>
         @<text>
-            <EnumSelect TEnum="TData" Mode="@SelectMode.Multiple"
-                Value="(TData)filter.Value"
-                DropdownMatchSelectWidth="@false"
-                ValueChanged="value => filter.Value = value"
-                @attributes="filter.Attributes" />
-         </text>
-    ;
+            <EnumSelect TEnum="TData" Mode="@SelectMode.Multiple" Value="(TData)filter.Value" DropdownMatchSelectWidth="@false"
+                        ValueChanged="value => filter.Value = value" @attributes="filter.Attributes" />
+        </text>
+;
 
     public RenderFragment<TableFilterInputRenderOptions> GetNumberInput<TData>() where TData : struct => filter =>
-         @<InputNumber Value="(TData?)filter.Value" TValue="TData?" ValueChanged="value => filter.Value = (object)value" @ref="@filter.InputRef" @attributes="filter.Attributes" />;
+         @<InputNumber Value="(TData?)filter.Value" TValue="TData?" ValueChanged="value => filter.Value = (object)value"    @ref="@filter.InputRef" @attributes="filter.Attributes" />;
 
     public RenderFragment<TableFilterInputRenderOptions> GetInput<TData>() => filter =>
-        @<Input TValue="TData" Value="(TData)filter.Value" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef" OnPressEnter="()=> filter.Confirm()" @attributes="filter.Attributes" />;
+        @<Input TValue="TData" Value="(TData)filter.Value" ValueChanged="value => filter.Value = value" @ref="@filter.InputRef"
+        OnPressEnter="()=> filter.Confirm()" @attributes="filter.Attributes" />;
+
+    public RenderFragment<TableFilterInputRenderOptions> GetBoolInput() => filter =>
+        @<Switch Value="filter.Value is true" ValueChanged="@(value => filter.Value = (object)value)"    @attributes="filter.Attributes" />;
 
     // https://github.com/dotnet/aspnetcore/issues/24655
     Task IHandleEvent.HandleEventAsync(EventCallbackWorkItem callback, object arg) => callback.InvokeAsync(arg);

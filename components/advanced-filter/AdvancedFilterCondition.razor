@@ -1,0 +1,40 @@
+@namespace AntDesign
+@using AntDesign.Filters
+@inherits AntDomComponentBase
+
+<Space Align="SpaceAlign.Center" Style="margin-bottom: 4px; width: 100%;">
+    <SpaceItem>
+        <Select TItem="FilterFieldDescriptor" TItemValue="string" DataSource="@Fields" Value="@Node.PropertyName"
+                ValueChanged="@OnPropertyChanged" ValueName="@nameof(FilterFieldDescriptor.PropertyName)"
+                LabelName="@nameof(FilterFieldDescriptor.DisplayName)"
+                Placeholder="@(_locale?.SelectField ?? "Select field")" Style="min-width: 150px;" Bordered>
+        </Select>
+    </SpaceItem>
+
+    @if (_currentField != null)
+    {
+        <SpaceItem>
+            <Select TItem="TableFilterCompareOperator" TItemValue="TableFilterCompareOperator" Value="@Node.CompareOperator"
+                    ValueChanged="@OnOperatorChanged" DataSource="@_currentField.FilterType.SupportedCompareOperators"
+                    Style="min-width: 120px;">
+                <LabelTemplate Context="op">
+                    @FilterOptionsLocale.Operator(op)
+                </LabelTemplate>
+                <ItemTemplate Context="op">
+                    @FilterOptionsLocale.Operator(op)
+                </ItemTemplate>
+            </Select>
+        </SpaceItem>
+
+        @if (!IsUnaryOperator(Node.CompareOperator) && _inputContext != null)
+        {
+            <SpaceItem>
+                <AdvancedFilterValueInput Context="@_inputContext" />
+            </SpaceItem>
+        }
+    }
+
+    <SpaceItem>
+        <Button Type="@ButtonType.Text" Icon="close" OnClick="@(() => OnRemove.InvokeAsync())" />
+    </SpaceItem>
+</Space>
