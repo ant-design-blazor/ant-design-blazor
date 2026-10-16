@@ -4,7 +4,7 @@
 
 <label @onclick="OnClick" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
     <span class="@_radioClassMapper.Class">
-        <input type="radio"
+        <input @attributes="AdditionalAttributes" type="radio"
                autofocus="@AutoFocus"
                class="@_inputClassMapper.Class"
                disabled="@Disabled"

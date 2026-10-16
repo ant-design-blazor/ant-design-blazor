@@ -55,7 +55,7 @@ else if (IsHeader && HeaderColSpan != 0)
 
     var headerCellAttributes = OnHeaderCell?.Invoke();
     <CascadingValue Name="IsHeader" Value="false" IsFixed>
-        <th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)" title="@(Ellipsis ? Title : false)" @attributes="headerCellAttributes">
+        <th @attributes="GetAdditionalAttributes(headerCellAttributes)" class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@(HeaderColSpan > 1 ? HeaderColSpan : false)" rowspan="@(RowSpan > 1 ? RowSpan : false)" title="@(Ellipsis ? Title : false)">
             @if (IsFixedEllipsis)
             {
                 <span class="ant-table-cell-content">
@@ -99,7 +99,7 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
             }
         }
 
-        <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@((Ellipsis || EllipsisShowTitle == true) && EllipsisShowTitle != false ? fieldText : false)" data-label="@title" @attributes="cellAttributes">
+        <td @attributes="GetAdditionalAttributes(cellAttributes)" class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" title="@((Ellipsis || EllipsisShowTitle == true) && EllipsisShowTitle != false ? fieldText : false)" data-label="@title">
             @if (ColIndex == Table.TreeExpandIconColumnIndex && (Table.TreeMode|| RowData.IsGrouping))
             {
                 <span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>

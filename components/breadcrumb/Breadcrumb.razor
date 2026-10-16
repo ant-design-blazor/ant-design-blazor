@@ -1,7 +1,7 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<nav class="@ClassMapper.Class" id="@Id" @ref="Ref" style="@Style">
+<nav @attributes="AdditionalAttributes" class="@ClassMapper.Class" id="@Id" @ref="Ref" style="@Style">
     <ol>
         <CascadingValue Value="this" IsFixed="@true">
             @ChildContent

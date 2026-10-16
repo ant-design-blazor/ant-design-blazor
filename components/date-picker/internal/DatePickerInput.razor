@@ -4,7 +4,7 @@
 @if (!IsRange)
 {
     <div class="@(PrefixCls)-input">
-        <input @ref="Ref"
+        <input @attributes="AdditionalAttributes" @ref="Ref"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
                @onkeydown="@OnKeyDown"
@@ -51,7 +51,7 @@
 else
 {
     <div class="@(PrefixCls)-input @(Active ? $"{PrefixCls}-input-active" : "")">
-        <input @ref="Ref"
+        <input @attributes="AdditionalAttributes" @ref="Ref"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
                @onkeydown="@OnKeyDown"

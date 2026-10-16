@@ -6,7 +6,7 @@
     if (coinfigs.Count > 0)
     {
         <div>
-            <div class="ant-message" style="top: @(_top)px;" @ref="Ref">
+            <div @attributes="AdditionalAttributes" class="ant-message" style="top: @(_top)px;" @ref="Ref">
                 <span>
                     @foreach (var config in coinfigs)
                     {

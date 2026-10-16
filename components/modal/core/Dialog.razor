@@ -12,7 +12,7 @@
              @onmousedown="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseDown)"
              @onkeydown="@(EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(OnKeyDown))"
              style="@_wrapStyle">
-            <div @ref="@_modal" role="document" 
+            <div @attributes="AdditionalAttributes" @ref="@_modal" role="document"
                  class=@($"{Config.PrefixCls} {GetModalClsName()}")
                  @onclick:stopPropagation
                  @onmousedown:stopPropagation

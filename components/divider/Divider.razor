@@ -1,7 +1,7 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<span class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+<span @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
     @if (Text != null || ChildContent != null)
     {
         <span class="ant-divider-inner-text">

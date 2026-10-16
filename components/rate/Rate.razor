@@ -2,7 +2,7 @@
 @inherits AntDesign.AntDomComponentBase
 @using Microsoft.AspNetCore.Components;
 
-    <ul class="@ClassMapper.Class" tabindex="0" role="radiogroup" style="@Style" @ref="Ref" id="@Id"
+    <ul @attributes="AdditionalAttributes" class="@ClassMapper.Class" tabindex="0" role="radiogroup" style="@Style" @ref="Ref" id="@Id"
         @onblur="@Blur"
         @onfocus="@Focus"
         @onkeydown="@KeyDown" @onkeydown:preventDefault

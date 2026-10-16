@@ -3,7 +3,7 @@
 @using AntDesign.TableModels
 
 @{
-    Dictionary<string, object> attributes = null;
+    IReadOnlyDictionary<string, object> attributes = null;
     if (RowAttributes?.Any() != true)
     {
         attributes = AdditionalAttributes;
@@ -14,14 +14,15 @@
     }
     else
     {
-        attributes = new Dictionary<string, object>();
+        var mergedAttributes = new Dictionary<string, object>();
+        attributes = mergedAttributes;
         foreach (var (key, value) in RowAttributes)
         {
-            attributes[key] = value;
+            mergedAttributes[key] = value;
         }
         foreach (var (key, value) in AdditionalAttributes)
         {
-            attributes[key] = value;
+            mergedAttributes[key] = value;
         }
     }
 }
@@ -70,6 +71,4 @@ else if (IsHeader)
     [CascadingParameter(Name = "AntDesign.TableRow.HasFixRight")]
     public bool HasFixRight { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object> AdditionalAttributes { get; set; }
 }

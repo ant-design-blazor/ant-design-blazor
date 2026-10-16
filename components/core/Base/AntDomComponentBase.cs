@@ -2,12 +2,39 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
 {
     public abstract class AntDomComponentBase : AntComponentBase
     {
+        /// <summary>
+        /// Additional HTML attributes for the component's DOM target. See the arbitrary
+        /// attributes documentation for composite components and attribute precedence.
+        /// </summary>
+        [Parameter(CaptureUnmatchedValues = true)]
+        public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
+
+        // Existing named attribute dictionaries remain supported. Their values take
+        // precedence over captured attributes, just like dedicated component parameters.
+        internal IReadOnlyDictionary<string, object> GetAdditionalAttributes(IReadOnlyDictionary<string, object> attributes)
+        {
+            if (AdditionalAttributes == null) return attributes;
+            if (attributes == null) return AdditionalAttributes;
+
+            var merged = new Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase);
+            foreach (var attribute in AdditionalAttributes)
+            {
+                merged[attribute.Key] = attribute.Value;
+            }
+            foreach (var attribute in attributes)
+            {
+                merged[attribute.Key] = attribute.Value;
+            }
+            return merged;
+        }
+
         [Inject]
         private IComponentIdGenerator ComponentIdGenerator { get; set; }
 

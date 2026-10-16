@@ -21,6 +21,41 @@ title: 常见问题
 
 可以参考[定制主题](https://ant.design/docs/react/customize-theme)。
 
+### 如何添加 `data-testid`、`aria-describedby` 等 HTML 属性？
+
+DOM 组件从 `AntDomComponentBase` 继承统一的 `AdditionalAttributes` 捕获参数。可以直接传入未匹配的属性，也可以通过 `AdditionalAttributes` 传入 `IReadOnlyDictionary<string, object>`，其类型与原有输入组件 API 一致。
+
+```razor
+<Button data-testid="save-button" data-action="save" aria-describedby="save-help"
+        form="editor" name="action" value="save">
+    保存
+</Button>
+<span id="save-help">保存当前修改。</span>
+```
+
+字典更新或清空后，属性会在下次渲染时更新或移除。布尔值遵循 Blazor 的 HTML 渲染规则：`true` 添加属性，`false`/`null` 移除属性。ARIA 值应使用 `"false"` 等字符串。
+
+| 组件 | 属性目标 |
+| --- | --- |
+| `Button`、`DownloadButton`、`Switch` | 原生 `button` |
+| `Input`、`InputNumber`、`Checkbox`、`Radio`、`SegmentedItem` | 原生 `input`，即使外层存在包装元素 |
+| `TextArea`、`Mentions` | 原生 `textarea` |
+| `DatePicker`（包括时间选择模式） | 可编辑的 `input` |
+| `RangePicker` | 两个输入框；避免传入 `id` 等必须唯一的属性 |
+| `Select`、`TreeSelect`、`Cascader` | 单选或多选模式中的搜索/组合框 `input` |
+| `AutoComplete` | 默认输入框；自定义 `ChildContent` 时需在自定义输入框上设置属性 |
+| `Image`、`MenuLink`、`Form` | 分别为 `img`、`a`、`form` |
+| `TabPane`、`RateItem` | 带有 `role="tab"` 或 `role="radio"` 的元素 |
+| `Modal`、`Confirm` | 带有 `role="document"` 的对话框元素 |
+| `Column`、`ActionColumn`、`Selection`、`SummaryCell` | 实际表头/数据单元格，不转发到测量或占位单元格 |
+| `Table`、`Slider`、分组、布局、排版及其他普通 DOM 组件 | 组件最外层元素（`Table` 为包装元素） |
+| `Tooltip`、`Popover`、`Popconfirm`、`Dropdown` | 存在时的触发器包装元素；使用 `Unbound` 或外部触发器引用时，需在提供的触发元素上设置属性 |
+| `Message`、`Notification` | 各个实际渲染的位置容器 |
+
+专用参数和组件管理的属性优先。`Class`、`Style`、`Id`、`Disabled`、`AriaLabel` 等应通过组件参数设置；字典不能替换生成的样式类、受控 ARIA 状态和内部事件处理器。受控事件请使用 `OnClick` 等组件回调；组件未处理的事件可通过字典添加。原有 `Attributes`、`UnmatchedAttributes`、`OnCell`、`OnHeaderCell` 和行属性字典继续可用，同名属性优先于共享字典；原有字典内部的行为保持兼容。
+
+`AntComponentBase` 本身不提供属性捕获。Provider、模板、服务容器（`AntContainer`、弹窗/抽屉宿主、图片预览容器等）及没有自身 DOM 的组件不转发属性。`Mentions.TextareaTemplate` 自行提供 DOM，也需要在模板内部添加属性。自定义派生 `AntDomComponentBase` 的组件应显式将 `AdditionalAttributes` 转发到选定元素：Razor 中将 `@attributes` 放在受控属性之前；使用 `RenderTreeBuilder` 时先调用 `AddMultipleAttributes`，再添加受控属性。
+
 ### 如何修改 Ant Design 组件的默认样式？
 
 你可以覆盖它们的样式，但是我们不推荐这么做。antd 是一系列 React 组件，但同样是一套设计规范。

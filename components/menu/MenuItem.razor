@@ -21,7 +21,7 @@
 
     RenderFragment MenuItemContent(ForwardRef refBack)
     {
-        return@<li class="@ClassMapper.Class" role="menuitem" style="@PaddingStyle @Style" @onclick="HandleOnClick" @key="Key" @ref="refBack.Current">
+        return@<li @attributes="AdditionalAttributes" class="@ClassMapper.Class" role="menuitem" style="@PaddingStyle @Style" @onclick="HandleOnClick" @key="Key" @ref="refBack.Current">
             @icon
             <span class="ant-menu-title-content">
                 @if (RouterLink == null)

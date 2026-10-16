@@ -177,12 +177,13 @@ namespace AntDesign
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(1, Component ?? "div");
+            builder.AddMultipleAttributes(2, AdditionalAttributes);
 
-            builder.AddAttribute(2, "class", ClassMapper.Class);
-            builder.AddAttribute(3, "style", $"{FlexStyle} {Style} ");
-            builder.AddAttribute(4, "id", $"{Id}");
-            builder.AddElementReferenceCapture(5, r => Ref = r);
-            builder.AddContent(6, ChildContent);
+            builder.AddAttribute(3, "class", ClassMapper.Class);
+            builder.AddAttribute(4, "style", $"{FlexStyle} {Style} ");
+            builder.AddAttribute(5, "id", $"{Id}");
+            builder.AddElementReferenceCapture(6, r => Ref = r);
+            builder.AddContent(7, ChildContent);
             builder.CloseElement();
         }
     }

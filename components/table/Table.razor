@@ -6,7 +6,7 @@
 
 @typeparam TItem
 
-<div class="@_wrapperClassMapper.Class" @ref="Ref">
+<div @attributes="AdditionalAttributes" class="@_wrapperClassMapper.Class" @ref="Ref">
     <Spin Spinning="Loading" WrapperClassName="ant-table-spin-wrapper">
         @if (!HidePagination && PaginationPosition.Contains("top"))
         {

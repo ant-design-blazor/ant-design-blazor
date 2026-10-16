@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Components.Rendering
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+<div @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
     <div class="ant-steps-item-container" @onclick="@HandleClick" tabindex="@GetTabIndex()" @attributes="@_containerAttributes">
         @if (!Last)
         {
