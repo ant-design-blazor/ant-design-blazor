@@ -16,6 +16,54 @@ namespace AntDesign.Tests.Core
 {
     public class AdditionalAttributesTests : AntDesignTestBase
     {
+        private sealed class AttributeProbe : AntDomComponentBase { }
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData(null, 0)]
+        [InlineData(null, 1)]
+        [InlineData(0, null)]
+        [InlineData(0, 0)]
+        [InlineData(0, 1)]
+        [InlineData(1, null)]
+        [InlineData(1, 0)]
+        public void Empty_or_missing_input_reuses_the_other_dictionary(int? sharedCount, int? legacyCount)
+        {
+            IReadOnlyDictionary<string, object>? Create(int? count) => count == null ? null :
+                new System.Collections.ObjectModel.ReadOnlyDictionary<string, object>(
+                    Enumerable.Range(0, count.Value).ToDictionary(i => $"data-{i}", i => (object)i));
+            var shared = Create(sharedCount);
+            var legacy = Create(legacyCount);
+            using var probe = new AttributeProbe { AdditionalAttributes = shared! };
+
+            var result = probe.GetAdditionalAttributes(legacy!);
+
+            Assert.Same(sharedCount.GetValueOrDefault() == 0 ? legacy : shared, result);
+        }
+
+        [Fact]
+        public void Merging_preserves_precedence_and_observes_mutations_without_modifying_inputs()
+        {
+            var shared = new Dictionary<string, object> { ["DATA-SHARED"] = "shared", ["title"] = "shared" };
+            var legacy = new Dictionary<string, object> { ["data-legacy"] = "legacy", ["TITLE"] = "legacy" };
+            using var probe = new AttributeProbe { AdditionalAttributes = shared };
+            var first = probe.GetAdditionalAttributes(legacy);
+            Assert.Equal(3, first.Count);
+            Assert.Equal("legacy", first["title"]);
+            Assert.Equal("shared", first["data-shared"]);
+            Assert.Equal(2, shared.Count);
+            Assert.Equal(2, legacy.Count);
+            Assert.Equal("shared", shared["title"]);
+
+            shared["DATA-SHARED"] = "updated";
+            legacy.Remove("TITLE");
+            var second = probe.GetAdditionalAttributes(legacy);
+            Assert.Equal("updated", second["data-shared"]);
+            Assert.Equal("shared", second["title"]);
+            Assert.Equal("shared", first["data-shared"]);
+            Assert.Equal("legacy", first["title"]);
+        }
+
         public AdditionalAttributesTests()
         {
             JSInterop.Mode = JSRuntimeMode.Loose;

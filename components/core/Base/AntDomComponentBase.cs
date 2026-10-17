@@ -20,11 +20,15 @@ namespace AntDesign
         // precedence over captured attributes, just like dedicated component parameters.
         internal IReadOnlyDictionary<string, object> GetAdditionalAttributes(IReadOnlyDictionary<string, object> attributes)
         {
-            if (AdditionalAttributes == null) return attributes;
-            if (attributes == null) return AdditionalAttributes;
+            var additionalAttributes = AdditionalAttributes;
+            if (additionalAttributes == null || additionalAttributes.Count == 0) return attributes;
+            if (attributes == null || attributes.Count == 0) return additionalAttributes;
 
-            var merged = new Dictionary<string, object>(System.StringComparer.OrdinalIgnoreCase);
-            foreach (var attribute in AdditionalAttributes)
+            // Start with the larger input to avoid repeated growth without reserving
+            // twice the space when most or all attribute names overlap.
+            var capacity = System.Math.Max(additionalAttributes.Count, attributes.Count);
+            var merged = new Dictionary<string, object>(capacity, System.StringComparer.OrdinalIgnoreCase);
+            foreach (var attribute in additionalAttributes)
             {
                 merged[attribute.Key] = attribute.Value;
             }
