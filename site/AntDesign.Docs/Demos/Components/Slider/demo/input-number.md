@@ -1,4 +1,4 @@
-﻿---
+---
 order: 1
 title:
   zh-CN: 带输入框的滑块
@@ -6,8 +6,7 @@ title:
 ---
 
 ## zh-CN
-和 数字输入框 组件保持同步.
-
+和数字输入框组件保持同步。
 
 ## en-US
-Synchronize with InputNumber component.
+Synchronize with the InputNumber component.

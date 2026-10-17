@@ -1,0 +1,21 @@
+<div>
+    <Slider TValue="double[]" Value="_value" OnChange="OnValueChange" DraggableTrack DisabledHandles="_disabled" />
+    <div style="display:flex;gap:16px;margin-top:16px;flex-wrap:wrap">
+        <Checkbox Checked="_disabled[0]" CheckedChanged="@(value => SetDisabled(0, value))">Disabled Handle 1</Checkbox>
+        <Checkbox Checked="_disabled[1]" CheckedChanged="@(value => SetDisabled(1, value))">Disabled Handle 2</Checkbox>
+        <Checkbox Checked="_disabled[2]" CheckedChanged="@(value => SetDisabled(2, value))">Disabled Handle 3</Checkbox>
+    </div>
+</div>
+
+@code {
+    private double[] _value = { 20, 50, 80 };
+    private bool[] _disabled = { false, false, false };
+
+    private void OnValueChange(double[] value) => _value = value;
+
+    private void SetDisabled(int index, bool disabled)
+    {
+        _disabled[index] = disabled;
+        _disabled = _disabled.ToArray();
+    }
+}

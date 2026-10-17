@@ -1,0 +1,10 @@
+<div>
+    <Slider TValue="double[]" Value="_value" OnChange="OnValueChange" Editable MinCount="1" MaxCount="5" />
+    <div style="margin-top:12px;color:#8c8c8c">Click the rail to add a handle; focus it and press Delete or Backspace, or drag it outside the slider to remove it.</div>
+</div>
+
+@code {
+    private double[] _value = { 20, 80 };
+
+    private void OnValueChange(double[] value) => _value = value;
+}

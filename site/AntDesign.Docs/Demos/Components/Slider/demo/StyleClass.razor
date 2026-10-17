@@ -1,0 +1,30 @@
+<div style="display:flex; flex-direction:column; gap:24px">
+    <Slider TValue="double" DefaultValue="35" Styles="@_styles" />
+    <Slider TValue="double" DefaultValue="65" ClassNames="@_classNames" />
+</div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "padding:12px; background:#f5f5f5; border-radius:8px",
+        ["rail"] = "background:#ffe7ba",
+        ["track"] = "background:#fa8c16",
+        ["handle"] = "border-color:#d46b08; box-shadow:0 0 0 4px #fff7e6"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "slider-semantic-root",
+        ["tracks"] = "slider-semantic-tracks",
+        ["track"] = "slider-semantic-track",
+        ["rail"] = "slider-semantic-rail",
+        ["handle"] = "slider-semantic-handle"
+    };
+}
+
+<style>
+    .slider-semantic-root { padding: 12px; background: #f0f5ff; border-radius: 8px; }
+    .slider-semantic-rail { background: #d6e4ff; }
+    .slider-semantic-track { background: #2f54eb; }
+    .slider-semantic-handle { border-color: #1d39c4; box-shadow: 0 0 0 4px #f0f5ff; }
+</style>

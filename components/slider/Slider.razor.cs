@@ -38,12 +38,23 @@ namespace AntDesign
         private string _leftHandleStyle = "left: 0%; right: auto; transform: translateX(-50%);";
         private string _rightHandleStyle = "left: 0%; right: auto; transform: translateX(-50%);";
         private string _trackStyle = "left: 0%; width: 0%; right: auto;";
+        private readonly List<double> _multiValues = new();
+        private readonly List<string> _multiTrackStyles = new();
         private bool _mouseDown;
         private bool _mouseMove;
+        private bool _draggingTrack;
+        private bool _draggingDelete;
         private bool _right = true;
         private bool _initialized = false;
         private double _initialLeftValue;
         private double _initialRightValue;
+        private double _trackStartPointerValue;
+        private double[] _initialMultiValues;
+        private double _multiHandleStartX;
+        private double _multiHandleStartY;
+        private int _activeHandleIndex = 1;
+
+        private bool MultiValue => typeof(TValue) == typeof(double[]);
         private Tooltip _toolTipRight;
         private Tooltip _toolTipLeft;
 
@@ -140,7 +151,7 @@ namespace AntDesign
         #region Parameters
 
         /// <summary>
-        /// The default value of slider. When <see cref="Range"/> is false, use number, otherwise, use [number, number]
+        /// The default value of slider. Use a double for a single handle, a tuple for two range handles, or a double array for multiple range handles.
         /// </summary>
         [Parameter]
         public TValue DefaultValue { get; set; }
@@ -150,6 +161,28 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Disabled { get; set; }
+
+        /// <summary>
+        /// Whether the range track can be dragged as a whole while preserving its width.
+        /// </summary>
+        [Parameter]
+        public bool DraggableTrack { get; set; }
+
+        /// <summary>Allow adding range handles by clicking the slider and removing focused handles with Delete or Backspace, or by dragging them outside the slider.</summary>
+        [Parameter]
+        public bool Editable { get; set; }
+
+        /// <summary>Minimum number of handles when <see cref="Editable"/> is enabled.</summary>
+        [Parameter]
+        public int MinCount { get; set; } = 0;
+
+        /// <summary>Maximum number of handles when <see cref="Editable"/> is enabled; zero means unlimited.</summary>
+        [Parameter]
+        public int MaxCount { get; set; }
+
+        /// <summary>Disable individual handles when using a range value.</summary>
+        [Parameter]
+        public bool[] DisabledHandles { get; set; }
 
         /// <summary>
         /// Currently not implemented. 
@@ -188,7 +221,7 @@ namespace AntDesign
         private double MinMaxDelta => Max - Min;
 
         /// <summary>
-        /// dual thumb mode
+        /// Range mode, supporting tuple values for two handles and double arrays for multiple handles.
         /// </summary>
         private bool? _range;
 
@@ -212,9 +245,13 @@ namespace AntDesign
                     {
                         _range = true;
                     }
+                    else if (type == typeof(double[]))
+                    {
+                        _range = true;
+                    }
                     else
                     {
-                        throw new ArgumentOutOfRangeException($"Type argument of Slider should be one of {doubleType}, {tupleDoubleType}");
+                        throw new ArgumentOutOfRangeException($"Type argument of Slider should be one of {doubleType}, {tupleDoubleType}, or double[]");
                     }
                 }
                 return _range.Value;
@@ -281,6 +318,14 @@ namespace AntDesign
                 double candidate = Clamp(value, Min, Max);
                 if (_leftValue != candidate)
                 {
+                    if (MultiValue)
+                    {
+                        EnsureMultiValues();
+                        var values = _multiValues.ToArray();
+                        values[0] = candidate;
+                        ApplyMultiValues(values);
+                        return;
+                    }
                     _leftValue = candidate;
                     SetStyle();
                     (double, double) typedValue = DataConversionExtensions.Convert<TValue, (double, double)>(CurrentValue);
@@ -301,7 +346,7 @@ namespace AntDesign
                 double candidate;
                 if (Range)
                 {
-                    candidate = Clamp(value, LeftValue, Max);
+                    candidate = Clamp(value, MultiValue ? (_multiValues.Count > 1 ? _multiValues[^2] : Min) : LeftValue, Max);
                 }
                 else
                 {
@@ -310,6 +355,14 @@ namespace AntDesign
 
                 if (_rightValue != candidate)
                 {
+                    if (MultiValue)
+                    {
+                        EnsureMultiValues();
+                        var values = _multiValues.ToArray();
+                        values[^1] = candidate;
+                        ApplyMultiValues(values);
+                        return;
+                    }
                     _rightValue = candidate;
                     SetStyle();
                     if (Range)
@@ -343,6 +396,107 @@ namespace AntDesign
             return GetNearestStep(value);
         }
 
+        private void EnsureMultiValues()
+        {
+            if (_multiValues.Count == 0)
+            {
+                _multiValues.Add(Min);
+                _multiValues.Add(Min);
+            }
+        }
+
+        private void ApplyMultiValues(IEnumerable<double> values)
+        {
+            var normalized = values.OrderBy(v => v).Select(v => Clamp(v, Min, Max)).ToList();
+            if (normalized.Count == 0)
+            {
+                normalized.Add(Min);
+                normalized.Add(Min);
+            }
+
+            _multiValues.Clear();
+            _multiValues.AddRange(normalized);
+            _leftValue = _multiValues[0];
+            _rightValue = _multiValues[^1];
+
+            var nextValue = (TValue)(object)_multiValues.ToArray();
+            if (!EqualityComparer<TValue>.Default.Equals(_value, nextValue))
+            {
+                CurrentValue = nextValue;
+            }
+            else
+            {
+                SetStyle();
+            }
+        }
+
+        private string GetMultiHandleStyle(int index)
+        {
+            var value = _multiValues[index];
+            var percent = Formatter.ToPercentWithoutBlank((value - Min) / MinMaxDelta);
+            return string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, percent);
+        }
+
+        private string GetMultiHandleClass(int index)
+        {
+            var baseClass = $"ant-slider-handle ant-slider-handle-{index + 1}";
+            if (IsHandleDisabled(index))
+            {
+                baseClass += " ant-slider-handle-disabled";
+            }
+            if (_draggingDelete && _activeHandleIndex == index)
+            {
+                baseClass += " ant-slider-handle-dragging-delete";
+            }
+            return SemanticClass("handle", baseClass);
+        }
+
+        private bool IsHandleDisabled(int index) => Disabled || (DisabledHandles != null && index < DisabledHandles.Length && DisabledHandles[index]);
+
+        private async Task OnMultiHandleMouseDown(MouseEventArgs args, int index)
+        {
+            if (IsHandleDisabled(index))
+            {
+                return;
+            }
+
+            _sliderDom = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
+            _activeHandleIndex = index;
+            _initialLeftValue = _leftValue;
+            _initialRightValue = _rightValue;
+            _trackedClientX = args.ClientX;
+            _trackedClientY = args.ClientY;
+            _multiHandleStartX = args.ClientX;
+            _multiHandleStartY = args.ClientY;
+            _draggingDelete = false;
+            _mouseDown = true;
+            if (_toolTipRight != null)
+            {
+                _tooltipRightVisible = true;
+            }
+            await Task.CompletedTask;
+        }
+
+        private async Task OnMultiHandleKeyDown(KeyboardEventArgs args, int index)
+        {
+            if (!Editable || IsHandleDisabled(index) || (args.Key != "Delete" && args.Key != "Backspace") || _multiValues.Count <= MinCount)
+            {
+                return;
+            }
+
+            var values = _multiValues.ToList();
+            values.RemoveAt(index);
+            ApplyMultiValues(values);
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(CurrentValue);
+            }
+            if (OnAfterChange.HasDelegate)
+            {
+                await OnAfterChange.InvokeAsync(CurrentValue);
+            }
+        }
+
         /// <summary>
         /// If true, the slider will be vertical. If false, it will be horizontal.
         /// </summary>
@@ -368,6 +522,14 @@ namespace AntDesign
         /// <default value="true"/>
         [Parameter]
         public bool HasTooltip { get; set; } = true;
+
+        /// <summary>Customize class names for Slider semantic elements.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Customize inline styles for Slider semantic elements.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
 
         private bool _isTipFormatterDefault = true;
 
@@ -431,6 +593,21 @@ namespace AntDesign
 
         #endregion Parameters
 
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return customStyle;
+            if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {customStyle}";
+        }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -449,9 +626,17 @@ namespace AntDesign
                     TValue defaultValue;
                     if (Range)
                     {
-                        defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConversionExtensions.Convert<(double, double), TValue>((0, 0)));
-                        LeftValue = DataConversionExtensions.Convert<TValue, (double, double)>(defaultValue).Item1;
-                        RightValue = DataConversionExtensions.Convert<TValue, (double, double)>(defaultValue).Item2;
+                        if (MultiValue)
+                        {
+                            defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), (TValue)(object)new[] { Min, Min });
+                            ApplyMultiValues(defaultValue is double[] values ? values : new[] { Min, Min });
+                        }
+                        else
+                        {
+                            defaultValue = parameters.GetValueOrDefault(nameof(DefaultValue), DataConversionExtensions.Convert<(double, double), TValue>((0, 0)));
+                            LeftValue = DataConversionExtensions.Convert<TValue, (double, double)>(defaultValue).Item1;
+                            RightValue = DataConversionExtensions.Convert<TValue, (double, double)>(defaultValue).Item2;
+                        }
                     }
                     else
                     {
@@ -463,8 +648,15 @@ namespace AntDesign
                 {
                     if (Range)
                     {
-                        LeftValue = DataConversionExtensions.Convert<TValue, (double, double)>(CurrentValue).Item1;
-                        RightValue = DataConversionExtensions.Convert<TValue, (double, double)>(CurrentValue).Item2;
+                        if (MultiValue)
+                        {
+                            ApplyMultiValues(CurrentValue is double[] values ? values : Array.Empty<double>());
+                        }
+                        else
+                        {
+                            LeftValue = DataConversionExtensions.Convert<TValue, (double, double)>(CurrentValue).Item1;
+                            RightValue = DataConversionExtensions.Convert<TValue, (double, double)>(CurrentValue).Item2;
+                        }
                     }
                     else
                     {
@@ -555,12 +747,58 @@ namespace AntDesign
             _mouseDown = !Disabled;
         }
 
+        private async Task OnTrackMouseDown(MouseEventArgs args)
+        {
+            if (Disabled || !Range)
+            {
+                return;
+            }
+
+            _sliderDom = await JsInvokeAsync<HtmlElement>(JSInteropConstants.GetDomInfo, Ref);
+            if (Editable && MultiValue && !DraggableTrack && DisabledHandles?.Any(x => x) != true && (MaxCount <= 0 || _multiValues.Count < MaxCount))
+            {
+                var values = _multiValues.ToList();
+                values.Add(Clamp(GetValueFromPointer(Vertical ? args.PageY : args.PageX), Min, Max));
+                ApplyMultiValues(values);
+                if (OnChange.HasDelegate)
+                {
+                    await OnChange.InvokeAsync(CurrentValue);
+                }
+                if (OnAfterChange.HasDelegate)
+                {
+                    await OnAfterChange.InvokeAsync(CurrentValue);
+                }
+                return;
+            }
+
+            if (!DraggableTrack || DisabledHandles?.Any(x => x) == true)
+            {
+                return;
+            }
+
+            _initialLeftValue = LeftValue;
+            _initialRightValue = RightValue;
+            _initialMultiValues = MultiValue ? _multiValues.ToArray() : null;
+            _trackStartPointerValue = GetValueFromPointer(Vertical ? args.PageY : args.PageX);
+            _trackedClientX = args.ClientX;
+            _trackedClientY = args.ClientY;
+            _mouseDown = true;
+            _draggingTrack = true;
+        }
+
         private double _trackedClientX;
         private double _trackedClientY;
 
         private void OnMouseDownEdge(MouseEventArgs args, bool right)
         {
+            var index = right ? 1 : 0;
+            if (IsHandleDisabled(index))
+            {
+                return;
+            }
             _right = right;
+            _activeHandleIndex = index;
+            _mouseDown = true;
             _initialLeftValue = _leftValue;
             _initialRightValue = _rightValue;
             _trackedClientX = args.ClientX;
@@ -593,7 +831,29 @@ namespace AntDesign
                 _trackedClientX = jsonElement.GetProperty("clientX").GetDouble();
                 _trackedClientY = jsonElement.GetProperty("clientY").GetDouble();
                 _mouseMove = true;
-                await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
+                if (_draggingTrack)
+                {
+                    CalculateTrackRange(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
+                }
+                else if (MultiValue)
+                {
+                    var clientX = jsonElement.GetProperty("clientX").GetDouble();
+                    var clientY = jsonElement.GetProperty("clientY").GetDouble();
+                    var deleteDistance = Vertical ? Math.Abs(clientX - _multiHandleStartX) : Math.Abs(clientY - _multiHandleStartY);
+                    _draggingDelete = Editable && _multiValues.Count > MinCount && deleteDistance > 130;
+                    if (_draggingDelete)
+                    {
+                        StateHasChanged();
+                    }
+                    else
+                    {
+                        CalculateMultiValue(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
+                    }
+                }
+                else
+                {
+                    await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
+                }
 
                 if (OnChange.HasDelegate)
                     await InvokeAsync(() => OnChange.InvokeAsync(CurrentValue));
@@ -606,7 +866,30 @@ namespace AntDesign
             if (_mouseDown)
             {
                 _mouseDown = false;
-                if (!isMoveInEdgeBoundary)
+                if (_draggingTrack)
+                {
+                    CalculateTrackRange(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
+                    _draggingTrack = false;
+                }
+                else if (MultiValue)
+                {
+                    if (_draggingDelete && _multiValues.Count > MinCount)
+                    {
+                        var values = _multiValues.ToList();
+                        values.RemoveAt(_activeHandleIndex);
+                        ApplyMultiValues(values);
+                        if (OnChange.HasDelegate)
+                        {
+                            await InvokeAsync(() => OnChange.InvokeAsync(CurrentValue));
+                        }
+                    }
+                    else
+                    {
+                        CalculateMultiValue(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
+                    }
+                    _draggingDelete = false;
+                }
+                else if (!isMoveInEdgeBoundary)
                 {
                     await CalculateValueAsync(Vertical ? jsonElement.GetProperty("pageY").GetDouble() : jsonElement.GetProperty("pageX").GetDouble());
                 }
@@ -730,12 +1013,77 @@ namespace AntDesign
             }
         }
 
+        private double GetValueFromPointer(double pointerPosition)
+        {
+            double sliderOffset = (double)(Vertical ? _sliderDom.AbsoluteTop : _sliderDom.AbsoluteLeft);
+            double sliderLength = (double)(Vertical ? _sliderDom.ClientHeight : _sliderDom.ClientWidth);
+            double position;
+
+            if (Reverse)
+            {
+                position = Vertical ? pointerPosition - sliderOffset : sliderLength - (pointerPosition - sliderOffset);
+            }
+            else
+            {
+                position = Vertical ? sliderOffset + sliderLength - pointerPosition : pointerPosition - sliderOffset;
+            }
+
+            return Min + MinMaxDelta * position / sliderLength;
+        }
+
+        private void CalculateTrackRange(double pointerPosition)
+        {
+            double delta = GetValueFromPointer(pointerPosition) - _trackStartPointerValue;
+            if (_initialMultiValues?.Length > 0)
+            {
+                delta = Math.Max(Min - _initialMultiValues[0], Math.Min(Max - _initialMultiValues[^1], delta));
+                var alignedDelta = Clamp(_initialMultiValues[0] + delta, Min, Max) - _initialMultiValues[0];
+                ApplyMultiValues(_initialMultiValues.Select(value => value + alignedDelta));
+                return;
+            }
+            double rangeWidth = _initialRightValue - _initialLeftValue;
+            double leftValue = Math.Max(Min, Math.Min(Max - rangeWidth, _initialLeftValue + delta));
+
+            LeftValue = leftValue;
+            RightValue = leftValue + rangeWidth;
+        }
+
+        private void CalculateMultiValue(double pointerPosition)
+        {
+            if (_activeHandleIndex < 0 || _activeHandleIndex >= _multiValues.Count || IsHandleDisabled(_activeHandleIndex))
+            {
+                return;
+            }
+
+            var values = _multiValues.ToArray();
+            var minimum = _activeHandleIndex == 0 ? Min : values[_activeHandleIndex - 1];
+            var maximum = _activeHandleIndex == values.Length - 1 ? Max : values[_activeHandleIndex + 1];
+            values[_activeHandleIndex] = Clamp(GetValueFromPointer(pointerPosition), minimum, maximum);
+            ApplyMultiValues(values);
+        }
+
         private void SetStyle()
         {
             var rightHandPercentage = (RightValue - Min) / MinMaxDelta;
             _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, Formatter.ToPercentWithoutBlank(rightHandPercentage));
             if (Range)
             {
+                if (MultiValue)
+                {
+                    EnsureMultiValues();
+                    _multiTrackStyles.Clear();
+                    for (var i = 0; i < _multiValues.Count - 1; i++)
+                    {
+                        var start = (_multiValues[i] - Min) / MinMaxDelta;
+                        var width = (_multiValues[i + 1] - _multiValues[i]) / MinMaxDelta;
+                        _multiTrackStyles.Add(string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, Formatter.ToPercentWithoutBlank(start), Formatter.ToPercentWithoutBlank(width)));
+                    }
+                    _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, Formatter.ToPercentWithoutBlank((_multiValues[0] - Min) / MinMaxDelta));
+                    var rightPercent = (_multiValues[^1] - Min) / MinMaxDelta;
+                    _rightHandleStyle = string.Format(CultureInfo.CurrentCulture, RightHandleStyleFormat, Formatter.ToPercentWithoutBlank(rightPercent));
+                    StateHasChanged();
+                    return;
+                }
                 var leftHandPercentage = (LeftValue - Min) / MinMaxDelta;
                 _trackStyle = string.Format(CultureInfo.CurrentCulture, TrackStyleFormat, Formatter.ToPercentWithoutBlank(leftHandPercentage), Formatter.ToPercentWithoutBlank((RightValue - LeftValue) / MinMaxDelta));
                 _leftHandleStyle = string.Format(CultureInfo.CurrentCulture, LeftHandleStyleFormat, Formatter.ToPercentWithoutBlank(leftHandPercentage));
@@ -782,6 +1130,23 @@ namespace AntDesign
 
             if (Range)
             {
+                if (MultiValue)
+                {
+                    _multiValues.Clear();
+                    if (value is double[] values)
+                    {
+                        _multiValues.AddRange(values.OrderBy(v => v).Select(v => Clamp(v, Min, Max)));
+                    }
+                    if (_multiValues.Count == 0)
+                    {
+                        _multiValues.Add(Min);
+                        _multiValues.Add(Min);
+                    }
+                    _leftValue = _multiValues[0];
+                    _rightValue = _multiValues[^1];
+                    SetStyle();
+                    return;
+                }
                 if (IsLeftAndRightChanged(value))
                 {
                     _leftValue = double.MinValue;
@@ -831,6 +1196,11 @@ namespace AntDesign
             TValue orderedValue = value;
             if (Range)
             {
+                if (MultiValue && value is double[] values)
+                {
+                    orderedValue = (TValue)(object)values.OrderBy(v => v).ToArray();
+                    return orderedValue;
+                }
                 //sort if needed
                 (double, double) typedValue = DataConversionExtensions.Convert<TValue, (double, double)>(value);
                 if (typedValue.Item1 > typedValue.Item2)

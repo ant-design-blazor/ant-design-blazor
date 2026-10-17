@@ -1,0 +1,13 @@
+<Slider TValue="double[]" Value="_value" OnChange="OnValueChange" Styles="@_styles" />
+
+@code {
+    private double[] _value = { 0, 10, 20 };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["track"] = "background:transparent",
+        ["tracks"] = "background:linear-gradient(to right, #87d068 0%, #ffccc7 100%)"
+    };
+
+    private void OnValueChange(double[] value) => _value = value;
+}

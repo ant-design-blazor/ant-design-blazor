@@ -77,6 +77,12 @@
     }
   }
 
+  &-handle-disabled {
+    cursor: not-allowed;
+    border-color: @slider-disabled-color;
+    box-shadow: none;
+  }
+
   &:hover {
     .@{slider-prefix-cls}-rail {
       background-color: @slider-rail-background-color-hover;

@@ -1,0 +1,42 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <div style="display:flex; flex-direction:column; gap:28px">
+        <Slider TValue="double" DefaultValue="30" Disabled />
+        <Slider TValue="(double, double)" DefaultValue="(20, 50)" />
+        <div style="height:220px; margin-inline-start:48px">
+            <Slider TValue="double" Vertical DefaultValue="30" />
+        </div>
+        <div style="height:220px; margin-inline-start:48px">
+            <Slider TValue="(double, double)" Vertical Step="10" DefaultValue="(20, 50)" />
+        </div>
+    </div>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Slider"] = new Dictionary<string, string>
+            {
+                ["controlSize"] = "20px",
+                ["railSize"] = "4px",
+                ["handleSize"] = "22px",
+                ["handleSizeHover"] = "18px",
+                ["dotSize"] = "8px",
+                ["handleLineWidth"] = "6px",
+                ["handleLineWidthHover"] = "2px",
+                ["railBg"] = "#9f3434",
+                ["railHoverBg"] = "#8d2424",
+                ["trackBg"] = "#b0b0ef",
+                ["trackHoverBg"] = "#c77195",
+                ["handleColor"] = "#e6f6a2",
+                ["handleActiveColor"] = "#d22bc4",
+                ["dotBorderColor"] = "#303030",
+                ["dotActiveBorderColor"] = "#918542",
+                ["trackBgDisabled"] = "#1a1b80"
+            }
+        }
+    };
+}
