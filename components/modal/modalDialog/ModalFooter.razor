@@ -8,47 +8,45 @@
     var cancelProps = ModalProps.CancelButtonProps ?? new ButtonProps();
 }
 
-<div>
-    <Button OnClick="@HandleOk"
-            Loading="@okProps.Loading"
-            Type="@okProps.Type"
-            Block="@okProps.Block"
-            Ghost="@okProps.Ghost"
-            Shape="@okProps.Shape"
-            Size="@okProps.Size"
-            Icon="@okProps.Icon"
-            Disabled="@okProps.Disabled"
-            Danger="@okProps.IsDanger">
-        @{
-            if (ModalProps.OkText.IsT0)
-            {
-                @(ModalProps.OkText.AsT0)
-            }
-            else
-            {
-                @(ModalProps.OkText.AsT1)
-            }
+<Button OnClick="@HandleCancel"
+        Block="@cancelProps.Block"
+        Ghost="@cancelProps.Ghost"
+        Loading="@cancelProps.Loading"
+        Type="@cancelProps.Type"
+        Shape="@cancelProps.Shape"
+        Size="@cancelProps.Size"
+        Icon="@cancelProps.Icon"
+        Disabled="@cancelProps.Disabled"
+        Danger="@cancelProps.IsDanger">
+    @{
+        if (ModalProps.CancelText.IsT0)
+        {
+            @(ModalProps.CancelText.AsT0)
         }
-    </Button>
-    <Button OnClick="@HandleCancel"
-            Block="@cancelProps.Block"
-            Ghost="@cancelProps.Ghost"
-            Loading="@cancelProps.Loading"
-            Type="@cancelProps.Type"
-            Shape="@cancelProps.Shape"
-            Size="@cancelProps.Size"
-            Icon="@cancelProps.Icon"
-            Disabled="@cancelProps.Disabled"
-            Danger="@cancelProps.IsDanger">
-        @{
-            if (ModalProps.CancelText.IsT0)
-            {
-                @(ModalProps.CancelText.AsT0)
-            }
-            else
-            {
-                @(ModalProps.CancelText.AsT1)
-            }
+        else
+        {
+            @(ModalProps.CancelText.AsT1)
         }
-    </Button>
-</div>
+    }
+</Button>
+<Button OnClick="@HandleOk"
+        Loading="@okProps.Loading"
+        Type="@okProps.Type"
+        Block="@okProps.Block"
+        Ghost="@okProps.Ghost"
+        Shape="@okProps.Shape"
+        Size="@okProps.Size"
+        Icon="@okProps.Icon"
+        Disabled="@okProps.Disabled"
+        Danger="@okProps.IsDanger">
+    @{
+        if (ModalProps.OkText.IsT0)
+        {
+            @(ModalProps.OkText.AsT0)
+        }
+        else
+        {
+            @(ModalProps.OkText.AsT1)
+        }
+    }
+</Button>

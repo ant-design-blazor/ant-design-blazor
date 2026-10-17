@@ -1,5 +1,5 @@
 const less = require('less');
-const LessPluginCleanCSS = require('less-plugin-clean-css');
+const CleanCSS = require('clean-css');
 const path = require('path');
 const fs = require('fs-extra');
 const { darkPaletteLess } = require('../build/dark-vars');
@@ -15,7 +15,6 @@ function generateTheme(vars, fileName) {
 
   return less.render(themeContent, {
     javascriptEnabled: true,
-    plugins: [new LessPluginCleanCSS({ advanced: true })],
     modifyVars: {
       'hack': `true;@import '${colorPalettePath}';`,
       ...vars,
@@ -23,7 +22,8 @@ function generateTheme(vars, fileName) {
       '@site-text-color': '@heading-color'
     }
   }).then(data => {
-    return fs.outputFile(path.join(__dirname, `../../site/AntDesign.Docs/wwwroot/css/${fileName}`), data.css);
+    const css = new CleanCSS({ level: 2 }).minify(data.css).styles;
+    return fs.outputFile(path.join(__dirname, `../../site/AntDesign.Docs/wwwroot/css/${fileName}`), css);
   }).catch(e => {
     console.log(e);
   });
