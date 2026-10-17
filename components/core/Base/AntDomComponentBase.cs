@@ -21,22 +21,61 @@ namespace AntDesign
         internal IReadOnlyDictionary<string, object> GetAdditionalAttributes(IReadOnlyDictionary<string, object> attributes)
         {
             var additionalAttributes = AdditionalAttributes;
-            if (additionalAttributes == null || additionalAttributes.Count == 0) return attributes;
-            if (attributes == null || attributes.Count == 0) return additionalAttributes;
+            if (additionalAttributes == null) return attributes;
+            if (attributes == null) return additionalAttributes;
+            return MergeAdditionalAttributes(additionalAttributes, attributes);
+        }
 
-            // Start with the larger input to avoid repeated growth without reserving
-            // twice the space when most or all attribute names overlap.
-            var capacity = System.Math.Max(additionalAttributes.Count, attributes.Count);
+        private static IReadOnlyDictionary<string, object> MergeAdditionalAttributes(
+            IReadOnlyDictionary<string, object> additionalAttributes, IReadOnlyDictionary<string, object> attributes)
+        {
+            var additionalCount = additionalAttributes.Count;
+            if (additionalCount == 0) return attributes;
+            var attributeCount = attributes.Count;
+            if (attributeCount == 0) return additionalAttributes;
+
+            // Reserve for the union instead of growing for disjoint inputs or
+            // reserving their sum when most keys overlap. A source comparer can
+            // differ from the output comparer; the estimate only affects capacity.
+            var capacity = additionalCount + attributeCount;
+            if (attributes is Dictionary<string, object> dictionary)
+            {
+                foreach (var attribute in dictionary)
+                {
+                    if (additionalAttributes.ContainsKey(attribute.Key)) capacity--;
+                }
+            }
+            else
+            {
+                foreach (var attribute in attributes)
+                {
+                    if (additionalAttributes.ContainsKey(attribute.Key)) capacity--;
+                }
+            }
             var merged = new Dictionary<string, object>(capacity, System.StringComparer.OrdinalIgnoreCase);
-            foreach (var attribute in additionalAttributes)
-            {
-                merged[attribute.Key] = attribute.Value;
-            }
-            foreach (var attribute in attributes)
-            {
-                merged[attribute.Key] = attribute.Value;
-            }
+            CopyAdditionalAttributes(merged, additionalAttributes);
+            CopyAdditionalAttributes(merged, attributes);
             return merged;
+        }
+
+        private static void CopyAdditionalAttributes(Dictionary<string, object> destination, IReadOnlyDictionary<string, object> source)
+        {
+            // The common Dictionary path uses its struct enumerator rather than
+            // allocating an interface enumerator on every copy.
+            if (source is Dictionary<string, object> dictionary)
+            {
+                foreach (var attribute in dictionary)
+                {
+                    destination[attribute.Key] = attribute.Value;
+                }
+            }
+            else
+            {
+                foreach (var attribute in source)
+                {
+                    destination[attribute.Key] = attribute.Value;
+                }
+            }
         }
 
         [Inject]

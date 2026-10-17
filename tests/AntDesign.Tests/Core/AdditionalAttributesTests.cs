@@ -38,7 +38,32 @@ namespace AntDesign.Tests.Core
 
             var result = probe.GetAdditionalAttributes(legacy!);
 
-            Assert.Same(sharedCount.GetValueOrDefault() == 0 ? legacy : shared, result);
+            var expected = shared == null ? legacy : legacy == null ? shared : sharedCount == 0 ? legacy : shared;
+            Assert.Same(expected, result);
+        }
+
+        [Theory]
+        [InlineData(false, false)]
+        [InlineData(false, true)]
+        [InlineData(true, false)]
+        [InlineData(true, true)]
+        public void Merging_handles_disjoint_keys_and_different_input_comparers(bool readOnly, bool overlap)
+        {
+            var shared = Enumerable.Range(0, 8).ToDictionary(i => $"DATA-SHARED-{i}", i => (object)$"shared-{i}", StringComparer.OrdinalIgnoreCase);
+            var legacy = Enumerable.Range(0, 8).ToDictionary(i => overlap ? $"data-shared-{i}" : $"data-legacy-{i}", i => (object)$"legacy-{i}");
+            IReadOnlyDictionary<string, object> Wrap(Dictionary<string, object> source) => readOnly
+                ? new System.Collections.ObjectModel.ReadOnlyDictionary<string, object>(source) : source;
+            using var probe = new AttributeProbe { AdditionalAttributes = Wrap(shared) };
+
+            var result = probe.GetAdditionalAttributes(Wrap(legacy));
+
+            Assert.Equal(overlap ? 8 : 16, result.Count);
+            for (var i = 0; i < 8; i++)
+            {
+                Assert.Equal(overlap ? $"legacy-{i}" : $"shared-{i}", result[$"data-shared-{i}"]);
+                if (!overlap) Assert.Equal($"legacy-{i}", result[$"DATA-LEGACY-{i}"]);
+                Assert.Equal($"shared-{i}", shared[$"DATA-SHARED-{i}"]);
+            }
         }
 
         [Fact]
