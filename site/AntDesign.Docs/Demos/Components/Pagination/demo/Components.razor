@@ -1,0 +1,17 @@
+<Pagination ShowSizeChanger="true" DefaultCurrent="3" Total="500" SizeChanger="@RenderSizeChanger" />
+
+@code {
+    private RenderFragment<PaginationSizeChangerContext> RenderSizeChanger => context => builder =>
+    {
+        builder.OpenComponent<AntDesign.InputNumber<int>>(0);
+        builder.AddAttribute(1, "aria-label", "Page Size");
+        builder.AddAttribute(2, nameof(AntDesign.InputNumber<int>.Class), context.Class);
+        builder.AddAttribute(3, nameof(AntDesign.InputNumber<int>.Disabled), context.Disabled);
+        builder.AddAttribute(4, nameof(AntDesign.InputNumber<int>.Min), 1);
+        builder.AddAttribute(5, nameof(AntDesign.InputNumber<int>.Precision), 0);
+        builder.AddAttribute(6, nameof(AntDesign.InputNumber<int>.Style), "width:100px");
+        builder.AddAttribute(7, nameof(AntDesign.InputNumber<int>.Value), context.Value);
+        builder.AddAttribute(8, nameof(AntDesign.InputNumber<int>.OnChange), context.OnChange);
+        builder.CloseComponent();
+    };
+}

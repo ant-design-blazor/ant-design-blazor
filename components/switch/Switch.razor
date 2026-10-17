@@ -7,35 +7,34 @@
         class="@ClassMapper.Class"
         style="@Style"
 		autofocus=@AutoFocus
-        ant-click-animating="@(_clickAnimating?"true":"false")"
-        @onmouseover="HandleMouseOver"
-        @onmouseout="HandleMouseOut"
         @onclick="HandleClick"
         @ref="Ref">
-    <div class="@($"{_prefixCls}-handle { _prefixCls }-indicator")">
+    <div class="@($"{_prefixCls}-handle")">
         @if (Loading)
         {
             <Icon Type="loading" Class="@($"{_prefixCls}-loading-icon")" />
         }
     </div>
-    <span class="@($"{_prefixCls}-inner { _prefixCls }-content")">
-        @if (CurrentValue)
-        {
-            if (CheckedChildrenTemplate != null)@CheckedChildrenTemplate else @CheckedChildren
-        }
-        else
-        {
-            if (UnCheckedChildrenTemplate != null)@UnCheckedChildrenTemplate else @UnCheckedChildren
-        }
+    <span class="@($"{_prefixCls}-inner")">
+        <span class="@($"{_prefixCls}-inner-checked")">
+            @if (CheckedChildrenTemplate != null)
+            {
+                @CheckedChildrenTemplate
+            }
+            else
+            {
+                @CheckedChildren
+            }
+        </span>
+        <span class="@($"{_prefixCls}-inner-unchecked")">
+            @if (UnCheckedChildrenTemplate != null)
+            {
+                @UnCheckedChildrenTemplate
+            }
+            else
+            {
+                @UnCheckedChildren
+            }
+        </span>
     </span>
-
-    <!--animation-->
-    @if (CurrentValue)
-    {
-        <div class="ant-click-animating-node"></div>
-    }
-    else
-    {
-        <div class="ant-click-animating-node"></div>
-    }
 </button>

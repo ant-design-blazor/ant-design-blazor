@@ -1,0 +1,26 @@
+<Form TModel="DebugFormModel" Model="_model" Style="max-width:640px;margin:0 auto">
+    <FormItem Label="AutoComplete">
+        <AutoComplete Placeholder="Type to search" Options="_options" />
+    </FormItem>
+    <FormItem Label="Input group">
+        <InputGroup Compact>
+            <Select TItemValue="string" TItem="string" Style="width:30%">
+                <SelectOptions><SelectOption TItemValue="string" TItem="string" Value=@("area") Label="Area" /></SelectOptions>
+            </Select>
+            <AutoComplete Placeholder="Search" Options="_options" Style="width:70%" />
+        </InputGroup>
+    </FormItem>
+    <FormItem Label="Input with suffix">
+        <AutoComplete Placeholder="Search" Options="_options">
+            <AutoCompleteSearch Placeholder="Search">
+                <Suffix><Icon Type="search" /></Suffix>
+            </AutoCompleteSearch>
+        </AutoComplete>
+    </FormItem>
+</Form>
+
+@code {
+    private readonly string[] _options = ["Ant Design", "Ant Design Blazor"];
+    private readonly DebugFormModel _model = new();
+    private sealed class DebugFormModel { }
+}

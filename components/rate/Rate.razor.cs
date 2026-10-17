@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -51,7 +52,23 @@ namespace AntDesign
         /// </summary>
         /// <default value="true"/>
         [Parameter]
-        public bool AutoFocus { get; set; } = true;
+        public bool AutoFocus { get; set; } = false;
+
+        /// <summary>Whether keyboard interaction is enabled.</summary>
+        [Parameter]
+        public bool Keyboard { get; set; } = true;
+
+        /// <summary>Tab order of the rating group.</summary>
+        [Parameter]
+        public int TabIndex { get; set; }
+
+        /// <summary>Size of the rating stars.</summary>
+        [Parameter]
+        public InputSize Size { get; set; } = InputSize.Default;
+
+        /// <summary>Callback invoked when a keyboard key is pressed.</summary>
+        [Parameter]
+        public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
 
         /// <summary>
         /// Custom character for each rate
@@ -118,6 +135,8 @@ namespace AntDesign
 
         private IEnumerable<RateMetaData> RateMetaDatas { get; set; }
 
+        private decimal DisplayedValue => _hoverValue > 0 ? _hoverValue - (_hasHalf ? 0.5M : 0M) : Value;
+
         /// <summary>
         /// 是否允许半选
         /// Whether to allow half-selection
@@ -149,25 +168,35 @@ namespace AntDesign
 
         private void Blur(FocusEventArgs e)
         {
+            if (Disabled) return;
             this._isFocused = false;
             OnBlur.InvokeAsync(e);
         }
 
         private void Focus(FocusEventArgs e)
         {
+            if (Disabled) return;
             this._isFocused = true;
             OnFocus.InvokeAsync(e);
         }
 
-        private void KeyDown(KeyboardEventArgs e)
+        private async Task KeyDown(KeyboardEventArgs e)
         {
             decimal oldVal = this.Value;
 
-            if (e.Key == "ArrowRight" && this.Value < Count)
+            if (Keyboard && e.Key == "ArrowRight" && this.Value < Count && !RTL)
             {
                 this.Value += this.AllowHalf ? 0.5M : 1M;
             }
-            else if (e.Key == "ArrowLeft" && this.Value > 0)
+            else if (Keyboard && e.Key == "ArrowLeft" && this.Value > 0 && !RTL)
+            {
+                this.Value -= this.AllowHalf ? 0.5M : 1M;
+            }
+            else if (Keyboard && e.Key == "ArrowLeft" && this.Value < Count && RTL)
+            {
+                this.Value += this.AllowHalf ? 0.5M : 1M;
+            }
+            else if (Keyboard && e.Key == "ArrowRight" && this.Value > 0 && RTL)
             {
                 this.Value -= this.AllowHalf ? 0.5M : 1M;
             }
@@ -175,6 +204,11 @@ namespace AntDesign
             {
                 this._hasHalf = !(this.Value == (int)this.Value);
                 this._hoverValue = (int)Math.Ceiling(this.Value);
+            }
+
+            if (!Disabled)
+            {
+                await OnKeyDown.InvokeAsync(e);
             }
         }
 
@@ -224,14 +258,31 @@ namespace AntDesign
             }
 
             SetClass();
-            RateMetaDatas = Enumerable.Range(1, Count).Select(c => new RateMetaData() { SerialNumber = c - 1, ToolTipText = this.Tooltips?[c - 1] });
+            RateMetaDatas = Enumerable.Range(1, Count).Select(c => new RateMetaData()
+            {
+                SerialNumber = c - 1,
+                ToolTipText = this.Tooltips != null && this.Tooltips.Length >= c ? this.Tooltips[c - 1] : null
+            });
             base.OnInitialized();
+        }
+
+        protected override async Task OnFirstAfterRenderAsync()
+        {
+            if (AutoFocus && !Disabled)
+            {
+                await FocusAsync(Ref);
+            }
+
+            await base.OnFirstAfterRenderAsync();
         }
 
         protected override void OnParametersSet()
         {
-            if (RateMetaDatas == null)
-                RateMetaDatas = Enumerable.Range(1, Count).Select(c => new RateMetaData() { SerialNumber = c - 1, ToolTipText = this.Tooltips?[c - 1] });
+            RateMetaDatas = Enumerable.Range(1, Count).Select(c => new RateMetaData()
+            {
+                SerialNumber = c - 1,
+                ToolTipText = this.Tooltips != null && this.Tooltips.Length >= c ? this.Tooltips[c - 1] : null
+            });
             SetClass();
             base.OnParametersSet();
         }
@@ -242,6 +293,8 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(clsPrefix)
+                .If($"{clsPrefix}-large", () => Size == InputSize.Large)
+                .If($"{clsPrefix}-small", () => Size == InputSize.Small)
                 .If($"{clsPrefix}-disabled", () => Disabled)
                 .If($"{clsPrefix}-rtl", () => RTL);
         }
@@ -256,6 +309,9 @@ namespace AntDesign
 
     public class RateItemRenderContext
     {
+        /// <summary>Zero-based index of the character being rendered.</summary>
+        public int Index { get; set; }
+
         /// <summary>
         ///  'AntIcon' | 'Text'
         /// </summary>

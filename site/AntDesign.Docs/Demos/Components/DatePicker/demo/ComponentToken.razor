@@ -1,0 +1,22 @@
+﻿@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@Theme">
+    <RangePicker TValue="DateTime?[]" Ranges="@Ranges" />
+</ConfigProvider>
+
+@code {
+    private readonly ThemeConfig Theme = new ThemeConfig().SetComponentToken(
+        "DatePicker",
+        new DatePickerComponentToken
+        {
+            PresetsWidth = 180,
+            PresetsMaxWidth = 320,
+            ZIndexPopup = 1100
+        });
+
+    private Dictionary<string, DateTime?[]> Ranges => new()
+    {
+        ["Last 7 days"] = new DateTime?[] { DateTime.Today.AddDays(-7), DateTime.Today },
+        ["Last 30 days"] = new DateTime?[] { DateTime.Today.AddDays(-30), DateTime.Today }
+    };
+}

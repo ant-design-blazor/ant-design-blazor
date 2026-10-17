@@ -1,0 +1,12 @@
+<Form Model="_model" Layout="FormLayout.Vertical">
+    <FormItem Label="Error" ValidateStatus="FormValidateStatus.Error" Help="Please select a valid date.">
+        <DatePicker TValue="DateTime?" />
+    </FormItem>
+    <FormItem Label="Warning" ValidateStatus="FormValidateStatus.Warning" Help="This date is outside the preferred range.">
+        <DatePicker TValue="DateTime?" />
+    </FormItem>
+</Form>
+
+@code {
+    private readonly object _model = new();
+}

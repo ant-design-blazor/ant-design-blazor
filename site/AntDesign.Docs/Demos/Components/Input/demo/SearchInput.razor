@@ -1,0 +1,10 @@
+<Space Direction="SpaceDirection.Vertical">
+    <Search Placeholder="Search text" WrapperStyle="width: 240px" AllowClear />
+    <Search Placeholder="Search and submit" WrapperStyle="width: 240px" EnterButton="true" OnSearch="OnSearch" />
+</Space>
+
+@inject IMessageService Message
+
+@code {
+    private void OnSearch(string value) => Message.Info($"Search: {value}");
+}

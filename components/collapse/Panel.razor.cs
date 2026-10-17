@@ -5,6 +5,7 @@
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -81,6 +82,7 @@ namespace AntDesign
         private string _warpperStyle;
 
         private bool _isActive = false;
+        private bool _hasRendered;
         private bool _isInactive = true;
         private bool _isHidden = true;
         private bool _isCollapseEnterPrepare;
@@ -102,10 +104,9 @@ namespace AntDesign
                 .If("ant-collapse-item-disabled", () => this.Disabled);
 
             _contentClassMapper
-                .Add("ant-collapse-content")
-                .If("ant-collapse-content-active", () => _isActive)
-                .If("ant-collapse-content-inactive", () => _isInactive)
-                .If("ant-collapse-content-hidden", () => _isHidden)
+                .Add("ant-collapse-panel")
+                .If("ant-collapse-panel-active", () => _isActive)
+                .If("ant-collapse-panel-hidden", () => _isHidden)
                 .If("ant-motion-collapse-enter ant-motion-collapse-enter-prepare ant-motion-collapse", () => _isCollapseEnterPrepare)
                 .If("ant-motion-collapse-enter ant-motion-collapse-enter-start ant-motion-collapse", () => _isCollapseEnterStart)
                 .If("ant-motion-collapse-enter ant-motion-collapse-enter-active ant-motion-collapse", () => _isCollapseEnterActive)
@@ -122,6 +123,7 @@ namespace AntDesign
             await base.OnInitializedAsync();
             if (Active)
             {
+                _hasRendered = true;
                 _isActive = true;
                 _isHidden = false;
                 _isInactive = false;
@@ -133,6 +135,14 @@ namespace AntDesign
             if (!this.Disabled)
             {
                 this.Collapse?.TogglePanelState(this);
+            }
+        }
+
+        private void OnHeaderKeyDown(KeyboardEventArgs args)
+        {
+            if (args.Key is "Enter" or " ")
+            {
+                OnHeaderClick();
             }
         }
 
@@ -151,6 +161,7 @@ namespace AntDesign
 
                 if (Active)
                 {
+                    _hasRendered = true;
                     if (Collapse.Animation)
                     {
                         HandleExpand();

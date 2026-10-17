@@ -1,0 +1,10 @@
+<Space>
+    <AntDesign.InputNumber TValue="double?" Min="1" Max="10" @bind-Value="_value" />
+    <Button Type="ButtonType.Primary" OnClick="Reset">Reset to 99</Button>
+</Space>
+
+@code {
+    private double? _value = 99;
+
+    private void Reset() => _value = 99;
+}

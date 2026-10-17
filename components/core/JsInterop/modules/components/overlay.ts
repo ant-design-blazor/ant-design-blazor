@@ -226,6 +226,11 @@ export class Overlay {
     this.observe();
   }
 
+  updateOffsets(verticalOffset: number, horizontalOffset: number) {
+    this.overlayConstraints.verticalOffset = verticalOffset;
+    this.overlayConstraints.horizontalOffset = horizontalOffset;
+  }
+
   static getFirstValidChild(element: HTMLElement, triggerIsWrappedInDiv: boolean): HTMLElement {
     if (triggerIsWrappedInDiv)
     {      

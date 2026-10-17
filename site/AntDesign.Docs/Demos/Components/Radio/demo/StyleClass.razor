@@ -1,0 +1,28 @@
+<div style="display:flex; flex-direction:column; gap:16px">
+    <RadioGroup TValue="string" @bind-Value="_value">
+        <Radio Value="@("styles")" Styles="_styles">Object styles</Radio>
+        <Radio Value="@("classNames")" ClassNames="_classNames">Semantic classNames</Radio>
+    </RadioGroup>
+</div>
+
+@code {
+    private string _value = "styles";
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "border-radius:8px; background:#f5f5f5; padding:8px",
+        ["icon"] = "border-color:#faad14",
+        ["label"] = "color:#1677ff; font-weight:600"
+    };
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "radio-demo-semantic-root",
+        ["icon"] = "radio-demo-semantic-icon",
+        ["label"] = "radio-demo-semantic-label"
+    };
+}
+
+<style>
+    .radio-demo-semantic-root { border-radius: 8px; background: #fff7e6; padding: 8px; }
+    .radio-demo-semantic-icon { outline: 1px solid #fa8c16; }
+    .radio-demo-semantic-label { color: #d46b08; font-weight: 600; }
+</style>

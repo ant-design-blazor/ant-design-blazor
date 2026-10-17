@@ -68,6 +68,14 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>Custom classes keyed by the root, item, and separator semantic slots.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Custom inline styles keyed by the root, item, and separator semantic slots.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
         internal int SpaceItemCount { get; set; }
 
         private readonly IList<SpaceItem> _items = new List<SpaceItem>();
@@ -82,6 +90,8 @@ namespace AntDesign
 
         private string _gapStyle = "";
 
+        private string RootStyle => SemanticStyle("root", $"{Style} {InnerStyle} {_gapStyle}");
+
         private readonly static Dictionary<SpaceAlign, string> _alignMap = new()
         {
             [SpaceAlign.Start] = "start",
@@ -93,11 +103,26 @@ namespace AntDesign
         private void SetClass()
         {
             ClassMapper
-                .Add(PrefixCls)
+                .Add(SemanticClass("root", PrefixCls))
                 .Get(() => $"{PrefixCls}-{Direction.ToString().ToLowerInvariant()}")
                 .GetIf(() => $"{PrefixCls}-align-{_alignMap[Align]}", () => HasAlign)
                 .If($"{PrefixCls}-align-center", () => !HasAlign && Direction == SpaceDirection.Horizontal)
                 .If($"{PrefixCls}-rtl", () => RTL);
+        }
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return customStyle;
+            if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
+            return $"{baseStyle.TrimEnd().TrimEnd(';')}; {customStyle}";
         }
 
         private void ChangeSize()

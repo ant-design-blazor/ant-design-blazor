@@ -1,0 +1,38 @@
+<Dropdown>
+    <Overlay>
+        <Menu DefaultSelectedKeys="_selectedKeys" DefaultOpenKeys="_openKeys">
+            <MenuItemGroup Title="Item Group">
+                <MenuItem Key="01">Option 0</MenuItem>
+                <MenuItem Key="02">Option 1</MenuItem>
+            </MenuItemGroup>
+            <SubMenu Key="sub1" Title="Navigation One" Icon="@IconType.Outline.Mail">
+                <MenuItemGroup Title="Group One">
+                    <MenuItem Key="1">Option 1</MenuItem>
+                    <MenuItem Key="2">Option 2</MenuItem>
+                </MenuItemGroup>
+                <MenuItemGroup Title="Group Two">
+                    <MenuItem Key="3">Option 3</MenuItem>
+                    <MenuItem Key="4">Option 4</MenuItem>
+                </MenuItemGroup>
+            </SubMenu>
+            <SubMenu Key="sub2" Title="Navigation Two" Icon="@IconType.Outline.Appstore">
+                <MenuItem Key="5">Option 5</MenuItem>
+                <MenuItem Key="6">Option 6</MenuItem>
+                <SubMenu Key="sub3" Title="Nested submenu">
+                    <MenuItem Key="7">Option 7</MenuItem>
+                    <MenuItem Key="8">Option 8</MenuItem>
+                </SubMenu>
+            </SubMenu>
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        <a class="ant-dropdown-link" @onclick:preventDefault>
+            Hover to check menu style <Icon Type="@IconType.Outline.Down" />
+        </a>
+    </ChildContent>
+</Dropdown>
+
+@code {
+    private readonly string[] _selectedKeys = ["1"];
+    private readonly string[] _openKeys = ["sub1"];
+}

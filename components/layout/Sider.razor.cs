@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -27,6 +28,14 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public RenderFragment ChildContent { get; set; }
+
+        /// <summary>Custom classes keyed by the root and body semantic slots.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Custom inline styles keyed by the root and body semantic slots.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
 
         /// <summary>
         /// Collapse/expand UI element to allow manually changing.
@@ -133,6 +142,12 @@ namespace AntDesign
             $"width: {ComputedWidth}px;" +
             (_isCollapsed ? "overflow:initial;" : "");
 
+        private string RootStyle => GetComponentStyle("Layout", SemanticStyle("root", $"{SiderStyles} {Style}"));
+
+        private string BodyStyle => SemanticStyle("body");
+
+        private string BodyClass => SemanticClass("body", "ant-layout-sider-children");
+
         private RenderFragment DefaultTrigger => builder =>
         {
             builder.OpenComponent<Icon>(1);
@@ -146,12 +161,27 @@ namespace AntDesign
         private void SetClass()
         {
             ClassMapper.Clear()
-                .Add(_prefixCls)
+                .Add(SemanticClass("root", _prefixCls))
                 .If($"{_prefixCls}-dark", () => Theme == SiderTheme.Dark)
                 .If($"{_prefixCls}-light", () => Theme == SiderTheme.Light)
                 .If($"{_prefixCls}-has-trigger", () => Collapsible)
                 .If($"{_prefixCls}-collapsed", () => _isCollapsed)
                 .If($"{_prefixCls}-zero-width", () => CollapsedWidth == 0 && _isCollapsed);
+        }
+
+        private string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return $"{baseClass} {customClass}";
+        }
+
+        private string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return customStyle;
+            if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
+            return $"{baseStyle.TrimEnd().TrimEnd(';')}; {customStyle}";
         }
 
         protected override void OnInitialized()

@@ -1,0 +1,106 @@
+@using AntDesign.TableModels
+
+<div class="table-dynamic-settings" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:16px">
+    <Checkbox @bind-Checked="_bordered">Bordered</Checkbox>
+    <Checkbox @bind-Checked="_loading">Loading</Checkbox>
+    <Checkbox @bind-Checked="_showTitle">Title</Checkbox>
+    <Checkbox @bind-Checked="_showHeader">Column Header</Checkbox>
+    <Checkbox @bind-Checked="_showFooter">Footer</Checkbox>
+    <Checkbox @bind-Checked="_expandable">Expandable</Checkbox>
+    <Checkbox @bind-Checked="_rowSelection">Checkbox</Checkbox>
+    <Checkbox @bind-Checked="_fixedHeader">Fixed Header</Checkbox>
+    <Checkbox @bind-Checked="_hasData">Has Data</Checkbox>
+    <Checkbox @bind-Checked="_ellipsis">Ellipsis</Checkbox>
+</div>
+
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:16px">
+    <span>Size</span>
+    <RadioGroup Options="_sizes" @bind-Value="_size" ButtonStyle="RadioButtonStyle.Outline" />
+    <span>Table Scroll</span>
+    <RadioGroup Options="_scrollOptions" @bind-Value="_xScrollMode" ButtonStyle="RadioButtonStyle.Outline" />
+    <span>Table Layout</span>
+    <RadioGroup Options="_layoutOptions" @bind-Value="_tableLayout" ButtonStyle="RadioButtonStyle.Outline" />
+</div>
+
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-bottom:16px">
+    <span>Pagination</span>
+    <RadioGroup Options="_paginationOptions" @bind-Value="_paginationPosition" ButtonStyle="RadioButtonStyle.Outline" />
+</div>
+
+<Table TItem="DynamicRow" DataSource="_hasData ? _rows : Array.Empty<DynamicRow>()"
+       RowKey="row=>row.Key" Bordered="_bordered" Loading="_loading"
+       Title="@(_showTitle ? "Here is title" : null)" Footer="@(_showFooter ? "Here is footer" : null)"
+       Size="CurrentSize" ShowHeader="_showHeader" ScrollY="@(_fixedHeader ? "240px" : null)"
+       ScrollX="@(_xScrollMode == "unset" ? null : "1200px")"
+       TableLayout="@(_tableLayout == "unset" ? null : _tableLayout)"
+       PaginationPosition="_paginationPosition" HidePagination="@(_paginationPosition == "none")" PageSize="5"
+       RowExpandable="@(_expandable ? (_ => true) : (_ => false))">
+    <ColumnDefinitions>
+        @if (_rowSelection)
+        {
+            <Selection Type="SelectionType.Checkbox" />
+        }
+        <PropertyColumn Property="row=>row.Name" Title="Name" Ellipsis="_ellipsis" Fixed="@(_xScrollMode == "fixed" ? ColumnFixPlacement.Left : null)" />
+        <PropertyColumn Property="row=>row.Age" Title="Age" Sortable Ellipsis="_ellipsis" />
+        <PropertyColumn Property="row=>row.Address" Title="Address" Ellipsis="_ellipsis" Fixed="@(_xScrollMode == "fixed" ? ColumnFixPlacement.Right : null)" />
+        <ActionColumn Title="Action">
+            <Space Size="SpaceSize.Middle">
+                <a>Delete</a>
+                <a>More actions</a>
+            </Space>
+        </ActionColumn>
+    </ColumnDefinitions>
+    <ExpandTemplate Context="row">
+        @if (_expandable)
+        {
+            <p>@row.Data.Description</p>
+        }
+    </ExpandTemplate>
+</Table>
+
+@code {
+    private bool _bordered;
+    private bool _loading;
+    private bool _showTitle;
+    private bool _showHeader = true;
+    private bool _showFooter = true;
+    private bool _expandable = true;
+    private bool _rowSelection = true;
+    private bool _fixedHeader;
+    private bool _hasData = true;
+    private bool _ellipsis;
+    private string _size = "large";
+    private string _xScrollMode = "unset";
+    private string _tableLayout = "unset";
+    private string _paginationPosition = "bottomRight";
+
+    private readonly string[] _sizes = ["large", "middle", "small"];
+    private readonly string[] _scrollOptions = ["unset", "scroll", "fixed"];
+    private readonly string[] _layoutOptions = ["unset", "fixed"];
+    private readonly string[] _paginationOptions = ["topLeft", "topCenter", "topRight", "none", "bottomLeft", "bottomCenter", "bottomRight"];
+
+    private TableSize CurrentSize => _size switch
+    {
+        "small" => TableSize.Small,
+        "middle" => TableSize.Middle,
+        _ => TableSize.Default
+    };
+
+    private readonly DynamicRow[] _rows = Enumerable.Range(0, 10).Select(i => new DynamicRow
+    {
+        Key = i,
+        Name = "John Brown",
+        Age = int.Parse($"{i}2"),
+        Address = $"New York No. {i} Lake Park",
+        Description = $"My name is John Brown, I am {i}2 years old, living in New York No. {i} Lake Park."
+    }).ToArray();
+
+    private sealed class DynamicRow
+    {
+        public int Key { get; init; }
+        public string Name { get; init; }
+        public int Age { get; init; }
+        public string Address { get; init; }
+        public string Description { get; init; }
+    }
+}

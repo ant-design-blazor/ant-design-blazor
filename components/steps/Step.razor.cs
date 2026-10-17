@@ -23,6 +23,8 @@ namespace AntDesign
 
         internal bool Last { get; set; }
 
+        internal StepsStatus RailStatus { get; set; } = StepsStatus.Wait;
+
         internal bool ShowProcessDot { get; set; }
 
         internal StepsStatus? GroupStatus { get; set; }

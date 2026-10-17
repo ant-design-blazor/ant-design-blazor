@@ -1,0 +1,26 @@
+<div style="display:flex; flex-direction:column; gap:16px">
+    <RadioGroup TValue="string" @bind-Value="_firstValue" ButtonStyle="RadioButtonStyle.Outline">
+        <Radio RadioButton Value="@("a")">Hangzhou</Radio>
+        <Radio RadioButton Value="@("b")">Shanghai</Radio>
+        <Radio RadioButton Value="@("c")">Beijing</Radio>
+        <Radio RadioButton Value="@("d")">Chengdu</Radio>
+    </RadioGroup>
+    <RadioGroup TValue="string" @bind-Value="_secondValue" ButtonStyle="RadioButtonStyle.Outline">
+        <Radio RadioButton Value="@("a")">Hangzhou</Radio>
+        <Radio RadioButton Value="@("b")" Disabled>Shanghai</Radio>
+        <Radio RadioButton Value="@("c")">Beijing</Radio>
+        <Radio RadioButton Value="@("d")">Chengdu</Radio>
+    </RadioGroup>
+    <RadioGroup TValue="string" @bind-Value="_thirdValue" Disabled ButtonStyle="RadioButtonStyle.Outline">
+        <Radio RadioButton Value="@("a")">Hangzhou</Radio>
+        <Radio RadioButton Value="@("b")">Shanghai</Radio>
+        <Radio RadioButton Value="@("c")">Beijing</Radio>
+        <Radio RadioButton Value="@("d")">Chengdu</Radio>
+    </RadioGroup>
+</div>
+
+@code {
+    private string _firstValue = "a";
+    private string _secondValue = "a";
+    private string _thirdValue = "a";
+}

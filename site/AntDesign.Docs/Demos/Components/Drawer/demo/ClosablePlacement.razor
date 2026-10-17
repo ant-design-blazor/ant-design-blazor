@@ -1,0 +1,18 @@
+<Space Direction="SpaceDirection.Vertical">
+    <RadioGroup @bind-Value="_placement">
+        <Radio RadioButton Value="DrawerPlacement.Right">Right</Radio>
+        <Radio RadioButton Value="DrawerPlacement.Left">Left</Radio>
+        <Radio RadioButton Value="DrawerPlacement.Top">Top</Radio>
+        <Radio RadioButton Value="DrawerPlacement.Bottom">Bottom</Radio>
+    </RadioGroup>
+    <Button Type="ButtonType.Primary" OnClick="() => _visible = true">Open</Button>
+</Space>
+<Drawer @bind-Visible="_visible" Placement="@_placement" Closable="false" Title='("Drawer without close icon")'>
+    <ChildContent><p>Close this drawer with the footer action.</p></ChildContent>
+    <Footer><Button OnClick="() => _visible = false">Close</Button></Footer>
+</Drawer>
+
+@code {
+    private DrawerPlacement _placement = DrawerPlacement.Right;
+    private bool _visible;
+}

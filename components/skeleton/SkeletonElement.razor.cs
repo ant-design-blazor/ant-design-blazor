@@ -37,11 +37,20 @@ namespace AntDesign
         [Parameter]
         public SkeletonElementShape Shape { get; set; } = SkeletonElementShape.Default;
 
+        /// <summary>Additional class applied to the skeleton shape element.</summary>
+        [Parameter] public string SpanClass { get; set; }
+
+        /// <summary>Additional inline style applied to the skeleton shape element.</summary>
+        [Parameter] public string SpanStyle { get; set; }
+
         #endregion Parameters
 
         private ClassMapper _spanClassMapper = new ClassMapper();
 
         private string _spanStyle = "";
+
+        private string SpanClassName => string.IsNullOrWhiteSpace(SpanClass) ? _spanClassMapper.Class : $"{_spanClassMapper.Class} {SpanClass}";
+        private string SpanStyleValue => string.IsNullOrWhiteSpace(SpanStyle) ? _spanStyle : $"{_spanStyle.Trim().TrimEnd(';')}; {SpanStyle}";
 
         private void SetClassMap()
         {

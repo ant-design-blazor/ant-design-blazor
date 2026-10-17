@@ -1,0 +1,22 @@
+<Masonry T="int" Columns="3" Gutter="12" Items="_items" ItemRender="RenderItem"
+         ClassNames="_classNames" Styles="_styles" />
+
+@code {
+    private readonly IEnumerable<MasonryItem<int>> _items = Enumerable.Range(1, 6)
+        .Select(index => new MasonryItem<int> { Key = index, Data = 56 + index * 8 });
+
+    private static readonly Dictionary<string, string> _classNames = new()
+    {
+        ["root"] = "demo-masonry-root",
+        ["item"] = "demo-masonry-item"
+    };
+
+    private static readonly Dictionary<string, string> _styles = new()
+    {
+        ["root"] = "outline: 1px dashed var(--ant-color-primary)",
+        ["item"] = "outline: 1px dotted var(--ant-color-success)"
+    };
+
+    private RenderFragment<MasonryItemRenderContext<int>> RenderItem => item =>
+        @<div style="height:@(item.Data)px;display:grid;place-items:center;background:var(--ant-color-fill-tertiary);border-radius:var(--ant-border-radius)">@item.Data px</div>;
+}

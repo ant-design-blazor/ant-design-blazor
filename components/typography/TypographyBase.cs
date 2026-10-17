@@ -113,6 +113,18 @@ namespace AntDesign
         public bool Strong { get; set; } = false;
 
         /// <summary>
+        /// Italic style
+        /// </summary>
+        [Parameter]
+        public bool Italic { get; set; }
+
+        /// <summary>
+        /// Native title attribute shown by the browser on hover.
+        /// </summary>
+        [Parameter]
+        public string Title { get; set; }
+
+        /// <summary>
         /// Callback executed when the user edits the content
         /// </summary>
         [Parameter]
@@ -133,10 +145,16 @@ namespace AntDesign
         protected bool Editing => _editing;
 
         private bool _editing = false;
+        private bool _ellipsisExpanded;
+        private TypographyEllipsisConfig _lastEllipsisConfig;
+        private string _editingText;
+        private string _editingOriginalText;
 
         protected abstract string HtmlType { get; }
 
         protected virtual bool IsKeyboard => false;
+
+        protected virtual void AddElementAttributes(RenderTreeBuilder builder, int sequence) { }
 
         private const string PrefixName = "ant-typography";
 
@@ -146,6 +164,21 @@ namespace AntDesign
             SetClassMap();
         }
 
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+
+            if (!ReferenceEquals(_lastEllipsisConfig, EllipsisConfig))
+            {
+                _lastEllipsisConfig = EllipsisConfig;
+                _ellipsisExpanded = EllipsisConfig?.Expanded ?? EllipsisConfig?.DefaultExpanded ?? false;
+            }
+            else if (EllipsisConfig?.Expanded is bool expanded)
+            {
+                _ellipsisExpanded = expanded;
+            }
+        }
+
         private void SetClassMap()
         {
             ClassMapper
@@ -153,8 +186,52 @@ namespace AntDesign
                 .GetIf(() => $"{PrefixName}-{Type.ToString().ToLowerInvariant()}", () => Type.HasValue)
                 .GetIf(() => $"{PrefixName}-{HtmlType}", () => Editing)
                 .If($"{PrefixName}-disabled", () => Disabled)
+                .If($"{PrefixName}-ellipsis", () => IsEllipsisEnabled && !IsEllipsisExpanded)
+                .If($"{PrefixName}-ellipsis-single-line", () => IsEllipsisEnabled && !IsEllipsisExpanded && HtmlType == "span")
+                .If($"{PrefixName}-ellipsis-multiple-line", () => IsEllipsisEnabled && !IsEllipsisExpanded && HtmlType != "span")
                 .If($"{PrefixName}-edit-content", () => Editing)
                 .If($"{PrefixName}-rtl", () => RTL);
+        }
+
+        private bool IsEllipsisEnabled => Ellipsis || EllipsisConfig != null;
+
+        private bool IsEllipsisExpanded => EllipsisConfig?.Expanded ?? _ellipsisExpanded;
+
+        private bool HasCustomEllipsisSuffix => !string.IsNullOrWhiteSpace(EllipsisConfig?.Suffix)
+            && EllipsisConfig.Suffix != "...";
+
+        private string TypographyStyle
+        {
+            get
+            {
+                if (!IsEllipsisEnabled || IsEllipsisExpanded)
+                {
+                    return HasCustomEllipsisSuffix && HtmlType == "span"
+                        ? AppendStyle(Style, "display: inline-flex; min-width: 0; max-width: 100%; vertical-align: bottom;")
+                        : Style;
+                }
+
+                var ellipsisStyle = HasCustomEllipsisSuffix && HtmlType == "span"
+                    ? "display: inline-flex; min-width: 0; max-width: 100%; vertical-align: bottom;"
+                    : HtmlType == "span"
+                        ? "display: inline-block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
+                        : $"-webkit-line-clamp: {Math.Max(1, EllipsisConfig?.Rows ?? 1)}; -webkit-box-orient: vertical; overflow: hidden;";
+
+                if (HasCustomEllipsisSuffix && HtmlType != "span")
+                {
+                    ellipsisStyle += " position: relative;";
+                }
+
+                return AppendStyle(Style, ellipsisStyle);
+            }
+        }
+
+        private static string AppendStyle(string current, string addition)
+        {
+            if (string.IsNullOrWhiteSpace(current)) return addition;
+
+            var normalized = current.TrimEnd();
+            return $"{normalized}{(normalized.EndsWith(";", StringComparison.Ordinal) ? "" : ";")} {addition}";
         }
 
         private RenderFragment CopyIcon()
@@ -202,16 +279,23 @@ namespace AntDesign
                 builder.AddAttribute(5, nameof(TextArea.Class), $"{PrefixName}-textarea");
                 builder.AddAttribute(6, nameof(TextArea.Rows), (uint)1);
                 builder.AddAttribute(7, nameof(TextArea.AutoSize), EditConfig.AutoSize);
-                builder.AddAttribute(8, nameof(TextArea.AutoFocus), true);
-                builder.AddAttribute(9, "Value", EditConfig.Text);
-                builder.AddAttribute(10, "ValueChanged", EventCallback.Factory.Create<string>(this, OnEditableValueChange));
-                builder.AddAttribute(11, nameof(TextArea.OnBlur), EventCallback.Factory.Create<FocusEventArgs>(this, ToggleEditing));
+                builder.AddAttribute(8, nameof(TextArea.MaxLength), EditConfig.MaxLength);
+                builder.AddAttribute(9, nameof(TextArea.AutoFocus), true);
+                builder.AddAttribute(10, nameof(TextArea.BindOnInput), true);
+                builder.AddAttribute(11, "Value", _editingText);
+                builder.AddAttribute(12, nameof(TextArea.OnInput), EventCallback.Factory.Create<ChangeEventArgs>(this, OnEditableInput));
+                builder.AddAttribute(13, "ValueChanged", EventCallback.Factory.Create<string>(this, OnEditableValueChange));
+                builder.AddAttribute(14, nameof(TextArea.OnBlur), EventCallback.Factory.Create<FocusEventArgs>(this, ConfirmEdit));
+                builder.AddAttribute(15, nameof(TextArea.OnKeyUp), EventCallback.Factory.Create<KeyboardEventArgs>(this, OnEditKeyUp));
                 builder.CloseComponent();
 
-                builder.OpenComponent<Icon>(11);
-                builder.AddAttribute(12, "Class", $"{PrefixName}-edit-content-confirm");
-                builder.AddAttribute(13, "Style", "border: 0px; background: transparent; padding: 0px; line-height: inherit;");
-                builder.AddAttribute(14, "Type", "enter");
+                builder.OpenElement(16, "span");
+                builder.AddAttribute(17, "class", $"{PrefixName}-edit-content-confirm");
+                builder.AddAttribute(18, "onclick", EventCallback.Factory.Create(this, ConfirmEdit));
+                builder.OpenComponent<Icon>(19);
+                builder.AddAttribute(20, "Style", "border: 0px; background: transparent; padding: 0px; line-height: inherit;");
+                builder.AddAttribute(21, "Type", "enter");
+                builder.CloseComponent();
                 builder.CloseElement();
             };
         }
@@ -220,6 +304,7 @@ namespace AntDesign
         {
             return builder =>
             {
+                if (Italic) builder.OpenElement(3, "i");
                 if (IsKeyboard) builder.OpenElement(4, "kbd");
                 if (Mark) builder.OpenElement(5, "mark");
                 if (Code) builder.OpenElement(6, "code");
@@ -235,14 +320,58 @@ namespace AntDesign
                 if (Code) builder.CloseElement();
                 if (Mark) builder.CloseElement();
                 if (IsKeyboard) builder.CloseElement();
+                if (Italic) builder.CloseElement();
+            };
+        }
+
+        private RenderFragment GetEllipsisContent()
+        {
+            return builder =>
+            {
+                if (HasCustomEllipsisSuffix && HtmlType == "span")
+                {
+                    builder.OpenElement(60, "span");
+                    builder.AddAttribute(61, "class", "ant-typography-ellipsis-content");
+                    if (!IsEllipsisExpanded)
+                    {
+                        builder.AddAttribute(62, "style", "flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;");
+                    }
+                    else
+                    {
+                        builder.AddAttribute(62, "style", "flex: 1 1 auto; min-width: 0;");
+                    }
+                    builder.AddContent(63, GetContent());
+                    builder.CloseElement();
+                    builder.OpenElement(64, "span");
+                    builder.AddAttribute(65, "class", "ant-typography-ellipsis-suffix");
+                    builder.AddAttribute(66, "style", "flex: none;");
+                    builder.AddContent(67, EllipsisConfig.Suffix);
+                    builder.CloseElement();
+                    return;
+                }
+
+                builder.AddContent(60, GetContent());
+                if (HasCustomEllipsisSuffix)
+                {
+                    builder.OpenElement(64, "span");
+                    builder.AddAttribute(65, "class", "ant-typography-ellipsis-suffix");
+                    if (!IsEllipsisExpanded)
+                    {
+                        builder.AddAttribute(66, "style", "position: absolute; right: 0; bottom: 0; padding-inline-start: 0.25em; background: var(--ant-color-bg-container, #fff);");
+                    }
+                    builder.AddContent(67, EllipsisConfig.Suffix);
+                    builder.CloseElement();
+                }
             };
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(1, _editing ? "div" : HtmlType);
-            builder.AddAttribute(2, "class", ClassMapper.Class);
-            builder.AddAttribute(3, "style", Style);
+            AddElementAttributes(builder, 2);
+            builder.AddAttribute(4, "class", ClassMapper.Class);
+            builder.AddAttribute(5, "style", TypographyStyle);
+            builder.AddAttribute(6, "title", Title);
 
             if (Editing && EditConfig != null)
             {
@@ -250,7 +379,17 @@ namespace AntDesign
             }
             else
             {
-                builder.AddContent(10, GetContent());
+                builder.AddContent(10, GetEllipsisContent());
+
+                if (CanToggleEllipsis)
+                {
+                    builder.OpenElement(32, "button");
+                    builder.AddAttribute(33, "type", "button");
+                    builder.AddAttribute(34, "class", IsEllipsisExpanded ? "ant-typography-collapse" : "ant-typography-expand");
+                    builder.AddAttribute(35, "onclick", EventCallback.Factory.Create(this, ToggleEllipsis));
+                    builder.AddContent(36, IsEllipsisExpanded ? EllipsisConfig.CollapseSymbol : EllipsisConfig.Symbol);
+                    builder.CloseElement();
+                }
             }
 
             if (Editable && !Editing)
@@ -292,22 +431,78 @@ namespace AntDesign
 
         private void ToggleEditing()
         {
-            _editing = !_editing;
+            if (_editing || EditConfig == null) return;
+
+            _editingOriginalText = EditConfig.Text;
+            _editingText = EditConfig.Text;
+            _editing = true;
+            EditConfig.OnStart?.Invoke();
+        }
+
+        private bool CanToggleEllipsis => EllipsisConfig?.Expandable == true
+            && (!IsEllipsisExpanded || EllipsisConfig.Collapsible);
+
+        private async Task ToggleEllipsis()
+        {
+            var expanded = !IsEllipsisExpanded;
+            if (!EllipsisConfig.Expanded.HasValue)
+            {
+                _ellipsisExpanded = expanded;
+            }
+
+            EllipsisConfig?.OnExpand?.Invoke();
+            if (EllipsisConfig?.OnExpandedChange.HasDelegate == true)
+            {
+                await EllipsisConfig.OnExpandedChange.InvokeAsync(expanded);
+            }
         }
 
         private void OnEditableValueChange(string value)
         {
-            if (EditConfig == null)
+            _editingText = value?.Replace("\r", string.Empty).Replace("\n", string.Empty);
+        }
+
+        private void OnEditableInput(ChangeEventArgs args)
+        {
+            _editingText = args?.Value?.ToString()?.Replace("\r", string.Empty).Replace("\n", string.Empty);
+        }
+
+        private void OnEditKeyUp(KeyboardEventArgs args)
+        {
+            if (args.Key == "Escape" || args.Key == "Esc")
             {
-                return;
+                CancelEdit();
             }
+            else if (args.Key == "Enter")
+            {
+                ConfirmEdit();
+                EditConfig?.OnEnd?.Invoke();
+            }
+        }
+
+        private void ConfirmEdit()
+        {
+            if (!_editing || EditConfig == null) return;
+
+            var value = (_editingText ?? string.Empty).Trim();
             EditConfig.Text = value;
+            _editing = false;
             EditConfig.OnChange?.Invoke(value);
 
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(value);
             }
+        }
+
+        private void CancelEdit()
+        {
+            if (!_editing || EditConfig == null) return;
+
+            EditConfig.Text = _editingOriginalText;
+            _editingText = _editingOriginalText;
+            _editing = false;
+            EditConfig.OnCancel?.Invoke();
         }
     }
 
@@ -327,6 +522,12 @@ namespace AntDesign
         public Action OnStart { get; set; }
 
         public Action<string> OnChange { get; set; }
+
+        public Action OnCancel { get; set; }
+
+        public Action OnEnd { get; set; }
+
+        public int MaxLength { get; set; } = -1;
     }
 
     public class TypographyEllipsisConfig
@@ -335,6 +536,20 @@ namespace AntDesign
 
         public int Rows { get; set; }
 
+        public bool Expandable { get; set; }
+
+        public bool Collapsible { get; set; }
+
+        public bool DefaultExpanded { get; set; }
+
+        public bool? Expanded { get; set; }
+
+        public string Symbol { get; set; } = "more";
+
+        public string CollapseSymbol { get; set; } = "less";
+
         public Action OnExpand { get; set; }
+
+        public EventCallback<bool> OnExpandedChange { get; set; }
     }
 }

@@ -1,10 +1,62 @@
-﻿@inherits AntDesignTestBase
+﻿@using System.Collections.Generic
+@inherits AntDesignTestBase
 @code {
 	[Fact]
 	public void Renders_basic_divider()
 	{
 		var cut = Context.Render(@<AntDesign.Divider/>);		
-		cut.MarkupMatches(@<span class="ant-divider ant-divider-horizontal" id:ignore></span>);
+		cut.MarkupMatches(@<div class="ant-divider ant-divider-horizontal ant-divider-rail" id:ignore role="separator"></div>);
+	}
+
+	[Fact]
+	public void Marks_an_empty_divider_as_the_rail_semantic_node()
+	{
+		var cut = Context.RenderComponent<AntDesign.Divider>();
+
+		Assert.Contains("ant-divider-rail", cut.Find(".ant-divider").ClassList);
+	}
+
+	[Fact]
+	public void Renders_dotted_and_dashed_variants()
+	{
+		var dotted = Context.RenderComponent<AntDesign.Divider>(parameters => parameters
+			.Add(component => component.Variant, "dotted"));
+		var dashed = Context.RenderComponent<AntDesign.Divider>(parameters => parameters
+			.Add(component => component.Variant, "dashed"));
+
+		Assert.Contains("ant-divider-dotted", dotted.Find(".ant-divider").ClassList);
+		Assert.DoesNotContain("ant-divider-dashed", dotted.Find(".ant-divider").ClassList);
+		Assert.Contains("ant-divider-dashed", dashed.Find(".ant-divider").ClassList);
+	}
+
+	[Fact]
+	public void Renders_size_and_semantic_classes_and_styles()
+	{
+		var classNames = new Dictionary<string, string>
+		{
+			["root"] = "custom-root",
+			["rail"] = "custom-rail",
+			["content"] = "custom-content"
+		};
+		var styles = new Dictionary<string, string>
+		{
+			["root"] = "border-color:red",
+			["rail"] = "opacity:.8",
+			["content"] = "font-style:italic"
+		};
+		var cut = Context.RenderComponent<AntDesign.Divider>(parameters => parameters
+			.Add(component => component.Size, "small")
+			.Add(component => component.ClassNames, classNames)
+			.Add(component => component.Styles, styles)
+			.AddChildContent("Section"));
+
+		Assert.Contains("ant-divider-sm", cut.Find(".ant-divider").ClassList);
+		Assert.Contains("custom-root", cut.Find(".ant-divider").ClassList);
+		Assert.Contains("custom-rail", cut.Find(".ant-divider-rail-start").ClassList);
+		Assert.Contains("custom-content", cut.Find(".ant-divider-inner-text").ClassList);
+		Assert.Contains("border-color:red", cut.Find(".ant-divider").GetAttribute("style"));
+		Assert.Contains("opacity:.8", cut.Find(".ant-divider-rail-start").GetAttribute("style"));
+		Assert.Contains("font-style:italic", cut.Find(".ant-divider-inner-text").GetAttribute("style"));
 	}
 
 	[Fact]
@@ -15,9 +67,11 @@
 
 		var cut = Context.Render(@<AntDesign.Divider Orientation="@orientation" Style="@style">A Title</AntDesign.Divider>);		
 		cut.MarkupMatches(
-			@<span class="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-left" style="@style" id:ignore>
+			@<div class="ant-divider ant-divider-horizontal ant-divider-with-text ant-divider-with-text-start" style="@style" id:ignore role="separator">
+				<div class="ant-divider-rail ant-divider-rail-start"></div>
 				<span class="ant-divider-inner-text">A Title</span>
-			</span>
+				<div class="ant-divider-rail ant-divider-rail-end"></div>
+			</div>
 		);
 	}
 
@@ -37,9 +91,9 @@
 		cut.MarkupMatches(
 			@<text>
 				Text
-				<span class="ant-divider ant-divider-vertical" id:ignore></span>
+				<div class="ant-divider ant-divider-vertical ant-divider-rail" id:ignore role="separator"></div>
 				<a href="#">Link 1</a>
-				<span class="ant-divider ant-divider-vertical" id:ignore></span>
+				<div class="ant-divider ant-divider-vertical ant-divider-rail" id:ignore role="separator"></div>
 				<a href="#">Link 2</a>
 			</text>
 		);

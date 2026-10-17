@@ -1,0 +1,12 @@
+<Space Direction="SpaceDirection.Vertical">
+    <Cascader Options="@_options" Placeholder="Default style" />
+    <Cascader Options="@_options" Placeholder="Custom class and style" Class="custom-cascader-demo" Style="max-width: 360px; border-color: #1677ff;" />
+</Space>
+
+@code {
+    private readonly CascaderNode[] _options =
+    [
+        new() { Value = "zhejiang", Label = "Zhejiang", Children = [new() { Value = "hangzhou", Label = "Hangzhou" }] },
+        new() { Value = "jiangsu", Label = "Jiangsu", Children = [new() { Value = "nanjing", Label = "Nanjing" }] }
+    ];
+}

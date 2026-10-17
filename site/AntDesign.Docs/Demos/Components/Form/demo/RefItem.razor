@@ -1,0 +1,44 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<Form Model="@_model" Style="max-width:600px;">
+    <FormItem Label="test" Name="Test">
+        <Input @bind-Value="context.Test" RefBack="@_singleRef" />
+    </FormItem>
+    @for (var i = 0; i < _model.List.Count; i++)
+    {
+        var index = i;
+        <FormItem @key="index" Label="@($"list[{index}]")">
+            <Input @bind-Value="_model.List[index]" RefBack="@_listRefs[index]" />
+        </FormItem>
+    }
+    <Space>
+        <Button OnClick="FocusSingle">Focus Form.Item</Button>
+        <Button OnClick="FocusList">Focus Form.List item</Button>
+    </Space>
+</Form>
+<p role="status">@_message</p>
+
+@code {
+    private readonly RefFormModel _model = new() { List = ["light"] };
+    private readonly ForwardRef _singleRef = new();
+    private readonly List<ForwardRef> _listRefs = [new()];
+    private string _message = "Use the buttons to focus a field through its component ref.";
+
+    private async Task FocusSingle()
+    {
+        await _singleRef.Current.FocusAsync();
+        _message = "Focused the Form.Item input using ForwardRef.";
+    }
+
+    private async Task FocusList()
+    {
+        await _listRefs[0].Current.FocusAsync();
+        _message = "Focused the first list input using ForwardRef.";
+    }
+
+    private sealed class RefFormModel
+    {
+        public string Test { get; set; } = string.Empty;
+        public List<string> List { get; set; } = [];
+    }
+}

@@ -3,97 +3,95 @@
 
 <div id="@Config.Key"
      class="@(ClassPrefix)-notice @(ClassPrefix)-notice-closable @GetClassName()"
-     style="@Config.Style"
+     style="@GetStyle()"
      @onclick="OnClick"
      @onmouseenter="HandleMouseEnter"
      @onmouseleave="HandleMouseLeave"
-     @ref="Ref">
-
-    <div class="@(ClassPrefix)-notice-content">
-        <div class="@GetIconClassName()">
-            @if (Config.Icon != null)
-            {
-                <span class="@(ClassPrefix)-notice-icon">
-                    @Config.Icon
-                </span>
-            }
-            else if (Config.NotificationType != NotificationType.None)
-            {
-                switch (Config.NotificationType)
+     @ref="Ref"
+     role="alert">
+    <div class="@(ClassPrefix)-notice-wrapper">
+        @if (Config.Icon != null || Config.NotificationType != NotificationType.None)
+        {
+            <div class="@GetIconClassName()">
+                @if (Config.Icon != null)
                 {
-                    case NotificationType.Success:
-                        {
-                            <span role="img" aria-label="check-circle" class="anticon anticon-check-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-success">
+                    @Config.Icon
+                }
+                else
+                {
+                    @switch (Config.NotificationType)
+                    {
+                        case NotificationType.Success:
+                            <span role="img" aria-label="check-circle" class="anticon anticon-check-circle">
                                 <Icon Type="@IconType.Outline.CheckCircle" />
                             </span>
-
                             break;
-                        }
-                    case NotificationType.Warning:
-                        {
-                            <span role="img" aria-label="exclamation-circle" class="anticon anticon-exclamation-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-warning">
+                        case NotificationType.Warning:
+                            <span role="img" aria-label="exclamation-circle" class="anticon anticon-exclamation-circle">
                                 <Icon Type="@IconType.Outline.ExclamationCircle" />
                             </span>
-
                             break;
-                        }
-                    case NotificationType.Error:
-                        {
-                            <span role="img" aria-label="close-circle" class="anticon anticon-close-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-error">
+                        case NotificationType.Error:
+                            <span role="img" aria-label="close-circle" class="anticon anticon-close-circle">
                                 <Icon Type="@IconType.Outline.CloseCircle" />
                             </span>
-
                             break;
-                        }
-                    case NotificationType.Info:
-                        {
-                            <span role="img" aria-label="info-circle" class="anticon anticon-info-circle @(ClassPrefix)-notice-icon @(ClassPrefix)-notice-icon-info">
+                        case NotificationType.Info:
+                            <span role="img" aria-label="info-circle" class="anticon anticon-info-circle">
                                 <Icon Type="@IconType.Outline.InfoCircle" />
                             </span>
-
                             break;
-                        }
-                }
-            }
-
-            <div class="@(ClassPrefix)-notice-message">
-                @{
-                    if (Config.Message.IsT0)
-                    {
-                        @((MarkupString)(Config.Message.AsT0))
-                    }
-                    else
-                    {
-                        @Config.Message.AsT1
                     }
                 }
             </div>
+        }
 
+        <div class="@(ClassPrefix)-notice-section">
+            <div class="@(ClassPrefix)-notice-title">
+                @if (Config.Message.IsT0)
+                {
+                    @((MarkupString)Config.Message.AsT0)
+                }
+                else
+                {
+                    @Config.Message.AsT1
+                }
+            </div>
             <div class="@(ClassPrefix)-notice-description">
-                @{
-                    if (Config.Description.IsT0)
-                    {
-                        @((MarkupString)(Config.Description.AsT0))
-                    }
-                    else
-                    {
-                        @Config.Description.AsT1
-                    }
+                @if (Config.Description.IsT0)
+                {
+                    @((MarkupString)Config.Description.AsT0)
+                }
+                else
+                {
+                    @Config.Description.AsT1
                 }
             </div>
-
-            @if (Config.Btn != null)
-            {
-                <span class="@(ClassPrefix)-notice-btn">
-                    @Config.Btn
-                </span>
-            }
         </div>
     </div>
 
-    <a tabindex="0" class="@(ClassPrefix)-notice-close" @onclick="Close" @onclick:preventDefault @onclick:stopPropagation>
+    @if (Config.Btn != null)
+    {
+        <div class="@(ClassPrefix)-notice-actions">
+            @Config.Btn
+        </div>
+    }
+
+    <button type="button" aria-label="Close" class="@(ClassPrefix)-notice-close" @onclick="Close" @onclick:stopPropagation>
         <span class="@(ClassPrefix)-notice-close-x">
-            @Config.CloseIcon
+            @if (Config.CloseIcon != null)
+            {
+                @Config.CloseIcon
+            }
+            else
+            {
+                <Icon Type="@IconType.Outline.Close" Class="@($"{ClassPrefix}-notice-close-icon")" />
+            }
         </span>
-    </a>
+    </button>
+
+    @if (Config.ShowProgress)
+    {
+        <progress class="@(ClassPrefix)-notice-progress" value="100" max="100"></progress>
+    }
 </div>

@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-    <div class="ant-collapse-header" @onclick="OnHeaderClick" role="button" aria-expanded="@(Active?"true":"false")">
+    <div class="ant-collapse-header" @onclick="OnHeaderClick" @onkeydown="OnHeaderKeyDown" role="button" aria-disabled="@Disabled.ToString().ToLowerInvariant()" aria-expanded="@(Active?"true":"false")" tabindex="@(Disabled ? -1 : 0)">
         @if (ShowArrow)
         {
             <div class="ant-collapse-expand-icon">
@@ -17,9 +17,9 @@
             </div>
         }
 
-        <div class="ant-collapse-header-text">
+        <span class="ant-collapse-title">
             @if (HeaderTemplate != null)@HeaderTemplate else @Header
-        </div>
+        </span>
 
         @if (Extra != null || ExtraTemplate != null)
         {
@@ -28,9 +28,10 @@
             </div>
         }
     </div>
-    <div class="@_contentClassMapper.Class" @ref="@_warpperRef" style="@_warpperStyle">
-        <div class="ant-collapse-content-box">
-            @ChildContent
+    @if (_hasRendered)
+    {
+        <div class="@_contentClassMapper.Class" @ref="@_warpperRef" style="@_warpperStyle">
+            <div class="ant-collapse-body">@ChildContent</div>
         </div>
-    </div>
+    }
 </div>

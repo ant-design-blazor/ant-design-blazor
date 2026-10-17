@@ -1,0 +1,29 @@
+﻿<Table @ref="_table" TItem="Row" DataSource="_rows" RowKey="x => x.Key" @bind-SelectedRows="_selectedRows">
+    <Selection />
+    <PropertyColumn Property="x => x.Name" Title="Name" />
+    <PropertyColumn Property="x => x.Age" Title="Age" />
+    <PropertyColumn Property="x => x.Address" Title="Address" />
+</Table>
+<Space Wrap Style="margin-top:12px;">
+    <Button OnClick="SelectAll">Select all</Button>
+    <Button OnClick="SelectOdd">Select odd rows</Button>
+    <Button OnClick="SelectEven">Select even rows</Button>
+    <Button OnClick="Invert">Invert</Button>
+    <Button OnClick="Clear">Clear selection</Button>
+</Space>
+
+@code {
+    private Table<Row> _table;
+    private IEnumerable<Row> _selectedRows = [];
+    private readonly Row[] _rows = Enumerable.Range(0, 46)
+        .Select(i => new Row(i, $"Edward King {i}", 32, $"London, Park Lane no. {i}"))
+        .ToArray();
+
+    private void SelectAll() => _table.SetSelection(_rows);
+    private void SelectOdd() => _table.SetSelection(_rows.Where((_, index) => index % 2 == 0));
+    private void SelectEven() => _table.SetSelection(_rows.Where((_, index) => index % 2 != 0));
+    private void Invert() => _table.SetSelection(_rows.Except(_selectedRows).ToArray());
+    private void Clear() => _table.SetSelection(Array.Empty<Row>());
+
+    private sealed record Row(int Key, string Name, int Age, string Address);
+}

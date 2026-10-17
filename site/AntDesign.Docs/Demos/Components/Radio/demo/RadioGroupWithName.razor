@@ -1,0 +1,12 @@
+<RadioGroup TValue="int" Name="radiogroup" @bind-Value="_value" Options="_options" />
+
+@code {
+    private readonly RadioOption<int>[] _options =
+    [
+        new() { Value = 1, Label = "A" },
+        new() { Value = 2, Label = "B" },
+        new() { Value = 3, Label = "C" },
+        new() { Value = 4, Label = "D" }
+    ];
+    private int _value = 1;
+}

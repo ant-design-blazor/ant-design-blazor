@@ -1,74 +1,50 @@
-<Title Level="4">@_options.Count() Items</Title>
+<Title Level="4">100000 Items</Title>
 
 <Select Mode="SelectMode.Multiple"
         Placeholder="Please select"
-		DataSource="@_options"
-		@bind-Values="@_selectedValues"
-		LabelName="@nameof(LabeledValue.Label)"
-        ValueName="@nameof(LabeledValue.Value)"
-		DisabledName="@nameof(LabeledValue.Disabled)"
-		TItemValue="string"
-		TItem="LabeledValue"
-		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
-		EnableSearch
-        EnableVirtualization>
-</Select>
-
-<Select Mode="default"
-        Placeholder="Please select"
+        Style="width: 100%;"
         DataSource="@_options"
-        @bind-Value="@_selectedValue"
+        DefaultValues="@_selectedValues"
         LabelName="@nameof(LabeledValue.Label)"
         ValueName="@nameof(LabeledValue.Value)"
         DisabledName="@nameof(LabeledValue.Disabled)"
         TItemValue="string"
         TItem="LabeledValue"
-        OnSelectedItemChanged="OnSelectedItemChangedHandler"
         EnableSearch
-        EnableVirtualization
-        Style="width: 100%; margin-top: 8px;">
+        EnableVirtualization>
 </Select>
 
-@code
-{
-	class LabeledValue
-	{
-		public LabeledValue () {} 
-		public LabeledValue (string value, string label, bool disabled) 
-		{
-			Value = value;
-			Label = label;
-			Disabled = disabled;
-		}
-		
-		public string Value { get; set; }
-		public string Label { get; set; }
-		public bool Disabled { get; set; }
-	}
-	
-    List<LabeledValue> _options;
-	IEnumerable<string> _selectedValues = new List<string> { "0a10", "0c12" };
-    string _selectedValue = "000";
+@code {
+    private sealed class LabeledValue
+    {
+        public string Value { get; init; }
+        public string Label { get; init; }
+        public bool Disabled { get; init; }
+    }
+
+    private List<LabeledValue> _options = new();
+    private IEnumerable<string> _selectedValues = new[] { "a10", "c12" };
+
     protected override void OnInitialized()
     {
-        const int min = 0;
-        const int max = 2000;
-        _options = new List<LabeledValue>();
-
-        for (var i = min; max > i; i++)
+        for (var i = 0; i < 100000; i++)
         {
-            var disabled = i == 10;
-            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
-            _options.Add(new LabeledValue(value, value, disabled));
+            var value = ToBase36(i) + i;
+            _options.Add(new LabeledValue { Value = value, Label = value, Disabled = i == 10 });
         }
     }
 
-    private void OnSelectedItemsChangedHandler(IEnumerable<LabeledValue> values)
+    private static string ToBase36(int value)
     {
-        Console.WriteLine($"selected: ${string.Join(",", values.Select(x => x.Label))}");
-    }
-    private void OnSelectedItemChangedHandler(LabeledValue value)
-    {
-        Console.WriteLine($"selected: ${value.Label}");
+        const string digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+        var buffer = new char[8];
+        var index = buffer.Length;
+        do
+        {
+            buffer[--index] = digits[value % 36];
+            value /= 36;
+        } while (value > 0);
+
+        return new string(buffer, index, buffer.Length - index);
     }
 }

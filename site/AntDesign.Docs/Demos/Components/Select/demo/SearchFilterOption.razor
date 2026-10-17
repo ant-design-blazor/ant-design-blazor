@@ -1,0 +1,23 @@
+@using AntDesign.Select.Internal
+
+<Select TItem="Person" TItemValue="string" DataSource="@people" LabelName="@nameof(Person.Name)"
+        ValueName="@nameof(Person.Value)" Placeholder="Select a person" EnableSearch
+        FilterExpression="FilterPerson" />
+
+@code {
+    private readonly List<Person> people = new()
+    {
+        new() { Value = "1", Name = "Jack" },
+        new() { Value = "2", Name = "Lucy" },
+        new() { Value = "3", Name = "Tom" }
+    };
+
+    private static bool FilterPerson(SelectOptionItem<string, Person> option, string query)
+        => option.Label.Contains(query, StringComparison.OrdinalIgnoreCase);
+
+    private sealed class Person
+    {
+        public string Value { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
+    }
+}

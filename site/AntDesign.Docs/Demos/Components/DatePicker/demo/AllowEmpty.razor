@@ -1,0 +1,12 @@
+<RangePicker TValue="DateTime?[]"
+             Placeholder='@(new[] { "Start Date", "Till Now" })'
+             OnChange="OnRangeChange" />
+
+@code {
+    private DateTime?[] _selectedRange;
+
+    private void OnRangeChange(DateRangeChangedEventArgs<DateTime?[]> args)
+    {
+        _selectedRange = args.Dates;
+    }
+}

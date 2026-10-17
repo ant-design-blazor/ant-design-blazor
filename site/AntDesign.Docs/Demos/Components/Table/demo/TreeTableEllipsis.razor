@@ -1,0 +1,56 @@
+<Space Align="SpaceAlign.Center" Style="margin-bottom:16px;">
+    <span>Fixed first column:</span>
+    <Switch @bind-Checked="_fixed" />
+</Space>
+
+<Table TItem="Row" DataSource="_rows" RowKey="row => row.Key"
+       TreeChildren="row => row.Children" DefaultExpandAllRows TableLayout="fixed">
+    <ColumnDefinitions>
+        <Selection Width="100" />
+        <PropertyColumn Property="row => row.Name" Title="Name" Width="30%" Ellipsis Fixed="@(_fixed ? ColumnFixPlacement.Left : null)" />
+        <PropertyColumn Property="row => row.Age" Title="Age" Width="12%" />
+        <PropertyColumn Property="row => row.Address" Title="Address" />
+    </ColumnDefinitions>
+</Table>
+
+@code {
+    private bool _fixed = true;
+
+    private readonly Row[] _rows =
+    [
+        new("1", "John Brown sr. John Brown sr. John Brown sr. John Brown sr. John Brown sr. John Brown sr.", 60, "New York No. 1 Lake Park")
+        {
+            Children =
+            [
+                new("11", "John Brown sr. John Brown sr. John Brown sr. John Brown sr. John Brown sr. John Brown sr.", 42, "New York No. 2 Lake Park"),
+                new("12", "John Brown sr. John Brown sr. John Brown sr. John Brown sr. John Brown sr. John Brown sr.", 30, "New York No. 3 Lake Park")
+                {
+                    Children =
+                    [
+                        new("121", "John Brown sr. John Brown sr. John Brown sr. John Brown sr. John Brown sr. John Brown sr.", 16, "New York No. 3 Lake Park")
+                    ]
+                },
+                new("13", "Jim Green sr. Jim Green sr. Jim Green sr. Jim Green sr.", 72, "London No. 1 Lake Park")
+                {
+                    Children =
+                    [
+                        new("131", "Jim Green. Jim Green. Jim Green. Jim Green. Jim Green. Jim Green.", 42, "London No. 2 Lake Park")
+                        {
+                            Children =
+                            [
+                                new("1311", "Jim Green jr. Jim Green jr. Jim Green jr. Jim Green jr.", 25, "London No. 3 Lake Park"),
+                                new("1312", "Jimmy Green sr. Jimmy Green sr. Jimmy Green sr.", 18, "London No. 4 Lake Park")
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        new("2", "Joe Black", 32, "Sydney No. 1 Lake Park")
+    ];
+
+    private sealed record Row(string Key, string Name, int Age, string Address)
+    {
+        public Row[] Children { get; init; }
+    }
+}

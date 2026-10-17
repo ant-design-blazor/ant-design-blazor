@@ -1,0 +1,16 @@
+<Flex Vertical Gap=@("16px")>
+    @foreach (var size in _sizes)
+    {
+        <Flex Gap=@("8px")>
+            <Select TItemValue="string" TItem="string" Value=@("centered") Size="@size" Style="width:200px">
+                <SelectOptions><SelectOption TItemValue="string" TItem="string" Value=@("centered") Label="centered" /></SelectOptions>
+            </Select>
+            <AutoComplete Value=@("centered") Size="@size" Style="width:200px" Options="_options" />
+        </Flex>
+    }
+</Flex>
+
+@code {
+    private readonly InputSize[] _sizes = [InputSize.Small, InputSize.Default, InputSize.Large];
+    private readonly string[] _options = ["centered"];
+}

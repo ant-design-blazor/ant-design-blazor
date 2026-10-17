@@ -1,0 +1,33 @@
+<Button Type="ButtonType.Primary" OnClick="() => _open = true">Start tour</Button>
+<span class="demo-tour-target" @ref="_target">Target element</span>
+<Tour Open="_open" Steps="_steps" ClassNames="_classNames" Styles="_styles" />
+
+@code {
+    private bool _open;
+    private ElementReference _target;
+
+    private IReadOnlyList<TourStep> _steps => new[]
+    {
+        new TourStep
+        {
+            Target = _target,
+            Title = @<span>Semantic DOM slots</span>,
+            Description = @<span>Each slot accepts a class name and inline style.</span>
+        }
+    };
+
+    private static readonly Dictionary<string, string> _classNames = new()
+    {
+        ["root"] = "demo-tour-root",
+        ["section"] = "demo-tour-section",
+        ["title"] = "demo-tour-title",
+        ["description"] = "demo-tour-description",
+        ["actions"] = "demo-tour-actions"
+    };
+
+    private static readonly Dictionary<string, string> _styles = new()
+    {
+        ["section"] = "outline: 1px dashed var(--ant-color-primary)",
+        ["title"] = "color: var(--ant-color-primary)"
+    };
+}

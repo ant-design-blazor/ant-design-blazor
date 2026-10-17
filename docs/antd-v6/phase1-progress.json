@@ -13,7 +13,12 @@
     },
     "themes": {
       "total": 13,
-      "migrated": 13,
+      "migrated": 17,
+      "pending": 0
+    },
+    "algorithms": {
+      "total": 3,
+      "migrated": 3,
       "pending": 0
     }
   },
@@ -24,14 +29,24 @@
       "pending": 0
     },
     "definitions": {
-      "total": 68,
-      "migrated": 52,
-      "pending": 16
+      "total": 69,
+      "migrated": 69,
+      "pending": 0
     },
-    "paths": {
-      "total": 113,
-      "migrated": 81,
-      "pending": 32
+    "apiSlots": {
+      "total": 409,
+      "migrated": 409,
+      "pending": 0
+    },
+    "dumiPaths": {
+      "total": 350,
+      "migrated": 350,
+      "pending": 0
+    },
+    "structureMigration": {
+      "total": 69,
+      "migrated": 58,
+      "pending": 11
     }
   },
   "documentation": {

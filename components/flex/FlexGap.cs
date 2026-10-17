@@ -9,6 +9,7 @@ namespace AntDesign
         Normal,
         Small,
         Middle,
-        Large
+        Large,
+        Medium
     }
 }

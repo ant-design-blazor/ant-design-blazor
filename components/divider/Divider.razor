@@ -1,11 +1,10 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref" role="separator">
-    @if (Text != null || ChildContent != null)
+<div class="@SemanticClass("root", ClassMapper.Class)" style="@GetComponentStyle("Divider", SemanticStyle("root", Style))" id="@Id" @ref="Ref" role="separator">@if (Text != null || ChildContent != null)
     {
-        <div class="ant-divider-rail ant-divider-rail-start"></div>
-        <span class="ant-divider-inner-text">
+        <div class="@SemanticClass("rail", "ant-divider-rail ant-divider-rail-start")" style="@SemanticStyle("rail")"></div>
+        <span class="@SemanticClass("content", "ant-divider-inner-text")" style="@SemanticStyle("content")">
             @if (Text != null)
             {
                 @Text
@@ -15,6 +14,5 @@
                 @ChildContent
             }
         </span>
-        <div class="ant-divider-rail ant-divider-rail-end"></div>
-    }
-</div>
+        <div class="@SemanticClass("rail", "ant-divider-rail ant-divider-rail-end")" style="@SemanticStyle("rail")"></div>
+    }</div>

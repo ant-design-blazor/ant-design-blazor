@@ -1,0 +1,76 @@
+@using System.Text.Json
+
+<Alert Message="Try modifying Password2, then change Password to see the dependency revalidate." Type="AlertType.Info" ShowIcon="true" />
+<Form Model="@model" OnFieldChanged="OnFieldChanged" Layout="FormLayout.Vertical" AutoComplete="off" Style="max-width:600px;">
+    <FormItem Label="Password" Name="Password" Rules="@(new[] { new FormValidationRule { Required = true } })">
+        <Input @bind-Value="context.Password" />
+    </FormItem>
+    <FormItem Label="Confirm Password" Name="Password2" Rules="confirmRules" ValidateStatus="@confirmStatus" Help="@confirmHelp" HasFeedback>
+        <Input @bind-Value="context.Password2" />
+    </FormItem>
+    <Typography>
+        <p>Only update when <code>password2</code> changes:</p>
+        <pre>@confirmedValues</pre>
+    </Typography>
+</Form>
+
+@code {
+    private readonly FormModel model = new();
+    private readonly FormValidationRule[] confirmRules;
+    private FormValidateStatus confirmStatus;
+    private string confirmHelp;
+    private string confirmedValues = "{}";
+
+    public FormDependencies()
+    {
+        confirmRules = new[]
+        {
+            new FormValidationRule { Required = true },
+            new FormValidationRule
+            {
+                Validator = context => string.IsNullOrEmpty((string)context.Value)
+                    || ((FormModel)context.Model).Password == (string)context.Value
+                    ? System.ComponentModel.DataAnnotations.ValidationResult.Success
+                    : new System.ComponentModel.DataAnnotations.ValidationResult("The new password that you entered do not match!")
+            }
+        };
+    }
+
+    private void OnFieldChanged(Microsoft.AspNetCore.Components.Forms.FieldChangedEventArgs args)
+    {
+        if (args.FieldIdentifier.FieldName == nameof(FormModel.Password2))
+        {
+            confirmedValues = JsonSerializer.Serialize(new { password2 = model.Password2 }, new JsonSerializerOptions { WriteIndented = true });
+            UpdateConfirmationState();
+        }
+        else if (args.FieldIdentifier.FieldName == nameof(FormModel.Password) && !string.IsNullOrEmpty(model.Password2))
+        {
+            UpdateConfirmationState();
+        }
+    }
+
+    private void UpdateConfirmationState()
+    {
+        if (string.IsNullOrEmpty(model.Password2))
+        {
+            confirmStatus = FormValidateStatus.Default;
+            confirmHelp = null;
+        }
+        else if (model.Password == model.Password2)
+        {
+            confirmStatus = FormValidateStatus.Success;
+            confirmHelp = null;
+        }
+        else
+        {
+            confirmStatus = FormValidateStatus.Error;
+            confirmHelp = "The new password that you entered do not match!";
+        }
+    }
+
+    private sealed class FormModel
+    {
+        public string Password { get; set; } = string.Empty;
+        public string Password2 { get; set; } = string.Empty;
+    }
+}

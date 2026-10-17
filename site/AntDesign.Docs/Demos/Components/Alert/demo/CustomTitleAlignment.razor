@@ -1,0 +1,18 @@
+<div style="width:360px">
+    <Alert Message="Long alert title wraps to multiple lines when the alert container is narrow enough."
+           Type="AlertType.Info" ShowIcon Closable Styles="@_firstLineStyles" />
+    <Alert Message="Long alert title wraps to multiple lines when the alert container is narrow enough."
+           Type="AlertType.Success" ShowIcon Closable Styles="@_firstLineStyles" Action="@_action" />
+</div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _firstLineStyles = new Dictionary<string, string>
+    {
+        ["root"] = "align-items:flex-start",
+        ["icon"] = "margin-block-start:4px",
+        ["actions"] = "margin-block-start:-1px",
+        ["close"] = "margin-block-start:5px"
+    };
+
+    private RenderFragment _action => @<Button Size="ButtonSize.Small" Type="ButtonType.Text">Action</Button>;
+}

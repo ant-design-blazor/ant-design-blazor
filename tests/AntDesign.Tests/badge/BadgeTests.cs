@@ -198,6 +198,28 @@ namespace AntDesign.Tests.Badge
         }
 
         [Fact]
+        public void ItShouldKeepCountWhenColorIsSet()
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Badge>(parameters => parameters
+                .Add(x => x.Count, 5)
+                .Add(x => x.Color, BadgeColor.Blue));
+
+            systemUnderTest.Find("sup").GetAttribute("class").Should().Contain("ant-badge-count").And.Contain("ant-badge-color-blue");
+        }
+
+        [Fact]
+        public void ItShouldKeepCountWhenStatusIsSetAlongsideChildContent()
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Badge>(parameters => parameters
+                .Add(x => x.Count, 5)
+                .Add(x => x.Status, BadgeStatus.Success)
+                .AddChildContent("Avatar"));
+
+            systemUnderTest.Find("sup").GetAttribute("class").Should().Contain("ant-badge-count");
+            systemUnderTest.Find(".ant-badge").TextContent.Should().Contain("Avatar");
+        }
+
+        [Fact]
         public void ItShouldNotRenderDotAtZero()
         {
             var systemUnderTest = RenderComponent<AntDesign.Badge>(parameters => parameters
@@ -216,9 +238,8 @@ namespace AntDesign.Tests.Badge
                 .Add(x => x.ShowZero, true));
 
             systemUnderTest.MarkupMatches(@"<span class=""ant-badge ant-badge-not-a-wrapper"" id:ignore>
-                <sup class=""ant-scroll-number ant-badge-dot ant-badge-zoom-enter ant-badge-zoom-enter-active""
-                    style="""" title=""0"">
-                </sup></span>");
+                <sup class=""ant-scroll-number ant-badge-count ant-badge-zoom-enter ant-badge-zoom-enter-active""
+                    style="""" title=""0"">0</sup></span>");
         }
 
         [Fact]
@@ -235,8 +256,8 @@ namespace AntDesign.Tests.Badge
         }
 
         [Theory]
-        [InlineData(BadgeColor.Red, "ant-badge-status-red")]
-        [InlineData(BadgeColor.Pink, "ant-badge-status-pink")]
+        [InlineData(BadgeColor.Red, "ant-badge-color-red")]
+        [InlineData(BadgeColor.Pink, "ant-badge-color-pink")]
         public void ItShouldRenderPresetColor(BadgeColor color, string expectedClass)
         {
             var systemUnderTest = RenderComponent<AntDesign.Badge>(parameters => parameters
@@ -244,9 +265,8 @@ namespace AntDesign.Tests.Badge
                 .Add(x => x.Color, color)
                 .Add(x => x.Dot, true));
 
-            systemUnderTest.MarkupMatches($@"<span class=""ant-badge ant-badge-status ant-badge-not-a-wrapper"" id:ignore>
-                <span class=""ant-badge-status-dot {expectedClass}"" style=""""></span>
-            </span>");
+            systemUnderTest.Find("sup").GetAttribute("class").Should().Contain("ant-badge-dot").And.Contain(expectedClass);
+            systemUnderTest.Find(".ant-badge").ClassList.Should().NotContain("ant-badge-status");
         }
 
         [Theory]
@@ -259,9 +279,8 @@ namespace AntDesign.Tests.Badge
                 .Add(x => x.Status, status)
                 .Add(x => x.Dot, true));
 
-            systemUnderTest.MarkupMatches($@"<span class=""ant-badge ant-badge-status ant-badge-not-a-wrapper"" id:ignore>
-                <span class=""ant-badge-status-dot {expectedClass}"" style=""""></span>
-            </span>");
+            systemUnderTest.Find("sup").GetAttribute("class").Should().Contain("ant-badge-dot").And.Contain(expectedClass);
+            systemUnderTest.Find(".ant-badge").ClassList.Should().NotContain("ant-badge-status");
         }
 
         [Theory]
@@ -275,9 +294,9 @@ namespace AntDesign.Tests.Badge
                 .Add(x => x.Color, color)
                 .Add(x => x.Dot, true));
 
-            systemUnderTest.MarkupMatches($@"<span class=""ant-badge ant-badge-status ant-badge-not-a-wrapper"" id:ignore>
-                <span class=""ant-badge-status-dot"" style=""{expectedStyle}""></span>
-            </span>");
+            systemUnderTest.Find("sup").GetAttribute("class").Should().Contain("ant-badge-dot");
+            systemUnderTest.Find("sup").GetAttribute("style").Should().Contain(expectedStyle);
+            systemUnderTest.Find(".ant-badge").ClassList.Should().NotContain("ant-badge-status");
         }
 
         [Fact]

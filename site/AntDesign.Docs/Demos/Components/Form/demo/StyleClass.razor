@@ -1,0 +1,38 @@
+﻿<Form Model="_model" LabelColSpan="6" WrapperColSpan="18"
+      Style="max-width: 800px; margin: 32px 0; padding: 20px; background: var(--ant-color-bg-container); border: 1px solid var(--ant-color-border); border-radius: var(--ant-border-radius);">
+    <FormItem Name="Username" Label="Username"
+              Rules="@(new[] { new FormValidationRule { Required = true, Message = "Please enter username!" } })"
+              LabelStyle="font-weight: 500; color: var(--ant-color-text);">
+        <Input @bind-Value="context.Username" Placeholder="Please enter username" />
+    </FormItem>
+    <FormItem Name="Email" Label="Email"
+              Rules="@(new[] { new FormValidationRule { Required = true, Message = "Please enter email!" } })"
+              LabelStyle="font-weight: 500; color: var(--ant-color-text);">
+        <Input @bind-Value="context.Email" Placeholder="Please enter email" />
+    </FormItem>
+    <FormItem WrapperColOffset="6" WrapperColSpan="18">
+        <Space>
+            <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
+            <Button HtmlType="reset">Reset</Button>
+        </Space>
+    </FormItem>
+</Form>
+
+<Form Model="_filledModel" LabelColSpan="6" WrapperColSpan="18"
+      Style="max-width: 800px; padding: 20px; background: var(--ant-color-fill-tertiary); border-radius: var(--ant-border-radius);">
+    <FormItem Name="Username" Label="Filled variant (style adapted)"
+              LabelStyle="font-weight: 500; color: var(--ant-color-primary);">
+        <Input @bind-Value="context.Username" Placeholder="Please enter username" />
+    </FormItem>
+</Form>
+
+@code {
+    private readonly StyleModel _model = new();
+    private readonly StyleModel _filledModel = new();
+
+    private sealed class StyleModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+    }
+}

@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Radio"
+  },
+  "config": {
+    "timeoutMs": 30000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id", "checked", "name"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_", "^ant-radio-css-var$"],
+        "sortClassTokens": true,
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "radio-basic-demo",
+      "component": "Radio",
+      "react": {
+        "url": "http://localhost:8001/components/radio",
+        "scopeSelector": "#radio-demo-basic .code-box-demo",
+        "rootSelector": ".ant-radio-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/radio",
+        "scopeSelector": "#components-radio-demo-Basic .code-box-demo",
+        "rootSelector": ".ant-radio-wrapper"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "paddingInline", "marginInlineEnd",
+        "gap", "alignItems", "lineHeight", "fontFamily", "fontSize", "fontWeight", "color", "backgroundColor",
+        "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "icon", "reactSelector": ".ant-radio", "blazorSelector": ".ant-radio", "minimumCount": 1 },
+        { "path": "input", "reactSelector": ".ant-radio-input", "blazorSelector": ".ant-radio-input", "minimumCount": 1 },
+        { "path": "label", "reactSelector": ".ant-radio-label", "blazorSelector": ".ant-radio-label", "minimumCount": 1 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    },
+    {
+      "id": "radio-button-groups-demo",
+      "component": "Radio.Button",
+      "react": {
+        "url": "http://localhost:8001/components/radio",
+        "scopeSelector": "#radio-demo-radiobutton .code-box-demo",
+        "rootSelector": ".ant-radio-group"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/radio",
+        "scopeSelector": "#components-radio-demo-Style .code-box-demo",
+        "rootSelector": ".ant-radio-group"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "paddingInline", "marginInlineEnd",
+        "gap", "alignItems", "lineHeight", "fontSize", "fontWeight", "color", "backgroundColor",
+        "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 3 },
+        { "path": "option", "reactSelector": ".ant-radio-button-wrapper", "blazorSelector": ".ant-radio-button-wrapper", "minimumCount": 12 },
+        { "path": "icon", "reactSelector": ".ant-radio-button", "blazorSelector": ".ant-radio-button", "minimumCount": 12 },
+        { "path": "input", "reactSelector": ".ant-radio-button-input", "blazorSelector": ".ant-radio-button-input", "minimumCount": 12 },
+        { "path": "label", "reactSelector": ".ant-radio-button-label", "blazorSelector": ".ant-radio-button-label", "minimumCount": 12 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    }
+  ]
+}

@@ -2,6 +2,17 @@
 
 @code {
     [Fact]
+    public void Search_uses_v6_scope_and_outlined_input_contract()
+    {
+        var cut = Render<AntDesign.Search>(@<AntDesign.Search Size="InputSize.Large" />);
+
+        cut.Find("span.ant-input-group-wrapper").ClassList.Contains("ant-input-css-var").Should().BeTrue();
+        cut.Find("span.ant-input-group-wrapper").ClassList.Contains("ant-input-search").Should().BeTrue();
+        cut.Find("input").ClassList.Contains("ant-input-outlined").Should().BeTrue();
+        cut.Find("button.ant-input-search-button").ClassList.Contains("ant-btn").Should().BeTrue();
+    }
+
+    [Fact]
     public async Task Search_OnPressEnter_Should_Trigger_Callback()
     {
         //Arrange

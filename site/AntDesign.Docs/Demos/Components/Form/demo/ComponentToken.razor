@@ -1,0 +1,40 @@
+﻿@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="_theme">
+    <Form Model="@_model" LabelColSpan="8" WrapperColSpan="16" Style="max-width: 600px;" AutoComplete="off">
+        <FormItem Label="Username" Name="Username" Rules="@(new[] { new FormValidationRule { Required = true, Message = "Please input your username!" } })">
+            <Input @bind-Value="context.Username" />
+        </FormItem>
+        <FormItem Label="Password" Name="Password" Rules="@(new[] { new FormValidationRule { Required = true, Message = "Please input your password!" } })">
+            <InputPassword @bind-Value="context.Password" />
+        </FormItem>
+    </Form>
+</ConfigProvider>
+
+@code {
+    private readonly AccountModel _model = new();
+
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Form"] = new Dictionary<string, string>
+            {
+                ["labelRequiredMarkColor"] = "pink",
+                ["labelColor"] = "green",
+                ["labelFontSize"] = "16",
+                ["labelHeight"] = "34",
+                ["labelColonMarginInlineStart"] = "4",
+                ["labelColonMarginInlineEnd"] = "12",
+                ["itemMarginBottom"] = "18",
+                ["inlineItemMarginBottom"] = "18"
+            }
+        }
+    };
+
+    private sealed class AccountModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}

@@ -30,7 +30,7 @@ namespace AntDesign
 #endif
     public abstract partial class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>, IEqualityComparer<TItem>
     {
-        protected virtual string DefaultWidth => "width: 100%;";
+        protected virtual string DefaultWidth => string.Empty;
         protected virtual bool UseChildContentAsTrigger => true;
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
         private SelectOptionItem<TItemValue, TItem> _selectOptionEqualToTypeDefault;
@@ -92,7 +92,10 @@ namespace AntDesign
 
         internal ClassMapper CurrentClassMapper => ClassMapper;
 
-        protected virtual string OverlayClassName { get; }
+        // The dropdown is rendered outside the Select root element. Give it the
+        // Select CSS-variable scope so the v6 popup and option tokens are available
+        // when the React-compatible styles are resolved.
+        protected virtual string OverlayClassName => "ant-select-css-var";
 
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
@@ -127,7 +130,8 @@ namespace AntDesign
         public SelectMode Mode { get; set; } = SelectMode.Default;
 
         /// <summary>
-        /// Indicates whether the search function is active or not. Always true for mode tags.
+        /// Enables search as an opt-in for single mode. Multiple and tags modes are searchable by default,
+        /// matching Ant Design v6.
         /// </summary>
         [Parameter]
         public bool EnableSearch { get; set; }
@@ -403,7 +407,7 @@ namespace AntDesign
         ///     Returns whether the user can input a pattern to search matched items
         /// </summary>
         /// <returns>true if search is enabled</returns>
-        internal bool IsSearchEnabled => EnableSearch || Mode == SelectMode.Tags;
+        internal bool IsSearchEnabled => EnableSearch || Mode != SelectMode.Default;
 
         /// <summary>
         ///     Sorted list of SelectOptionItems

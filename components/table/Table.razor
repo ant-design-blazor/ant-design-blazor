@@ -144,6 +144,11 @@
 {
     RenderFragment header()
     {
+        if (!ShowHeader)
+        {
+            return null;
+        }
+
         var headerRowAttributes = OnHeaderRow?.Invoke();
         return @<thead class="ant-table-thead">
             <CascadingValue Name="IsHeader" Value="true" IsFixed>

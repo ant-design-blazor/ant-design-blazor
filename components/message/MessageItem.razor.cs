@@ -23,9 +23,9 @@ namespace AntDesign
 
         protected const string PrefixCls = "ant-message";
 
-        private string GetClassName()
+        private string GetNoticeClassName()
         {
-            var className = $"{PrefixCls}-{Config.Type.ToString().ToLower(CultureInfo.InvariantCulture)}";
+            var className = $"{PrefixCls}-notice {PrefixCls}-notice-{Config.Type.ToString().ToLower(CultureInfo.InvariantCulture)}";
 
             if (RTL)
             {
@@ -33,6 +33,8 @@ namespace AntDesign
             }
             return className;
         }
+
+        private string GetIconClassName() => $"{PrefixCls}-notice-icon {PrefixCls}-notice-icon-{Config.Type.ToString().ToLower(CultureInfo.InvariantCulture)}";
 
         private void HandleMouseEnter()
         {

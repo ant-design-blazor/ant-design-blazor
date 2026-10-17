@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "upstream": { "repository": "ant-design/ant-design", "component": "Rate" },
+  "config": {
+    "timeoutMs": 30000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_", "^ant-rate-css-var$"],
+        "sortClassTokens": true,
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "rate-basic-demo",
+      "component": "Rate",
+      "react": {
+        "url": "http://localhost:8001/components/rate",
+        "scopeSelector": "#rate-demo-basic .code-box-demo",
+        "rootSelector": ".ant-rate"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/rate",
+        "scopeSelector": "#components-rate-demo-basic .code-box-demo",
+        "rootSelector": ".ant-rate"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "paddingInline", "marginInlineEnd",
+        "gap", "alignItems", "lineHeight", "fontFamily", "fontSize", "fontWeight", "color",
+        "backgroundColor", "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "star", "reactSelector": ".ant-rate-star", "blazorSelector": ".ant-rate-star", "minimumCount": 5 },
+        { "path": "radio", "reactSelector": "[role=radio]", "blazorSelector": "[role=radio]", "minimumCount": 5 },
+        { "path": "first", "reactSelector": ".ant-rate-star-first", "blazorSelector": ".ant-rate-star-first", "minimumCount": 5 },
+        { "path": "second", "reactSelector": ".ant-rate-star-second", "blazorSelector": ".ant-rate-star-second", "minimumCount": 5 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    },
+    {
+      "id": "rate-half-demo",
+      "component": "Rate allowHalf",
+      "react": {
+        "url": "http://localhost:8001/components/rate",
+        "scopeSelector": "#rate-demo-half .code-box-demo",
+        "rootSelector": ".ant-rate"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/rate",
+        "scopeSelector": "#components-rate-demo-half .code-box-demo",
+        "rootSelector": ".ant-rate"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "paddingInline", "marginInlineEnd",
+        "gap", "alignItems", "lineHeight", "fontFamily", "fontSize", "fontWeight", "color",
+        "backgroundColor", "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "star", "reactSelector": ".ant-rate-star", "blazorSelector": ".ant-rate-star", "minimumCount": 5 },
+        { "path": "radio", "reactSelector": "[role=radio]", "blazorSelector": "[role=radio]", "minimumCount": 5 },
+        { "path": "first", "reactSelector": ".ant-rate-star-first", "blazorSelector": ".ant-rate-star-first", "minimumCount": 5 },
+        { "path": "second", "reactSelector": ".ant-rate-star-second", "blazorSelector": ".ant-rate-star-second", "minimumCount": 5 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    }
+  ]
+}

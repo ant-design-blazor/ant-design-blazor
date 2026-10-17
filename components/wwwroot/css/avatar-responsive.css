@@ -1,0 +1,55 @@
+/* Responsive Avatar sizes. Values are supplied by the Avatar component as CSS custom properties. */
+@media (max-width: 575.98px) {
+  .ant-avatar-responsive {
+    width: var(--ant-avatar-size-xs, 32px);
+    height: var(--ant-avatar-size-xs, 32px);
+  }
+  .ant-avatar-responsive-has-content {
+    font-size: calc(var(--ant-avatar-size-xs, 32px) / 2);
+  }
+}
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .ant-avatar-responsive {
+    width: var(--ant-avatar-size-sm, 32px);
+    height: var(--ant-avatar-size-sm, 32px);
+  }
+  .ant-avatar-responsive-has-content {
+    font-size: calc(var(--ant-avatar-size-sm, 32px) / 2);
+  }
+}
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .ant-avatar-responsive {
+    width: var(--ant-avatar-size-md, 32px);
+    height: var(--ant-avatar-size-md, 32px);
+  }
+  .ant-avatar-responsive-has-content {
+    font-size: calc(var(--ant-avatar-size-md, 32px) / 2);
+  }
+}
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .ant-avatar-responsive {
+    width: var(--ant-avatar-size-lg, 32px);
+    height: var(--ant-avatar-size-lg, 32px);
+  }
+  .ant-avatar-responsive-has-content {
+    font-size: calc(var(--ant-avatar-size-lg, 32px) / 2);
+  }
+}
+@media (min-width: 1200px) and (max-width: 1599.98px) {
+  .ant-avatar-responsive {
+    width: var(--ant-avatar-size-xl, 32px);
+    height: var(--ant-avatar-size-xl, 32px);
+  }
+  .ant-avatar-responsive-has-content {
+    font-size: calc(var(--ant-avatar-size-xl, 32px) / 2);
+  }
+}
+@media (min-width: 1600px) {
+  .ant-avatar-responsive {
+    width: var(--ant-avatar-size-xxl, 32px);
+    height: var(--ant-avatar-size-xxl, 32px);
+  }
+  .ant-avatar-responsive-has-content {
+    font-size: calc(var(--ant-avatar-size-xxl, 32px) / 2);
+  }
+}

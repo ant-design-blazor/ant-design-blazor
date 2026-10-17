@@ -1,0 +1,32 @@
+<RadioGroup @bind-Value="_placement">
+    <Radio RadioButton Value="ButtonIconPlacement.Start">start</Radio>
+    <Radio RadioButton Value="ButtonIconPlacement.End">end</Radio>
+</RadioGroup>
+
+<Divider Orientation="DividerOrientation.Left" Plain>Preview</Divider>
+
+<Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap" Vertical>
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Tooltip Title="search">
+            <Button Type="ButtonType.Primary" Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" />
+        </Tooltip>
+        <Button Type="ButtonType.Primary" Shape="ButtonShape.Circle">A</Button>
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Search" IconPlacement="_placement">Search</Button>
+        <Tooltip Title="search">
+            <Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" />
+        </Tooltip>
+        <Button Icon="@IconType.Outline.Search" IconPlacement="_placement">Search</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Button Type="ButtonType.Text" Icon="@IconType.Outline.Search" IconPlacement="_placement">Search</Button>
+        <Button Type="ButtonType.Dashed" Icon="@IconType.Outline.Search" IconPlacement="_placement">Search</Button>
+        <Tooltip Title="search">
+            <Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" IconPlacement="_placement" />
+        </Tooltip>
+        <Button Type="ButtonType.Primary" Loading IconPlacement="_placement">Loading</Button>
+    </Flex>
+</Flex>
+
+@code {
+    private ButtonIconPlacement _placement = ButtonIconPlacement.End;
+}

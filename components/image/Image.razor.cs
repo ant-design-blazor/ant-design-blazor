@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -53,6 +55,18 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public RenderFragment Placeholder { get; set; }
+
+        /// <summary>
+        /// Render an indeterminate image loading progress placeholder.
+        /// </summary>
+        [Parameter]
+        public bool PlaceholderProgress { get; set; }
+
+        /// <summary>
+        /// Render a determinate loading progress placeholder. Values are rounded and clamped to 0-100.
+        /// </summary>
+        [Parameter]
+        public double? ProgressPercent { get; set; }
 
         /// <summary>
         /// Enable or disable preview functionality
@@ -153,6 +167,16 @@ namespace AntDesign
 
         private bool _previewVisible = true;
 
+        private bool IsProgressPlaceholder => PlaceholderProgress || ProgressPercent.HasValue;
+
+        private bool HasProgressPercent => ProgressPercent.HasValue && !double.IsNaN(ProgressPercent.Value) && !double.IsInfinity(ProgressPercent.Value);
+
+        private int ProgressPercentValue => HasProgressPercent
+            ? (int)Math.Max(0, Math.Min(100, Math.Floor(ProgressPercent.Value + 0.5)))
+            : 0;
+
+        private string ProgressPercentText => ProgressPercentValue.ToString(CultureInfo.InvariantCulture);
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -173,7 +197,7 @@ namespace AntDesign
                 PreviewSrc = _src;
             }
 
-            ClassMapper.Add("ant-image")
+            ClassMapper.Add("ant-image css-var-root ant-image-css-var")
                 .If("ant-image-error", () => _isError);
 
             Group?.AddImage(this);

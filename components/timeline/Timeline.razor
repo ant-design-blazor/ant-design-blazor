@@ -2,27 +2,36 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed>
-    <ul class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+    <ol class="@ClassMapper.Class" style="@GetRootStyle()" id="@Id" @ref="Ref">
         @ChildContent
 
         @foreach (var item in _displayItems)
         {
-            <li class="@item.ItemClass" @ref="item.Ref" style="@item.Style" id="@item.Id">
-				@if (!string.IsNullOrEmpty(item.Label))
-				{
-					<div class="ant-timeline-item-label">@item.Label</div>
-				}
-                <div class="ant-timeline-item-tail"></div>
-                <div class="@item._headClassMapper.Class" style="@item.HeadStyle">
-                    @if (item.Dot != null)
-                    {
-                        @item.Dot
-                    }
-                </div>
-                <div class="ant-timeline-item-content">
-                    @item.ChildContent
+            <li class="@item.ItemClass" @ref="item.Ref" style="@(item.HeadStyle + item.Style)" id="@item.Id">
+                <div class="ant-steps-item-wrapper ant-timeline-item-wrapper">
+                    <div class="@item._headClassMapper.Class">
+                        @if (item.Dot != null)
+                        {
+                            @item.Dot
+                        }
+                    </div>
+                    <div class="ant-steps-item-section ant-timeline-item-section">
+                        <div class="ant-steps-item-header ant-timeline-item-header">
+                            @if (!string.IsNullOrEmpty(item.Label))
+                            {
+                                <div class="ant-steps-item-title ant-timeline-item-title">@item.Label</div>
+                            }
+                            @if (!item.IsLast)
+                            {
+                                <div class="ant-steps-item-rail ant-steps-item-rail-finish ant-timeline-item-rail"></div>
+                            }
+                        </div>
+                        <div class="ant-steps-item-content ant-timeline-item-content">
+                            @item.ChildContent
+                        </div>
+                    </div>
                 </div>
             </li>
         }
-    </ul>
+    </ol>
 </CascadingValue>

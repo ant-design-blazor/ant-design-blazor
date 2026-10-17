@@ -1,0 +1,19 @@
+<Space Style="margin-bottom:24px;">
+    Tab placement:
+    <RadioGroup @bind-Value="placement">
+        <Radio RadioButton Value="TabPlacement.Top">top</Radio>
+        <Radio RadioButton Value="TabPlacement.Bottom">bottom</Radio>
+        <Radio RadioButton Value="TabPlacement.Start">start</Radio>
+        <Radio RadioButton Value="TabPlacement.End">end</Radio>
+    </RadioGroup>
+</Space>
+
+<Tabs TabPlacement="@placement">
+    <TabPane Key="1" Tab="Tab 1">Content of Tab 1</TabPane>
+    <TabPane Key="2" Tab="Tab 2">Content of Tab 2</TabPane>
+    <TabPane Key="3" Tab="Tab 3">Content of Tab 3</TabPane>
+</Tabs>
+
+@code {
+    private TabPlacement placement = TabPlacement.Start;
+}

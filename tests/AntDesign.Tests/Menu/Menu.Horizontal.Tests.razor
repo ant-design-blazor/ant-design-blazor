@@ -77,7 +77,7 @@
         //Act
         //Assert
         cut.MarkupMatches(@"
-            <ul class=""ant-menu ant-menu-root ant-menu-light ant-menu-horizontal"" id:ignore direction=""ltr"" role=""menu"">
+            <ul class=""ant-menu-css-var ant-menu ant-menu-root ant-menu-light ant-menu-horizontal"" id:ignore direction=""ltr"" role=""menu"">
 		        <li class=""ant-menu-item"" role=""menuitem"" style="""">
 			        <span class=""ant-menu-title-content"">
                         Navigation One
@@ -90,12 +90,24 @@
                         </span>
                     </div>
                 </li>
-        		<li class=""ant-menu-item"" role=""menuitem"" style="""">
+                <li class=""ant-menu-item"" role=""menuitem"" style="""">
         			<span class=""ant-menu-title-content"">
                         Navigation Three
 			        </span>
 		        </li>
             </ul>");
+    }
+
+    [Fact]
+    public void Menu_item_renders_extra_content_with_semantic_menu_class()
+    {
+        var cut = Context.RenderComponent<AntDesign.Menu>(parameters => parameters
+            .AddChildContent<AntDesign.MenuItem>(item => item
+                .Add(component => component.Key, "profile")
+                .AddChildContent("Profile")
+                .Add(component => component.Extra, @<span>⌘P</span>)));
+
+        cut.Find(".ant-menu-item-extra").TextContent.Trim().Should().Be("⌘P");
     }
 
     [Fact]
@@ -163,7 +175,7 @@
         var topOverlay = topExpandable.FindComponent<AntDesign.Internal.Overlay>();
         //Assert
         topOverlay.MarkupMatches(@"
-            <div class=""ant-menu-submenu ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-bottomLeft ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"" style:ignore>
+            <div class=""ant-menu-submenu ant-menu-css-var ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-bottomLeft ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"" style:ignore>
                 <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">
                     <li class=""ant-menu-item-group"">
                         <div class=""ant-menu-item-group-title"">
@@ -188,7 +200,7 @@
                             Item 2
                         </div>
                         <ul class=""ant-menu-item-group-list"">
-		                    <li class=""ant-menu-item"" role=""menuitem"" style="""">
+			                    <li class=""ant-menu-item"" role=""menuitem"" style="""">
 			                    <span class=""ant-menu-title-content"">
                                     Option 3
 			                    </span>
@@ -224,7 +236,7 @@
         var midOverlay = midExpandable.FindComponent<AntDesign.Internal.Overlay>();
         //Assert
         midOverlay.MarkupMatches(@"
-            <div style:ignore class=""ant-menu-submenu   ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-zoom-big-enter ant-zoom-big-enter-active ant-zoom-big"">
+            <div style:ignore class=""ant-menu-submenu ant-menu-css-var ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-zoom-big-enter ant-zoom-big-enter-active ant-zoom-big"">
                 <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">
                     <li class=""ant-menu-item"" role=""menuitem"" style="""">
                 		<span class=""ant-menu-title-content"">
@@ -262,7 +274,7 @@
         var bottomOverlay = bottomExpandable.FindComponent<AntDesign.Internal.Overlay>();
         //Assert
         bottomOverlay.MarkupMatches(@"
-            <div style:ignore class=""ant-menu-submenu   ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-zoom-big-enter ant-zoom-big-enter-active ant-zoom-big"">
+            <div style:ignore class=""ant-menu-submenu ant-menu-css-var ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-zoom-big-enter ant-zoom-big-enter-active ant-zoom-big"">
                 <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">
                     <li class=""ant-menu-item"" role=""menuitem"" style="""">
                 		<span class=""ant-menu-title-content"">

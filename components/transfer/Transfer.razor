@@ -2,11 +2,12 @@
 @inherits AntDomComponentBase
 
 <div class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
-    <div class="ant-transfer-list @((FooterTemplate != null || Footer != null)?FooterClass:"")" @onscroll="@(e=>HandleScroll(TransferDirection.Left,e))" style="@(ListStyle(TransferDirection.Left))">
+    <div class="ant-transfer-section @((FooterTemplate != null || !string.IsNullOrEmpty(Footer))?FooterClass:"")" @onscroll="@(e=>HandleScroll(TransferDirection.Left,e))" style="@(ListStyle(TransferDirection.Left))">
         <div class="ant-transfer-list-header">
             @if (ShowSelectAll)
             {
-                <Checkbox Checked="_leftCheckAllState" Indeterminate="_leftCheckAllIndeterminate" Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Left))" />
+                <Checkbox WrapperClass="ant-transfer-list-checkbox" HideEmptyLabel="true" Checked="_leftCheckAllState" Indeterminate="_leftCheckAllIndeterminate" Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Left))" />
+                <Icon Type="down" Class="ant-transfer-list-header-dropdown" />
             }
             <span class="ant-transfer-list-header-selected">
                 @_leftCountText
@@ -42,8 +43,9 @@
                 <ul class="ant-transfer-list-content">
                     @foreach (var item in _leftDataSource)
                     {
-                        <li @key="item" class="ant-transfer-list-content-item @(item.Disabled || Disabled ? DisabledClass : "")">
-                            <Checkbox Label="@item.Key" Checked="_sourceSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Left, item.Key))" Disabled="@(item.Disabled || Disabled)">
+                        <li @key="item" title="@item.Title" class="ant-transfer-list-content-item @(item.Disabled || Disabled ? DisabledClass : _sourceSelectedKeys.Contains(item.Key) ? "ant-transfer-list-content-item-checked" : "")">
+                <Checkbox WrapperClass="ant-transfer-list-checkbox" HideEmptyLabel="true" Checked="_sourceSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Left, item.Key))" Disabled="@(item.Disabled || Disabled)" />
+                            <span class="ant-transfer-list-content-item-text">
                                 @if (Render == null)
                                 {
                                     @item.Title
@@ -60,32 +62,50 @@
                                         @text.AsT1
                                     }
                                 }
-                            </Checkbox>
+                            </span>
                         </li>
                     }
                 </ul>
             }
         </div>
-        <div class="ant-transfer-list-footer">
-            @if (FooterTemplate != null)
-            {
-                @FooterTemplate
-            }
-            else
-            {
-                @Footer
-            }
-        </div>
+        @if (FooterTemplate != null || !string.IsNullOrEmpty(Footer))
+        {
+            <div class="ant-transfer-list-footer">
+                @if (FooterTemplate != null)
+                {
+                    @FooterTemplate
+                }
+                else
+                {
+                    @Footer
+                }
+            </div>
+        }
     </div>
-    <div class="ant-transfer-operation">
-        <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="left" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))" NoSpanWrap="@(String.IsNullOrEmpty(Operations[0]))">@Operations[0]</Button>
-        <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="right" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))" NoSpanWrap="@(String.IsNullOrEmpty(Operations[1]))">@Operations[1]</Button>
+    <div class="ant-transfer-actions">
+        @if (String.IsNullOrEmpty(Operations[0]))
+        {
+            <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="left" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))" />
+        }
+        else
+        {
+            <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="left" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))">@Operations[0]</Button>
+        }
+        @if (String.IsNullOrEmpty(Operations[1]))
+        {
+            <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="right" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))" />
+        }
+        else
+        {
+            <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="right" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))">@Operations[1]</Button>
+        }
     </div>
-    <div class="ant-transfer-list @((FooterTemplate != null || Footer != null)?FooterClass:"")" @onscroll="@(e => HandleScroll(TransferDirection.Right, e))" style="@(ListStyle(TransferDirection.Right))">
+    <div class="ant-transfer-section @((FooterTemplate != null || !string.IsNullOrEmpty(Footer))?FooterClass:"")" @onscroll="@(e => HandleScroll(TransferDirection.Right, e))" style="@(ListStyle(TransferDirection.Right))">
         <div class="ant-transfer-list-header">
             @if (ShowSelectAll)
             {
-                <Checkbox Checked="_rightCheckAllState" Indeterminate="_rightCheckAllIndeterminate " Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Right))" />
+                <Checkbox WrapperClass="ant-transfer-list-checkbox" HideEmptyLabel="true" Checked="_rightCheckAllState" Indeterminate="_rightCheckAllIndeterminate " Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Right))" />
+                <Icon Type="down" Class="ant-transfer-list-header-dropdown" />
             }
             <span class="ant-transfer-list-header-selected">
                 @_rightCountText
@@ -121,8 +141,9 @@
                 <ul class="ant-transfer-list-content">
                     @foreach (var item in _rightDataSource)
                     {
-                        <li @key="item" class="ant-transfer-list-content-item @(item.Disabled || Disabled ? DisabledClass : "")">
-                            <Checkbox Label="@item.Key" Checked="_targetSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Right, item.Key))" Disabled="@(item.Disabled || Disabled)">
+                        <li @key="item" title="@item.Title" class="ant-transfer-list-content-item @(item.Disabled || Disabled ? DisabledClass : _targetSelectedKeys.Contains(item.Key) ? "ant-transfer-list-content-item-checked" : "")">
+                <Checkbox WrapperClass="ant-transfer-list-checkbox" HideEmptyLabel="true" Checked="_targetSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Right, item.Key))" Disabled="@(item.Disabled || Disabled)" />
+                            <span class="ant-transfer-list-content-item-text">
                                 @if (Render == null)
                                 {
                                     @item.Title
@@ -139,22 +160,25 @@
                                         @text.AsT1
                                     }
                                 }
-                            </Checkbox>
+                            </span>
                         </li>
                     }
 
                 </ul>
             }
         </div>
-        <div class="ant-transfer-list-footer">
-            @if (FooterTemplate != null)
-            {
-                @FooterTemplate
-            }
-            else
-            {
-                @Footer
-            }
-        </div>
+        @if (FooterTemplate != null || !string.IsNullOrEmpty(Footer))
+        {
+            <div class="ant-transfer-list-footer">
+                @if (FooterTemplate != null)
+                {
+                    @FooterTemplate
+                }
+                else
+                {
+                    @Footer
+                }
+            </div>
+        }
     </div>
 </div>

@@ -16,7 +16,15 @@ Use it when a color value needs to be selected or previewed.
 | Parameter | Description | Type | Default |
 | --- | --- | --- | --- |
 | Value | Current color value | string | `#1677ff` |
+| Size | Trigger size: `small`, `middle`, or `large` | string | `middle` |
 | Open | Whether the panel is open | bool | false |
 | ShowText | Whether to show the color text | bool | false |
 | Disabled | Whether the control is disabled | bool | false |
+| AllowClear | Whether the selected color can be cleared | bool | false |
+| Presets | Labeled color preset groups | `IReadOnlyList<ColorPickerPreset>` | empty |
+| OnClear | Callback invoked when the color is cleared | `EventCallback` | — |
+| Format | Color input format: `hex`, `rgb`, or `hsb` | string | `hex` |
+| FormatChanged | Raised when the input format changes | `EventCallback<string>` | — |
+| DisabledAlpha | Hide the opacity slider | bool | false |
+| DisabledFormat | Hide the format selector | bool | false |
 | AriaLabel | Accessible label for the color button | string | Choose color |

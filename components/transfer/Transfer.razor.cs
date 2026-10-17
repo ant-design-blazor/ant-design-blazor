@@ -37,7 +37,7 @@ namespace AntDesign
     {
         private const string PrefixName = "ant-transfer";
         private const string DisabledClass = "ant-transfer-list-content-item-disabled";
-        private const string FooterClass = "ant-transfer-list-with-footer";
+        private const string FooterClass = "ant-transfer-section-with-footer";
 
         /// <summary>
         /// Used for setting the source data. 

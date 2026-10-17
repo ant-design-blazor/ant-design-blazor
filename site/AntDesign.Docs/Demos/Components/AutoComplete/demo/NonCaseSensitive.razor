@@ -1,0 +1,7 @@
+@* Case-insensitive filter example. *@
+<AutoComplete Style="width:200px" Options="_options" Placeholder="try to type 'b'" AllowFilter="true"
+              FilterExpression="@((option, value) => option.Label.Contains(value ?? string.Empty, StringComparison.OrdinalIgnoreCase))" />
+
+@code {
+    private readonly string[] _options = ["Burns Bay Road", "Downing Street", "Wall Street"];
+}

@@ -1,0 +1,9 @@
+<FloatButton Badge="@_dotBadge" Style="right:164px" />
+<FloatButton Badge="@_countBadge" />
+<FloatButton Badge="@_iconBadge" Icon="question-circle" />
+
+@code {
+    private readonly FloatButtonBadge _dotBadge = new() { Dot = true };
+    private readonly FloatButtonBadge _countBadge = new() { Count = 5, Color = "blue" };
+    private readonly FloatButtonBadge _iconBadge = new() { Count = 12 };
+}

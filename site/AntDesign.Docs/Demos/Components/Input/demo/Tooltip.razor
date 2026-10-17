@@ -1,0 +1,9 @@
+<Tooltip Title="@value">
+    <Unbound>
+        <Input RefBack="@context" @bind-Value="value" Placeholder="Enter a long value" Style="width: 160px" TValue="string" />
+    </Unbound>
+</Tooltip>
+
+@code {
+    private string value = "A long value shown in full by the tooltip";
+}

@@ -1,0 +1,26 @@
+<Space Direction="SpaceDirection.Vertical">
+    <SpaceItem>
+        <SpaceCompact Block>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.First">
+                <SpaceCompact>
+                    <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Style="width: 90px;" Placeholder="Typing..." /></SpaceCompactItem>
+                    <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Icon="@IconType.Outline.Search" /></SpaceCompactItem>
+                </SpaceCompact>
+            </SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Button Type="ButtonType.Primary">Separator</Button></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Last">
+                <SpaceCompact>
+                    <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" DefaultValue="@("mysite")" /></SpaceCompactItem>
+                    <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Icon="@IconType.Outline.Copy" /></SpaceCompactItem>
+                </SpaceCompact>
+            </SpaceCompactItem>
+        </SpaceCompact>
+    </SpaceItem>
+    <SpaceItem>
+        <SpaceCompact>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Button Type="ButtonType.Primary">Button 1</Button></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Button Type="ButtonType.Primary">Button 2</Button></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Danger>Button 3</Button></SpaceCompactItem>
+        </SpaceCompact>
+    </SpaceItem>
+</Space>

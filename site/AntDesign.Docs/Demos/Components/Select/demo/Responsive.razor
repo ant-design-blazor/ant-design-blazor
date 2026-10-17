@@ -1,60 +1,64 @@
-﻿@using AntDesign.Select
-<Select Mode="SelectMode.Multiple"
-        Id="selectDemo"
-        Placeholder="Please select"
-		@bind-Values="@_selectedValues1"
-		TItemValue="string"
-		TItem="string"
-		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
-		Style="width: 100%; margin-bottom: 8px;"
-        MaxTagCount="ResponsiveTag.Responsive"
-		EnableSearch
-		AllowClear>
-		<SelectOptions>
-			@foreach(var item in _items)
-			{
-				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@($"Long label: {item}") />
-			}
-		</SelectOptions>
-</Select>
-<Select Mode="SelectMode.Multiple"
-        Id="selectDemoDisabled"
-        Placeholder="Please select"
-		@bind-Values="@_selectedValues1"
-		TItemValue="string"
-		TItem="string"        
-        MaxTagCount="ResponsiveTag.Responsive"
-		Disabled>
-		<SelectOptions>
-			@foreach(var item in _items)
-			{
-				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@($"Long label: {item}") />
-			}
-		</SelectOptions>
-</Select>
-@code
-{
-    List<string> _items;
-    IEnumerable<string> _selectedValues1;
+@using AntDesign.Select
 
-	protected override void OnInitialized()
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+            Style="width: 100%;" Placeholder="Select Item..." MaxTagCount="ResponsiveTag.Responsive"
+            DataSource="@_options" ItemValue="value => value" ItemLabel="value => FormatLabel(value)"
+            @bind-Values="@_selectedValues">
+    </Select>
+    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+            Style="width: 100%;" Placeholder="Select Item..." MaxTagCount="ResponsiveTag.Responsive"
+            DataSource="@_options" ItemValue="value => value" ItemLabel="value => FormatLabel(value)"
+            Disabled>
+    </Select>
+    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+            Style="width: 100%;" Placeholder="Select Item..." MaxTagCount="ResponsiveTag.Responsive"
+            DataSource="@_options" ItemValue="value => value" ItemLabel="value => FormatLabel(value)"
+            MaxTagPlaceholder="@RenderMaxTagPlaceholder"
+            @bind-Values="@_selectedValues">
+    </Select>
+</Space>
+
+@code {
+    private List<string> _options = new();
+    private IEnumerable<string> _selectedValues;
+
+    private static string FormatLabel(string value) => $"Long Label: {value}";
+
+    private RenderFragment<IEnumerable<string>> RenderMaxTagPlaceholder => omittedValues => builder =>
     {
-        const int min = 10;
-        const int max = 36;
-        _items = new List<string>();
-
-        for (var i = min; max > i; i++)
+        builder.OpenComponent<Tooltip>(0);
+        builder.AddAttribute(1, "Title", string.Join(", ", omittedValues.Select(FormatLabel)));
+        builder.AddAttribute(2, "ChildContent", (RenderFragment)(childBuilder =>
         {
-            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
-            _items.Add(value);
+            childBuilder.OpenElement(0, "span");
+            childBuilder.AddContent(1, "Hover Me");
+            childBuilder.CloseElement();
+        }));
+        builder.CloseComponent();
+    };
+
+    protected override void OnInitialized()
+    {
+        for (var i = 10; i < 36; i++)
+        {
+            _options.Add(ToBase36(i) + i);
         }
 
-		_selectedValues1 = new List<string> { "0a10" , "0c12", "0h17", "1117", "1824", "0d13"};
+        _selectedValues = new[] { "a10", "c12", "h17", "j19", "k20" };
     }
 
-    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+    private static string ToBase36(int value)
     {
-		if (values != null)
-			Console.WriteLine($"selected: ${string.Join(",", values)}");
+        const string digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+        var buffer = new char[8];
+        var index = buffer.Length;
+        do
+        {
+            buffer[--index] = digits[value % 36];
+            value /= 36;
+        } while (value > 0);
+
+        return new string(buffer, index, buffer.Length - index);
     }
 }

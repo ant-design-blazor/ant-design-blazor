@@ -18,8 +18,8 @@ namespace AntDesign.Tests.Theming
                 new SemanticToken { Name = "colorText", Value = "rgba(0,0,0,.88)", Source = "semantic.ts" }
             }, ":where(.ant-theme-app)");
 
-            Assert.Equal("#1677ff", result.Resolved[1].Value);
-            Assert.Equal("--ant-color-primary", result.CssVariables[1].Variable);
+            Assert.Equal("#1677ff", result.Resolved.Single(token => token.Name == "colorPrimary").Value);
+            Assert.Contains(result.CssVariables, token => token.Variable == "--ant-color-primary");
             Assert.Contains("--ant-primary-shadow: 0 2px 0 rgba(5, 145, 255, 0.1);", result.Css);
             Assert.Equal("token-values", result.Manifest.Layer);
             Assert.StartsWith("token-values:default:", result.Manifest.CacheKey);
@@ -88,6 +88,8 @@ namespace AntDesign.Tests.Theming
             Assert.Equal("rgba(0, 0, 0, 0.06)", result.Resolved.Single(token => token.Name == "colorFillSecondary").Value);
             Assert.Equal("#ffffff", result.Resolved.Single(token => token.Name == "colorBgContainer").Value);
             Assert.Equal("rgba(0, 0, 0, 0.06)", result.Resolved.Single(token => token.Name == "colorFillContent").Value);
+            Assert.Equal("#f0f0f0", result.Resolved.Single(token => token.Name == "colorBorderSecondary").Value);
+            Assert.Equal("rgba(5, 5, 5, 0.06)", result.Resolved.Single(token => token.Name == "colorSplit").Value);
         }
 
         [Fact]
@@ -119,9 +121,39 @@ namespace AntDesign.Tests.Theming
             }, ":root", "compact", new CompactThemeAlgorithm());
 
             Assert.Equal("12", result.Resolved.Single(token => token.Name == "fontSize").Value);
-            Assert.Equal("24", result.Resolved.Single(token => token.Name == "controlHeight").Value);
+            Assert.Equal("28", result.Resolved.Single(token => token.Name == "controlHeight").Value);
+            Assert.Equal("21", result.Resolved.Single(token => token.Name == "controlHeightSM").Value);
+            Assert.Equal("14", result.Resolved.Single(token => token.Name == "controlHeightXS").Value);
+            Assert.Equal("35", result.Resolved.Single(token => token.Name == "controlHeightLG").Value);
             Assert.Equal("8", result.Resolved.Single(token => token.Name == "size").Value);
-            Assert.Equal("12", result.Resolved.Single(token => token.Name == "sizeLG").Value);
+            Assert.Equal("16", result.Resolved.Single(token => token.Name == "sizeLG").Value);
+        }
+
+        [Theory]
+        [InlineData("default", typeof(DefaultThemeAlgorithm))]
+        [InlineData("dark", typeof(DarkThemeAlgorithm))]
+        [InlineData("compact", typeof(CompactThemeAlgorithm))]
+        public void ThemeAlgorithmFactoryResolvesAllStandardAlgorithms(string name, System.Type expectedType)
+        {
+            Assert.IsType(expectedType, ThemeAlgorithmFactory.Create(name));
+        }
+
+        [Fact]
+        public void DarkAlgorithmResolvesDarkSemanticNeutralsAndColorPalette()
+        {
+            var values = new DarkThemeAlgorithm().Resolve(new[]
+            {
+                new SeedToken { Name = "colorPrimary", Value = "#1890ff" },
+                new SeedToken { Name = "colorTextBase", Value = "#ffffff" },
+                new SeedToken { Name = "colorBgBase", Value = "#000000" }
+            }).ToDictionary(token => token.Name, token => token.Value);
+
+            Assert.Equal("#177ddc", values["colorPrimary6"]);
+            Assert.Equal("rgba(255, 255, 255, 0.85)", values["colorText"]);
+            Assert.Equal("#141414", values["colorBgContainer"]);
+            Assert.Equal("#424242", values["colorBorder"]);
+            Assert.Equal(values["colorPrimaryBorder"], values["colorPrimaryBg"]);
+            Assert.True(values.ContainsKey("blue10"));
         }
 
         [Fact]

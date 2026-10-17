@@ -1,0 +1,28 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<Form Model="@_model" LabelColSpan="8" WrapperColSpan="16" OnFinish="OnFinish" Style="max-width:600px;">
+    <FormItem Label="Date" Name="DateTimestamp" Rules="@(new[] { new FormValidationRule { Required = true } })">
+        <DatePicker TValue="DateTime?" Value="_date" ValueChanged="OnDateChanged" />
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
+    </FormItem>
+</Form>
+@if (!string.IsNullOrEmpty(_result)) { <pre role="status">@_result</pre> }
+
+@code {
+    private readonly TimestampFormModel _model = new() { DateTimestamp = new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero).ToUnixTimeMilliseconds() };
+    private DateTime? _date = new DateTime(2024, 1, 1);
+    private string _result;
+
+    private Task OnDateChanged(DateTime? value)
+    {
+        _date = value;
+        _model.DateTimestamp = value is null ? null : new DateTimeOffset(DateTime.SpecifyKind(value.Value, DateTimeKind.Utc)).ToUnixTimeMilliseconds();
+        return Task.CompletedTask;
+    }
+
+    private void OnFinish(EditContext _) => _result = $"Timestamp submitted: {_model.DateTimestamp}";
+
+    private sealed class TimestampFormModel { public long? DateTimestamp { get; set; } }
+}

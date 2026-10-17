@@ -1,19 +1,29 @@
-﻿<GridRow OnBreakpoint="HandleBreakpoint">
+﻿<GridRow OnBreakpoint="HandleBreakpoint" Style="display: contents;">
     Current break point: 
     @foreach (var type in types)
     {
         if ((int)type <= (int)current)
         {
-            <Tag Color="TagColor.Blue">@type</Tag>
+            <span class="ant-tag ant-tag-filled ant-tag-blue">@type.ToString().ToLowerInvariant()</span>
         }
     }
 </GridRow>
+<style>@((MarkupString)breakpointStyles)</style>
 
 @code{
 
-    BreakpointType[] types = new[] { BreakpointType.Xxl, BreakpointType.Xl, BreakpointType.Lg, BreakpointType.Md, BreakpointType.Sm, BreakpointType.Xs };
+    BreakpointType[] types = new[] { BreakpointType.Sm, BreakpointType.Md, BreakpointType.Lg, BreakpointType.Xl, BreakpointType.Xxl };
 
     BreakpointType current;
+
+    private static readonly string breakpointStyles = AntDesign.Docs.Services.CssInJs.CreateGlobalStyles(new Dictionary<string, object>
+    {
+        ["#components-grid-demo-useBreakpoint .ant-tag"] = new Dictionary<string, object>
+        {
+            ["display"] = "inline-block !important",
+            ["minHeight"] = 0
+        }
+    });
 
     void HandleBreakpoint(BreakpointType breakpoint)
     {

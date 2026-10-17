@@ -1,0 +1,65 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+
+<Form Model="@model" OnFinish="OnFinish" OnFinishFailed="OnFinishFailed" Style="max-width: 600px;">
+    @for (var i = 0; i < model.Passengers.Count; i++)
+    {
+        var index = i;
+        <FormItem @key="model.Passengers[index].Id"
+                  Label="@(index == 0 ? "Passengers" : null)"
+                  LabelColSpan="@(index == 0 ? 4 : 0)"
+                  WrapperColSpan="@(index == 0 ? 20 : 20)"
+                  WrapperColOffset="@(index == 0 ? 0 : 4)">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <Input @bind-Value="model.Passengers[index].Name" Placeholder="passenger name" Style="width:60%;" />
+                @if (model.Passengers.Count > 1)
+                {
+                    <Button Type="ButtonType.Text" OnClick="@(() => Remove(index))" AriaLabel="Remove passenger">−</Button>
+                }
+            </div>
+        </FormItem>
+    }
+    <FormItem WrapperColSpan="20" WrapperColOffset="4">
+        <div style="width:60%; display:flex; flex-direction:column; gap:20px;">
+            <Button Type="ButtonType.Dashed" OnClick="@(() => Add())" Block>＋ Add field</Button>
+            <Button Type="ButtonType.Dashed" OnClick="@(() => AddAtHead())" Block>＋ Add field at head</Button>
+        </div>
+    </FormItem>
+    <FormItem WrapperColSpan="20" WrapperColOffset="4">
+        <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
+        @if (!string.IsNullOrEmpty(result))
+        {
+            <span style="margin-left:12px;">@result</span>
+        }
+    </FormItem>
+</Form>
+
+@code {
+    private readonly PassengerForm model = new();
+    private string result;
+
+    private void Add(string name = "") => model.Passengers.Add(new Passenger { Id = Guid.NewGuid(), Name = name });
+
+    private void AddAtHead() => model.Passengers.Insert(0, new Passenger { Id = Guid.NewGuid(), Name = "The head item" });
+
+    private void Remove(int index) => model.Passengers.RemoveAt(index);
+
+    private void OnFinish(EditContext editContext)
+    {
+        result = $"Received values: {JsonSerializer.Serialize(model.Passengers.Select(x => x.Name))}";
+    }
+
+    private void OnFinishFailed(EditContext editContext) => result = "Please enter a name for each passenger.";
+
+    private sealed class PassengerForm
+    {
+        public List<Passenger> Passengers { get; } = [new Passenger { Id = Guid.NewGuid() }];
+    }
+
+    private sealed class Passenger
+    {
+        public Guid Id { get; init; }
+        [Required]
+        public string Name { get; set; }
+    }
+}

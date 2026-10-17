@@ -25,6 +25,7 @@
 <CascadingValue Value="this" Name="Trigger" IsFixed="@true">
     <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
         <Overlay @ref="_overlay"
+                 CssVarClass="@($"{PrefixCls}-css-var")"
                  HideMillisecondsDelay="10"
                  WaitForHideAnimMilliseconds="100"
                  OnOverlayMouseEnter="OnOverlayMouseEnter"

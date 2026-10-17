@@ -1,0 +1,39 @@
+<div>
+    <Alert Message="Object styles" Type="AlertType.Info" ShowIcon
+           ClassNames="@_classNames" Styles="@_objectStyles" Action="@_action" />
+    <Alert Message="Function-style equivalent" Type="AlertType.Success" ShowIcon
+           ClassNames="@_classNames" Styles="@_successStyles" />
+    <Alert Message="Function-style equivalent" Type="AlertType.Warning" ShowIcon
+           ClassNames="@_classNames" Styles="@_warningStyles" />
+</div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-alert-root"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _objectStyles = new Dictionary<string, string>
+    {
+        ["icon"] = "font-size:18px",
+        ["section"] = "font-weight:500"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _successStyles = new Dictionary<string, string>
+    {
+        ["root"] = "background-color:rgba(82,196,26,.1);border-color:#b7eb8f",
+        ["icon"] = "color:#52c41a"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _warningStyles = new Dictionary<string, string>
+    {
+        ["root"] = "background-color:rgba(250,173,20,.1);border-color:#ffe58f",
+        ["icon"] = "color:#faad14"
+    };
+
+    private RenderFragment _action => @<Button Size="ButtonSize.Small">Action</Button>;
+}
+
+<style>
+    .demo-alert-root { border: 2px dashed #ccc; border-radius: 8px; padding: 12px; }
+</style>

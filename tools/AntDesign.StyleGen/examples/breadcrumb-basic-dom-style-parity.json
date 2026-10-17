@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Breadcrumb"
+  },
+  "config": {
+    "timeoutMs": 20000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_"],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "breadcrumb-basic-demo",
+      "component": "Breadcrumb",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/breadcrumb",
+        "scopeSelector": "#breadcrumb-demo-basic .code-box-demo",
+        "rootSelector": ".ant-breadcrumb"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8186/en-US/components/breadcrumb",
+        "scopeSelector": "#components-breadcrumb-demo-Basic .code-box-demo",
+        "rootSelector": ".ant-breadcrumb"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingInline", "gap", "alignItems", "lineHeight", "fontSize", "fontWeight", "color", "backgroundColor", "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "item", "reactSelector": ".ant-breadcrumb-item", "blazorSelector": ".ant-breadcrumb-item", "minimumCount": 3 },
+        { "path": "separator", "reactSelector": ".ant-breadcrumb-separator", "blazorSelector": ".ant-breadcrumb-separator", "minimumCount": 2 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    }
+  ]
+}

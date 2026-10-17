@@ -1,0 +1,15 @@
+﻿<div style="display: flex; flex-direction: column; gap: 16px;">
+    <label for="avatar-count">Avatar count: </label>
+    <AntDesign.InputNumber Min="2" Max="10" @bind-Value="_avatarCount" />
+    <AvatarGroup MaxCount="3" MaxStyle="color: #fff; background-color: #52c41a;">
+        @for (var i = 0; i < _avatarCount; i++)
+        {
+            var initial = (char)('A' + i);
+            <Avatar @key="i" Style="background-color: #f56a00">@initial</Avatar>
+        }
+    </AvatarGroup>
+</div>
+
+@code {
+    private int _avatarCount = 4;
+}

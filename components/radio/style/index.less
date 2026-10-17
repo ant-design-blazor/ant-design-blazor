@@ -14,6 +14,76 @@
   display: inline-block;
   font-size: 0;
 
+  &-block {
+    display: flex;
+  }
+
+  &-vertical {
+    display: flex;
+    flex-direction: column;
+    row-gap: @margin-xs;
+
+    .@{radio-prefix-cls}-wrapper {
+      margin-inline-end: 0;
+    }
+
+    &:has(> .@{radio-prefix-cls}-button-wrapper, > .@{ant-prefix}-badge > .@{radio-prefix-cls}-button-wrapper) {
+      row-gap: 0;
+
+      > .@{radio-prefix-cls}-button-wrapper {
+        width: 100%;
+        margin-inline-end: 0;
+        border-radius: 0;
+
+        &:not(:last-child) {
+          margin-block-end: -1px;
+        }
+
+        &:first-child {
+          border-start-start-radius: @border-radius-base;
+          border-start-end-radius: @border-radius-base;
+        }
+
+        &:last-child {
+          border-end-start-radius: @border-radius-base;
+          border-end-end-radius: @border-radius-base;
+        }
+
+        &:first-child:last-child {
+          border-radius: @border-radius-base;
+        }
+      }
+
+      > .@{ant-prefix}-badge {
+        width: auto;
+
+        &:not(:last-child) {
+          margin-block-end: -1px;
+        }
+
+        > .@{radio-prefix-cls}-button-wrapper {
+          width: 100%;
+          margin-inline-end: 0;
+          border-radius: 0;
+        }
+
+        &:first-child > .@{radio-prefix-cls}-button-wrapper {
+          border-start-start-radius: @border-radius-base;
+          border-start-end-radius: @border-radius-base;
+        }
+
+        &:last-child > .@{radio-prefix-cls}-button-wrapper {
+          border-end-start-radius: @border-radius-base;
+          border-end-end-radius: @border-radius-base;
+        }
+
+        &:first-child:last-child > .@{radio-prefix-cls}-button-wrapper {
+          border-radius: @border-radius-base;
+        }
+      }
+    }
+  }
+
   .@{ant-prefix}-badge-count {
     z-index: 1;
   }
@@ -31,6 +101,11 @@
   align-items: baseline;
   margin-right: @radio-wrapper-margin-right;
   cursor: pointer;
+
+  &-block {
+    flex: 1;
+    justify-content: center;
+  }
 
   &-disabled {
     cursor: not-allowed;

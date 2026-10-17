@@ -1,0 +1,62 @@
+@using System.Text.Json
+
+<Form Model="@_model" LabelColSpan="6" WrapperColSpan="18" Style="max-width:600px;" OnFinish="OnFinish" OnFinishFailed="OnFinishFailed">
+    <FormItem Label="Plain Text"><span class="ant-form-text">China</span></FormItem>
+    <FormItem Label="Select" Name="Country" HasFeedback Rules="@_requiredRule">
+        <Select TItemValue="string" TItem="string" @bind-Value="context.Country" Placeholder="Please select a country">
+            <SelectOptions><SelectOption TItemValue="string" TItem="string" Value='@("china")' Label="China" /><SelectOption TItemValue="string" TItem="string" Value='@("usa")' Label="U.S.A" /></SelectOptions>
+        </Select>
+    </FormItem>
+    <FormItem Label="Select[multiple]">
+        <Select Mode="SelectMode.Multiple" TItemValue="string" TItem="string" @bind-Values="_selectedColors" Placeholder="Please select favourite colors">
+            <SelectOptions><SelectOption TItemValue="string" TItem="string" Value='@("red")' Label="Red" /><SelectOption TItemValue="string" TItem="string" Value='@("green")' Label="Green" /><SelectOption TItemValue="string" TItem="string" Value='@("blue")' Label="Blue" /></SelectOptions>
+        </Select>
+    </FormItem>
+    <FormItem Label="InputNumber">
+        <AntDesign.InputNumber @bind-Value="context.Machines" Min="1" Max="10" /> <span class="ant-form-text" style="margin-inline-start:8px">machines</span>
+    </FormItem>
+    <FormItem Label="Switch"><Switch @bind-Checked="context.Enabled" /></FormItem>
+    <FormItem Label="Slider"><Slider TValue="double" @bind-Value="context.Progress" Min="0" Max="100" Marks="@_marks" /></FormItem>
+    <FormItem Label="Radio.Group"><RadioGroup @bind-Value="context.Radio"><Radio Value='@("a")'>item 1</Radio><Radio Value='@("b")'>item 2</Radio><Radio Value='@("c")'>item 3</Radio></RadioGroup></FormItem>
+    <FormItem Label="Radio.Button" Name="RadioButton" Rules="@_requiredRule"><RadioGroup @bind-Value="context.RadioButton"><Radio RadioButton Value='@("a")'>item 1</Radio><Radio RadioButton Value='@("b")'>item 2</Radio><Radio RadioButton Value='@("c")'>item 3</Radio></RadioGroup></FormItem>
+    <FormItem Label="Checkbox.Group"><CheckboxGroup TValue="string" Options="@_checkboxOptions" @bind-Value="context.Checkboxes" /></FormItem>
+    <FormItem Label="Rate"><Rate Value="@context.Rating" ValueChanged="@(value => context.Rating = value)" /></FormItem>
+    <FormItem Label="ColorPicker" Name="Color" Rules="@_requiredRule"><ColorPicker Value="@context.Color" ValueChanged="OnColorChanged" /></FormItem>
+    <FormItem WrapperColOffset="6" WrapperColSpan="18">
+        <Space><Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button><Button HtmlType="reset" OnClick="Reset">reset</Button></Space>
+    </FormItem>
+</Form>
+<pre>@_submitted</pre>
+
+@code {
+    private readonly FormModel _model = new();
+    private readonly FormValidationRule[] _requiredRule = { new() { Required = true } };
+    private readonly SliderMark[] _marks = { new(0, "A"), new(20, "B"), new(40, "C"), new(60, "D"), new(80, "E"), new(100, "F") };
+    private readonly CheckboxOption<string>[] _checkboxOptions =
+    {
+        new() { Label = "A", Value = "A" }, new() { Label = "B", Value = "B", Disabled = true }, new() { Label = "C", Value = "C" },
+        new() { Label = "D", Value = "D" }, new() { Label = "E", Value = "E" }, new() { Label = "F", Value = "F" }
+    };
+    private string _submitted = string.Empty;
+    private IEnumerable<string> _selectedColors = Array.Empty<string>();
+
+    private Task OnColorChanged(string value) { _model.Color = value; return Task.CompletedTask; }
+
+    private void OnFinish(EditContext _) => _submitted = JsonSerializer.Serialize(new { _model.Country, Colors = _selectedColors, _model.Machines, _model.Enabled, _model.Progress, _model.Radio, _model.RadioButton, _model.Checkboxes, _model.Rating, _model.Color }, new JsonSerializerOptions { WriteIndented = true });
+    private void OnFinishFailed(EditContext _) => _submitted = "Validation failed. Complete the required fields and submit again.";
+    private void Reset(MouseEventArgs _) { _model.Reset(); _selectedColors = Array.Empty<string>(); _submitted = string.Empty; }
+
+    private sealed class FormModel
+    {
+        public string Country { get; set; }
+        public double Machines { get; set; } = 3;
+        public bool Enabled { get; set; }
+        public double Progress { get; set; } = 40;
+        public string Radio { get; set; } = "a";
+        public string RadioButton { get; set; }
+        public string[] Checkboxes { get; set; } = { "A", "B" };
+        public decimal Rating { get; set; } = 3.5m;
+        public string Color { get; set; }
+        public void Reset() { Country = null; Machines = 3; Enabled = false; Progress = 40; Radio = "a"; RadioButton = null; Checkboxes = new[] { "A", "B" }; Rating = 3.5m; Color = null; }
+    }
+}

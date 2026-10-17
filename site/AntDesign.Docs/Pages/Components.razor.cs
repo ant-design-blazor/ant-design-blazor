@@ -59,6 +59,12 @@ namespace AntDesign.Docs.Pages
 
         private string ComponentSourceUrl => $"https://github.com/ant-design/ant-design/tree/master/components/{ToKebabCase(_demoComponent?.Title)}";
 
+        private string SemanticComponentKey => ToKebabCase(_demoComponent?.Title);
+
+        private Type? SemanticPreviewType => _demos.Count > 0
+            ? DemoService.GetShowCase(_demos[0].Type)
+            : null;
+
         private List<DemoItem> _demos = [];
 
         private (string Name, string Title)[] _anchors = [];

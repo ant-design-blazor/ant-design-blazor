@@ -1,0 +1,26 @@
+<Form Model="@_model" Layout="FormLayout.Inline" OnFinish="OnFinish">
+    <FormItem Name="Username" Rules="@(new[] { new FormValidationRule { Required = true, Message = "Please input your username!" } })">
+        <Input @bind-Value="context.Username" Placeholder="Username" />
+    </FormItem>
+    <FormItem Name="Password" Rules="@(new[] { new FormValidationRule { Required = true, Message = "Please input your password!" } })">
+        <InputPassword @bind-Value="context.Password" Placeholder="Password" />
+    </FormItem>
+    <FormItem>
+        <Button Type="ButtonType.Primary" HtmlType="submit" Disabled="@(!CanSubmit)">Log in</Button>
+    </FormItem>
+</Form>
+<p role="status">@(_submitted ? $"Login submitted for {_model.Username}." : "Enter both fields to enable login.")</p>
+
+@code {
+    private readonly LoginModel _model = new();
+    private bool CanSubmit => !string.IsNullOrWhiteSpace(_model.Username) && !string.IsNullOrWhiteSpace(_model.Password);
+    private bool _submitted;
+
+    private void OnFinish(EditContext _) => _submitted = true;
+
+    private sealed class LoginModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}

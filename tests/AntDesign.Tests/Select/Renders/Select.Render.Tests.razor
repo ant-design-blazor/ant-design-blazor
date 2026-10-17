@@ -48,10 +48,137 @@
         var cut = Render<EnumSelect<City>>(@<EnumSelect TEnum="City" Mode="SelectMode.Multiple" ShowArrowIcon></EnumSelect>);
         
         // Act
-        var arrow = cut.Find("span.ant-select-arrow");
+        var arrow = cut.Find("div.ant-select-suffix");
 
         // Assert
         arrow.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Render_default_select_with_v6_outlined_css_variable_classes()
+    {
+        var cut = Render<Select<string, string>>(@<Select TItemValue="string" TItem="string"></Select>);
+        var root = cut.Find(".ant-select");
+
+        Assert.Contains("ant-select-css-var", root.ClassList);
+        Assert.Contains("ant-select-outlined", root.ClassList);
+        Assert.DoesNotContain("ant-select-bordered", root.ClassList);
+        Assert.Contains("ant-select-css-var", cut.Find(".ant-select-dropdown").ClassList);
+        var content = cut.Find(".ant-select-content");
+        Assert.DoesNotContain("ant-select-selector", content.ClassList);
+        Assert.Contains(content.Children, child => child.TagName == "INPUT");
+    }
+
+    [Fact]
+    public void Render_select_without_forcing_a_default_full_width()
+    {
+        var cut = Render<Select<string, string>>(@<Select TItemValue="string" TItem="string">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("one")' Label="One" />
+            </SelectOptions>
+        </Select>);
+
+        Assert.DoesNotContain("width: 100%", cut.Find(".ant-select").GetAttribute("style") ?? string.Empty);
+    }
+
+    [Fact]
+    public void Render_unmatched_selected_value_as_text_like_react_select()
+    {
+        var cut = Render(@<Select TItemValue="string" TItem="string" Value='@("a1")'>
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("a10")' Label="a10" />
+            </SelectOptions>
+        </Select>);
+
+        var content = cut.Find(".ant-select-content");
+        Assert.Contains("a1", content.TextContent);
+        Assert.Empty(cut.FindAll(".ant-select-placeholder"));
+    }
+
+    [Fact]
+    public void Render_single_selected_value_as_text_without_a_selection_item_wrapper()
+    {
+        var cut = Render(@<Select TItemValue="string" TItem="string" Value='@("lucy")'>
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
+            </SelectOptions>
+        </Select>);
+
+        var content = cut.Find(".ant-select-content");
+        Assert.Contains("ant-select-content-has-value", content.ClassList);
+        Assert.Equal("Lucy", content.TextContent.Trim());
+        Assert.Empty(cut.FindAll(".ant-select-content .ant-select-selection-item"));
+    }
+
+    [Fact]
+    public void Render_disabled_option_when_it_is_part_of_the_initial_multiple_value()
+    {
+        var options = new[]
+        {
+            new DisabledOption("disabled", "Disabled", true),
+            new DisabledOption("enabled", "Enabled", false),
+        };
+        var selectedValues = new[] { "disabled", "enabled" };
+        var cut = Render(@<Select TItemValue="string" TItem="DisabledOption"
+                Mode="SelectMode.Multiple"
+                DataSource="@options"
+                LabelName="@nameof(DisabledOption.Label)"
+                ValueName="@nameof(DisabledOption.Value)"
+                DisabledName="@nameof(DisabledOption.Disabled)"
+                DefaultValues="@selectedValues">
+            </Select>);
+
+        Assert.Equal(new[] { "Disabled", "Enabled" }, cut.FindAll(".ant-select-selection-item-content")
+            .Select(element => element.TextContent.Trim()));
+    }
+
+    private sealed record DisabledOption(string Value, string Label, bool Disabled);
+
+    [Fact]
+    public void Render_multiple_and_tags_inputs_with_v6_content_item_structure()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventEnterOnOverlayVisible, _ => true);
+        var values = new[] { "one" };
+        var cut = Render(@<div>
+            <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" Values="@values" EnableSearch />
+            <Select TItemValue="string" TItem="string" Mode="SelectMode.Tags" Values="@values" EnableSearch />
+        </div>);
+
+        var suffixItems = cut.FindAll(".ant-select-multiple .ant-select-content-item-suffix");
+        Assert.Equal(2, suffixItems.Count);
+        Assert.Equal(2, cut.FindAll(".ant-select-multiple.ant-select-show-arrow").Count);
+        Assert.Equal(2, cut.FindAll(".ant-select-multiple .ant-select-suffix .anticon-down").Count);
+        Assert.Empty(cut.FindAll(".ant-select-selection-overflow"));
+        foreach (var suffixItem in suffixItems)
+        {
+            Assert.Single(suffixItem.Children);
+            Assert.Contains("ant-select-input", suffixItem.Children[0].ClassList);
+            Assert.Equal("text", suffixItem.Children[0].GetAttribute("type"));
+            Assert.Empty(suffixItem.QuerySelectorAll(".ant-select-selection-search"));
+            Assert.Contains("ant-select-content", suffixItem.ParentElement.ClassList);
+        }
+    }
+
+    [Fact]
+    public void Search_defaults_match_react_v6_single_and_multiple_modes()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventEnterOnOverlayVisible, _ => true);
+        var cut = Render(@<div>
+            <Select TItemValue="string" TItem="string" />
+            <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" />
+            <Select TItemValue="string" TItem="string" Mode="SelectMode.Tags" />
+        </div>);
+
+        var selects = cut.FindAll(".ant-select");
+        Assert.Equal(3, selects.Count);
+        Assert.DoesNotContain("ant-select-show-search", selects[0].ClassList);
+        Assert.Contains("ant-select-show-search", selects[1].ClassList);
+        Assert.Contains("ant-select-show-search", selects[2].ClassList);
+        Assert.Equal("", selects[0].QuerySelector(".ant-select-input")!.GetAttribute("readonly"));
+        Assert.Null(selects[1].QuerySelector(".ant-select-input")!.GetAttribute("readonly"));
+        Assert.Null(selects[2].QuerySelector(".ant-select-input")!.GetAttribute("readonly"));
     }
 
     [Fact]
@@ -83,9 +210,26 @@
         //investigation if it won't cause multiple re-renders.
         cut.Render(); 
         //Assert
-        cut.Invoking(c => c.Find("span.ant-select-clear"))
+        cut.Invoking(c => c.Find(".ant-select-clear"))
                 .Should().Throw<Bunit.ElementNotFoundException>();
 
+    }
+
+    [Fact]
+    public void AllowClear_uses_the_v6_accessible_button_structure()
+    {
+        var cut = Render(@<Select TItemValue="string" TItem="string" Value='@("one")' AllowClear>
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("one")' Label="One" />
+            </SelectOptions>
+        </Select>);
+
+        var clear = cut.Find("button.ant-select-clear");
+
+        Assert.Equal("BUTTON", clear.TagName);
+        Assert.Equal("button", clear.GetAttribute("type"));
+        Assert.Equal("Clear", clear.GetAttribute("aria-label"));
+        Assert.NotNull(clear.QuerySelector(".anticon-close-circle"));
     }
 
     [Fact]

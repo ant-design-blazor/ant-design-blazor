@@ -36,6 +36,9 @@ namespace AntDesign
     {
         protected const string PrefixCls = "ant-input";
 
+        [CascadingParameter]
+        internal SpaceCompactItemContext CompactItemContext { get; set; }
+
         protected string AffixWrapperClass { get; set; } = $"{PrefixCls}-affix-wrapper";
         private bool _hasAffixWrapper;
         protected string GroupWrapperClass { get; set; } = $"{PrefixCls}-group-wrapper";
@@ -376,14 +379,20 @@ namespace AntDesign
 
         protected virtual void SetClasses()
         {
-            AffixWrapperClass = $"{PrefixCls}-affix-wrapper {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")} {(Bordered ? "" : $"{PrefixCls}-affix-wrapper-borderless")}";
-            GroupWrapperClass = $"{PrefixCls}-group-wrapper";
+            var effectiveSize = Size == InputSize.Default && CompactItemContext?.Size.HasValue == true
+                ? CompactItemContext.Size.Value
+                : Size;
+            AffixWrapperClass = $"ant-input-css-var {PrefixCls}-affix-wrapper {(Bordered ? $"{PrefixCls}-outlined" : $"{PrefixCls}-borderless")} {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")}";
+            GroupWrapperClass = $"ant-input-css-var {PrefixCls}-group-wrapper {(Bordered ? $"{PrefixCls}-group-wrapper-outlined" : $"{PrefixCls}-group-wrapper-borderless")}";
 
             ClassMapper.Clear()
+                .Add("ant-input-css-var")
                 .Add($"{PrefixCls}")
+                .If($"{PrefixCls}-outlined", () => Bordered)
                 .If($"{PrefixCls}-borderless", () => !Bordered)
-                .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
-                .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
+                .If($"{PrefixCls}-lg", () => effectiveSize == InputSize.Large)
+                .If($"{PrefixCls}-sm", () => effectiveSize == InputSize.Small)
+                .Add(CompactItemContext?.ClassFor(PrefixCls))
                 .If($"{PrefixCls}-rtl", () => RTL)
                 .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass))
@@ -400,12 +409,12 @@ namespace AntDesign
                 ClassMapper.Add($"{PrefixCls}-disabled");
             }
 
-            if (Size == InputSize.Large)
+            if (effectiveSize == InputSize.Large)
             {
                 AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-lg");
                 GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-group-wrapper-lg");
             }
-            else if (Size == InputSize.Small)
+            else if (effectiveSize == InputSize.Small)
             {
                 AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-sm");
                 GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-group-wrapper-sm");

@@ -7,13 +7,13 @@
     "semanticSource": "export *SemanticType definitions"
   },
   "scope": {
-    "semanticDefinitions": 68,
+    "semanticDefinitions": 69,
     "uniqueComponents": 59,
-    "uniqueSemanticPaths": 122,
+    "uniqueSemanticPaths": 119,
     "dumiSemanticDemoFiles": 70,
-    "dumiSemanticPaths": 113,
+    "dumiSemanticPaths": 350,
     "cssComponents": 72,
-    "existingBlazorComponents": 68,
+    "existingBlazorComponents": 71,
     "existingBlazorComponentsWithSemanticDefinition": [
       "alert",
       "anchor",
@@ -32,12 +32,14 @@
       "drawer",
       "dropdown",
       "empty",
+      "float-button",
       "form",
       "image",
       "input",
       "input-number",
       "layout",
       "listy",
+      "masonry",
       "mentions",
       "message",
       "modal",
@@ -64,6 +66,7 @@
       "tag",
       "timeline",
       "tooltip",
+      "tour",
       "transfer",
       "tree",
       "tree-select",
@@ -103,22 +106,22 @@
         "title"
       ],
       "classNames": [
-        "root",
-        "icon",
-        "section",
-        "title",
-        "description",
         "actions",
-        "close"
+        "close",
+        "description",
+        "icon",
+        "root",
+        "section",
+        "title"
       ],
       "styles": [
-        "root",
-        "icon",
-        "section",
-        "title",
-        "description",
         "actions",
-        "close"
+        "close",
+        "description",
+        "icon",
+        "root",
+        "section",
+        "title"
       ],
       "dumiSemanticSources": [
         {
@@ -196,16 +199,16 @@
         "root"
       ],
       "classNames": [
-        "root",
+        "indicator",
         "item",
         "itemTitle",
-        "indicator"
+        "root"
       ],
       "styles": [
-        "root",
+        "indicator",
         "item",
         "itemTitle",
-        "indicator"
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -265,22 +268,22 @@
         "root"
       ],
       "classNames": [
-        "root",
-        "prefix",
+        "clear",
+        "content",
         "input",
         "placeholder",
-        "content",
-        "clear",
-        "popup"
+        "popup",
+        "prefix",
+        "root"
       ],
       "styles": [
-        "root",
-        "prefix",
+        "clear",
+        "content",
         "input",
         "placeholder",
-        "content",
-        "clear",
-        "popup"
+        "popup",
+        "prefix",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -349,12 +352,12 @@
         "root"
       ],
       "classNames": [
-        "root",
-        "indicator"
+        "indicator",
+        "root"
       ],
       "styles": [
-        "root",
-        "indicator"
+        "indicator",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -410,14 +413,14 @@
         "root"
       ],
       "classNames": [
-        "root",
         "content",
-        "indicator"
+        "indicator",
+        "root"
       ],
       "styles": [
-        "root",
         "content",
-        "indicator"
+        "indicator",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -473,13 +476,13 @@
         "separator"
       ],
       "classNames": [
-        "root",
         "item",
+        "root",
         "separator"
       ],
       "styles": [
-        "root",
         "item",
+        "root",
         "separator"
       ],
       "dumiSemanticSources": [
@@ -529,14 +532,14 @@
         "root"
       ],
       "classNames": [
-        "root",
+        "content",
         "icon",
-        "content"
+        "root"
       ],
       "styles": [
-        "root",
+        "content",
         "icon",
-        "content"
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -588,20 +591,20 @@
         "root"
       ],
       "classNames": [
-        "root",
-        "header",
         "body",
         "content",
+        "header",
         "item",
-        "itemContent"
+        "itemContent",
+        "root"
       ],
       "styles": [
-        "root",
-        "header",
         "body",
         "content",
+        "header",
         "item",
-        "itemContent"
+        "itemContent",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -678,18 +681,18 @@
         "title"
       ],
       "classNames": [
+        "avatar",
+        "description",
         "root",
         "section",
-        "avatar",
-        "title",
-        "description"
+        "title"
       ],
       "styles": [
+        "avatar",
+        "description",
         "root",
         "section",
-        "avatar",
-        "title",
-        "description"
+        "title"
       ],
       "dumiSemanticSources": [
         {
@@ -801,22 +804,22 @@
         "title"
       ],
       "classNames": [
-        "root",
-        "header",
-        "body",
-        "extra",
-        "title",
         "actions",
-        "cover"
+        "body",
+        "cover",
+        "extra",
+        "header",
+        "root",
+        "title"
       ],
       "styles": [
-        "root",
-        "header",
-        "body",
-        "extra",
-        "title",
         "actions",
-        "cover"
+        "body",
+        "cover",
+        "extra",
+        "header",
+        "root",
+        "title"
       ],
       "dumiSemanticSources": [
         {
@@ -928,28 +931,28 @@
         "suffix"
       ],
       "classNames": [
-        "root",
-        "prefix",
-        "suffix",
-        "input",
-        "placeholder",
         "content",
+        "input",
         "item",
         "itemContent",
         "itemRemove",
-        "popup"
+        "placeholder",
+        "popup",
+        "prefix",
+        "root",
+        "suffix"
       ],
       "styles": [
-        "root",
-        "prefix",
-        "suffix",
-        "input",
-        "placeholder",
         "content",
+        "input",
         "item",
         "itemContent",
         "itemRemove",
-        "popup"
+        "placeholder",
+        "popup",
+        "prefix",
+        "root",
+        "suffix"
       ],
       "dumiSemanticSources": [
         {
@@ -1036,14 +1039,14 @@
         "root"
       ],
       "classNames": [
-        "root",
         "icon",
-        "label"
+        "label",
+        "root"
       ],
       "styles": [
-        "root",
         "icon",
-        "label"
+        "label",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -1094,18 +1097,18 @@
         "title"
       ],
       "classNames": [
-        "root",
-        "header",
-        "title",
         "body",
-        "icon"
+        "header",
+        "icon",
+        "root",
+        "title"
       ],
       "styles": [
-        "root",
-        "header",
-        "title",
         "body",
-        "icon"
+        "header",
+        "icon",
+        "root",
+        "title"
       ],
       "dumiSemanticSources": [
         {
@@ -1172,19 +1175,21 @@
         "root"
       ],
       "classNames": [
-        "root",
         "body",
         "content",
         "description",
-        "popup"
+        "popup",
+        "popup.root",
+        "root"
       ],
       "styles": [
-        "root",
         "body",
         "content",
         "description",
+        "popup",
+        "popup.root",
         "popupOverlayInner",
-        "popup"
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -1254,13 +1259,7 @@
       "blazorDirectory": "components/date-picker",
       "semanticType": "DatePickerSemanticType",
       "semanticPaths": [
-        "body",
-        "container",
-        "content",
-        "footer",
-        "header",
         "input",
-        "item",
         "popup",
         "popup.body",
         "popup.container",
@@ -1274,32 +1273,25 @@
         "suffix"
       ],
       "classNames": [
-        "root",
-        "prefix",
         "input",
-        "suffix",
         "popup",
+        "prefix",
         "root",
-        "header",
-        "body",
-        "content",
-        "item",
-        "footer",
-        "container"
+        "suffix"
       ],
       "styles": [
-        "root",
-        "prefix",
         "input",
-        "suffix",
         "popup",
+        "popup.body",
+        "popup.container",
+        "popup.content",
+        "popup.footer",
+        "popup.header",
+        "popup.item",
+        "popup.root",
+        "prefix",
         "root",
-        "header",
-        "body",
-        "content",
-        "item",
-        "footer",
-        "container"
+        "suffix"
       ],
       "dumiSemanticSources": [
         {
@@ -1321,43 +1313,7 @@
       ],
       "classNameMapping": [
         {
-          "semanticPath": "body",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "container",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "content",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "footer",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "header",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
           "semanticPath": "input",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "item",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "pending"
@@ -1449,12 +1405,12 @@
         "title"
       ],
       "classNames": [
-        "label",
-        "content"
+        "content",
+        "label"
       ],
       "styles": [
-        "label",
-        "content"
+        "content",
+        "label"
       ],
       "dumiSemanticSources": [
         {
@@ -1527,20 +1483,20 @@
         "title"
       ],
       "classNames": [
-        "root",
-        "header",
-        "title",
+        "content",
         "extra",
+        "header",
         "label",
-        "content"
+        "root",
+        "title"
       ],
       "styles": [
-        "root",
-        "header",
-        "title",
+        "content",
         "extra",
+        "header",
         "label",
-        "content"
+        "root",
+        "title"
       ],
       "dumiSemanticSources": [
         {
@@ -1610,14 +1566,14 @@
         "root"
       ],
       "classNames": [
-        "root",
+        "content",
         "rail",
-        "content"
+        "root"
       ],
       "styles": [
-        "root",
+        "content",
         "rail",
-        "content"
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -1675,32 +1631,32 @@
         "wrapper"
       ],
       "classNames": [
-        "root",
-        "mask",
-        "header",
-        "title",
-        "extra",
-        "section",
         "body",
-        "footer",
-        "wrapper",
-        "dragger",
         "close",
-        "content"
+        "content",
+        "dragger",
+        "extra",
+        "footer",
+        "header",
+        "mask",
+        "root",
+        "section",
+        "title",
+        "wrapper"
       ],
       "styles": [
-        "root",
-        "mask",
-        "header",
-        "title",
-        "extra",
-        "section",
         "body",
-        "footer",
-        "wrapper",
-        "dragger",
         "close",
-        "content"
+        "content",
+        "dragger",
+        "extra",
+        "footer",
+        "header",
+        "mask",
+        "root",
+        "section",
+        "title",
+        "wrapper"
       ],
       "dumiSemanticSources": [
         {
@@ -1812,18 +1768,18 @@
         "root"
       ],
       "classNames": [
-        "root",
         "item",
-        "itemTitle",
+        "itemContent",
         "itemIcon",
-        "itemContent"
+        "itemTitle",
+        "root"
       ],
       "styles": [
-        "root",
         "item",
-        "itemTitle",
+        "itemContent",
         "itemIcon",
-        "itemContent"
+        "itemTitle",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -1887,16 +1843,16 @@
         "root"
       ],
       "classNames": [
-        "root",
-        "image",
         "description",
-        "footer"
+        "footer",
+        "image",
+        "root"
       ],
       "styles": [
-        "root",
-        "image",
         "description",
-        "footer"
+        "footer",
+        "image",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -1959,24 +1915,24 @@
         "triggerIcon"
       ],
       "classNames": [
-        "root",
-        "list",
         "item",
-        "itemIcon",
         "itemContent",
+        "itemIcon",
+        "list",
+        "root",
         "trigger",
-        "triggerIcon",
-        "triggerContent"
+        "triggerContent",
+        "triggerIcon"
       ],
       "styles": [
-        "root",
-        "list",
         "item",
-        "itemIcon",
         "itemContent",
+        "itemIcon",
+        "list",
+        "root",
         "trigger",
-        "triggerIcon",
-        "triggerContent"
+        "triggerContent",
+        "triggerIcon"
       ],
       "dumiSemanticSources": [
         {
@@ -2006,68 +1962,186 @@
           "semanticPath": "content",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "icon",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "itemContent",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "itemIcon",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "list",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "trigger",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "triggerContent",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "triggerIcon",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
+    },
+    {
+      "component": "float-button",
+      "reactSource": "components/float-button/FloatButton.tsx",
+      "blazorDirectory": "components/float-button",
+      "semanticType": "FloatButtonSemanticType",
+      "semanticPaths": [
+        "content",
+        "icon",
+        "item",
+        "itemContent",
+        "itemIcon",
+        "list",
+        "root",
+        "trigger",
+        "triggerContent",
+        "triggerIcon"
+      ],
+      "classNames": [
+        "content",
+        "icon",
+        "root"
+      ],
+      "styles": [
+        "content",
+        "icon",
+        "root"
+      ],
+      "dumiSemanticSources": [
+        {
+          "source": "components/float-button/demo/_semantic.tsx",
+          "semanticPaths": [
+            "content",
+            "icon",
+            "root"
+          ]
+        },
+        {
+          "source": "components/float-button/demo/_semantic_group.tsx",
+          "semanticPaths": [
+            "item",
+            "itemContent",
+            "itemIcon",
+            "list",
+            "root",
+            "trigger",
+            "triggerContent",
+            "triggerIcon"
+          ]
+        }
+      ],
+      "classNameMapping": [
+        {
+          "semanticPath": "content",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "semantic-injection-tested-pending-class-mapping"
+        },
+        {
+          "semanticPath": "icon",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "semantic-injection-tested-pending-class-mapping"
+        },
+        {
+          "semanticPath": "item",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "semantic-injection-tested-pending-class-mapping"
+        },
+        {
+          "semanticPath": "itemContent",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "semantic-injection-tested-pending-class-mapping"
+        },
+        {
+          "semanticPath": "itemIcon",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "semantic-injection-tested-pending-class-mapping"
+        },
+        {
+          "semanticPath": "list",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "semantic-injection-tested-pending-class-mapping"
+        },
+        {
+          "semanticPath": "root",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "semantic-injection-tested-pending-class-mapping"
+        },
+        {
+          "semanticPath": "trigger",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "semantic-injection-tested-pending-class-mapping"
+        },
+        {
+          "semanticPath": "triggerContent",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "semantic-injection-tested-pending-class-mapping"
+        },
+        {
+          "semanticPath": "triggerIcon",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "semantic-injection-tested-pending-class-mapping"
+        }
+      ],
+      "htmlSnapshot": {
+        "react": "pending-runtime-render",
+        "blazor": "structure-test-covered"
+      },
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "form",
@@ -2080,24 +2154,23 @@
         "help",
         "helpItem",
         "label",
-        "password",
         "root"
       ],
       "classNames": [
-        "root",
-        "label",
         "content",
+        "extra",
         "help",
         "helpItem",
-        "extra"
+        "label",
+        "root"
       ],
       "styles": [
-        "root",
-        "label",
         "content",
+        "extra",
         "help",
         "helpItem",
-        "extra"
+        "label",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -2108,7 +2181,6 @@
             "help",
             "helpItem",
             "label",
-            "password",
             "root"
           ]
         }
@@ -2145,12 +2217,6 @@
           "status": "structure-migrated-pending-semantic-injection"
         },
         {
-          "semanticPath": "password",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
@@ -2169,14 +2235,14 @@
       "blazorDirectory": "components/image",
       "semanticType": "ImageSemanticType",
       "semanticPaths": [
-        "actions",
-        "body",
-        "close",
         "cover",
-        "footer",
         "image",
-        "mask",
         "placeholder",
+        "placeholder.progress",
+        "placeholder.progress.content",
+        "placeholder.progress.indicator",
+        "placeholder.progress.rail",
+        "placeholder.progress.root",
         "popup",
         "popup.actions",
         "popup.body",
@@ -2184,36 +2250,43 @@
         "popup.footer",
         "popup.mask",
         "popup.root",
-        "progress",
         "root"
       ],
       "classNames": [
-        "root",
-        "image",
         "cover",
+        "image",
         "placeholder",
-        "progress",
+        "placeholder.progress",
+        "placeholder.progress.content",
+        "placeholder.progress.indicator",
+        "placeholder.progress.rail",
+        "placeholder.progress.root",
         "popup",
-        "root",
-        "mask",
-        "body",
-        "footer",
-        "actions",
-        "close"
+        "popup.actions",
+        "popup.body",
+        "popup.close",
+        "popup.footer",
+        "popup.mask",
+        "popup.root",
+        "root"
       ],
       "styles": [
-        "root",
-        "image",
         "cover",
+        "image",
         "placeholder",
-        "progress",
+        "placeholder.progress",
+        "placeholder.progress.content",
+        "placeholder.progress.indicator",
+        "placeholder.progress.rail",
+        "placeholder.progress.root",
         "popup",
-        "root",
-        "mask",
-        "body",
-        "footer",
-        "actions",
-        "close"
+        "popup.actions",
+        "popup.body",
+        "popup.close",
+        "popup.footer",
+        "popup.mask",
+        "popup.root",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -2233,31 +2306,7 @@
       ],
       "classNameMapping": [
         {
-          "semanticPath": "actions",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "body",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "close",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
           "semanticPath": "cover",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "footer",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "pending"
@@ -2269,13 +2318,37 @@
           "status": "pending"
         },
         {
-          "semanticPath": "mask",
+          "semanticPath": "placeholder",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "pending"
         },
         {
-          "semanticPath": "placeholder",
+          "semanticPath": "placeholder.progress",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "placeholder.progress.content",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "placeholder.progress.indicator",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "placeholder.progress.rail",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "placeholder.progress.root",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "pending"
@@ -2323,12 +2396,6 @@
           "status": "pending"
         },
         {
-          "semanticPath": "progress",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
@@ -2355,18 +2422,18 @@
         "suffix"
       ],
       "classNames": [
-        "root",
-        "prefix",
-        "suffix",
+        "actions",
         "input",
-        "actions"
+        "prefix",
+        "root",
+        "suffix"
       ],
       "styles": [
-        "root",
-        "prefix",
-        "suffix",
+        "actions",
         "input",
-        "actions"
+        "prefix",
+        "root",
+        "suffix"
       ],
       "dumiSemanticSources": [
         {
@@ -2445,22 +2512,28 @@
         "textarea"
       ],
       "classNames": [
-        "root",
-        "input",
-        "prefix",
-        "suffix",
+        "button",
+        "button.content",
+        "button.icon",
+        "button.root",
         "clear",
         "count",
-        "button"
+        "input",
+        "prefix",
+        "root",
+        "suffix"
       ],
       "styles": [
-        "root",
-        "input",
-        "prefix",
-        "suffix",
+        "button",
+        "button.content",
+        "button.icon",
+        "button.root",
         "clear",
         "count",
-        "button"
+        "input",
+        "prefix",
+        "root",
+        "suffix"
       ],
       "dumiSemanticSources": [
         {
@@ -2616,20 +2689,20 @@
         "textarea"
       ],
       "classNames": [
-        "root",
-        "prefix",
-        "suffix",
         "clear",
+        "count",
         "input",
-        "count"
+        "prefix",
+        "root",
+        "suffix"
       ],
       "styles": [
-        "root",
-        "prefix",
-        "suffix",
         "clear",
+        "count",
         "input",
-        "count"
+        "prefix",
+        "root",
+        "suffix"
       ],
       "dumiSemanticSources": [
         {
@@ -2779,13 +2852,13 @@
         "textarea"
       ],
       "classNames": [
-        "root",
         "input",
+        "root",
         "separator"
       ],
       "styles": [
-        "root",
         "input",
+        "root",
         "separator"
       ],
       "dumiSemanticSources": [
@@ -2936,16 +3009,16 @@
         "textarea"
       ],
       "classNames": [
-        "root",
-        "textarea",
         "clear",
-        "count"
+        "count",
+        "root",
+        "textarea"
       ],
       "styles": [
-        "root",
-        "textarea",
         "clear",
-        "count"
+        "count",
+        "root",
+        "textarea"
       ],
       "dumiSemanticSources": [
         {
@@ -3086,12 +3159,12 @@
         "root"
       ],
       "classNames": [
-        "root",
-        "body"
+        "body",
+        "root"
       ],
       "styles": [
-        "root",
-        "body"
+        "body",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -3128,12 +3201,6 @@
       "blazorDirectory": "components/listy",
       "semanticType": "ListySemanticType",
       "semanticPaths": [
-        "Ava",
-        "Emma",
-        "Ethan",
-        "Liam",
-        "Noah",
-        "Olivia",
         "groupHeader",
         "item",
         "root"
@@ -3144,12 +3211,6 @@
         {
           "source": "components/listy/demo/_semantic.tsx",
           "semanticPaths": [
-            "Ava",
-            "Emma",
-            "Ethan",
-            "Liam",
-            "Noah",
-            "Olivia",
             "groupHeader",
             "item",
             "root"
@@ -3157,42 +3218,6 @@
         }
       ],
       "classNameMapping": [
-        {
-          "semanticPath": "Ava",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "Emma",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "Ethan",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "Liam",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "Noah",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "Olivia",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
         {
           "semanticPath": "groupHeader",
           "reactClassName": null,
@@ -3228,12 +3253,12 @@
         "root"
       ],
       "classNames": [
-        "root",
-        "item"
+        "item",
+        "root"
       ],
       "styles": [
-        "root",
-        "item"
+        "item",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -3249,20 +3274,20 @@
           "semanticPath": "item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "mentions",
@@ -3276,16 +3301,16 @@
         "textarea"
       ],
       "classNames": [
-        "root",
-        "textarea",
         "popup",
-        "suffix"
+        "root",
+        "suffix",
+        "textarea"
       ],
       "styles": [
-        "root",
-        "textarea",
         "popup",
-        "suffix"
+        "root",
+        "suffix",
+        "textarea"
       ],
       "dumiSemanticSources": [
         {
@@ -3344,20 +3369,20 @@
         "wrapper"
       ],
       "classNames": [
+        "icon",
         "list",
         "listContent",
         "root",
-        "wrapper",
-        "icon",
-        "title"
+        "title",
+        "wrapper"
       ],
       "styles": [
+        "icon",
         "list",
         "listContent",
         "root",
-        "wrapper",
-        "icon",
-        "title"
+        "title",
+        "wrapper"
       ],
       "dumiSemanticSources": [
         {
@@ -3377,44 +3402,44 @@
           "semanticPath": "icon",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "list",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "listContent",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "title",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "wrapper",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "modal",
@@ -3433,26 +3458,26 @@
         "wrapper"
       ],
       "classNames": [
-        "root",
-        "header",
         "body",
-        "footer",
+        "close",
         "container",
-        "title",
-        "wrapper",
+        "footer",
+        "header",
         "mask",
-        "close"
+        "root",
+        "title",
+        "wrapper"
       ],
       "styles": [
-        "root",
-        "header",
         "body",
-        "footer",
+        "close",
         "container",
-        "title",
-        "wrapper",
+        "footer",
+        "header",
         "mask",
-        "close"
+        "root",
+        "title",
+        "wrapper"
       ],
       "dumiSemanticSources": [
         {
@@ -3551,30 +3576,30 @@
         "wrapper"
       ],
       "classNames": [
+        "actions",
+        "close",
+        "description",
+        "icon",
         "list",
         "listContent",
-        "wrapper",
+        "progress",
         "root",
-        "title",
-        "description",
-        "actions",
-        "icon",
         "section",
-        "close",
-        "progress"
+        "title",
+        "wrapper"
       ],
       "styles": [
+        "actions",
+        "close",
+        "description",
+        "icon",
         "list",
         "listContent",
-        "wrapper",
+        "progress",
         "root",
-        "title",
-        "description",
-        "actions",
-        "icon",
         "section",
-        "close",
-        "progress"
+        "title",
+        "wrapper"
       ],
       "dumiSemanticSources": [
         {
@@ -3599,74 +3624,74 @@
           "semanticPath": "actions",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "close",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "description",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "icon",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "list",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "listContent",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "progress",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "section",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "title",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "wrapper",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "pagination",
@@ -3678,12 +3703,12 @@
         "root"
       ],
       "classNames": [
-        "root",
-        "item"
+        "item",
+        "root"
       ],
       "styles": [
-        "root",
-        "item"
+        "item",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -3727,8 +3752,22 @@
         "root",
         "title"
       ],
-      "classNames": [],
-      "styles": [],
+      "classNames": [
+        "arrow",
+        "container",
+        "content",
+        "icon",
+        "root",
+        "title"
+      ],
+      "styles": [
+        "arrow",
+        "container",
+        "content",
+        "icon",
+        "root",
+        "title"
+      ],
       "dumiSemanticSources": [
         {
           "source": "components/popconfirm/demo/_semantic.tsx",
@@ -3799,12 +3838,18 @@
         "title"
       ],
       "classNames": [
-        "title",
-        "content"
+        "arrow",
+        "container",
+        "content",
+        "root",
+        "title"
       ],
       "styles": [
-        "title",
-        "content"
+        "arrow",
+        "container",
+        "content",
+        "root",
+        "title"
       ],
       "dumiSemanticSources": [
         {
@@ -3869,18 +3914,18 @@
         "track"
       ],
       "classNames": [
-        "root",
         "body",
+        "indicator",
         "rail",
-        "track",
-        "indicator"
+        "root",
+        "track"
       ],
       "styles": [
-        "root",
         "body",
+        "indicator",
         "rail",
-        "track",
-        "indicator"
+        "root",
+        "track"
       ],
       "dumiSemanticSources": [
         {
@@ -3942,12 +3987,12 @@
         "root"
       ],
       "classNames": [
-        "root",
-        "cover"
+        "cover",
+        "root"
       ],
       "styles": [
-        "root",
-        "cover"
+        "cover",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -3989,14 +4034,14 @@
         "root"
       ],
       "classNames": [
-        "root",
         "icon",
-        "label"
+        "label",
+        "root"
       ],
       "styles": [
-        "root",
         "icon",
-        "label"
+        "label",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -4048,20 +4093,20 @@
         "title"
       ],
       "classNames": [
-        "root",
-        "title",
-        "subTitle",
         "body",
         "extra",
-        "icon"
+        "icon",
+        "root",
+        "subTitle",
+        "title"
       ],
       "styles": [
-        "root",
-        "title",
-        "subTitle",
         "body",
         "extra",
-        "icon"
+        "icon",
+        "root",
+        "subTitle",
+        "title"
       ],
       "dumiSemanticSources": [
         {
@@ -4132,16 +4177,16 @@
         "root"
       ],
       "classNames": [
-        "root",
         "icon",
+        "item",
         "label",
-        "item"
+        "root"
       ],
       "styles": [
-        "root",
         "icon",
+        "item",
         "label",
-        "item"
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -4198,45 +4243,46 @@
         "item",
         "itemContent",
         "itemRemove",
-        "list",
-        "listItem",
         "placeholder",
         "popup",
+        "popup.list",
+        "popup.listItem",
+        "popup.root",
         "prefix",
         "root",
         "suffix"
       ],
       "classNames": [
-        "root",
-        "prefix",
-        "suffix",
-        "input",
-        "placeholder",
+        "clear",
         "content",
+        "input",
         "item",
         "itemContent",
         "itemRemove",
-        "clear",
+        "placeholder",
         "popup",
+        "popup.list",
+        "popup.listItem",
+        "popup.root",
+        "prefix",
         "root",
-        "listItem",
-        "list"
+        "suffix"
       ],
       "styles": [
-        "root",
-        "prefix",
-        "suffix",
-        "input",
-        "placeholder",
+        "clear",
         "content",
+        "input",
         "item",
         "itemContent",
         "itemRemove",
-        "clear",
+        "placeholder",
         "popup",
+        "popup.list",
+        "popup.listItem",
+        "popup.root",
+        "prefix",
         "root",
-        "listItem",
-        "list"
+        "suffix"
       ],
       "dumiSemanticSources": [
         {
@@ -4282,18 +4328,6 @@
           "status": "pending"
         },
         {
-          "semanticPath": "list",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "listItem",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
           "semanticPath": "placeholder",
           "reactClassName": null,
           "blazorClassName": null,
@@ -4301,6 +4335,24 @@
         },
         {
           "semanticPath": "popup",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "popup.list",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "popup.listItem",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "popup.root",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "pending"
@@ -4345,12 +4397,12 @@
         "title"
       ],
       "classNames": [
-        "root",
-        "content"
+        "content",
+        "root"
       ],
       "styles": [
-        "root",
-        "content"
+        "content",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -4437,20 +4489,20 @@
         "title"
       ],
       "classNames": [
-        "root",
-        "header",
-        "section",
         "avatar",
-        "title",
-        "paragraph"
+        "header",
+        "paragraph",
+        "root",
+        "section",
+        "title"
       ],
       "styles": [
-        "root",
-        "header",
-        "section",
         "avatar",
-        "title",
-        "paragraph"
+        "header",
+        "paragraph",
+        "root",
+        "section",
+        "title"
       ],
       "dumiSemanticSources": [
         {
@@ -4535,18 +4587,18 @@
         "tracks"
       ],
       "classNames": [
-        "root",
-        "tracks",
-        "track",
+        "handle",
         "rail",
-        "handle"
+        "root",
+        "track",
+        "tracks"
       ],
       "styles": [
-        "root",
-        "tracks",
-        "track",
+        "handle",
         "rail",
-        "handle"
+        "root",
+        "track",
+        "tracks"
       ],
       "dumiSemanticSources": [
         {
@@ -4609,13 +4661,13 @@
         "separator"
       ],
       "classNames": [
-        "root",
         "item",
+        "root",
         "separator"
       ],
       "styles": [
-        "root",
         "item",
+        "root",
         "separator"
       ],
       "dumiSemanticSources": [
@@ -4669,22 +4721,22 @@
         "tip"
       ],
       "classNames": [
+        "container",
+        "description",
+        "indicator",
+        "mask",
         "root",
         "section",
-        "indicator",
-        "description",
-        "container",
-        "tip",
-        "mask"
+        "tip"
       ],
       "styles": [
+        "container",
+        "description",
+        "indicator",
+        "mask",
         "root",
         "section",
-        "indicator",
-        "description",
-        "container",
-        "tip",
-        "mask"
+        "tip"
       ],
       "dumiSemanticSources": [
         {
@@ -4755,18 +4807,22 @@
       "semanticType": "SplitterSemanticType",
       "semanticPaths": [
         "dragger",
+        "dragger.active",
+        "dragger.default",
         "panel",
         "root"
       ],
       "classNames": [
-        "root",
+        "dragger",
         "panel",
-        "dragger"
+        "root"
       ],
       "styles": [
-        "root",
+        "dragger",
+        "dragger.active",
+        "dragger.default",
         "panel",
-        "dragger"
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -4781,6 +4837,18 @@
       "classNameMapping": [
         {
           "semanticPath": "dragger",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "dragger.active",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "dragger.default",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "structure-migrated-pending-semantic-injection"
@@ -4819,22 +4887,22 @@
         "value"
       ],
       "classNames": [
-        "root",
         "content",
-        "value",
-        "title",
         "header",
         "prefix",
-        "suffix"
+        "root",
+        "suffix",
+        "title",
+        "value"
       ],
       "styles": [
-        "root",
         "content",
-        "value",
-        "title",
         "header",
         "prefix",
-        "suffix"
+        "root",
+        "suffix",
+        "title",
+        "value"
       ],
       "dumiSemanticSources": [
         {
@@ -4926,28 +4994,28 @@
         "wrapper"
       ],
       "classNames": [
-        "root",
         "item",
-        "itemWrapper",
-        "itemIcon",
-        "itemSection",
-        "itemHeader",
-        "itemTitle",
-        "itemSubtitle",
         "itemContent",
-        "itemRail"
+        "itemHeader",
+        "itemIcon",
+        "itemRail",
+        "itemSection",
+        "itemSubtitle",
+        "itemTitle",
+        "itemWrapper",
+        "root"
       ],
       "styles": [
-        "root",
         "item",
-        "itemWrapper",
-        "itemIcon",
-        "itemSection",
-        "itemHeader",
-        "itemTitle",
-        "itemSubtitle",
         "itemContent",
-        "itemRail"
+        "itemHeader",
+        "itemIcon",
+        "itemRail",
+        "itemSection",
+        "itemSubtitle",
+        "itemTitle",
+        "itemWrapper",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -5107,14 +5175,14 @@
         "root"
       ],
       "classNames": [
-        "root",
         "content",
-        "indicator"
+        "indicator",
+        "root"
       ],
       "styles": [
-        "root",
         "content",
-        "indicator"
+        "indicator",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -5158,8 +5226,6 @@
       "blazorDirectory": "components/table",
       "semanticType": "TableSemanticType",
       "semanticPaths": [
-        "Jim Green",
-        "Joe Black",
         "body",
         "body.cell",
         "body.row",
@@ -5175,35 +5241,48 @@
         "pagination.root",
         "root",
         "section",
-        "thinkasany",
         "title"
       ],
       "classNames": [
+        "body",
+        "body.cell",
+        "body.row",
+        "body.wrapper",
+        "content",
+        "footer",
+        "header",
+        "header.cell",
+        "header.row",
+        "header.wrapper",
+        "pagination",
+        "pagination.item",
+        "pagination.root",
         "root",
         "section",
-        "title",
-        "footer",
-        "body",
-        "content",
-        "header",
-        "pagination"
+        "title"
       ],
       "styles": [
+        "body",
+        "body.cell",
+        "body.row",
+        "body.wrapper",
+        "content",
+        "footer",
+        "header",
+        "header.cell",
+        "header.row",
+        "header.wrapper",
+        "pagination",
+        "pagination.item",
+        "pagination.root",
         "root",
         "section",
-        "title",
-        "footer",
-        "body",
-        "content",
-        "header",
-        "pagination"
+        "title"
       ],
       "dumiSemanticSources": [
         {
           "source": "components/table/demo/_semantic.tsx",
           "semanticPaths": [
-            "Jim Green",
-            "Joe Black",
             "body.cell",
             "body.row",
             "body.wrapper",
@@ -5216,24 +5295,11 @@
             "pagination.root",
             "root",
             "section",
-            "thinkasany",
             "title"
           ]
         }
       ],
       "classNameMapping": [
-        {
-          "semanticPath": "Jim Green",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "Joe Black",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
         {
           "semanticPath": "body",
           "reactClassName": null,
@@ -5325,12 +5391,6 @@
           "status": "structure-migrated-pending-semantic-injection"
         },
         {
-          "semanticPath": "thinkasany",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
           "semanticPath": "title",
           "reactClassName": null,
           "blazorClassName": null,
@@ -5360,24 +5420,26 @@
         "root"
       ],
       "classNames": [
-        "root",
-        "item",
-        "remove",
-        "indicator",
         "body",
         "content",
         "header",
-        "popup"
+        "indicator",
+        "item",
+        "popup",
+        "popup.root",
+        "remove",
+        "root"
       ],
       "styles": [
-        "root",
-        "item",
-        "remove",
-        "indicator",
         "body",
         "content",
         "header",
-        "popup"
+        "indicator",
+        "item",
+        "popup",
+        "popup.root",
+        "remove",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -5469,12 +5531,12 @@
         "root"
       ],
       "classNames": [
-        "root",
-        "item"
+        "item",
+        "root"
       ],
       "styles": [
-        "root",
-        "item"
+        "item",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -5545,16 +5607,16 @@
         "root"
       ],
       "classNames": [
-        "root",
-        "icon",
+        "close",
         "content",
-        "close"
+        "icon",
+        "root"
       ],
       "styles": [
-        "root",
-        "icon",
+        "close",
         "content",
-        "close"
+        "icon",
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -5618,39 +5680,35 @@
       "blazorDirectory": "components/time-picker",
       "semanticType": "TimePickerSemanticType",
       "semanticPaths": [
-        "container",
-        "content",
-        "footer",
         "input",
-        "item",
         "popup",
+        "popup.container",
+        "popup.content",
+        "popup.footer",
+        "popup.item",
+        "popup.root",
         "prefix",
         "root",
         "suffix"
       ],
       "classNames": [
-        "root",
-        "prefix",
         "input",
-        "suffix",
         "popup",
+        "prefix",
         "root",
-        "content",
-        "item",
-        "footer",
-        "container"
+        "suffix"
       ],
       "styles": [
-        "root",
-        "prefix",
         "input",
-        "suffix",
         "popup",
+        "popup.container",
+        "popup.content",
+        "popup.footer",
+        "popup.item",
+        "popup.root",
+        "prefix",
         "root",
-        "content",
-        "item",
-        "footer",
-        "container"
+        "suffix"
       ],
       "dumiSemanticSources": [
         {
@@ -5660,37 +5718,43 @@
       ],
       "classNameMapping": [
         {
-          "semanticPath": "container",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "content",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "footer",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
           "semanticPath": "input",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "pending"
         },
         {
-          "semanticPath": "item",
+          "semanticPath": "popup",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "pending"
         },
         {
-          "semanticPath": "popup",
+          "semanticPath": "popup.container",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "popup.content",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "popup.footer",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "popup.item",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "popup.root",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "pending"
@@ -5889,14 +5953,14 @@
         "root"
       ],
       "classNames": [
-        "root",
+        "arrow",
         "container",
-        "arrow"
+        "root"
       ],
       "styles": [
-        "root",
+        "arrow",
         "container",
-        "arrow"
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -5954,32 +6018,32 @@
         "title"
       ],
       "classNames": [
-        "root",
-        "cover",
-        "close",
-        "mask",
-        "section",
-        "footer",
         "actions",
+        "close",
+        "cover",
+        "description",
+        "footer",
+        "header",
         "indicator",
         "indicators",
-        "header",
-        "title",
-        "description"
+        "mask",
+        "root",
+        "section",
+        "title"
       ],
       "styles": [
-        "root",
-        "cover",
-        "close",
-        "mask",
-        "section",
-        "footer",
         "actions",
+        "close",
+        "cover",
+        "description",
+        "footer",
+        "header",
         "indicator",
         "indicators",
-        "header",
-        "title",
-        "description"
+        "mask",
+        "root",
+        "section",
+        "title"
       ],
       "dumiSemanticSources": [
         {
@@ -6005,80 +6069,80 @@
           "semanticPath": "actions",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "close",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "cover",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "description",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "footer",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "header",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "indicator",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "indicators",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "mask",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "section",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "title",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "transfer",
@@ -6119,34 +6183,70 @@
         "title"
       ],
       "classNames": [
+        "actions",
+        "body",
+        "footer",
+        "header",
+        "item",
+        "itemContent",
+        "itemIcon",
+        "list",
         "root",
         "section",
-        "header",
-        "title",
-        "body",
-        "list",
-        "item",
-        "itemIcon",
-        "itemContent",
-        "footer",
-        "actions",
         "source",
-        "target"
+        "source.body",
+        "source.footer",
+        "source.header",
+        "source.item",
+        "source.itemContent",
+        "source.itemIcon",
+        "source.list",
+        "source.section",
+        "source.title",
+        "target",
+        "target.body",
+        "target.footer",
+        "target.header",
+        "target.item",
+        "target.itemContent",
+        "target.itemIcon",
+        "target.list",
+        "target.section",
+        "target.title",
+        "title"
       ],
       "styles": [
+        "actions",
+        "body",
+        "footer",
+        "header",
+        "item",
+        "itemContent",
+        "itemIcon",
+        "list",
         "root",
         "section",
-        "header",
-        "title",
-        "body",
-        "list",
-        "item",
-        "itemIcon",
-        "itemContent",
-        "footer",
-        "actions",
         "source",
-        "target"
+        "source.body",
+        "source.footer",
+        "source.header",
+        "source.item",
+        "source.itemContent",
+        "source.itemIcon",
+        "source.list",
+        "source.section",
+        "source.title",
+        "target",
+        "target.body",
+        "target.footer",
+        "target.header",
+        "target.item",
+        "target.itemContent",
+        "target.itemIcon",
+        "target.list",
+        "target.section",
+        "target.title",
+        "title"
       ],
       "dumiSemanticSources": [
         {
@@ -6390,16 +6490,16 @@
         "root"
       ],
       "classNames": [
-        "root",
         "item",
+        "itemSwitcher",
         "itemTitle",
-        "itemSwitcher"
+        "root"
       ],
       "styles": [
-        "root",
         "item",
+        "itemSwitcher",
         "itemTitle",
-        "itemSwitcher"
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -6452,33 +6552,45 @@
         "itemRemove",
         "placeholder",
         "popup",
+        "popup.item",
+        "popup.itemSwitcher",
+        "popup.itemTitle",
+        "popup.root",
         "prefix",
         "root",
         "suffix"
       ],
       "classNames": [
-        "root",
-        "prefix",
-        "input",
-        "suffix",
         "content",
-        "placeholder",
+        "input",
         "item",
         "itemContent",
         "itemRemove",
-        "popup"
+        "placeholder",
+        "popup",
+        "popup.item",
+        "popup.itemSwitcher",
+        "popup.itemTitle",
+        "popup.root",
+        "prefix",
+        "root",
+        "suffix"
       ],
       "styles": [
-        "root",
-        "prefix",
-        "input",
-        "suffix",
         "content",
-        "placeholder",
+        "input",
         "item",
         "itemContent",
         "itemRemove",
-        "popup"
+        "placeholder",
+        "popup",
+        "popup.item",
+        "popup.itemSwitcher",
+        "popup.itemTitle",
+        "popup.root",
+        "prefix",
+        "root",
+        "suffix"
       ],
       "dumiSemanticSources": [
         {
@@ -6530,6 +6642,30 @@
           "status": "pending"
         },
         {
+          "semanticPath": "popup.item",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "popup.itemSwitcher",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "popup.itemTitle",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
+          "semanticPath": "popup.root",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "pending"
+        },
+        {
           "semanticPath": "prefix",
           "reactClassName": null,
           "blazorClassName": null,
@@ -6567,18 +6703,18 @@
         "root"
       ],
       "classNames": [
-        "root",
         "item",
         "itemIcon",
+        "itemSwitcher",
         "itemTitle",
-        "itemSwitcher"
+        "root"
       ],
       "styles": [
-        "root",
         "item",
         "itemIcon",
+        "itemSwitcher",
         "itemTitle",
-        "itemSwitcher"
+        "root"
       ],
       "dumiSemanticSources": [
         {
@@ -6642,15 +6778,15 @@
         "textarea"
       ],
       "classNames": [
-        "root",
-        "actions",
         "action",
+        "actions",
+        "root",
         "textarea"
       ],
       "styles": [
-        "root",
-        "actions",
         "action",
+        "actions",
+        "root",
         "textarea"
       ],
       "dumiSemanticSources": [
@@ -6705,21 +6841,18 @@
         "item",
         "list",
         "root",
-        "trigger",
-        "xxx.png",
-        "yyy.png",
-        "zzz.png"
+        "trigger"
       ],
       "classNames": [
-        "root",
-        "list",
         "item",
+        "list",
+        "root",
         "trigger"
       ],
       "styles": [
-        "root",
-        "list",
         "item",
+        "list",
+        "root",
         "trigger"
       ],
       "dumiSemanticSources": [
@@ -6729,10 +6862,7 @@
             "item",
             "list",
             "root",
-            "trigger",
-            "xxx.png",
-            "yyy.png",
-            "zzz.png"
+            "trigger"
           ]
         }
       ],
@@ -6757,24 +6887,6 @@
         },
         {
           "semanticPath": "trigger",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "xxx.png",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "yyy.png",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "zzz.png",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "structure-migrated-pending-semantic-injection"
@@ -7000,9 +7112,9 @@
       "name": "float-button",
       "className": "ant-float-button",
       "reactStyleSource": "components/float-button/style/index.ts",
-      "implementedInBlazor": false,
+      "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "form",
@@ -7072,9 +7184,9 @@
       "name": "masonry",
       "className": "ant-masonry",
       "reactStyleSource": "components/masonry/style/index.ts",
-      "implementedInBlazor": false,
+      "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "mentions",
@@ -7098,7 +7210,7 @@
       "reactStyleSource": "components/message/style/index.ts",
       "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "modal",
@@ -7114,7 +7226,7 @@
       "reactStyleSource": "components/notification/style/index.ts",
       "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "pagination",
@@ -7320,9 +7432,9 @@
       "name": "tour",
       "className": "ant-tour",
       "reactStyleSource": "components/tour/style/index.ts",
-      "implementedInBlazor": false,
+      "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "transfer",

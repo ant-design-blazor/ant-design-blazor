@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using Microsoft.AspNetCore.Components;
+using AntDesign.Theming;
 
 namespace AntDesign
 {
@@ -20,6 +21,9 @@ namespace AntDesign
 
         [CascadingParameter]
         public ConfigProvider ConfigProvider { get; set; }
+
+        [CascadingParameter(Name = "AntDesignThemeComponents")]
+        private System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IDictionary<string, string>> ThemeComponents { get; set; }
 
         protected bool RTL => ConfigProvider?.Direction == "RTL";
 
@@ -40,6 +44,34 @@ namespace AntDesign
         }
 
         protected ClassMapper ClassMapper { get; } = new ClassMapper();
+
+        protected string GetComponentTokenStyle(string component)
+        {
+            if (string.IsNullOrWhiteSpace(component) || ThemeComponents == null || !ThemeComponents.TryGetValue(component, out var tokens))
+                return string.Empty;
+
+            var declarations = new System.Collections.Generic.List<string>();
+            foreach (var token in tokens)
+            {
+                // Unset generated OneOf component tokens stringify to values such as
+                // "System.String: ". Never emit those: they shadow the stylesheet's
+                // valid CSS variable fallback (notably Button's horizontal padding).
+                if (string.IsNullOrWhiteSpace(token.Key)
+                    || string.IsNullOrWhiteSpace(token.Value)
+                    || token.Value.StartsWith("System.", System.StringComparison.Ordinal)) continue;
+                var name = $"{component}-{token.Key}";
+                var value = CssVariableValueFormatter.Format(name, token.Value);
+                declarations.Add($"--ant-{TokenView.ToKebabCase(name)}:{value}");
+            }
+
+            return string.Join(";", declarations);
+        }
+
+        protected string GetComponentStyle(string component, string style)
+        {
+            var tokenStyle = GetComponentTokenStyle(component);
+            return string.IsNullOrEmpty(tokenStyle) ? style : $"{tokenStyle};{style}";
+        }
 
         protected AntDomComponentBase()
         {

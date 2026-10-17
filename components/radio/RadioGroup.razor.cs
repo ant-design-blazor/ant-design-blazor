@@ -45,6 +45,14 @@ namespace AntDesign
             }
         }
 
+        /// <summary>Make each radio fill an equal share of the group width.</summary>
+        [Parameter]
+        public bool Block { get; set; }
+
+        /// <summary>Arrange the radios vertically.</summary>
+        [Parameter]
+        public bool Vertical { get; set; }
+
         /// <summary>
         /// Button style for the group.
         /// </summary>
@@ -110,7 +118,11 @@ namespace AntDesign
                 .If($"{prefixCls}-large", () => Size == InputSize.Large)
                 .If($"{prefixCls}-small", () => Size == InputSize.Small)
                 .GetIf(() => $"{prefixCls}-{_buttonStyleDics[ButtonStyle.Value]}", () => ButtonStyle.HasValue && ButtonStyle.IsIn(RadioButtonStyle.Outline, RadioButtonStyle.Solid))
+                .If($"{prefixCls}-block", () => Block)
+                .If($"{prefixCls}-vertical", () => Vertical)
+                .If($"{prefixCls}-outline", () => !ButtonStyle.HasValue)
                 .If($"{prefixCls}-rtl", () => RTL)
+                .Add("ant-radio-css-var")
                 ;
 
             base.OnInitialized();

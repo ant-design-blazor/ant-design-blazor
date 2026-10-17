@@ -15,6 +15,12 @@ namespace AntDesign
 
         [Parameter] public bool AllowHalf { get; set; } = false;
 
+        [Parameter] public int Count { get; set; } = 5;
+
+        [Parameter] public decimal Value { get; set; }
+
+        [Parameter] public bool Disabled { get; set; }
+
         [Parameter] public EventCallback<bool> OnItemHover { get; set; }
 
         [Parameter] public EventCallback<bool> OnItemClick { get; set; }
@@ -57,7 +63,7 @@ namespace AntDesign
           .If($"{prefixName}-half", () => hasHalf && val == hoverValue)
           .If($"{prefixName}-active", () => hasHalf && val == hoverValue)
           .If($"{prefixName}-zero", () => val > hoverValue)
-          .If($"{prefixName}-focused", () => hasHalf && val == hoverValue && isFocused)
+          .If($"{prefixName}-focused", () => isFocused && (val == hoverValue || (hoverValue == 0 && IndexOfGroup == 0)))
           ;
 
         }

@@ -1,0 +1,52 @@
+<Space>
+    <DatePicker TValue="DateTime?"
+                Value="@_startValue"
+                DisabledDate="DisableStartDate"
+                ShowTime="true"
+                Format="yyyy-MM-dd HH:mm:ss"
+                Placeholder="@("Start")"
+                OnChange="OnStartChange"
+                OnOpenChange="OnStartOpenChange" />
+    <DatePicker TValue="DateTime?"
+                Value="@_endValue"
+                DisabledDate="DisableEndDate"
+                ShowTime="true"
+                Format="yyyy-MM-dd HH:mm:ss"
+                Placeholder="@("End")"
+                Open="@_endOpen"
+                OnChange="OnEndChange"
+                OnOpenChange="OnEndOpenChange" />
+</Space>
+
+@code {
+    private DateTime? _startValue;
+    private DateTime? _endValue;
+    private bool _endOpen;
+
+    private bool DisableStartDate(DateTime date) => _endValue.HasValue && date > _endValue.Value;
+
+    private bool DisableEndDate(DateTime date) => _startValue.HasValue && date <= _startValue.Value;
+
+    private void OnStartChange(DateTimeChangedEventArgs<DateTime?> args)
+    {
+        _startValue = args.Date;
+    }
+
+    private void OnEndChange(DateTimeChangedEventArgs<DateTime?> args)
+    {
+        _endValue = args.Date;
+    }
+
+    private void OnStartOpenChange(bool open)
+    {
+        if (!open)
+        {
+            _endOpen = true;
+        }
+    }
+
+    private void OnEndOpenChange(bool open)
+    {
+        _endOpen = open;
+    }
+}

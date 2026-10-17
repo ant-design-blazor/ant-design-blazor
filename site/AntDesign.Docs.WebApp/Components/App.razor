@@ -16,20 +16,20 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="AntDesign.Docs.WebApp.styles.css" />
 
-    <HeadOutlet @rendermode="InteractiveAuto" />
+    <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 
-<body class="css-var-_R_29n_">
+<body class="ant-theme" data-theme="default">
     <app>
-        @* The WebAssembly host registers AntDesign.Docs.App on the app root.
-           Keeping a second InteractiveAuto Routes marker here causes .NET 10
-           to retain the prerendered tree and append a second client tree. *@
-        <Routes />
+        @* Keep the docs in a single interactive server boundary. The standalone WASM entry point
+           also targets <app>, so InteractiveAuto here mounts a second copy of the routed page. *@
+        <Routes @rendermode="InteractiveServer" />
     </app>
 
     <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
     <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
-    @* <script src="_content/AntDesign/js/ant-design-blazor.js"></script> *@
+    @* Load the component interop before Blazor starts hydrating interactive components. *@
+    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
     <script src="_content/AntDesign.Docs/js/prism.js"></script>
     <link rel="stylesheet" href="_content/AntDesign.Docs/css/happy-work.css" />
     <script>
@@ -68,7 +68,12 @@
         }
     </script>
     <script antblazor-js></script>
-    <script src="/_framework/blazor.web.js"></script>
+    <script src="/_framework/blazor.web.js" autostart="false"></script>
+    <script>
+        if (!customElements.get("blazor-ssr-end")) {
+            Blazor.start();
+        }
+    </script>
 </body>
 
 </html>

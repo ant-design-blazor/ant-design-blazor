@@ -1,0 +1,36 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Rate_renders_v6_keyboard_and_aria_structure()
+    {
+        var cut = Render(@<Rate DefaultValue="2.5M" AllowHalf Count="4" />);
+
+        var root = cut.Find("ul.ant-rate");
+        Assert.Null(root.GetAttribute("role"));
+        Assert.Equal("0", root.GetAttribute("tabindex"));
+
+        var radios = cut.FindAll("[role='radio']");
+        Assert.Equal(4, radios.Count);
+        Assert.All(radios, radio => Assert.Equal("4", radio.GetAttribute("aria-setsize")));
+        Assert.All(radios, radio => Assert.Equal("0", radio.GetAttribute("tabindex")));
+        Assert.Equal(new[] { "true", "true", "true", "false" },
+            radios.Select(radio => radio.GetAttribute("aria-checked")));
+        Assert.Contains("ant-rate-star-half", cut.FindAll(".ant-rate-star")[2].ClassList);
+        Assert.Equal("star", cut.Find(".anticon-star").GetAttribute("aria-label"));
+        Assert.DoesNotContain("ant-rate-star-focused", cut.Find(".ant-rate-star").ClassList);
+    }
+
+    [Fact]
+    public void Disabled_rate_removes_root_and_star_from_tab_order()
+    {
+        var cut = Render(@<Rate Disabled DefaultValue="2" Size="InputSize.Large" />);
+
+        var root = cut.Find("ul.ant-rate");
+        Assert.Contains("ant-rate-disabled", root.ClassList);
+        Assert.Contains("ant-rate-large", root.ClassList);
+        Assert.Equal("-1", root.GetAttribute("tabindex"));
+        Assert.All(cut.FindAll("[role='radio']"), radio =>
+            Assert.Equal("-1", radio.GetAttribute("tabindex")));
+    }
+}

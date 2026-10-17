@@ -328,6 +328,7 @@ namespace AntDesign
         {
             ClassMapper
                 .Add("ant-tree-treenode")
+                .If("ant-select-tree-treenode", () => TreeComponent.IsInTreeSelect)
                 .If("ant-tree-treenode-disabled", () => Disabled)
                 .If("ant-tree-treenode-switcher-open", () => SwitcherOpen)
                 .If("ant-tree-treenode-switcher-close", () => SwitcherClose)

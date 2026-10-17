@@ -245,13 +245,14 @@ catalog are shared infrastructure rather than UI components.
 - Updated `Button` to emit the React v6 class contract: legacy type aliases
   plus `ant-btn-color-*` and `ant-btn-variant-*`. Parameter updates now rebuild
   the class map, so changing `Type` after first render is reflected in the DOM.
-- Added the static v6 CSS variable scope to `ClassMapper` DOM roots and the
-  docs host body. This is required because the compiled React stylesheet uses
-  selectors such as `.css-var-_R_29n_.ant-btn`; without the scope, component
-  tokens resolve to empty values and buttons fall back to square/zero-padding
-  styles. ConfigProvider now skips unset generated token values and preserves
-  valid v6 stylesheet variables; token kebab casing keeps `LG/SM/XXS` groups
-  together.
+- The compiled React stylesheet is normalized at the generator boundary: its
+  internal `css-var-_R_*_` selectors are translated to the stable
+  `.ant-theme` ancestor contract. `ClassMapper` no longer emits a React
+  renderer identifier, and ConfigProvider supplies the stable theme scope;
+  this keeps component token values independent of compile-time/random React
+  class names. ConfigProvider also skips unset generated token values and
+  preserves valid v6 stylesheet variables; token kebab casing keeps
+  `LG/SM/XXS` groups together.
 - Removed the old homepage Banner button overrides and changed the hero
   buttons to v6 large buttons. Browser comparison now reports the primary
   hero button as 40px high, 8px radius, 15px horizontal padding, and the
@@ -261,9 +262,10 @@ catalog are shared infrastructure rather than UI components.
   and 35 docs/chart routes with 105 buttons; unresolved scope, zero-height,
   transparent-solid and borderless-outlined anomalies: 0.
 - Current migration totals: CSS components 72/72; themes 13/13; standard
-  algorithms 0/3; Semantic DOM component catalog 59/59; Semantic DOM
-  definitions 52/68; documented Semantic DOM paths 81/113; Theme Preview
-  1/1; Semantic DOM Preview 1/1. React currently has one homepage hero CTA,
+  algorithms 0/3; Semantic DOM component catalog 59/59; React Semantic DOM
+  definitions mapped 68/68 (structural migration tracked separately at 52/68);
+  API slots 370/370; documented Dumi paths 350/350; Theme Preview 1/1;
+  Semantic DOM Preview 1/1. React currently has one homepage hero CTA,
   while Blazor retains the existing GitHub CTA as an additional documented
   link; this is a content difference, not a Button CSS mismatch.
 - Updated Button bUnit baselines to the v6 DOM contract. Focused CSS/Button
@@ -277,15 +279,34 @@ catalog are shared infrastructure rather than UI components.
   menu variable scope. Consequently `--ant-menu-item-height` resolved to an
   empty value and every inline menu item computed to `height: 0px`; only the
   group headings were visible.
-- `Menu` now emits `css-var-_R_0_ ant-menu-css-var` in addition to the shared
-  Blazor v6 scope. The static React v6 stylesheet can therefore resolve the
-  Menu component tokens without adding global or page-specific CSS overrides.
+- `Menu` now emits only the stable `ant-menu-css-var` component marker. The
+  static React v6 stylesheet resolves its variables through the shared
+  `.ant-theme` ancestor, without adding global or page-specific CSS overrides.
 - Browser verification after rebuild: component navigation has 72 rendered
   items, 72 visible items, 7 groups, and `--ant-menu-item-height: 40px`;
   documentation navigation has 14/14 visible items and the same resolved
   token. The page route redirects from `/en-US/components` to the first
   component overview as before.
-- WebApp build passes with 0 errors. The legacy Menu bUnit snapshots still
-  expect pre-v6 class output and are not yet updated; the targeted run was
-  6/17 passing after the existing v6 scope changes, with failures limited to
-  markup expectations rather than child rendering.
+- Updated the horizontal and inline Menu bUnit snapshots to the v6 DOM
+  contract: component roots carry the stable component markers, while
+  title/arrow helper nodes remain unscoped. Nested popup and inline submenu
+  structure remains fully asserted.
+- WebApp build passes with 0 errors; the complete Menu test group passes 15/15.
+
+## Documentation preview interaction tests
+
+- Added component-split bUnit coverage for `HomeThemePreview` and
+  `SemanticDomPreview`, with a shared documentation test base that uses a
+  minimal localizer instead of booting the full docs host.
+- Theme Preview tests now cover all 13 theme labels, Components/Dashboard
+  switching, dark-theme CSS variable regeneration, narrow-screen media rules,
+  tablist semantics, and title/aria-label controls.
+- Semantic DOM Preview tests now cover real Button and Alert rendering,
+  representative semantic-node counts (3 and 6), hover/focus activation,
+  Enter/Space/Escape keyboard behavior, selector/version output, active
+  highlighting, and narrow-screen media rules.
+- Fixed an accessibility regression found by these tests: `aria-selected` and
+  `aria-pressed` are emitted as explicit lowercase strings, so inactive items
+  retain the required `false` state instead of being omitted by Blazor's
+  boolean-attribute handling.
+- Focused documentation preview tests pass: 4/4; build passes with 0 errors.

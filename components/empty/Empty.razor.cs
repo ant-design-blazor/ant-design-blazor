@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using Microsoft.AspNetCore.Components;
+using System.Collections.Generic;
 using OneOf;
 
 namespace AntDesign
@@ -73,6 +74,33 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ImageTemplate { get; set; }
 
+        /// <summary>
+        /// Semantic class names keyed by root, image, description, and footer.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>
+        /// Semantic inline styles keyed by root, image, description, and footer.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return semanticStyle;
+            if (string.IsNullOrWhiteSpace(semanticStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
+        }
+
         protected void SetClass()
         {
             this.ClassMapper.Clear()
@@ -86,6 +114,12 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             this.SetClass();
+        }
+
+        protected override void OnParametersSet()
+        {
+            this.SetClass();
+            base.OnParametersSet();
         }
     }
 }

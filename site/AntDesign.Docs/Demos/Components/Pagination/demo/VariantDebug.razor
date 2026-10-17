@@ -1,0 +1,14 @@
+@foreach (var variant in _variants)
+{
+    <ConfigProvider @key="variant" Variant="@variant">
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+            <code>@variant</code>
+            <Pagination DefaultCurrent="2" Total="50" ShowQuickJumper="true" />
+            <Pagination DefaultCurrent="2" Total="50" Simple="true" />
+        </div>
+    </ConfigProvider>
+}
+
+@code {
+    private static readonly string[] _variants = { "outlined", "filled", "borderless", "underlined" };
+}

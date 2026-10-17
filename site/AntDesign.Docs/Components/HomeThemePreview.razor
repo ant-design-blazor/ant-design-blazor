@@ -19,8 +19,8 @@
                 {
                     <button class="@GetSwatchClass(theme.Key)"
                             title="@theme.Label" aria-label="@theme.Label"
-                            aria-selected="@(_selected == theme.Key)"
-                            @onclick="() => SelectTheme(theme.Key)"></button>
+                            aria-selected="@((_selected == theme.Key).ToString().ToLowerInvariant())"
+                            @onclick="() => SelectTheme(theme.Key)"><img src="@theme.Icon" alt="" /></button>
                 }
             </div>
             <div class="@GetClass("home-theme-actions", "actions")">
@@ -37,35 +37,122 @@
     @if (!_dashboard)
     {
         <div class="@GetClass("home-theme-components", "components")">
-            <div class="@GetClass("home-theme-demo-card", "demoCard")">
-                <div class="@GetClass("home-theme-card-header", "cardHeader")"><span class="@GetClass("home-theme-avatar", "avatar")">A</span><div><strong>Ant Design</strong><small>Design system preview</small></div><span class="@GetClass("home-theme-more", "more")">•••</span></div>
-                <h3>Build better products</h3>
-                <p>Consistent, accessible components for modern applications.</p>
-                <div class="@GetClass("home-theme-button-row", "buttonRow")">
-                    <Button Type="ButtonType.Primary">Primary</Button><Button>Default</Button><Button Type="ButtonType.Dashed">Dashed</Button>
+            <div class="@GetClass("home-theme-preview-column", "previewColumn")">
+                <div class="@GetClass("home-theme-control-grid", "controlGrid")">
+                    <div class="@_styles["controlRow"]">
+                        <Input TValue="string" @bind-Value="_previewEmail" Placeholder="hi@example.com" />
+                        <Select Mode="SelectMode.Multiple" MaxTagCount="AntDesign.Select.ResponsiveTag.Responsive" TItemValue="string" TItem="string" @bind-Values="_selectedFoods" Placeholder="Select one">
+                            <SelectOptions>
+                                <SelectOption TItemValue="string" TItem="string" Value="@("apple")" Label="Apple" />
+                                <SelectOption TItemValue="string" TItem="string" Value="@("banana")" Label="Banana" />
+                                <SelectOption TItemValue="string" TItem="string" Value="@("orange")" Label="Orange" />
+                            </SelectOptions>
+                        </Select>
+                    </div>
+                    <div class="@_styles["controlRowSecond"]">
+                        <ColorPicker Value="@_previewColor" ValueChanged="OnPreviewColorChanged" ShowText />
+                        <div class="@GetClass("home-theme-compact", "compact")"><Dropdown><Unbound Context="trigger"><Button RefBack="@trigger">Dropdown <Icon Type="@IconType.Outline.Down" /></Button></Unbound><Overlay><Menu><MenuItem Key="option-1">Option 1</MenuItem><MenuItem Key="option-2">Option 2</MenuItem></Menu></Overlay></Dropdown></div>
+                        <DatePicker TValue="DateTime?" @bind-Value="_previewDate" Placeholder="@("Select Date")" />
+                    </div>
                 </div>
-                <Alert Message="Your changes have been saved." Type="AlertType.Success" ShowIcon="true" />
-                <div class="@GetClass("home-theme-progress", "progress")"><span></span></div>
+                <div class="@GetClass("home-theme-options", "options")">
+                    <CheckboxGroup TValue="string" Options="@(new[] { "Apple", "Pear" })" @bind-Value="_checkedFruits" />
+                    <RadioGroup TValue="string" Options="@(new[] { "Apple", "Pear" })" @bind-Value="_selectedFruit" />
+                    <Switch @bind-Checked="_notifications" />
+                    <Spin Size="SpinSize.Small" />
+                </div>
+                <div class="@GetClass("home-theme-steps", "steps")"><Steps Current="1" Status="StepsStatus.Error" Size="StepsSize.Small"><Step Title="Finished" /><Step Title="In Process" /><Step Title="Waiting" /></Steps></div>
+                <div class="@GetClass("home-theme-progress-list", "progressList")">
+                    <div class="@_styles["progressRow"]"><Progress Percent="50" Status="ProgressStatus.Active" ShowInfo="false" /><span>50%</span></div>
+                    <div class="@_styles["progressRow"]"><Progress Percent="70" Status="ProgressStatus.Exception" ShowInfo="false" /><span class="@_styles["progressError"]">×</span></div>
+                </div>
+                <div class="@GetClass("home-theme-statuses", "statuses")"><Badge Status="BadgeStatus.Success" Text="Success" /><Badge Status="BadgeStatus.Error" Text="Error" /><Badge Status="BadgeStatus.Default" Text="Default" /><Badge Status="BadgeStatus.Processing" Text="Processing" /><Badge Status="BadgeStatus.Warning" Text="Warning" /></div>
+                <div class="@GetClass("home-theme-lower-grid", "lowerGrid")">
+                    <div class="@GetClass("home-theme-qr", "qr")"><QRCode Value="https://ant.design" Size="128" Bordered="false" /></div>
+                    <div class="@GetClass("home-theme-lower-controls", "lowerControls")">
+                        <div class="@GetClass("home-theme-mini-icons", "miniIcons")"><Spin Size="SpinSize.Small" /><Spin Size="SpinSize.Small" /><Rate @bind-Value="_rating" /></div>
+                        <div class="@GetClass("home-theme-tags", "tags")"><Tag Color="TagColor.Blue">Twitter</Tag><Tag Color="TagColor.Red">Youtube</Tag><Tag Color="TagColor.Blue">Facebook</Tag></div>
+                        <Alert Class="@GetClass("home-theme-confirm", "confirm")" Type="AlertType.Warning" Message="@(_confirmMessage ?? "Are you OK?")" ShowIcon>
+                            <Action>
+                                <div class="@_styles["confirmActions"]">
+                                    <Button OnClick="CancelConfirm">Cancel</Button>
+                                    <Button Type="ButtonType.Primary" OnClick="AcceptConfirm">OK</Button>
+                                </div>
+                            </Action>
+                        </Alert>
+                    </div>
+                </div>
+                <div class="@GetClass("home-theme-segments", "segments")"><Segmented TValue="string" Labels="@(new[] { "1D", "7D", "1M", "1Y", "All" })" @bind-Value="_activePeriod" /><Segmented TValue="string" Labels="@(new[] { "Chats", "Emails" })" @bind-Value="_activeChannel" /></div>
             </div>
-            <div class="@GetClass("home-theme-demo-card home-theme-form", "demoCard", "formCard")">
-                <h3>Form controls</h3>
-                <label>Project name<input class="ant-input" value="Ant Design Blazor" readonly /></label>
-                <label>Visibility<select class="ant-select-selector"><option>Public</option></select></label>
-                <div class="@GetClass("home-theme-check", "check")"><span>✓</span> Enable notifications</div>
-                <div class="@GetClass("home-theme-switch", "switch")"><span>Automatic updates</span><i></i></div>
+            <div class="@GetClass("home-theme-preview-column", "previewColumn", "centerColumn")">
+                <div class="@GetClass("home-theme-verify", "verify")">
+                    <div class="@GetClass("home-theme-contributors", "contributors")"><AvatarGroup><Avatar Src="https://github.com/ant-design.png?size=48" /><Avatar Src="https://github.com/afc163.png?size=48" /><Avatar Src="https://github.com/benjycui.png?size=48" /><Avatar Src="https://github.com/yesmeck.png?size=48" /><Avatar Src="https://github.com/zombieJ.png?size=48" /><Avatar>+5</Avatar></AvatarGroup></div>
+                    <strong>Verify account</strong><small>We've sent a code to a***@@gmail.com</small>
+                    <div class="@GetClass("home-theme-otp", "otp")"><Input TValue="string" @bind-Value="_otp1" /><Input TValue="string" @bind-Value="_otp2" /><Input TValue="string" @bind-Value="_otp3" /><Input TValue="string" @bind-Value="_otp4" /><Input TValue="string" @bind-Value="_otp5" /><Input TValue="string" @bind-Value="_otp6" /></div>
+                    <small>@_verificationMessage <Button Type="ButtonType.Link" OnClick="ResendVerification">Resend</Button></small>
+                </div>
+                <div class="@GetClass("home-theme-button-pairs", "buttonPairs")"><Button Type="ButtonType.Primary" OnClick="PrimaryButtonClicked">Primary button</Button><Button Danger Type="ButtonType.Primary" OnClick="DangerButtonClicked">Danger button</Button><Button Type="ButtonType.Dashed" OnClick="OutlinedButtonClicked">Outlined button</Button><Button Shape="ButtonShape.Round" OnClick="RoundButtonClicked">Round button</Button></div>
+                @if (_buttonFeedback is not null) { <Alert Type="AlertType.Info" Message="@_buttonFeedback" ShowIcon Closable OnClose="() => _buttonFeedback = null" /> }
+                <Card Class="@_styles["profile"]"><Avatar Shape="AvatarShape.Square" Size="@("60px")" Src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" /><div><strong>Ant Design</strong><small>@@ant-design</small><p>Building the future of UI for web &amp; mobile.</p></div></Card>
+                <Alert Class="@_styles["previewAlert"]" Type="AlertType.Success" Message="Ant Design" Description="An enterprise-class design system for building modern, intelligent, and delightful user experiences." ShowIcon />
             </div>
-            <div class="@GetClass("home-theme-demo-card home-theme-side-card", "demoCard", "sideCard")">
-                <div class="@GetClass("home-theme-stat-label", "statLabel")">Total activity</div><strong class="@GetClass("home-theme-stat", "stat")">2,486</strong><span class="@GetClass("home-theme-trend", "trend")">↗ 12.8% this month</span>
-                <div class="@GetClass("home-theme-bars", "bars")"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="@GetClass("home-theme-preview-column", "previewColumn", "rightColumn")">
+                <Card Class="@_styles["signup"]"><Avatar Src="https://github.com/ant-design.png?size=50" Size="AvatarSize.Large" /><Title Level="4">Create an account</Title><p>Start your free 7-day trial. No credit card required.</p><Button Type="ButtonType.Primary" Block Size="ButtonSize.Large" OnClick="StartAccountCreation">Get Started</Button><Divider>OR</Divider><Button Block Size="ButtonSize.Large" OnClick="SelectGoogleSignIn">Continue with Google</Button><Button Block Size="ButtonSize.Large" OnClick="SelectAppleSignIn">Continue with Apple</Button></Card>
+                @if (_signupFeedback is not null) { <Alert Type="AlertType.Success" Message="@_signupFeedback" ShowIcon Closable OnClose="() => _signupFeedback = null" /> }
+                @if (_dialogVisible)
+                {
+                    <Card Class="@_styles["dialog"]"><div class="@_styles["dialogCopy"]"><strong>Ant Design</strong><p>Ant Design use CSS-in-JS technology to provide dynamic &amp; mix theme ability.</p></div><div class="@_styles["dialogActions"]"><Button OnClick="CloseDialog">Cancel</Button><Button Type="ButtonType.Primary" OnClick="ConfirmDialog">OK</Button></div></Card>
+                }
+                else
+                {
+                    <Button OnClick="OpenDialog">Open message</Button>
+                }
             </div>
         </div>
     }
     else
     {
-        <div class="@GetClass("home-theme-dashboard", "dashboard")">
-            <aside><strong>Workspace</strong><span class="active">Overview</span><span>Projects</span><span>Analytics</span><span>Settings</span></aside>
-            <div class="@GetClass("home-theme-dashboard-content", "dashboardContent")"><h3>Overview</h3><div class="@GetClass("home-theme-metrics", "metrics")"><article><small>Total users</small><strong>8,942</strong><span>↗ 8.2%</span></article><article><small>Active projects</small><strong>36</strong><span>↗ 4.6%</span></article><article><small>Completion</small><strong>78.4%</strong><span>↗ 2.1%</span></article></div><div class="@GetClass("home-theme-chart", "chart")"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
-        </div>
+        <Layout Class="@GetClass("home-theme-dashboard", "dashboard")">
+            <Header Class="@_styles["dashboardHeader"]">
+                <div class="@_styles["dashboardLogo"]"><img src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" alt="Ant Design" /><strong>Ant Design</strong></div>
+                <div>♧　?　<Avatar Icon="@IconType.Outline.User" Size="AvatarSize.Small" /></div>
+            </Header>
+            <Layout>
+                <Sider Width="176" Theme="@GetDashboardSiderTheme()">
+                    <Menu Mode="MenuMode.Inline" Theme="@GetDashboardMenuTheme()" DefaultSelectedKeys="@(new[] { "Themes" })" DefaultOpenKeys="@(new[] { "Design" })">
+                        <MenuItem Key="Overview">Overview</MenuItem>
+                        <SubMenu Key="Design" Title="Design"><MenuItem Key="Themes">Themes</MenuItem><MenuItem Key="Tokens">Tokens</MenuItem></SubMenu>
+                        <MenuItem Key="Employees">Employees</MenuItem><MenuItem Key="Reports">Reports</MenuItem>
+                    </Menu>
+                </Sider>
+                <Layout Class="@_styles["dashboardMain"]">
+                    <Breadcrumb Class="@_styles["dashboardBreadcrumb"]"><BreadcrumbItem>⌂</BreadcrumbItem><BreadcrumbItem>Design</BreadcrumbItem><BreadcrumbItem>Themes</BreadcrumbItem></Breadcrumb>
+                    <Content>
+                        <div class="@_styles["dashboardToolbar"]">
+                            <Segmented TValue="string" Labels="@(new[] { "Overview", "Sales", "Expenses" })" @bind-Value="_dashboardSection" />
+                            <div><Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Reload" OnClick="ResetDashboard" /><Select TItemValue="string" TItem="string" @bind-Value="_dashboardRange" Style="width: 130px"><SelectOptions><SelectOption TItemValue="string" TItem="string" Value="@("monthly")" Label="Monthly" /><SelectOption TItemValue="string" TItem="string" Value="@("quarterly")" Label="Quarterly" /></SelectOptions></Select><Button Type="ButtonType.Primary" Icon="@IconType.Outline.Download" OnClick="DownloadDashboard">Download</Button></div>
+                        </div>
+                        <Row Gutter="16" Class="@_styles["dashboardKpis"]">
+                            <GridCol Xs="24" Sm="12" Lg="6"><Card><Statistic Title="Total Revenue" Value="128450" Prefix="$" /><Tag Color="TagColor.Green">↑ 12.8%</Tag></Card></GridCol>
+                            <GridCol Xs="24" Sm="12" Lg="6"><Card><Statistic Title="Active Users" Value="8942" /><Tag Color="TagColor.Green">↑ 8.2%</Tag></Card></GridCol>
+                            <GridCol Xs="24" Sm="12" Lg="6"><Card><Statistic Title="New Customers" Value="1268" /><Tag Color="TagColor.Red">↓ 2.4%</Tag></Card></GridCol>
+                            <GridCol Xs="24" Sm="12" Lg="6"><Card><Statistic Title="Conversion Rate" Value="6.84" Precision="2" Suffix="%" /><Tag Color="TagColor.Green">↑ 1.6%</Tag></Card></GridCol>
+                        </Row>
+                        <Card Class="@_styles["dashboardTable"]">
+                            <div class="@_styles["dashboardTableHeader"]"><Title Level="4">All Employees</Title><Tag>@FilteredDashboardEmployees.Count()</Tag><Input TValue="string" @bind-Value="_dashboardSearch" BindOnInput Placeholder="Search..." /></div>
+                            <div class="@_styles["dashboardTableActions"]"><Button Icon="@IconType.Outline.Filter" OnClick="ShowFilterFeedback">Filter</Button><Button Icon="@IconType.Outline.SortAscending" OnClick="ToggleDashboardSort">Sort</Button><Button Icon="@IconType.Outline.ColumnHeight" OnClick="ShowColumnFeedback">Columns</Button></div>
+                            @if (_dashboardFeedback is not null) { <Alert Type="AlertType.Info" Message="@_dashboardFeedback" ShowIcon Closable OnClose="() => _dashboardFeedback = null" /> }
+                            <Table TItem="DashboardEmployee" DataSource="FilteredDashboardEmployees" PageSize="5">
+                                <PropertyColumn Property="employee => employee.Name" Title="Name" />
+                                <PropertyColumn Property="employee => employee.Role" Title="Role" />
+                                <PropertyColumn Property="employee => employee.Department" Title="Department" />
+                                <PropertyColumn Property="employee => employee.Status" Title="Status" />
+                            </Table>
+                        </Card>
+                    </Content>
+                </Layout>
+            </Layout>
+        </Layout>
     }
 </section>
 
@@ -75,6 +162,83 @@
     private string _selected = "light";
     private bool _dashboard;
     private bool _copied;
+    private bool _themeModeInitialized;
+    private string _selectedFruit = "Apple";
+    private bool _notifications = true;
+    private string _activePeriod = "1D";
+    private string _activeChannel = "Chats";
+    private string _dashboardSection = "Overview";
+    private string _previewEmail = string.Empty;
+    private IEnumerable<string> _selectedFoods = new[] { "apple", "banana" };
+    private string[] _checkedFruits = { "Apple" };
+    private string _previewColor = "#1677ff";
+    private DateTime? _previewDate;
+    private decimal _rating = 3M;
+    private string _otp1 = "4", _otp2 = "3", _otp3 = "2", _otp4 = "0", _otp5 = string.Empty, _otp6 = string.Empty;
+    private string _verificationMessage = "Didn't receive a code?";
+    private string? _confirmMessage, _buttonFeedback, _signupFeedback, _dashboardFeedback;
+    private bool _dialogVisible = true;
+    private string _dashboardSearch = string.Empty;
+    private string _dashboardRange = "monthly";
+    private bool _dashboardSortDescending;
+    private IEnumerable<DashboardEmployee> FilteredDashboardEmployees
+    {
+        get
+        {
+            var filtered = DashboardEmployees.Where(employee => string.IsNullOrWhiteSpace(_dashboardSearch)
+                || employee.Name.Contains(_dashboardSearch, StringComparison.OrdinalIgnoreCase)
+                || employee.Role.Contains(_dashboardSearch, StringComparison.OrdinalIgnoreCase)
+                || employee.Department.Contains(_dashboardSearch, StringComparison.OrdinalIgnoreCase));
+            return _dashboardSortDescending
+                ? filtered.OrderByDescending(employee => employee.Name)
+                : filtered.OrderBy(employee => employee.Name);
+        }
+    }
+
+    private Task OnPreviewColorChanged(string value)
+    {
+        _previewColor = value;
+        _styles = CreatePreviewStyles(SelectedTheme with { Primary = value });
+        return Task.CompletedTask;
+    }
+
+    private void ResendVerification() => _verificationMessage = "A new verification code was sent.";
+    private void ConfirmDialog() { _dialogVisible = false; _signupFeedback = "Theme settings confirmed"; }
+    private void OpenDialog() => _dialogVisible = true;
+    private void CloseDialog() => _dialogVisible = false;
+    private void CancelConfirm() => _confirmMessage = "Cancelled";
+    private void AcceptConfirm() => _confirmMessage = "Confirmed";
+    private void PrimaryButtonClicked() => _buttonFeedback = "Primary action clicked";
+    private void DangerButtonClicked() => _buttonFeedback = "Danger action clicked";
+    private void OutlinedButtonClicked() => _buttonFeedback = "Outlined action clicked";
+    private void RoundButtonClicked() => _buttonFeedback = "Round action clicked";
+    private void StartAccountCreation() => _signupFeedback = "Account creation started";
+    private void SelectGoogleSignIn() => _signupFeedback = "Google sign-in selected";
+    private void SelectAppleSignIn() => _signupFeedback = "Apple sign-in selected";
+    private void DownloadDashboard() => _dashboardFeedback = "Download requested";
+    private void ShowFilterFeedback() => _dashboardFeedback = "Filter options are ready";
+    private void ShowColumnFeedback() => _dashboardFeedback = "Column settings are ready";
+    private void ToggleDashboardSort() => _dashboardSortDescending = !_dashboardSortDescending;
+    private void ResetDashboard()
+    {
+        _dashboardSearch = string.Empty;
+        _dashboardRange = "monthly";
+        _dashboardSortDescending = false;
+        _dashboardFeedback = "Dashboard reset";
+    }
+    private MenuTheme GetDashboardMenuTheme() => _selected is "dark" or "geek" ? MenuTheme.Dark : MenuTheme.Light;
+    private SiderTheme GetDashboardSiderTheme() => _selected is "dark" or "geek" ? SiderTheme.Dark : SiderTheme.Light;
+
+    private static readonly DashboardEmployee[] DashboardEmployees =
+    {
+        new("Olivia Rhye", "Product Designer", "Design", "Active"),
+        new("Phoenix Baker", "Engineering Lead", "Engineering", "Active"),
+        new("Lana Steiner", "Product Manager", "Product", "On leave"),
+        new("Demi Wilkinson", "Frontend Engineer", "Engineering", "Active"),
+        new("Candice Wu", "UX Researcher", "Design", "Active")
+    };
+
+    private sealed record DashboardEmployee(string Name, string Role, string Department, string Status);
     private CssStyleSheet _styles = CreatePreviewStyles(Themes[0]);
     private ThemeSwatch SelectedTheme => Themes.First(item => item.Key == _selected);
 
@@ -88,6 +252,19 @@
         _styles = CreatePreviewStyles(SelectedTheme);
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_themeModeInitialized) return;
+        _themeModeInitialized = true;
+        var savedTheme = await JS.InvokeAsync<string>("localStorage.getItem", "ant-design-blazor-doc-theme");
+        if (savedTheme?.StartsWith("dark", System.StringComparison.Ordinal) == true)
+        {
+            _selected = "dark";
+            _styles = CreatePreviewStyles(SelectedTheme);
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
     private static CssStyleSheet CreatePreviewStyles(ThemeSwatch theme)
     {
         var rules = new System.Collections.Generic.Dictionary<string, object>
@@ -95,19 +272,20 @@
             ["root"] = Css(("--home-theme-primary", theme.Primary), ("--home-theme-bg", theme.Background), ("--home-theme-text", theme.Text), ("--home-theme-border", theme.Border), ("--home-theme-muted", theme.Muted),
                 ("--ant-color-primary", theme.Primary), ("--ant-color-bg-container", theme.Background), ("--ant-color-text", theme.Text), ("--ant-color-border", theme.Border),
                 ("--preview-surface", "var(--home-theme-bg)"), ("--preview-text", "var(--home-theme-text)"), ("--preview-border", "var(--home-theme-border)"),
-                ("boxSizing", "border-box"), ("width", "100%"), ("maxWidth", 1320), ("margin", "52px 12px 64px"), ("marginInline", "auto"), ("padding", 32),
-                ("border", "1px solid var(--preview-border)"), ("borderRadius", 20), ("background", "var(--preview-surface)"), ("color", "var(--preview-text)"),
-                ("boxShadow", "0 16px 48px rgba(0,0,0,.07)"), ("transition", "background .2s, color .2s"),
-                ("@media(max-width:900px)", Css(("maxWidth", "100%"))),
-                ("@media(max-width:600px)", Css(("margin", "36px 8px"), ("padding", "20px 14px")))),
-            ["heading"] = Css(("display", "flex"), ("width", "100%"), ("alignItems", "flex-end"), ("justifyContent", "space-between"), ("gap", 24), ("marginBottom", 24),
-                ("& h2", Css(("margin", "5px 0"), ("fontSize", 28), ("fontWeight", 600), ("color", "var(--preview-text)"))),
-                ("& p", Css(("margin", 0), ("color", "var(--home-theme-muted)"))),
-                ("@media(max-width:900px)", Css(("alignItems", "flex-start"), ("flexDirection", "column"))),
-                ("@media(max-width:600px)", Css(("& h2", Css(("fontSize", 22)))))),
-            ["eyebrow"] = Css(("color", "var(--home-theme-primary)"), ("fontSize", 12), ("fontWeight", 700), ("letterSpacing", ".08em"), ("textTransform", "uppercase")),
-            ["controls"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 20), ("@media(max-width:900px)", Css(("width", "100%"), ("justifyContent", "space-between"))),
-                ("@media(max-width:600px)", Css(("alignItems", "flex-start"), ("flexDirection", "column"), ("gap", 15)))),
+                ("boxSizing", "border-box"), ("width", "100vw"), ("maxWidth", "none"), ("margin", "52px 0 64px"), ("marginInline", "calc(50% - 50vw)"),
+                ("padding", "52px max(32px, calc((100vw - 1320px)/2)) 64px"),
+                ("border", 0), ("borderRadius", 0), ("background", "var(--preview-surface)"), ("color", "var(--preview-text)"),
+                ("boxShadow", "none"), ("transition", "background .2s, color .2s"),
+                ("@media(max-width:900px)", Css(("maxWidth", "none"))),
+                ("@media(max-width:600px)", Css(("margin", "36px 0"), ("marginInline", "calc(50% - 50vw)"), ("padding", "36px 16px 48px")))),
+            ["heading"] = Css(("display", "flex"), ("width", "100%"), ("alignItems", "center"), ("flexDirection", "column"), ("gap", 0), ("marginBottom", 36), ("textAlign", "center"),
+                ("& h2", Css(("margin", "4px 0"), ("fontSize", 38), ("fontWeight", 800), ("lineHeight", 1.15), ("color", "var(--preview-text)"))),
+                ("& p", Css(("margin", "8px 0 0"), ("color", "var(--home-theme-muted)"))),
+                ("@media(max-width:600px)", Css(("& h2", Css(("fontSize", 26)))))),
+            ["eyebrow"] = Css(("display", "none")),
+            ["controls"] = Css(("display", "flex"), ("width", "100%"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 20), ("marginTop", 48),
+                ("@media(max-width:900px)", Css(("width", "100%"), ("justifyContent", "space-between"))),
+                ("@media(max-width:600px)", Css(("alignItems", "flex-start"), ("flexDirection", "column"), ("gap", 15), ("marginTop", 26)))),
             ["actions"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 8), ("& button, & a", Css(("border", 0), ("background", "transparent"), ("color", "var(--home-theme-primary)"), ("cursor", "pointer")))),
             ["previewTabs"] = Css(("display", "flex"), ("gap", 4), ("padding", 3), ("borderRadius", 100), ("background", "var(--ant-color-fill-quaternary, color-mix(in srgb,var(--home-theme-text) 7%,var(--home-theme-bg)))"),
                 ("@media(max-width:768px)", Css(("width", "60%")))),
@@ -116,13 +294,97 @@
                 ("&.selected", Css(("color", "var(--ant-color-text, var(--home-theme-text))"), ("background", "var(--ant-color-bg-elevated, var(--home-theme-bg))"), ("boxShadow", "0 2px 8px rgba(0,0,0,.08)"))),
                 ("@media(max-width:768px)", Css(("minWidth", 0), ("flex", 1), ("paddingInline", 12), ("fontSize", 16)))),
             ["swatches"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 9), ("@media(max-width:600px)", Css(("flexWrap", "wrap"), ("gap", 12)))),
-            ["themeBlock"] = Css(("width", 20), ("height", 20), ("padding", 0), ("border", "2px solid var(--home-theme-bg)"), ("borderRadius", "50%"),
-                ("background", "var(--swatch-color)"), ("boxShadow", "0 0 0 1px var(--preview-border)"), ("cursor", "pointer"),
-                ("outline", "2px solid var(--ant-color-bg-layout, var(--home-theme-bg))"), ("transition", "background-color .1s, transform .1s, opacity .1s"),
+            ["themeBlock"] = Css(("display", "grid"), ("width", 24), ("height", 24), ("padding", 0), ("border", "2px solid rgba(255,255,255,.8)"), ("borderRadius", "50%"),
+                ("background", "var(--swatch-color)"), ("boxShadow", "0 0 0 1px rgba(0,0,0,.22)"), ("color", "#fff"), ("cursor", "pointer"),
+                ("placeItems", "center"), ("fontSize", 12), ("outline", "2px solid transparent"), ("transition", "background-color .1s, transform .1s, opacity .1s"),
+                ("& img", Css(("display", "block"), ("width", "100%"), ("height", "100%"), ("borderRadius", "50%"), ("objectFit", "cover"))),
                 ("&:hover, &:focus-visible", Css(("outline", "2px solid var(--ant-color-primary-border, var(--home-theme-primary))"), ("transform", "scale(1.1)")))),
-            ["active"] = Css(("outline", "2px solid var(--ant-color-primary-border, var(--home-theme-primary))")),
-            ["components"] = Css(("display", "grid"), ("width", "100%"), ("gridTemplateColumns", "1.2fr 1fr .8fr"), ("gap", 16),
-                ("@media(max-width:900px)", Css(("gridTemplateColumns", "1fr 1fr"))), ("@media(max-width:600px)", Css(("gridTemplateColumns", "1fr")))),
+            ["active"] = Css(("outline", "2px solid var(--home-theme-primary)"), ("boxShadow", "0 0 0 4px color-mix(in srgb,var(--home-theme-primary) 26%,transparent)")),
+            ["components"] = Css(("display", "grid"), ("width", "100%"), ("gridTemplateColumns", "1.2fr 1fr .8fr"), ("gap", 24), ("alignItems", "stretch"),
+                ("@media(max-width:1100px)", Css(("gridTemplateColumns", "1fr 1fr"))), ("@media(max-width:700px)", Css(("gridTemplateColumns", "1fr")))),
+            ["previewColumn"] = Css(("minWidth", 0), ("display", "flex"), ("flexDirection", "column"), ("gap", 18), ("padding", 20), ("borderRadius", 10),
+                ("background", "color-mix(in srgb, var(--home-theme-bg) 94%, var(--home-theme-text))"),
+                ("@media(max-width:700px)", Css(("padding", 14)))),
+            ["centerColumn"] = Css(("justifyContent", "space-between")),
+            ["rightColumn"] = Css(("gap", 18)),
+            ["controlGrid"] = Css(("display", "flex"), ("flexDirection", "column"), ("gap", 12),
+                ("& input::placeholder", Css(("color", "var(--home-theme-muted)"))),
+                ("@media(max-width:700px)", Css(("gap", 8)))),
+            ["controlRow"] = Css(("display", "flex"), ("gap", 12), ("alignItems", "center"),
+                ("& > :first-child", Css(("flex", "1 1 auto"), ("minWidth", 0))),
+                ("& > .ant-select", Css(("flex", "0 0 300px"), ("width", "300px"), ("maxWidth", "100%"))),
+                ("@media(max-width:700px)", Css(
+                    ("flexWrap", "wrap"),
+                    ("& > .ant-select", Css(("flexBasis", "100%"), ("width", "100%")))))) ,
+            ["controlRowSecond"] = Css(("display", "grid"), ("gridTemplateColumns", ".85fr 1fr 1.2fr"), ("gap", 10), ("alignItems", "center"),
+                ("& > *", Css(("minWidth", 0), ("width", "100%"))), ("& .ant-btn", Css(("paddingInline", 8), ("fontSize", 11)))),
+            ["colorPicker"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 8), ("& i", Css(("width", 22), ("height", 22), ("borderRadius", 4), ("background", "var(--home-theme-primary)")))),
+            ["compact"] = Css(("display", "flex"), ("width", "100%"), ("& .ant-btn", Css(("width", "100%"), ("justifyContent", "space-between")))),
+            ["date"] = Css(("textAlign", "left"), ("color", "var(--home-theme-muted) !important")),
+            ["options"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 8), ("fontSize", 12),
+                ("& label", Css(("whiteSpace", "nowrap"))), ("& input", Css(("accentColor", "var(--home-theme-primary)"))),
+                ("@media(max-width:700px)", Css(("flexWrap", "wrap")))),
+            ["toggle"] = Css(("width", 42), ("height", 22), ("padding", 2), ("border", 0), ("borderRadius", 20), ("background", "var(--home-theme-primary)"),
+                ("& i", Css(("display", "block"), ("width", 18), ("height", 18), ("marginLeft", "auto"), ("borderRadius", "50%"), ("background", "#fff")))),
+            ["spinner"] = Css(("width", 19), ("height", 19), ("border", "3px solid var(--preview-border)"), ("borderTopColor", "var(--home-theme-primary)"), ("borderRadius", "50%")),
+            ["steps"] = Css(("minWidth", 0), ("overflow", "hidden"), ("& .ant-steps-item-title", Css(("fontSize", 11), ("whiteSpace", "nowrap"))),
+                ("& .ant-steps-item-description", Css(("display", "none"))), ("& .ant-steps-item-icon", Css(("marginInlineEnd", 4))),
+                ("@media(max-width:700px)", Css(("& .ant-steps-item-title", Css(("fontSize", 9)))))),
+            ["progressList"] = Css(("display", "flex"), ("flexDirection", "column"), ("gap", 8), ("marginTop", 8)),
+            ["progressRow"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 8), ("width", "100%"),
+                ("& .ant-progress", Css(("flex", "1 1 auto"), ("minWidth", 0), ("width", "auto"))),
+                ("& .ant-progress-outer", Css(("display", "block"), ("width", "100%"), ("marginRight", "0 !important"), ("paddingRight", "0 !important"))),
+                ("& .ant-progress-inner", Css(("position", "relative"), ("display", "inline-block"), ("width", "100%"), ("height", 8), ("overflow", "hidden"), ("verticalAlign", "middle"), ("background", "var(--home-theme-border, #d9d9d9)"), ("borderRadius", 100))),
+                ("& .ant-progress-bg", Css(("position", "relative"), ("height", 8), ("borderRadius", 100), ("backgroundColor", "var(--home-theme-primary)"))),
+                ("& .ant-progress-text", Css(("display", "none"))),
+                ("& .ant-progress-status-exception .ant-progress-bg", Css(("backgroundColor", "#ff4d4f"))),
+                ("& > span:last-child", Css(("flex", "0 0 14px"), ("width", 14), ("height", 14))),
+                ("& > span", Css(("flex", "0 0 2em"), ("fontSize", 11), ("textAlign", "right")))),
+            ["progressError"] = Css(("display", "grid"), ("flex", "0 0 14px"), ("width", 14), ("height", 14), ("boxSizing", "border-box"), ("placeItems", "center"), ("borderRadius", "50%"), ("background", "#e5484d"), ("color", "#fff"), ("fontWeight", 700)),
+            ["statuses"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 6), ("fontSize", 11),
+                ("& .ant-badge-status-text", Css(("marginInlineStart", 4), ("fontSize", 10))),
+                ("@media(max-width:700px)", Css(("flexWrap", "wrap")))),
+            ["lowerGrid"] = Css(("display", "grid"), ("gridTemplateColumns", "minmax(90px, .65fr) minmax(0,1fr)"), ("alignItems", "start"), ("gap", 12)),
+            ["qr"] = Css(("display", "grid"), ("placeItems", "center"), ("minHeight", 130), ("padding", 6), ("border", "1px solid var(--preview-border)"), ("borderRadius", 8), ("background", "var(--home-theme-bg)"),
+                ("& .ant-qrcode", Css(("maxWidth", "100%"), ("height", "auto")))),
+            ["lowerControls"] = Css(("display", "flex"), ("flexDirection", "column"), ("gap", 8)),
+            ["miniIcons"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-around"), ("color", "var(--home-theme-primary)"), ("fontSize", 17),
+                ("& .ant-rate", Css(("fontSize", 15))), ("& .ant-spin", Css(("color", "var(--home-theme-primary)")))),
+            ["tags"] = Css(("display", "flex"), ("justifyContent", "space-around"), ("gap", 3), ("padding", 5), ("borderRadius", 6), ("background", "color-mix(in srgb,var(--home-theme-text) 12%,var(--home-theme-bg))"),
+                ("& .ant-tag", Css(("marginInlineEnd", 0), ("paddingInline", 5), ("fontSize", 9), ("whiteSpace", "nowrap")))),
+            ["confirm"] = Css(("padding", 10), ("borderRadius", 6), ("background", "color-mix(in srgb,var(--home-theme-text) 8%,var(--home-theme-bg))"), ("fontSize", 12)),
+            ["confirmTitle"] = Css(("fontWeight", 500), ("lineHeight", 1.5)),
+            ["confirmActions"] = Css(("display", "flex"), ("justifyContent", "flex-end"), ("gap", 6), ("marginTop", 12), ("& .ant-btn", Css(("height", 28), ("paddingInline", 8), ("fontSize", 12)))),
+            ["segments"] = Css(("display", "flex"), ("flexDirection", "column"), ("gap", 8), ("padding", 7), ("border", "1px solid var(--preview-border)"), ("borderRadius", 6), ("background", "var(--home-theme-bg)"),
+                ("& .ant-segmented", Css(("width", "100%"))),
+                ("& .ant-segmented-group", Css(("display", "flex"), ("width", "100%"))), ("& .ant-segmented-item", Css(("flex", 1), ("textAlign", "center")))),
+            ["verify"] = Css(("display", "flex"), ("alignItems", "center"), ("flexDirection", "column"), ("textAlign", "center"), ("padding", "2px 0 14px"),
+                ("& strong", Css(("margin", "14px 0 5px"), ("fontSize", 16))), ("& small", Css(("color", "var(--home-theme-muted)"), ("fontSize", 12))), ("& a", Css(("color", "var(--home-theme-primary)")))),
+            ["contributors"] = Css(("width", "100%"), ("& .ant-avatar-group", Css(("display", "flex"), ("justifyContent", "center"))), ("& .ant-avatar", Css(("width", 42), ("height", 42), ("lineHeight", "42px")))),
+            ["otp"] = Css(("display", "flex"), ("gap", 7), ("margin", "15px 0"), ("& .ant-input-affix-wrapper, & .ant-input", Css(("width", 38), ("height", 42), ("padding", 0), ("textAlign", "center"), ("background", "color-mix(in srgb,var(--home-theme-text) 14%,var(--home-theme-bg))")))),
+            ["buttonPairs"] = Css(("display", "grid"), ("gridTemplateColumns", "1fr 1fr"), ("justifyItems", "center"), ("gap", 16), ("& .ant-btn", Css(("paddingInline", 12), ("fontSize", 12), ("whiteSpace", "nowrap"))),
+                ("@media(max-width:700px)", Css(("gap", 8), ("& .ant-btn", Css(("paddingInline", 7), ("fontSize", 10)))))),
+            ["profile"] = Css(("border", 0), ("background", "color-mix(in srgb,var(--home-theme-text) 8%,var(--home-theme-bg))"),
+                ("& .ant-card-body", Css(("display", "flex"), ("alignItems", "flex-start"), ("gap", 14), ("padding", 18))),
+                ("& .ant-avatar", Css(("flex", "0 0 60px"), ("width", 60), ("height", 60), ("overflow", "hidden"))),
+                ("& .ant-avatar img", Css(("display", "block"), ("width", "100%"), ("height", "100%"), ("objectFit", "contain"))),
+                ("& strong, & small", Css(("display", "block"))), ("& small", Css(("color", "var(--home-theme-muted)"))), ("& p", Css(("margin", "10px 0 0"), ("fontSize", 12)))),
+            ["previewAlert"] = Css(("width", "100%"), ("minWidth", 0), ("& .ant-alert-description", Css(("overflowWrap", "anywhere")))),
+            ["brandMark"] = Css(("display", "grid"), ("flex", "0 0 46px"), ("width", 46), ("height", 46), ("placeItems", "center"), ("border", "5px solid var(--home-theme-primary)"), ("borderRadius", 10), ("color", "#ed4b65"), ("fontSize", 24)),
+            ["notice"] = Css(("display", "flex"), ("gap", 12), ("padding", 16), ("borderRadius", 8), ("background", "color-mix(in srgb,var(--home-theme-text) 8%,var(--home-theme-bg))"),
+                ("& > b", Css(("display", "grid"), ("flex", "0 0 24px"), ("width", 24), ("height", 24), ("placeItems", "center"), ("borderRadius", "50%"), ("background", "#389e0d"), ("color", "#fff"))),
+                ("& strong", Css(("fontSize", 14))), ("& button", Css(("float", "right"), ("border", 0), ("background", "transparent"), ("color", "var(--home-theme-muted)"))), ("& p", Css(("margin", "6px 0 0"), ("fontSize", 12), ("lineHeight", 1.5)))),
+            ["signup"] = Css(("border", 0), ("background", "color-mix(in srgb,var(--home-theme-text) 9%,var(--home-theme-bg))"),
+                ("& .ant-card-body", Css(("display", "flex"), ("alignItems", "center"), ("flexDirection", "column"), ("width", "100%"), ("padding", 24))),
+                ("& .ant-avatar", Css(("marginBottom", 14))), ("& .ant-typography", Css(("color", "var(--home-theme-text)"), ("fontSize", 18))), ("& p", Css(("margin", "8px 0 20px"), ("color", "var(--home-theme-muted)"), ("fontSize", 12), ("textAlign", "center"))),
+                ("& .ant-btn", Css(("width", "100%"), ("marginTop", 7)))),
+            ["divider"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 10), ("width", "100%"), ("margin", "14px 0 4px"), ("color", "var(--home-theme-muted)"), ("fontSize", 11),
+                ("&::before, &::after", Css(("height", 1), ("flex", 1), ("background", "var(--preview-border)")))),
+            ["dialog"] = Css(("border", 0), ("borderRadius", 8), ("background", "color-mix(in srgb,var(--home-theme-text) 9%,var(--home-theme-bg))"),
+                ("& .ant-card-body", Css(("padding", 18))),
+                ("& strong", Css(("display", "block"), ("fontSize", 14))), ("& p", Css(("margin", "8px 0 14px"), ("fontSize", 12), ("lineHeight", 1.5), ("overflowWrap", "anywhere")))),
+            ["dialogCopy"] = Css(("minWidth", 0)),
+            ["dialogActions"] = Css(("display", "flex"), ("justifyContent", "flex-end"), ("gap", 8), ("& .ant-btn", Css(("height", 30), ("paddingInline", 10), ("fontSize", 12)))),
             ["demoCard"] = Css(("minWidth", 0), ("padding", 22), ("border", "1px solid var(--preview-border)"), ("borderRadius", 12),
                 ("background", "color-mix(in srgb,var(--home-theme-bg) 95%,var(--home-theme-primary))"),
                 ("& h3", Css(("margin", "0 0 8px"), ("color", "var(--preview-text)"), ("fontSize", 17))),
@@ -144,24 +406,32 @@
             ["switch"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 8), ("marginTop", 16), ("fontSize", 13),
                 ("& i", Css(("width", 32), ("height", 18), ("borderRadius", 20), ("background", "var(--home-theme-primary)"))),
                 ("& i::after", Css(("display", "block"), ("width", 14), ("height", 14), ("margin", "2px 0 0 16px"), ("borderRadius", "50%"), ("background", "white"), ("content", "\"\"")))),
-            ["statLabel"] = Css(("display", "block"), ("color", "var(--home-theme-muted)"), ("fontSize", 12)),
-            ["stat"] = Css(("display", "block"), ("margin", "8px 0"), ("fontSize", 32)),
-            ["trend"] = Css(("display", "block"), ("color", "#35a16b"), ("fontSize", 12)),
-            ["bars"] = Css(("display", "flex"), ("alignItems", "flex-end"), ("gap", 5), ("height", 90), ("marginTop", 20), ("borderBottom", "1px solid var(--preview-border)"),
-                ("& i", Css(("flex", 1), ("borderRadius", "4px 4px 0 0"), ("background", "color-mix(in srgb,var(--home-theme-primary) 65%,var(--home-theme-bg))"))),
-                ("& i:nth-child(3n)", Css(("height", "40%"))), ("& i:nth-child(3n + 1)", Css(("height", "66%"))), ("& i:nth-child(3n + 2)", Css(("height", "85%"))),
-                ("@media(max-width:900px)", Css(("gridColumn", "1/-1"))), ("@media(max-width:600px)", Css(("gridColumn", "auto")))),
-            ["sideCard"] = Css(("@media(max-width:900px)", Css(("gridColumn", "1/-1"))), ("@media(max-width:600px)", Css(("gridColumn", "auto")))),
-            ["dashboard"] = Css(("display", "grid"), ("width", "100%"), ("gridTemplateColumns", "180px 1fr"), ("minHeight", 250), ("border", "1px solid var(--preview-border)"), ("borderRadius", 12), ("overflow", "hidden"),
+            ["dashboard"] = Css(("width", "100%"), ("minHeight", 520), ("border", "1px solid var(--preview-border)"), ("borderRadius", 12), ("overflow", "hidden"),
                 ("background", "color-mix(in srgb,var(--home-theme-bg) 97%,var(--home-theme-primary))"), ("& aside", Css(("display", "flex"), ("flexDirection", "column"), ("gap", 6), ("padding", 20), ("borderRight", "1px solid var(--preview-border)"))),
                 ("& aside strong", Css(("marginBottom", 12))), ("& aside span", Css(("padding", 8), ("borderRadius", 6), ("color", "var(--home-theme-muted)"), ("fontSize", 13))),
                 ("& aside span.active", Css(("background", "color-mix(in srgb,var(--home-theme-primary) 12%,var(--home-theme-bg))"), ("color", "var(--home-theme-primary)"))),
                 ("@media(max-width:600px)", Css(("gridTemplateColumns", "1fr"), ("& aside", Css(("display", "none")))))),
-            ["dashboardContent"] = Css(("padding", 22), ("& h3", Css(("margin", "0 0 16px")))),
-            ["metrics"] = Css(("display", "grid"), ("gridTemplateColumns", "repeat(3,1fr)"), ("gap", 12),
-                ("& article", Css(("display", "grid"), ("gap", 8), ("padding", 14), ("border", "1px solid var(--preview-border)"), ("borderRadius", 8))),
-                ("& small", Css(("color", "var(--home-theme-muted)"))), ("& strong", Css(("fontSize", 22))), ("& span", Css(("color", "#35a16b"), ("fontSize", 12))),
-                ("@media(max-width:600px)", Css(("gridTemplateColumns", "1fr")))),
+            ["dashboardHeader"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("height", 56), ("paddingInline", 18), ("borderBottom", "1px solid var(--preview-border)"),
+                ("background", "color-mix(in srgb,var(--home-theme-bg) 94%,var(--home-theme-text))"), ("lineHeight", "normal")),
+            ["dashboardLogo"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 9), ("& img", Css(("width", 28), ("height", 28))), ("& strong", Css(("fontSize", 15)))),
+            ["dashboardMain"] = Css(("minWidth", 0), ("padding", "0 20px 20px"), ("@media(max-width:700px)", Css(("padding", "0 12px 14px")))),
+            ["dashboardBreadcrumb"] = Css(("margin", "14px 0 18px"), ("fontSize", 12)),
+            ["dashboardToolbar"] = Css(("display", "flex"), ("alignItems", "center"), ("justifyContent", "space-between"), ("gap", 12), ("marginBottom", 16),
+                ("& > div", Css(("display", "flex"), ("alignItems", "center"), ("gap", 8))),
+                ("@media(max-width:700px)", Css(("alignItems", "stretch"), ("flexDirection", "column"), ("& > div", Css(("justifyContent", "flex-end")))))),
+            ["dashboardKpis"] = Css(("marginBottom", 16), ("& .ant-card", Css(("height", "100%"), ("borderColor", "var(--preview-border)"), ("background", "var(--home-theme-bg)"))),
+                ("& .ant-card-body", Css(("padding", "14px 16px"))), ("& .ant-statistic-title", Css(("fontSize", 12), ("color", "var(--home-theme-muted)"))),
+                ("& .ant-statistic-content", Css(("fontSize", 23))), ("& .ant-tag", Css(("marginTop", 8), ("marginInlineEnd", 0))),
+                ("@media(max-width:700px)", Css(("rowGap", 12)))),
+            ["dashboardTable"] = Css(("borderColor", "var(--preview-border)"), ("background", "var(--home-theme-bg)"),
+                ("& .ant-card-body", Css(("padding", 16))), ("& .ant-table", Css(("background", "var(--home-theme-bg)"))),
+                ("& .ant-table-thead > tr > th", Css(("background", "color-mix(in srgb,var(--home-theme-bg) 92%,var(--home-theme-text))"))),
+                ("@media(max-width:700px)", Css(("& .ant-card-body", Css(("padding", 10))), ("overflowX", "auto")))),
+            ["dashboardTableHeader"] = Css(("display", "flex"), ("alignItems", "center"), ("gap", 8), ("marginBottom", 12),
+                ("& h4", Css(("margin", 0), ("fontSize", 16))), ("& .ant-input", Css(("width", 170), ("marginLeft", "auto"))),
+                ("@media(max-width:700px)", Css(("flexWrap", "wrap"), ("& .ant-input", Css(("width", "100%"), ("marginLeft", 0)))))),
+            ["dashboardTableActions"] = Css(("display", "flex"), ("justifyContent", "flex-end"), ("gap", 8), ("marginBottom", 12),
+                ("@media(max-width:700px)", Css(("justifyContent", "flex-start"), ("flexWrap", "wrap")))),
             ["chart"] = Css(("display", "flex"), ("alignItems", "flex-end"), ("gap", 10), ("height", 110), ("marginTop", 18), ("padding", "10px 20px"), ("border", "1px solid var(--preview-border)"), ("borderRadius", 8),
                 ("& span", Css(("height", "45%"), ("flex", 1), ("borderRadius", "4px 4px 0 0"), ("background", "color-mix(in srgb,var(--home-theme-primary) 65%,var(--home-theme-bg))"))),
                 ("& span:nth-child(3n)", Css(("height", "78%"))), ("& span:nth-child(3n + 1)", Css(("height", "60%"))), ("& span:nth-child(3n + 2)", Css(("height", "90%"))),
@@ -188,20 +458,20 @@
 
     private static readonly ThemeSwatch[] Themes =
     {
-        new("light", "Ant Design", "#1677ff", "#fff", "#1f1f1f", "#d9d9d9", "#8c8c8c"),
-        new("mui", "MUI", "#1976d2", "#fff", "#202124", "#dadce0", "#70757a"),
-        new("shadcn", "shadcn", "#18181b", "#fff", "#18181b", "#e4e4e7", "#71717a"),
-        new("bootstrap", "Bootstrap", "#0d6efd", "#fff", "#212529", "#dee2e6", "#6c757d"),
-        new("cartoon", "Cartoon", "#ff6b6b", "#fffaf0", "#3d2b1f", "#ffcf70", "#92765e"),
-        new("dark", "Dark", "#1668dc", "#141414", "#f5f5f5", "#424242", "#bfbfbf"),
-        new("illustration", "Illustration", "#7c5cff", "#fff", "#2e2459", "#d9d0ff", "#766e91"),
-        new("glass", "Glass", "#1677ff", "#f5f9ff", "#102a43", "#c8dcf0", "#627d98"),
-        new("geek", "Geek", "#00b96b", "#101418", "#e6fffb", "#29343b", "#9fb3ad"),
-        new("lark", "Lark", "#3370ff", "#fff", "#1f2329", "#c9cdd4", "#646a73"),
-        new("blossom", "Blossom", "#eb2f96", "#fff7fb", "#4a2036", "#ffc6e2", "#875f75"),
-        new("v4", "Ant Design V4", "#1890ff", "#fff", "#1f1f1f", "#d9d9d9", "#8c8c8c"),
-        new("serene", "Serene", "#5b8c85", "#f6ffed", "#274c45", "#b7d8d0", "#52776f")
+        new("light", "Ant Design", "#1677ff", "#f5f8ff", "#1f1f1f", "#d9d9d9", "#8c8c8c", "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"),
+        new("mui", "MUI", "#1976d2", "#fafafa", "#202124", "#dadce0", "#70757a", "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*LuUWTKWMy34AAAAAFvAAAAgAegCCAQ/original"),
+        new("shadcn", "shadcn", "#18181b", "#18181b", "#fafafa", "#3f3f46", "#a1a1aa", "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*X-rDQY7JQ-oAAAAAFVAAAAgAegCCAQ/original"),
+        new("bootstrap", "Bootstrap", "#7c18df", "#f8f9fa", "#212529", "#dee2e6", "#6c757d", "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*V0RKS7vJxqEAAAAAQBAAAAgAegCCAQ/original"),
+        new("cartoon", "Cartoon", "#ff6b6b", "#fffaf0", "#3d2b1f", "#ffcf70", "#92765e", "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*fLjhR5tqNIwAAAAAN9AAAAgAegCCAQ/original"),
+        new("dark", "Dark", "#1668dc", "#111318", "#f5f5f5", "#30343b", "#a3a6ad", "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*rjPZR5DHPO0AAAAAQBAAAAgAegCCAQ/original"),
+        new("illustration", "Illustration", "#7c5cff", "#f7f4ff", "#2e2459", "#d9d0ff", "#766e91", "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*Tm6ESY5h6ZgAAAAAQBAAAAgAegCCAQ/original"),
+        new("glass", "Glass", "#1677ff", "#f5f9ff", "#102a43", "#c8dcf0", "#627d98", "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*GF9US7qG8tAAAAAAQCAAAAgAegCCAQ/original"),
+        new("geek", "Geek", "#00b96b", "#030603", "#39ff14", "#29343b", "#9fb3ad", "https://mdn.alipayobjects.com/huamei_iwk9zp/afts/img/A*MsjGSYbZ6xkAAAAAQCAAAAgAegCCAQ/original"),
+        new("lark", "Lark", "#3370ff", "#f5f7fa", "#1f2329", "#c9cdd4", "#646a73", "https://gw.alipayobjects.com/zos/bmw-prod/3e899b2b-4eb4-4771-a7fc-14c7ff078aed.svg"),
+        new("blossom", "Blossom", "#eb2f96", "#fff7fb", "#4a2036", "#ffc6e2", "#875f75", "https://gw.alipayobjects.com/zos/bmw-prod/ed9b04e8-9b8d-4945-8f8a-c8fc025e846f.svg"),
+        new("v4", "Ant Design V4", "#1890ff", "#f0f5ff", "#1f1f1f", "#d9d9d9", "#8c8c8c", "https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*bOiWT4-34jkAAAAAAAAAAAAADrJ8AQ/original"),
+        new("serene", "Serene", "#5b8c85", "#f6ffed", "#274c45", "#b7d8d0", "#52776f", "https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg")
     };
 
-    private sealed record ThemeSwatch(string Key, string Label, string Primary, string Background, string Text, string Border, string Muted);
+    private sealed record ThemeSwatch(string Key, string Label, string Primary, string Background, string Text, string Border, string Muted, string Icon);
 }

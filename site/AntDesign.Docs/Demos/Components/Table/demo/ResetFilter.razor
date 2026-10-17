@@ -1,0 +1,119 @@
+@using AntDesign.Filters
+@using AntDesign.TableModels
+
+<Space Style="margin-bottom:16px">
+    <Button OnClick="SortAge">Sort age</Button>
+    <Button OnClick="ClearFilters">Clear filters</Button>
+    <Button OnClick="ClearAll">Clear filters and sorters</Button>
+</Space>
+
+<Table @key="_tableInstance" TItem="ResetFilterRow" DataSource="VisibleRows" RowKey="row=>row.Key"
+       OnChange="OnTableChange">
+    <ColumnDefinitions>
+        <PropertyColumn Property="row=>row.Name" Title="Name" Width="30%" Filterable Filtered="@(_selectedNames.Count > 0)"
+                        Sortable SorterCompare="(left,right)=>left.Length-right.Length">
+            <FilterDropdown Context="dropdown">
+                @{ dropdown.PreventClose(); }
+                <div style="padding:8px;min-width:180px">
+                    @foreach (var name in _nameOptions)
+                    {
+                        <div style="padding:4px 0"><Checkbox Checked="@_selectedNames.Contains(name)" CheckedChanged="@(checkedValue => Toggle(_selectedNames, name, checkedValue))">@name</Checkbox></div>
+                    }
+                    <div style="display:flex;justify-content:space-between;padding-top:8px">
+                        <Button Size="ButtonSize.Small" OnClick="ClearNames">Reset</Button>
+                        <Button Type="ButtonType.Primary" Size="ButtonSize.Small" OnClick="()=>Apply(dropdown)">OK</Button>
+                    </div>
+                </div>
+            </FilterDropdown>
+        </PropertyColumn>
+        <PropertyColumn Property="row=>row.Age" Title="Age" Sortable SorterCompare="(left,right)=>left-right"
+                        DefaultSortOrder="@(_sortAge ? SortDirection.Descending : null)" />
+        <PropertyColumn Property="row=>row.Address" Title="Address" Filterable Filtered="@(_selectedAddresses.Count > 0)"
+                        Sortable SorterCompare="(left,right)=>left.Length-right.Length">
+            <FilterDropdown Context="dropdown">
+                @{ dropdown.PreventClose(); }
+                <div style="padding:8px;min-width:180px">
+                    @foreach (var address in _addressOptions)
+                    {
+                        <div style="padding:4px 0"><Checkbox Checked="@_selectedAddresses.Contains(address)" CheckedChanged="@(checkedValue => Toggle(_selectedAddresses, address, checkedValue))">@address</Checkbox></div>
+                    }
+                    <div style="display:flex;justify-content:space-between;padding-top:8px">
+                        <Button Size="ButtonSize.Small" OnClick="ClearAddresses">Reset</Button>
+                        <Button Type="ButtonType.Primary" Size="ButtonSize.Small" OnClick="()=>Apply(dropdown)">OK</Button>
+                    </div>
+                </div>
+            </FilterDropdown>
+        </PropertyColumn>
+    </ColumnDefinitions>
+</Table>
+
+@code {
+    private readonly ResetFilterRow[] _data =
+    [
+        new("1", "John Brown", 32, "New York No. 1 Lake Park"),
+        new("2", "Jim Green", 42, "London No. 1 Lake Park"),
+        new("3", "Joe Black", 32, "Sydney No. 1 Lake Park"),
+        new("4", "Jim Red", 32, "London No. 2 Lake Park")
+    ];
+    private readonly string[] _nameOptions = ["Joe", "Jim"];
+    private readonly string[] _addressOptions = ["London", "New York"];
+    private readonly HashSet<string> _selectedNames = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _selectedAddresses = new(StringComparer.Ordinal);
+    private int _tableInstance;
+    private bool _sortAge;
+    private List<ResetFilterRow> _visibleRows;
+    private IEnumerable<ResetFilterRow> VisibleRows => _visibleRows is null ? _data : _visibleRows;
+
+    private static void Toggle(HashSet<string> selected, string value, bool isChecked)
+    {
+        if (isChecked) selected.Add(value);
+        else selected.Remove(value);
+    }
+
+    private void Apply(TableFilterDropdownContext dropdown)
+    {
+        UpdateRows();
+        dropdown.FilterClose();
+    }
+
+    private void UpdateRows()
+    {
+        IEnumerable<ResetFilterRow> rows = _data;
+        if (_selectedNames.Count > 0)
+            rows = rows.Where(row => _selectedNames.Any(name => row.Name.Contains(name, StringComparison.Ordinal)));
+        if (_selectedAddresses.Count > 0)
+            rows = rows.Where(row => _selectedAddresses.Any(address => row.Address.Contains(address, StringComparison.Ordinal)));
+        _visibleRows = rows.ToList();
+    }
+
+    private void ClearNames() => _selectedNames.Clear();
+    private void ClearAddresses() => _selectedAddresses.Clear();
+
+    private void ClearFilters()
+    {
+        _selectedNames.Clear();
+        _selectedAddresses.Clear();
+        _visibleRows = null;
+    }
+
+    private void SortAge()
+    {
+        _sortAge = true;
+        _tableInstance++;
+    }
+
+    private void ClearAll()
+    {
+        ClearFilters();
+        _sortAge = false;
+        _tableInstance++;
+    }
+
+    private void OnTableChange(QueryModel<ResetFilterRow> query)
+    {
+        var source = _visibleRows?.AsQueryable() ?? _data.AsQueryable();
+        _visibleRows = query.ExecuteQuery(source).ToList();
+    }
+
+    private sealed record ResetFilterRow(string Key, string Name, int Age, string Address);
+}

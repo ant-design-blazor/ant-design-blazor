@@ -1,0 +1,18 @@
+<Dropdown>
+    <Overlay>
+        <Menu Selectable DefaultSelectedKeys="_selectedKeys">
+            <MenuItem Key="1">Item 1</MenuItem>
+            <MenuItem Key="2">Item 2</MenuItem>
+            <MenuItem Key="3">Item 3</MenuItem>
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        <a class="ant-dropdown-link" @onclick:preventDefault>
+            Selectable <Icon Type="@IconType.Outline.Down" />
+        </a>
+    </ChildContent>
+</Dropdown>
+
+@code {
+    private readonly string[] _selectedKeys = ["3"];
+}

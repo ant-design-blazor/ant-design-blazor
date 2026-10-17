@@ -1,0 +1,36 @@
+﻿@using System.Text.Json
+
+<Form Model="@_model" Layout="FormLayout.Inline" OnFieldChanged="OnFieldChanged">
+    <FormItem Name="Username" Label="Username" Rules="@(new[] { new FormValidationRule { Required = true, Message = "Username is required!" } })">
+        <Input @bind-Value="context.Username" />
+    </FormItem>
+    <FormItem Name="Profile.Email" Label="Email">
+        <Input @bind-Value="context.Profile.Email" />
+    </FormItem>
+</Form>
+<div style="max-width: 440px; margin-top: 24px;">
+    <pre style="border: none;">@JsonSerializer.Serialize(_model, _jsonOptions)</pre>
+</div>
+
+@code {
+    private readonly ProfileFormModel _model = new()
+    {
+        Username = "Ant Design",
+        Profile = new ProfileModel { Email = "antd@example.com" }
+    };
+
+    private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
+
+    private void OnFieldChanged(FieldChangedEventArgs _) => StateHasChanged();
+
+    private sealed class ProfileFormModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public ProfileModel Profile { get; set; } = new();
+    }
+
+    private sealed class ProfileModel
+    {
+        public string Email { get; set; } = string.Empty;
+    }
+}

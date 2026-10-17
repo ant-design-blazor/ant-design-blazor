@@ -2,8 +2,8 @@
 @typeparam TValue
 @inherits AntDomComponentBase
 
-<label @onclick="OnClick" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-    <span class="@_radioClassMapper.Class">
+<label @onclick="OnClick" class="@SemanticClass("root", ClassMapper.Class)" style="@SemanticStyle("root", Style)" title="@Title" @ref="Ref">
+    <span class="@SemanticClass("icon", _radioClassMapper.Class)" style="@SemanticStyle("icon")">
         <input type="radio"
                autofocus="@AutoFocus"
                class="@_inputClassMapper.Class"
@@ -11,11 +11,13 @@
                checked="@Checked"
                name="@_name"
                value="@Value"
+               id="@Id"
+               required="@Required"
                @ref="_inputRef"/>
         <span class="@_innerClassMapper.Class"></span>
     </span>
     @if (ChildContent != null)
     {
-        <span class="ant-radio-label">@ChildContent</span>
+        <span class="@SemanticClass("label", RadioButton ? "ant-radio-button-label" : "ant-radio-label")" style="@SemanticStyle("label")">@ChildContent</span>
     }
 </label>

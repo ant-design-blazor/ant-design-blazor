@@ -3,42 +3,53 @@
 
 @if (!_isClosed)
 {
-    <div data-show="@(!_isClosing||_isClosed?"true":"false")" class="@ClassMapper.Class" style="@_innerStyle @Style " Id="@Id" @ref="Ref">
+    <div data-show="@(!_isClosing||_isClosed?"true":"false")" class="@SemanticClass("root", ClassMapper.Class)" style="@(GetComponentStyle("Alert", SemanticStyle("root", $"{_innerStyle} {Style}")) ?? string.Empty)" Id="@Id" role="alert" @ref="Ref">
         @if (IsShowIcon)
         {
             @if (Icon != null)
             {
-                <div class="ant-alert-icon">
+                <div class="@SemanticClass("icon", "ant-alert-icon")" style="@(HasSemanticStyle("icon") ? SemanticStyle("icon") : null)">
                     @Icon
                 </div>
             }
             else
             {
-                <Icon Type="@IconType" Theme="@(string.IsNullOrWhiteSpace(Description) ? IconThemeType.Fill : IconThemeType.Outline)" Class="ant-alert-icon" />
+                @if (HasSemanticStyle("icon"))
+                {
+                    <Icon Type="@IconType" Theme="@(string.IsNullOrWhiteSpace(Description) ? IconThemeType.Fill : IconThemeType.Outline)" Class="@SemanticClass("icon", "ant-alert-icon")" Style="@SemanticStyle("icon")" />
+                }
+                else
+                {
+                    <Icon Type="@IconType" Theme="@(string.IsNullOrWhiteSpace(Description) ? IconThemeType.Fill : IconThemeType.Outline)" Class="@SemanticClass("icon", "ant-alert-icon")" />
+                }
             }
         }
-        <div class="ant-alert-section">
+        <div class="@SemanticClass("section", "ant-alert-section")" style="@SemanticStyle("section")">
             @if (MessageTemplate != null)
             {
-                <div class="ant-alert-title">@MessageTemplate</div>
+                <div class="@SemanticClass("title", "ant-alert-title")" style="@SemanticStyle("title")">@MessageTemplate</div>
             }
             else if (!string.IsNullOrEmpty(Message))
             {
-                <div class="ant-alert-title">@Message</div>
+                <div class="@SemanticClass("title", "ant-alert-title")" style="@SemanticStyle("title")">@Message</div>
             }
 
             @if (ChildContent != null)
             {
-                <div class="ant-alert-description">@ChildContent</div>
+                <div class="@SemanticClass("description", "ant-alert-description")" style="@SemanticStyle("description")">@ChildContent</div>
             }
             else if (!string.IsNullOrEmpty(Description))
             {
-                <div class="ant-alert-description">@Description</div>
+                <div class="@SemanticClass("description", "ant-alert-description")" style="@SemanticStyle("description")">@Description</div>
             }
         </div>
+        @if (Action != null)
+        {
+            <div class="@SemanticClass("actions", "ant-alert-actions")" style="@SemanticStyle("actions")">@Action</div>
+        }
         @if (Closable)
         {
-            <button type="button" class="ant-alert-close-icon" tabindex="0" @onclick="@OnCloseHandler">
+            <button type="button" class="@SemanticClass("close", "ant-alert-close-icon")" style="@SemanticStyle("close")" tabindex="0" @onclick="@OnCloseHandler">
                 @if (!string.IsNullOrEmpty(CloseText))
                 {
                     <span class="ant-alert-close-text">@CloseText</span>

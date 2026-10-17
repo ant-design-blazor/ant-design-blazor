@@ -604,7 +604,17 @@ namespace AntDesign.Docs.Build.CLI.Command
                 {
                     var razorFile = fileGroup.FirstOrDefault(x => x.Extension == ".razor");
                     var descriptionFile = fileGroup.FirstOrDefault(x => x.Extension == ".md");
+                    if (razorFile is null || descriptionFile is null)
+                    {
+                        continue;
+                    }
                     var descriptionContent = DocParser.ParseDescription(File.ReadAllText(descriptionFile.FullName));
+                    if (descriptionContent.Meta?.Title is null ||
+                        !descriptionContent.Meta.Title.ContainsKey(Constants.EnglishLanguage) ||
+                        !descriptionContent.Meta.Title.ContainsKey(Constants.ChineseLanguage))
+                    {
+                        continue;
+                    }
                     var demoType = $"{demoDirectoryInfo.Name}{razorFile.FullName.Replace(demoDirectoryInfo.FullName, "").Replace("/", ".").Replace("\\", ".").Replace(razorFile.Extension, "")}";
 
                     yield return new DemoInformation
@@ -757,11 +767,19 @@ namespace AntDesign.Docs.Build.CLI.Command
                         List<FileSystemInfo> showCaseFiles = demo.ToList();
                         FileSystemInfo razorFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".razor");
                         FileSystemInfo descriptionFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".md");
+                        if (razorFile is null || descriptionFile is null)
+                        {
+                            continue;
+                        }
                         string code = razorFile != null ? File.ReadAllText(razorFile.FullName) : null;
 
                         string demoType = $"{demoDirectoryInfo.Name}{razorFile.FullName.Replace(demoDirectoryInfo.FullName, "").Replace(Path.DirectorySeparatorChar, '.').Replace(razorFile.Extension, "")}";
 
                         (DescriptionYaml Meta, string Style, Dictionary<string, string> Descriptions) descriptionContent = descriptionFile != null ? DocParser.ParseDescription(File.ReadAllText(descriptionFile.FullName)) : default;
+                        if (descriptionContent.Meta?.Title is null)
+                        {
+                            continue;
+                        }
 
                         // Read additional files specified in YAML metadata
                         Dictionary<string, string> additionalFiles = null;

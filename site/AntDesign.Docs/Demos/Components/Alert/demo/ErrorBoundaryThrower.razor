@@ -1,0 +1,8 @@
+<Button Danger OnClick="ThrowError">Click to throw an error</Button>
+
+@code {
+    private static void ThrowError()
+    {
+        throw new InvalidOperationException("An Uncaught Error");
+    }
+}

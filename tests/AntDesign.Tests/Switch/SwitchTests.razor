@@ -5,10 +5,12 @@
 	{
 		var cut = Render(@<Switch/>);
 		cut.MarkupMatches(
-			@<button type="button" role="switch" aria-checked="false" class="ant-switch" ant-click-animating="false">
+			@<button type="button" role="switch" aria-checked="false" class="ant-switch css-var-root">
 				<div class="ant-switch-handle"></div>
-				<span class="ant-switch-inner"> </span>    
-				<div class="ant-click-animating-node"></div>
+				<span class="ant-switch-inner">
+					<span class="ant-switch-inner-checked"></span>
+					<span class="ant-switch-inner-unchecked"></span>
+				</span>
 			</button>);
 	}
 
@@ -60,12 +62,12 @@
 		string onChild = "On", offChild = "Off";		
 		var cut = Render(@<Switch Checked="false" CheckedChildren=@onChild UnCheckedChildren=@offChild/>);
 		var buttonElement = cut.Find("button");		
-		var spanWithOffText = cut.Find("span.ant-switch-inner");
+		var spanWithOffText = cut.Find("span.ant-switch-inner-unchecked");
 		string actuallOffText = spanWithOffText.TextContent.Trim();
 		//Act
 		buttonElement.Click();		
 		//Assert
-		var spanWithOnText = cut.Find("span.ant-switch-inner");
+		var spanWithOnText = cut.Find("span.ant-switch-inner-checked");
 		Assert.Equal(offChild, actuallOffText );
 		Assert.Equal(onChild, spanWithOnText.TextContent.Trim());
 	}

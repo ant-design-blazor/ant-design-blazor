@@ -1,0 +1,39 @@
+<div class="table-fixed-gapped-columns-demo">
+    <style>
+        .table-fixed-gapped-columns-demo .ant-table-body,
+        .table-fixed-gapped-columns-demo .ant-table-content {
+            scrollbar-width: thin;
+            scrollbar-color: #eaeaea transparent;
+        }
+    </style>
+    <Table TItem="Row" DataSource="_rows" Bordered ScrollX="max-content" HidePagination Class="custom-table">
+        <ColumnDefinitions>
+            <PropertyColumn Property="row => row.Name" Title="Full Name" Width="100" Fixed="ColumnFixPlacement.Left" />
+            <PropertyColumn Property="row => row.Age" Title="Age" Width="100" />
+            <PropertyColumn Property="row => row.Address" Title="Column 1" Width="150" Fixed="ColumnFixPlacement.Left" />
+            @for (var index = 2; index <= 20; index++)
+            {
+                <PropertyColumn @key="index" Property="row => row.Address" Title="@($"Column {index}")" Width="150" />
+            }
+            <ActionColumn Title="Action 1" Width="90" Fixed="ColumnFixPlacement.Right">
+                <a>action</a>
+            </ActionColumn>
+            <ActionColumn Title="Action 2" Width="90">
+                <a>action</a>
+            </ActionColumn>
+            <ActionColumn Title="Action 3" Width="90" Fixed="ColumnFixPlacement.Right">
+                <a>action</a>
+            </ActionColumn>
+        </ColumnDefinitions>
+    </Table>
+</div>
+
+@code {
+    private readonly Row[] _rows =
+    [
+        new("1", "Olivia", 32, "New York Park"),
+        new("2", "Ethan", 40, "London Park")
+    ];
+
+    private sealed record Row(string Key, string Name, int Age, string Address);
+}

@@ -34,6 +34,25 @@ namespace AntDesign.Internal
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>
+        /// Optional display override for overlays whose upstream implementation
+        /// uses a different formatting context than the shared inline-flex default.
+        /// </summary>
+        [Parameter]
+        public string OverlayDisplayStyle { get; set; }
+
+        /// <summary>
+        /// Use the component stylesheet's z-index instead of the shared overlay fallback.
+        /// </summary>
+        [Parameter]
+        public bool UseCssZIndex { get; set; }
+
+        /// <summary>
+        /// Lets component CSS resolve its transform origin from runtime arrow variables.
+        /// </summary>
+        [Parameter]
+        public bool UseCssTransformOrigin { get; set; }
+
         [Parameter]
         public EventCallback OnOverlayMouseEnter { get; set; }
 
@@ -53,6 +72,9 @@ namespace AntDesign.Internal
         public string OverlayChildPrefixCls { get; set; } = "";
 
         [Parameter]
+        public string CssVarClass { get; set; } = "";
+
+        [Parameter]
         public int HideMillisecondsDelay { get; set; } = 100;
 
         [Parameter]
@@ -69,6 +91,13 @@ namespace AntDesign.Internal
         /// </summary>
         [Parameter]
         public int HorizontalOffset { get; set; } = 4;
+
+        /// <summary>
+        /// Optional CSS length expression used to resolve the overlay offsets
+        /// against the active theme's CSS variables.
+        /// </summary>
+        [Parameter]
+        public string OffsetCssExpression { get; set; }
 
         /// <summary>
         /// By default Overlay does not render its content if Overlay hasn't been
@@ -126,11 +155,15 @@ namespace AntDesign.Internal
 
         protected override async Task OnParametersSetAsync()
         {
-            if (!_isOverlayShow && Trigger.Visible && !_preVisible)
+            // A controlled overlay can be requested as visible on its first render.
+            // Defer opening until after the trigger and overlay have element refs;
+            // otherwise AddOverlayToBody exits before positioning and the popup
+            // remains hidden even though the trigger thinks it is open.
+            if (_afterFirstRender && !_isOverlayShow && Trigger.Visible && !_preVisible)
             {
                 await Show(_overlayLeft, _overlayTop);
             }
-            else if (_isOverlayShow && !Trigger.Visible && _preVisible)
+            else if (_afterFirstRender && _isOverlayShow && !Trigger.Visible && _preVisible)
             {
                 await Hide(true);
             }
@@ -145,6 +178,11 @@ namespace AntDesign.Internal
             {
                 _afterFirstRender = true;
                 DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
+
+                if (Trigger.Visible && !_isOverlayShow)
+                {
+                    await Show(_overlayLeft, _overlayTop);
+                }
             }
 
             if (_lastDisabledState != Trigger.Disabled)
@@ -378,7 +416,7 @@ namespace AntDesign.Internal
                 _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
                     Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
                     Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
-                    VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
+                    VerticalOffset, HorizontalOffset, OffsetCssExpression, ArrowPointAtCenter, overlayTop, overlayLeft);
                 if (_position is null && _recurenceGuard <= 10) //up to 10 attempts
                 {
                     //Console.WriteLine($"Failed to add overlay to the container. Container: {Trigger.PopupContainerSelector}, trigger: {Trigger.Ref.Id}, overlay: {Ref.Id}. Awaiting and rerunning.");
@@ -388,7 +426,7 @@ namespace AntDesign.Internal
                 else if (_position is not null)
                 {
                     _hasAddOverlayToBody = true;
-                    _overlayStyle = _position.PositionCss + GetTransformOrigin();
+                    _overlayStyle = (UseCssZIndex ? _position.PositionCssWithoutZIndex : _position.PositionCss) + GetOverlayTransformOrigin();
                     if (_position.Placement != Trigger.GetPlacementType().Placement)
                     {
                         Trigger.ChangePlacementForShow(PlacementType.Create(_position.Placement));
@@ -439,6 +477,8 @@ namespace AntDesign.Internal
         {
             return $"transform-origin: {Trigger.GetPlacementType().TranformOrigin}";
         }
+
+        private string GetOverlayTransformOrigin() => UseCssTransformOrigin ? string.Empty : GetTransformOrigin();
 
         private bool IsContainTrigger(TriggerType triggerType)
         {
@@ -504,6 +544,16 @@ namespace AntDesign.Internal
             return "display: inline-flex; visibility: hidden;";
         }
 
+        private string GetOverlayDisplayStyle()
+        {
+            var display = GetDisplayStyle();
+            if (!string.IsNullOrWhiteSpace(OverlayDisplayStyle))
+            {
+                display = display.Replace("display: inline-flex;", $"display: {OverlayDisplayStyle};");
+            }
+            return display;
+        }
+
         internal async Task UpdatePosition(int? overlayLeft = null, int? overlayTop = null)
         {
             bool triggerIsWrappedInDiv = Trigger.Unbound is null;
@@ -511,14 +561,14 @@ namespace AntDesign.Internal
             _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition,
                 Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
                 Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
-                VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
+                VerticalOffset, HorizontalOffset, OffsetCssExpression, ArrowPointAtCenter, overlayTop, overlayLeft);
             if (_position is not null)
             {
                 if (_position.Placement != Trigger.GetPlacementType().Placement)
                 {
                     Trigger.ChangePlacementForShow(PlacementType.Create(_position.Placement));
                 }
-                _overlayStyle = _position.PositionCss + GetTransformOrigin();
+                _overlayStyle = (UseCssZIndex ? _position.PositionCssWithoutZIndex : _position.PositionCss) + GetOverlayTransformOrigin();
             }
         }
 

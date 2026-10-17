@@ -1,0 +1,46 @@
+<div>
+    <Result Status="ResultStatus.Info" Title="classNames and styles" SubTitle="Customized semantic nodes"
+            ClassNames="@_classNames" Styles="@_objectStyles" Extra="@_action">
+        <div>Content area</div>
+    </Result>
+    <Result Status="ResultStatus.Success" Title="Status-aware styles" SubTitle="Green status styling"
+            ClassNames="@_classNames" Styles="@_successStyles" Extra="@_action" />
+    <Result Status="ResultStatus.Error" Title="Error result" SubTitle="Status-specific style values"
+            ClassNames="@_classNames" Styles="@_errorStyles" />
+</div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-result-root",
+        ["title"] = "demo-result-title",
+        ["subTitle"] = "demo-result-subtitle",
+        ["icon"] = "demo-result-icon",
+        ["body"] = "demo-result-body",
+        ["extra"] = "demo-result-extra"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _objectStyles = new Dictionary<string, string>
+    {
+        ["root"] = "border:2px dashed #d9d9d9;padding:16px",
+        ["title"] = "font-style:italic;color:#1677ff",
+        ["subTitle"] = "font-weight:600",
+        ["icon"] = "opacity:.8",
+        ["body"] = "padding:12px;background:#fafafa",
+        ["extra"] = "padding:8px;background:#f0f0f0"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _successStyles = new Dictionary<string, string>
+    {
+        ["root"] = "background:#f6ffed;border-color:#52c41a",
+        ["title"] = "color:#52c41a"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _errorStyles = new Dictionary<string, string>
+    {
+        ["root"] = "background:#fff2f0;border-color:#ff4d4f",
+        ["title"] = "color:#ff4d4f"
+    };
+
+    private RenderFragment _action => @<Button Type="ButtonType.Primary">Action</Button>;
+}

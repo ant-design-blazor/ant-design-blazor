@@ -1,14 +1,19 @@
-<Select @bind-Value="@_selectedValue"
-		DefaultValue="@("lucy")"
-		Style="width: 120px;"
-		TItemValue="string"
-		TItem="string"
-		Loading>
-	<SelectOptions>
-		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
-	</SelectOptions>
+<Select TItemValue="string"
+        TItem="UserOption"
+        Mode="SelectMode.Multiple"
+        LabelInValue
+        EnableSearch
+        Style="width: 100%;"
+        Placeholder="Select users"
+        DataSource="@_options"
+        ValueName="@nameof(UserOption.Value)"
+        LabelName="@nameof(UserOption.Label)">
 </Select>
-@code
-{
-	string _selectedValue;
+
+@code {
+    private sealed record UserOption(string Value, string Label);
+
+    // The React demo starts with an empty value and fetches options only after
+    // the user searches. Keep the initial rendered state equivalent here.
+    private readonly List<UserOption> _options = new();
 }

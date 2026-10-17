@@ -1,0 +1,25 @@
+﻿<Table TItem="ResponsiveTableRow" DataSource="@_rows" HidePagination="true">
+    <PropertyColumn Property="x => x.Name" Title="Name (all screens)" />
+    <PropertyColumn Property="x => x.Age" Title="Age (medium screen or bigger)" Class="responsive-medium-column" />
+    <PropertyColumn Property="x => x.Address" Title="Address (large screen or bigger)" Class="responsive-large-column" />
+</Table>
+
+<style>
+@@media (max-width: 767px) { .ant-table-cell.responsive-medium-column { display:none; } }
+@@media (max-width: 991px) { .ant-table-cell.responsive-large-column { display:none; } }
+</style>
+
+@code {
+    private readonly ResponsiveTableRow[] _rows =
+    [
+        new() { Name = "John Brown", Age = 32, Address = "New York No. 1 Lake Park" },
+        new() { Name = "Jim Green", Age = 42, Address = "London No. 1 Lake Park" }
+    ];
+
+    private sealed class ResponsiveTableRow
+    {
+        public string Name { get; set; } = string.Empty;
+        public int Age { get; set; }
+        public string Address { get; set; } = string.Empty;
+    }
+}

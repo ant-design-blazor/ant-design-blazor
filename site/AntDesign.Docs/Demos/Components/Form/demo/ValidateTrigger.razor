@@ -1,0 +1,83 @@
+@implements IDisposable
+@using System.Threading
+
+<div class="ant-alert ant-alert-info" role="note">Use a maximum-length rule. Field A validates on blur, Field B after a one-second pause, and Field C checks rules in order.</div>
+<Form Model="@model" Layout="FormLayout.Vertical" AutoComplete="off" Style="max-width:600px;">
+    <FormItem Label="Field A" ValidateStatus="@fieldAStatus" Help="@fieldAHelp" HasFeedback>
+        <Input @bind-Value="model.FieldA" BindOnInput="true" OnBlur="ValidateFieldA" Placeholder="Validate on blur (max 3 characters)" />
+    </FormItem>
+    <FormItem Label="Field B" ValidateStatus="@fieldBStatus" Help="@fieldBHelp" HasFeedback>
+        <Input @bind-Value="model.FieldB" BindOnInput="true" OnInput="DebounceFieldB" Placeholder="Validate after a 1 second pause (max 3 characters)" />
+    </FormItem>
+    <FormItem Label="Field C" ValidateStatus="@fieldCStatus" Help="@fieldCHelp" HasFeedback>
+        <Input @bind-Value="model.FieldC" BindOnInput="true" OnInput="ValidateFieldC" Placeholder="Validate rules in order (max 6, then max 3)" />
+    </FormItem>
+</Form>
+
+@code {
+    private readonly FormModel model = new();
+    private CancellationTokenSource debounce;
+    private FormValidateStatus fieldAStatus;
+    private FormValidateStatus fieldBStatus;
+    private FormValidateStatus fieldCStatus;
+    private string fieldAHelp;
+    private string fieldBHelp;
+    private string fieldCHelp;
+
+    private void ValidateFieldA(FocusEventArgs _)
+    {
+        fieldAStatus = model.FieldA.Length > 3 ? FormValidateStatus.Error : FormValidateStatus.Success;
+        fieldAHelp = model.FieldA.Length > 3 ? "Maximum 3 characters." : null;
+    }
+
+    private async Task DebounceFieldB(ChangeEventArgs _)
+    {
+        debounce?.Cancel();
+        debounce?.Dispose();
+        debounce = new CancellationTokenSource();
+        var token = debounce.Token;
+        fieldBStatus = FormValidateStatus.Validating;
+        fieldBHelp = "Waiting to validate…";
+        try
+        {
+            await Task.Delay(1000, token);
+            var value = _.Value?.ToString() ?? string.Empty;
+            fieldBStatus = value.Length > 3 ? FormValidateStatus.Error : FormValidateStatus.Success;
+            fieldBHelp = value.Length > 3 ? "Maximum 3 characters (debounced)." : null;
+        }
+        catch (TaskCanceledException) { }
+    }
+
+    private void ValidateFieldC(ChangeEventArgs _)
+    {
+        var value = _.Value?.ToString() ?? string.Empty;
+        if (value.Length > 6)
+        {
+            fieldCStatus = FormValidateStatus.Error;
+            fieldCHelp = "Maximum 6 characters.";
+        }
+        else if (value.Length > 3)
+        {
+            fieldCStatus = FormValidateStatus.Error;
+            fieldCHelp = "Continue input to exceed 6 chars";
+        }
+        else
+        {
+            fieldCStatus = FormValidateStatus.Success;
+            fieldCHelp = null;
+        }
+    }
+
+    public void Dispose()
+    {
+        debounce?.Cancel();
+        debounce?.Dispose();
+    }
+
+    private sealed class FormModel
+    {
+        public string FieldA { get; set; } = string.Empty;
+        public string FieldB { get; set; } = string.Empty;
+        public string FieldC { get; set; } = string.Empty;
+    }
+}

@@ -67,9 +67,7 @@ namespace AntDesign.Select.Internal
 
         private const char Ellipse = (char)0x2026;
         private const int ItemMargin = 4; //taken from each tag item
-        private string _inputStyle = string.Empty;
         private string _inputWidth;
-        private bool _suppressInput;
         private bool _isInitialized;
         private string _prefix;
         private int _calculatedMaxCount;
@@ -106,12 +104,19 @@ namespace AntDesign.Select.Internal
                 SetInputWidth();
             }
             _isInitialized = true;
-            SetSuppressInput();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            SetSuppressInput();
+            if (string.IsNullOrEmpty(_inputString))
+            {
+                // Blazor synchronizes an empty input value as a DOM property and
+                // omits the empty HTML attribute. React serializes value="";
+                // keep the reflected attribute in sync, including after clearing.
+                await Js.InvokeVoidAsync(JSInteropConstants.SetDomAttribute, ParentSelect._inputRef,
+                    new Dictionary<string, string> { ["value"] = string.Empty });
+            }
+
             if (firstRender)
             {
                 _firstRender = true;
@@ -159,6 +164,7 @@ namespace AntDesign.Select.Internal
                 _aggregateTagElement = await Js.InvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _aggregateTag);
                 await CalculateResponsiveTags(_refocus);
             }
+
             await base.OnAfterRenderAsync(firstRender);
         }
 
@@ -347,7 +353,7 @@ namespace AntDesign.Select.Internal
             {
                 if (!string.IsNullOrWhiteSpace(_inputString))
                 {
-                    _inputWidth = $"{_inputWidth}width: {_inputString.Length}em;";
+                    _inputWidth = $"width: {_inputString.Length}em;";
                     if (ParentSelect.IsResponsive && _lastInputWidth != _inputString.Length)
                     {
                         _lastInputWidth = _inputString.Length;
@@ -356,56 +362,24 @@ namespace AntDesign.Select.Internal
                 }
                 else
                 {
-                    if (ParentSelect.HasValue)
-                    {
-                        _inputWidth = $"{_inputWidth}width: 4px;"; //ToDo fix class
-                    }
-                    else if (ParentSelect.PrefixIcon != null)
-                    {
-                        _inputWidth = $"{_inputWidth}width: 4px; margin-left: 0px;"; //ToDo fix class
-                    }
-                    else
-                    {
-                        _inputWidth = $"{_inputWidth}width: 4px; margin-left: 10px;"; //ToDo fix class
-                    }
-                }
-            }
-        }
-
-        private void SetSuppressInput()
-        {
-            if (!ParentSelect.IsSearchEnabled)
-            {
-                if (!_suppressInput)
-                {
-                    _suppressInput = true;
-                    _inputStyle = "opacity: 0;";
-                }
-            }
-            else
-            {
-                if (_suppressInput)
-                {
-                    _suppressInput = false;
-                    _inputStyle = string.Empty;
+                    // rc-select measures the empty input's intrinsic 4px width
+                    // and exposes it through this v6 CSS variable.
+                    _inputWidth = "--select-input-width: 4;";
                 }
             }
         }
 
         private string OverflowStyle(int order)
         {
-            string width = "max-width: 98%;";
-            if (order == 0)
-                width = $"max-width: {GetFirstItemMaxWidth()}%;";
             if (ParentSelect.HasTagCount || ParentSelect.IsResponsive)
             {
                 if (_calculatedMaxCount < order + 1)
                 {
-                    return $"opacity: 0.2; order: {order}; height: 0px; overflow-y: hidden; pointer-events: none; {width}";
+                    return $"opacity: 0.2; order: {order}; height: 0px; overflow-y: hidden; pointer-events: none;";
                 }
-                return $"opacity: 1; order: {order}; {width}";
+                return $"opacity: 1; order: {order};";
             }
-            return "opacity: 1;" + width;
+            return "opacity: 1;";
         }
 
         private string FormatLabel(string label)
@@ -425,49 +399,6 @@ namespace AntDesign.Select.Internal
                 dict.Add("tabindex", "-1");
 
             return dict;
-        }
-
-        /// <summary>
-        /// Any item may overflow. In case of first item, when there
-        /// are any other elements inside SelectContent (prefix, suffix, clear btn, etc)
-        /// default MaxWidth will force th SelectContent to grow. Changing the MaxWidth
-        /// allows the overflowing item to fit in a single line.
-        /// TODO: use relative units
-        /// </summary>
-        /// <returns></returns>
-        private int GetFirstItemMaxWidth()
-        {
-            int percentValue = 98;
-            if (ParentSelect.PrefixIcon != null)
-            {
-                if (ShowArrowIcon || ShowSearchIcon)
-                {
-                    if (ParentSelect.AllowClear)
-                    {
-                        percentValue = 90;
-                    }
-                    else
-                    {
-                        percentValue = 93;
-                    }
-                }
-                else
-                {
-                    percentValue = 94;
-                }
-            }
-            else if (ShowArrowIcon || ShowSearchIcon)
-            {
-                if (ParentSelect.AllowClear)
-                {
-                    percentValue = 94;
-                }
-                else
-                {
-                    percentValue = 96;
-                }
-            }
-            return percentValue;
         }
 
         /// <summary>

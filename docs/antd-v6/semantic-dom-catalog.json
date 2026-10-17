@@ -1,0 +1,2945 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "ant-design",
+    "path": "../ant-design/components",
+    "semanticSource": "export *SemanticType definitions"
+  },
+  "components": [
+    {
+      "name": "affix",
+      "nodes": []
+    },
+    {
+      "name": "alert",
+      "nodes": [
+        {
+          "name": "actions",
+          "selector": ".ant-alert-actions",
+          "description": "alert actions Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "close",
+          "selector": ".ant-alert-close-icon",
+          "description": "alert close Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "description",
+          "selector": ".ant-alert-description",
+          "description": "alert description Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "icon",
+          "selector": ".ant-alert-icon",
+          "description": "alert icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-alert",
+          "description": "alert root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "section",
+          "selector": ".ant-alert-section",
+          "description": "alert section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-alert-title",
+          "description": "alert title Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "anchor",
+      "nodes": [
+        {
+          "name": "indicator",
+          "selector": ".ant-anchor-ink",
+          "description": "anchor indicator Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-anchor-link",
+          "description": "anchor item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemTitle",
+          "selector": ".ant-anchor-link-title",
+          "description": "anchor itemTitle Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-anchor-wrapper",
+          "description": "anchor root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "app",
+      "nodes": []
+    },
+    {
+      "name": "auto-complete",
+      "nodes": [
+        {
+          "name": "clear",
+          "selector": ".ant-select-clear",
+          "description": "auto-complete clear Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "content",
+          "selector": ".ant-select-content",
+          "description": "auto-complete content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "input",
+          "selector": ".ant-select-selection-search-input",
+          "description": "auto-complete input Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "placeholder",
+          "selector": ".ant-select-selection-placeholder",
+          "description": "auto-complete placeholder Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup",
+          "selector": ".ant-select-dropdown",
+          "description": "auto-complete popup Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "prefix",
+          "selector": ".ant-select-prefix",
+          "description": "auto-complete prefix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-select.ant-select-auto-complete",
+          "description": "auto-complete root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "avatar",
+      "nodes": []
+    },
+    {
+      "name": "back-top",
+      "nodes": []
+    },
+    {
+      "name": "badge",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-badge-count",
+          "description": "badge content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "indicator",
+          "selector": ".ant-badge-dot, .ant-badge-status-dot",
+          "description": "badge indicator Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-badge",
+          "description": "badge root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "border-beam",
+      "nodes": []
+    },
+    {
+      "name": "breadcrumb",
+      "nodes": [
+        {
+          "name": "item",
+          "selector": ".ant-breadcrumb-item",
+          "description": "breadcrumb item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-breadcrumb",
+          "description": "breadcrumb root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "separator",
+          "selector": ".ant-breadcrumb-separator",
+          "description": "breadcrumb separator Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-btn > span:not(.ant-btn-icon)",
+          "description": "button content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "icon",
+          "selector": ".ant-btn-icon",
+          "description": "button icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-btn",
+          "description": "button root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "calendar",
+      "nodes": [
+        {
+          "name": "body",
+          "selector": ".ant-picker-body",
+          "description": "calendar body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "content",
+          "selector": ".ant-picker-content",
+          "description": "calendar content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-picker-calendar-header",
+          "description": "calendar header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-picker-cell",
+          "description": "calendar item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemContent",
+          "selector": ".ant-picker-calendar-date-content",
+          "description": "calendar itemContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-picker-calendar",
+          "description": "calendar root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "nodes": [
+        {
+          "name": "actions",
+          "selector": ".ant-card-actions",
+          "description": "card actions Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "avatar",
+          "selector": ".ant-card-meta-avatar",
+          "description": "card avatar Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "body",
+          "selector": ".ant-card-body",
+          "description": "card body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "cover",
+          "selector": ".ant-card-cover",
+          "description": "card cover Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "description",
+          "selector": ".ant-card-meta-description",
+          "description": "card description Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "extra",
+          "selector": ".ant-card-extra",
+          "description": "card extra Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-card-head",
+          "description": "card header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-card",
+          "description": "card root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "section",
+          "selector": ".ant-card-body",
+          "description": "card section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-card-head-title",
+          "description": "card title Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "carousel",
+      "nodes": []
+    },
+    {
+      "name": "cascader",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-select-content, .ant-select-selection-item",
+          "description": "cascader content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "input",
+          "selector": ".ant-select-selection-search-input",
+          "description": "cascader input Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-cascader-menu-item",
+          "description": "cascader item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemContent",
+          "selector": ".ant-cascader-menu-item-content",
+          "description": "cascader itemContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemRemove",
+          "selector": ".ant-select-selection-item-remove",
+          "description": "cascader itemRemove Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "placeholder",
+          "selector": ".ant-select-selection-placeholder",
+          "description": "cascader placeholder Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup",
+          "selector": ".ant-cascader-dropdown",
+          "description": "cascader popup Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "prefix",
+          "selector": ".ant-select-prefix",
+          "description": "cascader prefix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-select.ant-cascader",
+          "description": "cascader root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "suffix",
+          "selector": ".ant-select-suffix",
+          "description": "cascader suffix Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "nodes": [
+        {
+          "name": "icon",
+          "selector": ".ant-checkbox-inner",
+          "description": "checkbox icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "label",
+          "selector": ".ant-checkbox-wrapper",
+          "description": "checkbox label Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-checkbox",
+          "description": "checkbox root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "col",
+      "nodes": []
+    },
+    {
+      "name": "collapse",
+      "nodes": [
+        {
+          "name": "body",
+          "selector": ".ant-collapse-body",
+          "description": "collapse body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-collapse-header",
+          "description": "collapse header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "icon",
+          "selector": ".ant-collapse-expand-icon",
+          "description": "collapse icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-collapse",
+          "description": "collapse root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-collapse-title",
+          "description": "collapse title Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "color-picker",
+      "nodes": [
+        {
+          "name": "body",
+          "selector": ".ant-color-picker-color-block",
+          "description": "color-picker body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "content",
+          "selector": ".ant-color-picker-color-block-inner",
+          "description": "color-picker content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "description",
+          "selector": ".ant-color-picker-trigger-text",
+          "description": "color-picker description Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup",
+          "selector": ".ant-popover.ant-color-picker",
+          "description": "color-picker popup Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.root",
+          "selector": ".ant-popover.ant-color-picker",
+          "description": "color-picker popup.root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popupOverlayInner",
+          "selector": ".ant-color-picker-inner-content",
+          "description": "color-picker popupOverlayInner Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-color-picker-trigger",
+          "description": "color-picker root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "config-provider",
+      "nodes": []
+    },
+    {
+      "name": "date-picker",
+      "nodes": [
+        {
+          "name": "input",
+          "selector": ".ant-picker-input",
+          "description": "date-picker input Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup",
+          "selector": ".ant-picker-dropdown",
+          "description": "date-picker popup Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.body",
+          "selector": ".ant-picker-body",
+          "description": "date-picker popup.body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.container",
+          "selector": ".ant-picker-panel-container",
+          "description": "date-picker popup.container Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.content",
+          "selector": ".ant-picker-content",
+          "description": "date-picker popup.content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.footer",
+          "selector": ".ant-picker-footer",
+          "description": "date-picker popup.footer Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.header",
+          "selector": ".ant-picker-header",
+          "description": "date-picker popup.header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.item",
+          "selector": ".ant-picker-cell",
+          "description": "date-picker popup.item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.root",
+          "selector": ".ant-picker-dropdown",
+          "description": "date-picker popup.root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "prefix",
+          "selector": ".ant-picker-prefix",
+          "description": "date-picker prefix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-picker",
+          "description": "date-picker root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "suffix",
+          "selector": ".ant-picker-suffix",
+          "description": "date-picker suffix Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "descriptions",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-descriptions-item-content",
+          "description": "descriptions content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "extra",
+          "selector": ".ant-descriptions-extra",
+          "description": "descriptions extra Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-descriptions-header",
+          "description": "descriptions header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "label",
+          "selector": ".ant-descriptions-item-label",
+          "description": "descriptions label Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-descriptions",
+          "description": "descriptions root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-descriptions-title",
+          "description": "descriptions title Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "divider",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-divider-inner-text",
+          "description": "divider content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "rail",
+          "selector": ".ant-divider-rail",
+          "description": "divider rail Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-divider",
+          "description": "divider root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "drawer",
+      "nodes": [
+        {
+          "name": "body",
+          "selector": ".ant-drawer-body",
+          "description": "drawer body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "close",
+          "selector": ".ant-drawer-close",
+          "description": "drawer close Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "content",
+          "selector": ".ant-drawer-content",
+          "description": "drawer content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "dragger",
+          "selector": ".ant-drawer-resize-handle",
+          "description": "drawer dragger Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "extra",
+          "selector": ".ant-drawer-extra",
+          "description": "drawer extra Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "footer",
+          "selector": ".ant-drawer-footer",
+          "description": "drawer footer Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-drawer-header",
+          "description": "drawer header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "mask",
+          "selector": ".ant-drawer-mask",
+          "description": "drawer mask Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-drawer",
+          "description": "drawer root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "section",
+          "selector": ".ant-drawer-section",
+          "description": "drawer section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-drawer-title",
+          "description": "drawer title Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "wrapper",
+          "selector": ".ant-drawer-content-wrapper",
+          "description": "drawer wrapper Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "dropdown",
+      "nodes": [
+        {
+          "name": "item",
+          "selector": ".ant-dropdown-menu-item",
+          "description": "dropdown item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemContent",
+          "selector": ".ant-dropdown-menu-title-content",
+          "description": "dropdown itemContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemIcon",
+          "selector": ".ant-dropdown-menu-item-icon",
+          "description": "dropdown itemIcon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemTitle",
+          "selector": ".ant-dropdown-menu-title-content",
+          "description": "dropdown itemTitle Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-dropdown",
+          "description": "dropdown root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "empty",
+      "nodes": [
+        {
+          "name": "description",
+          "selector": ".ant-empty-description",
+          "description": "empty description Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "footer",
+          "selector": ".ant-empty-footer",
+          "description": "empty footer Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "image",
+          "selector": ".ant-empty-image",
+          "description": "empty image Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-empty",
+          "description": "empty root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "flex",
+      "nodes": []
+    },
+    {
+      "name": "float-button",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-float-btn-content",
+          "description": "float-button content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "icon",
+          "selector": ".ant-float-btn-icon",
+          "description": "float-button icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-float-btn",
+          "description": "float-button item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemContent",
+          "selector": ".ant-float-btn-content",
+          "description": "float-button itemContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemIcon",
+          "selector": ".ant-float-btn-icon",
+          "description": "float-button itemIcon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "list",
+          "selector": ".ant-float-btn-group-list",
+          "description": "float-button list Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-float-btn",
+          "description": "float-button root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "trigger",
+          "selector": ".ant-float-btn-group-trigger",
+          "description": "float-button trigger Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "triggerContent",
+          "selector": ".ant-float-btn-group-trigger .ant-float-btn-content",
+          "description": "float-button triggerContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "triggerIcon",
+          "selector": ".ant-float-btn-group-trigger .ant-float-btn-icon",
+          "description": "float-button triggerIcon Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "form",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-form-item-control-input-content",
+          "description": "form content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "extra",
+          "selector": ".ant-form-item-extra",
+          "description": "form extra Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "help",
+          "selector": ".ant-form-item-explain",
+          "description": "form help Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "helpItem",
+          "selector": ".ant-form-item-explain-connected",
+          "description": "form helpItem Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "label",
+          "selector": ".ant-form-item-label",
+          "description": "form label Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-form",
+          "description": "form root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "grid",
+      "nodes": []
+    },
+    {
+      "name": "image",
+      "nodes": [
+        {
+          "name": "cover",
+          "selector": ".ant-image-cover",
+          "description": "image cover Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "image",
+          "selector": ".ant-image-img",
+          "description": "image image Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "placeholder",
+          "selector": ".ant-image-placeholder",
+          "description": "image placeholder Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "placeholder.progress",
+          "selector": ".ant-image-placeholder-progress",
+          "description": "image placeholder.progress Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "placeholder.progress.content",
+          "selector": ".ant-image-placeholder-progress-content",
+          "description": "image placeholder.progress.content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "placeholder.progress.indicator",
+          "selector": ".ant-image-placeholder-progress-indicator",
+          "description": "image placeholder.progress.indicator Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "placeholder.progress.rail",
+          "selector": ".ant-image-placeholder-progress-rail",
+          "description": "image placeholder.progress.rail Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "placeholder.progress.root",
+          "selector": ".ant-image-placeholder-progress-root",
+          "description": "image placeholder.progress.root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup",
+          "selector": ".ant-image-preview-root",
+          "description": "image popup Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.actions",
+          "selector": ".ant-image-preview-actions",
+          "description": "image popup.actions Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.body",
+          "selector": ".ant-image-preview-body",
+          "description": "image popup.body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.close",
+          "selector": ".ant-image-preview-close",
+          "description": "image popup.close Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.footer",
+          "selector": ".ant-image-preview-footer",
+          "description": "image popup.footer Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.mask",
+          "selector": ".ant-image-preview-mask",
+          "description": "image popup.mask Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.root",
+          "selector": ".ant-image-preview-root",
+          "description": "image popup.root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-image",
+          "description": "image root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "nodes": [
+        {
+          "name": "button",
+          "selector": ".ant-input-search .ant-btn",
+          "description": "input button Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "button.content",
+          "selector": ".ant-btn > span:not(.ant-btn-icon)",
+          "description": "input button.content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "button.icon",
+          "selector": ".ant-btn-icon",
+          "description": "input button.icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "button.root",
+          "selector": ".ant-input-search-button",
+          "description": "input button.root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "clear",
+          "selector": ".ant-input-clear-icon",
+          "description": "input clear Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "count",
+          "selector": ".ant-input-data-count, .ant-input-show-count-suffix",
+          "description": "input count Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "input",
+          "selector": ".ant-input",
+          "description": "input input Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "prefix",
+          "selector": ".ant-input-prefix",
+          "description": "input prefix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-input-affix-wrapper, .ant-input-group-wrapper, input.ant-input",
+          "description": "input root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "separator",
+          "selector": ".ant-input-group-addon",
+          "description": "input separator Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "suffix",
+          "selector": ".ant-input-suffix",
+          "description": "input suffix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "textarea",
+          "selector": "textarea.ant-input",
+          "description": "input textarea Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "input-number",
+      "nodes": [
+        {
+          "name": "action",
+          "selector": ".ant-input-number-action",
+          "description": "input-number action Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "actions",
+          "selector": ".ant-input-number-actions",
+          "description": "input-number actions Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "input",
+          "selector": ".ant-input-number-input",
+          "description": "input-number input Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "prefix",
+          "selector": ".ant-input-number-prefix",
+          "description": "input-number prefix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-input-number",
+          "description": "input-number root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "suffix",
+          "selector": ".ant-input-number-suffix",
+          "description": "input-number suffix Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "layout",
+      "nodes": [
+        {
+          "name": "body",
+          "selector": ".ant-layout-sider-children",
+          "description": "layout body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-layout-sider",
+          "description": "layout root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "list",
+      "nodes": []
+    },
+    {
+      "name": "listy",
+      "nodes": [
+        {
+          "name": "groupHeader",
+          "selector": ".ant-listy-group-header",
+          "description": "listy groupHeader Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-listy-item",
+          "description": "listy item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-listy",
+          "description": "listy root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "masonry",
+      "nodes": [
+        {
+          "name": "item",
+          "selector": ".ant-masonry-item",
+          "description": "masonry item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-masonry",
+          "description": "masonry root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "mentions",
+      "nodes": [
+        {
+          "name": "popup",
+          "selector": ".ant-select-dropdown",
+          "description": "mentions popup Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-mentions",
+          "description": "mentions root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "suffix",
+          "selector": ".ant-mentions-suffix",
+          "description": "mentions suffix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "textarea",
+          "selector": ".ant-mentions-textarea",
+          "description": "mentions textarea Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "menu",
+      "nodes": []
+    },
+    {
+      "name": "message",
+      "nodes": [
+        {
+          "name": "icon",
+          "selector": ".ant-message-notice-icon",
+          "description": "message icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "list",
+          "selector": ".ant-message-list",
+          "description": "message list Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "listContent",
+          "selector": ".ant-message-list-content",
+          "description": "message listContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-message-notice",
+          "description": "message root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-message-notice-title",
+          "description": "message title Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "wrapper",
+          "selector": ".ant-message-notice-wrapper",
+          "description": "message wrapper Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "modal",
+      "nodes": [
+        {
+          "name": "body",
+          "selector": ".ant-modal-body",
+          "description": "modal body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "close",
+          "selector": ".ant-modal-close",
+          "description": "modal close Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "container",
+          "selector": ".ant-modal-container",
+          "description": "modal container Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "footer",
+          "selector": ".ant-modal-footer",
+          "description": "modal footer Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-modal-header",
+          "description": "modal header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "mask",
+          "selector": ".ant-modal-mask",
+          "description": "modal mask Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-modal",
+          "description": "modal root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-modal-title",
+          "description": "modal title Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "wrapper",
+          "selector": ".ant-modal-wrap",
+          "description": "modal wrapper Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "notification",
+      "nodes": [
+        {
+          "name": "actions",
+          "selector": ".ant-notification-notice-actions",
+          "description": "notification actions Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "close",
+          "selector": ".ant-notification-notice-close",
+          "description": "notification close Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "description",
+          "selector": ".ant-notification-notice-description",
+          "description": "notification description Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "icon",
+          "selector": ".ant-notification-notice-icon",
+          "description": "notification icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "list",
+          "selector": ".ant-notification-list",
+          "description": "notification list Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "listContent",
+          "selector": ".ant-notification-list-content",
+          "description": "notification listContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "progress",
+          "selector": ".ant-notification-notice-progress",
+          "description": "notification progress Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-notification-notice",
+          "description": "notification root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "section",
+          "selector": ".ant-notification-notice-section",
+          "description": "notification section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-notification-notice-title",
+          "description": "notification title Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "wrapper",
+          "selector": ".ant-notification-notice-wrapper",
+          "description": "notification wrapper Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "pagination",
+      "nodes": [
+        {
+          "name": "item",
+          "selector": ".ant-pagination-item",
+          "description": "pagination item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-pagination",
+          "description": "pagination root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "popconfirm",
+      "nodes": [
+        {
+          "name": "arrow",
+          "selector": ".ant-popover-arrow",
+          "description": "popconfirm arrow Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "container",
+          "selector": ".ant-popover-container",
+          "description": "popconfirm container Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "content",
+          "selector": ".ant-popconfirm-inner-content",
+          "description": "popconfirm content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "icon",
+          "selector": ".ant-popconfirm-message-icon",
+          "description": "popconfirm icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-popover",
+          "description": "popconfirm root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-popconfirm-title",
+          "description": "popconfirm title Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "nodes": [
+        {
+          "name": "arrow",
+          "selector": ".ant-popover-arrow",
+          "description": "popover arrow Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "container",
+          "selector": ".ant-popover-container",
+          "description": "popover container Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "content",
+          "selector": ".ant-popover-content",
+          "description": "popover content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-popover",
+          "description": "popover root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-popover-title",
+          "description": "popover title Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "nodes": [
+        {
+          "name": "body",
+          "selector": ".ant-progress-body",
+          "description": "progress body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "indicator",
+          "selector": ".ant-progress-indicator",
+          "description": "progress indicator Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "rail",
+          "selector": ".ant-progress-rail",
+          "description": "progress rail Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-progress",
+          "description": "progress root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "track",
+          "selector": ".ant-progress-track",
+          "description": "progress track Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "qr-code",
+      "nodes": [
+        {
+          "name": "cover",
+          "selector": ".ant-qrcode-cover",
+          "description": "qr-code cover Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-qrcode",
+          "description": "qr-code root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "qrcode",
+      "nodes": []
+    },
+    {
+      "name": "radio",
+      "nodes": [
+        {
+          "name": "icon",
+          "selector": ".ant-radio-inner",
+          "description": "radio icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "label",
+          "selector": ".ant-radio-wrapper",
+          "description": "radio label Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-radio",
+          "description": "radio root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "rate",
+      "nodes": []
+    },
+    {
+      "name": "result",
+      "nodes": [
+        {
+          "name": "body",
+          "selector": ".ant-result-body",
+          "description": "result body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "extra",
+          "selector": ".ant-result-extra",
+          "description": "result extra Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "icon",
+          "selector": ".ant-result-icon",
+          "description": "result icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-result",
+          "description": "result root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "subTitle",
+          "selector": ".ant-result-subtitle",
+          "description": "result subTitle Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-result-title",
+          "description": "result title Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "row",
+      "nodes": []
+    },
+    {
+      "name": "segmented",
+      "nodes": [
+        {
+          "name": "icon",
+          "selector": ".ant-segmented-item-icon",
+          "description": "segmented icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-segmented-item",
+          "description": "segmented item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "label",
+          "selector": ".ant-segmented-item-label",
+          "description": "segmented label Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-segmented",
+          "description": "segmented root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "nodes": [
+        {
+          "name": "clear",
+          "selector": ".ant-select-clear",
+          "description": "select clear Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "content",
+          "selector": ".ant-select-content",
+          "description": "select content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "input",
+          "selector": ".ant-select-input",
+          "description": "select input Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-select-selection-item",
+          "description": "select item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemContent",
+          "selector": ".ant-select-selection-item-content",
+          "description": "select itemContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemRemove",
+          "selector": ".ant-select-selection-item-remove",
+          "description": "select itemRemove Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "placeholder",
+          "selector": ".ant-select-placeholder",
+          "description": "select placeholder Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup",
+          "selector": ".ant-select-dropdown",
+          "description": "select popup Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.list",
+          "selector": ".ant-select-popup-list",
+          "description": "select popup.list Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.listItem",
+          "selector": ".ant-select-popup-list-item",
+          "description": "select popup.listItem Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.root",
+          "selector": ".ant-select-popup-root",
+          "description": "select popup.root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "prefix",
+          "selector": ".ant-select-prefix",
+          "description": "select prefix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-select",
+          "description": "select root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "suffix",
+          "selector": ".ant-select-suffix",
+          "description": "select suffix Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "nodes": [
+        {
+          "name": "avatar",
+          "selector": ".ant-skeleton-avatar",
+          "description": "skeleton avatar Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "content",
+          "selector": ".ant-skeleton",
+          "description": "skeleton content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-skeleton-header",
+          "description": "skeleton header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "paragraph",
+          "selector": ".ant-skeleton-paragraph",
+          "description": "skeleton paragraph Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-skeleton",
+          "description": "skeleton root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "section",
+          "selector": ".ant-skeleton-section",
+          "description": "skeleton section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-skeleton-title",
+          "description": "skeleton title Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "slider",
+      "nodes": [
+        {
+          "name": "handle",
+          "selector": ".ant-slider-handle",
+          "description": "slider handle Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "rail",
+          "selector": ".ant-slider-rail",
+          "description": "slider rail Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-slider",
+          "description": "slider root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "track",
+          "selector": ".ant-slider-track",
+          "description": "slider track Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "tracks",
+          "selector": ".ant-slider-tracks",
+          "description": "slider tracks Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "space",
+      "nodes": [
+        {
+          "name": "item",
+          "selector": ".ant-space-item",
+          "description": "space item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-space",
+          "description": "space root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "separator",
+          "selector": ".ant-space-item",
+          "description": "space separator Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "spin",
+      "nodes": [
+        {
+          "name": "container",
+          "selector": ".ant-spin-container",
+          "description": "spin container Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "description",
+          "selector": ".ant-spin-description",
+          "description": "spin description Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "indicator",
+          "selector": ".ant-spin-dot-holder",
+          "description": "spin indicator Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "mask",
+          "selector": ".ant-spin",
+          "description": "spin mask Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-spin",
+          "description": "spin root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "section",
+          "selector": ".ant-spin-section",
+          "description": "spin section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "tip",
+          "selector": ".ant-spin-description",
+          "description": "spin tip Semantic DOM 节点（兼容别名）",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "splitter",
+      "nodes": [
+        {
+          "name": "dragger",
+          "selector": ".ant-splitter-bar-dragger",
+          "description": "splitter dragger Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "dragger.active",
+          "selector": ".ant-splitter-dragger-active",
+          "description": "splitter dragger.active Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "dragger.default",
+          "selector": ".ant-splitter-dragger-default",
+          "description": "splitter dragger.default Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "panel",
+          "selector": ".ant-splitter-panel",
+          "description": "splitter panel Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-splitter",
+          "description": "splitter root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "statistic",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-statistic-content",
+          "description": "statistic content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-statistic-header",
+          "description": "statistic header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "prefix",
+          "selector": ".ant-statistic-content-prefix",
+          "description": "statistic prefix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-statistic",
+          "description": "statistic root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "suffix",
+          "selector": ".ant-statistic-content-suffix",
+          "description": "statistic suffix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-statistic-title",
+          "description": "statistic title Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "value",
+          "selector": ".ant-statistic-content-value",
+          "description": "statistic value Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "steps",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-steps-item-content",
+          "description": "steps content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-steps-item-header",
+          "description": "steps header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "icon",
+          "selector": ".ant-steps-item-icon",
+          "description": "steps icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-steps-item",
+          "description": "steps item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemContent",
+          "selector": ".ant-steps-item-content",
+          "description": "steps itemContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemHeader",
+          "selector": ".ant-steps-item-header",
+          "description": "steps itemHeader Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemIcon",
+          "selector": ".ant-steps-item-icon",
+          "description": "steps itemIcon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemRail",
+          "selector": ".ant-steps-item-rail",
+          "description": "steps itemRail Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemSection",
+          "selector": ".ant-steps-item-section",
+          "description": "steps itemSection Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemSubtitle",
+          "selector": ".ant-steps-item-subtitle",
+          "description": "steps itemSubtitle Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemTitle",
+          "selector": ".ant-steps-item-title",
+          "description": "steps itemTitle Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemWrapper",
+          "selector": ".ant-steps-item-wrapper",
+          "description": "steps itemWrapper Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "rail",
+          "selector": ".ant-steps-item-rail",
+          "description": "steps rail Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-steps",
+          "description": "steps root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "section",
+          "selector": ".ant-steps-item-section",
+          "description": "steps section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "subtitle",
+          "selector": ".ant-steps-item-subtitle",
+          "description": "steps subtitle Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-steps-item-title",
+          "description": "steps title Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "wrapper",
+          "selector": ".ant-steps-item-wrapper",
+          "description": "steps wrapper Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-switch-inner",
+          "description": "switch content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "indicator",
+          "selector": ".ant-switch-handle",
+          "description": "switch indicator Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-switch",
+          "description": "switch root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "nodes": [
+        {
+          "name": "body",
+          "selector": ".ant-table-body",
+          "description": "table body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "body.cell",
+          "selector": ".ant-table-tbody > tr > .ant-table-cell",
+          "description": "table body.cell Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "body.row",
+          "selector": ".ant-table-tbody > tr",
+          "description": "table body.row Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "body.wrapper",
+          "selector": ".ant-table-tbody",
+          "description": "table body.wrapper Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "content",
+          "selector": ".ant-table-content",
+          "description": "table content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "footer",
+          "selector": ".ant-table-footer",
+          "description": "table footer Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-table-header",
+          "description": "table header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header.cell",
+          "selector": ".ant-table-thead > tr > .ant-table-cell",
+          "description": "table header.cell Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header.row",
+          "selector": ".ant-table-thead > tr",
+          "description": "table header.row Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header.wrapper",
+          "selector": ".ant-table-thead",
+          "description": "table header.wrapper Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "pagination",
+          "selector": ".ant-table-pagination",
+          "description": "table pagination Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "pagination.item",
+          "selector": ".ant-table-pagination .ant-pagination-item",
+          "description": "table pagination.item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "pagination.root",
+          "selector": ".ant-table-pagination",
+          "description": "table pagination.root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-table",
+          "description": "table root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "section",
+          "selector": ".ant-table-container",
+          "description": "table section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-table-title",
+          "description": "table title Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "nodes": [
+        {
+          "name": "body",
+          "selector": ".ant-tabs-body-holder",
+          "description": "tabs body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "content",
+          "selector": ".ant-tabs-content",
+          "description": "tabs content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-tabs-nav",
+          "description": "tabs header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "indicator",
+          "selector": ".ant-tabs-ink-bar",
+          "description": "tabs indicator Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-tabs-tab",
+          "description": "tabs item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup",
+          "selector": ".ant-tabs-dropdown",
+          "description": "tabs popup Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.root",
+          "selector": ".ant-tabs-dropdown",
+          "description": "tabs popup.root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "remove",
+          "selector": ".ant-tabs-tab-remove",
+          "description": "tabs remove Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-tabs",
+          "description": "tabs root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "tag",
+      "nodes": [
+        {
+          "name": "close",
+          "selector": ".ant-tag-close",
+          "description": "tag close Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "content",
+          "selector": ".ant-tag",
+          "description": "tag content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "icon",
+          "selector": ".ant-tag-icon",
+          "description": "tag icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-tag",
+          "description": "tag item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-tag",
+          "description": "tag root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "time-picker",
+      "nodes": [
+        {
+          "name": "input",
+          "selector": ".ant-picker-input",
+          "description": "time-picker input Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup",
+          "selector": ".ant-picker-dropdown",
+          "description": "time-picker popup Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.container",
+          "selector": ".ant-time-picker-popup-container",
+          "description": "time-picker popup.container Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.content",
+          "selector": ".ant-time-picker-popup-content",
+          "description": "time-picker popup.content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.footer",
+          "selector": ".ant-time-picker-popup-footer",
+          "description": "time-picker popup.footer Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.item",
+          "selector": ".ant-time-picker-popup-item",
+          "description": "time-picker popup.item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.root",
+          "selector": ".ant-time-picker-popup-root",
+          "description": "time-picker popup.root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "prefix",
+          "selector": ".ant-picker-prefix",
+          "description": "time-picker prefix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-picker",
+          "description": "time-picker root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "suffix",
+          "selector": ".ant-picker-suffix",
+          "description": "time-picker suffix Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "timeline",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-timeline-item-content",
+          "description": "timeline content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-timeline-item-header",
+          "description": "timeline header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "icon",
+          "selector": ".ant-timeline-item-icon",
+          "description": "timeline icon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-timeline-item",
+          "description": "timeline item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemContent",
+          "selector": ".ant-timeline-item-content",
+          "description": "timeline itemContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemHeader",
+          "selector": ".ant-timeline-item-header",
+          "description": "timeline itemHeader Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemIcon",
+          "selector": ".ant-timeline-item-icon",
+          "description": "timeline itemIcon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemRail",
+          "selector": ".ant-timeline-item-rail",
+          "description": "timeline itemRail Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemSection",
+          "selector": ".ant-timeline-item-section",
+          "description": "timeline itemSection Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemTitle",
+          "selector": ".ant-timeline-item-title",
+          "description": "timeline itemTitle Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemWrapper",
+          "selector": ".ant-timeline-item-wrapper",
+          "description": "timeline itemWrapper Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "rail",
+          "selector": ".ant-timeline-item-rail",
+          "description": "timeline rail Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-timeline",
+          "description": "timeline root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "section",
+          "selector": ".ant-timeline-item-section",
+          "description": "timeline section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-timeline-item-title",
+          "description": "timeline title Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "wrapper",
+          "selector": ".ant-timeline-item-wrapper",
+          "description": "timeline wrapper Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "nodes": [
+        {
+          "name": "arrow",
+          "selector": ".ant-tooltip-arrow",
+          "description": "tooltip arrow Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "container",
+          "selector": ".ant-tooltip-container",
+          "description": "tooltip container Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-tooltip",
+          "description": "tooltip root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "tour",
+      "nodes": [
+        {
+          "name": "actions",
+          "selector": ".ant-tour-actions",
+          "description": "tour actions Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "close",
+          "selector": ".ant-tour-close",
+          "description": "tour close Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "cover",
+          "selector": ".ant-tour-cover",
+          "description": "tour cover Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "description",
+          "selector": ".ant-tour-description",
+          "description": "tour description Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "footer",
+          "selector": ".ant-tour-footer",
+          "description": "tour footer Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-tour-header",
+          "description": "tour header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "indicator",
+          "selector": ".ant-tour-indicator",
+          "description": "tour indicator Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "indicators",
+          "selector": ".ant-tour-indicators",
+          "description": "tour indicators Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "mask",
+          "selector": ".ant-tour-mask",
+          "description": "tour mask Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-tour",
+          "description": "tour root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "section",
+          "selector": ".ant-tour-section",
+          "description": "tour section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-tour-title",
+          "description": "tour title Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "transfer",
+      "nodes": [
+        {
+          "name": "actions",
+          "selector": ".ant-transfer-actions",
+          "description": "transfer actions Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "body",
+          "selector": ".ant-transfer-list-body",
+          "description": "transfer body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "footer",
+          "selector": ".ant-transfer-list-footer",
+          "description": "transfer footer Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "header",
+          "selector": ".ant-transfer-list-header",
+          "description": "transfer header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-transfer-list-content-item",
+          "description": "transfer item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemContent",
+          "selector": ".ant-transfer-list-content-item-text",
+          "description": "transfer itemContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemIcon",
+          "selector": ".ant-transfer-list-checkbox",
+          "description": "transfer itemIcon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "list",
+          "selector": ".ant-transfer-list-content",
+          "description": "transfer list Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-transfer",
+          "description": "transfer root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "section",
+          "selector": ".ant-transfer-section",
+          "description": "transfer section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "source",
+          "selector": ".ant-transfer > .ant-transfer-section:first-of-type",
+          "description": "transfer source Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "source.body",
+          "selector": ".ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-body",
+          "description": "transfer source.body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "source.footer",
+          "selector": ".ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-footer",
+          "description": "transfer source.footer Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "source.header",
+          "selector": ".ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-header",
+          "description": "transfer source.header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "source.item",
+          "selector": ".ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-content-item",
+          "description": "transfer source.item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "source.itemContent",
+          "selector": ".ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-content-item-text",
+          "description": "transfer source.itemContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "source.itemIcon",
+          "selector": ".ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-checkbox",
+          "description": "transfer source.itemIcon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "source.list",
+          "selector": ".ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-content",
+          "description": "transfer source.list Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "source.section",
+          "selector": ".ant-transfer > .ant-transfer-section:first-of-type",
+          "description": "transfer source.section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "source.title",
+          "selector": ".ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-header-title",
+          "description": "transfer source.title Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "target",
+          "selector": ".ant-transfer > .ant-transfer-section:last-of-type",
+          "description": "transfer target Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "target.body",
+          "selector": ".ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-body",
+          "description": "transfer target.body Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "target.footer",
+          "selector": ".ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-footer",
+          "description": "transfer target.footer Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "target.header",
+          "selector": ".ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-header",
+          "description": "transfer target.header Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "target.item",
+          "selector": ".ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-content-item",
+          "description": "transfer target.item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "target.itemContent",
+          "selector": ".ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-content-item-text",
+          "description": "transfer target.itemContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "target.itemIcon",
+          "selector": ".ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-checkbox",
+          "description": "transfer target.itemIcon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "target.list",
+          "selector": ".ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-content",
+          "description": "transfer target.list Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "target.section",
+          "selector": ".ant-transfer > .ant-transfer-section:last-of-type",
+          "description": "transfer target.section Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "target.title",
+          "selector": ".ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-header-title",
+          "description": "transfer target.title Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "title",
+          "selector": ".ant-transfer-list-header-title",
+          "description": "transfer title Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "tree",
+      "nodes": [
+        {
+          "name": "item",
+          "selector": ".ant-tree-treenode",
+          "description": "tree item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemIcon",
+          "selector": ".ant-tree-iconEle",
+          "description": "tree itemIcon Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemSwitcher",
+          "selector": ".ant-tree-switcher",
+          "description": "tree itemSwitcher Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemTitle",
+          "selector": ".ant-tree-title",
+          "description": "tree itemTitle Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-tree",
+          "description": "tree root Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "tree-select",
+      "nodes": [
+        {
+          "name": "content",
+          "selector": ".ant-select-content",
+          "description": "tree-select content Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "input",
+          "selector": ".ant-select-selection-search-input",
+          "description": "tree-select input Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "item",
+          "selector": ".ant-select-item-option",
+          "description": "tree-select item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemContent",
+          "selector": ".ant-select-item-option-content",
+          "description": "tree-select itemContent Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemRemove",
+          "selector": ".ant-select-selection-item-remove",
+          "description": "tree-select itemRemove Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemSwitcher",
+          "selector": ".ant-tree-switcher",
+          "description": "tree-select itemSwitcher Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "itemTitle",
+          "selector": ".ant-tree-title",
+          "description": "tree-select itemTitle Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "placeholder",
+          "selector": ".ant-select-selection-placeholder",
+          "description": "tree-select placeholder Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup",
+          "selector": ".ant-select-dropdown",
+          "description": "tree-select popup Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.item",
+          "selector": ".ant-tree-select-popup-item",
+          "description": "tree-select popup.item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.itemSwitcher",
+          "selector": ".ant-tree-select-popup-item-switcher",
+          "description": "tree-select popup.itemSwitcher Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.itemTitle",
+          "selector": ".ant-tree-select-popup-item-title",
+          "description": "tree-select popup.itemTitle Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "popup.root",
+          "selector": ".ant-tree-select-popup-root",
+          "description": "tree-select popup.root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "prefix",
+          "selector": ".ant-select-prefix",
+          "description": "tree-select prefix Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-select.ant-select-tree-select",
+          "description": "tree-select root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "suffix",
+          "selector": ".ant-select-suffix",
+          "description": "tree-select suffix Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "typography",
+      "nodes": [
+        {
+          "name": "action",
+          "selector": ".ant-typography-action",
+          "description": "typography action Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "actions",
+          "selector": ".ant-typography-actions",
+          "description": "typography actions Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-typography",
+          "description": "typography root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "textarea",
+          "selector": ".ant-typography-edit-content",
+          "description": "typography textarea Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    },
+    {
+      "name": "upload",
+      "nodes": [
+        {
+          "name": "item",
+          "selector": ".ant-upload-list-item",
+          "description": "upload item Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "list",
+          "selector": ".ant-upload-list",
+          "description": "upload list Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "root",
+          "selector": ".ant-upload-wrapper",
+          "description": "upload root Semantic DOM 节点",
+          "version": "6.0.0"
+        },
+        {
+          "name": "trigger",
+          "selector": ".ant-upload-select",
+          "description": "upload trigger Semantic DOM 节点",
+          "version": "6.0.0"
+        }
+      ]
+    }
+  ]
+}

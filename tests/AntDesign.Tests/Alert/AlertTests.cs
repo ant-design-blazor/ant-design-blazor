@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Bunit;
@@ -29,9 +30,53 @@ namespace AntDesign.Tests.Alert
         {
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters.Add(x => x.Type, type));
 
-            systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert {expectedClass} ant-alert-no-icon\" style=\"\" id:ignore>"
+            systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-outlined {expectedClass} ant-alert-no-icon\" style=\"\" id:ignore role=\"alert\">"
                 + "<div class=\"ant-alert-section\"></div>"
                 + "</div>");
+        }
+
+        [Fact]
+        public void ItShouldRenderActionsAndFilledVariant()
+        {
+            var action = (RenderFragment)(builder => builder.AddContent(0, "Undo"));
+            var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters
+                .Add(x => x.Message, "Saved")
+                .Add(x => x.Variant, AlertVariant.Filled)
+                .Add(x => x.Action, action));
+
+            systemUnderTest.Find(".ant-alert").GetAttribute("class").Should().Contain("ant-alert-filled");
+            systemUnderTest.Find(".ant-alert").GetAttribute("role").Should().Be("alert");
+            systemUnderTest.Find(".ant-alert-actions").TextContent.Should().Be("Undo");
+        }
+
+        [Fact]
+        public void ItShouldApplySemanticClassesAndStyles()
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters
+                .Add(x => x.Message, "Styled alert")
+                .Add(x => x.Description, "Description")
+                .Add(x => x.ShowIcon, true)
+                .Add(x => x.Closable, true)
+                .Add(x => x.Action, (RenderFragment)(builder => builder.AddContent(0, "Action")))
+                .Add(x => x.ClassNames, new Dictionary<string, string>
+                {
+                    ["root"] = "custom-root",
+                    ["title"] = "custom-title",
+                    ["actions"] = "custom-actions",
+                    ["close"] = "custom-close"
+                })
+                .Add(x => x.Styles, new Dictionary<string, string>
+                {
+                    ["icon"] = "margin-block-start:4px",
+                    ["section"] = "font-weight:500"
+                }));
+
+            systemUnderTest.Find(".ant-alert.custom-root").Should().NotBeNull();
+            systemUnderTest.Find(".ant-alert-title.custom-title").Should().NotBeNull();
+            systemUnderTest.Find(".ant-alert-icon").GetAttribute("style").Should().Contain("margin-block-start:4px");
+            systemUnderTest.Find(".ant-alert-section").GetAttribute("style").Should().Contain("font-weight:500");
+            systemUnderTest.Find(".ant-alert-actions.custom-actions").Should().NotBeNull();
+            systemUnderTest.Find(".ant-alert-close-icon.custom-close").Should().NotBeNull();
         }
 
         [Theory]
@@ -80,7 +125,7 @@ namespace AntDesign.Tests.Alert
                 .Add(x => x.Icon, fragment)
                 .Add(x => x.ShowIcon, true));
 
-            systemUnderTest.MarkupMatches(@"<div data-show=""true"" class="" ant-alert ant-alert-info"" style:ignore id:ignore>
+            systemUnderTest.MarkupMatches(@"<div data-show=""true"" class="" ant-alert ant-alert-outlined ant-alert-info"" style:ignore id:ignore role=""alert"">
                 <div class=""ant-alert-icon"">
                     <span>Icon</span>
                 </div>
@@ -104,7 +149,7 @@ namespace AntDesign.Tests.Alert
                 .Add(x => x.Icon, fragment)
                 .Add(x => x.ShowIcon, false));
 
-            systemUnderTest.MarkupMatches(@"<div data-show=""true"" class="" ant-alert ant-alert-info ant-alert-no-icon"" style:ignore id:ignore>
+            systemUnderTest.MarkupMatches(@"<div data-show=""true"" class="" ant-alert ant-alert-outlined ant-alert-info ant-alert-no-icon"" style:ignore id:ignore role=""alert"">
                 <div class=""ant-alert-section"">
                 </div>
             </div>");
@@ -191,7 +236,7 @@ namespace AntDesign.Tests.Alert
         {
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters.Add(x => x.Message, "Test message"));
 
-            systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-info ant-alert-no-icon\" style=\"\" id:ignore>"
+            systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-outlined ant-alert-info ant-alert-no-icon\" style=\"\" id:ignore role=\"alert\">"
                 + "<div class=\"ant-alert-section\">"
                 + "<div class=\"ant-alert-title\">Test message</div>"
                 + "</div></div>");
@@ -210,7 +255,7 @@ namespace AntDesign.Tests.Alert
 
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters.Add(x => x.MessageTemplate, fragment));
 
-            systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-info ant-alert-no-icon\" style=\"\" id:ignore>"
+            systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-outlined ant-alert-info ant-alert-no-icon\" style=\"\" id:ignore role=\"alert\">"
                 + "<div class=\"ant-alert-section\">"
                 + "<div class=\"ant-alert-title\"><span>Test Message</span></div>"
                 + "</div></div>");
@@ -229,7 +274,7 @@ namespace AntDesign.Tests.Alert
 
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters.Add(x => x.ChildContent, fragment));
 
-            systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-info ant-alert-no-icon ant-alert-with-description\" style=\"\" id:ignore>"
+            systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-outlined ant-alert-info ant-alert-no-icon ant-alert-with-description\" style=\"\" id:ignore role=\"alert\">"
                 + "<div class=\"ant-alert-section\">"
                 + "<div class=\"ant-alert-description\"><span>Test Message</span></div>"
                 + "</div></div>");
@@ -242,7 +287,7 @@ namespace AntDesign.Tests.Alert
                 .Add(x => x.Description, "Here is some more detail")
                 .Add(x => x.Message, "Something happened"));
 
-            systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-info ant-alert-no-icon ant-alert-with-description\" style=\"\" id:ignore>"
+            systemUnderTest.MarkupMatches($"<div data-show=\"true\" class=\" ant-alert ant-alert-outlined ant-alert-info ant-alert-no-icon ant-alert-with-description\" style=\"\" id:ignore role=\"alert\">"
                 + "<div class=\"ant-alert-section\">"
                 + "<div class=\"ant-alert-title\">Something happened</div><div class=\"ant-alert-description\">Here is some more detail</div>"
                 + "</div></div>");
@@ -253,7 +298,7 @@ namespace AntDesign.Tests.Alert
         {
             var systemUnderTest = RenderComponent<AntDesign.Alert>(parameters => parameters.Add(x => x.Banner, true));
 
-            systemUnderTest.MarkupMatches(@"<div data-show=""true"" class="" ant-alert ant-alert-warning ant-alert-banner"" style:ignore id:ignore>
+            systemUnderTest.MarkupMatches(@"<div data-show=""true"" class="" ant-alert ant-alert-outlined ant-alert-warning ant-alert-banner"" style:ignore id:ignore role=""alert"">
                 <span role=""img"" class=""ant-alert-icon anticon anticon-exclamation-circle"" id:ignore>
                     <svg focusable=""false"" width=""1em"" height=""1em"" fill=""currentColor"" style=""pointer-events: none;""
                         xmlns=""http://www.w3.org/2000/svg"" class=""icon"" viewBox=""0 0 1024 1024"">
@@ -274,7 +319,7 @@ namespace AntDesign.Tests.Alert
                 .Add(x => x.Banner, true)
                 .Add(x => x.ShowIcon, false));
 
-            systemUnderTest.MarkupMatches(@"<div data-show=""true"" class="" ant-alert ant-alert-warning ant-alert-no-icon ant-alert-banner"" style:ignore id:ignore>
+            systemUnderTest.MarkupMatches(@"<div data-show=""true"" class="" ant-alert ant-alert-outlined ant-alert-warning ant-alert-no-icon ant-alert-banner"" style:ignore id:ignore role=""alert"">
                 <div class=""ant-alert-section"">
                 </div>
             </div>");

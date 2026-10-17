@@ -48,12 +48,14 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | locale | Localization configuration. Note: do not change the order of days in the ShortWeekDays array. The wrong order will result in the incorrect day headers. | object | [default](https://github.com/ant-design-blazor/ant-design-blazor/blob/master/components/locales/en-US.json) |  |
 | mode（TODO） | picker panel mode（[Cannot select year or month anymore?](/docs/react/faq#When-set-mode-to-DatePicker/RangePicker,-cannot-select-year-or-month-anymore?) | `time` \| `date` \| `month` \| `year` \| `decade` | - |  |
 | open | open state of picker | boolean | - |  |
+| NeedConfirm | Require clicking OK to apply the selected date | boolean | false |  |
 | picker | Set picker type | `date` \| `week` \| `month` \| `quarter` (4.1.0) \| `year` | `date` |  |
 | placeholder | placeholder of date input | string\|RangePicker\[] | - |  |
 | Placement | The position where the selection box pops up | `bottomLeft` `bottomRight` `topLeft` `topRight` | bottomLeft |  |
 | popupStyle | to customize the style of the popup calendar | CSSProperties | {} |  |
 | size | determine the size of the input box, the height of `large` and `small`, are 40px and 24px respectively, while default size is 32px | `large` \| `middle` \| `small` | - |  |
 | bordered | whether has border style | Boolean | true |  |
+| Prefix | Custom content displayed before the picker input | RenderFragment | - |  |
 | SuffixIcon | The custom suffix icon | RenderFragment | - |  |
 | style | to customize the style of the input box | CSSProperties | {} |  |
 | onOpenChange | a callback function, can be executed whether the popup calendar is popped up or closed | function(open) | - |  |

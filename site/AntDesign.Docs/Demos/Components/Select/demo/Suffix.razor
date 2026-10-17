@@ -1,37 +1,70 @@
-<Select SuffixIcon="_syncIcon"
-        DefaultValue="@("luck")"
-        Style="width: 120px"
-		TItemValue="string"
-		TItem="string">
-    <SelectOptions>
-		<SelectOption TItemValue="string" TItem="string" Value="@("jack")" Label="Jack" />
-		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
-		<SelectOption TItemValue="string" TItem="string" Value="@("disabled")" Label="Disabled" Disabled/>
-		<SelectOption TItemValue="string" TItem="string" Value="@("yaoming")" Label="YaoMing" />
-	</SelectOptions>
-</Select>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+    <Select TItemValue="string" TItem="string"
+            DefaultValue="@("lucy")" Placeholder="Select User" Style="width: 200px"
+            AllowClear EnableSearch>
+        <PrefixIcon><span>User</span></PrefixIcon>
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value="@("jack")" Label="Jack" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("Yiminghe")" Label="yiminghe" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("disabled")" Label="Disabled" Disabled />
+        </SelectOptions>
+    </Select>
 
-<Select SuffixIcon="_smileIcon"
-        DefaultValue="@("luck")"
-		TItemValue="string"
-		TItem="string"
-        Style="width: 120px"
-		Disabled>
-    <SelectOptions>
-		<SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
-	</SelectOptions>
-</Select>
+    <Select TItemValue="string" TItem="string"
+            DefaultValue="@("lucy")" Placeholder="Select" Style="width: 120px"
+            SuffixIcon="@_smileIcon">
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value="@("jack")" Label="Jack" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("Yiminghe")" Label="yiminghe" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("disabled")" Label="Disabled" Disabled />
+        </SelectOptions>
+    </Select>
 
-@using OneOf;
-@code
-{
-    private RenderFragment _syncIcon;
-    private RenderFragment _smileIcon;
+    <Select TItemValue="string" TItem="string"
+            DefaultValue="@("lucy")" Placeholder="Select" Style="width: 120px"
+            Disabled SuffixIcon="@_mehIcon">
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+        </SelectOptions>
+    </Select>
 
-    protected override void OnParametersSet()
-    {
-        _syncIcon = @<Icon Type="@IconType.Outline.Sync" />;
-        _smileIcon = @<Icon Type="@IconType.Outline.Smile" Rotate="180" />;
-        base.OnParametersSet();
-    }
+    <div style="flex-basis: 100%; height: 0;"></div>
+
+    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+            DefaultValues="@_selectedValues" Placeholder="Select" Style="width: 200px">
+        <PrefixIcon><span>User</span></PrefixIcon>
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value="@("jack")" Label="Jack" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("Yiminghe")" Label="yiminghe" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("disabled")" Label="Disabled" Disabled />
+        </SelectOptions>
+    </Select>
+
+    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+            DefaultValues="@_selectedValues" Placeholder="Select" Style="width: 120px"
+            SuffixIcon="@_smileIcon">
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value="@("jack")" Label="Jack" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("Yiminghe")" Label="yiminghe" />
+            <SelectOption TItemValue="string" TItem="string" Value="@("disabled")" Label="Disabled" Disabled />
+        </SelectOptions>
+    </Select>
+
+    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple"
+            DefaultValues="@_selectedValues" Placeholder="Select" Style="width: 120px"
+            Disabled SuffixIcon="@_mehIcon">
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+        </SelectOptions>
+    </Select>
+</div>
+
+@code {
+    private readonly string[] _selectedValues = ["lucy"];
+    private RenderFragment _smileIcon = @<Icon Type="@IconType.Outline.Smile" />;
+    private RenderFragment _mehIcon = @<Icon Type="@IconType.Outline.Meh" />;
 }

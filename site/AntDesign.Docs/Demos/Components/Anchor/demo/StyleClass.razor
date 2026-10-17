@@ -1,0 +1,27 @@
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;">
+    <div>
+        <div id="anchor-style-1" style="height:140px;background:rgba(255,0,0,.08)"></div>
+        <div id="anchor-style-2" style="height:140px;background:rgba(0,255,0,.08)"></div>
+        <div id="anchor-style-3" style="height:140px;background:rgba(0,0,255,.08)"></div>
+    </div>
+    <Anchor Affix="false" Replace="true" ClassNames="_classNames" Styles="_styles">
+        <AnchorLink Href="#anchor-style-1" Title="Part 1" />
+        <AnchorLink Href="#anchor-style-2" Title="Part 2" />
+        <AnchorLink Href="#anchor-style-3" Title="Part 3" />
+    </Anchor>
+</div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-anchor-root",
+        ["item"] = "demo-anchor-item",
+        ["itemTitle"] = "demo-anchor-title",
+        ["indicator"] = "demo-anchor-indicator"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "background-color:rgba(255,251,230,.5);height:100vh;"
+    };
+}

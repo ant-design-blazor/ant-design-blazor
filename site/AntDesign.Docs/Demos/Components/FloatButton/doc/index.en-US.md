@@ -1,0 +1,97 @@
+---
+category: Components
+type: General
+title: FloatButton
+description: A button that floats at the top of the page.
+cover: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*tXAoQqyr-ioAAAAAAAAAAAAADrJ8AQ/original
+coverDark: https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*hSAwR7cnabwAAAAAAAAAAAAADrJ8AQ/original
+cols: 2
+---
+
+## When To Use
+
+- For global functionality on the site.
+- Buttons that can be seen wherever you browse.
+
+## Examples
+
+<!-- prettier-ignore -->
+<code src="./demo/Basic.razor" iframe="360">Basic</code>
+<code src="./demo/Type.razor" iframe="360">Type</code>
+<code src="./demo/Shape.razor" iframe="360">Shape</code>
+<code src="./demo/Content.razor" iframe="360">Content</code>
+<code src="./demo/Tooltip.razor" iframe="360">FloatButton with tooltip</code>
+<code src="./demo/Group.razor" iframe="360">FloatButton Group</code>
+<code src="./demo/GroupMenu.razor" iframe="360">Menu mode</code>
+<code src="./demo/Controlled.razor" iframe="360">Controlled mode</code>
+<code src="./demo/Placement.razor" iframe="380" version="5.21.0">placement</code>
+<code src="./demo/Draggable.razor" iframe="380">draggable</code>
+<code src="./demo/BackTop.razor" iframe="360">BackTop</code>
+<code src="./demo/ProgressRing.razor" iframe="360" version="6.6.0">Progress ring</code>
+<code src="./demo/Badge.razor" iframe="360">badge</code>
+<code src="./demo/BadgeDebug.razor" iframe="360" debug>debug dot</code>
+<code src="./demo/StyleClass.razor" iframe="360" version="6.0.0">Custom semantic dom styling</code>
+<code src="./demo/RenderPanel.razor" debug>\_InternalPanelDoNotUseOrYouWillBeFired</code>
+
+## API
+
+Common props ref：[Common props](/docs/react/common-props)
+
+> This component is available since `antd@5.0.0`.
+
+### common API
+
+| Property | Description | Type | Default | Version | [Global Config](/components/config-provider#component-config) |
+| --- | --- | --- | --- | --- | --- |
+| icon | Set the icon component of button | ReactNode | - |  | FloatButton: ×, BackTop: 5.27.0 |
+| classNames | Customize class for each semantic structure inside the component. Supports object or function. | Record<[SemanticDOM](#semantic-dom), string> \| (info: { props })=> Record<[SemanticDOM](#semantic-dom), string> | - |  | 6.0.0 |
+| content | Text and other | ReactNode | - |  | × |
+| ~~description~~ | Please use `content` instead | ReactNode | - |  | × |
+| tooltip | The text shown in the tooltip | ReactNode \| [TooltipProps](/components/tooltip#api) | - | TooltipProps: 5.25.0 | × |
+| type | Setting button type | `default` \| `primary` | `default` |  | × |
+| shape | Setting button shape | `circle` \| `square` | `circle` |  | × |
+| styles | Customize inline style for each semantic structure inside the component. Supports object or function. | Record<[SemanticDOM](#semantic-dom), CSSProperties> \| (info: { props })=> Record<[SemanticDOM](#semantic-dom), CSSProperties> | - |  | 6.0.0 |
+| onClick | Set the handler to handle `click` event | (event) => void | - |  | × |
+| href | The target of hyperlink | string | - |  | × |
+| target | Specifies where to display the linked URL | string | - |  | × |
+| htmlType | Set the original html `type` of `button`, see: [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#type) | `submit` \| `reset` \| `button` | `button` | 5.21.0 | × |
+| badge | Attach Badge to FloatButton. `status` and other props related are not supported. | [BadgeProps](/components/badge#api) | - | 5.4.0 | × |
+| disabled | Whether the button is disabled | boolean | - | 6.4.0 | × |
+
+### FloatButton.Group
+
+| Property | Description | Type | Default | Version | [Global Config](/components/config-provider#component-config) |
+| --- | --- | --- | --- | --- | --- |
+| open | Whether the menu is visible or not, use it with trigger | boolean | - |  | × |
+| closeIcon | Customize close button icon | React.ReactNode | `<CloseOutlined />` |  | 5.16.0 |
+| placement | Customize menu animation placement | `top` \| `left` \| `right` \| `bottom` | `top` | 5.21.0 | × |
+| shape | Setting button shape of children | `circle` \| `square` | `circle` |  | × |
+| classNames | Customize each group Semantic DOM slot | `IDictionary<string, string>` | - | 6.0.0 | × |
+| styles | Customize inline styles for each group Semantic DOM slot | `IDictionary<string, string>` | - | 6.0.0 | × |
+| trigger | Which action can trigger menu open/close | `click` \| `hover` | - |  | × |
+| onOpenChange | Callback executed when active menu is changed, use it with trigger | (open: boolean) => void | - |  | × |
+| onClick | Set the handler to handle `click` event (only work in `Menu mode`) | (event) => void | - | 5.3.0 | × |
+
+### FloatButton.BackTop
+
+| Property | Description | Type | Default | Version |
+| --- | --- | --- | --- | --- |
+| duration | Time to return to top (ms). This property is ignored when enables reduced motion (`prefers-reduced-motion: reduce`) | number | 450 |  |
+| showProgress | Show the current scroll progress ring around the BackTop button edge | boolean | false | 6.6.0 |
+| target | Specifies the scrollable area dom node | () => HTMLElement | () => window |  |
+| visibilityHeight | The BackTop button will not show until the scroll height reaches this value | number | 400 |  |
+| onClick | A callback function, which can be executed when you click the button | () => void | - |  |
+
+## Semantic DOM
+
+### FloatButton
+
+<code src="./demo/_semantic.razor" simplify="true"></code>
+
+### FloatButton.Group
+
+<code src="./demo/_semantic_group.razor" simplify="true"></code>
+
+## Design Token
+
+<ComponentTokenTable component="FloatButton"></ComponentTokenTable>

@@ -172,7 +172,8 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-vertical", () => !IsHorizontal)
-                .If($"{PrefixCls}-rtl", () => RTL);
+                .If($"{PrefixCls}-rtl", () => RTL)
+                .Add("css-var-root");
         }
 
         protected override void OnParametersSet()

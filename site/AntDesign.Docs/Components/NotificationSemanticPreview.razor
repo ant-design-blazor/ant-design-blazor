@@ -1,0 +1,30 @@
+@namespace AntDesign.Docs.Components
+
+<div class="ant-notification ant-notification-list ant-notification-topRight" style="position:relative;inset:auto;width:432px;max-width:100%;height:auto;padding:24px;transform:none">
+    <div class="ant-notification-list-content">
+        <NotificationItem Config="SuccessNotification" />
+        <NotificationItem Config="InfoNotification" />
+    </div>
+</div>
+
+@code {
+    private static readonly NotificationConfig SuccessNotification = new()
+    {
+        Key = "semantic-notification-success",
+        Message = "Hello World!",
+        Description = "Hello World?",
+        NotificationType = NotificationType.Success,
+        Duration = 0,
+        Btn = builder => builder.AddMarkupContent(0, "<button class=\"ant-btn ant-btn-primary ant-btn-sm\">My Button</button>"),
+    };
+
+    private static readonly NotificationConfig InfoNotification = new()
+    {
+        Key = "semantic-notification-info",
+        Message = "Welcome back!",
+        Description = "This is another notification.",
+        NotificationType = NotificationType.Info,
+        Duration = 0,
+        ShowProgress = true,
+    };
+}

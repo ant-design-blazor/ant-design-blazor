@@ -1,0 +1,10 @@
+@* Toggle the suggestion panel using the public Open parameter. *@
+<Flex Vertical Align="FlexAlign.Start" Gap="FlexGap.Small">
+    <Switch @bind-Checked="_open" />
+    <AutoComplete Value="lucy" Style="width:160px" Open="@_open" Options="_options" />
+</Flex>
+
+@code {
+    private bool _open;
+    private readonly string[] _options = ["Jack", "Lucy", "Disabled", "Bamboo"];
+}

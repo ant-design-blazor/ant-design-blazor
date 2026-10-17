@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @namespace AntDesign.Docs.Components
 
-<style>@((MarkupString)PreviewStyles.CssText)</style>
+<style>@((MarkupString)(PreviewStyles.CssText + GlobalHighlightStyles))</style>
 <div class="@PreviewStyles["root"]" data-active-semantic="@ActiveKey">
 
     <div class="@PreviewStyles["content"]">
@@ -16,16 +16,17 @@
             <li class="@PreviewStyles["item"] @(ActiveKey == key ? PreviewStyles["active"] : null)"
                 role="button"
                 tabindex="0"
-                aria-pressed="@(ActiveKey == key)"
+                aria-pressed="@((ActiveKey == key).ToString().ToLowerInvariant())"
                 @onclick="() => Activate(key)"
                 @onmouseenter="() => Activate(key)"
                 @onfocus="() => Activate(key)"
                 @onkeydown="(args) => ActivateFromKeyboard(args, key)">
-                <div>
-                    <strong>@node.Name</strong> <code>@node.Selector</code>
+                <div class="@PreviewStyles["itemHeader"]">
+                    <strong class="@PreviewStyles["itemName"]">@node.Name</strong>
+                    <code class="@PreviewStyles["selector"]">@node.Selector</code>
                     @if (!string.IsNullOrWhiteSpace(node.Version))
                     {
-                        <small>@($"v{node.Version}")</small>
+                        <Tag Color="TagColor.Blue">@($"v{node.Version}")</Tag>
                     }
                 </div>
                 <div>@node.Description</div>
@@ -46,30 +47,55 @@
     private IReadOnlyList<SemanticDomNode> Nodes => SemanticDomCatalog.Get(Component);
 
     private CssStyleSheet PreviewStyles { get; set; } = null!;
+    private string GlobalHighlightStyles { get; set; } = string.Empty;
 
-    protected override void OnParametersSet() => PreviewStyles = CreatePreviewStyles();
+    protected override void OnParametersSet()
+    {
+        PreviewStyles = CreatePreviewStyles();
+        GlobalHighlightStyles = CreateGlobalHighlightStyles();
+    }
 
     private CssStyleSheet CreatePreviewStyles()
     {
+        var content = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["position"] = "relative",
+            ["zIndex"] = 0,
+            ["display"] = "flex",
+            ["minWidth"] = 0,
+            ["alignItems"] = "center",
+            ["justifyContent"] = "center",
+            ["padding"] = "var(--ant-padding-md, 16px)",
+            ["borderInlineEnd"] = "1px solid var(--ant-color-border-secondary, #f0f0f0)",
+            ["overflow"] = "hidden"
+        };
+
+        // Masonry children are absolutely positioned, so a horizontal flex item
+        // cannot infer its width from content and collapses to zero in the preview.
+        if (Component.Equals("masonry", StringComparison.OrdinalIgnoreCase))
+        {
+            content["flexDirection"] = "column";
+            content["alignItems"] = "stretch";
+        }
+
         var root = new System.Collections.Generic.Dictionary<string, object>
         {
             ["position"] = "relative",
             ["zIndex"] = 0,
             ["display"] = "grid",
-            ["gridTemplateColumns"] = "minmax(0, 1fr) minmax(220px, 320px)",
-            ["border"] = "1px solid var(--ant-color-border-secondary, #f0f0f0)",
-            ["borderRadius"] = "var(--ant-border-radius, 8px)",
-            ["overflow"] = "hidden"
+            ["gridTemplateColumns"] = "minmax(0, 2fr) minmax(0, 1fr)"
         };
 
         foreach (var node in Nodes)
         {
-            root[$"&[data-active-semantic=\"{NodeKey(node)}\"] {node.Selector}"] = new System.Collections.Generic.Dictionary<string, object>
+            var activeNode = $"&[data-active-semantic=\"{NodeKey(node)}\"] {node.Selector}";
+            root[activeNode] = CreateHighlightRule(node);
+
+            if (Component.Equals("table", StringComparison.OrdinalIgnoreCase) && node.Name == "body.cell")
             {
-                ["outline"] = "2px solid var(--ant-color-warning, #faad14)",
-                ["outlineOffset"] = "2px",
-                ["boxShadow"] = "0 0 0 4px color-mix(in srgb, var(--ant-color-warning, #faad14) 20%, transparent)"
-            };
+                root[$"&[data-active-semantic=\"{NodeKey(node)}\"] .ant-table-tbody > tr:last-child > .ant-table-cell"] = CreateTableBodyCellRule(bottom: true);
+                root[$"&[data-active-semantic=\"{NodeKey(node)}\"] .ant-table-tbody > tr:last-child > .ant-table-cell:last-child"] = CreateTableBodyCellRule(bottom: true, right: true);
+            }
         }
 
         root["@media (max-width: 767.99px)"] = new System.Collections.Generic.Dictionary<string, object>
@@ -85,23 +111,11 @@
         return CssInJs.CreateStyles("semantic-preview", new System.Collections.Generic.Dictionary<string, object>
         {
             ["root"] = root,
-            ["content"] = new System.Collections.Generic.Dictionary<string, object>
-            {
-                ["position"] = "relative",
-                ["zIndex"] = 0,
-                ["display"] = "flex",
-                ["minWidth"] = 0,
-                ["minHeight"] = 180,
-                ["alignItems"] = "center",
-                ["justifyContent"] = "center",
-                ["padding"] = "var(--ant-padding-md, 16px)",
-                ["borderInlineEnd"] = "1px solid var(--ant-color-border-secondary, #f0f0f0)",
-                ["overflow"] = "hidden"
-            },
+            ["content"] = content,
             ["list"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["display"] = "flex",
-                ["maxHeight"] = 600,
+                ["maxHeight"] = "min(600px, 50vh)",
                 ["flexDirection"] = "column",
                 ["margin"] = 0,
                 ["padding"] = 0,
@@ -116,11 +130,110 @@
                 ["& + &"] = new System.Collections.Generic.Dictionary<string, object> { ["borderTop"] = "1px solid var(--ant-color-border-secondary, #f0f0f0)" },
                 ["&:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["backgroundColor"] = "var(--ant-control-item-bg-hover, #f5f5f5)" }
             },
+            ["itemHeader"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["display"] = "flex",
+                ["alignItems"] = "center",
+                ["justifyContent"] = "space-between",
+                ["gap"] = "var(--ant-margin-xs, 8px)"
+            },
+            ["itemName"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["fontSize"] = 16,
+                ["fontWeight"] = 500,
+                ["lineHeight"] = "var(--ant-line-height, 1.5714)"
+            },
+            ["selector"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["maxWidth"] = "100%",
+                ["overflowWrap"] = "anywhere",
+                ["padding"] = "2px 4px",
+                ["borderRadius"] = "var(--ant-border-radius-sm, 4px)",
+                ["backgroundColor"] = "var(--ant-color-fill-tertiary, #f5f5f5)",
+                ["fontFamily"] = "var(--ant-font-family-code, monospace)",
+                ["fontSize"] = 12,
+                ["lineHeight"] = "var(--ant-line-height, 1.5714)"
+            },
             ["active"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["backgroundColor"] = "var(--ant-color-primary-bg, #e6f4ff)"
             }
         });
+    }
+
+    private string CreateGlobalHighlightStyles()
+    {
+        var rules = new System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, object>>();
+        foreach (var node in Nodes)
+        {
+            if (!IsPortaledNode(node)) continue;
+            var activePreview = $"body:has(.{PreviewStyles["root"]}[data-active-semantic=\"{NodeKey(node)}\"])";
+            foreach (var selector in node.Selector.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+            {
+                rules.Add(new System.Collections.Generic.KeyValuePair<string, object>($"{activePreview} {selector}", CreateHighlightRule(node)));
+            }
+        }
+        return CssInJs.CreateGlobalStyles(rules);
+    }
+
+    private bool IsPortaledNode(SemanticDomNode node)
+    {
+        var component = Component.ToLowerInvariant();
+        if (component is "dropdown" or "modal" or "notification" or "popconfirm" or "popover" or "tooltip" or "drawer")
+            return true;
+
+        if (node.Name.StartsWith("popup", StringComparison.OrdinalIgnoreCase)) return true;
+        if (component == "select" && node.Name is "list" or "listItem") return true;
+        if (component == "cascader" && node.Name == "popup") return true;
+        if (component == "tree-select" && node.Name is "list" or "item") return true;
+        return false;
+    }
+
+    private System.Collections.Generic.Dictionary<string, object> CreateHighlightRule(SemanticDomNode node)
+    {
+        var color = "var(--ant-color-warning, #faad14)";
+
+        if (Component.Equals("table", StringComparison.OrdinalIgnoreCase) && node.Name == "body.row")
+        {
+            return new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["outline"] = "none",
+                ["boxShadow"] = "none",
+                ["& > .ant-table-cell"] = CreateTableBodyCellRule(),
+                ["& > .ant-table-cell:last-child"] = CreateTableBodyCellRule(right: true),
+                ["&:last-child > .ant-table-cell"] = CreateTableBodyCellRule(bottom: true),
+                ["&:last-child > .ant-table-cell:last-child"] = CreateTableBodyCellRule(bottom: true, right: true)
+            };
+        }
+
+        if (Component.Equals("table", StringComparison.OrdinalIgnoreCase) && node.Name == "body.cell")
+        {
+            var cellRule = CreateTableBodyCellRule();
+            return new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["outline"] = "none",
+                ["outlineOffset"] = "0",
+                ["boxShadow"] = cellRule["boxShadow"],
+                ["&:last-child"] = CreateTableBodyCellRule(right: true)
+            };
+        }
+
+        var rule = new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["outline"] = $"2px solid {color}",
+            ["outlineOffset"] = "2px",
+            ["boxShadow"] = $"0 0 0 4px color-mix(in srgb, {color} 20%, transparent)"
+        };
+        return rule;
+    }
+
+    private static System.Collections.Generic.Dictionary<string, object> CreateTableBodyCellRule(bool bottom = false, bool right = false)
+    {
+        var color = "var(--ant-color-warning, #faad14)";
+        var shadows = new System.Collections.Generic.List<string> { $"inset 2px 0 {color}", $"inset 0 2px {color}" };
+        if (bottom) shadows.Add($"inset 0 -2px {color}");
+        if (right) shadows.Add($"inset -2px 0 {color}");
+        return new System.Collections.Generic.Dictionary<string, object> { ["boxShadow"] = string.Join(", ", shadows) };
     }
 
     private string NodeKey(SemanticDomNode node) => $"{Component}-{node.Name}";

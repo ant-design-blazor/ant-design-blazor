@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AntDesign.Theming;
 using Xunit;
 
@@ -35,6 +36,26 @@ namespace AntDesign.Tests.Theming
         }
 
         [Fact]
+        public void MergesDynamicAvatarTokensIntoComponentCssValues()
+        {
+            var config = new ThemeConfig();
+            config.Components["Avatar"] = new Dictionary<string, string>
+            {
+                ["containerSize"] = "60",
+                ["groupOverlapping"] = "-10",
+                ["groupBorderColor"] = "#eee"
+            };
+
+            var values = config.GetResolvedComponentValues();
+
+            Assert.Equal("60", values["Avatar"]["containerSize"]);
+            Assert.Equal("-10", values["Avatar"]["groupOverlapping"]);
+            Assert.Equal("#eee", values["Avatar"]["groupBorderColor"]);
+            Assert.Equal("60px", CssVariableValueFormatter.Format("Avatar-containerSize", values["Avatar"]["containerSize"]));
+            Assert.Equal("-10px", CssVariableValueFormatter.Format("Avatar-groupOverlapping", values["Avatar"]["groupOverlapping"]));
+        }
+
+        [Fact]
         public void ChildThemeInheritsParentResolvedValuesAndOverridesExplicitTokens()
         {
             var parent = new ThemeConfig
@@ -51,6 +72,16 @@ namespace AntDesign.Tests.Theming
             Assert.Equal("#1677ff", values["colorPrimary"]);
             Assert.Equal("#52c41a", values["colorSuccess"]);
             Assert.Contains("colorPrimaryBg", values.Keys);
+        }
+
+        [Fact]
+        public void FormatsRuntimeCssVariablesLikeReactCssInJs()
+        {
+            Assert.Equal("12px", CssVariableValueFormatter.Format("paddingSM", "12"));
+            Assert.Equal("14px", CssVariableValueFormatter.Format("fontSize", "14"));
+            Assert.Equal("1.57142857142857", CssVariableValueFormatter.Format("lineHeight", "1.57142857142857"));
+            Assert.Equal("0", CssVariableValueFormatter.Format("padding", "0"));
+            Assert.Equal("0.2s", CssVariableValueFormatter.Format("motionDurationFast", "0.2s"));
         }
     }
 }

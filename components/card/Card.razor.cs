@@ -122,6 +122,7 @@ namespace AntDesign
         {
             this.ClassMapper
                 .Add("ant-card")
+                .Add("css-var-root")
                 .If("ant-card-rtl", () => RTL)
                 .If("ant-card-loading", () => Loading)
                 .If("ant-card-bordered", () => Bordered)

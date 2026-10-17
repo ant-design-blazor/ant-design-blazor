@@ -8,5 +8,7 @@ namespace AntDesign
     {
         Default,
         Navigation,
+        Inline,
+        Panel,
     }
 }

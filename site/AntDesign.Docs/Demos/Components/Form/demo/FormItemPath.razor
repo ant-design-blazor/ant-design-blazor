@@ -1,0 +1,44 @@
+@using System.Text.Json
+
+<Form Model="@model" Layout="FormLayout.Vertical" OnFinish="OnFinish" Style="max-width:600px;">
+    <FormItem Label="First Name" Name="User.Name.FirstName" Rules="@(new[] { new FormValidationRule { Required = true } })">
+        <Input @bind-Value="context.User.Name.FirstName" Placeholder="First name" />
+    </FormItem>
+    <FormItem Label="Last Name" Name="User.Name.LastName" Rules="@(new[] { new FormValidationRule { Required = true } })">
+        <Input @bind-Value="context.User.Name.LastName" Placeholder="Last name" />
+    </FormItem>
+    <FormItem Label="Age" Name="User.Age">
+        <Input @bind-Value="context.User.Age" Placeholder="Age" />
+    </FormItem>
+    <FormItem>
+        <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
+    </FormItem>
+</Form>
+@if (!string.IsNullOrEmpty(result))
+{
+    <pre role="status">@result</pre>
+}
+
+@code {
+    private readonly FormModel model = new();
+    private string result;
+
+    private void OnFinish(EditContext _) => result = JsonSerializer.Serialize(model, new JsonSerializerOptions { WriteIndented = true });
+
+    private sealed class FormModel
+    {
+        public UserModel User { get; } = new();
+    }
+
+    private sealed class UserModel
+    {
+        public NameModel Name { get; } = new();
+        public int? Age { get; set; }
+    }
+
+    private sealed class NameModel
+    {
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+    }
+}

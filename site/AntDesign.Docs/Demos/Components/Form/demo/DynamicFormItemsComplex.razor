@@ -1,0 +1,54 @@
+﻿@using System.Text.Json
+
+<Form Model="@_model" LabelColSpan="6" WrapperColSpan="18" Style="max-width:600px;">
+    @for (var i = 0; i < _model.Items.Count; i++)
+    {
+        var itemIndex = i;
+        var item = _model.Items[itemIndex];
+        <Card Size="CardSize.Small" Title="@($"Item {itemIndex + 1}")" @key="item.Id" Style="margin-bottom:16px;">
+            <FormItem Label="Name">
+                <Input @bind-Value="item.Name" />
+            </FormItem>
+            <FormItem Label="List">
+                @for (var j = 0; j < item.Children.Count; j++)
+                {
+                    var childIndex = j;
+                    var child = item.Children[childIndex];
+                    <div @key="child.Id" style="display:flex; gap:8px; margin-bottom:8px;">
+                        <FormItem NoStyle><Input @bind-Value="child.First" Placeholder="first" /></FormItem>
+                        <FormItem NoStyle><Input @bind-Value="child.Second" Placeholder="second" /></FormItem>
+                        <Button Type="ButtonType.Text" AriaLabel="Remove sub item" OnClick="@(() => RemoveChild(itemIndex, childIndex))">×</Button>
+                    </div>
+                }
+                <Button Type="ButtonType.Dashed" Block OnClick="@(() => AddChild(itemIndex))">＋ Add Sub Item</Button>
+            </FormItem>
+            <Button Type="ButtonType.Text" AriaLabel="Remove item" OnClick="@(() => RemoveItem(itemIndex))">Remove item</Button>
+        </Card>
+    }
+    <Button Type="ButtonType.Dashed" Block OnClick="AddItem">＋ Add Item</Button>
+    <Typography><pre>@JsonSerializer.Serialize(_model, _jsonOptions)</pre></Typography>
+</Form>
+
+@code {
+    private readonly ComplexListModel _model = new();
+    private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
+
+    private void AddItem() => _model.Items.Add(new ComplexItem());
+    private void RemoveItem(int index) => _model.Items.RemoveAt(index);
+    private void AddChild(int index) => _model.Items[index].Children.Add(new ComplexChild());
+    private void RemoveChild(int itemIndex, int childIndex) => _model.Items[itemIndex].Children.RemoveAt(childIndex);
+
+    private sealed class ComplexListModel { public List<ComplexItem> Items { get; } = [new()]; }
+    private sealed class ComplexItem
+    {
+        public Guid Id { get; } = Guid.NewGuid();
+        public string Name { get; set; } = string.Empty;
+        public List<ComplexChild> Children { get; } = [new()];
+    }
+    private sealed class ComplexChild
+    {
+        public Guid Id { get; } = Guid.NewGuid();
+        public string First { get; set; } = string.Empty;
+        public string Second { get; set; } = string.Empty;
+    }
+}

@@ -1,0 +1,72 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+@using AntDesign.Forms
+
+<Form Model="@_model" LabelColSpan="8" WrapperColSpan="16" Style="max-width:600px;"
+      OnFinish="OnFinish" OnFinishFailed="OnFinishFailed" AutoComplete="off">
+    <FormItem Label="E-mail" Name="Email" Rules="@_emailRules"><Input @bind-Value="context.Email" /></FormItem>
+    <FormItem Label="Password" Name="Password" Rules="@_requiredRules" HasFeedback><InputPassword @bind-Value="context.Password" /></FormItem>
+    <FormItem Label="Confirm Password" Name="Confirm" Rules="@_confirmRules" HasFeedback><InputPassword @bind-Value="context.Confirm" /></FormItem>
+    <FormItem Label="Nickname" Name="Nickname" Rules="@_requiredRules" Tooltip="What do you want others to call you?"><Input @bind-Value="context.Nickname" /></FormItem>
+    <FormItem Label="Habitual Residence" Name="Residence" Rules="@_requiredRules">
+        <Cascader Options="@_residences" @bind-Value="context.Residence" Placeholder="Select a residence" />
+    </FormItem>
+    <FormItem Label="Phone prefix" Name="PhonePrefix" Rules="@_requiredRules">
+        <Select TItemValue="string" TItem="string" @bind-Value="context.PhonePrefix" Style="width:100px;">
+            <SelectOptions><SelectOption TItemValue="string" TItem="string" Value='@("86")' Label="+86" /><SelectOption TItemValue="string" TItem="string" Value='@("87")' Label="+87" /></SelectOptions>
+        </Select>
+    </FormItem>
+    <FormItem Label="Phone Number" Name="Phone" Rules="@_requiredRules"><Input @bind-Value="context.Phone" /></FormItem>
+    <FormItem Label="Donation" Name="Amount" Rules="@_requiredRules">
+        <Space>
+            <AntDesign.InputNumber TValue="decimal?" @bind-Value="context.Amount" Min="0" />
+            <Select TItemValue="string" TItem="string" @bind-Value="context.Currency" Style="width:90px;">
+                <SelectOptions><SelectOption TItemValue="string" TItem="string" Value='@("USD")' Label="$ USD" /><SelectOption TItemValue="string" TItem="string" Value='@("CNY")' Label="¥ CNY" /></SelectOptions>
+            </Select>
+        </Space>
+    </FormItem>
+    <FormItem Label="Website" Name="Website" Rules="@_requiredRules">
+        <AutoComplete TOption="string" @bind-Value="context.Website" OnInput="OnWebsiteChange" Options="@_websiteOptions" Placeholder="website" />
+    </FormItem>
+    <FormItem Label="Intro" Name="Intro" Rules="@_requiredRules"><TextArea @bind-Value="context.Intro" Rows="3" MaxLength="100" ShowCount /></FormItem>
+    <FormItem Label="Gender" Name="Gender" Rules="@_requiredRules">
+        <Select TItemValue="string" TItem="string" @bind-Value="context.Gender" Placeholder="Select gender">
+            <SelectOptions><SelectOption TItemValue="string" TItem="string" Value='@("male")' Label="Male" /><SelectOption TItemValue="string" TItem="string" Value='@("female")' Label="Female" /><SelectOption TItemValue="string" TItem="string" Value='@("other")' Label="Other" /></SelectOptions>
+        </Select>
+    </FormItem>
+    <FormItem Label="Captcha" Name="Captcha" Rules="@_captchaRules" Help="We must make sure that you are a human.">
+        <Space><Input @bind-Value="context.Captcha" /><Button HtmlType="button" OnClick="GetCaptcha">Get captcha</Button></Space>
+    </FormItem>
+    <FormItem Label="Agreement" Name="Agreement" Rules="@_agreementRules">
+        <Checkbox @bind-Value="context.Agreement">I have read the <a href="#agreement">agreement</a></Checkbox>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16"><Button Type="ButtonType.Primary" HtmlType="submit">Register</Button></FormItem>
+</Form>
+<p role="status">@_result</p>
+
+@code {
+    private readonly RegisterFormModel _model = new() { PhonePrefix = "86", Currency = "USD" };
+    private readonly FormValidationRule[] _requiredRules = [new() { Required = true }];
+    private readonly FormValidationRule[] _emailRules = [new() { Required = true }, new() { Type = FormFieldType.Email, Message = "The input is not a valid E-mail!" }];
+    private readonly CascaderNode[] _residences =
+    [
+        new() { Value = "zhejiang", Label = "Zhejiang", Children = [new() { Value = "hangzhou", Label = "Hangzhou", Children = [new() { Value = "xihu", Label = "West Lake" }] }] },
+        new() { Value = "jiangsu", Label = "Jiangsu", Children = [new() { Value = "nanjing", Label = "Nanjing", Children = [new() { Value = "zhonghuamen", Label = "Zhong Hua Men" }] }] }
+    ];
+    private IEnumerable<string> _websiteOptions = [];
+    private FormValidationRule[] _confirmRules => [new() { Required = true, Validator = ValidateConfirm }];
+    private readonly FormValidationRule[] _captchaRules = [new() { Required = true, Validator = c => (string)c.Value == "ANTD" ? ValidationResult.Success : new ValidationResult("Please enter the captcha you got!") }];
+    private readonly FormValidationRule[] _agreementRules = [new() { Validator = c => Equals(c.Value, true) ? ValidationResult.Success : new ValidationResult("Please accept the agreement.") }];
+    private string _result;
+
+    private void GetCaptcha() { _model.Captcha = "ANTD"; _result = "Demo captcha generated: ANTD"; }
+    private void OnWebsiteChange(ChangeEventArgs args)
+    {
+        var website = args.Value?.ToString();
+        _websiteOptions = string.IsNullOrWhiteSpace(website) ? Enumerable.Empty<string>() : new[] { ".com", ".org", ".net" }.Select(domain => $"{website}{domain}").ToArray();
+    }
+    private ValidationResult ValidateConfirm(FormValidationContext c) => (string)c.Value == _model.Password ? ValidationResult.Success : new ValidationResult("The passwords do not match!");
+    private void OnFinish(EditContext _) => _result = $"Registration submitted: {JsonSerializer.Serialize(_model)}";
+    private void OnFinishFailed(EditContext _) => _result = "Please complete the required fields and resolve validation errors.";
+
+}

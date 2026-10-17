@@ -1,0 +1,14 @@
+<Space Direction="SpaceDirection.Vertical" Size="@("12px")" Style="width:240px">
+    <Form TModel="DisabledFormModel" Model="_model">
+        <FormItem Label="Form disabled">
+            <AutoComplete Disabled Value="Disabled Value" Options="_options" />
+        </FormItem>
+    </Form>
+    <AutoComplete Disabled Value="Disabled Value" Options="_options" />
+</Space>
+
+@code {
+    private readonly string[] _options = ["Disabled Value"];
+    private readonly DisabledFormModel _model = new();
+    private sealed class DisabledFormModel { }
+}

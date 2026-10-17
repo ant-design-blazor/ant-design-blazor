@@ -1,0 +1,11 @@
+<Space Wrap Size="@("12px")">
+    <Input TValue="string" Disabled Placeholder="Regular Input" />
+    <AutoComplete Disabled Placeholder="AutoComplete" Options="_options" />
+    <Select TItemValue="string" TItem="string" Disabled Placeholder="Select">
+        <SelectOptions><SelectOption TItemValue="string" TItem="string" Value=@("one") Label="One" /></SelectOptions>
+    </Select>
+</Space>
+
+@code {
+    private readonly string[] _options = ["Option"];
+}

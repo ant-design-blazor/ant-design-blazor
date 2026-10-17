@@ -1,0 +1,31 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Modal_uses_react_v6_semantic_dom_hierarchy()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var dialog = Context.RenderComponent<Dialog>(parameters => parameters
+            .Add(x => x.Config, new DialogOptions
+            {
+                Title = "Dialog title",
+                Footer = "Dialog footer"
+            })
+            .Add(x => x.Visible, true));
+
+        var root = dialog.Find(".ant-modal-root.css-var-root.ant-modal-css-var");
+        Assert.NotNull(root.QuerySelector(".ant-modal-mask"));
+        Assert.NotNull(root.QuerySelector(".ant-modal-wrap"));
+
+        var modal = root.QuerySelector(".ant-modal[role='dialog'][aria-modal='true'][tabindex='-1']");
+        Assert.NotNull(modal);
+        Assert.Equal(modal?.QuerySelector(".ant-modal-title")?.GetAttribute("id"), modal?.GetAttribute("aria-labelledby"));
+        Assert.NotNull(modal?.QuerySelector(".ant-modal-container"));
+        Assert.NotNull(modal?.QuerySelector(".ant-modal-close[aria-label='Close']"));
+        Assert.Equal("Dialog title", modal?.QuerySelector(".ant-modal-title")?.TextContent.Trim());
+        Assert.Equal("Dialog footer", modal?.QuerySelector(".ant-modal-footer")?.TextContent.Trim());
+        Assert.NotNull(modal?.QuerySelector(".ant-modal-body"));
+        Assert.Null(root.QuerySelector(".ant-modal-content"));
+        Assert.Null(root.QuerySelector(".ant-modal-wrap[role='dialog']"));
+    }
+}

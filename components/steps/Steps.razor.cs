@@ -4,7 +4,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading.Tasks;
+using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -23,8 +27,15 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.Navigation, "https://gw.alipayobjects.com/zos/antfincdn/UZYqMizXHaj/Steps.svg", Columns = 1, Title = "Steps", SubTitle = "步骤条")]
     public partial class Steps : AntDomComponentBase
     {
+        private const decimal ResponsiveBreakpoint = 575m;
+
         private bool _showProgressDot;
         private RenderFragment _progressDot;
+        private decimal? _windowWidth;
+        private bool _isResponsiveVertical;
+
+        [Inject]
+        private IDomEventListener DomEventListener { get; set; }
 
         internal List<Step> _children;
 
@@ -78,6 +89,17 @@ namespace AntDesign
         public StepsDirection Direction { get; set; } = StepsDirection.Horizontal;
 
         /// <summary>
+        /// Automatically switches horizontal steps to vertical on narrow screens.
+        /// </summary>
+        /// <default value="true" />
+        [Parameter]
+        public bool Responsive { get; set; } = true;
+
+        private StepsDirection EffectiveDirection => Responsive && Direction == StepsDirection.Horizontal && _isResponsiveVertical
+            ? StepsDirection.Vertical
+            : Direction;
+
+        /// <summary>
         /// Place title and description horizontal or vertical
         /// </summary>
         /// <default value="StepsLabelPlacement.Horizontal" />
@@ -85,11 +107,23 @@ namespace AntDesign
         public StepsLabelPlacement LabelPlacement { get; set; } = StepsLabelPlacement.Horizontal;
 
         /// <summary>
+        /// Truncate step titles and descriptions when they exceed the available space.
+        /// </summary>
+        [Parameter]
+        public bool Ellipsis { get; set; }
+
+        /// <summary>
         /// Type of steps. Possible Values: default, navigation
         /// </summary>
         /// <default value="StepsType.Default" />
         [Parameter]
         public StepsType Type { get; set; } = StepsType.Default;
+
+        /// <summary>
+        /// Render steps with outlined styling.
+        /// </summary>
+        [Parameter]
+        public bool Outlined { get; set; }
 
         /// <summary>
         /// Size of steps. Possible Values: default, small
@@ -133,13 +167,73 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
-            for (int i = 0; i < _children.Count; i++)
+            DomEventListener?.Dispose();
+
+            for (int i = 0; _children != null && i < _children.Count; i++)
             {
                 _children[i].Dispose();
             }
 
-            _children.Clear();
+            _children?.Clear();
             base.Dispose(disposing);
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                DomEventListener.AddShared<JsonElement>("window", "resize", OnWindowResize);
+                bool? isNarrowScreen = null;
+                try
+                {
+                    isNarrowScreen = await JsInvokeAsync<bool>(JSInteropConstants.MatchMedia, $"(max-width: {ResponsiveBreakpoint}px)");
+                }
+                catch (Exception exception) when (exception is JSException || exception is InvalidOperationException)
+                {
+                    // JS interop is unavailable during prerendering and in static renderers.
+                }
+
+                if (isNarrowScreen.HasValue)
+                {
+                    _windowWidth = isNarrowScreen.Value ? ResponsiveBreakpoint : ResponsiveBreakpoint + 1;
+                    if (UpdateResponsiveDirection())
+                    {
+                        await InvokeAsync(StateHasChanged);
+                    }
+                }
+            }
+
+            await base.OnAfterRenderAsync(firstRender);
+        }
+
+        private async Task OnWindowResize(JsonElement element)
+        {
+            if (element.TryGetProperty("innerWidth", out var width))
+            {
+                _windowWidth = width.GetDecimal();
+                if (UpdateResponsiveDirection())
+                {
+                    await InvokeAsync(StateHasChanged);
+                }
+            }
+        }
+
+        private bool UpdateResponsiveDirection()
+        {
+            var isResponsiveVertical = Responsive
+                && Direction == StepsDirection.Horizontal
+                && _windowWidth.HasValue
+                && _windowWidth.Value <= ResponsiveBreakpoint;
+
+            if (_isResponsiveVertical == isResponsiveVertical)
+            {
+                return false;
+            }
+
+            _isResponsiveVertical = isResponsiveVertical;
+            SetClassMap();
+            ResetChildrenSteps();
+            return true;
         }
 
         internal void ResetChildrenSteps()
@@ -158,12 +252,18 @@ namespace AntDesign
                     _children[i].ProgressDot = this._progressDot;
                 }
                 _children[i].Clickable = OnChange.HasDelegate; //TODO: Develop event emitter
-                _children[i].Direction = this.Direction;
+                _children[i].Direction = EffectiveDirection;
                 _children[i].Index = i + this.StartIndex;
                 _children[i].GroupCurrentIndex = this.Current;
                 _children[i].Percent = this.Percent;
                 _children[i].Size = this.Size;
                 _children[i].Last = _children.Count == i + 1;
+            }
+
+            // In React Steps the rail uses the following item's status by default.
+            for (int i = 0; i < _children.Count - 1; i++)
+            {
+                _children[i].RailStatus = _children[i + 1].Status;
             }
         }
 
@@ -180,6 +280,8 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
+            UpdateResponsiveDirection();
+            SetClassMap();
             ResetChildrenSteps();
         }
 
@@ -197,13 +299,22 @@ namespace AntDesign
             string prefixName = "ant-steps";
             ClassMapper.Clear()
                 .Add(prefixName)
-                .If($"{prefixName}-horizontal", () => Direction == StepsDirection.Horizontal)
-                .If($"{prefixName}-vertical", () => Direction == StepsDirection.Vertical)
-                .If($"{prefixName}-label-horizontal", () => Direction == StepsDirection.Horizontal)
-                .If($"{prefixName}-label-vertical", () => (_showProgressDot || LabelPlacement == StepsLabelPlacement.Vertical) && Direction == StepsDirection.Horizontal)
+                .If($"{prefixName}-horizontal", () => EffectiveDirection == StepsDirection.Horizontal)
+                .If($"{prefixName}-vertical", () => EffectiveDirection == StepsDirection.Vertical)
+                // v6 styles key title layout from title-placement classes. The legacy
+                // label-placement class names don't activate the corresponding layout rules.
+                .If($"{prefixName}-title-horizontal", () => !(_showProgressDot || LabelPlacement == StepsLabelPlacement.Vertical) || EffectiveDirection == StepsDirection.Vertical)
+                .If($"{prefixName}-title-vertical", () => (_showProgressDot || LabelPlacement == StepsLabelPlacement.Vertical) && EffectiveDirection == StepsDirection.Horizontal)
                 .If($"{prefixName}-dot", () => _showProgressDot)
                 .If($"{prefixName}-small", () => Size == StepsSize.Small)
                 .If($"{prefixName}-navigation", () => Type == StepsType.Navigation)
+                .If($"{prefixName}-inline", () => Type == StepsType.Inline)
+                .If($"{prefixName}-panel", () => Type == StepsType.Panel)
+                // React Steps defaults to the filled variant. Without this class, v6 leaves
+                // the icon state variables unset and the browser falls back to black icons.
+                .If($"{prefixName}-filled", () => !Outlined)
+                .If($"{prefixName}-outlined", () => Outlined)
+                .If($"{prefixName}-ellipsis", () => Ellipsis)
                 .If($"{prefixName}-with-progress", () => Percent != null)
                 .If($"{prefixName}-rtl", () => RTL);
         }

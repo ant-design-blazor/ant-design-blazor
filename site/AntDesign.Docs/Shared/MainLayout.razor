@@ -44,7 +44,7 @@
                 </GridCol>
             }
 
-            <GridCol Xs="24" Sm="24" Md="18" Lg="18" Xl="19" Xxl="20">
+            <GridCol Xs="24" Sm="24" Md="24" Lg="18" Xl="19" Xxl="20">
                 <CascadingValue Value="this">
                     @Body
                     @*<div class="fixed-widgets">
@@ -63,9 +63,39 @@
     </div>
 </div>
 
+<style>@((MarkupString)_globalCssText)</style>
 <style>@((MarkupString)_styles.CssText)</style>
 
 @code {
+    private static readonly string _globalCssText = CssInJs.CreateGlobalStyles(new[]
+    {
+        new System.Collections.Generic.KeyValuePair<string, object>("@font-face", new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["fontFamily"] = "AlibabaSans", ["fontStyle"] = "normal", ["fontWeight"] = 300,
+            ["fontDisplay"] = "optional", ["src"] = "url('https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*1GSgSYDD_aIAAAAAQsAAAAgAegCCAQ/AlibabaSans-Light.woff2') format('woff2')"
+        }),
+        new System.Collections.Generic.KeyValuePair<string, object>("@font-face", new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["fontFamily"] = "AlibabaSans", ["fontStyle"] = "normal", ["fontWeight"] = 400,
+            ["fontDisplay"] = "optional", ["src"] = "url('https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*2zEUQqnPNesAAAAAQtAAAAgAegCCAQ/AlibabaSans-Regular.woff2') format('woff2')"
+        }),
+        new System.Collections.Generic.KeyValuePair<string, object>("@font-face", new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["fontFamily"] = "AlibabaSans", ["fontStyle"] = "normal", ["fontWeight"] = 500,
+            ["fontDisplay"] = "optional", ["src"] = "url('https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*E_cxRbMlZqUAAAAAQuAAAAgAegCCAQ/AlibabaSans-Medium.woff2') format('woff2')"
+        }),
+        new System.Collections.Generic.KeyValuePair<string, object>("@font-face", new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["fontFamily"] = "AlibabaSans", ["fontStyle"] = "normal", ["fontWeight"] = 600,
+            ["fontDisplay"] = "optional", ["src"] = "url('https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*E_cxRbMlZqUAAAAAQuAAAAgAegCCAQ/AlibabaSans-Bold.woff2') format('woff2')"
+        }),
+        new System.Collections.Generic.KeyValuePair<string, object>("@font-face", new System.Collections.Generic.Dictionary<string, object>
+        {
+            ["fontFamily"] = "AlibabaSans", ["fontStyle"] = "normal", ["fontWeight"] = 700,
+            ["fontDisplay"] = "optional", ["src"] = "url('https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*E_cxRbMlZqUAAAAAQuAAAAgAegCCAQ/AlibabaSans-Heavy.woff2') format('woff2')"
+        })
+    });
+
     private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-layout", new System.Collections.Generic.Dictionary<string, object>
     {
         ["root"] = new System.Collections.Generic.Dictionary<string, object>
@@ -84,16 +114,25 @@
                 ["position"] = "relative", ["minHeight"] = 500, ["padding"] = "0 170px 32px 64px", ["background"] = "#fff",
                 ["transition"] = "all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)"
             },
+            ["& .main-container-component"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["paddingInline"] = "48px 164px",
+                ["fontFamily"] = "var(--ant-font-family)",
+                ["lineHeight"] = "var(--ant-line-height)",
+                ["--ant-font-family"] = "AlibabaSans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'"
+            },
             [".ant-row-rtl & .main-container"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "0 64px 144px 170px" },
             ["@media only screen and (max-width: 992px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["& .main-container"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 48, ["paddingLeft"] = 48 },
+                ["& .main-container-component"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingInline"] = "48px 164px" },
                 ["& .main-container .toc-affix"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" }
             },
             ["@media only screen and (max-width: 767.99px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["&"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%", ["margin"] = 0, ["borderRadius"] = 0 },
                 ["& .main-container, .ant-row-rtl & .main-container"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 0, ["marginLeft"] = 0, ["paddingRight"] = 16, ["paddingLeft"] = 16 },
+                ["& .main-container-component"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingInline"] = "48px 164px" },
                 ["& .main-container > .markdown > *, .ant-row-rtl & .main-container > .markdown > *"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100% !important" },
                 ["& .drawer .ant-menu-inline .ant-menu-item::after, & .drawer .ant-menu-vertical .ant-menu-item::after"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = "auto", ["left"] = 0 }
             }

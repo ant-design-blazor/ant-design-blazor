@@ -1,0 +1,18 @@
+<div>
+    <Search Placeholder="Search with loading state" Loading="@loading" @bind-Value="value" OnSearch="SearchAsync" />
+</div>
+
+@inject IMessageService Message
+
+@code {
+    private string value;
+    private bool loading;
+
+    private async Task SearchAsync(string query)
+    {
+        loading = true;
+        await Task.Delay(900);
+        loading = false;
+        Message.Success($"Search completed: {query}");
+    }
+}

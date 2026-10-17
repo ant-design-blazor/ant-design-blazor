@@ -1,0 +1,11 @@
+<div style="width: 400px; max-width: 100%;">
+    <Text Style="max-width: 100%;" EllipsisConfig="@ellipsisConfig">@start</Text>
+</div>
+
+@code {
+    private const int suffixCount = 12;
+    private const string text = "In the process of internal desktop applications development, many different design specs and implementations would be involved, which might cause designers and developers difficulties and duplication and reduce the efficiency of development.";
+    private string start => text[..^suffixCount];
+    private string suffix => text[^suffixCount..].Trim();
+    private TypographyEllipsisConfig ellipsisConfig => new() { Suffix = suffix };
+}

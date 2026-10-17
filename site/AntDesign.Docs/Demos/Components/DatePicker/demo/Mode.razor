@@ -1,0 +1,41 @@
+<Space Direction="SpaceDirection.Vertical">
+    <DatePicker TValue="DateTime?"
+                Picker="_datePicker"
+                ShowTime="true"
+                OnOpenChange="OnDateOpenChange"
+                OnPanelChange="OnDatePanelChange" />
+    <RangePicker TValue="DateTime?[]"
+                 Picker="_rangePicker"
+                 Placeholder='@(new[] { "Start month", "End month" })'
+                 Format="yyyy-MM"
+                 OnPanelChange="OnRangePanelChange" />
+</Space>
+
+@code {
+    private DatePickerType _datePicker = DatePickerType.Time;
+    private DatePickerType _rangePicker = DatePickerType.Month;
+
+    private void OnDateOpenChange(bool open)
+    {
+        if (open)
+        {
+            _datePicker = DatePickerType.Time;
+        }
+    }
+
+    private void OnDatePanelChange(DateTimeChangedEventArgs<DateTime?> args)
+    {
+        if (Enum.TryParse<DatePickerType>(args.DateString, true, out var picker))
+        {
+            _datePicker = picker;
+        }
+    }
+
+    private void OnRangePanelChange(DateTimeChangedEventArgs<DateTime?[]> args)
+    {
+        if (Enum.TryParse<DatePickerType>(args.DateString, true, out var picker))
+        {
+            _rangePicker = picker == DatePickerType.Date ? DatePickerType.Month : picker;
+        }
+    }
+}

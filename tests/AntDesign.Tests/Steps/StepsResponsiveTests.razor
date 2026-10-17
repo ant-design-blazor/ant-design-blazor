@@ -1,0 +1,34 @@
+@inherits AntDesignTestBase
+@code {
+    public StepsResponsiveTests()
+    {
+        JSInterop.Setup<bool>(JSInteropConstants.MatchMedia, _ => true).SetResult(true);
+        JSInterop.SetupVoid(JSInteropConstants.AddDomEventListener, _ => true).SetVoidResult();
+    }
+
+    [Fact]
+    public void Defaults_to_vertical_layout_at_the_responsive_breakpoint()
+    {
+        var cut = Render(@<Steps>
+            <Step Title="One" />
+            <Step Title="Two" />
+        </Steps>);
+
+        var root = cut.Find(".ant-steps");
+        Assert.Contains("ant-steps-vertical", root.ClassList);
+        Assert.Contains("ant-steps-title-horizontal", root.ClassList);
+    }
+
+    [Fact]
+    public void Responsive_can_be_disabled()
+    {
+        var cut = Render(@<Steps Responsive="false">
+            <Step Title="One" />
+            <Step Title="Two" />
+        </Steps>);
+
+        var root = cut.Find(".ant-steps");
+        Assert.Contains("ant-steps-horizontal", root.ClassList);
+        Assert.DoesNotContain("ant-steps-vertical", root.ClassList);
+    }
+}

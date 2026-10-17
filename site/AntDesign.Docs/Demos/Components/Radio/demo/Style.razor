@@ -1,29 +1,25 @@
-<div>
+<Flex Vertical Gap="FlexGap.Middle">
     <RadioGroup @bind-Value="radioValue3">
-        <Radio RadioButton Value="@("A")">Hangzhou</Radio>
-        <Radio RadioButton Value="@("B")">Shanghai</Radio>
-        <Radio RadioButton Value="@("C")">Beijing</Radio>
-        <Radio RadioButton Value="@("D")">Chengdu</Radio>
+        <Radio RadioButton Value="@("a")">Hangzhou</Radio>
+        <Radio RadioButton Value="@("b")">Shanghai</Radio>
+        <Radio RadioButton Value="@("c")">Beijing</Radio>
+        <Radio RadioButton Value="@("d")">Chengdu</Radio>
     </RadioGroup>
-    <br />
-    <br />
     <RadioGroup @bind-Value="radioValue3">
-        <Radio RadioButton Value="@("A")">Hangzhou</Radio>
-        <Radio RadioButton Value="@("B")" Disabled>Shanghai</Radio>
-        <Radio RadioButton Value="@("C")">Beijing</Radio>
-        <Radio RadioButton Value="@("D")">Chengdu</Radio>
+        <Radio RadioButton Value="@("a")">Hangzhou</Radio>
+        <Radio RadioButton Value="@("b")" Disabled>Shanghai</Radio>
+        <Radio RadioButton Value="@("c")">Beijing</Radio>
+        <Radio RadioButton Value="@("d")">Chengdu</Radio>
     </RadioGroup>
-    <br />
-    <br />
     <RadioGroup Disabled @bind-Value="radioValue3">
-        <Radio RadioButton Value="@("A")" >Hangzhou</Radio>
-        <Radio RadioButton Value="@("B")" >Shanghai</Radio>
-        <Radio RadioButton Value="@("C")" >Beijing</Radio>
-        <Radio RadioButton Value="@("D")" >Chengdu</Radio>
+        <Radio RadioButton Value="@("a")" >Hangzhou</Radio>
+        <Radio RadioButton Value="@("b")" >Shanghai</Radio>
+        <Radio RadioButton Value="@("c")" >Beijing</Radio>
+        <Radio RadioButton Value="@("d")" >Chengdu</Radio>
     </RadioGroup>
-</div>
+</Flex>
 
 @code
 {
-    string radioValue3 = "A";
+    string radioValue3 = "a";
 }

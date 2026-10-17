@@ -1,0 +1,31 @@
+<div style="display:flex; align-items:flex-start; gap:48px">
+    <div style="flex:1">
+        <RadioGroup TValue="int" @bind-Value="_value" Vertical>
+            <Radio Value="1" Style="height:32px; line-height:32px">Option A</Radio>
+            <Radio Value="2" Style="height:32px; line-height:32px">Option B</Radio>
+            <Radio Value="3" Style="height:32px; line-height:32px">Option C</Radio>
+            <Radio Value="4" Style="height:32px; line-height:32px">
+                More...
+                @if (_value == 4)
+                {
+                    <Input TValue="string" Placeholder="please input" Style="width:120px; margin-inline-start:12px" />
+                }
+            </Radio>
+        </RadioGroup>
+    </div>
+
+    <div style="flex:1">
+        <RadioGroup TValue="string" Options="@_buttonOptions" @bind-Value="_buttonValue" ButtonStyle="RadioButtonStyle.Outline" Vertical />
+    </div>
+</div>
+
+@code {
+    private int _value = 1;
+    private string _buttonValue = "Apple";
+    private readonly RadioOption<string>[] _buttonOptions =
+    [
+        new() { Label = "Apple", Value = "Apple" },
+        new() { Label = "Pear", Value = "Pear" },
+        new() { Label = "Orange", Value = "Orange", Title = "Orange" }
+    ];
+}

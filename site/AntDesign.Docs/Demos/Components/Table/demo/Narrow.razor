@@ -1,0 +1,16 @@
+<div style="width:300px">
+    <Table TItem="NarrowRow" DataSource="_rows" RowKey="row=>row.Key"
+           Size="TableSize.Small" PageSize="10" PageIndex="13">
+        <PropertyColumn Property="row=>row.Name" Title="Name" />
+        <PropertyColumn Property="row=>row.Age" Title="Age" />
+        <PropertyColumn Property="row=>row.Address" Title="Address" />
+    </Table>
+</div>
+
+@code {
+    private readonly NarrowRow[] _rows = Enumerable.Range(0, 200)
+        .Select(index => new NarrowRow(index, "Sample Name", 30 + index % 5, $"Sample Address {index}"))
+        .ToArray();
+
+    private sealed record NarrowRow(int Key, string Name, int Age, string Address);
+}

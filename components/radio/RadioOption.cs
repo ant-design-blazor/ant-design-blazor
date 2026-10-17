@@ -11,5 +11,15 @@ namespace AntDesign
         public TValue Value { get; set; }
 
         public bool Disabled { get; set; }
+
+        public string ClassName { get; set; }
+
+        public string Style { get; set; }
+
+        public string Title { get; set; }
+
+        public string Id { get; set; }
+
+        public bool Required { get; set; }
     }
 }

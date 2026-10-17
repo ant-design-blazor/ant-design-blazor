@@ -1,0 +1,43 @@
+@masonry-prefix-cls: ~'ant-masonry';
+
+.@{masonry-prefix-cls} {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  &-rtl {
+    direction: rtl;
+  }
+
+  & > &-item {
+    box-sizing: border-box;
+
+    &-fade {
+      &-appear {
+        transition: opacity var(--ant-motion-duration-slow) var(--ant-motion-ease-out);
+        opacity: 0;
+
+        &-active {
+          opacity: 1;
+        }
+      }
+
+      &-leave {
+        transition: opacity var(--ant-motion-duration-fast) var(--ant-motion-ease-out);
+        opacity: 1;
+
+        &-active {
+          opacity: 0;
+        }
+      }
+    }
+
+    &:not(&-fade) {
+      transition: left var(--ant-motion-duration-slow) var(--ant-motion-ease-out),
+        right var(--ant-motion-duration-slow) var(--ant-motion-ease-out),
+        top var(--ant-motion-duration-slow) var(--ant-motion-ease-out);
+    }
+  }
+}

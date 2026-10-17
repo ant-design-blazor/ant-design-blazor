@@ -1,0 +1,33 @@
+﻿<Flex Vertical Gap="FlexGap.Middle">
+    <Flex Align="FlexAlign.Center" Gap="FlexGap.Middle">
+        <Button Type="ButtonType.Primary" Disabled="@(!_selectedRows.Any())" Loading="_loading" OnClick="Reload">Reload</Button>
+        @if (_selectedRows.Any())
+        {
+            <span>Selected @_selectedRows.Count() items</span>
+        }
+    </Flex>
+    <Table TItem="Row" DataSource="_rows" RowKey="x => x.Key" @bind-SelectedRows="_selectedRows">
+        <Selection />
+        <PropertyColumn Property="x => x.Name" Title="Name" />
+        <PropertyColumn Property="x => x.Age" Title="Age" />
+        <PropertyColumn Property="x => x.Address" Title="Address" />
+    </Table>
+</Flex>
+
+@code {
+    private bool _loading;
+    private IEnumerable<Row> _selectedRows = [];
+    private readonly Row[] _rows = Enumerable.Range(0, 46)
+        .Select(i => new Row(i, $"Edward King {i}", 32, $"London, Park Lane no. {i}"))
+        .ToArray();
+
+    private async Task Reload()
+    {
+        _loading = true;
+        await Task.Delay(1000);
+        _selectedRows = [];
+        _loading = false;
+    }
+
+    private sealed record Row(int Key, string Name, int Age, string Address);
+}

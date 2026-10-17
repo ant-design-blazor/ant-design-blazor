@@ -1,0 +1,45 @@
+﻿@using System.Text.Json
+
+<Form Model="@_model" Style="max-width:600px;" OnFinish="OnFinish">
+    @for (var i = 0; i < _model.Users.Count; i++)
+    {
+        var index = i;
+        var user = _model.Users[index];
+        <div @key="user.Id" style="display:flex; align-items:baseline; gap:8px; margin-bottom:8px;">
+            <span aria-label="Reorder controls">↕</span>
+            <FormItem NoStyle><Input @bind-Value="user.First" Placeholder="First Name" /></FormItem>
+            <FormItem NoStyle><Input @bind-Value="user.Last" Placeholder="Last Name" /></FormItem>
+            <Button Type="ButtonType.Text" Disabled="@(index == 0)" AriaLabel="Move up" OnClick="@(() => Move(index, -1))">↑</Button>
+            <Button Type="ButtonType.Text" Disabled="@(index == _model.Users.Count - 1)" AriaLabel="Move down" OnClick="@(() => Move(index, 1))">↓</Button>
+            <Button Type="ButtonType.Text" AriaLabel="Remove row" OnClick="@(() => Remove(index))">×</Button>
+        </div>
+    }
+    <FormItem>
+        <Space>
+            <Button Type="ButtonType.Dashed" OnClick="Add">＋ Add field</Button>
+            <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
+        </Space>
+    </FormItem>
+</Form>
+@if (!string.IsNullOrEmpty(_result)) { <pre role="status">@_result</pre> }
+
+@code {
+    private readonly SortableUsersModel _model = new();
+    private string _result;
+    private void Add() => _model.Users.Add(new SortableUser());
+    private void Remove(int index) => _model.Users.RemoveAt(index);
+    private void Move(int index, int offset)
+    {
+        var target = index + offset;
+        if (target < 0 || target >= _model.Users.Count) return;
+        (_model.Users[index], _model.Users[target]) = (_model.Users[target], _model.Users[index]);
+    }
+    private void OnFinish(EditContext _) => _result = JsonSerializer.Serialize(_model.Users.Select(x => new { x.First, x.Last }));
+    private sealed class SortableUsersModel { public List<SortableUser> Users { get; } = [new(), new()]; }
+    private sealed class SortableUser
+    {
+        public Guid Id { get; } = Guid.NewGuid();
+        public string First { get; set; } = string.Empty;
+        public string Last { get; set; } = string.Empty;
+    }
+}

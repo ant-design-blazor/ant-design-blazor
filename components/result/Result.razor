@@ -1,10 +1,10 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" @ref="Ref">
+<div class="@SemanticClass("root", ClassMapper.Class)" style="@SemanticStyle("root", GetComponentStyle("Result", Style))" @ref="Ref">
     @if (IsShowIcon)
     {
-        <div class="@IconClassMapper.Class">
+        <div class="@SemanticClass("icon", IconClassMapper.Class)" style="@SemanticStyle("icon")">
             @if (IsImage)
             {
                 @((MarkupString)_svgImage)
@@ -15,21 +15,21 @@
             }
         </div>
     }
-    <div class="ant-result-title">
+    <div class="@SemanticClass("title", "ant-result-title")" style="@SemanticStyle("title")">
         @if (TitleTemplate != null)@TitleTemplate else @Title
     </div>
-    <div class="ant-result-subtitle ant-result-sub-title">
+    <div class="@SemanticClass("subTitle", "ant-result-subtitle ant-result-sub-title")" style="@SemanticStyle("subTitle")">
         @if (SubTitleTemplate != null)@SubTitleTemplate else @SubTitle
     </div>
     @if (ChildContent != null)
     {
-        <div class="ant-result-body ant-result-content">
+        <div class="@SemanticClass("body", "ant-result-body ant-result-content")" style="@SemanticStyle("body")">
             @ChildContent
         </div>
     }
     @if (Extra != null)
     {
-        <div class="ant-result-extra">
+        <div class="@SemanticClass("extra", "ant-result-extra")" style="@SemanticStyle("extra")">
             @Extra
         </div>
     }

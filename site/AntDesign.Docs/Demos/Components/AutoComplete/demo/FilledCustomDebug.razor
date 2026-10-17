@@ -1,0 +1,16 @@
+<Space Wrap Size="@("24px")">
+    <Form TModel="DisabledFormModel" Model="_model" Layout="FormLayout.Vertical" Style="width:280px">
+        <FormItem Label="AutoComplete filled">
+            <AutoComplete Variant="filled" Options="_options" Placeholder="Choose a city" />
+        </FormItem>
+        <FormItem Label="Input filled">
+            <Input TValue="string" Placeholder="Compare input" InputElementSuffixClass="ant-input-filled" />
+        </FormItem>
+    </Form>
+</Space>
+
+@code {
+    private readonly string[] _options = ["Burnaby", "Seattle", "Los Angeles"];
+    private readonly DisabledFormModel _model = new();
+    private sealed class DisabledFormModel { }
+}

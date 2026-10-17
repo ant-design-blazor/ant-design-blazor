@@ -1,0 +1,57 @@
+﻿<Layout>
+    <Sider Collapsible
+           NoTrigger
+           DefaultCollapsed
+           @bind-Collapsed="collapsed">
+        <div class="demo-logo-vertical"></div>
+        <Menu Theme="MenuTheme.Dark"
+              Mode="MenuMode.Inline"
+              DefaultSelectedKeys="@(new[] { "3" })"
+              DefaultOpenKeys="@(new[] { "sub1" })">
+            <MenuItem Key="1" Icon="@IconType.Outline.PieChart">Option 1</MenuItem>
+            <MenuItem Key="2" Icon="@IconType.Outline.Desktop">Option 2</MenuItem>
+            <SubMenu Key="sub1" TitleTemplate="@UserTitle">
+                <MenuItem Key="3">Tom</MenuItem>
+                <MenuItem Key="4">Bill</MenuItem>
+                <MenuItem Key="5">Alex</MenuItem>
+            </SubMenu>
+            <SubMenu Key="sub2" TitleTemplate="@TeamTitle">
+                <MenuItem Key="6">Team 1</MenuItem>
+                <MenuItem Key="7">Team 2</MenuItem>
+            </SubMenu>
+            <MenuItem Key="9" Icon="@IconType.Outline.File"></MenuItem>
+        </Menu>
+    </Sider>
+    <Layout>
+        <Header Style="padding: 0; background: var(--ant-color-bg-container);">
+            <Button Type="ButtonType.Text"
+                    OnClick="ToggleCollapsed"
+                    Style="font-size: 16px; width: 64px; height: 64px;">
+                @if (collapsed)
+                {
+                    <Icon Type="@IconType.Outline.MenuUnfold" />
+                }
+                else
+                {
+                    <Icon Type="@IconType.Outline.MenuFold" />
+                }
+            </Button>
+        </Header>
+        <Content Style="margin: 24px 16px; padding: 24px; min-height: 280px; background: var(--ant-color-bg-container); border-radius: var(--ant-border-radius-lg);">
+            Content
+        </Content>
+    </Layout>
+</Layout>
+
+@code {
+    private bool collapsed = true;
+
+    private RenderFragment UserTitle => @<span><Icon Type="@IconType.Outline.User" /> User</span>;
+
+    private RenderFragment TeamTitle => @<span><Icon Type="@IconType.Outline.Team" /> Team</span>;
+
+    private void ToggleCollapsed()
+    {
+        collapsed = !collapsed;
+    }
+}

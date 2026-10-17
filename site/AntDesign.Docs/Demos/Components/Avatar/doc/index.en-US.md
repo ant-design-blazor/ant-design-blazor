@@ -18,6 +18,7 @@ Avatars can be used to represent people or objects. It supports images, `Icon`s,
 | OnError | Handler when img load error | EventCallback&lt;ErrorEventArgs> | - |  |
 | Shape | The shape of avatar | string | - |  |
 | Size | The size of the avatar `default` \| `small` \| `large` | string | `default` |  |
+| ResponsiveSize | Responsive avatar sizes keyed by `xs`, `sm`, `md`, `lg`, `xl`, and `xxl` breakpoints | `Dictionary<string, int>` | - |  |
 | Src | The address of the image for an image avatar | string | - |  |
 | SrcSet | A list of sources to use for different screen resolutions | string | - |  |
 

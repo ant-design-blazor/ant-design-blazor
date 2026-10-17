@@ -7,11 +7,21 @@ import { tmpdir } from 'node:os';
 import test from 'node:test';
 import { compareArtifactSets, compareCss } from '../src/style-diff.mjs';
 import { createArtifact, readBaseline } from '../src/baseline.mjs';
+import { normalizeBlazorThemeScope } from '../src/react-css-baseline.mjs';
 
 const repo = resolve(new URL('../../..', import.meta.url).pathname);
 const antdPath = process.env.ANTD_PATH ?? resolve(repo, '../ant-design');
 const tsxPath = resolve(antdPath, 'node_modules/.bin/tsx');
 const cliPath = resolve(repo, 'tools/AntDesign.StyleGen/src/cli.mjs');
+
+test('normalizes React renderer scopes to the stable Blazor theme ancestor', () => {
+  const reactCss = '.css-var-root.ant-btn{color:red}.css-var-root{--ant-color-primary:blue}.css-var-_R_39n_.ant-css-var{--ant-x:y}';
+  assert.equal(
+    normalizeBlazorThemeScope(reactCss),
+    '.ant-theme .ant-btn{color:red}.ant-theme{--ant-color-primary:blue}.ant-theme .ant-css-var{--ant-x:y}',
+  );
+  assert.doesNotMatch(normalizeBlazorThemeScope(reactCss), /css-var-(?:root|_R_)/);
+});
 
 test('generates the phase-one React CSS catalog for all components and themes', { skip: !existsSync(join(antdPath, 'package.json')) || !existsSync(tsxPath) }, async () => {
   const output = await mkdtemp(join(tmpdir(), 'antd-v6-css-baseline-'));

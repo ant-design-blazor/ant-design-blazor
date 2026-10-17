@@ -1,0 +1,25 @@
+<Table TItem="ParentRow" DataSource="_rows" RowKey="row=>row.Key" HidePagination DefaultExpandAllRows RowExpandable="@(_ => true)">
+    <ColumnDefinitions>
+        <PropertyColumn Property="row=>row.Name" Title="Name" />
+    </ColumnDefinitions>
+    <ExpandTemplate Context="row">
+        <Tabs DefaultActiveKey="1">
+            <TabPane Key="1" Tab="Tab 1">
+                <Table TItem="ParentRow" DataSource="_tabRows" RowKey="item=>item.Key" Bordered HidePagination>
+                    <PropertyColumn Property="item=>item.Name" Title="Name" />
+                </Table>
+            </TabPane>
+        </Tabs>
+    </ExpandTemplate>
+</Table>
+
+@code {
+    private readonly ParentRow[] _rows = [new() { Key = "0", Name = "Jack" }];
+    private readonly ParentRow[] _tabRows = [new() { Key = "0-child", Name = "Jack" }];
+
+    private sealed class ParentRow
+    {
+        public string Key { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
+    }
+}

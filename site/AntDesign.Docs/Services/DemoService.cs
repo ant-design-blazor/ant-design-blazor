@@ -6,7 +6,6 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Reflection;
 using System.Threading.Tasks;
 using AntDesign.Extensions.Localization;
 using Microsoft.AspNetCore.Components;
@@ -15,52 +14,25 @@ namespace AntDesign.Docs.Services
 {
     public class DemoService
     {
-        private static ConcurrentCache<string, Type> _showCaseCache;
-
         private readonly ILocalizationService _localizationService;
         private readonly HttpClient _httpClient;
-        private readonly DemoServiceCache _cache;
         private readonly NavigationManager _navigationManager;
         private Uri _baseUrl;
 
         private string CurrentLanguage => _localizationService.CurrentCulture.Name;
 
-        public DemoService(ILocalizationService localizationService, HttpClient httpClient, DemoServiceCache cache, NavigationManager navigationManager)
+        public DemoService(ILocalizationService localizationService, HttpClient httpClient, NavigationManager navigationManager)
         {
             _localizationService = localizationService;
             _httpClient = httpClient;
-            _cache = cache;
             _navigationManager = navigationManager;
             _baseUrl = _navigationManager.ToAbsoluteUri(_navigationManager.BaseUri);
-            Initialize(localizationService.CurrentCulture.Name);
-
-            _localizationService.LanguageChanged += (sender, args) => Initialize(args.Name);
         }
 
-        private void Initialize(string language)
-        {
-            _cache.PreFetch(language);
-        }
+        public Task<DemoComponent> GetComponentAsync(string componentName) =>
+            Task.FromResult(GeneratedDocsMetadata.GetComponent(CurrentLanguage, componentName));
 
-        //public async Task InitializeDemos()
-        //{
-        //    _showCaseCache ??= new ConcurrentCache<string, RenderFragment>();
-        //    var demoTypes = await _httpClient.GetFromJsonAsync<string[]>(new Uri(_baseUrl, $"_content/AntDesign.Docs/meta/demoTypes.json").ToString());
-        //    foreach (var type in demoTypes)
-        //    {
-        //        GetShowCase(type);
-        //    }
-        //}
-
-        public async Task<DemoComponent> GetComponentAsync(string componentName)
-        {
-            return await _cache.GetComponentAsync(CurrentLanguage, componentName);
-        }
-
-        public async Task<DemoMenuItem[]> GetMenuAsync()
-        {
-            return await _cache.GetMenuAsync(CurrentLanguage);
-        }
+        public Task<DemoMenuItem[]> GetMenuAsync() => Task.FromResult(GeneratedDocsMetadata.GetMenu(CurrentLanguage));
 
         public async ValueTask<DemoMenuItem[]> GetCurrentMenuItems()
         {
@@ -78,29 +50,24 @@ namespace AntDesign.Docs.Services
 
         public Type GetShowCase(string type)
         {
-            _showCaseCache ??= new();
-            return _showCaseCache.GetOrAdd(type, t =>
-            {
-                var showCase = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{t}") ?? typeof(Template);
-                return showCase;
-            });
+            return GeneratedDocsMetadata.GetDemoType(type) ?? typeof(Template);
         }
 
-        public async Task<DemoMenuItem[]> GetPrevNextMenu(string type, string currentTitle)
+        public Task<DemoMenuItem[]> GetPrevNextMenu(string type, string currentTitle)
         {
-            var items = Array.Empty<DemoMenuItem>();
+            DemoMenuItem[] items;
 
             if (type.ToLowerInvariant() == "docs")
             {
-                items = (await _cache.GetDocMenuAsync(CurrentLanguage)).OrderBy(x => x.Order).ToArray();
+                items = GeneratedDocsMetadata.GetDocsMenu(CurrentLanguage).OrderBy(x => x.Order).ToArray();
                 currentTitle = $"docs/{currentTitle}";
             }
             else
             {
-                items = (await _cache.GetDemoMenuAsync(CurrentLanguage))
-                .OrderBy(x => x.Order)
-                .SelectMany(x => x.Children)
-                .ToArray();
+                items = GeneratedDocsMetadata.GetDemoMenu(CurrentLanguage)
+                    .OrderBy(x => x.Order)
+                    .SelectMany(x => x.Children ?? Array.Empty<DemoMenuItem>())
+                    .ToArray();
 
                 currentTitle = $"components/{currentTitle}";
             }
@@ -111,11 +78,11 @@ namespace AntDesign.Docs.Services
                 {
                     var prev = i == 0 ? null : items[i - 1];
                     var next = i == items.Length - 1 ? null : items[i + 1];
-                    return new[] { prev, next };
+                    return Task.FromResult(new[] { prev, next });
                 }
             }
 
-            return new DemoMenuItem[] { null, null };
+            return Task.FromResult(new DemoMenuItem[] { null, null });
         }
 
         public async Task<Recommend[]> GetRecommend()

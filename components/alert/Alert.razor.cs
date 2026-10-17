@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -25,6 +26,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> AfterClose { get; set; }
+
+        /// <summary>
+        /// Content rendered in the alert actions area.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Action { get; set; }
 
         /// <summary>
         /// Whether to show as banner
@@ -81,6 +88,24 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public AlertType? Type { get; set; }
+
+        /// <summary>
+        /// Visual variant of the alert.
+        /// </summary>
+        [Parameter]
+        public AlertVariant Variant { get; set; } = AlertVariant.Outlined;
+
+        /// <summary>
+        /// Semantic class names keyed by root, icon, section, title, description, actions, and close.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>
+        /// Semantic inline styles keyed by root, icon, section, title, description, actions, and close.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
 
         /// <summary>
         /// Callback when Alert is closed.
@@ -141,8 +166,9 @@ namespace AntDesign
         private void SetClassMap()
         {
             string prefixName = "ant-alert";
-            ClassMapper
+            ClassMapper.Clear()
                 .Add("ant-alert")
+                .GetIf(() => $"ant-alert-{Variant.ToString().ToLowerInvariant()}", () => true)
                 .GetIf(() => $"{prefixName}-{_cssMap}", () => CalcType.HasValue)
                 .If($"{prefixName}-no-icon", () => !IsShowIcon)
                 .If($"{prefixName}-closable", () => Closable)
@@ -155,6 +181,26 @@ namespace AntDesign
                 ;
         }
 
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return semanticStyle;
+            if (string.IsNullOrWhiteSpace(semanticStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
+        }
+
+        internal bool HasSemanticStyle(string slot)
+        {
+            return Styles != null && Styles.TryGetValue(slot, out var value) && !string.IsNullOrWhiteSpace(value);
+        }
+
         /// <summary>
         /// Start-up code.
         /// </summary>
@@ -163,6 +209,12 @@ namespace AntDesign
             base.OnInitialized();
 
             SetClassMap();
+        }
+
+        protected override void OnParametersSet()
+        {
+            SetClassMap();
+            base.OnParametersSet();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

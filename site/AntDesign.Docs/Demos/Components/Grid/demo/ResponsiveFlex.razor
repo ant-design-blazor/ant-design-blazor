@@ -1,0 +1,10 @@
+<GridRow>
+    @for (var index = 0; index < 10; index++)
+    {
+        <GridCol @key="index" Xs="@Flex("100%")" Sm="@Flex("50%")" Md="@Flex("40%")" Lg="@Flex("20%")" Xl="@Flex("10%")">Col</GridCol>
+    }
+</GridRow>
+
+@code {
+    private static EmbeddedProperty Flex(string value) => new() { Flex = value };
+}

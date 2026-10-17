@@ -1,0 +1,23 @@
+﻿@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="_theme">
+    <Skeleton Loading Active />
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Skeleton"] = new Dictionary<string, string>
+            {
+                ["blockRadius"] = "30",
+                ["titleHeight"] = "50",
+                ["gradientFromColor"] = "#222",
+                ["gradientToColor"] = "#444",
+                ["paragraphMarginTop"] = "30",
+                ["paragraphLiHeight"] = "30"
+            }
+        }
+    };
+}

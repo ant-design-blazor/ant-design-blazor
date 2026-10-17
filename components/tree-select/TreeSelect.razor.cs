@@ -36,6 +36,11 @@ namespace AntDesign
 
     public partial class TreeSelect<TItemValue, TItem> : SelectBase<TItemValue, TItem>, ITreeSelect
     {
+        protected override string OverlayClassName => "ant-tree-select-dropdown ant-select-css-var ant-tree-select-css-var";
+
+        [Parameter]
+        public bool Bordered { get; set; } = true;
+
         /// <summary>
         /// Whether to allow multiple selections or not
         /// </summary>
@@ -688,6 +693,10 @@ namespace AntDesign
             ClassMapper
                 .Add("ant-tree-select")
                 .Add($"{ClassPrefix}")
+                .If($"{ClassPrefix}-outlined", () => Bordered)
+                .If($"{ClassPrefix}-borderless", () => !Bordered)
+                .Add($"{ClassPrefix}-css-var")
+                .Add("ant-tree-select-css-var")
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
                 .If($"{ClassPrefix}-single", () => Mode == SelectMode.Default)

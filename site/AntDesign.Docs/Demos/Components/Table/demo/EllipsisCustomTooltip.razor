@@ -1,0 +1,39 @@
+<Table TItem="Row" DataSource="_rows" RowKey="row => row.Key">
+    <ColumnDefinitions>
+        <PropertyColumn Property="row => row.Name" Title="Name" Width="150">
+            <a>@context.Name</a>
+        </PropertyColumn>
+        <PropertyColumn Property="row => row.Age" Title="Age" Width="80" />
+        <PropertyColumn Property="row => row.Address" Title="Address" Ellipsis EllipsisShowTitle="false">
+            <Tooltip Placement="Placement.TopLeft" Title="@context.Address" Style="display:inline;">
+                @context.Address
+            </Tooltip>
+        </PropertyColumn>
+        <PropertyColumn Property="row => row.Address" Title="Long Column Long Column Long Column" Ellipsis EllipsisShowTitle="false">
+            <Tooltip Placement="Placement.TopLeft" Title="@context.Address" Style="display:inline;">
+                @context.Address
+            </Tooltip>
+        </PropertyColumn>
+        <PropertyColumn Property="row => row.Address" Title="Long Column Long Column" Ellipsis EllipsisShowTitle="false">
+            <Tooltip Placement="Placement.TopLeft" Title="@context.Address" Style="display:inline;">
+                @context.Address
+            </Tooltip>
+        </PropertyColumn>
+        <PropertyColumn Property="row => row.Address" Title="Long Column" Ellipsis EllipsisShowTitle="false">
+            <Tooltip Placement="Placement.TopLeft" Title="@context.Address" Style="display:inline;">
+                @context.Address
+            </Tooltip>
+        </PropertyColumn>
+    </ColumnDefinitions>
+</Table>
+
+@code {
+    private readonly Row[] _rows =
+    [
+        new("1", "John Brown", 32, "New York No. 1 Lake Park, New York No. 1 Lake Park"),
+        new("2", "Jim Green", 42, "London No. 2 Lake Park, London No. 2 Lake Park"),
+        new("3", "Joe Black", 32, "Sydney No. 1 Lake Park, Sydney No. 1 Lake Park")
+    ];
+
+    private sealed record Row(string Key, string Name, int Age, string Address);
+}

@@ -1,0 +1,20 @@
+<Space Direction="SpaceDirection.Vertical">
+    <Select TItemValue="DatePickerType" TItem="DatePickerType"
+            DataSource="_pickerTypes"
+            @bind-Value="_picker"
+            Style="width: 160px;" />
+    <DatePicker TValue="DateTime?" Picker="_picker" />
+</Space>
+
+@code {
+    private DatePickerType _picker = DatePickerType.Time;
+    private readonly DatePickerType[] _pickerTypes =
+    [
+        DatePickerType.Date,
+        DatePickerType.Week,
+        DatePickerType.Month,
+        DatePickerType.Quarter,
+        DatePickerType.Year,
+        DatePickerType.Time,
+    ];
+}

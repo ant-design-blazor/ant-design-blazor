@@ -30,6 +30,9 @@ namespace AntDesign.Tests
             //Needed for Tests using Overlay
             Services.AddScoped<DomEventService>(sp => new TestDomEventService(Context.JSInterop.JSRuntime, MockedDomEventListener));
             JSInterop.SetupVoid(JSInteropConstants.OverlayComponentHelper.DeleteOverlayFromContainer, _ => true);
+            JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+            JSInterop.SetupVoid(JSInteropConstants.AddPreventEnterOnOverlayVisible, _ => true);
+            JSInterop.SetupVoid(JSInteropConstants.SetDomAttribute, _ => true);
             JSInterop.SetupVoid("AntDesign.interop.tableHelper.bindTableScroll", _ => true);
             JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.blur", _ => true);
             JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.smoothScrollTo", _ => true);

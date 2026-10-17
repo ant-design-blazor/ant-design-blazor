@@ -1,0 +1,31 @@
+@using AntDesign.Select.Internal
+
+<Select TItem="SearchOption"
+        TItemValue="string"
+        DataSource="@options"
+        LabelName="@nameof(SearchOption.Label)"
+        ValueName="@nameof(SearchOption.Value)"
+        Placeholder="Select an option"
+        EnableSearch
+        FilterExpression="FilterOption" />
+
+@code {
+    private readonly List<SearchOption> options = new()
+    {
+        new() { Value = "a11", Label = "a11", OtherField = "c11" },
+        new() { Value = "b22", Label = "b22", OtherField = "b11" },
+        new() { Value = "c33", Label = "c33", OtherField = "b33" },
+        new() { Value = "d44", Label = "d44", OtherField = "d44" }
+    };
+
+    private static bool FilterOption(SelectOptionItem<string, SearchOption> option, string searchValue)
+        => option.Label.Contains(searchValue, StringComparison.OrdinalIgnoreCase)
+            || option.Item.OtherField.Contains(searchValue, StringComparison.OrdinalIgnoreCase);
+
+    private sealed class SearchOption
+    {
+        public string Value { get; init; } = string.Empty;
+        public string Label { get; init; } = string.Empty;
+        public string OtherField { get; init; } = string.Empty;
+    }
+}

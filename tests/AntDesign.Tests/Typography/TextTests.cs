@@ -43,6 +43,43 @@ namespace AntDesign.Tests.Typography
         }
 
         [Fact]
+        public void Ellipsis_uses_single_line_overflow_and_preserves_user_style()
+        {
+            var systemUnderTest = RenderComponent<Text>(parameters => parameters
+                .Add(x => x.Ellipsis, true)
+                .Add(x => x.Style, "width: 200px;")
+                .AddChildContent("A long inline text that should be truncated."));
+
+            systemUnderTest.Find("span.ant-typography").ClassList.Should().Contain("ant-typography-ellipsis-single-line");
+            systemUnderTest.Find("span.ant-typography").GetAttribute("style").Should().Contain("width: 200px;")
+                .And.Contain("display: inline-block")
+                .And.Contain("max-width: 100%")
+                .And.Contain("text-overflow: ellipsis");
+        }
+
+        [Fact]
+        public void ItShouldRenderItalicDecoration()
+        {
+            var systemUnderTest = RenderComponent<Text>(parameters => parameters
+                .Add(x => x.Italic, true)
+                .AddChildContent("Italic text"));
+
+            systemUnderTest.MarkupMatches("<span class=\"ant-typography\"><i>Italic text</i></span>");
+        }
+
+        [Fact]
+        public void Ellipsis_suffix_keeps_the_text_ending_visible()
+        {
+            var systemUnderTest = RenderComponent<Text>(parameters => parameters
+                .Add(x => x.EllipsisConfig, new TypographyEllipsisConfig { Suffix = "preserved ending" })
+                .AddChildContent("A long prefix that should be clipped"));
+
+            systemUnderTest.Find(".ant-typography-ellipsis-content").TextContent.Should().Be("A long prefix that should be clipped");
+            systemUnderTest.Find(".ant-typography-ellipsis-content").GetAttribute("style").Should().Contain("text-overflow: ellipsis");
+            systemUnderTest.Find(".ant-typography-ellipsis-suffix").TextContent.Should().Be("preserved ending");
+        }
+
+        [Fact]
         public void ItShouldRenderMark()
         {
             var systemUnderTest = RenderComponent<Text>(parameters => parameters

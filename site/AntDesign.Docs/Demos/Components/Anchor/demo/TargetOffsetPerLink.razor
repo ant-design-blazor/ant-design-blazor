@@ -1,0 +1,15 @@
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;">
+    <div>
+        <div style="position:sticky;top:0;height:20px;background:rgba(0,0,0,.85);color:white;z-index:1;">Fixed top block</div>
+        <div id="anchor-per-offset-1" style="height:180px;background:rgba(255,0,0,.08)"></div>
+        <div id="anchor-per-offset-2" style="height:180px;background:rgba(0,255,0,.08)"></div>
+        <div id="anchor-per-offset-3" style="height:180px;background:rgba(0,0,255,.08)"></div>
+        <div id="anchor-per-offset-4" style="height:180px;background:rgba(0,255,229,.08)"></div>
+    </div>
+    <Anchor Affix="false" TargetOffset="20">
+        <AnchorLink Href="#anchor-per-offset-1" Title="Part 1 (global offset: 20)" />
+        <AnchorLink Href="#anchor-per-offset-2" Title="Part 2 (link offset: 50)" TargetOffset="50" />
+        <AnchorLink Href="#anchor-per-offset-3" Title="Part 3 (link offset: 50)" TargetOffset="50" />
+        <AnchorLink Href="#anchor-per-offset-4" Title="Part 4 (global offset: 20)" />
+    </Anchor>
+</div>

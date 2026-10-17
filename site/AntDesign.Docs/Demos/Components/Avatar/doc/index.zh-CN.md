@@ -19,6 +19,7 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/aBcnbw68hP/Avatar.svg
 | OnError | 图片加载失败的事件 | EventCallback&lt;ErrorEventArgs> | - |  |
 | Shape | 指定头像的形状 | string | - |  |
 | Size | 设置头像的大小 `default` \| `small` \| `large` | string | `default` |  |
+| ResponsiveSize | 使用 `xs`、`sm`、`md`、`lg`、`xl`、`xxl` 断点设置响应式头像尺寸 | `Dictionary<string, int>` | - |  |
 | Src | 图片类头像的资源地址或者图片元素 | string | - |  |
 | SrcSet |设置图片类头像响应式资源地址 | string | - |  |
 

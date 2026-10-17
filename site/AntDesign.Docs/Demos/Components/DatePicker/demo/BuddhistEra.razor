@@ -1,0 +1,24 @@
+<Space Direction="SpaceDirection.Vertical">
+    <div>Thai Buddhist calendar culture</div>
+    <DatePicker TValue="DateTime?"
+                CultureInfo="_thaiCulture"
+                Format="yyyy-MM-dd"
+                DefaultValue="@(new DateTime(2024, 1, 1))" />
+    <div>Gregorian culture</div>
+    <DatePicker TValue="DateTime?"
+                CultureInfo="_invariantCulture"
+                Format="yyyy-MM-dd"
+                DefaultValue="@(new DateTime(2024, 1, 1))" />
+</Space>
+
+@code {
+    private readonly System.Globalization.CultureInfo _thaiCulture = CreateThaiCulture();
+    private readonly System.Globalization.CultureInfo _invariantCulture = System.Globalization.CultureInfo.InvariantCulture;
+
+    private static System.Globalization.CultureInfo CreateThaiCulture()
+    {
+        var culture = new System.Globalization.CultureInfo("th-TH");
+        culture.DateTimeFormat.Calendar = new System.Globalization.ThaiBuddhistCalendar();
+        return culture;
+    }
+}

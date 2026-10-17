@@ -1,0 +1,33 @@
+<AntList DataSource="@data" TItem="InlineItem">
+    <ListItem>
+        <ListItemMeta AvatarTemplate="@avatar" Description="Ant Design, a design language for background applications, is refined by Ant UED Team">
+            <TitleTemplate>
+                <a href="https://ant.design">@context.Title</a>
+            </TitleTemplate>
+        </ListItemMeta>
+        <Steps Type="StepsType.Inline" Current="@context.Current" Status="@context.Status" Style="margin-top: 8px;" @key="context.Title">
+            <Step Title="Step 1" Description="This is Step 1" />
+            <Step Title="Step 2" Description="This is Step 2" />
+            <Step Title="Step 3" Description="This is Step 3" />
+        </Steps>
+    </ListItem>
+</AntList>
+
+@code {
+    private readonly RenderFragment avatar = @<Avatar>AD</Avatar>;
+
+    private readonly List<InlineItem> data = new()
+    {
+        new() { Title = "Ant Design Title 1", Current = 0 },
+        new() { Title = "Ant Design Title 2", Current = 1, Status = StepsStatus.Error },
+        new() { Title = "Ant Design Title 3", Current = 2 },
+        new() { Title = "Ant Design Title 4", Current = 1 },
+    };
+
+    private sealed class InlineItem
+    {
+        public string Title { get; init; }
+        public int Current { get; init; }
+        public StepsStatus Status { get; init; } = StepsStatus.Process;
+    }
+}

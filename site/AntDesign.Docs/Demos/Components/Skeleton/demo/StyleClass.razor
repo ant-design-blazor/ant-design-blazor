@@ -1,0 +1,31 @@
+﻿<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+    <Skeleton Active Avatar Paragraph="false" ClassNames="@_classNames" Styles="@_objectStyles" />
+    <Skeleton Active Avatar ClassNames="@_classNames" Styles="@_activeStyles" />
+</div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-skeleton-root",
+        ["header"] = "demo-skeleton-header",
+        ["avatar"] = "demo-skeleton-avatar",
+        ["title"] = "demo-skeleton-title",
+        ["paragraph"] = "demo-skeleton-paragraph",
+        ["paragraphLi"] = "demo-skeleton-paragraph-item"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _objectStyles = new Dictionary<string, string>
+    {
+        ["root"] = "border-radius:10px;padding:12px",
+        ["header"] = "margin-bottom:12px",
+        ["avatar"] = "border:1px solid #aaa",
+        ["title"] = "border:1px solid #aaa"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _activeStyles = new Dictionary<string, string>
+    {
+        ["root"] = "border:1px solid rgba(22,119,255,.25);border-radius:10px;padding:12px",
+        ["title"] = "height:20px;border-radius:20px;background:rgba(229,243,254,.8)",
+        ["paragraphLi"] = "background:rgba(229,243,254,.5)"
+    };
+}

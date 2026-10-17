@@ -1,0 +1,103 @@
+@using AntDesign.Theming
+
+<Flex Vertical Gap="FlexGap.Small">
+    <div>Component Token</div>
+    <ConfigProvider ThemeConfig="_sizingTheme">
+        <Flex Gap="FlexGap.Small" Align="FlexAlign.Center">
+            <Button Size="ButtonSize.Small">Small</Button>
+            <Button>Default</Button>
+            <Button Size="ButtonSize.Large">Large</Button>
+        </Flex>
+    </ConfigProvider>
+    <ConfigProvider ThemeConfig="_dangerTheme">
+        <Flex Gap="FlexGap.Small" Align="FlexAlign.Center" Wrap="FlexWrap.Wrap">
+            <Button Danger>Default</Button>
+            <Button Danger Type="ButtonType.Primary">Primary</Button>
+            <Button Danger Type="ButtonType.Dashed">Dashed</Button>
+            <Button Danger Type="ButtonType.Text">Text</Button>
+            <Button Danger Type="ButtonType.Link">Link</Button>
+        </Flex>
+    </ConfigProvider>
+    <ConfigProvider ThemeConfig="_disabledTheme">
+        <Button Type="ButtonType.Dashed" Disabled>Dashed Disabled</Button>
+    </ConfigProvider>
+    <ConfigProvider ThemeConfig="_defaultTheme">
+        <Flex Gap="FlexGap.Small" Align="FlexAlign.Start" Wrap="FlexWrap.Wrap">
+            <Button>Default</Button>
+            <Button Type="ButtonType.Dashed">Dashed</Button>
+            <Button Type="ButtonType.Text">Text</Button>
+            <Button Disabled>Disabled</Button>
+        </Flex>
+    </ConfigProvider>
+    <ConfigProvider ThemeConfig="_iconTheme">
+        <Button Icon="@IconType.Outline.Search">icon gap 24</Button>
+        <Flex Gap="FlexGap.Small" Align="FlexAlign.Center">
+            <Button Size="ButtonSize.Small" Icon="@IconType.Outline.Search" />
+            <Button Icon="@IconType.Outline.Search" />
+            <Button Size="ButtonSize.Large" Icon="@IconType.Outline.Search" />
+        </Flex>
+    </ConfigProvider>
+    <ConfigProvider ThemeConfig="_semanticTheme">
+        <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+            <Button Type="ButtonType.Primary">Primary</Button>
+            <Button ButtonColor="ButtonColor.Primary" Variant="ButtonVariant.Solid">Solid primary</Button>
+            <Button ButtonColor="ButtonColor.Danger" Variant="ButtonVariant.Solid">Solid danger</Button>
+            <Button ButtonColor="ButtonColor.Default" Variant="ButtonVariant.Solid">Solid default</Button>
+            <Button ButtonColor="ButtonColor.Primary" Variant="ButtonVariant.Text">Primary text</Button>
+            <Button ButtonColor="ButtonColor.Primary" Variant="ButtonVariant.Link">Primary link</Button>
+        </Flex>
+    </ConfigProvider>
+    <div>Global Token</div>
+    <ConfigProvider ThemeConfig="_globalTheme">
+        <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+            <Button Type="ButtonType.Text">TEXT</Button>
+            <Button Type="ButtonType.Primary">CONTAINED</Button>
+            <Button>OUTLINED</Button>
+            <Button Type="ButtonType.Text" Disabled>TEXT</Button>
+            <Button Type="ButtonType.Primary" Disabled>CONTAINED</Button>
+            <Button Disabled>OUTLINED</Button>
+        </Flex>
+    </ConfigProvider>
+</Flex>
+
+@code {
+    private static ThemeConfig ComponentTheme(params (string Key, string Value)[] tokens)
+    {
+        var theme = new ThemeConfig();
+        theme.Components["Button"] = tokens.ToDictionary(item => item.Key, item => item.Value);
+        return theme;
+    }
+
+    private static readonly ThemeConfig _sizingTheme = ComponentTheme(
+        ("fontWeight", "900"), ("contentFontSizeSM", "20"), ("contentFontSize", "30"), ("contentFontSizeLG", "40"),
+        ("paddingInlineSM", "20"), ("paddingInline", "30"), ("paddingInlineLG", "40"));
+
+    private static readonly ThemeConfig _dangerTheme = ComponentTheme(("dangerColor", "green"), ("dangerShadow", "yellow"));
+    private static readonly ThemeConfig _disabledTheme = ComponentTheme(("dashedBgDisabled", "#ffccc7"));
+
+    private static readonly ThemeConfig _defaultTheme = ComponentTheme(
+        ("defaultColor", "#cf1322"), ("defaultBg", "#fff1f0"), ("defaultBorderColor", "#ffa39e"), ("defaultShadow", "none"),
+        ("defaultBgDisabled", "#fff1f0"), ("defaultHoverColor", "#a8071a"), ("defaultHoverBg", "#ffccc7"),
+        ("defaultHoverBorderColor", "#ff7875"), ("defaultActiveColor", "#820014"), ("defaultActiveBg", "#ffa39e"),
+        ("defaultActiveBorderColor", "#f5222d"));
+
+    private static readonly ThemeConfig _iconTheme = ComponentTheme(("iconGap", "24"), ("onlyIconSizeSM", "20"), ("onlyIconSize", "30"), ("onlyIconSizeLG", "40"));
+
+    private static readonly ThemeConfig _semanticTheme = ComponentTheme(
+        ("primaryColor", "#fff"), ("primaryShadow", "0 3px 1px -2px rgba(0,0,0,.2)"),
+        ("solidTextColor", "#fff"), ("textTextColor", "#1677ff"), ("textHoverBg", "#e6f4ff"),
+        ("textTextHoverColor", "#4096ff"), ("textTextActiveColor", "#0958d9"), ("linkHoverBg", "#e6f4ff"));
+
+    private static readonly ThemeConfig _globalTheme = new()
+    {
+        Token = new ThemeToken(new Dictionary<string, string>
+        {
+            ["colorPrimary"] = "#1976d2",
+            ["colorText"] = "#1976d2",
+            ["colorTextDisabled"] = "rgba(0,0,0,.26)",
+            ["colorBgContainerDisabled"] = "rgba(0,0,0,.12)",
+            ["colorBorderDisabled"] = "rgba(0,0,0,.12)",
+            ["borderRadius"] = "4"
+        })
+    };
+}

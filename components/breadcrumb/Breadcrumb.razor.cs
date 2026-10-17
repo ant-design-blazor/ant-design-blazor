@@ -73,12 +73,14 @@ namespace AntDesign
             InvokeStateHasChanged();
         }
 
-        internal void AddOption(BreadcrumbOption option)
+        internal int AddOption(BreadcrumbOption option)
         {
             if (!_existingOptions.Contains(option))
             {
                 _existingOptions.Add(option);
             }
+
+            return _existingOptions.IndexOf(option);
         }
 
         protected override void Dispose(bool disposing)

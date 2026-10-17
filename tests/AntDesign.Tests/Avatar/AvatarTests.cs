@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Globalization;
+using System.Collections.Generic;
 using AntDesign.JsInterop;
 using Bunit;
 using FluentAssertions;
@@ -208,6 +209,42 @@ namespace AntDesign.Tests.Avatar
                 .MarkupMatches(@$"<span class=""ant-avatar-string"" style:ignore>
                     USER
                 </span>"));
+        }
+
+        [Fact]
+        public void ItShouldRenderChildContentWhenImageErrors()
+        {
+            JSInterop
+                .Setup<HtmlElement>("AntDesign.interop.domInfoHelper.getInfo", _ => true)
+                .SetResult(new HtmlElement());
+
+            JSInterop
+                .Setup<DomRect>("AntDesign.interop.domInfoHelper.getBoundingClientRect", _ => true)
+                .SetResult(new DomRect());
+
+            var systemUnderTest = RenderComponent<AntDesign.Avatar>(parameters => parameters
+                .Add(x => x.Src, "InvalidImage")
+                .AddChildContent("ABC"));
+
+            systemUnderTest.Find("img").TriggerEvent("onerror", new ErrorEventArgs());
+
+            systemUnderTest.WaitForAssertion(() => systemUnderTest.Find(".ant-avatar-string").TextContent.Should().Contain("ABC"));
+        }
+
+        [Fact]
+        public void ItShouldRenderResponsiveSizeVariables()
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Avatar>(parameters => parameters
+                .Add(x => x.ResponsiveSize, new Dictionary<string, int>
+                {
+                    ["xs"] = 24,
+                    ["md"] = 40
+                })
+                .Add(x => x.Icon, "user"));
+
+            systemUnderTest.Find(".ant-avatar-responsive").GetAttribute("style")
+                .Should().Contain("--ant-avatar-size-xs:24px")
+                .And.Contain("--ant-avatar-size-md:40px");
         }
     }
 }

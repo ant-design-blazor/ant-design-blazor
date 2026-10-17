@@ -1,109 +1,29 @@
-<Select DataSource="@_list"
-		@bind-Value="@_selectedValue1"
-		DefaultValue="@("lucy")"
-		ItemValue="c=>c.Value"
-        ItemLabel="c=>c.Name"
-		DisabledName="@nameof(Person.IsDisabled)"
-		Style="width:120px">
-</Select>
-<Select @bind-Value="@_selectedValue2"
-		DefaultValue="@("lucy")"
-		Style="width: 120px;"
-		TItemValue="string"
-		TItem="string"
-		Disabled>
-    <SelectOption Value="@("jack")" Label="Jack" />
-    <SelectOption Value="@("lucy")" Label="Lucy" />
-    <SelectOption Value="@("disabled")" Label="Disabled" Disabled />
-    <SelectOption Value="@("yaoming")" Label="Yaoming" />
-</Select>
-<Select @bind-Value="@_selectedValue3"
-		DefaultValue="@("lucy")"
-		Style="width: 120px;"
-		TItemValue="string"
-		TItem="string"
-		Loading>
-    <SelectOption Value="@("jack")">Jack</SelectOption>
-    <SelectOption Value="@("lucy")">Lucy</SelectOption>
-    <SelectOption Value="@("disabled")" Disabled>Disabled</SelectOption>
-    <SelectOption Value="@("yaoming")">Yaoming</SelectOption>
-</Select>
-<Select DataSource="@_list"
-		@bind-Value="@_selectedValue4"		
-		ValueName="@nameof(Person.Value)"
-		LabelName="@nameof(Person.Name)"
-		DisabledName="@nameof(Person.IsDisabled)"
-		Style="width: 120px;"
-		Placeholder="Choose"
-		AllowClear>
-</Select>
-<Select TItem="string"
-        TItemValue="string"
-        DataSource="@_personNames"
-        @bind-Value="@_selectedValue5"
-        Style="width: 120px;"
-        Placeholder="Choose"
-        OnSelectedItemChanged="@((personName) => Console.WriteLine($"selectedItem:{personName},selectedValue:{_selectedValue5}"))">
-</Select>
+<Space Wrap>
+    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" OnSelectedItemChanged="HandleChange">
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value='@("jack")' Label="Jack" />
+            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
+            <SelectOption TItemValue="string" TItem="string" Value='@("yiminghe")' Label="yiminghe" />
+            <SelectOption TItemValue="string" TItem="string" Value='@("disabled")' Label="Disabled" Disabled />
+        </SelectOptions>
+    </Select>
+    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" Disabled>
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
+        </SelectOptions>
+    </Select>
+    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" Loading>
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
+        </SelectOptions>
+    </Select>
+    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" AllowClear Placeholder="select it">
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
+        </SelectOptions>
+    </Select>
+</Space>
 
-<Select DataSource="@_dict"
-        @bind-Value="@_selectedValue6"
-        ItemLabel="c=>c.Key"
-        ItemValue="c=>c.Value"
-        DisabledPredicate="@(c=>c.Key == "Disabled")"
-        Style="width: 120px;"
-        Placeholder="Dictionary options">
-</Select>
-<Select TItem="string"
-        TItemValue="string"
-        @bind-Value="_selectedValue7"
-        Style="width:120px;"
-        Placeholder="Select option content">
-    <SelectOptions>
-        @foreach (var item in _list)
-        {
-            <SelectOption TItemValue="string" TItem="string" Value="@item.Value">
-                <span>@item.Name (@item.Value)</span>
-            </SelectOption>
-        }
-    </SelectOptions>
-</Select>
-
-@code
-{
-    List<Person> _list;
-    List<string> _personNames;
-    Dictionary<string, string> _dict;
-
-    string _selectedValue1, _selectedValue2, _selectedValue3;
-    string _selectedValue4 = "lucy";
-    string _selectedValue5 = "Lucy";
-    string _selectedValue6 = "lucy";
-    string _selectedValue7 = "lucy";
-    class Person
-    {
-        public string Value { get; set; }
-        public string Name { get; set; }
-        public bool IsDisabled { get; set; }
-    }
-
-    protected override void OnInitialized()
-    {
-        _list = new List<Person>
-        {
-            new Person {Value = "jack", Name = "Jack"},
-            new Person {Value = "lucy", Name = "Lucy"},
-            new Person {Value = "disabled", Name = "Disabled", IsDisabled = true},
-            new Person {Value = "yaoming", Name = "YaoMing"}
-        };
-
-        _personNames = new List<string> { "Jack", "Lucy", "YaoMing" };
-
-        _dict = _list.ToDictionary(c => c.Name, c => c.Value);
-    }
-
-    private void OnSelectedItemChangedHandler(Person value)
-    {
-        Console.WriteLine($"selected: ${value?.Name}");
-    }
+@code {
+    private void HandleChange(string value) => Console.WriteLine($"selected {value}");
 }

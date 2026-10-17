@@ -15,6 +15,29 @@
         cut.Instance.Value.Should().Be(defaultValue);
     }
 
+    [Fact]
+    public void Time_range_uses_the_v6_picker_semantic_structure()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+
+        var cut = Render<AntDesign.RangePicker<DateTime?[]>>(@<RangePicker TValue="DateTime?[]"
+            Picker="DatePickerType.Time" Open="true" Placeholder="@(new[] { "Start time", "End time" })" />);
+
+        var root = cut.Find(".ant-picker.ant-picker-range");
+        root.ClassList.Should().Contain("ant-picker-outlined");
+        root.ClassList.Should().Contain("ant-picker-css-var");
+        cut.FindAll(".ant-picker-input input").Should().HaveCount(2);
+
+        var popup = cut.WaitForElement(".ant-picker-dropdown");
+        popup.ClassList.Should().Contain("ant-picker-css-var");
+        var container = popup.QuerySelector(".ant-picker-range-wrapper.ant-picker-time-range-wrapper > .ant-picker-panel-container");
+        container.Should().NotBeNull();
+        container!.QuerySelector(".ant-picker-panel-layout").Should().NotBeNull();
+        container.QuerySelectorAll(".ant-picker-time-panel-column").Should().NotBeEmpty();
+    }
+
 #if NET6_0_OR_GREATER
     [Theory]
     [MemberData(nameof(DatePickerTestData.TimePickerData), MemberType = typeof(DatePickerTestData))]

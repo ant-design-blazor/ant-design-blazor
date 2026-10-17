@@ -1,0 +1,77 @@
+@using AntDesign.Theming
+
+<RadioGroup @bind-Value="_size">
+    <Radio RadioButton Value="ButtonSize.Large">Large</Radio>
+    <Radio RadioButton Value="ButtonSize.Default">Medium</Radio>
+    <Radio RadioButton Value="ButtonSize.Small">Small</Radio>
+</RadioGroup>
+<Divider Orientation="DividerOrientation.Left" Plain>Preview</Divider>
+
+<Flex Vertical Gap="FlexGap.Small">
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Tooltip Title="search"><Button Type="ButtonType.Primary" Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" Size="_size" /></Tooltip>
+        <Button Type="ButtonType.Primary" Shape="ButtonShape.Circle" Size="_size">A</Button>
+        <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Search" Size="_size">Search</Button>
+        <Tooltip Title="search"><Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" Size="_size" /></Tooltip>
+        <Button Icon="@IconType.Outline.Search" Size="_size">Search</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Tooltip Title="search"><Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" Size="_size" /></Tooltip>
+        <Button Icon="@IconType.Outline.Search" Size="_size">Search</Button>
+        <Tooltip Title="search"><Button Type="ButtonType.Dashed" Shape="ButtonShape.Circle" Icon="@IconType.Outline.Search" Size="_size" /></Tooltip>
+        <Button Type="ButtonType.Dashed" Icon="@IconType.Outline.Search" Size="_size">Search</Button>
+        <Button Icon="@IconType.Outline.Search" IconPlacement="ButtonIconPlacement.End" Size="_size">Search</Button>
+        <Button><Icon Type="@IconType.Outline.Search" /> Search</Button>
+    </Flex>
+    <Divider Plain>Custom icon sizes</Divider>
+    <Flex Gap="FlexGap.Small" Align="FlexAlign.Center" Wrap="FlexWrap.Wrap">
+        <Button Size="ButtonSize.Large" Icon="@IconType.Outline.Appstore" />
+        <Button Size="ButtonSize.Large"><span class="button-debug-icon-12"></span></Button>
+        <Button Size="ButtonSize.Large"><span class="button-debug-icon-16"></span>Custom icon</Button>
+        <Button><span class="button-debug-icon-irregular"></span>Irregular</Button>
+        <Button Size="ButtonSize.Large">Without icon</Button>
+    </Flex>
+    <Divider Plain>Icon-only buttons keep compact padding</Divider>
+    <ConfigProvider ThemeConfig="_paddingTheme">
+        <Flex Gap="FlexGap.Small" Vertical>
+            <Flex Gap="FlexGap.Small">
+                <Button Size="ButtonSize.Small" Icon="@IconType.Outline.ArrowDown" />
+                <Button Size="ButtonSize.Small" Shape="ButtonShape.Round" Icon="@IconType.Outline.ArrowDown" />
+                <Button Size="ButtonSize.Small" Shape="ButtonShape.Circle" Icon="@IconType.Outline.ArrowDown" />
+            </Flex>
+            <Flex Gap="FlexGap.Small">
+                <Button Icon="@IconType.Outline.ArrowDown" />
+                <Button Shape="ButtonShape.Round" Icon="@IconType.Outline.ArrowDown" />
+                <Button Shape="ButtonShape.Circle" Icon="@IconType.Outline.ArrowDown" />
+            </Flex>
+            <Flex Gap="FlexGap.Small">
+                <Button Size="ButtonSize.Large" Icon="@IconType.Outline.ArrowDown" />
+                <Button Size="ButtonSize.Large" Shape="ButtonShape.Round" Icon="@IconType.Outline.ArrowDown" />
+                <Button Size="ButtonSize.Large" Shape="ButtonShape.Circle" Icon="@IconType.Outline.ArrowDown" />
+            </Flex>
+        </Flex>
+    </ConfigProvider>
+</Flex>
+
+<style>
+    .button-debug-icon-12 { display: inline-block; width: 12px; height: 12px; background: #f5222d; }
+    .button-debug-icon-16 { display: inline-block; width: 16px; height: 16px; background: #52c41a; }
+    .button-debug-icon-irregular { display: inline-block; width: 14px; height: 16px; background: #1677ff; }
+</style>
+
+@code {
+    private ButtonSize _size = ButtonSize.Large;
+
+    private static readonly ThemeConfig _paddingTheme = new()
+    {
+        Components =
+        {
+            ["Button"] = new Dictionary<string, string>
+            {
+                ["paddingInline"] = "100",
+                ["paddingInlineLG"] = "150",
+                ["paddingInlineSM"] = "50"
+            }
+        }
+    };
+}

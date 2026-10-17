@@ -1,0 +1,16 @@
+<FloatButton Icon="search" Content="Search" ClassNames="_classNames" Styles="_styles" />
+
+@code {
+    private static readonly Dictionary<string, string> _classNames = new()
+    {
+        ["root"] = "demo-float-button-root",
+        ["icon"] = "demo-float-button-icon",
+        ["content"] = "demo-float-button-content"
+    };
+
+    private static readonly Dictionary<string, string> _styles = new()
+    {
+        ["root"] = "outline: 1px dashed var(--ant-color-primary)",
+        ["content"] = "color: var(--ant-color-primary)"
+    };
+}

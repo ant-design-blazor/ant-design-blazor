@@ -25,3 +25,18 @@ cover: https://gw.alipayobjects.com/zos/alicdn/5swjECahe/Divider.svg
 | Style | 分割线样式对象| CSS properties  | -  |
 | Type | 水平还是垂直类型 `horizontal` or `vertical`| string | -  |
 | Plain | 文字是否显示为普通正文样式| boolean  | -  |
+| Size | 水平分割线间距尺寸：`small`、`middle` 或 `large` | string | - |
+| ClassNames | 按 `root`、`rail`、`content` 语义节点设置 CSS 类 | `IReadOnlyDictionary<string, string>` | - |
+| Styles | 按 `root`、`rail`、`content` 语义节点设置内联样式 | `IReadOnlyDictionary<string, string>` | - |
+
+## Semantic DOM
+
+| 节点 | 类名 |
+| --- | --- |
+| root | `.ant-divider` |
+| rail | `.ant-divider-rail` |
+| content | `.ant-divider-inner-text` |
+
+## Design Token
+
+可通过 `ConfigProvider.ThemeConfig.Components["Divider"]` 自定义 `textPaddingInline`、`orientationMargin` 和 `verticalMarginInline`。

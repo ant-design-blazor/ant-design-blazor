@@ -14,11 +14,26 @@
                     OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                     OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
                     Placement="Placement"
+                    OverlayClassName="ant-picker-css-var"
                     Trigger="new[] { Trigger.Click }">
         <Overlay>
-            <div class="@(PrefixCls)-panel-container" @onclick="@PickerClicked">
-                <div class="@_panelClassMapper.Class">
-                    <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date, index)" />
+            <div class="@(PrefixCls)-panel-container @(Picker == DatePickerType.Time ? $"{PrefixCls}-time-panel-container" : $"{PrefixCls}-date-panel-container")" @onclick="@PickerClicked">
+                <div class="@(PrefixCls)-panel-layout">
+                    <div class="@_panelClassMapper.Class">
+                        <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date, index)" />
+                    </div>
+                        @if (NeedConfirm && !HasTimeInput)
+                        {
+                            <div class="@(PrefixCls)-footer">
+                                <ul class="@(PrefixCls)-ranges">
+                                    <li class="@(PrefixCls)-ok">
+                                        <Button Type="@ButtonType.Primary" Size="@ButtonSize.Small" OnClick="OnOkClick">
+                                            @Locale.Lang.Ok
+                                        </Button>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
                 </div>
             </div>
         </Overlay>
@@ -27,6 +42,10 @@
                  @ref="@context.Current"
                  style="@Style"
                  Id="@Id">
+                @if (Prefix != null)
+                {
+                    <span class="@(PrefixCls)-prefix">@Prefix</span>
+                }
                 <DatePickerInput @ref="_inputStart"
                                  PrefixCls="@PrefixCls"
                                  Size="@Size"

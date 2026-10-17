@@ -1,0 +1,23 @@
+<FloatButtonGroup Trigger="FloatButtonGroupTrigger.Click" Icon="appstore" ClassNames="_classNames" Styles="_styles">
+    <FloatButton Icon="search" />
+    <FloatButton Icon="edit" />
+</FloatButtonGroup>
+
+@code {
+    private static readonly Dictionary<string, string> _classNames = new()
+    {
+        ["root"] = "demo-float-button-group-root",
+        ["list"] = "demo-float-button-group-list",
+        ["item"] = "demo-float-button-group-item",
+        ["itemIcon"] = "demo-float-button-group-item-icon",
+        ["trigger"] = "demo-float-button-group-trigger",
+        ["triggerIcon"] = "demo-float-button-group-trigger-icon"
+    };
+
+    private static readonly Dictionary<string, string> _styles = new()
+    {
+        ["root"] = "outline: 1px dashed var(--ant-color-primary)",
+        ["list"] = "outline: 1px dotted var(--ant-color-success)",
+        ["trigger"] = "outline: 1px solid var(--ant-color-warning)"
+    };
+}

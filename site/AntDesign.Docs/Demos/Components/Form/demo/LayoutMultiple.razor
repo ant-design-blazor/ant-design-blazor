@@ -1,0 +1,33 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<h4>Horizontal form with vertical fields</h4>
+<Form Model="@_horizontalModel" LabelColSpan="4" WrapperColSpan="20">
+    <FormItem Label="horizontal" Name="Horizontal" Rules="@_required"><Input @bind-Value="context.Horizontal" /></FormItem>
+    <FormItem Label="vertical" Name="Vertical" Rules="@_required" LabelStyle="display:block; width:100%;">
+        <Input @bind-Value="context.Vertical" />
+    </FormItem>
+    <FormItem Label="vertical2" Name="Vertical2" Rules="@_required" LabelStyle="display:block; width:100%;">
+        <Input @bind-Value="context.Vertical2" />
+    </FormItem>
+</Form>
+<Divider />
+<h4>Vertical form with a horizontal field</h4>
+<Form Model="@_verticalModel" Layout="FormLayout.Vertical">
+    <FormItem Label="vertical" Name="Vertical" Rules="@_required"><Input @bind-Value="context.Vertical" /></FormItem>
+    <FormItem Label="vertical2" Name="Vertical2" Rules="@_required"><Input @bind-Value="context.Vertical2" /></FormItem>
+    <FormItem Label="horizontal" Name="Horizontal" Rules="@_required" LabelColSpan="4" WrapperColSpan="20">
+        <Input @bind-Value="context.Horizontal" />
+    </FormItem>
+</Form>
+
+@code {
+    private readonly LayoutFormModel _horizontalModel = new();
+    private readonly LayoutFormModel _verticalModel = new();
+    private readonly FormValidationRule[] _required = [new() { Required = true }];
+    private sealed class LayoutFormModel
+    {
+        public string Horizontal { get; set; } = string.Empty;
+        public string Vertical { get; set; } = string.Empty;
+        public string Vertical2 { get; set; } = string.Empty;
+    }
+}

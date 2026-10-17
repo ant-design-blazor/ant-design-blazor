@@ -7,7 +7,7 @@
         @ChildContent
     }
 
-    @if (HasStatusOrColor && ChildContent == null)
+    @if (IsStandaloneStatus)
     {
         <span class="@DotClassMapper.Class" style="@DotColorStyle @Style"></span>
 
@@ -30,7 +30,7 @@
         @if (_finalShowSup)
         {
             <sup class="@CountClassMapper.Class" style="@CountStyle @DotColorStyle @Style" title="@(string.IsNullOrWhiteSpace(Title) ? Count.ToString() : Title)">
-                @if (!Dot && !HasStatusOrColor)
+                @if (!IsDotIndicator)
                 {
                     @if (_showOverflowCount)
                     {

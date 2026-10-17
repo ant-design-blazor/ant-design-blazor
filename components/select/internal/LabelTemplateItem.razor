@@ -1,4 +1,5 @@
 ﻿@using AntDesign.Select.Internal
+@using AntDesign.Icons
 @namespace AntDesign.Select
 @typeparam TItemValue
 @typeparam TItem
@@ -12,7 +13,7 @@
   {
     <span unselectable="on" aria-hidden="true" style="user-select: none; @RemoveIconStyle" class="@RemoveIconClass"
         @onclick="()=> ParentSelectContent.OnRemoveSelected.InvokeAsync(SelectOption)" @onclick:stopPropagation>
-      <Icon Type="close"></Icon>
+      <CloseOutlined />
     </span>
   }
 </span>

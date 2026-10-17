@@ -1,0 +1,38 @@
+<Space ClassNames="@_classNames" Styles="@_styles" Split="@Separator">
+    <SpaceItem><Button>Styled Button 1</Button></SpaceItem>
+    <SpaceItem><Button>Styled Button 2</Button></SpaceItem>
+    <SpaceItem><Button>Styled Button 3</Button></SpaceItem>
+</Space>
+
+<Space Size="SpaceSize.Large" ClassNames="@_largeClassNames" Styles="@_largeStyles">
+    <SpaceItem><Button>Large Space Button 1</Button></SpaceItem>
+    <SpaceItem><Button>Large Space Button 2</Button></SpaceItem>
+</Space>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-space-root",
+        ["item"] = "demo-space-item",
+        ["separator"] = "demo-space-separator"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "border: 2px dashed #1677ff; padding: 8px; margin-bottom: 10px;",
+        ["item"] = "background: #f0f0f0; padding: 4px;",
+        ["separator"] = "color: #ff4d4f; font-weight: bold;"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _largeClassNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-space-root--large"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _largeStyles = new Dictionary<string, string>
+    {
+        ["root"] = "background: #e6f4ff; border: 1px solid #1677ff; padding: 8px;"
+    };
+
+    private RenderFragment Separator => @<span>•</span>;
+}

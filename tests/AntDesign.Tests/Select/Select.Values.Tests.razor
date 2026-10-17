@@ -48,14 +48,13 @@
                 >
             </AntDesign.Select>
         );
-        var prevSelectedItem = cut.Find(".ant-select-selection-item").TextContent.Trim();
+        var prevSelectedItem = cut.Find(".ant-select-content").TextContent.Trim();
         //Act
         _persons.Remove(_persons.First(x => x.Id == value));        
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
         //Assert        
         prevSelectedItem.Should().Be(selectedPersion.Name);
-        cut.Invoking(c => c.Find(".ant-select-selection-item"))
-            .Should().Throw<Bunit.ElementNotFoundException>();
+        cut.Find(".ant-select-content").TextContent.Trim().Should().Be(selectedPersion.Id.ToString());
         value.Should().Be(selectedPersion.Id);
         cut.Instance.Value.Should().Be(selectedPersion.Id);
     }

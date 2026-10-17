@@ -38,7 +38,7 @@ Select component to select value from options.
 | DropdownMaxWidth | Will not allow dropdown width to grow above stated in here value (eg. "768px"). | string | "auto" |  |
 | DropdownRender | Customize dropdown content. | Renderfragment | - |  |
 | SearchDebounceMilliseconds | Delays the processing of the search input event until the user has stopped typing for a predetermined amount of time | int        |  250         |
-| EnableSearch | Indicates whether the search function is active or not. Always `true` for mode `tags`. | bool | false |  |
+| EnableSearch | Enables search in single mode. Multiple and tags modes are searchable by default, matching Ant Design v6. | bool | false |  |
 | FilterExpression | Customize the logic to filter when searching. | Func<SelectOptionItem<TItemValue, TItem>, string, bool> | (item, searchValue) => item.Label.Contains(searchValue, StringComparison.InvariantCultureIgnoreCase) |  |
 | GroupName | The name of the property to be used as a group indicator. If the value is set, the entries are displayed in groups. Use additional `SortByGroup` and `SortByLabel`. | string | - |  |
 | HideSelected | Hides the selected items when they are selected. | bool | false |  |

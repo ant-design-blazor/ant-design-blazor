@@ -1,0 +1,29 @@
+﻿@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="_theme">
+    <Result Status="ResultStatus.Success"
+            Title="Successfully Purchased Cloud Server ECS!"
+            SubTitle="Order number: 2017182818828182881. The cloud server configuration takes 1–5 minutes, please wait."
+            Extra="@_actions" />
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Result"] = new Dictionary<string, string>
+            {
+                ["titleFontSize"] = "18",
+                ["subtitleFontSize"] = "14",
+                ["iconFontSize"] = "48",
+                ["extraMargin"] = "12px 0 0"
+            }
+        }
+    };
+
+    private RenderFragment _actions => @<text>
+        <Button Type="ButtonType.Primary">Go Console</Button>
+        <Button>Buy Again</Button>
+    </text>;
+}

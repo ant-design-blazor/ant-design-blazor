@@ -3,7 +3,8 @@
 
 <li
     title="@(ShowTitle ? Page : null)"
-    class="@ClassMapper.Class"
+    class="@($"{ClassMapper.Class} {ItemClass}".Trim())"
+    style="@ItemStyle"
     @onclick="HandleClick"
     @onkeypress="HandleKeyPress"
     tabIndex="0"
@@ -22,6 +23,12 @@
 
     [Parameter]
     public string RootPrefixCls { get; set; }
+
+    [Parameter]
+    public string ItemClass { get; set; }
+
+    [Parameter]
+    public string ItemStyle { get; set; }
 
     [Parameter]
     public bool Active { get; set; }

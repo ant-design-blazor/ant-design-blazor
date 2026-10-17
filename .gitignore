@@ -347,6 +347,8 @@ healthchecksdb
 /components/wwwroot/css/*
 !/components/wwwroot/css/antd-v6/
 !/components/wwwroot/css/antd-v6/**
+!/components/wwwroot/css/avatar-responsive.css
+/artifacts/
 /components/wwwroot/js/ant-design-blazor.js
 /components/wwwroot/js/ant-design-blazor.js.map
 /components/wwwroot/js/split/**/*.js.map

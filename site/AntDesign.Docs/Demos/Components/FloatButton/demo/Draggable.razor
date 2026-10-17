@@ -1,0 +1,78 @@
+@using Microsoft.AspNetCore.Components.Web
+@using AntDesign
+@using System.Globalization
+@using System.Text.Json
+@using AntDesign.JsInterop
+@implements IDisposable
+
+<div @onmousedown="OnMouseDown" style="display:contents">
+    <FloatButton Style="@ButtonStyle" />
+</div>
+
+@code {
+    [Inject]
+    private IDomEventListener DomEventListener { get; set; }
+
+    private double _positionX;
+    private double _positionY;
+    private double _mouseStartX;
+    private double _mouseStartY;
+    private double _dragX;
+    private double _dragY;
+    private bool _dragging;
+
+    private string ButtonStyle => string.Create(CultureInfo.InvariantCulture,
+        $"transform:translate({_positionX + _dragX}px,{_positionY + _dragY}px);" +
+        $"cursor:{(_dragging ? "grabbing" : "grab")};" +
+        $"transition:{(_dragging ? "none" : "transform 0.2s")};touch-action:none;");
+
+    private void OnMouseDown(MouseEventArgs args)
+    {
+        _mouseStartX = args.ClientX;
+        _mouseStartY = args.ClientY;
+        _dragX = 0;
+        _dragY = 0;
+
+        DomEventListener.AddExclusive<JsonElement>("document", "mousemove", OnMouseMove, true);
+        DomEventListener.AddExclusive<JsonElement>("document", "mouseup", OnMouseUp, true);
+    }
+
+    private async Task OnMouseMove(JsonElement args)
+    {
+        var x = args.GetProperty("clientX").GetDouble();
+        var y = args.GetProperty("clientY").GetDouble();
+        var deltaX = x - _mouseStartX;
+        var deltaY = y - _mouseStartY;
+
+        if (!_dragging && Math.Sqrt(deltaX * deltaX + deltaY * deltaY) < 10)
+        {
+            return;
+        }
+
+        _dragging = true;
+        _dragX = deltaX;
+        _dragY = deltaY;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task OnMouseUp(JsonElement args)
+    {
+        if (_dragging)
+        {
+            _positionX += _dragX;
+            _positionY += _dragY;
+        }
+
+        _dragX = 0;
+        _dragY = 0;
+        _dragging = false;
+        DomEventListener.RemoveExclusive("document", "mousemove");
+        DomEventListener.RemoveExclusive("document", "mouseup");
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        DomEventListener?.DisposeExclusive();
+    }
+}

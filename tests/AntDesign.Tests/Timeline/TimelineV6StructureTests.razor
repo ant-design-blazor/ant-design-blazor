@@ -1,0 +1,31 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Timeline_uses_react_v6_steps_semantic_markup()
+    {
+        var timeline = Context.Render(@<Timeline>
+            <TimelineItem Label="Created">Create a service</TimelineItem>
+            <TimelineItem Label="Released">Release the service</TimelineItem>
+        </Timeline>);
+
+        var root = timeline.Find("ol.ant-steps.ant-timeline");
+        Assert.Contains("ant-steps-vertical", root.ClassList);
+        Assert.Contains("ant-steps-title-horizontal", root.ClassList);
+        Assert.Contains("ant-steps-outlined", root.ClassList);
+        Assert.Contains("ant-steps-dot", root.ClassList);
+        Assert.Contains("ant-timeline-layout-alternate", root.ClassList);
+
+        var firstItem = root.QuerySelector("li.ant-steps-item");
+        Assert.NotNull(firstItem?.QuerySelector(".ant-steps-item-wrapper.ant-timeline-item-wrapper"));
+        Assert.NotNull(firstItem?.QuerySelector(".ant-steps-item-icon.ant-timeline-item-icon"));
+        Assert.NotNull(firstItem?.QuerySelector(".ant-steps-item-section.ant-timeline-item-section"));
+        Assert.Equal("Created", firstItem?.QuerySelector(".ant-steps-item-title")?.TextContent);
+        Assert.NotNull(firstItem?.QuerySelector(".ant-steps-item-rail.ant-timeline-item-rail"));
+        Assert.Equal("Create a service", firstItem?.QuerySelector(".ant-steps-item-content.ant-timeline-item-content")?.TextContent.Trim());
+
+        var lastItem = root.QuerySelectorAll("li.ant-steps-item")[1];
+        Assert.Null(lastItem.QuerySelector(".ant-steps-item-rail"));
+        Assert.Empty(timeline.FindAll(".ant-timeline-item-tail"));
+    }
+}

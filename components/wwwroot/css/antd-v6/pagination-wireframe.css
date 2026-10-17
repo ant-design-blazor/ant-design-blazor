@@ -1,0 +1,37 @@
+.ant-theme-wireframe .ant-pagination-bordered .ant-pagination-item {
+    background-color: var(--ant-pagination-item-bg, var(--ant-color-bg-container));
+    border-color: var(--ant-color-border);
+}
+
+.ant-theme-wireframe .ant-pagination-bordered .ant-pagination-item:hover:not(.ant-pagination-item-active),
+.ant-theme-wireframe .ant-pagination-bordered .ant-pagination-item:focus-visible:not(.ant-pagination-item-active) {
+    background-color: var(--ant-pagination-item-bg, var(--ant-color-bg-container));
+    border-color: var(--ant-color-primary);
+}
+
+.ant-theme-wireframe .ant-pagination-bordered .ant-pagination-item-active {
+    border-color: var(--ant-color-primary);
+}
+
+.ant-theme-wireframe .ant-pagination-bordered .ant-pagination-prev .ant-pagination-item-link,
+.ant-theme-wireframe .ant-pagination-bordered .ant-pagination-next .ant-pagination-item-link {
+    background-color: var(--ant-pagination-item-link-bg, var(--ant-color-bg-container));
+    border-color: var(--ant-color-border);
+}
+
+.ant-theme-wireframe .ant-pagination-bordered .ant-pagination-prev:hover .ant-pagination-item-link,
+.ant-theme-wireframe .ant-pagination-bordered .ant-pagination-next:hover .ant-pagination-item-link {
+    background-color: var(--ant-pagination-item-bg, var(--ant-color-bg-container));
+    border-color: var(--ant-color-primary);
+    color: var(--ant-color-primary);
+}
+
+.ant-theme-wireframe .ant-pagination-bordered.ant-pagination-disabled .ant-pagination-item,
+.ant-theme-wireframe .ant-pagination-bordered.ant-pagination-disabled .ant-pagination-item-link {
+    background-color: var(--ant-color-bg-container-disabled);
+    border-color: var(--ant-color-border);
+}
+
+.ant-theme-wireframe .ant-pagination-bordered.ant-pagination-disabled .ant-pagination-item-active {
+    background-color: var(--ant-pagination-item-active-bg-disabled);
+}

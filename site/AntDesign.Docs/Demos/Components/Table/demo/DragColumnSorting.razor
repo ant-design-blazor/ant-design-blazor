@@ -1,0 +1,141 @@
+<div class="table-column-drag-demo">
+    <p>Drag a column header to reorder columns. The current layout is local to this example.</p>
+    <Table @key="_tableInstance" TItem="Row" DataSource="_rows" RowKey="row => row.Key" Class="table-column-drag-table">
+        <ColumnDefinitions>
+            @foreach (var column in _columnOrder)
+            {
+                @switch (column)
+                {
+                    case nameof(Row.Name):
+                        <PropertyColumn @key="column" Property="row => row.Name" Title="Name" OnHeaderCell="@HeaderAttributes">
+                            <TitleTemplate>
+                                <div class="table-column-drag-target" draggable="true"
+                                     @ondragstart="@(_ => StartColumnDrag(nameof(Row.Name)))"
+                                     @ondragover:preventDefault
+                                     @ondrop="@(_ => DropColumnOn(nameof(Row.Name)))"
+                                     @ondragend="@(_ => EndColumnDrag())">Name</div>
+                            </TitleTemplate>
+                        </PropertyColumn>
+                        break;
+                    case nameof(Row.Gender):
+                        <PropertyColumn @key="column" Property="row => row.Gender" Title="Gender" OnHeaderCell="@HeaderAttributes">
+                            <TitleTemplate>
+                                <div class="table-column-drag-target" draggable="true"
+                                     @ondragstart="@(_ => StartColumnDrag(nameof(Row.Gender)))"
+                                     @ondragover:preventDefault
+                                     @ondrop="@(_ => DropColumnOn(nameof(Row.Gender)))"
+                                     @ondragend="@(_ => EndColumnDrag())">Gender</div>
+                            </TitleTemplate>
+                        </PropertyColumn>
+                        break;
+                    case nameof(Row.Age):
+                        <PropertyColumn @key="column" Property="row => row.Age" Title="Age" OnHeaderCell="@HeaderAttributes">
+                            <TitleTemplate>
+                                <div class="table-column-drag-target" draggable="true"
+                                     @ondragstart="@(_ => StartColumnDrag(nameof(Row.Age)))"
+                                     @ondragover:preventDefault
+                                     @ondrop="@(_ => DropColumnOn(nameof(Row.Age)))"
+                                     @ondragend="@(_ => EndColumnDrag())">Age</div>
+                            </TitleTemplate>
+                        </PropertyColumn>
+                        break;
+                    case nameof(Row.Email):
+                        <PropertyColumn @key="column" Property="row => row.Email" Title="Email" OnHeaderCell="@HeaderAttributes">
+                            <TitleTemplate>
+                                <div class="table-column-drag-target" draggable="true"
+                                     @ondragstart="@(_ => StartColumnDrag(nameof(Row.Email)))"
+                                     @ondragover:preventDefault
+                                     @ondrop="@(_ => DropColumnOn(nameof(Row.Email)))"
+                                     @ondragend="@(_ => EndColumnDrag())">Email</div>
+                            </TitleTemplate>
+                        </PropertyColumn>
+                        break;
+                    case nameof(Row.Address):
+                        <PropertyColumn @key="column" Property="row => row.Address" Title="Address" OnHeaderCell="@HeaderAttributes">
+                            <TitleTemplate>
+                                <div class="table-column-drag-target" draggable="true"
+                                     @ondragstart="@(_ => StartColumnDrag(nameof(Row.Address)))"
+                                     @ondragover:preventDefault
+                                     @ondrop="@(_ => DropColumnOn(nameof(Row.Address)))"
+                                     @ondragend="@(_ => EndColumnDrag())">Address</div>
+                            </TitleTemplate>
+                        </PropertyColumn>
+                        break;
+                }
+            }
+        </ColumnDefinitions>
+    </Table>
+</div>
+
+<style>
+    .table-column-drag-demo .table-column-drag-table .ant-table-thead > tr > th[draggable="true"] {
+        cursor: grab;
+        user-select: none;
+    }
+
+    .table-column-drag-demo .table-column-drag-target {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 1em;
+        cursor: grab;
+        user-select: none;
+    }
+
+    .table-column-drag-demo .table-column-drag-target:active {
+        cursor: grabbing;
+    }
+</style>
+
+@code {
+    private readonly List<string> _columnOrder =
+    [
+        nameof(Row.Name),
+        nameof(Row.Gender),
+        nameof(Row.Age),
+        nameof(Row.Email),
+        nameof(Row.Address)
+    ];
+
+    private string _draggedColumn;
+    private int _tableInstance;
+
+    private readonly Row[] _rows =
+    [
+        new("1", "John Brown", "male", 32, "John Brown@example.com", "London No. 1 Lake Park"),
+        new("2", "Jim Green", "female", 42, "jimGreen@example.com", "London No. 1 Lake Park"),
+        new("3", "Joe Black", "female", 32, "JoeBlack@example.com", "Sidney No. 1 Lake Park"),
+        new("4", "George Hcc", "male", 20, "george@example.com", "Sidney No. 1 Lake Park")
+    ];
+
+    private Dictionary<string, object> HeaderAttributes() => new()
+    {
+        ["style"] = "user-select:none;"
+    };
+
+    private void StartColumnDrag(string column) => _draggedColumn = column;
+
+    private void DropColumnOn(string target)
+    {
+        if (_draggedColumn is null || _draggedColumn == target)
+        {
+            EndColumnDrag();
+            return;
+        }
+
+        var from = _columnOrder.IndexOf(_draggedColumn);
+        var to = _columnOrder.IndexOf(target);
+        if (from >= 0 && to >= 0)
+        {
+            _columnOrder.RemoveAt(from);
+            _columnOrder.Insert(to, _draggedColumn);
+            _tableInstance++;
+        }
+
+        EndColumnDrag();
+    }
+
+    private void EndColumnDrag() => _draggedColumn = null;
+
+    private sealed record Row(string Key, string Name, string Gender, int Age, string Email, string Address);
+}

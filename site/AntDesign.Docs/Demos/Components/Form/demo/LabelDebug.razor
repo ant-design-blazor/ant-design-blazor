@@ -1,0 +1,22 @@
+﻿<Form Model="@_model" LabelColSpan="8" WrapperColSpan="16" Style="max-width:600px;">
+    <FormItem Name="Username"
+              Label="longtextlongtextlongtextlongtextlongtextlongtextlongtext"
+              LabelStyle="display:block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+        <Input @bind-Value="context.Username" />
+    </FormItem>
+    <FormItem Name="Password"
+              Label="longtext longtext longtext longtext longtext longtext longtext"
+              LabelStyle="display:block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+        <InputPassword @bind-Value="context.Password" />
+    </FormItem>
+</Form>
+
+@code {
+    private readonly LabelFormModel _model = new();
+
+    private sealed class LabelFormModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}

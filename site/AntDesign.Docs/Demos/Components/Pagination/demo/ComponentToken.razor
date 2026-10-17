@@ -1,0 +1,42 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <Pagination ShowSizeChanger="true" DefaultCurrent="3" Total="500"
+                ShowQuickJumper="true" ShowTotal="@_showTotal" ItemRender="@RenderItem" />
+    <br />
+    <Pagination ShowSizeChanger="true" DefaultCurrent="3" Total="500" Disabled="true" />
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Pagination"] = new Dictionary<string, string>
+            {
+                ["itemSize"] = "40px",
+                ["itemSizeSM"] = "32px",
+                ["itemActiveBg"] = "#e7cc87",
+                ["itemActiveColor"] = "#eee",
+                ["itemActiveColorHover"] = "#fff",
+                ["itemLinkBg"] = "#344324",
+                ["itemActiveBgDisabled"] = "#9c1515",
+                ["itemInputBg"] = "#9c1515",
+                ["miniOptionsSizeChangerTop"] = "0",
+                ["itemBg"] = "#b5f5ec"
+            }
+        }
+    };
+
+    private readonly Func<PaginationTotalContext, string> _showTotal = context => $"Total {context.Total} items";
+
+    private static RenderFragment<PaginationItemRenderContext> RenderItem => context => builder =>
+    {
+        if (context.Type == PaginationItemType.Prev)
+            builder.AddContent(0, "Previous");
+        else if (context.Type == PaginationItemType.Next)
+            builder.AddContent(1, "Next");
+        else
+            context.OriginalElement(context)(builder);
+    };
+}

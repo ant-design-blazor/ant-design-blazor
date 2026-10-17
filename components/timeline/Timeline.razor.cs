@@ -162,13 +162,19 @@ namespace AntDesign
         {
             var prefix = "ant-timeline";
             ClassMapper.Clear()
+                .Add("ant-steps ant-steps-vertical ant-steps-title-horizontal ant-steps-outlined ant-steps-dot")
                 .Add(prefix)
-                .If($"{prefix}-right", () => Mode == TimelineMode.Right && !_hasLabel)
-                .If($"{prefix}-alternate", () => Mode == TimelineMode.Alternate && !_hasLabel)
+                .Add("css-var-root ant-timeline-css-var")
+                .If($"{prefix}-layout-alternate", () => Mode == TimelineMode.Alternate || _hasLabel)
                 .If($"{prefix}-pending", () => Pending.Value != null)
                 .If($"{prefix}-reverse", () => Reverse)
-                .If($"{prefix}-label", () => _hasLabel)
                 .If($"{prefix}-rtl", () => RTL);
+        }
+
+        protected string GetRootStyle()
+        {
+            const string stepsOffset = "--ant-cmp-steps-items-offset: 0;";
+            return string.IsNullOrWhiteSpace(Style) ? stepsOffset : $"{stepsOffset}{Style}";
         }
 
         internal void RemoveItem(TimelineItem item)
@@ -185,6 +191,7 @@ namespace AntDesign
             {
                 _hasLabel = true;
             }
+            SetClassMap();
         }
 
         protected IEnumerable<TimelineItem> UpdateChildren(IEnumerable<TimelineItem> items)
@@ -202,8 +209,9 @@ namespace AntDesign
                     TimelineMode.Left => TimelineMode.Left,
                     TimelineMode.Right => TimelineMode.Right,
                     TimelineMode.Alternate => i % 2 == 0 ? TimelineMode.Left : TimelineMode.Right,
-                    _ => null,
+                    _ => TimelineMode.Left,
                 };
+                item.SetClassMap();
 
                 yield return item;
             }

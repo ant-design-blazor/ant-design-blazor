@@ -1,0 +1,8 @@
+<div style="max-width: 480px">
+    <TextArea Placeholder="Basic textarea" Rows="4" @bind-Value="value" />
+    <p>Characters: @(value?.Length ?? 0)</p>
+</div>
+
+@code {
+    private string value = string.Empty;
+}

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
+using AntDesign.Theming;
 
 namespace AntDesign
 {
@@ -146,6 +147,12 @@ namespace AntDesign
         public int[] PageSizeOptions { get; set; } = PaginationOptions.DefaultPageSizeOptions;
 
         /// <summary>
+        /// Custom page-size changer content.
+        /// </summary>
+        [Parameter]
+        public RenderFragment<PaginationSizeChangerContext> SizeChanger { get; set; }
+
+        /// <summary>
         /// Called when PageSize is changed
         /// </summary>
         [Parameter]
@@ -182,6 +189,25 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public PaginationSize Size { get; set; }
+
+        /// <summary>
+        /// Alignment of the pagination items.
+        /// </summary>
+        /// <default value="center" />
+        [Parameter]
+        public string Align { get; set; }
+
+        /// <summary>
+        /// CSS class applied to each page item.
+        /// </summary>
+        [Parameter]
+        public string ItemClass { get; set; }
+
+        /// <summary>
+        /// Inline style applied to each page item.
+        /// </summary>
+        [Parameter]
+        public string ItemStyle { get; set; }
 
         /// <summary>
         /// (Not implemented) If Size is not specified, Pagination would resize according to the width of the window
@@ -268,6 +294,12 @@ namespace AntDesign
         [Parameter(CaptureUnmatchedValues = true)]
         public Dictionary<string, object>? UnmatchedAttributes { get; set; }
 
+        [CascadingParameter]
+        private ThemeConfig? ThemeConfig { get; set; }
+
+        [CascadingParameter(Name = "AntDesignVariant")]
+        private string? InputVariant { get; set; }
+
         private const string PrefixCls = "ant-pagination";
 
         private ClassMapper _prevClass = new();
@@ -331,6 +363,9 @@ namespace AntDesign
                .If($"{PrefixCls}-simple", () => Simple)
                .If($"{PrefixCls}-disabled", () => Disabled)
                .If($"{PrefixCls}-mini", () => !Simple && Size == PaginationSize.Small)
+               .If($"{PrefixCls}-{Align}", () => Align == "start" || Align == "center" || Align == "end")
+               .If($"{PrefixCls}-{InputVariant}", () => InputVariant is "filled" or "borderless" or "underlined")
+               .If($"{PrefixCls}-bordered", () => ThemeConfig?.Seed?.Wireframe == true)
                .If($"{PrefixCls}-rtl", () => RTL);
 
             _prevClass

@@ -11,6 +11,18 @@ namespace AntDesign.Tests.Typography
     public class LinkTests : AntDesignTestBase
     {
         [Fact]
+        public void Link_renders_href_and_target_attributes()
+        {
+            var systemUnderTest = RenderComponent<Link>(parameters => parameters
+                .Add(x => x.Href, "https://ant.design")
+                .Add(x => x.Target, "_blank")
+                .AddChildContent("Ant Design"));
+
+            systemUnderTest.Find("a.ant-typography").GetAttribute("href").Should().Be("https://ant.design");
+            systemUnderTest.Find("a.ant-typography").GetAttribute("target").Should().Be("_blank");
+        }
+
+        [Fact]
         public void ItShouldRenderBasicProperly()
         {
             var systemUnderTest = RenderComponent<Link>(parameters => parameters

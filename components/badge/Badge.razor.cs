@@ -25,7 +25,8 @@ namespace AntDesign
     public partial class Badge : AntDomComponentBase
     {
         /// <summary>
-        /// Customize Badge status dot color. Usage of this parameter will make the badge a status dot.
+        /// Customize the badge indicator color. Without a visible count this renders a status dot;
+        /// with a count it colors the count indicator.
         /// </summary>
         [Parameter]
         public OneOf<BadgeColor?, string> Color { get; set; }
@@ -111,7 +112,7 @@ namespace AntDesign
         public bool ShowZero { get; set; } = false;
 
         /// <summary>
-        /// Set Badge dot to a status color. Usage of this parameter will make the badge a status dot.
+        /// Set the badge indicator to a preset status color. Without a visible count this renders a status dot.
         /// </summary>
         [Parameter]
         public BadgeStatus? Status { get; set; }
@@ -159,21 +160,28 @@ namespace AntDesign
             [BadgeStatus.Warning] = "warning",
         };
 
-        private string StatusOrPresetColor => Status.HasValue
-            ? _statusMap[Status.Value]
-            : (Color.IsT0 && Color.AsT0.HasValue
-                ? Enum.GetName(typeof(BadgeColor), Color.AsT0)
-                : string.Empty);
-
         private bool HasStatusOrColor => Status.HasValue || ((Color.IsT0 && Color.AsT0.HasValue) || (Color.IsT1 && !string.IsNullOrWhiteSpace(Color.AsT1)));
+
+        private bool IsZero => Count == 0 || string.Equals(Text, "0", StringComparison.Ordinal);
+
+        private bool IgnoreCount => !Count.HasValue || (IsZero && !ShowZero);
+
+        private bool IsStandaloneStatus => ChildContent == null && HasStatusOrColor && IgnoreCount
+            && (!string.IsNullOrEmpty(Text) || Status.HasValue || !IsZero);
+
+        private bool IsDotIndicator => Dot && !IsZero;
+
+        private string IndicatorColorClass => Status.HasValue
+            ? $"ant-badge-status-{_statusMap[Status.Value]}"
+            : Color.IsT0 && Color.AsT0.HasValue
+                ? $"ant-badge-color-{Enum.GetName(typeof(BadgeColor), Color.AsT0).ToLowerInvariant()}"
+                : string.Empty;
 
         private string CountStyle => Offset == default ? string.Empty : $"{$"right:{-Offset.Left}px"};{$"margin-top:{Offset.Top}px"};";
 
         private string DotColorStyle => Color.IsT1 ? $"background:{Color.AsT1};" : string.Empty;
 
-        private bool RealShowSup => (Dot && (!Count.HasValue || (Count > 0 || Count == 0 && ShowZero)))
-                                || Count > 0
-                                || (Count == 0 && ShowZero);
+        private bool RealShowSup => IsDotIndicator || (Count.HasValue && (!IsZero || ShowZero));
 
         private bool _dotEnter;
 
@@ -195,17 +203,17 @@ namespace AntDesign
             var prefixName = "ant-badge";
             ClassMapper.Clear()
                 .Add(prefixName)
-                .If($"{prefixName}-status", () => HasStatusOrColor)
+                .If($"{prefixName}-status", () => IsStandaloneStatus)
                 .If($"{prefixName}-not-a-wrapper", () => ChildContent == null)
                 .If($"{prefixName}-rtl", () => RTL)
                 ;
 
             CountClassMapper.Clear()
                 .Add("ant-scroll-number")
-                .If($"{prefixName}-count", () => !Dot && !HasStatusOrColor)
-                .If($"{prefixName}-dot", () => Dot || HasStatusOrColor)
+                .If($"{prefixName}-count", () => !IsDotIndicator)
+                .If($"{prefixName}-dot", () => IsDotIndicator)
                 .If($"{prefixName}-count-sm", () => Size == BadgeSize.Small)
-                .GetIf(() => $"ant-badge-status-{StatusOrPresetColor}", () => !string.IsNullOrWhiteSpace(StatusOrPresetColor))
+                .GetIf(() => IndicatorColorClass, () => !string.IsNullOrWhiteSpace(IndicatorColorClass))
                 .If($"{prefixName}-multiple-words", () => _countArray.Length >= 2)
                 .If($"{prefixName}-zoom-enter {prefixName}-zoom-enter-active", () => _dotEnter)
                 .If($"{prefixName}-zoom-leave {prefixName}-zoom-leave-active", () => _dotLeave)
@@ -214,7 +222,7 @@ namespace AntDesign
 
             DotClassMapper.Clear()
                 .Add("ant-badge-status-dot")
-                .GetIf(() => $"ant-badge-status-{StatusOrPresetColor.ToLowerInvariant()}", () => !string.IsNullOrWhiteSpace(StatusOrPresetColor))
+                .GetIf(() => IndicatorColorClass, () => !string.IsNullOrWhiteSpace(IndicatorColorClass))
                 ;
         }
 

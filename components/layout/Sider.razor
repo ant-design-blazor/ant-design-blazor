@@ -1,8 +1,8 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<aside class="@ClassMapper.Class" style="@SiderStyles @Style">
-    @if (_showTrigger && CollapsedWidth == 0 && !NoTrigger)
+<aside class="@ClassMapper.Class" style="@RootStyle">
+    @if ((_showTrigger || _isCollapsed) && CollapsedWidth == 0 && !NoTrigger)
     {
         <span class="ant-layout-sider-zero-width-trigger ant-layout-sider-zero-width-trigger-left"
               @onclick="ToggleCollapsed">
@@ -10,11 +10,11 @@
         </span>
     }
     <CascadingValue Value="this" IsFixed="@true">
-        <div class="ant-layout-sider-children">
+        <div class="@BodyClass" style="@BodyStyle">
             @ChildContent
         </div>
     </CascadingValue>
-    @if (Collapsible && !NoTrigger)
+    @if (Collapsible && !NoTrigger && !(CollapsedWidth == 0 && _isCollapsed))
     {
         <div class="ant-layout-sider-trigger" style="width: @($"{ComputedWidth}px")" @onclick="ToggleCollapsed">
             @Trigger

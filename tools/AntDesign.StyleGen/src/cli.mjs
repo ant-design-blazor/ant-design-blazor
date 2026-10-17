@@ -4,7 +4,6 @@ import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import Ajv from 'ajv';
 import { createArtifact, createBaseline, readBaseline, sha256, writeBaseline } from './baseline.mjs';
 import { compareArtifactSets, compareCss } from './style-diff.mjs';
 import { generateReactCssBaseline } from './react-css-baseline.mjs';
@@ -17,6 +16,7 @@ const usage = `Usage:
   node src/cli.mjs generate-csharp-theme-tokens --antd-path <path> --output <GeneratedThemeTokens.cs>
   node src/cli.mjs generate-preview-theme-catalog --ir <themes.json> --output <GeneratedPreviewThemes.cs>
   node src/cli.mjs sync-v6 --antd-path <path> [--blazor-path <path>] [--output <path>]
+  node src/cli.mjs sync-semantic-dom --antd-path <path> [--blazor-path <path>] [--output <semantic-dom-catalog.json>]
   node src/cli.mjs css-baseline-update --antd-path <path> --output <path> [--docs-theme-output <path>]
   node src/cli.mjs exact-check --expected <baseline-dir> --actual <candidate-dir> [--allowlist <id,id>] [--report <path>]
   node src/cli.mjs theme-exact-check --expected <react-theme-css-dir> --actual <blazor-theme-css-dir> [--themes <key,key>] [--report <path>]
@@ -223,6 +223,7 @@ async function sync(args) {
   });
   const ir = { schemaVersion: 1, upstream, generator, tokens, styles, themes, unsupported: [] };
   const schema = await readJson(join(new URL('..', import.meta.url).pathname, 'schema/style-ir.schema.json'), 'style IR schema');
+  const { default: Ajv } = await import('ajv');
   const validate = new Ajv({ allErrors: true, strict: false }).compile(schema);
   if (!validate(ir)) {
     throw new Error(`generated IR does not satisfy schema: ${JSON.stringify(validate.errors)}`);
@@ -858,11 +859,20 @@ if (args.command === 'sync') {
   generatePreviewThemeCatalog(args).catch((error) => fail(error.message));
 } else if (args.command === 'sync-v6') {
   syncV6(args).catch((error) => fail(error.message));
+} else if (args.command === 'sync-semantic-dom') {
+  if (!args['antd-path']) fail('sync-semantic-dom requires --antd-path');
+  else {
+    const repoRoot = resolve(args['blazor-path'] || process.cwd());
+    const output = resolve(args.output || join(repoRoot, 'docs/antd-v6/semantic-dom-catalog.json'));
+    const script = join(repoRoot, 'tools/AntDesign.StyleGen/src/sync-semantic-dom.mjs');
+    const result = spawnSync(process.execPath, [script, repoRoot, args['antd-path'], output], { encoding: 'utf8', stdio: 'inherit' });
+    if (result.status !== 0) fail(`Semantic DOM sync failed with exit code ${result.status}`);
+  }
 } else if (args.command === 'css-baseline-update') {
   if (!args['antd-path'] || !args.output) fail('css-baseline-update requires --antd-path and --output');
   else generateReactCssBaseline({ antdPath: args['antd-path'], output: args.output, docsThemeOutput: args['docs-theme-output'] })
     .then((result) => console.log(JSON.stringify(result, null, 2)))
     .catch((error) => fail(error.message));
 } else {
-  fail('supported commands are sync, baseline-update, css-baseline-update, generate-csharp-tokens, generate-csharp-theme-tokens, sync-v6, exact-check and theme-exact-check');
+  fail('supported commands are sync, baseline-update, css-baseline-update, generate-csharp-tokens, generate-csharp-theme-tokens, sync-v6, sync-semantic-dom, exact-check and theme-exact-check');
 }

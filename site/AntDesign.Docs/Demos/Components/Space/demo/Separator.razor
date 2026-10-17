@@ -1,0 +1,15 @@
+<Space Split="@SeparatorContent">
+    <SpaceItem>
+        <Link>Link</Link>
+    </SpaceItem>
+    <SpaceItem>
+        <Link>Link</Link>
+    </SpaceItem>
+    <SpaceItem>
+        <Link>Link</Link>
+    </SpaceItem>
+</Space>
+
+@code {
+    private RenderFragment SeparatorContent => @<Divider Type="DividerType.Vertical" />;
+}

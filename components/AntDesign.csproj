@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="QRCoder" Version="1.8.0" />
-    <PackageReference Include="AntDesign.Icons" Version="0.2.0-beta.3-local.5" />
+    <PackageReference Include="AntDesign.Icons" Version="0.2.0-beta.3-local.20" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +48,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Pack>true</Pack>
       <PackagePath>wwwroot\css\antd-v6\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+    </Content>
+    <Content Update="wwwroot\css\avatar-responsive.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>true</Pack>
+      <PackagePath>wwwroot\css\avatar-responsive.css</PackagePath>
     </Content>
   </ItemGroup>
 

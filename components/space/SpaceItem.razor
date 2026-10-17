@@ -3,11 +3,11 @@
 
 @if (Parent?.Split != null && _index != 0)
 {
-    <span class="ant-space-item-separator" style="margin-right: 4px;">
+    <span class="@SeparatorClass" style="@SeparatorStyle">
         @Parent.Split
     </span>
 }
 
-<div class="@ClassMapper.Class" style="@Style" @ref="Ref" id="@Id">
+<div class="@ClassMapper.Class" style="@SemanticStyle" @ref="Ref" id="@Id">
     @ChildContent
 </div>

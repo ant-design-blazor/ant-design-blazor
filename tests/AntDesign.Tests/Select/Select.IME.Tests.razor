@@ -36,7 +36,7 @@
             SearchDebounceMilliseconds="0" Values="@selectedValues" DataSource="@dataSource" />
         );
 
-        var input = cut.Find("input.ant-select-selection-search-input");
+        var input = cut.Find("input.ant-select-input");
 
         // Verify initial state - should have 2 selected items
         cut.Instance.SelectedOptionItems.Should().HaveCount(2);
@@ -86,7 +86,7 @@
             SearchDebounceMilliseconds="0" Values="@selectedValues" DataSource="@dataSource" />
         );
 
-        var input = cut.Find("input.ant-select-selection-search-input");
+        var input = cut.Find("input.ant-select-input");
 
         // Verify initial state - should have 2 selected items
         cut.Instance.SelectedOptionItems.Should().HaveCount(2);
@@ -116,7 +116,7 @@
             SearchDebounceMilliseconds="0" Values="@selectedValues" DataSource="@dataSource" />
         );
 
-        var input = cut.Find("input.ant-select-selection-search-input");
+        var input = cut.Find("input.ant-select-input");
 
         // Verify initial state
         cut.Instance.SelectedOptionItems.Should().HaveCount(2);
@@ -187,7 +187,7 @@ System.Text.Json.JsonDocument.Parse("{}").RootElement });
         </AntDesign.Select>
         );
 
-        var input = cut.Find("input.ant-select-selection-search-input");
+        var input = cut.Find("input.ant-select-input");
 
         // Verify initial state
         cut.Instance.SelectedOptionItems.Should().HaveCount(3);

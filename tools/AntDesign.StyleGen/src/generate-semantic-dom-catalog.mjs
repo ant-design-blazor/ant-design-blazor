@@ -5,11 +5,16 @@ import path from 'node:path';
 
 const repoRoot = process.argv[2] || process.cwd();
 const inventoryPath = process.argv[3] || path.join(repoRoot, 'docs/antd-v6/semantic-dom-inventory.json');
-const existingPath = process.argv[4] || path.join(repoRoot, 'site/AntDesign.Docs/Services/SemanticDomGeneratedCatalog.cs');
+const existingPath = process.argv[4] || path.join(repoRoot, 'docs/antd-v6/semantic-dom-catalog.json');
+const legacyCatalogPath = path.join(repoRoot, 'site/AntDesign.Docs/Services/SemanticDomGeneratedCatalog.cs');
+const legacyManualPath = path.join(repoRoot, 'site/AntDesign.Docs/Services/SemanticDomCatalog.cs');
 const outputPath = process.argv[5] || existingPath;
 
 const inventory = JSON.parse(fs.readFileSync(inventoryPath, 'utf8'));
-const existing = fs.existsSync(existingPath) ? fs.readFileSync(existingPath, 'utf8') : '';
+const existingJson = fs.existsSync(existingPath) ? fs.readFileSync(existingPath, 'utf8') : '';
+const existingCatalog = fs.existsSync(legacyCatalogPath) ? fs.readFileSync(legacyCatalogPath, 'utf8') : '';
+const existingManual = fs.existsSync(legacyManualPath) ? fs.readFileSync(legacyManualPath, 'utf8') : '';
+const existing = `${existingCatalog}\n${existingManual}`;
 
 function kebab(value) {
   return value
@@ -59,7 +64,240 @@ function fallbackNode(component, semanticPath) {
   };
 }
 
+const semanticPathSelectors = {
+  'auto-complete/root': '.ant-select.ant-select-auto-complete',
+  'auto-complete/content': '.ant-select-content',
+  'auto-complete/input': '.ant-select-selection-search-input',
+  'auto-complete/placeholder': '.ant-select-selection-placeholder',
+  'auto-complete/prefix': '.ant-select-prefix',
+  'auto-complete/suffix': '.ant-select-suffix',
+  'auto-complete/clear': '.ant-select-clear',
+  'auto-complete/popup': '.ant-select-dropdown',
+  'badge/content': '.ant-badge-count',
+  'badge/indicator': '.ant-badge-dot, .ant-badge-status-dot',
+  'button/root': '.ant-btn',
+  'button/content': '.ant-btn > span:not(.ant-btn-icon)',
+  'button/icon': '.ant-btn-icon',
+  'card/header': '.ant-card-head',
+  'card/title': '.ant-card-head-title',
+  'card/section': '.ant-card-body',
+  'card/avatar': '.ant-card-meta-avatar',
+  'card/description': '.ant-card-meta-description',
+  'cascader/input': '.ant-select-selection-search-input',
+  'cascader/placeholder': '.ant-select-selection-placeholder',
+  'checkbox/icon': '.ant-checkbox-inner',
+  'checkbox/label': '.ant-checkbox-wrapper',
+  'date-picker/root': '.ant-picker',
+  'date-picker/input': '.ant-picker-input',
+  'date-picker/prefix': '.ant-picker-prefix',
+  'date-picker/suffix': '.ant-picker-suffix',
+  'date-picker/popup': '.ant-picker-dropdown',
+  'date-picker/container': '.ant-picker-panel-container',
+  'date-picker/header': '.ant-picker-header',
+  'date-picker/body': '.ant-picker-body',
+  'date-picker/content': '.ant-picker-content',
+  'date-picker/item': '.ant-picker-cell',
+  'date-picker/footer': '.ant-picker-footer',
+  'descriptions/label': '.ant-descriptions-item-label',
+  'descriptions/content': '.ant-descriptions-item-content',
+  'divider/content': '.ant-divider-inner-text',
+  'drawer/dragger': '.ant-drawer-resize-handle',
+  'drawer/wrapper': '.ant-drawer-content-wrapper',
+  'dropdown/item': '.ant-dropdown-menu-item',
+  'dropdown/itemContent': '.ant-dropdown-menu-title-content',
+  'dropdown/itemIcon': '.ant-dropdown-menu-item-icon',
+  'dropdown/itemTitle': '.ant-dropdown-menu-title-content',
+  'float-button/root': '.ant-float-btn',
+  'float-button/list': '.ant-float-btn-group-list',
+  'float-button/item': '.ant-float-btn',
+  'float-button/itemContent': '.ant-float-btn-content',
+  'float-button/itemIcon': '.ant-float-btn-icon',
+  'float-button/trigger': '.ant-float-btn-group-trigger',
+  'float-button/triggerContent': '.ant-float-btn-group-trigger .ant-float-btn-content',
+  'float-button/triggerIcon': '.ant-float-btn-group-trigger .ant-float-btn-icon',
+  'image/root': '.ant-image',
+  'image/image': '.ant-image-img',
+  'image/popup': '.ant-image-preview-root',
+  'image/actions': '.ant-image-preview-actions',
+  'image/body': '.ant-image-preview-body',
+  'image/close': '.ant-image-preview-close',
+  'image/footer': '.ant-image-preview-footer',
+  'image/mask': '.ant-image-preview-mask',
+  'image/placeholder': '.ant-image-placeholder',
+  'image/progress': '.ant-image-progress-wrapper',
+  'image/popup.root': '.ant-image-preview-root',
+  'input/button': '.ant-input-search .ant-btn',
+  'input/button.root': '.ant-input-search .ant-btn',
+  'input/button.content': '.ant-input-search .ant-btn > span:not(.ant-btn-icon)',
+  'input/button.icon': '.ant-input-search .ant-btn-icon',
+  'mentions/popup': '.ant-select-dropdown',
+  'message/icon': '.ant-message-notice-icon',
+  'message/list': '.ant-message-list',
+  'message/listContent': '.ant-message-list-content',
+  'message/root': '.ant-message-notice',
+  'message/title': '.ant-message-notice-title',
+  'message/wrapper': '.ant-message-notice-wrapper',
+  'modal/wrapper': '.ant-modal-wrap',
+  'notification/actions': '.ant-notification-notice-actions',
+  'notification/close': '.ant-notification-notice-close',
+  'notification/description': '.ant-notification-notice-description',
+  'notification/icon': '.ant-notification-notice-icon',
+  'notification/progress': '.ant-notification-notice-progress',
+  'notification/root': '.ant-notification-notice',
+  'notification/list': '.ant-notification-list',
+  'notification/listContent': '.ant-notification-list-content',
+  'notification/section': '.ant-notification-notice-section',
+  'notification/title': '.ant-notification-notice-title',
+  'notification/wrapper': '.ant-notification-notice-wrapper',
+  'popconfirm/content': '.ant-popconfirm-inner-content',
+  'qr-code/root': '.ant-qrcode',
+  'qr-code/cover': '.ant-qrcode-cover',
+  'radio/icon': '.ant-radio-inner',
+  'radio/label': '.ant-radio-wrapper',
+  'skeleton/content': '.ant-skeleton',
+  'space/separator': '.ant-space-item',
+  'switch/content': '.ant-switch-inner',
+  'switch/indicator': '.ant-switch-handle',
+  'table/section': '.ant-table-container',
+  'tabs/body': '.ant-tabs-body-holder',
+  'tabs/popup': '.ant-tabs-dropdown',
+  'tag/content': '.ant-tag',
+  'tag/icon': '.ant-tag-icon',
+  'tag/item': '.ant-tag',
+  'time-picker/root': '.ant-picker',
+  'time-picker/input': '.ant-picker-input',
+  'time-picker/prefix': '.ant-picker-prefix',
+  'time-picker/suffix': '.ant-picker-suffix',
+  'time-picker/popup': '.ant-picker-dropdown',
+  'time-picker/container': '.ant-picker-panel-container',
+  'time-picker/content': '.ant-picker-content',
+  'time-picker/item': '.ant-picker-cell',
+  'time-picker/footer': '.ant-picker-footer',
+  'transfer/body': '.ant-transfer-list-body',
+  'transfer/header': '.ant-transfer-list-header',
+  'transfer/title': '.ant-transfer-list-header-title',
+  'transfer/footer': '.ant-transfer-list-footer',
+  'transfer/item': '.ant-transfer-list-content-item',
+  'transfer/itemContent': '.ant-transfer-list-content-item-text',
+  'transfer/itemIcon': '.ant-transfer-list-checkbox',
+  'transfer/source': '.ant-transfer > .ant-transfer-section:first-of-type',
+  'transfer/target': '.ant-transfer > .ant-transfer-section:last-of-type',
+  'transfer/section': '.ant-transfer-section',
+  'transfer/actions': '.ant-transfer-actions',
+  'transfer/list': '.ant-transfer-list-content',
+  'tree-select/root': '.ant-select.ant-select-tree-select',
+  'tree-select/content': '.ant-select-content',
+  'tree-select/input': '.ant-select-selection-search-input',
+  'tree-select/item': '.ant-select-item-option',
+  'tree-select/itemContent': '.ant-select-item-option-content',
+  'tree-select/itemRemove': '.ant-select-selection-item-remove',
+  'tree-select/itemSwitcher': '.ant-tree-switcher',
+  'tree-select/itemTitle': '.ant-tree-title',
+  'tree-select/placeholder': '.ant-select-selection-placeholder',
+  'tree-select/popup': '.ant-select-dropdown',
+  'tree-select/prefix': '.ant-select-prefix',
+  'tree-select/suffix': '.ant-select-suffix',
+  'typography/textarea': '.ant-typography-edit-content',
+  'color-picker/popup.root': '.ant-popover.ant-color-picker',
+  'date-picker/popup.root': '.ant-picker-dropdown',
+  'date-picker/popup.container': '.ant-picker-panel-container',
+  'date-picker/popup.header': '.ant-picker-header',
+  'date-picker/popup.body': '.ant-picker-body',
+  'date-picker/popup.content': '.ant-picker-content',
+  'date-picker/popup.item': '.ant-picker-cell',
+  'date-picker/popup.footer': '.ant-picker-footer',
+  'float-button/content': '.ant-float-btn-content',
+  'float-button/icon': '.ant-float-btn-icon',
+  'image/popup.root': '.ant-image-preview-root',
+  'image/popup.mask': '.ant-image-preview-mask',
+  'image/popup.body': '.ant-image-preview-body',
+  'image/popup.footer': '.ant-image-preview-footer',
+  'image/popup.actions': '.ant-image-preview-actions',
+  'image/popup.close': '.ant-image-preview-close',
+  'input-number/action': '.ant-input-number-action',
+  'input/button.root': '.ant-input-search-button',
+  'input/button.content': '.ant-btn > span:not(.ant-btn-icon)',
+  'input/button.icon': '.ant-btn-icon',
+  'popconfirm/arrow': '.ant-popover-arrow',
+  'popconfirm/container': '.ant-popover-container',
+  'popconfirm/content': '.ant-popconfirm-inner-content',
+  'popconfirm/icon': '.ant-popconfirm-message-icon',
+  'popconfirm/root': '.ant-popover',
+  'popconfirm/title': '.ant-popconfirm-title',
+  'popover/arrow': '.ant-popover-arrow',
+  'popover/container': '.ant-popover-container',
+  'popover/root': '.ant-popover',
+  'steps/content': '.ant-steps-item-content',
+  'steps/header': '.ant-steps-item-header',
+  'steps/icon': '.ant-steps-item-icon',
+  'steps/rail': '.ant-steps-item-rail',
+  'steps/section': '.ant-steps-item-section',
+  'steps/subtitle': '.ant-steps-item-subtitle',
+  'steps/title': '.ant-steps-item-title',
+  'steps/wrapper': '.ant-steps-item-wrapper',
+  'table/header.wrapper': '.ant-table-thead',
+  'table/header.row': '.ant-table-thead > tr',
+  'table/header.cell': '.ant-table-thead > tr > .ant-table-cell',
+  'table/body.wrapper': '.ant-table-tbody',
+  'table/body.row': '.ant-table-tbody > tr',
+  'table/body.cell': '.ant-table-tbody > tr > .ant-table-cell',
+  'table/pagination.root': '.ant-table-pagination',
+  'table/pagination.item': '.ant-table-pagination .ant-pagination-item',
+  'tabs/popup.root': '.ant-tabs-dropdown',
+  'timeline/item': '.ant-timeline-item',
+  'timeline/itemWrapper': '.ant-timeline-item-wrapper',
+  'timeline/itemIcon': '.ant-timeline-item-icon',
+  'timeline/itemHeader': '.ant-timeline-item-header',
+  'timeline/itemTitle': '.ant-timeline-item-title',
+  'timeline/itemSection': '.ant-timeline-item-section',
+  'timeline/itemContent': '.ant-timeline-item-content',
+  'timeline/itemRail': '.ant-timeline-item-rail',
+  'timeline/content': '.ant-timeline-item-content',
+  'timeline/header': '.ant-timeline-item-header',
+  'timeline/icon': '.ant-timeline-item-icon',
+  'timeline/rail': '.ant-timeline-item-rail',
+  'timeline/section': '.ant-timeline-item-section',
+  'timeline/title': '.ant-timeline-item-title',
+  'timeline/wrapper': '.ant-timeline-item-wrapper',
+  'transfer/source.section': '.ant-transfer > .ant-transfer-section:first-of-type',
+  'transfer/source.header': '.ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-header',
+  'transfer/source.title': '.ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-header-title',
+  'transfer/source.body': '.ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-body',
+  'transfer/source.list': '.ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-content',
+  'transfer/source.item': '.ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-content-item',
+  'transfer/source.itemIcon': '.ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-checkbox',
+  'transfer/source.itemContent': '.ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-content-item-text',
+  'transfer/source.footer': '.ant-transfer > .ant-transfer-section:first-of-type .ant-transfer-list-footer',
+  'transfer/target.section': '.ant-transfer > .ant-transfer-section:last-of-type',
+  'transfer/target.header': '.ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-header',
+  'transfer/target.title': '.ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-header-title',
+  'transfer/target.body': '.ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-body',
+  'transfer/target.list': '.ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-content',
+  'transfer/target.item': '.ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-content-item',
+  'transfer/target.itemIcon': '.ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-checkbox',
+  'transfer/target.itemContent': '.ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-content-item-text',
+  'transfer/target.footer': '.ant-transfer > .ant-transfer-section:last-of-type .ant-transfer-list-footer',
+};
+
 const existingNodes = parseExistingNodes(existing);
+if (existingJson) {
+  try {
+    const parsed = JSON.parse(existingJson);
+    for (const component of parsed.components || []) {
+      const nodes = existingNodes.get(component.name) || new Map();
+      for (const node of component.nodes || []) {
+        nodes.set(node.name, {
+          selector: node.selector,
+          description: node.description,
+          version: node.version || '6.0.0',
+        });
+      }
+      existingNodes.set(component.name, nodes);
+    }
+  } catch (error) {
+    if (existingJson.trim()) throw new Error(`Invalid existing Semantic DOM JSON: ${error.message}`);
+  }
+}
 const inventoryComponents = new Map();
 for (const entry of inventory.entries || []) {
   const paths = inventoryComponents.get(entry.component) || new Set();
@@ -67,50 +305,34 @@ for (const entry of inventory.entries || []) {
   inventoryComponents.set(entry.component, paths);
 }
 
-// Preserve additional preview-only entries already present in the catalog.
-for (const component of existingNodes.keys()) {
-  if (!inventoryComponents.has(component)) inventoryComponents.set(component, new Set(existingNodes.get(component).keys()));
+// Include every React component from the synchronized component catalog, even
+// when that component has not declared Semantic DOM slots yet.
+for (const component of inventory.componentCatalog || []) {
+  if (!inventoryComponents.has(component.name)) inventoryComponents.set(component.name, new Set());
 }
 
 const components = [...inventoryComponents.keys()].sort((a, b) => a.localeCompare(b));
-const lines = [
-  'using System;',
-  'using System.Collections.Generic;',
-  'using System.Collections.ObjectModel;',
-  '',
-  'namespace AntDesign.Docs.Services;',
-  '',
-  'internal static class SemanticDomGeneratedCatalog',
-  '{',
-  '    internal static readonly IReadOnlyDictionary<string, IReadOnlyList<SemanticDomNode>> Nodes =',
-  '        new ReadOnlyDictionary<string, IReadOnlyList<SemanticDomNode>>(',
-  '            new Dictionary<string, IReadOnlyList<SemanticDomNode>>(StringComparer.OrdinalIgnoreCase)',
-  '            {',
-];
-
-for (const component of components) {
-  const oldNodes = existingNodes.get(component) || new Map();
-  const semanticPaths = [...inventoryComponents.get(component)].sort((a, b) => a.localeCompare(b));
-  const nodes = semanticPaths.map((semanticPath) => [
-    semanticPath,
-    oldNodes.get(semanticPath) || fallbackNode(component, semanticPath),
-  ]);
-  lines.push(`                ["${csharp(component)}"] = ${nodes.length ? 'new[]' : 'Array.Empty<SemanticDomNode>()'}${nodes.length ? '' : ','}`);
-  if (nodes.length) {
-    lines.push('                {');
-    for (const [semanticPath, node] of nodes) {
-      lines.push(`                    new SemanticDomNode("${csharp(semanticPath)}", "${csharp(node.selector)}", "${csharp(node.description)}", "${csharp(node.version)}"),`);
-    }
-    lines.push('                },');
-  }
-}
-
-lines.push(
-  '            });',
-  '}',
-  '',
-);
+const catalog = {
+  schemaVersion: 1,
+  source: inventory.source,
+  components: components.map((component) => {
+    const oldNodes = existingNodes.get(component) || new Map();
+    const semanticPaths = [...(inventoryComponents.get(component) || [])].sort((a, b) => a.localeCompare(b));
+    return {
+      name: component,
+      nodes: semanticPaths.map((name) => {
+        const previous = oldNodes.get(name);
+        return {
+          name,
+          selector: previous?.selector || semanticPathSelectors[`${component}/${name}`] || fallbackNode(component, name).selector,
+          description: previous?.description || `${component} ${name} Semantic DOM 节点`,
+          version: previous?.version || '6.0.0',
+        };
+      }),
+    };
+  }),
+};
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-fs.writeFileSync(outputPath, lines.join('\n'));
-console.log(JSON.stringify({ outputPath, components: components.length, inventoryComponents: inventoryComponents.size }));
+fs.writeFileSync(outputPath, `${JSON.stringify(catalog, null, 2)}\n`);
+console.log(JSON.stringify({ outputPath, components: components.length, slots: catalog.components.reduce((count, component) => count + component.nodes.length, 0) }));

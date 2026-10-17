@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Button"
+  },
+  "config": {
+    "timeoutMs": 20000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_"],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "button-basic-demo",
+      "component": "Button",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/button",
+        "scopeSelector": "#button-demo-basic .code-box-demo",
+        "rootSelector": "button.ant-btn"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8186/en-US/components/button",
+        "scopeSelector": "#components-button-demo-Basic .code-box-demo",
+        "rootSelector": "button.ant-btn"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingInline", "gap", "alignItems", "lineHeight", "fontSize", "fontWeight", "color", "backgroundColor", "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "icon", "reactSelector": ".ant-btn-icon", "blazorSelector": ".ant-btn-icon", "minimumCount": 0 },
+        { "path": "content", "reactSelector": "span:not(.ant-btn-icon)", "blazorSelector": "span:not(.ant-btn-icon)", "minimumCount": 1 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    }
+  ]
+}

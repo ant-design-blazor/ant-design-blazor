@@ -1,0 +1,12 @@
+<div style="display:flex; flex-direction:column; gap:16px">
+    <RadioGroup TValue="string" Options="@_options" @bind-Value="_plainValue" Block />
+    <RadioGroup TValue="string" Options="@_options" @bind-Value="_solidValue" ButtonStyle="RadioButtonStyle.Solid" Block />
+    <RadioGroup TValue="string" Options="@_options" @bind-Value="_outlineValue" ButtonStyle="RadioButtonStyle.Outline" Block />
+</div>
+
+@code {
+    private readonly string[] _options = ["Apple", "Pear", "Orange"];
+    private string _plainValue = "Apple";
+    private string _solidValue = "Apple";
+    private string _outlineValue = "Pear";
+}

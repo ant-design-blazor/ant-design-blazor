@@ -1,0 +1,102 @@
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div @ref="_positionContainer" style="position: relative">
+    <Dropdown Trigger="_noTrigger" Visible="_visible" VisibleChanged="OnVisibleChanged" Placement="Placement.Bottom">
+        <Overlay>
+            <Menu OnMenuItemClicked="HandleMenuItemClicked">
+                <MenuItem Key="mask">Mask keyword</MenuItem>
+                <MenuItem Key="mark">Mark keyword</MenuItem>
+                <MenuItem Key="search">Search keyword</MenuItem>
+            </Menu>
+        </Overlay>
+        <Unbound Context="trigger">
+            <span aria-hidden="true" @ref="trigger.Current"
+                  style="@TriggerStyle"></span>
+        </Unbound>
+    </Dropdown>
+
+    <div @ref="_textContainer" @onmousedown="ClearSelection" @onmouseup="HandleMouseUp"
+         style="padding: var(--ant-padding-lg); user-select: text; color: var(--ant-color-text); background: var(--ant-color-bg-layout); border-radius: var(--ant-border-radius-lg)">
+        Select any text in this paragraph to open a Dropdown menu near the selection. This is useful for actions such as masking sensitive words, marking entities, or searching the selected keyword. Example data: Alice, phone 13800138000, ID 110101199001011234.
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(_result))
+{
+    <p role="status" style="margin-top: 8px">@_result</p>
+}
+
+@code {
+    private readonly Trigger[] _noTrigger = [];
+    private ElementReference _textContainer;
+    private ElementReference _positionContainer;
+    private IJSObjectReference _selectionModule;
+    private SelectionInfo _selection;
+    private bool _visible;
+    private decimal _triggerLeft = -9999;
+    private decimal _triggerTop = -9999;
+    private string _result;
+    private string TriggerStyle => $"position: absolute; display: block; width: 1px; height: 1px; margin: 0; padding: 0; pointer-events: none; left: {_triggerLeft}px; top: {_triggerTop}px";
+
+    private async Task HandleMouseUp()
+    {
+        _selectionModule ??= await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/dropdown-selection.js");
+        _selection = await _selectionModule.InvokeAsync<SelectionInfo>("getSelection", _textContainer, _positionContainer);
+        _visible = _selection is not null;
+
+        if (_selection is not null)
+        {
+            _triggerLeft = _selection.X;
+            _triggerTop = _selection.Y;
+            _result = null;
+        }
+    }
+
+    private Task ClearSelection()
+    {
+        _selection = null;
+        _visible = false;
+        return Task.CompletedTask;
+    }
+
+    private async Task HandleMenuItemClicked(MenuItem item)
+    {
+        if (_selection is null)
+        {
+            return;
+        }
+
+        var action = item.Key switch
+        {
+            "mask" => "Mask keyword",
+            "mark" => "Mark keyword",
+            _ => "Search keyword"
+        };
+        _result = $"{action}: {_selection.Text}";
+        _visible = false;
+        await _selectionModule.InvokeVoidAsync("clearSelection");
+        _selection = null;
+    }
+
+    private Task OnVisibleChanged(bool visible)
+    {
+        _visible = visible && _selection is not null;
+        return Task.CompletedTask;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_selectionModule is not null)
+        {
+            await _selectionModule.DisposeAsync();
+        }
+    }
+
+    private sealed class SelectionInfo
+    {
+        public string Text { get; set; }
+        public decimal X { get; set; }
+        public decimal Y { get; set; }
+    }
+}

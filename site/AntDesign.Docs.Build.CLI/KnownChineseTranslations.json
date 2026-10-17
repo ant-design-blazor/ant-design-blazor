@@ -944,9 +944,6 @@
   "The scrollable area the button is for": {
     "Translated": "按钮所在的可滚动区域"
   },
-  "Customize Badge status dot color. Usage of this parameter will make the badge a status dot.": {
-    "Translated": "自定义徽章状态点颜色。使用此参数将使徽章成为状态点。"
-  },
   "Set Badge status dot to a preset color. Usage of this parameter will make the badge a status dot.": {
     "Translated": "将徽章状态点设置为预设颜色。使用此参数将使徽章成为状态点。"
   },
@@ -967,9 +964,6 @@
   },
   "Whether to show badge when count is zero": {
     "Translated": "计数为零时是否显示徽章"
-  },
-  "Set Badge dot to a status color. Usage of this parameter will make the badge a status dot.": {
-    "Translated": "将徽章点设置为状态颜色。使用此参数将使徽章成为状态点。"
   },
   "The display text next to the status dot": {
     "Translated": "状态点旁边的显示文本"
@@ -2915,9 +2909,6 @@
   "Whether the Select component is disabled.": {
     "Translated": "选择组件是否被禁用。"
   },
-  "Indicates whether the search function is active or not. Always true for mode tags.": {
-    "Translated": "指示搜索功能是否处于活动状态。对于模式标签始终为真。"
-  },
   "Controlled open state of dropdown.": {
     "Translated": "下拉菜单的受控打开状态。"
   },
@@ -3010,9 +3001,6 @@
   },
   "Shape of the avatar. Not used for input type.": {
     "Translated": "头像的形状。不用于输入类型。"
-  },
-  "The default value of slider. When <code>AntDesign.Slider`1.Range</code> is false, use number, otherwise, use [number, number]": {
-    "Translated": "滑块的默认值。当<code>AntDesign.Slider`1.Range</code>为false时，使用number，否则使用[number, number]"
   },
   "If true, the slider will not be interactable": {
     "Translated": "如果为真，滑块将不可交互"
@@ -4414,9 +4402,6 @@
   },
   "The dot of the timeline item.": {
     "Translated": "时间线项的点。"
-  },
-  "The color of the timeline item.": {
-    "Translated": "时间线项的颜色。"
   },
   "The label of the timeline item.": {
     "Translated": "时间线项的标签。"

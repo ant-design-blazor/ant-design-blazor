@@ -1,0 +1,50 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+
+<Button Type="ButtonType.Primary" OnClick="ShowModal">New Collection</Button>
+<pre>@result</pre>
+<Modal Title='@("Create a new collection")' Visible="@visible" OnOk="HandleOk" OnCancel="HandleCancel" OkText='@("Create")' CancelText='@("Cancel")'>
+    @FormTemplate()
+</Modal>
+
+@code {
+    RenderFragment FormTemplate()
+    {
+        return
+        @<Form Model="@model" Layout="FormLayout.Vertical" OnFinish="OnFinish" @ref="@form">
+            <FormItem Label="Title" Name="Title" Rules="@(new[] { new FormValidationRule { Required = true, Message = "Please input the title of collection!" } })">
+                <Input @bind-Value="context.Title" />
+            </FormItem>
+            <FormItem Label="Description">
+                <TextArea @bind-Value="context.Description" Rows="3" />
+            </FormItem>
+            <FormItem>
+                <RadioGroup @bind-Value="context.Modifier">
+                    <Radio Value='@("public")'>Public</Radio>
+                    <Radio Value='@("private")'>Private</Radio>
+                </RadioGroup>
+            </FormItem>
+        </Form>;
+    }
+
+    bool visible;
+    Form<CollectionModel> form;
+    CollectionModel model = new CollectionModel { Modifier = "public" };
+    string result = string.Empty;
+
+    public class CollectionModel
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Modifier { get; set; }
+    }
+
+    void ShowModal() => visible = true;
+    void HandleCancel(MouseEventArgs _) => visible = false;
+    void HandleOk(MouseEventArgs _) => form?.Submit();
+    void OnFinish(EditContext _)
+    {
+        result = JsonSerializer.Serialize(model, new JsonSerializerOptions { WriteIndented = true });
+        visible = false;
+    }
+}

@@ -1,0 +1,15 @@
+<Space>
+    <Cascader Options="@_options" Placeholder="Default icons" />
+    <Cascader Options="@_options" Placeholder="Custom icons">
+        <PrefixIcon><Icon Type="IconType.Outline.Environment" /></PrefixIcon>
+        <SuffixIcon><Icon Type="IconType.Outline.Search" /></SuffixIcon>
+    </Cascader>
+</Space>
+
+@code {
+    private readonly CascaderNode[] _options =
+    [
+        new() { Value = "zhejiang", Label = "Zhejiang", Children = [new() { Value = "hangzhou", Label = "Hangzhou" }] },
+        new() { Value = "jiangsu", Label = "Jiangsu", Children = [new() { Value = "nanjing", Label = "Nanjing" }] }
+    ];
+}

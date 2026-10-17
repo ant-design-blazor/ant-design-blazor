@@ -93,7 +93,7 @@ namespace AntDesign
             placementStr = placementStr[0] == 'T'
                 ? "t" + placementStr.Substring(1)
                 : "b" + placementStr.Substring(1);
-            var className = $"{ClassPrefix} {ClassPrefix}-" + placementStr;
+            var className = $"{ClassPrefix} {ClassPrefix}-css-var {ClassPrefix}-list {ClassPrefix}-" + placementStr;
 
             if (IsRtl())
             {

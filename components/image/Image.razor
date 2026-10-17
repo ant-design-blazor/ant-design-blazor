@@ -2,26 +2,61 @@
 @inherits AntDomComponentBase
 
 
-<div class="@ClassMapper.Class" style="@_wrapperStyle" id="@Id" @ref="Ref">
-    <img alt="@Alt" class="ant-image-img" src="@Src" style="@Style"
-         @onerror="HandleOnError"
-         @onloadstart="HandleOnLoadStart"
-         @onload="HandleOnLoad" 
-		 @onclick="OnClick"/>
-
-    @if (!_loaded && Placeholder != null)
-    {
-        <div aria-hidden="true" class="ant-image-placeholder">
-            @Placeholder
+@if (IsProgressPlaceholder)
+{
+    <div class="ant-image ant-image-progress-wrapper css-var-root ant-image-css-var" style="@_wrapperStyle"
+         role="@(HasProgressPercent ? "progressbar" : null)"
+         aria-valuemin="@(HasProgressPercent ? "0" : null)"
+         aria-valuemax="@(HasProgressPercent ? "100" : null)"
+         aria-valuenow="@(HasProgressPercent ? ProgressPercentText : null)"
+         aria-label="@(HasProgressPercent ? $"{ProgressPercentText}%" : null)"
+         aria-busy="@(HasProgressPercent ? null : "true")">
+        @if (!HasProgressPercent)
+        {
+            <span role="status" aria-live="polite" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0">Loading</span>
+        }
+        <div class="ant-image-progress-ink-1"></div>
+        <div class="ant-image-progress-ink-2"></div>
+        <div class="ant-image-progress-content">
+            @if (HasProgressPercent)
+            {
+                <div class="ant-image-progress-rail" style="@($"--progress-percent:{ProgressPercentText}%")"></div>
+                <div class="ant-image-progress-indicator">@ProgressPercentText%</div>
+            }
+            else if (Placeholder != null)
+            {
+                @Placeholder
+            }
         </div>
-    }
+    </div>
+}
+else
+{
+    <div class="@ClassMapper.Class" style="@_wrapperStyle" id="@Id"
+         role="@(Preview ? "button" : null)" tabindex="@(Preview ? "0" : null)" @ref="Ref">
+        <img alt="@Alt" class="ant-image-img" src="@Src" style="@Style"
+             @onerror="HandleOnError"
+             @onloadstart="HandleOnLoadStart"
+             @onload="HandleOnLoad"
+		     @onclick="OnClick"/>
 
-    @if (_loaded && !_isError && Preview)
-    {
-        <div class="ant-image-mask" @onclick="OnMaskClick" @onclick:stopPropagation>
-            <div class="ant-image-mask-info">
-                <Icon Type="eye" /> @Locale.Preview
+        @if (!_loaded && Placeholder != null)
+        {
+            <div aria-hidden="true" class="ant-image-placeholder">
+                @Placeholder
             </div>
-        </div>
-    }
-</div>
+        }
+
+        @if (Preview)
+        {
+            <div class="ant-image-cover ant-image-cover-center" @onclick="OnMaskClick" @onclick:stopPropagation>
+                @if (_loaded && !_isError)
+                {
+                    <div class="ant-image-mask-info">
+                        <Icon Type="eye" /> @Locale.Preview
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}

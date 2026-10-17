@@ -11,80 +11,80 @@
     {
       "key": "blossom",
       "path": "css/antd-v6/blossom.css",
-      "sha256": "11fdd7ac2aa1df3c3dc8b2f89c86eef27d1912793544f278ffbaaedd0741cfbe",
-      "bytes": 1018518
+      "sha256": "b457d49a20e976592121fff5742ee3b16cbf0b43a64b3c05352182771418b938",
+      "bytes": 1018290
     },
     {
       "key": "bootstrap",
       "path": "css/antd-v6/bootstrap.css",
-      "sha256": "8268904a44f306cc65b9fd4b4c04fa91b6c1c8260be0ad6fcd5619d39d5f7093",
-      "bytes": 1019020
+      "sha256": "eb689fea043c9985966d091db06c71ff3f98aa180e0d5d5e569cbea49c54e909",
+      "bytes": 1018789
     },
     {
       "key": "cartoon",
       "path": "css/antd-v6/cartoon.css",
-      "sha256": "7b884b216dcb1a6f596e4d4d7c172344fcfa62fe8e02b5503abf19f9a98ecc71",
-      "bytes": 1019192
+      "sha256": "21e340fd95e85606c02a78d802501c014cc65637b96ee9c5ea4a988d9e349e8e",
+      "bytes": 1018964
     },
     {
       "key": "dark",
       "path": "css/antd-v6/dark.css",
-      "sha256": "8148db4775a154145ca7402fda90580f7048b065e2fa80d4139d6a87e82aa9c9",
-      "bytes": 1021057
+      "sha256": "f2bfa291f1aa604f1419faa3920e5c69fea56d8a538e141f1a028d653e8ac82f",
+      "bytes": 1020829
     },
     {
       "key": "geek",
       "path": "css/antd-v6/geek.css",
-      "sha256": "2f6f72bb12486582fea3b6b0cccc1c6ebb53dc3d86afeadf6f44095fde358c25",
-      "bytes": 1019568
+      "sha256": "cbb0048e141239169b737e5bf232142cb93460e30c3cd9043c07b74e023367c4",
+      "bytes": 1019340
     },
     {
       "key": "glass",
       "path": "css/antd-v6/glass.css",
-      "sha256": "1fe2ae742692841fddd91ac85a2270938c85e7715613ba892e010e5cadef963d",
-      "bytes": 1020646
+      "sha256": "d459cadafc9be2d2f67a87361022fa1a8db7c86faf00cdf73af4466f8e69358b",
+      "bytes": 1020418
     },
     {
       "key": "illustration",
       "path": "css/antd-v6/illustration.css",
-      "sha256": "12a6f08af3e065be322223deb0ae0ae69e447223d53a03af4a9d1d771ac6fbac",
-      "bytes": 1018732
+      "sha256": "0c8898e12004fd0c8f797fa63138777a6b635be81047c2152929a9209c65a3a9",
+      "bytes": 1018504
     },
     {
       "key": "lark",
       "path": "css/antd-v6/lark.css",
-      "sha256": "116f6d14037ca368691f5cca4cdf409b3ea79adec7b73dc05fb6efe239e82709",
-      "bytes": 1018491
+      "sha256": "1f086fcfda7ba5412bb1d380f8ca879f947dda84f87059240dcade34f16d1c2c",
+      "bytes": 1018263
     },
     {
       "key": "light",
       "path": "css/antd-v6/light.css",
-      "sha256": "19f9112216066708c5124d7ab62d99014bc7aab319034e1270c6f5bb725d06bb",
-      "bytes": 1018590
+      "sha256": "ab1e175c66c9d0dddba20b221a83098557cdcfc174b0732e0c01df00de7886a1",
+      "bytes": 1018362
     },
     {
       "key": "mui",
       "path": "css/antd-v6/mui.css",
-      "sha256": "82ea5afeed5ced7de4f8adeda5c7c10ebaaeb672f06bf351bf068b6dce63665d",
-      "bytes": 1021272
+      "sha256": "c02993bc83068a3f069844ef8786a3f755006f2071cb21ba24fa0f42010f3aa5",
+      "bytes": 1021035
     },
     {
       "key": "serene",
       "path": "css/antd-v6/serene.css",
-      "sha256": "c633929ca5490615bf3f97c05ad15d79245361c39fd2f36a367c28610a1be179",
-      "bytes": 1017713
+      "sha256": "6cba6f83c9a2771abd3aa161a76f2db64c272753ad249da26e1d46fc5055bbac",
+      "bytes": 1017482
     },
     {
       "key": "shadcn",
       "path": "css/antd-v6/shadcn.css",
-      "sha256": "ddfe1c6770d94df55376e16fa32a283930c09fb4e7e3dbbb4a71357463c52006",
-      "bytes": 1017845
+      "sha256": "e8bb495a6008e58284bb1a22e7610ad9a6a2f392c6d807c53392519866246733",
+      "bytes": 1017611
     },
     {
       "key": "v4",
       "path": "css/antd-v6/v4.css",
-      "sha256": "2ba032544787a8e76af78e00ecbe3cf56ce8d04720476064ac8130c955ddd585",
-      "bytes": 1018487
+      "sha256": "e519e9c112b23079ee4ee00cf636df66d52ea02cb924235dec00163f2d9a3f8f",
+      "bytes": 1018259
     }
   ]
 }

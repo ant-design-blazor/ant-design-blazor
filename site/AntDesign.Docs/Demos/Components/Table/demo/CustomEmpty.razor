@@ -1,0 +1,29 @@
+﻿<Button Type="ButtonType.Primary" OnClick="ToggleData">Toggle Data</Button>
+<Table TItem="EmptyTableRow" DataSource="@_rows" Bordered>
+    <ColumnDefinitions>
+        <PropertyColumn Property="x => x.Name" Title="Name" />
+        <PropertyColumn Property="x => x.Age" Title="Age" />
+        <PropertyColumn Property="x => x.Address" Title="Address" />
+    </ColumnDefinitions>
+    <EmptyTemplate>
+        <Empty Description='@("No Data")'>
+            <Button Type="ButtonType.Primary" OnClick="ToggleData">Add sample data</Button>
+        </Empty>
+    </EmptyTemplate>
+</Table>
+
+@code {
+    private List<EmptyTableRow> _rows = CreateRows();
+
+    private void ToggleData() => _rows = _rows.Count > 0 ? [] : CreateRows();
+
+    private static List<EmptyTableRow> CreateRows() => Enumerable.Range(0, 5)
+        .Select(i => new EmptyTableRow { Name = $"Edward King {i}", Age = 32 + i, Address = $"London, Park Lane no. {i}" }).ToList();
+
+    private sealed class EmptyTableRow
+    {
+        public string Name { get; set; } = string.Empty;
+        public int Age { get; set; }
+        public string Address { get; set; } = string.Empty;
+    }
+}

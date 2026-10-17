@@ -185,6 +185,10 @@ namespace AntDesign
 
         private readonly string _sentinelEnd = IdPrefix + Guid.NewGuid().ToString();
 
+        private readonly string _titleId = IdPrefix + "title-" + Guid.NewGuid().ToString("N");
+
+        private bool HasTitle => !string.IsNullOrWhiteSpace(Config.Title) || Config.TitleTemplate != null;
+
         /// <summary>
         /// Tab start control id
         /// </summary>
@@ -386,6 +390,17 @@ namespace AntDesign
             var clsName = _maskHideClsName;
             clsName += _maskAnimationClsName;
             return clsName;
+        }
+
+        private string GetRootClass()
+        {
+            var className = $"{Config.PrefixCls}-root {(Visible ? $"{Config.PrefixCls}-open" : string.Empty)}";
+            if (Config.PrefixCls == "ant-modal")
+            {
+                className += " css-var-root ant-modal-css-var";
+            }
+
+            return className;
         }
 
         private string GetModalClsName()

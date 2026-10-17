@@ -37,6 +37,8 @@ namespace AntDesign
         [CascadingParameter(Name = "TreeSelect")]
         private ITreeSelect TreeSelect { get; set; }
 
+        internal bool IsInTreeSelect => TreeSelect != null;
+
         #region Fields
 
         /// <summary>
@@ -135,6 +137,7 @@ namespace AntDesign
         {
             ClassMapper
                 .Add("ant-tree")
+                .If("ant-select-tree", () => IsInTreeSelect)
                 .If("ant-tree-show-line", () => ShowLine)
                 .If("ant-tree-icon-hide", () => ShowIcon)
                 .If("ant-tree-block-node", () => BlockNode)

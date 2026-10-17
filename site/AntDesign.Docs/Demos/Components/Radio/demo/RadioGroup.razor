@@ -1,0 +1,10 @@
+<RadioGroup TValue="int" @bind-Value="_value" ButtonStyle="RadioButtonStyle.Outline">
+    <Radio RadioButton Value="1"><span style="display:flex; flex-direction:column; align-items:center; gap:8px"><Icon Type="@IconType.Outline.LineChart" Style="font-size:18px" />LineChart</span></Radio>
+    <Radio RadioButton Value="2"><span style="display:flex; flex-direction:column; align-items:center; gap:8px"><Icon Type="@IconType.Outline.DotChart" Style="font-size:18px" />DotChart</span></Radio>
+    <Radio RadioButton Value="3"><span style="display:flex; flex-direction:column; align-items:center; gap:8px"><Icon Type="@IconType.Outline.BarChart" Style="font-size:18px" />BarChart</span></Radio>
+    <Radio RadioButton Value="4"><span style="display:flex; flex-direction:column; align-items:center; gap:8px"><Icon Type="@IconType.Outline.PieChart" Style="font-size:18px" />PieChart</span></Radio>
+</RadioGroup>
+
+@code {
+    private int _value = 1;
+}

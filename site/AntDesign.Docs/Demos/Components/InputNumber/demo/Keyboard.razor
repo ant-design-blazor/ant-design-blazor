@@ -1,0 +1,8 @@
+<Space>
+    <AntDesign.InputNumber TValue="double" Min="1" Max="10" Keyboard="_keyboard" DefaultValue="3" />
+    <Checkbox @bind-Checked="_keyboard">Toggle keyboard</Checkbox>
+</Space>
+
+@code {
+    private bool _keyboard = true;
+}

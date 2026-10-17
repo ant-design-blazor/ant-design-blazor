@@ -1,0 +1,103 @@
+@using AntDesign.Filters
+@using AntDesign.TableModels
+
+<Table TItem="FilterRow" DataSource="VisibleRows" RowKey="row=>row.Key" OnChange="OnTableChange">
+    <ColumnDefinitions>
+        <PropertyColumn Property="row=>row.Name" Title="Name" Width="30%" Filterable Filtered="@(_selectedNames.Count > 0)">
+            <FilterDropdown Context="dropdown">
+                @{ dropdown.PreventClose(); }
+                <div style="padding:8px 8px 0;min-width:220px">
+                    <input class="ant-input-css-var ant-input ant-input-outlined" placeholder="Search in filters" @bind="_filterSearch" @bind:event="oninput" />
+                    @if (Matches("Joe"))
+                    {
+                        <div style="padding:6px 8px"><Checkbox Checked='@IsSelected("Joe")' CheckedChanged='@(value => ToggleName("Joe", value))'>Joe</Checkbox></div>
+                    }
+                    @if (MatchesCategory("Category 1", "Yellow", "Pink"))
+                    {
+                        <div style="padding:6px 8px"><Checkbox Checked='@IsCategorySelected("Yellow", "Pink")' CheckedChanged='@(value => ToggleCategory(new[] { "Yellow", "Pink" }, value))'>Category 1</Checkbox></div>
+                        @if (Matches("Yellow"))
+                        {
+                            <div style="padding:4px 8px 4px 28px"><Checkbox Checked='@IsSelected("Yellow")' CheckedChanged='@(value => ToggleName("Yellow", value))'>Yellow</Checkbox></div>
+                        }
+                        @if (Matches("Pink"))
+                        {
+                            <div style="padding:4px 8px 4px 28px"><Checkbox Checked='@IsSelected("Pink")' CheckedChanged='@(value => ToggleName("Pink", value))'>Pink</Checkbox></div>
+                        }
+                    }
+                    @if (MatchesCategory("Category 2", "Green", "Black"))
+                    {
+                        <div style="padding:6px 8px"><Checkbox Checked='@IsCategorySelected("Green", "Black")' CheckedChanged='@(value => ToggleCategory(new[] { "Green", "Black" }, value))'>Category 2</Checkbox></div>
+                        @if (Matches("Green"))
+                        {
+                            <div style="padding:4px 8px 4px 28px"><Checkbox Checked='@IsSelected("Green")' CheckedChanged='@(value => ToggleName("Green", value))'>Green</Checkbox></div>
+                        }
+                        @if (Matches("Black"))
+                        {
+                            <div style="padding:4px 8px 4px 28px"><Checkbox Checked='@IsSelected("Black")' CheckedChanged='@(value => ToggleName("Black", value))'>Black</Checkbox></div>
+                        }
+                    }
+                    <div style="display:flex;justify-content:space-between;padding:8px">
+                        <Button Size="ButtonSize.Small" OnClick="ClearNameFilter">Reset</Button>
+                        <Button Type="ButtonType.Primary" Size="ButtonSize.Small" OnClick="()=>ApplyNameFilter(dropdown)">OK</Button>
+                    </div>
+                </div>
+            </FilterDropdown>
+        </PropertyColumn>
+        <PropertyColumn Property="row=>row.Age" Title="Age" Sortable SorterCompare="(left,right)=>left-right" />
+        <PropertyColumn Property="row=>row.Address" Title="Address" Width="40%" Filters="_addressFilters" OnFilter="(value,address)=>address.StartsWith(value, StringComparison.OrdinalIgnoreCase)" />
+    </ColumnDefinitions>
+</Table>
+
+@code {
+    private readonly List<FilterRow> _data =
+    [
+        new("1", "John Brown", 32, "New York No. 1 Lake Park"),
+        new("2", "Jim Green", 42, "London No. 1 Lake Park"),
+        new("3", "Joe Black", 32, "Sidney No. 1 Lake Park"),
+        new("4", "Jim Red", 32, "London No. 2 Lake Park")
+    ];
+    private readonly TableFilter<string>[] _addressFilters =
+    [
+        new() { Text = "London", Value = "London" },
+        new() { Text = "New York", Value = "New York" }
+    ];
+    private List<FilterRow> _visibleRows;
+    private readonly HashSet<string> _selectedNames = new(StringComparer.Ordinal);
+    private string _filterSearch = "";
+    private IEnumerable<FilterRow> VisibleRows => _visibleRows ?? _data;
+
+    private bool Matches(string value) => string.IsNullOrWhiteSpace(_filterSearch) || value.Contains(_filterSearch, StringComparison.OrdinalIgnoreCase);
+    private bool MatchesCategory(string category, params string[] children) => Matches(category) || children.Any(Matches);
+    private bool IsSelected(string value) => _selectedNames.Contains(value);
+    private bool IsCategorySelected(params string[] children) => children.All(_selectedNames.Contains);
+    private void ToggleName(string value, bool selected)
+    {
+        if (selected) _selectedNames.Add(value);
+        else _selectedNames.Remove(value);
+    }
+    private void ToggleCategory(string[] children, bool selected)
+    {
+        foreach (var child in children) ToggleName(child, selected);
+    }
+    private void ClearNameFilter()
+    {
+        _selectedNames.Clear();
+        _visibleRows = null;
+    }
+    private void ApplyNameFilter(TableFilterDropdownContext dropdown)
+    {
+        _visibleRows = _selectedNames.Count == 0
+            ? null
+            : _data.Where(row => _selectedNames.Any(value => row.Name.Contains(value, StringComparison.OrdinalIgnoreCase))).ToList();
+        dropdown.FilterClose();
+    }
+    private void OnTableChange(QueryModel<FilterRow> query)
+    {
+        var rows = _selectedNames.Count == 0
+            ? _data.AsQueryable()
+            : _data.Where(row => _selectedNames.Any(value => row.Name.Contains(value, StringComparison.OrdinalIgnoreCase))).AsQueryable();
+        _visibleRows = query.ExecuteQuery(rows).ToList();
+    }
+
+    private sealed record FilterRow(string Key, string Name, int Age, string Address);
+}

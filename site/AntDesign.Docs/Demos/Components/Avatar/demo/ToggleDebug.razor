@@ -1,0 +1,29 @@
+<Space Wrap>
+    <Button OnClick="ToggleVisibility">Toggle Avatar visibility</Button>
+    <Button OnClick="ToggleSize">Toggle Avatar size</Button>
+    <Button OnClick="ToggleScale">Change Avatar scale</Button>
+</Space>
+
+<div style="text-align:center; transform:scale(@scale); margin-top:24px;">
+    <Avatar Size="@avatarSize" Style="@firstAvatarStyle">Avatar</Avatar>
+    <Avatar Size="@avatarSize" Src="invalid" Style="@secondAvatarStyle">Invalid</Avatar>
+    <div style="@visibilityStyle">
+        <Avatar Size="@avatarSize" Style="background:#7265e6;">Avatar</Avatar>
+        <Avatar Size="@avatarSize" Src="invalid" Style="background:#00a2ae;">Invalid</Avatar>
+    </div>
+</div>
+
+@code {
+    private bool isVisible;
+    private int sizeIndex = 2;
+    private int scale = 1;
+
+    private string avatarSize => sizeIndex switch { 0 => "small", 1 => "32px", _ => "large" };
+    private string visibilityStyle => isVisible ? null : "display:none;";
+    private string firstAvatarStyle => $"background:#7265e6;{visibilityStyle}";
+    private string secondAvatarStyle => $"background:#00a2ae;{visibilityStyle}";
+
+    private void ToggleVisibility() => isVisible = !isVisible;
+    private void ToggleSize() => sizeIndex = (sizeIndex + 1) % 3;
+    private void ToggleScale() => scale = scale == 1 ? 2 : 1;
+}

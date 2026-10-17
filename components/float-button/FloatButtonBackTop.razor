@@ -1,0 +1,9 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+@if (!_hidden)
+{
+    <FloatButton Icon="@Icon" Type="@Type" Shape="@Shape" Style="@ProgressStyle"
+                 Class="@($"{Class} {(ShowProgress ? "ant-float-btn-progress" : string.Empty)}")"
+                 Tooltip="@Tooltip" Disabled="@Disabled" OnClick="OnButtonClick" />
+}

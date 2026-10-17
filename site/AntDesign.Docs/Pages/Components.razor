@@ -12,6 +12,7 @@
 @page "/{locale}/charts"
 @page "/{locale}/experimental/{name}"
 @page "/{locale}/experimental"
+@using AntDesign.Docs.Components
 <section class="main-container main-container-component @_styles["root"]">
     <article>
 
@@ -118,13 +119,13 @@
                         var leftList = _demos.Where((_, i) => i % 2 == 0);
                         var rightList = _demos.Where((_, i) => i % 2 != 0);
 
-                        <AntDesign.Col Md="12" Sm="24" Class="@($"code-boxes-col-2-1 {_styles["demoGridColumn"]}")">
+                        <AntDesign.Col Lg="12" Md="24" Sm="24" Class="@($"code-boxes-col-2-1 {_styles["demoGridColumn"]}")">
                             @foreach (var demo in leftList)
                             {
                                 <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
                             }
                         </AntDesign.Col>
-                        <AntDesign.Col Md="12" Sm="24" Class="@($"code-boxes-col-2-1 {_styles["demoGridColumn"]}")">
+                        <AntDesign.Col Lg="12" Md="24" Sm="24" Class="@($"code-boxes-col-2-1 {_styles["demoGridColumn"]}")">
                             @foreach (var demo in rightList)
                             {
                                 <CodeBox CodeExpand="_expandAllCode" Demo="demo" @key="demo.Type" ComponentName="@_demoComponent.Title"></CodeBox>
@@ -141,6 +142,44 @@
             <section class="markdown api-container">
                 @((MarkupString)_demoComponent.Faq)
             </section>
+
+            @if (SemanticDomCatalog.Get(SemanticComponentKey).Count > 0)
+            {
+                <section class="markdown api-container semantic-dom-preview">
+                    <h2>@(CurrentLanguage == "zh-CN" ? "语义 DOM" : "Semantic DOM")</h2>
+                    <SemanticDomPreview Component="@SemanticComponentKey">
+                        @if (SemanticComponentKey == "message")
+                        {
+                            <MessageSemanticPreview />
+                        }
+                        else if (SemanticComponentKey == "cascader")
+                        {
+                            <CascaderSemanticPreview />
+                        }
+                        else if (SemanticComponentKey == "notification")
+                        {
+                            <NotificationSemanticPreview />
+                        }
+                        else if (SemanticPreviewType is { } previewType)
+                        {
+                            <DynamicComponent Type="previewType" />
+                        }
+                    </SemanticDomPreview>
+                    @if (SemanticComponentKey == "float-button")
+                    {
+                        <SemanticDomPreview Component="float-button-group">
+                            <div style="min-height:220px;display:grid;place-items:center">
+                                <FloatButtonGroup Trigger="FloatButtonGroupTrigger.Hover" Open="true"
+                                                  Style="position:relative;inset:auto;padding:12px">
+                                    <FloatButton Icon="alert" />
+                                    <FloatButton Icon="bug" />
+                                    <FloatButton Icon="bulb" />
+                                </FloatButtonGroup>
+                            </div>
+                        </SemanticDomPreview>
+                    }
+                </section>
+            }
         }
         else
         {
@@ -190,7 +229,90 @@
             },
             ["& .markdown.api-container hr"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = "12px 0" },
             ["[data-theme='dark'] & .markdown.api-container table tbody tr:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#262626" },
-            [".ant-row-rtl & #components-tooltip-demo-placement .code-box-demo, .ant-row-rtl & #components-popover-demo-placement .code-box-demo, .ant-row-rtl & #components-popconfirm-demo-placement .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["direction"] = "ltr" }
+            [".ant-row-rtl & #components-tooltip-demo-placement .code-box-demo, .ant-row-rtl & #components-popover-demo-placement .code-box-demo, .ant-row-rtl & #components-popconfirm-demo-placement .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["direction"] = "ltr" },
+            ["& .ant-page-header"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["position"] = "relative",
+                ["boxSizing"] = "border-box",
+                ["padding"] = "var(--ant-padding-md, 16px) var(--ant-padding-lg, 24px)",
+                ["color"] = "var(--ant-color-text, rgba(0, 0, 0, 0.88))",
+                ["backgroundColor"] = "var(--ant-color-bg-container, #fff)"
+            },
+            ["& .ant-page-header-ghost"] = new System.Collections.Generic.Dictionary<string, object> { ["backgroundColor"] = "transparent" },
+            ["& .ant-page-header.has-breadcrumb"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingTop"] = "var(--ant-padding-sm, 12px)" },
+            ["& .ant-page-header.has-footer"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingBottom"] = 0 },
+            ["& .ant-page-header-heading"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["display"] = "flex",
+                ["alignItems"] = "center",
+                ["justifyContent"] = "space-between",
+                ["minWidth"] = 0
+            },
+            ["& .ant-page-header-heading-left"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["display"] = "flex",
+                ["alignItems"] = "center",
+                ["minWidth"] = 0,
+                ["overflow"] = "hidden"
+            },
+            ["& .ant-page-header-back"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["marginInlineEnd"] = "var(--ant-margin-md, 20px)",
+                ["fontSize"] = 16,
+                ["lineHeight"] = 1
+            },
+            ["& .ant-page-header-back-button"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["color"] = "var(--ant-color-text, rgba(0, 0, 0, 0.88))",
+                ["cursor"] = "pointer"
+            },
+            ["& .ant-page-header-back-button:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-color-primary-hover, #4096ff)" },
+            ["& .ant-page-header-heading-title"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["margin"] = "0 var(--ant-margin-sm, 12px) 0 0",
+                ["color"] = "var(--ant-color-text-heading, rgba(0, 0, 0, 0.88))",
+                ["fontWeight"] = "var(--ant-font-weight-strong, 600)",
+                ["fontSize"] = "var(--ant-font-size-heading-4, 20px)",
+                ["lineHeight"] = "var(--ant-control-height, 32px)",
+                ["overflow"] = "hidden",
+                ["whiteSpace"] = "nowrap",
+                ["textOverflow"] = "ellipsis"
+            },
+            ["& .ant-page-header-heading-sub-title"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["marginInlineEnd"] = "var(--ant-margin-sm, 12px)",
+                ["color"] = "var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65))",
+                ["fontSize"] = "var(--ant-font-size, 14px)",
+                ["lineHeight"] = "var(--ant-line-height, 1.5714)",
+                ["overflow"] = "hidden",
+                ["whiteSpace"] = "nowrap",
+                ["textOverflow"] = "ellipsis"
+            },
+            ["& .ant-page-header-heading-tags .ant-tag"] = new System.Collections.Generic.Dictionary<string, object> { ["marginInlineEnd"] = "var(--ant-margin-xs, 8px)" },
+            ["& .ant-page-header-heading-extra"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["marginBlock"] = "calc(var(--ant-margin-xs, 8px) / 2)",
+                ["whiteSpace"] = "nowrap"
+            },
+            ["& .ant-page-header-heading-extra > *"] = new System.Collections.Generic.Dictionary<string, object> { ["whiteSpace"] = "unset" },
+            ["& .ant-page-header-content"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingTop"] = "var(--ant-padding-sm, 12px)" },
+            ["& .ant-page-header-footer"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["marginTop"] = "var(--ant-margin-md, 20px)"
+            },
+            ["& .ant-page-header-footer .ant-tabs-nav"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = 0 },
+            ["& .ant-page-header-footer .ant-tabs-nav::before"] = new System.Collections.Generic.Dictionary<string, object> { ["border"] = "none" },
+            ["& .ant-page-header-footer .ant-tabs-tab"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["paddingBlock"] = "var(--ant-padding-xs, 8px)",
+                ["fontSize"] = "var(--ant-font-size-lg, 16px)"
+            },
+            ["& .ant-page-header-compact .ant-page-header-heading"] = new System.Collections.Generic.Dictionary<string, object> { ["flexWrap"] = "wrap" },
+            ["@media (max-width: 576px)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["& .ant-page-header-heading"] = new System.Collections.Generic.Dictionary<string, object> { ["flexWrap"] = "wrap" },
+                ["& .ant-page-header-heading-extra"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%", ["whiteSpace"] = "normal" }
+            }
         },
         ["demoGridRow"] = new System.Collections.Generic.Dictionary<string, object> { ["marginLeft"] = -8, ["marginRight"] = -8 },
         ["demoGridColumn"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingLeft"] = 8, ["paddingRight"] = 8 },

@@ -172,12 +172,36 @@ function loadReactRuntime(root) {
 function renderCss(runtime, theme, includes) {
   const algorithmNames = Array.isArray(theme.algorithm) ? theme.algorithm : [theme.algorithm];
   const algorithm = algorithmNames.map((name) => runtime.antd.theme[name]);
-  const themeConfig = { hashed: false, algorithm, token: theme.token, components: theme.components };
+  // React falls back to useId() when cssVar.key is omitted. That makes the
+  // extracted selector vary with the render tree (for example css-var-_R_0_).
+  // Keep the React extraction deterministic, then normalize this internal key
+  // to the Blazor theme ancestor at the artifact boundary below.
+  const themeConfig = {
+    hashed: false,
+    cssVar: { key: 'css-var-root' },
+    algorithm,
+    token: theme.token,
+    components: theme.components,
+  };
   return runtime.extractStyle({
     includes,
     antdInstance: runtime.antd,
     customTheme: (node) => runtime.React.createElement(runtime.antd.ConfigProvider, { theme: themeConfig }, node),
   });
+}
+
+// React's static extractor uses an internal css-in-js scope such as
+// `css-var-_R_0_`. That identifier is an implementation detail of the React
+// render process and is not a portable Blazor contract. The Blazor runtime
+// provides the stable `.ant-theme` ancestor through ConfigProvider instead.
+// Keep the React baseline untouched for exact upstream comparisons, but
+// normalize the CSS artifact that is shipped to the Blazor application.
+export function normalizeBlazorThemeScope(css) {
+  return css
+    .replace(/\.css-var-root\.(?=ant-)/g, '.ant-theme .')
+    .replace(/\.css-var-root/g, '.ant-theme')
+    .replace(/\.css-var-_R_[A-Za-z0-9]+_\.(?=ant-)/g, '.ant-theme .')
+    .replace(/\.css-var-_R_[A-Za-z0-9]+_/g, '.ant-theme');
 }
 
 export async function generateReactCssBaseline({ antdPath, output, docsThemeOutput }) {
@@ -216,7 +240,7 @@ export async function generateReactCssBaseline({ antdPath, output, docsThemeOutp
   const baseline = createBaseline({ upstream, generator, inputDigest: sha256(JSON.stringify({ revision, themes, docsThemeModes, components })), artifacts });
   await writeBaseline(target, baseline, cssById);
   await mkdir(join(target, 'themes'), { recursive: true });
-  for (const [theme, css] of themeFullCss) await writeFile(join(target, 'themes', `${theme}.css`), css, 'utf8');
+  for (const [theme, css] of themeFullCss) await writeFile(join(target, 'themes', `${theme}.css`), normalizeBlazorThemeScope(css), 'utf8');
   await writeFile(join(target, 'components.json'), `${JSON.stringify({ total: components.length, generated: available.length, unsupported }, null, 2)}\n`, 'utf8');
   await writeFile(join(target, 'themes.json'), `${JSON.stringify(themes, null, 2)}\n`, 'utf8');
   await writeFile(join(target, 'docs-theme-modes.json'), `${JSON.stringify(docsThemeModes, null, 2)}\n`, 'utf8');
@@ -224,9 +248,9 @@ export async function generateReactCssBaseline({ antdPath, output, docsThemeOutp
     const destination = resolve(docsThemeOutput);
     await mkdir(destination, { recursive: true });
     for (const theme of docsThemeModes) {
-      await writeFile(join(destination, `${theme.key}.css`), themeFullCss.get(theme.key), 'utf8');
+      await writeFile(join(destination, `${theme.key}.css`), normalizeBlazorThemeScope(themeFullCss.get(theme.key)), 'utf8');
     }
-    await writeFile(join(destination, 'docs-theme-modes.manifest.json'), `${JSON.stringify({ upstream, generator, modes: docsThemeModes.map(({ key }) => ({ key, file: `${key}.css`, sha256: sha256(themeFullCss.get(key)) })) }, null, 2)}\n`, 'utf8');
+    await writeFile(join(destination, 'docs-theme-modes.manifest.json'), `${JSON.stringify({ upstream, generator, scope: 'ant-theme', modes: docsThemeModes.map(({ key }) => ({ key, file: `${key}.css`, sha256: sha256(normalizeBlazorThemeScope(themeFullCss.get(key))) })) }, null, 2)}\n`, 'utf8');
   }
   return { output: target, revision, version: packageJson.version, components: components.length, generatedComponents: available.length, themes: themes.length, docsThemeModes: docsThemeModes.length, artifacts: artifacts.length, unsupported };
 }

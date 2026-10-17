@@ -1,0 +1,25 @@
+@using AntDesign
+@using Microsoft.AspNetCore.Components
+
+<Flex Vertical="true" Gap="FlexGap.Middle">
+    <Steps Type="StepsType.Panel" Current="@_current" OnChange="OnChange">
+        <Step Title="Step 1" Subtitle="00:00" Description="This is a content." />
+        <Step Title="Step 2" Description="This is a content." Status="StepsStatus.Error" />
+        <Step Title="Step 3" Description="This is a content." />
+    </Steps>
+    <Steps Type="StepsType.Panel" Current="@_current" OnChange="OnChange" Size="StepsSize.Small" Outlined="true">
+        <Step Title="Step 1" Subtitle="00:00" Description="This is a content." />
+        <Step Title="Step 2" Description="This is a content." Status="StepsStatus.Error" />
+        <Step Title="Step 3" Description="This is a content." />
+    </Steps>
+</Flex>
+
+@code {
+    private int _current;
+
+    private Task OnChange(int current)
+    {
+        _current = current;
+        return Task.CompletedTask;
+    }
+}

@@ -1,0 +1,19 @@
+<div>
+    <Switch Checked="@_singleColumn" OnChange="ToggleColumn" />
+    <div style="box-shadow: 0 0 5px green; margin-top: 8px;">
+        <Space Wrap Size="SpaceSize.Small" Style="@SpaceStyle">
+            <SpaceItem><div style="width: 150px; height: 100px; background: red;"></div></SpaceItem>
+            <SpaceItem><div style="width: 150px; height: 100px; background: red;"></div></SpaceItem>
+            <SpaceItem><div style="width: 150px; height: 100px; background: red;"></div></SpaceItem>
+            <SpaceItem><div style="width: 150px; height: 100px; background: red;"></div></SpaceItem>
+        </Space>
+    </div>
+</div>
+
+@code {
+    private bool _singleColumn;
+
+    private string SpaceStyle => $"width: {(_singleColumn ? 307 : 310)}px; background: blue;";
+
+    private void ToggleColumn(bool value) => _singleColumn = value;
+}

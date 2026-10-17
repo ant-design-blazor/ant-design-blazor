@@ -1,0 +1,16 @@
+@{
+    var classes = new Dictionary<string, string>
+    {
+        ["root"] = "button-semantic-preview-root",
+        ["content"] = "button-semantic-preview-content",
+        ["icon"] = "button-semantic-preview-icon"
+    };
+}
+
+<style>
+    .button-semantic-preview-root { border-radius: 6px; }
+    .button-semantic-preview-content { letter-spacing: .02em; }
+    .button-semantic-preview-icon { color: #1677ff; }
+</style>
+
+<Button Type="ButtonType.Primary" Icon="@IconType.Outline.AntDesign" ClassNames="classes">Ant Design</Button>

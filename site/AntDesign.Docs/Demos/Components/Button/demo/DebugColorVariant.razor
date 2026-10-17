@@ -1,0 +1,70 @@
+@using AntDesign.Theming
+
+<style>
+    .button-debug-color .custom-primary { background: #5794f7; border-color: blue; color: wheat; }
+    .button-debug-color .custom-default,
+    .button-debug-color .custom-dashed { background: #f5f5f5; border-color: gray; color: #313030; }
+    .button-debug-color .custom-text { color: gray; }
+    .button-debug-color .custom-link { color: blue; }
+    .button-debug-color .legacy-override .ant-btn-primary { color: #ec5b56; }
+    .button-debug-color .legacy-override .ant-btn-default { color: orange; }
+    .button-debug-color .legacy-override .ant-btn-dashed { color: #3976f6; }
+    .button-debug-color .legacy-override .ant-btn-text { color: green; }
+    .button-debug-color .legacy-override .ant-btn-link { color: #0e98aa; }
+</style>
+
+<Flex Vertical Gap="FlexGap.Small" Class="button-debug-color">
+    <Flex Gap="FlexGap.Small">
+        <ConfigProvider ThemeConfig="_linkTheme"><Button Type="ButtonType.Link">Link Button (custom link token)</Button></ConfigProvider>
+        <Button Type="ButtonType.Link">Link Button</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Button Type="ButtonType.Primary" Class="custom-primary">Primary Button</Button>
+        <Button Type="ButtonType.Default" Class="custom-default">Default Button</Button>
+        <Button Type="ButtonType.Dashed" Class="custom-dashed">Dashed Button</Button>
+        <Button Type="ButtonType.Text" Class="custom-text">Text Button</Button>
+        <Button Type="ButtonType.Link" Class="custom-link">Link Button</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap" Class="legacy-override">
+        <Button Type="ButtonType.Primary">Legacy Primary</Button>
+        <Button Type="ButtonType.Default">Legacy Default</Button>
+        <Button Type="ButtonType.Dashed">Legacy Dashed</Button>
+        <Button Type="ButtonType.Text">Legacy Text</Button>
+        <Button Type="ButtonType.Link">Legacy Link</Button>
+    </Flex>
+    <ConfigProvider ThemeConfig="_theme">
+        <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+            <Button Type="ButtonType.Primary">Primary</Button>
+            <Button ButtonColor="ButtonColor.Primary" Variant="ButtonVariant.Solid">Solid primary</Button>
+            <Button ButtonColor="ButtonColor.Danger" Variant="ButtonVariant.Solid">Solid danger</Button>
+            <Button>Default</Button>
+            <Button Variant="ButtonVariant.Outlined">Outlined</Button>
+            <Button Type="ButtonType.Dashed">Dashed</Button>
+        </Flex>
+    </ConfigProvider>
+</Flex>
+
+@code {
+    private static readonly ThemeConfig _linkTheme = CreateTheme("Global", "colorLink", "#ff0000");
+
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Button"] = new Dictionary<string, string>
+            {
+                ["defaultHoverBg"] = "orange",
+                ["defaultActiveBg"] = "blue",
+                ["primaryColor"] = "pink",
+                ["dangerColor"] = "green"
+            }
+        }
+    };
+
+    private static ThemeConfig CreateTheme(string scope, string token, string value)
+    {
+        var theme = new ThemeConfig { ThemeScope = $"button-debug-{scope.ToLowerInvariant()}" };
+        theme.Token[token] = value;
+        return theme;
+    }
+}

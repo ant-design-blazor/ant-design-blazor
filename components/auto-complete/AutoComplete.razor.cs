@@ -42,6 +42,30 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>Show a clear control when the input has a value.</summary>
+        [Parameter]
+        public bool AllowClear { get; set; }
+
+        /// <summary>Controls the dropdown visibility when specified; otherwise visibility is managed internally.</summary>
+        [Parameter]
+        public bool? Open { get; set; }
+
+        /// <summary>Visual input variant: outlined, filled, borderless, or underlined.</summary>
+        [Parameter]
+        public string Variant { get; set; } = "outlined";
+
+        /// <summary>Validation status shown on the autocomplete control.</summary>
+        [Parameter]
+        public FormValidateStatus Status { get; set; } = FormValidateStatus.Default;
+
+        /// <summary>Semantic class names for the root and popup nodes.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Semantic inline styles for the root and popup nodes.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
         /// <summary>
         /// Make first option active by default or not
         /// </summary>
@@ -258,6 +282,53 @@ namespace AntDesign
 
         private bool _isOpened = false;
 
+        internal string RootClass
+        {
+            get
+            {
+                var variant = string.IsNullOrWhiteSpace(Variant) ? "outlined" : Variant.ToLowerInvariant();
+                var status = Status != FormValidateStatus.Default ? Status : FormItem?.ValidateStatus ?? FormValidateStatus.Default;
+                var classes = $"ant-select ant-select-auto-complete ant-select-{variant}";
+                if (Disabled) classes += " ant-select-disabled";
+                if (status != FormValidateStatus.Default) classes += $" ant-select-status-{status.ToString().ToLowerInvariant()}";
+                return SemanticClass("root", classes);
+            }
+        }
+
+        internal string RootStyle => SemanticStyle("root", Style);
+        internal string PopupClass => SemanticClass("popup", OverlayClassName);
+        internal string PopupStyle => SemanticStyle("popup", OverlayStyle);
+
+        internal string InputStatusClass
+        {
+            get
+            {
+                var status = Status != FormValidateStatus.Default ? Status : FormItem?.ValidateStatus ?? FormValidateStatus.Default;
+                var baseClass = status == FormValidateStatus.Default ? null : $"ant-input-status-{status.ToString().ToLowerInvariant()}";
+                return SemanticClass("input", baseClass);
+            }
+        }
+
+        internal string InputStyle => SemanticStyle("input", null);
+
+        internal bool InputBordered => !string.Equals(Variant, "borderless", StringComparison.OrdinalIgnoreCase)
+            && !string.Equals(Variant, "underlined", StringComparison.OrdinalIgnoreCase);
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return customStyle;
+            if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {customStyle}";
+        }
+
         void IAutoCompleteRef.SetInputComponent(IAutoCompleteInput input)
         {
             _inputComponent = input;
@@ -335,6 +406,14 @@ namespace AntDesign
             await SetOverlayWidth();
             await DomEventListener.AddResizeObserver(_overlayTrigger.RefBack.Current, UpdateWidth);
             await base.OnFirstAfterRenderAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (!Open.HasValue || _overlayTrigger == null || Open.Value == _isOpened) return;
+            if (Open.Value) await OpenPanel();
+            else await ClosePanel();
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)

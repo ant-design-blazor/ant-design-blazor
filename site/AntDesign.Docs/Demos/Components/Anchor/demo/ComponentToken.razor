@@ -1,0 +1,30 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;">
+        <div>
+            <div id="anchor-token-1" style="height:140px;background:rgba(255,0,0,.04)"></div>
+            <div id="anchor-token-2" style="height:140px;background:rgba(0,255,0,.04)"></div>
+            <div id="anchor-token-3" style="height:140px;background:rgba(0,0,255,.04)"></div>
+        </div>
+        <Anchor Affix="false">
+            <AnchorLink Href="#anchor-token-1" Title="Part 1" />
+            <AnchorLink Href="#anchor-token-2" Title="Part 2" />
+            <AnchorLink Href="#anchor-token-3" Title="Part 3" />
+        </Anchor>
+    </div>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Anchor"] = new Dictionary<string, string>
+            {
+                ["linkPaddingBlock"] = "24px",
+                ["linkPaddingInlineStart"] = "24px"
+            }
+        }
+    };
+}

@@ -8,16 +8,17 @@
     "name": "@ant-design-blazor/react-css-baseline",
     "version": "0.1.0"
   },
+  "scope": "ant-theme",
   "modes": [
     {
       "key": "light-compact",
       "file": "light-compact.css",
-      "sha256": "c3c47a419b05f1a71714ade157ed4a5936e79ec36ccaf25981487b4ccb1badf7"
+      "sha256": "b335f304d00d16905511c286bafb4aa28eac64ac2cab180de74f85a915f57b8c"
     },
     {
       "key": "dark-compact",
       "file": "dark-compact.css",
-      "sha256": "1bdffe7704ca6106c15643846ae5d1d5ed132cf3046f24e8b8aa1055ff2cc191"
+      "sha256": "1a1c1969c4da6eb6e5788a0df1493e2c204b57a9cddf38881aec59776fa1e99a"
     }
   ]
 }

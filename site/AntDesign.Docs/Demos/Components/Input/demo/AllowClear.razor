@@ -1,0 +1,11 @@
+<div>
+    <Input @bind-Value="value" Placeholder="Input with clear icon" AllowClear TValue="string" />
+    <br />
+    <br />
+    <TextArea @bind-Value="text" Placeholder="Textarea with clear icon" AllowClear />
+</div>
+
+@code {
+    private string value = "Clear this input";
+    private string text = "Clear this text";
+}

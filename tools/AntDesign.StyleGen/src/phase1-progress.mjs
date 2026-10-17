@@ -2,6 +2,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { getSemanticCatalogCoverage } from './semantic-catalog-coverage.mjs';
 
 const repoRoot = process.argv[2] ?? process.cwd();
 const output = process.argv[3] ?? path.join(repoRoot, 'docs/antd-v6/phase1-progress.json');
@@ -10,16 +11,13 @@ const countFiles = (relative, pattern) => fs.readdirSync(path.join(repoRoot, rel
 
 const inventory = readJson('docs/antd-v6/semantic-dom-inventory.json');
 const styleIr = readJson('.vibedev/generated/antd-v6/ir/style-ir.json');
-const semanticCatalog = fs.readFileSync(path.join(repoRoot, 'site/AntDesign.Docs/Services/SemanticDomGeneratedCatalog.cs'), 'utf8');
-const catalogComponents = new Set([...semanticCatalog.matchAll(/^                \["([^"]+)"\]/gm)].map(match => match[1]));
+const semanticCatalog = readJson('docs/antd-v6/semantic-dom-catalog.json');
+const algorithmSource = fs.readFileSync(path.join(repoRoot, 'components/theming/TokenCompiler.cs'), 'utf8');
+const algorithmNames = ['DefaultThemeAlgorithm', 'DarkThemeAlgorithm', 'CompactThemeAlgorithm'];
+const implementedAlgorithms = algorithmNames.filter(name => new RegExp(`public sealed class ${name}\\b`).test(algorithmSource));
 const semanticEntries = inventory.entries ?? [];
 const structureMigrated = semanticEntries.filter(entry => entry.migrationStatus === 'structure-migrated');
-const allDumiSemanticPaths = new Set(semanticEntries.flatMap(entry => (entry.dumiSemanticSources ?? []).flatMap(source => source.semanticPaths ?? [])));
-const migratedDumiSemanticPaths = new Set(structureMigrated.flatMap(entry => (entry.classNameMapping ?? [])
-  .filter(mapping => mapping.status === 'structure-migrated-pending-semantic-injection')
-  .map(mapping => mapping.semanticPath)
-  .filter(semanticPath => allDumiSemanticPaths.has(semanticPath))));
-const semanticPathsMigrated = migratedDumiSemanticPaths.size;
+const semanticCoverage = getSemanticCatalogCoverage(inventory, semanticCatalog);
 const metric = (total, migrated) => ({ total, migrated, pending: Math.max(total - migrated, 0) });
 
 const report = {
@@ -32,11 +30,14 @@ const report = {
   css: {
     components: metric(inventory.scope.cssComponents, Array.isArray(styleIr.styles) ? styleIr.styles.length : 0),
     themes: metric(13, countFiles('components/wwwroot/css/antd-v6', /^.+\.css$/)),
+    algorithms: metric(3, implementedAlgorithms.length),
   },
   semanticDom: {
-    catalogComponents: metric(new Set(semanticEntries.map(entry => entry.component)).size, [...new Set(semanticEntries.map(entry => entry.component))].filter(component => catalogComponents.has(component)).length),
-    definitions: metric(inventory.scope.semanticDefinitions, structureMigrated.length),
-    paths: metric(inventory.scope.dumiSemanticPaths, semanticPathsMigrated),
+    catalogComponents: metric(semanticCoverage.catalogComponents.total, semanticCoverage.catalogComponents.migrated),
+    definitions: metric(semanticCoverage.definitions.total, semanticCoverage.definitions.migrated),
+    apiSlots: metric(semanticCoverage.apiSlots.total, semanticCoverage.apiSlots.migrated),
+    dumiPaths: metric(semanticCoverage.dumiPaths.total, semanticCoverage.dumiPaths.migrated),
+    structureMigration: metric(inventory.scope.semanticDefinitions, structureMigrated.length),
   },
   documentation: {
     semanticPreview: metric(1, fs.existsSync(path.join(repoRoot, 'site/AntDesign.Docs/Components/SemanticDomPreview.razor')) ? 1 : 0),

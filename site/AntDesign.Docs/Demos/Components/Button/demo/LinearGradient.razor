@@ -1,0 +1,25 @@
+<div class="button-gradient-demo">
+    <Space>
+        <Button Type="ButtonType.Primary" Size="ButtonSize.Large" Icon="@IconType.Outline.AntDesign">Gradient Button</Button>
+        <Button Size="ButtonSize.Large">Button</Button>
+    </Space>
+</div>
+
+<style>
+    .button-gradient-demo .ant-btn-primary:not([disabled]):not(.ant-btn-dangerous) {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+    }
+    .button-gradient-demo .ant-btn-primary:not([disabled]):not(.ant-btn-dangerous)::before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        background: linear-gradient(135deg, #6253e1, #04befe);
+        opacity: 1;
+        transition: opacity var(--ant-motion-duration-slow);
+    }
+    .button-gradient-demo .ant-btn-primary:not([disabled]):not(.ant-btn-dangerous) > span { position: relative; }
+    .button-gradient-demo .ant-btn-primary:not([disabled]):not(.ant-btn-dangerous):hover::before { opacity: 0; }
+</style>

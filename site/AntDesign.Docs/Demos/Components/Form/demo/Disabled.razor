@@ -1,0 +1,21 @@
+<Checkbox @bind-Value="_disabled">Form disabled</Checkbox>
+<div class="ant-form ant-form-horizontal" style="max-width:600px;">
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>Checkbox</label></div><div class="ant-form-item-control"><Checkbox Disabled="@_disabled">Checkbox</Checkbox></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>Radio</label></div><div class="ant-form-item-control"><RadioGroup Disabled="@_disabled" @bind-Value="_radio"><Radio Value='@("apple")'>Apple</Radio><Radio Value='@("pear")'>Pear</Radio></RadioGroup></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>Input</label></div><div class="ant-form-item-control"><Input TValue="string" Disabled="@_disabled" Placeholder="Input" /></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>Select</label></div><div class="ant-form-item-control"><Select TItemValue="string" TItem="string" Disabled="@_disabled" Placeholder="Demo"><SelectOptions><SelectOption TItemValue="string" TItem="string" Value='@("demo")' Label="Demo" /></SelectOptions></Select></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>DatePicker</label></div><div class="ant-form-item-control"><DatePicker TValue="DateTime?" Disabled="@_disabled" /></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>InputNumber</label></div><div class="ant-form-item-control"><AntDesign.InputNumber Disabled="@_disabled" Min="1" Max="10" /></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>TextArea</label></div><div class="ant-form-item-control"><TextArea Rows="3" Disabled="@_disabled" /></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>Switch</label></div><div class="ant-form-item-control"><Switch Disabled="@_disabled" /></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>Button</label></div><div class="ant-form-item-control"><Button Disabled="@_disabled">Button</Button></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>Slider</label></div><div class="ant-form-item-control"><Slider TValue="double" Disabled="@_disabled" DefaultValue="35" /></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>ColorPicker</label></div><div class="ant-form-item-control"><ColorPicker Value="#1677ff" Disabled="@_disabled" /></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>Rate</label></div><div class="ant-form-item-control"><Rate Disabled="@_disabled" /></div></div>
+    <div class="ant-form-item"><div class="ant-form-item-label"><label>Mentions</label></div><div class="ant-form-item-control"><fieldset disabled="@_disabled" style="border:0;padding:0;margin:0"><Mentions /></fieldset></div></div>
+</div>
+
+@code {
+    private bool _disabled = true;
+    private string _radio = "apple";
+}

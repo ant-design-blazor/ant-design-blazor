@@ -1,9 +1,10 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<CascadingValue Value="this">
-    <div class="@ClassMapper.Class" style="@_gutterStyle @Style" id="@Id" @ref="Ref">
-        @ChildContent
-    </div>
-</CascadingValue>
+<CascadingValue Value="this"><div class="@ClassMapper.Class" style="@HostStyle" id="@Id" @ref="Ref">@ChildContent</div></CascadingValue>
 
+@code {
+    private string HostStyle => string.IsNullOrWhiteSpace(_gutterStyle)
+        ? Style
+        : string.IsNullOrWhiteSpace(Style) ? _gutterStyle : $"{_gutterStyle} {Style}";
+}

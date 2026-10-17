@@ -6,6 +6,7 @@ namespace AntDesign
 {
     public enum RowJustify
     {
+        Default = -1,
         Start,
         End,
         Center,

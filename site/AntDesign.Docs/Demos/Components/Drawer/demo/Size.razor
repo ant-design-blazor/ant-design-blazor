@@ -1,0 +1,15 @@
+<Space>
+    <Button Type="ButtonType.Primary" OnClick="() => _smallVisible = true">Open 320px drawer</Button>
+    <Button OnClick="() => _largeVisible = true">Open 720px drawer</Button>
+</Space>
+<Drawer @bind-Visible="_smallVisible" Width="320" Title='("Compact drawer")'>
+    <p>Drawer width can be customized.</p>
+</Drawer>
+<Drawer @bind-Visible="_largeVisible" Width="720" Title='("Wide drawer")'>
+    <p>A wider drawer can host richer content.</p>
+</Drawer>
+
+@code {
+    private bool _smallVisible;
+    private bool _largeVisible;
+}

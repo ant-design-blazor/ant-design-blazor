@@ -228,8 +228,6 @@ namespace AntDesign
 
         [Parameter] public string PopupContainerMaxHeight { get; set; } = "256px";
 
-        private bool _showArrowIconChanged;
-
         /// <summary>
         /// Whether to show the drop-down arrow
         /// </summary>
@@ -241,7 +239,6 @@ namespace AntDesign
             set
             {
                 _showArrowIcon = value;
-                _showArrowIconChanged = true;
             }
         }
 
@@ -417,8 +414,6 @@ namespace AntDesign
             {
                 _isPrimitive = IsSimpleType(typeof(TItem));
                 _isValueEnum = typeof(TItemValue).IsEnum;
-                if (!_showArrowIconChanged && Mode != SelectMode.Default)
-                    _showArrowIcon = SuffixIcon != null;
             }
             _isInitialized = true;
 
@@ -775,16 +770,17 @@ namespace AntDesign
         {
             ClassMapper
                 .Add($"{ClassPrefix}")
+                .If($"{ClassPrefix}-sm", () => Size == InputSize.Small)
+                .If($"{ClassPrefix}-lg", () => Size == InputSize.Large)
+                .If($"{ClassPrefix}-outlined", () => Bordered)
+                .Add($"{ClassPrefix}-css-var")
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
                 .If($"{ClassPrefix}-single", () => Mode == SelectMode.Default)
                 .If($"{ClassPrefix}-multiple", () => Mode != SelectMode.Default)
-                .If($"{ClassPrefix}-sm", () => Size == InputSize.Small)
-                .If($"{ClassPrefix}-lg", () => Size == InputSize.Large)
                 .If($"{ClassPrefix}-borderless", () => !Bordered)
                 .If($"{ClassPrefix}-show-arrow", () => ShowArrowIcon)
                 .If($"{ClassPrefix}-show-search", () => IsSearchEnabled)
-                .If($"{ClassPrefix}-bordered", () => Bordered)
                 .If($"{ClassPrefix}-loading", () => Loading)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
                 .If($"{ClassPrefix}-rtl", () => RTL)
@@ -959,7 +955,8 @@ namespace AntDesign
                 {
                     var result = SelectOptionItems.FirstOrDefault(x => EqualityComparer<TItemValue>.Default.Equals(x.Value, defaultValue));
 
-                    if (result != null && !result.IsDisabled)
+                    // Disabled options may still be selected by an initial/default value.
+                    if (result != null)
                     {
                         result.IsSelected = true;
 
@@ -1032,7 +1029,9 @@ namespace AntDesign
                     {
                         var result = EqualityComparer<TItemValue>.Default.Equals(selectOptionItem.Value, value);
 
-                        if (result && !selectOptionItem.IsDisabled)
+                        // A disabled option cannot be newly selected by interaction, but a value
+                        // supplied through Value/DefaultValues remains selected (matching React Select).
+                        if (result)
                         {
                             selectOptionItem.IsSelected = true;
 

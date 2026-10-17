@@ -1,47 +1,30 @@
 ﻿@namespace AntDesign
+@using AntDesign.Icons
 @inherits AntDesign.AntDomComponentBase
 
 @{ 
     RenderFragment<RateItem> template = item =>
-    @<div role="radio" aria-checked="true" aria-posinset="@(item.IndexOfGroup + 1)" aria-setsize="5" tabindex="@item.IndexOfGroup">
+    @<div role="radio" aria-checked="@(item.Value > item.IndexOfGroup ? "true" : "false")" aria-posinset="@(item.IndexOfGroup + 1)" aria-setsize="@item.Count" tabindex="@(item.Disabled ? -1 : 0)">
         <div class="ant-rate-star-first" @onclick="@(async e => await item.OnClick(true))" @onmouseover="@(async e => await item.OnHover(true))">
             @if (@item.Character != null)
             {
-                @item.Character.Invoke(new RateItemRenderContext());
+                @item.Character.Invoke(new RateItemRenderContext { Index = item.IndexOfGroup });
             }
             else
             {
-                <Icon Type="@IconType.Fill.Star" />
+                <StarFilled />
             }
         </div>
         <div class="ant-rate-star-second" @onclick="@(async e => await item.OnClick(false))" @onmouseover="@(async e => await item.OnHover(false))">
             @if (@item.Character != null)
             {
-                @item.Character.Invoke(new RateItemRenderContext());
+                @item.Character.Invoke(new RateItemRenderContext { Index = item.IndexOfGroup });
             }
             else
             {
-                <Icon Type="@IconType.Fill.Star" />
+                <StarFilled />
             }
         </div>
     </div>;
 
-}
-
-@if (string.IsNullOrWhiteSpace(Tooltip))
-{
-    <li class="@_starClassMapper.Class" @ref="Ref">
-        @template(this)
-    </li>
-}
-else
-{
-    <Tooltip Title="@Tooltip">
-        <Unbound>
-            <li class="@_starClassMapper.Class" @ref="@context.Current">
-
-                @template(this)
-            </li>
-        </Unbound>
-    </Tooltip>
-}
+}@if (string.IsNullOrWhiteSpace(Tooltip)) {<li class="@_starClassMapper.Class" @ref="Ref">@template(this)</li>}else {<Tooltip Title="@Tooltip"><Unbound><li class="@_starClassMapper.Class" @ref="@context.Current">@template(this)</li></Unbound></Tooltip>}

@@ -33,20 +33,25 @@ cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
 | Property | Description | Type | Default Value | Version 
 | --- | --- | --- | --- |
 | AriaLabel | Sets the aria-label attribute         | string    | null         |
+| ButtonColor | 设置 v6 按钮语义颜色（`Default`、`Primary`、`Danger` 或预设颜色）。 | ButtonColor? | null |
 | Block | 将按钮宽度调整为其父宽度的选项 | bool    | false         | 
 | ChildContent | Content of the button.   | RenderFragment    | -         |
+| ClassNames | 按语义 slot 自定义 class：`root`、`icon`、`content`。 | IReadOnlyDictionary<string, string> | null |
 | Danger | 设置危险按钮 | bool    | false         | 
 | Disabled | 按钮失效状态         | bool    | false     |
 | Ghost | 幽灵属性，使按钮背景透明 | bool    | false         | 
 | HtmlType | 设置 button 原生的 type 值，可选值请参考 [HTML 标准]('https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attr-type')         | string    | `button` |
 | Icon | 设置按钮的图标组件 | string | -         | 
+| IconPlacement | 设置图标相对于按钮内容的位置。 | ButtonIconPlacement | Start |
 | Loading | 设置按钮载入状态        | bool    | false         | 
 | OnClick | Callback when `Button` is clicked          | Action    | -         |
 | OnClickStopPropagation | Do not propagate events when button is clicked. | bool    | false    |
 | Search | Adds class `ant-input-search-button` to the button.   | bool | false         |
 | Shape | Can set button shape: `circle` &#124; `round` or `null` (default, which is rectangle).    | string    | null |
 | Size | 设置按钮大小        | AntSizeLDSType    | `AntSizeLDSType.Default`         | 
+| Styles | 按语义 slot 自定义内联样式：`root`、`icon`、`content`。 | IReadOnlyDictionary<string, string> | null |
 | Type | 设置按钮类型        | ButtonType | `ButtonType.Default` |
+| Variant | 设置 v6 按钮视觉变体（`Solid`、`Outlined`、`Dashed`、`Filled`、`Text` 或 `Link`）。 | ButtonVariant? | null |
 | NoSpanWrap | Remove `<span>` from button content, if you want to provide rich content        | bool | false |
 
 
@@ -55,4 +60,4 @@ cover: https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg
 | Property | Description | Type | Default Value | Version 
 | --- | --- | --- | --- |
 | Url | 文件下载地址     | string    | null         |
-| FileName |  指定文件名        | string    | false         | 
+| FileName |  指定文件名        | string    | false         |

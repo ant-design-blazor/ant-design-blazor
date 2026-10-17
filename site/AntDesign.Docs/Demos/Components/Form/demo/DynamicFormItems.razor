@@ -1,0 +1,58 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+
+<Form Model="@model" OnFinish="OnFinish" OnFinishFailed="OnFinishFailed" Style="max-width: 600px;">
+    @for (var i = 0; i < model.Users.Count; i++)
+    {
+        var index = i;
+        <div @key="model.Users[index].Id" style="display:flex; align-items:baseline; gap:8px;">
+            <FormItem NoStyle>
+                <Input @bind-Value="model.Users[index].FirstName" Placeholder="First Name" />
+            </FormItem>
+            <FormItem NoStyle>
+                <Input @bind-Value="model.Users[index].LastName" Placeholder="Last Name" />
+            </FormItem>
+            <Button Type="ButtonType.Text" OnClick="@(() => Remove(index))" AriaLabel="Remove user">−</Button>
+        </div>
+    }
+    <FormItem>
+        <Button Type="ButtonType.Dashed" OnClick="@(() => Add())" Block>＋ Add field</Button>
+    </FormItem>
+    <FormItem>
+        <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
+        @if (!string.IsNullOrEmpty(result))
+        {
+            <span style="margin-left:12px;">@result</span>
+        }
+    </FormItem>
+</Form>
+
+@code {
+    private readonly UsersForm model = new();
+    private string result;
+
+    private void Add() => model.Users.Add(new User { Id = Guid.NewGuid() });
+
+    private void Remove(int index) => model.Users.RemoveAt(index);
+
+    private void OnFinish(EditContext editContext)
+    {
+        result = $"Received values: {JsonSerializer.Serialize(model.Users.Select(x => new { x.FirstName, x.LastName }))}";
+    }
+
+    private void OnFinishFailed(EditContext editContext) => result = "Please enter both first and last names.";
+
+    private sealed class UsersForm
+    {
+        public List<User> Users { get; } = [new User()];
+    }
+
+    private sealed class User
+    {
+        public Guid Id { get; init; } = Guid.NewGuid();
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+    }
+}

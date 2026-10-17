@@ -96,6 +96,11 @@ namespace AntDesign
         /// </summary>
         public NotificationType NotificationType { get; set; } = NotificationType.None;
 
+        /// <summary>
+        /// Display a progress bar for notifications that close automatically.
+        /// </summary>
+        public bool ShowProgress { get; set; }
+
         internal CancellationTokenSource Cts { get; set; }
     }
 }

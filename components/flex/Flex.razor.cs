@@ -144,15 +144,16 @@ namespace AntDesign
         {
             [FlexGap.Normal] = "normal",
             [FlexGap.Small] = "small",
-            [FlexGap.Middle] = "middle",
+            [FlexGap.Middle] = "medium",
+            [FlexGap.Medium] = "medium",
             [FlexGap.Large] = "large",
         };
 
         private string FlexStyle => new CssStyleBuilder()
-            .AddStyle("flex-wrap", Wrap.IsT0 ? _wrapMap[Wrap.AsT0].ToString() : Wrap.AsT1)
-            .AddStyle("align-items", Align.IsT0 ? _alignMap[Align.AsT0].ToString() : Align.AsT1)
-            .AddStyle("justify-content", Justify.IsT0 ? _justifyMap[Justify.AsT0].ToString() : Justify.AsT1)
-            .AddStyle("flex", FlexCss)
+            .AddStyle("flex-wrap", Wrap.IsT0 ? "" : Wrap.AsT1)
+            .AddStyle("align-items", Align.IsT0 ? "" : Align.AsT1)
+            .AddStyle("justify-content", Justify.IsT0 ? "" : Justify.AsT1)
+            .AddStyle("flex", FlexCss == "normal" ? "" : FlexCss)
             .AddStyle("gap", Gap.IsT0 ? "" : (CssSizeLength)Gap.AsT1)
             .Build();
 
@@ -165,12 +166,12 @@ namespace AntDesign
         private void SetClass()
         {
             ClassMapper.Add("ant-flex")
-                .GetIf(() => "ant-flex-vertical", () => Direction == FlexDirection.Vertical)
                 .GetIf(() => "ant-flex-align-stretch", () => Direction == FlexDirection.Vertical && Align.IsT0 && Align.AsT0 == FlexAlign.Normal)
-                .GetIf(() => $"ant-flex-align-{_alignMap[Align.AsT0]}", () => Align.IsT0)
-                .GetIf(() => $"ant-flex-justify-{_justifyMap[Justify.AsT0]}", () => Justify.IsT0)
-                .GetIf(() => $"ant-flex-gap-{_gapMap[Gap.AsT0]}", () => Gap.IsT0)
-                .GetIf(() => $"ant-flex-wrap-{_wrapMap[Wrap.AsT0]}", () => Wrap.IsT0)
+                .GetIf(() => $"ant-flex-align-{_alignMap[Align.AsT0]}", () => Align.IsT0 && Align.AsT0 != FlexAlign.Normal)
+                .GetIf(() => $"ant-flex-justify-{_justifyMap[Justify.AsT0]}", () => Justify.IsT0 && Justify.AsT0 != FlexJustify.Normal)
+                .GetIf(() => $"ant-flex-wrap-{_wrapMap[Wrap.AsT0]}", () => Wrap.IsT0 && Wrap.AsT0 != FlexWrap.NoWrap)
+                .GetIf(() => $"ant-flex-gap-{_gapMap[Gap.AsT0]}", () => Gap.IsT0 && Gap.AsT0 != FlexGap.Normal)
+                .GetIf(() => "ant-flex-vertical", () => Direction == FlexDirection.Vertical)
                 ;
         }
 
@@ -179,7 +180,9 @@ namespace AntDesign
             builder.OpenElement(1, Component ?? "div");
 
             builder.AddAttribute(2, "class", ClassMapper.Class);
-            builder.AddAttribute(3, "style", $"{FlexStyle} {Style} ");
+            var mergedStyle = $"{FlexStyle} {Style}".Trim();
+            if (!string.IsNullOrWhiteSpace(mergedStyle))
+                builder.AddAttribute(3, "style", mergedStyle);
             builder.AddAttribute(4, "id", $"{Id}");
             builder.AddElementReferenceCapture(5, r => Ref = r);
             builder.AddContent(6, ChildContent);

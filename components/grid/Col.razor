@@ -1,6 +1,16 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@GutterStyle @_hostFlexStyle @Style" id="@Id" @ref="Ref">
-    @ChildContent
-</div>
+<div class="@HostClass" style="@HostStyle" id="@Id" @ref="Ref">@ChildContent</div>
+
+@code {
+    private string HostStyle
+    {
+        get
+        {
+            var styles = new[] { GutterStyle, _hostFlexStyle, Style, _responsiveFlexStyle };
+            var style = string.Join(" ", styles.Where(value => !string.IsNullOrWhiteSpace(value)));
+            return style.Length == 0 ? null : style;
+        }
+    }
+}

@@ -15,27 +15,24 @@
 	{
 		var cut = Render(@<CheckboxGroup TValue="string" Options="@plainOptions"/>);
 		cut.MarkupMatches(
-			@<div class="ant-checkbox-group" id:ignore>
-                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class="ant-checkbox">
+			@<div class="ant-checkbox-group" id:ignore role="group">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class="ant-checkbox ant-wave-target">
 						<input type="checkbox" value="Apple" class="ant-checkbox-input" id:ignore>
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Apple</span>
+					<span class="ant-checkbox-label">Apple</span>
 				</label>
-                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class="ant-checkbox">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class="ant-checkbox ant-wave-target">
 						<input type="checkbox" value="Pear" class="ant-checkbox-input" id:ignore>
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Pear</span>
+					<span class="ant-checkbox-label">Pear</span>
 				</label>
-				<label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class="ant-checkbox">
+				<label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class="ant-checkbox ant-wave-target">
 						<input type="checkbox" value="Orange" class="ant-checkbox-input" id:ignore>
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Orange</span>
+					<span class="ant-checkbox-label">Orange</span>
 				</label>
 			</div>);
 	}
@@ -45,27 +42,24 @@
 	{
 		var cut = Render(@<CheckboxGroup TValue="string" Options="@options"/>);
 		cut.MarkupMatches(
-			@<div class="ant-checkbox-group" id:ignore>
-                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class=" ant-checkbox">
+			@<div class="ant-checkbox-group" id:ignore role="group">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class=" ant-checkbox ant-wave-target">
 						<input type="checkbox" value="Apple" class="ant-checkbox-input" id:ignore>
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Apple</span>
+					<span class="ant-checkbox-label">Apple</span>
 				</label>
-                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class="ant-checkbox">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class="ant-checkbox ant-wave-target">
 						<input type="checkbox" value="Pear" class="ant-checkbox-input" id:ignore>
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Pear</span>
+					<span class="ant-checkbox-label">Pear</span>
 				</label>
-                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class="ant-checkbox">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class="ant-checkbox ant-wave-target">
 						<input type="checkbox" value="Orange" class="ant-checkbox-input" id:ignore>
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Orange</span>
+					<span class="ant-checkbox-label">Orange</span>
 				</label>
 			</div>);
 	}

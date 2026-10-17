@@ -89,14 +89,31 @@
   }
 
   &-horizontal&-with-text&-dashed {
-    &::before,
-    &::after {
-      border-style: dashed none none;
+    .@{divider-prefix-cls}-rail {
+      border-top-style: dashed;
     }
   }
 
   &-vertical&-dashed {
     border-width: 0 0 0 @border-width-base;
+  }
+
+  &-dotted {
+    background: none;
+    border-color: @divider-color;
+    border-style: dotted;
+    border-width: @border-width-base 0 0;
+  }
+
+  &-horizontal&-with-text&-dotted {
+    .@{divider-prefix-cls}-rail {
+      border-top-style: dotted;
+    }
+  }
+
+  &-vertical&-dotted {
+    border-width: 0 0 0 @border-width-base;
+    border-left-style: dotted;
   }
 
   &-plain&-with-text {

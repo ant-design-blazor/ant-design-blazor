@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -40,6 +41,38 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/Vyyeu8jq2/Tooltp.svg", Title= "Tooltip",SubTitle = "文字提示")]
     public partial class Tooltip : OverlayTrigger
     {
+        private readonly string _tooltipId = $"ant-blazor-tooltip-{System.Guid.NewGuid():N}";
+        private RenderFragment TooltipContent => builder =>
+        {
+            if (TitleTemplate != null)
+                builder.AddContent(0, TitleTemplate);
+            else
+                builder.AddContent(1, Title);
+        };
+
+        private string GetTooltipArrowStyle()
+        {
+            var placement = GetPlacementType().Name;
+            if (placement.StartsWith("top", System.StringComparison.Ordinal))
+            {
+                var left = placement == "topLeft" ? "33%" : placement == "topRight" ? "66%" : "50%";
+                return $"position: absolute; bottom: 0px; left: {left};";
+            }
+            if (placement.StartsWith("bottom", System.StringComparison.Ordinal))
+            {
+                var left = placement == "bottomLeft" ? "33%" : placement == "bottomRight" ? "66%" : "50%";
+                return $"position: absolute; top: 0px; left: {left};";
+            }
+            if (placement.StartsWith("left", System.StringComparison.Ordinal))
+            {
+                var top = placement == "leftTop" ? "33%" : placement == "leftBottom" ? "66%" : "50%";
+                return $"position: absolute; right: 0px; top: {top};";
+            }
+
+            var rightTop = placement == "rightTop" ? "33%" : placement == "rightBottom" ? "66%" : "50%";
+            return $"position: absolute; left: 0px; top: {rightTop};";
+        }
+
         /// <summary>
         /// The text shown in the tooltip
         /// </summary>
@@ -88,7 +121,10 @@ namespace AntDesign
 
         internal override string GetOverlayEnterClass()
         {
-            return "ant-zoom-big-fast-enter ant-zoom-big-fast-enter-active ant-zoom-big-fast";
+            // React removes its motion classes after the enter transition. The
+            // shared Blazor Overlay keeps the returned class for its lifetime,
+            // so Tooltip should not leave a completed-motion transform behind.
+            return string.Empty;
         }
 
         internal override string GetOverlayLeaveClass()
@@ -104,6 +140,10 @@ namespace AntDesign
             }
 
             await base.Show(overlayLeft, overlayTop);
+            if (IsOverlayShow())
+            {
+                await SetTriggerOpenState(true);
+            }
         }
 
         internal override async Task Hide(bool force = false)
@@ -114,6 +154,24 @@ namespace AntDesign
             }
 
             await base.Hide(force);
+            if (!IsOverlayShow())
+            {
+                await SetTriggerOpenState(false);
+            }
+        }
+
+        private async Task SetTriggerOpenState(bool open)
+        {
+            var module = await Js.InvokeAsync<Microsoft.JSInterop.IJSObjectReference>(
+                "import", "./_content/AntDesign/js/tooltipTriggerHelper.js");
+            try
+            {
+                await module.InvokeVoidAsync("setTooltipTriggerState", Ref, "ant-tooltip-open", _tooltipId, open, Unbound is null);
+            }
+            finally
+            {
+                await module.DisposeAsync();
+            }
         }
     }
 }

@@ -174,7 +174,7 @@
         );
         //Assert
         var options = cut.FindAll(".ant-select-item-option-content");
-        var selectedItem = cut.Find(".ant-select-selection-item");
+        var selectedItem = cut.Find(".ant-select-content");
         options.Should().HaveCount(1);
         selectedItem.TextContent.Trim().Should().Be("NewPerson");
         value.Should().Be(5);
@@ -202,7 +202,7 @@
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _persons));
         //Assert
         var options = cut.FindAll(".ant-select-item-option-content");
-        var selectedItem = cut.Find(".ant-select-selection-item");
+        var selectedItem = cut.Find(".ant-select-content");
         options.Should().HaveCount(4);
         selectedItem.TextContent.Trim().Should().Be("Lucy");
         value.Should().Be(2);
@@ -277,7 +277,7 @@
         _personsClass[1].Name = "Lucie";
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.DataSource, _personsClass));
         //Assert
-        cut.Find("span.ant-select-selection-item").TextContent.Trim().Should().Be(_personsClass[1].Name);
+        cut.Find(".ant-select-content").TextContent.Trim().Should().Be(_personsClass[1].Name);
         handlerCalled.Should().BeTrue();
     }
 
@@ -307,7 +307,7 @@
         );
         //Assert
         var options = cut.FindAll(".ant-select-item-option-content");
-        var selectedItem = cut.Find(".ant-select-selection-item");
+        var selectedItem = cut.Find(".ant-select-content");
         options.Should().HaveCount(5);
         for (int i = 0; i < options.Count; i++)
         {
@@ -341,7 +341,7 @@
         );
         //Assert
         var options = cut.FindAll(".ant-select-item-option-content");
-        var selectedItem = cut.Find(".ant-select-selection-item");
+        var selectedItem = cut.Find(".ant-select-content");
         options.Should().HaveCount(5);
 
         for (int i = 0; i < options.Count; i++)
@@ -387,7 +387,7 @@
         //Assert
         var options = cut.FindAll(".ant-select-item-option-content");
         //Should not have any selected
-        cut.FindAll(".ant-select-selection-item").Should().BeEmpty();
+        cut.Find(".ant-select-content").TextContent.Trim().Should().Be("2");
         options.Should().HaveCount(3);
         //Check if it's in right order
         for (int i = 0; i < options.Count; i++)
@@ -431,7 +431,7 @@
         );
         //Assert
         var options = cut.FindAll(".ant-select-item-option-content");
-        var selectedItem = cut.Find(".ant-select-selection-item");
+        var selectedItem = cut.Find(".ant-select-content");
         options.Should().HaveCount(5);
         //Check if it's in right order
         for (int i = 0; i < options.Count; i++)

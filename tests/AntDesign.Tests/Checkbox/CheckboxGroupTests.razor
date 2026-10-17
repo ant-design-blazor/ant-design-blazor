@@ -15,27 +15,24 @@
 	{
 		var cut = Render(@<CheckboxGroup TValue="string" Options="@plainOptions"/>);
         cut.MarkupMatches(
-            @<div class="ant-checkbox-group" id:ignore>
-                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class="ant-checkbox">
+            @<div class="ant-checkbox-group" id:ignore role="group">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class="ant-checkbox ant-wave-target">
 						<input id:ignore type="checkbox" value="Apple" class="ant-checkbox-input">
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Apple</span>
+					<span class="ant-checkbox-label">Apple</span>
 				</label>
-                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class="ant-checkbox">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class="ant-checkbox ant-wave-target">
 						<input id:ignore type="checkbox" value="Pear" class="ant-checkbox-input">
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Pear</span>
+					<span class="ant-checkbox-label">Pear</span>
 				</label>
-                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class="ant-checkbox">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class="ant-checkbox ant-wave-target">
 						<input id:ignore type="checkbox" value="Orange" class="ant-checkbox-input">
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Orange</span>
+					<span class="ant-checkbox-label">Orange</span>
 				</label>
 			</div>);
 	}
@@ -45,29 +42,68 @@
 	{
 		var cut = Render(@<CheckboxGroup TValue="string" Options="@options"/>);
 		cut.MarkupMatches(
-			@<div class="ant-checkbox-group" id:ignore>
-				<label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class="ant-checkbox">
+			@<div class="ant-checkbox-group" id:ignore role="group">
+				<label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class="ant-checkbox ant-wave-target">
 						<input id:ignore type="checkbox" value="Apple" class="ant-checkbox-input">
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Apple</span>
+					<span class="ant-checkbox-label">Apple</span>
 				</label>
-                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class="ant-checkbox">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class="ant-checkbox ant-wave-target">
 						<input id:ignore type="checkbox" value="Pear" class="ant-checkbox-input">
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Pear</span>
+					<span class="ant-checkbox-label">Pear</span>
 				</label>
-                <label class="ant-checkbox-wrapper ant-checkbox-group-item" for:ignore>
-					<span class="ant-checkbox">
+                <label class="ant-checkbox-wrapper ant-checkbox-group-item">
+					<span class="ant-checkbox ant-wave-target">
 						<input id:ignore type="checkbox" value="Orange" class="ant-checkbox-input">
-						<span class="ant-checkbox-inner"></span>
 					</span>
-					<span>Orange</span>
+					<span class="ant-checkbox-label">Orange</span>
 				</label>
 			</div>);
+	}
+
+	[Fact]
+	public void Renders_v6_option_metadata_on_the_checkbox_wrapper_and_input()
+	{
+		var option = new CheckboxOption<string>
+		{
+			Label = "Apple",
+			Value = "Apple",
+			ClassName = "custom-option",
+			Style = "color: red",
+			Title = "Choose Apple",
+			Id = "apple-option",
+			Required = true,
+		};
+		var cut = Render(@<CheckboxGroup TValue="string" Options="@(new[] { option })"/>);
+
+		var wrapper = cut.Find("label.custom-option");
+		wrapper.GetAttribute("style").Should().Be("color: red;");
+		wrapper.HasAttribute("for").Should().BeFalse();
+
+		var input = wrapper.QuerySelector("input");
+		input.GetAttribute("id").Should().Be("apple-option");
+		input.GetAttribute("title").Should().Be("Choose Apple");
+		input.HasAttribute("required").Should().BeTrue();
+		wrapper.QuerySelector(".ant-checkbox-label").TextContent.Trim().Should().Be("Apple");
+	}
+
+	[Fact]
+	public void Explicitly_enabled_option_overrides_disabled_group()
+	{
+		var options = new[]
+		{
+			new CheckboxOption<string> { Label = "Inherits disabled", Value = "inherited" },
+			new CheckboxOption<string> { Label = "Explicitly enabled", Value = "enabled", Disabled = false },
+		};
+		var cut = Render(@<CheckboxGroup TValue="string" Options="@options" Disabled="true"/>);
+
+		var inputs = cut.FindAll("input[type='checkbox']");
+		inputs[0].HasAttribute("disabled").Should().BeTrue();
+		inputs[1].HasAttribute("disabled").Should().BeFalse();
+		inputs[1].Closest("label").ClassList.Contains("ant-checkbox-wrapper-disabled").Should().BeFalse();
 	}
 
 	[Fact]

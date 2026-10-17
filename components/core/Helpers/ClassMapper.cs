@@ -10,11 +10,6 @@ namespace AntDesign
 {
     public class ClassMapper
     {
-        // The v6 static stylesheet is compiled from React's CSS-in-JS output.
-        // Component token declarations use this scope on the component element
-        // itself, for example `.css-var-_R_29n_.ant-btn`.
-        private const string V6CssVariableScope = "css-var-_R_29n_";
-
         private readonly Dictionary<Func<string>, Func<bool>> _map = new();
 
         public ClassMapper() : this(string.Empty)
@@ -25,7 +20,6 @@ namespace AntDesign
         {
             OriginalClass = originalClass;
 
-            _map.Add(() => V6CssVariableScope, () => true);
             _map.Add(() => OriginalClass, () => !string.IsNullOrEmpty(OriginalClass));
         }
 
@@ -58,7 +52,6 @@ namespace AntDesign
         {
             _map.Clear();
 
-            _map.Add(() => V6CssVariableScope, () => true);
             _map.Add(() => OriginalClass, () => !string.IsNullOrEmpty(OriginalClass));
 
             return this;

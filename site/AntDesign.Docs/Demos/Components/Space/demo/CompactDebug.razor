@@ -1,0 +1,36 @@
+<Space Direction="SpaceDirection.Vertical">
+    <SpaceItem>
+        <SpaceCompact>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Button>Default</Button></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Button Danger>Danger</Button></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Button Type="ButtonType.Dashed">Dashed</Button></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Type="ButtonType.Text">Text</Button></SpaceCompactItem>
+        </SpaceCompact>
+    </SpaceItem>
+    <SpaceItem>
+        <SpaceCompact>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Button>Prefix</Button></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Input TValue="string" DefaultValue="@("mysite")" AddOnBefore="@HttpAddon" AddOnAfter="@ComAddon" /></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Type="ButtonType.Primary">Submit</Button></SpaceCompactItem>
+        </SpaceCompact>
+    </SpaceItem>
+    <SpaceItem>
+        <SpaceCompact>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Placeholder="prefix" /></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Input TValue="string" DefaultValue="@("mysite")" AddOnBefore="@WwwAddon" AddOnAfter="@ComAddon" /></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Icon="@IconType.Outline.Copy" /></SpaceCompactItem>
+        </SpaceCompact>
+    </SpaceItem>
+    <SpaceItem>
+        <SpaceCompact>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input.Search Placeholder="Search" /></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Type="ButtonType.Primary">Submit</Button></SpaceCompactItem>
+        </SpaceCompact>
+    </SpaceItem>
+</Space>
+
+@code {
+    private RenderFragment HttpAddon => @<span>http://</span>;
+    private RenderFragment WwwAddon => @<span>www.</span>;
+    private RenderFragment ComAddon => @<span>.com</span>;
+}

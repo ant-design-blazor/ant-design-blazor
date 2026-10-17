@@ -26,12 +26,9 @@
                 Step="null"
                 TipFormatter="@(value => colCounts[(int)value].ToString())" />
     </div>
-    <GridRow Gutter="(gutters[gutterKey], vgutters[vgutterKey])">
-        @cols()
-        @cols()
-    </GridRow>
+    <GridRow Gutter="(gutters[gutterKey], vgutters[vgutterKey])">@columns(2)</GridRow>
     Another GridRow:
-    <GridRow Gutter="(gutters[gutterKey], vgutters[vgutterKey])">@cols()</GridRow>
+    <GridRow Gutter="(gutters[gutterKey], vgutters[vgutterKey])">@columns(1)</GridRow>
     <pre class="demo-code">@($"<GridRow Gutter=\"({gutters[gutterKey]}, {vgutters[vgutterKey]})\">\n{colCode}\n{colCode}</GridRow>")</pre>
     <pre class="demo-code">@($"<GridRow Gutter=\"({gutters[gutterKey]}, {vgutters[vgutterKey]})\">\n{colCode}</GridRow>")</pre>
 </div>
@@ -55,20 +52,23 @@
         new[] { 2, 3, 4, 6, 8, 12 }.ForEach((value, i) => colCounts[i] = value);
     }
 
-    RenderFragment cols()
+    RenderFragment columns(int rowCount)
     {
         var colCount = colCounts[colCountKey];
 
-        return
-    @<Template>
-        @for (var i = 0; i < colCount; i++)
+        return builder =>
         {
-                <GridCol @key="@(i.ToString())" Span="@(24 / colCount)">
-                    <div>Column</div>
-                </GridCol>
-        }
-        </Template>
-    ;
+            var sequence = 0;
+            for (var i = 0; i < colCount * rowCount; i++)
+            {
+                OneOf.OneOf<string, int> span = 24 / colCount;
+                builder.OpenComponent<GridCol>(sequence++);
+                builder.SetKey(i.ToString());
+                builder.AddAttribute(sequence++, nameof(GridCol.Span), span);
+                builder.AddAttribute(sequence++, nameof(GridCol.ChildContent), (RenderFragment)(contentBuilder => contentBuilder.AddMarkupContent(0, "<div>Column</div>")));
+                builder.CloseComponent();
+            }
+        };
     }
 }
 

@@ -45,6 +45,7 @@ namespace AntDesign
         {
             TitleClassMapper
                 .Add("ant-tree-node-content-wrapper")
+                .If("ant-select-tree-node-content-wrapper", () => TreeComponent.IsInTreeSelect)
                 .If("draggable", () => CanDraggable)
                 .If("ant-tree-node-content-wrapper-open", () => IsSwitcherOpen)
                 .If("ant-tree-node-content-wrapper-close", () => IsSwitcherClose)

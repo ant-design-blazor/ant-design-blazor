@@ -6,8 +6,8 @@ title:
 ---
 
 ## zh-CN
-添加后缀的省略。
+通过滑块调整省略行数，并在省略文本末尾保留莎士比亚署名；展开时显示完整文本。
 
 
 ## en-US
-add suffix ellipsis support.
+Adjust the clamp row count and preserve the Shakespeare attribution after the truncated text.

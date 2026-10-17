@@ -7,6 +7,8 @@
     "test:mvp": "node --test test/mvp.test.mjs"
   },
   "dependencies": {
-    "ajv": "^6.12.6"
+    "ajv": "^6.12.6",
+    "jsdom": "^29.1.1",
+    "typescript": "^5.9.3"
   }
 }

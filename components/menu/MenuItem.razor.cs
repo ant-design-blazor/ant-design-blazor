@@ -26,6 +26,12 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
+        /// Additional content aligned to the end of the menu item.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Extra { get; set; }
+
+        /// <summary>
         /// Unique ID of the menu item
         /// </summary>
         /// <default value="Uniquely Generated ID" />

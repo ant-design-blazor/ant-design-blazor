@@ -30,3 +30,22 @@ Alert component for feedback.
 | Type | Type of Alert styles, options: `success` \| `info` \| `warning` \| `error` | string | warning |  |
 | OnClose | Callback when Alert is closed | EventCallback&lt;MouseEventArgs> | - |  |
 | ChildContent | Additional Content shown like description| RenderFragment | - |  |
+
+| ClassNames | Semantic class names keyed by `root`, `icon`, `section`, `title`, `description`, `actions`, and `close` | IReadOnlyDictionary&lt;string, string&gt; | - |  |
+| Styles | Semantic inline CSS keyed by `root`, `icon`, `section`, `title`, `description`, `actions`, and `close` | IReadOnlyDictionary&lt;string, string&gt; | - |  |
+
+## Semantic DOM
+
+| Slot | Selector |
+| --- | --- |
+| root | `.ant-alert` |
+| icon | `.ant-alert-icon` |
+| section | `.ant-alert-section` |
+| title | `.ant-alert-title` |
+| description | `.ant-alert-description` |
+| actions | `.ant-alert-actions` |
+| close | `.ant-alert-close-icon` |
+
+## Design Token
+
+Alert component tokens can be customized through `ConfigProvider` `ThemeConfig.Components["Alert"]`.

@@ -1,5 +1,6 @@
 ﻿window.DocSearchInit = function (locale) {
-  if (!docsearch) {
+  if (typeof docsearch !== 'function') {
+    observeDocSearchPortal();
     return;
   }
   const lang = locale === 'zh-CN' ? 'cn' : 'en';

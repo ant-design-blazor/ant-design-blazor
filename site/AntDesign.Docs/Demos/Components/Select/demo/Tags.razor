@@ -3,6 +3,7 @@
 		@bind-Values="@_selectedValues"
 		TItemValue="string"
 		TItem="string"
+		Style="width: 100%;"
 		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
 		EnableSearch>
 		<SelectOptions>
@@ -29,7 +30,7 @@
             _items.Add(value);
         }
 
-		_selectedValues = new List<string> { "0f15"};
+		_selectedValues = new List<string>();
     }
 
     private void OnSelectedItemsChangedHandler(IEnumerable<string> values)

@@ -1,0 +1,12 @@
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%">
+    <Cascader Options="@_options" Status="FormValidateStatus.Error" Placeholder="Error" />
+    <Cascader Options="@_options" Status="FormValidateStatus.Warning" Placeholder="Warning" />
+</Space>
+
+@code {
+    private readonly CascaderNode[] _options =
+    [
+        new() { Value = "zhejiang", Label = "Zhejiang", Children = [new() { Value = "hangzhou", Label = "Hangzhou" }] },
+        new() { Value = "jiangsu", Label = "Jiangsu", Children = [new() { Value = "nanjing", Label = "Nanjing" }] }
+    ];
+}

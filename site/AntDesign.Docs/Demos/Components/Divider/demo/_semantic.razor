@@ -1,0 +1,26 @@
+@{
+    var classes = new Dictionary<string, string>
+    {
+        ["root"] = "divider-semantic-root",
+        ["content"] = "divider-semantic-content",
+        ["rail"] = "divider-semantic-rail"
+    };
+}
+
+<div>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <Divider ClassNames="classes" />
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <Divider ClassNames="classes">Solid</Divider>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <Divider ClassNames="classes" Orientation="DividerOrientation.Left" Variant="dotted">Dotted</Divider>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    <Divider ClassNames="classes" Orientation="DividerOrientation.Right" Variant="dashed">Dashed</Divider>
+    <div>These <Divider Type="DividerType.Vertical" ClassNames="classes" /> are <Divider Type="DividerType.Vertical" ClassNames="classes" /> vertical <Divider Type="DividerType.Vertical" ClassNames="classes" /> dividers</div>
+</div>
+
+<style>
+    .divider-semantic-root { color: #1677ff; }
+    .divider-semantic-content { background: #e6f4ff; }
+    .divider-semantic-rail { opacity: .85; }
+</style>

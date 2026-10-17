@@ -1,0 +1,34 @@
+﻿@using System.Text.Json
+
+<Form Model="@_model" Style="max-width:600px;" OnFinish="OnFinish">
+    <FormItem Label="Users">
+        @for (var i = 0; i < _model.Users.Count; i++)
+        {
+            var index = i;
+            var user = _model.Users[index];
+            <div @key="user.Id" style="display:flex; gap:8px; margin-bottom:16px;">
+                <FormItem NoStyle><Input @bind-Value="user.LastName" Placeholder="Last Name" /></FormItem>
+                <FormItem NoStyle><Input @bind-Value="user.FirstName" Placeholder="First Name" /></FormItem>
+                <Button Type="ButtonType.Text" AriaLabel="Remove user" OnClick="@(() => Remove(index))">−</Button>
+            </div>
+        }
+        <Button Type="ButtonType.Dashed" Block OnClick="Add">＋ Add field</Button>
+    </FormItem>
+    <FormItem><Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button></FormItem>
+</Form>
+@if (!string.IsNullOrEmpty(_result)) { <pre role="status">@_result</pre> }
+
+@code {
+    private readonly NoStyleUsersModel _model = new();
+    private string _result;
+    private void Add() => _model.Users.Add(new NoStyleUser());
+    private void Remove(int index) => _model.Users.RemoveAt(index);
+    private void OnFinish(EditContext _) => _result = JsonSerializer.Serialize(_model.Users.Select(x => new { x.LastName, x.FirstName }));
+    private sealed class NoStyleUsersModel { public List<NoStyleUser> Users { get; } = [new()]; }
+    private sealed class NoStyleUser
+    {
+        public Guid Id { get; } = Guid.NewGuid();
+        public string LastName { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+    }
+}

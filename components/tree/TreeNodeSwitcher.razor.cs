@@ -38,6 +38,7 @@ namespace AntDesign
         {
             ClassMapper
                 .Add("ant-tree-switcher")
+                .If("ant-select-tree-switcher", () => TreeComponent.IsInTreeSelect)
                 .If("ant-tree-switcher-noop", () => SelfNode.IsLeaf)
                 .If("ant-tree-switcher_open", () => IsSwitcherOpen)
                 .If("ant-tree-switcher_close", () => IsSwitcherClose);

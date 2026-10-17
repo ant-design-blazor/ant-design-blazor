@@ -1,0 +1,24 @@
+<Anchor Affix="false" ClassNames="_classNames" Styles="_styles">
+    <AnchorLink Href="#anchor-semantic-api" Title="API">
+        <AnchorLink Href="#anchor-semantic-anchor-props" Title="Anchor Props" />
+        <AnchorLink Href="#anchor-semantic-link-props" Title="Link Props" />
+    </AnchorLink>
+    <AnchorLink Href="#components-anchor-demo-basic" Title="Basic demo" />
+    <AnchorLink Href="#components-anchor-demo-static" Title="Static demo" />
+</Anchor>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-anchor-root",
+        ["item"] = "demo-anchor-item",
+        ["itemTitle"] = "demo-anchor-title",
+        ["indicator"] = "demo-anchor-indicator"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "height:260px;overflow:auto;",
+        ["indicator"] = "background:#1677ff;"
+    };
+}

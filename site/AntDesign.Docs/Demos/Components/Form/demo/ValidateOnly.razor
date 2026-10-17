@@ -1,0 +1,32 @@
+<Form Model="@model" Layout="FormLayout.Vertical" AutoComplete="off">
+    <FormItem Label="Name" Name="Name" Rules="@(new[] { new FormValidationRule { Required = true } })">
+        <Input @bind-Value="context.Name" Placeholder="Enter a name" />
+    </FormItem>
+    <FormItem Label="Age" Name="Age" Rules="@(new[] { new FormValidationRule { Required = true } })">
+        <Input @bind-Value="context.Age" Placeholder="Enter an age" />
+    </FormItem>
+    <FormItem>
+        <Space>
+            <Button Type="ButtonType.Primary" HtmlType="submit" Disabled="@(!IsSubmittable)">Submit</Button>
+            <Button HtmlType="reset" OnClick="Reset">Reset</Button>
+        </Space>
+    </FormItem>
+</Form>
+<p role="status">@(IsSubmittable ? "Both fields are valid; submit is enabled." : "Complete both fields to enable submit.")</p>
+
+@code {
+    private readonly FormModel model = new();
+    private bool IsSubmittable => !string.IsNullOrWhiteSpace(model.Name) && !string.IsNullOrWhiteSpace(model.Age);
+
+    private void Reset()
+    {
+        model.Name = string.Empty;
+        model.Age = string.Empty;
+    }
+
+    private sealed class FormModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Age { get; set; } = string.Empty;
+    }
+}

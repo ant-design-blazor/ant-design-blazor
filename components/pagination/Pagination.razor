@@ -54,7 +54,7 @@
         }
         <ul
             class="@ClassMapper.Class"
-            style="@Style"
+            style="@(GetComponentStyle("Pagination", Style))"
             @ref="Ref"
             @attributes="@dataOrAriaAttributeProps">
             <li
@@ -106,6 +106,8 @@
                          @key="@("noPager")"
                          Page="@allPages"
                          Class="@($"{PrefixCls}-disabled")"
+                         ItemClass="@ItemClass"
+                         ItemStyle="@ItemStyle"
                          ItemRender="@ItemRender"/>
                     );
             }
@@ -121,6 +123,8 @@
                          @key="@key"
                          Page="@key"
                          Active="@(_current == key)"
+                         ItemClass="@ItemClass"
+                         ItemStyle="@ItemStyle"
                          ItemRender="@ItemRender"/>
                     );
             }
@@ -171,6 +175,8 @@
                      Page="allPages"
                      Active="@false"
                      ShowTitle="ShowTitle"
+                     ItemClass="@ItemClass"
+                     ItemStyle="@ItemStyle"
                      ItemRender="@ItemRender"/>;
             firstPager =
                 @<PaginationPager
@@ -181,6 +187,8 @@
                      Page="1"
                      Active="@false"
                      ShowTitle="ShowTitle"
+                     ItemClass="@ItemClass"
+                     ItemStyle="@ItemStyle"
                      ItemRender="@ItemRender"/>;
 
             var left = Math.Max(1, _current - pageBufferSize);
@@ -210,6 +218,8 @@
                          Active="@(_current == key)"
                          ShowTitle="ShowTitle"
                          Class=""
+                         ItemClass="@ItemClass"
+                         ItemStyle="@ItemStyle"
                          ItemRender="@ItemRender"/>
                     );
             }
@@ -226,6 +236,8 @@
                          Active="@(_current == left)"
                          ShowTitle="ShowTitle"
                          Class="@($"{PrefixCls}-item-after-jump-prev")"
+                         ItemClass="@ItemClass"
+                         ItemStyle="@ItemStyle"
                          ItemRender="@ItemRender"/>;
                 pagerList.AddFirst(jumpPrev);
             }
@@ -241,6 +253,8 @@
                          Active="@(_current == right)"
                          ShowTitle="ShowTitle"
                          Class="@($"{PrefixCls}-item-before-jump-next")"
+                         ItemClass="@ItemClass"
+                         ItemStyle="@ItemStyle"
                          ItemRender="@ItemRender"/>;
                 pagerList.AddLast(jumpNext);
             }
@@ -277,12 +291,12 @@
                     }
                 </li>;
         }
-        var prevDisabled = !HasPrev() || allPages != 0;
-        var nextDisabled = !HasNext() || allPages != 0;
+        var prevDisabled = !HasPrev() || allPages == 0;
+        var nextDisabled = !HasNext() || allPages == 0;
 
         <ul
             class="@ClassMapper.Class"
-            style="@Style"
+            style="@(GetComponentStyle("Pagination", Style))"
             unselectable="unselectable"
             @ref="Ref"
             @attributes="@dataOrAriaAttributeProps">
@@ -293,7 +307,7 @@
                 tabIndex="@(prevDisabled ? null : 0)"
                 @onkeypress="RunIfEnterPrev"
                 class="@_prevClass.Class"
-                aria-disabled="prevDisabled">
+                aria-disabled="@(prevDisabled.ToString().ToLowerInvariant())">
                 @RenderPrev(prevPage)
             </li>
             @foreach (var pager in pagerList)
@@ -306,7 +320,7 @@
                 tabIndex="@(nextDisabled ? null : 0)"
                 @onkeypress="RunIfEnterNext"
                 class="@_nextClass.Class"
-                aria-disabled="nextDisabled">
+                aria-disabled="@(nextDisabled.ToString().ToLowerInvariant())">
                 @RenderNext(nextPage)
             </li>
 
@@ -319,6 +333,7 @@
                 Current="@Current"
                 PageSize="@PageSize"
                 PageSizeOptions="@PageSizeOptions"
+                SizeChanger="@SizeChanger"
                 QuickGo="@(ShouldDisplayQuickJumper() ? HandleChange : null)"
                 GoButton="@goButton"/>
         </ul>

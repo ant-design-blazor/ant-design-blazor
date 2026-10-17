@@ -1,0 +1,30 @@
+<div>
+    <RadioGroup TValue="string" Options="_plainOptions" @bind-Value="_plainValue" />
+    <br />
+    <RadioGroup TValue="string" Options="_disabledOptions" @bind-Value="_disabledValue" />
+    <br />
+    <br />
+    <RadioGroup TValue="string" Options="_options" @bind-Value="_buttonValue" ButtonStyle="RadioButtonStyle.Outline" />
+    <br />
+    <RadioGroup TValue="string" Options="_disabledOptions" @bind-Value="_solidValue" ButtonStyle="RadioButtonStyle.Solid" />
+</div>
+
+@code {
+    private readonly string[] _plainOptions = ["Apple", "Pear", "Orange"];
+    private readonly RadioOption<string>[] _options =
+    [
+        new() { Label = "Apple", Value = "Apple", ClassName = "label-1" },
+        new() { Label = "Pear", Value = "Pear", ClassName = "label-2" },
+        new() { Label = "Orange", Value = "Orange", Title = "Orange", ClassName = "label-3" }
+    ];
+    private readonly RadioOption<string>[] _disabledOptions =
+    [
+        new() { Label = "Apple", Value = "Apple", ClassName = "label-1" },
+        new() { Label = "Pear", Value = "Pear", ClassName = "label-2" },
+        new() { Label = "Orange", Value = "Orange", Disabled = true, ClassName = "label-3" }
+    ];
+    private string _plainValue = "Apple";
+    private string _disabledValue = "Apple";
+    private string _buttonValue = "Apple";
+    private string _solidValue = "Apple";
+}

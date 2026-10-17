@@ -1,27 +1,28 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+<div class="@SemanticClass("root", ClassMapper.Class)" style="@SemanticStyle("root", GetComponentStyle("Skeleton", Style))" id="@Id" @ref="Ref">
 
     @if (Loading)
     {
         if (Avatar)
         {
-            <div class="ant-skeleton-header">
-                <SkeletonElement Type="@SkeletonElementType.Avatar" Size="@AvatarSize" Shape="@AvatarShape"></SkeletonElement>
+            <div class="@SemanticClass("header", "ant-skeleton-header")" style="@SemanticStyle("header")">
+                <SkeletonElement Type="@SkeletonElementType.Avatar" Size="@AvatarSize" Shape="@AvatarShape"
+                                 SpanClass="@SemanticClass("avatar")" SpanStyle="@SemanticStyle("avatar")"></SkeletonElement>
             </div>
         }
         <div class="ant-skeleton-content ant-skeleton-section">
             @if (Title)
             {
-                <h3 class="ant-skeleton-title" style="width:@ToCSSUnit(TitleWidth)"></h3>
+                <h3 class="@SemanticClass("title", "ant-skeleton-title")" style="@SemanticStyle("title", $"width:{ToCSSUnit(TitleWidth)}")"></h3>
             }
             @if (Paragraph)
             {
-                <ul class="ant-skeleton-paragraph">
+                <ul class="@SemanticClass("paragraph", "ant-skeleton-paragraph")" style="@SemanticStyle("paragraph")">
                     @foreach (var row in this._paragraphRowsList)
                     {
-                        <li style="width:@ToCSSUnit(row)"></li>
+                        <li class="@SemanticClass("paragraphLi")" style="@SemanticStyle("paragraphLi", $"width:{ToCSSUnit(row)}")"></li>
                     }
                 </ul>
             }

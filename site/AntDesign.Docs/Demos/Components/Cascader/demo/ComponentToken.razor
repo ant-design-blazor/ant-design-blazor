@@ -1,0 +1,27 @@
+@using AntDesign.Theming
+
+<Space Direction="SpaceDirection.Vertical">
+    <Cascader Options="@_options" Placeholder="Default width" />
+    <ConfigProvider ThemeConfig="@_theme">
+        <Cascader Options="@_options" Placeholder="Customized width" />
+    </ConfigProvider>
+</Space>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Cascader"] = new Dictionary<string, string>
+            {
+                ["controlWidth"] = "280px"
+            }
+        }
+    };
+
+    private readonly CascaderNode[] _options =
+    [
+        new() { Value = "zhejiang", Label = "Zhejiang", Children = [new() { Value = "hangzhou", Label = "Hangzhou", Children = [new() { Value = "west-lake", Label = "West Lake" }] }] },
+        new() { Value = "jiangsu", Label = "Jiangsu", Children = [new() { Value = "nanjing", Label = "Nanjing", Children = [new() { Value = "zhonghuamen", Label = "Zhong Hua Men" }] }] }
+    ];
+}

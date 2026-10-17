@@ -24,7 +24,15 @@
 
 <CascadingValue Value="this" Name="Trigger">
     <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
+        @* React v6 resolves half the popup arrow width plus marginXXS from the active theme. *@
         <Overlay @ref="_overlay"
+                 CssVarClass="@($"{PrefixCls}-css-var")"
+                 VerticalOffset="12"
+                 HorizontalOffset="12"
+                 OffsetCssExpression="calc(var(--ant-size-popup-arrow) / 2 + var(--ant-margin-xxs))"
+                 OverlayDisplayStyle="block"
+                 UseCssZIndex="true"
+                 UseCssTransformOrigin="true"
                  HideMillisecondsDelay="10"
                  WaitForHideAnimMilliseconds="100"
                  OnOverlayMouseEnter="OnOverlayMouseEnter"
@@ -32,19 +40,8 @@
                  OnOverlayMouseUp="OnOverlayMouseUp">
             @if (TitleTemplate != null || !string.IsNullOrWhiteSpace(Title))
             {
-                <div class="ant-tooltip-arrow">
-                    <span class="ant-tooltip-arrow-content"></span>
-                </div>
-                <div class="ant-tooltip-container" role="tooltip">
-                    @if (TitleTemplate != null)
-                    {
-                        @TitleTemplate
-                    }
-                    else
-                    {
-                        @Title
-                    }
-                </div>
+                <div class="ant-tooltip-arrow" style="@GetTooltipArrowStyle()"><span class="ant-tooltip-arrow-content"></span></div>
+                <div id="@_tooltipId" class="ant-tooltip-container" role="tooltip">@TooltipContent</div>
             }
         </Overlay>
     </CascadingValue>

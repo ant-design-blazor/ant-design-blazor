@@ -1,0 +1,24 @@
+<RadioGroup @bind-Value="_placement" ButtonStyle="RadioButtonStyle.Outline" TValue="AntDesign.Placement">
+    <Radio RadioButton Value="AntDesign.Placement.TopLeft">topLeft</Radio>
+    <Radio RadioButton Value="AntDesign.Placement.TopRight">topRight</Radio>
+    <Radio RadioButton Value="AntDesign.Placement.BottomLeft">bottomLeft</Radio>
+    <Radio RadioButton Value="AntDesign.Placement.BottomRight">bottomRight</Radio>
+</RadioGroup>
+<br />
+<br />
+<Select Value="@("HangZhou")"
+        TItemValue="string"
+        TItem="string"
+        Style="width: 120px;"
+        DropdownMatchSelectWidth="false"
+        Placement="_placement">
+    <SelectOptions>
+        <SelectOption TItemValue="string" TItem="string" Value="@("HangZhou")" Label="HangZhou #310000" />
+        <SelectOption TItemValue="string" TItem="string" Value="@("NingBo")" Label="NingBo #315000" />
+        <SelectOption TItemValue="string" TItem="string" Value="@("WenZhou")" Label="WenZhou #325000" />
+    </SelectOptions>
+</Select>
+
+@code {
+    private AntDesign.Placement _placement = AntDesign.Placement.TopLeft;
+}

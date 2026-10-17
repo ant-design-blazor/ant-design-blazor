@@ -1,28 +1,135 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="ant-color-picker-trigger @Class" style="@Style">
-    <button type="button" class="ant-color-picker-color-block" disabled="@Disabled" aria-label="@AriaLabel" @onclick="Toggle">
-        <span class="ant-color-picker-color-block-inner" style="background-color:@CurrentValue"></span>
-    </button>
+<div class="@TriggerClass" style="@Style" @onclick="Toggle">
+    @if (IsCleared)
+    {
+        <div class="ant-color-picker-clear" role="button" aria-label="Clear color" tabindex="@(Disabled ? -1 : 0)"
+             aria-disabled="@Disabled" @onclick="Clear" @onclick:stopPropagation="true" @onkeydown="OnClearKeyDown"></div>
+    }
+    else
+    {
+        <div class="ant-color-picker-color-block">
+            <div class="ant-color-picker-color-block-inner" style="background:@CurrentValue"></div>
+        </div>
+    }
     @if (ShowText)
     {
-        <span class="ant-color-picker-trigger-text">@CurrentValue</span>
+        <div class="ant-color-picker-trigger-text">@DisplayValue</div>
     }
-    @if (Open)
-    {
-        <div class="ant-popover ant-color-picker" role="dialog">
-            <div class="ant-popover-container">
-                <div class="ant-popover-content">
-                    <div class="ant-color-picker-inner">
-                        <div class="ant-color-picker-inner-content">
-                            <div class="ant-color-picker-panel">
-                                <input class="ant-color-picker-color-input" type="color" value="@CurrentValue" disabled="@Disabled" @oninput="OnInput" />
+</div>
+@if (Open && !Disabled)
+{
+    <div class="ant-popover ant-color-picker ant-color-picker-css-var" role="dialog" @onclick:stopPropagation="true">
+        <div class="ant-popover-container">
+            <div class="ant-popover-content">
+                <div class="ant-color-picker-inner">
+                    @if (AllowClear)
+                    {
+                        <div class="ant-color-picker-operation">
+                            <div class="ant-color-picker-clear" role="button" aria-label="Clear color" tabindex="@(Disabled ? -1 : 0)"
+                                 aria-disabled="@Disabled" @onclick="Clear" @onclick:stopPropagation="true" @onkeydown="OnClearKeyDown"></div>
+                        </div>
+                    }
+                    <div class="ant-color-picker-inner-content">
+                        <div class="ant-color-picker-panel">
+                            <div class="ant-color-picker-select" @ref="_saturationElement" @onpointerdown="StartSaturation"
+                                 @onpointermove="MoveSaturation" @onpointerup="StopSaturation" @onpointercancel="StopSaturation">
+                                <div class="ant-color-picker-palette" style="position:relative">
+                                    <div style="position:absolute;left:@(Hsva.S * 100)%;top:@((1 - Hsva.V) * 100)%;z-index:1;transform:translate(-50%,-50%);pointer-events:none">
+                                        <div class="ant-color-picker-handler" style="background-color:@ToRgbString(Hsva)"></div>
+                                    </div>
+                                    <div class="ant-color-picker-saturation" style="background-color:@HueColor;background-image:linear-gradient(0deg,#000,transparent),linear-gradient(90deg,#fff,hsla(0,0%,100%,0))"></div>
+                                </div>
+                            </div>
+                            <div class="ant-color-picker-slider-container">
+                                <div class="ant-color-picker-slider-group @(DisabledAlpha ? "ant-color-picker-slider-group-disabled-alpha" : string.Empty)">
+                                    <div class="ant-slider ant-color-picker-slider ant-slider-horizontal" @ref="_hueElement" @onpointerdown="StartHue" @onpointermove="MoveHue"
+                                         @onpointerup="StopHue" @onpointercancel="StopHue">
+                                        <div class="ant-slider-rail ant-color-picker-slider-rail" style="background:linear-gradient(90deg,#f00 0%,#ff0 17%,#0f0 33%,#0ff 50%,#00f 67%,#f0f 83%,#f00 100%);pointer-events:none"></div>
+                                        <div class="ant-slider-step" style="pointer-events:none"></div>
+                                        <div class="ant-slider-handle ant-slider-handle-1 ant-color-picker-slider-handle" role="slider" aria-valuemin="0" aria-valuemax="359" aria-valuenow="@Hsva.H" aria-disabled="@Disabled" tabindex="@(Disabled ? -1 : 0)" style="left:@(Hsva.H / 359d * 100)%;transform:translateX(-50%);background:@HueColor;pointer-events:none" @onkeydown="HandleHueKeyDown"></div>
+                                    </div>
+                                    @if (!DisabledAlpha)
+                                    {
+                                        <div class="ant-slider ant-color-picker-slider ant-slider-horizontal" @ref="_alphaElement" @onpointerdown="StartAlpha" @onpointermove="MoveAlpha"
+                                             @onpointerup="StopAlpha" @onpointercancel="StopAlpha">
+                                            <div class="ant-slider-rail ant-color-picker-slider-rail" style="background:linear-gradient(90deg,transparent,@OpaqueColor);pointer-events:none"></div>
+                                            <div class="ant-slider-step" style="pointer-events:none"></div>
+                                            <div class="ant-slider-handle ant-slider-handle-1 ant-color-picker-slider-handle" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="@(Hsva.A * 100)" aria-disabled="@Disabled" tabindex="@(Disabled ? -1 : 0)" style="left:@(Hsva.A * 100)%;transform:translateX(-50%);background:@ToRgbString(Hsva);pointer-events:none" @onkeydown="HandleAlphaKeyDown"></div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="ant-color-picker-color-block"><div class="ant-color-picker-color-block-inner" style="background:@ToRgbString(Hsva)"></div></div>
+                            </div>
+                            <div class="ant-color-picker-input-container">
+                                @if (!DisabledFormat)
+                                {
+                                    <Select TItemValue="string" TItem="string" Value="@_format"
+                                            Class="ant-color-picker-format-select" Bordered="false" Size="InputSize.Small"
+                                            Placement="Placement.BottomRight" DropdownMatchSelectWidth='@("68px")'
+                                            Disabled="@Disabled" OnSelectedItemChanged="OnFormatSelected">
+                                        <SelectOptions>
+                                            <SelectOption TItemValue="string" TItem="string" Value="@("hex")" Label="HEX" />
+                                            <SelectOption TItemValue="string" TItem="string" Value="@("rgb")" Label="RGB" />
+                                            <SelectOption TItemValue="string" TItem="string" Value="@("hsb")" Label="HSB" />
+                                        </SelectOptions>
+                                    </Select>
+                                }
+                                <div class="ant-color-picker-input">
+                                    @if (_format == "hex")
+                                    {
+                                        <Input TValue="string" Class="ant-color-picker-hex-input" Size="InputSize.Small"
+                                               Value="@InputValue" Prefix="@HashPrefix" Disabled="@Disabled" OnInput="OnHexInput" />
+                                    }
+                                    else if (_format == "rgb")
+                                    {
+                                        <div class="ant-color-picker-rgb-input">
+                                            <InputNumber TValue="double" Class="ant-color-picker-steppers ant-color-picker-rgb-input" Size="InputSize.Small" Min="0" Max="255" Value="@Rgb.R" ValueChanged="OnRedChanged" Disabled="@Disabled" />
+                                            <InputNumber TValue="double" Class="ant-color-picker-steppers ant-color-picker-rgb-input" Size="InputSize.Small" Min="0" Max="255" Value="@Rgb.G" ValueChanged="OnGreenChanged" Disabled="@Disabled" />
+                                            <InputNumber TValue="double" Class="ant-color-picker-steppers ant-color-picker-rgb-input" Size="InputSize.Small" Min="0" Max="255" Value="@Rgb.B" ValueChanged="OnBlueChanged" Disabled="@Disabled" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="ant-color-picker-hsb-input">
+                                            <InputNumber TValue="double" Class="ant-color-picker-steppers ant-color-picker-hsb-input" Size="InputSize.Small" Min="0" Max="360" Value="@Hsva.H" Formatter="@FormatHue" ValueChanged="OnHueChanged" Disabled="@Disabled" />
+                                            <InputNumber TValue="double" Class="ant-color-picker-steppers ant-color-picker-hsb-input" Size="InputSize.Small" Min="0" Max="100" Value="@(Hsva.S * 100)" Formatter="@FormatPercent" ValueChanged="OnSaturationChanged" Disabled="@Disabled" />
+                                            <InputNumber TValue="double" Class="ant-color-picker-steppers ant-color-picker-hsb-input" Size="InputSize.Small" Min="0" Max="100" Value="@(Hsva.V * 100)" Formatter="@FormatPercent" ValueChanged="OnBrightnessChanged" Disabled="@Disabled" />
+                                        </div>
+                                    }
+                                </div>
+                                @if (!DisabledAlpha)
+                                {
+                                    <InputNumber TValue="double" Class="ant-color-picker-steppers ant-color-picker-alpha-input" Size="InputSize.Small" Min="0" Max="100" Value="@(Hsva.A * 100)" Formatter="@FormatPercent" ValueChanged="OnAlphaChanged" Disabled="@Disabled" />
+                                }
                             </div>
                         </div>
+                    @if (Presets.Count > 0)
+                    {
+                        <div class="ant-divider ant-divider-horizontal" role="separator"></div>
+                        <div class="ant-color-picker-presets">
+                            @foreach (var preset in Presets)
+                            {
+                                <div class="ant-color-picker-presets-group" @key="preset">
+                                    <div class="ant-color-picker-presets-label">@preset.Label</div>
+                                    <div class="ant-color-picker-presets-items">
+                                        @foreach (var color in preset.Colors)
+                                        {
+                                            <div class="ant-color-picker-color-block @GetPresetClass(color)" role="button" aria-label="@color" title="@color"
+                                                 tabindex="@(Disabled ? -1 : 0)" aria-disabled="@Disabled" @onclick="() => SelectPreset(color)" @onclick:stopPropagation="true"
+                                                 @onkeydown="args => OnPresetKeyDown(color, args)">
+                                                <div class="ant-color-picker-color-block-inner" style="background-color:@color"></div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
                     </div>
                 </div>
             </div>
         </div>
-    }
-</div>
+    </div>
+}

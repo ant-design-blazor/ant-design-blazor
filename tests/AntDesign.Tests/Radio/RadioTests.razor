@@ -5,11 +5,11 @@
     {
         var cut = Context.Render(@<Radio TValue="bool">Radio</Radio>);
         cut.MarkupMatches(
-        @<label class="ant-radio-wrapper" id:ignore>
-            <span class="ant-radio">
-                <input type="radio" class="ant-radio-input">
-                <span class="ant-radio-inner"></span>
-            </span><span>Radio</span>
+        @<label class="ant-radio-wrapper ant-radio-css-var">
+            <span class="ant-radio ant-wave-target">
+                <input id:ignore type="radio" class="ant-radio-input">
+
+            </span><span class="ant-radio-label">Radio</span>
         </label>);
     }
 
@@ -18,11 +18,11 @@
     {
         var cut = Context.Render(@<Radio TValue="string" Value="@("Test")">Radio</Radio>);
         cut.MarkupMatches(
-        @<label class="ant-radio-wrapper" id:ignore>
-            <span class="ant-radio">
-                <input type="radio" class="ant-radio-input" value="Test">
-                <span class="ant-radio-inner"></span>
-            </span><span>Radio</span>
+        @<label class="ant-radio-wrapper ant-radio-css-var">
+            <span class="ant-radio ant-wave-target">
+                <input id:ignore type="radio" class="ant-radio-input" value="Test">
+
+            </span><span class="ant-radio-label">Radio</span>
         </label>);
     }
 

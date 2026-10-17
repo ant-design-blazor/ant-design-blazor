@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import ts from '/Volumes/Data/GitHub/ant-design/node_modules/typescript/lib/typescript.js';
+import ts from 'typescript';
 import { readReactSnapshot } from './html-structure-compare.mjs';
 
 const defaultReactRoot = '/Volumes/Data/GitHub/ant-design';

@@ -2,7 +2,7 @@
 
 import fs from 'node:fs';
 import process from 'node:process';
-import { JSDOM } from '/Volumes/Data/GitHub/ant-design/node_modules/jsdom/lib/api.js';
+import { JSDOM } from 'jsdom';
 
 const DEFAULT_IGNORED_ATTRIBUTES = new Set(['id']);
 

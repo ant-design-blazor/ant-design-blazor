@@ -41,6 +41,9 @@ namespace AntDesign
     {
         private FormSize? _formSize;
 
+        [CascadingParameter]
+        internal SpaceCompactItemContext CompactItemContext { get; set; }
+
         private const int RemoveAnimationAfter = 500;
 
         [CascadingParameter(Name = "FormSize")]
@@ -80,6 +83,18 @@ namespace AntDesign
         /// <default value="Color.None" />
         [Parameter]
         public Color Color { get; set; } = Color.None;
+
+        /// <summary>
+        /// Set the semantic v6 color of the button.
+        /// </summary>
+        [Parameter]
+        public ButtonColor? ButtonColor { get; set; }
+
+        /// <summary>
+        /// Set the visual v6 variant of the button.
+        /// </summary>
+        [Parameter]
+        public ButtonVariant? Variant { get; set; }
 
         /// <summary>
         /// Option to fit button width to its parent width
@@ -133,6 +148,25 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string IconFont { get; set; }
+
+        /// <summary>
+        /// Set the placement of the button icon relative to its content.
+        /// </summary>
+        /// <default value="ButtonIconPlacement.Start" />
+        [Parameter]
+        public ButtonIconPlacement IconPlacement { get; set; } = ButtonIconPlacement.Start;
+
+        /// <summary>
+        /// Semantic class names keyed by root, icon, and content.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>
+        /// Semantic inline styles keyed by root, icon, and content.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
 
         /// <summary>
         /// Show loading indicator. You have to write the loading logic on your own.
@@ -198,6 +232,36 @@ namespace AntDesign
             [ButtonType.Text] = "text",
         };
 
+        private static readonly Dictionary<ButtonColor, string> _colorMap = new()
+        {
+            [global::AntDesign.ButtonColor.Default] = "default",
+            [global::AntDesign.ButtonColor.Primary] = "primary",
+            [global::AntDesign.ButtonColor.Danger] = "dangerous",
+            [global::AntDesign.ButtonColor.Blue] = "blue",
+            [global::AntDesign.ButtonColor.Cyan] = "cyan",
+            [global::AntDesign.ButtonColor.Geekblue] = "geekblue",
+            [global::AntDesign.ButtonColor.Gold] = "gold",
+            [global::AntDesign.ButtonColor.Green] = "green",
+            [global::AntDesign.ButtonColor.Lime] = "lime",
+            [global::AntDesign.ButtonColor.Magenta] = "magenta",
+            [global::AntDesign.ButtonColor.Orange] = "orange",
+            [global::AntDesign.ButtonColor.Pink] = "pink",
+            [global::AntDesign.ButtonColor.Purple] = "purple",
+            [global::AntDesign.ButtonColor.Red] = "red",
+            [global::AntDesign.ButtonColor.Volcano] = "volcano",
+            [global::AntDesign.ButtonColor.Yellow] = "yellow",
+        };
+
+        private static readonly Dictionary<ButtonVariant, string> _buttonVariantMap = new()
+        {
+            [ButtonVariant.Solid] = "solid",
+            [ButtonVariant.Outlined] = "outlined",
+            [ButtonVariant.Dashed] = "dashed",
+            [ButtonVariant.Filled] = "filled",
+            [ButtonVariant.Text] = "text",
+            [ButtonVariant.Link] = "link",
+        };
+
         /// <summary>
         /// Do not wrap with &lt;span&gt;
         /// </summary>
@@ -208,11 +272,30 @@ namespace AntDesign
 
         private const string BtnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
 
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return semanticStyle;
+            if (string.IsNullOrWhiteSpace(semanticStyle)) return baseStyle;
+            return $"{baseStyle.TrimEnd().TrimEnd(';')}; {semanticStyle}";
+        }
+
         protected void SetClassMap()
         {
             var prefixName = "ant-btn";
             var buttonType = Type.GetValueOrDefault(ButtonType.Default);
-            var color = Danger ? "dangerous" : buttonType == ButtonType.Link ? "link" : buttonType == ButtonType.Primary ? "primary" : "default";
+            var color = ButtonColor.HasValue
+                ? _colorMap[ButtonColor.Value]
+                : Danger ? "dangerous" : buttonType == ButtonType.Link ? "link" : buttonType == ButtonType.Primary ? "primary" : "default";
+            var variant = Variant.HasValue ? _buttonVariantMap[Variant.Value] : _variantMap[buttonType];
+            var hasColorOrVariant = Type.HasValue || ButtonColor.HasValue || Variant.HasValue;
 
             ClassMapper.Clear()
                 .Add(prefixName)
@@ -220,14 +303,16 @@ namespace AntDesign
                 // classes consumed by antd-v6.css. This is the same class contract as
                 // the React implementation and lets old selectors remain compatible.
                 .GetIf(() => $"{prefixName}-{_typeMap[buttonType]}", () => Type.HasValue)
-                .GetIf(() => $"{prefixName}-color-{color}", () => Type.HasValue)
-                .GetIf(() => $"{prefixName}-variant-{_variantMap[buttonType]}", () => Type.HasValue)
+                .GetIf(() => $"{prefixName}-color-{color}", () => hasColorOrVariant)
+                .GetIf(() => $"{prefixName}-variant-{variant}", () => hasColorOrVariant)
                 .If($"{prefixName}-dangerous", () => Danger)
                 .GetIf(() => $"{prefixName}-{Shape.ToString().ToLowerInvariant()}", () => Shape != ButtonShape.Rectangle)
-                .If($"{prefixName}-lg", () => Size == ButtonSize.Large)
-                .If($"{prefixName}-sm", () => Size == ButtonSize.Small)
+                .If($"{prefixName}-lg", () => Size == ButtonSize.Large || CompactItemContext?.Size == InputSize.Large)
+                .If($"{prefixName}-sm", () => Size == ButtonSize.Small || CompactItemContext?.Size == InputSize.Small)
+                .Add(CompactItemContext?.ClassFor(prefixName))
                 .If($"{prefixName}-loading", () => Loading)
                 .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && this.ChildContent == null)
+                .If($"{prefixName}-icon-end", () => IconPlacement == ButtonIconPlacement.End)
                 .If($"{prefixName}-background-ghost", () => Ghost)
                 .If($"{prefixName}-block", () => this.Block)
                 .If($"{prefixName}-rtl", () => RTL)

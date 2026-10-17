@@ -1,0 +1,27 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <div>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <Divider>Text</Divider>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <Divider Orientation="DividerOrientation.Left">Left Text</Divider>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <Divider Orientation="DividerOrientation.Right">Right Text</Divider>
+    </div>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Divider"] = new Dictionary<string, string>
+            {
+                ["textPaddingInline"] = "16px",
+                ["orientationMargin"] = "0.2",
+                ["verticalMarginInline"] = "16px"
+            }
+        }
+    };
+}

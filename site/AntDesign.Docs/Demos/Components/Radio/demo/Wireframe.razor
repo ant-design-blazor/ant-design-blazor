@@ -1,0 +1,18 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <RadioGroup TValue="int" Value="1" Options="@_options" />
+    <br />
+    <RadioGroup TValue="int" Value="1" Options="@_options" Disabled />
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new() { Seed = new GeneratedSeedToken { Wireframe = true } };
+    private readonly RadioOption<int>[] _options =
+    [
+        new() { Value = 1, Label = "A" },
+        new() { Value = 2, Label = "B" },
+        new() { Value = 3, Label = "C" },
+        new() { Value = 4, Label = "D" }
+    ];
+}

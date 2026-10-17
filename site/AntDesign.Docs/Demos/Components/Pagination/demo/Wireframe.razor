@@ -1,0 +1,18 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <Pagination ShowSizeChanger="true" DefaultCurrent="3" Total="500" />
+    <br />
+    <Pagination ShowSizeChanger="true" DefaultCurrent="3" Total="500" Disabled="true" />
+    <br />
+    <Pagination Size="PaginationSize.Small" DefaultCurrent="50" Total="500" />
+    <br />
+    <Pagination Disabled="true" Size="PaginationSize.Small" DefaultCurrent="50" Total="500" />
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Seed = new GeneratedSeedToken { Wireframe = true }
+    };
+}

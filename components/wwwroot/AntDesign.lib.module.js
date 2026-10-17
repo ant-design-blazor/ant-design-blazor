@@ -40,4 +40,11 @@ function loadScriptAndStyle() {
             document.head.appendChild(customStyle);
         }
     }
+
+    if (!document.querySelector('[href$="_content/AntDesign/css/avatar-responsive.css"]')) {
+        var avatarResponsiveStyle = document.createElement('link');
+        avatarResponsiveStyle.setAttribute('href', '_content/AntDesign/css/avatar-responsive.css');
+        avatarResponsiveStyle.setAttribute('rel', 'stylesheet');
+        document.head.appendChild(avatarResponsiveStyle);
+    }
 }

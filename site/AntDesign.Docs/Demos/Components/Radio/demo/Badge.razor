@@ -1,0 +1,16 @@
+<div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start">
+    <RadioGroup TValue="int" @bind-Value="_horizontal" ButtonStyle="RadioButtonStyle.Solid">
+        <Badge Count="1"><Radio RadioButton Value="1">Click Me</Radio></Badge>
+        <Badge Count="2"><Radio RadioButton Value="2">Not Me</Radio></Badge>
+    </RadioGroup>
+    <RadioGroup TValue="string" @bind-Value="_vertical" ButtonStyle="RadioButtonStyle.Solid" Vertical>
+        <Badge Count="1"><Radio RadioButton Value="@("vertical-1")">Click Me</Radio></Badge>
+        <Badge Count="0"><Radio RadioButton Value="@("vertical-0")">Hidden Badge</Radio></Badge>
+        <Badge Count="2"><Radio RadioButton Value="@("vertical-2")">Not Me</Radio></Badge>
+    </RadioGroup>
+</div>
+
+@code {
+    private int _horizontal = 1;
+    private string _vertical = "vertical-1";
+}

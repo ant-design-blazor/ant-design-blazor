@@ -1,0 +1,20 @@
+<Space Direction="SpaceDirection.Vertical">
+    <SpaceCompact>
+        <Button Type="ButtonType.Primary" Loading>Submit</Button>
+        <DropdownButton Type="@((ButtonType.Primary, ButtonType.Primary))" Icon="@IconType.Outline.Ellipsis">
+            <ChildContent>Submit and continue</ChildContent>
+            <Overlay>
+                <Menu><MenuItem Key="1">Submit and continue</MenuItem></Menu>
+            </Overlay>
+        </DropdownButton>
+    </SpaceCompact>
+    <SpaceCompact Size="InputSize.Small">
+        <Button Type="ButtonType.Primary" Loading>Submit</Button>
+        <DropdownButton Type="@((ButtonType.Primary, ButtonType.Primary))" Icon="@IconType.Outline.Ellipsis" Size="ButtonSize.Small">
+            <ChildContent>Submit and continue</ChildContent>
+            <Overlay>
+                <Menu><MenuItem Key="1">Submit and continue</MenuItem></Menu>
+            </Overlay>
+        </DropdownButton>
+    </SpaceCompact>
+</Space>

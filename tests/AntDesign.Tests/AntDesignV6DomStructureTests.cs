@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using AntDesign.Tests;
@@ -31,11 +33,13 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
     {
         JSInterop.Setup<HtmlElement>("AntDesign.interop.domInfoHelper.getInfo", _ => true)
             .SetResult(new HtmlElement());
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(AntDesign.JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect { Width = 200 });
         JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.setDomAttribute", _ => true);
     }
 
     [Fact]
-    public void Button_exposes_v6_root_icon_and_content_slots()
+    public void Button_exposes_v6_root_icon_and_unclassed_content_node()
     {
         var cut = Context.RenderComponent<AntDesign.Button>(parameters =>
         {
@@ -45,7 +49,8 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
 
         Assert.Contains("ant-btn", cut.Markup, StringComparison.Ordinal);
         Assert.Contains("ant-btn-icon", cut.Markup, StringComparison.Ordinal);
-        Assert.Contains("ant-btn-content", cut.Markup, StringComparison.Ordinal);
+        Assert.DoesNotContain("ant-btn-content", cut.Markup, StringComparison.Ordinal);
+        Assert.Equal("Save", cut.Find("button > span:not(.ant-btn-icon)").TextContent);
     }
 
     [Fact]
@@ -89,7 +94,8 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
         var cut = Context.RenderComponent<AntDesign.Breadcrumb>(parameters =>
             parameters
                 .Add(x => x.Separator, "-")
-                .AddChildContent<AntDesign.BreadcrumbItem>(item => item.Add(x => x.ChildContent, "Home")));
+                .AddChildContent<AntDesign.BreadcrumbItem>(item => item.Add(x => x.ChildContent, "Home"))
+                .AddChildContent<AntDesign.BreadcrumbItem>(item => item.Add(x => x.ChildContent, "Page")));
 
         Assert.NotNull(cut.Find(".ant-breadcrumb"));
         Assert.NotNull(cut.Find(".ant-breadcrumb-item"));
@@ -107,6 +113,7 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
         });
 
         Assert.NotNull(cut.Find(".ant-card"));
+        Assert.Contains("css-var-root", cut.Find(".ant-card").ClassList);
         Assert.NotNull(cut.Find(".ant-card-head"));
         Assert.NotNull(cut.Find(".ant-card-head-title"));
         Assert.NotNull(cut.Find(".ant-card-extra"));
@@ -143,10 +150,12 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
         });
 
         Assert.NotNull(cut.Find(".ant-collapse"));
+        Assert.Contains("css-var-root", cut.Find(".ant-collapse").ClassList);
+        Assert.Contains("ant-collapse-icon-placement-start", cut.Find(".ant-collapse").ClassList);
         Assert.NotNull(cut.Find(".ant-collapse-header"));
-        Assert.NotNull(cut.Find(".ant-collapse-header-text"));
+        Assert.NotNull(cut.Find(".ant-collapse-title"));
         Assert.NotNull(cut.Find(".ant-collapse-expand-icon"));
-        Assert.NotNull(cut.Find(".ant-collapse-content-box"));
+        Assert.NotNull(cut.Find(".ant-collapse-panel-active .ant-collapse-body"));
     }
 
     [Fact]
@@ -225,6 +234,63 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
 
         Assert.NotNull(cut.Find(".ant-pagination"));
         Assert.NotNull(cut.Find(".ant-pagination-item"));
+        Assert.Equal("true", cut.Find(".ant-pagination-prev").GetAttribute("aria-disabled"));
+        Assert.Equal("false", cut.Find(".ant-pagination-next").GetAttribute("aria-disabled"));
+        Assert.Contains("ant-pagination-item-active", cut.Find(".ant-pagination-item-1").ClassList);
+        Assert.Equal("nofollow", cut.Find(".ant-pagination-item-1 a").GetAttribute("rel"));
+    }
+
+    [Fact]
+    public void Transfer_uses_v6_section_and_actions_structure()
+    {
+        var cut = Context.RenderComponent<AntDesign.Transfer>(parameters =>
+            parameters.Add(x => x.DataSource, new[]
+            {
+                new AntDesign.TransferItem { Key = "item-1", Title = "Source item" },
+            })
+            .Add(x => x.TargetKeys, Array.Empty<string>())
+            .Add(x => x.SelectedKeys, Array.Empty<string>()));
+
+        Assert.Equal(2, cut.FindAll(".ant-transfer-section").Count);
+        Assert.Equal(2, cut.FindAll(".ant-transfer-list-header").Count);
+        Assert.Equal(2, cut.FindAll(".ant-transfer-list-body").Count);
+        Assert.NotNull(cut.Find(".ant-transfer-actions"));
+        Assert.Single(cut.FindAll(".ant-transfer-list-content-item"));
+        var itemCheckbox = cut.Find(".ant-transfer-list-content-item > .ant-transfer-list-checkbox");
+        Assert.NotNull(itemCheckbox);
+        Assert.Null(itemCheckbox.QuerySelector(".ant-checkbox-label"));
+        Assert.NotNull(cut.Find(".ant-transfer-list-content-item > .ant-transfer-list-content-item-text"));
+        Assert.Empty(cut.FindAll(".ant-transfer-operation"));
+        Assert.Empty(cut.FindAll(".ant-transfer-list-footer"));
+    }
+
+    [Fact]
+    public void TreeSelect_uses_v6_root_popup_and_tree_item_classes()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        JSInterop.Setup<AntDesign.Core.JsInterop.Modules.Components.OverlayPosition>(
+                AntDesign.JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
+                _ => true)
+            .SetResult(new AntDesign.Core.JsInterop.Modules.Components.OverlayPosition());
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(AntDesign.JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect { Width = 200 });
+
+        var cut = Context.RenderComponent<AntDesign.TreeSelect<string, string>>(parameters => parameters
+            .Add(x => x.DataSource, new[] { "tree item" })
+            .Add(x => x.TitleExpression, node => node.DataItem)
+            .Add(x => x.Open, true)
+            .Add(x => x.TreeDefaultExpandAll, true));
+
+        var root = cut.Find(".ant-select.ant-tree-select");
+        Assert.Contains("ant-select-outlined", root.ClassList);
+        Assert.Contains("ant-select-css-var", root.ClassList);
+        Assert.Contains("ant-tree-select-css-var", root.ClassList);
+
+        var popup = cut.WaitForElement(".ant-select-dropdown.ant-tree-select-dropdown");
+        Assert.Contains("ant-select-css-var", popup.ClassList);
+        Assert.Contains("ant-tree-select-css-var", popup.ClassList);
+        Assert.NotNull(popup.QuerySelector(".ant-select-tree .ant-select-tree-treenode"));
+        Assert.NotNull(popup.QuerySelector(".ant-select-tree-title"));
     }
 
     [Fact]
@@ -255,6 +321,73 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
     }
 
     [Fact]
+    public void SpaceCompact_emits_v6_root_and_child_position_classes_without_wrapper_nodes()
+    {
+        var cut = Context.RenderComponent<AntDesign.SpaceCompact>(parameters =>
+            parameters.Add(x => x.Block, true)
+                .AddChildContent<AntDesign.SpaceCompactItem>(first => first
+                    .Add(x => x.Position, AntDesign.SpaceCompactItemPosition.First)
+                    .AddChildContent<AntDesign.Button>(button => button.AddChildContent("A")))
+                .AddChildContent<AntDesign.SpaceCompactItem>(last => last
+                    .Add(x => x.Position, AntDesign.SpaceCompactItemPosition.Last)
+                    .AddChildContent<AntDesign.Button>(button => button.AddChildContent("B"))));
+
+        var root = cut.Find(".ant-space-compact.ant-space-compact-block");
+        Assert.Equal(2, root.QuerySelectorAll(":scope > .ant-btn").Length);
+        Assert.Contains("ant-btn-compact-item", root.QuerySelectorAll(".ant-btn")[0].ClassList);
+        Assert.Contains("ant-btn-compact-first-item", root.QuerySelectorAll(".ant-btn")[0].ClassList);
+        Assert.Contains("ant-btn-compact-last-item", root.QuerySelectorAll(".ant-btn")[1].ClassList);
+    }
+
+    [Fact]
+    public void SpaceCompact_applies_context_to_input_and_addon_without_item_wrappers()
+    {
+        var cut = Context.RenderComponent<AntDesign.SpaceCompact>(parameters =>
+            parameters.Add(x => x.Size, AntDesign.InputSize.Small)
+                .AddChildContent<AntDesign.SpaceCompactItem>(first => first
+                    .Add(x => x.Position, AntDesign.SpaceCompactItemPosition.First)
+                    .AddChildContent<AntDesign.SpaceAddon>(addon => addon.AddChildContent("https://")))
+                .AddChildContent<AntDesign.SpaceCompactItem>(last => last
+                    .Add(x => x.Position, AntDesign.SpaceCompactItemPosition.Last)
+                    .AddChildContent<AntDesign.Input<string>>()));
+
+        var root = cut.Find(".ant-space-compact");
+        Assert.Equal(2, root.Children.Length);
+        Assert.Contains("ant-space-addon-compact-first-item", root.Children[0].ClassList);
+        Assert.Contains("ant-space-addon-small", root.Children[0].ClassList);
+        Assert.Contains("ant-input-compact-last-item", root.Children[1].ClassList);
+        Assert.Contains("ant-input-sm", root.Children[1].ClassList);
+    }
+
+    [Fact]
+    public void Space_applies_semantic_classes_and_styles_to_root_items_and_separator()
+    {
+        var cut = Context.RenderComponent<AntDesign.Space>(parameters =>
+            parameters.Add(x => x.Split, builder => builder.AddContent(0, "•"))
+                .Add(x => x.ClassNames, new Dictionary<string, string>
+                {
+                    ["root"] = "custom-root",
+                    ["item"] = "custom-item",
+                    ["separator"] = "custom-separator"
+                })
+                .Add(x => x.Styles, new Dictionary<string, string>
+                {
+                    ["root"] = "border: 2px solid red;",
+                    ["item"] = "padding: 4px;",
+                    ["separator"] = "color: red;"
+                })
+                .AddChildContent<AntDesign.SpaceItem>(item => item.AddChildContent("A"))
+                .AddChildContent<AntDesign.SpaceItem>(item => item.AddChildContent("B")));
+
+        Assert.Contains("custom-root", cut.Find(".ant-space").ClassList);
+        Assert.Contains("custom-item", cut.Find(".ant-space-item").ClassList);
+        Assert.Contains("custom-separator", cut.Find(".ant-space-item-separator").ClassList);
+        Assert.Contains("border: 2px solid red", cut.Find(".ant-space").GetAttribute("style"));
+        Assert.Contains("padding: 4px", cut.Find(".ant-space-item").GetAttribute("style"));
+        Assert.Contains("color: red", cut.Find(".ant-space-item-separator").GetAttribute("style"));
+    }
+
+    [Fact]
     public void Progress_exposes_v6_root_body_rail_track_and_indicator_slots()
     {
         var cut = Context.RenderComponent<AntDesign.Progress>(parameters =>
@@ -271,10 +404,22 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
     public void LayoutSider_exposes_v6_root_and_body_slots()
     {
         var cut = Context.RenderComponent<AntDesign.Sider>(parameters =>
-            parameters.AddChildContent("Navigation"));
+            parameters.Add(x => x.ClassNames, new Dictionary<string, string>
+                {
+                    ["root"] = "custom-sider-root",
+                    ["body"] = "custom-sider-body"
+                })
+                .Add(x => x.Styles, new Dictionary<string, string>
+                {
+                    ["body"] = "min-height: 96px;"
+                })
+                .AddChildContent("Navigation"));
 
-        Assert.NotNull(cut.Find(".ant-layout-sider"));
-        Assert.NotNull(cut.Find(".ant-layout-sider-children"));
+        var root = cut.Find(".ant-layout-sider");
+        var body = cut.Find(".ant-layout-sider-children");
+        Assert.Contains("custom-sider-root", root.ClassList);
+        Assert.Contains("custom-sider-body", body.ClassList);
+        Assert.Contains("min-height: 96px", body.GetAttribute("style"));
     }
 
     [Fact]
@@ -305,15 +450,19 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
     }
 
     [Fact]
-    public void Switch_exposes_v6_root_indicator_and_content_slots()
+    public void Switch_matches_v6_root_indicator_and_content_slots()
     {
         var cut = Context.RenderComponent<AntDesign.Switch>(parameters =>
             parameters.Add(x => x.CheckedChildren, "ON")
                 .Add(x => x.UnCheckedChildren, "OFF"));
 
         Assert.NotNull(cut.Find(".ant-switch"));
-        Assert.NotNull(cut.Find(".ant-switch-indicator"));
-        Assert.NotNull(cut.Find(".ant-switch-content"));
+        Assert.Contains("css-var-root", cut.Find(".ant-switch").ClassList);
+        Assert.NotNull(cut.Find(".ant-switch-handle"));
+        Assert.NotNull(cut.Find(".ant-switch-inner"));
+        Assert.NotNull(cut.Find(".ant-switch-inner-checked"));
+        Assert.NotNull(cut.Find(".ant-switch-inner-unchecked"));
+        Assert.Empty(cut.FindAll(".ant-click-animating-node"));
     }
 
     [Fact]
@@ -415,6 +564,43 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
     }
 
     [Fact]
+    public void Anchor_supports_horizontal_direction_and_semantic_slots()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(AntDesign.JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+
+        var classNames = new Dictionary<string, string>
+        {
+            ["root"] = "custom-root",
+            ["item"] = "custom-item",
+            ["itemTitle"] = "custom-title",
+            ["indicator"] = "custom-indicator"
+        };
+        var styles = new Dictionary<string, string>
+        {
+            ["root"] = "height: 120px",
+            ["itemTitle"] = "color: red"
+        };
+
+        var cut = Context.RenderComponent<AntDesign.Anchor>(parameters => parameters
+            .Add(x => x.Direction, "horizontal")
+            .Add(x => x.Affix, false)
+            .Add(x => x.ClassNames, classNames)
+            .Add(x => x.Styles, styles)
+            .AddChildContent<AntDesign.AnchorLink>(link => link
+                .Add(x => x.Href, "#overview")
+                .Add(x => x.TargetOffset, 50)
+                .Add(x => x.Title, "Overview")));
+
+        Assert.Contains("ant-anchor-wrapper-horizontal", cut.Find(".custom-root").ClassName);
+        Assert.NotNull(cut.Find(".custom-indicator"));
+        Assert.NotNull(cut.Find(".custom-item"));
+        Assert.Equal("color: red", cut.Find(".custom-title").GetAttribute("style"));
+        Assert.Contains("height: 120px", cut.Find(".custom-root").GetAttribute("style"));
+    }
+
+    [Fact]
     public void Calendar_exposes_v6_root_header_body_content_and_item_slots()
     {
         JSInterop.Mode = JSRuntimeMode.Loose;
@@ -423,12 +609,28 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
 
         var cut = Context.RenderComponent<AntDesign.Calendar>();
 
-        Assert.NotNull(cut.Find(".ant-picker-calendar"));
+        var root = cut.Find(".ant-picker-calendar");
+        Assert.Equal("ant-picker-calendar ant-picker-calendar-full css-var-root", root.ClassName);
         Assert.NotNull(cut.Find(".ant-picker-calendar-header"));
         Assert.NotNull(cut.Find(".ant-picker-body"));
         Assert.NotNull(cut.Find(".ant-picker-content"));
         Assert.NotNull(cut.Find(".ant-picker-cell"));
         Assert.NotNull(cut.Find(".ant-picker-calendar-date-content"));
+    }
+
+    [Fact]
+    public void Carousel_exposes_v6_root_css_scope_and_slick_slide_structure()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var cut = Context.RenderComponent<AntDesign.Carousel>(parameters => parameters
+            .AddChildContent<AntDesign.CarouselSlick>(slide => slide.AddChildContent("Slide 1")));
+
+        var root = cut.Find(".ant-carousel");
+        Assert.Equal("ant-carousel css-var-root", root.ClassName);
+        Assert.NotNull(cut.Find(".slick-slider.slick-initialized"));
+        Assert.NotNull(cut.Find(".slick-slide.slick-active.slick-current"));
+        Assert.Equal("Slide 1", cut.Find(".slick-slide.slick-active").TextContent.Trim());
     }
 
     [Fact]
@@ -457,8 +659,16 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
     {
         var cut = Context.RenderComponent<AntDesign.InputNumber<double>>();
 
-        Assert.NotNull(cut.Find(".ant-input-number"));
-        Assert.NotNull(cut.Find(".ant-input-number-actions"));
+        var root = cut.Find(".ant-input-number");
+        Assert.Contains("ant-input-number-mode-input", root.ClassList);
+        Assert.Contains("css-var-root", root.ClassList);
+        Assert.Contains("ant-input-number-css-var", root.ClassList);
+        Assert.Contains("ant-input-number-outlined", root.ClassList);
+        Assert.Equal("INPUT", root.Children[0].TagName);
+        Assert.Equal("ant-input-number-actions", root.Children[1].ClassName);
+        Assert.Equal(2, cut.FindAll(".ant-input-number-action").Count);
+        Assert.Empty(cut.FindAll(".ant-input-number-handler-wrap"));
+        Assert.Empty(cut.FindAll(".ant-input-number-input-wrap"));
         Assert.NotNull(cut.Find(".ant-input-number-input"));
     }
 
@@ -639,6 +849,7 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
             .AddChildContent("Open details"));
 
         Assert.NotNull(cut.Find(".ant-popover-content"));
+        Assert.NotNull(cut.Find(".ant-popover.ant-popover-css-var"));
         Assert.Equal("Details", cut.Find(".ant-popover-title").TextContent.Trim());
         Assert.Equal("More information", cut.Find(".ant-popover-inner-content").TextContent.Trim());
     }
@@ -658,6 +869,7 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
         await cut.Find("div").TriggerEventAsync("onmouseenter", new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
 
         Assert.Equal("Help", cut.Find(".ant-tooltip-container").TextContent.Trim());
+        Assert.NotNull(cut.Find(".ant-tooltip.ant-tooltip-css-var"));
         Assert.NotNull(cut.Find(".ant-tooltip-arrow .ant-tooltip-arrow-content"));
         Assert.Empty(cut.FindAll(".ant-tooltip-content"));
         Assert.Empty(cut.FindAll(".ant-tooltip-inner"));
@@ -706,17 +918,140 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
     {
         var cut = Context.RenderComponent<AntDesign.ColorPicker>(parameters => parameters
             .Add(x => x.Value, "#ff0000")
-            .Add(x => x.ShowText, true));
+            .Add(x => x.ShowText, true)
+            .Add(x => x.Size, "large"));
 
-        Assert.NotNull(cut.Find(".ant-color-picker-trigger"));
-        Assert.NotNull(cut.Find(".ant-color-picker-color-block"));
-        Assert.Contains("#ff0000", cut.Find(".ant-color-picker-color-block-inner").GetAttribute("style"), StringComparison.OrdinalIgnoreCase);
-        Assert.Equal("#ff0000", cut.Find(".ant-color-picker-trigger-text").TextContent);
+        var trigger = cut.Find(".ant-color-picker-trigger");
+        Assert.Contains("ant-color-picker-lg", trigger.ClassList);
+        Assert.Equal("DIV", trigger.TagName);
+        Assert.Equal("DIV", cut.Find(".ant-color-picker-color-block").TagName);
+        Assert.Equal("DIV", cut.Find(".ant-color-picker-color-block-inner").TagName);
+        Assert.Contains("background:#ff0000", cut.Find(".ant-color-picker-color-block-inner").GetAttribute("style"), StringComparison.OrdinalIgnoreCase);
+        Assert.Equal("#FF0000", cut.Find(".ant-color-picker-trigger-text").TextContent);
 
-        await cut.Find(".ant-color-picker-color-block").ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+        await trigger.ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
         Assert.NotNull(cut.Find(".ant-popover.ant-color-picker"));
         Assert.NotNull(cut.Find(".ant-color-picker-inner-content"));
-        Assert.NotNull(cut.Find("input[type=color]"));
+        Assert.NotNull(cut.Find(".ant-color-picker-select .ant-color-picker-saturation"));
+        Assert.Equal(2, cut.FindAll(".ant-slider.ant-color-picker-slider.ant-slider-horizontal").Count);
+        Assert.Equal(2, cut.FindAll(".ant-slider-rail.ant-color-picker-slider-rail").Count);
+        Assert.Equal(2, cut.FindAll(".ant-slider-handle.ant-slider-handle-1.ant-color-picker-slider-handle").Count);
+        Assert.NotNull(cut.Find(".ant-color-picker-format-select"));
+    }
+
+    [Fact]
+    public async Task ColorPicker_matches_react_small_disabled_trigger_classes()
+    {
+        var cut = Context.RenderComponent<AntDesign.ColorPicker>(parameters => parameters
+            .Add(x => x.Size, "small")
+            .Add(x => x.Disabled, true)
+            .Add(x => x.ShowText, true));
+
+        var trigger = cut.Find(".ant-color-picker-trigger");
+        Assert.Contains("ant-color-picker-sm", trigger.ClassList);
+        Assert.Contains("ant-color-picker-trigger-disabled", trigger.ClassList);
+        Assert.DoesNotContain("button", trigger.InnerHtml, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal("#1677FF", cut.Find(".ant-color-picker-trigger-text").TextContent);
+        await trigger.ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+        Assert.Empty(cut.FindAll(".ant-popover.ant-color-picker"));
+    }
+
+    [Fact]
+    public async Task ColorPicker_clears_and_selects_preset_colors()
+    {
+        var changed = new List<string>();
+        var cleared = false;
+        var presets = new[]
+        {
+            new AntDesign.ColorPickerPreset { Label = "Brand", Colors = new[] { "#1677ff", "#52c41a" } }
+        };
+        var cut = Context.RenderComponent<AntDesign.ColorPicker>(parameters => parameters
+            .Add(x => x.Value, "#1677ff")
+            .Add(x => x.ValueChanged, value => changed.Add(value))
+            .Add(x => x.AllowClear, true)
+            .Add(x => x.Presets, presets)
+            .Add(x => x.OnClear, () => cleared = true)
+            .Add(x => x.Open, true));
+
+        Assert.Equal(2, cut.FindAll(".ant-color-picker-presets-color").Count);
+        await cut.FindAll(".ant-color-picker-presets-color")[1].ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+        Assert.Equal("#52c41a", changed[^1]);
+
+        await cut.Find(".ant-color-picker-operation .ant-color-picker-clear").ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+        Assert.True(cleared);
+        Assert.Equal("transparent", changed[^1]);
+        Assert.Contains("ant-color-picker-clear", cut.Find(".ant-color-picker-trigger").InnerHtml);
+    }
+
+    [Fact]
+    public async Task ColorPicker_panel_edits_hsb_and_switches_format()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(AntDesign.JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect { Width = 300, Height = 160 });
+        var changed = new List<string>();
+        var formats = new List<string>();
+        var cut = Context.RenderComponent<AntDesign.ColorPicker>(parameters => parameters
+            .Add(x => x.Value, "#ff0000")
+            .Add(x => x.ValueChanged, value => changed.Add(value))
+            .Add(x => x.FormatChanged, format => formats.Add(format))
+            .Add(x => x.Open, true));
+
+        await cut.Find(".ant-color-picker-select").TriggerEventAsync("onpointerdown", new Microsoft.AspNetCore.Components.Web.PointerEventArgs { OffsetX = 150, OffsetY = 80 });
+        Assert.Equal("#804040", changed[^1]);
+
+        var formatSelect = cut.FindComponent<AntDesign.Select<string, string>>();
+        formatSelect.SetParametersAndRender(parameters => parameters.Add(x => x.Open, true));
+        await cut.FindAll(".ant-select-item-option")[1].ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs());
+        Assert.Equal("rgb", formats[^1]);
+        var rgbInputs = cut.FindAll(".ant-color-picker-rgb-input .ant-input-number-input");
+        Assert.Equal(3, rgbInputs.Count);
+        Assert.Equal(new[] { "128", "64", "64" }, rgbInputs.Select(input => input.GetAttribute("value")).ToArray());
+        var alphaInput = cut.Find(".ant-color-picker-alpha-input .ant-input-number-input");
+        Assert.Equal("0", alphaInput.GetAttribute("aria-valuemin"));
+        Assert.Equal("100", alphaInput.GetAttribute("aria-valuemax"));
+    }
+
+    [Fact]
+    public async Task ColorPicker_maps_pointer_positions_using_measured_control_dimensions()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(AntDesign.JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect { Width = 300, Height = 160 });
+        var changed = new List<string>();
+        var cut = Context.RenderComponent<AntDesign.ColorPicker>(parameters => parameters
+            .Add(x => x.Value, "#ff0000")
+            .Add(x => x.ValueChanged, value => changed.Add(value))
+            .Add(x => x.Open, true));
+
+        await cut.Find(".ant-color-picker-select").TriggerEventAsync("onpointerdown", new Microsoft.AspNetCore.Components.Web.PointerEventArgs { OffsetX = 300, OffsetY = 0 });
+        Assert.Equal("#FF0000", changed[^1]);
+
+        await cut.Find(".ant-color-picker-select").TriggerEventAsync("onpointermove", new Microsoft.AspNetCore.Components.Web.PointerEventArgs { OffsetX = 150, OffsetY = 80 });
+        Assert.Equal("#804040", changed[^1]);
+
+        await cut.Find(".ant-slider.ant-color-picker-slider").TriggerEventAsync("onpointerdown", new Microsoft.AspNetCore.Components.Web.PointerEventArgs { OffsetX = 150 });
+        Assert.Equal("#40807F", changed[^1]);
+
+        await cut.FindAll(".ant-slider.ant-color-picker-slider")[1].TriggerEventAsync("onpointerdown", new Microsoft.AspNetCore.Components.Web.PointerEventArgs { OffsetX = 150 });
+        Assert.Equal("rgba(64, 128, 127, 0.5)", changed[^1]);
+    }
+
+    [Fact]
+    public async Task ColorPicker_accepts_unprefixed_hex_input_and_ignores_disabled_panel_edits()
+    {
+        var changed = new List<string>();
+        var cut = Context.RenderComponent<AntDesign.ColorPicker>(parameters => parameters
+            .Add(x => x.ValueChanged, value => changed.Add(value))
+            .Add(x => x.Open, true));
+
+        await cut.Find(".ant-color-picker-hex-input input").InputAsync(new Microsoft.AspNetCore.Components.ChangeEventArgs { Value = "ff0000" });
+        Assert.Equal("#FF0000", changed[^1]);
+
+        var disabled = Context.RenderComponent<AntDesign.ColorPicker>(parameters => parameters
+            .Add(x => x.Disabled, true)
+            .Add(x => x.Open, true)
+            .Add(x => x.ValueChanged, value => changed.Add(value)));
+        Assert.Empty(disabled.FindAll(".ant-popover.ant-color-picker"));
+        Assert.Empty(disabled.FindAll(".ant-color-picker-trigger-active"));
     }
 
     [Fact]
@@ -809,6 +1144,7 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
             .AddChildContent("Trigger"));
 
         Assert.NotNull(cut.Find(".ant-popover-arrow"));
+        Assert.NotNull(cut.Find(".ant-popover.ant-popover-css-var"));
         Assert.NotNull(cut.Find(".ant-popover-container[role='tooltip']"));
         Assert.NotNull(cut.Find(".ant-popconfirm-message-icon"));
         Assert.Equal("Confirm action", cut.Find(".ant-popconfirm-title").TextContent.Trim());

@@ -1,0 +1,14 @@
+<Button Type="ButtonType.Primary" OnClick="() => _visible = true">Open drawer</Button>
+<Drawer @bind-Visible="_visible" Title='("Project details")'>
+    <ChildContent>
+        <p>Extra actions can be placed in the header.</p>
+    </ChildContent>
+    <Extra>
+        <Button Type="ButtonType.Primary" Size="ButtonSize.Small" OnClick="Save">Save</Button>
+    </Extra>
+</Drawer>
+
+@code {
+    private bool _visible;
+    private void Save() => _visible = false;
+}

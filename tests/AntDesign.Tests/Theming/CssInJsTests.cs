@@ -7,6 +7,29 @@ namespace AntDesign.Tests.Theming;
 public sealed class CssInJsTests
 {
     [Fact]
+    public void CreateGlobalStyles_GeneratesFontFaceAndGlobalSelectorsWithoutScopedClasses()
+    {
+        var definitions = new[]
+        {
+            new KeyValuePair<string, object>("@font-face", new Dictionary<string, object>
+            {
+                ["fontFamily"] = "AlibabaSans",
+                ["fontWeight"] = 400,
+                ["fontDisplay"] = "swap",
+                ["src"] = "url('/fonts/alibaba-sans.woff2') format('woff2')"
+            }),
+            new KeyValuePair<string, object>("html", new Dictionary<string, object>
+            {
+                ["fontFamily"] = "AlibabaSans, sans-serif"
+            })
+        };
+
+        Assert.Equal(
+            "@font-face{font-family:AlibabaSans;font-weight:400;font-display:swap;src:url('/fonts/alibaba-sans.woff2') format('woff2');}html{font-family:AlibabaSans, sans-serif;}",
+            CssInJs.CreateGlobalStyles(definitions));
+    }
+
+    [Fact]
     public void CreateStyles_GeneratesStableNamedClassesAndCssRules()
     {
         var definitions = new Dictionary<string, object>

@@ -1,0 +1,10 @@
+<Switch @bind-Checked="_open" Style="margin:16px" />
+<FloatButtonGroup Open="@_open" Trigger="FloatButtonGroupTrigger.Click" Icon="customer-service" Style="right:24px">
+    <FloatButton />
+    <FloatButton />
+    <FloatButton Icon="comment" />
+</FloatButtonGroup>
+
+@code {
+    private bool _open = true;
+}

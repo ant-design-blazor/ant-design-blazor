@@ -17,7 +17,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col"" id:ignore>Contents</div>
             ");
         }
 
@@ -48,7 +48,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col ant-col-2"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col ant-col-2"" id:ignore>Contents</div>
             ");
         }
 
@@ -61,7 +61,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col ant-col-3"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col ant-col-3"" id:ignore>Contents</div>
             ");
         }
 
@@ -79,7 +79,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col ant-col-5 ant-col-xs-6"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col ant-col-5 ant-col-xs-6"" id:ignore>Contents</div>
             ");
         }
 
@@ -105,7 +105,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col ant-col-xs-2 ant-col-xs-order-3 ant-col-xs-offset-4 ant-col-xs-push-5 ant-col-xs-pull-6"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col ant-col-xs-2 ant-col-xs-order-3 ant-col-xs-offset-4 ant-col-xs-push-5 ant-col-xs-pull-6"" id:ignore>Contents</div>
             ");
         }
 
@@ -118,7 +118,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col ant-col-xs-4"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col ant-col-xs-4"" id:ignore>Contents</div>
             ");
         }
 
@@ -131,7 +131,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col ant-col-xs-3"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col ant-col-xs-3"" id:ignore>Contents</div>
             ");
         }
 
@@ -148,7 +148,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col ant-col-sm-2"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col ant-col-sm-2"" id:ignore>Contents</div>
             ");
         }
 
@@ -165,7 +165,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col ant-col-md-2"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col ant-col-md-2"" id:ignore>Contents</div>
             ");
         }
 
@@ -182,7 +182,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col ant-col-lg-2"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col ant-col-lg-2"" id:ignore>Contents</div>
             ");
         }
 
@@ -199,7 +199,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col ant-col-xl-2"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col ant-col-xl-2"" id:ignore>Contents</div>
             ");
         }
 
@@ -216,7 +216,7 @@ namespace AntDesign.Tests.Grid
                 p.AddChildContent("Contents");
             });
             cut.MarkupMatches(@"
-                <div class=""ant-col ant-col-xxl-2"" style="" "" id:ignore>Contents</div>
+                <div class=""ant-col ant-col-xxl-2"" id:ignore>Contents</div>
             ");
         }
     }

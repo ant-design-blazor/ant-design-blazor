@@ -1,0 +1,24 @@
+<Cascader Options="@options" DefaultValue="xihu" SelectedNodesChanged="OnChange" />
+<p>Selected path: @value</p>
+
+@code {
+    private string value = "Zhejiang / Hangzhou / West Lake";
+
+    private void OnChange(CascaderNode[] nodes)
+    {
+        value = string.Join(" / ", nodes.Select(node => node.Label));
+        Console.WriteLine(value);
+    }
+
+    private readonly List<CascaderNode> options = new()
+    {
+        new() { Value = "zhejiang", Label = "Zhejiang", Children = new[] {
+            new CascaderNode { Value = "hangzhou", Label = "Hangzhou", Children = new[] {
+                new CascaderNode { Value = "xihu", Label = "West Lake" }
+            }}
+        }},
+        new() { Value = "jiangsu", Label = "Jiangsu", Children = new[] {
+            new CascaderNode { Value = "nanjing", Label = "Nanjing" }
+        }}
+    };
+}

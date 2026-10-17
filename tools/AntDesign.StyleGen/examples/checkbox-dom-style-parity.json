@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Checkbox"
+  },
+  "config": {
+    "timeoutMs": 30000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id", "checked"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_", "^ant-checkbox-css-var$"],
+        "sortClassTokens": true,
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "checkbox-basic-demo",
+      "component": "Checkbox",
+      "react": {
+        "url": "http://localhost:8001/components/checkbox",
+        "scopeSelector": "#checkbox-demo-basic .code-box-demo",
+        "rootSelector": ".ant-checkbox-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/checkbox",
+        "scopeSelector": "#components-checkbox-demo-Basic .code-box-demo",
+        "rootSelector": ".ant-checkbox-wrapper"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "paddingInline", "marginInlineStart",
+        "gap", "alignItems", "lineHeight", "fontSize", "fontWeight", "color", "backgroundColor",
+        "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "icon", "reactSelector": ".ant-checkbox", "blazorSelector": ".ant-checkbox", "minimumCount": 1 },
+        { "path": "input", "reactSelector": ".ant-checkbox-input", "blazorSelector": ".ant-checkbox-input", "minimumCount": 1 },
+        { "path": "label", "reactSelector": ".ant-checkbox-label", "blazorSelector": ".ant-checkbox-label", "minimumCount": 1 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    },
+    {
+      "id": "checkbox-group-demo",
+      "component": "Checkbox.Group",
+      "react": {
+        "url": "http://localhost:8001/components/checkbox",
+        "scopeSelector": "#checkbox-demo-group .code-box-demo",
+        "rootSelector": ".ant-checkbox-group"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/checkbox",
+        "scopeSelector": "#components-checkbox-demo-Group .code-box-demo",
+        "rootSelector": ".ant-checkbox-group"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "paddingInline", "marginInlineStart",
+        "gap", "alignItems", "lineHeight", "fontSize", "fontWeight", "color", "backgroundColor",
+        "borderRadius", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "option", "reactSelector": ".ant-checkbox-wrapper", "blazorSelector": ".ant-checkbox-wrapper", "minimumCount": 3 },
+        { "path": "icon", "reactSelector": ".ant-checkbox", "blazorSelector": ".ant-checkbox", "minimumCount": 3 },
+        { "path": "label", "reactSelector": ".ant-checkbox-label", "blazorSelector": ".ant-checkbox-label", "minimumCount": 3 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    }
+  ]
+}

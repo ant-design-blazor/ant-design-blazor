@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 1,
+  "upstream": { "repository": "ant-design/ant-design", "component": "Grid" },
+  "config": {
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_", "^css-[a-zA-Z0-9]+$", "^acss-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "grid-flex-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/grid",
+        "scopeSelector": "#grid-demo-flex .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-flex .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minHeight", "marginLeft", "marginRight", "marginTop", "marginBottom", "paddingLeft", "paddingRight", "paddingTop", "paddingBottom", "rowGap", "flex", "flexBasis", "maxWidth", "color", "backgroundColor", "textAlign", "borderRadius", "fontSize", "lineHeight", "justifyContent", "alignItems"],
+      "semanticNodes": [
+        { "path": "rows", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 6 },
+        { "path": "columns", "reactSelector": ".ant-col", "blazorSelector": ".ant-col", "minimumCount": 24 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    },
+    {
+      "id": "grid-flex-align-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/grid",
+        "scopeSelector": "#grid-demo-flex-align .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-flex-align .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minHeight", "marginLeft", "marginRight", "marginTop", "marginBottom", "paddingLeft", "paddingRight", "paddingTop", "paddingBottom", "rowGap", "flex", "flexBasis", "maxWidth", "color", "backgroundColor", "textAlign", "borderRadius", "fontSize", "lineHeight", "justifyContent", "alignItems"],
+      "semanticNodes": [
+        { "path": "rows", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 3 },
+        { "path": "columns", "reactSelector": ".ant-col", "blazorSelector": ".ant-col", "minimumCount": 12 },
+        { "path": "heightSamples", "reactSelector": "p", "blazorSelector": "p", "minimumCount": 12 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    },
+    {
+      "id": "grid-flex-order-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/grid",
+        "scopeSelector": "#grid-demo-flex-order .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-flex-order .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minHeight", "marginLeft", "marginRight", "marginTop", "marginBottom", "paddingLeft", "paddingRight", "paddingTop", "paddingBottom", "rowGap", "flex", "flexBasis", "order", "maxWidth", "color", "backgroundColor", "textAlign", "borderRadius", "fontSize", "lineHeight"],
+      "semanticNodes": [
+        { "path": "rows", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 2 },
+        { "path": "columns", "reactSelector": ".ant-col", "blazorSelector": ".ant-col", "minimumCount": 8 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    },
+    {
+      "id": "grid-offset-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/grid",
+        "scopeSelector": "#grid-demo-offset .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-offset .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minHeight", "marginLeft", "marginRight", "marginInlineStart", "marginInlineEnd", "marginTop", "marginBottom", "paddingLeft", "paddingRight", "paddingTop", "paddingBottom", "flex", "flexBasis", "order", "maxWidth", "color", "backgroundColor", "textAlign", "borderRadius", "fontSize", "lineHeight"],
+      "semanticNodes": [
+        { "path": "rows", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 3 },
+        { "path": "columns", "reactSelector": ".ant-col", "blazorSelector": ".ant-col", "minimumCount": 5 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    },
+    {
+      "id": "grid-responsive-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/grid",
+        "scopeSelector": "#grid-demo-responsive .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-responsive .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minHeight", "marginLeft", "marginRight", "marginTop", "marginBottom", "paddingLeft", "paddingRight", "paddingTop", "paddingBottom", "flex", "flexGrow", "flexShrink", "flexBasis", "order", "maxWidth", "color", "backgroundColor", "textAlign", "borderRadius", "fontSize", "lineHeight"],
+      "semanticNodes": [
+        { "path": "rows", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "columns", "reactSelector": ".ant-col", "blazorSelector": ".ant-col", "minimumCount": 3 }
+      ],
+      "scenarios": [{ "id": "desktop-xl" }]
+    },
+    {
+      "id": "grid-flex-stretch-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/grid",
+        "scopeSelector": "#grid-demo-flex-stretch .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-flex-stretch .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minHeight", "marginLeft", "marginRight", "marginTop", "marginBottom", "paddingLeft", "paddingRight", "paddingTop", "paddingBottom", "flex", "flexGrow", "flexShrink", "flexBasis", "order", "maxWidth", "color", "backgroundColor", "textAlign", "borderRadius", "fontSize", "lineHeight", "justifyContent", "alignItems", "whiteSpace"],
+      "semanticNodes": [
+        { "path": "rows", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 4 },
+        { "path": "columns", "reactSelector": ".ant-col", "blazorSelector": ".ant-col", "minimumCount": 8 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    },
+    {
+      "id": "grid-sort-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/grid",
+        "scopeSelector": "#grid-demo-sort .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-sort .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minHeight", "marginLeft", "marginRight", "marginTop", "marginBottom", "paddingLeft", "paddingRight", "paddingTop", "paddingBottom", "flex", "flexBasis", "order", "maxWidth", "color", "backgroundColor", "textAlign", "borderRadius", "fontSize", "lineHeight"],
+      "semanticNodes": [
+        { "path": "rows", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "columns", "reactSelector": ".ant-col", "blazorSelector": ".ant-col", "minimumCount": 2 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    },
+    {
+      "id": "grid-responsive-more-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/grid",
+        "scopeSelector": "#grid-demo-responsive-more .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-responsive-more .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minHeight", "marginLeft", "marginRight", "marginTop", "marginBottom", "paddingLeft", "paddingRight", "paddingTop", "paddingBottom", "flex", "flexBasis", "order", "maxWidth", "color", "backgroundColor", "textAlign", "borderRadius", "fontSize", "lineHeight"],
+      "semanticNodes": [
+        { "path": "rows", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "columns", "reactSelector": ".ant-col", "blazorSelector": ".ant-col", "minimumCount": 3 }
+      ],
+      "scenarios": [{ "id": "desktop-xl" }]
+    },
+    {
+      "id": "grid-responsive-flex-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/grid",
+        "scopeSelector": "#grid-demo-responsive-flex .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-responsive-flex .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minHeight", "marginLeft", "marginRight", "marginTop", "marginBottom", "paddingLeft", "paddingRight", "paddingTop", "paddingBottom", "flex", "flexGrow", "flexShrink", "flexBasis", "order", "maxWidth", "color", "backgroundColor", "textAlign", "borderRadius", "fontSize", "lineHeight"],
+      "semanticNodes": [
+        { "path": "rows", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "columns", "reactSelector": ".ant-col", "blazorSelector": ".ant-col", "minimumCount": 10 }
+      ],
+      "scenarios": [{ "id": "desktop-xl" }]
+    },
+    {
+      "id": "grid-use-breakpoint-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/grid",
+        "scopeSelector": "#grid-demo-usebreakpoint .code-box-demo",
+        "rootSelector": ".ant-tag"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-useBreakpoint .code-box-demo",
+        "rootSelector": ".ant-tag"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minHeight", "marginLeft", "marginRight", "marginTop", "marginBottom", "paddingLeft", "paddingRight", "paddingTop", "paddingBottom", "color", "backgroundColor", "borderRadius", "fontSize", "lineHeight"],
+      "semanticNodes": [
+        { "path": "breakpoints", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 4 }
+      ],
+      "scenarios": [{ "id": "desktop-xl" }]
+    },
+    {
+      "id": "grid-playground-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/grid",
+        "scopeSelector": "#grid-demo-playground .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-playground .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minHeight", "marginLeft", "marginRight", "marginTop", "marginBottom", "paddingLeft", "paddingRight", "paddingTop", "paddingBottom", "flex", "flexGrow", "flexShrink", "flexBasis", "order", "maxWidth", "color", "backgroundColor", "textAlign", "borderRadius", "fontSize", "lineHeight", "justifyContent", "alignItems"],
+      "semanticNodes": [
+        { "path": "rows", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 2 },
+        { "path": "columns", "reactSelector": ".ant-col", "blazorSelector": ".ant-col", "minimumCount": 10 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    }
+  ]
+}

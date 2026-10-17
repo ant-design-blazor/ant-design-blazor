@@ -121,6 +121,12 @@ namespace AntDesign
         public bool ShowToday { get; set; } = true;
 
         /// <summary>
+        /// Require an explicit confirmation before applying a selected date.
+        /// </summary>
+        [Parameter]
+        public bool NeedConfirm { get; set; }
+
+        /// <summary>
         /// Locale for localizing UI strings
         /// </summary>
         /// <default value="LocaleProvider.CurrentLocale.DatePicker" />
@@ -283,6 +289,12 @@ namespace AntDesign
             get => _defaultPickerValue;
             set => _defaultPickerValue = SortValue(value);
         }
+
+        /// <summary>
+        /// Custom content displayed before the picker input.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Prefix { get; set; }
 
         /// <summary>
         /// Custom suffix icon
@@ -501,6 +513,8 @@ namespace AntDesign
         {
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
+                .Add($"{PrefixCls}-css-var")
+                .If($"{PrefixCls}-outlined", () => Bordered != false)
                 .If($"{PrefixCls}-large", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-small", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-rtl", () => RTL)
@@ -701,7 +715,7 @@ namespace AntDesign
                         }
                     }
                 }
-                else if (!HasTimeInput)
+                else if (!HasTimeInput && !NeedConfirm)
                 {
                     ChangeValue(date, index, true);
                 }
@@ -756,7 +770,7 @@ namespace AntDesign
             }
             else
             {
-                if (HasTimeInput && _pickerStatus[index].SelectedValue is not null)
+                if ((HasTimeInput || NeedConfirm) && _pickerStatus[index].SelectedValue is not null)
                 {
                     ChangeValue(_pickerStatus[index].SelectedValue.Value, index);
                 }

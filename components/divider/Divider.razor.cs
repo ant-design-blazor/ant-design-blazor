@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -61,6 +63,31 @@ namespace AntDesign
         [Parameter]
         public bool Dashed { get; set; } = false;
 
+        /// <summary>
+        /// Whether line is dashed, dotted or solid.
+        /// </summary>
+        /// <default value="solid" />
+        [Parameter]
+        public string Variant { get; set; } = "solid";
+
+        /// <summary>
+        /// Horizontal divider spacing size. Supported values are small, middle, and large.
+        /// </summary>
+        [Parameter]
+        public string Size { get; set; }
+
+        /// <summary>
+        /// Semantic class names keyed by root, rail, and content.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>
+        /// Semantic inline styles keyed by root, rail, and content.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
         private void SetClass()
         {
             ClassMapper.Clear()
@@ -68,17 +95,45 @@ namespace AntDesign
                 .If("ant-divider", () => RTL)
                 .Get(() => $"ant-divider-{Type.ToString().ToLowerInvariant()}")
                 .If("ant-divider-with-text", () => Text != null || ChildContent != null)
-                .GetIf(() => $"ant-divider-with-text-{Orientation.ToString().ToLowerInvariant()}", () => Text != null || ChildContent != null)
+                .GetIf(() => $"ant-divider-with-text-{GetTitlePlacement()}", () => Text != null || ChildContent != null)
                 .If($"ant-divider-plain", () => Plain && (Text != null || ChildContent != null))
-                .If("ant-divider-dashed", () => Dashed)
+                .If("ant-divider-dashed", () => Dashed || string.Equals(Variant, "dashed", StringComparison.OrdinalIgnoreCase))
+                .If("ant-divider-dotted", () => string.Equals(Variant, "dotted", StringComparison.OrdinalIgnoreCase))
+                .If("ant-divider-rail", () => Text == null && ChildContent == null)
+                .If("ant-divider-sm", () => string.Equals(Size, "small", StringComparison.OrdinalIgnoreCase))
+                .If("ant-divider-md", () => string.Equals(Size, "middle", StringComparison.OrdinalIgnoreCase) || string.Equals(Size, "medium", StringComparison.OrdinalIgnoreCase))
                 ;
         }
 
-        protected override void OnInitialized()
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return semanticStyle;
+            if (string.IsNullOrWhiteSpace(semanticStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
+        }
+
+        private string GetTitlePlacement()
+        {
+            return Orientation switch
+            {
+                DividerOrientation.Left => RTL ? "end" : "start",
+                DividerOrientation.Right => RTL ? "start" : "end",
+                _ => "center",
+            };
+        }
+
+        protected override void OnParametersSet()
         {
             SetClass();
-
-            base.OnInitialized();
+            base.OnParametersSet();
         }
     }
 }

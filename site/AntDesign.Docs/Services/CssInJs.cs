@@ -10,6 +10,21 @@ namespace AntDesign.Docs.Services;
 /// <summary>A small object-to-CSS class generator for documentation components.</summary>
 public static class CssInJs
 {
+    public static string CreateGlobalStyles(IEnumerable<KeyValuePair<string, object>> definitions)
+    {
+        if (definitions == null) throw new ArgumentNullException(nameof(definitions));
+
+        var css = new StringBuilder();
+        foreach (var (selector, rule) in definitions)
+        {
+            if (string.IsNullOrWhiteSpace(selector)) throw new ArgumentException("A global CSS selector is required.", nameof(definitions));
+            if (rule == null) throw new ArgumentException($"The CSS rule for '{selector}' cannot be null.", nameof(definitions));
+            AppendRule(css, selector, rule);
+        }
+
+        return css.ToString();
+    }
+
     public static CssStyleSheet CreateStyles(string componentName, object definitions)
     {
         if (string.IsNullOrWhiteSpace(componentName)) throw new ArgumentException("A component name is required.", nameof(componentName));

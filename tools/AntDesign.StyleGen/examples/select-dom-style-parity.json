@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Select"
+  },
+  "config": {
+    "timeoutMs": 20000,
+    "viewport": {
+      "width": 1280,
+      "height": 900,
+      "deviceScaleFactor": 1
+    },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*"],
+        "removeClassPatterns": [
+          "^css-dev-only-do-not-override-",
+          "^css-var-_r_"
+        ],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "select-size-demo",
+      "component": "Select",
+      "matchScopeWidth": "react",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select",
+        "scopeSelector": "#select-demo-size .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8182/en-US/components/select",
+        "scopeSelector": "#components-select-demo-size .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "minHeight", "maxHeight",
+        "paddingBlock", "paddingInline", "marginBlock", "gap", "alignItems", "lineHeight",
+        "fontSize", "fontWeight", "color", "backgroundColor", "borderRadius",
+        "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth",
+        "--ant-select-height", "--ant-select-multi-item-height", "--ant-select-multi-padding-vertical"
+      ],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 3 },
+        { "path": "content", "reactSelector": ".ant-select-content", "blazorSelector": ".ant-select-content", "minimumCount": 3 },
+        { "path": "input", "reactSelector": ".ant-select-input", "blazorSelector": ".ant-select-input", "minimumCount": 3 },
+        { "path": "item", "reactSelector": ".ant-select-selection-item", "blazorSelector": ".ant-select-selection-item", "minimumCount": 4 },
+        { "path": "suffix", "reactSelector": ".ant-select-suffix", "blazorSelector": ".ant-select-suffix", "minimumCount": 3 }
+      ],
+      "scenarios": [
+        { "id": "default", "minimumRoots": 3 },
+        {
+          "id": "large",
+          "minimumRoots": 3,
+          "actions": [
+            {
+              "id": "select-large",
+              "type": "click",
+              "reactSelector": "#select-demo-size input[value=large]",
+              "blazorSelector": "#components-select-demo-size input[value=Large]",
+              "reactCheckedValue": "large",
+              "blazorCheckedValue": "Large",
+              "force": true,
+              "stableForMs": 1000
+            }
+          ]
+        },
+        {
+          "id": "small",
+          "minimumRoots": 3,
+          "actions": [
+            {
+              "id": "select-small",
+              "type": "click",
+              "reactSelector": "#select-demo-size input[value=small]",
+              "blazorSelector": "#components-select-demo-size input[value=Small]",
+              "reactCheckedValue": "small",
+              "blazorCheckedValue": "Small",
+              "force": true,
+              "stableForMs": 1000
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+
+<Form Model="@_model" Layout="FormLayout.Vertical" Style="max-width: 360px" OnFinish="OnFinish">
+    <FormItem Name="Username" Rules="@(new[] { new FormValidationRule { Required = true, Message = "Please input your Username!" } })">
+        <Input @bind-Value="context.Username" Placeholder="Username" />
+    </FormItem>
+    <FormItem Name="Password" Rules="@(new[] { new FormValidationRule { Required = true, Message = "Please input your Password!" } })">
+        <InputPassword @bind-Value="context.Password" Placeholder="Password" />
+    </FormItem>
+    <FormItem>
+        <Flex Justify="FlexJustify.SpaceBetween" Align="FlexAlign.Center">
+            <FormItem NoStyle>
+                <Checkbox @bind-Value="context.Remember">Remember me</Checkbox>
+            </FormItem>
+            <a href="#forgot-password">Forgot password</a>
+        </Flex>
+    </FormItem>
+    <FormItem>
+        <Button Block Type="ButtonType.Primary" HtmlType="submit">Log in</Button>
+        <span>or <a href="#register">Register now!</a></span>
+    </FormItem>
+</Form>
+@if (!string.IsNullOrEmpty(_submitted))
+{
+    <p role="status">Signed in as @_submitted</p>
+}
+
+@code {
+    private readonly LoginModel _model = new() { Remember = true };
+    private string _submitted = string.Empty;
+
+    private void OnFinish(EditContext _)
+    {
+        _submitted = JsonSerializer.Serialize(_model);
+    }
+
+    private sealed class LoginModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public bool Remember { get; set; }
+    }
+}

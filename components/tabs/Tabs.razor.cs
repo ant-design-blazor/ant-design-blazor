@@ -168,6 +168,13 @@ namespace AntDesign
         public TabPosition TabPosition { get; set; } = TabPosition.Top;
 
         /// <summary>
+        /// Logical placement of the tab bar. Start and End follow the configured text direction.
+        /// When omitted, the legacy <see cref="TabPosition"/> parameter is used.
+        /// </summary>
+        [Parameter]
+        public TabPlacement? TabPlacement { get; set; }
+
+        /// <summary>
         /// Basic style of tabs
         /// </summary>
         /// <default value="TabType.Line" />
@@ -244,7 +251,16 @@ namespace AntDesign
         #endregion Parameters
 
         private const string PrefixCls = "ant-tabs";
-        private bool IsHorizontal => TabPosition.IsIn(TabPosition.Top, TabPosition.Bottom);
+        private TabPosition EffectiveTabPosition => TabPlacement switch
+        {
+            AntDesign.TabPlacement.Start => RTL ? AntDesign.TabPosition.Right : AntDesign.TabPosition.Left,
+            AntDesign.TabPlacement.End => RTL ? AntDesign.TabPosition.Left : AntDesign.TabPosition.Right,
+            AntDesign.TabPlacement.Top => AntDesign.TabPosition.Top,
+            AntDesign.TabPlacement.Bottom => AntDesign.TabPosition.Bottom,
+            _ => TabPosition
+        };
+
+        private bool IsHorizontal => EffectiveTabPosition.IsIn(TabPosition.Top, TabPosition.Bottom);
 
         private TabPane _activeTab;
         private HtmlElement _activeTabElement;
@@ -316,7 +332,7 @@ namespace AntDesign
 
             ClassMapper
                 .Add(PrefixCls)
-                .Get(() => $"{PrefixCls}-{TabPosition.ToString().ToLowerInvariant()}")
+                .Get(() => $"{PrefixCls}-{EffectiveTabPosition.ToString().ToLowerInvariant()}")
                 .If($"{PrefixCls}-line", () => Type == TabType.Line)
                 .If($"{PrefixCls}-editable-card", () => Type == TabType.EditableCard)
                 .If($"{PrefixCls}-card", () => Type.IsIn(TabType.EditableCard, TabType.Card))
@@ -333,7 +349,7 @@ namespace AntDesign
 
             _contentClassMapper
                 .Add($"{PrefixCls}-content")
-                .Get(() => $"{PrefixCls}-content-{TabPosition.ToString().ToLowerInvariant()}")
+                .Get(() => $"{PrefixCls}-content-{EffectiveTabPosition.ToString().ToLowerInvariant()}")
                 .If($"{PrefixCls}-content-animated", () => Animated);
 
             _tabsNavWarpPingClassMapper
@@ -638,6 +654,7 @@ namespace AntDesign
         public override Task SetParametersAsync(ParameterView parameters)
         {
             if (parameters.IsParameterChanged(nameof(TabPosition), TabPosition)
+                || parameters.IsParameterChanged(nameof(TabPlacement), TabPlacement)
                 || parameters.IsParameterChanged(nameof(Indicator), Indicator))
             {
                 _needUpdateScrollListPosition = true;

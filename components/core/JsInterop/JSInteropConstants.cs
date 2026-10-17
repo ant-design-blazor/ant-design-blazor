@@ -15,6 +15,7 @@ namespace AntDesign
         public static string GetWindow = DomInfoHelper.GetWindow;
         public static string GetDomInfo => DomInfoHelper.GetInfo;
         public static string GetBoundingClientRect => DomInfoHelper.GetBoundingClientRect;
+        public static string GetBoundingClientRects => DomInfoHelper.GetBoundingClientRects;
         public static string GetFirstChildDomInfo => DomInfoHelper.GetFirstChildDomInfo;
         public static string GetElementsDomInfo => DomInfoHelper.GetElementsDomInfo;
         public static string GetActiveElement => DomInfoHelper.GetActiveElement;
@@ -158,6 +159,7 @@ namespace AntDesign
 
             public static string GetElementsDomInfo => $"{FUNC_PREFIX}getElementsInfo";
             public static string GetBoundingClientRect => $"{FUNC_PREFIX}getBoundingClientRect";
+            public static string GetBoundingClientRects => $"{FUNC_PREFIX}getBoundingClientRects";
             public static string GetFirstChildDomInfo => $"{FUNC_PREFIX}getFirstChildDomInfo";
             public static string GetActiveElement => $"{FUNC_PREFIX}getActiveElement";
             public static string GetScroll => $"{FUNC_PREFIX}getScroll";

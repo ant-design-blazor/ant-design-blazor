@@ -1,0 +1,8 @@
+<Space Direction="SpaceDirection.Vertical" Size="@("24px")" Style="width:300px">
+    <AutoComplete AllowClear Value="Burnaby" Options="_options" />
+    <AutoComplete AllowClear Value="Burnaby" Options="_options" />
+</Space>
+
+@code {
+    private readonly string[] _options = ["Burnaby", "Seattle", "Los Angeles"];
+}

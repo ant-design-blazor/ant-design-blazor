@@ -1,86 +1,27 @@
 ﻿<div>
-    <RadioGroup @bind-Value="selectionType">
+    <RadioGroup @bind-Value="_selectionType">
         <Radio Value="SelectionType.Checkbox">Checkbox</Radio>
-        <Radio Value="SelectionType.Radio">Radio</Radio>
+        <Radio Value="SelectionType.Radio">radio</Radio>
     </RadioGroup>
-
-    <h5>
-        selections: 
-        @if (selectedRows != null)
-        {
-            @foreach (var selected in selectedRows)
-            {
-                <Tag @key="selected" Closable OnClose="e => RemoveSelection(selected.Name)">@selected.Name</Tag>
-            }
-            <Button Danger Size="ButtonSize.Small" OnClick="@(e => { table.SetSelection([]); })">Clear</Button>
-        }
-    </h5>
-
-    <Table @ref="table" DataSource="@data" @bind-SelectedRows="selectedRows" RowKey="x => x.Name" OnSelectAll="OnSelectAll">
-        <Selection Type="@selectionType" Disabled="@(context.Name == "Disabled User")" />
-        <PropertyColumn Property="c=>c.Name">
-            <a>@context.Name</a>
-        </PropertyColumn>
-        <PropertyColumn Property="c=>c.Age" />
-        <PropertyColumn Property="c=>c.Address" />
+    <Divider />
+    <Table TItem="Row" DataSource="_rows" RowKey="x => x.Key" @bind-SelectedRows="_selectedRows">
+        <Selection Type="_selectionType" Disabled="@(context.Name == "Disabled User")" />
+        <PropertyColumn Property="x => x.Name" Title="Name"><a>@context.Name</a></PropertyColumn>
+        <PropertyColumn Property="x => x.Age" Title="Age" />
+        <PropertyColumn Property="x => x.Address" Title="Address" />
     </Table>
 </div>
 
 @code {
+    private SelectionType _selectionType = SelectionType.Checkbox;
+    private IEnumerable<Row> _selectedRows = [];
+    private readonly Row[] _rows =
+    [
+        new("1", "John Brown", 32, "New York No. 1 Lake Park"),
+        new("2", "Jim Green", 42, "London No. 1 Lake Park"),
+        new("3", "Joe Black", 32, "Sydney No. 1 Lake Park"),
+        new("4", "Disabled User", 99, "Sydney No. 1 Lake Park")
+    ];
 
-    ITable table;
-
-    class Column
-    {
-        public string Name { get; set; }
-
-        public int Age { get; set; }
-
-        public string Address { get; set; }
-    }
-
-    Column[] data =
-    {
-        new Column()
-        {
-            Name = "John Brown",
-            Age = 32,
-            Address = "New York No. 1 Lake Park",
-        },
-        new Column()
-        {
-            Name = "Jim Green",
-            Age = 42,
-            Address = "London No. 1 Lake Park",
-        },
-        new Column()
-        {
-            Name = "Joe Black",
-            Age = 32,
-            Address = "Sidney No. 1 Lake Park",
-        },
-        new Column()
-        {
-            Name = "Disabled User",
-            Age = 99,
-            Address = "Sidney No. 1 Lake Park",
-        }
-    };
-
-    IEnumerable<Column> selectedRows;
-    SelectionType selectionType = SelectionType.Checkbox;
-
-    protected override void OnInitialized()
-    {
-    }
-
-    public void RemoveSelection(string key)
-    {
-        this.selectedRows = selectedRows.Where(x => x.Name != key).ToList();
-    }
-
-    void OnSelectAll(bool selectAll)
-    {
-        Console.WriteLine($"select all row? {selectAll}");
-    }
+    private sealed record Row(string Key, string Name, int Age, string Address);
 }

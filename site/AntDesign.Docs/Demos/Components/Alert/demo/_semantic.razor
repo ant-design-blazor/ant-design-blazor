@@ -1,0 +1,29 @@
+@{
+    var classes = new Dictionary<string, string>
+    {
+        ["root"] = "alert-semantic-root",
+        ["section"] = "alert-semantic-section",
+        ["icon"] = "alert-semantic-icon",
+        ["title"] = "alert-semantic-title",
+        ["description"] = "alert-semantic-description",
+        ["actions"] = "alert-semantic-actions",
+        ["close"] = "alert-semantic-close"
+    };
+}
+
+<Alert Message="Info Text" Description="Info description" ShowIcon Closable Type="AlertType.Info"
+       ClassNames="classes" Action="@_action" />
+
+<style>
+    .alert-semantic-root { border-radius: 8px; }
+    .alert-semantic-section { min-width: 0; }
+    .alert-semantic-icon { color: #1677ff; }
+    .alert-semantic-title { letter-spacing: .02em; }
+    .alert-semantic-description { line-height: 1.7; }
+    .alert-semantic-actions { margin-inline-start: 12px; }
+    .alert-semantic-close { color: #1677ff; }
+</style>
+
+@code {
+    private RenderFragment _action => @<Button Size="ButtonSize.Small">Action</Button>;
+}

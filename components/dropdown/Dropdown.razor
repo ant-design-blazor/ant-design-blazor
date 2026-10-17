@@ -44,6 +44,7 @@
 <CascadingValue Value="this" Name="Trigger" IsFixed="@true">
     <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
         <Overlay @ref="_overlay"
+                 CssVarClass="ant-dropdown-css-var"
                  OverlayChildPrefixCls="@($"{PrefixCls}-menu")"
                  OnOverlayMouseEnter="OnOverlayMouseEnter"
                  OnOverlayMouseLeave="OnOverlayMouseLeave"

@@ -11,6 +11,26 @@
         _testOutputHelper = testOutputHelper;
     }
 
+    [Fact]
+    public void Date_picker_uses_the_v6_panel_semantic_structure()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition());
+
+        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker TValue="DateTime" Open="true" />);
+
+        var root = cut.Find(".ant-picker");
+        root.ClassList.Should().Contain("ant-picker-outlined");
+        root.ClassList.Should().Contain("ant-picker-css-var");
+
+        var popup = cut.WaitForElement(".ant-picker-dropdown");
+        popup.ClassList.Should().Contain("ant-picker-css-var");
+        var container = popup.QuerySelector(".ant-picker-panel-container.ant-picker-date-panel-container");
+        container.Should().NotBeNull();
+        container!.QuerySelector(".ant-picker-panel-layout .ant-picker-panel").Should().NotBeNull();
+    }
+
     [Theory]
     [MemberData(nameof(DatePickerTestData.Data), MemberType = typeof(DatePickerTestData))]
     public void DefaultValue_applied_to_value<T>(T defaultValue)

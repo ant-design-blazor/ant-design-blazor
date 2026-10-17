@@ -1,0 +1,13 @@
+<div>
+    <AntDesign.InputNumber TValue="double" Min="1" Max="10" Disabled="_disabled" @bind-Value="_value" />
+    <div style="margin-top: 20px;">
+        <Button Type="ButtonType.Primary" OnClick="ToggleDisabled">Toggle disabled</Button>
+    </div>
+</div>
+
+@code {
+    private bool _disabled = true;
+    private double _value = 3;
+
+    private void ToggleDisabled() => _disabled = !_disabled;
+}

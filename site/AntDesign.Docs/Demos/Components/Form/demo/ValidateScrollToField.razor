@@ -1,0 +1,66 @@
+@inject Microsoft.JSInterop.IJSRuntime JS
+@using System.ComponentModel.DataAnnotations
+
+<Form Model="@model" OnFinish="OnFinish" OnFinishFailed="OnFinishFailed" Style="max-width:600px; padding-block:32px;" LabelColSpan="6" WrapperColSpan="14">
+    <FormItem>
+        <Button OnClick="ScrollToBio">Scroll to Bio</Button>
+    </FormItem>
+    <FormItem Label="UserName" Name="UserName">
+        <Input @bind-Value="context.UserName" RefBack="@userNameRef" />
+    </FormItem>
+    <FormItem Label="Occupation" Name="Occupation">
+        <Select DataSource="occupations" @bind-Value="context.Occupation" Placeholder="Select an occupation" />
+    </FormItem>
+    <FormItem Label="Motto" Name="Motto">
+        <TextArea @bind-Value="context.Motto" Rows="4" />
+    </FormItem>
+    <FormItem Label="Bio" Name="Bio">
+        <TextArea @bind-Value="context.Bio" RefBack="@bioRef" Rows="6" />
+    </FormItem>
+    <FormItem>
+        <Space>
+            <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
+            <Button Danger="true" OnClick="Reset">Reset</Button>
+        </Space>
+    </FormItem>
+</Form>
+@if (!string.IsNullOrEmpty(result))
+{
+    <p role="status">@result</p>
+}
+
+@code {
+    private readonly FormModel model = new();
+    private readonly ForwardRef userNameRef = new();
+    private readonly ForwardRef bioRef = new();
+    private readonly string[] occupations = ["Designer", "Developer", "Product Manager"];
+    private string result;
+
+    private async Task ScrollToBio() => await bioRef.Current.FocusAsync();
+    private async Task OnFinish(EditContext _) => result = "Submitted successfully.";
+
+    private async Task OnFinishFailed(EditContext _)
+    {
+        result = "Complete the required fields. Focus moved to the first invalid field.";
+        await userNameRef.Current.FocusAsync();
+    }
+
+    private void Reset()
+    {
+        model.UserName = string.Empty;
+        model.Occupation = null;
+        model.Motto = string.Empty;
+        model.Bio = string.Empty;
+        result = null;
+    }
+
+    private sealed class FormModel
+    {
+        [Required]
+        public string UserName { get; set; } = string.Empty;
+        public string Occupation { get; set; }
+        public string Motto { get; set; } = string.Empty;
+        [Required]
+        public string Bio { get; set; } = string.Empty;
+    }
+}

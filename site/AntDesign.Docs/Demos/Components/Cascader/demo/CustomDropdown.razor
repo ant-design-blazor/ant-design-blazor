@@ -1,0 +1,16 @@
+<Cascader Options="@_options" Placeholder="Customize dropdown">
+    <DropdownRender Context="originalDropdown">
+        @originalDropdown
+        <div style="padding: 8px 12px; border-top: 1px solid #f0f0f0; color: #1677ff;">
+            Choose a province, then a city
+        </div>
+    </DropdownRender>
+</Cascader>
+
+@code {
+    private readonly CascaderNode[] _options =
+    [
+        new() { Value = "zhejiang", Label = "Zhejiang", Children = [new() { Value = "hangzhou", Label = "Hangzhou" }] },
+        new() { Value = "jiangsu", Label = "Jiangsu", Children = [new() { Value = "nanjing", Label = "Nanjing" }] }
+    ];
+}

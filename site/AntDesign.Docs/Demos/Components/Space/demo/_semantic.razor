@@ -1,0 +1,9 @@
+<Space Split="@Separator">
+    <SpaceItem><Button Type="ButtonType.Primary">Primary</Button></SpaceItem>
+    <SpaceItem><Button>Default</Button></SpaceItem>
+    <SpaceItem><Button Type="ButtonType.Dashed">Dashed</Button></SpaceItem>
+</Space>
+
+@code {
+    private RenderFragment Separator => @<Divider Type="DividerType.Vertical" />;
+}

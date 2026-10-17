@@ -1,0 +1,52 @@
+﻿@using System.Text.Json
+
+<Form Model="@_model" LabelColSpan="8" WrapperColSpan="16"
+      OnFinish="OnFinish" Style="max-width:600px;">
+    <FormItem Name="User.Name" Label="Name"
+              Rules="@(new[] { new FormValidationRule { Required = true } })">
+        <Input @bind-Value="context.User.Name" />
+    </FormItem>
+    <FormItem Name="User.Email" Label="Email"
+              Rules="@(new[] { new FormValidationRule { Type = FormFieldType.Email, Message = "Email is not a valid email!" } })">
+        <Input @bind-Value="context.User.Email" />
+    </FormItem>
+    <FormItem Name="User.Age" Label="Age"
+              Rules="@(new[] { new FormValidationRule { Type = FormFieldType.Number, Min = 0, Max = 99, Message = "Age must be between 0 and 99!" } })">
+        <AntDesign.InputNumber TValue="int?" @bind-Value="context.User.Age" />
+    </FormItem>
+    <FormItem Name="User.Website" Label="Website">
+        <Input @bind-Value="context.User.Website" />
+    </FormItem>
+    <FormItem Name="User.Introduction" Label="Introduction">
+        <TextArea @bind-Value="context.User.Introduction" Rows="3" />
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
+    </FormItem>
+</Form>
+
+@if (!string.IsNullOrEmpty(_result))
+{
+    <pre role="status">@_result</pre>
+}
+
+@code {
+    private readonly NestedFormModel _model = new();
+    private string _result;
+
+    private void OnFinish(EditContext _) => _result = JsonSerializer.Serialize(_model, new JsonSerializerOptions { WriteIndented = true });
+
+    private sealed class NestedFormModel
+    {
+        public NestedUserModel User { get; } = new();
+    }
+
+    private sealed class NestedUserModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public int? Age { get; set; }
+        public string Website { get; set; } = string.Empty;
+        public string Introduction { get; set; } = string.Empty;
+    }
+}

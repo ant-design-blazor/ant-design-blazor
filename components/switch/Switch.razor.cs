@@ -67,8 +67,6 @@ namespace AntDesign
         [Parameter]
         public RenderFragment UnCheckedChildrenTemplate { get; set; }
 
-        private bool _clickAnimating = false;
-
         private string _prefixCls = "ant-switch";
 
         protected override void OnInitialized()
@@ -81,6 +79,7 @@ namespace AntDesign
         {
             ClassMapper.Clear()
                 .Add(_prefixCls)
+                .Add("css-var-root")
                 .If($"{_prefixCls}-checked", () => CurrentValue)
                 .If($"{_prefixCls}-disabled", () => Disabled || Loading)
                 .If($"{_prefixCls}-loading", () => Loading)
@@ -95,9 +94,5 @@ namespace AntDesign
             if (OnClick.HasDelegate)
                 await OnClick.InvokeAsync(null);
         }
-
-        private void HandleMouseOver(MouseEventArgs e) => _clickAnimating = true;
-
-        private void HandleMouseOut(MouseEventArgs e) => _clickAnimating = false;
     }
 }

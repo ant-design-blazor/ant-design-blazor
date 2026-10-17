@@ -31,3 +31,22 @@ cover: https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg
 | Type | 指定警告提示的样式，有四种选择 `success` \| `info` \| `warning` \| `error` | string | warning |  |
 | OnClose | 关闭时触发的回调函数 | EventCallback&lt;MouseEventArgs> | - |  |
 | ChildContent | 附加内容 | RenderFragment | - |  |
+
+| ClassNames | 按 `root`、`icon`、`section`、`title`、`description`、`actions` 和 `close` 设置语义类名 | IReadOnlyDictionary&lt;string, string&gt; | - |  |
+| Styles | 按 `root`、`icon`、`section`、`title`、`description`、`actions` 和 `close` 设置语义内联样式 | IReadOnlyDictionary&lt;string, string&gt; | - |  |
+
+## Semantic DOM
+
+| 插槽 | 选择器 |
+| --- | --- |
+| root | `.ant-alert` |
+| icon | `.ant-alert-icon` |
+| section | `.ant-alert-section` |
+| title | `.ant-alert-title` |
+| description | `.ant-alert-description` |
+| actions | `.ant-alert-actions` |
+| close | `.ant-alert-close-icon` |
+
+## Design Token
+
+可通过 `ConfigProvider` 的 `ThemeConfig.Components["Alert"]` 自定义 Alert 组件 Token。

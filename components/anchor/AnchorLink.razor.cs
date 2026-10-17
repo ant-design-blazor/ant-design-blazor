@@ -70,9 +70,22 @@ namespace AntDesign
         [Parameter]
         public string Target { get; set; }
 
+        /// <summary>Override the anchor scroll offset for this link.</summary>
+        [Parameter]
+        public int? TargetOffset { get; set; }
+
+        /// <summary>Replace the current browser history entry when this link is clicked.</summary>
+        [Parameter]
+        public bool Replace { get; set; }
+
         #endregion Parameters
 
         internal string _hash = string.Empty;
+
+        internal string ItemClass => Root?.SemanticClass("item", ClassMapper.Class) ?? ClassMapper.Class;
+        internal string ItemStyle => Root?.SemanticStyle("item", Style) ?? Style;
+        internal string ItemTitleClass => Root?.SemanticClass("itemTitle", _titleClass.Class) ?? _titleClass.Class;
+        internal string ItemTitleStyle => Root?.SemanticStyle("itemTitle", null);
 
         protected override void Dispose(bool disposing)
         {

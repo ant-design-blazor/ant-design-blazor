@@ -115,8 +115,9 @@ namespace AntDesign
         {
             ClassMapper
                 .Add("ant-collapse")
-                .If("ant-collapse-icon-position-left", () => ExpandIconPosition == CollapseExpandIconPosition.Left)
-                .If("ant-collapse-icon-position-right", () => ExpandIconPosition == CollapseExpandIconPosition.Right)
+                .Add("css-var-root")
+                .If("ant-collapse-icon-placement-start", () => ExpandIconPosition == CollapseExpandIconPosition.Left)
+                .If("ant-collapse-icon-placement-end", () => ExpandIconPosition == CollapseExpandIconPosition.Right)
                 .If("ant-collapse-borderless", () => !this.Bordered)
                 .If("ant-collapse-rtl", () => RTL);
         }

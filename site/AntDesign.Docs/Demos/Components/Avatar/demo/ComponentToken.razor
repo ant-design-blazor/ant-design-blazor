@@ -1,0 +1,51 @@
+﻿@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="_theme">
+    <Space>
+        <Avatar Shape="AvatarShape.Circle" Src="https://invalid.example/not-exist.jpg">A</Avatar>
+    </Space>
+    <Space Style="margin-inline-start: 16px;">
+        <AvatarGroup MaxCount="2" MaxStyle="color: #f56a00; background-color: #fde3cf;">
+            <Avatar Src="https://api.dicebear.com/10.x/lorelei/svg?seed=2" />
+            <Avatar Style="background-color: #f56a00">K</Avatar>
+            <Tooltip Title="Ant User" Placement="Placement.Top">
+                <Unbound>
+                    <Avatar Style="background-color: #87d068;" Icon="@IconType.Outline.User" RefBack="@context" />
+                </Unbound>
+            </Tooltip>
+            <Avatar Style="background-color: #1890ff;" Icon="@IconType.Outline.AntDesign" />
+        </AvatarGroup>
+    </Space>
+    <Space Style="margin-inline-start: 16px;">
+        <Badge Count="1">
+            <Avatar Shape="AvatarShape.Square" Icon="@IconType.Outline.User" />
+        </Badge>
+        <Badge Dot>
+            <Avatar Shape="AvatarShape.Square" Icon="@IconType.Outline.User" />
+        </Badge>
+    </Space>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Avatar"] = new Dictionary<string, string>
+            {
+                ["containerSize"] = "60",
+                ["containerSizeLG"] = "30",
+                ["containerSizeSM"] = "16",
+                ["textFontSize"] = "14",
+                ["textFontSizeLG"] = "14",
+                ["textFontSizeSM"] = "14",
+                ["iconFontSize"] = "18",
+                ["iconFontSizeLG"] = "28",
+                ["iconFontSizeSM"] = "12",
+                ["borderRadius"] = "10",
+                ["groupOverlapping"] = "-10",
+                ["groupBorderColor"] = "#eee"
+            }
+        }
+    };
+}

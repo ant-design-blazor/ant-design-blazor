@@ -1,0 +1,80 @@
+﻿@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@OuterTheme">
+    <Layout>
+        <Header Style="display: flex; align-items: center; background: var(--ant-layout-header-bg); height: var(--ant-layout-header-height); padding: var(--ant-layout-header-padding); color: var(--ant-layout-header-color);">
+            <div class="demo-logo"></div>
+            <div style="margin-inline-start: 24px; font-size: 24px;">Ant Design</div>
+        </Header>
+        <Layout>
+            <ConfigProvider ThemeConfig="@NestedTheme">
+                <Sider Width="32"></Sider>
+            </ConfigProvider>
+            <Sider Width="200">
+                <Menu Mode="MenuMode.Inline"
+                      DefaultSelectedKeys="@(new[] { "1" })"
+                      DefaultOpenKeys="@(new[] { "sub1" })"
+                      Style="border-inline-end: 0;">
+                    <SubMenu Key="sub1" TitleTemplate="@UserTitle">
+                        <MenuItem Key="1">option1</MenuItem>
+                        <MenuItem Key="2">option2</MenuItem>
+                        <MenuItem Key="3">option3</MenuItem>
+                        <MenuItem Key="4">option4</MenuItem>
+                    </SubMenu>
+                    <SubMenu Key="sub2" TitleTemplate="@LaptopTitle">
+                        <MenuItem Key="5">option5</MenuItem>
+                        <MenuItem Key="6">option6</MenuItem>
+                        <MenuItem Key="7">option7</MenuItem>
+                        <MenuItem Key="8">option8</MenuItem>
+                    </SubMenu>
+                    <SubMenu Key="sub3" TitleTemplate="@NotificationTitle">
+                        <MenuItem Key="9">option9</MenuItem>
+                        <MenuItem Key="10">option10</MenuItem>
+                        <MenuItem Key="11">option11</MenuItem>
+                        <MenuItem Key="12">option12</MenuItem>
+                    </SubMenu>
+                </Menu>
+            </Sider>
+            <Layout Style="padding: 0 24px 24px;">
+                <Breadcrumb Style="margin: 16px 0;">
+                    <BreadcrumbItem>Home</BreadcrumbItem>
+                    <BreadcrumbItem>List</BreadcrumbItem>
+                    <BreadcrumbItem>App</BreadcrumbItem>
+                </Breadcrumb>
+                <Content Style="padding: 24px; margin: 0; min-height: 280px; background: var(--ant-color-bg-layout); border-radius: var(--ant-border-radius-lg);">
+                    Content
+                </Content>
+            </Layout>
+        </Layout>
+    </Layout>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig OuterTheme = CreateTheme(new Dictionary<string, string>
+    {
+        ["bodyBg"] = "#fff",
+        ["headerBg"] = "#1677ff",
+        ["headerHeight"] = "64px",
+        ["headerPadding"] = "0 24px",
+        ["headerColor"] = "var(--ant-color-bg-container)",
+        ["siderBg"] = "#800080"
+    });
+
+    private static readonly ThemeConfig NestedTheme = CreateTheme(new Dictionary<string, string>
+    {
+        ["siderBg"] = "red"
+    });
+
+    private static ThemeConfig CreateTheme(IDictionary<string, string> layoutTokens)
+    {
+        var theme = new ThemeConfig();
+        theme.Components["Layout"] = layoutTokens;
+        return theme;
+    }
+
+    private RenderFragment UserTitle => @<span><Icon Type="@IconType.Outline.User" /> subnav 1</span>;
+
+    private RenderFragment LaptopTitle => @<span><Icon Type="@IconType.Outline.Laptop" /> subnav 2</span>;
+
+    private RenderFragment NotificationTitle => @<span><Icon Type="@IconType.Outline.Notification" /> subnav 3</span>;
+}

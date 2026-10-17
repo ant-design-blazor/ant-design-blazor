@@ -1,8 +1,8 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" @ref="Ref" id="@Id">
-    <a title="@Title" class="@_titleClass.Class" @onclick="(e)=>OnClick(e)">@Title</a>
+<div class="@ItemClass" style="@ItemStyle" @ref="Ref" id="@Id">
+    <a href="@Href" target="@Target" title="@Title" class="@ItemTitleClass" style="@ItemTitleStyle" @onclick="(e)=>OnClick(e)" @onclick:preventDefault="true">@Title</a>
     <CascadingValue Value="this" Name="Parent" IsFixed>
         @ChildContent
     </CascadingValue>

@@ -1,0 +1,13 @@
+<DatePicker TValue="DateTime?"
+            DefaultValue="@(new DateTime(2019, 9, 3))"
+            DisabledDate="IsOutsideDateRange" />
+
+@code {
+    private readonly DateTime _minDate = new(2019, 8, 1);
+    private readonly DateTime _maxDate = new(2020, 10, 31);
+
+    private bool IsOutsideDateRange(DateTime date)
+    {
+        return date.Date < _minDate || date.Date > _maxDate;
+    }
+}

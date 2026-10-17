@@ -1,0 +1,21 @@
+<div>
+    <RadioGroup @bind-Value="_placement">
+        <Radio RadioButton Value="AntDesign.Placement.TopLeft">topLeft</Radio>
+        <Radio RadioButton Value="AntDesign.Placement.TopRight">topRight</Radio>
+        <Radio RadioButton Value="AntDesign.Placement.BottomLeft">bottomLeft</Radio>
+        <Radio RadioButton Value="AntDesign.Placement.BottomRight">bottomRight</Radio>
+    </RadioGroup>
+    <br />
+    <br />
+    <Cascader Options="@_options" Placeholder="Select a location" Placement="@_placement" />
+</div>
+
+@code {
+    private AntDesign.Placement _placement = AntDesign.Placement.BottomLeft;
+
+    private readonly CascaderNode[] _options =
+    [
+        new() { Value = "zhejiang", Label = "Zhejiang", Children = [new() { Value = "hangzhou", Label = "Hangzhou" }] },
+        new() { Value = "jiangsu", Label = "Jiangsu", Children = [new() { Value = "nanjing", Label = "Nanjing" }] }
+    ];
+}

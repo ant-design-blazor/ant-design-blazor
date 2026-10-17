@@ -42,6 +42,22 @@ namespace AntDesign
         [Parameter]
         public ThemeConfig ThemeConfig { get; set; } = new ThemeConfig();
 
+        /// <summary>
+        /// Input appearance variant inherited by components such as Pagination.
+        /// Supported values are outlined, filled, borderless, and underlined.
+        /// </summary>
+        [Parameter]
+        public string Variant { get; set; }
+
+        [CascadingParameter(Name = "AntDesignVariant")]
+        private string ParentVariant { get; set; }
+
+        public string ResolvedVariant => string.IsNullOrWhiteSpace(Variant)
+            ? (string.IsNullOrWhiteSpace(ParentVariant) ? "outlined" : ParentVariant)
+            : Variant;
+
+        public string ThemeCssClass => ThemeConfig?.Seed?.Wireframe == true ? "ant-theme-wireframe" : string.Empty;
+
         [CascadingParameter(Name = "AntDesignThemeConfig")]
         private ThemeConfig ParentThemeConfig { get; set; }
 
@@ -77,7 +93,8 @@ namespace AntDesign
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(value) || value.StartsWith("System.", System.StringComparison.Ordinal))
                 return;
 
-            declarations.Add($"--ant-{TokenView.ToKebabCase(name)}:{value}");
+            var formattedValue = CssVariableValueFormatter.Format(name, value);
+            declarations.Add($"--ant-{TokenView.ToKebabCase(name)}:{formattedValue}");
         }
 
         [Parameter]

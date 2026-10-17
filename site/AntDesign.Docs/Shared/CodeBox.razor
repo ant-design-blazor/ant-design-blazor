@@ -118,7 +118,27 @@
             ["border"] = "1px solid rgba(0, 0, 0, 0.06)", ["borderRadius"] = 2, ["transition"] = "all 0.2s",
             ["& .code-box-title, & .code-box-title a, & .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#fff" },
             ["& .code-box-title, & .code-box-title a"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)" },
-            ["& .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "42px 24px 50px", ["color"] = "rgba(0, 0, 0, 0.85)", ["borderBottom"] = "1px solid rgba(0, 0, 0, 0.06)" },
+            ["& .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "42px 24px 50px", ["color"] = "var(--ant-color-text)", ["borderBottom"] = "1px solid rgba(0, 0, 0, 0.06)" },
+            ["&[id^='components-grid-demo-'] .code-box-demo .ant-row > div"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["minHeight"] = 30, ["marginTop"] = 8, ["marginBottom"] = 8, ["color"] = "#fff", ["textAlign"] = "center", ["borderRadius"] = 0
+            },
+            ["&[id^='components-grid-demo-'] .code-box-demo .ant-row > div:not(.gutter-row)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["paddingTop"] = 16, ["paddingBottom"] = 16, ["backgroundColor"] = "#1677ff"
+            },
+            ["&[id^='components-grid-demo-'] .code-box-demo .ant-row > div:not(.gutter-row):nth-child(2n + 1)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["backgroundColor"] = "rgba(22, 119, 255, 0.75)"
+            },
+            ["&[id^='components-grid-demo-'] .code-box-demo .ant-row > div.gutter-row"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["marginTop"] = 0, ["marginBottom"] = 0
+            },
+            ["&[id='components-grid-demo-playground'] .code-box-demo .ant-row > div"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["marginTop"] = 0, ["marginBottom"] = 0
+            },
             ["& iframe"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%", ["border"] = 0 },
             ["& .markdown pre"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = "0.5em 0", ["padding"] = "6px 12px" },
             ["& .markdown pre code"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = 0, ["background"] = "#f5f5f5" },

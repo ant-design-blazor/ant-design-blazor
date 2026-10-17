@@ -1,0 +1,25 @@
+<div>
+    <RadioGroup @bind-Value="_size" Style="margin-bottom: 16px;">
+        <Radio Value="StepsSize.Small">Small</Radio>
+        <Radio Value="StepsSize.Default">Medium</Radio>
+    </RadioGroup>
+    <Steps Size="@_size" Direction="StepsDirection.Vertical">
+        <Step Title="Finished">
+            <DescriptionTemplate>
+                <Card>
+                    <Steps Size="@_size" Current="1">
+                        <Step Title="Finished" Description="This is a content." />
+                        <Step Title="In Progress" Description="This is a content." />
+                        <Step Title="Waiting" Description="This is a content." />
+                    </Steps>
+                </Card>
+            </DescriptionTemplate>
+        </Step>
+        <Step Title="In Progress" Description="This is a content." />
+        <Step Title="Waiting" Description="This is a content." />
+    </Steps>
+</div>
+
+@code {
+    private StepsSize _size = StepsSize.Default;
+}

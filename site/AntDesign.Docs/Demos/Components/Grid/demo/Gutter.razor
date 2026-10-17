@@ -1,79 +1,20 @@
 ﻿@{
-    string style="background: #0092ff; padding: 8px 0;";
+    string style="padding: 8px 0px; background-color: rgb(0, 146, 255);";
     Dictionary<string, int> gutter = new()
     {
         ["xs"] = 8,
         ["sm"] = 16,
         ["md"] = 24,
-        ["lg"] = 32,
-        ["xl"] = 48,
-        ["xxl"] = 64
+        ["lg"] = 32
     };
 }
 <div>
     <Divider Orientation="DividerOrientation.Left">Horizontal</Divider>
-    <GridRow Gutter="16">
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-    </GridRow>
+    <GridRow Gutter="16"><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol></GridRow>
     <Divider Orientation="DividerOrientation.Left">Responsive</Divider>
-    <GridRow Gutter="@gutter">
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-    </GridRow>
+    <GridRow Gutter="@gutter" DefaultBreakpoint="BreakpointType.Lg"><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol></GridRow>
     <Divider Orientation="DividerOrientation.Left">Vertical</Divider>
-    <GridRow Gutter="(16,24)">
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-        <GridCol Class="gutter-row" Span="6">
-            <div style="@style">col-6</div>
-        </GridCol>
-    </GridRow>
-
+    <GridRow Gutter="(16,24)"><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol></GridRow>
+    <Divider Orientation="DividerOrientation.Left">Gutter(string)</Divider>
+    <GridRow Gutter="@("2rem")"><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol><GridCol Class="gutter-row" Span="6"><div style="@style">col-6</div></GridCol></GridRow>
 </div>
-
-<style>
-    .gutter-box {
-        padding: 8px 0;
-        background: #00a0e9;
-    }
-</style>

@@ -1,0 +1,49 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <div style="display:flex; flex-direction:column; gap:16px; align-items:flex-start">
+        <Radio TValue="bool" Checked>Test</Radio>
+        <Radio TValue="bool" Checked Disabled>Disabled</Radio>
+        <RadioGroup TValue="string" Value="@("a")" ButtonStyle="RadioButtonStyle.Outline">
+            <Radio RadioButton Value="@("a")">Hangzhou</Radio>
+            <Radio RadioButton Value="@("b")">Shanghai</Radio>
+            <Radio RadioButton Value="@("c")">Beijing</Radio>
+            <Radio RadioButton Value="@("d")">Chengdu</Radio>
+        </RadioGroup>
+        <RadioGroup TValue="string" Value="@("a")" Disabled ButtonStyle="RadioButtonStyle.Outline">
+            <Radio RadioButton Value="@("a")">Hangzhou</Radio>
+            <Radio RadioButton Value="@("b")">Shanghai</Radio>
+            <Radio RadioButton Value="@("c")">Beijing</Radio>
+            <Radio RadioButton Value="@("d")">Chengdu</Radio>
+        </RadioGroup>
+        <RadioGroup TValue="string" Value="@("a")" ButtonStyle="RadioButtonStyle.Solid">
+            <Radio RadioButton Value="@("a")">Hangzhou</Radio>
+            <Radio RadioButton Value="@("b")">Shanghai</Radio>
+            <Radio RadioButton Value="@("c")">Beijing</Radio>
+            <Radio RadioButton Value="@("d")">Chengdu</Radio>
+        </RadioGroup>
+    </div>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Radio"] = new Dictionary<string, string>
+            {
+                ["radioSize"] = "20px",
+                ["dotSize"] = "10px",
+                ["dotColorDisabled"] = "grey",
+                ["buttonBg"] = "#f6ffed",
+                ["buttonCheckedBg"] = "#d9f7be",
+                ["buttonColor"] = "#faad14",
+                ["buttonPaddingInline"] = "20px",
+                ["buttonCheckedBgDisabled"] = "#fffbe6",
+                ["buttonCheckedColorDisabled"] = "#ffe58f",
+                ["buttonSolidCheckedColor"] = "#ffa39e",
+                ["wrapperMarginInlineEnd"] = "20px"
+            }
+        }
+    };
+}

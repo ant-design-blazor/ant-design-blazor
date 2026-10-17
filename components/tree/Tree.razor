@@ -3,8 +3,9 @@
 @typeparam TItem
 
 <div class="@ClassMapper.Class" style="@Style" @ref="Ref">
-    <div class="ant-tree-list">
-        <div class="ant-tree-list-holder-inner">
+    <div class="ant-tree-list @(IsInTreeSelect ? "ant-select-tree-list" : null)">
+        <div class="ant-tree-list-holder @(IsInTreeSelect ? "ant-select-tree-list-holder" : null)">
+            <div class="ant-tree-list-holder-inner @(IsInTreeSelect ? "ant-select-tree-list-holder-inner" : null)">
             <CascadingValue Value="this" Name="Tree" IsFixed="@true">
                 @if (DataSource != null)
                 {
@@ -22,6 +23,7 @@
                     @Nodes
                 }
             </CascadingValue>
+            </div>
         </div>
     </div>
 </div>

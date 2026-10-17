@@ -1,0 +1,18 @@
+<Space Direction="SpaceDirection.Vertical" Size="@("16px")">
+    <AutoComplete Options="_options" Placeholder="Customize semantic root and popup" Style="width:240px" ClassNames="_classes" Styles="_styles" />
+    <AutoComplete Options="_options" Placeholder="Filled variant" Variant="filled" Style="width:240px" ClassNames="_classes" Styles="_styles" />
+</Space>
+
+@code {
+    private readonly string[] _options = ["Burnaby", "Seattle", "Los Angeles", "San Francisco"];
+    private static readonly IReadOnlyDictionary<string, string> _classes = new Dictionary<string, string>
+    {
+        ["root"] = "demo-autocomplete-root",
+        ["popup"] = "demo-autocomplete-popup"
+    };
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "border-radius:4px",
+        ["popup"] = "border:1px solid #1890ff"
+    };
+}

@@ -24,4 +24,18 @@ A divider line separates different content.
 | Style |style object of container| CSS properties  | -  |
 | Type |direction type of divider| string | -  |
 | Plain |divider text show as plain style| boolean  | -  |
+| Size |Spacing size for horizontal dividers: `small`, `middle`, or `large`| string | - |
+| ClassNames |Semantic CSS classes keyed by `root`, `rail`, and `content`| `IReadOnlyDictionary<string, string>` | - |
+| Styles |Semantic inline CSS keyed by `root`, `rail`, and `content`| `IReadOnlyDictionary<string, string>` | - |
 
+## Semantic DOM
+
+| Slot | Class |
+| --- | --- |
+| root | `.ant-divider` |
+| rail | `.ant-divider-rail` |
+| content | `.ant-divider-inner-text` |
+
+## Design Token
+
+Divider tokens can be customized through `ConfigProvider.ThemeConfig.Components["Divider"]`, including `textPaddingInline`, `orientationMargin`, and `verticalMarginInline`.

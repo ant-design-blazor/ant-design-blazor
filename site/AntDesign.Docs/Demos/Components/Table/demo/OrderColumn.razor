@@ -1,0 +1,22 @@
+<Table TItem="OrderColumnRow" DataSource="_rows" RowKey="row=>row.Key"
+       ExpandIconColumnIndex="1" RowExpandable='row=>row.Data.Name != "Not Expandable"'>
+    <ColumnDefinitions>
+        <PropertyColumn Property="row=>row.Name" Title="Name" />
+        <PropertyColumn Property="row=>row.Age" Title="Age" />
+        <Selection Type="SelectionType.Checkbox" />
+        <PropertyColumn Property="row=>row.Address" Title="Address" />
+    </ColumnDefinitions>
+    <ExpandTemplate Context="row"><p style="margin:0">@row.Data.Description</p></ExpandTemplate>
+</Table>
+
+@code {
+    private readonly OrderColumnRow[] _rows =
+    [
+        new(1, "John Brown", 32, "New York No. 1 Lake Park", "My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park."),
+        new(2, "Jim Green", 42, "London No. 1 Lake Park", "My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park."),
+        new(3, "Not Expandable", 29, "Jiangsu No. 1 Lake Park", "This not expandable"),
+        new(4, "Joe Black", 32, "Sydney No. 1 Lake Park", "My name is Joe Black, I am 32 years old, living in Sydney No. 1 Lake Park.")
+    ];
+
+    private sealed record OrderColumnRow(int Key, string Name, int Age, string Address, string Description);
+}

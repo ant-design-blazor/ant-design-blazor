@@ -50,6 +50,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
     <ProjectReference Include="..\..\src\AntDesign.Extensions.Localization\AntDesign.Extensions.Localization.csproj" />
+    <ProjectReference Include="..\..\src\AntDesign.Docs.Generator\AntDesign.Docs.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <AdditionalFiles Include="..\..\docs\antd-v6\semantic-dom-catalog.json" />
+    <AdditionalFiles Include="wwwroot\meta\components.*.json;wwwroot\meta\menu.*.json;wwwroot\meta\demos.*.json;wwwroot\meta\docs.*.json" />
   </ItemGroup>
 
   <ItemGroup>

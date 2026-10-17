@@ -17,7 +17,8 @@
 
 <CascadingValue Value="this" Name="Trigger">
     <Overlay @ref="_overlay"
-             OverlayChildPrefixCls="@($"{prefixCls}-menu")"
+             OverlayChildPrefixCls="@SubMenuComponent.RootMenu.PrefixCls"
+             CssVarClass="@($"{SubMenuComponent.RootMenu.PrefixCls}-css-var")"
              OnOverlayMouseEnter="OnOverlayMouseEnter"
              OnOverlayMouseLeave="OnOverlayMouseLeave"
              OnOverlayMouseUp="OnOverlayMouseUp" />

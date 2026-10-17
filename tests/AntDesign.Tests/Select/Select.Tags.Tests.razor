@@ -8,8 +8,8 @@
         JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
             .SetResult(new HtmlElement());
 
-		JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);		
-		JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);		
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
 #if !NET6_0_OR_GREATER
 #pragma warning disable CS0618 // Type or member is obsolete
             JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult(); ;
@@ -36,7 +36,7 @@
         </AntDesign.Select>
         );        
 
-        var input = cut.Find("input.ant-select-selection-search-input");        
+        var input = cut.Find("input.ant-select-input");
         //Act
         await cut.InvokeAsync(() => input.Input("A"));
         await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption is not null));
@@ -81,10 +81,13 @@
         //		should be refactored.
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, values));   		
         //Assert
-        var items = cut.Find("div.ant-select-selection-overflow").Children;
-        var tags = items.Where(i => i.ClassList.Count() == 1);
-        var rest = items.Filter(".ant-select-selection-overflow-item-rest");
-        var input = items.Filter(".ant-select-selection-overflow-item-suffix");
+        var items = cut.Find("div.ant-select-content").Children;
+        var tags = items.Where(i =>
+            i.ClassList.Contains("ant-select-content-item") &&
+            !i.ClassList.Contains("ant-select-content-item-rest") &&
+            !i.ClassList.Contains("ant-select-content-item-suffix"));
+        var rest = items.Filter(".ant-select-content-item-rest");
+        var input = items.Filter(".ant-select-content-item-suffix");
 
         items.Should().HaveCount(4);
         tags.Should().HaveCount(2);
@@ -92,6 +95,110 @@
         rest.ElementAt(0).GetAttribute("style").Should().Contain("order: 5");
         input.Should().HaveCount(1);
         input.ElementAt(0).GetAttribute("style").Should().Contain("order: 6");
+    }
+
+    [Fact]
+    public void Multiple_selection_markup_matches_v6_value_and_suffix_slots()
+    {
+        IEnumerable<string> values = new[] { "a10", "c12" };
+        var cut = Render<AntDesign.Select<string, string>>(@<AntDesign.Select Mode="SelectMode.Multiple"
+                TItemValue="string" TItem="string">
+            <SelectOptions>
+                @foreach (var value in values)
+                {
+                    <SelectOption TItemValue="string" TItem="string" Value="@value" Label="@value" />
+                }
+            </SelectOptions>
+        </AntDesign.Select>);
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, values));
+
+        var content = cut.Find(".ant-select-content");
+        content.ClassList.Should().NotContain("ant-select-content-has-value");
+        cut.Find(".ant-select-selection-item").GetAttribute("title").Should().Be("a10");
+        cut.Find(".ant-select-content-item-suffix").GetAttribute("style").Should().Be("opacity: 1;");
+        cut.Find(".ant-select-selection-item-remove").HasAttribute("onclick").Should().BeFalse();
+    }
+
+    [Fact]
+    public void Empty_input_value_is_reflected_as_an_html_attribute_after_render()
+    {
+        var cut = Render<AntDesign.Select<string, string>>(@<AntDesign.Select Value='@("a1")'
+                TItemValue="string" TItem="string" />);
+
+        cut.Find(".ant-select-input").HasAttribute("style").Should().BeFalse();
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Value, string.Empty));
+
+        var setValueAttribute = JSInterop.Invocations.Last(invocation =>
+            invocation.Identifier == JSInteropConstants.SetDomAttribute);
+        setValueAttribute.Arguments[1].Should().BeEquivalentTo(
+            new Dictionary<string, string> { ["value"] = string.Empty });
+    }
+
+    [Fact]
+    public void Custom_max_tag_placeholder_keeps_the_v6_selection_item_wrapper()
+    {
+        IEnumerable<string> values = new[] { "one", "two" };
+        RenderFragment<IEnumerable<string>> placeholder = _ => builder => builder.AddContent(0, "More");
+        var cut = Render<AntDesign.Select<string, string>>(@<AntDesign.Select Mode="SelectMode.Multiple"
+                TItemValue="string" TItem="string" MaxTagCount="1" MaxTagPlaceholder="@placeholder">
+            <SelectOptions>
+                @foreach (var value in values)
+                {
+                    <SelectOption TItemValue="string" TItem="string" Value="@value" Label="@value" />
+                }
+            </SelectOptions>
+        </AntDesign.Select>);
+        cut.SetParametersAndRender(parameters => parameters.Add(p => p.Values, values));
+
+        var placeholderItem = cut.Find(".ant-select-content-item-rest .ant-select-selection-item");
+        placeholderItem.TextContent.Trim().Should().Be("More");
+    }
+
+    [Fact]
+    public void Empty_multiple_select_renders_placeholder_before_the_search_input()
+    {
+        var cut = Render<AntDesign.Select<string, string>>(@<AntDesign.Select Mode="SelectMode.Multiple"
+                TItemValue="string" TItem="string" EnableSearch Placeholder="Select users" />);
+
+        var content = cut.Find(".ant-select-content");
+        var root = cut.Find(".ant-select");
+        var prefix = content.QuerySelector(".ant-select-content-item-prefix");
+        var suffix = content.QuerySelector(".ant-select-content-item-suffix");
+
+        prefix.Should().NotBeNull();
+        suffix.Should().NotBeNull();
+        content.Children[0].Should().BeSameAs(prefix);
+        var children = content.Children.ToList();
+        children.IndexOf(prefix).Should().BeLessThan(children.IndexOf(suffix));
+        prefix.QuerySelector(".ant-select-placeholder").TextContent.Trim().Should().Be("Select users");
+        prefix.QuerySelector(".ant-select-placeholder").TagName.Should().Be("DIV");
+        suffix.GetAttribute("style").Should().Be("opacity: 1;");
+        var input = suffix.QuerySelector(".ant-select-input");
+        input.GetAttribute("style").Should().Be("--select-input-width: 4;");
+        input.GetAttribute("id").Should().NotBeNullOrWhiteSpace();
+        input.GetAttribute("id").Should().NotEndWith("_list");
+        input.GetAttribute("autocomplete").Should().Be("new-password");
+        input.GetAttribute("aria-expanded").Should().Be("false");
+        input.HasAttribute("value").Should().BeTrue();
+        input.HasAttribute("aria-owns").Should().BeFalse();
+        input.HasAttribute("aria-controls").Should().BeFalse();
+        root.HasAttribute("id").Should().BeFalse();
+        root.HasAttribute("tabindex").Should().BeFalse();
+        content.HasAttribute("style").Should().BeFalse();
+
+        var arrow = cut.Find(".ant-select-suffix > .anticon-down");
+        arrow.ClassList.Should().Contain("anticon");
+        arrow.GetAttribute("role").Should().Be("img");
+        arrow.GetAttribute("aria-label").Should().Be("down");
+        arrow.HasAttribute("style").Should().BeFalse();
+        var svg = arrow.QuerySelector("svg");
+        svg.GetAttribute("data-icon").Should().Be("down");
+        svg.GetAttribute("viewBox").Should().Be("64 64 896 896");
+        // React does not forward the source SVG's root `icon` class.
+        svg.HasAttribute("class").Should().BeFalse();
+        svg.GetAttribute("focusable").Should().Be("false");
+        svg.GetAttribute("fill").Should().Be("currentColor");
+        svg.GetAttribute("aria-hidden").Should().Be("true");
     }
 
     [Fact]
@@ -107,7 +214,7 @@
             @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string" DataSource="datasource" EnableSearch SearchDebounceMilliseconds="0"/>
         );
 
-        var input = systemUnderTest.Find("input.ant-select-selection-search-input");
+        var input = systemUnderTest.Find("input.ant-select-input");
 
         await systemUnderTest.InvokeAsync(() => input.Input("Tag1"));
         await systemUnderTest.InvokeAsync(() => systemUnderTest.WaitForState(() => systemUnderTest.Instance.ActiveOption is not null));
@@ -131,7 +238,7 @@
         var dataSource = new List<string>();
         var cut = Render<Select<string, string>>(
             @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string" DataSource="@dataSource" EnableSearch SearchDebounceMilliseconds="0" />);
-        var input = cut.Find("input.ant-select-selection-search-input");
+        var input = cut.Find("input.ant-select-input");
 
         await cut.InvokeAsync(() => input.Input("Tag1"));
         await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption?.Value == "Tag1"));

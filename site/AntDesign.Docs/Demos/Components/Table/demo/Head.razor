@@ -1,0 +1,52 @@
+@using AntDesign.TableModels
+
+<Table TItem="Row" DataSource="_visibleRows" OnChange="OnChange">
+    <ColumnDefinitions>
+        <PropertyColumn Property="row => row.Name"
+                        Sortable
+                        SorterCompare="@((left, right) => left.Length - right.Length)"
+                        SortDirections="new[] { SortDirection.Descending }"
+                        Filters="_nameFilters"
+                        OnFilter="@((value, name) => name.StartsWith(value, StringComparison.Ordinal))" />
+        <PropertyColumn Property="row => row.Age"
+                        Sortable
+                        DefaultSortOrder="SortDirection.Descending"
+                        SorterCompare="@((left, right) => left - right)" />
+        <PropertyColumn Property="row => row.Address"
+                        Filters="_addressFilters"
+                        FilterMultiple="false"
+                        OnFilter="@((value, address) => address.StartsWith(value, StringComparison.Ordinal))" />
+    </ColumnDefinitions>
+</Table>
+
+@code {
+    private readonly Row[] _data =
+    [
+        new("1", "John Brown", 32, "New York No. 1 Lake Park"),
+        new("2", "Jim Green", 42, "London No. 1 Lake Park"),
+        new("3", "Joe Black", 32, "Sydney No. 1 Lake Park"),
+        new("4", "Jim Red", 32, "London No. 2 Lake Park")
+    ];
+
+    private IEnumerable<Row> _visibleRows;
+
+    private readonly TableFilter<string>[] _nameFilters =
+    [
+        new() { Text = "Joe", Value = "Joe" },
+        new() { Text = "Jim", Value = "Jim" },
+        new() { Text = "Green", Value = "Green" },
+        new() { Text = "Black", Value = "Black" }
+    ];
+
+    private readonly TableFilter<string>[] _addressFilters =
+    [
+        new() { Text = "London", Value = "London" },
+        new() { Text = "New York", Value = "New York" }
+    ];
+
+    protected override void OnInitialized() => _visibleRows = _data;
+
+    private void OnChange(QueryModel<Row> query) => _visibleRows = query.ExecuteQuery(_data.AsQueryable()).ToArray();
+
+    private sealed record Row(string Key, string Name, int Age, string Address);
+}

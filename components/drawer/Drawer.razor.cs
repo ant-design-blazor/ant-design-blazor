@@ -44,6 +44,14 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
+        /// <summary>Additional actions rendered in the Drawer header.</summary>
+        [Parameter]
+        public RenderFragment Extra { get; set; }
+
+        /// <summary>Content rendered in the Drawer footer.</summary>
+        [Parameter]
+        public RenderFragment Footer { get; set; }
+
         /// <summary>
         /// The content of Drawer. <para>If <see cref="Content"/> is a string, it will be rendered as HTML.</para>
         /// </summary>
@@ -332,12 +340,13 @@ namespace AntDesign
                 .Add(prefixCls)
                 .If($"{prefixCls}-open", () => _isOpen)
                 .Add($"{prefixCls}-{Placement.ToString().ToLowerInvariant()}")
+                .Add($"{prefixCls}-inline")
                 .If($"{prefixCls}-rtl", () => RTL)
                 ;
 
             TitleClassMapper.Clear()
-                .If("ant-drawer-header", () => _title.Value != null)
-                .If("ant-drawer-header-no-title", () => _title.Value == null)
+                .If("ant-drawer-header", () => _title.Value != null || Closable)
+                .If("ant-drawer-header-close-only", () => _title.Value == null && Closable && Extra == null)
                 ;
         }
 

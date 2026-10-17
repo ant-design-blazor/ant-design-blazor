@@ -1,9 +1,9 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@PrefixCls-notice @Config.AnimationClass" @onmouseenter="HandleMouseEnter" @onmouseleave="HandleMouseLeave">
-    <div class="@PrefixCls-notice-content" @ref="Ref">
-        <div class="@PrefixCls-custom-content @GetClassName()">
+<div class="@GetNoticeClassName() @Config.AnimationClass" @onmouseenter="HandleMouseEnter" @onmouseleave="HandleMouseLeave" role="alert">
+    <div class="@PrefixCls-notice-wrapper" @ref="Ref">
+        <div class="@GetIconClassName()">
             @{
                 switch (Config.Type)
                 {
@@ -35,7 +35,8 @@
                         }
                 }
             }
-        <span>
+        </div>
+        <div class="@PrefixCls-notice-title">
             @if (Config.Content.IsT0)
             {
                 @Config.Content.AsT0;
@@ -44,7 +45,6 @@
             {
                 @Config.Content.AsT1;
             }
-        </span>
         </div>
     </div>
 </div>

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Flex"
+  },
+  "config": {
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_"],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "flex-basic-demo",
+      "component": "Flex",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/flex",
+        "scopeSelector": "#flex-demo-basic .code-box-demo",
+        "rootSelector": ".ant-flex-vertical > .ant-flex"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/flex",
+        "scopeSelector": "#components-flex-demo-basic .code-box-demo",
+        "rootSelector": ".ant-flex-vertical > .ant-flex"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "flexDirection", "flexWrap", "justifyContent", "alignItems", "gap", "rowGap", "columnGap"],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    }
+  ]
+}

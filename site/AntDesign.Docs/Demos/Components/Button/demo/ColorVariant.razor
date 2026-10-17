@@ -1,0 +1,33 @@
+<Flex Gap="FlexGap.Small" Vertical>
+    @foreach (var color in _colors)
+    {
+        <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+            @foreach (var variant in _variants)
+            {
+                <Button ButtonColor="color" Variant="variant">@variant</Button>
+            }
+        </Flex>
+    }
+</Flex>
+
+@code {
+    private static readonly ButtonColor[] _colors =
+    [
+        ButtonColor.Default,
+        ButtonColor.Primary,
+        ButtonColor.Danger,
+        ButtonColor.Pink,
+        ButtonColor.Purple,
+        ButtonColor.Cyan,
+    ];
+
+    private static readonly ButtonVariant[] _variants =
+    [
+        ButtonVariant.Solid,
+        ButtonVariant.Outlined,
+        ButtonVariant.Dashed,
+        ButtonVariant.Filled,
+        ButtonVariant.Text,
+        ButtonVariant.Link,
+    ];
+}

@@ -1,0 +1,93 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+@if (!string.IsNullOrWhiteSpace(Tooltip))
+{
+    <Tooltip Title="@Tooltip" Placement="@TooltipPlacement">
+        <Unbound Context="context">
+            @RenderButton(context)
+        </Unbound>
+    </Tooltip>
+}
+else
+{
+    @RenderButton()
+}
+
+@code {
+    private RenderFragment RenderButton() => RenderButton(null);
+
+    private RenderFragment RenderButton(ForwardRef refBack) => builder =>
+    {
+        var sequence = 0;
+        var element = string.IsNullOrWhiteSpace(Href) ? "button" : "a";
+
+        builder.OpenElement(sequence++, element);
+        builder.AddAttribute(sequence++, "class", GetElementClass(ClassMapper.Class, "root"));
+        builder.AddAttribute(sequence++, "style", GetElementStyle(Style, "root"));
+        builder.AddAttribute(sequence++, "id", Id);
+
+        if (!string.IsNullOrWhiteSpace(Href))
+        {
+            builder.AddAttribute(sequence++, "href", Href);
+            builder.AddAttribute(sequence++, "target", Target);
+            builder.AddAttribute(sequence++, "aria-disabled", Disabled.ToString().ToLowerInvariant());
+        }
+        else
+        {
+            builder.AddAttribute(sequence++, "type", HtmlType);
+            builder.AddAttribute(sequence++, "disabled", Disabled);
+        }
+
+        builder.AddAttribute(sequence++, "aria-label", AriaLabel);
+        builder.AddAttribute(sequence++, "onclick", EventCallback.Factory.Create<Microsoft.AspNetCore.Components.Web.MouseEventArgs>(this, OnClickHandler));
+        builder.AddElementReferenceCapture(sequence++, reference =>
+        {
+            Ref = reference;
+            if (refBack != null)
+            {
+                refBack.Current = reference;
+            }
+        });
+
+        builder.OpenElement(sequence++, "span");
+        builder.AddAttribute(sequence++, "class", GetElementClass($"ant-btn-icon {PrefixCls}-icon", "icon"));
+        builder.AddAttribute(sequence++, "style", GetSemanticStyle("icon"));
+        if (IconTemplate != null)
+        {
+            builder.AddContent(sequence++, IconTemplate);
+        }
+        else
+        {
+            builder.OpenComponent<Icon>(sequence++);
+            builder.AddAttribute(sequence++, "Type", Icon ?? "file-text");
+            builder.CloseComponent();
+        }
+        builder.CloseElement();
+
+        if (HasContent)
+        {
+            builder.OpenElement(sequence++, "span");
+            builder.AddAttribute(sequence++, "class", GetElementClass($"{PrefixCls}-content", "content"));
+            builder.AddAttribute(sequence++, "style", GetSemanticStyle("content"));
+            if (ChildContent != null)
+                builder.AddContent(sequence++, ChildContent);
+            else
+                builder.AddContent(sequence++, Content ?? Description);
+            builder.CloseElement();
+        }
+
+        if (Badge != null)
+        {
+            builder.OpenComponent<Badge>(sequence++);
+            builder.AddAttribute(sequence++, "Count", Badge.Count);
+            builder.AddAttribute(sequence++, "Dot", Badge.Dot);
+            builder.AddAttribute(sequence++, "OverflowCount", Badge.OverflowCount);
+            builder.AddAttribute(sequence++, "Color", Badge.Color);
+            builder.AddAttribute(sequence++, "Class", $"{PrefixCls}-badge {(Badge.Dot ? $"{PrefixCls}-badge-dot" : string.Empty)}");
+            builder.CloseComponent();
+        }
+
+        builder.CloseElement();
+    };
+}

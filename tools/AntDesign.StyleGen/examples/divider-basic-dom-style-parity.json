@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Divider"
+  },
+  "config": {
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_"],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "divider-horizontal-demo",
+      "component": "Divider",
+      "react": {
+        "url": "http://127.0.0.1:8001/components/divider",
+        "scopeSelector": "#divider-demo-horizontal .code-box-demo",
+        "rootSelector": ".ant-divider"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:8188/en-US/components/divider",
+        "scopeSelector": "#components-divider-demo-Horizontal .code-box-demo",
+        "rootSelector": ".ant-divider"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "marginBlock", "marginInline", "borderColor", "borderTopWidth", "borderTopStyle", "color", "fontSize", "lineHeight", "verticalAlign"],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "start", "reactSelector": ".ant-divider-rail-start", "blazorSelector": ".ant-divider-rail-start", "minimumCount": 0 },
+        { "path": "label", "reactSelector": ".ant-divider-inner-text", "blazorSelector": ".ant-divider-inner-text", "minimumCount": 0 },
+        { "path": "end", "reactSelector": ".ant-divider-rail-end", "blazorSelector": ".ant-divider-rail-end", "minimumCount": 0 }
+      ],
+      "scenarios": [{ "id": "default" }]
+    }
+  ]
+}

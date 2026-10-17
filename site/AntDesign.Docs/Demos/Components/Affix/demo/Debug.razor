@@ -1,0 +1,20 @@
+<div style="height: 10000px">
+    <div>Top</div>
+    <Affix OffsetTop="@_offsetTop">
+        <div style="background: red">
+            <Button Type="ButtonType.Primary" OnClick="IncreaseOffset">
+                Affix top
+            </Button>
+        </div>
+    </Affix>
+    <div>Bottom</div>
+</div>
+
+@code {
+    private int _offsetTop = 10;
+
+    private void IncreaseOffset()
+    {
+        _offsetTop += 10;
+    }
+}

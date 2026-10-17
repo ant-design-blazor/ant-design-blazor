@@ -1,0 +1,21 @@
+<Flex Direction="FlexDirection.Vertical">
+    @foreach (var i in Enumerable.Range(0, 4))
+    {
+        <div @key="i" style="@VerticalItemStyle(i)" />
+    }
+</Flex>
+
+<Flex Style="margin-top: 20px;">
+    @foreach (var i in Enumerable.Range(0, 4))
+    {
+        <div @key="i" style="@HorizontalItemStyle(i)" />
+    }
+</Flex>
+
+@code {
+    private static string VerticalItemStyle(int index)
+        => $"height: 60px; background-color: {(index % 2 == 1 ? "#1677ff" : "#1677ffbf")};";
+
+    private static string HorizontalItemStyle(int index)
+        => $"width: 25%; height: {(index % 2 == 1 ? 60 : 40)}px; background-color: {(index % 2 == 1 ? "#1677ff" : "#1677ffbf")};";
+}

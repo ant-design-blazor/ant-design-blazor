@@ -10,36 +10,65 @@
             <Radio Value="4">D</Radio>
         </RadioGroup>);
         cut.MarkupMatches(
-        @<div class="ant-radio-group" id:ignore>
-            <label class="ant-radio-wrapper ant-radio-wrapper-checked" id:ignore>
-                <span class="ant-radio ant-radio-checked">
-                    <input type="radio" class="ant-radio-input" value="1" name:ignore checked="">
-                    <span class="ant-radio-inner"></span>
+        @<div class="ant-radio-group ant-radio-group-outline ant-radio-css-var" id:ignore role="radiogroup">
+            <label class="ant-radio-wrapper ant-radio-wrapper-checked ant-radio-css-var">
+                <span class="ant-radio ant-radio-checked ant-wave-target">
+                    <input id:ignore type="radio" class="ant-radio-input" value="1" name:ignore checked="">
+
                 </span>
-                <span>A</span>
+                <span class="ant-radio-label">A</span>
             </label>
-            <label class="ant-radio-wrapper" id:ignore>
-                <span class="ant-radio">
-                    <input type="radio" class="ant-radio-input" name:ignore value="2">
-                    <span class="ant-radio-inner"></span>
+            <label class="ant-radio-wrapper ant-radio-css-var">
+                <span class="ant-radio ant-wave-target">
+                    <input id:ignore type="radio" class="ant-radio-input" name:ignore value="2">
+
                 </span>
-                <span>B</span>
+                <span class="ant-radio-label">B</span>
             </label>
-            <label class="ant-radio-wrapper" id:ignore>
-                <span class="ant-radio">
-                    <input type="radio" class="ant-radio-input" name:ignore value="3">
-                    <span class="ant-radio-inner"></span>
+            <label class="ant-radio-wrapper ant-radio-css-var">
+                <span class="ant-radio ant-wave-target">
+                    <input id:ignore type="radio" class="ant-radio-input" name:ignore value="3">
+
                 </span>
-                <span>C</span>
+                <span class="ant-radio-label">C</span>
             </label>
-            <label class="ant-radio-wrapper" id:ignore>
-                <span class="ant-radio">
-                    <input type="radio" class="ant-radio-input" name:ignore value="4">
-                    <span class="ant-radio-inner"></span>
+            <label class="ant-radio-wrapper ant-radio-css-var">
+                <span class="ant-radio ant-wave-target">
+                    <input id:ignore type="radio" class="ant-radio-input" name:ignore value="4">
+
                 </span>
-                <span>D</span>
+                <span class="ant-radio-label">D</span>
             </label>
         </div>);
+    }
+
+    [Fact]
+    public void Radio_group_options_render_v6_metadata_on_wrapper_and_input()
+    {
+        var options = new[]
+        {
+            new RadioOption<string>
+            {
+                Label = "Primary",
+                Value = "primary",
+                ClassName = "custom-option",
+                Style = "color: red",
+                Title = "Choose primary",
+                Id = "primary-radio",
+                Required = true,
+            },
+        };
+        var cut = Render<RadioGroup<string>>(@<RadioGroup Options="@options" Value="@("primary")"/>);
+
+        var wrapper = cut.Find("label.custom-option");
+        wrapper.GetAttribute("style").Should().Be("color: red;");
+        wrapper.GetAttribute("title").Should().Be("Choose primary");
+        wrapper.QuerySelector(".ant-radio-label").TextContent.Trim().Should().Be("Primary");
+
+        var input = wrapper.QuerySelector("input[type=radio]");
+        input.GetAttribute("id").Should().Be("primary-radio");
+        input.HasAttribute("required").Should().BeTrue();
+        wrapper.QuerySelector(".ant-radio").ClassList.Contains("ant-radio-checked").Should().BeTrue();
     }
 
 

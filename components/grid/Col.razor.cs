@@ -36,6 +36,11 @@ namespace AntDesign
         /// Order of Col, used in flex mode
         /// </summary>
         public StringNumber Order { get; set; }
+
+        /// <summary>
+        /// Flex value for this breakpoint.
+        /// </summary>
+        public StringNumber Flex { get; set; }
     }
 
     public partial class Col : AntDomComponentBase
@@ -122,6 +127,7 @@ namespace AntDesign
         public Row Row { get; set; }
 
         private string _hostFlexStyle;
+        private string _responsiveFlexStyle;
 
         private string GutterStyle { get; set; }
 
@@ -130,13 +136,32 @@ namespace AntDesign
             GutterStyle = string.Empty;
             if (gutter.horizontalGutter > 0)
             {
-                GutterStyle = $"padding-left: {gutter.horizontalGutter / 2}px; padding-right: {gutter.horizontalGutter / 2}px;";
+                GutterStyle = $"padding-inline: {gutter.horizontalGutter / 2}px;";
             }
+        }
+
+        internal void RowGutterChanged(string horizontalGutter)
+        {
+            GutterStyle = string.IsNullOrWhiteSpace(horizontalGutter)
+                ? string.Empty
+                : $"padding-inline: {ScaleCssLength(horizontalGutter, 0.5m)};";
+        }
+
+        private static string ScaleCssLength(string value, decimal factor)
+        {
+            var match = Regex.Match(value.Trim(), @"^(-?\d+(?:\.\d+)?)([a-zA-Z%]+)$");
+            if (match.Success && decimal.TryParse(match.Groups[1].Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number))
+            {
+                return $"calc({(number * factor).ToString("0.############################", System.Globalization.CultureInfo.InvariantCulture)}{match.Groups[2].Value})";
+            }
+
+            return $"calc(({value.Trim()}) * {factor.ToString("0.############################", System.Globalization.CultureInfo.InvariantCulture)})";
         }
 
         private void SetHostClassMap()
         {
             var prefixCls = "ant-col";
+            ClassMapper.OriginalClass = null;
             this.ClassMapper.Clear()
                 .Add(prefixCls)
                 .GetIf(() => $"{prefixCls}-{this.Span.Value}", () => this.Span.Value != null)
@@ -155,6 +180,28 @@ namespace AntDesign
             SetSizeClassMapper(prefixCls, Xxl, "xxl");
         }
 
+        private string HostClass
+        {
+            get
+            {
+                var componentClasses = ClassMapper.Class;
+                if (!string.IsNullOrWhiteSpace(Class))
+                {
+                    var mappedClasses = new System.Collections.Generic.List<string>(componentClasses.Split(' ', System.StringSplitOptions.RemoveEmptyEntries));
+                    foreach (var customClass in Class.Split(' ', System.StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        mappedClasses.Remove(customClass);
+                    }
+
+                    componentClasses = string.Join(" ", mappedClasses);
+                }
+
+                return string.IsNullOrWhiteSpace(componentClasses)
+                    ? Class
+                    : string.IsNullOrWhiteSpace(Class) ? componentClasses : $"{componentClasses} {Class}";
+            }
+        }
+
         private void SetSizeClassMapper(string prefixCls, OneOf<int, EmbeddedProperty> parameter, string sizeName)
         {
             parameter.Switch(strNum =>
@@ -168,7 +215,37 @@ namespace AntDesign
                     .GetIf(() => $"{prefixCls}-{sizeName}-offset-{embedded.Offset.Value}", () => embedded.Offset.Value != null)
                     .GetIf(() => $"{prefixCls}-{sizeName}-push-{embedded.Push.Value}", () => embedded.Push.Value != null)
                     .GetIf(() => $"{prefixCls}-{sizeName}-pull-{embedded.Pull.Value}", () => embedded.Pull.Value != null);
+
+                var flex = embedded.Flex.Match(value => (value, value != null), value => (value.ToString(System.Globalization.CultureInfo.InvariantCulture), true));
+                if (flex.Item2)
+                {
+                    ClassMapper.If($"{prefixCls}-{sizeName}-flex", () => true);
+                    var parsedFlex = ParseFlex(flex.Item1);
+                    _responsiveFlexStyle = string.IsNullOrEmpty(_responsiveFlexStyle)
+                        ? $"--ant-col-{sizeName}-flex: {parsedFlex};"
+                        : $"{_responsiveFlexStyle} --ant-col-{sizeName}-flex: {parsedFlex};";
+                }
             });
+        }
+
+        private static string ParseFlex(string flex)
+        {
+            if (string.Equals(flex, "auto", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return "1 1 auto";
+            }
+
+            if (string.Equals(flex, "none", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return "0 0 auto";
+            }
+
+            if (Regex.IsMatch(flex, @"^\d+(\.\d+)?(px|em|rem|%)$"))
+            {
+                return $"0 0 {flex}";
+            }
+
+            return flex;
         }
 
 #if NET7_0_OR_GREATER
@@ -195,9 +272,24 @@ namespace AntDesign
                         return $"flex: 0 0 {str};";
                     }
 
+                    if (string.Equals(str, "auto", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        return "flex: 1 1 auto;";
+                    }
+
+                    if (string.Equals(str, "none", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        return "flex: 0 0 auto;";
+                    }
+
                     return $"flex: {str};";
                 },
                 num => $"flex: {num} {num} auto;");
+
+            if (Row?.Wrap == false)
+            {
+                _hostFlexStyle += " min-width: 0px;";
+            }
         }
 
         protected override void OnInitialized()

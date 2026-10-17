@@ -1,0 +1,79 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<Form Model="@_model" LabelColSpan="24" WrapperColSpan="24"
+      OnFinish="OnFinish" OnFinishFailed="OnFinishFailed"
+      AutoComplete="off" Style="max-width:600px;">
+    <FormItem Name="Username" Label="Username" Rules="@_requiredRules">
+        <Input @bind-Value="context.Username" />
+    </FormItem>
+    <FormItem Name="Password" Label="Password" Rules="@_requiredRules">
+        <InputPassword @bind-Value="context.Password" />
+    </FormItem>
+    <FormItem Name="Choices" Label="Issue #36459" Style="box-shadow: 0 0 3px red;">
+        <Select Mode="SelectMode.Multiple" TItemValue="string" TItem="string"
+                @bind-Values="context.Choices" Style="width:70%;">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("bamboo")' Label="Bamboo" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("little")' Label="Little" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("light")' Label="Light" />
+            </SelectOptions>
+        </Select>
+    </FormItem>
+    <FormItem WrapperColSpan="24">
+        <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
+    </FormItem>
+</Form>
+
+<Form Model="@_responsiveModel" LabelColSpan="24" WrapperColSpan="24" AutoComplete="off">
+    <FormItem Name="Username" Label="Responsive username" Rules="@_requiredRules">
+        <Input @bind-Value="context.Username" />
+    </FormItem>
+    <FormItem Name="Password" Label="Responsive password" Rules="@_requiredRules">
+        <InputPassword @bind-Value="context.Password" />
+    </FormItem>
+    <FormItem WrapperColSpan="24">
+        <Button Type="ButtonType.Primary">Submit</Button>
+    </FormItem>
+</Form>
+
+<Divider />
+
+<Form Model="@_verticalModel" Layout="FormLayout.Vertical">
+    <FormItem Name="Choices" Label="Vertical multi-select" Style="box-shadow: 0 0 3px red;">
+        <Select Mode="SelectMode.Multiple" TItemValue="string" TItem="string"
+                @bind-Values="context.Choices">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("bamboo")' Label="Bamboo" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("little")' Label="Little" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("light")' Label="Light" />
+            </SelectOptions>
+        </Select>
+    </FormItem>
+    <FormItem Name="Col12" Label="Col12" LabelColSpan="12" WrapperColSpan="12">
+        <Input @bind-Value="context.Col12" />
+    </FormItem>
+</Form>
+
+@if (!string.IsNullOrEmpty(_submitResult))
+{
+    <p role="status">@_submitResult</p>
+}
+
+@code {
+    private readonly DebugFormModel _model = new() { Choices = ["bamboo"] };
+    private readonly DebugFormModel _responsiveModel = new();
+    private readonly DebugFormModel _verticalModel = new() { Choices = ["bamboo"] };
+    private readonly FormValidationRule[] _requiredRules = [new() { Required = true, Message = "This field is required." }];
+    private string _submitResult;
+
+    private void OnFinish(EditContext _) => _submitResult = "Submit succeeded.";
+    private void OnFinishFailed(EditContext _) => _submitResult = "Submit failed. Check required fields.";
+
+    private sealed class DebugFormModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public IEnumerable<string> Choices { get; set; } = [];
+        public string Col12 { get; set; } = string.Empty;
+    }
+}

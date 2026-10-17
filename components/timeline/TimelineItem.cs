@@ -25,8 +25,20 @@ namespace AntDesign
         /// The color of the timeline item.
         /// </summary>
         /// <default value="TimelineDotColor.Blue" />
+        private OneOf<TimelineDotColor, string> _color = TimelineDotColor.Blue;
+        private bool _hasColor;
+
         [Parameter]
-        public OneOf<TimelineDotColor, string> Color { get; set; } = TimelineDotColor.Blue;
+        public OneOf<TimelineDotColor, string> Color
+        {
+            get => _color;
+            set
+            {
+                _color = value;
+                _hasColor = true;
+                TryUpdateCustomColor();
+            }
+        }
 
         /// <summary>
         /// The label of the timeline item.
@@ -69,21 +81,20 @@ namespace AntDesign
 
         private void TryUpdateCustomColor()
         {
-            HeadStyle = Color.IsT1 ? $"border-color:{Color.AsT1}" : "";
+            HeadStyle = Color.IsT1 ? $"--ant-cmp-steps-item-icon-dot-color:{Color.AsT1};" : "";
         }
 
         internal void SetClassMap()
         {
-            var prefix = "ant-timeline-item";
-            ClassMapper.Clear().Add(prefix)
-                .If($"{prefix}-right", () => Position == TimelineMode.Right)
-                .If($"{prefix}-left", () => Position == TimelineMode.Left)
-                .If($"{prefix}-last", () => IsLast);
+            ClassMapper.Clear()
+                .Add("ant-steps-item ant-steps-item-finish ant-timeline-item")
+                .Add($"ant-timeline-item-placement-{(Position == TimelineMode.Right ? "end" : "start")}")
+                .If("ant-steps-item-active", () => IsLast)
+                .If("ant-steps-item-empty-header", () => string.IsNullOrEmpty(Label))
+                .GetIf(() => $"ant-timeline-item-color-{Color.AsT0.ToString().ToLowerInvariant()}", () => _hasColor && Color.IsT0);
 
-            var headPrefix = "ant-timeline-item-head";
-            _headClassMapper.Add(headPrefix)
-                .GetIf(() => $"{headPrefix}-{Color.AsT0.ToString().ToLowerInvariant()}", () => Color.IsT0)
-                .If($"{headPrefix}-custom", () => Dot != null);
+            _headClassMapper.Clear()
+                .Add("ant-steps-item-icon ant-wave-target ant-timeline-item-icon");
         }
 
         internal void SetChildContent(RenderFragment childContent)

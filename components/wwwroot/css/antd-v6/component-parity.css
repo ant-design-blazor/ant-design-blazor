@@ -1,0 +1,97 @@
+/* Component rules kept outside the generated theme snapshots so their behavior stays token-driven. */
+.ant-float-btn.ant-btn {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--ant-padding-xxs) / 2);
+  width: var(--ant-float-btn-size, var(--ant-control-height-lg));
+  min-height: var(--ant-float-btn-size, var(--ant-control-height-lg));
+  height: auto;
+  margin: 0;
+  padding: var(--ant-padding-xxs) 0;
+  color: var(--ant-color-text);
+  font-family: var(--ant-font-family);
+  font-size: var(--ant-font-size);
+  line-height: var(--ant-line-height);
+  text-align: center;
+  white-space: normal;
+  word-break: break-word;
+  background: var(--ant-color-bg-container);
+  border: var(--ant-line-width) var(--ant-line-type) var(--ant-color-border);
+  border-radius: var(--ant-border-radius);
+  box-shadow: none;
+}
+
+.ant-float-btn.ant-btn.ant-float-btn-circle {
+  border-radius: 50%;
+}
+
+.ant-float-btn.ant-btn.ant-float-btn-square {
+  border-radius: var(--ant-border-radius);
+}
+
+.ant-float-btn.ant-btn:not(:disabled):not([aria-disabled="true"]):hover {
+  color: var(--ant-color-text);
+  background: var(--ant-color-bg-text-hover);
+}
+
+.ant-float-btn.ant-btn.ant-float-btn-primary {
+  color: var(--ant-color-text-light-solid);
+  background: var(--ant-color-primary);
+  border-color: var(--ant-color-primary);
+}
+
+.ant-float-btn.ant-btn.ant-float-btn-primary:hover {
+  color: var(--ant-color-text-light-solid);
+  background: var(--ant-color-primary-hover);
+  border-color: var(--ant-color-primary-hover);
+}
+
+.ant-float-btn.ant-btn.ant-float-btn-progress {
+  border-width: var(--ant-line-width-bold);
+  border-color: transparent;
+  background-image: linear-gradient(var(--ant-color-bg-container), var(--ant-color-bg-container)),
+    conic-gradient(var(--ant-color-primary) var(--ant-float-btn-progress, 0turn), var(--ant-color-border-secondary) 0);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.ant-float-btn.ant-btn.ant-float-btn-progress:hover {
+  background-image: linear-gradient(var(--ant-color-bg-text-hover), var(--ant-color-bg-text-hover)),
+    conic-gradient(var(--ant-color-primary) var(--ant-float-btn-progress, 0turn), var(--ant-color-border-secondary) 0);
+}
+
+.ant-float-btn.ant-btn.ant-float-btn-progress:active {
+  background-image: linear-gradient(var(--ant-color-bg-text-active), var(--ant-color-bg-text-active)),
+    conic-gradient(var(--ant-color-primary) var(--ant-float-btn-progress, 0turn), var(--ant-color-border-secondary) 0);
+}
+
+.ant-float-btn.ant-btn.ant-float-btn-disabled,
+.ant-float-btn.ant-btn:disabled,
+.ant-float-btn.ant-btn[aria-disabled="true"] {
+  color: var(--ant-color-text-disabled);
+  background: var(--ant-color-bg-container-disabled);
+  border-color: var(--ant-color-border);
+  cursor: not-allowed;
+}
+
+.ant-tour {
+  position: fixed;
+  width: 520px;
+  max-width: calc(100vw - 16px);
+}
+
+.ant-tour-mask {
+  position: fixed;
+  z-index: calc(var(--ant-tour-z-index-popup, 1070) - 10);
+  inset: 0;
+  pointer-events: none;
+}
+
+.ant-tour-mask > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

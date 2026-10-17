@@ -1,0 +1,25 @@
+<Space Direction="SpaceDirection.Vertical">
+    <DatePicker TValue="DateTime?" Picker="DatePickerType.Date">
+        <Prefix>
+            <Icon Type="@IconType.Outline.Smile" />
+        </Prefix>
+    </DatePicker>
+    <DatePicker TValue="DateTime?" Picker="DatePickerType.Week">
+        <Prefix>
+            <span>Event Period</span>
+        </Prefix>
+    </DatePicker>
+    <RangePicker TValue="DateTime?[]" Picker="DatePickerType.Week">
+        <Prefix>
+            <span>Event Period</span>
+        </Prefix>
+        <SuffixIcon>
+            <Icon Type="@IconType.Outline.Smile" />
+        </SuffixIcon>
+    </RangePicker>
+    <DatePicker TValue="DateTime?" Picker="DatePickerType.Month">
+        <SuffixIcon>
+            <span>ab</span>
+        </SuffixIcon>
+    </DatePicker>
+</Space>

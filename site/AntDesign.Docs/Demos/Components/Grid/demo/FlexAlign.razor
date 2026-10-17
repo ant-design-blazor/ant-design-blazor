@@ -1,59 +1,34 @@
 ﻿<div>
     <Divider Orientation="DividerOrientation.Left">Align Top</Divider>
     <GridRow Justify="RowJustify.Center" Align="RowAlign.Top">
-        <GridCol Span="4">
-            @DemoBox((100, "col-4"))
-        </GridCol>
-        <GridCol Span="4">
-            @DemoBox((50, "col-4"))
-        </GridCol>
-        <GridCol Span="4">
-            @DemoBox((120, "col-4"))
-        </GridCol>
-        <GridCol Span="4">
-            @DemoBox((80, "col-4"))
-        </GridCol>
+        <GridCol Span="4">@DemoBox((100, "col-4"))</GridCol><GridCol Span="4">@DemoBox((50, "col-4"))</GridCol><GridCol Span="4">@DemoBox((120, "col-4"))</GridCol><GridCol Span="4">@DemoBox((80, "col-4"))</GridCol>
     </GridRow>
 
     <Divider Orientation="DividerOrientation.Left">Align Middle</Divider>
     <GridRow Justify="RowJustify.SpaceAround" Align="RowAlign.Middle">
-        <GridCol Span="4">
-            @DemoBox((100, "col-4"))
-        </GridCol>
-        <GridCol Span="4">
-            @DemoBox((50, "col-4"))
-        </GridCol>
-        <GridCol Span="4">
-            @DemoBox((120, "col-4"))
-        </GridCol>
-        <GridCol Span="4">
-            @DemoBox((80, "col-4"))
-        </GridCol>
+        <GridCol Span="4">@DemoBox((100, "col-4"))</GridCol><GridCol Span="4">@DemoBox((50, "col-4"))</GridCol><GridCol Span="4">@DemoBox((120, "col-4"))</GridCol><GridCol Span="4">@DemoBox((80, "col-4"))</GridCol>
     </GridRow>
 
     <Divider Orientation="DividerOrientation.Left">Align Bottom</Divider>
     <GridRow Justify="RowJustify.SpaceBetween" Align="RowAlign.Bottom">
-        <GridCol Span="4">
-            @DemoBox((100, "col-4"))
-        </GridCol>
-        <GridCol Span="4">
-            @DemoBox((50, "col-4"))
-        </GridCol>
-        <GridCol Span="4">
-            @DemoBox((120, "col-4"))
-        </GridCol>
-        <GridCol Span="4">
-            @DemoBox((80, "col-4"))
-        </GridCol>
+        <GridCol Span="4">@DemoBox((100, "col-4"))</GridCol><GridCol Span="4">@DemoBox((50, "col-4"))</GridCol><GridCol Span="4">@DemoBox((120, "col-4"))</GridCol><GridCol Span="4">@DemoBox((80, "col-4"))</GridCol>
     </GridRow>
 </div>
 
-<style>
-    #components-grid-demo-flex-align [class~='ant-row'] {
-        background: rgba(128, 128, 128, 0.08);
-    }
-</style>
+<style>@((MarkupString)gridStyles)</style>
 
 @code{
     RenderFragment<(int value, string children)> DemoBox = props =>@<p class="@($"height-{props.value}")">@props.children</p>;
+
+    private static readonly string gridStyles = AntDesign.Docs.Services.CssInJs.CreateGlobalStyles(new Dictionary<string, object>
+    {
+        ["#components-grid-demo-flex-align [class~='ant-row']"] = new Dictionary<string, object>
+        {
+            ["background"] = "rgba(128, 128, 128, 0.08)"
+        },
+        ["#components-grid-demo-flex-align .code-box-demo .height-100"] = new Dictionary<string, object> { ["height"] = 100, ["lineHeight"] = "100px" },
+        ["#components-grid-demo-flex-align .code-box-demo .height-50"] = new Dictionary<string, object> { ["height"] = 50, ["lineHeight"] = "50px" },
+        ["#components-grid-demo-flex-align .code-box-demo .height-120"] = new Dictionary<string, object> { ["height"] = 120, ["lineHeight"] = "120px" },
+        ["#components-grid-demo-flex-align .code-box-demo .height-80"] = new Dictionary<string, object> { ["height"] = 80, ["lineHeight"] = "80px" }
+    });
 }

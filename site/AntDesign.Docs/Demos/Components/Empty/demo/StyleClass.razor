@@ -1,0 +1,37 @@
+<div style="display:flex; flex-direction:column; gap:16px;">
+    <Empty Description=@("Object styles") ClassNames="@classNames" Styles="@objectStyles">
+        <ImageTemplate><EmptySimpleImg /></ImageTemplate>
+        <ChildContent><Button Type="ButtonType.Primary">Create Now</Button></ChildContent>
+    </Empty>
+    <Empty Description=@("Function styles") ClassNames="@classNames" Styles="@functionStyles">
+        <ImageTemplate><EmptySimpleImg /></ImageTemplate>
+        <ChildContent><Button Type="ButtonType.Primary">Create Now</Button></ChildContent>
+    </Empty>
+</div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-empty-root"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> objectStyles = new Dictionary<string, string>
+    {
+        ["root"] = "background-color:#f5f5f5;border-radius:8px",
+        ["image"] = "filter:grayscale(100%)",
+        ["description"] = "color:#1890ff;font-weight:bold",
+        ["footer"] = "margin-top:16px"
+    };
+
+    // Equivalent of the React style function for the `description` case.
+    private static readonly IReadOnlyDictionary<string, string> functionStyles = new Dictionary<string, string>
+    {
+        ["root"] = "background-color:#e6f7ff;border:1px solid #91d5ff",
+        ["image"] = "filter:hue-rotate(180deg)",
+        ["description"] = "color:#1890ff;font-weight:bold"
+    };
+}
+
+<style>
+    .demo-empty-root { border: 1px dashed #ccc; padding: 16px; }
+</style>

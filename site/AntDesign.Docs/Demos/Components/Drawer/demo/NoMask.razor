@@ -1,0 +1,8 @@
+<Button Type="ButtonType.Primary" OnClick="() => _visible = true">Open without mask</Button>
+<Drawer @bind-Visible="_visible" Title='("Drawer without mask")' Mask="false">
+    <p>The page remains interactive because the mask is hidden.</p>
+</Drawer>
+
+@code {
+    private bool _visible;
+}

@@ -1,0 +1,23 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <Alert Message="Success Tips"
+           Description="Detailed description and advice about successful copywriting."
+           Type="AlertType.Success" ShowIcon Icon="@_icon" />
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Alert"] = new Dictionary<string, string>
+            {
+                ["withDescriptionIconSize"] = "32px",
+                ["withDescriptionPadding"] = "16px"
+            }
+        }
+    };
+
+    private RenderFragment _icon => @<Icon Type="smile" />;
+}

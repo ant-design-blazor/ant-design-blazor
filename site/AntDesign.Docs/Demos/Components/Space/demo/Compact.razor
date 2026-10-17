@@ -1,0 +1,25 @@
+<Space Direction="SpaceDirection.Vertical">
+    <SpaceItem>
+        <SpaceCompact Block>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Style="width: 20%;" DefaultValue="@("0571")" /></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Input TValue="string" DefaultValue="@("26888888")" /></SpaceCompactItem>
+        </SpaceCompact>
+    </SpaceItem>
+    <SpaceItem>
+        <SpaceCompact Block Size="InputSize.Small">
+            <SpaceCompactItem Position="SpaceCompactItemPosition.First"><Input TValue="string" Style="@FlexibleWidthStyle" DefaultValue="@("https://ant.design")" /></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Type="ButtonType.Primary">Submit</Button></SpaceCompactItem>
+        </SpaceCompact>
+    </SpaceItem>
+    <SpaceItem>
+        <SpaceCompact Block>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.First"><SpaceAddon>https://</SpaceAddon></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Middle"><Input TValue="string" DefaultValue="@("ant.design")" /></SpaceCompactItem>
+            <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><SpaceAddon>.com</SpaceAddon></SpaceCompactItem>
+        </SpaceCompact>
+    </SpaceItem>
+</Space>
+
+@code {
+    private const string FlexibleWidthStyle = "width: 80%;";
+}

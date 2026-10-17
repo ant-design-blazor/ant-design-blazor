@@ -1,0 +1,21 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <Rate AllowHalf="true" DefaultValue="2.5M" />
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Rate"] = new Dictionary<string, string>
+            {
+                ["starColor"] = "blue",
+                ["starSize"] = "40px",
+                ["starHoverScale"] = "scale(2)",
+                ["starBg"] = "#ffe58f"
+            }
+        }
+    };
+}

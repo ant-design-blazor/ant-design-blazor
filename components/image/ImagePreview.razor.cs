@@ -21,9 +21,8 @@ namespace AntDesign
         private double _zoomOutTimes = 1;
         private int _rotateTimes;
         private bool _visible = true;
-        private string _left = "50%";
-        private string _top = "50%";
-
+        private bool _flipX;
+        private bool _flipY;
 
         private async Task HandleClose()
         {
@@ -58,11 +57,36 @@ namespace AntDesign
             _rotateTimes--;
         }
 
+        private void HandleFlipX()
+        {
+            _flipX = !_flipX;
+        }
+
+        private void HandleFlipY()
+        {
+            _flipY = !_flipY;
+        }
+
+        private void SwitchPrevious()
+        {
+            ImageRef.SwitchTo(ImageRef.CurrentIndex - 1);
+        }
+
+        private void SwitchNext()
+        {
+            ImageRef.SwitchTo(ImageRef.CurrentIndex + 1);
+        }
+
+        private async Task HandleKeyDown(KeyboardEventArgs args)
+        {
+            if (args.Key == "Escape")
+            {
+                await HandleClose();
+            }
+        }
+
         private async Task WeelHandZoom(WheelEventArgs wheelEventArgs)
         {
-            _left = await Js.InvokeAsync<string>(JSInteropConstants.GetStyle, _previewImg, "left");
-            _top = await Js.InvokeAsync<string>(JSInteropConstants.GetStyle, _previewImg, "top");
-
             if (wheelEventArgs.DeltaY < 0)
             {
                 _zoomOutTimes += 0.1;
@@ -71,22 +95,6 @@ namespace AntDesign
             {
                 _zoomOutTimes -= 0.1;
             }
-        }
-
-        private DialogOptions GetDialogOptions()
-        {
-            return new DialogOptions()
-            {
-                PrefixCls = "ant-image-preview",
-                Closable = false,
-                Footer = null,
-                MaskClosable = true,
-                CreateByService = true,
-                OnCancel = async (e) =>
-                {
-                    await HandleClose();
-                }
-            };
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

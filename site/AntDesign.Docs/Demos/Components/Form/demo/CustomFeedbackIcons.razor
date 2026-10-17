@@ -1,0 +1,35 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<Alert Type="AlertType.Info" ShowIcon Message="Blazor Form currently renders its built-in feedback icons; this example exercises the same error/success states and exposes validation messages inline." />
+<Form Model="@_model" OnFinishFailed="OnFinishFailed" Style="max-width:600px;">
+    <FormItem Name="Email" Label="Email" HasFeedback
+              Rules="@(new[] { new FormValidationRule { Required = true, Type = FormFieldType.Email, Message = "Enter a valid email address." } })">
+        <Input @bind-Value="context.Email" />
+    </FormItem>
+    <FormItem Name="BackupEmail" Label="Backup email" HasFeedback
+              Rules="@(new[] { new FormValidationRule { Required = true, Type = FormFieldType.Email, Message = "Enter a valid email address." } })">
+        <Input @bind-Value="context.BackupEmail" />
+    </FormItem>
+    <FormItem Name="Mention" Label="Mention" HasFeedback ValidateStatus="@_mentionStatus">
+        <Input @bind-Value="context.Mention" Placeholder="mention" />
+    </FormItem>
+    <FormItem>
+        <Button Type="ButtonType.Primary" HtmlType="submit">Validate</Button>
+        @if (!string.IsNullOrEmpty(_result)) { <span role="status" style="margin-inline-start:12px">@_result</span> }
+    </FormItem>
+</Form>
+
+@code {
+    private readonly FeedbackModel _model = new() { Mention = "@mention1" };
+    private FormValidateStatus _mentionStatus = FormValidateStatus.Success;
+    private string _result;
+
+    private void OnFinishFailed(EditContext _) => _result = "Fix the email fields and submit again.";
+
+    private sealed class FeedbackModel
+    {
+        public string Email { get; set; } = string.Empty;
+        public string BackupEmail { get; set; } = string.Empty;
+        public string Mention { get; set; } = string.Empty;
+    }
+}

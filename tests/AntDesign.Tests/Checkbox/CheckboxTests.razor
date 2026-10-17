@@ -5,12 +5,11 @@
 	{
 		var cut = Render(@<Checkbox>Test</Checkbox>);
 		cut.MarkupMatches(
-			@<label class="ant-checkbox-wrapper" for:ignore>
-				<span class="ant-checkbox">
-					<input id:ignore type="checkbox" value="true" class="ant-checkbox-input">
-					<span class="ant-checkbox-inner"></span>
+			@<label class="ant-checkbox-wrapper">
+				<span class="ant-checkbox ant-wave-target">
+					<input id:ignore type="checkbox" class="ant-checkbox-input">
 				</span>
-				<span>Test</span>
+				<span class="ant-checkbox-label">Test</span>
 			</label>);
 	}
 

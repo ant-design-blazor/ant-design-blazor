@@ -1,0 +1,8 @@
+﻿@namespace AntDesign
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this" IsFixed="@true">
+    <div class="@CompactClass" style="@Style" id="@Id" @ref="@Ref">
+        @ChildContent
+    </div>
+</CascadingValue>

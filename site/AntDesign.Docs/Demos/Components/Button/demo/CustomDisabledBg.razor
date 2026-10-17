@@ -1,0 +1,23 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="_theme">
+    <Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+        <Button Type="ButtonType.Primary" Disabled>Primary Button</Button>
+        <Button Disabled>Default Button</Button>
+        <Button Type="ButtonType.Dashed" Disabled>Dashed Button</Button>
+    </Flex>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Button"] = new Dictionary<string, string>
+            {
+                ["defaultBgDisabled"] = "rgba(0,0,0,0.1)",
+                ["dashedBgDisabled"] = "rgba(0,0,0,0.4)"
+            }
+        }
+    };
+}

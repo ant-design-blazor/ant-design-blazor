@@ -1,0 +1,23 @@
+<DatePicker TValue="DateTime?"
+            NeedConfirm="true"
+            OnChange="OnDateChange"
+            OnOk="OnConfirm"
+            Placeholder="@("Select then confirm")" />
+
+@if (_selectedDate.HasValue)
+{
+    <div role="status">Selected: @_selectedDate.Value.ToString("yyyy-MM-dd")</div>
+}
+
+@code {
+    private DateTime? _selectedDate;
+
+    private void OnDateChange(DateTimeChangedEventArgs<DateTime?> args)
+    {
+        _selectedDate = args.Date;
+    }
+
+    private void OnConfirm()
+    {
+    }
+}

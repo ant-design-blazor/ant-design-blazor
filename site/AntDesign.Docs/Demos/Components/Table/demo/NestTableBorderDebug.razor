@@ -1,0 +1,62 @@
+<Space Wrap>
+    <Checkbox @bind-Checked="_rootBordered">Root table bordered</Checkbox>
+    <Checkbox @bind-Checked="_childBordered">Child table bordered</Checkbox>
+</Space>
+
+<Table TItem="ParentRow" DataSource="_rows" RowKey="row=>row.Key" Bordered="_rootBordered" HidePagination Title="cool" Footer="cool" RowExpandable="@(_ => true)">
+    <ColumnDefinitions>
+        <PropertyColumn Property="row=>row.Name" Title="Name" />
+        <PropertyColumn Property="row=>row.Platform" Title="Platform" />
+        <PropertyColumn Property="row=>row.Version" Title="Version" />
+        <PropertyColumn Property="row=>row.UpgradeCount" Title="Upgraded" />
+        <PropertyColumn Property="row=>row.Creator" Title="Creator" />
+        <PropertyColumn Property="row=>row.CreatedAt" Title="Date" />
+        <ActionColumn Title="Action"><a>Publish</a></ActionColumn>
+    </ColumnDefinitions>
+    <ExpandTemplate Context="row">
+        <Table TItem="ChildRow" DataSource="_childRows" RowKey="item=>item.Key" Bordered="_childBordered" HidePagination>
+            <ColumnDefinitions>
+                <PropertyColumn Property="item=>item.Date" Title="Date" />
+                <PropertyColumn Property="item=>item.Name" Title="Name" />
+                <Column TData="string" Title="Status">
+                    <Badge Status="BadgeStatus.Success" /> Finished
+                </Column>
+                <PropertyColumn Property="item=>item.UpgradeStatus" Title="Upgrade Status" />
+                <ActionColumn Title="Action"><a>Pause</a><a style="margin-inline-start:12px">Stop</a></ActionColumn>
+            </ColumnDefinitions>
+        </Table>
+    </ExpandTemplate>
+</Table>
+
+@code {
+    private bool _rootBordered = true;
+    private bool _childBordered = true;
+    private readonly ParentRow[] _rows = Enumerable.Range(0, 3).Select(i => new ParentRow
+    {
+        Key = $"parent-{i}", Name = "Screem", Platform = "iOS", Version = "10.3.4.5654",
+        UpgradeCount = 500, Creator = "Jack", CreatedAt = "2014-12-24 23:12:00"
+    }).ToArray();
+    private readonly ChildRow[] _childRows = Enumerable.Range(0, 3).Select(i => new ChildRow
+    {
+        Key = $"child-{i}", Date = "2014-12-24 23:12:00", Name = "This is production name", UpgradeStatus = "Upgraded: 56"
+    }).ToArray();
+
+    private sealed class ParentRow
+    {
+        public string Key { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
+        public string Platform { get; init; } = string.Empty;
+        public string Version { get; init; } = string.Empty;
+        public int UpgradeCount { get; init; }
+        public string Creator { get; init; } = string.Empty;
+        public string CreatedAt { get; init; } = string.Empty;
+    }
+
+    private sealed class ChildRow
+    {
+        public string Key { get; init; } = string.Empty;
+        public string Date { get; init; } = string.Empty;
+        public string Name { get; init; } = string.Empty;
+        public string UpgradeStatus { get; init; } = string.Empty;
+    }
+}

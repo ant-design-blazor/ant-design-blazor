@@ -193,6 +193,7 @@ namespace AntDesign
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-full", () => FullScreen)
                 .If($"{PrefixCls}-rtl", () => RTL)
+                .Add("css-var-root")
                ;
         }
 

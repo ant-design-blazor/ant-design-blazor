@@ -1,0 +1,40 @@
+@{
+    var semanticClasses = new Dictionary<string, string>
+    {
+        ["root"] = "button-semantic-root",
+        ["content"] = "button-semantic-content"
+    };
+    var rootStyles = new Dictionary<string, string>
+    {
+        ["root"] = "box-shadow: 0 1px 2px 0 rgba(0,0,0,.05); border-radius: 6px; padding: 8px 16px; height: auto;",
+        ["content"] = "letter-spacing: .02em;"
+    };
+    var primaryStyles = new Dictionary<string, string>
+    {
+        ["root"] = "background-color: #171717; border-color: #171717;",
+        ["content"] = "color: #fff;"
+    };
+}
+
+<style>
+    .button-semantic-root { border: 1px solid var(--ant-color-border); }
+    .button-semantic-content { color: var(--ant-color-text); }
+    .button-semantic-icon { color: var(--ant-color-primary); }
+</style>
+
+<Flex Gap="FlexGap.Small" Wrap="FlexWrap.Wrap">
+    <Button Type="ButtonType.Default" ClassNames="semanticClasses" Styles="rootStyles">Object styles</Button>
+    <Button Type="ButtonType.Primary" ClassNames="semanticClasses" Styles="primaryStyles">Function styles equivalent</Button>
+    <Button Type="ButtonType.Default" Icon="@IconType.Outline.Search" ClassNames="_iconSlotClasses">
+        Root, icon, and content slots
+    </Button>
+</Flex>
+
+@code {
+    private static readonly Dictionary<string, string> _iconSlotClasses = new()
+    {
+        ["root"] = "button-semantic-root",
+        ["icon"] = "button-semantic-icon",
+        ["content"] = "button-semantic-content"
+    };
+}

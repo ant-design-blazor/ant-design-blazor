@@ -1,5 +1,11 @@
 @inherits AntDesignTestBase
 @code {
+    public StepsTests()
+    {
+        JSInterop.Setup<bool>(JSInteropConstants.MatchMedia, _ => true).SetResult(false);
+        JSInterop.SetupVoid(JSInteropConstants.AddDomEventListener, _ => true).SetVoidResult();
+    }
+
     [Fact]
     public void Renders_steps_classes_and_with_progress_and_dot()
     {
@@ -16,6 +22,56 @@
         Assert.Contains("ant-steps-navigation", root.ClassList);
         Assert.Contains("ant-steps-with-progress", root.ClassList);
         Assert.Contains("ant-steps-dot", root.ClassList);
+    }
+
+    [Fact]
+    public void Renders_inline_type_class()
+    {
+        var cut = Render(@<Steps Type="StepsType.Inline">
+            <Step Title="One" />
+            <Step Title="Two" />
+        </Steps>);
+
+        Assert.Contains("ant-steps-inline", cut.Find(".ant-steps").ClassList);
+    }
+
+    [Fact]
+    public void Uses_filled_variant_by_default_and_outlined_variant_when_requested()
+    {
+        var filled = Render(@<Steps><Step Title="One" /></Steps>);
+        Assert.Contains("ant-steps-filled", filled.Find(".ant-steps").ClassList);
+
+        var outlined = Render(@<Steps Outlined="true"><Step Title="One" /></Steps>);
+        var outlinedRoot = outlined.Find(".ant-steps");
+        Assert.Contains("ant-steps-outlined", outlinedRoot.ClassList);
+        Assert.DoesNotContain("ant-steps-filled", outlinedRoot.ClassList);
+    }
+
+    [Fact]
+    public void Renders_vertical_title_placement_and_ellipsis_classes()
+    {
+        var cut = Render(@<Steps LabelPlacement="StepsLabelPlacement.Vertical" Ellipsis="true">
+            <Step Title="One" />
+            <Step Title="Two" />
+        </Steps>);
+
+        var root = cut.Find(".ant-steps");
+        Assert.Contains("ant-steps-title-vertical", root.ClassList);
+        Assert.DoesNotContain("ant-steps-label-vertical", root.ClassList);
+        Assert.Contains("ant-steps-ellipsis", root.ClassList);
+    }
+
+    [Fact]
+    public void Renders_panel_and_outlined_classes()
+    {
+        var cut = Render(@<Steps Type="StepsType.Panel" Outlined="true">
+            <Step Title="One" />
+            <Step Title="Two" />
+        </Steps>);
+
+        var root = cut.Find(".ant-steps");
+        Assert.Contains("ant-steps-panel", root.ClassList);
+        Assert.Contains("ant-steps-outlined", root.ClassList);
     }
 
     [Fact]
@@ -38,23 +94,25 @@
     public void Step_renders_number_and_finish_and_error_and_progress_dot()
     {
         var cut = Render(@<Steps Current="1" Percent="60">
-            <Step Status="StepsStatus.Process" Title="One" />
-            <Step Status="StepsStatus.Finish" Title="Two" />
+            <Step Title="One" />
+            <Step Title="Two" />
             <Step Status="StepsStatus.Error" Title="Three" />
         </Steps>);
 
         var items = cut.FindAll(".ant-steps-item");
-        // first step shows number because process state and no icon
-        var firstIcon = items[0].QuerySelector(".ant-steps-icon");
-        Assert.Contains("1", firstIcon.TextContent);
-        // second step finish shows check icon - check class present
-        Assert.Contains("ant-steps-item-finish", items[1].ClassList);
+        // current step shows its number while the preceding item is finished
+        var currentIcon = items[1].QuerySelector(".ant-steps-item-icon-number");
+        Assert.Contains("2", currentIcon.TextContent);
+        Assert.Contains("ant-steps-item-finish", items[0].ClassList);
         // third step error shows error class
         Assert.Contains("ant-steps-item-error", items[2].ClassList);
 
         // progress icon exists for current step (Current=1 so second item)
-        var progress = items[1].QuerySelector(".ant-steps-progress-icon");
+        var progress = items[1].QuerySelector(".ant-steps-item-icon > .ant-steps-item-progress-icon-svg");
+        var progressNumber = items[1].QuerySelector(".ant-steps-item-icon > .ant-steps-item-icon-number");
         Assert.NotNull(progress);
+        Assert.NotNull(progressNumber);
+        Assert.Same(progress.ParentElement, progressNumber.ParentElement);
     }
 
     [Fact]
@@ -128,6 +186,22 @@
         var items = cut.FindAll(".ant-steps-item");
         // last item should not contain tail element
         Assert.Empty(items[1].QuerySelectorAll(".ant-steps-item-tail"));
+    }
+
+    [Fact]
+    public void Rails_use_v6_status_classes_and_no_legacy_tail_nodes()
+    {
+        var cut = Render(@<Steps Current="1">
+            <Step Title="Finished" />
+            <Step Title="In Progress" />
+            <Step Title="Waiting" />
+        </Steps>);
+
+        var items = cut.FindAll(".ant-steps-item");
+        Assert.Empty(cut.FindAll(".ant-steps-item-tail"));
+        Assert.Contains("ant-steps-item-rail-process", items[0].QuerySelector(".ant-steps-item-rail").ClassList);
+        Assert.Contains("ant-steps-item-rail-wait", items[1].QuerySelector(".ant-steps-item-rail").ClassList);
+        Assert.Empty(items[2].QuerySelectorAll(".ant-steps-item-rail"));
     }
 
     [Fact]

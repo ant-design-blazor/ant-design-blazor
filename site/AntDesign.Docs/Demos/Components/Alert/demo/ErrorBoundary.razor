@@ -1,0 +1,10 @@
+<Microsoft.AspNetCore.Components.Web.ErrorBoundary>
+    <ChildContent>
+        <ErrorBoundaryThrower />
+    </ChildContent>
+    <ErrorContent Context="error">
+        <Alert Type="AlertType.Error"
+               Message="@error.ToString()"
+               Description="@error.StackTrace" />
+    </ErrorContent>
+</Microsoft.AspNetCore.Components.Web.ErrorBoundary>

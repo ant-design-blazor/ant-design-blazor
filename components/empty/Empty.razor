@@ -1,8 +1,8 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" @ref="@Ref" style="@Style" id="@Id">
-    <div class="@(_prefixCls)-image" style="@ImageStyle">
+<div class="@SemanticClass("root", ClassMapper.Class)" @ref="@Ref" style="@SemanticStyle("root", Style)" id="@Id">
+    <div class="@SemanticClass("image", $"{_prefixCls}-image")" style="@SemanticStyle("image", ImageStyle)">
         @if (ImageTemplate != null)
         {
             @ImageTemplate
@@ -25,13 +25,13 @@
 
     @if (DescriptionTemplate != null)
     {
-        <p class="@(_prefixCls)-description">@DescriptionTemplate</p>
+        <p class="@SemanticClass("description", $"{_prefixCls}-description")" style="@SemanticStyle("description")">@DescriptionTemplate</p>
     }
     else if (Description.IsT1 == false || Description.AsT1 == true)
     {
-        <p class="@(_prefixCls)-description">@Description.AsT0</p>
+        <p class="@SemanticClass("description", $"{_prefixCls}-description")" style="@SemanticStyle("description")">@Description.AsT0</p>
     }
-    <div class="@(_prefixCls)-footer">
+    <div class="@SemanticClass("footer", $"{_prefixCls}-footer")" style="@SemanticStyle("footer")">
         @ChildContent
     </div>
 </div>

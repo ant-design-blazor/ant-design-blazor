@@ -1,0 +1,25 @@
+<div>
+    <Divider ClassNames="@_classNames" Styles="@_styles">Semantic DOM styles</Divider>
+    <Divider ClassNames="@_classNames" Styles="@_styles" Size="small">Small semantic divider</Divider>
+</div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-divider-root",
+        ["content"] = "demo-divider-content",
+        ["rail"] = "demo-divider-rail"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "border-width:2px; border-style:dashed",
+        ["content"] = "font-style:italic",
+        ["rail"] = "opacity:0.85"
+    };
+}
+
+<style>
+    .demo-divider-root { color: #1677ff; }
+    .demo-divider-content { background: #e6f4ff; }
+</style>

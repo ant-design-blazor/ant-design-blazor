@@ -1,0 +1,259 @@
+@using System.ComponentModel
+@using AntDesign.TableModels
+
+<div class="table-parity-demo" style="@ContainerStyle">
+    @if (IsSettings)
+    {
+        <Space Wrap>
+            <Checkbox @bind-Checked="_bordered">Bordered</Checkbox>
+            <Checkbox @bind-Checked="_showAge">Age</Checkbox>
+            <Checkbox @bind-Checked="_showAddress">Address</Checkbox>
+            <Checkbox @bind-Checked="_small">Small size</Checkbox>
+        </Space>
+    }
+    @if (IsSelection)
+    {
+        <Space>
+            <Button OnClick="SelectAll">Select all</Button>
+            <Button OnClick="InvertSelection">Invert</Button>
+            <Button OnClick="ClearSelection">Clear</Button>
+            @if (Variant.Contains("operation"))
+            {
+                <Button Disabled="@(!_selectedRows.Any())" Loading="_reloading" OnClick="Reload">Reload selected</Button>
+            }
+        </Space>
+    }
+    @if (IsReorder)
+    {
+        <div>@(Variant == "drag-sorting" ? "Drag a row to reorder records." : "Drag the row handle to reorder records. Use the arrow buttons for keyboard-accessible reordering.")</div>
+    }
+    @if (IsFilter)
+    {
+        <Space>
+            <Input TValue="string" Placeholder="Filter names" Value="_search" OnInput="OnSearchInput" BindOnInput="true" />
+            <Button OnClick="ResetFilter">Reset filters</Button>
+        </Space>
+    }
+    @if (Variant == "measure-row-render")
+    {
+        <span>Rows: @_data.Count · Rendered: @_data.Count</span>
+    }
+    @if (IsTree && Variant.Contains("ellipsis"))
+    {
+        <Checkbox @bind-Checked="_ellipsis">Ellipsis and fix the tree column</Checkbox>
+    }
+    @if (Variant is "row-selection" or "tree-table-preserveSelectedRowKeys")
+    {
+        <Space><Checkbox @bind-Checked="_radio">Radio selection</Checkbox><Checkbox @bind-Checked="_checkStrictly">Check strictly</Checkbox></Space>
+    }
+    <Table TItem="Row" DataSource="VisibleRows" RowKey="x=>x.Key" Bordered="@(_bordered && !IsReorder)"
+           Size="@(_small ? TableSize.Small : TableSize.Default)" ScrollX="@ScrollWidth" ExpandTemplate="@ExpandContent" RowTemplate="@ReorderRowContent"
+           OnRow="GetRowAttributes" @bind-SelectedRows="_selectedRows" TreeChildren="@(IsTree ? TreeChildren : null)" RowExpandable="@(IsExpand ? _ => true : null)">
+        <ColumnDefinitions>
+            @if (IsSelection)
+            {
+                <Selection Type="@(_radio ? SelectionType.Radio : SelectionType.Checkbox)" CheckStrictly="_checkStrictly" />
+            }
+            @if (IsTree)
+            {
+                <PropertyColumn Property="x=>x.Name" Title="Name" Ellipsis="@(_ellipsis || Variant.Contains("ellipsis"))" Fixed="@(( _ellipsis || Variant.Contains("ellipsis") || Variant == "fixed-gapped-columns") ? ColumnFixPlacement.Left : null)" />
+            }
+            else
+            {
+                <PropertyColumn Property="x=>x.Name" Title="Name" Sortable="@(!IsReorder)" />
+            }
+            @if (_showAge || !IsSettings)
+            {
+                <PropertyColumn Property="x=>x.Age" Title="Age" Sortable="@(!IsReorder)" />
+            }
+            @if (_showAddress || !IsSettings)
+            {
+                @if (Variant.Contains("ellipsis"))
+                {
+                    <PropertyColumn Property="x=>x.Address" Title="Address" Ellipsis Fixed="@(Variant == "fixed-gapped-columns" ? ColumnFixPlacement.Right : null)">
+                        <Tooltip Title="@context.Address">@context.Address</Tooltip>
+                    </PropertyColumn>
+                }
+                else
+                {
+                    <PropertyColumn Property="x=>x.Address" Title="Address" Fixed="@(Variant == "fixed-gapped-columns" ? ColumnFixPlacement.Right : null)" />
+                }
+            }
+            @if (Variant == "order-column")
+            {
+                <PropertyColumn Property="x=>x.Group" Title="Group" />
+            }
+            @if (Variant == "component-token")
+            {
+                <PropertyColumn Property="x=>x.Group" Title="Theme token preview" />
+            }
+            @if (Variant == "jsx")
+            {
+                <ActionColumn Title="Action"><Button Size="ButtonSize.Small">View @context.Name</Button></ActionColumn>
+            }
+            @if (Variant == "drag-sorting-handler")
+            {
+                <ActionColumn Title="Order">
+                    <button type="button" class="ant-btn ant-btn-text ant-btn-sm" draggable="true"
+                            aria-label="Drag @context.Name" title="Drag to reorder" style="cursor:move"
+                            @ondragstart="@(_ => StartDrag(context))"
+                            @ondragenter="@(_ => MoveDraggedRowTo(context))" @ondragover:preventDefault
+                            @ondrop="@(_ => EndDrag())" @ondragend="EndDrag">⠿</button>
+                    <Button Size="ButtonSize.Small" Disabled="@(_data.IndexOf(context) == 0)" OnClick="@(() => Move(context, -1))">↑</Button>
+                    <Button Size="ButtonSize.Small" Disabled="@(_data.IndexOf(context) == _data.Count - 1)" OnClick="@(() => Move(context, 1))">↓</Button>
+                </ActionColumn>
+            }
+        </ColumnDefinitions>
+    </Table>
+    @if (IsSelection)
+    {
+        <div>Selected keys: @string.Join(", ", _selectedRows.Select(x => x.Key))</div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Variant { get; set; } = "basic";
+    private bool _bordered = true, _showAge = true, _showAddress = true, _small, _radio, _checkStrictly, _ellipsis;
+    private bool _reloading;
+    private string _search = "";
+    private IEnumerable<Row> _selectedRows = [];
+    private bool IsSelection => Variant.StartsWith("row-selection") || Variant.StartsWith("selections-");
+    private bool IsSettings => Variant is "dynamic-settings" or "component-token" or "style-class" or "hidden-columns";
+    private bool IsFilter => Variant.StartsWith("filter-") || Variant == "reset-filter";
+    private bool IsTree => Variant.StartsWith("tree-table") || Variant == "filter-in-tree";
+    private bool IsExpand => Variant == "expand-sticky";
+    private bool IsReorder => Variant is "drag-sorting" or "drag-sorting-handler";
+    private RenderFragment<RowData<Row>> ReorderRowContent => Variant == "drag-sorting" ? row => @<TableRow draggable="true" style="cursor:move;user-select:none;"
+        @ondragstart="@(_ => StartDrag(row.Data))" @ondragover:preventDefault
+        @ondrop="@(_ => DropDraggedRowOn(row.Data))" @ondragend="EndDrag">
+        <TableCell>@row.Data.Name</TableCell>
+        <TableCell>@row.Data.Age</TableCell>
+        <TableCell>@row.Data.Address</TableCell>
+    </TableRow> : null;
+    private RenderFragment<RowData<Row>> ExpandContent => IsExpand ? row => builder =>
+    {
+        builder.OpenElement(0, "div");
+        builder.AddAttribute(1, "style", "padding:16px");
+        builder.AddContent(2, $"Details for {row.Data.Name} — {row.Data.Address}");
+        builder.CloseElement();
+    } : null;
+    private string ScrollWidth => Variant is "fixed-gapped-columns" or "narrow" or "expand-sticky" ? "900px" : null;
+    private string ContainerStyle => $"overflow-x:auto;max-width:{(Variant == "narrow" ? "300px" : "100%")};" +
+        (Variant == "style-class" ? "border:1px dashed #1677ff;padding:12px;" : "") +
+        (Variant == "component-token" ? "--ant-table-header-bg:#e6f4ff;--ant-table-header-color:#0958d9;--ant-table-border-color:#91caff;" : "");
+    private List<Row> _visibleRows;
+    private IEnumerable<Row> VisibleRows => _visibleRows ?? _data;
+    private string _draggedKey;
+    private static IEnumerable<Row> TreeChildren(Row row) => row.Children ?? [];
+    private List<Row> _data = Enumerable.Range(1, 12).Select(i => new Row {
+        Key = $"{i}", Name = i == 3 ? "Disabled User" : $"User {i}", Age = 20 + i,
+        Address = $"{i} Lake Park, London — a deliberately long address for ellipsis and responsive layout checks.",
+        Group = i % 2 == 0 ? "Engineering" : "Design",
+        Children = i is 1 or 2 ? [new Row { Key = $"{i}-1", Name = $"User {i} child", Age = 18 + i, Address = "Nested row address", Group = "Child" }] : null
+    }).ToList();
+
+    protected override void OnInitialized()
+    {
+        if (IsReorder)
+        {
+            _data =
+            [
+                new Row { Key = "1", Name = "John Brown", Age = 32, Address = "Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text" },
+                new Row { Key = "2", Name = "Jim Green", Age = 42, Address = "London No. 1 Lake Park" },
+                new Row { Key = "3", Name = "Joe Black", Age = 32, Address = "Sidney No. 1 Lake Park" }
+            ];
+        }
+    }
+
+    private Dictionary<string, object> GetRowAttributes(RowData<Row> rowData)
+    {
+        if (!IsReorder)
+            return null;
+
+        if (Variant == "drag-sorting")
+            return new Dictionary<string, object> { ["style"] = "cursor:move;user-select:none;" };
+
+        return new Dictionary<string, object>
+        {
+            ["ondragenter"] = (Action<DragEventArgs>)(_ => MoveDraggedRowTo(rowData.Data)),
+            ["ondragover"] = "event.preventDefault()",
+            ["ondrop"] = (Action<DragEventArgs>)(_ => EndDrag()),
+            ["ondragend"] = (Action<DragEventArgs>)(_ => EndDrag())
+        };
+    }
+
+    private void StartDrag(Row row) => _draggedKey = row.Key;
+    private void EndDrag() => _draggedKey = null;
+    private void DropDraggedRowOn(Row target)
+    {
+        if (_draggedKey is null || _draggedKey == target.Key)
+        {
+            EndDrag();
+            return;
+        }
+
+        var from = _data.FindIndex(row => row.Key == _draggedKey);
+        var to = _data.IndexOf(target);
+        if (from >= 0 && to >= 0)
+        {
+            var dragged = _data[from];
+            _data.RemoveAt(from);
+            _data.Insert(to, dragged);
+        }
+
+        EndDrag();
+    }
+    private void MoveDraggedRowTo(Row target)
+    {
+        if (_draggedKey is null || _draggedKey == target.Key)
+            return;
+        var from = _data.FindIndex(row => row.Key == _draggedKey);
+        var to = _data.IndexOf(target);
+        if (from < 0 || to < 0)
+            return;
+        var dragged = _data[from];
+        _data.RemoveAt(from);
+        _data.Insert(to, dragged);
+        if (_visibleRows is not null)
+            _visibleRows = _data.Where(row => row.Name.Contains(_search, StringComparison.OrdinalIgnoreCase)).ToList();
+    }
+
+    private void ResetFilter()
+    {
+        _search = "";
+        _visibleRows = null;
+    }
+    private Task OnSearchInput(ChangeEventArgs args)
+    {
+        _search = args?.Value?.ToString() ?? "";
+        _visibleRows = string.IsNullOrWhiteSpace(_search)
+            ? null
+            : _data.Where(x => x.Name.Contains(_search, StringComparison.OrdinalIgnoreCase)).ToList();
+        return Task.CompletedTask;
+    }
+    private void Move(Row row, int offset)
+    {
+        var index = _data.IndexOf(row);
+        var target = index + offset;
+        if (index < 0 || target < 0 || target >= _data.Count) return;
+        (_data[index], _data[target]) = (_data[target], _data[index]);
+        if (_visibleRows != null)
+        {
+            _visibleRows = _data.Where(x => x.Name.Contains(_search, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+    }
+    private void SelectAll() => _selectedRows = VisibleRows.ToArray();
+    private void ClearSelection() => _selectedRows = [];
+    private void InvertSelection() => _selectedRows = VisibleRows.Except(_selectedRows).ToArray();
+    private async Task Reload() { _reloading = true; await Task.Delay(500); _selectedRows = []; _reloading = false; }
+
+    private sealed class Row
+    {
+        public string Key { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Address { get; set; }
+        public string Group { get; set; }
+        public Row[] Children { get; set; }
+    }
+}

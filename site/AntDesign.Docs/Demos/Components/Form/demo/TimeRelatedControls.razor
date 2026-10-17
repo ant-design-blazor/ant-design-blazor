@@ -1,0 +1,72 @@
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json
+
+<Form Model="@model"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed"
+      LabelColSpan="8"
+      WrapperColSpan="16"
+      Style="max-width: 600px;">
+    <FormItem Label="DatePicker">
+        <DatePicker TValue="DateTime?" @bind-Value="context.Date" Style="width:100%;" />
+    </FormItem>
+    <FormItem Label="DatePicker[showTime]">
+        <DatePicker TValue="DateTime?" @bind-Value="context.DateTime" ShowTime="true" Format="yyyy-MM-dd HH:mm:ss" Style="width:100%;" />
+    </FormItem>
+    <FormItem Label="MonthPicker">
+        <DatePicker TValue="DateTime?" @bind-Value="context.Month" Picker="DatePickerType.Month" Style="width:100%;" />
+    </FormItem>
+    <FormItem Label="RangePicker">
+        <RangePicker @bind-Value="context.DateRange" Style="width:100%;" />
+    </FormItem>
+    <FormItem Label="RangePicker[showTime]">
+        <RangePicker @bind-Value="context.DateTimeRange" ShowTime="true" Format="yyyy-MM-dd HH:mm:ss" Style="width:100%;" />
+    </FormItem>
+    <FormItem Label="TimePicker">
+        <TimePicker @bind-Value="context.Time" Style="width:100%;" />
+    </FormItem>
+    <FormItem Label="">
+        <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
+        @if (!string.IsNullOrEmpty(result))
+        {
+            <pre style="margin-top:12px;">@result</pre>
+        }
+    </FormItem>
+</Form>
+
+@code {
+    private readonly TimeFormModel model = new();
+    private string result;
+
+    private void OnFinish(EditContext editContext)
+    {
+        var formatted = new
+        {
+            date = model.Date?.ToString("yyyy-MM-dd"),
+            dateTime = model.DateTime?.ToString("yyyy-MM-dd HH:mm:ss"),
+            month = model.Month?.ToString("yyyy-MM"),
+            dateRange = model.DateRange?.Select(value => value?.ToString("yyyy-MM-dd")),
+            dateTimeRange = model.DateTimeRange?.Select(value => value?.ToString("yyyy-MM-dd HH:mm:ss")),
+            time = model.Time?.ToString("HH:mm:ss")
+        };
+        result = JsonSerializer.Serialize(formatted, new JsonSerializerOptions { WriteIndented = true });
+    }
+
+    private void OnFinishFailed(EditContext editContext) => result = "Select values for each required field before submitting.";
+
+    private sealed class TimeFormModel
+    {
+        [Required]
+        public DateTime? Date { get; set; }
+        [Required]
+        public DateTime? DateTime { get; set; }
+        [Required]
+        public DateTime? Month { get; set; }
+        [Required]
+        public DateTime?[] DateRange { get; set; }
+        [Required]
+        public DateTime?[] DateTimeRange { get; set; }
+        [Required]
+        public DateTime? Time { get; set; }
+    }
+}

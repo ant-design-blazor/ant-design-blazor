@@ -1,0 +1,106 @@
+<Space>
+    <Dropdown Visible="_dateMenuOpen" VisibleChanged="OnDateMenuOpenChange" Trigger="_clickTrigger">
+        <Overlay>
+            <Menu AutoCloseDropdown="@false" OnMenuItemClicked="OnDateMenuItemClicked">
+                <MenuItem Key="today">Today</MenuItem>
+                <MenuItem Key="tomorrow">Tomorrow</MenuItem>
+                <MenuItem Key="custom-date">
+                    <div style="position: relative; overflow: hidden;" @onclick:stopPropagation>
+                        <div @onclick="ShowDatePicker">Customize</div>
+                        <DatePicker TValue="DateTime?" Open="_datePickerOpen" OnChange="OnDateChange"
+                                    Style="position: absolute; pointer-events: none; opacity: 0; bottom: -12px; inset-inline-start: 0;" />
+                    </div>
+                </MenuItem>
+            </Menu>
+        </Overlay>
+        <ChildContent>
+            <Button>@_dateLabel <Icon Type="@IconType.Outline.Down" /></Button>
+        </ChildContent>
+    </Dropdown>
+
+    <Dropdown Visible="_rangeMenuOpen" VisibleChanged="OnRangeMenuOpenChange" Trigger="_clickTrigger">
+        <Overlay>
+            <Menu AutoCloseDropdown="@false" OnMenuItemClicked="OnRangeMenuItemClicked">
+                <MenuItem Key="7">7 days</MenuItem>
+                <MenuItem Key="30">30 days</MenuItem>
+                <MenuItem Key="custom-range">
+                    <div style="position: relative; overflow: hidden;" @onclick:stopPropagation>
+                        <div @onclick="ShowRangePicker">Customize range</div>
+                        <RangePicker TValue="DateTime?[]" Open="_rangePickerOpen" OnChange="OnRangeChange"
+                                     Style="position: absolute; pointer-events: none; opacity: 0; bottom: 0; inset-inline-start: 0;" />
+                    </div>
+                </MenuItem>
+            </Menu>
+        </Overlay>
+        <ChildContent>
+            <Button>@_rangeLabel <Icon Type="@IconType.Outline.Down" /></Button>
+        </ChildContent>
+    </Dropdown>
+</Space>
+
+@code {
+    private readonly Trigger[] _clickTrigger = [Trigger.Click];
+    private bool _dateMenuOpen;
+    private bool _datePickerOpen;
+    private bool _rangeMenuOpen;
+    private bool _rangePickerOpen;
+    private DateTime _date = DateTime.Today;
+    private DateTime _rangeStart = DateTime.Today;
+    private DateTime _rangeEnd = DateTime.Today.AddDays(1);
+    private string _dateLabel => _date.ToString("yyyy-MM-dd");
+    private string _rangeLabel => $"{_rangeStart:yyyy-MM-dd} ~ {_rangeEnd:yyyy-MM-dd}";
+
+    private Task OnDateMenuOpenChange(bool open)
+    {
+        _dateMenuOpen = open;
+        if (!open) _datePickerOpen = false;
+        return Task.CompletedTask;
+    }
+
+    private Task OnRangeMenuOpenChange(bool open)
+    {
+        _rangeMenuOpen = open;
+        if (!open) _rangePickerOpen = false;
+        return Task.CompletedTask;
+    }
+
+    private void ShowDatePicker() => _datePickerOpen = true;
+    private void ShowRangePicker() => _rangePickerOpen = true;
+
+    private Task OnDateMenuItemClicked(MenuItem item)
+    {
+        if (item.Key == "today") _date = DateTime.Today;
+        if (item.Key == "tomorrow") _date = DateTime.Today.AddDays(1);
+        if (item.Key != "custom-date") _dateMenuOpen = false;
+        return Task.CompletedTask;
+    }
+
+    private Task OnRangeMenuItemClicked(MenuItem item)
+    {
+        if (item.Key is "7" or "30")
+        {
+            _rangeStart = DateTime.Today;
+            _rangeEnd = DateTime.Today.AddDays(int.Parse(item.Key));
+            _rangeMenuOpen = false;
+        }
+        return Task.CompletedTask;
+    }
+
+    private void OnDateChange(DateTimeChangedEventArgs<DateTime?> args)
+    {
+        if (args.Date.HasValue) _date = args.Date.Value;
+        _datePickerOpen = false;
+        _dateMenuOpen = false;
+    }
+
+    private void OnRangeChange(DateRangeChangedEventArgs<DateTime?[]> args)
+    {
+        if (args.Dates is { Length: 2 } && args.Dates[0].HasValue && args.Dates[1].HasValue)
+        {
+            _rangeStart = args.Dates[0]!.Value;
+            _rangeEnd = args.Dates[1]!.Value;
+            _rangePickerOpen = false;
+            _rangeMenuOpen = false;
+        }
+    }
+}

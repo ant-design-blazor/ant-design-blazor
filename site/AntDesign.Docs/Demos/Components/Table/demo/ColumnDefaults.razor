@@ -1,0 +1,21 @@
+﻿<Table TItem="ColumnDefaultsRow" DataSource="@_rows" HidePagination>
+    <PropertyColumn Property="x => x.Name" Title="Name" Align="ColumnAlign.Center" Ellipsis />
+    <PropertyColumn Property="x => x.Description" Title="Description" Width="180px" Align="ColumnAlign.Center" Ellipsis />
+    <PropertyColumn Property="x => x.Address" Title="Address" Width="220px" Align="ColumnAlign.Left" Ellipsis />
+</Table>
+<p>Shared column presentation is applied explicitly to each Blazor column; Address overrides the centered alignment.</p>
+
+@code {
+    private readonly ColumnDefaultsRow[] _rows =
+    [
+        new() { Name = "John Brown", Description = "Shared column props let repeated settings live on the table.", Address = "No. 1 Lake Park Road, Hangzhou, Zhejiang, China" },
+        new() { Name = "Jim Green", Description = "Individual columns can override the common alignment.", Address = "No. 99 Garden Avenue, Pudong, Shanghai, China" }
+    ];
+
+    private sealed class ColumnDefaultsRow
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+    }
+}

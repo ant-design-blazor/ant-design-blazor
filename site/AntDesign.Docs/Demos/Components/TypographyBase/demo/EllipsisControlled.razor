@@ -1,0 +1,29 @@
+<div style="display: flex; flex-direction: column; gap: 16px;">
+    <div style="display: flex; align-items: center; gap: 16px;">
+        <Switch @bind-Checked="expanded" />
+        <Slider TValue="double" Min="1" Max="20" @bind-Value="rows" Style="flex: 1;" />
+    </div>
+
+    <Paragraph Copyable EllipsisConfig="@ellipsisConfig">
+        @LongText
+    </Paragraph>
+</div>
+
+@code {
+    private bool expanded;
+    private double rows = 2;
+
+    private TypographyEllipsisConfig ellipsisConfig => new()
+    {
+        Rows = (int)rows,
+        Expandable = true,
+        Collapsible = true,
+        Expanded = expanded,
+        OnExpandedChange = EventCallback.Factory.Create<bool>(this, OnExpandedChange)
+    };
+
+    private void OnExpandedChange(bool value) => expanded = value;
+
+    private const string Sentence = "Ant Design, a design language for background applications, is refined by Ant UED Team. ";
+    private string LongText => Sentence + Sentence + Sentence + Sentence + Sentence + Sentence + Sentence + Sentence;
+}

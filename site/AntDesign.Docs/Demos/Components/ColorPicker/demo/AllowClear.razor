@@ -1,0 +1,20 @@
+<ColorPicker Value="@_value" ValueChanged="OnValueChanged" AllowClear ShowText OnClear="OnClear" />
+<p>Selected: @_value</p>
+<p>Cleared: @_cleared</p>
+
+@code {
+    private string _value = "#1677ff";
+    private bool _cleared;
+
+    private Task OnValueChanged(string value)
+    {
+        _value = value;
+        return Task.CompletedTask;
+    }
+
+    private Task OnClear()
+    {
+        _cleared = true;
+        return Task.CompletedTask;
+    }
+}

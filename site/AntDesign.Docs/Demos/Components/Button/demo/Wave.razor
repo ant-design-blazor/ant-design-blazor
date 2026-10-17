@@ -1,0 +1,47 @@
+<Flex Gap="FlexGap.Large" Wrap="FlexWrap.Wrap">
+    <Button Type="ButtonType.Primary" Disabled>Disabled</Button>
+    <Button Type="ButtonType.Primary">Default</Button>
+    <Button Type="ButtonType.Primary" Class="@EffectClass("inset")" OnClick="@(() => Play("inset"))">Inset</Button>
+    <Button Type="ButtonType.Primary" Class="@EffectClass("shake")" OnClick="@(() => Play("shake"))">Shake</Button>
+    <Button Type="ButtonType.Primary" Class="button-wave-happy">Custom accent</Button>
+</Flex>
+
+<style>
+    .button-wave-happy { --antd-wave-shadow-color: #13c2c2; }
+    .button-wave-effect.inset { position: relative; isolation: isolate; overflow: hidden; }
+    .button-wave-effect.inset::after {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        inset: -80%;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,255,255,.7) 0 8%, transparent 10% 100%);
+        transform: scale(.15);
+        opacity: 0;
+        pointer-events: none;
+    }
+    .button-wave-effect.inset.is-animating::after { animation: button-inset-wave .75s ease-out; }
+    .button-wave-effect.shake.is-animating { animation: button-wave-shake .45s ease-in-out; }
+    @@keyframes button-inset-wave { 20% { opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+    @@keyframes button-wave-shake {
+        0%,100% { transform: rotate(0); }
+        20% { transform: rotate(-8deg); }
+        40% { transform: rotate(8deg); }
+        60% { transform: rotate(-3deg); }
+        80% { transform: rotate(3deg); }
+    }
+</style>
+
+@code {
+    private string _activeEffect;
+
+    private string EffectClass(string effect) => $"button-wave-effect {effect} {(_activeEffect == effect ? "is-animating" : string.Empty)}";
+
+    private async Task Play(string effect)
+    {
+        _activeEffect = effect;
+        await InvokeAsync(StateHasChanged);
+        await Task.Delay(800);
+        _activeEffect = null;
+    }
+}

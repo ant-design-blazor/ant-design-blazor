@@ -2,54 +2,82 @@
 @inherits AntDomComponentBase
 
 <div @ref="@_element" id="@Id">
-    <div class="@($"{Config.PrefixCls}-root {(Visible?$"{Config.PrefixCls}-open":"")}")">
+    <div class="@GetRootClass()">
         @if (Config.Mask)
         {
-            <div class=@($"{Config.PrefixCls}-mask {GetMaskClsName()}") style="@Config.MaskStyle"></div>
+            <div class="@($"{Config.PrefixCls}-mask {GetMaskClsName()}")" style="@Config.MaskStyle"></div>
         }
-        <div tabindex="-1" class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended(this.Status)}") role="dialog"
+        <div class="@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended(this.Status)}")"
              @onmouseup="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseUp)"
              @onmousedown="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseDown)"
              @onkeydown="@(EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(OnKeyDown))"
              style="@_wrapStyle">
-            <div @ref="@_modal" role="document" 
-                 class=@($"{Config.PrefixCls} {GetModalClsName()}")
+            <div @ref="@_modal" role="dialog" aria-modal="true" aria-labelledby="@(HasTitle ? _titleId : null)" tabindex="-1"
+                 class="@($"{Config.PrefixCls} {GetModalClsName()}")"
                  @onclick:stopPropagation
                  @onmousedown:stopPropagation
                  @onmousedown="@EventUtil.AsNonRenderingEventHandler(OnDialogMouseDown)"
-                 style="@GetStyle()"
-                 >
-                <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
-                <div class=@($"{Config.PrefixCls}-content") style="@(_resizing ? "resize:both; overflow: hidden;":"")" id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}")>
+                 style="@GetStyle()">
+                @if (Config.Closable)
+                {
+                    <button type="button" aria-label="Close" class="@($"{Config.PrefixCls}-close")" @onclick="OnCloserClick">
+                        <span class="@($"{Config.PrefixCls}-close-x")">
+                            <span role="img" aria-label="close" class="@($"anticon anticon-close {Config.PrefixCls}-close-icon")">
+                                @Config.CloseIcon
+                            </span>
+                        </span>
+                    </button>
+                }
+                @if (Config.Maximizable)
+                {
+                    <button type="button" aria-label="Max" class="@($"{Config.PrefixCls}-max-btn")" @onclick="OnMaxBtnClick">
+                        <span class="@($"{Config.PrefixCls}-max-btn-x")">
+                            <span role="img" aria-label="Max" class="@($"anticon anticon-max {Config.PrefixCls}-max-btn-icon")">
+                                @if (Status == ModalStatus.Default)
+                                {
+                                    @Config.MaximizeBtnIcon
+                                }
+                                else
+                                {
+                                    @Config.RestoreBtnIcon
+                                }
+                            </span>
+                        </span>
+                    </button>
+                }
+                <div class="@($"{Config.PrefixCls}-container")">
                     @if (Config.Header != null)
                     {
                         <CascadingValue Value="@Config">
+                            <CascadingValue Name="TitleId" Value="@_titleId">
                             <CascadingValue Name="Parent" Value="@this">
-                                <div @ref="@_dialogHeader" class=@($"{Config.PrefixCls}-header") style="@Config.GetHeaderStyle()">
+                                <div @ref="@_dialogHeader" class="@($"{Config.PrefixCls}-header")" style="@Config.GetHeaderStyle()">
                                     @Config.Header
                                 </div>
                             </CascadingValue>
+                            </CascadingValue>
                         </CascadingValue>
                     }
-                    <div class=@($"{Config.PrefixCls}-body") style="@GetBodyStyle()">
+                    <div class="@($"{Config.PrefixCls}-body")" style="@GetBodyStyle()">
                         @ChildContent
                     </div>
                     @if (Config.Footer != null)
                     {
-                        <div class=@($"{Config.PrefixCls}-footer")>
+                        <div class="@($"{Config.PrefixCls}-footer")">
                             <CascadingValue Value="@Config">
                                 @if (Config.Footer.Value.IsT0)
                                 {
-                                    @(Config.Footer.Value.AsT0)
+                                    @Config.Footer.Value.AsT0
                                 }
                                 else
                                 {
-                                    @(Config.Footer.Value.AsT1)
+                                    @Config.Footer.Value.AsT1
                                 }
                             </CascadingValue>
                         </div>
                     }
                 </div>
+                <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
                 <div id="@_sentinelEnd" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
             </div>
         </div>

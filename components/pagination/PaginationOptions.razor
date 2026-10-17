@@ -16,8 +16,14 @@
 
     if (ChangeSize.HasDelegate)
     {
-        changeSelect =
-            @<Select
+        if (SizeChanger != null)
+        {
+            changeSelect = SizeChanger(new PaginationSizeChangerContext(PageSize, Disabled, $"{prefixCls}-size-changer", ChangeSize));
+        }
+        else
+        {
+            changeSelect =
+                @<Select
                  TItem="int"
                  TItemValue="int"
                  Disabled="@Disabled"
@@ -34,7 +40,8 @@
                         <SelectOption TItem="int" TItemValue="int" Label="@BuildOptionText(opt)" Value="@opt" />
                     }
                 </SelectOptions>
-            </Select>;
+                </Select>;
+        }
     }
 
     if (QuickGo.HasDelegate)

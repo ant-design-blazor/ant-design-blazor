@@ -1,0 +1,16 @@
+<AutoComplete Value="aojunhao123" Style="width:200px" Options="_options" Placeholder="input here" ClassNames="_classes" Styles="_styles" />
+
+@code {
+    private readonly string[] _options = ["aojunhao123", "thinkasany", "meet-student"];
+    private static readonly IReadOnlyDictionary<string, string> _classes = new Dictionary<string, string>
+    {
+        ["root"] = "demo-autocomplete-root",
+        ["input"] = "demo-autocomplete-input",
+        ["popup"] = "demo-autocomplete-popup"
+    };
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "max-width:200px",
+        ["popup"] = "border-color:#1677ff"
+    };
+}

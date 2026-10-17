@@ -1,0 +1,11 @@
+<Flex Vertical="true" Gap="@("medium")">
+    <InputNumber TValue="decimal?" Prefix="@("￥")" Style="width: 100%" />
+    <SpaceCompact Block>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First">$</SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last">
+            <InputNumber TValue="decimal?" Prefix="@("￥")" Style="width: 100%" />
+        </SpaceCompactItem>
+    </SpaceCompact>
+    <InputNumber TValue="decimal?" Prefix="@("￥")" Disabled="true" Style="width: 100%" />
+    <InputNumber TValue="decimal?" Suffix="@("RMB")" Style="width: 100%" />
+</Flex>

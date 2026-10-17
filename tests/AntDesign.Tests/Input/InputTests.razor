@@ -15,6 +15,16 @@
 		classList.Contains("ant-input-borderless").Should().BeTrue();
 	}
 
+    [Fact]
+    public void Input_default_uses_v6_outlined_contract()
+    {
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" />);
+        var classList = cut.Find("input").ClassList;
+
+        classList.Contains("ant-input-css-var").Should().BeTrue();
+        classList.Contains("ant-input-outlined").Should().BeTrue();
+    }
+
 	[Fact]
 	public async Task Input_FocusClear_behavior_should_clear()
 	{

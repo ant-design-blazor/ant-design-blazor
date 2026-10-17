@@ -172,18 +172,13 @@ namespace AntDesign
         {
             base.OnValueChange(value);
 
-            if (Disabled)
-            {
-                return;
-            }
-
             _selectedValues = value;
 
             if (Options.Value != null && Options.IsT0)
             {
                 Options.AsT0.ForEach(x =>
                 {
-                    if (!x.Disabled)
+                    if (!(x.HasDisabledOverride ? x.Disabled : Disabled))
                     {
                         x.Checked = x.Value.IsIn(_selectedValues);
                     }

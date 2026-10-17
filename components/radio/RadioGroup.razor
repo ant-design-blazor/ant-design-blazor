@@ -3,8 +3,9 @@
 @inherits AntInputComponentBase<TValue>
 
 <CascadingValue Value="this" IsFixed="@true">
+	<CascadingValue Value="Block" Name="GroupBlock" IsFixed="@true">
 	<CascadingValue Value="true" Name="InGroup" IsFixed>
-		<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+        <div class="@ClassMapper.Class" style="@Style" id="@Id" role="radiogroup" @ref="Ref">
 			@if (Options.Value != null)
 			{
 				if (Options.IsT0)
@@ -18,7 +19,9 @@
 				{
 					@foreach (var radio in Options.AsT1)
 					{
-                        <Radio Value="radio.Value" RadioButton="IsButton">@radio.Label</Radio>
+                        <Radio Value="radio.Value" RadioButton="IsButton" Disabled="radio.Disabled || Disabled"
+                               Class="@radio.ClassName" Style="@radio.Style" Title="@radio.Title"
+                               Id="@radio.Id" Required="@radio.Required">@radio.Label</Radio>
 					}
 				}
 			}
@@ -27,5 +30,6 @@
 				@ChildContent
 			}
 		</div>
+	</CascadingValue>
 	</CascadingValue>
 </CascadingValue>

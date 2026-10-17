@@ -1,0 +1,48 @@
+@using AntDesign
+
+<Space Size="SpaceSize.Small" Wrap>
+    <Button OnClick="SetPercentUndefined">Percentage to undefined</Button>
+    <Button OnClick="IncrementPercent">Percentage +</Button>
+    <Button OnClick="AdvanceCurrent">Current +</Button>
+    <Button OnClick="() => SetStatus(StepsStatus.Wait)">Status Wait</Button>
+    <Button OnClick="() => SetStatus(StepsStatus.Process)">Status Process</Button>
+    <Button OnClick="() => SetStatus(StepsStatus.Finish)">Status Finish</Button>
+    <Button OnClick="() => SetStatus(StepsStatus.Error)">Status Error</Button>
+</Space>
+<div style="margin-top: 16px">
+    <Steps Current="@current" Percent="@percent" Status="@status">
+        <Step Title="Finished" Description="This is a content." />
+        <Step Title="In Progress" Subtitle="Left 00:00:08" Description="This is a content." />
+        <Step Title="Waiting" Description="This is a content." />
+    </Steps>
+    <Steps Current="@current" Percent="@percent" Status="@status" Size="StepsSize.Small">
+        <Step Title="Finished" Description="This is a content." />
+        <Step Title="In Progress" Subtitle="Left 00:00:08" Description="This is a content." />
+        <Step Title="Waiting" Description="This is a content." />
+    </Steps>
+    <Steps Current="@current" Percent="@percent" Status="@status" Direction="StepsDirection.Vertical">
+        <Step Title="Finished" Description="This is a content." />
+        <Step Title="In Progress" Subtitle="Left 00:00:08" Description="This is a content." />
+        <Step Title="Waiting" Description="This is a content." />
+    </Steps>
+    <Steps Current="@current" Percent="@percent" Status="@status" Direction="StepsDirection.Vertical" Size="StepsSize.Small">
+        <Step Title="Finished" Description="This is a content." />
+        <Step Title="In Progress" Subtitle="Left 00:00:08" Description="This is a content." />
+        <Step Title="Waiting" Description="This is a content." />
+    </Steps>
+</div>
+<div>@(percent?.ToString() ?? "undefined")</div>
+
+@code {
+    private double? percent = 0;
+    private int current = 1;
+    private StepsStatus status = StepsStatus.Process;
+
+    private void SetPercentUndefined() => percent = null;
+
+    private void IncrementPercent() => percent = (percent ?? 0) + 10 > 100 ? 0 : (percent ?? 0) + 10;
+
+    private void AdvanceCurrent() => current = (current + 1) % 3;
+
+    private void SetStatus(StepsStatus value) => status = value;
+}

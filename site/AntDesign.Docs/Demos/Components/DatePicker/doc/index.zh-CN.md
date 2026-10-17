@@ -53,12 +53,14 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | locale（TODO） | 国际化配置 | object | [默认配置](https://github.com/ant-design/ant-design/blob/master/components/date-picker/locale/example.json) |  |
 | mode（TODO） | 日期面板的状态（[设置后无法选择年份/月份？](/docs/react/faq#当我指定了-DatePicker/RangePicker-的-mode-属性后，点击后无法选择年份/月份？)） | `time` \| `date` \| `month` \| `year` \| `decade` | - |  |
 | open | 控制弹层是否展开 | boolean | - |  |
+| NeedConfirm | 需要点击确认按钮后才应用选择的日期 | boolean | false |  |
 | picker | 设置选择器类型 | `date` \| `week` \| `month` \| `quarter` (4.1.0) \| `year` | `date` |  |
 | placeholder | 输入框提示文字 | string\|RangePicker\[] | - |  |
 | placement | 选择框弹出的位置 | `bottomLeft` `bottomRight` `topLeft` `topRight` | bottomLeft |  |
 | popupStyle | 额外的弹出日历样式 | CSSProperties | {} |  |
 | size | 输入框大小，`large` 高度为 40px，`small` 为 24px，默认是 32px | `large` \| `middle` \| `small` | 无 |  |
 | bordered | 是否有边框 | Boolean | true |  |
+| Prefix | 自定义的选择框前缀内容 | RenderFragment | - |  |
 | SuffixIcon | 自定义的选择框后缀图标 | RenderFragment | - |  |
 | style | 自定义输入框样式 | CSSProperties | {} |  |
 | onOpenChange | 弹出日历和关闭日历的回调 | function(open) | 无 |  |

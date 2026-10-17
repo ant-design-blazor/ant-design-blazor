@@ -1,0 +1,10 @@
+<div style="max-width: 480px">
+    <TextArea Placeholder="Autosize based on content" AutoSize @bind-Value="value" />
+    <br />
+    <br />
+    <TextArea Placeholder="Autosize between 2 and 6 rows" MinRows="2" MaxRows="6" />
+</div>
+
+@code {
+    private string value = "Type more text to see the textarea grow automatically.";
+}

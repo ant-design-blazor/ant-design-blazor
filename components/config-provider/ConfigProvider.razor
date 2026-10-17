@@ -1,12 +1,19 @@
 ﻿@namespace AntDesign
 @inherits AntComponentBase
 
-<div class="@ThemeScopeClass" data-theme="@ThemeConfig?.Key" style="@ThemeStyle">
+<div class="@ThemeScopeClass @ThemeCssClass" data-theme="@ThemeConfig?.Key" style="@ThemeStyle">
+    <link rel="stylesheet" href="_content/AntDesign/css/antd-v6/component-parity.css" />
+    @if (ThemeConfig?.Seed?.Wireframe == true)
+    {
+        <link rel="stylesheet" href="_content/AntDesign/css/antd-v6/pagination-wireframe.css" />
+    }
     <CascadingValue Value="this">
         <CascadingValue Value="ThemeConfig">
             <CascadingValue Name="AntDesignThemeConfig" Value="ThemeConfig">
-                <CascadingValue Name="AntDesignThemeComponents" Value="ThemeConfig.GetResolvedComponentValues()">
-                    @ChildContent
+                <CascadingValue Name="AntDesignVariant" Value="ResolvedVariant">
+                    <CascadingValue Name="AntDesignThemeComponents" Value="ThemeConfig.GetResolvedComponentValues()">
+                        @ChildContent
+                    </CascadingValue>
                 </CascadingValue>
             </CascadingValue>
         </CascadingValue>

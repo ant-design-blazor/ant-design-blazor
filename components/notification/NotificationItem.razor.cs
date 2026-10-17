@@ -25,14 +25,12 @@ namespace AntDesign
 
         private string GetIconClassName()
         {
-            if (Config.NotificationType != NotificationType.None
-                || Config.Icon != null
-            )
+            var className = $"{ClassPrefix}-notice-icon";
+            if (Config.NotificationType != NotificationType.None)
             {
-                return $"{ClassPrefix}-notice-with-icon";
+                className += $" {ClassPrefix}-notice-icon-{Config.NotificationType.ToString().ToLowerInvariant()}";
             }
-
-            return "";
+            return className;
         }
 
         private string GetClassName()
@@ -42,6 +40,21 @@ namespace AntDesign
                 return Config.ClassName + Config.AnimationClass;
             }
             return Config.AnimationClass;
+        }
+
+        private string GetStyle()
+        {
+            // React's rc-notification positions notices absolutely and calculates each
+            // notice's coordinates at runtime. Blazor doesn't run that positioning
+            // algorithm, so keep notices in the list's flex flow to prevent overlap.
+            const string listLayoutStyle = "position: relative; inset: auto; width: 100%; transform: none;";
+            var customStyle = Config.Style?.Trim();
+            if (string.IsNullOrEmpty(customStyle))
+            {
+                return listLayoutStyle;
+            }
+
+            return $"{listLayoutStyle} {customStyle.TrimEnd(';')};";
         }
 
         private async Task Close(MouseEventArgs e)

@@ -17,6 +17,7 @@ namespace AntDesign.Core.JsInterop.Modules.Components
         public decimal? Right { get; set; }
         public string RightCss => $"right: " + GetAsString(Right);
         public string PositionCss => ZIndexCss + LeftCss + RightCss + TopCss + BottomCss;
+        public string PositionCssWithoutZIndex => LeftCss + RightCss + TopCss + BottomCss;
 
         public int ZIndex { get; set; }
         public string ZIndexCss => $"z-index:{ZIndex};";

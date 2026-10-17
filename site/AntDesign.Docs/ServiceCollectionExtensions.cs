@@ -14,7 +14,6 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddAntDesignDocs(this IServiceCollection services)
         {
             services.AddAntDesign();
-            services.AddSingleton<DemoServiceCache>();
             services.AddScoped<DemoService>();
             services.AddScoped<IconListService>();
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();

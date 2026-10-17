@@ -23,9 +23,10 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.Other, "https://gw.alipayobjects.com/zos/alicdn/_1-C1JwsC/Anchor.svg", Title = "Anchor", SubTitle = "锚点")]
     public partial class Anchor : AntDomComponentBase, IAnchor
     {
-        private string _ballClass = "ant-anchor-ink-ball";
+        private string _ballClass = "ant-anchor-ink";
         private string _ballStyle = string.Empty;
         private ElementReference _ink;
+        private ElementReference _anchor;
         private DomRect _selfDom;
         private AnchorLink _activeLink;
         private bool _activatedByClick = false;
@@ -34,6 +35,22 @@ namespace AntDesign
         private List<AnchorLink> _flatLinks;
         private List<AnchorLink> _links = new List<AnchorLink>();
         private bool _linksChanged = false;
+
+        /// <summary>Semantic class names for root, item, itemTitle, and indicator.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Semantic inline styles for root, item, itemTitle, and indicator.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        /// <summary>Anchor layout direction: vertical or horizontal.</summary>
+        [Parameter]
+        public string Direction { get; set; } = "vertical";
+
+        /// <summary>Replace the current history entry when a link is clicked.</summary>
+        [Parameter]
+        public bool Replace { get; set; }
 
         [Inject]
         private IDomEventListener DomEventListener { get; set; }
@@ -138,8 +155,27 @@ namespace AntDesign
             base.OnInitialized();
 
             string prefixCls = "ant-anchor";
-            ClassMapper.Add(prefixCls)
+            ClassMapper.Add($"{prefixCls}-wrapper")
+                .If($"{prefixCls}-wrapper-horizontal", () => IsHorizontal)
                 .If($"{prefixCls}-rtl", () => RTL);
+        }
+
+        internal bool IsHorizontal => string.Equals(Direction, "horizontal", StringComparison.OrdinalIgnoreCase);
+        internal bool IsFixed => !Affix && !ShowInkInFixed;
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return customStyle;
+            if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {customStyle}";
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -158,7 +194,7 @@ namespace AntDesign
             {
                 _linksChanged = false;
 
-                _selfDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _ink);
+                _selfDom = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _anchor);
                 _linkTops = new Dictionary<string, decimal>();
                 _flatLinks = FlatChildren();
                 foreach (var link in _flatLinks)
@@ -220,7 +256,6 @@ namespace AntDesign
                 _activeLink = null;
                 _flatLinks.ForEach(l => l.Activate(false));
 
-                int offset = OffsetBottom.HasValue ? OffsetBottom.Value : -OffsetTop.Value;
                 foreach (var link in _flatLinks)
                 {
                     try
@@ -228,7 +263,15 @@ namespace AntDesign
                         DomRect hrefDom = await link.GetHrefDom();
                         if (hrefDom != null)
                         {
-                            _linkTops[link.Href] = hrefDom.Top + offset;
+                            if (OffsetBottom.HasValue && !link.TargetOffset.HasValue && !TargetOffset.HasValue && (!OffsetTop.HasValue || OffsetTop.Value == 0))
+                            {
+                                _linkTops[link.Href] = hrefDom.Top + OffsetBottom.Value;
+                            }
+                            else
+                            {
+                                var targetOffset = link.TargetOffset ?? TargetOffset ?? OffsetTop ?? 0;
+                                _linkTops[link.Href] = hrefDom.Top - targetOffset;
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -244,15 +287,23 @@ namespace AntDesign
                     await ActivateAsync(_activeLink, true);
                 }
 
-                if (Affix && _activeLink != null)
+                if (_activeLink != null)
                 {
-                    _ballClass = "ant-anchor-ink-ball visible";
-                    decimal top = (_activeLink.LinkDom.Top - _selfDom.Top) + _activeLink.LinkDom.Height / 2 - 2;
-                    _ballStyle = $"top: {top}px;";
+                    if (IsHorizontal)
+                    {
+                        var left = _activeLink.LinkDom.Left - _selfDom.Left;
+                        _ballStyle = $"left: {left}px; width: {_activeLink.LinkDom.Width}px;";
+                    }
+                    else
+                    {
+                        var top = (_activeLink.LinkDom.Top - _selfDom.Top) + _activeLink.LinkDom.Height / 2;
+                        _ballStyle = $"top: {top}px; height: {_activeLink.LinkDom.Height}px;";
+                    }
+                    _ballClass = "ant-anchor-ink ant-anchor-ink-visible";
                 }
                 else
                 {
-                    _ballClass = "ant-anchor-ink-ball";
+                    _ballClass = "ant-anchor-ink";
                     _ballStyle = string.Empty;
                 }
 
@@ -281,7 +332,11 @@ namespace AntDesign
 
         internal async Task OnLinkClickAsync(MouseEventArgs args, AnchorLink anchorLink)
         {
-            await JsInvokeAsync("window.eval", $"window.location.hash='{anchorLink._hash}'");
+            var historyMethod = Replace || anchorLink.Replace ? "replaceState" : "pushState";
+            var href = JsonSerializer.Serialize(anchorLink.Href);
+            var targetId = JsonSerializer.Serialize(anchorLink._hash);
+            var offset = anchorLink.TargetOffset ?? TargetOffset ?? OffsetTop ?? 0;
+            await JsInvokeAsync("window.eval", $"(() => {{ window.history.{historyMethod}(null, '', {href}); const target = document.getElementById({targetId}); if (target) window.scrollTo({{ top: window.scrollY + target.getBoundingClientRect().top - {offset}, behavior: 'smooth' }}); }})()");
 
             if (OnClick.HasDelegate)
             {

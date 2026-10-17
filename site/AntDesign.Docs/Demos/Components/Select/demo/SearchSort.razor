@@ -1,0 +1,28 @@
+<Select TItem="SearchOption"
+        TItemValue="string"
+        DataSource="@options"
+        LabelName="@nameof(SearchOption.Label)"
+        ValueName="@nameof(SearchOption.Value)"
+        Placeholder="Search to Select"
+        EnableSearch
+        SortByLabel="SortDirection.Ascending"
+        Style="width: 200px" />
+
+@code {
+    // Intentionally keep React's source ordering so the alphabetical sort is observable.
+    private readonly List<SearchOption> options =
+    [
+        new() { Value = "1", Label = "Not Identified" },
+        new() { Value = "2", Label = "Closed" },
+        new() { Value = "3", Label = "Communicated" },
+        new() { Value = "4", Label = "Identified" },
+        new() { Value = "5", Label = "Resolved" },
+        new() { Value = "6", Label = "Cancelled" }
+    ];
+
+    private sealed class SearchOption
+    {
+        public string Value { get; init; } = string.Empty;
+        public string Label { get; init; } = string.Empty;
+    }
+}

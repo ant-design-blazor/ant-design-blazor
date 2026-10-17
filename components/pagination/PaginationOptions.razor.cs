@@ -57,6 +57,9 @@ namespace AntDesign
         [Parameter]
         public int[] PageSizeOptions { get; set; }
 
+        [Parameter]
+        public RenderFragment<PaginationSizeChangerContext> SizeChanger { get; set; }
+
         /// <summary>
         /// Callback executed when jumping to a specific page
         /// </summary>

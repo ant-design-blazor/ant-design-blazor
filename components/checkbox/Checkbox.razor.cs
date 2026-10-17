@@ -68,7 +68,7 @@ namespace AntDesign
 
         internal bool IsFromOptions { get; set; }
 
-        private bool IsDisabled => Disabled || (CheckboxGroup?.Disabled ?? false);
+        private bool IsDisabled => IsFromOptions ? Disabled : Disabled || (CheckboxGroup?.Disabled ?? false);
 
         private Dictionary<string, object> _attributes;
 
@@ -99,18 +99,32 @@ namespace AntDesign
 
         protected ClassMapper ClassMapperLabel { get; } = new ClassMapper();
 
+        /// <summary>
+        /// Additional class names applied to the checkbox label wrapper.
+        /// </summary>
+        [Parameter]
+        public string WrapperClass { get; set; }
+
+        /// <summary>
+        /// Omits the empty label span when this checkbox has no label content.
+        /// </summary>
+        [Parameter]
+        public bool HideEmptyLabel { get; set; }
+
         private string _prefixCls = "ant-checkbox";
 
         protected void SetClass()
         {
             ClassMapperLabel
                 .Add($"{_prefixCls}-wrapper")
+                .Add(WrapperClass)
                 .If($"{_prefixCls}-wrapper-checked", () => Checked)
                 .If($"{_prefixCls}-wrapper-disabled", () => IsDisabled)
                 .If($"{_prefixCls}-group-item", () => CheckboxGroup != null);
 
             ClassMapper
                 .Add(_prefixCls)
+                .Add("ant-wave-target")
                 .If($"{_prefixCls}-checked", () => Checked && !Indeterminate)
                 .If($"{_prefixCls}-disabled", () => IsDisabled)
                 .If($"{_prefixCls}-indeterminate", () => Indeterminate)

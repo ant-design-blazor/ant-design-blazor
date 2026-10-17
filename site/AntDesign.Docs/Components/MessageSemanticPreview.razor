@@ -1,0 +1,45 @@
+@namespace AntDesign.Docs.Components
+@using AntDesign.Docs.Services
+
+<style>@((MarkupString)PreviewStyles.CssText)</style>
+<div class="@PreviewStyles["root"] ant-message ant-message-list ant-message-top ant-message-css-var" style="position:relative;inset:auto;width:100%;max-width:100%;height:auto;padding:24px;overflow:visible;transform:none">
+    <div class="ant-message-list-content ant-message-list-content-increase">
+        <MessageItem Config="SuccessMessage" />
+        <MessageItem Config="InfoMessage" />
+    </div>
+</div>
+
+@code {
+    private static readonly CssStyleSheet PreviewStyles = CssInJs.CreateStyles("message-semantic-preview", new Dictionary<string, object>
+    {
+        ["root"] = new Dictionary<string, object>
+        {
+            ["& .ant-message-list-content"] = new Dictionary<string, object>
+            {
+                ["gap"] = "var(--ant-margin)",
+            },
+            ["& .ant-message-notice"] = new Dictionary<string, object>
+            {
+                ["position"] = "relative",
+                ["inset"] = "auto",
+                ["transform"] = "none",
+            },
+        },
+    });
+
+    private static readonly MessageConfig SuccessMessage = new()
+    {
+        Key = "semantic-message-success",
+        Content = "Hello, Ant Design!",
+        Type = MessageType.Success,
+        Duration = 0,
+    };
+
+    private static readonly MessageConfig InfoMessage = new()
+    {
+        Key = "semantic-message-info",
+        Content = "Welcome back!",
+        Type = MessageType.Info,
+        Duration = 0,
+    };
+}

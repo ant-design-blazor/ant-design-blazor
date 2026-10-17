@@ -80,7 +80,7 @@
         cut.MarkupMatches(@"<section class=""ant-layout ant-layout-has-sider"" id:ignore>
   <aside class=""ant-layout-sider ant-layout-sider-dark ant-layout-sider-has-trigger"" style=""flex: 0 0 200px;max-width: 200px;min-width: 200px;width: 200px; "">
     <div class=""ant-layout-sider-children"">
-      <ul class=""ant-menu ant-menu-root ant-menu-dark ant-menu-vertical"" id:ignore direction=""ltr"" role=""menu"" >
+  <ul class=""ant-menu-css-var ant-menu ant-menu-root ant-menu-dark ant-menu-vertical"" id:ignore direction=""ltr"" role=""menu"" >
       </ul>
     </div>
     <div class=""ant-layout-sider-trigger"" style=""width: 200px"" >
@@ -149,5 +149,50 @@
 
         isNoZeroTrigerAfterCollapsed.Should().Be(expectedNoZeroTriger);
 
+    }
+
+    [Fact]
+    public void Collapsed_zero_width_sider_keeps_an_expand_trigger()
+    {
+        var cut = Render(
+            @<Layout>
+                <Sider Collapsible CollapsedWidth="0" DefaultCollapsed>
+                    <Menu Theme="MenuTheme.Dark"></Menu>
+                </Sider>
+            </Layout>);
+
+        cut.Find(".ant-layout-sider-zero-width-trigger").Click();
+
+        cut.Find(".ant-layout-sider").ClassList.Should().NotContain("ant-layout-sider-collapsed");
+        cut.Find(".ant-layout-sider-trigger").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Layout_component_tokens_override_component_defaults_and_nest_locally()
+    {
+        var outerTheme = new AntDesign.Theming.ThemeConfig();
+        outerTheme.Components["Layout"] = new System.Collections.Generic.Dictionary<string, string>
+        {
+            ["headerBg"] = "#1677ff",
+            ["siderBg"] = "#800080"
+        };
+        var nestedTheme = new AntDesign.Theming.ThemeConfig();
+        nestedTheme.Components["Layout"] = new System.Collections.Generic.Dictionary<string, string>
+        {
+            ["siderBg"] = "red"
+        };
+
+        var cut = Render(
+            @<ConfigProvider ThemeConfig="@outerTheme">
+                <Layout>
+                    <Header>Header</Header>
+                    <ConfigProvider ThemeConfig="@nestedTheme">
+                        <Sider>Sider</Sider>
+                    </ConfigProvider>
+                </Layout>
+            </ConfigProvider>);
+
+        cut.Find(".ant-layout").GetAttribute("style").Should().Contain("--ant-layout-header-bg:#1677ff");
+        cut.Find(".ant-layout-sider").GetAttribute("style").Should().Contain("--ant-layout-sider-bg:red");
     }
 }

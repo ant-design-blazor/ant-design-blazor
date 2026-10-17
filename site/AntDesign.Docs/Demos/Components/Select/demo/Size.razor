@@ -4,11 +4,12 @@
     <Radio RadioButton Value="InputSize.Small">Small</Radio>
 </RadioGroup>
 <br /><br />
-<Select @bind-Value="@_selectedValue"
-		DefaultValue="@("0a10")"
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%">
+  <SpaceItem>
+<Select Value='@("a1")'
 		TItemValue="string"
 		TItem="string"
-		Style="width: 200px; margin-bottom: 8px;"
+		Style="width: 200px;"
 		Size="@_sizeValue"
 		OnSelectedItemChanged="OnSelectedItemChangedHandler">
 		<SelectOptions>
@@ -18,13 +19,15 @@
 			}
 		</SelectOptions>
 </Select>
+  </SpaceItem>
+  <SpaceItem>
 <Select Mode="SelectMode.Multiple"
 		@bind-Values="@_selectedValues1"
 		Placeholder="Please select"
 		TItemValue="string"
 		TItem="string"
 		Size="@_sizeValue"
-		Style="width: 100%; margin-bottom: 8px;"
+		Style="width: 100%;"
 		OnSelectedItemsChanged="OnSelectedItemsChangedHandler">
 		<SelectOptions>
 			@foreach(var item in _items)
@@ -33,12 +36,15 @@
 			}
 		</SelectOptions>
 </Select>
+  </SpaceItem>
+  <SpaceItem>
 <Select Mode="SelectMode.Tags"
 		@bind-Values="@_selectedValues2"
 		Placeholder="Please select"
 		TItemValue="string"
 		TItem="string"
 		Size="@_sizeValue"
+		Style="width: 100%;"
 		OnSelectedItemsChanged="OnSelectedItemsChangedHandler">
 		<SelectOptions>
 			@foreach(var item in _items)
@@ -47,11 +53,12 @@
 			}
 		</SelectOptions>
 </Select>
+  </SpaceItem>
+</Space>
 
 @code
 {
 	List<string> _items;
-	string _selectedValue;
     IEnumerable<string> _selectedValues1, _selectedValues2;
     private InputSize _sizeValue = InputSize.Default;
 
@@ -63,12 +70,24 @@
 
         for (var i = min; max > i; i++)
         {
-            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+            var value = ToBase36(i) + i.ToString();
             _items.Add(value);
         }
-		_selectedValue = "0a10";
-		_selectedValues1 = new List<string> { "0a10" , "0c12"};
-		_selectedValues2 = new List<string> { "0a10" , "0c12"};
+		_selectedValues1 = new List<string> { "a10" , "c12"};
+		_selectedValues2 = new List<string> { "a10" , "c12"};
+    }
+
+    private static string ToBase36(int value)
+    {
+        const string digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+        var result = new Stack<char>();
+        do
+        {
+            result.Push(digits[value % 36]);
+            value /= 36;
+        } while (value > 0);
+
+        return new string(result.ToArray());
     }
 
     private void OnChangeSize(InputSize value)

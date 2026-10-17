@@ -1,14 +1,7 @@
 ---
-order: 99
 title:
-  en-US: Pagination Settings
+  en-US: Pagination settings
   zh-CN: 分页设置
 ---
 
-## zh-CN
-
-表格的分页设置。
-
-## en-US
-
-Table pagination settings.
+Select a pagination position and see the table update. Blazor currently accepts one position at a time, while React's demo can configure top and bottom placements independently.

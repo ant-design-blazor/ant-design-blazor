@@ -11,7 +11,8 @@ namespace AntDesign.Internal.ModalDialog
         [CascadingParameter]
         public DialogOptions Config { get; set; }
 
-        [CascadingParameter(Name = "Parent")]
-        public Dialog Parent { get; set; }
+        [CascadingParameter(Name = "TitleId")]
+        public string TitleId { get; set; }
+
     }
 }

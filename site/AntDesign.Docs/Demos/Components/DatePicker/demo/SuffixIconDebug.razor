@@ -1,0 +1,18 @@
+<Space Direction="SpaceDirection.Vertical">
+    <DatePicker TValue="DateTime?" Placeholder="@("Default suffix")" />
+    <DatePicker TValue="DateTime?" Placeholder="@("Custom icon")">
+        <SuffixIcon>
+            <Icon Type="@IconType.Outline.Smile" />
+        </SuffixIcon>
+    </DatePicker>
+    <DatePicker TValue="DateTime?" Placeholder="@("Custom text")">
+        <SuffixIcon>
+            <span>123</span>
+        </SuffixIcon>
+    </DatePicker>
+    <RangePicker TValue="DateTime?[]" Placeholder="@("Custom range suffix")">
+        <SuffixIcon>
+            <Icon Type="@IconType.Outline.Calendar" />
+        </SuffixIcon>
+    </RangePicker>
+</Space>

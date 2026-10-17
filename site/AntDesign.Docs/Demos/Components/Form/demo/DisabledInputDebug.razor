@@ -1,0 +1,34 @@
+﻿<Form Model="@_model" Style="max-width:600px;">
+    @foreach (var item in _cases)
+    {
+        <FormItem @key="item.Label" Label="@item.Label"
+                  ValidateStatus="@(item.Invalid ? FormValidateStatus.Error : FormValidateStatus.Default)"
+                  Help="@(item.Invalid ? "Buggy!" : null)">
+            @if (item.WithPrefix)
+            {
+                <Input Value="50" Prefix="@("RMB".ToRenderFragment())" Disabled="@item.Disabled" Placeholder="unavailable choice" />
+            }
+            else
+            {
+                <Input Value='@("Buggy!")' Disabled="@item.Disabled" Placeholder="unavailable choice" />
+            }
+        </FormItem>
+    }
+</Form>
+
+@code {
+    private readonly EmptyModel _model = new();
+    private readonly DebugInputCase[] _cases =
+    [
+        new("Normal", false, false, false),
+        new("Fail", true, false, false),
+        new("FailDisabled", true, true, false),
+        new("Normal prefix", false, false, true),
+        new("Fail prefix", true, false, true),
+        new("Fail disabled prefix", true, true, true)
+    ];
+
+    private sealed record DebugInputCase(string Label, bool Invalid, bool Disabled, bool WithPrefix);
+
+    private sealed class EmptyModel { }
+}

@@ -77,7 +77,7 @@ namespace AntDesign
                     AddOnAfter = builder =>
                     {
                         builder.OpenComponent<Button>(6);
-                        builder.AddAttribute(7, "Class", $"{PrefixCls}-search-button");
+                        builder.AddAttribute(7, "Class", $"{PrefixCls}-search-button {PrefixCls}-search-btn");
                         builder.AddAttribute(8, "Type", ButtonType.Default);
                         builder.AddAttribute(9, "Size", _buttonSizeMap[Size]);
                         builder.AddAttribute(10, "Loading", Loading);
@@ -97,7 +97,7 @@ namespace AntDesign
                 AddOnAfter = builder =>
                 {
                     builder.OpenComponent<Button>(11);
-                    builder.AddAttribute(12, "Class", $"{PrefixCls}-search-button");
+                    builder.AddAttribute(12, "Class", $"{PrefixCls}-search-button {PrefixCls}-search-btn");
                     builder.AddAttribute(13, "Type", ButtonType.Primary);
                     builder.AddAttribute(14, "Size", _buttonSizeMap[Size]);
                     builder.AddAttribute(15, "Loading", Loading);

@@ -1,0 +1,29 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<Form Model="@_model" Layout="FormLayout.Vertical" OnFieldChanged="OnFieldChanged">
+    <FormItem Name="Name" Label="Name (Watch to trigger rerender)">
+        <Input @bind-Value="context.Name" />
+    </FormItem>
+    <FormItem Name="Age" Label="Age (Not watched)">
+        <AntDesign.InputNumber TValue="int?" @bind-Value="context.Age" />
+    </FormItem>
+</Form>
+
+<div class="ant-typography">
+    <pre>Name Value: @_model.Name</pre>
+    <pre>Custom Value: name: @(_model.Name ?? string.Empty)</pre>
+</div>
+
+@code {
+    private readonly WatchModel _model = new();
+
+    private void OnFieldChanged(FieldChangedEventArgs _) => StateHasChanged();
+
+    private sealed class WatchModel
+    {
+        public string Name { get; set; } = string.Empty;
+
+        [Range(0, int.MaxValue)]
+        public int? Age { get; set; }
+    }
+}

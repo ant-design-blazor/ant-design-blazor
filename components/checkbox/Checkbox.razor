@@ -1,10 +1,10 @@
 ﻿@namespace AntDesign
 @inherits AntInputBoolComponentBase
 
-<label class="@ClassMapperLabel.Class" style="@Style" for="@Id" @ref="Ref" @onclick:stopPropagation>
+<label class="@ClassMapperLabel.Class" style="@(string.IsNullOrEmpty(Style) ? null : Style)" @ref="Ref" @onclick:stopPropagation>
     <span class="@ClassMapper.Class">
         <input id="@Id"
-               value="@(CheckboxGroup==null?"true":Label)"
+               value="@(CheckboxGroup == null ? null : ItemValue?.ToString() ?? Label)"
                checked="@Checked"
                disabled="@IsDisabled"
                autofocus=@AutoFocus
@@ -12,7 +12,6 @@
                type="checkbox"
                class="ant-checkbox-input"
                @attributes="_attributes" />
-        <span class="ant-checkbox-inner"></span>
     </span>
 
     @if (ChildContent != null)
@@ -21,7 +20,7 @@
             @ChildContent
         </span>
     }
-    else
+    else if (!HideEmptyLabel || !string.IsNullOrEmpty(Label))
     {
         <span class="ant-checkbox-label">@Label</span>
     }

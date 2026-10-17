@@ -1,0 +1,25 @@
+<Paragraph Copyable>This is a copyable text.</Paragraph>
+<Paragraph Copyable CopyConfig="@replaceText">Replace copy text.</Paragraph>
+<Paragraph Copyable CopyConfig="@withCallback">Copy and invoke a callback.</Paragraph>
+<span>@(copyCallbackInvoked ? "Copy callback invoked." : "")</span>
+<Text Copyable CopyConfig="@textCopy" />
+
+@code {
+    private readonly TypographyCopyableConfig replaceText = new() { Text = "Hello, Ant Design!" };
+    private TypographyCopyableConfig withCallback;
+    private readonly TypographyCopyableConfig textCopy = new() { Text = "text to be copied" };
+    private bool copyCallbackInvoked;
+
+    protected override void OnInitialized()
+    {
+        withCallback = new TypographyCopyableConfig
+        {
+            Text = "Callback text",
+            OnCopy = () =>
+            {
+                copyCallbackInvoked = true;
+                _ = InvokeAsync(StateHasChanged);
+            }
+        };
+    }
+}

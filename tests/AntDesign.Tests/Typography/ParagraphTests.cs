@@ -50,6 +50,109 @@ namespace AntDesign.Tests.Typography
         }
 
         [Fact]
+        public void EllipsisConfig_clamps_rows_and_expand_button_toggles_full_text()
+        {
+            var expandedCount = 0;
+            var config = new TypographyEllipsisConfig
+            {
+                Rows = 2,
+                Expandable = true,
+                OnExpand = () => expandedCount++
+            };
+            var systemUnderTest = RenderComponent<Paragraph>(parameters => parameters
+                .Add(x => x.EllipsisConfig, config)
+                .AddChildContent("A long paragraph that should be clamped to two rows."));
+
+            systemUnderTest.Find(".ant-typography").ClassList.Should().Contain("ant-typography-ellipsis-multiple-line");
+            systemUnderTest.Find(".ant-typography").GetAttribute("style").Should().Contain("-webkit-line-clamp: 2");
+            systemUnderTest.Find(".ant-typography-expand").TextContent.Should().Be("more");
+
+            systemUnderTest.Find(".ant-typography-expand").Click();
+
+            systemUnderTest.FindAll(".ant-typography-collapse").Should().BeEmpty();
+            systemUnderTest.Find(".ant-typography").GetAttribute("style").Should().BeNullOrEmpty();
+            systemUnderTest.Find(".ant-typography").ClassList.Should().NotContain("ant-typography-ellipsis-multiple-line");
+            expandedCount.Should().Be(1);
+        }
+
+        [Fact]
+        public void Ellipsis_supports_controlled_expansion_and_collapsing()
+        {
+            var config = new TypographyEllipsisConfig { Rows = 2, Expandable = true, Collapsible = true, Expanded = false };
+            config.OnExpandedChange = Microsoft.AspNetCore.Components.EventCallback.Factory.Create<bool>(this, expanded => config.Expanded = expanded);
+            var systemUnderTest = RenderComponent<Paragraph>(parameters => parameters
+                .Add(x => x.EllipsisConfig, config)
+                .AddChildContent("A long paragraph with controlled expandable content."));
+
+            systemUnderTest.Find(".ant-typography-expand").Click();
+
+            config.Expanded.Should().BeTrue();
+            systemUnderTest.Find(".ant-typography-collapse").TextContent.Should().Be("less");
+            systemUnderTest.Find(".ant-typography").ClassList.Should().NotContain("ant-typography-ellipsis-multiple-line");
+
+            systemUnderTest.Find(".ant-typography-collapse").Click();
+
+            config.Expanded.Should().BeFalse();
+            systemUnderTest.Find(".ant-typography-expand").TextContent.Should().Be("more");
+            systemUnderTest.Find(".ant-typography").ClassList.Should().Contain("ant-typography-ellipsis-multiple-line");
+        }
+
+        [Fact]
+        public void Ellipsis_suffix_renders_at_the_clamped_paragraph_end_and_title_preserves_full_text()
+        {
+            var systemUnderTest = RenderComponent<Paragraph>(parameters => parameters
+                .Add(x => x.EllipsisConfig, new TypographyEllipsisConfig { Rows = 2, Suffix = "— Author" })
+                .Add(x => x.Title, "Full text — Author")
+                .AddChildContent("A long paragraph that should be clamped while retaining an attribution."));
+
+            systemUnderTest.Find(".ant-typography").GetAttribute("style").Should().Contain("position: relative");
+            systemUnderTest.Find(".ant-typography").GetAttribute("title").Should().Be("Full text — Author");
+            systemUnderTest.Find(".ant-typography-ellipsis-suffix").GetAttribute("style").Should().Contain("position: absolute");
+            systemUnderTest.Find(".ant-typography-ellipsis-suffix").TextContent.Should().Be("— Author");
+        }
+
+        [Fact]
+        public void Editable_supports_start_enter_commit_and_escape_cancel()
+        {
+            JSInterop.Setup<AntDesign.Internal.TextAreaInfo>(JSInteropConstants.InputComponentHelper.RegisterResizeTextArea, _ => true);
+            var started = 0;
+            var changed = 0;
+            var cancelled = 0;
+            var ended = 0;
+            var config = new TypographyEditableConfig
+            {
+                Text = "Original",
+                OnStart = () => started++,
+                OnChange = _ => changed++,
+                OnCancel = () => cancelled++,
+                OnEnd = () => ended++
+            };
+            var systemUnderTest = RenderComponent<Paragraph>(parameters => parameters
+                .Add(x => x.Editable, true)
+                .Add(x => x.EditConfig, config)
+                .AddChildContent(builder => builder.AddContent(0, config.Text)));
+
+            systemUnderTest.Find(".ant-typography-edit").Click();
+            systemUnderTest.Find("textarea").Input("Discard this draft");
+            systemUnderTest.Find("textarea").KeyUp(new Microsoft.AspNetCore.Components.Web.KeyboardEventArgs { Key = "Escape" });
+
+            config.Text.Should().Be("Original");
+            started.Should().Be(1);
+            cancelled.Should().Be(1);
+            changed.Should().Be(0);
+
+            systemUnderTest.Find(".ant-typography-edit").Click();
+            systemUnderTest.Find("textarea").Input("  Saved draft  ");
+            systemUnderTest.Find("textarea").KeyUp(new Microsoft.AspNetCore.Components.Web.KeyboardEventArgs { Key = "Enter" });
+
+            ended.Should().Be(1);
+            config.Text.Should().Be("Saved draft");
+            started.Should().Be(2);
+            changed.Should().Be(1);
+            systemUnderTest.Find(".ant-typography").TextContent.Should().Contain("Saved draft");
+        }
+
+        [Fact]
         public void ItShouldRenderMark()
         {
             var systemUnderTest = RenderComponent<Paragraph>(parameters => parameters

@@ -1,0 +1,20 @@
+<Form Model="@emptyModel" Style="max-width: 600px;">
+    <FormItem Label="Prime between 8 &amp; 12"
+              LabelColSpan="7"
+              WrapperColSpan="12"
+              ValidateStatus="@status"
+              Help="@help">
+        <AntDesign.InputNumber Min="8" Max="12" @bind-Value="number" Style="width:100%;" />
+    </FormItem>
+</Form>
+
+@code {
+    private readonly object emptyModel = new();
+    private int? number = 11;
+
+    private FormValidateStatus status => number == 11 ? FormValidateStatus.Success : FormValidateStatus.Error;
+
+    private string help => number == 11
+        ? "A prime is a natural number greater than 1 that has no positive divisors other than 1 and itself."
+        : "The prime between 8 and 12 is 11!";
+}

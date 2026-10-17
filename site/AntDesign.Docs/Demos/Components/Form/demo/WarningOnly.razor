@@ -1,0 +1,45 @@
+@using System.ComponentModel.DataAnnotations
+
+<Form Model="@model" Layout="FormLayout.Vertical" OnFinish="OnFinish" OnFinishFailed="OnFinishFailed" AutoComplete="off">
+    <FormItem Label="URL" Name="Url" Rules="@(new[] { new FormValidationRule { Required = true, Message = "Please enter a URL." } })"
+              ValidateStatus="@WarningStatus" Help="@WarningHelp">
+        <Input @bind-Value="context.Url" Placeholder="input placeholder" />
+    </FormItem>
+    <FormItem>
+        <Space>
+            <Button Type="ButtonType.Primary" HtmlType="submit">Submit</Button>
+            <Button HtmlType="button" OnClick="Fill">Fill</Button>
+        </Space>
+    </FormItem>
+</Form>
+@if (!string.IsNullOrEmpty(result))
+{
+    <p role="status">@result</p>
+}
+
+@code {
+    private readonly FormModel model = new();
+    private string result;
+
+    private FormValidateStatus WarningStatus => string.IsNullOrWhiteSpace(model.Url)
+        ? FormValidateStatus.Default
+        : Uri.IsWellFormedUriString(model.Url, UriKind.Absolute) ? FormValidateStatus.Default : FormValidateStatus.Warning;
+    private string WarningHelp => WarningStatus == FormValidateStatus.Warning
+        ? "This value is not a valid URL, but warning-only rules do not prevent submission."
+        : null;
+
+    private void Fill()
+    {
+        model.Url = "https://taobao.com/";
+        result = null;
+    }
+
+    private void OnFinish(EditContext editContext) => result = "Submit success!";
+    private void OnFinishFailed(EditContext editContext) => result = "Submit failed!";
+
+    private sealed class FormModel
+    {
+        [Required]
+        public string Url { get; set; } = string.Empty;
+    }
+}

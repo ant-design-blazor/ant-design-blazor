@@ -63,6 +63,12 @@ namespace AntDesign
         public bool ShowSearch { get; set; }
 
         /// <summary>
+        /// Set the validation status of the selector.
+        /// </summary>
+        [Parameter]
+        public FormValidateStatus Status { get; set; } = FormValidateStatus.Default;
+
+        /// <summary>
         /// Callback executed when the selected value changes
         /// </summary>
         [Obsolete("Instead use SelectedNodesChanged.")]
@@ -131,7 +137,7 @@ namespace AntDesign
 
         private bool _focused;
 
-        protected override string OverlayClassName => "ant-cascader-dropdown";
+        protected override string OverlayClassName => "ant-cascader-dropdown ant-select-css-var ant-cascader-css-var";
 
         protected override string DefaultWidth => "";
 
@@ -334,6 +340,17 @@ namespace AntDesign
             SetDefaultValue(Value ?? DefaultValue);
         }
 
+        private static string GetPathKey(CascaderNode node)
+        {
+            var values = new Stack<string>();
+            for (var current = node; current != null; current = current.ParentNode)
+            {
+                values.Push(current.Value);
+            }
+
+            return string.Join("__RC_CASCADER_SPLIT__", values);
+        }
+
         /// <summary>
         /// Initialize nodes (Level, ParentNode)
         /// </summary>
@@ -469,20 +486,18 @@ namespace AntDesign
             string selectCls = "ant-select";
 
             ClassMapper
-                .Add("ant-select ant-cascader ant-select-single ant-select-show-arrow")
-                .Add($"{prefixCls}-picker")
-                .GetIf(() => $"{prefixCls}-picker-{Size}", () => _sizeMap.ContainsKey(Size))
+                .Add("ant-select ant-cascader ant-select-outlined ant-select-single ant-select-show-arrow")
+                .Add("ant-select-css-var ant-cascader-css-var")
                 .If("ant-select-open", () => _dropdownOpened)
                 .If("ant-select-focused", () => _focused)
-                .If($"{prefixCls}-picker-show-search ant-select-show-search", () => ShowSearch)
-                .If($"{prefixCls}-picker-with-value", () => !string.IsNullOrEmpty(_searchValue))
+                .If("ant-select-show-search", () => ShowSearch)
                 .If($"ant-select-lg", () => Size == InputSize.Large)
                 .If($"ant-select-sm", () => Size == InputSize.Small)
                 .If($"ant-select-disabled", () => Disabled)
-                .If("ant-select-allow-clear ", () => AllowClear)
+                .If("ant-select-allow-clear", () => AllowClear)
                 .If($"{selectCls}-in-form-item ", () => FormItem != null)
                 .If($"{selectCls}-has-feedback", () => FormItem?.HasFeedback == true)
-                .GetIf(() => $"{selectCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .GetIf(() => $"{selectCls}-status-{GetValidationStatus().ToString().ToLowerInvariant()}", () => GetValidationStatus() != FormValidateStatus.Default)
                 .If($"{prefixCls}-picker-rtl", () => RTL);
 
             _inputClassMapper
@@ -494,6 +509,11 @@ namespace AntDesign
             _menuClassMapper
                 .Add($"{prefixCls}-menu")
                 .If($"{prefixCls}-menu-rtl", () => RTL);
+        }
+
+        private FormValidateStatus GetValidationStatus()
+        {
+            return Status != FormValidateStatus.Default ? Status : FormItem?.ValidateStatus ?? FormValidateStatus.Default;
         }
 
         protected override async Task OnOverlayVisibleChangeAsync(bool visible)

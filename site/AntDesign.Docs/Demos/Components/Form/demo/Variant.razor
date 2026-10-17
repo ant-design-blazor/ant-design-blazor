@@ -1,0 +1,46 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+<div class="form-variant-demo @($"form-variant-{_variant}")">
+    <Form Model="@_model" LabelColSpan="6" WrapperColSpan="18" Style="max-width:600px;">
+        <FormItem Label="Form variant">
+            <Select TItemValue="string" TItem="string" @bind-Value="_variant">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value='@("outlined")' Label="outlined" />
+                    <SelectOption TItemValue="string" TItem="string" Value='@("filled")' Label="filled" />
+                    <SelectOption TItemValue="string" TItem="string" Value='@("borderless")' Label="borderless" />
+                    <SelectOption TItemValue="string" TItem="string" Value='@("underlined")' Label="underlined" />
+                </SelectOptions>
+            </Select>
+        </FormItem>
+        <FormItem Label="Input" Name="Input" Rules="@_required"><Input @bind-Value="context.Input" /></FormItem>
+        <FormItem Label="InputNumber" Name="Number" Rules="@_required"><AntDesign.InputNumber TValue="int?" @bind-Value="context.Number" Style="width:100%;" /></FormItem>
+        <FormItem Label="TextArea" Name="TextArea" Rules="@_required"><TextArea @bind-Value="context.TextArea" /></FormItem>
+        <FormItem Label="Select" Name="Select" Rules="@_required">
+            <Select TItemValue="string" TItem="string" @bind-Value="context.Select">
+                <SelectOptions><SelectOption TItemValue="string" TItem="string" Value='@("one")' Label="One" /><SelectOption TItemValue="string" TItem="string" Value='@("two")' Label="Two" /></SelectOptions>
+            </Select>
+        </FormItem>
+        <FormItem Label="DatePicker" Name="Date"><DatePicker TValue="DateTime?" @bind-Value="context.Date" /></FormItem>
+    </Form>
+</div>
+
+<style>
+.form-variant-demo .ant-input-outlined, .form-variant-demo .ant-select-selector, .form-variant-demo .ant-picker, .form-variant-demo .ant-input-number { background: var(--ant-color-bg-container); }
+.form-variant-filled .ant-input-outlined, .form-variant-filled .ant-select-selector, .form-variant-filled .ant-picker, .form-variant-filled .ant-input-number { background: var(--ant-color-fill-tertiary); }
+.form-variant-borderless .ant-input-outlined, .form-variant-borderless .ant-select-selector, .form-variant-borderless .ant-picker, .form-variant-borderless .ant-input-number { border-color: transparent !important; box-shadow: none !important; }
+.form-variant-underlined .ant-input-outlined, .form-variant-underlined .ant-select-selector, .form-variant-underlined .ant-picker, .form-variant-underlined .ant-input-number { border-width: 0 0 1px !important; border-radius: 0 !important; box-shadow: none !important; }
+</style>
+
+@code {
+    private readonly VariantFormModel _model = new();
+    private readonly FormValidationRule[] _required = [new() { Required = true, Message = "Please input!" }];
+    private string _variant = "filled";
+    private sealed class VariantFormModel
+    {
+        public string Input { get; set; } = string.Empty;
+        public int? Number { get; set; }
+        public string TextArea { get; set; } = string.Empty;
+        public string Select { get; set; } = string.Empty;
+        public DateTime? Date { get; set; }
+    }
+}

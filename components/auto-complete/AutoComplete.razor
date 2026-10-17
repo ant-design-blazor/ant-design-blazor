@@ -3,7 +3,7 @@
 @typeparam TOption
 @using AntDesign.Internal
 
-<div class="ant-select ant-select-auto-complete">
+<div class="@RootClass" style="@RootStyle">
 <CascadingValue Value='$"ant-select-dropdown"' Name="PrefixCls">
     <OverlayTrigger @ref="_overlayTrigger"
                     Style="display: inline"
@@ -14,8 +14,8 @@
                     PopupContainerSelector="@PopupContainerSelector"
                     OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                     OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
-                    OverlayClassName="@OverlayClassName"
-                    OverlayStyle="@OverlayStyle"
+                    OverlayClassName="@PopupClass"
+                    OverlayStyle="@PopupStyle"
                     OnVisibleChange="@OnOverlayTriggerVisibleChange">
         <Overlay>
             <CascadingValue Value="this" IsFixed="@true">
@@ -51,7 +51,7 @@
                 <CascadingValue Value="context" Name="OverlayTriggerContext" IsFixed>
                     @if (ChildContent == null)
                     {
-                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" DebounceMilliseconds="DebounceMilliseconds" BindOnInput Class="@Class" />
+                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" AllowClear="@AllowClear" Bordered="@InputBordered" InputElementSuffixClass="@InputStatusClass" Style="@InputStyle" Id="@Id" DebounceMilliseconds="DebounceMilliseconds" BindOnInput Class="@Class" />
                     }
                     else
                     {

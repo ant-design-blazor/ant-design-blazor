@@ -1,0 +1,13 @@
+<div style="width:280px; border:1px solid #eee; padding:16px">
+    <RadioGroup TValue="string" Options="@_options" @bind-Value="_value" />
+</div>
+
+@code {
+    private string _value = "a";
+    private readonly RadioOption<string>[] _options =
+    [
+        new() { Label = "Short", Value = "a" },
+        new() { Label = "Long label that may wrap in narrow container", Value = "b" },
+        new() { Label = "Medium", Value = "c" }
+    ];
+}

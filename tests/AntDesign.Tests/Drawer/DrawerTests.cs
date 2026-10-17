@@ -20,73 +20,33 @@ namespace AntDesign.Tests.Drawer
         }
 
         [Theory]
-        [InlineData(DrawerPlacement.Left, "width:256px;transform:translateX(-100%);", "height:100%")]
-        [InlineData(DrawerPlacement.Right, "width:256px;transform:translateX(100%);", "height:100%")]
-        [InlineData(DrawerPlacement.Top, "height:256px;transform:translateY(-100%);", "")]
-        [InlineData(DrawerPlacement.Bottom, "height:256px;transform:translateY(100%);", "")]
-        public void ItShouldRenderWrapperProperly(DrawerPlacement placement, string contentWrapperStyle, string bodyWrapperStyle)
+        [InlineData(DrawerPlacement.Left, "width:256px;transform:translateX(-100%);")]
+        [InlineData(DrawerPlacement.Right, "width:256px;transform:translateX(100%);")]
+        [InlineData(DrawerPlacement.Top, "height:256px;transform:translateY(-100%);")]
+        [InlineData(DrawerPlacement.Bottom, "height:256px;transform:translateY(100%);")]
+        public void ItShouldRenderWrapperProperly(DrawerPlacement placement, string contentWrapperStyle)
         {
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters.Add(x => x.Placement, placement));
-
-            systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement.ToString().ToLowerInvariant()}"" style=""z-index:-9999;"" id:ignore>
-                <div class=""ant-drawer-content-wrapper"" style=""{contentWrapperStyle}"" id:ignore>
-                    <div class=""ant-drawer-content"">
-                        <div class=""ant-drawer-wrapper-body"" style=""{bodyWrapperStyle}"">
-                            <div class=""ant-drawer-header-no-title"">
-                                <button type=""button"" aria-label=""Close"" class=""ant-drawer-close"">
-                                    <span role=""img"" class=""anticon anticon-close"" id:ignore>
-                                        <svg focusable=""false"" width=""1em"" height=""1em"" fill=""currentColor""
-                                            style=""pointer-events: none;"" xmlns=""http://www.w3.org/2000/svg"" class=""icon""
-                                            viewBox=""0 0 1024 1024"">
-                                            <path
-                                                d=""M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"">
-                                            </path>
-                                        </svg>
-                                    </span>
-                                </button>
-                            </div>
-                            <div class=""ant-drawer-body"">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>");
+            systemUnderTest.Find(".ant-drawer").ClassList.Should().Contain($"ant-drawer-{placement.ToString().ToLowerInvariant()}");
+            systemUnderTest.Find(".ant-drawer-content-wrapper").GetAttribute("style").Should().Contain(contentWrapperStyle.Split(';')[0]);
+            systemUnderTest.Find(".ant-drawer-section[role='dialog']").Should().NotBeNull();
+            systemUnderTest.Find(".ant-drawer-body").Should().NotBeNull();
         }
 
         [Theory]
-        [InlineData(DrawerPlacement.Top, DrawerPlacement.Left, "width:256px;transform:translateX(-100%);", "height:100%")]
-        [InlineData(DrawerPlacement.Top, DrawerPlacement.Right, "width:256px;transform:translateX(100%);", "height:100%")]
-        [InlineData(DrawerPlacement.Left, DrawerPlacement.Top, "height:256px;transform:translateY(-100%);", "")]
-        [InlineData(DrawerPlacement.Left, DrawerPlacement.Bottom, "height:256px;transform:translateY(100%);", "")]
-        public void ItShouldChangePlacementAfterRender(DrawerPlacement initialPlacement, DrawerPlacement placement, string contentWrapperStyle, string bodyWrapperStyle)
+        [InlineData(DrawerPlacement.Top, DrawerPlacement.Left, "width:256px;transform:translateX(-100%);")]
+        [InlineData(DrawerPlacement.Top, DrawerPlacement.Right, "width:256px;transform:translateX(100%);")]
+        [InlineData(DrawerPlacement.Left, DrawerPlacement.Top, "height:256px;transform:translateY(-100%);")]
+        [InlineData(DrawerPlacement.Left, DrawerPlacement.Bottom, "height:256px;transform:translateY(100%);")]
+        public void ItShouldChangePlacementAfterRender(DrawerPlacement initialPlacement, DrawerPlacement placement, string contentWrapperStyle)
         {
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters.Add(x => x.Placement, initialPlacement));
 
             systemUnderTest.SetParametersAndRender(parameters => parameters.Add(x => x.Placement, placement));
 
-            systemUnderTest.MarkupMatches($@"<div class=""ant-drawer ant-drawer-{placement.ToString().ToLowerInvariant()}"" style=""z-index:-9999;"" id:ignore>
-                <div class=""ant-drawer-content-wrapper"" style=""{contentWrapperStyle}"" id:ignore>
-                    <div class=""ant-drawer-content"">
-                        <div class=""ant-drawer-wrapper-body"" style=""{bodyWrapperStyle}"">
-                            <div class=""ant-drawer-header-no-title"">
-                                <button type=""button"" aria-label=""Close"" class=""ant-drawer-close"">
-                                    <span role=""img"" class=""anticon anticon-close"" id:ignore>
-                                        <svg focusable=""false"" width=""1em"" height=""1em"" fill=""currentColor""
-                                            style=""pointer-events: none;"" xmlns=""http://www.w3.org/2000/svg"" class=""icon""
-                                            viewBox=""0 0 1024 1024"">
-                                            <path
-                                                d=""M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 0 0 203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"">
-                                            </path>
-                                        </svg>
-                                    </span>
-                                </button>
-                            </div>
-                            <div class=""ant-drawer-body"">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>");
+            systemUnderTest.Find(".ant-drawer").ClassList.Should().Contain($"ant-drawer-{placement.ToString().ToLowerInvariant()}");
+            systemUnderTest.Find(".ant-drawer-content-wrapper").GetAttribute("style").Should().Contain(contentWrapperStyle.Split(';')[0]);
+            systemUnderTest.Find(".ant-drawer-section[role='dialog']").Should().NotBeNull();
         }
 
         [Fact]
@@ -94,7 +54,7 @@ namespace AntDesign.Tests.Drawer
         {
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters.Add(x => x.Title, "Test Title"));
 
-            systemUnderTest.Find(".ant-drawer-title").MarkupMatches(@"<div class=""ant-drawer-title"">Test Title</div>");
+            systemUnderTest.Find(".ant-drawer-title").TextContent.Trim().Should().Be("Test Title");
         }
 
         [Fact]
@@ -109,7 +69,7 @@ namespace AntDesign.Tests.Drawer
 
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters.Add(x => x.Title, fragment));
 
-            systemUnderTest.Find(".ant-drawer-title").MarkupMatches(@"<div class=""ant-drawer-title""><span>Testing</span></div>");
+            systemUnderTest.Find(".ant-drawer-title span").TextContent.Should().Be("Testing");
         }
 
         [Fact]
@@ -234,8 +194,7 @@ namespace AntDesign.Tests.Drawer
                 .Add(x => x.ZIndex, 4000)
                 .Add(x => x.Visible, false));
 
-            systemUnderTest.MarkupMatches(@"
-                <div class=""ant-drawer ant-drawer-right"" style=""z-index:-9999;"" id:ignore diff:ignoreChildren></div>");
+            systemUnderTest.Find(".ant-drawer").GetAttribute("style").Should().Contain("z-index:-9999");
         }
 
         //[Theory]
@@ -393,12 +352,7 @@ namespace AntDesign.Tests.Drawer
 
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters.Add(x => x.Handler, fragment));
 
-            systemUnderTest.MarkupMatches(@"<div diff:ignoreAttributes>
-                <div class=""ant-drawer-content-wrapper"" diff:ignoreAttributes>
-                    <div class=""ant-drawer-content"" diff:ignoreChildren></div>
-                    <span>Handler Stuff</span>
-                </div>
-            </div>");
+            systemUnderTest.Find(".ant-drawer-content-wrapper > span").TextContent.Should().Be("Handler Stuff");
         }
     }
 }

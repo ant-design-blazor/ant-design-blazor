@@ -1,4 +1,29 @@
-<div>
-To do
+﻿<div>
+    <Switch @bind-Checked="ellipsis" />
+
+    <Paragraph Ellipsis="@ellipsis">
+        @RepeatedText
+    </Paragraph>
+
+    <Paragraph Ellipsis="@ellipsis" EllipsisConfig="@(ellipsis ? expandableEllipsis : null)">
+        @RepeatedText
+    </Paragraph>
+
+    <Text Ellipsis="@ellipsis" EllipsisConfig="@(ellipsis ? tooltipEllipsis : null)"
+          Style="@(ellipsis ? "width: 200px;" : null)">
+        Ant Design, a design language for background applications, is refined by Ant UED Team.
+    </Text>
+    <br />
+    <Text Code Ellipsis="@ellipsis" EllipsisConfig="@(ellipsis ? tooltipEllipsis : null)"
+          Style="@(ellipsis ? "width: 200px;" : null)">
+        Ant Design, a design language for background applications, is refined by Ant UED Team.
+    </Text>
 </div>
 
+@code {
+    private bool ellipsis = true;
+    private readonly TypographyEllipsisConfig expandableEllipsis = new() { Rows = 2, Expandable = true };
+    private readonly TypographyEllipsisConfig tooltipEllipsis = new();
+
+    private const string RepeatedText = "Ant Design, a design language for background applications, is refined by Ant UED Team. Ant Design, a design language for background applications, is refined by Ant UED Team. Ant Design, a design language for background applications, is refined by Ant UED Team. Ant Design, a design language for background applications, is refined by Ant UED Team. Ant Design, a design language for background applications, is refined by Ant UED Team. Ant Design, a design language for background applications, is refined by Ant UED Team.";
+}

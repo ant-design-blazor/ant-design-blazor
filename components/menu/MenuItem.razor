@@ -32,6 +32,10 @@
                 {
                     <MenuLink Href="@RouterLink" Match="@RouterMatch" Target="Target">@content</MenuLink>
                 }
+                @if (Extra != null)
+                {
+                    <span class="@(RootMenu?.PrefixCls ?? "ant-menu")-item-extra">@Extra</span>
+                }
             </span>
         </li>;
     }

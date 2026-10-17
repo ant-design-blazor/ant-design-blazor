@@ -32,20 +32,25 @@ And 4 other properties additionally.
 | Property | Description | Type | Default Value | Version 
 | --- | --- | --- | --- |
 | AriaLabel | Sets the aria-label attribute         | string    | null         |
+| ButtonColor | Set the semantic v6 button color (`Default`, `Primary`, `Danger`, or a preset color). | ButtonColor? | null |
 | Block | Option to fit button width to its parent width         | bool    | false         | 
 | ChildContent | Content of the button.   | RenderFragment    | -         |
+| ClassNames | Customize classes by semantic slot: `root`, `icon`, and `content`. | IReadOnlyDictionary<string, string> | null |
 | Danger | Set the danger status of button | bool    | false         | 
 | Disabled | Whether the `Button` is disabled.         | bool    | false     |
 | Ghost | Make background transparent and invert text and border colors | bool    | false         | 
 | HtmlType | Set the original html `type` of `button`, see: [MDN]('https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#attr-type')         | string    | `button` |
 | Icon | Set the icon component of button | string | -         | 
+| IconPlacement | Set the icon position relative to button content. | ButtonIconPlacement | Start |
 | Loading | Set the loading status of button        | bool    | false         | 
 | OnClick | Callback when `Button` is clicked          | Action    | -         |
 | OnClickStopPropagation | Do not propagate events when button is clicked. | bool    | false    |
 | Search | Adds class `ant-input-search-button` to the button.   | bool | false         |
 | Shape | Can set button shape: `circle` &#124; `round` or `null` (default, which is rectangle).    | string    | null |
 | Size | Set the size of `Button`.         | AntSizeLDSType    | `AntSizeLDSType.Default`         | 
+| Styles | Customize inline styles by semantic slot: `root`, `icon`, and `content`. | IReadOnlyDictionary<string, string> | null |
 | Type | Type of the button.         | ButtonType | `ButtonType.Default` |
+| Variant | Set the v6 button visual variant (`Solid`, `Outlined`, `Dashed`, `Filled`, `Text`, or `Link`). | ButtonVariant? | null |
 | NoSpanWrap | Remove `<span>` from button content, if you want to provide rich content        | bool | false |
 
 
@@ -54,4 +59,4 @@ And 4 other properties additionally.
 | Property | Description | Type | Default Value | Version 
 | --- | --- | --- | --- |
 | Url | The download url of a file    | string    | null         |
-| FileName | name of the file         | string    |         | 
+| FileName | name of the file         | string    |         |

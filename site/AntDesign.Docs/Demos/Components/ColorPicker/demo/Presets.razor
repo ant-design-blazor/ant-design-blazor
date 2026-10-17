@@ -1,0 +1,20 @@
+<ColorPicker Value="@_value" ValueChanged="OnValueChanged" Presets="_presets" ShowText />
+<p>Selected: @_value</p>
+
+@code {
+    private string _value = "#1677ff";
+    private readonly IReadOnlyList<ColorPickerPreset> _presets = new[]
+    {
+        new ColorPickerPreset
+        {
+            Label = "Brand colors",
+            Colors = new[] { "#1677ff", "#52c41a", "#faad14", "#ff4d4f", "#722ed1", "#13c2c2" }
+        }
+    };
+
+    private Task OnValueChanged(string value)
+    {
+        _value = value;
+        return Task.CompletedTask;
+    }
+}

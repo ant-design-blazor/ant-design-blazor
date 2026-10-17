@@ -50,6 +50,16 @@ namespace AntDesign.Theming
                     }
                 }
             }
+            foreach (var preset in PresetColorPalettes.All)
+            {
+                var color = values.Get(preset.Key, PresetColorPalettes.Primary(preset.Key));
+                var palette = AntColorPalette.Generate(color);
+                for (var index = 0; index < palette.Length; index++)
+                {
+                    values[$"{preset.Key}{index + 1}"] = palette[index];
+                    values[$"{preset.Key}-{index + 1}"] = palette[index];
+                }
+            }
             AddNeutralColorMap(values, false);
             AddColorSemanticMap(values);
             AddAliasMap(values);
@@ -135,18 +145,18 @@ namespace AntDesign.Theming
             values["colorBgSolid"] = ColorMath.Alpha(text, dark ? .95 : 1);
             values["colorBgSolidHover"] = ColorMath.Alpha(text, dark ? 1 : .75);
             values["colorBgSolidActive"] = ColorMath.Alpha(text, dark ? .9 : .95);
-            values["colorBgLayout"] = ColorMath.Darken(background, dark ? 0 : 4);
-            values["colorBgContainer"] = ColorMath.Darken(background, dark ? 8 : 0);
-            values["colorBgElevated"] = ColorMath.Darken(background, dark ? 12 : 0);
-            values["colorBgSpotlight"] = dark ? ColorMath.Darken(background, 26) : ColorMath.Alpha(text, .85);
+            values["colorBgLayout"] = dark ? ColorMath.Lighten(background, 0) : ColorMath.Darken(background, 4);
+            values["colorBgContainer"] = dark ? ColorMath.Lighten(background, 8) : ColorMath.Darken(background, 0);
+            values["colorBgElevated"] = dark ? ColorMath.Lighten(background, 12) : ColorMath.Darken(background, 0);
+            values["colorBgSpotlight"] = dark ? ColorMath.Lighten(background, 26) : ColorMath.Alpha(text, .85);
             values["colorBgBlur"] = dark ? ColorMath.Alpha(text, .04) : "transparent";
-            values["colorBorder"] = ColorMath.Darken(background, dark ? 26 : 15);
+            values["colorBorder"] = dark ? ColorMath.Lighten(background, 26) : ColorMath.Darken(background, 15);
             values["colorBorderDisabled"] = values["colorBorder"];
-            values["colorBorderSecondary"] = ColorMath.Darken(background, dark ? 19 : 6);
+            values["colorBorderSecondary"] = dark ? ColorMath.Lighten(background, 19) : ColorMath.Darken(background, 6);
             values["colorWhite"] = "#ffffff";
         }
 
-        internal static void AddColorSemanticMap(IDictionary<string, string> values)
+        internal static void AddColorSemanticMap(IDictionary<string, string> values, bool dark = false)
         {
             foreach (var name in new[] { "Primary", "Success", "Warning", "Error", "Info" })
             {
@@ -162,12 +172,12 @@ namespace AntDesign.Theming
                 values[$"{prefix}TextActive"] = values.Get(prefix + "10", "");
             }
             var link = values.Get("colorLink", values.Get("colorInfo", ""));
-            var linkPalette = AntColorPalette.Generate(link);
+            var linkPalette = dark ? AntColorPalette.GenerateDark(link, "#141414") : AntColorPalette.Generate(link);
             if (linkPalette.Length == 10)
             {
-                values["colorLinkHover"] = linkPalette[4];
+                values["colorLinkHover"] = dark ? linkPalette[3] : linkPalette[4];
                 values["colorLink"] = linkPalette[5];
-                values["colorLinkActive"] = linkPalette[6];
+                values["colorLinkActive"] = dark ? linkPalette[4] : linkPalette[6];
             }
             values["colorErrorBgFilledHover"] = ColorMath.Mix(values.Get("colorError2", ""), values.Get("colorError4", ""), 50);
             values["colorBgMask"] = ColorMath.Alpha("#000000", .45);
@@ -187,7 +197,7 @@ namespace AntDesign.Theming
                 ("controlItemBgActive", "colorPrimaryBg"), ("controlItemBgActiveHover", "colorPrimaryBgHover"), ("controlItemBgActiveDisabled", "colorFill")
             };
             foreach (var pair in aliases) values[pair.Item1] = values.Get(pair.Item2, "");
-            values["colorSplit"] = ColorMath.Mix(values.Get("colorBorderSecondary", ""), values.Get("colorBgContainer", ""), 50);
+            values["colorSplit"] = ColorMath.GetAlphaColor(values.Get("colorBorderSecondary", ""), values.Get("colorBgContainer", ""));
             values["controlOutline"] = values.Get("colorPrimaryBg", "");
             values["controlTmpOutline"] = values.Get("colorFillQuaternary", "");
             values["fontSizeIcon"] = values.Get("fontSizeSM", "");
@@ -254,11 +264,29 @@ namespace AntDesign.Theming
                 if (palette.Length == 10)
                 {
                     var mapped = new[] { palette[0], palette[1], palette[2], palette[3], palette[6], palette[5], palette[4], palette[6], palette[5], palette[4] };
-                    for (var index = 0; index < mapped.Length; index++) map[$"{name}{index + 1}"] = mapped[index];
+                    for (var index = 0; index < mapped.Length; index++)
+                    {
+                        map[$"{name}{index + 1}"] = mapped[index];
+                        map[$"{name}-{index + 1}"] = mapped[index];
+                    }
                 }
             }
+            foreach (var preset in PresetColorPalettes.All)
+            {
+                var color = map.Get(preset.Key, PresetColorPalettes.Primary(preset.Key));
+                var palette = AntColorPalette.GenerateDark(color, "#141414");
+                for (var index = 0; index < palette.Length; index++)
+                {
+                    map[$"{preset.Key}{index + 1}"] = palette[index];
+                    map[$"{preset.Key}-{index + 1}"] = palette[index];
+                }
+                map[$"{preset.Key}Hover"] = palette[6];
+                map[$"{preset.Key}Active"] = palette[4];
+            }
             DefaultThemeAlgorithm.AddNeutralColorMap(map, true);
-            DefaultThemeAlgorithm.AddColorSemanticMap(map);
+            DefaultThemeAlgorithm.AddColorSemanticMap(map, dark: true);
+            map["colorPrimaryBg"] = map.Get("colorPrimary3", map.Get("colorPrimaryBg", ""));
+            map["colorPrimaryBgHover"] = map.Get("colorPrimary4", map.Get("colorPrimaryBgHover", ""));
             DefaultThemeAlgorithm.AddAliasMap(map);
             DefaultThemeAlgorithm.AddResponsiveAndShadowMap(map);
             return map.Select(item => new ResolvedToken(item.Key, item.Value)).OrderBy(item => item.Name, StringComparer.Ordinal);
@@ -284,7 +312,11 @@ namespace AntDesign.Theming
             map["sizeSM"] = map["size"];
             map["sizeXS"] = DefaultThemeAlgorithm.Number(unit * (compactStep - 1));
             map["sizeXXS"] = map["sizeXS"];
-            map["controlHeight"] = DefaultThemeAlgorithm.Number(DefaultThemeAlgorithm.Parse(map.Get("controlHeight", "32"), 32) - 4);
+            var controlHeight = DefaultThemeAlgorithm.Parse(map.Get("controlHeight", "32"), 32) - 4;
+            map["controlHeight"] = DefaultThemeAlgorithm.Number(controlHeight);
+            map["controlHeightSM"] = DefaultThemeAlgorithm.Number(controlHeight * .75);
+            map["controlHeightXS"] = DefaultThemeAlgorithm.Number(controlHeight * .5);
+            map["controlHeightLG"] = DefaultThemeAlgorithm.Number(controlHeight * 1.25);
             DefaultThemeAlgorithm.AddFontMap(map);
             DefaultThemeAlgorithm.AddRadiusMap(map);
             DefaultThemeAlgorithm.AddCommonMap(map);
@@ -320,6 +352,13 @@ namespace AntDesign.Theming
             return $"#{(int)Math.Floor(r * factor + .5):X2}{(int)Math.Floor(g * factor + .5):X2}{(int)Math.Floor(b * factor + .5):X2}".ToLowerInvariant();
         }
 
+        public static string Lighten(string color, double amount)
+        {
+            if (!TryHex(color, out var r, out var g, out var b)) return color;
+            var factor = Math.Clamp(amount / 100, 0, 1);
+            return $"#{(int)Math.Floor(r + (255 - r) * factor + .5):X2}{(int)Math.Floor(g + (255 - g) * factor + .5):X2}{(int)Math.Floor(b + (255 - b) * factor + .5):X2}".ToLowerInvariant();
+        }
+
         public static string Mix(string first, string second, int amount)
         {
             if (!TryHex(first, out var r1, out var g1, out var b1) || !TryHex(second, out var r2, out var g2, out var b2)) return second;
@@ -327,10 +366,32 @@ namespace AntDesign.Theming
             return $"#{(int)Math.Floor(r1 + (r2 - r1) * p + .5):X2}{(int)Math.Floor(g1 + (g2 - g1) * p + .5):X2}{(int)Math.Floor(b1 + (b2 - b1) * p + .5):X2}".ToLowerInvariant();
         }
 
+        public static string GetAlphaColor(string frontColor, string backgroundColor)
+        {
+            if (string.IsNullOrWhiteSpace(frontColor) || frontColor.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase)) return frontColor;
+            if (!TryHex(frontColor, out var frontR, out var frontG, out var frontB)
+                || !TryHex(backgroundColor, out var backgroundR, out var backgroundG, out var backgroundB)) return frontColor;
+
+            for (var alpha = 0.01; alpha <= 1; alpha += 0.01)
+            {
+                var r = (int)Math.Floor((frontR - backgroundR * (1 - alpha)) / alpha + .5);
+                var g = (int)Math.Floor((frontG - backgroundG * (1 - alpha)) / alpha + .5);
+                var b = (int)Math.Floor((frontB - backgroundB * (1 - alpha)) / alpha + .5);
+                if (r is >= 0 and <= 255 && g is >= 0 and <= 255 && b is >= 0 and <= 255)
+                {
+                    return $"rgba({r}, {g}, {b}, {(Math.Floor(alpha * 100 + .5) / 100).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)})";
+                }
+            }
+
+            return frontColor;
+        }
+
         private static bool TryHex(string value, out int r, out int g, out int b)
         {
             r = g = b = 0;
             var hex = value?.Trim().TrimStart('#');
+            if (hex?.Length == 3)
+                hex = string.Concat(hex.Select(character => new string(character, 2)));
             return hex?.Length == 6 && int.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out r) && int.TryParse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber, null, out g) && int.TryParse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out b);
         }
     }
@@ -353,6 +414,7 @@ namespace AntDesign.Theming
         public static string[] GenerateDark(string value, string background)
         {
             var patterns = Generate(value);
+            if (patterns.Length != 10) return Array.Empty<string>();
             var indexes = new[] { 7, 6, 5, 5, 5, 5, 4, 3, 2, 1 };
             var amounts = new[] { 15, 25, 30, 45, 65, 85, 90, 95, 97, 98 };
             return indexes.Select((index, position) => Mix(background, patterns[index], amounts[position])).ToArray();

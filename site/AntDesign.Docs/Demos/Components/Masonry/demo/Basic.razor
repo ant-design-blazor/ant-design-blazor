@@ -1,0 +1,26 @@
+﻿<Masonry T="int" Columns="4" Gutter="16" Items="_items" ItemRender="RenderItem" />
+
+@code {
+    private readonly IEnumerable<MasonryItem<int>> _items = Enumerable.Range(0, 15)
+        .Select((_, index) => new MasonryItem<int>
+        {
+            Key = $"item-{index}",
+            Data = new[] { 150, 50, 90, 70, 110, 150, 130, 80, 50, 90, 100, 150, 60, 50, 80 }[index],
+        });
+
+    private RenderFragment<MasonryItemRenderContext<int>> RenderItem => item => RenderItemContent(item);
+
+    private RenderFragment RenderItemContent(MasonryItemRenderContext<int> item)
+    {
+        if (item.Index == 4)
+        {
+            return @<Card Size="CardSize.Small" Cover="@FoodCover">
+                <CardMeta Title="I'm Special" Description="Let's have a meal" />
+            </Card>;
+        }
+
+        return @<Card Size="CardSize.Small" Style="@($"height: {item.Data}px")">@(item.Index + 1)</Card>;
+    }
+
+    private RenderFragment FoodCover => @<img alt="food" src="https://images.unsplash.com/photo-1491961865842-98f7befd1a60?w=523&auto=format" />;
+}

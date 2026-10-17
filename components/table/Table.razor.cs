@@ -140,6 +140,12 @@ namespace AntDesign
         public RenderFragment<TItem> HeaderTemplate { get; set; }
 
         /// <summary>
+        /// Whether to render the column header.
+        /// </summary>
+        [Parameter]
+        public bool ShowHeader { get; set; } = true;
+
+        /// <summary>
         /// Template use for what to display when a row is expanded
         /// </summary>
         [Parameter]
@@ -858,7 +864,7 @@ namespace AntDesign
                 ;
 
             _wrapperClassMapper
-                .Add($"{prefixCls}-wrapper")
+                .Add($"{prefixCls}-wrapper {prefixCls}-css-var")
                 .If($"{prefixCls}-responsive", () => Responsive) // Not implemented in ant design
                 .If($"{prefixCls}-wrapper-rtl", () => RTL);
         }

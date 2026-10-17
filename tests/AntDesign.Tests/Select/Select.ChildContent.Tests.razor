@@ -54,14 +54,14 @@
     );
 
     // Assert initial label uses suffix (check selector content)
-    cut.Find(".ant-select-selector").TextContent.Trim().Should().Be("Lucy_v1");
+    cut.Find(".ant-select-content").TextContent.Trim().Should().Be("Lucy_v1");
 
         // Act: change suffix and force re-render
         suffix = "_v2";
         cut.SetParametersAndRender(parameters => parameters.Add(p => p.Disabled, false));
 
     // Assert updated label (check selector content)
-    cut.Find(".ant-select-selector").TextContent.Trim().Should().Be("Lucy_v2");
+    cut.Find(".ant-select-content").TextContent.Trim().Should().Be("Lucy_v2");
     }
 
     [Fact]
@@ -94,7 +94,7 @@
     );
 
     // Assert selected display uses childcontent text (check selector content)
-    cut.Find(".ant-select-selector").TextContent.Trim().Should().Be("Lucy - custom");
+    cut.Find(".ant-select-content").TextContent.Trim().Should().Be("Lucy - custom");
     }
 
     [Fact]

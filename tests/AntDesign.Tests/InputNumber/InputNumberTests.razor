@@ -44,6 +44,56 @@
         inputElement.GetAttribute("value").Should().Be($"0{decimalSeparator}00001");
     }
 
+    [Fact]
+    public void InputNumber_keyboard_parameter_disables_arrow_step()
+    {
+        var cut = Context.RenderComponent<AntDesign.InputNumber<double>>(
+            parameters => parameters
+                .Add(component => component.Keyboard, false)
+                .Add(component => component.DefaultValue, 3d)
+        );
+
+        cut.Find("input").KeyDown(Key.Up);
+
+        cut.Instance.Value.Should().Be(3d);
+    }
+
+    [Theory]
+    [InlineData("outlined", "ant-input-number-outlined")]
+    [InlineData("filled", "ant-input-number-filled")]
+    [InlineData("borderless", "ant-input-number-borderless")]
+    [InlineData("underlined", "ant-input-number-underlined")]
+    public void InputNumber_variant_applies_matching_v6_class(string variant, string expectedClass)
+    {
+        var cut = Context.RenderComponent<AntDesign.InputNumber<double>>(
+            parameters => parameters.Add(component => component.Variant, variant));
+
+        cut.Find(".ant-input-number").ClassList.Should().Contain(expectedClass);
+    }
+
+    [Theory]
+    [InlineData(FormValidateStatus.Error, "ant-input-number-status-error")]
+    [InlineData(FormValidateStatus.Warning, "ant-input-number-status-warning")]
+    public void InputNumber_status_applies_matching_v6_class(FormValidateStatus status, string expectedClass)
+    {
+        var cut = Context.RenderComponent<AntDesign.InputNumber<double>>(
+            parameters => parameters.Add(component => component.Status, status));
+
+        cut.Find(".ant-input-number").ClassList.Should().Contain(expectedClass);
+    }
+
+    [Fact]
+    public void InputNumber_renders_prefix_and_suffix()
+    {
+        var cut = Context.RenderComponent<AntDesign.InputNumber<double>>(
+            parameters => parameters
+                .Add(component => component.Prefix, "$")
+                .Add(component => component.Suffix, "USD"));
+
+        cut.Find(".ant-input-number-prefix").TextContent.Trim().Should().Be("$");
+        cut.Find(".ant-input-number-suffix").TextContent.Trim().Should().Be("USD");
+    }
+
     [Theory]
     [InlineData(2, "1", "1.00")]
     [InlineData(2, "1.1", "1.10")]
@@ -157,9 +207,9 @@
         );
 
         //Act
-        var handler = isUpHandler ? 
-            cut.Find(".ant-input-number-handler-up") : 
-            cut.Find(".ant-input-number-handler-down");
+        var handler = isUpHandler ?
+            cut.Find(".ant-input-number-action-up") :
+            cut.Find(".ant-input-number-action-down");
         
         // Simulate mouse down and up events
         handler.MouseDown();

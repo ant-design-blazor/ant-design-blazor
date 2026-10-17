@@ -1,0 +1,32 @@
+﻿<Layout Style="position: relative; min-height: 360px;">
+    <Sider Collapsible
+           CollapsedWidth="0"
+           @bind-Collapsed="collapsed"
+           Trigger="@CurrentTrigger"
+           Style="position: absolute; top: 0; bottom: 0; inset-inline-start: 0; z-index: 10;">
+        <div class="demo-logo-vertical"></div>
+        <Menu Theme="MenuTheme.Dark" Mode="MenuMode.Inline" DefaultSelectedKeys="@(new[] { "1" })">
+            <MenuItem Key="1"><Icon Type="@IconType.Outline.PieChart" />nav 1</MenuItem><MenuItem Key="2"><Icon Type="@IconType.Outline.Desktop" />nav 2</MenuItem><MenuItem Key="3"><Icon Type="@IconType.Outline.Team" />nav 3</MenuItem><MenuItem Key="4"><Icon Type="@IconType.Outline.File" />nav 4</MenuItem>
+        </Menu>
+    </Sider>
+    <Layout>
+        <Header Style="padding: 0; background: var(--ant-color-bg-container);"></Header>
+        <Content Style="margin: 24px 16px 0;">
+            <div Style="padding: 24px; min-height: 240px; background: var(--ant-color-bg-container); border-radius: var(--ant-border-radius-lg);">
+                Content keeps its full width when the sider overlays it.
+            </div>
+        </Content>
+        <Footer Style="text-align: center;">Ant Design ©@DateTime.Now.Year Created by Ant UED</Footer>
+    </Layout>
+</Layout>
+
+@code {
+    private bool collapsed;
+
+    private RenderFragment CurrentTrigger => builder =>
+    {
+        builder.OpenComponent<Icon>(0);
+        builder.AddAttribute(1, nameof(Icon.Type), collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold);
+        builder.CloseComponent();
+    };
+}

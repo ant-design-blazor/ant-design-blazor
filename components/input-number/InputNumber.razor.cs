@@ -123,6 +123,24 @@ namespace AntDesign
         public bool Disabled { get; set; }
 
         /// <summary>
+        /// Validation status of the input.
+        /// </summary>
+        [Parameter]
+        public FormValidateStatus Status { get; set; } = FormValidateStatus.Default;
+
+        /// <summary>
+        /// Visual variant of the input: outlined, filled, borderless, or underlined.
+        /// </summary>
+        [Parameter]
+        public string Variant { get; set; } = "outlined";
+
+        /// <summary>
+        /// Whether to enable keyboard interaction for incrementing and decrementing the value.
+        /// </summary>
+        [Parameter]
+        public bool Keyboard { get; set; } = true;
+
+        /// <summary>
         /// Callback executed when the input value changes
         /// </summary>
         [Parameter]
@@ -151,6 +169,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public OneOf<string, RenderFragment> Prefix { get; set; }
+
+        /// <summary>
+        /// Setting suffix content to the input.
+        /// </summary>
+        [Parameter]
+        public OneOf<string, RenderFragment> Suffix { get; set; }
 
         /// <summary>
         /// The width of the input
@@ -251,9 +275,8 @@ namespace AntDesign
         private const string PrefixCls = "ant-input-number";
         private readonly string _inputNumberMode = "numeric";
 
-        private readonly ClassMapper _affixWarrperClass = new();
-
-        private bool HasAffixWarrper => FormItem?.FeedbackIcon != null;
+        private bool IsIncreaseDisabled => !(_isNullable && Value == null) && !_greaterThanFunc(Max, Value);
+        private bool IsDecreaseDisabled => !(_isNullable && Value == null) && !_greaterThanFunc(Value, Min);
 
         private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
 
@@ -377,20 +400,21 @@ namespace AntDesign
 
         private void SetClass()
         {
-            _affixWarrperClass
-                .Add("ant-input-number-affix-wrapper")
-                .If("ant-input-number-affix-wrapper-has-feedback", () => FormItem?.HasFeedback == true)
-                .GetIf(() => $"ant-input-number-affix-wrapper-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default });
-            ;
-
             ClassMapper
                 .Add(PrefixCls)
+                .Add("ant-input-number-mode-input")
+                .Add("css-var-root")
+                .Add("ant-input-number-css-var")
+                .If("ant-input-number-outlined", () => Bordered && Variant == "outlined")
+                .If("ant-input-number-filled", () => Bordered && Variant == "filled")
+                .If("ant-input-number-underlined", () => Bordered && Variant == "underlined")
                 .If($"{PrefixCls}-lg", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-focused", () => _focused)
                 .If($"{PrefixCls}-disabled", () => this.Disabled)
-                .If($"{PrefixCls}-borderless", () => !Bordered)
-                .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .If($"{PrefixCls}-borderless", () => !Bordered || Variant == "borderless")
+                .If($"{PrefixCls}-in-form-item", () => FormItem is not null)
+                .GetIf(() => $"{PrefixCls}-status-{(Status != FormValidateStatus.Default ? Status : FormItem?.ValidateStatus ?? FormValidateStatus.Default).ToString().ToLowerInvariant()}", () => Status != FormValidateStatus.Default || FormItem is { ValidateStatus: not FormValidateStatus.Default })
                 .If($"{PrefixCls}-rtl", () => RTL);
         }
 
@@ -515,6 +539,11 @@ namespace AntDesign
 
         private async Task OnKeyDown(KeyboardEventArgs e)
         {
+            if (!Keyboard)
+            {
+                return;
+            }
+
             if (e.Key == "ArrowUp")
             {
                 if (_equalToFunc(Value, Max))
@@ -608,11 +637,11 @@ namespace AntDesign
             string cls;
             if (direction == "up")
             {
-                cls = $"ant-input-number-handler ant-input-number-handler-up " + (!(_isNullable && Value == null) && !_greaterThanFunc(Max, Value) ? "ant-input-number-handler-up-disabled" : string.Empty);
+                cls = $"ant-input-number-action ant-input-number-action-up " + (IsIncreaseDisabled ? "ant-input-number-action-up-disabled" : string.Empty);
             }
             else
             {
-                cls = $"ant-input-number-handler ant-input-number-handler-down " + (!(_isNullable && Value == null) && !_greaterThanFunc(Value, Min) ? "ant-input-number-handler-down-disabled" : string.Empty);
+                cls = $"ant-input-number-action ant-input-number-action-down " + (IsDecreaseDisabled ? "ant-input-number-action-down-disabled" : string.Empty);
             }
 
             return cls;

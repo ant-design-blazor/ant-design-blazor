@@ -26,8 +26,14 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            ClassMapper.Add("ant-space-item");
+            ClassMapper.Add(Parent?.SemanticClass("item", "ant-space-item") ?? "ant-space-item");
         }
+
+        internal string SemanticStyle => Parent?.SemanticStyle("item", Style) ?? Style;
+
+        internal string SeparatorClass => Parent?.SemanticClass("separator", "ant-space-item-separator") ?? "ant-space-item-separator";
+
+        internal string SeparatorStyle => Parent?.SemanticStyle("separator", "margin-right: 4px;");
 
         protected override void OnParametersSet()
         {

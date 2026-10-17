@@ -1,0 +1,21 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <SpaceCompact>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.First"><SpaceAddon>Addon</SpaceAddon></SpaceCompactItem>
+        <SpaceCompactItem Position="SpaceCompactItemPosition.Last"><Button Type="ButtonType.Primary">Button</Button></SpaceCompactItem>
+    </SpaceCompact>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Addon"] = new Dictionary<string, string>
+            {
+                ["colorText"] = "blue"
+            }
+        }
+    };
+}

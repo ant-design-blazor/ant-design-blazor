@@ -1,0 +1,21 @@
+﻿<RadioGroup Options="@_positions" @bind-Value="_position" Style="margin-bottom:10px;" />
+<Table TItem="PaginationRow" DataSource="@_rows" PageSize="2" PaginationPosition="@_position">
+    <PropertyColumn Property="x => x.Name" Title="Name" />
+    <PropertyColumn Property="x => x.Age" Title="Age" />
+    <PropertyColumn Property="x => x.Address" Title="Address" />
+</Table>
+<p>Pagination position: @_position</p>
+
+@code {
+    private readonly string[] _positions = ["topLeft", "topCenter", "topRight", "none", "bottomLeft", "bottomCenter", "bottomRight"];
+    private string _position = "bottomRight";
+    private readonly PaginationRow[] _rows = Enumerable.Range(1, 9)
+        .Select(i => new PaginationRow { Name = $"User {i}", Age = 20 + i, Address = $"Address {i}" }).ToArray();
+
+    private sealed class PaginationRow
+    {
+        public string Name { get; set; } = string.Empty;
+        public int Age { get; set; }
+        public string Address { get; set; } = string.Empty;
+    }
+}

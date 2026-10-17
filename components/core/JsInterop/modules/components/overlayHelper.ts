@@ -2,13 +2,28 @@
 import { Placement, TriggerBoundyAdjustMode, overlayConstraints, overlayPosition, Overlay } from './overlay'
 import { state } from '../stateProvider';
 
+function resolveOffset(element: HTMLElement, fallback: number, cssExpression?: string): number {
+  if (!cssExpression) {
+    return fallback;
+  }
+
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;display:block;visibility:hidden;height:0;padding:0;border:0;margin:0;';
+  probe.style.width = cssExpression;
+  element.appendChild(probe);
+  const resolved = probe.getBoundingClientRect().width;
+  probe.remove();
+
+  return Number.isFinite(resolved) && resolved > 0 ? resolved : fallback;
+}
+
 export class overlayHelper {
   static overlayRegistry: { [key: string]: Overlay} = {};
 
   static addOverlayToContainer(blazorId: string, 
     overlaySelector, triggerSelector, placement: Placement,  containerSelector: string,
     triggerBoundyAdjustMode: TriggerBoundyAdjustMode, triggerIsWrappedInDiv: boolean, triggerPrefixCls: string,
-    verticalOffset: number, horizontalOffset: number, arrowPointAtCenter: boolean,    
+    verticalOffset: number, horizontalOffset: number, offsetCssExpression: string, arrowPointAtCenter: boolean,
     overlayTop?: number, overlayLeft?: number
   ): overlayPosition {      
     const overlayElement = domInfoHelper.get(overlaySelector) as HTMLDivElement;    
@@ -30,8 +45,8 @@ export class overlayHelper {
     }
 
     const overlayConstraints: overlayConstraints = {
-      verticalOffset: verticalOffset,
-      horizontalOffset: horizontalOffset,
+      verticalOffset: resolveOffset(overlayElement, verticalOffset, offsetCssExpression),
+      horizontalOffset: resolveOffset(overlayElement, horizontalOffset, offsetCssExpression),
       arrowPointAtCenter: arrowPointAtCenter
     };
 
@@ -49,10 +64,15 @@ export class overlayHelper {
 
   static updateOverlayPosition(blazorId: string, overlaySelector, triggerSelector, placement: Placement,  containerSelector: string,
     triggerBoundyAdjustMode: TriggerBoundyAdjustMode, triggerIsWrappedInDiv: boolean, triggerPrefixCls: string,
-    verticalOffset: number, horizontalOffset: number, arrowPointAtCenter: boolean,  
+    verticalOffset: number, horizontalOffset: number, offsetCssExpression: string, arrowPointAtCenter: boolean,
     overlayTop?: number, overlayLeft?: number): overlayPosition {
     const overlay = this.overlayRegistry[blazorId];
     if (overlay){
+      const overlayElement = domInfoHelper.get(overlaySelector) as HTMLElement;
+      overlay.updateOffsets(
+        resolveOffset(overlayElement, verticalOffset, offsetCssExpression),
+        resolveOffset(overlayElement, horizontalOffset, offsetCssExpression)
+      );
       let overlayPresets: domTypes.position;
       if (overlayTop || overlayLeft) {
         overlayPresets = { x: overlayLeft, y: overlayTop };
@@ -67,7 +87,7 @@ export class overlayHelper {
       //blazor thinks it did happen. In such a case, when overlay object is not found, just try
       //to render it again.
       return overlayHelper.addOverlayToContainer(blazorId, overlaySelector, triggerSelector, placement,  containerSelector,triggerBoundyAdjustMode, triggerIsWrappedInDiv, triggerPrefixCls, 
-        verticalOffset, horizontalOffset, arrowPointAtCenter,  
+        verticalOffset, horizontalOffset, offsetCssExpression, arrowPointAtCenter,
         overlayTop, overlayLeft);      
     }    
   }
@@ -100,4 +120,3 @@ export class overlayHelper {
     }
   }
 }
-

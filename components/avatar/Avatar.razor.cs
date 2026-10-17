@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
@@ -72,6 +74,13 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Responsive avatar sizes keyed by Ant Design breakpoints (xs, sm, md, lg, xl, xxl).
+        /// Values are pixel sizes, matching the responsive <c>size</c> object in Ant Design React.
+        /// </summary>
+        [Parameter]
+        public Dictionary<string, int> ResponsiveSize { get; set; }
+
+        /// <summary>
         /// Text string to display in the avatar. Typical use is for displaying initials.
         /// </summary>
         [Parameter]
@@ -135,6 +144,17 @@ namespace AntDesign
 
         private string _textStyles = string.Empty;
         private string _sizeStyles = string.Empty;
+        private bool HasResponsiveSize => ResponsiveSize?.Any(item => ResponsiveBreakpoints.ContainsKey(item.Key) && item.Value > 0) == true;
+        private string ResponsiveSizeStyles => ResponsiveSize == null
+            ? string.Empty
+            : string.Join(";", ResponsiveSize
+                .Where(item => ResponsiveBreakpoints.ContainsKey(item.Key) && item.Value > 0)
+                .Select(item => $"--ant-avatar-size-{item.Key.ToLowerInvariant()}:{item.Value}px")) + ";";
+
+        private static readonly Dictionary<string, int> ResponsiveBreakpoints = new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["xs"] = 0, ["sm"] = 576, ["md"] = 768, ["lg"] = 992, ["xl"] = 1200, ["xxl"] = 1600
+        };
 
         protected ElementReference TextEl { get; set; }
 
@@ -188,7 +208,7 @@ namespace AntDesign
             {
                 _hasIcon = true;
             }
-            else if (!string.IsNullOrEmpty(_text))
+            else if (!string.IsNullOrEmpty(_text) || _childContent != null)
             {
                 _hasText = true;
             }
@@ -206,7 +226,9 @@ namespace AntDesign
                 .If($"{PrefixCls}-sm", () => _size.IsT0 && _size.AsT0 == AvatarSize.Small)
                 .If($"{PrefixCls}-lg", () => _size.IsT0 && _size.AsT0 == AvatarSize.Large)
                 .If($"{PrefixCls}-icon", () => !string.IsNullOrEmpty(Icon))
-                .If($"{PrefixCls}-image", () => _hasSrc);
+                .If($"{PrefixCls}-image", () => _hasSrc)
+                .If($"{PrefixCls}-responsive", () => HasResponsiveSize)
+                .If($"{PrefixCls}-responsive-has-content", () => HasResponsiveSize && (_hasIcon || _hasText));
         }
 
         private void SetSizeStyle()

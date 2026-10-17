@@ -1,0 +1,10 @@
+<div style="display: flex; flex-direction: column; gap: 16px;">
+    <Rate DefaultValue="2" Character="@NumberCharacter" />
+    <Rate DefaultValue="3" Character="@MoodCharacter" />
+</div>
+
+@code {
+    private RenderFragment<RateItemRenderContext> NumberCharacter => context => @<span>@(context.Index + 1)</span>;
+
+    private RenderFragment<RateItemRenderContext> MoodCharacter => context => @<Icon Type="@(context.Index < 2 ? IconType.Outline.Frown : context.Index == 2 ? IconType.Outline.Meh : IconType.Outline.Smile)" />;
+}

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -33,6 +34,14 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public TValue Value { get; set; }
+
+        /// <summary>Tooltip text for the radio.</summary>
+        [Parameter]
+        public string Title { get; set; }
+
+        /// <summary>Marks the radio as required.</summary>
+        [Parameter]
+        public bool Required { get; set; }
 
         /// <summary>
         /// Autofocus or not
@@ -85,6 +94,14 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>Semantic class names keyed by root, icon, and label.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Semantic inline styles keyed by root, icon, and label.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
         /// <summary>
         /// Callback executed when the checked state changes
         /// </summary>
@@ -97,6 +114,9 @@ namespace AntDesign
 
         [CascadingParameter(Name = "InGroup")]
         public bool InGroup { get; set; }
+
+        [CascadingParameter(Name = "GroupBlock")]
+        public bool GroupBlock { get; set; }
 
         private readonly ClassMapper _radioClassMapper = new();
         private readonly ClassMapper _inputClassMapper = new();
@@ -122,7 +142,10 @@ namespace AntDesign
                 .If($"{prefixCls}-button-wrapper-checked", () => Checked && RadioButton)
                 .If($"{prefixCls}-wrapper-disabled", () => Disabled && !RadioButton)
                 .If($"{prefixCls}-button-wrapper-disabled", () => Disabled && RadioButton)
-                .If($"{prefixCls}-button-wrapper-rtl", () => RTL);
+                .If($"{prefixCls}-wrapper-block", () => GroupBlock && !RadioButton)
+                .If($"{prefixCls}-button-wrapper-block", () => GroupBlock && RadioButton)
+                .If($"{prefixCls}-button-wrapper-rtl", () => RTL)
+                .Add("ant-radio-css-var");
 
             _radioClassMapper
                 .If(prefixCls, () => !RadioButton)
@@ -131,7 +154,8 @@ namespace AntDesign
                 .If($"{prefixCls}-button", () => RadioButton)
                 .If($"{prefixCls}-button-checked", () => Checked && RadioButton)
                 .If($"{prefixCls}-button-disabled", () => Disabled && RadioButton)
-                .If($"{prefixCls}-rtl", () => RTL);
+                .If($"{prefixCls}-rtl", () => RTL)
+                .If("ant-wave-target", () => !RadioButton);
 
             _inputClassMapper
                 .If($"{prefixCls}-input", () => !RadioButton)
@@ -140,6 +164,21 @@ namespace AntDesign
             _innerClassMapper
                 .If($"{prefixCls}-inner", () => !RadioButton)
                 .If($"{prefixCls}-button-inner", () => RadioButton);
+        }
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return customStyle;
+            if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {customStyle}";
         }
 
         internal void SetName(string name) => _name = name;

@@ -1,0 +1,19 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this" IsFixed="true">
+    <div class="@($"{ClassMapper.Class} {GetSemanticClass("root")}".Trim())" style="@($"{Style};{GetSemanticStyle("root")}")" id="@Id" @ref="Ref"
+         @onmouseenter="OnMouseEnter" @onmouseleave="OnMouseLeave">
+        <div class="ant-float-btn-group-list @(!IsMenuMode || IsOpen ? "ant-float-btn-group-list-open" : "ant-float-btn-group-list-closed") @(IsMenuMode ? "ant-float-btn-group-list-motion" : string.Empty) @(!IsIndividual ? "ant-space-compact ant-space-compact-vertical ant-float-btn-group-compact" : string.Empty) @GetSemanticClass("list")" style="@GetSemanticStyle("list")">
+            @ChildContent
+        </div>
+
+        @if (IsMenuMode)
+        {
+            <FloatButton Type="@Type" Shape="@Shape" Icon="@(IsOpen ? CloseIcon : Icon)"
+                         ChildContent="@TriggerContent" AriaLabel="@AriaLabel"
+                         Disabled="@Disabled" Class="ant-float-btn-group-trigger"
+                         OnClick="OnTriggerClick" />
+        }
+    </div>
+</CascadingValue>

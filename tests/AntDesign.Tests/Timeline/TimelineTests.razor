@@ -1,196 +1,89 @@
-﻿@inherits AntDesignTestBase
+@inherits AntDesignTestBase
+
 @code {
-	[Fact]
-	public void Renders_basic_timeline()
-	{
-		var cut = Context.Render(
-			@<Timeline>
-			  <TimelineItem>Create a services site 2015-09-01</TimelineItem>
-			  <TimelineItem Color="TimelineDotColor.Red" >Solve initial network problems 2015-09-01</TimelineItem>
-			</Timeline>);		
-		cut.MarkupMatches(
-			@<ul class="ant-timeline" id:ignore >
-			  <li class="ant-timeline-item" id:ignore >
-			    <div class="ant-timeline-item-tail"></div>
-			    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
-			    </div>
-			    <div class="ant-timeline-item-content">
-			      Create a services site 2015-09-01
-			    </div>
-			  </li>
-			  <li class="ant-timeline-item ant-timeline-item-last" id:ignore >
-			    <div class="ant-timeline-item-tail"></div>
-			    <div class="ant-timeline-item-head ant-timeline-item-head-red" style="">
-			    </div>
-			    <div class="ant-timeline-item-content">
-			      Solve initial network problems 2015-09-01
-			    </div>
-			  </li>
-			</ul>);
-	}
-
-	[Fact]
-	public void Renders_timeline_with_right_mode()
-	{
-		var cut = Context.Render(
-			@<Timeline Mode="@TimelineMode.Right">
-			  <TimelineItem>Create a services site 2015-09-01</TimelineItem>
-			  <TimelineItem Color="TimelineDotColor.Red" >Solve initial network problems 2015-09-01</TimelineItem>
-			</Timeline>);		
-		cut.MarkupMatches(
-			@<ul class="ant-timeline ant-timeline-right" id:ignore >
-			  <li class="ant-timeline-item ant-timeline-item-right" id:ignore >
-			    <div class="ant-timeline-item-tail"></div>
-			    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
-			    </div>
-			    <div class="ant-timeline-item-content">
-			      Create a services site 2015-09-01
-			    </div>
-			  </li>
-			  <li class="ant-timeline-item ant-timeline-item-right ant-timeline-item-last" id:ignore >
-			    <div class="ant-timeline-item-tail"></div>
-			    <div class="ant-timeline-item-head ant-timeline-item-head-red" style="">
-			    </div>
-			    <div class="ant-timeline-item-content">
-			      Solve initial network problems 2015-09-01
-			    </div>
-			  </li>
-			</ul>);
-	}
-
-	
-	[Theory]
-	[InlineData(TimelineMode.Left,"","left","left")]
-	[InlineData(TimelineMode.Right,"ant-timeline-right","right","right")]
-	[InlineData(TimelineMode.Alternate,"ant-timeline-alternate","left","right")]
-	public void Renders_timeline_with_alternate_mode(TimelineMode mode, string timelineModeClass, string firstItemMode,string secondItemMode)
-	{
-		var cut = Context.Render(
-			@<Timeline Mode="@mode">
-			  <TimelineItem>Create a services site 2015-09-01</TimelineItem>
-			  <TimelineItem>Solve initial network problems 2015-09-01</TimelineItem>
-			</Timeline>);		
-		cut.MarkupMatches(
-			@<ul class="ant-timeline @timelineModeClass" id:ignore >
-			  <li class="ant-timeline-item ant-timeline-item-@firstItemMode" id:ignore >
-			    <div class="ant-timeline-item-tail"></div>
-			    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
-			    </div>
-			    <div class="ant-timeline-item-content">
-			      Create a services site 2015-09-01
-			    </div>
-			  </li>
-			  <li class="ant-timeline-item ant-timeline-item-@secondItemMode ant-timeline-item-last" id:ignore >
-			    <div class="ant-timeline-item-tail"></div>
-			    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
-			    </div>
-			    <div class="ant-timeline-item-content">
-			      Solve initial network problems 2015-09-01
-			    </div>
-			  </li>
-			</ul>);
-	}
-
-	[Theory]
-	[InlineData(TimelineMode.Left,"left","left")]
-	[InlineData(TimelineMode.Right,"right","right")]
-	[InlineData(TimelineMode.Alternate,"left","right")]
-	public void Renders_timeline_with_label(TimelineMode mode,string firstItemMode,string secondItemMode)
-	{
-		var cut = Context.Render(
-			@<Timeline Mode="@mode">
-			  <TimelineItem Label="2015-09-01">Create a services site</TimelineItem>
-			  <TimelineItem Label="2015-09-02" Color="TimelineDotColor.Red" >Solve initial network problems</TimelineItem>
-			</Timeline>);
-
-		cut.MarkupMatches(
-			@<ul class="ant-timeline ant-timeline-label" id:ignore >
-			  <li class="ant-timeline-item ant-timeline-item-@firstItemMode" id:ignore >
-				<div class="ant-timeline-item-label">2015-09-01</div>
-			    <div class="ant-timeline-item-tail"></div>
-			    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
-			    </div>
-			    <div class="ant-timeline-item-content">
-			      Create a services site 
-			    </div>
-			  </li>
-			  <li class="ant-timeline-item ant-timeline-item-@secondItemMode ant-timeline-item-last" id:ignore >
-				<div class="ant-timeline-item-label">2015-09-02</div>
-			    <div class="ant-timeline-item-tail"></div>
-			    <div class="ant-timeline-item-head ant-timeline-item-head-red" style="">
-			    </div>
-			    <div class="ant-timeline-item-content">
-			      Solve initial network problems 
-			    </div>
-			  </li>
-			</ul> );
-	}
-    
-    [Theory]
-    [InlineData(TimelineDotColor.Red,"red")]
-    [InlineData(TimelineDotColor.Green,"green")]
-    public void Renders_timeline_with_color(TimelineDotColor color, string expectedColor)
+    [Fact]
+    public void Renders_basic_timeline_with_v6_steps_structure()
     {
-        var cut = Context.Render(
-            @<Timeline >
-                <TimelineItem Label="2015-09-01" >Create a services site</TimelineItem>
-                <TimelineItem Label="2015-09-02" Color="@color" >Solve initial network problems</TimelineItem>
-            </Timeline>);
+        var timeline = Context.Render(@<Timeline>
+            <TimelineItem>Create a services site</TimelineItem>
+            <TimelineItem Color="TimelineDotColor.Red">Solve network problems</TimelineItem>
+        </Timeline>);
 
-        cut.MarkupMatches(
-            @<ul class="ant-timeline ant-timeline-label" id:ignore >
-                <li class="ant-timeline-item" id:ignore >
-                    <div class="ant-timeline-item-label">2015-09-01</div>
-                    <div class="ant-timeline-item-tail"></div>
-                    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
-                    </div>
-                    <div class="ant-timeline-item-content">
-                        Create a services site 
-                    </div>
-                </li>
-                <li class="ant-timeline-item ant-timeline-item-last" id:ignore >
-                    <div class="ant-timeline-item-label">2015-09-02</div>
-                    <div class="ant-timeline-item-tail"></div>
-                    <div class="ant-timeline-item-head ant-timeline-item-head-@expectedColor" style="">
-                    </div>
-                    <div class="ant-timeline-item-content">
-                        Solve initial network problems 
-                    </div>
-                </li>
-            </ul> );
+        var root = timeline.Find("ol.ant-steps.ant-timeline");
+        var items = root.QuerySelectorAll("li.ant-steps-item.ant-timeline-item");
+        Assert.Equal(2, items.Length);
+        Assert.Equal("Create a services site", items[0].QuerySelector(".ant-timeline-item-content")?.TextContent.Trim());
+        Assert.Equal("Solve network problems", items[1].QuerySelector(".ant-timeline-item-content")?.TextContent.Trim());
+        Assert.DoesNotContain("ant-timeline-item-color-blue", items[0].ClassList);
+        Assert.Contains("ant-timeline-item-color-red", items[1].ClassList);
+        Assert.Contains("ant-steps-item-active", items[1].ClassList);
+        Assert.NotNull(items[0].QuerySelector(".ant-timeline-item-rail"));
+        Assert.Null(items[1].QuerySelector(".ant-timeline-item-rail"));
     }
-    
+
+    [Fact]
+    public void Right_mode_places_items_at_the_end()
+    {
+        var timeline = Context.Render(@<Timeline Mode="@TimelineMode.Right">
+            <TimelineItem>First</TimelineItem>
+            <TimelineItem>Second</TimelineItem>
+        </Timeline>);
+
+        Assert.All(timeline.FindAll(".ant-timeline-item"), item =>
+            Assert.Contains("ant-timeline-item-placement-end", item.ClassList));
+        Assert.DoesNotContain("ant-timeline-layout-alternate", timeline.Find("ol.ant-timeline").ClassList);
+    }
+
+    [Fact]
+    public void Alternate_mode_alternates_item_placement()
+    {
+        var timeline = Context.Render(@<Timeline Mode="@TimelineMode.Alternate">
+            <TimelineItem>First</TimelineItem>
+            <TimelineItem>Second</TimelineItem>
+        </Timeline>);
+
+        var items = timeline.FindAll(".ant-timeline-item");
+        Assert.Contains("ant-timeline-layout-alternate", timeline.Find("ol.ant-timeline").ClassList);
+        Assert.Contains("ant-timeline-item-placement-start", items[0].ClassList);
+        Assert.Contains("ant-timeline-item-placement-end", items[1].ClassList);
+    }
+
+    [Fact]
+    public void Item_labels_render_as_v6_titles_and_enable_alternate_layout()
+    {
+        var timeline = Context.Render(@<Timeline>
+            <TimelineItem Label="2015-09-01">Create a service</TimelineItem>
+            <TimelineItem Label="2015-09-02">Release a service</TimelineItem>
+        </Timeline>);
+
+        var root = timeline.Find("ol.ant-timeline");
+        Assert.Contains("ant-timeline-layout-alternate", root.ClassList);
+        Assert.Equal(new[] { "2015-09-01", "2015-09-02" },
+            timeline.FindAll(".ant-timeline-item-title").Select(title => title.TextContent.Trim()));
+        Assert.Empty(timeline.FindAll(".ant-timeline-item-label"));
+    }
+
+    [Theory]
+    [InlineData(TimelineDotColor.Green, "ant-timeline-item-color-green")]
+    [InlineData(TimelineDotColor.Gray, "ant-timeline-item-color-gray")]
+    public void Named_colors_are_applied_to_the_v6_item(TimelineDotColor color, string colorClass)
+    {
+        var timeline = Context.Render(@<Timeline>
+            <TimelineItem Color="@color">Colored item</TimelineItem>
+        </Timeline>);
+
+        Assert.Contains(colorClass, timeline.Find(".ant-timeline-item").ClassList);
+    }
+
     [Theory]
     [InlineData("#fff")]
     [InlineData("green")]
-    public void Renders_timeline_with_custom_color(string color)
+    public void Custom_color_uses_the_steps_dot_css_variable(string color)
     {
-        var cut = Context.Render(
-            @<Timeline >
-                <TimelineItem Label="2015-09-01" >Create a services site</TimelineItem>
-                <TimelineItem Label="2015-09-02" Color="@color" >Solve initial network problems</TimelineItem>
-            </Timeline>);
+        var timeline = Context.Render(@<Timeline>
+            <TimelineItem Color="@color">Custom colored item</TimelineItem>
+        </Timeline>);
 
-        cut.MarkupMatches(
-            @<ul class="ant-timeline ant-timeline-label" id:ignore >
-                <li class="ant-timeline-item" id:ignore >
-                    <div class="ant-timeline-item-label">2015-09-01</div>
-                    <div class="ant-timeline-item-tail"></div>
-                    <div class="ant-timeline-item-head ant-timeline-item-head-blue" style="">
-                    </div>
-                    <div class="ant-timeline-item-content">
-                        Create a services site 
-                    </div>
-                </li>
-                <li class="ant-timeline-item ant-timeline-item-last" id:ignore >
-                    <div class="ant-timeline-item-label">2015-09-02</div>
-                    <div class="ant-timeline-item-tail"></div>
-                    <div class="ant-timeline-item-head" style="border-color:@color">
-                    </div>
-                    <div class="ant-timeline-item-content">
-                        Solve initial network problems 
-                    </div>
-                </li>
-            </ul> );
+        Assert.Contains($"--ant-cmp-steps-item-icon-dot-color:{color};", timeline.Find(".ant-timeline-item").GetAttribute("style"));
     }
 }

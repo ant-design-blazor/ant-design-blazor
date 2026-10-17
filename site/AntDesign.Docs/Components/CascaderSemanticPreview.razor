@@ -1,0 +1,32 @@
+@namespace AntDesign.Docs.Components
+
+<Cascader Options="@_options" DefaultValue="xihu" Open="true" AllowClear PrefixIcon="@_prefix"
+          Placeholder="Please select" Style="width: 200px" />
+
+@code {
+    private readonly RenderFragment _prefix = builder => builder.AddContent(0, "prefix");
+
+    private readonly List<CascaderNode> _options =
+    [
+        new CascaderNode
+        {
+            Value = "zhejiang",
+            Label = "Zhejiang",
+            Children =
+            [
+                new CascaderNode
+                {
+                    Value = "hangzhou",
+                    Label = "Hangzhou",
+                    Children = [new CascaderNode { Value = "xihu", Label = "West Lake" }]
+                }
+            ]
+        },
+        new CascaderNode
+        {
+            Value = "jiangsu",
+            Label = "Jiangsu",
+            Children = [new CascaderNode { Value = "nanjing", Label = "Nanjing" }]
+        }
+    ];
+}
