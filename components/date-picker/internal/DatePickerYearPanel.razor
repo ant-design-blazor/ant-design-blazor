@@ -4,12 +4,12 @@
 @using System.Globalization;
 
 @{
-    var calendar = CultureInfo.InvariantCulture.Calendar;
+    var calendar = Calendar;
 
-    int startYear = PickerValue.Year / 10 * 10 - 1;
+    int startYear = calendar.GetYear(PickerValue) / 10 * 10 - 1;
     DateTime startDate;
     if (startYear > 0)
-        startDate = new DateTime(startYear, 1, 1);
+        startDate = DateHelper.CreateDate(calendar, startYear, 1, 1, PickerValue);
     else
         startDate = DateTime.MinValue;
 
@@ -22,11 +22,11 @@
                         MaxCol="MAX_COL"
                         ViewStartDate="startDate"
                         IsInView="date => IsInView(date, startDate)"
-                        IsToday="date => DateHelper.IsSameYear(date, DatePicker.CurrentDate)"
-                        IsSelected="date => DateHelper.IsSameYear(date, Value)"
-                        GetColTitle="date => date.ToString(Locale.Lang.YearFormat, CultureInfo)"
+                        IsToday="date => calendar.GetYear(date) == calendar.GetYear(DatePicker.CurrentDate)"
+                        IsSelected="date => Value.HasValue && calendar.GetYear(date) == calendar.GetYear(Value.Value)"
+                        GetColTitle="date => FormatYear(date, Locale.Lang.YearFormat)"
                         OnValueSelect="date => OnSelectYear(date)"
-                        GetNextColValue="date => DateHelper.AddYearsSafely(date, 1)">
+                        GetNextColValue="date => calendar.AddYears(date, 1)">
         <RenderPickerHeader>
             <DatePickerHeader @attributes="GetAttributes()"
                               TValue="TValue"
@@ -38,7 +38,7 @@
         </RenderPickerHeader>
         <RenderColValue Context="currentColDate">
             @{yearIndex++;}
-            @currentColDate.ToString("yyyy", CultureInfo)
+            @FormatYear(currentColDate, Locale.Lang.YearFormat)
         </RenderColValue>
     </DatePickerTemplate>
 </div>
@@ -51,7 +51,7 @@
 
     private bool IsInView(DateTime date, DateTime startDate)
     {
-        return date.Year != DateHelper.AddYearsSafely(startDate, FIRST_YEAR_INDEX).Year
-        && date.Year != DateHelper.AddYearsSafely(startDate, LAST_YEAR_INDEX).Year;
+        return Calendar.GetYear(date) != Calendar.GetYear(Calendar.AddYears(startDate, FIRST_YEAR_INDEX))
+        && Calendar.GetYear(date) != Calendar.GetYear(Calendar.AddYears(startDate, LAST_YEAR_INDEX));
     }
 }
