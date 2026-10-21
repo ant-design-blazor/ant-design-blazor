@@ -19,7 +19,7 @@ namespace AntDesign
         /// <summary>
         /// 当前节点
         /// </summary>
-        [CascadingParameter(Name = "SelfNode")]
+        [CascadingParameter(Name = "Node")]
         private TreeNode<TItem> SelfNode { get; set; }
 
         /// <summary>
