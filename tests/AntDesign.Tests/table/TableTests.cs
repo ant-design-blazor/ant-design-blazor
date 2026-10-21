@@ -4,7 +4,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using AntDesign.Core.JsInterop.Modules.Components;
+using AntDesign.JsInterop;
 using Bunit;
+using Xunit;
 
 namespace AntDesign.Tests.Table
 {
@@ -150,6 +154,50 @@ namespace AntDesign.Tests.Table
             });
 
             cut.RecordedMarkupMatches();
+        }
+
+        [Fact]
+        public async Task Filter_dropdown_closes_on_outside_click_by_default()
+        {
+            var cut = CreateFilterableTable();
+            cut.Find(".ant-table-filter-trigger").Click();
+
+            await cut.InvokeAsync(() => cut.FindComponent<AntDesign.Dropdown>().Instance.OnMaskClick.InvokeAsync());
+
+            cut.WaitForAssertion(() => Assert.DoesNotContain("ant-dropdown-open", cut.Find(".ant-table-filter-trigger").ClassList));
+        }
+
+        [Fact]
+        public async Task Filter_dropdown_can_remain_open_on_outside_click()
+        {
+            var cut = CreateFilterableTable(closeOnOutsideClick: false);
+            cut.Find(".ant-table-filter-trigger").Click();
+
+            await cut.InvokeAsync(() => cut.FindComponent<AntDesign.Dropdown>().Instance.OnMaskClick.InvokeAsync());
+
+            cut.WaitForAssertion(() => Assert.Contains("ant-dropdown-open", cut.Find(".ant-table-filter-trigger").ClassList));
+        }
+
+        private IRenderedComponent<Table<Person>> CreateFilterableTable(bool closeOnOutsideClick = true)
+        {
+            var persons = new[] { new Person { Id = 1, Name = "John", Surname = "Smith" } };
+            JSInterop.SetupVoid("AntDesign.interop.styleHelper.addCls", _ => true);
+            JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+                .SetResult(new OverlayPosition());
+            JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+                .SetResult(new DomRect());
+
+            return Context.RenderComponent<Table<Person>>(x => x
+                .Add(q => q.DataSource, persons)
+                .Add(q => q.ChildContent, _ => builder =>
+                {
+                    new ComponentParameterCollectionBuilder<Column<string>>()
+                        .Add(q => q.Field, "Name")
+                        .Add(q => q.Filterable, true)
+                        .Add(q => q.FilterDropdownAutoClose, closeOnOutsideClick)
+                        .Build()
+                        .ToRenderFragment<Column<string>>()(builder);
+                }));
         }
     }
 }
