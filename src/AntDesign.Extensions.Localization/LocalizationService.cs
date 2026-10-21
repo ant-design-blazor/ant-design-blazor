@@ -24,8 +24,10 @@ namespace AntDesign.Extensions.Localization
             if (_currentCulture == null || !_currentCulture.Equals(culture))
             {
                 _currentCulture = culture;
-                CultureInfo.DefaultThreadCurrentCulture = culture;
-                CultureInfo.DefaultThreadCurrentUICulture = culture;
+                // Do NOT set CultureInfo.DefaultThreadCurrentCulture/DefaultThreadCurrentUICulture: they are
+                // process-wide static defaults. This service is scoped per circuit in Blazor Server, so
+                // mutating those statics here would leak the language change into every other user's circuit.
+                CultureInfo.CurrentUICulture = culture;
 
                 LanguageChanged?.Invoke(this, culture);
             }
