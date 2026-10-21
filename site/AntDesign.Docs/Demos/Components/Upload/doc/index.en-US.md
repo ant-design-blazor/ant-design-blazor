@@ -17,21 +17,37 @@ Uploading is the process of publishing information (web pages, text, pictures, v
 
 ## API
 
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| ClassNames | Semantic class names for root, trigger, list, and item slots | `IReadOnlyDictionary<string, string>` | - |
+| Styles | Semantic inline styles for root, trigger, list, and item slots | `IReadOnlyDictionary<string, string>` | - |
+| RemoveIcon | Custom remove action content | `RenderFragment<UploadFileItem>` | Delete icon |
+| PreviewIcon | Custom preview action content | `RenderFragment<UploadFileItem>` | Eye icon |
+| DownloadIcon | Custom download action content | `RenderFragment<UploadFileItem>` | Download icon |
+| Extra | Per-file content displayed beside the file name | `RenderFragment<UploadFileItem>` | - |
+| DragSort | Allow files in the list to be reordered by dragging | bool | false |
+
 | Property | Description | Type | Default | Version |
 | --- | --- | --- | --- | --- |
 | Accept | File types that can be accepted. See [input accept Attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) | string | - |  |
 | Action | Uploading URL | string\|(file) => `Promise` | - |  |
 | Directory | support upload whole directory ([caniuse](https://caniuse.com/#feat=input-file-directory)) | boolean | false |  |
 | BeforeUpload | Hook function which will be executed before uploading each file. Uploading will be stopped with `false` or a rejected Promise returned. **Warning：this function is not supported in IE9**。 | (file, fileList) => `boolean | Promise` | - |  |
+| TransformFile | Asynchronously replaces the file content before it is uploaded. Bytes are transferred through the Blazor callback; use for small files. | `Func<UploadFileTransformContext, Task<UploadFileTransformResult>>` | - |  |
 | BeforeAllUpload & BeforeAllUploadAsync  | Hook function which will be executed before uploading. Uploading will be stopped with `false` or a rejected Promise returned. **Warning：this function is not supported in IE9**。 | (file, fileList) => `boolean | Promise` | - |  |
 | Data | Uploading extra params or function which can return uploading extra params. | object\|function(file) | - |  |
 | DefaultFileList | Default list of files that have been uploaded. | object\[] | - |  |
 | Disabled | disable upload button | boolean | false |  |
 | FileList | List of files that have been uploaded (controlled). Here is a common issue [#2423](https://github.com/ant-design/ant-design/issues/2423) when using it | object\[] | - |  |
 | Headers | Set request headers, valid above IE10. | object | - |  |
-| ListType | Built-in stylesheets, support for three types: `text`, `picture` or `picture-card` | string | 'text' |  |
+| ListType | Built-in stylesheets: `text`, `picture`, `picture-card` or `picture-circle` | string | 'text' | `picture-circle` (5.2.0+) |
 | Method | http method of upload request | string | 'post' |  |
 | Multiple | Whether to support selected multiple file. `IE10+` supported. You can select multiple files with CTRL holding down while multiple is set to be true | boolean | false |  |
+| MaxCount | Maximum number of files in the list; `1` replaces the current file | number | - |  |
+| ProgressStrokeColor | Gradient color stops for the upload-list progress bar | `Dictionary<string, string>` | - |  |
+| ProgressStrokeWidth | Width in pixels of the upload-list progress bar | `int?` | `2` |  |
+| ProgressFormat | Formats the upload percentage displayed next to the progress bar | `Func<double, string>` | - |  |
+| ProgressShowInfo | Whether to display the formatted percentage next to the progress bar | `bool` | `false` |  |
 | Name | The name of uploading file | string | 'file' |  |
 | OnChange | A callback function, can be executed when uploading state is changing, see [onChange](#onChange) | Function | - |  |
 | OnCompleted | A callback function, will be executed when all uploads have succeeded or failed | Function(file) | - |  |
@@ -43,7 +59,6 @@ Uploading is the process of publishing information (web pages, text, pictures, v
 | ShowDownloadIcon | Whether to show download button | Boolean | true |  |
 | ShowPreviewIcon | Whether to show preview button | Boolean | true |  |
 | ShowRemoveIcon | Whether to show remove button | Boolean | true |  |
-
 
 ### onChange
 
@@ -93,3 +108,10 @@ Please set property `url` of each item in `fileList` to control content of link.
 ### How to use `customRequest`?
 
 See <https://github.com/react-component/upload#customrequest>.
+
+## Design Token
+
+| Token | Description | Type | Default |
+| --- | --- | --- | --- |
+| ActionsColor | Color of the upload-list action icons | string | `colorIcon` |
+| PictureCardSize | Size of picture-card and picture-circle upload items | number | `controlHeightLG * 2.55` |

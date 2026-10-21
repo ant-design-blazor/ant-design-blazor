@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AntDesign.Core.Documentation;
+using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -30,6 +31,14 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.DataEntry, "https://gw.alipayobjects.com/zos/alicdn/UdS8y8xyZ/Cascader.svg", Title = "Cascader", SubTitle = "级联选择")]
     public partial class Cascader : SelectBase<string, string>
     {
+        /// <summary>Whether to enable checkbox-based multiple selection.</summary>
+        [Parameter]
+        public bool Multiple { get; set; }
+
+        /// <summary>Determines which checked nodes are rendered as tags in multiple mode.</summary>
+        [Parameter]
+        public CascaderCheckedStrategy ShowCheckedStrategy { get; set; } = CascaderCheckedStrategy.ShowParent;
+
         /// <summary>
         /// Change value on each selection if set to true, only chage on final selection if false.
         /// </summary>
@@ -115,6 +124,8 @@ namespace AntDesign
 
         private List<CascaderNode> _nodelist = new List<CascaderNode>();
         private List<CascaderNode> _selectedNodes = new List<CascaderNode>();
+        private readonly List<CascaderNode> _checkedLeafNodes = new();
+        private readonly Dictionary<string, SelectOptionItem<string, string>> _triggerItems = new();
         private List<CascaderNode> _hoverSelectedNodes = new List<CascaderNode>();
         private List<CascaderNode> _renderNodes = new List<CascaderNode>();
         private readonly List<CascaderNode> _searchList = new List<CascaderNode>();
@@ -132,12 +143,9 @@ namespace AntDesign
         private bool _showClearIcon;
         private string _displayText;
         private bool _initialized;
-        private string _searchValue;
-        private ElementReference _inputRef;
-
         private bool _focused;
 
-        protected override string OverlayClassName => "ant-cascader-dropdown ant-select-css-var ant-cascader-css-var";
+        protected override string OverlayClassName => GetSemanticClass("popup.root", "ant-cascader-dropdown ant-select-css-var ant-cascader-css-var");
 
         protected override string DefaultWidth => "";
 
@@ -157,8 +165,36 @@ namespace AntDesign
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            
-            SetDefaultValue(Value ?? DefaultValue);
+
+            if (Multiple)
+            {
+                Mode = SelectMode.Multiple;
+                ApplyCheckedValues(Values ?? DefaultValues);
+            }
+            else
+            {
+                SetDefaultValue(Value ?? DefaultValue);
+            }
+        }
+
+        public override async Task SetParametersAsync(ParameterView parameters)
+        {
+            var multipleChanged = parameters.IsParameterChanged(nameof(Multiple), Multiple);
+            var valuesChanged = parameters.IsParameterChanged(nameof(Values), Values);
+            await base.SetParametersAsync(parameters);
+
+            if (Multiple)
+            {
+                Mode = SelectMode.Multiple;
+                if (_nodelist.Count > 0 && (multipleChanged || valuesChanged))
+                    ApplyCheckedValues(Values ?? DefaultValues);
+            }
+            else if (multipleChanged && Mode == SelectMode.Multiple)
+            {
+                Mode = SelectMode.Default;
+                if (_nodelist.Count > 0)
+                    SetDefaultValue(Value ?? DefaultValue);
+            }
         }
 
         protected override void OnValueChange(string value)
@@ -200,6 +236,15 @@ namespace AntDesign
         /// </summary>
         private async Task ClearSelected()
         {
+            if (Multiple)
+            {
+                ApplyCheckedValues(Array.Empty<string>());
+                await NotifyMultipleValueChanged();
+                _searchValue = string.Empty;
+                await this.FocusAsync(_inputRef);
+                return;
+            }
+
             _selectedNodes.Clear();
             _hoverSelectedNodes.Clear();
             _displayText = string.Empty;
@@ -217,7 +262,181 @@ namespace AntDesign
         {
             if (node.Disabled) return;
             _searchValue = string.Empty;
+            if (Multiple)
+            {
+                if (node.HasChildren)
+                    SetSelectedNode(node, SelectedTypeEnum.Click);
+                return;
+            }
             SetSelectedNode(node, SelectedTypeEnum.Click);
+        }
+
+        private async Task NodeCheckboxChanged(CascaderNode node, bool isChecked)
+        {
+            if (node.Disabled || node.DisableCheckbox)
+                return;
+
+            SetNodeChecked(node, isChecked);
+            await InvokeAsync(StateHasChanged);
+            RefreshComponentState();
+        }
+
+        internal RenderFragment RenderCheckbox(CascaderNode node, bool isChecked, bool isIndeterminate) => builder =>
+        {
+            builder.OpenComponent<CascadingValue<string>>(0);
+            builder.AddAttribute(1, nameof(CascadingValue<string>.Name), "PrefixCls");
+            builder.AddAttribute(2, nameof(CascadingValue<string>.Value), "ant-cascader-checkbox");
+            builder.AddAttribute(3, nameof(CascadingValue<string>.IsFixed), true);
+            builder.AddAttribute(4, nameof(CascadingValue<string>.ChildContent), (RenderFragment)(checkboxBuilder =>
+            {
+                checkboxBuilder.OpenComponent<Checkbox>(0);
+                checkboxBuilder.AddAttribute(1, nameof(Checkbox.Checked), isChecked);
+                checkboxBuilder.AddAttribute(2, nameof(Checkbox.Indeterminate), isIndeterminate);
+                checkboxBuilder.AddAttribute(3, nameof(Checkbox.Disabled), node.Disabled || node.DisableCheckbox);
+                checkboxBuilder.AddAttribute(4, nameof(Checkbox.CheckedChanged), EventCallback.Factory.Create<bool>(this, value => NodeCheckboxChanged(node, value)));
+                checkboxBuilder.CloseComponent();
+            }));
+            builder.CloseComponent();
+        };
+
+        private void SetNodeChecked(CascaderNode node, bool isChecked)
+        {
+            var leaves = GetCheckableLeaves(node).ToArray();
+            if (leaves.Length == 0)
+                return;
+
+            var checkedValues = new HashSet<string>(Values ?? Enumerable.Empty<string>());
+            foreach (var leaf in leaves)
+            {
+                if (isChecked) checkedValues.Add(leaf.Value);
+                else checkedValues.Remove(leaf.Value);
+            }
+            ApplyCheckedValues(checkedValues);
+            _ = NotifyMultipleValueChanged();
+        }
+
+        private async Task NotifyMultipleValueChanged()
+        {
+            var values = Values?.ToArray() ?? Array.Empty<string>();
+            if (ValuesChanged.HasDelegate)
+                await ValuesChanged.InvokeAsync(values);
+            if (_initialized && SelectedNodesChanged.HasDelegate)
+                await SelectedNodesChanged.InvokeAsync(_checkedLeafNodes.ToArray());
+            OnChange?.Invoke(_checkedLeafNodes, string.Join(",", values), string.Join(", ", DisplayCheckedNodes.Select(x => x.Label)));
+        }
+
+        private IEnumerable<CascaderNode> GetCheckableLeaves(CascaderNode node)
+        {
+            if (node == null || node.Disabled)
+                yield break;
+            if (!node.HasChildren)
+            {
+                if (!node.DisableCheckbox)
+                    yield return node;
+                yield break;
+            }
+            foreach (var child in node.Children)
+                foreach (var leaf in GetCheckableLeaves(child))
+                    yield return leaf;
+        }
+
+        private IEnumerable<CascaderNode> GetCheckableLeavesFrom(IEnumerable<CascaderNode> nodes)
+        {
+            foreach (var node in nodes ?? Enumerable.Empty<CascaderNode>())
+                foreach (var leaf in GetCheckableLeaves(node))
+                    yield return leaf;
+        }
+
+        private bool IsNodeChecked(CascaderNode node)
+        {
+            var leaves = GetCheckableLeaves(node).ToArray();
+            return leaves.Length > 0 && leaves.All(x => _checkedLeafNodes.Any(y => y.Value == x.Value));
+        }
+
+        private bool IsNodeIndeterminate(CascaderNode node)
+        {
+            var leaves = GetCheckableLeaves(node).ToArray();
+            return leaves.Any(x => _checkedLeafNodes.Any(y => y.Value == x.Value)) && !leaves.All(x => _checkedLeafNodes.Any(y => y.Value == x.Value));
+        }
+
+        private IEnumerable<CascaderNode> DisplayCheckedNodes => ShowCheckedStrategy switch
+        {
+            CascaderCheckedStrategy.ShowAll => GetAllCheckedNodes(_nodelist),
+            CascaderCheckedStrategy.ShowParent => GetParentCheckedNodes(_nodelist),
+            _ => _checkedLeafNodes
+        };
+
+        private IEnumerable<CascaderNode> GetAllCheckedNodes(IEnumerable<CascaderNode> nodes)
+        {
+            foreach (var node in nodes ?? Enumerable.Empty<CascaderNode>())
+            {
+                if (IsNodeChecked(node)) yield return node;
+                foreach (var child in GetAllCheckedNodes(node.Children)) yield return child;
+            }
+        }
+
+        private IEnumerable<CascaderNode> GetParentCheckedNodes(IEnumerable<CascaderNode> nodes)
+        {
+            foreach (var node in nodes ?? Enumerable.Empty<CascaderNode>())
+            {
+                if (IsNodeChecked(node)) yield return node;
+                else
+                    foreach (var child in GetParentCheckedNodes(node.Children)) yield return child;
+            }
+        }
+
+        internal override bool HasValue => Multiple ? _checkedLeafNodes.Count > 0 : _selectedNodes.Count > 0;
+
+        internal override List<SelectOptionItem<string, string>> GetOrderedSelectedItems()
+        {
+            var nodes = Multiple ? DisplayCheckedNodes : _selectedNodes.LastOrDefault() is { } selected ? [selected] : [];
+            var activeValues = new HashSet<string>();
+            var items = new List<SelectOptionItem<string, string>>();
+            foreach (var node in nodes)
+            {
+                activeValues.Add(node.Value);
+                if (!_triggerItems.TryGetValue(node.Value, out var item))
+                    _triggerItems[node.Value] = item = new SelectOptionItem<string, string> { Value = node.Value, Item = node.Value };
+                item.Label = Multiple ? node.Label : string.Join(" / ", _selectedNodes.OrderBy(x => x.Level).Select(x => x.Label));
+                item.IsSelected = true;
+                items.Add(item);
+            }
+            foreach (var stale in _triggerItems.Keys.Where(key => !activeValues.Contains(key)).ToArray())
+                _triggerItems.Remove(stale);
+            return items;
+        }
+
+        private void ApplyCheckedValues(IEnumerable<string> values)
+        {
+            var selected = new HashSet<string>(values ?? Enumerable.Empty<string>());
+            _checkedLeafNodes.Clear();
+            _checkedLeafNodes.AddRange(GetCheckableLeavesFrom(_nodelist).Where(x => selected.Contains(x.Value)));
+            base.Values = _checkedLeafNodes.Select(x => x.Value).ToArray();
+        }
+
+        internal override string GetSelectedItemLabel(SelectOptionItem<string, string> option) => option.Label;
+
+        protected override async Task OnInputClearClickAsync(MouseEventArgs args)
+        {
+            if (Multiple)
+                await ClearSelected();
+            else
+                await base.OnInputClearClickAsync(args);
+        }
+
+        protected override async Task OnRemoveSelectedAsync(SelectOptionItem<string, string> option)
+        {
+            if (!Multiple)
+            {
+                await base.OnRemoveSelectedAsync(option);
+                return;
+            }
+            var node = GetNodeByValue(_nodelist, option.Value);
+            if (node == null) return;
+            var selected = new HashSet<string>(Values ?? Enumerable.Empty<string>());
+            foreach (var leaf in GetCheckableLeaves(node)) selected.Remove(leaf.Value);
+            ApplyCheckedValues(selected);
+            await NotifyMultipleValueChanged();
         }
 
         /// <summary>
@@ -337,7 +556,10 @@ namespace AntDesign
         private void ProcessParentAndDefault()
         {
             InitCascaderNodeState(_nodelist, null, 0);
-            SetDefaultValue(Value ?? DefaultValue);
+            if (Multiple)
+                ApplyCheckedValues(Values ?? DefaultValues);
+            else
+                SetDefaultValue(Value ?? DefaultValue);
         }
 
         private static string GetPathKey(CascaderNode node)
@@ -486,7 +708,9 @@ namespace AntDesign
             string selectCls = "ant-select";
 
             ClassMapper
-                .Add("ant-select ant-cascader ant-select-outlined ant-select-single ant-select-show-arrow")
+                .Add("ant-select ant-cascader ant-select-outlined ant-select-show-arrow")
+                .GetIf(() => "ant-select-multiple", () => Multiple)
+                .GetIf(() => "ant-select-single", () => !Multiple)
                 .Add("ant-select-css-var ant-cascader-css-var")
                 .If("ant-select-open", () => _dropdownOpened)
                 .If("ant-select-focused", () => _focused)
@@ -537,6 +761,17 @@ namespace AntDesign
 
         protected override Task OnInputAsync(ChangeEventArgs e)
         {
+            _searchValue = e.Value?.ToString();
+            if (!string.IsNullOrEmpty(_searchValue))
+            {
+                _matchList = _searchList.Where(x => x.Label.Contains(_searchValue, StringComparison.OrdinalIgnoreCase));
+                _showClearIcon = true;
+            }
+            else
+            {
+                _matchList = null;
+                _showClearIcon = false;
+            }
             return Task.CompletedTask;
         }
 

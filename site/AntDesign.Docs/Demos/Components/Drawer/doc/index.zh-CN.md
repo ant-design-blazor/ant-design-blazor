@@ -27,6 +27,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 | Content | 抽屉的内容。当与 ChildContent 一起给出时，这显示在 ChildContent 上方。| OneOf<RenderFragment, 字符串> | - |
 | MaskClosable | 单击遮罩（抽屉外区域）将关闭或关闭抽屉。| 布尔值 | 真实 |
 | Mask | 是否显示面具。当为真时，抽屉周围的区域在可见时会变暗。| 布尔值 | 真实 |
+| MaskBlur | 模糊抽屉遮罩后方的页面内容。| 布尔值 | 假 |
+| Loading | 加载时使用活动骨架屏替换抽屉主体内容。| 布尔值 | 假 |
 | Placement | 抽屉的位置，选项可以是`left`，`top`，`right`，`bottom` | 字符串 | `正确` |
 | Width | 抽屉的宽度。仅在放置为“左”或“右”时使用。| 整数 | 256 |
 | Height | 抽屉高度。仅在 Placement 为“top”或“bottom”时使用 | 整数 | 256 |
@@ -42,6 +44,13 @@ cover: https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg
 | HeaderStyle   | 可用于设置 Drawer 标题部分的样式                          | string         | -        |
 | BodyStyle | 抽屉内容部分的样式| 字符串 | - |
 | WrapClassName | Drawer 对话框的容器的类名。| 字符串 | - |
+| Resizable | 允许拖动抽屉边缘调整尺寸。| 布尔值 | 假 |
+| MaxSize | 调整尺寸时的最大宽度或高度（像素）。| `int?` | - |
+| OnResizeStart | 开始调整尺寸时调用。| 事件回调 | - |
+| OnResize | 调整尺寸过程中调用，参数为新的像素尺寸。| `EventCallback<int>` | - |
+| OnResizeEnd | 调整尺寸结束时调用。| 事件回调 | - |
+| ClassNames | 自定义 `root`、`mask`、`wrapper`、`section`、`header`、`title`、`extra`、`close`、`body`、`footer` 和 `dragger` 语义节点的类名。| `IReadOnlyDictionary<string, string>` | - |
+| Styles | 自定义相同语义节点的内联样式；`content` 是 `section` 的弃用别名。| `IReadOnlyDictionary<string, string>` | - |
 
 ### DrawerService
 

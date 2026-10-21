@@ -1,0 +1,74 @@
+@using AntDesign.Theming
+@using AntDesign.Docs.Services
+
+@{
+    var tokens = ComponentTokenCatalog.Get(Component);
+}
+
+<section class="markdown api-container component-token-documentation" id="design-token">
+    <h2>@(IsChinese ? "Design Token" : "Design Token")</h2>
+    @if (tokens.Count > 0)
+    {
+        <p>
+            @if (IsChinese)
+            {
+                <text>以下组件级 Design Token 与 React v6 同步。可通过 <code>ConfigProvider</code> 的 <code>ThemeConfig.Components</code> 自定义；CSS 变量可用于样式覆盖。完整全局 token 列表见<a href="/@Language/docs/customize-theme#global-token-reference">定制主题</a>。</text>
+            }
+            else
+            {
+                <text>Component-level Design Tokens are synchronized with React v6. Customize them through <code>ConfigProvider</code> <code>ThemeConfig.Components</code>; CSS variables are available for style overrides. See <a href="/@Language/docs/customize-theme#global-token-reference">Customize Theme</a> for the complete global token reference.</text>
+            }
+        </p>
+        <table class="api properties-api">
+            <thead>
+                <tr>
+                    <th>@(IsChinese ? "Token" : "Token")</th>
+                    <th>@(IsChinese ? "说明" : "Description")</th>
+                    <th>@(IsChinese ? "CSS 变量" : "CSS Variable")</th>
+                    <th>@(IsChinese ? "C# 类型" : "C# Type")</th>
+                    <th>@(IsChinese ? "默认值" : "Default Value")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var token in tokens)
+                {
+                    <tr>
+                        <td class="api-code-identifier">@token.Name</td>
+                        <td class="api-description">
+                            @if (IsChinese)
+                            {
+                                @(string.IsNullOrWhiteSpace(token.Description) ? token.Name : token.Description)
+                            }
+                            else
+                            {
+                                @(string.IsNullOrWhiteSpace(token.DescriptionEn) ? token.Name : token.DescriptionEn)
+                            }
+                            @if (token.Deprecated)
+                            {
+                                <span class="ant-tag">@(IsChinese ? "已弃用" : "Deprecated")</span>
+                            }
+                        </td>
+                        <td><code>@token.CssVariable</code></td>
+                        <td><code>@token.Type</code></td>
+                        <td><code>@token.DefaultValue</code></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (IsChinese)
+    {
+        <p>此组件没有独立的组件级 Design Token；尺寸、颜色和状态由全局 Design Token 与组件默认样式提供。</p>
+    }
+    else
+    {
+        <p>This component has no component-specific Design Tokens; its dimensions, colors, and states inherit from global Design Tokens and component defaults.</p>
+    }
+</section>
+
+@code {
+    [Parameter] public string Component { get; set; } = string.Empty;
+    [Parameter] public string Language { get; set; } = "en-US";
+
+    private bool IsChinese => string.Equals(Language, "zh-CN", StringComparison.OrdinalIgnoreCase);
+}

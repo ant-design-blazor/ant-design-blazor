@@ -81,11 +81,43 @@ namespace AntDesign.Tests.Drawer
         }
 
         [Fact]
+        public void ItShouldApplyBlurClassToMaskWhenEnabled()
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
+                .Add(x => x.Visible, true)
+                .Add(x => x.MaskBlur, true));
+
+            systemUnderTest.Find(".ant-drawer-mask").ClassList.Should().Contain("ant-drawer-mask-blur");
+        }
+
+        [Fact]
         public void ItShouldNotRenderCloseButtonWhenTurnedOff()
         {
             var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters.Add(x => x.Closable, false));
 
             systemUnderTest.FindAll(".ant-drawer-close").Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ItShouldRenderLoadingSkeletonInsteadOfContent()
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
+                .Add(x => x.Loading, true)
+                .AddChildContent("Loaded content"));
+
+            systemUnderTest.Find(".ant-drawer-body-skeleton.ant-skeleton-active").Should().NotBeNull();
+            systemUnderTest.Markup.Should().NotContain("Loaded content");
+        }
+
+        [Fact]
+        public void ItShouldRenderContentWhenNotLoading()
+        {
+            var systemUnderTest = RenderComponent<AntDesign.Drawer>(parameters => parameters
+                .Add(x => x.Loading, false)
+                .AddChildContent("Loaded content"));
+
+            systemUnderTest.Find(".ant-drawer-body").TextContent.Should().Contain("Loaded content");
+            systemUnderTest.FindAll(".ant-drawer-body-skeleton").Should().BeEmpty();
         }
 
         [Fact]

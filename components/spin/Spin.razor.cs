@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Timers;
 using Microsoft.AspNetCore.Components;
 
@@ -29,8 +32,21 @@ namespace AntDesign
         /// <summary>
         /// Customize description content when Spin has children
         /// </summary>
+        [Obsolete("Use Description instead.")]
         [Parameter]
         public string Tip { get; set; } = null;
+
+        /// <summary>Customize the loading description.</summary>
+        [Parameter]
+        public string Description { get; set; }
+
+        /// <summary>CSS classes keyed by Spin semantic DOM parts.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Inline CSS declarations keyed by Spin semantic DOM parts.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
 
         /// <summary>
         /// Specifies a delay in milliseconds for loading state (prevent flush)
@@ -72,7 +88,38 @@ namespace AntDesign
 
         private bool Simple => ChildContent == null;
 
+        private string EffectiveDescription => Description ?? Tip;
+
         private string ContainerClass => _isLoading ? $"{PrefixCls}-blur" : "";
+
+        internal string SemanticClass(string slot, string baseClass = null, string legacySlot = null)
+        {
+            var classNames = new[]
+            {
+                baseClass,
+                GetSemanticValue(ClassNames, legacySlot),
+                GetSemanticValue(ClassNames, slot)
+            };
+            return string.Join(" ", classNames.Where(value => !string.IsNullOrWhiteSpace(value)));
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null, string legacySlot = null)
+        {
+            var styleParts = new[]
+            {
+                baseStyle,
+                GetSemanticValue(Styles, legacySlot),
+                GetSemanticValue(Styles, slot)
+            };
+            return string.Join(";", styleParts
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => value!.Trim().TrimEnd(';')));
+        }
+
+        private static string GetSemanticValue(IReadOnlyDictionary<string, string> values, string key)
+        {
+            return key != null && values != null && values.TryGetValue(key, out var value) ? value : null;
+        }
 
         private Timer _delayTimer;
 
@@ -87,7 +134,7 @@ namespace AntDesign
                 .If($"{PrefixCls}-spinning", () => _isLoading)
                 .If($"{PrefixCls}-lg", () => Size == SpinSize.Large)
                 .If($"{PrefixCls}-sm", () => Size == SpinSize.Small)
-                .If($"{PrefixCls}-show-text", () => !string.IsNullOrWhiteSpace(Tip))
+                .If($"{PrefixCls}-show-text", () => !string.IsNullOrWhiteSpace(EffectiveDescription))
                 .If($"{PrefixCls}-rtl", () => RTL);
         }
 

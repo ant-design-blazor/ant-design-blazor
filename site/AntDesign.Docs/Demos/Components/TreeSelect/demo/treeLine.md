@@ -1,6 +1,5 @@
 ---
 order: 6
-debug: true
 title:
   zh-CN: 线性样式
   en-US: Show Tree Line

@@ -1,143 +1,142 @@
 const pointerdown = "pointerdown";
 const pointermove = "pointermove";
 const pointerup = "pointerup";
+const dblclick = "dblclick";
 const touchstart = "touchstart";
-const NULL = null;
 
 export class splitterHelper {
-  static attach(component, container) {
-    const state = { isHorizontal: 0, targetPaneIndex: 0, pos: 0, sizeOfTargetPane: 0, sizeOfContainer: 0 };
-    let disposed = false;
-    const splitter = container.querySelector(":scope > .ant-splitter-bar > .spliter-bar");
+  static attach(component, container, lazy = false) {
+    const draggers = [...container.querySelectorAll(":scope > .ant-splitter-bar > .spliter-bar")];
     const panes = [...container.querySelectorAll(":scope > .pane-of-split-container")];
-    const collapseBars = [...container.querySelectorAll(":scope > .ant-splitter-bar > .ant-splitter-bar-collapse-bar")];
-    const round = Math.round;
-    const getPos = (ev) => round(state.isHorizontal === 0 ? ev.clientX : ev.clientY);
-    const getSize = (element) => round(((rect) => state.isHorizontal === 0 ? rect.width : rect.height)(element.getBoundingClientRect()));
-    const getSizeOfPane = (targetPaneIndex) => getSize(panes[targetPaneIndex]);
-    const addEventListenerToSplitter = splitter.addEventListener.bind(splitter);
-    const removeEventListenerToSplitter = splitter.removeEventListener.bind(splitter);
-    const preventDefault = (ev) => ev.preventDefault();
+    const dimension = container.classList.contains("splitter-orientation-vertical") ? "width" : "height";
+    const position = dimension === "width" ? "clientX" : "clientY";
+    const sizeOf = (element) => element.getBoundingClientRect()[dimension];
+    const toPx = (value, containerSize) => {
+      if (!value)
+        return 0;
+      const parsed = Number.parseFloat(value);
+      if (!Number.isFinite(parsed))
+        return 0;
+      return value.trim().endsWith("%") ? containerSize * parsed / 100 : parsed;
+    };
+    let disposed = false;
+    let dragState = null;
+
     const dispose = () => {
       if (disposed)
         return;
       disposed = true;
-      removeEventListenerToSplitter(pointerdown, onPointerDown);
-      removeEventListenerToSplitter(pointerup, onPointerUp);
-      removeEventListenerToSplitter(touchstart, preventDefault);
-    };
-
-    const updateButtonVisibility = (pos) => {
-      const containerRect = container.getBoundingClientRect();
-      const containerSize = state.isHorizontal === 0 ? containerRect.width : containerRect.height;
-      const threshold = 2; // 2px threshold for edge detection
-
-      // Calculate the actual position relative to the container
-      const relativePos = state.isHorizontal === 0
-        ? pos - containerRect.left
-        : pos - containerRect.top;
-
-      collapseBars.forEach((bar, index) => {
-        if (index === 0) { // Left/Top button
-          if (relativePos <= threshold) {
-            bar.style.display = 'none';
-          } else {
-            bar.style.display = '';
-          }
-        } else { // Right/Bottom button
-          if (relativePos >= containerSize - threshold) {
-            bar.style.display = 'none';
-          } else {
-            bar.style.display = '';
-          }
-        }
+      draggers.forEach((dragger) => {
+        dragger.removeEventListener(pointerdown, onPointerDown);
+        dragger.removeEventListener(pointerup, onPointerUp);
+        dragger.removeEventListener(dblclick, onDoubleClick);
+        dragger.removeEventListener(touchstart, preventDefault);
       });
     };
 
-    const updateSize = (ev) => {
-      const targetPaneIndex = state.targetPaneIndex;
-      const resizeTarget = panes[targetPaneIndex] || NULL;
-      const otherPane = panes[targetPaneIndex == 0 ? 1 : 0] || NULL;
-      if (resizeTarget === NULL || otherPane === NULL)
-        return ["0px", "0px"];
+    const preventDefault = (event) => event.preventDefault();
 
-      const resizeTargetStyle = resizeTarget.style;
-      const currentPos = getPos(ev);
-      const containerRect = container.getBoundingClientRect();
-      const relativePos = state.isHorizontal === 0
-        ? currentPos - containerRect.left
-        : currentPos - containerRect.top;
-      const delta = relativePos - state.pos;
-      const nextPxSize = (state.sizeOfTargetPane + (targetPaneIndex == 0 ? +1 : -1) * delta);
-
-      // Calculate min and max sizes based on container size
-      const minSize = 0;
-      const maxSize = state.sizeOfContainer;
-
-      // If dragging beyond boundaries, return current sizes
-      if (nextPxSize <= minSize || nextPxSize >= maxSize) {
-        return [resizeTargetStyle.width || resizeTargetStyle.height, otherPane.style.width || otherPane.style.height];
-      }
-
-      const nextSize = nextPxSize + "px";
-      const otherSize = (state.sizeOfContainer - nextPxSize) + "px";
-
-      if (state.isHorizontal === 0) {
-        resizeTargetStyle.width = nextSize;
-        otherPane.style.width = otherSize;
-        return [nextSize, otherSize];
-      } else {
-        resizeTargetStyle.height = nextSize;
-        otherPane.style.height = otherSize;
-        return [nextSize, otherSize];
-      }
-    };
-
-    const onPointerMove = (ev) => {
-      // Only update sizes in JavaScript during dragging
-      updateSize(ev);
-      const currentPos = getPos(ev);
-      updateButtonVisibility(currentPos);
-    };
-
-    const onPointerDown = (ev) => {
-      if (!document.contains(splitter)) {
+    const onPointerDown = (event) => {
+      const dragger = event.currentTarget;
+      if (!container.isConnected) {
         dispose();
         return;
       }
-      if (splitter.classList.contains('ant-splitter-bar-dragger-disabled')) {
+      if (dragger.classList.contains("ant-splitter-bar-dragger-disabled"))
+        return;
+
+      const index = draggers.indexOf(dragger);
+      const left = panes[index];
+      const right = panes[index + 1];
+      if (!left || !right)
+        return;
+
+      const leftResizable = left.getAttribute("data-resizable") !== "false";
+      const rightResizable = right.getAttribute("data-resizable") !== "false";
+      const targetSide = leftResizable ? "left" : rightResizable ? "right" : null;
+      if (!targetSide)
+        return;
+
+      const containerSize = sizeOf(container);
+      const leftSize = sizeOf(left);
+      const rightSize = sizeOf(right);
+      dragState = {
+        index,
+        dragger,
+        left,
+        right,
+        targetSide,
+        startPosition: event[position],
+        containerSize,
+        leftSize,
+        pairSize: leftSize + rightSize,
+        minLeft: toPx(left.getAttribute("data-min"), containerSize),
+        maxLeft: left.getAttribute("data-max") ? toPx(left.getAttribute("data-max"), containerSize) : containerSize,
+        minRight: toPx(right.getAttribute("data-min"), containerSize),
+        maxRight: right.getAttribute("data-max") ? toPx(right.getAttribute("data-max"), containerSize) : containerSize,
+      };
+
+      component.invokeMethodAsync("SetDragging", true, index);
+      dragger.addEventListener(pointermove, onPointerMove);
+      dragger.setPointerCapture(event.pointerId);
+    };
+
+    const updateSize = (event, apply = true) => {
+      if (!dragState)
+        return;
+
+      const { left, right, dragger, leftSize, pairSize, startPosition, minLeft, maxLeft, minRight, maxRight } = dragState;
+      const delta = event[position] - startPosition;
+      const nextLeft = Math.max(minLeft, Math.min(maxLeft, Math.min(pairSize - minRight, Math.max(pairSize - maxRight, leftSize + delta))));
+      const nextRight = pairSize - nextLeft;
+
+      if (!apply) {
+        const preview = dragger.parentElement.querySelector(":scope > .ant-splitter-bar-preview");
+        if (preview) {
+          preview.style.setProperty("--ant-splitter-bar-preview-offset", `${delta}px`);
+          preview.classList.toggle("ant-splitter-bar-preview-active", delta !== 0);
+        }
         return;
       }
-      const targetPaneIndex = panes.findIndex(p => p.style.flex === "");
-      if (targetPaneIndex === -1)
+
+      left.style[dimension] = `${nextLeft}px`;
+      left.style.flex = `0 0 ${nextLeft}px`;
+      right.style[dimension] = `${nextRight}px`;
+      right.style.flex = `0 0 ${nextRight}px`;
+    };
+
+    const onPointerMove = (event) => updateSize(event, !lazy);
+
+    const onDoubleClick = (event) => {
+      const index = draggers.indexOf(event.currentTarget);
+      component.invokeMethodAsync("DraggerDoubleClick", index);
+    };
+
+    const onPointerUp = async (event) => {
+      if (!dragState)
         return;
-      state.isHorizontal = container.classList.contains("splitter-orientation-vertical") ? 0 : 1;
-      state.targetPaneIndex = targetPaneIndex;
-      const containerRect = container.getBoundingClientRect();
-      const currentPos = getPos(ev);
-      state.pos = state.isHorizontal === 0
-        ? currentPos - containerRect.left
-        : currentPos - containerRect.top;
-      state.sizeOfTargetPane = getSizeOfPane(targetPaneIndex);
-      state.sizeOfContainer = getSize(container);
-      addEventListenerToSplitter(pointermove, onPointerMove);
-      splitter.setPointerCapture(ev.pointerId);
+
+      const { dragger, index } = dragState;
+      updateSize(event, true);
+      dragger.removeEventListener(pointermove, onPointerMove);
+      if (dragger.hasPointerCapture(event.pointerId))
+        dragger.releasePointerCapture(event.pointerId);
+
+      const sizes = panes.map((pane) => `${Math.round(sizeOf(pane))}px`);
+      const preview = dragger.parentElement.querySelector(":scope > .ant-splitter-bar-preview");
+      preview?.classList.remove("ant-splitter-bar-preview-active");
+      dragState = null;
+      await component.invokeMethodAsync("SetDragging", false, index);
+      await component.invokeMethodAsync("UpdateSize", sizes);
     };
 
-    const onPointerUp = (ev) => {
-      splitter.releasePointerCapture(ev.pointerId);
-      removeEventListenerToSplitter(pointermove, onPointerMove);
-      // Get final sizes and sync back to C#
-      const sizes = updateSize(ev);
-      const currentPos = getPos(ev);
-      updateButtonVisibility(currentPos);
-      // Only invoke C# method when drag ends
-      component.invokeMethodAsync("UpdateSize", sizes);
-    };
+    draggers.forEach((dragger) => {
+      dragger.addEventListener(pointerdown, onPointerDown);
+      dragger.addEventListener(pointerup, onPointerUp);
+      dragger.addEventListener(dblclick, onDoubleClick);
+      dragger.addEventListener(touchstart, preventDefault, { passive: false });
+    });
 
-    addEventListenerToSplitter(pointerdown, onPointerDown);
-    addEventListenerToSplitter(pointerup, onPointerUp);
-    addEventListenerToSplitter(touchstart, preventDefault, { passive: false });
-    return { dispose: dispose };
+    return { dispose };
   }
 }

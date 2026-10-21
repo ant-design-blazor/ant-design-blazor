@@ -12,8 +12,8 @@
         var cut = Context.Render(@<Upload Action="https://example.com/upload">some content</Upload>);
 
         cut.MarkupMatches(
-          @<span class="">
-              <div class=" ant-upload ant-upload-select-text ant-upload-select" style="">
+          @<span class="ant-upload-wrapper">
+              <div class="ant-upload ant-upload-select-text ant-upload-select" style="">
                   <span tabindex="0" class="ant-upload" style="display: grid;" data-fileid:ignore role="button">
                       some content
                       <input type="file" style="display:none;" id:ignore title="">
@@ -32,8 +32,8 @@
         var cut = Context.Render(@<Upload Action="https://example.com/upload" Drag>some content</Upload>);
 
         cut.MarkupMatches(
-          @<span class="">
-              <div class=" ant-upload ant-upload-select-text ant-upload-drag ant-upload-select" style="">
+          @<span class="ant-upload-wrapper">
+              <div class="ant-upload ant-upload-select-text ant-upload-drag ant-upload-select" style="">
                 <span tabindex="0" class="ant-upload" style="display: grid;;" data-fileid:ignore role="button" >
                   <div class="ant-upload-drag-container">
                     some content
@@ -54,8 +54,8 @@
         var cut = Context.Render(@<Upload Action="https://example.com/upload" Method="HttpMethod.Put">some content</Upload>);
 
         cut.MarkupMatches(
-          @<span class="">
-              <div class=" ant-upload ant-upload-select-text ant-upload-select" style="">
+          @<span class="ant-upload-wrapper">
+              <div class="ant-upload ant-upload-select-text ant-upload-select" style="">
                   <span tabindex="0" class="ant-upload" style="display: grid;" data-fileid:ignore role="button">
                       some content
                       <input type="file" style="display:none;" id:ignore title="">
@@ -74,6 +74,105 @@
         var cut = Context.Render(@<Upload>some content</Upload>);
         // when no Action is provided the input element should not be rendered
         cut.FindAll("input").Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Applies_semantic_classes_and_styles_to_upload_slots()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
+        var classNames = new Dictionary<string, string>
+        {
+            ["root"] = "custom-upload-root",
+            ["trigger"] = "custom-upload-trigger",
+            ["list"] = "custom-upload-list",
+            ["item"] = "custom-upload-item"
+        };
+        var styles = new Dictionary<string, string>
+        {
+            ["root"] = "padding: 8px;",
+            ["trigger"] = "border-radius: 6px;",
+            ["list"] = "margin-top: 4px;",
+            ["item"] = "color: red;"
+        };
+        var cut = Context.Render(@<Upload Action="https://example.com/upload"
+            ClassNames="@classNames" Styles="@styles"
+            DefaultFileList="@(new List<UploadFileItem> { new() { Id = "file-1", FileName = "sample.txt", State = UploadState.Success } })">
+            Upload
+        </Upload>);
+
+        Assert.Contains("custom-upload-root", cut.Find(".ant-upload-wrapper").ClassList);
+        Assert.Contains("padding: 8px", cut.Find(".ant-upload-wrapper").GetAttribute("style"));
+        Assert.Contains("custom-upload-trigger", cut.Find(".ant-upload-select").ClassList);
+        Assert.Contains("border-radius: 6px", cut.Find(".ant-upload-select").GetAttribute("style"));
+        Assert.Contains("custom-upload-list", cut.Find(".ant-upload-list").ClassList);
+        Assert.Contains("margin-top: 4px", cut.Find(".ant-upload-list").GetAttribute("style"));
+        Assert.Contains("custom-upload-item", cut.Find(".ant-upload-list-item").ClassList);
+        Assert.Contains("color: red", cut.Find(".ant-upload-list-item").GetAttribute("style"));
+    }
+
+    [Fact]
+    public void Renders_custom_action_icons_and_per_file_extra_content()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
+        RenderFragment<UploadFileItem> removeIcon = _ => builder => builder.AddContent(0, "Custom remove");
+        RenderFragment<UploadFileItem> previewIcon = _ => builder => builder.AddContent(0, "Custom preview");
+        RenderFragment<UploadFileItem> downloadIcon = _ => builder => builder.AddContent(0, "Custom download");
+        RenderFragment<UploadFileItem> extra = file => builder => builder.AddContent(0, $"({file.Size} bytes)");
+        var cut = Context.Render(@<Upload Action="https://example.com/upload"
+            ListType="UploadListType.PictureCard"
+            RemoveIcon="@removeIcon" PreviewIcon="@previewIcon" DownloadIcon="@downloadIcon" Extra="@extra"
+            DefaultFileList="@(new List<UploadFileItem> { new() { Id = "file-1", FileName = "sample.png", Size = 1234, Url = "https://example.com/sample.png", State = UploadState.Success } })">
+            Upload
+        </Upload>);
+
+        Assert.Contains("Custom remove", cut.Find(".ant-upload-list-item-actions").TextContent);
+        Assert.Contains("Custom preview", cut.Find(".ant-upload-list-item-actions").TextContent);
+        Assert.Contains("Custom download", cut.Find(".ant-upload-list-item-actions").TextContent);
+        Assert.Equal("(1234 bytes)", cut.Find(".ant-upload-list-item-extra").TextContent);
+    }
+
+    [Fact]
+    public async Task Invokes_preview_callback_for_picture_card_action()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
+        UploadFileItem previewed = null;
+        var file = new UploadFileItem
+        {
+            Id = "preview-file",
+            FileName = "sample.png",
+            Url = "https://example.com/sample.png",
+            State = UploadState.Success
+        };
+
+        var cut = Context.Render(@<Upload ListType="UploadListType.PictureCard"
+            OnPreview="@(EventCallback.Factory.Create<UploadFileItem>(this, value => previewed = value))"
+            DefaultFileList="@(new List<UploadFileItem> { file })">
+            Upload
+        </Upload>);
+
+        await cut.Find(".ant-upload-list-item-actions a[title='Preview file']").ClickAsync(new MouseEventArgs());
+
+        Assert.Same(file, previewed);
+    }
+
+    [Fact]
+    public async Task Drag_sort_reorders_files_and_notifies_bound_list()
+    {
+        var files = new List<UploadFileItem>
+        {
+            new() { Id = "first", FileName = "first.txt", State = UploadState.Success },
+            new() { Id = "second", FileName = "second.txt", State = UploadState.Success }
+        };
+        var cut = Context.Render(@<Upload FileList="@files" FileListChanged="@(value => files = value)" DragSort="true" />);
+        var items = cut.FindAll(".ant-upload-list-item");
+
+        await items[0].TriggerEventAsync("ondragstart", new DragEventArgs());
+        Assert.Contains("ant-upload-list-item-dragging", cut.Find(".ant-upload-list-item").ClassList);
+        var target = cut.FindAll(".ant-upload-list-item")[1];
+        await target.TriggerEventAsync("ondragover", new DragEventArgs());
+        await cut.FindAll(".ant-upload-list-item")[1].TriggerEventAsync("ondrop", new DragEventArgs());
+
+        Assert.Equal(new[] { "second.txt", "first.txt" }, files.Select(file => file.FileName));
     }
 
     [Fact]

@@ -1,0 +1,37 @@
+<Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        Name="avatar"
+        ListType="UploadListType.PictureCircle"
+        @bind-FileList="_fileList"
+        ShowButton="_fileList.Count < 8">
+    <button type="button" style="border: 0; background: none;">
+        <Icon Type="@IconType.Outline.Plus" />
+        <div style="margin-top: 8px;">Upload</div>
+    </button>
+</Upload>
+
+@code {
+    private List<UploadFileItem> _fileList = new()
+    {
+        new()
+        {
+            Id = "circle-success",
+            FileName = "image.png",
+            State = UploadState.Success,
+            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        },
+        new()
+        {
+            Id = "circle-uploading",
+            FileName = "image.png",
+            State = UploadState.Uploading,
+            Percent = 50,
+            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        },
+        new()
+        {
+            Id = "circle-error",
+            FileName = "image.png",
+            State = UploadState.Fail
+        }
+    };
+}

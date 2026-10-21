@@ -13,6 +13,7 @@
   <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin />
   <link rel="stylesheet" href="@("https://fastly.jsdelivr.net/npm/@docsearch/css@3")" />
   <link id="docs-theme-v6" href="_content/AntDesign/css/antd-v6/light.css" rel="stylesheet">
+  <link href="_content/Cropper.Blazor/cropper.min.css" rel="stylesheet">
   <link href="_content/AntDesign.Docs/css/docs-layout.css" rel="stylesheet">
   <link href="_content/AntDesign.Docs/css/dumi-docs.css" rel="stylesheet">
   <component type="typeof(AntiforgeryToken)" render-mode="Static" />
@@ -21,14 +22,11 @@
   <app>
     @RenderBody()
   </app>
-  @{
-#if NET5_0_OR_GREATER
-  var polyfillPath = "_framework/blazor.polyfill.min.js";
-#else
-    var polyfillPath = "https://raw.githubusercontent.com/Daddoon/Blazor.Polyfill@3.0.8/Publish/Blazor.Polyfill.Publish/blazor.polyfill.min.js";
+#if NET5_0 || NET6_0
+  <script src="_framework/blazor.polyfill.min.js"></script>
+#elif !NET7_0_OR_GREATER
+  <script src="https://raw.githubusercontent.com/Daddoon/Blazor.Polyfill@3.0.8/Publish/Blazor.Polyfill.Publish/blazor.polyfill.min.js"></script>
 #endif
-  }
-  <script src="@polyfillPath"></script>
   <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
   <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
   @* <script src="_content/AntDesign/js/ant-design-blazor.js"></script> *@

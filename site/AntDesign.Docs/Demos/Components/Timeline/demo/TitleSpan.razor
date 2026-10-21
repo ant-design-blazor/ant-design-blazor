@@ -1,0 +1,38 @@
+<div style="display: flex; flex-direction: column; gap: 24px;">
+    <div>
+        <h4>titleSpan = 100px</h4>
+        <Timeline Mode="TimelineMode.Alternate" TitleSpan="@("100px")">
+            <TimelineItem Label="05:10">Create a service</TimelineItem>
+            <TimelineItem Label="09:03">Solve initial network problems</TimelineItem>
+            <TimelineItem Dot="_clockDot">Technical testing</TimelineItem>
+            <TimelineItem Label="11:28">Network problems being solved</TimelineItem>
+        </Timeline>
+    </div>
+    <div>
+        <h4>titleSpan = 25%</h4>
+        <Timeline Mode="TimelineMode.Alternate" TitleSpan="@("25%")">
+            <TimelineItem Label="05:10">Create a service</TimelineItem>
+            <TimelineItem Label="09:03">Solve initial network problems</TimelineItem>
+            <TimelineItem Dot="_clockDot">Technical testing</TimelineItem>
+            <TimelineItem Label="11:28">Network problems being solved</TimelineItem>
+        </Timeline>
+    </div>
+    <div>
+        <h4>titleSpan = 18, mode = end</h4>
+        <Timeline Mode="TimelineMode.Right" TitleSpan="@(18d)">
+            <TimelineItem Label="05:10">Create a service</TimelineItem>
+            <TimelineItem Label="09:03">Solve initial network problems</TimelineItem>
+            <TimelineItem Dot="_clockDot">Technical testing</TimelineItem>
+            <TimelineItem Label="11:28">Network problems being solved</TimelineItem>
+        </Timeline>
+    </div>
+</div>
+
+@code {
+    private readonly RenderFragment _clockDot = builder =>
+    {
+        builder.OpenComponent<Icon>(0);
+        builder.AddAttribute(1, nameof(Icon.Type), IconType.Outline.ClockCircle);
+        builder.CloseComponent();
+    };
+}

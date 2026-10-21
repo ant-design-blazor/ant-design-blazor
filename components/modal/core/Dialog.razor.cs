@@ -45,6 +45,9 @@ namespace AntDesign
         [CascadingParameter(Name = "DialogWrapperId")]
         public string DialogWrapperId { get; set; } = "";
 
+        [CascadingParameter(Name = "AntDesignThemeStyle")]
+        private string ThemeStyle { get; set; }
+
         [Inject] private NavigationManager NavigationManager { get; set; }
 
         private string _maskAnimationClsName = "";
@@ -104,6 +107,11 @@ namespace AntDesign
             else
             {
                 style = "margin: 0; padding: 0 ; top: 0;";
+            }
+
+            if (Config.MousePosition != null)
+            {
+                style += $"transform-origin: {Config.MousePosition.X}px {Config.MousePosition.Y}px;";
             }
 
             if (string.IsNullOrWhiteSpace(Style))

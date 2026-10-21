@@ -1,0 +1,14 @@
+<div style="min-height:220px;display:grid;place-items:center">
+    <CheckableTagGroup Options="_options" Value="@_value" ValueChanged="value => _value = value" />
+</div>
+
+@code {
+    private string _value = "Books";
+    private readonly IReadOnlyList<CheckableTagOption> _options = new[]
+    {
+        new CheckableTagOption { Value = "Movies", Label = "Movies" },
+        new CheckableTagOption { Value = "Books", Label = "Books" },
+        new CheckableTagOption { Value = "Music", Label = "Music" },
+        new CheckableTagOption { Value = "Sports", Label = "Sports" },
+    };
+}

@@ -91,6 +91,7 @@ namespace AntDesign.Internal
             [UploadListType.Text] = "text",
             [UploadListType.Picture] = "picture",
             [UploadListType.PictureCard] = "picture-card",
+            [UploadListType.PictureCircle] = "picture-circle",
         };
 
         protected override void OnInitialized()
@@ -168,6 +169,48 @@ namespace AntDesign.Internal
         private async Task HandleFileList(List<UploadFileItem> flist)
         {
             if (!await ValidateFiles(flist))
+            {
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
+                return;
+            }
+
+            if (flist.Count == 0)
+            {
+                await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
+                return;
+            }
+
+            if (Upload.MaxCount is int maxCount && maxCount > 0)
+            {
+                if (maxCount == 1)
+                {
+                    Upload.FileList.Clear();
+                    flist = flist.Take(1).ToList();
+                }
+                else
+                {
+                    var duplicateCount = flist.Count(file => Upload.FileList.Any(existing => existing.FileName == file.FileName));
+                    var availableCount = Math.Max(0, maxCount - Upload.FileList.Count + duplicateCount);
+                    var acceptedFiles = new List<UploadFileItem>(Math.Min(flist.Count, availableCount));
+                    foreach (var file in flist)
+                    {
+                        if (acceptedFiles.Count >= availableCount)
+                        {
+                            break;
+                        }
+
+                        if (Upload.FileList.Any(existing => existing.FileName == file.FileName) ||
+                            acceptedFiles.All(existing => existing.FileName != file.FileName))
+                        {
+                            acceptedFiles.Add(file);
+                        }
+                    }
+
+                    flist = acceptedFiles;
+                }
+            }
+
+            if (flist.Count == 0)
             {
                 await JSRuntime.InvokeVoidAsync(JSInteropConstants.ClearFile, _file);
                 return;
@@ -258,7 +301,8 @@ namespace AntDesign.Internal
                 name = Name,
                 instance = _currentInstance,
                 method = MethodString,
-                withCredentials = Upload.WithCredentials
+                withCredentials = Upload.WithCredentials,
+                transformFile = Upload.TransformFile != null
             });
         }
 
@@ -287,9 +331,44 @@ namespace AntDesign.Internal
                     name = Name,
                     instance = _currentInstance,
                     method = MethodString,
-                    withCredentials = Upload.WithCredentials
+                    withCredentials = Upload.WithCredentials,
+                    transformFile = Upload.TransformFile != null
                 });
             }
+        }
+
+        [JSInvokable]
+        public async Task<UploadFileTransformResult> TransformFileContent(string id, string contentBase64, string contentType)
+        {
+            var file = Upload.FileList.FirstOrDefault(item => item.Id == id);
+            if (file == null || Upload.TransformFile == null)
+            {
+                return null;
+            }
+
+            var result = await Upload.TransformFile.Invoke(new UploadFileTransformContext
+            {
+                File = file,
+                Content = string.IsNullOrEmpty(contentBase64) ? Array.Empty<byte>() : Convert.FromBase64String(contentBase64),
+                ContentType = contentType
+            });
+
+            if (result?.Content != null && !string.IsNullOrWhiteSpace(result.FileName))
+            {
+                file.FileName = result.FileName;
+                file.Ext = System.IO.Path.GetExtension(result.FileName);
+            }
+
+            if (result?.Content != null)
+            {
+                file.Size = result.Content.LongLength;
+                if (!string.IsNullOrWhiteSpace(result.ContentType))
+                {
+                    file.Type = result.ContentType;
+                }
+            }
+
+            return result;
         }
 
         [JSInvokable]

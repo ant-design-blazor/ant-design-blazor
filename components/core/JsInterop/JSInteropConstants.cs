@@ -66,6 +66,7 @@ namespace AntDesign
         public static string ClearFile => UploadComponentHelper.ClearFile;
         public static string UploadFile => UploadComponentHelper.UploadFile;
         public static string GetFileInfo => UploadComponentHelper.GetFileInfo;
+        public static string AddImageWatermark => UploadComponentHelper.AddImageWatermark;
 
         #endregion upload
 
@@ -304,6 +305,8 @@ namespace AntDesign
             public static string ClearFile => $"{FUNC_PREFIX}clearFile";
             public static string UploadFile => $"{FUNC_PREFIX}uploadFile";
             public static string GetFileInfo => $"{FUNC_PREFIX}getFileInfo";
+            public static string TransformFileContent => $"{FUNC_PREFIX}transformFileContent";
+            public static string AddImageWatermark => $"{FUNC_PREFIX}addImageWatermark";
         }
 
         public static class DownloadComponentHelper
@@ -323,6 +326,12 @@ namespace AntDesign
         public static class SplitterHelper
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "splitterHelper.";
+            public static string Attach => $"{FUNC_PREFIX}attach";
+        }
+
+        public static class DrawerHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "drawerHelper.";
             public static string Attach => $"{FUNC_PREFIX}attach";
         }
     }

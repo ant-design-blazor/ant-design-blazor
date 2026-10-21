@@ -1,0 +1,29 @@
+@using System.Collections.Generic
+
+<Splitter ClassNames="_classNames" Styles="_styles" Style="height:200px">
+    <SplitterPanel Size="40%">
+        <div style="height:100%;display:grid;place-items:center">Panel 1</div>
+    </SplitterPanel>
+    <SplitterPanel>
+        <div style="height:100%;display:grid;place-items:center">Panel 2</div>
+    </SplitterPanel>
+</Splitter>
+
+@code {
+    private readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "splitter-demo-root",
+        ["panel"] = "splitter-demo-panel",
+        ["dragger"] = "splitter-demo-dragger",
+        ["dragger.default"] = "splitter-demo-dragger-default",
+        ["dragger.active"] = "splitter-demo-dragger-active",
+    };
+
+    private readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "border:1px solid #91caff; border-radius:8px",
+        ["panel"] = "padding:12px",
+        ["dragger.default"] = "background-color:#91caff",
+        ["dragger.active"] = "background-color:#1677ff",
+    };
+}

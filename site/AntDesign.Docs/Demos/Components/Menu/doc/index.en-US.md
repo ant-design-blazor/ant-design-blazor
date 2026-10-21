@@ -30,6 +30,7 @@ More layouts with navigation: [Layout](/components/layout).
 | Param | Description | Type | Default value | Version |
 | --- | --- | --- | --- | --- |
 | Accordion | SubMenu accordion mode | boolean | false |
+| ClassNames | Customize classes for Menu Semantic DOM paths, such as `root`, `item`, `popup.root`, and `subMenu.item` | `IReadOnlyDictionary<string, string>` | - | 6.0.0 |
 | DefaultOpenKeys | Array with the keys of default opened sub menus | string\[] |  |  |
 | DefaultSelectedKeys | Array with the keys of default selected menu items | string\[] |  |  |
 | ForceSubMenuRender | Render submenu into DOM before it becomes visible | boolean | false | (Not implemented) |
@@ -49,6 +50,7 @@ More layouts with navigation: [Layout](/components/layout).
 | SubMenuOpenDelay | Delay time to show submenu when mouse enters, (in seconds) | number | 0 | (Not implemented) |
 | Theme | Color theme of the menu | `light` \| `dark` | `light` |  |
 | TriggerSubMenuAction | Which action can trigger submenu open/close | `hover` \| `click` | `hover` |  |
+| Styles | Customize inline styles for Menu Semantic DOM paths | `IReadOnlyDictionary<string, string>` | - | 6.0.0 |
 
 ### MenuItem
 
@@ -72,6 +74,8 @@ More layouts with navigation: [Layout](/components/layout).
 | --- | --- | --- | --- | --- |
 | ChildContent | Sub-menus or sub-menu items | RenderFragment |  |  |
 | Disabled | Whether sub-menu is disabled | boolean | false |  |
+| Icon | Icon displayed before the sub-menu title | string | - |  |
+| IconTemplate | Custom icon content displayed before the sub-menu title | RenderFragment | - |  |
 | IsOpen | Open state of the SubMenu | bool | false |  |
 | Key | Unique ID of the sub-menu | string |  |  |
 | OnTitleClick | Callback executed when the sub-menu title is clicked | EventCallback&lt;MouseEventArgs> |  |  |
@@ -91,3 +95,24 @@ More layouts with navigation: [Layout](/components/layout).
 ### Menu.Divider
 
 Divider line in between menu items, only used in vertical popup Menu or Dropdown Menu.
+
+## Semantic DOM
+
+Use `ClassNames` and `Styles` with these paths:
+
+| Semantic DOM | Description |
+| --- | --- |
+| `root` | Root menu list |
+| `item` | Menu item |
+| `itemContent` | Menu item content |
+| `itemIcon` | Menu item icon |
+| `itemTitle` | Menu group title |
+| `list` | Menu group list |
+| `popup.root` | Popup menu root |
+| `subMenu.item` | Submenu item |
+| `subMenu.itemTitle` | Submenu title |
+| `subMenu.list` | Submenu list |
+| `subMenu.itemContent` | Submenu item content |
+| `subMenu.itemIcon` | Submenu item icon |
+
+See [Customize Semantic DOM styles](#components-menu-demo-semantic-style) for an interactive example.

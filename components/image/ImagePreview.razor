@@ -1,15 +1,22 @@
 ﻿@namespace AntDesign
+@using Microsoft.AspNetCore.Components.Rendering
 
 @if (_visible)
 {
-    <div class="ant-image-preview css-var-root ant-image-css-var ant-image-preview-movable"
+    <div class="@ImageRef.SemanticClass("popup.root", "ant-image-preview css-var-root ant-image-css-var ant-image-preview-movable")" style="@ImageRef.SemanticStyle("popup.root")"
          role="dialog" aria-modal="true" tabindex="-1" @onkeydown="HandleKeyDown">
-        <div class="ant-image-preview-mask" @onclick="HandleClose" @onclick:stopPropagation></div>
-        <div class="ant-image-preview-body" @onwheel="WeelHandZoom" @onclick:stopPropagation>
-            <img id="preview-img" @ref="_previewImg" class="ant-image-preview-img" src="@ImageRef.ImageSrc"
-                 style="transform: translate3d(0px, 0px, 0) scale3d(@_zoomOutTimes, @_zoomOutTimes, 1) rotate(@(90 * _rotateTimes)deg) scaleX(@(_flipX ? -1 : 1)) scaleY(@(_flipY ? -1 : 1));">
+        <div class="@ImageRef.SemanticClass("popup.mask", $"ant-image-preview-mask {(!ImageRef.PreviewMaskVisible ? "ant-image-preview-mask-hidden" : null)} {(ImageRef.PreviewMaskBlur ? "ant-image-preview-mask-blur" : null)}")" style="@ImageRef.SemanticStyle("popup.mask")" @onclick="HandleClose" @onclick:stopPropagation></div>
+        <div class="@ImageRef.SemanticClass("popup.body", "ant-image-preview-body")" style="@ImageRef.SemanticStyle("popup.body")" @ref="_previewBody" @onwheel="WeelHandZoom" @onclick:stopPropagation>
+            @if (ImageRef.ImageRender is { } imageRender)
+            {
+                @imageRender(CreateImageRenderContext())
+            }
+            else
+            {
+                @DefaultPreviewImage
+            }
         </div>
-        <button class="ant-image-preview-close" aria-label="close" @onclick="HandleClose" @onclick:stopPropagation>
+        <button class="@ImageRef.SemanticClass("popup.close", "ant-image-preview-close")" style="@ImageRef.SemanticStyle("popup.close")" aria-label="close" @onclick="HandleClose" @onclick:stopPropagation>
             <Icon Type="close" />
         </button>
         @if (ImageRef.ImageCount > 1)
@@ -23,31 +30,90 @@
                 <Icon Type="right" />
             </button>
         }
-        <div class="ant-image-preview-footer">
+        <div class="@ImageRef.SemanticClass("popup.footer", "ant-image-preview-footer")" style="@ImageRef.SemanticStyle("popup.footer")">
             @if (ImageRef.ImageCount > 1)
             {
                 <div class="ant-image-preview-progress"><bdi>@(ImageRef.CurrentIndex + 1) / @ImageRef.ImageCount</bdi></div>
             }
-            <div class="ant-image-preview-actions">
-                <button aria-label="flipY" class="ant-image-preview-actions-action ant-image-preview-actions-action-flipY" type="button" @onclick="HandleFlipY" @onclick:stopPropagation>
-                    <Icon Type="swap" Style="transform: rotate(90deg);" />
-                </button>
-                <button aria-label="flipX" class="ant-image-preview-actions-action ant-image-preview-actions-action-flipX" type="button" @onclick="HandleFlipX" @onclick:stopPropagation>
-                    <Icon Type="swap" />
-                </button>
-                <button aria-label="rotateLeft" class="ant-image-preview-actions-action ant-image-preview-actions-action-rotateLeft" type="button" @onclick="HandleRotateLeft" @onclick:stopPropagation>
-                    <Icon Type="rotate-left" />
-                </button>
-                <button aria-label="rotateRight" class="ant-image-preview-actions-action ant-image-preview-actions-action-rotateRight" type="button" @onclick="HandleRotateRight" @onclick:stopPropagation>
-                    <Icon Type="rotate-right" />
-                </button>
-                <button aria-label="zoomOut" class="ant-image-preview-actions-action ant-image-preview-actions-action-zoomOut @(_zoomOutTimes <= 1 ? "ant-image-preview-actions-action-disabled" : string.Empty)" type="button" disabled="@(_zoomOutTimes <= 1)" @onclick="HandleZoomOut" @onclick:stopPropagation>
-                    <Icon Type="zoom-out" />
-                </button>
-                <button aria-label="zoomIn" class="ant-image-preview-actions-action ant-image-preview-actions-action-zoomIn" type="button" @onclick="HandleZoomIn" @onclick:stopPropagation>
-                    <Icon Type="zoom-in" />
-                </button>
+            <div class="@ImageRef.SemanticClass("popup.actions", "ant-image-preview-actions")" style="@ImageRef.SemanticStyle("popup.actions")">
+                @if (ImageRef.ActionsRender is { } actionsRender)
+                {
+                    @actionsRender(CreateActionsContext())
+                }
+                else
+                {
+                    @DefaultActions
+                }
             </div>
         </div>
     </div>
+}
+
+@code {
+    private RenderFragment DefaultActions => builder =>
+    {
+        var sequence = 0;
+        AddActionButton(builder, ref sequence, "flipY", "swap", HandleFlipY, "transform: rotate(90deg);");
+        AddActionButton(builder, ref sequence, "flipX", "swap", HandleFlipX);
+        AddActionButton(builder, ref sequence, "rotateLeft", "rotate-left", HandleRotateLeft);
+        AddActionButton(builder, ref sequence, "rotateRight", "rotate-right", HandleRotateRight);
+        AddActionButton(builder, ref sequence, "zoomOut", "zoom-out", HandleZoomOut, disabled: _zoomOutTimes <= 1);
+        AddActionButton(builder, ref sequence, "zoomIn", "zoom-in", HandleZoomIn);
+    };
+
+    private void AddActionButton(RenderTreeBuilder builder, ref int sequence, string action, string icon, Action callback, string iconStyle = null, bool disabled = false)
+    {
+        var actionClass = $"ant-image-preview-actions-action ant-image-preview-actions-action-{action}"
+            + (disabled ? " ant-image-preview-actions-action-disabled" : string.Empty);
+        builder.OpenElement(sequence++, "button");
+        builder.AddAttribute(sequence++, "aria-label", action);
+        builder.AddAttribute(sequence++, "class", actionClass);
+        builder.AddAttribute(sequence++, "type", "button");
+        if (disabled)
+        {
+            builder.AddAttribute(sequence++, "disabled", true);
+        }
+        builder.AddAttribute(sequence++, "onclick", EventCallback.Factory.Create(this, callback));
+        builder.AddEventStopPropagationAttribute(sequence++, "onclick", true);
+        builder.OpenComponent<Icon>(sequence++);
+        builder.AddAttribute(sequence++, nameof(Icon.Type), icon);
+        if (!string.IsNullOrWhiteSpace(iconStyle))
+        {
+            builder.AddAttribute(sequence++, nameof(Icon.Style), iconStyle);
+        }
+        builder.CloseComponent();
+        builder.CloseElement();
+    }
+
+    private RenderFragment DefaultPreviewImage => @<img id="preview-img" class="ant-image-preview-img" src="@ImageRef.ImageSrc" alt="@ImageRef.ImageAlt"
+         style="transform: translate3d(0px, 0px, 0) scale3d(@_zoomOutTimes, @_zoomOutTimes, 1) rotate(@(90 * _rotateTimes)deg) scaleX(@(_flipX ? -1 : 1)) scaleY(@(_flipY ? -1 : 1));" />;
+
+    private ImagePreviewActionsRenderContext CreateActionsContext() => new(
+        DefaultActions,
+        _zoomOutTimes,
+        _rotateTimes * 90,
+        _flipX,
+        _flipY,
+        ImageRef.CurrentIndex + 1,
+        ImageRef.ImageCount,
+        ImageRef.ImageSrc,
+        EventCallback.Factory.Create(this, HandleFlipY),
+        EventCallback.Factory.Create(this, HandleFlipX),
+        EventCallback.Factory.Create(this, HandleRotateLeft),
+        EventCallback.Factory.Create(this, HandleRotateRight),
+        EventCallback.Factory.Create(this, HandleZoomOut),
+        EventCallback.Factory.Create(this, HandleZoomIn),
+        EventCallback.Factory.Create(this, HandleReset),
+        EventCallback.Factory.Create(this, HandleClose));
+
+    private ImagePreviewImageRenderContext CreateImageRenderContext() => new(
+        DefaultPreviewImage,
+        _zoomOutTimes,
+        _rotateTimes * 90,
+        _flipX,
+        _flipY,
+        ImageRef.ImageSrc,
+        ImageRef.ImageAlt,
+        ImageRef.ImageWidth,
+        ImageRef.ImageHeight);
 }

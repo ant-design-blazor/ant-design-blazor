@@ -1,0 +1,22 @@
+<Space Size=@("24px") Align="SpaceAlign.Center">
+    <Image PlaceholderProgress="true" Width=@("220px") Height=@("140px") ClassNames="_classNames" Styles="_styles" />
+    <Image ProgressPercent="63" Width=@("220px") Height=@("140px") ClassNames="_classNames" Styles="_styles" />
+</Space>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["placeholder.progress.root"] = "demo-image-progress-root",
+        ["placeholder.progress.content"] = "demo-image-progress-content",
+        ["placeholder.progress.rail"] = "demo-image-progress-rail",
+        ["placeholder.progress.indicator"] = "demo-image-progress-indicator"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["placeholder.progress.root"] = "border-radius: 8px",
+        ["placeholder.progress.content"] = "color: #1677ff",
+        ["placeholder.progress.rail"] = "border-radius: 4px",
+        ["placeholder.progress.indicator"] = "font-weight: 600"
+    };
+}

@@ -11,6 +11,9 @@ namespace AntDesign
         [CascadingParameter]
         public Menu RootMenu { get; set; }
 
+        [CascadingParameter]
+        public SubMenu ParentMenu { get; set; }
+
         /// <summary>
         /// Title of the group
         /// </summary>

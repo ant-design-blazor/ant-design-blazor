@@ -56,6 +56,10 @@ namespace AntDesign
         [Parameter]
         public bool Checked { get; set; }
 
+        /// <summary>Whether the checkable tag is disabled.</summary>
+        [Parameter]
+        public bool Disabled { get; set; }
+
         /// <summary>
         /// Callback executed when Tag is checked/unchecked
         /// </summary>
@@ -112,6 +116,18 @@ namespace AntDesign
         [Parameter]
         [PublicApi("1.5.2")]
         public RenderFragment IconTemplate { get; set; }
+
+        /// <summary>Semantic classes keyed by root, icon, content, and close.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Semantic inline styles keyed by root, icon, content, and close.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        /// <summary>Additional attributes applied to the Tag root element.</summary>
+        [Parameter(CaptureUnmatchedValues = true)]
+        public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
 
         [Parameter]
         [Obsolete("Parameter is not used and does not affect functionality")]
@@ -236,14 +252,40 @@ namespace AntDesign
         private void UpdateClassMap()
         {
             this.ClassMapper.Add(StylePrefix)
+                .Add(GetSemanticValue(ClassNames, "root"))
                 .If($"{StylePrefix}-has-color", () => !_isPresetColor)
                 .If($"{StylePrefix}-hidden", () => !Visible)
                 .GetIf(() => $"{StylePrefix}-{_colorMap[_presetColor]}", () => _isPresetColor)
                 .If($"{StylePrefix}-checkable", () => Checkable)
                 .If($"{StylePrefix}-checkable-checked", () => Checked)
+                .If($"{StylePrefix}-checkable-disabled", () => Checkable && Disabled)
                 .If($"{StylePrefix}-rtl", () => RTL)
                 .If($"{StylePrefix}-clickable", () => OnClick.HasDelegate)
                 ;
+        }
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            var customClass = GetSemanticValue(ClassNames, slot);
+            return string.IsNullOrWhiteSpace(customClass) ? baseClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var customStyle = GetSemanticValue(Styles, slot);
+            if (string.IsNullOrWhiteSpace(customStyle))
+            {
+                return baseStyle;
+            }
+
+            return string.IsNullOrWhiteSpace(baseStyle)
+                ? customStyle
+                : $"{baseStyle.Trim().TrimEnd(';')}; {customStyle}";
+        }
+
+        private static string GetSemanticValue(IReadOnlyDictionary<string, string> values, string key)
+        {
+            return values != null && values.TryGetValue(key, out var value) ? value : null;
         }
 
         private string GetStyle()
@@ -252,7 +294,7 @@ namespace AntDesign
                 .AppendIfNotNullOrEmpty(Style)
                 .AppendIf($"background-color: {_customColor};", !_isPresetColor);
 
-            return styleBuilder.Length > 0 ? styleBuilder.ToString() : null;
+            return SemanticStyle("root", styleBuilder.Length > 0 ? styleBuilder.ToString() : null);
         }
 
         private async Task UpdateCheckedStatus()
@@ -291,14 +333,34 @@ namespace AntDesign
             }
         }
 
+        private Task CloseTagFromKeyboard(KeyboardEventArgs e)
+        {
+            return e.Key is "Enter" or " " ? CloseTag(new MouseEventArgs()) : Task.CompletedTask;
+        }
+
         private async Task ClickTag(MouseEventArgs e)
         {
+            if (Disabled)
+            {
+                return;
+            }
+
             await this.UpdateCheckedStatus();
 
             if (OnClick.HasDelegate)
             {
                 await OnClick.InvokeAsync(this);
             }
+        }
+
+        private Task HandleCheckableKeyDown(KeyboardEventArgs e)
+        {
+            if (!Checkable || Disabled || e.Key is not ("Enter" or " "))
+            {
+                return Task.CompletedTask;
+            }
+
+            return UpdateCheckedStatus();
         }
     }
 }

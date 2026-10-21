@@ -1,0 +1,30 @@
+<Button Type="ButtonType.Primary" OnClick="ShowLoading">Open Drawer</Button>
+
+<Drawer @bind-Visible="_visible"
+        Loading="@_loading"
+        Title='("Loading Drawer")'
+        Placement="DrawerPlacement.Right"
+        OnClose="Close">
+    <Button Type="ButtonType.Primary" OnClick="ShowLoading" Style="margin-bottom: 16px">Reload</Button>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+</Drawer>
+
+@code {
+    private bool _visible;
+    private bool _loading;
+
+    private async Task ShowLoading()
+    {
+        _visible = true;
+        _loading = true;
+        await Task.Delay(2000);
+        _loading = false;
+    }
+
+    private void Close()
+    {
+        _visible = false;
+    }
+}

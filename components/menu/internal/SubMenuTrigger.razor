@@ -6,7 +6,7 @@
 }
 <li class="@TriggerClass"
     role="menuitem"
-    style="position:relative;@SubMenuComponent.Style"
+    style="@SubMenuComponent.RootMenu.GetSemanticStyle("subMenu.item", $"position:relative;{SubMenuComponent.Style}")"
     @key="SubMenuComponent.Key"
     @ref="@Ref"
     @onclick="OnClickDiv"

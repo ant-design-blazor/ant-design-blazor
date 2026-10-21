@@ -1,0 +1,46 @@
+@using System.Collections.Generic
+
+<Flex Vertical Gap="FlexGap.Middle">
+    <TreeSelect TItemValue="string"
+                TItem="string"
+                ClassNames="_classNames"
+                Styles="_styles"
+                Open="true"
+                TreeDefaultExpandAll
+                Style="width: 300px;"
+                Placeholder="Custom semantic styles">
+        <ChildContent>
+            <TreeNode TItem="string" Key="parent" Title="Parent">
+                <TreeNode TItem="string" Key="leaf-1" Title="Leaf 1" />
+                <TreeNode TItem="string" Key="leaf-2" Title="Leaf 2" />
+            </TreeNode>
+        </ChildContent>
+    </TreeSelect>
+    <TreeSelect TItemValue="string"
+                TItem="string"
+                Variant="InputVariant.Filled"
+                ClassNames="_classNames"
+                Styles="_styles"
+                Style="width: 300px;"
+                Placeholder="Filled with the same hooks" />
+</Flex>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "tree-select-custom-root",
+        ["input"] = "tree-select-custom-input",
+        ["suffix"] = "tree-select-custom-suffix",
+        ["popup.root"] = "tree-select-custom-popup",
+        ["popup.item"] = "tree-select-custom-node"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "border-radius: 12px;",
+        ["input"] = "font-size: 16px;",
+        ["suffix"] = "color: var(--ant-color-primary);",
+        ["popup.root"] = "border: 1px solid var(--ant-color-primary-border);",
+        ["popup.item"] = "font-weight: 600;"
+    };
+}

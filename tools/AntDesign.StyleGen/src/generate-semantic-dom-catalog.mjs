@@ -15,6 +15,10 @@ const existingJson = fs.existsSync(existingPath) ? fs.readFileSync(existingPath,
 const existingCatalog = fs.existsSync(legacyCatalogPath) ? fs.readFileSync(legacyCatalogPath, 'utf8') : '';
 const existingManual = fs.existsSync(legacyManualPath) ? fs.readFileSync(legacyManualPath, 'utf8') : '';
 const existing = `${existingCatalog}\n${existingManual}`;
+const semanticMdPath = process.argv[6] ? path.resolve(process.argv[6]) : null;
+const semanticMdCatalog = semanticMdPath && fs.existsSync(semanticMdPath)
+  ? JSON.parse(fs.readFileSync(semanticMdPath, 'utf8'))
+  : null;
 
 function kebab(value) {
   return value
@@ -79,15 +83,22 @@ const semanticPathSelectors = {
   'button/content': '.ant-btn > span:not(.ant-btn-icon)',
   'button/icon': '.ant-btn-icon',
   'card/header': '.ant-card-head',
+  'card/root': '.ant-card',
   'card/title': '.ant-card-head-title',
   'card/section': '.ant-card-body',
   'card/avatar': '.ant-card-meta-avatar',
   'card/description': '.ant-card-meta-description',
+  'card-meta/root': '.ant-card-meta',
+  'card-meta/section': '.ant-card-meta-section',
+  'card-meta/avatar': '.ant-card-meta-avatar',
+  'card-meta/title': '.ant-card-meta-title',
+  'card-meta/description': '.ant-card-meta-description',
   'cascader/input': '.ant-select-selection-search-input',
   'cascader/placeholder': '.ant-select-selection-placeholder',
   'checkbox/icon': '.ant-checkbox-inner',
   'checkbox/label': '.ant-checkbox-wrapper',
   'date-picker/root': '.ant-picker',
+  'date-picker/popup.root': '.ant-picker-dropdown',
   'date-picker/input': '.ant-picker-input',
   'date-picker/prefix': '.ant-picker-prefix',
   'date-picker/suffix': '.ant-picker-suffix',
@@ -101,7 +112,8 @@ const semanticPathSelectors = {
   'descriptions/label': '.ant-descriptions-item-label',
   'descriptions/content': '.ant-descriptions-item-content',
   'divider/content': '.ant-divider-inner-text',
-  'drawer/dragger': '.ant-drawer-resize-handle',
+  'drawer/dragger': '.ant-drawer-resizable-dragger',
+  'drawer/content': '.ant-drawer-section',
   'drawer/wrapper': '.ant-drawer-content-wrapper',
   'dropdown/item': '.ant-dropdown-menu-item',
   'dropdown/itemContent': '.ant-dropdown-menu-title-content',
@@ -116,8 +128,12 @@ const semanticPathSelectors = {
   'float-button/triggerContent': '.ant-float-btn-group-trigger .ant-float-btn-content',
   'float-button/triggerIcon': '.ant-float-btn-group-trigger .ant-float-btn-icon',
   'image/root': '.ant-image',
+  'image/placeholder.progress.root': '.ant-image-progress-wrapper',
+  'image/placeholder.progress.content': '.ant-image-progress-content',
+  'image/placeholder.progress.rail': '.ant-image-progress-rail',
+  'image/placeholder.progress.indicator': '.ant-image-progress-indicator',
   'image/image': '.ant-image-img',
-  'image/popup': '.ant-image-preview-root',
+  'image/popup': '.ant-image-preview',
   'image/actions': '.ant-image-preview-actions',
   'image/body': '.ant-image-preview-body',
   'image/close': '.ant-image-preview-close',
@@ -125,12 +141,25 @@ const semanticPathSelectors = {
   'image/mask': '.ant-image-preview-mask',
   'image/placeholder': '.ant-image-placeholder',
   'image/progress': '.ant-image-progress-wrapper',
-  'image/popup.root': '.ant-image-preview-root',
+  'image/popup.root': '.ant-image-preview',
   'input/button': '.ant-input-search .ant-btn',
   'input/button.root': '.ant-input-search .ant-btn',
   'input/button.content': '.ant-input-search .ant-btn > span:not(.ant-btn-icon)',
   'input/button.icon': '.ant-input-search .ant-btn-icon',
   'mentions/popup': '.ant-select-dropdown',
+  'menu/root': '.ant-menu',
+  'menu/item': '.ant-menu-item',
+  'menu/itemContent': '.ant-menu-title-content',
+  'menu/itemIcon': '.ant-menu-item-icon',
+  'menu/itemTitle': '.ant-menu-item-group-title',
+  'menu/list': '.ant-menu-item-group-list',
+  'menu/popup': '.ant-menu-submenu-popup',
+  'menu/popup.root': '.ant-menu-submenu-popup',
+  'menu/subMenu.item': '.ant-menu-item',
+  'menu/subMenu.itemContent': '.ant-menu-title-content',
+  'menu/subMenu.itemIcon': '.ant-menu-item-icon',
+  'menu/subMenu.itemTitle': '.ant-menu-item-group-title',
+  'menu/subMenu.list': '.ant-menu-item-group-list',
   'message/icon': '.ant-message-notice-icon',
   'message/list': '.ant-message-list',
   'message/listContent': '.ant-message-list-content',
@@ -156,15 +185,22 @@ const semanticPathSelectors = {
   'radio/label': '.ant-radio-wrapper',
   'skeleton/content': '.ant-skeleton',
   'space/separator': '.ant-space-item',
+  'spin/tip': '.ant-spin-description',
+  'spin/mask': '.ant-spin.ant-spin-fullscreen',
+  'splitter/dragger.default': '.ant-splitter-bar-dragger:not(.ant-splitter-bar-dragger-active)',
+  'splitter/dragger.active': '.ant-splitter-bar-dragger.ant-splitter-bar-dragger-active',
   'switch/content': '.ant-switch-inner',
   'switch/indicator': '.ant-switch-handle',
   'table/section': '.ant-table-container',
   'tabs/body': '.ant-tabs-body-holder',
   'tabs/popup': '.ant-tabs-dropdown',
-  'tag/content': '.ant-tag',
+  'tag/close': '.ant-tag-close-icon',
+  'tag/content': '.ant-tag-content',
   'tag/icon': '.ant-tag-icon',
-  'tag/item': '.ant-tag',
+  'tag/root': '.ant-tag, .ant-tag-checkable-group',
+  'tag/item': '.ant-tag-checkable-group-item',
   'time-picker/root': '.ant-picker',
+  'time-picker/popup.root': '.ant-picker-dropdown',
   'time-picker/input': '.ant-picker-input',
   'time-picker/prefix': '.ant-picker-prefix',
   'time-picker/suffix': '.ant-picker-suffix',
@@ -185,16 +221,20 @@ const semanticPathSelectors = {
   'transfer/section': '.ant-transfer-section',
   'transfer/actions': '.ant-transfer-actions',
   'transfer/list': '.ant-transfer-list-content',
-  'tree-select/root': '.ant-select.ant-select-tree-select',
+  'tree-select/root': '.ant-select.ant-tree-select',
   'tree-select/content': '.ant-select-content',
-  'tree-select/input': '.ant-select-selection-search-input',
-  'tree-select/item': '.ant-select-item-option',
-  'tree-select/itemContent': '.ant-select-item-option-content',
+  'tree-select/input': '.ant-select-input',
+  'tree-select/item': '.ant-select-selection-item',
+  'tree-select/itemContent': '.ant-select-selection-item-content',
   'tree-select/itemRemove': '.ant-select-selection-item-remove',
-  'tree-select/itemSwitcher': '.ant-tree-switcher',
-  'tree-select/itemTitle': '.ant-tree-title',
-  'tree-select/placeholder': '.ant-select-selection-placeholder',
+  'tree-select/itemSwitcher': '.ant-tree-switcher.ant-select-tree-switcher',
+  'tree-select/itemTitle': '.ant-tree-title.ant-select-tree-title',
+  'tree-select/placeholder': '.ant-select-placeholder',
   'tree-select/popup': '.ant-select-dropdown',
+  'tree-select/popup.root': '.ant-select-dropdown.ant-tree-select-dropdown',
+  'tree-select/popup.item': '.ant-tree-treenode.ant-select-tree-treenode',
+  'tree-select/popup.itemTitle': '.ant-tree-title.ant-select-tree-title',
+  'tree-select/popup.itemSwitcher': '.ant-tree-switcher.ant-select-tree-switcher',
   'tree-select/prefix': '.ant-select-prefix',
   'tree-select/suffix': '.ant-select-suffix',
   'typography/textarea': '.ant-typography-edit-content',
@@ -208,7 +248,7 @@ const semanticPathSelectors = {
   'date-picker/popup.footer': '.ant-picker-footer',
   'float-button/content': '.ant-float-btn-content',
   'float-button/icon': '.ant-float-btn-icon',
-  'image/popup.root': '.ant-image-preview-root',
+  'image/popup.root': '.ant-image-preview',
   'image/popup.mask': '.ant-image-preview-mask',
   'image/popup.body': '.ant-image-preview-body',
   'image/popup.footer': '.ant-image-preview-footer',
@@ -305,6 +345,27 @@ for (const entry of inventory.entries || []) {
   inventoryComponents.set(entry.component, paths);
 }
 
+const documentedNodes = new Map();
+const documentedPaths = new Map();
+for (const page of semanticMdCatalog?.pages ?? []) {
+  const paths = documentedPaths.get(page.component) ?? new Set();
+  for (const part of page.parts ?? []) {
+    paths.add(part.name);
+    const key = `${page.component}/${part.name}`;
+    const previous = documentedNodes.get(key) ?? {};
+    documentedNodes.set(key, {
+      description: page.locale === 'zh-CN' || !previous.description ? part.description : previous.description,
+      selectorCandidate: page.variant === null
+        ? part.selectorCandidate || previous.selectorCandidate || null
+        : previous.selectorCandidate || part.selectorCandidate || null,
+    });
+  }
+  documentedPaths.set(page.component, paths);
+}
+for (const component of documentedPaths.keys()) {
+  if (!inventoryComponents.has(component)) inventoryComponents.set(component, new Set());
+}
+
 // Include every React component from the synchronized component catalog, even
 // when that component has not declared Semantic DOM slots yet.
 for (const component of inventory.componentCatalog || []) {
@@ -314,18 +375,42 @@ for (const component of inventory.componentCatalog || []) {
 const components = [...inventoryComponents.keys()].sort((a, b) => a.localeCompare(b));
 const catalog = {
   schemaVersion: 1,
-  source: inventory.source,
+  source: semanticMdCatalog
+    ? {
+      ...semanticMdCatalog.source,
+      apiInventory: inventory.source.path,
+      apiSemanticSource: inventory.source.semanticSource,
+    }
+    : inventory.source,
   components: components.map((component) => {
     const oldNodes = existingNodes.get(component) || new Map();
-    const semanticPaths = [...(inventoryComponents.get(component) || [])].sort((a, b) => a.localeCompare(b));
+    // The exported semantic.md is the documentation target, but its demo only
+    // renders a subset of public SemanticType paths. Keep the API inventory as
+    // a completeness source and merge both sets so documented slots never hide
+    // public classNames/styles slots that are not currently shown in the demo.
+    const semanticPaths = [...new Set([
+      ...(documentedPaths.get(component) || []),
+      ...(inventoryComponents.get(component) || []),
+    ])].sort((a, b) => a.localeCompare(b));
     return {
       name: component,
       nodes: semanticPaths.map((name) => {
         const previous = oldNodes.get(name);
+        const documented = documentedNodes.get(`${component}/${name}`);
+        const fallbackSelector = fallbackNode(component, name).selector;
+        const previousIsFallback = previous?.selector === fallbackSelector;
+        const selector = semanticPathSelectors[`${component}/${name}`]
+          || documented?.selectorCandidate
+          || (previous?.selector && !previousIsFallback ? previous.selector : null)
+          || previous?.selector
+          || fallbackSelector;
+        const generatedDescription = `${component} ${name} Semantic DOM 节点`;
         return {
           name,
-          selector: previous?.selector || semanticPathSelectors[`${component}/${name}`] || fallbackNode(component, name).selector,
-          description: previous?.description || `${component} ${name} Semantic DOM 节点`,
+          selector,
+          description: documented?.description || (previous?.description && previous.description !== generatedDescription
+            ? previous.description
+            : previous?.description || generatedDescription),
           version: previous?.version || '6.0.0',
         };
       }),
@@ -335,4 +420,10 @@ const catalog = {
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, `${JSON.stringify(catalog, null, 2)}\n`);
-console.log(JSON.stringify({ outputPath, components: components.length, slots: catalog.components.reduce((count, component) => count + component.nodes.length, 0) }));
+console.log(JSON.stringify({
+  outputPath,
+  components: components.length,
+  slots: catalog.components.reduce((count, component) => count + component.nodes.length, 0),
+  documentedSlots: documentedNodes.size,
+  documentedSelectorCandidates: [...documentedNodes.values()].filter((node) => node.selectorCandidate).length,
+}));

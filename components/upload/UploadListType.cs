@@ -9,5 +9,6 @@ namespace AntDesign
         Text,
         Picture,
         PictureCard,
+        PictureCircle,
     }
 }

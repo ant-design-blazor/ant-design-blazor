@@ -1,0 +1,32 @@
+<Flex Vertical Gap="@("20px")">
+    <Flex Gap="@("5px")" Align="FlexAlign.Center">
+        <span>ShowCollapsibleIcon:</span>
+        <RadioGroup TValue="string" @bind-Value="_mode">
+            <Radio Value="@("auto")">Auto</Radio>
+            <Radio Value="@("true")">True</Radio>
+            <Radio Value="@("false")">False</Radio>
+        </RadioGroup>
+    </Flex>
+    <Splitter Style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)">
+        <SplitterPanel Collapsible Min="20%" ShowCollapsibleIcon="@IconVisibility">
+            <Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height:100%">First</Flex>
+        </SplitterPanel>
+        <SplitterPanel Collapsible ShowCollapsibleIcon="@IconVisibility">
+            <Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height:100%">Second</Flex>
+        </SplitterPanel>
+        <SplitterPanel Collapsible ShowCollapsibleIcon="@IconVisibility">
+            <Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height:100%">Third</Flex>
+        </SplitterPanel>
+    </Splitter>
+</Flex>
+
+@code {
+    private string _mode = "true";
+
+    private bool? IconVisibility => _mode switch
+    {
+        "true" => true,
+        "false" => false,
+        _ => null,
+    };
+}

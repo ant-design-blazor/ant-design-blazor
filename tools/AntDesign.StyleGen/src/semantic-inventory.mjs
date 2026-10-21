@@ -9,10 +9,11 @@ const repoRoot = path.resolve(process.argv[2] || defaultRepoRoot);
 const reactRoot = path.resolve(process.argv[3] || path.join(repoRoot, '../ant-design/components'));
 const output = path.resolve(process.argv[4] || path.join(repoRoot, 'docs/antd-v6/semantic-dom-inventory.json'));
 const componentCatalogPath = path.resolve(repoRoot, '.vibedev/generated/antd-v6/ir/components.json');
-const migratedStructureComponents = new Set(['alert', 'anchor', 'auto-complete', 'badge', 'breadcrumb', 'button', 'calendar', 'card', 'checkbox', 'collapse', 'color-picker', 'descriptions', 'divider', 'dropdown', 'empty', 'float-button', 'form', 'input', 'input-number', 'layout', 'listy', 'masonry', 'mentions', 'message', 'notification', 'pagination', 'popover', 'popconfirm', 'progress', 'qr-code', 'radio', 'result', 'segmented', 'skeleton', 'slider', 'space', 'spin', 'splitter', 'statistic', 'steps', 'switch', 'table', 'tabs', 'tag', 'tooltip', 'tour', 'tree', 'typography', 'upload']);
-const semanticInjectionComponents = new Set(['float-button', 'masonry', 'tour']);
+const migratedStructureComponents = new Set(['alert', 'anchor', 'auto-complete', 'badge', 'breadcrumb', 'button', 'calendar', 'card', 'cascader', 'checkbox', 'collapse', 'color-picker', 'date-picker', 'descriptions', 'divider', 'drawer', 'dropdown', 'empty', 'float-button', 'form', 'image', 'input', 'input-number', 'layout', 'listy', 'masonry', 'mentions', 'menu', 'message', 'modal', 'notification', 'pagination', 'popover', 'popconfirm', 'progress', 'qr-code', 'radio', 'result', 'segmented', 'select', 'skeleton', 'slider', 'space', 'spin', 'splitter', 'statistic', 'steps', 'switch', 'table', 'tabs', 'tag', 'time-picker', 'timeline', 'tooltip', 'tour', 'transfer', 'tree', 'tree-select', 'typography', 'upload']);
+const semanticInjectionComponents = new Set(['float-button', 'masonry', 'tour', 'transfer', 'tree-select']);
 const unavailableSemanticPaths = new Map([['popconfirm', new Set(['content'])]]);
 const blazorDirectoryAliases = new Map([['row', 'grid'], ['col', 'grid'], ['qrcode', 'qr-code']]);
+const nestedSemanticTypePrefixes = new Map([['TreeSelectPopupSemanticType', 'popup']]);
 
 function hasBlazorSource(component) {
   const directory = path.join(repoRoot, 'components', blazorDirectoryAliases.get(component) ?? component);
@@ -91,10 +92,15 @@ function semanticPreviewPaths(source) {
   return [...new Set(paths)].sort();
 }
 
-function dumiSemanticDemos(component) {
+function dumiSemanticDemos(component, semanticType) {
   const directory = path.join(reactRoot, component, 'demo');
   if (!fs.existsSync(directory)) return [];
-  return fs.readdirSync(directory).filter((file) => /^_semantic.*\.tsx$/.test(file)).sort().map((file) => {
+  return fs.readdirSync(directory).filter((file) => {
+    if (!/^_semantic.*\.tsx$/.test(file)) return false;
+    if (component === 'card' && semanticType === 'CardMetaSemanticType') return file === '_semantic_meta.tsx';
+    if (component === 'card' && semanticType === 'CardSemanticType') return file === '_semantic.tsx';
+    return true;
+  }).sort().map((file) => {
     const relative = path.join(component, 'demo', file);
     const source = fs.readFileSync(path.join(reactRoot, relative), 'utf8');
     return {
@@ -110,12 +116,15 @@ const entries = [];
 for (const type of semanticTypes) {
     const file = type.file;
     const relative = path.relative(reactRoot, file).split(path.sep);
-    const dumiSemanticSources = dumiSemanticDemos(relative[0]);
-    const classNames = type.classNames;
-    const styles = type.styles;
+    const component = type.semanticType === 'CardMetaSemanticType' ? `${relative[0]}-meta` : relative[0];
+    const dumiSemanticSources = dumiSemanticDemos(relative[0], type.semanticType);
+    const semanticPrefix = nestedSemanticTypePrefixes.get(type.semanticType);
+    const prefixPaths = paths => semanticPrefix ? paths.map(semanticPath => `${semanticPrefix}.${semanticPath}`) : paths;
+    const classNames = prefixPaths(type.classNames);
+    const styles = prefixPaths(type.styles);
     const paths = [...new Set([...classNames, ...styles, ...dumiSemanticSources.flatMap((demo) => demo.semanticPaths)])].sort();
     entries.push({
-      component: relative[0],
+      component,
       reactSource: path.posix.join('components', ...relative),
       blazorDirectory: fs.existsSync(path.join(repoRoot, 'components', relative[0])) ? path.posix.join('components', relative[0]) : null,
       semanticType: type.semanticType,
@@ -133,7 +142,7 @@ entries.sort((a, b) => `${a.component}/${a.semanticType}`.localeCompare(`${b.com
 const result = {
   schemaVersion: 1,
   phase: 1,
-  source: { repository: 'ant-design', path: path.relative(repoRoot, reactRoot).split(path.sep).join('/'), semanticSource: 'export *SemanticType definitions' },
+  source: { repository: 'ant-design', path: path.relative(repoRoot, reactRoot).split(path.sep).join('/'), semanticSource: 'exported SemanticType definitions and public Props semantic schemas' },
   scope: { semanticDefinitions: entries.length, uniqueComponents: new Set(entries.map((entry) => entry.component)).size, uniqueSemanticPaths: new Set(entries.flatMap((entry) => entry.semanticPaths)).size },
   entries,
 };

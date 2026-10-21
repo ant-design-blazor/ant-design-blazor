@@ -128,4 +128,44 @@
         cut.Find("div.ant-tabs-tabpane-active").TextContent.Trim().Should().Be("Content of Tab Pane 2");
         cut.FindAll("div.ant-tabs-tab")[1].ClassList.Should().Contain("ant-tabs-tab-active");
     }
+
+    [Fact]
+    public void Render_card_with_semantic_class_names_and_styles()
+    {
+        var classNames = new Dictionary<string, string>
+        {
+            ["root"] = "custom-card-root",
+            ["header"] = "custom-card-header",
+            ["title"] = "custom-card-title",
+            ["body"] = "custom-card-body"
+        };
+        var styles = new Dictionary<string, string>
+        {
+            ["root"] = "color: red",
+            ["header"] = "padding: 4px",
+            ["body"] = "background: yellow"
+        };
+
+        var cut = Render<AntDesign.Card>(@<Card Title="Semantic card" ClassNames="classNames" Styles="styles">
+            <ChildContent>Card body</ChildContent>
+        </Card>);
+
+        cut.Find(".ant-card.custom-card-root").GetAttribute("style").Should().Contain("color: red");
+        cut.Find(".ant-card-head.custom-card-header").GetAttribute("style").Should().Contain("padding: 4px");
+        cut.Find(".ant-card-head-title.custom-card-title").Should().NotBeNull();
+        cut.Find(".ant-card-body.custom-card-body").GetAttribute("style").Should().Contain("background: yellow");
+    }
+
+    [Fact]
+    public void Card_variant_controls_border_and_keeps_bordered_as_legacy_fallback()
+    {
+        var borderless = Render<AntDesign.Card>(@<Card Variant="CardVariant.Borderless" Bordered="true" />);
+        borderless.Find(".ant-card").ClassList.Should().NotContain("ant-card-bordered");
+
+        var outlined = Render<AntDesign.Card>(@<Card Variant="CardVariant.Outlined" Bordered="false" />);
+        outlined.Find(".ant-card").ClassList.Should().Contain("ant-card-bordered");
+
+        var legacy = Render<AntDesign.Card>(@<Card Bordered="false" />);
+        legacy.Find(".ant-card").ClassList.Should().NotContain("ant-card-bordered");
+    }
 }

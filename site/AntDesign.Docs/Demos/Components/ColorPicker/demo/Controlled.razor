@@ -1,0 +1,14 @@
+<Space Direction="SpaceDirection.Vertical">
+    <ColorPicker @bind-Value="_color" ShowText />
+    <span>Selected color: @_color</span>
+    <Button OnClick="Reset">Reset to blue</Button>
+</Space>
+
+@code {
+    private string _color = "#1677ff";
+
+    private void Reset()
+    {
+        _color = "#1677ff";
+    }
+}

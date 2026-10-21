@@ -1,0 +1,35 @@
+<Space Wrap>
+    <RadioGroup @bind-Value="_placement" @bind-Value:after="ResetSize">
+        <Radio RadioButton Value="DrawerPlacement.Top">Top</Radio>
+        <Radio RadioButton Value="DrawerPlacement.Right">Right</Radio>
+        <Radio RadioButton Value="DrawerPlacement.Bottom">Bottom</Radio>
+        <Radio RadioButton Value="DrawerPlacement.Left">Left</Radio>
+    </RadioGroup>
+    <Button Type="ButtonType.Primary" OnClick="() => _visible = true">Open Drawer</Button>
+</Space>
+<p>Current size: @_size px</p>
+
+<Drawer @bind-Visible="_visible"
+        Title='("Resizable Drawer")'
+        Placement="@_placement"
+        Width="@_size.ToString()"
+        Height="@_size.ToString()"
+        MaxSize="640"
+        Resizable="true"
+        OnResizeStart="OnResizeStart"
+        OnResize="OnResize"
+        OnResizeEnd="OnResizeEnd">
+    <p>Drag the edge to resize the drawer.</p>
+    <p>Current size: @_size px</p>
+</Drawer>
+
+@code {
+    private bool _visible;
+    private int _size = 256;
+    private DrawerPlacement _placement = DrawerPlacement.Right;
+
+    private void ResetSize() => _size = 256;
+    private void OnResize(int size) => _size = size;
+    private void OnResizeStart() { }
+    private void OnResizeEnd() { }
+}

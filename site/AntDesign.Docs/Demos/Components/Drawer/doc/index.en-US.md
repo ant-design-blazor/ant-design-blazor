@@ -33,6 +33,8 @@ tasks can be achieved more efficiently within thesame context.
 | Content       | Content for Drawer. When given with ChildContent this is shown above ChildContent.             | OneOf<RenderFragment, string> | -             |
 | MaskClosable  | Clicking on the mask (area outside the Drawer) will close the Drawer or not.                   | boolean        | true          |
 | Mask          | Whether to show mask or not. When true the area around the Drawer will darken when Visible.    | boolean        | true          |
+| MaskBlur      | Blur the page content behind the drawer mask.                                                  | boolean        | false         |
+| Loading       | Replace the drawer body content with an active skeleton while loading.                         | boolean        | false         |
 | Placement     | The placement of the Drawer, option could be `left` , `top`,`right`,`bottom`                   | string         | `right`       |
 | Width         | Width of the Drawer. Only used when placement is 'left' or 'right'.                            | int            | 256           |
 | Height        | Height of the Drawer. Only used when Placement is 'top' or 'bottom'                            | int            | 256           |
@@ -47,6 +49,13 @@ tasks can be achieved more efficiently within thesame context.
 | MaskStyle     | Style for Drawer's mask element.                                                               | string         | -             |
 | BodyStyle     | Style of the drawer content part                                                               | string         | -             |
 | WrapClassName | The class name of the container of the Drawer dialog.                                          | string         | -             |
+| Resizable     | Enable resizing by dragging the drawer edge.                                                    | bool           | false         |
+| MaxSize       | Maximum width or height in pixels while resizing.                                               | int?           | -             |
+| OnResizeStart | Callback invoked when resizing starts.                                                          | EventCallback  | -             |
+| OnResize      | Callback invoked while resizing, with the new size in pixels.                                  | `EventCallback<int>` | -        |
+| OnResizeEnd   | Callback invoked when resizing ends.                                                            | EventCallback  | -             |
+| ClassNames    | Custom classes for the `root`, `mask`, `wrapper`, `section`, `header`, `title`, `extra`, `close`, `body`, `footer`, and `dragger` semantic slots. | `IReadOnlyDictionary<string, string>` | - |
+| Styles        | Custom inline styles for the same semantic slots. `content` is supported as a deprecated alias for `section`. | `IReadOnlyDictionary<string, string>` | - |
 
 ### DrawerService
 

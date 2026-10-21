@@ -1,0 +1,31 @@
+<Button Type="ButtonType.Primary" OnClick="@ShowLoading">
+    Open Modal
+</Button>
+
+@{
+    RenderFragment footer = @<Template>
+        <Button Type="ButtonType.Primary" OnClick="@ShowLoading">Reload</Button>
+    </Template>;
+}
+
+<Modal Title="Loading Modal"
+       @bind-Visible="_visible"
+       Loading="@_loading"
+       Footer="@footer">
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+</Modal>
+
+@code {
+    private bool _visible;
+    private bool _loading = true;
+
+    private async Task ShowLoading()
+    {
+        _visible = true;
+        _loading = true;
+        await Task.Delay(2000);
+        _loading = false;
+    }
+}

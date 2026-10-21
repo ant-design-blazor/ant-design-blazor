@@ -1,6 +1,5 @@
 ---
 order: 8
-debug: true
 title:
   zh-CN: 弹出位置
   en-US: Placement

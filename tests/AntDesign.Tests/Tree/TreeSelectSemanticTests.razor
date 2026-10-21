@@ -1,0 +1,90 @@
+@using System.Collections.Generic
+@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Applies_semantic_classes_and_styles_to_trigger_and_tree_popup_slots()
+    {
+        JSInterop.SetupVoid("AntDesign.interop.styleHelper.addClsToFirstChild", _ => true);
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.domInfoHelper.getOverlayPosition", _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition());
+
+        var classNames = new Dictionary<string, string>
+        {
+            ["root"] = "semantic-trigger-root",
+            ["content"] = "semantic-content",
+            ["input"] = "semantic-input",
+            ["placeholder"] = "semantic-placeholder",
+            ["suffix"] = "semantic-suffix",
+            ["popup.root"] = "semantic-popup-root",
+            ["popup.item"] = "semantic-popup-item",
+            ["popup.itemTitle"] = "semantic-popup-title",
+            ["popup.itemSwitcher"] = "semantic-popup-switcher"
+        };
+        var styles = new Dictionary<string, string>
+        {
+            ["root"] = "outline: 1px solid red;",
+            ["content"] = "color: red;",
+            ["input"] = "letter-spacing: 1px;",
+            ["placeholder"] = "font-style: italic;",
+            ["suffix"] = "opacity: 0.5;",
+            ["popup.root"] = "background-color: rgb(240, 245, 255);",
+            ["popup.item"] = "outline: 1px solid blue;",
+            ["popup.itemTitle"] = "font-weight: 700;",
+            ["popup.itemSwitcher"] = "color: red;"
+        };
+
+        var cut = Render<AntDesign.TreeSelect<string, string>>(
+            @<AntDesign.TreeSelect TItemValue="string"
+                                  TItem="string"
+                                  Open="true"
+                                  TreeDefaultExpandAll="true"
+                                  ClassNames="@classNames"
+                                  Styles="@styles">
+                <TreeNode TItem="string" Key="parent" Title="Parent">
+                    <TreeNode TItem="string" Key="leaf" Title="Leaf" />
+                </TreeNode>
+            </AntDesign.TreeSelect>);
+
+        var root = cut.Find(".semantic-trigger-root");
+        Assert.Contains("outline: 1px solid red", root.GetAttribute("style"));
+        Assert.Contains("semantic-content", root.QuerySelector(".semantic-content").GetAttribute("class"));
+        Assert.Contains("letter-spacing: 1px", root.QuerySelector("input.semantic-input").GetAttribute("style"));
+        Assert.Contains("font-style: italic", root.QuerySelector(".semantic-placeholder").GetAttribute("style"));
+        Assert.Contains("opacity: 0.5", root.QuerySelector(".semantic-suffix").GetAttribute("style"));
+
+        var popup = cut.Find(".semantic-popup-root");
+        Assert.Contains("background-color: rgb(240, 245, 255)", popup.GetAttribute("style"));
+        Assert.Contains("outline: 1px solid blue", popup.QuerySelector(".semantic-popup-item").GetAttribute("style"));
+        Assert.Contains("font-weight: 700", popup.QuerySelector(".semantic-popup-title").GetAttribute("style"));
+        Assert.Contains("color: red", popup.QuerySelector(".semantic-popup-switcher").GetAttribute("style"));
+    }
+
+    [Theory]
+    [InlineData(InputVariant.Outlined, "ant-select-outlined")]
+    [InlineData(InputVariant.Filled, "ant-select-filled")]
+    [InlineData(InputVariant.Borderless, "ant-select-borderless")]
+    [InlineData(InputVariant.Underlined, "ant-select-underlined")]
+    public void Applies_react_v6_variant_class(InputVariant variant, string expectedClass)
+    {
+        var cut = Render<AntDesign.TreeSelect<string, string>>(
+            @<AntDesign.TreeSelect TItemValue="string" TItem="string" Variant="@variant" />);
+
+        Assert.Contains(expectedClass, cut.Find(".ant-tree-select").ClassList);
+    }
+
+    [Theory]
+    [InlineData("error", "ant-select-status-error")]
+    [InlineData("warning", "ant-select-status-warning")]
+    public void Applies_validation_status_class(string status, string expectedClass)
+    {
+        var cut = Render<AntDesign.TreeSelect<string, string>>(
+            @<AntDesign.TreeSelect TItemValue="string" TItem="string" Status="@status" />);
+
+        Assert.Contains(expectedClass, cut.Find(".ant-tree-select").ClassList);
+    }
+
+}

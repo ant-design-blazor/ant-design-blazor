@@ -72,9 +72,14 @@ namespace AntDesign
 
         private Dictionary<string, object> _attributes;
 
+        [CascadingParameter(Name = "PrefixCls")]
+        private string CascadingPrefixCls { get; set; }
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            if (!string.IsNullOrWhiteSpace(CascadingPrefixCls))
+                _prefixCls = CascadingPrefixCls;
             SetClass();
             CheckboxGroup?.AddItem(this);
         }

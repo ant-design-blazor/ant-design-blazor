@@ -1,0 +1,22 @@
+<Timeline Mode="TimelineMode.Alternate" TitleSpan="@("96px")" ClassNames="_classNames" Styles="_styles">
+    <TimelineItem Label="Today">Semantic classes and styles can target each timeline slot.</TimelineItem>
+    <TimelineItem Label="Tomorrow" Color="TimelineDotColor.Green">Style individual items without replacing their default classes.</TimelineItem>
+</Timeline>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "timeline-demo-root",
+        ["item"] = "timeline-demo-item",
+        ["itemTitle"] = "timeline-demo-title",
+        ["itemContent"] = "timeline-demo-content",
+        ["itemRail"] = "timeline-demo-rail"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "padding: 12px 16px; border: 1px dashed #91caff; border-radius: 8px;",
+        ["itemTitle"] = "color: #1677ff; font-weight: 600;",
+        ["itemContent"] = "color: #595959;"
+    };
+}

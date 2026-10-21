@@ -1,8 +1,12 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@TriggerClass" style="@Style" @onclick="Toggle">
-    @if (IsCleared)
+<div class="@TriggerClass" style="@TriggerStyle" @onclick="Toggle">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else if (IsCleared)
     {
         <div class="ant-color-picker-clear" role="button" aria-label="Clear color" tabindex="@(Disabled ? -1 : 0)"
              aria-disabled="@Disabled" @onclick="Clear" @onclick:stopPropagation="true" @onkeydown="OnClearKeyDown"></div>

@@ -25,6 +25,12 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/vJmo00mmgR/Timeline.svg
 | Pending | 指定最后一个幽灵节点是否存在或内容 | RenderFragment         | -         |
 | PendingDot   | 当最后一个幽灵节点存在時，指定其时间图点| RenderFragment         |
 | Reverse | 节点排序 | boolean         |-       |
+| Orientation | 设置时间轴方向 | TimelineOrientation（`Vertical`、`Horizontal`） | `Vertical` |
+| TitleSpan | 设置标题与节点间距，支持数字、CSS 长度或百分比 | `OneOf<double, string>` | `12` |
+| Variant | 设置时间轴节点样式 | TimelineVariant（`Outlined`、`Filled`） | `Outlined` |
+| ClassNames | 为根节点和时间轴各语义节点设置 class | `IReadOnlyDictionary<string, string>` | - |
+| Styles | 为根节点和时间轴各语义节点设置内联样式 | `IReadOnlyDictionary<string, string>` | - |
+| Items | 时间轴节点的数据源 | `IReadOnlyList<TimelineItemData>` | - |
 | Mode |通过设置 mode 可以改变时间轴和内容的相对位置，可选 `alternate` `left` `right` | string  | -  |
 
 Timeline.Item

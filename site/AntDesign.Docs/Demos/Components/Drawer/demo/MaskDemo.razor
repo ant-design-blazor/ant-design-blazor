@@ -1,0 +1,32 @@
+<Space Wrap>
+    <Button OnClick='() => Open("blur")'>Blur</Button>
+    <Button OnClick='() => Open("dimmed")'>Dimmed mask</Button>
+    <Button OnClick='() => Open("none")'>No mask</Button>
+</Space>
+
+<Drawer Visible="@(_open == "blur")" VisibleChanged="Close" Title='("Blur")' MaskBlur>
+    <p>Some contents...</p>
+    <p>The page behind this drawer is blurred.</p>
+</Drawer>
+<Drawer Visible="@(_open == "dimmed")" VisibleChanged="Close" Title='("Dimmed mask")'>
+    <p>Some contents...</p>
+    <p>The default dimmed mask remains enabled.</p>
+</Drawer>
+<Drawer Visible="@(_open == "none")" VisibleChanged="Close" Title='("No mask")' Mask="false">
+    <p>Some contents...</p>
+    <p>The page remains interactive because the mask is hidden.</p>
+</Drawer>
+
+@code {
+    private string _open;
+
+    private void Open(string type) => _open = type;
+
+    private void Close(bool visible)
+    {
+        if (!visible)
+        {
+            _open = null;
+        }
+    }
+}

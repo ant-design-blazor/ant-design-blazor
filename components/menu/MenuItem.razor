@@ -21,9 +21,9 @@
 
     RenderFragment MenuItemContent(ForwardRef refBack)
     {
-        return@<li class="@ClassMapper.Class" role="menuitem" style="@PaddingStyle @Style" @onclick="HandleOnClick" @key="Key" @ref="refBack.Current">
+        return@<li class="@RootMenu.GetSemanticClass(SemanticSlot("item"), ClassMapper.Class)" role="menuitem" style="@RootMenu.GetSemanticStyle(SemanticSlot("item"), $"{PaddingStyle} {Style}")" @onclick="HandleOnClick" @key="Key" @ref="refBack.Current">
             @icon
-            <span class="@(RootMenu?.PrefixCls ?? "ant-menu")-title-content">
+            <span class="@RootMenu.GetSemanticClass(SemanticSlot("itemContent"), $"{RootMenu?.PrefixCls ?? "ant-menu"}-title-content")" style="@RootMenu.GetSemanticStyle(SemanticSlot("itemContent"))">
                 @if (RouterLink == null)
                 {
                     @content
@@ -57,13 +57,13 @@
     {
         if (IconTemplate != null)
         {
-            <span role="img" class="anticon anticon-container @MenuItemIconClass">
+            <span role="img" class="anticon anticon-container @MenuItemIconClass" style="@MenuItemIconStyle">
                 @IconTemplate
             </span>
         }
         else if (Icon != null)
         {
-            <Icon Type="@Icon" Class="@MenuItemIconClass" />
+            <Icon Type="@Icon" Class="@MenuItemIconClass" Style="@MenuItemIconStyle" />
         }
     }
 

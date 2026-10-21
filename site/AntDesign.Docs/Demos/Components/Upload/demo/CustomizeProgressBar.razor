@@ -1,0 +1,20 @@
+<Upload DefaultFileList="@_fileList"
+        ProgressStrokeColor="@_progressStrokeColor"
+        ProgressStrokeWidth="3"
+        ProgressFormat="FormatProgress"
+        ProgressShowInfo />
+
+@code {
+    private readonly List<UploadFileItem> _fileList = new()
+    {
+        new() { Id = "progress-demo", FileName = "report.zip", Percent = 68, State = UploadState.Uploading }
+    };
+
+    private readonly Dictionary<string, string> _progressStrokeColor = new()
+    {
+        ["0%"] = "#108ee9",
+        ["100%"] = "#87d068"
+    };
+
+    private static string FormatProgress(double percent) => $"{percent.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)}%";
+}

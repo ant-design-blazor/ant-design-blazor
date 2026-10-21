@@ -1,0 +1,20 @@
+<Button Type="ButtonType.Primary" OnClick="@(() => _visible = true)">
+    Open modal with custom footer
+</Button>
+
+@{
+    RenderFragment footer = @<Template>
+        <Button OnClick="@(() => _visible = false)">Custom Button</Button>
+        <Button OnClick="@(() => _visible = false)">Cancel</Button>
+        <Button Type="ButtonType.Primary" OnClick="@(() => _visible = false)">OK</Button>
+    </Template>;
+}
+
+<Modal Title="Custom footer" Footer="@footer" @bind-Visible="_visible">
+    <p>The footer is composed from application-defined buttons.</p>
+    <p>Each action controls the modal visibility.</p>
+</Modal>
+
+@code {
+    private bool _visible;
+}

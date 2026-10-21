@@ -1,0 +1,25 @@
+<Space Direction="SpaceDirection.Vertical" Size="SpaceSize.Small" Align="SpaceAlign.Start">
+    <Switch @bind-Value="_open" CheckedChildren="Open" UnCheckedChildren="Closed" />
+    <Select TItemValue="string"
+            TItem="PanelOption"
+            DataSource="@_options"
+            ValueName="@nameof(PanelOption.Value)"
+            LabelName="@nameof(PanelOption.Label)"
+            DefaultValue="@("lucy")"
+            Style="width: 180px;"
+            @bind-Open="_open" />
+</Space>
+
+@code {
+    private sealed record PanelOption(string Value, string Label);
+
+    private readonly PanelOption[] _options =
+    [
+        new("jack", "Jack"),
+        new("lucy", "Lucy"),
+        new("disabled", "Disabled"),
+        new("bamboo", "Bamboo")
+    ];
+
+    private bool _open = true;
+}

@@ -8,7 +8,10 @@ export function parseSemanticCatalog(source) {
   return components;
 }
 
-export function getSemanticCatalogCoverage(inventory, source) {
+export function getSemanticCatalogCoverage(inventory, source, documentedSource = null) {
+  // The DatePicker Dumi preview calls the popup node `popup.root`, while the
+  // React semantic.md page names the same `.ant-picker-dropdown` node `popup`.
+  const documentedPathAliases = new Map([['date-picker/popup.root', 'date-picker/popup']]);
   const catalog = parseSemanticCatalog(source);
   const entries = inventory.entries ?? [];
   const componentNames = [...new Set(entries.map(({ component }) => component))];
@@ -22,12 +25,27 @@ export function getSemanticCatalogCoverage(inventory, source) {
     const separator = path.indexOf('/');
     const component = path.slice(0, separator);
     const semanticPath = path.slice(separator + 1);
+    return catalog.get(component)?.has(semanticPath)
+      || documentedPathAliases.has(path) && catalog.get(component)?.has(documentedPathAliases.get(path).slice(separator + 1));
+  }).length;
+  const documentedPaths = new Set((documentedSource?.pages ?? []).flatMap((page) =>
+    (page.parts ?? []).map((part) => `${page.component}/${part.name}`)));
+  const mappedDocumentedPaths = [...documentedPaths].filter((path) => {
+    const separator = path.indexOf('/');
+    const component = path.slice(0, separator);
+    const semanticPath = path.slice(separator + 1);
     return catalog.get(component)?.has(semanticPath);
   }).length;
+  const documentedComponents = new Set([...documentedPaths].map((path) => path.slice(0, path.indexOf('/'))));
   return {
     catalogComponents: { total: componentNames.length, migrated: componentNames.filter((name) => catalog.has(name)).length },
     definitions: { total: entries.length, migrated: definitions },
     apiSlots: { total: slots.length, migrated: mappedSlots },
     dumiPaths: { total: dumiPaths.size, migrated: mappedDumiPaths },
+    documentedComponents: {
+      total: documentedComponents.size,
+      migrated: [...documentedComponents].filter((name) => catalog.has(name)).length,
+    },
+    documentedSlots: { total: documentedPaths.size, migrated: mappedDocumentedPaths },
   };
 }

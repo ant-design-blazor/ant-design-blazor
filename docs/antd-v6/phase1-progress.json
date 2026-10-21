@@ -24,29 +24,39 @@
   },
   "semanticDom": {
     "catalogComponents": {
-      "total": 59,
-      "migrated": 59,
+      "total": 61,
+      "migrated": 61,
       "pending": 0
     },
     "definitions": {
-      "total": 69,
-      "migrated": 69,
+      "total": 70,
+      "migrated": 70,
       "pending": 0
     },
     "apiSlots": {
-      "total": 409,
-      "migrated": 409,
+      "total": 423,
+      "migrated": 423,
       "pending": 0
     },
     "dumiPaths": {
-      "total": 350,
-      "migrated": 350,
+      "total": 352,
+      "migrated": 352,
+      "pending": 0
+    },
+    "documentedComponents": {
+      "total": 62,
+      "migrated": 62,
+      "pending": 0
+    },
+    "documentedSlots": {
+      "total": 423,
+      "migrated": 423,
       "pending": 0
     },
     "structureMigration": {
-      "total": 69,
-      "migrated": 58,
-      "pending": 11
+      "total": 70,
+      "migrated": 70,
+      "pending": 0
     }
   },
   "documentation": {
@@ -59,6 +69,65 @@
       "total": 1,
       "migrated": 1,
       "pending": 0
+    },
+    "componentTokenPages": {
+      "total": 65,
+      "migrated": 65,
+      "pending": 0
+    },
+    "componentTokenRows": {
+      "total": 584,
+      "migrated": 584,
+      "pending": 0
+    }
+  },
+  "componentTokenDocumentation": {
+    "totalReactComponentsWithTokenTable": 65,
+    "completeBlazorPages": 65,
+    "delivery": "shared component route renders the generated token table in both locales",
+    "missingEnglish": [],
+    "missingChinese": [],
+    "componentsWithoutDocumentedTokenRows": [
+      "app",
+      "border-beam",
+      "checkbox",
+      "empty",
+      "flex",
+      "float-button",
+      "grid",
+      "masonry",
+      "qr-code",
+      "space"
+    ],
+    "tokenMetadataParity": {
+      "missingIrTokens": {
+        "count": 0,
+        "samples": []
+      },
+      "missingDocumentedRows": {
+        "count": 0,
+        "samples": []
+      },
+      "unexpectedDocumentedRows": {
+        "count": 0,
+        "samples": []
+      },
+      "mismatchedDescriptions": {
+        "count": 0,
+        "samples": []
+      },
+      "mismatchedEnglishDescriptions": {
+        "count": 0,
+        "samples": []
+      },
+      "mismatchedDefaults": {
+        "count": 0,
+        "samples": []
+      },
+      "mismatchedCssVariables": {
+        "count": 0,
+        "samples": []
+      }
     }
   }
 }

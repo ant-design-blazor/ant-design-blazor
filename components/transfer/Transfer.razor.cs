@@ -40,6 +40,69 @@ namespace AntDesign
         private const string FooterClass = "ant-transfer-section-with-footer";
 
         /// <summary>
+        /// Semantic classes for the transfer root, shared slots, and source/target slots.
+        /// Direction-specific keys use the dotted form, for example <c>source.header</c>.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>
+        /// Semantic inline styles for the transfer root, shared slots, and source/target slots.
+        /// Direction-specific keys use the dotted form, for example <c>target.section</c>.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        private string SemanticClass(string slot, string baseClass, TransferDirection? direction = null)
+        {
+            var classes = new List<string>(3);
+            if (!string.IsNullOrWhiteSpace(baseClass))
+            {
+                classes.Add(baseClass);
+            }
+
+            AddSemanticClass(classes, slot);
+            if (direction.HasValue)
+            {
+                AddSemanticClass(classes, $"{SemanticDirection(direction.Value)}.{slot}");
+            }
+
+            return string.Join(" ", classes);
+        }
+
+        private void AddSemanticClass(List<string> classes, string key)
+        {
+            if (ClassNames != null && ClassNames.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value))
+            {
+                classes.Add(value);
+            }
+        }
+
+        private string SemanticStyle(string slot, string baseStyle = null, TransferDirection? direction = null)
+        {
+            var style = baseStyle;
+            if (Styles != null && Styles.TryGetValue(slot, out var sharedStyle) && !string.IsNullOrWhiteSpace(sharedStyle))
+            {
+                style = AppendStyle(style, sharedStyle);
+            }
+
+            if (direction.HasValue && Styles != null && Styles.TryGetValue($"{SemanticDirection(direction.Value)}.{slot}", out var directionStyle) && !string.IsNullOrWhiteSpace(directionStyle))
+            {
+                style = AppendStyle(style, directionStyle);
+            }
+
+            return style;
+        }
+
+        private static string AppendStyle(string current, string additional)
+        {
+            if (string.IsNullOrWhiteSpace(current)) return additional;
+            return $"{current.Trim().TrimEnd(';')}; {additional}";
+        }
+
+        private static string SemanticDirection(TransferDirection direction) => direction == TransferDirection.Left ? "source" : "target";
+
+        /// <summary>
         /// Used for setting the source data. 
         /// The elements that are part of this array will be present jn the left column, except for the elements whose keys are included in <see cref="TargetKeys"/>.
         /// </summary>

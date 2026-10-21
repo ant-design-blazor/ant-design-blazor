@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign.Internal
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@(!ShowButton ? "display:none;" : "")">
+<div class="@Upload?.SemanticClass("trigger", ClassMapper.Class)" style="@(Upload?.SemanticStyle("trigger", !ShowButton ? "display:none;" : string.Empty) ?? string.Empty)">
     <span tabindex="0" class="ant-upload" style="display: grid;" @ref="_btn" data-fileid="@_fileId" role="button">
         @if (Upload?.Trigger == UploadTrigger.Click)
         {

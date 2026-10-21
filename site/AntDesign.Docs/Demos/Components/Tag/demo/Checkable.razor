@@ -1,11 +1,30 @@
-﻿<div>
-    <span style="margin-right:8px">Categories:</span>
-    <Tag Checkable Checked="lstCheck[0]">Movies</Tag>
-    <Tag Checkable Checked="lstCheck[1]">Books</Tag>
-    <Tag Checkable Checked="lstCheck[2]">Music</Tag>
-    <Tag Checkable Checked="lstCheck[3]">Sports</Tag>	
+@using System.Collections.Generic
+@using System.Linq
+
+<div style="display:flex; flex-direction:column; gap:16px">
+    <div>
+        <span style="display:inline-block; width:80px">Checkable</span>
+        <Tag Checkable Checked="_checked" CheckedChanged="value => _checked = value">Yes</Tag>
+    </div>
+    <div>
+        <span style="display:inline-block; width:80px">Single</span>
+        <CheckableTagGroup Options="_options" Value="@_single" ValueChanged="value => _single = value" />
+    </div>
+    <div>
+        <span style="display:inline-block; width:80px">Multiple</span>
+        <CheckableTagGroup Multiple Options="_options" Values="_multiple" ValuesChanged="values => _multiple = values.ToList()" />
+    </div>
 </div>
 
-@code{
-    bool[] lstCheck = new bool[] { false, true, false, false };
+@code {
+    private bool _checked = true;
+    private string _single = "Books";
+    private List<string> _multiple = new() { "Movies", "Music" };
+    private readonly IReadOnlyList<CheckableTagOption> _options = new[]
+    {
+        new CheckableTagOption { Value = "Movies", Label = "Movies" },
+        new CheckableTagOption { Value = "Books", Label = "Books" },
+        new CheckableTagOption { Value = "Music", Label = "Music" },
+        new CheckableTagOption { Value = "Sports", Label = "Sports" },
+    };
 }

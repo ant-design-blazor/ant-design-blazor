@@ -1,0 +1,19 @@
+<Select Mode="SelectMode.Multiple"
+        @bind-Values="_selectedValues"
+        TItemValue="string"
+        TItem="string"
+        MaxCount="3"
+        Style="width: 100%;"
+        Placeholder="Please select">
+    <SelectOptions>
+        @foreach (var name in _names)
+        {
+            <SelectOption TItemValue="string" TItem="string" Value="@name" Label="@name" />
+        }
+    </SelectOptions>
+</Select>
+
+@code {
+    private readonly string[] _names = ["Ava Swift", "Cole Reed", "Mia Blake", "Jake Stone", "Lily Lane", "Ryan Chase"];
+    private IEnumerable<string> _selectedValues = ["Ava Swift"];
+}

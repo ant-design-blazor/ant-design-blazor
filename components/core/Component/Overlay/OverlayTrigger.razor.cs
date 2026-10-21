@@ -16,6 +16,10 @@ namespace AntDesign.Internal
 {
     public partial class OverlayTrigger : AntDomComponentBase
     {
+        internal virtual string GetOverlayAdditionalClass() => string.Empty;
+
+        internal virtual string GetOverlayAdditionalStyle() => string.Empty;
+
         [CascadingParameter(Name = "PrefixCls")]
         public string PrefixCls { get; set; } = "ant-dropdown";
 

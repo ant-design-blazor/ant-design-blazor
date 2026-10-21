@@ -50,6 +50,20 @@ namespace AntDesign
         [Parameter]
         public bool Bordered { get; set; } = true;
 
+        /// <summary>
+        /// Visual style of the selector. When omitted, the legacy <see cref="Bordered"/> value is used.
+        /// </summary>
+        [Parameter]
+        public InputVariant? Variant { get; set; }
+
+        private InputVariant EffectiveVariant => Variant ?? (Bordered ? InputVariant.Outlined : InputVariant.Borderless);
+
+        /// <summary>
+        /// Validation status of the selector. When omitted, the status is inherited from the containing FormItem.
+        /// </summary>
+        [Parameter]
+        public string Status { get; set; }
+
 #if NET5_0_OR_GREATER
         /// <summary>
         /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
@@ -250,6 +264,13 @@ namespace AntDesign
         public char[] TokenSeparators { get; set; }
 
         /// <summary>
+        /// Converts the current search text into committed values for tags or multiple mode.
+        /// Return an empty sequence while the text is incomplete.
+        /// </summary>
+        [Parameter]
+        public Func<string, IEnumerable<string>> Tokenize { get; set; }
+
+        /// <summary>
         /// Used for the two-way binding.
         /// </summary>
         [Parameter]
@@ -430,6 +451,7 @@ namespace AntDesign
 
         protected override async Task OnParametersSetAsync()
         {
+            SetClassMap();
             EvaluateDataSourceChange();
 
             if (SelectOptions == null)
@@ -768,24 +790,38 @@ namespace AntDesign
         /// </summary>
         protected override void SetClassMap()
         {
+            var status = GetValidationStatus();
             ClassMapper
+                .Clear()
                 .Add($"{ClassPrefix}")
                 .If($"{ClassPrefix}-sm", () => Size == InputSize.Small)
                 .If($"{ClassPrefix}-lg", () => Size == InputSize.Large)
-                .If($"{ClassPrefix}-outlined", () => Bordered)
+                .If($"{ClassPrefix}-{EffectiveVariant.ToString().ToLowerInvariant()}", () => true)
                 .Add($"{ClassPrefix}-css-var")
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
                 .If($"{ClassPrefix}-single", () => Mode == SelectMode.Default)
                 .If($"{ClassPrefix}-multiple", () => Mode != SelectMode.Default)
-                .If($"{ClassPrefix}-borderless", () => !Bordered)
+                .If($"{ClassPrefix}-in-form-item ", () => FormItem != null)
+                .If($"{ClassPrefix}-has-feedback", () => FormItem?.HasFeedback == true)
                 .If($"{ClassPrefix}-show-arrow", () => ShowArrowIcon)
                 .If($"{ClassPrefix}-show-search", () => IsSearchEnabled)
                 .If($"{ClassPrefix}-loading", () => Loading)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
                 .If($"{ClassPrefix}-rtl", () => RTL)
+                .GetIf(() => $"{ClassPrefix}-status-{status}", () => status is not null)
 
                 ;
+        }
+
+        private string? GetValidationStatus()
+        {
+            if (!string.IsNullOrWhiteSpace(Status))
+                return Status.ToLowerInvariant();
+
+            return FormItem?.ValidateStatus is FormValidateStatus.Error or FormValidateStatus.Warning
+                ? FormItem.ValidateStatus.ToString().ToLowerInvariant()
+                : null;
         }
 
         /// <summary>
@@ -1174,6 +1210,7 @@ namespace AntDesign
             }
 
             bool containsToken = false;
+            IEnumerable<string> customTokens = null;
             _prevSearchValue = _searchValue;
             if (_isToken)
                 _searchValue = e.Value?.ToString().TrimEnd(TokenSeparators);
@@ -1185,13 +1222,28 @@ namespace AntDesign
                 {
                     containsToken = TokenSeparators.Any(t => _searchValue.Contains(t));
                 }
+
+                if (Tokenize is not null && Mode is SelectMode.Tags or SelectMode.Multiple)
+                {
+                    customTokens = Tokenize(_searchValue ?? string.Empty)?.Where(token => !string.IsNullOrWhiteSpace(token)).ToArray();
+                    containsToken |= customTokens?.Any() == true;
+                }
             }
 
             //_inputWidth = string.IsNullOrEmpty(_searchValue) ? InputDefaultWidth : $"{4 + _searchValue.Length * 8}px";
 
             if (containsToken)
             {
-                await TokenizeSearchedPhrase(_searchValue);
+                if (customTokens?.Any() == true)
+                {
+                    await TokenizeValuesAsync(customTokens);
+                    _searchValue = string.Empty;
+                    UnhideSelectOptions();
+                }
+                else
+                {
+                    await TokenizeSearchedPhrase(_searchValue);
+                }
             }
 
             if (!string.IsNullOrEmpty(_searchValue))
@@ -1212,10 +1264,16 @@ namespace AntDesign
 
         private async Task TokenizeSearchedPhrase(string searchValue)
         {
-            Dictionary<string, SelectOptionItem<TItemValue, TItem>> tokenItemMatch = new();
-            tokenItemMatch = searchValue.Split(TokenSeparators).Distinct().ToDictionary(
-                item => item.Trim(),
-                _ => default(SelectOptionItem<TItemValue, TItem>));
+            await TokenizeValuesAsync(searchValue.Split(TokenSeparators));
+        }
+
+        private async Task TokenizeValuesAsync(IEnumerable<string> values)
+        {
+            var tokenItemMatch = values
+                .Select(item => item.Trim())
+                .Where(item => !string.IsNullOrWhiteSpace(item))
+                .Distinct()
+                .ToDictionary(item => item, _ => default(SelectOptionItem<TItemValue, TItem>));
 
             if (Mode == SelectMode.Tags)
             {

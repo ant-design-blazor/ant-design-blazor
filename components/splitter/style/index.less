@@ -120,6 +120,20 @@
     transform: translate(-50%, -50%);
 }
 
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-dragger-customize::after {
+    display: none;
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-dragger-customize .ant-splitter-bar-dragger-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    transform: translate(-50%, -50%);
+    color: var(--ant-color-fill);
+}
+
 .ant-splitter-horizontal>.ant-splitter-bar .ant-splitter-bar-dragger::after {
     height: var(--ant-splitter-split-bar-draggable-size);
     width: var(--ant-splitter-split-bar-size);
@@ -162,6 +176,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-collapse-bar:focus-visible {
+    outline: var(--ant-line-width-focus) solid var(--ant-color-primary-border);
+    outline-offset: 1px;
+    transition: outline-offset 0s, outline 0s;
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-collapse-bar:hover:not(.ant-splitter-bar-collapse-bar-customize) {
+    background: var(--ant-control-item-bg-active);
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-collapse-bar:active:not(.ant-splitter-bar-collapse-bar-customize) {
+    background: var(--ant-control-item-bg-active-hover);
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-collapse-bar-customize {
+    background: transparent;
+}
+
+.ant-splitter>.ant-splitter-bar .ant-splitter-bar-collapse-icon {
+    display: flex;
+    align-items: center;
 }
 
 .ant-splitter-horizontal >.ant-splitter-bar .ant-splitter-bar-collapse-bar {
@@ -226,10 +263,22 @@
     transform: translate(-50%, -50%);
 }
 
-.ant-splitter >.ant-splitter-bar:hover .ant-splitter-bar-collapse-bar, .ant-splitter >.ant-splitter-bar:active .ant-splitter-bar-collapse-bar {
+.ant-splitter >.ant-splitter-bar:hover .ant-splitter-bar-collapse-bar-hover-only,
+.ant-splitter >.ant-splitter-bar:active .ant-splitter-bar-collapse-bar-hover-only,
+.ant-splitter >.ant-splitter-bar:focus-within .ant-splitter-bar-collapse-bar-hover-only {
     opacity: 1;
 }
 
-.ant-splitter >.ant-splitter-bar:hover .ant-splitter-bar-collapse-bar, .ant-splitter >.ant-splitter-bar:active .ant-splitter-bar-collapse-bar {
+.ant-splitter >.ant-splitter-bar .ant-splitter-bar-collapse-bar-hover-only {
+    @media (hover: none) {
+        opacity: 1;
+    }
+}
+
+.ant-splitter >.ant-splitter-bar .ant-splitter-bar-collapse-bar-always-hidden {
+    display: none;
+}
+
+.ant-splitter >.ant-splitter-bar .ant-splitter-bar-collapse-bar-always-visible {
     opacity: 1;
 }

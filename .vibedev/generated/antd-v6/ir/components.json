@@ -3,27 +3,75 @@
     "name": "affix",
     "className": "ant-affix",
     "styleSource": "components/affix/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/affix/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": false,
+    "tokenDefinitions": [
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "弹出层的 z-index",
+        "descriptionEn": "z-index of popup"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "alert",
     "className": "ant-alert",
     "styleSource": "components/alert/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/alert/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "borderRadius",
+        "type": "CSSProperties['borderRadius']",
+        "description": "组件圆角",
+        "descriptionEn": "Border radius of alert"
+      },
+      {
+        "name": "defaultPadding",
+        "type": "CSSProperties['padding']",
+        "description": "默认内间距",
+        "descriptionEn": "Default padding"
+      },
+      {
+        "name": "withDescriptionIconSize",
+        "type": "number | string",
+        "description": "带有描述时的图标尺寸",
+        "descriptionEn": "Icon size with description"
+      },
+      {
+        "name": "withDescriptionPadding",
+        "type": "CSSProperties['padding']",
+        "description": "带有描述的内间距",
+        "descriptionEn": "Padding with description"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "anchor",
     "className": "ant-anchor",
     "styleSource": "components/anchor/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/anchor/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "linkPaddingBlock",
+        "type": "number",
+        "description": "链接纵向内间距",
+        "descriptionEn": "Vertical padding of link"
+      },
+      {
+        "name": "linkPaddingInlineStart",
+        "type": "number",
+        "description": "链接横向内间距",
+        "descriptionEn": "Horizontal padding of link"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -32,34 +80,173 @@
     "styleSource": "components/app/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": true,
     "tokenDefinitions": [],
-    "implementedInBlazor": false
+    "implementedInBlazor": true
   },
   {
     "name": "avatar",
     "className": "ant-avatar",
     "styleSource": "components/avatar/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/avatar/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "containerSize",
+        "type": "number",
+        "description": "头像尺寸",
+        "descriptionEn": "Size of Avatar"
+      },
+      {
+        "name": "containerSizeLG",
+        "type": "number",
+        "description": "大号头像尺寸",
+        "descriptionEn": "Size of large Avatar"
+      },
+      {
+        "name": "containerSizeSM",
+        "type": "number",
+        "description": "小号头像尺寸",
+        "descriptionEn": "Size of small Avatar"
+      },
+      {
+        "name": "groupBorderColor",
+        "type": "string",
+        "description": "头像组边框颜色",
+        "descriptionEn": "Border color of avatars in a group"
+      },
+      {
+        "name": "groupOverlapping",
+        "type": "number",
+        "description": "头像组重叠宽度",
+        "descriptionEn": "Overlapping of avatars in a group"
+      },
+      {
+        "name": "groupSpace",
+        "type": "number",
+        "description": "头像组间距",
+        "descriptionEn": "Spacing between avatars in a group"
+      },
+      {
+        "name": "iconFontSize",
+        "type": "number",
+        "description": "头像图标大小",
+        "descriptionEn": "Font size of Avatar icon"
+      },
+      {
+        "name": "iconFontSizeLG",
+        "type": "number | string",
+        "description": "大号头像图标大小",
+        "descriptionEn": "Font size of large Avatar icon"
+      },
+      {
+        "name": "iconFontSizeSM",
+        "type": "number",
+        "description": "小号头像图标大小",
+        "descriptionEn": "Font size of small Avatar icon"
+      },
+      {
+        "name": "textFontSize",
+        "type": "number",
+        "description": "头像文字大小",
+        "descriptionEn": "Font size of Avatar"
+      },
+      {
+        "name": "textFontSizeLG",
+        "type": "number",
+        "description": "大号头像文字大小",
+        "descriptionEn": "Font size of large Avatar"
+      },
+      {
+        "name": "textFontSizeSM",
+        "type": "number",
+        "description": "小号头像文字大小",
+        "descriptionEn": "Font size of small Avatar"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "back-top",
     "className": "ant-back-top",
     "styleSource": "components/back-top/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/back-top/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": false,
+    "tokenDefinitions": [
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "弹出层的 z-index",
+        "descriptionEn": "z-index of popup"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "badge",
     "className": "ant-badge",
     "styleSource": "components/badge/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/badge/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "dotSize",
+        "type": "number",
+        "description": "点状徽标尺寸",
+        "descriptionEn": "Size of dot badge"
+      },
+      {
+        "name": "indicatorHeight",
+        "type": "number | string",
+        "description": "徽标高度",
+        "descriptionEn": "Height of badge"
+      },
+      {
+        "name": "indicatorHeightSM",
+        "type": "number | string",
+        "description": "小号徽标高度",
+        "descriptionEn": "Height of small badge"
+      },
+      {
+        "name": "indicatorZIndex",
+        "type": "number | string",
+        "description": "徽标 z-index",
+        "descriptionEn": "z-index of badge"
+      },
+      {
+        "name": "paddingInline",
+        "type": "number | string",
+        "description": "多字符徽标水平内边距",
+        "descriptionEn": "Inline padding of multiple words badge"
+      },
+      {
+        "name": "statusSize",
+        "type": "number",
+        "description": "状态徽标尺寸",
+        "descriptionEn": "Size of status badge"
+      },
+      {
+        "name": "textFontSize",
+        "type": "number",
+        "description": "徽标文本尺寸",
+        "descriptionEn": "Font size of badge text"
+      },
+      {
+        "name": "textFontSizeSM",
+        "type": "number",
+        "description": "小号徽标文本尺寸",
+        "descriptionEn": "Font size of small badge text"
+      },
+      {
+        "name": "textFontWeight",
+        "type": "number | string",
+        "description": "徽标文本粗细",
+        "descriptionEn": "Font weight of badge text"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -68,6 +255,7 @@
     "styleSource": "components/border-beam/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": true,
     "tokenDefinitions": [],
     "implementedInBlazor": false
   },
@@ -75,9 +263,53 @@
     "name": "breadcrumb",
     "className": "ant-breadcrumb",
     "styleSource": "components/breadcrumb/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/breadcrumb/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "iconFontSize",
+        "type": "number",
+        "description": "图标大小",
+        "descriptionEn": "Icon size"
+      },
+      {
+        "name": "itemColor",
+        "type": "string",
+        "description": "面包屑项文字颜色",
+        "descriptionEn": "Text color of Breadcrumb item"
+      },
+      {
+        "name": "lastItemColor",
+        "type": "string",
+        "description": "最后一项文字颜色",
+        "descriptionEn": "Text color of the last item"
+      },
+      {
+        "name": "linkColor",
+        "type": "string",
+        "description": "链接文字颜色",
+        "descriptionEn": "Text color of link"
+      },
+      {
+        "name": "linkHoverColor",
+        "type": "string",
+        "description": "链接文字悬浮颜色",
+        "descriptionEn": "Color of hovered link"
+      },
+      {
+        "name": "separatorColor",
+        "type": "string",
+        "description": "分隔符颜色",
+        "descriptionEn": "Color of separator"
+      },
+      {
+        "name": "separatorMargin",
+        "type": "number",
+        "description": "分隔符外间距",
+        "descriptionEn": "Margin of separator"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -86,178 +318,270 @@
     "styleSource": "components/button/style/index.ts",
     "tokenSource": "components/button/style/token.ts",
     "hasTokenSource": true,
+    "hasTokenTable": true,
     "tokenDefinitions": [
       {
         "name": "borderColorDisabled",
-        "type": "string"
+        "type": "string",
+        "description": "禁用状态边框颜色",
+        "descriptionEn": "Border color of disabled button",
+        "deprecated": true
       },
       {
         "name": "contentFontSize",
-        "type": "number"
+        "type": "number",
+        "description": "按钮内容字体大小",
+        "descriptionEn": "Font size of button content"
       },
       {
         "name": "contentFontSizeLG",
-        "type": "number"
+        "type": "number",
+        "description": "大号按钮内容字体大小",
+        "descriptionEn": "Font size of large button content"
       },
       {
         "name": "contentFontSizeSM",
-        "type": "number"
+        "type": "number",
+        "description": "小号按钮内容字体大小",
+        "descriptionEn": "Font size of small button content"
       },
       {
         "name": "contentLineHeight",
-        "type": "number"
+        "type": "number",
+        "description": "按钮内容字体行高",
+        "descriptionEn": "Line height of button content",
+        "deprecated": true
       },
       {
         "name": "contentLineHeightLG",
-        "type": "number"
+        "type": "number",
+        "description": "大号按钮内容字体行高",
+        "descriptionEn": "Line height of large button content",
+        "deprecated": true
       },
       {
         "name": "contentLineHeightSM",
-        "type": "number"
+        "type": "number",
+        "description": "小号按钮内容字体行高",
+        "descriptionEn": "Line height of small button content",
+        "deprecated": true
       },
       {
         "name": "dangerColor",
-        "type": "string"
+        "type": "string",
+        "description": "危险按钮文本颜色",
+        "descriptionEn": "Text color of danger button"
       },
       {
         "name": "dangerShadow",
-        "type": "string"
+        "type": "string",
+        "description": "危险按钮阴影",
+        "descriptionEn": "Shadow of danger button"
       },
       {
         "name": "dashedBgDisabled",
-        "type": "string"
+        "type": "string",
+        "description": "type='dashed' 禁用状态下的背景颜色"
       },
       {
         "name": "defaultActiveBg",
-        "type": "string"
+        "type": "string",
+        "description": "默认按钮激活态背景色",
+        "descriptionEn": "Background color of default button when active"
       },
       {
         "name": "defaultActiveBorderColor",
-        "type": "string"
+        "type": "string",
+        "description": "默认按钮激活态边框颜色",
+        "descriptionEn": "Border color of default button when active"
       },
       {
         "name": "defaultActiveColor",
-        "type": "string"
+        "type": "string",
+        "description": "默认按钮激活态文字颜色",
+        "descriptionEn": "Text color of default button when active"
       },
       {
         "name": "defaultBg",
-        "type": "string"
+        "type": "string",
+        "description": "默认按钮背景色",
+        "descriptionEn": "Background color of default button"
       },
       {
         "name": "defaultBgDisabled",
-        "type": "string"
+        "type": "string",
+        "description": "type='default' 禁用状态下的背景颜色"
       },
       {
         "name": "defaultBorderColor",
-        "type": "string"
+        "type": "string",
+        "description": "默认按钮边框颜色",
+        "descriptionEn": "Border color of default button"
       },
       {
         "name": "defaultColor",
-        "type": "string"
+        "type": "string",
+        "description": "默认按钮文本颜色",
+        "descriptionEn": "Text color of default button"
       },
       {
         "name": "defaultGhostBorderColor",
-        "type": "string"
+        "type": "string",
+        "description": "默认幽灵按钮边框颜色",
+        "descriptionEn": "Border color of default ghost button"
       },
       {
         "name": "defaultGhostColor",
-        "type": "string"
+        "type": "string",
+        "description": "默认幽灵按钮文本颜色",
+        "descriptionEn": "Text color of default ghost button"
       },
       {
         "name": "defaultHoverBg",
-        "type": "string"
+        "type": "string",
+        "description": "默认按钮悬浮态背景色",
+        "descriptionEn": "Background color of default button when hover"
       },
       {
         "name": "defaultHoverBorderColor",
-        "type": "string"
+        "type": "string",
+        "description": "默认按钮悬浮态边框颜色",
+        "descriptionEn": "Border color of default button"
       },
       {
         "name": "defaultHoverColor",
-        "type": "string"
+        "type": "string",
+        "description": "默认按钮悬浮态文本颜色",
+        "descriptionEn": "Text color of default button when hover"
       },
       {
         "name": "defaultShadow",
-        "type": "string"
+        "type": "string",
+        "description": "默认按钮阴影",
+        "descriptionEn": "Shadow of default button"
       },
       {
         "name": "fontWeight",
-        "type": "CSSProperties['fontWeight']"
+        "type": "CSSProperties['fontWeight']",
+        "description": "文字字重",
+        "descriptionEn": "Font weight of text"
       },
       {
         "name": "ghostBg",
-        "type": "string"
+        "type": "string",
+        "description": "幽灵按钮背景色",
+        "descriptionEn": "Background color of ghost button"
       },
       {
         "name": "iconGap",
-        "type": "CSSProperties['gap']"
+        "type": "CSSProperties['gap']",
+        "description": "图标文字间距",
+        "descriptionEn": "Gap between icon and text"
       },
       {
         "name": "linkHoverBg",
-        "type": "string"
+        "type": "string",
+        "description": "链接按钮悬浮态背景色",
+        "descriptionEn": "Background color of link button when hover"
       },
       {
         "name": "onlyIconSize",
-        "type": "number | string"
+        "type": "number | string",
+        "description": "只有图标的按钮图标尺寸",
+        "descriptionEn": "Icon size of button which only contains icon"
       },
       {
         "name": "onlyIconSizeLG",
-        "type": "number | string"
+        "type": "number | string",
+        "description": "大号只有图标的按钮图标尺寸",
+        "descriptionEn": "Icon size of large button which only contains icon"
       },
       {
         "name": "onlyIconSizeSM",
-        "type": "number | string"
+        "type": "number | string",
+        "description": "小号只有图标的按钮图标尺寸",
+        "descriptionEn": "Icon size of small button which only contains icon"
       },
       {
         "name": "paddingBlock",
-        "type": "CSSProperties['paddingBlock']"
+        "type": "CSSProperties['paddingBlock']",
+        "description": "按钮纵向内间距",
+        "descriptionEn": "Vertical padding of button",
+        "deprecated": true
       },
       {
         "name": "paddingBlockLG",
-        "type": "CSSProperties['paddingBlock']"
+        "type": "CSSProperties['paddingBlock']",
+        "description": "大号按钮纵向内间距",
+        "descriptionEn": "Vertical padding of large button",
+        "deprecated": true
       },
       {
         "name": "paddingBlockSM",
-        "type": "CSSProperties['paddingBlock']"
+        "type": "CSSProperties['paddingBlock']",
+        "description": "小号按钮纵向内间距",
+        "descriptionEn": "Vertical padding of small button",
+        "deprecated": true
       },
       {
         "name": "paddingInline",
-        "type": "CSSProperties['paddingInline']"
+        "type": "CSSProperties['paddingInline']",
+        "description": "按钮横向内间距",
+        "descriptionEn": "Horizontal padding of button"
       },
       {
         "name": "paddingInlineLG",
-        "type": "CSSProperties['paddingInline']"
+        "type": "CSSProperties['paddingInline']",
+        "description": "大号按钮横向内间距",
+        "descriptionEn": "Horizontal padding of large button"
       },
       {
         "name": "paddingInlineSM",
-        "type": "CSSProperties['paddingInline']"
+        "type": "CSSProperties['paddingInline']",
+        "description": "小号按钮横向内间距",
+        "descriptionEn": "Horizontal padding of small button"
       },
       {
         "name": "primaryColor",
-        "type": "string"
+        "type": "string",
+        "description": "主要按钮文本颜色",
+        "descriptionEn": "Text color of primary button"
       },
       {
         "name": "primaryShadow",
-        "type": "string"
+        "type": "string",
+        "description": "主要按钮阴影",
+        "descriptionEn": "Shadow of primary button"
       },
       {
         "name": "solidTextColor",
-        "type": "string"
+        "type": "string",
+        "description": "主要填充按钮的浅色背景颜色",
+        "descriptionEn": "Background color of primary filled button"
       },
       {
         "name": "textHoverBg",
-        "type": "string"
+        "type": "string",
+        "description": "文本按钮悬浮态背景色",
+        "descriptionEn": "Background color of text button when hover"
       },
       {
         "name": "textTextActiveColor",
-        "type": "string"
+        "type": "string",
+        "description": "默认文本按钮激活态文字颜色",
+        "descriptionEn": "Default text color for text buttons on active"
       },
       {
         "name": "textTextColor",
-        "type": "string"
+        "type": "string",
+        "description": "默认文本按钮的文本色",
+        "descriptionEn": "Default text color for text buttons"
       },
       {
         "name": "textTextHoverColor",
-        "type": "string"
+        "type": "string",
+        "description": "默认文本按钮悬浮态文本颜色",
+        "descriptionEn": "Default text color for text buttons on hover"
       }
     ],
     "implementedInBlazor": true
@@ -266,36 +590,253 @@
     "name": "calendar",
     "className": "ant-calendar",
     "styleSource": "components/calendar/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/calendar/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "fullBg",
+        "type": "string",
+        "description": "完整日历背景色",
+        "descriptionEn": "Background color of full calendar"
+      },
+      {
+        "name": "fullPanelBg",
+        "type": "string",
+        "description": "完整日历面板背景色",
+        "descriptionEn": "Background color of full calendar panel"
+      },
+      {
+        "name": "itemActiveBg",
+        "type": "string",
+        "description": "日期项选中背景色",
+        "descriptionEn": "Background color of selected date item"
+      },
+      {
+        "name": "miniContentHeight",
+        "type": "number | string",
+        "description": "迷你日历内容高度",
+        "descriptionEn": "Height of mini calendar content"
+      },
+      {
+        "name": "monthControlWidth",
+        "type": "number | string",
+        "description": "月选择器宽度",
+        "descriptionEn": "Width of month select"
+      },
+      {
+        "name": "yearControlWidth",
+        "type": "number | string",
+        "description": "年选择器宽度",
+        "descriptionEn": "Width of year select"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "card",
     "className": "ant-card",
     "styleSource": "components/card/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/card/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "actionsBg",
+        "type": "string",
+        "description": "操作区背景色",
+        "descriptionEn": "Background color of card actions"
+      },
+      {
+        "name": "actionsLiMargin",
+        "type": "string",
+        "description": "操作区每一项的外间距",
+        "descriptionEn": "Margin of each item in card actions"
+      },
+      {
+        "name": "bodyPadding",
+        "type": "number",
+        "description": "卡片内边距",
+        "descriptionEn": "Padding of card body"
+      },
+      {
+        "name": "bodyPaddingSM",
+        "type": "number",
+        "description": "小号卡片内边距",
+        "descriptionEn": "Padding of small card body"
+      },
+      {
+        "name": "extraColor",
+        "type": "string",
+        "description": "额外区文字颜色",
+        "descriptionEn": "Text color of extra area"
+      },
+      {
+        "name": "headerBg",
+        "type": "string",
+        "description": "卡片头部背景色",
+        "descriptionEn": "Background color of card header"
+      },
+      {
+        "name": "headerFontSize",
+        "type": "number | string",
+        "description": "卡片头部文字大小",
+        "descriptionEn": "Font size of card header"
+      },
+      {
+        "name": "headerFontSizeSM",
+        "type": "number | string",
+        "description": "小号卡片头部文字大小",
+        "descriptionEn": "Font size of small card header"
+      },
+      {
+        "name": "headerHeight",
+        "type": "number | string",
+        "description": "卡片头部高度",
+        "descriptionEn": "Height of card header"
+      },
+      {
+        "name": "headerHeightSM",
+        "type": "number | string",
+        "description": "小号卡片头部高度",
+        "descriptionEn": "Height of small card header"
+      },
+      {
+        "name": "headerPadding",
+        "type": "number",
+        "description": "卡片头部内边距",
+        "descriptionEn": "Padding of card head"
+      },
+      {
+        "name": "headerPaddingSM",
+        "type": "number",
+        "description": "小号卡片头部内边距",
+        "descriptionEn": "Padding of small card head"
+      },
+      {
+        "name": "tabsMarginBottom",
+        "type": "number",
+        "description": "内置标签页组件下间距",
+        "descriptionEn": "Margin bottom of tabs component"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "carousel",
     "className": "ant-carousel",
     "styleSource": "components/carousel/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/carousel/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "arrowOffset",
+        "type": "number",
+        "description": "切换箭头边距",
+        "descriptionEn": "arrows offset to Carousel edge"
+      },
+      {
+        "name": "arrowSize",
+        "type": "number",
+        "description": "切换箭头大小",
+        "descriptionEn": "Size of arrows"
+      },
+      {
+        "name": "dotActiveWidth",
+        "type": "number | string",
+        "description": "激活态指示点宽度",
+        "descriptionEn": "Width of active indicator"
+      },
+      {
+        "name": "dotGap",
+        "type": "number",
+        "description": "指示点之间的间距",
+        "descriptionEn": "gap between indicator"
+      },
+      {
+        "name": "dotHeight",
+        "type": "number | string",
+        "description": "指示点高度",
+        "descriptionEn": "Height of indicator"
+      },
+      {
+        "name": "dotOffset",
+        "type": "number",
+        "description": "指示点距离边缘的距离",
+        "descriptionEn": "dot offset to Carousel edge"
+      },
+      {
+        "name": "dotWidth",
+        "type": "number | string",
+        "description": "指示点宽度",
+        "descriptionEn": "Width of indicator"
+      },
+      {
+        "name": "dotWidthActive",
+        "type": "number",
+        "deprecated": true
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "cascader",
     "className": "ant-cascader",
     "styleSource": "components/cascader/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/cascader/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "controlItemWidth",
+        "type": "number | string",
+        "description": "选项宽度",
+        "descriptionEn": "Width of item"
+      },
+      {
+        "name": "controlWidth",
+        "type": "number | string",
+        "description": "选择器宽度",
+        "descriptionEn": "Width of Cascader"
+      },
+      {
+        "name": "dropdownHeight",
+        "type": "number | string",
+        "description": "下拉菜单高度",
+        "descriptionEn": "Height of dropdown"
+      },
+      {
+        "name": "menuPadding",
+        "type": "CSSProperties['padding']",
+        "description": "选项菜单（单列）内间距",
+        "descriptionEn": "Padding of menu item (single column)"
+      },
+      {
+        "name": "optionPadding",
+        "type": "CSSProperties['padding']",
+        "description": "选项内间距",
+        "descriptionEn": "Padding of menu item"
+      },
+      {
+        "name": "optionSelectedBg",
+        "type": "string",
+        "description": "选项选中时背景色",
+        "descriptionEn": "Background color of selected item"
+      },
+      {
+        "name": "optionSelectedColor",
+        "type": "string",
+        "description": "选项选中时文本颜色",
+        "descriptionEn": "Text color when option is selected"
+      },
+      {
+        "name": "optionSelectedFontWeight",
+        "type": "CSSProperties['fontWeight']",
+        "description": "选项选中时字重",
+        "descriptionEn": "Font weight of selected item"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -304,6 +845,7 @@
     "styleSource": "components/checkbox/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": true,
     "tokenDefinitions": [],
     "implementedInBlazor": true
   },
@@ -313,6 +855,7 @@
     "styleSource": "components/col/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": false,
     "tokenDefinitions": [],
     "implementedInBlazor": false
   },
@@ -320,9 +863,71 @@
     "name": "collapse",
     "className": "ant-collapse",
     "styleSource": "components/collapse/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/collapse/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "borderlessContentBg",
+        "type": "string",
+        "description": "简约风格折叠面板的内容背景",
+        "descriptionEn": "Background of content in borderless style"
+      },
+      {
+        "name": "borderlessContentPadding",
+        "type": "CSSProperties['padding']",
+        "description": "简约风格折叠面板的内容内边距",
+        "descriptionEn": "Padding of content in borderless style"
+      },
+      {
+        "name": "contentBg",
+        "type": "string",
+        "description": "折叠面板内容背景",
+        "descriptionEn": "Background of content"
+      },
+      {
+        "name": "contentPadding",
+        "type": "CSSProperties['padding']",
+        "description": "折叠面板内容内边距",
+        "descriptionEn": "Padding of content"
+      },
+      {
+        "name": "contentPaddingLG",
+        "type": "CSSProperties['padding']",
+        "description": "大号折叠面板内容内边距",
+        "descriptionEn": "Padding of large content"
+      },
+      {
+        "name": "contentPaddingSM",
+        "type": "CSSProperties['padding']",
+        "description": "小号折叠面板内容内边距",
+        "descriptionEn": "Padding of small content"
+      },
+      {
+        "name": "headerBg",
+        "type": "string",
+        "description": "折叠面板头部背景",
+        "descriptionEn": "Background of header"
+      },
+      {
+        "name": "headerPadding",
+        "type": "CSSProperties['padding']",
+        "description": "折叠面板头部内边距",
+        "descriptionEn": "Padding of header"
+      },
+      {
+        "name": "headerPaddingLG",
+        "type": "CSSProperties['padding']",
+        "description": "大号折叠面板头部内边距",
+        "descriptionEn": "Padding of large header"
+      },
+      {
+        "name": "headerPaddingSM",
+        "type": "CSSProperties['padding']",
+        "description": "小号折叠面板头部内边距",
+        "descriptionEn": "Padding of small header"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -331,8 +936,9 @@
     "styleSource": "components/color-picker/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": false,
     "tokenDefinitions": [],
-    "implementedInBlazor": false
+    "implementedInBlazor": true
   },
   {
     "name": "config-provider",
@@ -340,6 +946,7 @@
     "styleSource": "components/config-provider/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": false,
     "tokenDefinitions": [],
     "implementedInBlazor": true
   },
@@ -349,18 +956,97 @@
     "styleSource": "components/date-picker/style/index.ts",
     "tokenSource": "components/date-picker/style/token.ts",
     "hasTokenSource": true,
+    "hasTokenTable": true,
     "tokenDefinitions": [
       {
+        "name": "cellActiveWithRangeBg",
+        "type": "string",
+        "description": "选取范围内的单元格背景色",
+        "descriptionEn": "Background color of cell in range"
+      },
+      {
+        "name": "cellBgDisabled",
+        "type": "string",
+        "description": "单元格禁用态背景色",
+        "descriptionEn": "Background color of disabled cell"
+      },
+      {
+        "name": "cellHeight",
+        "type": "number",
+        "description": "单元格高度",
+        "descriptionEn": "Height of cell"
+      },
+      {
+        "name": "cellHoverBg",
+        "type": "string",
+        "description": "单元格悬浮态背景色",
+        "descriptionEn": "Background color of cell hover state"
+      },
+      {
+        "name": "cellHoverWithRangeBg",
+        "type": "string",
+        "description": "选取范围内的单元格悬浮态背景色",
+        "descriptionEn": "Background color of hovered cell in range"
+      },
+      {
+        "name": "cellRangeBorderColor",
+        "type": "string",
+        "description": "选取范围时单元格边框色",
+        "descriptionEn": "Border color of cell in range when picking"
+      },
+      {
+        "name": "cellWidth",
+        "type": "number",
+        "description": "单元格宽度",
+        "descriptionEn": "Width of cell"
+      },
+      {
         "name": "presetsMaxWidth",
-        "type": "number"
+        "type": "number",
+        "description": "预设区域最大宽度",
+        "descriptionEn": "Max width of preset area"
       },
       {
         "name": "presetsWidth",
-        "type": "number"
+        "type": "number",
+        "description": "预设区域宽度",
+        "descriptionEn": "Width of preset area"
+      },
+      {
+        "name": "textHeight",
+        "type": "number",
+        "description": "单元格文本高度",
+        "descriptionEn": "Height of cell text"
+      },
+      {
+        "name": "timeCellHeight",
+        "type": "number",
+        "description": "时间单元格高度",
+        "descriptionEn": "Height of time cell"
+      },
+      {
+        "name": "timeColumnHeight",
+        "type": "number",
+        "description": "时间列高度",
+        "descriptionEn": "Height of time column"
+      },
+      {
+        "name": "timeColumnWidth",
+        "type": "number",
+        "description": "时间列宽度",
+        "descriptionEn": "Width of time column"
+      },
+      {
+        "name": "withoutTimeCellHeight",
+        "type": "number",
+        "description": "十年/年/季/月/周单元格高度",
+        "descriptionEn": "Height of decade/year/quarter/month/week cell"
       },
       {
         "name": "zIndexPopup",
-        "type": "number"
+        "type": "number",
+        "description": "弹窗 z-index",
+        "descriptionEn": "z-index of popup"
       }
     ],
     "implementedInBlazor": true
@@ -369,36 +1055,158 @@
     "name": "descriptions",
     "className": "ant-descriptions",
     "styleSource": "components/descriptions/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/descriptions/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "colonMarginLeft",
+        "type": "number",
+        "description": "冒号左间距",
+        "descriptionEn": "Left margin of colon"
+      },
+      {
+        "name": "colonMarginRight",
+        "type": "number",
+        "description": "冒号右间距",
+        "descriptionEn": "Right margin of colon"
+      },
+      {
+        "name": "contentColor",
+        "type": "string",
+        "description": "内容区域文字颜色",
+        "descriptionEn": "Text color of content"
+      },
+      {
+        "name": "extraColor",
+        "type": "string",
+        "description": "额外区域文字颜色",
+        "descriptionEn": "Text color of extra area"
+      },
+      {
+        "name": "itemPaddingBottom",
+        "type": "number",
+        "description": "子项下间距",
+        "descriptionEn": "Bottom padding of item"
+      },
+      {
+        "name": "itemPaddingEnd",
+        "type": "number",
+        "description": "子项结束间距",
+        "descriptionEn": "End padding of item"
+      },
+      {
+        "name": "labelBg",
+        "type": "string",
+        "description": "标签背景色",
+        "descriptionEn": "Background color of label"
+      },
+      {
+        "name": "labelColor",
+        "type": "string",
+        "description": "标签文字颜色",
+        "descriptionEn": "Text color of label"
+      },
+      {
+        "name": "titleColor",
+        "type": "string",
+        "description": "标题文字颜色",
+        "descriptionEn": "Text color of title"
+      },
+      {
+        "name": "titleMarginBottom",
+        "type": "number",
+        "description": "标题下间距",
+        "descriptionEn": "Bottom margin of title"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "divider",
     "className": "ant-divider",
     "styleSource": "components/divider/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/divider/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "orientationMargin",
+        "type": "number",
+        "description": "文本与边缘距离，取值 0 ～ 1",
+        "descriptionEn": "Distance between text and edge, which should be a number between 0 and 1."
+      },
+      {
+        "name": "textPaddingInline",
+        "type": "CSSProperties['paddingInline']",
+        "description": "文本横向内间距",
+        "descriptionEn": "Horizontal padding of text"
+      },
+      {
+        "name": "verticalMarginInline",
+        "type": "CSSProperties['marginInline']",
+        "description": "纵向分割线的横向外间距",
+        "descriptionEn": "Horizontal margin of vertical Divider"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "drawer",
     "className": "ant-drawer",
     "styleSource": "components/drawer/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/drawer/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "draggerSize",
+        "type": "number",
+        "description": "拖拽手柄大小",
+        "descriptionEn": "Size of resize handle"
+      },
+      {
+        "name": "footerPaddingBlock",
+        "type": "number",
+        "description": "底部区域纵向内间距",
+        "descriptionEn": "Vertical padding of footer"
+      },
+      {
+        "name": "footerPaddingInline",
+        "type": "number",
+        "description": "底部区域横向内间距",
+        "descriptionEn": "Horizontal padding of footer"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "弹窗 z-index",
+        "descriptionEn": "z-index of drawer"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "dropdown",
     "className": "ant-dropdown",
     "styleSource": "components/dropdown/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/dropdown/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "paddingBlock",
+        "type": "CSSProperties['paddingBlock']",
+        "description": "下拉菜单纵向内边距",
+        "descriptionEn": "Vertical padding of dropdown"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "下拉菜单 z-index",
+        "descriptionEn": "z-index of dropdown"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -407,6 +1215,7 @@
     "styleSource": "components/empty/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": true,
     "tokenDefinitions": [],
     "implementedInBlazor": true
   },
@@ -416,6 +1225,7 @@
     "styleSource": "components/flex/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": true,
     "tokenDefinitions": [],
     "implementedInBlazor": true
   },
@@ -425,16 +1235,83 @@
     "styleSource": "components/float-button/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": true,
     "tokenDefinitions": [],
-    "implementedInBlazor": false
+    "implementedInBlazor": true
   },
   {
     "name": "form",
     "className": "ant-form",
     "styleSource": "components/form/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/form/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "inlineItemMarginBottom",
+        "type": "number",
+        "description": "行内布局表单项间距",
+        "descriptionEn": "Inline layout form item margin bottom"
+      },
+      {
+        "name": "itemMarginBottom",
+        "type": "number",
+        "description": "表单项间距",
+        "descriptionEn": "Form item margin bottom"
+      },
+      {
+        "name": "labelColonMarginInlineEnd",
+        "type": "number",
+        "description": "标签冒号后间距",
+        "descriptionEn": "Label colon margin-inline-end"
+      },
+      {
+        "name": "labelColonMarginInlineStart",
+        "type": "number",
+        "description": "标签冒号前间距",
+        "descriptionEn": "Label colon margin-inline-start"
+      },
+      {
+        "name": "labelColor",
+        "type": "string",
+        "description": "标签颜色",
+        "descriptionEn": "Label color"
+      },
+      {
+        "name": "labelFontSize",
+        "type": "number",
+        "description": "标签字体大小",
+        "descriptionEn": "Label font size"
+      },
+      {
+        "name": "labelHeight",
+        "type": "number | string",
+        "description": "标签高度",
+        "descriptionEn": "Label height"
+      },
+      {
+        "name": "labelRequiredMarkColor",
+        "type": "string",
+        "description": "必填项标记颜色",
+        "descriptionEn": "Required mark color"
+      },
+      {
+        "name": "verticalLabelHeight",
+        "type": "number | string"
+      },
+      {
+        "name": "verticalLabelMargin",
+        "type": "CSSProperties['margin']",
+        "description": "垂直布局标签外边距",
+        "descriptionEn": "Vertical layout label margin"
+      },
+      {
+        "name": "verticalLabelPadding",
+        "type": "CSSProperties['padding']",
+        "description": "垂直布局标签内边距",
+        "descriptionEn": "Vertical layout label padding"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -443,6 +1320,7 @@
     "styleSource": "components/grid/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": true,
     "tokenDefinitions": [],
     "implementedInBlazor": true
   },
@@ -450,9 +1328,47 @@
     "name": "image",
     "className": "ant-image",
     "styleSource": "components/image/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/image/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "previewOperationColor",
+        "type": "string",
+        "description": "预览操作图标颜色",
+        "descriptionEn": "Color of preview operation icon"
+      },
+      {
+        "name": "previewOperationColorDisabled",
+        "type": "string",
+        "description": "预览操作图标禁用颜色",
+        "descriptionEn": "Disabled color of preview operation icon"
+      },
+      {
+        "name": "previewOperationHoverColor",
+        "type": "string",
+        "description": "预览操作图标悬浮颜色",
+        "descriptionEn": "Color of hovered preview operation icon"
+      },
+      {
+        "name": "previewOperationSize",
+        "type": "number",
+        "description": "预览操作图标大小",
+        "descriptionEn": "Size of preview operation icon"
+      },
+      {
+        "name": "progressAnimationDuration",
+        "type": "string",
+        "description": "加载动画基础时长",
+        "descriptionEn": "Base duration of loading animation"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "预览浮层 z-index",
+        "descriptionEn": "z-index of preview popup"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -461,7 +1377,111 @@
     "styleSource": "components/input/style/index.ts",
     "tokenSource": "components/input/style/token.ts",
     "hasTokenSource": true,
-    "tokenDefinitions": [],
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "activeBg",
+        "type": "string",
+        "description": "输入框激活状态时背景颜色",
+        "descriptionEn": "Background color when the input box is activated"
+      },
+      {
+        "name": "activeBorderColor",
+        "type": "string",
+        "description": "激活态边框色",
+        "descriptionEn": "Active border color"
+      },
+      {
+        "name": "activeShadow",
+        "type": "string",
+        "description": "激活态阴影",
+        "descriptionEn": "Box-shadow when active"
+      },
+      {
+        "name": "addonBg",
+        "type": "string",
+        "description": "前/后置标签背景色",
+        "descriptionEn": "Background color of addon"
+      },
+      {
+        "name": "errorActiveShadow",
+        "type": "string",
+        "description": "错误状态时激活态阴影",
+        "descriptionEn": "Box-shadow when active in error status"
+      },
+      {
+        "name": "hoverBg",
+        "type": "string",
+        "description": "输入框hover状态时背景颜色",
+        "descriptionEn": "Background color when the input box hovers"
+      },
+      {
+        "name": "hoverBorderColor",
+        "type": "string",
+        "description": "悬浮态边框色",
+        "descriptionEn": "Hover border color"
+      },
+      {
+        "name": "inputFontSize",
+        "type": "number",
+        "description": "字体大小",
+        "descriptionEn": "Font size"
+      },
+      {
+        "name": "inputFontSizeLG",
+        "type": "number",
+        "description": "大号字体大小",
+        "descriptionEn": "Font size of large"
+      },
+      {
+        "name": "inputFontSizeSM",
+        "type": "number",
+        "description": "小号字体大小",
+        "descriptionEn": "Font size of small"
+      },
+      {
+        "name": "paddingBlock",
+        "type": "number",
+        "description": "输入框纵向内边距",
+        "descriptionEn": "Vertical padding of input"
+      },
+      {
+        "name": "paddingBlockLG",
+        "type": "number",
+        "description": "大号输入框纵向内边距",
+        "descriptionEn": "Vertical padding of large input"
+      },
+      {
+        "name": "paddingBlockSM",
+        "type": "number",
+        "description": "小号输入框纵向内边距",
+        "descriptionEn": "Vertical padding of small input"
+      },
+      {
+        "name": "paddingInline",
+        "type": "number",
+        "description": "输入框横向内边距",
+        "descriptionEn": "Horizontal padding of input"
+      },
+      {
+        "name": "paddingInlineLG",
+        "type": "number",
+        "description": "大号输入框横向内边距",
+        "descriptionEn": "Horizontal padding of large input"
+      },
+      {
+        "name": "paddingInlineSM",
+        "type": "number",
+        "description": "小号输入框横向内边距",
+        "descriptionEn": "Horizontal padding of small input"
+      },
+      {
+        "name": "warningActiveShadow",
+        "type": "string",
+        "description": "警告状态时激活态阴影",
+        "descriptionEn": "Box-shadow when active in warning status"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -470,34 +1490,49 @@
     "styleSource": "components/input-number/style/index.ts",
     "tokenSource": "components/input-number/style/token.ts",
     "hasTokenSource": true,
+    "hasTokenTable": true,
     "tokenDefinitions": [
       {
         "name": "controlWidth",
-        "type": "number"
+        "type": "number",
+        "description": "输入框宽度",
+        "descriptionEn": "Width of input"
       },
       {
         "name": "filledHandleBg",
-        "type": "string"
+        "type": "string",
+        "description": "面性变体操作按钮背景色",
+        "descriptionEn": "Background color of handle in filled variant"
       },
       {
         "name": "handleActiveBg",
-        "type": "string"
+        "type": "string",
+        "description": "操作按钮激活背景色",
+        "descriptionEn": "Active background color of handle"
       },
       {
         "name": "handleBg",
-        "type": "string"
+        "type": "string",
+        "description": "操作按钮背景色",
+        "descriptionEn": "Background color of handle"
       },
       {
         "name": "handleBorderColor",
-        "type": "string"
+        "type": "string",
+        "description": "操作按钮边框颜色",
+        "descriptionEn": "Border color of handle"
       },
       {
         "name": "handleFontSize",
-        "type": "number"
+        "type": "number",
+        "description": "操作按钮图标大小",
+        "descriptionEn": "Icon size of control button"
       },
       {
         "name": "handleHoverColor",
-        "type": "string"
+        "type": "string",
+        "description": "操作按钮悬浮颜色",
+        "descriptionEn": "Hover color of handle"
       },
       {
         "name": "handleOpacity",
@@ -505,7 +1540,9 @@
       },
       {
         "name": "handleVisible",
-        "type": "'auto' | true"
+        "type": "'auto' | true",
+        "description": "操作按钮可见性",
+        "descriptionEn": "Handle visible"
       },
       {
         "name": "handleVisibleWidth",
@@ -513,7 +1550,9 @@
       },
       {
         "name": "handleWidth",
-        "type": "number"
+        "type": "number",
+        "description": "操作按钮宽度",
+        "descriptionEn": "Width of control button"
       }
     ],
     "implementedInBlazor": true
@@ -522,28 +1561,223 @@
     "name": "layout",
     "className": "ant-layout",
     "styleSource": "components/layout/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/layout/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "bodyBg",
+        "type": "string",
+        "description": "主体部分背景色",
+        "descriptionEn": "Background Color of body"
+      },
+      {
+        "name": "colorBgBody",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorBgHeader",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorBgTrigger",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "footerBg",
+        "type": "string",
+        "description": "页脚背景色",
+        "descriptionEn": "Background Color of footer"
+      },
+      {
+        "name": "footerPadding",
+        "type": "CSSProperties['padding']",
+        "description": "页脚内边距",
+        "descriptionEn": "Padding of footer"
+      },
+      {
+        "name": "headerBg",
+        "type": "string",
+        "description": "顶部背景色",
+        "descriptionEn": "Background Color of header"
+      },
+      {
+        "name": "headerColor",
+        "type": "string",
+        "description": "顶部文字颜色",
+        "descriptionEn": "Text color of header"
+      },
+      {
+        "name": "headerHeight",
+        "type": "number | string",
+        "description": "顶部高度",
+        "descriptionEn": "Height of header"
+      },
+      {
+        "name": "headerPadding",
+        "type": "CSSProperties['padding']",
+        "description": "顶部内边距",
+        "descriptionEn": "Padding of header"
+      },
+      {
+        "name": "lightSiderBg",
+        "type": "string",
+        "description": "亮色主题侧边栏背景色",
+        "descriptionEn": "Background Color of light theme sider"
+      },
+      {
+        "name": "lightTriggerBg",
+        "type": "string",
+        "description": "亮色主题侧边栏开关背景色",
+        "descriptionEn": "Background Color of light theme sider trigger"
+      },
+      {
+        "name": "lightTriggerColor",
+        "type": "string",
+        "description": "亮色主题侧边栏开关颜色",
+        "descriptionEn": "Color of light theme sider trigger"
+      },
+      {
+        "name": "siderBg",
+        "type": "string",
+        "description": "侧边栏背景色",
+        "descriptionEn": "Background Color of sider"
+      },
+      {
+        "name": "triggerBg",
+        "type": "string",
+        "description": "侧边栏开关背景色",
+        "descriptionEn": "Background Color of sider trigger"
+      },
+      {
+        "name": "triggerColor",
+        "type": "string",
+        "description": "侧边栏开关颜色",
+        "descriptionEn": "Color of sider trigger"
+      },
+      {
+        "name": "triggerHeight",
+        "type": "number | string",
+        "description": "侧边栏开关高度",
+        "descriptionEn": "Height of sider trigger"
+      },
+      {
+        "name": "zeroTriggerHeight",
+        "type": "number",
+        "description": "collapse 为 0 时侧边栏开关高度",
+        "descriptionEn": "Height of sider trigger when collapse is 0"
+      },
+      {
+        "name": "zeroTriggerWidth",
+        "type": "number",
+        "description": "collapse 为 0 时侧边栏开关宽度",
+        "descriptionEn": "Width of sider trigger when collapse is 0"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "list",
     "className": "ant-list",
     "styleSource": "components/list/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/list/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "avatarMarginRight",
+        "type": "CSSProperties['marginRight']",
+        "description": "头像右间距",
+        "descriptionEn": "Right margin of avatar"
+      },
+      {
+        "name": "contentWidth",
+        "type": "number | string",
+        "description": "内容宽度",
+        "descriptionEn": "Width of content"
+      },
+      {
+        "name": "descriptionFontSize",
+        "type": "number",
+        "description": "描述文字大小",
+        "descriptionEn": "Font size of description"
+      },
+      {
+        "name": "emptyTextPadding",
+        "type": "CSSProperties['padding']",
+        "description": "空文本内边距",
+        "descriptionEn": "Padding of empty text"
+      },
+      {
+        "name": "footerBg",
+        "type": "string",
+        "description": "底部区域背景色",
+        "descriptionEn": "Background color of footer"
+      },
+      {
+        "name": "headerBg",
+        "type": "string",
+        "description": "头部区域背景色",
+        "descriptionEn": "Background color of header"
+      },
+      {
+        "name": "itemPadding",
+        "type": "string",
+        "description": "列表项内间距",
+        "descriptionEn": "Padding of item"
+      },
+      {
+        "name": "itemPaddingLG",
+        "type": "string",
+        "description": "大号列表项内间距",
+        "descriptionEn": "Padding of large item"
+      },
+      {
+        "name": "itemPaddingSM",
+        "type": "string",
+        "description": "小号列表项内间距",
+        "descriptionEn": "Padding of small item"
+      },
+      {
+        "name": "metaMarginBottom",
+        "type": "CSSProperties['marginBottom']",
+        "description": "Meta 下间距",
+        "descriptionEn": "Margin bottom of meta"
+      },
+      {
+        "name": "titleMarginBottom",
+        "type": "CSSProperties['marginBottom']",
+        "description": "标题下间距",
+        "descriptionEn": "Margin bottom of title"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "listy",
     "className": "ant-listy",
     "styleSource": "components/listy/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
-    "implementedInBlazor": false
+    "tokenSource": "components/listy/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "itemPaddingBlock",
+        "type": "number",
+        "description": "列表项的纵向内间距。",
+        "descriptionEn": "Vertical padding of a list item."
+      },
+      {
+        "name": "itemPaddingInline",
+        "type": "number",
+        "description": "列表项的横向内间距。",
+        "descriptionEn": "Horizontal padding of a list item."
+      }
+    ],
+    "implementedInBlazor": true
   },
   {
     "name": "masonry",
@@ -551,88 +1785,877 @@
     "styleSource": "components/masonry/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": true,
     "tokenDefinitions": [],
-    "implementedInBlazor": false
+    "implementedInBlazor": true
   },
   {
     "name": "mentions",
     "className": "ant-mentions",
     "styleSource": "components/mentions/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/mentions/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "controlItemWidth",
+        "type": "number | string",
+        "description": "菜单项高度",
+        "descriptionEn": "Height of menu item"
+      },
+      {
+        "name": "dropdownHeight",
+        "type": "number | string",
+        "description": "弹层高度",
+        "descriptionEn": "Height of popup"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "弹层 z-index",
+        "descriptionEn": "z-index of popup"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "menu",
     "className": "ant-menu",
     "styleSource": "components/menu/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/menu/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "activeBarBorderWidth",
+        "type": "number | string",
+        "description": "菜单项指示条边框宽度",
+        "descriptionEn": "Border width of menu item active bar"
+      },
+      {
+        "name": "activeBarHeight",
+        "type": "number",
+        "description": "菜单项指示条高度",
+        "descriptionEn": "Height of menu item active bar"
+      },
+      {
+        "name": "activeBarWidth",
+        "type": "number | string",
+        "description": "菜单项指示条宽度",
+        "descriptionEn": "Width of menu item active bar"
+      },
+      {
+        "name": "collapsedIconSize",
+        "type": "number",
+        "description": "收起时图标尺寸",
+        "descriptionEn": "Size of icon when collapsed"
+      },
+      {
+        "name": "collapsedWidth",
+        "type": "number | string",
+        "description": "收起后的宽度",
+        "descriptionEn": "Width when collapsed"
+      },
+      {
+        "name": "colorActiveBarBorderSize",
+        "type": "number",
+        "deprecated": true
+      },
+      {
+        "name": "colorActiveBarHeight",
+        "type": "number",
+        "deprecated": true
+      },
+      {
+        "name": "colorActiveBarWidth",
+        "type": "number | string",
+        "deprecated": true
+      },
+      {
+        "name": "colorDangerItemBgActive",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorDangerItemBgSelected",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorDangerItemText",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorDangerItemTextHover",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorDangerItemTextSelected",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorGroupTitle",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorItemBg",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorItemBgActive",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorItemBgHover",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorItemBgSelected",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorItemBgSelectedHorizontal",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorItemText",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorItemTextDisabled",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorItemTextHover",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorItemTextHoverHorizontal",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorItemTextSelected",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorItemTextSelectedHorizontal",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorSubItemBg",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "dangerItemActiveBg",
+        "type": "string",
+        "description": "危险菜单项激活态背景色",
+        "descriptionEn": "Background color of danger menu item when active"
+      },
+      {
+        "name": "dangerItemColor",
+        "type": "string",
+        "description": "危险菜单项文字颜色",
+        "descriptionEn": "Color of danger menu item text"
+      },
+      {
+        "name": "dangerItemHoverColor",
+        "type": "string",
+        "description": "危险菜单项文字悬浮颜色",
+        "descriptionEn": "Hover color of danger menu item text"
+      },
+      {
+        "name": "dangerItemSelectedBg",
+        "type": "string",
+        "description": "危险菜单项选中背景色",
+        "descriptionEn": "Background color of selected danger menu item"
+      },
+      {
+        "name": "dangerItemSelectedColor",
+        "type": "string",
+        "description": "危险菜单项文字选中颜色",
+        "descriptionEn": "Color of selected danger menu item text"
+      },
+      {
+        "name": "darkDangerItemActiveBg",
+        "type": "string",
+        "description": "暗色模式下的危险菜单项激活态背景",
+        "descriptionEn": "Background of active danger menu item in dark mode"
+      },
+      {
+        "name": "darkDangerItemColor",
+        "type": "string",
+        "description": "暗色模式下的危险菜单项文字颜色",
+        "descriptionEn": "Color of danger menu item text in dark mode"
+      },
+      {
+        "name": "darkDangerItemHoverColor",
+        "type": "string",
+        "description": "暗色模式下的危险菜单项悬浮文字背景",
+        "descriptionEn": "Background of hovered danger menu item in dark mode"
+      },
+      {
+        "name": "darkDangerItemSelectedBg",
+        "type": "string",
+        "description": "暗色模式下的危险菜单项选中背景",
+        "descriptionEn": "Background of active danger menu item in dark mode"
+      },
+      {
+        "name": "darkDangerItemSelectedColor",
+        "type": "string",
+        "description": "暗色模式下的危险菜单项选中文字颜色",
+        "descriptionEn": "Color of selected danger menu item in dark mode"
+      },
+      {
+        "name": "darkGroupTitleColor",
+        "type": "string",
+        "description": "暗色模式下的分组标题文字颜色",
+        "descriptionEn": "Color of group title text in dark mode"
+      },
+      {
+        "name": "darkItemBg",
+        "type": "string",
+        "description": "暗色模式下的菜单项背景",
+        "descriptionEn": "Background of menu item in dark mode"
+      },
+      {
+        "name": "darkItemColor",
+        "type": "string",
+        "description": "暗色模式下的菜单项文字颜色",
+        "descriptionEn": "Color of menu item text in dark mode"
+      },
+      {
+        "name": "darkItemDisabledColor",
+        "type": "string",
+        "description": "暗色模式下的菜单项禁用颜色",
+        "descriptionEn": "Color of disabled menu item in dark mode"
+      },
+      {
+        "name": "darkItemHoverBg",
+        "type": "string",
+        "description": "暗色模式下的菜单项悬浮背景",
+        "descriptionEn": "Background of hovered menu item in dark mode"
+      },
+      {
+        "name": "darkItemHoverColor",
+        "type": "string",
+        "description": "暗色模式下的菜单项悬浮颜色",
+        "descriptionEn": "Color of hovered menu item in dark mode"
+      },
+      {
+        "name": "darkItemSelectedBg",
+        "type": "string",
+        "description": "暗色模式下的菜单项选中背景",
+        "descriptionEn": "Background of active menu item in dark mode"
+      },
+      {
+        "name": "darkItemSelectedColor",
+        "type": "string",
+        "description": "暗色模式下的菜单项选中颜色",
+        "descriptionEn": "Color of selected menu item in dark mode"
+      },
+      {
+        "name": "darkPopupBg",
+        "type": "string",
+        "description": "暗色模式下的浮层菜单的背景颜色",
+        "descriptionEn": "The background color of the overlay menu in dark mode."
+      },
+      {
+        "name": "darkSubMenuItemBg",
+        "type": "string",
+        "description": "暗色模式下的子菜单项背景",
+        "descriptionEn": "Background of submenu item in dark mode"
+      },
+      {
+        "name": "dropdownWidth",
+        "type": "number | string",
+        "description": "弹出菜单的宽度",
+        "descriptionEn": "Width of popup menu"
+      },
+      {
+        "name": "groupTitleColor",
+        "type": "string",
+        "description": "分组标题文字颜色",
+        "descriptionEn": "Color of group title text"
+      },
+      {
+        "name": "groupTitleFontSize",
+        "type": "number",
+        "description": "分组标题文字大小",
+        "descriptionEn": "font-size of group title"
+      },
+      {
+        "name": "groupTitleLineHeight",
+        "type": "string | number",
+        "description": "分组标题文字高度",
+        "descriptionEn": "line-height of group title"
+      },
+      {
+        "name": "horizontalItemBorderRadius",
+        "type": "number",
+        "description": "横向菜单项圆角",
+        "descriptionEn": "Border radius of horizontal menu item"
+      },
+      {
+        "name": "horizontalItemHoverBg",
+        "type": "string",
+        "description": "横向菜单项横悬浮态背景色",
+        "descriptionEn": "Background color of horizontal menu item when hover"
+      },
+      {
+        "name": "horizontalItemHoverColor",
+        "type": "string",
+        "description": "水平菜单项文字悬浮颜色",
+        "descriptionEn": "Hover color of horizontal menu item text"
+      },
+      {
+        "name": "horizontalItemSelectedBg",
+        "type": "string",
+        "description": "水平菜单项选中态背景色",
+        "descriptionEn": "Background color of horizontal menu item when selected"
+      },
+      {
+        "name": "horizontalItemSelectedColor",
+        "type": "string",
+        "description": "水平菜单项文字选中颜色",
+        "descriptionEn": "Color of selected horizontal menu item text"
+      },
+      {
+        "name": "horizontalLineHeight",
+        "type": "CSSProperties['lineHeight']",
+        "description": "横向菜单行高",
+        "descriptionEn": "LineHeight of horizontal menu item"
+      },
+      {
+        "name": "iconMarginInlineEnd",
+        "type": "CSSProperties['marginInlineEnd']",
+        "description": "图标与文字间距",
+        "descriptionEn": "Spacing between icon and text"
+      },
+      {
+        "name": "iconSize",
+        "type": "number",
+        "description": "图标尺寸",
+        "descriptionEn": "Size of icon"
+      },
+      {
+        "name": "itemActiveBg",
+        "type": "string",
+        "description": "菜单项激活态背景色",
+        "descriptionEn": "Background color of menu item when active"
+      },
+      {
+        "name": "itemBg",
+        "type": "string",
+        "description": "菜单项背景色"
+      },
+      {
+        "name": "itemBorderRadius",
+        "type": "number",
+        "description": "菜单项的圆角",
+        "descriptionEn": "Radius of menu item"
+      },
+      {
+        "name": "itemColor",
+        "type": "string",
+        "description": "菜单项文字颜色",
+        "descriptionEn": "Color of menu item text"
+      },
+      {
+        "name": "itemDisabledColor",
+        "type": "string",
+        "description": "菜单项文字禁用颜色",
+        "descriptionEn": "Color of disabled menu item text"
+      },
+      {
+        "name": "itemHeight",
+        "type": "number | string",
+        "description": "菜单项高度",
+        "descriptionEn": "Height of menu item"
+      },
+      {
+        "name": "itemHoverBg",
+        "type": "string",
+        "description": "菜单项悬浮态背景色",
+        "descriptionEn": "Background color of menu item when hover"
+      },
+      {
+        "name": "itemHoverColor",
+        "type": "string",
+        "description": "菜单项文字悬浮颜色",
+        "descriptionEn": "Hover color of menu item text"
+      },
+      {
+        "name": "itemMarginBlock",
+        "type": "CSSProperties['marginBlock']",
+        "description": "菜单项纵向外间距",
+        "descriptionEn": "margin-block of menu item"
+      },
+      {
+        "name": "itemMarginInline",
+        "type": "number",
+        "description": "菜单项横向外间距",
+        "descriptionEn": "Horizontal margin of menu item"
+      },
+      {
+        "name": "itemPaddingInline",
+        "type": "CSSProperties['paddingInline']",
+        "description": "菜单项横向内间距",
+        "descriptionEn": "padding-inline of menu item"
+      },
+      {
+        "name": "itemSelectedBg",
+        "type": "string",
+        "description": "菜单项选中态背景色",
+        "descriptionEn": "Background color of menu item when selected"
+      },
+      {
+        "name": "itemSelectedColor",
+        "type": "string",
+        "description": "菜单项文字选中颜色",
+        "descriptionEn": "Color of selected menu item text"
+      },
+      {
+        "name": "itemWidth",
+        "type": "number | string"
+      },
+      {
+        "name": "popupBg",
+        "type": "string",
+        "description": "弹出框背景色",
+        "descriptionEn": "Background color of popup"
+      },
+      {
+        "name": "radiusItem",
+        "type": "number",
+        "deprecated": true
+      },
+      {
+        "name": "radiusSubMenuItem",
+        "type": "number",
+        "deprecated": true
+      },
+      {
+        "name": "subMenuItemBg",
+        "type": "string",
+        "description": "子菜单项背景色",
+        "descriptionEn": "Background color of sub-menu item"
+      },
+      {
+        "name": "subMenuItemBorderRadius",
+        "type": "number",
+        "description": "子菜单项的圆角",
+        "descriptionEn": "Radius of sub-menu item"
+      },
+      {
+        "name": "subMenuItemSelectedColor",
+        "type": "string",
+        "description": "子菜单内有选中项时，子菜单标题色",
+        "descriptionEn": "Color of submenu title when submenu has selected item"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "弹出菜单的 z-index",
+        "descriptionEn": "z-index of popup menu"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "message",
     "className": "ant-message",
     "styleSource": "components/message/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/message/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "contentBg",
+        "type": "string",
+        "description": "提示框背景色",
+        "descriptionEn": "Background color of Message"
+      },
+      {
+        "name": "contentPadding",
+        "type": "CSSProperties['padding']",
+        "description": "提示框内边距",
+        "descriptionEn": "Padding of Message"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "提示框 z-index",
+        "descriptionEn": "z-index of Message"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "modal",
     "className": "ant-modal",
     "styleSource": "components/modal/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/modal/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "bodyPadding",
+        "type": "number"
+      },
+      {
+        "name": "confirmBodyPadding",
+        "type": "string | number"
+      },
+      {
+        "name": "confirmBtnsMarginTop",
+        "type": "string | number"
+      },
+      {
+        "name": "confirmIconMarginInlineEnd",
+        "type": "string | number"
+      },
+      {
+        "name": "contentBg",
+        "type": "string",
+        "description": "内容区域背景色",
+        "descriptionEn": "Background color of content"
+      },
+      {
+        "name": "contentPadding",
+        "type": "number | string"
+      },
+      {
+        "name": "footerBg",
+        "type": "string",
+        "description": "底部区域背景色",
+        "descriptionEn": "Background color of footer"
+      },
+      {
+        "name": "footerBorderRadius",
+        "type": "string | number"
+      },
+      {
+        "name": "footerBorderTop",
+        "type": "string"
+      },
+      {
+        "name": "footerMarginTop",
+        "type": "string | number"
+      },
+      {
+        "name": "footerPadding",
+        "type": "string | number"
+      },
+      {
+        "name": "headerBg",
+        "type": "string",
+        "description": "顶部背景色",
+        "descriptionEn": "Background color of header"
+      },
+      {
+        "name": "headerBorderBottom",
+        "type": "string"
+      },
+      {
+        "name": "headerMarginBottom",
+        "type": "number"
+      },
+      {
+        "name": "headerPadding",
+        "type": "string | number"
+      },
+      {
+        "name": "titleColor",
+        "type": "string",
+        "description": "标题字体颜色",
+        "descriptionEn": "Font color of title"
+      },
+      {
+        "name": "titleFontSize",
+        "type": "number | string",
+        "description": "标题字体大小",
+        "descriptionEn": "Font size of title"
+      },
+      {
+        "name": "titleLineHeight",
+        "type": "number | string",
+        "description": "标题行高",
+        "descriptionEn": "Line height of title"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "notification",
     "className": "ant-notification",
     "styleSource": "components/notification/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/notification/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "colorErrorBg",
+        "type": "string",
+        "description": "错误提醒框容器背景色",
+        "descriptionEn": "Background color of error notification container"
+      },
+      {
+        "name": "colorInfoBg",
+        "type": "string",
+        "description": "信息提醒框容器背景色",
+        "descriptionEn": "Background color of info notification container"
+      },
+      {
+        "name": "colorSuccessBg",
+        "type": "string",
+        "description": "成功提醒框容器背景色",
+        "descriptionEn": "Background color of success notification container"
+      },
+      {
+        "name": "colorWarningBg",
+        "type": "string",
+        "description": "警告提醒框容器背景色",
+        "descriptionEn": "Background color of warning notification container"
+      },
+      {
+        "name": "progressBg",
+        "type": "string",
+        "description": "提醒框进度条背景色",
+        "descriptionEn": "Background color of Notification progress bar"
+      },
+      {
+        "name": "width",
+        "type": "number | string",
+        "description": "提醒框宽度",
+        "descriptionEn": "Width of Notification"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "提醒框 z-index",
+        "descriptionEn": "z-index of Notification"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "pagination",
     "className": "ant-pagination",
     "styleSource": "components/pagination/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/pagination/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "itemActiveBg",
+        "type": "string",
+        "description": "页码激活态背景色",
+        "descriptionEn": "Background color of active Pagination item"
+      },
+      {
+        "name": "itemActiveBgDisabled",
+        "type": "string",
+        "description": "页码激活态禁用状态背景色",
+        "descriptionEn": "Background color of disabled active Pagination item"
+      },
+      {
+        "name": "itemActiveColor",
+        "type": "string",
+        "description": "页码激活态文字颜色",
+        "descriptionEn": "Text color of active Pagination item"
+      },
+      {
+        "name": "itemActiveColorDisabled",
+        "type": "string",
+        "description": "页码激活态禁用状态文字颜色",
+        "descriptionEn": "Text color of disabled active Pagination item"
+      },
+      {
+        "name": "itemActiveColorHover",
+        "type": "string",
+        "description": "页码激活态文字颜色悬停态",
+        "descriptionEn": "Text color of active Pagination item hover"
+      },
+      {
+        "name": "itemBg",
+        "type": "string",
+        "description": "页码选项背景色",
+        "descriptionEn": "Background color of Pagination item"
+      },
+      {
+        "name": "itemInputBg",
+        "type": "string",
+        "description": "输入框背景色",
+        "descriptionEn": "Background color of input"
+      },
+      {
+        "name": "itemLinkBg",
+        "type": "string",
+        "description": "页码链接背景色",
+        "descriptionEn": "Background color of Pagination item link"
+      },
+      {
+        "name": "itemSize",
+        "type": "number",
+        "description": "页码尺寸",
+        "descriptionEn": "Size of Pagination item"
+      },
+      {
+        "name": "itemSizeLG",
+        "type": "number",
+        "description": "大号页码尺寸",
+        "descriptionEn": "Size of large Pagination item"
+      },
+      {
+        "name": "itemSizeSM",
+        "type": "number",
+        "description": "小号页码尺寸",
+        "descriptionEn": "Size of small Pagination item"
+      },
+      {
+        "name": "miniOptionsSizeChangerTop",
+        "type": "number",
+        "description": "每页展示数量选择器 top",
+        "descriptionEn": "Top of Pagination size changer"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "popconfirm",
     "className": "ant-popconfirm",
     "styleSource": "components/popconfirm/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/popconfirm/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "确认框 z-index",
+        "descriptionEn": "z-index of Popconfirm"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "popover",
     "className": "ant-popover",
     "styleSource": "components/popover/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/popover/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "innerContentPadding",
+        "type": "number | string"
+      },
+      {
+        "name": "innerPadding",
+        "type": "number"
+      },
+      {
+        "name": "minWidth",
+        "type": "number | string",
+        "description": "气泡卡片最小宽度",
+        "descriptionEn": "Min width of Popover",
+        "deprecated": true
+      },
+      {
+        "name": "titleBorderBottom",
+        "type": "string"
+      },
+      {
+        "name": "titleMarginBottom",
+        "type": "number"
+      },
+      {
+        "name": "titleMinWidth",
+        "type": "number | string",
+        "description": "气泡卡片标题最小宽度",
+        "descriptionEn": "Min width of Popover title"
+      },
+      {
+        "name": "titlePadding",
+        "type": "number | string"
+      },
+      {
+        "name": "width",
+        "type": "number | string",
+        "description": "气泡卡片宽度",
+        "descriptionEn": "Width of Popover",
+        "deprecated": true
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "气泡卡片 z-index",
+        "descriptionEn": "z-index of Popover"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "progress",
     "className": "ant-progress",
     "styleSource": "components/progress/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/progress/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "circleIconFontSize",
+        "type": "string",
+        "description": "圆形进度条图标大小",
+        "descriptionEn": "Icon size of circular progress bar"
+      },
+      {
+        "name": "circleTextColor",
+        "type": "string",
+        "description": "圆形进度条文字颜色",
+        "descriptionEn": "Text color of circular progress bar"
+      },
+      {
+        "name": "circleTextFontSize",
+        "type": "string",
+        "description": "圆形进度条文本大小",
+        "descriptionEn": "Text size of circular progress bar"
+      },
+      {
+        "name": "defaultColor",
+        "type": "string",
+        "description": "进度条默认颜色",
+        "descriptionEn": "Default color of progress bar"
+      },
+      {
+        "name": "lineBorderRadius",
+        "type": "number",
+        "description": "条状进度条圆角",
+        "descriptionEn": "Border radius of line progress bar"
+      },
+      {
+        "name": "remainingColor",
+        "type": "string",
+        "description": "进度条剩余部分颜色",
+        "descriptionEn": "Color of remaining part of progress bar"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -641,8 +2664,9 @@
     "styleSource": "components/qr-code/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": true,
     "tokenDefinitions": [],
-    "implementedInBlazor": false
+    "implementedInBlazor": true
   },
   {
     "name": "qrcode",
@@ -650,6 +2674,7 @@
     "styleSource": "components/qrcode/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": false,
     "tokenDefinitions": [],
     "implementedInBlazor": false
   },
@@ -657,27 +2682,185 @@
     "name": "radio",
     "className": "ant-radio",
     "styleSource": "components/radio/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/radio/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "buttonBg",
+        "type": "string",
+        "description": "单选框按钮背景色",
+        "descriptionEn": "Background color of Radio button"
+      },
+      {
+        "name": "buttonCheckedBg",
+        "type": "string",
+        "description": "单选框按钮选中背景色",
+        "descriptionEn": "Background color of checked Radio button"
+      },
+      {
+        "name": "buttonCheckedBgDisabled",
+        "type": "string",
+        "description": "单选框按钮选中并禁用时的背景色",
+        "descriptionEn": "Background color of checked and disabled Radio button"
+      },
+      {
+        "name": "buttonCheckedColorDisabled",
+        "type": "string",
+        "description": "单选框按钮选中并禁用时的文本颜色",
+        "descriptionEn": "Color of checked and disabled Radio button text"
+      },
+      {
+        "name": "buttonColor",
+        "type": "string",
+        "description": "单选框按钮文本颜色",
+        "descriptionEn": "Color of Radio button text"
+      },
+      {
+        "name": "buttonPaddingInline",
+        "type": "number",
+        "description": "单选框按钮横向内间距",
+        "descriptionEn": "Horizontal padding of Radio button"
+      },
+      {
+        "name": "buttonSolidCheckedActiveBg",
+        "type": "string",
+        "description": "单选框实色按钮选中时的激活态背景色",
+        "descriptionEn": "Background color of checked solid Radio button text when active"
+      },
+      {
+        "name": "buttonSolidCheckedBg",
+        "type": "string",
+        "description": "单选框实色按钮选中时的背景色",
+        "descriptionEn": "Background color of checked solid Radio button text"
+      },
+      {
+        "name": "buttonSolidCheckedColor",
+        "type": "string",
+        "description": "单选框实色按钮选中时的文本颜色",
+        "descriptionEn": "Color of checked solid Radio button text"
+      },
+      {
+        "name": "buttonSolidCheckedHoverBg",
+        "type": "string",
+        "description": "单选框实色按钮选中时的悬浮态背景色",
+        "descriptionEn": "Background color of checked solid Radio button text when hover"
+      },
+      {
+        "name": "dotColorDisabled",
+        "type": "string",
+        "description": "单选框圆点禁用颜色",
+        "descriptionEn": "Color of disabled Radio dot"
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "description": "单选框圆点大小",
+        "descriptionEn": "Size of Radio dot"
+      },
+      {
+        "name": "radioBgColor",
+        "type": "string"
+      },
+      {
+        "name": "radioColor",
+        "type": "string"
+      },
+      {
+        "name": "radioSize",
+        "type": "number",
+        "description": "单选框大小",
+        "descriptionEn": "Radio size"
+      },
+      {
+        "name": "wrapperMarginInlineEnd",
+        "type": "number",
+        "description": "单选框右间距",
+        "descriptionEn": "Margin right of Radio button"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "rate",
     "className": "ant-rate",
     "styleSource": "components/rate/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/rate/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "starBg",
+        "type": "string",
+        "description": "星星背景色",
+        "descriptionEn": "Star background color"
+      },
+      {
+        "name": "starColor",
+        "type": "string",
+        "description": "星星颜色",
+        "descriptionEn": "Star color"
+      },
+      {
+        "name": "starHoverScale",
+        "type": "CSSObject['transform']",
+        "description": "星星悬浮时的缩放",
+        "descriptionEn": "Scale of star when hover"
+      },
+      {
+        "name": "starSize",
+        "type": "number",
+        "description": "星星尺寸",
+        "descriptionEn": "Star size"
+      },
+      {
+        "name": "starSizeLG",
+        "type": "number",
+        "description": "大星星尺寸",
+        "descriptionEn": "Large star size"
+      },
+      {
+        "name": "starSizeSM",
+        "type": "number",
+        "description": "小星星尺寸",
+        "descriptionEn": "Small star size"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "result",
     "className": "ant-result",
     "styleSource": "components/result/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/result/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "extraMargin",
+        "type": "CSSProperties['margin']",
+        "description": "额外区域外间距",
+        "descriptionEn": "Margin of extra area"
+      },
+      {
+        "name": "iconFontSize",
+        "type": "number | string",
+        "description": "图标大小",
+        "descriptionEn": "Icon size"
+      },
+      {
+        "name": "subtitleFontSize",
+        "type": "number",
+        "description": "副标题字体大小",
+        "descriptionEn": "Subtitle font size"
+      },
+      {
+        "name": "titleFontSize",
+        "type": "number | string",
+        "description": "标题字体大小",
+        "descriptionEn": "Title font size"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -686,6 +2869,7 @@
     "styleSource": "components/row/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": false,
     "tokenDefinitions": [],
     "implementedInBlazor": false
   },
@@ -693,9 +2877,59 @@
     "name": "segmented",
     "className": "ant-segmented",
     "styleSource": "components/segmented/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/segmented/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "itemActiveBg",
+        "type": "string",
+        "description": "选项激活态背景颜色",
+        "descriptionEn": "Background color of item when active"
+      },
+      {
+        "name": "itemColor",
+        "type": "string",
+        "description": "选项文本颜色",
+        "descriptionEn": "Text color of item"
+      },
+      {
+        "name": "itemHoverBg",
+        "type": "string",
+        "description": "选项悬浮态背景颜色",
+        "descriptionEn": "Background color of item when hover"
+      },
+      {
+        "name": "itemHoverColor",
+        "type": "string",
+        "description": "选项悬浮态文本颜色",
+        "descriptionEn": "Text color of item when hover"
+      },
+      {
+        "name": "itemSelectedBg",
+        "type": "string",
+        "description": "选项选中时背景颜色",
+        "descriptionEn": "Background color of item when selected"
+      },
+      {
+        "name": "itemSelectedColor",
+        "type": "string",
+        "description": "选项选中时文字颜色",
+        "descriptionEn": "Text color of item when selected"
+      },
+      {
+        "name": "trackBg",
+        "type": "string",
+        "description": "Segmented 控件容器背景色",
+        "descriptionEn": "Background of Segmented container"
+      },
+      {
+        "name": "trackPadding",
+        "type": "string | number",
+        "description": "Segmented 控件容器的 padding",
+        "descriptionEn": "Padding of Segmented container"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -704,70 +2938,151 @@
     "styleSource": "components/select/style/index.ts",
     "tokenSource": "components/select/style/token.ts",
     "hasTokenSource": true,
+    "hasTokenTable": true,
     "tokenDefinitions": [
       {
         "name": "activeBorderColor",
-        "type": "string"
+        "type": "string",
+        "description": "激活态边框色",
+        "descriptionEn": "Active border color"
       },
       {
         "name": "activeOutlineColor",
-        "type": "string"
+        "type": "string",
+        "description": "激活态 outline 颜色",
+        "descriptionEn": "Active outline color"
       },
       {
         "name": "clearBg",
-        "type": "string"
+        "type": "string",
+        "description": "清空按钮背景色",
+        "descriptionEn": "Background color of clear button"
       },
       {
         "name": "hoverBorderColor",
-        "type": "string"
+        "type": "string",
+        "description": "悬浮态边框色",
+        "descriptionEn": "Hover border color"
+      },
+      {
+        "name": "multipleItemBg",
+        "type": "string",
+        "description": "多选标签背景色",
+        "descriptionEn": "Background color of multiple tag"
+      },
+      {
+        "name": "multipleItemBorderColor",
+        "type": "string",
+        "description": "多选标签边框色",
+        "descriptionEn": "Border color of multiple tag"
+      },
+      {
+        "name": "multipleItemBorderColorDisabled",
+        "type": "string",
+        "description": "多选标签禁用边框色",
+        "descriptionEn": "Border color of multiple tag when disabled"
+      },
+      {
+        "name": "multipleItemColorDisabled",
+        "type": "string",
+        "description": "多选标签禁用文本颜色",
+        "descriptionEn": "Text color of multiple tag when disabled"
+      },
+      {
+        "name": "multipleItemHeight",
+        "type": "number",
+        "description": "多选标签高度",
+        "descriptionEn": "Height of multiple tag"
+      },
+      {
+        "name": "multipleItemHeightLG",
+        "type": "number",
+        "description": "大号多选标签高度",
+        "descriptionEn": "Height of multiple tag with large size"
+      },
+      {
+        "name": "multipleItemHeightSM",
+        "type": "number",
+        "description": "小号多选标签高度",
+        "descriptionEn": "Height of multiple tag with small size"
+      },
+      {
+        "name": "multipleSelectorBgDisabled",
+        "type": "string",
+        "description": "多选框禁用背景",
+        "descriptionEn": "Background color of multiple selector when disabled"
       },
       {
         "name": "optionActiveBg",
-        "type": "string"
+        "type": "string",
+        "description": "选项激活态时背景色",
+        "descriptionEn": "Background color when option is active"
       },
       {
         "name": "optionFontSize",
-        "type": "number"
+        "type": "number",
+        "description": "选项字体大小",
+        "descriptionEn": "Font size of option"
       },
       {
         "name": "optionHeight",
-        "type": "number"
+        "type": "number",
+        "description": "选项高度",
+        "descriptionEn": "Height of option"
       },
       {
         "name": "optionLineHeight",
-        "type": "CSSProperties['lineHeight']"
+        "type": "CSSProperties['lineHeight']",
+        "description": "选项行高",
+        "descriptionEn": "Line height of option"
       },
       {
         "name": "optionPadding",
-        "type": "CSSProperties['padding']"
+        "type": "CSSProperties['padding']",
+        "description": "选项内间距",
+        "descriptionEn": "Padding of option"
       },
       {
         "name": "optionSelectedBg",
-        "type": "string"
+        "type": "string",
+        "description": "选项选中时背景色",
+        "descriptionEn": "Background color when option is selected"
       },
       {
         "name": "optionSelectedColor",
-        "type": "string"
+        "type": "string",
+        "description": "选项选中时文本颜色",
+        "descriptionEn": "Text color when option is selected"
       },
       {
         "name": "optionSelectedFontWeight",
-        "type": "CSSProperties['fontWeight']"
+        "type": "CSSProperties['fontWeight']",
+        "description": "选项选中时文本字重",
+        "descriptionEn": "Font weight when option is selected"
       },
       {
         "name": "selectorBg",
-        "type": "string"
+        "type": "string",
+        "description": "选框背景色",
+        "descriptionEn": "Background color of selector"
       },
       {
         "name": "showArrowPaddingInlineEnd",
-        "type": "number"
+        "type": "number",
+        "description": "箭头的行末内边距",
+        "descriptionEn": "Inline end padding of arrow"
       },
       {
         "name": "singleItemHeightLG",
-        "type": "number"
+        "type": "number",
+        "description": "单选大号回填项高度",
+        "descriptionEn": "Height of single selected item with large size"
       },
       {
         "name": "zIndexPopup",
-        "type": "number"
+        "type": "number",
+        "description": "下拉菜单 z-index",
+        "descriptionEn": "z-index of dropdown"
       }
     ],
     "implementedInBlazor": true
@@ -776,18 +3091,176 @@
     "name": "skeleton",
     "className": "ant-skeleton",
     "styleSource": "components/skeleton/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/skeleton/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "blockRadius",
+        "type": "number",
+        "description": "骨架屏圆角",
+        "descriptionEn": "Border radius of skeleton"
+      },
+      {
+        "name": "color",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "colorGradientEnd",
+        "type": "string",
+        "deprecated": true
+      },
+      {
+        "name": "gradientFromColor",
+        "type": "string",
+        "description": "渐变色起点颜色",
+        "descriptionEn": "Start color of gradient"
+      },
+      {
+        "name": "gradientToColor",
+        "type": "string",
+        "description": "渐变色终点颜色",
+        "descriptionEn": "End color of gradient"
+      },
+      {
+        "name": "paragraphLiHeight",
+        "type": "number",
+        "description": "段落骨架屏单行高度",
+        "descriptionEn": "Line height of paragraph skeleton"
+      },
+      {
+        "name": "paragraphMarginTop",
+        "type": "number",
+        "description": "段落骨架屏上间距",
+        "descriptionEn": "Margin top of paragraph skeleton"
+      },
+      {
+        "name": "titleHeight",
+        "type": "number | string",
+        "description": "标题骨架屏高度",
+        "descriptionEn": "Height of title skeleton"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "slider",
     "className": "ant-slider",
     "styleSource": "components/slider/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/slider/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "controlSize",
+        "type": "number",
+        "description": "滑动输入高度",
+        "descriptionEn": "Height of slider"
+      },
+      {
+        "name": "dotActiveBorderColor",
+        "type": "string",
+        "description": "圆点激活态边框颜色",
+        "descriptionEn": "Border color of dot when active"
+      },
+      {
+        "name": "dotBorderColor",
+        "type": "string",
+        "description": "圆点边框颜色",
+        "descriptionEn": "Border color of dot"
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "description": "滑块圆点尺寸",
+        "descriptionEn": "Size of dot"
+      },
+      {
+        "name": "handleActiveColor",
+        "type": "string",
+        "description": "滑块激活态边框色",
+        "descriptionEn": "Border color of handle when active"
+      },
+      {
+        "name": "handleActiveOutlineColor",
+        "type": "string",
+        "description": "滑块激活态外框色",
+        "descriptionEn": "Outline color of handle when active"
+      },
+      {
+        "name": "handleColor",
+        "type": "string",
+        "description": "滑块颜色",
+        "descriptionEn": "Color of handle"
+      },
+      {
+        "name": "handleColorDisabled",
+        "type": "string",
+        "description": "滑块禁用颜色",
+        "descriptionEn": "Color of handle when disabled"
+      },
+      {
+        "name": "handleLineWidth",
+        "type": "number | string",
+        "description": "滑块边框宽度",
+        "descriptionEn": "Border width of handle"
+      },
+      {
+        "name": "handleLineWidthHover",
+        "type": "number | string",
+        "description": "滑块边框宽度（悬浮态）",
+        "descriptionEn": "Border width of handle when hover"
+      },
+      {
+        "name": "handleSize",
+        "type": "number",
+        "description": "滑块尺寸",
+        "descriptionEn": "Size of handle"
+      },
+      {
+        "name": "handleSizeHover",
+        "type": "number",
+        "description": "滑块尺寸（悬浮态）",
+        "descriptionEn": "Size of handle when hover"
+      },
+      {
+        "name": "railBg",
+        "type": "string",
+        "description": "轨道背景色",
+        "descriptionEn": "Background color of rail"
+      },
+      {
+        "name": "railHoverBg",
+        "type": "string",
+        "description": "轨道背景色（悬浮态）",
+        "descriptionEn": "Background color of rail when hover"
+      },
+      {
+        "name": "railSize",
+        "type": "number",
+        "description": "轨道高度",
+        "descriptionEn": "Height of rail"
+      },
+      {
+        "name": "trackBg",
+        "type": "string",
+        "description": "轨道已覆盖部分背景色",
+        "descriptionEn": "Background color of track"
+      },
+      {
+        "name": "trackBgDisabled",
+        "type": "string",
+        "description": "轨道禁用态背景色",
+        "descriptionEn": "Background color of track when disabled"
+      },
+      {
+        "name": "trackHoverBg",
+        "type": "string",
+        "description": "轨道已覆盖部分背景色（悬浮态）",
+        "descriptionEn": "Background color of track when hover"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -796,6 +3269,7 @@
     "styleSource": "components/space/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": true,
     "tokenDefinitions": [],
     "implementedInBlazor": true
   },
@@ -803,117 +3277,908 @@
     "name": "spin",
     "className": "ant-spin",
     "styleSource": "components/spin/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/spin/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "contentHeight",
+        "type": "number | string",
+        "description": "内容区域高度",
+        "descriptionEn": "Height of content area"
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "description": "加载图标尺寸",
+        "descriptionEn": "Loading icon size"
+      },
+      {
+        "name": "dotSizeLG",
+        "type": "number",
+        "description": "大号加载图标尺寸",
+        "descriptionEn": "Large loading icon size"
+      },
+      {
+        "name": "dotSizeSM",
+        "type": "number",
+        "description": "小号加载图标尺寸",
+        "descriptionEn": "Small loading icon size"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "splitter",
     "className": "ant-splitter",
     "styleSource": "components/splitter/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/splitter/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "resizeSpinnerSize",
+        "type": "number",
+        "description": "拖拽标识元素大小",
+        "descriptionEn": "Drag and drop the identity element size",
+        "deprecated": true
+      },
+      {
+        "name": "splitBarDraggableSize",
+        "type": "number",
+        "description": "拖拽标识元素大小",
+        "descriptionEn": "Drag and drop the identity element size"
+      },
+      {
+        "name": "splitBarSize",
+        "type": "number",
+        "description": "拖拽元素显示大小",
+        "descriptionEn": "Drag the element display size"
+      },
+      {
+        "name": "splitTriggerSize",
+        "type": "number",
+        "description": "拖拽触发区域大小",
+        "descriptionEn": "Drag and drop trigger area size"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "statistic",
     "className": "ant-statistic",
     "styleSource": "components/statistic/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/statistic/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "contentFontSize",
+        "type": "number | string",
+        "description": "内容字体大小",
+        "descriptionEn": "Content font size"
+      },
+      {
+        "name": "titleFontSize",
+        "type": "number",
+        "description": "标题字体大小",
+        "descriptionEn": "Title font size"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "steps",
     "className": "ant-steps",
     "styleSource": "components/steps/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/steps/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "customIconFontSize",
+        "type": "number",
+        "description": "自定义图标大小",
+        "descriptionEn": "Font size of custom icon"
+      },
+      {
+        "name": "customIconSize",
+        "type": "number",
+        "description": "自定义图标容器尺寸",
+        "descriptionEn": "Size of custom icon container"
+      },
+      {
+        "name": "customIconTop",
+        "type": "number",
+        "description": "自定义图标 top",
+        "descriptionEn": "Top of custom icon"
+      },
+      {
+        "name": "descriptionMaxWidth",
+        "type": "number",
+        "description": "描述区域最大宽度",
+        "descriptionEn": "Max width of description area",
+        "deprecated": true
+      },
+      {
+        "name": "dotCurrentSize",
+        "type": "number",
+        "description": "点状步骤点当前大小",
+        "descriptionEn": "Current size of dot"
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "description": "点状步骤点大小",
+        "descriptionEn": "Size of dot"
+      },
+      {
+        "name": "iconFontSize",
+        "type": "number",
+        "description": "图标大小",
+        "descriptionEn": "Size of icon"
+      },
+      {
+        "name": "iconSize",
+        "type": "number",
+        "description": "图标容器尺寸",
+        "descriptionEn": "Size of icon container"
+      },
+      {
+        "name": "iconSizeSM",
+        "type": "number | string",
+        "description": "小号步骤条图标大小",
+        "descriptionEn": "Size of small steps icon"
+      },
+      {
+        "name": "iconTop",
+        "type": "number",
+        "description": "图标 top",
+        "descriptionEn": "Top of icon"
+      },
+      {
+        "name": "navArrowColor",
+        "type": "string",
+        "description": "可跳转步骤条箭头颜色",
+        "descriptionEn": "Color of arrow in nav"
+      },
+      {
+        "name": "navContentMaxWidth",
+        "type": "CSSProperties['maxWidth']",
+        "description": "可跳转步骤条内容最大宽度",
+        "descriptionEn": "Max width of nav content"
+      },
+      {
+        "name": "titleLineHeight",
+        "type": "number | string",
+        "description": "标题行高",
+        "descriptionEn": "Line height of title",
+        "deprecated": true
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "switch",
     "className": "ant-switch",
     "styleSource": "components/switch/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/switch/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "handleBg",
+        "type": "string",
+        "description": "开关把手背景色",
+        "descriptionEn": "Background color of Switch handle"
+      },
+      {
+        "name": "handleShadow",
+        "type": "string",
+        "description": "开关把手阴影",
+        "descriptionEn": "Shadow of Switch handle"
+      },
+      {
+        "name": "handleSize",
+        "type": "number",
+        "description": "开关把手大小",
+        "descriptionEn": "Size of Switch handle"
+      },
+      {
+        "name": "handleSizeSM",
+        "type": "number",
+        "description": "小号开关把手大小",
+        "descriptionEn": "Size of small Switch handle"
+      },
+      {
+        "name": "innerMaxMargin",
+        "type": "number",
+        "description": "内容区域最大边距",
+        "descriptionEn": "Maximum margin of content area"
+      },
+      {
+        "name": "innerMaxMarginSM",
+        "type": "number",
+        "description": "小号开关内容区域最大边距",
+        "descriptionEn": "Maximum margin of content area of small Switch"
+      },
+      {
+        "name": "innerMinMargin",
+        "type": "number",
+        "description": "内容区域最小边距",
+        "descriptionEn": "Minimum margin of content area"
+      },
+      {
+        "name": "innerMinMarginSM",
+        "type": "number",
+        "description": "小号开关内容区域最小边距",
+        "descriptionEn": "Minimum margin of content area of small Switch"
+      },
+      {
+        "name": "trackHeight",
+        "type": "number | string",
+        "description": "开关高度",
+        "descriptionEn": "Height of Switch"
+      },
+      {
+        "name": "trackHeightSM",
+        "type": "number | string",
+        "description": "小号开关高度",
+        "descriptionEn": "Height of small Switch"
+      },
+      {
+        "name": "trackMinWidth",
+        "type": "number | string",
+        "description": "开关最小宽度",
+        "descriptionEn": "Minimum width of Switch"
+      },
+      {
+        "name": "trackMinWidthSM",
+        "type": "number | string",
+        "description": "小号开关最小宽度",
+        "descriptionEn": "Minimum width of small Switch"
+      },
+      {
+        "name": "trackPadding",
+        "type": "number",
+        "description": "开关内边距",
+        "descriptionEn": "Padding of Switch"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "table",
     "className": "ant-table",
     "styleSource": "components/table/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/table/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "bodySortBg",
+        "type": "string",
+        "description": "表格排序列背景色",
+        "descriptionEn": "Background color of table sorted column"
+      },
+      {
+        "name": "borderColor",
+        "type": "string",
+        "description": "表格边框/分割线颜色",
+        "descriptionEn": "Border color of table"
+      },
+      {
+        "name": "cellFontSize",
+        "type": "number",
+        "description": "单元格文字大小（默认大尺寸）",
+        "descriptionEn": "Font size of table cell (large size by default)"
+      },
+      {
+        "name": "cellFontSizeMD",
+        "type": "number",
+        "description": "单元格文字大小（中等尺寸）",
+        "descriptionEn": "Font size of table cell (middle size)"
+      },
+      {
+        "name": "cellFontSizeSM",
+        "type": "number",
+        "description": "单元格文字大小（小尺寸）",
+        "descriptionEn": "Font size of table cell (small size)"
+      },
+      {
+        "name": "cellPaddingBlock",
+        "type": "number",
+        "description": "单元格纵向内间距",
+        "descriptionEn": "Vertical padding of table cell"
+      },
+      {
+        "name": "cellPaddingBlockMD",
+        "type": "number",
+        "description": "单元格纵向内间距（中等尺寸）",
+        "descriptionEn": "Vertical padding of table cell (middle size)"
+      },
+      {
+        "name": "cellPaddingBlockSM",
+        "type": "number",
+        "description": "单元格纵向内间距（小尺寸）",
+        "descriptionEn": "Vertical padding of table cell (small size)"
+      },
+      {
+        "name": "cellPaddingInline",
+        "type": "number",
+        "description": "单元格横向内间距（默认大尺寸）",
+        "descriptionEn": "Horizontal padding of table cell (large size by default)"
+      },
+      {
+        "name": "cellPaddingInlineMD",
+        "type": "number",
+        "description": "单元格横向内间距（中等尺寸）",
+        "descriptionEn": "Horizontal padding of table cell (middle size)"
+      },
+      {
+        "name": "cellPaddingInlineSM",
+        "type": "number",
+        "description": "单元格横向内间距（小尺寸）",
+        "descriptionEn": "Horizontal padding of table cell (small size)"
+      },
+      {
+        "name": "expandIconBg",
+        "type": "string",
+        "description": "展开按钮背景色",
+        "descriptionEn": "Background of expand button"
+      },
+      {
+        "name": "expandIconHalfInner",
+        "type": "number"
+      },
+      {
+        "name": "expandIconMarginTop",
+        "type": "number"
+      },
+      {
+        "name": "expandIconScale",
+        "type": "number"
+      },
+      {
+        "name": "expandIconSize",
+        "type": "number"
+      },
+      {
+        "name": "filterDropdownBg",
+        "type": "string",
+        "description": "过滤下拉菜单颜色",
+        "descriptionEn": "Color of filter dropdown"
+      },
+      {
+        "name": "filterDropdownMenuBg",
+        "type": "string",
+        "description": "过滤下拉菜单选项背景",
+        "descriptionEn": "Background of filter dropdown menu item"
+      },
+      {
+        "name": "fixedHeaderSortActiveBg",
+        "type": "string",
+        "description": "固定表头排序激活态背景色",
+        "descriptionEn": "Background color of fixed table header when sorted"
+      },
+      {
+        "name": "footerBg",
+        "type": "string",
+        "description": "表格底部背景色",
+        "descriptionEn": "Background of footer"
+      },
+      {
+        "name": "footerColor",
+        "type": "string",
+        "description": "表格底部文字颜色",
+        "descriptionEn": "Color of footer text"
+      },
+      {
+        "name": "headerBg",
+        "type": "string",
+        "description": "表头背景",
+        "descriptionEn": "Background of table header"
+      },
+      {
+        "name": "headerBorderRadius",
+        "type": "number",
+        "description": "表头圆角",
+        "descriptionEn": "Border radius of table header"
+      },
+      {
+        "name": "headerColor",
+        "type": "string",
+        "description": "表头文字颜色",
+        "descriptionEn": "Color of table header text"
+      },
+      {
+        "name": "headerFilterHoverBg",
+        "type": "string",
+        "description": "表头过滤按钮悬浮背景色",
+        "descriptionEn": "Background color of table header filter button when hovered"
+      },
+      {
+        "name": "headerIconColor",
+        "type": "string"
+      },
+      {
+        "name": "headerIconHoverColor",
+        "type": "string"
+      },
+      {
+        "name": "headerSortActiveBg",
+        "type": "string",
+        "description": "表头排序激活态背景色",
+        "descriptionEn": "Background color of table header when sorted"
+      },
+      {
+        "name": "headerSortHoverBg",
+        "type": "string",
+        "description": "表头排序激活态悬浮背景色",
+        "descriptionEn": "Background color of table header when sorted and hovered"
+      },
+      {
+        "name": "headerSplitColor",
+        "type": "string",
+        "description": "表头分割线颜色",
+        "descriptionEn": "Split border color of table header"
+      },
+      {
+        "name": "rowExpandedBg",
+        "type": "string",
+        "description": "表格行展开背景色",
+        "descriptionEn": "Background color of table expanded row"
+      },
+      {
+        "name": "rowHoverBg",
+        "type": "string",
+        "description": "表格行悬浮背景色",
+        "descriptionEn": "Background color of table hovered row"
+      },
+      {
+        "name": "rowSelectedBg",
+        "type": "string",
+        "description": "表格行选中背景色",
+        "descriptionEn": "Background color of table selected row"
+      },
+      {
+        "name": "rowSelectedHoverBg",
+        "type": "string",
+        "description": "表格行选中悬浮背景色",
+        "descriptionEn": "Background color of table selected row when hovered"
+      },
+      {
+        "name": "selectionColumnWidth",
+        "type": "number | string",
+        "description": "选择列宽度",
+        "descriptionEn": "Width of selection column"
+      },
+      {
+        "name": "stickyScrollBarBg",
+        "type": "string",
+        "description": "Sticky 模式下滚动条背景色",
+        "descriptionEn": "Background of sticky scrollbar"
+      },
+      {
+        "name": "stickyScrollBarBorderRadius",
+        "type": "number",
+        "description": "Sticky 模式下滚动条圆角",
+        "descriptionEn": "Border radius of sticky scrollbar"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "tabs",
     "className": "ant-tabs",
     "styleSource": "components/tabs/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/tabs/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "cardBg",
+        "type": "string",
+        "description": "卡片标签页背景色",
+        "descriptionEn": "Background color of card tab"
+      },
+      {
+        "name": "cardGutter",
+        "type": "number",
+        "description": "卡片标签间距",
+        "descriptionEn": "Gutter of card tab"
+      },
+      {
+        "name": "cardHeight",
+        "type": "number",
+        "description": "卡片标签页高度",
+        "descriptionEn": "Height of card tab"
+      },
+      {
+        "name": "cardHeightLG",
+        "type": "number",
+        "description": "大尺寸卡片标签页高度",
+        "descriptionEn": "Height of large card tab"
+      },
+      {
+        "name": "cardHeightSM",
+        "type": "number",
+        "description": "小尺寸卡片标签页高度",
+        "descriptionEn": "Height of small card tab"
+      },
+      {
+        "name": "cardPadding",
+        "type": "string",
+        "description": "卡片标签页内间距",
+        "descriptionEn": "Padding of card tab"
+      },
+      {
+        "name": "cardPaddingLG",
+        "type": "string",
+        "description": "大号卡片标签页内间距",
+        "descriptionEn": "Padding of large card tab"
+      },
+      {
+        "name": "cardPaddingSM",
+        "type": "string",
+        "description": "小号卡片标签页内间距",
+        "descriptionEn": "Padding of small card tab"
+      },
+      {
+        "name": "horizontalItemGutter",
+        "type": "number",
+        "description": "横向标签页标签间距",
+        "descriptionEn": "Horizontal gutter of horizontal tab"
+      },
+      {
+        "name": "horizontalItemMargin",
+        "type": "string",
+        "description": "横向标签页标签外间距",
+        "descriptionEn": "Horizontal margin of horizontal tab item"
+      },
+      {
+        "name": "horizontalItemMarginRTL",
+        "type": "string",
+        "description": "横向标签页标签外间距（RTL）",
+        "descriptionEn": "Horizontal margin of horizontal tab item (RTL)"
+      },
+      {
+        "name": "horizontalItemPadding",
+        "type": "string",
+        "description": "横向标签页标签内间距",
+        "descriptionEn": "Horizontal padding of horizontal tab item"
+      },
+      {
+        "name": "horizontalItemPaddingLG",
+        "type": "string",
+        "description": "大号横向标签页标签内间距",
+        "descriptionEn": "Horizontal padding of large horizontal tab item"
+      },
+      {
+        "name": "horizontalItemPaddingSM",
+        "type": "string",
+        "description": "小号横向标签页标签内间距",
+        "descriptionEn": "Horizontal padding of small horizontal tab item"
+      },
+      {
+        "name": "horizontalMargin",
+        "type": "string",
+        "description": "横向标签页外间距",
+        "descriptionEn": "Horizontal margin of horizontal tab"
+      },
+      {
+        "name": "inkBarColor",
+        "type": "string",
+        "description": "指示条颜色",
+        "descriptionEn": "Color of indicator"
+      },
+      {
+        "name": "itemActiveColor",
+        "type": "string",
+        "description": "标签激活态文本颜色",
+        "descriptionEn": "Text color of active tab"
+      },
+      {
+        "name": "itemColor",
+        "type": "string",
+        "description": "标签文本颜色",
+        "descriptionEn": "Text color of tab"
+      },
+      {
+        "name": "itemHoverColor",
+        "type": "string",
+        "description": "标签悬浮态文本颜色",
+        "descriptionEn": "Text color of hover tab"
+      },
+      {
+        "name": "itemSelectedColor",
+        "type": "string",
+        "description": "标签选中态文本颜色",
+        "descriptionEn": "Text color of selected tab"
+      },
+      {
+        "name": "titleFontSize",
+        "type": "number",
+        "description": "标签页标题文本大小",
+        "descriptionEn": "Font size of title"
+      },
+      {
+        "name": "titleFontSizeLG",
+        "type": "number",
+        "description": "大号标签页标题文本大小",
+        "descriptionEn": "Font size of large title"
+      },
+      {
+        "name": "titleFontSizeSM",
+        "type": "number",
+        "description": "小号标签页标题文本大小",
+        "descriptionEn": "Font size of small title"
+      },
+      {
+        "name": "verticalItemMargin",
+        "type": "string",
+        "description": "纵向标签页标签外间距",
+        "descriptionEn": "Vertical margin of vertical tab item"
+      },
+      {
+        "name": "verticalItemPadding",
+        "type": "string",
+        "description": "纵向标签页标签内间距",
+        "descriptionEn": "Vertical padding of vertical tab item"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "下拉菜单 z-index",
+        "descriptionEn": "z-index of dropdown menu"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "tag",
     "className": "ant-tag",
     "styleSource": "components/tag/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/tag/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "defaultBg",
+        "type": "string",
+        "description": "默认背景色",
+        "descriptionEn": "Default background color"
+      },
+      {
+        "name": "defaultColor",
+        "type": "string",
+        "description": "默认文字颜色",
+        "descriptionEn": "Default text color"
+      },
+      {
+        "name": "solidTextColor",
+        "type": "string",
+        "description": "默认实心标签的文本色",
+        "descriptionEn": "Default text color for solid tag."
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "timeline",
     "className": "ant-timeline",
     "styleSource": "components/timeline/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/timeline/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "dotBg",
+        "type": "string",
+        "description": "节点背景色",
+        "descriptionEn": "Background color of node"
+      },
+      {
+        "name": "dotBorderWidth",
+        "type": "number | string",
+        "description": "节点边框宽度",
+        "descriptionEn": "Border width of node"
+      },
+      {
+        "name": "dotSize",
+        "type": "number | string",
+        "description": "节点大小",
+        "descriptionEn": "Node size"
+      },
+      {
+        "name": "itemPaddingBottom",
+        "type": "number",
+        "description": "时间项下间距",
+        "descriptionEn": "Bottom padding of item"
+      },
+      {
+        "name": "tailColor",
+        "type": "string",
+        "description": "轨迹颜色",
+        "descriptionEn": "Line color"
+      },
+      {
+        "name": "tailWidth",
+        "type": "number | string",
+        "description": "轨迹宽度",
+        "descriptionEn": "Line width"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "tooltip",
     "className": "ant-tooltip",
     "styleSource": "components/tooltip/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/tooltip/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "maxWidth",
+        "type": "number",
+        "description": "文字提示最大宽度",
+        "descriptionEn": "Max width of tooltip"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "文字提示 z-index",
+        "descriptionEn": "z-index of tooltip"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "tour",
     "className": "ant-tour",
     "styleSource": "components/tour/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
-    "implementedInBlazor": false
+    "tokenSource": "components/tour/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "closeBtnSize",
+        "type": "number",
+        "description": "关闭按钮尺寸",
+        "descriptionEn": "Close button size"
+      },
+      {
+        "name": "primaryNextBtnHoverBg",
+        "type": "string",
+        "description": "Primary 模式下一步按钮悬浮背景色",
+        "descriptionEn": "Hover background color of next button in primary type"
+      },
+      {
+        "name": "primaryPrevBtnBg",
+        "type": "string",
+        "description": "Primary 模式上一步按钮背景色",
+        "descriptionEn": "Background color of previous button in primary type"
+      },
+      {
+        "name": "zIndexPopup",
+        "type": "number",
+        "description": "弹层 z-index",
+        "descriptionEn": "Tour popup z-index"
+      }
+    ],
+    "implementedInBlazor": true
   },
   {
     "name": "transfer",
     "className": "ant-transfer",
     "styleSource": "components/transfer/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/transfer/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "headerHeight",
+        "type": "number | string",
+        "description": "顶部高度",
+        "descriptionEn": "Height of header"
+      },
+      {
+        "name": "itemHeight",
+        "type": "number | string",
+        "description": "列表项高度",
+        "descriptionEn": "Height of list item"
+      },
+      {
+        "name": "itemPaddingBlock",
+        "type": "number | string",
+        "description": "列表项纵向内边距",
+        "descriptionEn": "Vertical padding of list item"
+      },
+      {
+        "name": "listHeight",
+        "type": "number | string",
+        "description": "列表高度",
+        "descriptionEn": "Height of list"
+      },
+      {
+        "name": "listWidth",
+        "type": "number | string",
+        "description": "列表宽度",
+        "descriptionEn": "Width of list"
+      },
+      {
+        "name": "listWidthLG",
+        "type": "number | string",
+        "description": "大号列表宽度",
+        "descriptionEn": "Width of large list"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "tree",
     "className": "ant-tree",
     "styleSource": "components/tree/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/tree/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "directoryNodeSelectedBg",
+        "type": "string",
+        "description": "目录树节点选中背景色",
+        "descriptionEn": "Background color of selected directory node"
+      },
+      {
+        "name": "directoryNodeSelectedColor",
+        "type": "string",
+        "description": "目录树节点选中文字颜色",
+        "descriptionEn": "Text color of selected directory node"
+      },
+      {
+        "name": "indentSize",
+        "type": "number",
+        "description": "缩进宽度",
+        "descriptionEn": "Indent width of tree"
+      },
+      {
+        "name": "nodeHoverBg",
+        "type": "string",
+        "description": "节点悬浮态背景色",
+        "descriptionEn": "Background color of hovered node"
+      },
+      {
+        "name": "nodeHoverColor",
+        "type": "string",
+        "description": "节点悬浮态态文字颜色",
+        "descriptionEn": "Text color of hovered node"
+      },
+      {
+        "name": "nodeSelectedBg",
+        "type": "string",
+        "description": "节点选中态背景色",
+        "descriptionEn": "Background color of selected node"
+      },
+      {
+        "name": "nodeSelectedColor",
+        "type": "string",
+        "description": "节点选中态文字颜色",
+        "descriptionEn": "Text color of selected node"
+      },
+      {
+        "name": "switcherSize",
+        "type": "number",
+        "description": "展开按钮宽度",
+        "descriptionEn": "Switcher width of tree"
+      },
+      {
+        "name": "titleHeight",
+        "type": "number",
+        "description": "节点标题高度",
+        "descriptionEn": "Node title height"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
@@ -922,6 +4187,7 @@
     "styleSource": "components/tree-select/style/index.ts",
     "tokenSource": null,
     "hasTokenSource": false,
+    "hasTokenTable": true,
     "tokenDefinitions": [],
     "implementedInBlazor": true
   },
@@ -929,18 +4195,46 @@
     "name": "typography",
     "className": "ant-typography",
     "styleSource": "components/typography/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/typography/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "titleMarginBottom",
+        "type": "number | string",
+        "description": "标题下间距",
+        "descriptionEn": "Margin bottom of title"
+      },
+      {
+        "name": "titleMarginTop",
+        "type": "number | string",
+        "description": "标题上间距",
+        "descriptionEn": "Margin top of title"
+      }
+    ],
     "implementedInBlazor": true
   },
   {
     "name": "upload",
     "className": "ant-upload",
     "styleSource": "components/upload/style/index.ts",
-    "tokenSource": null,
-    "hasTokenSource": false,
-    "tokenDefinitions": [],
+    "tokenSource": "components/upload/style/index.ts",
+    "hasTokenSource": true,
+    "hasTokenTable": true,
+    "tokenDefinitions": [
+      {
+        "name": "actionsColor",
+        "type": "string",
+        "description": "操作按扭颜色",
+        "descriptionEn": "Action button color"
+      },
+      {
+        "name": "pictureCardSize",
+        "type": "number",
+        "description": "卡片类型文件列表项的尺寸（对 picture-card 和 picture-circle 生效）",
+        "descriptionEn": "Size of list items in card type (affects both picture-card and picture-circle)"
+      }
+    ],
     "implementedInBlazor": true
   }
 ]

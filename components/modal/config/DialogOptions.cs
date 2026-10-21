@@ -77,6 +77,11 @@ namespace AntDesign
         public string ClassName { get; set; }
 
         /// <summary>
+        /// Wraps the rendered modal panel in custom markup.
+        /// </summary>
+        public RenderFragment<RenderFragment> ModalRender { get; set; }
+
+        /// <summary>
         /// for OK-Cancel Confirm dialog, cancel button clicked callback.
         /// It's only trigger in Confirm created by ModalService mode
         /// </summary>

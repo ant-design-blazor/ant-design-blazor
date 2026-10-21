@@ -88,7 +88,12 @@ export class inputHelper {
     }
     if (oldHeight !== newHeight) {
       const textAreaObj = state.objReferenceDict[element.id];
-      textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", element.scrollWidth, newHeight);
+      // ResizeObserver may deliver one last notification while an AutoSize
+      // TextArea is being removed or switched back to a fixed size. In that
+      // case the .NET reference has already been disposed.
+      if (textAreaObj && typeof textAreaObj.invokeMethodAsync === "function") {
+        textAreaObj.invokeMethodAsync("ChangeSizeAsyncJs", element.scrollWidth, newHeight);
+      }
     }
   }
 

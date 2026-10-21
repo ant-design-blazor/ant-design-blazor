@@ -107,6 +107,11 @@ namespace AntDesign
         public bool MaskClosable { get; set; }
 
         /// <summary>
+        /// Coordinates used as the modal zoom animation origin.
+        /// </summary>
+        public ModalMousePosition MousePosition { get; set; }
+
+        /// <summary>
         /// Style for dialog's mask element
         /// </summary>
         public string MaskStyle { get; set; }

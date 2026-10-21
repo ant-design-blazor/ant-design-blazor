@@ -1,0 +1,48 @@
+﻿@using System.Collections.Generic
+
+<Menu Mode="@MenuMode.Vertical"
+      DefaultSelectedKeys="@(new[] { "mail" })"
+      ClassNames="@_classNames"
+      Styles="@_styles">
+    <MenuItem Key="mail" Icon="mail">Navigation One</MenuItem>
+    <SubMenu Key="submenu" Title="Navigation Two" Icon="appstore">
+        <MenuItemGroup Key="group" Title="Group">
+            <MenuItem Key="option-1" Icon="setting">Option 1</MenuItem>
+            <MenuItem Key="option-2">Option 2</MenuItem>
+        </MenuItemGroup>
+    </SubMenu>
+</Menu>
+
+@code {
+    private readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "menu-semantic-root",
+        ["item"] = "menu-semantic-item",
+        ["itemContent"] = "menu-semantic-item-content",
+        ["itemIcon"] = "menu-semantic-item-icon",
+        ["itemTitle"] = "menu-semantic-item-title",
+        ["list"] = "menu-semantic-list",
+        ["popup.root"] = "menu-semantic-popup",
+        ["subMenu.item"] = "menu-semantic-submenu-item",
+        ["subMenu.itemTitle"] = "menu-semantic-submenu-title",
+        ["subMenu.list"] = "menu-semantic-submenu-list",
+        ["subMenu.itemContent"] = "menu-semantic-submenu-item-content",
+        ["subMenu.itemIcon"] = "menu-semantic-submenu-item-icon"
+    };
+
+    private readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "width: 256px;",
+        ["item"] = "font-weight: 600;",
+        ["itemContent"] = "letter-spacing: 0.02em;",
+        ["itemIcon"] = "color: #1677ff;",
+        ["itemTitle"] = "color: #1677ff;",
+        ["list"] = "padding: 4px;",
+        ["popup.root"] = "z-index: 2;",
+        ["subMenu.item"] = "margin-block: 2px;",
+        ["subMenu.itemTitle"] = "color: #1677ff;",
+        ["subMenu.list"] = "border-inline-start: 1px solid #91caff;",
+        ["subMenu.itemContent"] = "text-transform: uppercase;",
+        ["subMenu.itemIcon"] = "color: #52c41a;"
+    };
+}

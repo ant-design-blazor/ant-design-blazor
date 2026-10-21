@@ -1,0 +1,21 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_brandTheme">
+    <Space Wrap>
+        <Button Type="ButtonType.Primary">Primary action</Button>
+        <Button Type="ButtonType.Default">Default action</Button>
+        <Input TValue="string" Placeholder="Brand theme input" Style="width: 200px;" />
+    </Space>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _brandTheme = new()
+    {
+        Token = new ThemeToken
+        {
+            ["colorPrimary"] = "#722ed1",
+            ["borderRadius"] = "8",
+            ["controlHeight"] = "36"
+        }
+    };
+}

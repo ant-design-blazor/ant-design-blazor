@@ -34,6 +34,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | Mask | 是否展示遮罩 | bool | true |
 | MaskClosable | 点击蒙层是否允许关闭 | bool | true |
 | MaskStyle | 遮罩样式 | string | {} |
+| ModalRender | 使用自定义标记包装对话框面板 | RenderFragment<RenderFragment> | - |
+| MousePosition | 对话框缩放动画的起始坐标 | ModalMousePosition | - |
 | OkText | 确认按钮文字 | string\|RenderFragment | OK |
 | OkType | 确认按钮类型 | string | primary |
 | OkButtonProps | ok 按钮 props | ButtonProps                   | - |

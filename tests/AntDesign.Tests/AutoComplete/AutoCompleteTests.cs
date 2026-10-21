@@ -35,6 +35,39 @@ namespace AntDesign.Tests.AutoComplete
         }
 
         [Fact]
+        public void Semantic_popup_list_slots_apply_to_parent_and_option_nodes()
+        {
+            var autocomplete = new AntDesign.AutoComplete<string>
+            {
+                ClassNames = new Dictionary<string, string>
+                {
+                    ["popup.list"] = "custom-list",
+                    ["popup.listItem"] = "custom-option"
+                },
+                Styles = new Dictionary<string, string>
+                {
+                    ["popup.list"] = "background-color: rgb(245, 250, 255)",
+                    ["popup.listItem"] = "padding-inline-start: 20px"
+                }
+            };
+
+            var autocompleteRef = (IAutoCompleteRef)autocomplete;
+            autocompleteRef.GetSemanticClass("popup.list", null).Should().Be("custom-list");
+            autocompleteRef.GetSemanticStyle("popup.list", "max-height:256px").Should()
+                .Contain("max-height:256px").And.Contain("background-color: rgb(245, 250, 255)");
+
+            var option = RenderComponent<AutoCompleteOption>(parameters => parameters
+                .AddCascadingValue(autocompleteRef)
+                .Add(x => x.Value, "Seattle")
+                .Add(x => x.Class, "option-base")
+                .Add(x => x.Style, "color: navy"));
+
+            option.Find(".custom-option").ClassList.Should().Contain("ant-select-item").And.Contain("option-base");
+            option.Find(".custom-option").GetAttribute("style").Should()
+                .Contain("color: navy").And.Contain("padding-inline-start: 20px");
+        }
+
+        [Fact]
         public async Task Dropdown_refreshes_when_Options_change()
         {
             // Arrange: DOM info interop required by the component during render

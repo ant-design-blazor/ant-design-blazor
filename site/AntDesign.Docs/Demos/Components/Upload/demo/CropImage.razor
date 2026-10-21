@@ -1,0 +1,89 @@
+@using Cropper.Blazor.Components
+@using Cropper.Blazor.Models
+@using System.IO
+
+<Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        Name="file"
+        ListType="UploadListType.Picture"
+        Accept="image/*"
+        TransformFile="CropBeforeUpload">
+    <Button Icon="upload">Select image</Button>
+</Upload>
+
+<Modal Title="Crop image before upload"
+       Width="720"
+       Visible="_cropModalVisible"
+       OnOk="ConfirmCrop"
+       OnCancel="UploadOriginal">
+    @if (!string.IsNullOrEmpty(_cropImageSource))
+    {
+        <CropperComponent @key="_cropImageSource"
+                          @ref="_cropper"
+                          Src="_cropImageSource"
+                          Options="_cropOptions"
+                          Class="upload-cropper-image" />
+    }
+</Modal>
+
+<style>
+    .upload-cropper-image {
+        display: block;
+        max-height: 60vh;
+        max-width: 100%;
+    }
+</style>
+
+@code {
+    private readonly Options _cropOptions = new() { AspectRatio = 1m, ViewMode = ViewMode.Vm1 };
+    private CropperComponent _cropper;
+    private string _cropImageSource;
+    private string _originalFileName;
+    private bool _cropModalVisible;
+    private TaskCompletionSource<UploadFileTransformResult> _pendingTransform;
+
+    private async Task<UploadFileTransformResult> CropBeforeUpload(UploadFileTransformContext context)
+    {
+        _originalFileName = context.File.FileName;
+        _cropImageSource = $"data:{context.ContentType};base64,{Convert.ToBase64String(context.Content)}";
+        _cropModalVisible = true;
+        _pendingTransform = new TaskCompletionSource<UploadFileTransformResult>(TaskCreationOptions.RunContinuationsAsynchronously);
+        await InvokeAsync(StateHasChanged);
+        return await _pendingTransform.Task;
+    }
+
+    private async Task ConfirmCrop(MouseEventArgs _)
+    {
+        if (_cropper == null || _pendingTransform == null)
+        {
+            return;
+        }
+
+#pragma warning disable CS0618 // The data URL API is sufficient for this small, interactive documentation example.
+        var dataUrl = await _cropper.GetCroppedCanvasDataURLAsync(new GetCroppedCanvasOptions(), "image/png");
+#pragma warning restore CS0618
+        var separator = dataUrl.IndexOf(',');
+        var croppedBytes = Convert.FromBase64String(separator < 0 ? dataUrl : dataUrl[(separator + 1)..]);
+        var originalName = Path.GetFileNameWithoutExtension(_originalFileName);
+        _pendingTransform.TrySetResult(new UploadFileTransformResult
+        {
+            Content = croppedBytes,
+            FileName = $"{originalName}-cropped.png",
+            ContentType = "image/png"
+        });
+        CloseCropModal();
+    }
+
+    private void UploadOriginal(MouseEventArgs _)
+    {
+        _pendingTransform?.TrySetResult(null);
+        CloseCropModal();
+    }
+
+    private void CloseCropModal()
+    {
+        _cropModalVisible = false;
+        _cropImageSource = null;
+        _cropper = null;
+        _pendingTransform = null;
+    }
+}

@@ -95,7 +95,44 @@ namespace AntDesign
         // The dropdown is rendered outside the Select root element. Give it the
         // Select CSS-variable scope so the v6 popup and option tokens are available
         // when the React-compatible styles are resolved.
-        protected virtual string OverlayClassName => "ant-select-css-var";
+        protected virtual string OverlayClassName => $"ant-select-css-var {GetSemanticClass("popup.root")}";
+
+        /// <summary>
+        /// CSS classes for semantic parts of the selector. Nested popup slots use dotted keys such as <c>popup.root</c>.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>
+        /// Inline CSS for semantic parts of the selector. Nested popup slots use dotted keys such as <c>popup.root</c>.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        internal string GetSemanticClass(string slot, string baseClass = null)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+            {
+                return baseClass;
+            }
+
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string GetSemanticStyle(string slot, string baseStyle = null)
+        {
+            if (Styles == null || !Styles.TryGetValue(slot, out var semanticStyle) || string.IsNullOrWhiteSpace(semanticStyle))
+            {
+                return baseStyle;
+            }
+
+            if (string.IsNullOrWhiteSpace(baseStyle))
+            {
+                return semanticStyle;
+            }
+
+            return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
+        }
 
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
@@ -128,6 +165,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public SelectMode Mode { get; set; } = SelectMode.Default;
+
+        /// <summary>
+        /// The maximum number of items that can be selected in multiple or tags mode.
+        /// </summary>
+        [Parameter]
+        public int? MaxCount { get; set; }
 
         /// <summary>
         /// Enables search as an opt-in for single mode. Multiple and tags modes are searchable by default,
@@ -284,7 +327,7 @@ namespace AntDesign
 
         private List<SelectOptionItem<TItemValue, TItem>> _cachedOrderedSelectedItems = null;
 
-        internal List<SelectOptionItem<TItemValue, TItem>> GetOrderedSelectedItems()
+        internal virtual List<SelectOptionItem<TItemValue, TItem>> GetOrderedSelectedItems()
         {
             if (_cachedOrderedSelectedItems != null) return _cachedOrderedSelectedItems;
             _cachedOrderedSelectedItems = [];
@@ -401,7 +444,9 @@ namespace AntDesign
         ///     Determines if SelectOptions has any selected items
         /// </summary>
         /// <returns>true if SelectOptions has any selected Items, otherwise false</returns>
-        internal bool HasValue => SelectOptionItems.Any(x => x.IsSelected);
+        internal virtual bool HasValue => SelectOptionItems.Any(x => x.IsSelected);
+
+        internal virtual string GetSelectedItemLabel(SelectOptionItem<TItemValue, TItem> option) => option.Label;
 
         /// <summary>
         ///     Returns whether the user can input a pattern to search matched items
@@ -820,12 +865,6 @@ namespace AntDesign
         {
             SetClassMap();
 
-            var classPrefix = "ant-select";
-            ClassMapper
-                .If($"{classPrefix}-in-form-item ", () => FormItem != null)
-                .If($"{classPrefix}-has-feedback", () => FormItem?.HasFeedback == true)
-                .GetIf(() => $"{classPrefix}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default });
-
             if (string.IsNullOrWhiteSpace(Style))
             {
                 Style = DefaultWidth;
@@ -962,6 +1001,11 @@ namespace AntDesign
             }
             else
             {
+                if (!selectOption.IsSelected && MaxCount is > 0 && SelectedOptionItems.Count >= MaxCount.Value)
+                {
+                    return;
+                }
+
                 selectOption.IsSelected = !selectOption.IsSelected;
 
                 if (selectOption.IsSelected)
@@ -1083,7 +1127,7 @@ namespace AntDesign
         ///     Set the IsSelected and IsHidden properties for all items to False. It updates the overlay position if
         ///     the SelectMode is Tags or Multiple. Invoke the OnClearSelected Action. Set the Value(s) to default.
         /// </summary>
-        protected async Task OnInputClearClickAsync(MouseEventArgs _)
+        protected virtual async Task OnInputClearClickAsync(MouseEventArgs _)
         {
             if (Mode == SelectMode.Default)
             {

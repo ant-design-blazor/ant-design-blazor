@@ -28,4 +28,101 @@
         Assert.Null(lastItem.QuerySelector(".ant-steps-item-rail"));
         Assert.Empty(timeline.FindAll(".ant-timeline-item-tail"));
     }
+
+    [Fact]
+    public void Filled_variant_uses_the_react_v6_steps_style_class()
+    {
+        var timeline = Context.Render(@<Timeline Variant="TimelineVariant.Filled">
+            <TimelineItem>Filled node</TimelineItem>
+        </Timeline>);
+
+        var root = timeline.Find("ol.ant-steps.ant-timeline");
+        Assert.Contains("ant-steps-filled", root.ClassList);
+        Assert.DoesNotContain("ant-steps-outlined", root.ClassList);
+    }
+
+    [Fact]
+    public void Horizontal_orientation_uses_react_v6_steps_and_timeline_classes()
+    {
+        var timeline = Context.Render(@<Timeline Orientation="TimelineOrientation.Horizontal">
+            <TimelineItem>First</TimelineItem>
+            <TimelineItem>Second</TimelineItem>
+        </Timeline>);
+
+        var root = timeline.Find("ol.ant-timeline");
+        Assert.Contains("ant-steps-horizontal", root.ClassList);
+        Assert.Contains("ant-steps-title-vertical", root.ClassList);
+        Assert.Contains("ant-timeline-horizontal", root.ClassList);
+        Assert.DoesNotContain("ant-steps-vertical", root.ClassList);
+    }
+
+    [Fact]
+    public void Numeric_title_span_matches_react_v6_inline_custom_property()
+    {
+        var timeline = Context.Render(@<Timeline TitleSpan="@(18d)">
+            <TimelineItem Label="05:10">Create a service</TimelineItem>
+        </Timeline>);
+
+        Assert.Contains("--ant-timeline-head-span: 18;", timeline.Find("ol.ant-timeline").GetAttribute("style"));
+    }
+
+    [Theory]
+    [InlineData("25%")]
+    [InlineData("100px")]
+    public void String_title_span_matches_react_v6_inline_custom_property(string value)
+    {
+        var timeline = Context.Render(@<Timeline TitleSpan="@value">
+            <TimelineItem Label="05:10">Create a service</TimelineItem>
+        </Timeline>);
+
+        Assert.Contains($"--ant-timeline-head-span-ptg: {value};", timeline.Find("ol.ant-timeline").GetAttribute("style"));
+    }
+
+    [Fact]
+    public void Semantic_classes_and_styles_are_applied_to_timeline_slots()
+    {
+        var classes = new Dictionary<string, string>
+        {
+            ["root"] = "custom-timeline",
+            ["item"] = "custom-item",
+            ["itemWrapper"] = "custom-wrapper",
+            ["itemTitle"] = "custom-title"
+        };
+        var styles = new Dictionary<string, string>
+        {
+            ["root"] = "padding: 12px;",
+            ["itemTitle"] = "color: red;"
+        };
+        var timeline = Context.Render(@<Timeline ClassNames="@classes" Styles="@styles">
+            <TimelineItem Label="Created">Create a service</TimelineItem>
+        </Timeline>);
+
+        var root = timeline.Find("ol.ant-timeline");
+        Assert.Contains("custom-timeline", root.ClassList);
+        Assert.Contains("padding: 12px", root.GetAttribute("style"));
+        var item = timeline.Find("li.ant-timeline-item");
+        Assert.Contains("custom-item", item.ClassList);
+        Assert.Contains("custom-wrapper", item.QuerySelector(".ant-timeline-item-wrapper").ClassList);
+        Assert.Contains("custom-title", item.QuerySelector(".ant-timeline-item-title").ClassList);
+        Assert.Contains("color: red", item.QuerySelector(".ant-timeline-item-title").GetAttribute("style"));
+    }
+
+    [Fact]
+    public void Data_items_render_content_color_loading_and_item_placement()
+    {
+        var items = new List<TimelineItemData>
+        {
+            new() { Title = "Created", Content = "Data-backed first node", Color = TimelineDotColor.Green },
+            new() { Title = "Processing", Content = "Data-backed second node", Loading = true, Placement = TimelineMode.Right }
+        };
+        var timeline = Context.Render(@<Timeline Items="@items" Mode="TimelineMode.Left" />);
+
+        var renderedItems = timeline.FindAll(".ant-timeline-item");
+        Assert.Equal(2, renderedItems.Count);
+        Assert.Contains("ant-timeline-item-color-green", renderedItems[0].ClassList);
+        Assert.Equal("Created", renderedItems[0].QuerySelector(".ant-timeline-item-title")?.TextContent.Trim());
+        Assert.Equal("Data-backed first node", renderedItems[0].QuerySelector(".ant-timeline-item-content")?.TextContent.Trim());
+        Assert.Contains("ant-timeline-item-placement-end", renderedItems[1].ClassList);
+        Assert.NotNull(renderedItems[1].QuerySelector(".anticon-loading"));
+    }
 }

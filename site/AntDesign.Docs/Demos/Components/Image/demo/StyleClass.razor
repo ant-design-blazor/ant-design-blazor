@@ -1,0 +1,29 @@
+<Image Width="200"
+       Src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+       Alt="Semantic Image styling example"
+       ClassNames="_classNames"
+       Styles="_styles" />
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-image-root",
+        ["image"] = "demo-image-element",
+        ["cover"] = "demo-image-cover",
+        ["popup.root"] = "demo-image-preview-root",
+        ["popup.mask"] = "demo-image-preview-mask",
+        ["popup.body"] = "demo-image-preview-body",
+        ["popup.footer"] = "demo-image-preview-footer",
+        ["popup.actions"] = "demo-image-preview-actions",
+        ["popup.close"] = "demo-image-preview-close"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "border: 2px dashed #1677ff; padding: 4px",
+        ["image"] = "border-radius: 8px",
+        ["cover"] = "color: #fff; background: rgba(22,119,255,.55)",
+        ["popup.mask"] = "background: rgba(9,24,48,.75)",
+        ["popup.actions"] = "gap: 8px"
+    };
+}

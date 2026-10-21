@@ -1,0 +1,41 @@
+<Space Direction="SpaceDirection.Vertical" Size="@("16px")" Style="width: 320px">
+    <Space Align="SpaceAlign.Center" Size="@("8px")">
+        <Button OnClick="Decrease">-10%</Button>
+        <span>Progress: @_percent%</span>
+        <Button OnClick="Increase">+10%</Button>
+    </Space>
+    <Image ProgressPercent="_percent" ProgressRender="RenderProgress" Width="300px" Height="72px" />
+</Space>
+
+<style>
+    .demo-image-custom-progress {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .demo-image-custom-progress-label {
+        flex: 0 0 auto;
+        color: #1677ff;
+        font-weight: 600;
+    }
+
+    .demo-image-custom-progress-bar {
+        flex: 1;
+        min-width: 0;
+    }
+</style>
+
+@code {
+    private double _percent = 63;
+
+    private void Decrease() => _percent = Math.Max(0, _percent - 10);
+
+    private void Increase() => _percent = Math.Min(100, _percent + 10);
+
+    private RenderFragment<ImageProgressRenderContext> RenderProgress => context => @<div class="demo-image-custom-progress">
+        <span class="demo-image-custom-progress-label">Uploading @context.Percent%</span>
+        <div class="demo-image-custom-progress-bar">@context.DefaultProgress</div>
+    </div>;
+}

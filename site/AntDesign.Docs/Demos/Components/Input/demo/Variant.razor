@@ -1,0 +1,26 @@
+@using AntDesign
+
+<div class="input-variant-demo">
+    <Input TValue="string" Placeholder="Outlined" Variant="InputVariant.Outlined" />
+    <Input TValue="string" Placeholder="Filled" Variant="InputVariant.Filled" />
+    <Input TValue="string" Placeholder="Filled with prefix" Variant="InputVariant.Filled" Prefix="@_currency" />
+    <Input TValue="string" Placeholder="Borderless" Variant="InputVariant.Borderless" />
+    <Input TValue="string" Placeholder="Underlined" Variant="InputVariant.Underlined" />
+    <Input TValue="string" Placeholder="Filled error" Variant="InputVariant.Filled" Status="FormValidateStatus.Error" />
+    <Input TValue="string" Placeholder="Underlined warning" Variant="InputVariant.Underlined" Status="FormValidateStatus.Warning" />
+    <Search Placeholder="Filled search" Variant="InputVariant.Filled" />
+    <TextArea Placeholder="Filled text area" Variant="InputVariant.Filled" Rows="3" />
+</div>
+
+<style>
+    .input-variant-demo {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 420px;
+    }
+</style>
+
+@code {
+    private RenderFragment _currency => @<span>$</span>;
+}

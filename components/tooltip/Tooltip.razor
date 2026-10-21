@@ -40,8 +40,11 @@
                  OnOverlayMouseUp="OnOverlayMouseUp">
             @if (TitleTemplate != null || !string.IsNullOrWhiteSpace(Title))
             {
-                <div class="ant-tooltip-arrow" style="@GetTooltipArrowStyle()"><span class="ant-tooltip-arrow-content"></span></div>
-                <div id="@_tooltipId" class="ant-tooltip-container" role="tooltip">@TooltipContent</div>
+                @if (Arrow)
+                {
+                    <div class="ant-tooltip-arrow" style="@GetTooltipArrowStyle()"><span class="ant-tooltip-arrow-content" style="@GetTooltipArrowContentStyle()"></span></div>
+                }
+                <div id="@_tooltipId" class="ant-tooltip-container" role="tooltip" style="@GetTooltipContainerStyle()">@TooltipContent</div>
             }
         </Overlay>
     </CascadingValue>

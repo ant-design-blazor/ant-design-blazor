@@ -46,6 +46,14 @@ namespace AntDesign
         [Parameter]
         public string Label { get; set; }
 
+        internal RenderFragment TitleContent { get; set; }
+
+        /// <summary>
+        /// Placement of this node. When omitted, the Timeline's Mode determines placement.
+        /// </summary>
+        [Parameter]
+        public TimelineMode? Placement { get; set; }
+
         [CascadingParameter]
         private Timeline ParentTimeline { get; set; }
 
@@ -90,7 +98,7 @@ namespace AntDesign
                 .Add("ant-steps-item ant-steps-item-finish ant-timeline-item")
                 .Add($"ant-timeline-item-placement-{(Position == TimelineMode.Right ? "end" : "start")}")
                 .If("ant-steps-item-active", () => IsLast)
-                .If("ant-steps-item-empty-header", () => string.IsNullOrEmpty(Label))
+                .If("ant-steps-item-empty-header", () => string.IsNullOrEmpty(Label) && TitleContent == null)
                 .GetIf(() => $"ant-timeline-item-color-{Color.AsT0.ToString().ToLowerInvariant()}", () => _hasColor && Color.IsT0);
 
             _headClassMapper.Clear()

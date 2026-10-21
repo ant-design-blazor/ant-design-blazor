@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Cropper.Blazor" Version="1.5.1" ExcludeAssets="contentFiles" />
     <PackageReference Include="BlazorPolyfill.Server">
       <Version>6.0.100.1</Version>
     </PackageReference>

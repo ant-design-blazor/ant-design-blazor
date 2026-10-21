@@ -119,26 +119,50 @@ test('Select preview catalog maps to actual Blazor v6 Semantic DOM classes', asy
     ['itemContent', '.ant-select-selection-item-content'],
     ['itemRemove', '.ant-select-selection-item-remove'],
   ]) assert.ok(selectNodes.some((node) => node.name === name && node.selector.includes(selector)));
+
+  const cardNodes = catalog.components.find(({ name }) => name === 'card').nodes;
+  assert.equal(cardNodes.find(({ name }) => name === 'root').selector, '.ant-card');
+  assert.equal(cardNodes.find(({ name }) => name === 'root').description, '卡片根元素，包含位置定位、背景色、边框、圆角、阴影、内边距等卡片容器的基础样式');
+  const cardMetaNodes = catalog.components.find(({ name }) => name === 'card-meta').nodes;
+  assert.equal(cardMetaNodes.find(({ name }) => name === 'root').selector, '.ant-card-meta');
+  assert.equal(cardMetaNodes.find(({ name }) => name === 'title').selector, '.ant-card-meta-title');
 });
 
-test('Semantic DOM inventory reads only Dumi preview slots and every React API slot is in the Blazor catalogue', async () => {
+test('React Semantic DOM documentation is the catalog target and nested type/Dumi paths normalize correctly', async () => {
   const inventory = JSON.parse(await readFile(new URL('../../../docs/antd-v6/semantic-dom-inventory.json', import.meta.url), 'utf8'));
   const catalog = JSON.parse(await readFile(new URL('../../../docs/antd-v6/semantic-dom-catalog.json', import.meta.url), 'utf8'));
-  const coverage = getSemanticCatalogCoverage(inventory, catalog);
+  const semanticMd = JSON.parse(await readFile(new URL('../../../docs/antd-v6/semantic-md-catalog.json', import.meta.url), 'utf8'));
+  const coverage = getSemanticCatalogCoverage(inventory, catalog, semanticMd);
 
   assert.ok(inventory.entries.find(({ component }) => component === 'table').dumiSemanticSources[0].semanticPaths.includes('body.cell'));
   assert.ok(!inventory.entries.find(({ component }) => component === 'table').dumiSemanticSources[0].semanticPaths.includes('Jim Green'));
-  assert.deepEqual(coverage.catalogComponents, { total: 59, migrated: 59 });
-  assert.deepEqual(coverage.definitions, { total: 69, migrated: 69 });
-  assert.deepEqual(coverage.apiSlots, { total: 409, migrated: 409 });
-  assert.deepEqual(coverage.dumiPaths, { total: 350, migrated: 350 });
+  assert.deepEqual(coverage.catalogComponents, { total: 61, migrated: 61 });
+  assert.deepEqual(coverage.definitions, { total: 70, migrated: 70 });
+  assert.deepEqual(coverage.apiSlots, { total: 423, migrated: 423 });
+  assert.deepEqual(coverage.dumiPaths, { total: 352, migrated: 352 });
+  assert.deepEqual(coverage.documentedComponents, { total: 62, migrated: 62 });
+  assert.deepEqual(coverage.documentedSlots, { total: 423, migrated: 423 });
+  const treeSelectPopup = inventory.entries.find(({ semanticType }) => semanticType === 'TreeSelectPopupSemanticType');
+  assert.ok(treeSelectPopup.classNames.includes('popup.itemSwitcher'));
+  assert.ok(!treeSelectPopup.classNames.includes('itemSwitcher'));
+});
+
+test('DatePicker Dumi popup.root aliases the semantic.md popup node and its selector', async () => {
+  const inventory = JSON.parse(await readFile(new URL('../../../docs/antd-v6/semantic-dom-inventory.json', import.meta.url), 'utf8'));
+  const catalog = JSON.parse(await readFile(new URL('../../../docs/antd-v6/semantic-dom-catalog.json', import.meta.url), 'utf8'));
+  const datePicker = catalog.components.find(({ name }) => name === 'date-picker');
+  const popup = datePicker.nodes.find(({ name }) => name === 'popup');
+  const demoPath = inventory.entries.find(({ component }) => component === 'date-picker').dumiSemanticSources[0].semanticPaths;
+  assert.ok(demoPath.includes('popup.root'));
+  assert.equal(popup.selector, '.ant-picker-dropdown');
+  assert.equal(getSemanticCatalogCoverage(inventory, catalog).dumiPaths.migrated, 352);
 });
 
 test('generated Semantic DOM catalog includes nested React Dumi preview paths with v6 selectors', async () => {
   const catalog = JSON.parse(await readFile(new URL('../../../docs/antd-v6/semantic-dom-catalog.json', import.meta.url), 'utf8'));
   const css = await readFile(new URL('../../../components/wwwroot/css/antd-v6/light.css', import.meta.url), 'utf8');
   for (const [component, semanticPath, selector] of [
-    ['date-picker', 'popup.root', '.ant-picker-dropdown'],
+    ['date-picker', 'popup', '.ant-picker-dropdown'],
     ['image', 'popup.actions', '.ant-image-preview-actions'],
     ['input', 'button.content', '.ant-btn > span:not(.ant-btn-icon)'],
     ['table', 'body.cell', '.ant-table-tbody > tr > .ant-table-cell'],
@@ -148,6 +172,33 @@ test('generated Semantic DOM catalog includes nested React Dumi preview paths wi
     const node = catalog.components.find((entry) => entry.name === component)?.nodes.find((entry) => entry.name === semanticPath);
     assert.equal(node?.selector, selector, `${component}/${semanticPath} selector mapping is missing`);
     for (const className of selector.match(/\.ant-[\w-]+/g) ?? []) assert.ok(css.includes(className), `v6 CSS does not contain ${className}`);
+  }
+});
+
+test('API-only Semantic DOM paths remain catalogued with explicit React selectors', async () => {
+  const catalog = JSON.parse(await readFile(new URL('../../../docs/antd-v6/semantic-dom-catalog.json', import.meta.url), 'utf8'));
+  for (const [component, semanticPath, selector] of [
+    ['drawer', 'content', '.ant-drawer-section'],
+    ['drawer', 'wrapper', '.ant-drawer-content-wrapper'],
+    ['image', 'placeholder.progress.root', '.ant-image-progress-wrapper'],
+    ['image', 'placeholder.progress.content', '.ant-image-progress-content'],
+    ['image', 'placeholder.progress.rail', '.ant-image-progress-rail'],
+    ['image', 'placeholder.progress.indicator', '.ant-image-progress-indicator'],
+    ['menu', 'popup.root', '.ant-menu-submenu-popup'],
+    ['spin', 'mask', '.ant-spin.ant-spin-fullscreen'],
+    ['spin', 'tip', '.ant-spin-description'],
+    ['splitter', 'dragger.default', '.ant-splitter-bar-dragger:not(.ant-splitter-bar-dragger-active)'],
+    ['splitter', 'dragger.active', '.ant-splitter-bar-dragger.ant-splitter-bar-dragger-active'],
+    ['menu', 'popup', '.ant-menu-submenu-popup'],
+    ['menu', 'popup.root', '.ant-menu-submenu-popup'],
+    ['menu', 'subMenu.item', '.ant-menu-item'],
+    ['menu', 'subMenu.itemTitle', '.ant-menu-item-group-title'],
+    ['menu', 'subMenu.list', '.ant-menu-item-group-list'],
+    ['date-picker', 'popup.root', '.ant-picker-dropdown'],
+    ['time-picker', 'popup.root', '.ant-picker-dropdown'],
+  ]) {
+    const node = catalog.components.find((entry) => entry.name === component)?.nodes.find((entry) => entry.name === semanticPath);
+    assert.equal(node?.selector, selector, `${component}/${semanticPath} should have its explicit selector`);
   }
 });
 

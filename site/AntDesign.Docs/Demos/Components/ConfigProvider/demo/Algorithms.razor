@@ -1,0 +1,25 @@
+@using AntDesign.Theming
+
+<Space Wrap Align="SpaceAlign.Start">
+    <ConfigProvider ThemeConfig="@_defaultTheme">
+        <Card Title="Default algorithm">
+            <Button Type="ButtonType.Primary">Default</Button>
+        </Card>
+    </ConfigProvider>
+    <ConfigProvider ThemeConfig="@_darkTheme">
+        <Card Title="Dark algorithm">
+            <Button Type="ButtonType.Primary">Dark</Button>
+        </Card>
+    </ConfigProvider>
+    <ConfigProvider ThemeConfig="@_compactTheme">
+        <Card Title="Compact algorithm">
+            <Button Type="ButtonType.Primary">Compact</Button>
+        </Card>
+    </ConfigProvider>
+</Space>
+
+@code {
+    private static readonly ThemeConfig _defaultTheme = new();
+    private static readonly ThemeConfig _darkTheme = new() { Algorithm = "dark" };
+    private static readonly ThemeConfig _compactTheme = new() { Algorithm = "compact" };
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -8,6 +8,8 @@ import { createArtifact, createBaseline, readBaseline, sha256, writeBaseline } f
 import { compareArtifactSets, compareCss } from './style-diff.mjs';
 import { generateReactCssBaseline } from './react-css-baseline.mjs';
 import { generateIconCategoriesSource, syncAntDesignIconCategories } from './icon-categories.mjs';
+import { extractComponentTokenDefinitions } from './component-tokens.mjs';
+import { syncGlobalTokenDocs } from './global-token-docs.mjs';
 
 const usage = `Usage:
   node src/cli.mjs sync --antd-path <path> [--blazor-path <path>] [--revision <revision>] --output <path>
@@ -16,7 +18,7 @@ const usage = `Usage:
   node src/cli.mjs generate-csharp-theme-tokens --antd-path <path> --output <GeneratedThemeTokens.cs>
   node src/cli.mjs generate-preview-theme-catalog --ir <themes.json> --output <GeneratedPreviewThemes.cs>
   node src/cli.mjs sync-v6 --antd-path <path> [--blazor-path <path>] [--output <path>]
-  node src/cli.mjs sync-semantic-dom --antd-path <path> [--blazor-path <path>] [--output <semantic-dom-catalog.json>]
+  node src/cli.mjs sync-semantic-dom --antd-path <path> [--blazor-path <path>] [--output <semantic-dom-catalog.json>] [--semantic-docs-path <react-_site>] [--semantic-md-output <path>]
   node src/cli.mjs css-baseline-update --antd-path <path> --output <path> [--docs-theme-output <path>]
   node src/cli.mjs exact-check --expected <baseline-dir> --actual <candidate-dir> [--allowlist <id,id>] [--report <path>]
   node src/cli.mjs theme-exact-check --expected <react-theme-css-dir> --actual <blazor-theme-css-dir> [--themes <key,key>] [--report <path>]
@@ -115,15 +117,21 @@ async function discoverComponents(componentsPath, root) {
     if (!stylePath) continue;
     const styleRelativePath = relative(root, stylePath).replaceAll('\\', '/');
     const candidateTokenFile = join(componentPath, 'style', 'token.ts');
-    const tokenFile = existsSync(candidateTokenFile) ? candidateTokenFile : null;
-    const tokenRelativePath = tokenFile ? relative(root, tokenFile).replaceAll('\\', '/') : null;
+    // A few components (including Modal) declare ComponentToken beside the
+    // style generators in index.ts instead of a separate token.ts file.
+    const tokenFile = existsSync(candidateTokenFile) ? candidateTokenFile : stylePath;
     const tokenDefinitions = tokenFile ? await discoverTokenDefinitions(tokenFile) : [];
+    const hasTokenSource = tokenDefinitions.length > 0;
+    const tokenRelativePath = hasTokenSource ? relative(root, tokenFile).replaceAll('\\', '/') : null;
+    const docsPath = join(componentPath, 'index.en-US.md');
+    const docsSource = existsSync(docsPath) ? await readFile(docsPath, 'utf8') : '';
     components.push({
       name: entry.name,
       className: `ant-${kebabCase(entry.name)}`,
       styleSource: styleRelativePath,
       tokenSource: tokenRelativePath,
-      hasTokenSource: Boolean(tokenRelativePath),
+      hasTokenSource,
+      hasTokenTable: /<ComponentTokenTable\b/.test(docsSource),
       tokenDefinitions,
     });
   }
@@ -132,13 +140,7 @@ async function discoverComponents(componentsPath, root) {
 
 async function discoverTokenDefinitions(tokenPath) {
   const source = await readFile(tokenPath, 'utf8');
-  const definitions = new Map();
-  for (const match of source.matchAll(/interface\s+ComponentToken[^\{]*\{([\s\S]*?)\}/g)) {
-    for (const property of match[1].matchAll(/^\s*([A-Za-z_$][\w$]*)\??\s*:\s*([^;\n]+);?/gm)) {
-      definitions.set(property[1], property[2].trim());
-    }
-  }
-  return [...definitions].sort(([left], [right]) => left.localeCompare(right)).map(([name, type]) => ({ name, type }));
+  return extractComponentTokenDefinitions(source);
 }
 
 async function discoverBlazorComponents(componentsPath) {
@@ -195,6 +197,12 @@ async function sync(args) {
     component.implementedInBlazor = blazorComponents.has(component.name.toLowerCase());
   }
   const themes = await discoverThemes(join(root, '.dumi/pages/index/components/ThemePreview/previewThemes'), root);
+  const tokenMetaPath = join(root, 'components/version/token-meta.json');
+  const tokenDataPath = join(root, 'components/version/token.json');
+  const tokenMeta = existsSync(tokenMetaPath) ? await readJson(tokenMetaPath, 'React Design Token metadata') : null;
+  const tokenData = existsSync(tokenDataPath) ? await readJson(tokenDataPath, 'React Design Token values') : null;
+  const normalizeTokenOwner = (value) => String(value).replace(/[^a-z0-9]/gi, '').toLowerCase();
+  const componentTokenMetadata = new Map(Object.entries(tokenMeta?.components ?? {}).map(([name, definitions]) => [normalizeTokenOwner(name), definitions]));
   const generatedAt = args['generated-at'] ?? new Date().toISOString();
   const upstream = { repository: 'ant-design', revision, version };
   const generator = { name: '@ant-design-blazor/style-generator', version: '0.1.0' };
@@ -208,18 +216,42 @@ async function sync(args) {
     source: component.styleSource,
   }));
   const tokens = components.flatMap((component) => {
-    const definitions = component.tokenDefinitions.length > 0 ? component.tokenDefinitions : [{ name: 'componentToken', type: 'unknown' }];
-    return definitions.map(({ name, type }) => ({
+    const metadata = componentTokenMetadata.get(normalizeTokenOwner(component.name)) ?? [];
+    const definitions = [...component.tokenDefinitions];
+    for (const item of metadata) {
+      if (!definitions.some((definition) => definition.name === item.token)) {
+        definitions.push({
+          name: item.token,
+          type: item.type ?? 'unknown',
+          description: item.desc,
+          descriptionEn: item.descEn,
+        });
+      }
+    }
+    if (definitions.length === 0) definitions.push({ name: 'componentToken', type: 'unknown' });
+    return definitions.map(({ name, type, description, descriptionEn, deprecated }) => {
+      const docsDefinition = metadata.find((item) => item.token === name);
+      const value = docsDefinition ? tokenData?.[docsDefinition.source]?.component?.[name] : undefined;
+      const defaultValue = value === undefined || value === null
+        ? undefined
+        : typeof value === 'object' ? JSON.stringify(value) : String(value);
+      return {
       name,
       kind: 'component',
       type: normalizeTokenType(name, type),
       sourceType: type,
+      ...((docsDefinition?.desc ?? description) ? { description: docsDefinition?.desc ?? description } : {}),
+      ...((docsDefinition?.descEn ?? descriptionEn) ? { descriptionEn: docsDefinition?.descEn ?? descriptionEn } : {}),
+      ...(deprecated ? { deprecated: true } : {}),
+      ...(defaultValue !== undefined ? { defaultValue } : {}),
+      documented: Boolean(component.hasTokenTable && docsDefinition),
       value: null,
       cssVariable: `--ant-${kebabCase(component.name)}-${kebabCase(name)}`,
       component: component.name,
       source: component.tokenSource ?? component.styleSource,
-      reserved: !component.hasTokenSource || !component.implementedInBlazor,
-    }));
+      reserved: !component.implementedInBlazor || (!component.hasTokenSource && !docsDefinition),
+      };
+    });
   });
   const ir = { schemaVersion: 1, upstream, generator, tokens, styles, themes, unsupported: [] };
   const schema = await readJson(join(new URL('..', import.meta.url).pathname, 'schema/style-ir.schema.json'), 'style IR schema');
@@ -403,9 +435,17 @@ async function generateCsharpTokens(args) {
     '        public string Component { get; }',
     '        public string Name { get; }',
     '        public string CssVariable { get; }',
+    '        public string Type { get; }',
+    '        public string Description { get; }',
+    '        public string DescriptionEn { get; }',
+    '        public string DefaultValue { get; }',
+    '        public bool Deprecated { get; }',
+    '        public bool Documented { get; }',
     '        public bool Reserved { get; }',
+    '        public ComponentTokenDefinition(string component, string name, string cssVariable, string type, string description, string descriptionEn, string defaultValue, bool deprecated, bool documented, bool reserved)',
+    '        { Component = component; Name = name; CssVariable = cssVariable; Type = type; Description = description; DescriptionEn = descriptionEn; DefaultValue = defaultValue; Deprecated = deprecated; Documented = documented; Reserved = reserved; }',
     '        public ComponentTokenDefinition(string component, string name, string cssVariable, bool reserved)',
-    '        { Component = component; Name = name; CssVariable = cssVariable; Reserved = reserved; }',
+    '            : this(component, name, cssVariable, string.Empty, string.Empty, string.Empty, string.Empty, false, false, reserved) { }',
     '    }',
     '',
     ...[...byComponent.entries()].flatMap(([component, componentTokens]) => [
@@ -437,7 +477,7 @@ async function generateCsharpTokens(args) {
     '    {',
     '        public static IReadOnlyList<ComponentTokenDefinition> All { get; } = new ReadOnlyCollection<ComponentTokenDefinition>(new[]',
     '        {',
-    ...tokens.map((token) => `            new ComponentTokenDefinition(${quote(token.component)}, ${quote(token.name)}, ${quote(token.cssVariable)}, ${Boolean(token.reserved).toString().toLowerCase()}),`),
+    ...tokens.map((token) => `            new ComponentTokenDefinition(${quote(token.component)}, ${quote(token.name)}, ${quote(token.cssVariable)}, ${quote(token.sourceType ?? token.type)}, ${quote(token.description ?? '')}, ${quote(token.descriptionEn ?? '')}, ${quote(token.defaultValue ?? '')}, ${Boolean(token.deprecated).toString().toLowerCase()}, ${Boolean(token.documented).toString().toLowerCase()}, ${Boolean(token.reserved).toString().toLowerCase()}),`),
     '        });',
     '    }',
     '}',
@@ -474,8 +514,20 @@ async function generateCsharpThemeTokens(args) {
     const bases = match?.[1]?.match(/extends\s+([\s\S]*)/)?.[1]?.split(',').map((item) => item.trim()).filter(Boolean) ?? [];
     models.push({ name, fields, bases });
   }
+  const tokenMetaPath = join(root, 'components/version/token-meta.json');
+  const tokenMetadata = existsSync(tokenMetaPath) ? await readJson(tokenMetaPath, 'React Design Token metadata') : null;
+  const globalTokens = Object.entries(tokenMetadata?.global ?? {}).map(([name, token]) => ({
+    name,
+    description: token.desc ?? '',
+    descriptionEn: token.descEn ?? '',
+    type: token.type ?? 'unknown',
+    source: token.source ?? 'other',
+    cssVariable: `--ant-${name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/([A-Z])([A-Z][a-z])/g, '$1-$2').toLowerCase()}`,
+  }));
   const lines = [
     '// <auto-generated /> Generated by AntDesign.StyleGen. Do not edit manually.',
+    'using System.Collections.Generic;',
+    'using System.Collections.ObjectModel;',
     'using OneOf;',
     'namespace AntDesign.Theming',
     '{',
@@ -491,6 +543,26 @@ async function generateCsharpThemeTokens(args) {
       '    }',
       '',
     ]),
+    '    public sealed class GlobalTokenDefinition',
+    '    {',
+    '        public string Name { get; }',
+    '        public string Description { get; }',
+    '        public string DescriptionEn { get; }',
+    '        public string Type { get; }',
+    '        public string Source { get; }',
+    '        public string CssVariable { get; }',
+    '        public GlobalTokenDefinition(string name, string description, string descriptionEn, string type, string source, string cssVariable)',
+    '        { Name = name; Description = description; DescriptionEn = descriptionEn; Type = type; Source = source; CssVariable = cssVariable; }',
+    '    }',
+    '',
+    '    public static class GeneratedGlobalTokens',
+    '    {',
+    '        public static IReadOnlyList<GlobalTokenDefinition> All { get; } = new ReadOnlyCollection<GlobalTokenDefinition>(new[]',
+    '        {',
+    ...globalTokens.map((token) => `            new GlobalTokenDefinition(${quote(token.name)}, ${quote(token.description)}, ${quote(token.descriptionEn)}, ${quote(token.type)}, ${quote(token.source)}, ${quote(token.cssVariable)}),`),
+    '        });',
+    '    }',
+    '',
     '    public sealed class GeneratedThemeAlgorithmDefinition',
     '    {',
     '        public string Name { get; }',
@@ -575,8 +647,21 @@ async function syncV6(args) {
   await writeFile(iconCategoriesSourceOutput, generateIconCategoriesSource(await readFile(iconCategoriesOutput, 'utf8')), 'utf8');
   await generateCsharpTokens({ ir: join(irOutput, 'style-ir.json'), output: generatedComponents, 'antd-path': antdPath });
   await generateCsharpThemeTokens({ 'antd-path': antdPath, output: generatedTheme, 'shortcuts-output': generatedShortcuts });
+  const globalTokenCount = await syncGlobalTokenDocs({
+    metadataPath: join(antdPath, 'components/version/token-meta.json'),
+    englishPath: join(blazorPath, 'docs/customize-theme.en-US.md'),
+    chinesePath: join(blazorPath, 'docs/customize-theme.zh-CN.md'),
+  });
+  await renderRuntimeGlobalTokenDocs(blazorPath);
   await generatePreviewThemeCatalog({ ir: join(irOutput, 'themes.json'), 'antd-path': antdPath, output: generatedThemes });
-  const structure = await verifyGeneratedStructure({ antdPath, ir: join(irOutput, 'style-ir.json'), components: generatedComponents, theme: generatedTheme, shortcuts: generatedShortcuts });
+  const structure = await verifyGeneratedStructure({
+    antdPath,
+    ir: join(irOutput, 'style-ir.json'),
+    components: generatedComponents,
+    theme: generatedTheme,
+    shortcuts: generatedShortcuts,
+    globalTokenDocs: [join(blazorPath, 'docs/customize-theme.en-US.md'), join(blazorPath, 'docs/customize-theme.zh-CN.md')],
+  });
   await updateBaseline({ 'antd-path': antdPath, output: baselineOutput, revision, 'react-css': args['react-css'], 'input-id': 'antd-react-css' });
 
   const colorsTestSource = join(antdPath, 'node_modules', '@ant-design', 'colors', 'tests');
@@ -602,6 +687,7 @@ async function syncV6(args) {
       theme: relative(blazorPath, generatedTheme),
       shortcuts: relative(blazorPath, generatedShortcuts),
       themes: relative(blazorPath, generatedThemes),
+      globalTokenDocs: [relative(blazorPath, join(blazorPath, 'docs/customize-theme.en-US.md')), relative(blazorPath, join(blazorPath, 'docs/customize-theme.zh-CN.md'))],
       reactBaseline: relative(blazorPath, baselineOutput),
       colorTests: relative(blazorPath, join(output, 'color-test-cases.json')),
       structure: relative(blazorPath, join(output, 'structure-report.json')),
@@ -610,7 +696,22 @@ async function syncV6(args) {
   };
   await writeFile(join(output, 'structure-report.json'), `${JSON.stringify(structure, null, 2)}\n`, 'utf8');
   await writeFile(join(output, 'sync-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
-  console.log(JSON.stringify({ output, revision: manifest.upstream.revision, generatedComponents, generatedTheme, baselineOutput, iconCategories, iconCategoriesSourceOutput }, null, 2));
+  console.log(JSON.stringify({ output, revision: manifest.upstream.revision, generatedComponents, generatedTheme, baselineOutput, iconCategories, iconCategoriesSourceOutput, globalTokenCount }, null, 2));
+}
+
+async function renderRuntimeGlobalTokenDocs(blazorPath) {
+  const siteDocs = join(blazorPath, 'site/AntDesign.Docs/wwwroot/docs');
+  for (const language of ['en-US', 'zh-CN']) {
+    await copyFile(join(blazorPath, `docs/customize-theme.${language}.md`), join(siteDocs, `customize-theme.${language}.md`));
+  }
+  const cliProject = join(blazorPath, 'site/AntDesign.Docs.Build.CLI/AntDesign.Docs.Build.CLI.csproj');
+  const result = spawnSync('dotnet', [
+    'run', '--no-launch-profile', '--framework', 'net10.0', '--project', cliProject,
+    'docs2html', siteDocs, siteDocs,
+  ], { cwd: blazorPath, encoding: 'utf8', stdio: 'pipe' });
+  if (result.status !== 0) {
+    throw new Error(`Failed to render synchronized Design Token docs: ${result.stderr || result.stdout || `dotnet exited ${result.status}`}`);
+  }
 }
 
 async function generatePreviewThemeCatalog(args) {
@@ -790,6 +891,8 @@ async function verifyGeneratedStructure(args) {
   const componentSource = await readFile(resolve(args.components), 'utf8');
   const themeSource = await readFile(resolve(args.theme), 'utf8');
   const shortcutSource = await readFile(resolve(args.shortcuts), 'utf8');
+  const tokenMetadata = await readJson(join(args.antdPath, 'components/version/token-meta.json'), 'React Design Token metadata');
+  const globalTokenSource = tokenMetadata.global ?? {};
   const pascal = (value) => pascalCase(value);
   const componentExpected = [...new Set((ir.tokens ?? []).filter((token) => token.kind === 'component' && token.name).map((token) => pascal(token.name)))];
   const componentMissing = componentExpected.filter((name) => !new RegExp(`public\\s+[^\\r\\n]+\\s+${name}\\s*\\{`).test(componentSource));
@@ -801,7 +904,23 @@ async function verifyGeneratedStructure(args) {
   }
   const themeMissing = Object.values(upstreamFields).flat().filter((name) => !new RegExp(`public\\s+[^\\s]+\\s+${name}\\s*\\{`).test(themeSource));
   const shortcutMissing = [...new Set(Object.values(upstreamFields).flat())].filter((name) => !new RegExp(`public\\s+string\\s+${name}\\s*\\{`).test(shortcutSource));
-  const report = { valid: componentMissing.length === 0 && themeMissing.length === 0 && shortcutMissing.length === 0, componentTokenCount: componentExpected.length, missingComponentTokens: componentMissing, missingThemeFields: themeMissing, missingShortcuts: shortcutMissing };
+  const missingGlobalDefinitions = Object.keys(globalTokenSource).filter((name) => !themeSource.includes(`new GlobalTokenDefinition("${name}"`));
+  const globalDocsMissing = [];
+  for (const path of args.globalTokenDocs ?? []) {
+    const source = await readFile(path, 'utf8');
+    const missing = Object.keys(globalTokenSource).filter((name) => !source.includes(`| \`${name}\` |`));
+    if (missing.length) globalDocsMissing.push({ path, missing });
+  }
+  const report = {
+    valid: componentMissing.length === 0 && themeMissing.length === 0 && shortcutMissing.length === 0 && missingGlobalDefinitions.length === 0 && globalDocsMissing.length === 0,
+    componentTokenCount: componentExpected.length,
+    globalTokenCount: Object.keys(globalTokenSource).length,
+    missingComponentTokens: componentMissing,
+    missingThemeFields: themeMissing,
+    missingShortcuts: shortcutMissing,
+    missingGlobalDefinitions,
+    globalDocsMissing,
+  };
   if (!report.valid) throw new Error(`generated Token structure is incomplete: ${JSON.stringify(report)}`);
   return report;
 }
@@ -864,9 +983,24 @@ if (args.command === 'sync') {
   else {
     const repoRoot = resolve(args['blazor-path'] || process.cwd());
     const output = resolve(args.output || join(repoRoot, 'docs/antd-v6/semantic-dom-catalog.json'));
-    const script = join(repoRoot, 'tools/AntDesign.StyleGen/src/sync-semantic-dom.mjs');
-    const result = spawnSync(process.execPath, [script, repoRoot, args['antd-path'], output], { encoding: 'utf8', stdio: 'inherit' });
-    if (result.status !== 0) fail(`Semantic DOM sync failed with exit code ${result.status}`);
+    const semanticDocsPath = resolve(args['semantic-docs-path'] || join(args['antd-path'], '_site'));
+    if (!existsSync(semanticDocsPath)) {
+      fail(`Generated React semantic.md files were not found at ${semanticDocsPath}; build/export the Ant Design docs first or pass --semantic-docs-path <path>.`);
+    } else {
+      const inventoryScript = join(repoRoot, 'tools/AntDesign.StyleGen/src/semantic-inventory.mjs');
+      const inventoryOutput = join(repoRoot, 'docs/antd-v6/semantic-dom-inventory.json');
+      const inventory = spawnSync(process.execPath, [inventoryScript, repoRoot, join(resolve(args['antd-path']), 'components'), inventoryOutput], { encoding: 'utf8', stdio: 'inherit' });
+      if (inventory.status !== 0) fail(`Semantic DOM API inventory sync failed with exit code ${inventory.status}`);
+      else {
+        const auditScript = join(repoRoot, 'tools/AntDesign.StyleGen/src/audit-semantic-md.mjs');
+        const auditOutput = resolve(args['semantic-md-output'] || join(repoRoot, 'docs/antd-v6/semantic-md-catalog.json'));
+        const audit = spawnSync(process.execPath, [auditScript, repoRoot, join(repoRoot, 'docs/antd-v6/semantic-dom-inventory.json'), semanticDocsPath, auditOutput], { encoding: 'utf8', stdio: 'inherit' });
+        const generatorScript = join(repoRoot, 'tools/AntDesign.StyleGen/src/generate-semantic-dom-catalog.mjs');
+        const generated = spawnSync(process.execPath, [generatorScript, repoRoot, join(repoRoot, 'docs/antd-v6/semantic-dom-inventory.json'), output, output, auditOutput], { encoding: 'utf8', stdio: 'inherit' });
+        if (generated.status !== 0) fail(`Semantic DOM catalog generation failed with exit code ${generated.status}`);
+        if (audit.status !== 0) fail(`Generated semantic.md audit found documented/API differences (exit code ${audit.status}); the catalog was still refreshed from the documentation nodes.`);
+      }
+    }
   }
 } else if (args.command === 'css-baseline-update') {
   if (!args['antd-path'] || !args.output) fail('css-baseline-update requires --antd-path and --output');

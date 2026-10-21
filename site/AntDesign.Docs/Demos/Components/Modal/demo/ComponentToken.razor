@@ -1,0 +1,27 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <Button Type="ButtonType.Primary" OnClick="OpenModal">
+        Open themed modal
+    </Button>
+
+    <Modal Title="Modal component tokens"
+           @bind-Visible="_visible">
+        <p>The header and content backgrounds are customized through the Modal component tokens.</p>
+    </Modal>
+</ConfigProvider>
+
+@code {
+    private bool _visible;
+
+    private void OpenModal() => _visible = true;
+
+    private static readonly ThemeConfig _theme = new ThemeConfig().SetComponentToken(
+        "Modal",
+        new ModalComponentToken
+        {
+            HeaderBg = "#e6f4ff",
+            ContentBg = "#f5f5f5",
+            TitleColor = "#0958d9"
+        });
+}

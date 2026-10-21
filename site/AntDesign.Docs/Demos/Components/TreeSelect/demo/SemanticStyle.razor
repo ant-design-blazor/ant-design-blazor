@@ -1,0 +1,58 @@
+@using System.Collections.Generic
+
+<TreeSelect TItemValue="string"
+            TItem="string"
+            Multiple
+            @bind-Values="_values"
+            Open="true"
+            TreeDefaultExpandAll
+            AllowClear
+            Style="width: 320px;"
+            ClassNames="_classNames"
+            Styles="_styles">
+    <PrefixIcon>
+        <span aria-hidden="true">Tree</span>
+    </PrefixIcon>
+    <ChildContent>
+        <TreeNode TItem="string" Key="group" Title="Group">
+            <TreeNode TItem="string" Key="leaf" Title="Leaf" />
+            <TreeNode TItem="string" Key="leaf-2" Title="Another leaf" />
+        </TreeNode>
+    </ChildContent>
+</TreeSelect>
+
+@code {
+    private IEnumerable<string> _values = ["leaf"];
+
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "tree-select-semantic-root",
+        ["prefix"] = "tree-select-semantic-prefix",
+        ["input"] = "tree-select-semantic-input",
+        ["suffix"] = "tree-select-semantic-suffix",
+        ["content"] = "tree-select-semantic-content",
+        ["placeholder"] = "tree-select-semantic-placeholder",
+        ["item"] = "tree-select-semantic-tag",
+        ["itemContent"] = "tree-select-semantic-tag-content",
+        ["itemRemove"] = "tree-select-semantic-tag-remove",
+        ["popup.root"] = "tree-select-semantic-popup",
+        ["popup.item"] = "tree-select-semantic-node",
+        ["popup.itemTitle"] = "tree-select-semantic-title",
+        ["popup.itemSwitcher"] = "tree-select-semantic-switcher"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "outline: 1px dashed var(--ant-color-primary);",
+        ["prefix"] = "color: var(--ant-color-primary);",
+        ["input"] = "letter-spacing: 0.02em;",
+        ["suffix"] = "color: var(--ant-color-primary);",
+        ["item"] = "background: var(--ant-color-primary-bg);",
+        ["itemContent"] = "font-weight: 600;",
+        ["itemRemove"] = "color: var(--ant-color-primary);",
+        ["popup.root"] = "border: 1px solid var(--ant-color-primary-border);",
+        ["popup.item"] = "outline: 1px dashed var(--ant-color-primary);",
+        ["popup.itemTitle"] = "font-weight: 600;",
+        ["popup.itemSwitcher"] = "color: var(--ant-color-primary);"
+    };
+}

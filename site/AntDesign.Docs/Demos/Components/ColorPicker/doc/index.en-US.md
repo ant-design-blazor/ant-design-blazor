@@ -16,6 +16,8 @@ Use it when a color value needs to be selected or previewed.
 | Parameter | Description | Type | Default |
 | --- | --- | --- | --- |
 | Value | Current color value | string | `#1677ff` |
+| ValueChanged | Callback raised when the color changes; use `@bind-Value` for two-way binding | `EventCallback<string>` | — |
+| ChildContent | Optional content used as a custom trigger instead of the built-in swatch | `RenderFragment` | — |
 | Size | Trigger size: `small`, `middle`, or `large` | string | `middle` |
 | Open | Whether the panel is open | bool | false |
 | ShowText | Whether to show the color text | bool | false |

@@ -3,7 +3,7 @@
 
 @upload-prefix-cls: ~'@{ant-prefix}-upload';
 @upload-item: ~'@{ant-prefix}-upload-list-item';
-@upload-picture-card-size: 104px;
+@upload-picture-card-size: 102px;
 @upload-picture-card-border-style: @border-style-base;
 
 .@{upload-prefix-cls} {
@@ -34,9 +34,10 @@
     cursor: not-allowed;
   }
 
-  &&-select-picture-card {
-    width: @upload-picture-card-size;
-    height: @upload-picture-card-size;
+  &&-select-picture-card,
+  &&-select-picture-circle {
+    width: var(--ant-upload-picture-card-size, @upload-picture-card-size);
+    height: var(--ant-upload-picture-card-size, @upload-picture-card-size);
     margin-right: 8px;
     margin-bottom: 8px;
     text-align: center;
@@ -162,6 +163,14 @@
       text-overflow: ellipsis;
     }
 
+    &-dragging {
+      opacity: 0.45;
+    }
+
+    &-drag-over {
+      border-top: 2px solid @primary-color;
+    }
+
     &-card-actions {
       position: absolute;
       right: 0;
@@ -253,7 +262,8 @@
 
   // =================== Picture & Picture Card ===================
   &-picture,
-  &-picture-card {
+  &-picture-card,
+  &-picture-circle {
     .@{upload-item} {
       position: relative;
       height: 66px;
@@ -359,13 +369,26 @@
   }
 
   // ======================== Picture Card ========================
-  &-picture-card {
-    &-container {
+  &-picture-card,
+  &-picture-circle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: @margin-xs;
+
+    &:not(:empty) {
+      min-height: var(--ant-upload-picture-card-size, @upload-picture-card-size);
+    }
+
+    .@{upload-prefix-cls}-list-item-container {
       display: inline-block;
-      width: @upload-picture-card-size;
-      height: @upload-picture-card-size;
-      margin: 0 @margin-xs @margin-xs 0;
+      width: var(--ant-upload-picture-card-size, @upload-picture-card-size);
+      height: var(--ant-upload-picture-card-size, @upload-picture-card-size);
       vertical-align: top;
+    }
+
+    &::before,
+    &::after {
+      display: none;
     }
 
     .@{upload-item} {
@@ -539,6 +562,24 @@
 
   .@{upload-prefix-cls}-animate-inline-leave {
     animation-name: uploadAnimateInlineOut;
+  }
+}
+
+.@{upload-prefix-cls}-picture-circle-wrapper {
+  display: block;
+  width: 100%;
+
+  .@{upload-prefix-cls}-select-picture-circle {
+    border-radius: 50%;
+  }
+}
+
+.@{upload-prefix-cls}-list-picture-circle {
+  .@{upload-item},
+  .@{upload-item}-info::before,
+  .@{upload-item}-thumbnail,
+  .@{upload-item}-thumbnail img {
+    border-radius: 50%;
   }
 }
 

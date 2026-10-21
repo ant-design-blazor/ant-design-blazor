@@ -17,10 +17,13 @@ Tag for categorizing or markup.
 | Property | Description | Type | Default Value | Version | 
 | --- | --- | --- | --- | --- |
 | Checkable | Whether the `Tag` can be checked | boolean         | false       |
+| Disabled | Whether a checkable `Tag` is disabled | boolean | false |
 | Checked | 	Checked status of `Tag` | boolean         |false       |
 | CheckedChange | Callback executed when `Tag` is checked/unchecked| Action<bool>         |-       |
 | ChildContent | Contents of the `Tag`| RenderFragment  |-       |
 | Class | Any css class that will be added to tag. Use case: adding animation. | string   | -  | 0.9 
+| ClassNames | Semantic classes keyed by `root`, `icon`, `content`, and `close`. | IReadOnlyDictionary<string, string> | - |
+| Styles | Semantic inline styles keyed by `root`, `icon`, `content`, and `close`. | IReadOnlyDictionary<string, string> | - |
 | Closable | Whether the `Tag` can be closed| boolean         | false       |
 | Color | Color of the `Tag` | string   | "default"         |
 | Icon | Set the icon of the `Tag`  | string        | -         |
@@ -29,3 +32,7 @@ Tag for categorizing or markup.
 | OnClose | Callback executed when the `Tag` is closed     | Action<MouseEventArgs>        | -         |
 | OnClosing | Callback executed when the `Tag` is being closed. Closing can be canceled here.     | Action<CloseEventArgs<MouseEventArgs>>        | -         |
 | Visible | Whether the `Tag` is closed or not | boolean         | true         |
+
+`CheckableTagGroup` supports `Options`, single-selection `Value` / `ValueChanged`, and multiple-selection `Values` / `ValuesChanged` (set `Multiple` to enable multiple selection). Its `ClassNames` and `Styles` dictionaries accept the `root` and `item` semantic slots.
+
+Tag also forwards unmatched HTML attributes and event handlers to its root element, so native attributes such as `draggable` can be used directly.

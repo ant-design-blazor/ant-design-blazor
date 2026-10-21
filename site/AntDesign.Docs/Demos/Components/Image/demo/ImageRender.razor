@@ -1,0 +1,19 @@
+<Image Width="200"
+       Src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+       Alt="Custom preview content"
+       ImageRender="@_imageRender" />
+
+@code {
+    private RenderFragment<ImagePreviewImageRenderContext> _imageRender => context => builder =>
+    {
+        var sequence = 0;
+        builder.OpenElement(sequence++, "div");
+        builder.AddAttribute(sequence++, "class", "demo-image-preview-render");
+        builder.AddContent(sequence++, context.OriginalNode);
+        builder.OpenElement(sequence++, "div");
+        builder.AddAttribute(sequence++, "class", "demo-image-preview-caption");
+        builder.AddContent(sequence++, $"{context.Alt} — {context.Scale.ToString("0.0")}× — {context.Rotation}°");
+        builder.CloseElement();
+        builder.CloseElement();
+    };
+}

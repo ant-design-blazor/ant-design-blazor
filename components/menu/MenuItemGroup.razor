@@ -2,10 +2,14 @@
 @inherits AntDomComponentBase
 
 <li class="@(RootMenu.PrefixCls)-item-group" style="@Style" @key="Key" @ref="Ref">
-    <div class="@(RootMenu.PrefixCls)-item-group-title">
+    <div class="@RootMenu.GetSemanticClass(SemanticSlot("itemTitle"), $"{RootMenu.PrefixCls}-item-group-title")" style="@RootMenu.GetSemanticStyle(SemanticSlot("itemTitle"))">
         @if (TitleTemplate != null)@TitleTemplate else @Title
     </div>
-    <ul class="@(RootMenu.PrefixCls)-item-group-list">
+    <ul class="@RootMenu.GetSemanticClass(SemanticSlot("list"), $"{RootMenu.PrefixCls}-item-group-list")" style="@RootMenu.GetSemanticStyle(SemanticSlot("list"))">
         @ChildContent
     </ul>
 </li>
+
+@code {
+    private string SemanticSlot(string slot) => ParentMenu == null ? slot : $"subMenu.{slot}";
+}

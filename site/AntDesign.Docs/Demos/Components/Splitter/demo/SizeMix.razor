@@ -1,0 +1,39 @@
+<RadioGroup TValue="int" @bind-Value="_sizeBucket" Style="margin-bottom:16px">
+    <Radio RadioButton Value="1">Size Bucket 1</Radio>
+    <Radio RadioButton Value="2">Size Bucket 2</Radio>
+</RadioGroup>
+
+<Splitter Style="height:300px;width:1000px;box-shadow:0 0 10px rgba(0, 0, 0, 0.1)">
+    @if (_sizeBucket == 1)
+    {
+        <SplitterPanel DefaultSize="100px" Min="100px" Max="200px">
+            @Panel("First")
+        </SplitterPanel>
+        <SplitterPanel Min="100px" Max="200px">
+            @Panel("Second")
+        </SplitterPanel>
+        <SplitterPanel Min="20%">
+            @Panel("Third")
+        </SplitterPanel>
+    }
+    else
+    {
+        <SplitterPanel Min="300px">
+            @Panel("First")
+        </SplitterPanel>
+        <SplitterPanel Min="100px" Max="200px">
+            @Panel("Second")
+        </SplitterPanel>
+        <SplitterPanel Min="600px">
+            @Panel("Third")
+        </SplitterPanel>
+    }
+</Splitter>
+
+@code {
+    private int _sizeBucket = 1;
+
+    private RenderFragment Panel(string text) => @<Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height:100%">
+        <Title Type="TextElementType.Secondary" Level="5">@text</Title>
+    </Flex>;
+}

@@ -2,10 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 using AntDesign.Core.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using OneOf;
 
 namespace AntDesign
@@ -88,10 +92,50 @@ namespace AntDesign
         public bool Mask { get; set; } = true;
 
         /// <summary>
+        /// Blur the page content behind the drawer mask.
+        /// </summary>
+        [Parameter]
+        public bool MaskBlur { get; set; }
+
+        /// <summary>
+        /// Display an active skeleton in place of the drawer content while data is loading.
+        /// </summary>
+        [Parameter]
+        public bool Loading { get; set; }
+
+        /// <summary>
         /// Style for Drawer's mask element.
         /// </summary>
         [Parameter]
         public string MaskStyle { get; set; }
+
+        /// <summary>Semantic class names for Drawer slots.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Semantic inline styles for Drawer slots.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        /// <summary>Enable dragging the drawer edge to resize the panel.</summary>
+        [Parameter]
+        public bool Resizable { get; set; }
+
+        /// <summary>Maximum size in pixels when the drawer is resizable. Zero or null means no maximum.</summary>
+        [Parameter]
+        public int? MaxSize { get; set; }
+
+        /// <summary>Invoked when the user starts resizing the drawer.</summary>
+        [Parameter]
+        public EventCallback OnResizeStart { get; set; }
+
+        /// <summary>Invoked while resizing, with the new width or height in pixels.</summary>
+        [Parameter]
+        public EventCallback<int> OnResize { get; set; }
+
+        /// <summary>Invoked when the user finishes resizing the drawer.</summary>
+        [Parameter]
+        public EventCallback OnResizeEnd { get; set; }
 
         /// <summary>
         /// Whether to support keyboard esc off
@@ -315,11 +359,47 @@ namespace AntDesign
 
         private bool IsLeftOrRight => Placement == DrawerPlacement.Left || Placement == DrawerPlacement.Right;
 
-        private string WidthPx => IsLeftOrRight ? StyleHelper.ToCssPixel(Width) : null;
+        private string WidthPx => IsLeftOrRight ? StyleHelper.ToCssPixel(_resizedSize?.ToString() ?? Width) : null;
 
-        private string HeightPx => !IsLeftOrRight ? StyleHelper.ToCssPixel(Height) : null;
+        private string HeightPx => !IsLeftOrRight ? StyleHelper.ToCssPixel(_resizedSize?.ToString() ?? Height) : null;
 
         private ClassMapper TitleClassMapper { get; set; } = new ClassMapper();
+
+        private ElementReference _wrapperRef;
+        private ElementReference _draggerRef;
+        private DotNetObjectReference<Drawer> _drawerReference;
+        private IJSObjectReference _resizeHandler;
+        private int? _resizedSize;
+        private string _lastWidth;
+        private string _lastHeight;
+        private DrawerPlacement? _lastPlacement;
+        private bool _isResizing;
+
+        internal string GetSemanticClass(string slot, string baseClass = null)
+        {
+            var customClass = ClassNames != null && ClassNames.TryGetValue(slot, out var value) ? value : null;
+            if (slot == "section" && string.IsNullOrWhiteSpace(customClass)
+                && ClassNames != null && ClassNames.TryGetValue("content", out var deprecatedContentClass))
+            {
+                customClass = deprecatedContentClass;
+            }
+
+            return string.Join(" ", new[] { baseClass, customClass }.Where(value => !string.IsNullOrWhiteSpace(value)));
+        }
+
+        internal string GetSemanticStyle(string slot, string baseStyle = null, string overrideStyle = null)
+        {
+            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (slot == "section" && string.IsNullOrWhiteSpace(semanticStyle)
+                && Styles != null && Styles.TryGetValue("content", out var deprecatedContentStyle))
+            {
+                semanticStyle = deprecatedContentStyle;
+            }
+
+            return string.Join(";", new[] { baseStyle, semanticStyle, overrideStyle }
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => value.Trim().TrimEnd(';')));
+        }
 
         private string WrapperStyle => $@"
             {(WidthPx != null ? $"width:{WidthPx};" : "")}
@@ -358,6 +438,14 @@ namespace AntDesign
 
         protected override void OnParametersSet()
         {
+            if (_lastWidth != Width || _lastHeight != Height || _lastPlacement != Placement)
+            {
+                _resizedSize = null;
+                _lastWidth = Width;
+                _lastHeight = Height;
+                _lastPlacement = Placement;
+            }
+
             SetClass();
             _drawerStyle = "";
             base.OnParametersSet();
@@ -369,6 +457,23 @@ namespace AntDesign
             {
                 await ClientDimensionService.GetScrollBarSizeAsync();
             }
+
+            if (Resizable && _resizeHandler == null)
+            {
+                _drawerReference ??= DotNetObjectReference.Create(this);
+                _resizeHandler = await JsInvokeAsync<IJSObjectReference>(
+                    JSInteropConstants.DrawerHelper.Attach,
+                    _drawerReference,
+                    _wrapperRef,
+                    _draggerRef,
+                    Placement.ToString().ToLowerInvariant(),
+                    MaxSize ?? 0);
+            }
+            else if (!Resizable && _resizeHandler != null)
+            {
+                await DisposeResizeHandlerAsync();
+            }
+
             switch (_status)
             {
                 case ComponentStatus.Opening:
@@ -407,6 +512,57 @@ namespace AntDesign
             }
 
             await base.OnAfterRenderAsync(isFirst);
+        }
+
+        [JSInvokable]
+        public async Task OnDrawerResizeStarted(int _)
+        {
+            _isResizing = true;
+            if (OnResizeStart.HasDelegate)
+            {
+                await OnResizeStart.InvokeAsync(this);
+            }
+            await InvokeAsync(StateHasChanged);
+        }
+
+        [JSInvokable]
+        public async Task OnDrawerResized(int size)
+        {
+            _resizedSize = Math.Max(0, MaxSize > 0 ? Math.Min(size, MaxSize.Value) : size);
+            if (OnResize.HasDelegate)
+            {
+                await OnResize.InvokeAsync(_resizedSize.Value);
+            }
+            await InvokeAsync(StateHasChanged);
+        }
+
+        [JSInvokable]
+        public async Task OnDrawerResizeEnded(int size)
+        {
+            _isResizing = false;
+            _resizedSize = Math.Max(0, MaxSize > 0 ? Math.Min(size, MaxSize.Value) : size);
+            if (OnResizeEnd.HasDelegate)
+            {
+                await OnResizeEnd.InvokeAsync(this);
+            }
+            await InvokeAsync(StateHasChanged);
+        }
+
+        private async Task DisposeResizeHandlerAsync()
+        {
+            if (_resizeHandler == null)
+            {
+                return;
+            }
+
+            try
+            {
+                await _resizeHandler.InvokeVoidAsync("dispose");
+                await _resizeHandler.DisposeAsync();
+            }
+            catch (JSDisconnectedException) { }
+            catch (ObjectDisposedException) { }
+            _resizeHandler = null;
         }
 
         private int _zIndex = DefaultZIndez;
@@ -479,6 +635,11 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            if (_resizeHandler != null)
+            {
+                _ = DisposeResizeHandlerAsync();
+            }
+            _drawerReference?.Dispose();
             base.Dispose(disposing);
         }
     }

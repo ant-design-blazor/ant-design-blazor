@@ -1,0 +1,31 @@
+<Select TItemValue="string"
+        TItem="MoodOption"
+        Mode="SelectMode.Multiple"
+        DataSource="@_options"
+        ValueName="@nameof(MoodOption.Value)"
+        LabelName="@nameof(MoodOption.Label)"
+        DefaultValues="@_selected"
+        Placeholder="Select your current mood"
+        Style="width: 100%;">
+    <ItemTemplate Context="option">
+        <Space>
+            <span role="img" aria-label="@option.Label">@option.Emoji</span>
+            <span>@option.Label (@option.Description)</span>
+        </Space>
+    </ItemTemplate>
+</Select>
+
+@code {
+    private sealed record MoodOption(string Value, string Label, string Emoji, string Description);
+
+    private readonly MoodOption[] _options =
+    [
+        new("happy", "Happy", "😄", "Feeling Good"),
+        new("sad", "Sad", "😢", "Feeling Blue"),
+        new("angry", "Angry", "😡", "Furious"),
+        new("cool", "Cool", "😎", "Chilling"),
+        new("sleepy", "Sleepy", "😴", "Need Sleep")
+    ];
+
+    private readonly string[] _selected = ["happy"];
+}

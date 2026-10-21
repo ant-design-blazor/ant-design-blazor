@@ -1,6 +1,5 @@
 ---
 order: 5
-debug: true
 title:
   zh-CN: 异步加载
   en-US: Asynchronous loading

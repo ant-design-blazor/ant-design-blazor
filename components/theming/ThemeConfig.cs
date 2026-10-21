@@ -52,7 +52,11 @@ namespace AntDesign.Theming
             foreach (var tokenProperty in typeof(TToken).GetProperties())
             {
                 var value = tokenProperty.GetValue(token);
-                if (value != null) values[tokenProperty.Name] = value.ToString();
+                if (value == null || value is string text && string.IsNullOrWhiteSpace(text)) continue;
+                if (value is byte or sbyte or short or ushort or int or uint or long or ulong or float or double or decimal
+                    && Convert.ToDouble(value, CultureInfo.InvariantCulture) == 0)
+                    continue;
+                values[tokenProperty.Name] = value.ToString();
             }
             Components[component] = values;
             return this;
@@ -107,7 +111,54 @@ namespace AntDesign.Theming
                     foreach (var value in values) componentValues[value.Key] = value.Value;
                 }
             }
+            ResolveInputComponentValues(result, GetResolvedTokenValues());
             return result;
+        }
+
+        private static void ResolveInputComponentValues(IDictionary<string, IDictionary<string, string>> components, IReadOnlyDictionary<string, string> tokens)
+        {
+            // Input's component tokens are derived from global design tokens in
+            // Ant Design. Resolve them here too, so a ConfigProvider override of
+            // controlHeight/fontSize affects the actual input CSS variables.
+            var input = components.TryGetValue("Input", out var configured)
+                ? new Dictionary<string, string>(configured, StringComparer.Ordinal)
+                : new Dictionary<string, string>(StringComparer.Ordinal);
+            components["Input"] = input;
+
+            string Token(string name, string fallback = null) => tokens.TryGetValue(name, out var value) && !string.IsNullOrWhiteSpace(value) ? value : fallback;
+            double Number(string name, double fallback = 0) => double.TryParse(Token(name), NumberStyles.Float, CultureInfo.InvariantCulture, out var value) && value != 0 ? value : fallback;
+            double Value(string name, double fallback) => input.TryGetValue(name, out var value) && double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed) && parsed != 0 ? parsed : fallback;
+            string Format(double value) => value.ToString("0.####################", CultureInfo.InvariantCulture);
+            double Round(double value) => Math.Round(value, 1, MidpointRounding.AwayFromZero);
+
+            var fontSize = Value("inputFontSize", Number("fontSize", 14));
+            var fontSizeSm = Value("inputFontSizeSM", fontSize);
+            var fontSizeLg = Value("inputFontSizeLG", Number("fontSizeLG", 16));
+            var lineHeight = Number("lineHeight", 1.5714285714285714);
+            var lineHeightLg = Number("lineHeightLG", 1.5);
+            var lineWidth = Number("lineWidth", 1);
+            var controlHeight = Number("controlHeight", 32);
+            var controlHeightSm = Number("controlHeightSM", 24);
+            var controlHeightLg = Number("controlHeightLG", 40);
+
+            void SetResolved(string name, string value)
+            {
+                input[name] = value;
+            }
+
+            var customBaseFont = Number("fontSize", 14) != 14 || input.ContainsKey("inputFontSize");
+            var customSmallFont = Number("fontSizeSM", 12) != 12 || input.ContainsKey("inputFontSizeSM");
+            var customLargeFont = Number("fontSizeLG", 16) != 16 || input.ContainsKey("inputFontSizeLG");
+            if (customBaseFont) SetResolved("inputFontSize", Format(fontSize));
+            if (customSmallFont) SetResolved("inputFontSizeSM", Format(fontSizeSm));
+            if (customLargeFont) SetResolved("inputFontSizeLG", Format(fontSizeLg));
+
+            if (Number("controlHeight", 32) != 32 || customBaseFont || input.ContainsKey("paddingBlock"))
+                SetResolved("paddingBlock", Format(Math.Max(Round((controlHeight - fontSize * lineHeight) / 2) - lineWidth, 0)));
+            if (Number("controlHeightSM", 24) != 24 || customSmallFont || input.ContainsKey("paddingBlockSM"))
+                SetResolved("paddingBlockSM", Format(Math.Max(Round((controlHeightSm - fontSizeSm * lineHeight) / 2) - lineWidth, 0)));
+            if (Number("controlHeightLG", 40) != 40 || customLargeFont || input.ContainsKey("paddingBlockLG"))
+                SetResolved("paddingBlockLG", Format(Math.Max(Math.Ceiling(((controlHeightLg - fontSizeLg * lineHeightLg) / 2) * 10) / 10 - lineWidth, 0)));
         }
 
         private static Dictionary<string, string> ReadObject(object value)

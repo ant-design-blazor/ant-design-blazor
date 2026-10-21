@@ -39,6 +39,12 @@ namespace AntDesign
 
         internal bool IsInTreeSelect => TreeSelect != null;
 
+        internal string GetTreeSelectSemanticClass(string slot, string baseClass = null) =>
+            TreeSelect?.GetPopupSemanticClass(slot, baseClass) ?? baseClass;
+
+        internal string GetTreeSelectSemanticStyle(string slot, string baseStyle = null) =>
+            TreeSelect?.GetPopupSemanticStyle(slot, baseStyle) ?? baseStyle;
+
         #region Fields
 
         /// <summary>

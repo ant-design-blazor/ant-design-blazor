@@ -1,0 +1,69 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <Flex Vertical Gap="FlexGap.Middle">
+        <Splitter Style="height:200px;box-shadow:0 0 10px rgba(0,0,0,.1)"
+                  DraggerIcon="@ColumnWidthIcon"
+                  CollapseIconStart="@CollapseLeftIcon"
+                  CollapseIconEnd="@CollapseRightIcon">
+            <SplitterPanel DefaultSize="40%" Min="20%" Max="70%" Collapsible>
+                <Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height:100%"><Title Type="TextElementType.Secondary" Level="5">Panel 1</Title></Flex>
+            </SplitterPanel>
+            <SplitterPanel Collapsible>
+                <Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height:100%"><Title Type="TextElementType.Secondary" Level="5">Panel 2</Title></Flex>
+            </SplitterPanel>
+            <SplitterPanel Resizable="false">
+                <Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height:100%"><Title Type="TextElementType.Secondary" Level="5">Panel 3</Title></Flex>
+            </SplitterPanel>
+        </Splitter>
+
+        <Divider />
+
+        <Splitter Layout="SplitterLayout.Vertical" ClassNames="@_verticalClassNames" HideDraggerIndicator
+                  Style="height:200px;box-shadow:0 0 10px rgba(0,0,0,.1)"
+                  CollapseIconStart="@CollapseUpIcon"
+                  CollapseIconEnd="@CollapseDownIcon">
+            <SplitterPanel DefaultSize="40%" Min="30%" Max="70%" Collapsible>
+                <Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height:100%"><Title Type="TextElementType.Secondary" Level="5">First</Title></Flex>
+            </SplitterPanel>
+            <SplitterPanel Collapsible>
+                <Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height:100%"><Title Type="TextElementType.Secondary" Level="5">Second</Title></Flex>
+            </SplitterPanel>
+        </Splitter>
+    </Flex>
+</ConfigProvider>
+
+<style>
+    .splitter-demo-customize-icon { color: var(--ant-color-text-description); font-size: var(--ant-font-size-lg); }
+    .splitter-demo-customize-icon:hover { color: var(--ant-color-primary); }
+    .splitter-demo-customize-dragger-icon { color: var(--ant-color-fill); }
+    .splitter-demo-customize-dragger-icon:hover { color: var(--ant-color-primary); }
+    .splitter-demo-customize-dragger::before { background: transparent !important; border: var(--ant-line-width) dashed var(--ant-control-item-bg-hover); }
+    .splitter-demo-customize-dragger-active::before { border-color: var(--ant-color-primary); }
+</style>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Splitter"] = new Dictionary<string, string>
+            {
+                ["splitBarSize"] = "1",
+                ["splitTriggerSize"] = "16",
+            }
+        }
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _verticalClassNames = new Dictionary<string, string>
+    {
+        ["dragger"] = "splitter-demo-customize-dragger",
+        ["dragger.active"] = "splitter-demo-customize-dragger-active",
+    };
+
+    private static RenderFragment ColumnWidthIcon => @<Icon Type="@IconType.Outline.ColumnWidth" Class="splitter-demo-customize-dragger-icon" />;
+    private static RenderFragment CollapseLeftIcon => @<Icon Type="@IconType.Outline.CaretLeft" Class="splitter-demo-customize-icon" />;
+    private static RenderFragment CollapseRightIcon => @<Icon Type="@IconType.Outline.CaretRight" Class="splitter-demo-customize-icon" />;
+    private static RenderFragment CollapseUpIcon => @<Icon Type="@IconType.Outline.CaretUp" Class="splitter-demo-customize-icon" />;
+    private static RenderFragment CollapseDownIcon => @<Icon Type="@IconType.Outline.CaretDown" Class="splitter-demo-customize-icon" />;
+}

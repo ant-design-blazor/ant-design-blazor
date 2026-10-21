@@ -31,6 +31,10 @@ namespace AntDesign
 
         Task SetSelectedItem(AutoCompleteOption item);
 
+        string GetSemanticClass(string slot, string baseClass);
+
+        string GetSemanticStyle(string slot, string baseStyle = null);
+
         Func<object, object, bool> CompareWith { get; set; }
 
         object SelectedValue { get; set; }

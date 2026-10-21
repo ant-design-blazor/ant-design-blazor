@@ -1,26 +1,30 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 <CascadingValue Value="@($"#ant-drawer-wrap_{Id} .ant-drawer-section")" Name="PopupContainerSelector">
-    <div class="@ClassMapper.Class" @ref="@Ref" style="@_drawerStyle @InnerZIndexStyle @Style" id="@Id" tabindex="-1">
+    <div class="@GetSemanticClass("root", ClassMapper.Class)" @ref="@Ref" style="@GetSemanticStyle("root", _drawerStyle, $"{InnerZIndexStyle} {Style}")" id="@Id" tabindex="-1">
         @if (Mask && _isOpen)
         {
-            <div class="ant-drawer-mask" @onclick="MaskClick" style="@MaskStyle"></div>
+            <div class="@GetSemanticClass("mask", $"ant-drawer-mask {(MaskBlur ? "ant-drawer-mask-blur" : null)}")" @onclick="MaskClick" style="@GetSemanticStyle("mask", null, MaskStyle)"></div>
         }
-        <div class="ant-drawer-content-wrapper @WrapClassName " style="@WrapperStyle" id="@($"ant-drawer-wrap_{Id}")">
-            <section class="ant-drawer-section" role="dialog" aria-modal="true" aria-labelledby="@(_title.Value != null ? $"{Id}-title" : null)">
+        <div class="@GetSemanticClass("wrapper", $"ant-drawer-content-wrapper {(_isResizing ? "ant-drawer-content-wrapper-dragging" : null)} {WrapClassName}")" style="@GetSemanticStyle("wrapper", null, WrapperStyle)" id="@($"ant-drawer-wrap_{Id}")" @ref="_wrapperRef">
+            @if (Resizable)
+            {
+                <div class="@GetSemanticClass("dragger", $"ant-drawer-resizable-dragger ant-drawer-resizable-dragger-{Placement.ToString().ToLowerInvariant()} ant-drawer-resizable-dragger-{(IsLeftOrRight ? "horizontal" : "vertical")} {(_isResizing ? "ant-drawer-resizable-dragger-dragging" : null)}")" style="@GetSemanticStyle("dragger")" @ref="_draggerRef"></div>
+            }
+            <section class="@GetSemanticClass("section", "ant-drawer-section")" style="@GetSemanticStyle("section")" role="dialog" aria-modal="true" aria-labelledby="@(_title.Value != null ? $"{Id}-title" : null)">
                 @if (_title.Value != null || Closable || Extra != null)
                 {
-                    <div class="@TitleClassMapper.Class" style="@HeaderStyle">
+                    <div class="@GetSemanticClass("header", TitleClassMapper.Class)" style="@GetSemanticStyle("header", null, HeaderStyle)">
                         <div class="ant-drawer-header-title">
                             @if (Closable)
                             {
-                                <button @onclick="_=>CloseClick()" type="button" aria-label="Close" class="ant-drawer-close">
+                                <button @onclick="_=>CloseClick()" type="button" aria-label="Close" class="@GetSemanticClass("close", "ant-drawer-close")" style="@GetSemanticStyle("close")">
                                     <Icon Type="close" />
                                 </button>
                             }
                             @if (_title.Value != null)
                             {
-                                <div class="ant-drawer-title" id="@($"{Id}-title")">
+                                <div class="@GetSemanticClass("title", "ant-drawer-title")" style="@GetSemanticStyle("title")" id="@($"{Id}-title")">
                                     @if (TitleTemplate != null)
                                     {
                                         @TitleTemplate
@@ -34,24 +38,31 @@
                         </div>
                         @if (Extra != null)
                         {
-                            <div class="ant-drawer-extra">@Extra</div>
+                            <div class="@GetSemanticClass("extra", "ant-drawer-extra")" style="@GetSemanticStyle("extra")">@Extra</div>
                         }
                     </div>
                 }
-                <div class="ant-drawer-body" style="@BodyStyle">
-                    @if (ContentTemplate != null)
+                <div class="@GetSemanticClass("body", "ant-drawer-body")" style="@GetSemanticStyle("body", null, BodyStyle)">
+                    @if (Loading)
                     {
-                        @ContentTemplate
+                        <Skeleton Active Title="false" ParagraphRows="5" Class="ant-drawer-body-skeleton" />
                     }
-                    @if (!string.IsNullOrEmpty(ContentString))
+                    else
                     {
-                        @((MarkupString)ContentString)
+                        @if (ContentTemplate != null)
+                        {
+                            @ContentTemplate
+                        }
+                        @if (!string.IsNullOrEmpty(ContentString))
+                        {
+                            @((MarkupString)ContentString)
+                        }
+                        @ChildContent
                     }
-                    @ChildContent
                 </div>
                 @if (Footer != null)
                 {
-                    <div class="ant-drawer-footer">@Footer</div>
+                    <div class="@GetSemanticClass("footer", "ant-drawer-footer")" style="@GetSemanticStyle("footer")">@Footer</div>
                 }
             </section>
             @if (Handler != null)

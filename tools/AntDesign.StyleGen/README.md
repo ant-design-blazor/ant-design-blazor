@@ -29,11 +29,13 @@ node tools/AntDesign.StyleGen/src/cli.mjs css-baseline-update \
   --output /tmp/antd-v6-react-css-baseline \
   --docs-theme-output /Volumes/Data/GitHub/ant-design-blazor/components/wwwroot/css/antd-v6
 
-# 从 Ant Design React v6 同步所有 Semantic DOM 到 JSON。SemanticType 的
-# classNames/styles 路径是上游权威；JSON 同时保存 Blazor 文档预览所需的 selector 映射。
+# 从 React 文档构建产物中的 semantic.md 同步正式 slot、说明和抽象 DOM 到 JSON。
+# 命令也会扫描 SemanticType 的 classNames/styles 路径并做差异审计；AST 清单用于发现
+# 文档未呈现的类型路径，不再作为正式文档 slot 清单的替代来源。
 npm install --prefix tools/AntDesign.StyleGen
 node tools/AntDesign.StyleGen/src/cli.mjs sync-semantic-dom \
   --antd-path /Volumes/Data/GitHub/ant-design \
+  --semantic-docs-path /Volumes/Data/GitHub/ant-design/_site \
   --blazor-path /Volumes/Data/GitHub/ant-design-blazor
 
 # Semantic DOM 与 demo/menu/components JSON 作为 AdditionalFile 输入；AntDesign.Docs.Generator
@@ -41,10 +43,13 @@ node tools/AntDesign.StyleGen/src/cli.mjs sync-semantic-dom \
 dotnet build site/AntDesign.Docs/AntDesign.Docs.csproj -f net10.0
 ```
 
-`docs/antd-v6/semantic-dom-catalog.json` 中的组件与 slot 名称由同步命令重建，不能手改。
-同步器使用 TypeScript AST 展开 SemanticType 的交叉继承、`SemanticAllType` 包装及嵌套 slot，
-避免只同步当前文件中直接声明的路径。StyleGen 自己声明 TypeScript 与 jsdom 依赖，不要求
-从相邻 React 仓库解析这些工具包。
+React 文档必须先构建/导出到 `_site`（或通过 `--semantic-docs-path` 指定其他导出目录）。
+`docs/antd-v6/semantic-dom-catalog.json` 的组件与 slot 名称、说明和 React 抽象 DOM 以这些
+`semantic.md` 文件为正式同步目标；`semantic-dom-inventory.json` 则通过 TypeScript AST 展开
+SemanticType 的交叉继承、`SemanticAllType` 包装、嵌套 slot，以及没有 `*SemanticType` 别名时
+公开 Props 上的 classNames/styles schema，用作 API 完整性对照。两边不一致时
+同步仍会刷新文档 catalog，但命令以非零状态报告差异，需确认是文档缺项、类型遗漏还是路径别名。
+StyleGen 自己声明 TypeScript 与 jsdom 依赖，不要求从相邻 React 仓库解析这些工具包。
 selector 是 Blazor 预览的目标映射：已有映射在同步时按 component/slot 稳定保留，新 slot
 使用默认类名推导；组件实现或 DOM 结构改变时，应更新 JSON 中对应 selector 并补充结构测试。
 

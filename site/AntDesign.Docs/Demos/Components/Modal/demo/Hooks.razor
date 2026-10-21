@@ -1,0 +1,47 @@
+@inject ModalService _modalService
+@inject IMessageService _message
+
+<Space>
+    <Button OnClick="@Confirm">Confirm</Button>
+    <Button OnClick="@(() => Show(ModalKind.Warning))">Warning</Button>
+    <Button OnClick="@(() => Show(ModalKind.Info))">Info</Button>
+    <Button OnClick="@(() => Show(ModalKind.Error))">Error</Button>
+</Space>
+
+@code {
+    private ConfirmOptions CreateOptions() => new()
+    {
+        Title = "Use ModalService",
+        Content = "This is a modal dialog created through the Blazor modal service.",
+    };
+
+    private async Task Confirm()
+    {
+        var confirmed = await _modalService.ConfirmAsync(CreateOptions());
+        _message.Info($"Confirmed: {confirmed}");
+    }
+
+    private void Show(ModalKind type)
+    {
+        var options = CreateOptions();
+        switch (type)
+        {
+            case ModalKind.Warning:
+                _modalService.Warning(options);
+                break;
+            case ModalKind.Info:
+                _modalService.Info(options);
+                break;
+            case ModalKind.Error:
+                _modalService.Error(options);
+                break;
+        }
+    }
+
+    private enum ModalKind
+    {
+        Warning,
+        Info,
+        Error,
+    }
+}

@@ -1,0 +1,29 @@
+<div style="display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;">
+    <Image Width="160px"
+           Src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+           Alt="Semantic DOM preview image" />
+    <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;width:100%;">
+        <Image PlaceholderProgress="true" Preview="false" Width="160px" Height="88px"
+               ClassNames="_progressClassNames" Styles="_progressStyles" />
+        <Image ProgressPercent="63" Preview="false" Width="160px" Height="88px"
+               ClassNames="_progressClassNames" Styles="_progressStyles" />
+    </div>
+</div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _progressClassNames = new Dictionary<string, string>
+    {
+        ["placeholder.progress.root"] = "demo-image-progress-root",
+        ["placeholder.progress.content"] = "demo-image-progress-content",
+        ["placeholder.progress.rail"] = "demo-image-progress-rail",
+        ["placeholder.progress.indicator"] = "demo-image-progress-indicator"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _progressStyles = new Dictionary<string, string>
+    {
+        ["placeholder.progress.root"] = "border-radius: 8px",
+        ["placeholder.progress.content"] = "color: #1677ff",
+        ["placeholder.progress.rail"] = "border-radius: 4px",
+        ["placeholder.progress.indicator"] = "font-weight: 600"
+    };
+}

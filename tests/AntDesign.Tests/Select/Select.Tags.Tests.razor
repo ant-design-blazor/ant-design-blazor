@@ -55,6 +55,30 @@
     }
 
     [Fact]
+    public async Task Max_count_prevents_selecting_additional_items()
+    {
+        var cut = Render<AntDesign.Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Multiple"
+                               MaxCount="2"
+                               TItemValue="string"
+                               TItem="string">
+                <SelectOptions>
+                    <SelectOption TItemValue="string" TItem="string" Value='@("one")' Label="One" />
+                    <SelectOption TItemValue="string" TItem="string" Value='@("two")' Label="Two" />
+                    <SelectOption TItemValue="string" TItem="string" Value='@("three")' Label="Three" />
+                </SelectOptions>
+            </AntDesign.Select>
+        );
+
+        await cut.InvokeAsync(() => cut.Instance.SetValueAsync(cut.Instance.SelectOptionItems[0]));
+        await cut.InvokeAsync(() => cut.Instance.SetValueAsync(cut.Instance.SelectOptionItems[1]));
+        await cut.InvokeAsync(() => cut.Instance.SetValueAsync(cut.Instance.SelectOptionItems[2]));
+
+        cut.Instance.SelectedOptionItems.Values.Select(item => item.Value).Should().BeEquivalentTo("one", "two");
+        cut.Instance.SelectOptionItems.Single(item => item.Value == "three").IsSelected.Should().BeFalse();
+    }
+
+    [Fact]
     public void Tag_MaxTagCount_sets_tags_in_proper_order() //issue #1746
     {
         //Arrange

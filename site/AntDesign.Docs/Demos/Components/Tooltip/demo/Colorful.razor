@@ -1,0 +1,19 @@
+@{
+    var colors = new[] { "pink", "red", "yellow", "orange", "cyan", "green", "blue", "purple", "geekblue", "magenta", "volcano", "gold", "lime" };
+    var customColors = new[] { "#f50", "#2db7f5", "#87d068", "#108ee9" };
+}
+
+<Divider Orientation="DividerOrientation.Left">Presets</Divider>
+<Space Wrap>
+    @foreach (var color in colors)
+    {
+        <Tooltip Title="Prompt text" Color="@color"><Button>@color</Button></Tooltip>
+    }
+</Space>
+<Divider Orientation="DividerOrientation.Left">Custom</Divider>
+<Space Wrap>
+    @foreach (var color in customColors)
+    {
+        <Tooltip Title="Prompt text" Color="@color"><Button>@color</Button></Tooltip>
+    }
+</Space>

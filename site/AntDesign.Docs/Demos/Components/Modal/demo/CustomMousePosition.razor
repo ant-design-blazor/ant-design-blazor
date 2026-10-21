@@ -1,0 +1,16 @@
+<Button Type="ButtonType.Primary" OnClick="@(() => _visible = true)">
+    Open Modal
+</Button>
+
+<Modal Title="Basic Modal"
+       @bind-Visible="_visible"
+       MousePosition="@_mousePosition">
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+</Modal>
+
+@code {
+    private bool _visible;
+    private readonly ModalMousePosition _mousePosition = new() { X = 300, Y = 300 };
+}

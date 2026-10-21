@@ -1,0 +1,26 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+            ListType="UploadListType.PictureCircle"
+            DefaultFileList="@_files">
+        <Button Icon="@IconType.Outline.Plus">Upload</Button>
+    </Upload>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new ThemeConfig().SetComponentToken(
+        "Upload",
+        new UploadComponentToken
+        {
+            ActionsColor = "#1677ff",
+            PictureCardSize = 144
+        });
+
+    private static readonly List<UploadFileItem> _files = new()
+    {
+        new() { Id = "token-upload-done", FileName = "avatar.png", State = UploadState.Success, Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" },
+        new() { Id = "token-uploading", FileName = "avatar.png", State = UploadState.Uploading, Percent = 33, Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" },
+        new() { Id = "token-upload-error", FileName = "avatar.png", State = UploadState.Fail }
+    };
+}

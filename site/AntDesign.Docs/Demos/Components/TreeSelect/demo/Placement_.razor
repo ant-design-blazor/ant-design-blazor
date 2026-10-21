@@ -9,17 +9,18 @@
 <TreeSelect TItem="string" TItemValue="string"
             Style="width:100%;"
             DropdownStyle="max-height:400px;overflow:auto;"
+            Placement="_placement"
             Placeholder="Please select"
             AllowClear
             Multiple
             TreeDefaultExpandAll>
-  <TreeNode TItem="string" Value="parent 1" Title="parent 1">
-    <TreeNode TItem="string" Value="parent 1-0" Title="parent 1-0">
-      <TreeNode TItem="string" Value="leaf1" Title="leaf1" />
-      <TreeNode TItem="string" Value="leaf2" Title="leaf2" />
+  <TreeNode TItem="string" Key="parent 1" Title="parent 1">
+    <TreeNode TItem="string" Key="parent 1-0" Title="parent 1-0">
+      <TreeNode TItem="string" Key="leaf1" Title="leaf1" />
+      <TreeNode TItem="string" Key="leaf2" Title="leaf2" />
     </TreeNode>
-    <TreeNode TItem="string" Value="parent 1-1" Title="parent 1-1">
-      <TreeNode TItem="string" Value="leaf3">
+    <TreeNode TItem="string" Key="parent 1-1" Title="parent 1-1">
+      <TreeNode TItem="string" Key="leaf3">
         <TitleTemplate>
           <b style=" color: #08c;">leaf3</b>
         </TitleTemplate>

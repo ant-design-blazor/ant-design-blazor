@@ -16,3 +16,9 @@ The differences with Select are:
 
 - AutoComplete is an input box with text hints, and users can type freely. The keyword is aiding **input**.
 - Select is selecting among given choices. The keyword is **select**.
+
+## Semantic DOM
+
+`ClassNames` and `Styles` support the `root`, `input`, `popup`/`popup.root`,
+`popup.list`, and `popup.listItem` slots. The popup list and each option can be
+customized independently.

@@ -1,0 +1,41 @@
+@using System.Collections.Generic
+
+<Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        Name="file"
+        Data="_uploadData"
+        BeforeUpload="PrepareObjectKey"
+        OnChange="HandleChange">
+    <Button Icon="upload">Click to Upload</Button>
+</Upload>
+
+<p class="upload-oss-status">@_status</p>
+
+@code {
+    private readonly Dictionary<string, object> _uploadData = new()
+    {
+        ["OSSAccessKeyId"] = "demo-access-key",
+        ["policy"] = "demo-policy",
+        ["Signature"] = "demo-signature"
+    };
+
+    private string _status = "OSS fields are attached to each multipart request.";
+
+    private bool PrepareObjectKey(UploadFileItem file)
+    {
+        var extension = System.IO.Path.GetExtension(file.FileName);
+        _uploadData["key"] = $"user-dir/{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}{extension}";
+        _status = $"Prepared object key for {file.FileName}.";
+        return true;
+    }
+
+    private void HandleChange(UploadInfo info)
+    {
+        _status = info.File.State switch
+        {
+            UploadState.Uploading => $"Uploading {info.File.FileName} ({info.File.Percent}%).",
+            UploadState.Success => $"Uploaded {info.File.FileName}.",
+            UploadState.Fail => $"Upload failed: {info.File.Response}",
+            _ => $"Ready: {info.File.FileName}"
+        };
+    }
+}

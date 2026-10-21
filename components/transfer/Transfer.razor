@@ -1,9 +1,9 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" @ref="Ref" style="@Style" id="@Id">
-    <div class="ant-transfer-section @((FooterTemplate != null || !string.IsNullOrEmpty(Footer))?FooterClass:"")" @onscroll="@(e=>HandleScroll(TransferDirection.Left,e))" style="@(ListStyle(TransferDirection.Left))">
-        <div class="ant-transfer-list-header">
+<div class="@SemanticClass("root", ClassMapper.Class)" @ref="Ref" style="@SemanticStyle("root", Style)" id="@Id">
+    <div class="@SemanticClass("section", (FooterTemplate != null || !string.IsNullOrEmpty(Footer)) ? $"ant-transfer-section {FooterClass}" : "ant-transfer-section", TransferDirection.Left)" @onscroll="@(e=>HandleScroll(TransferDirection.Left,e))" style="@SemanticStyle("section", ListStyle(TransferDirection.Left), TransferDirection.Left)">
+        <div class="@SemanticClass("header", "ant-transfer-list-header", TransferDirection.Left)" style="@SemanticStyle("header", direction: TransferDirection.Left)">
             @if (ShowSelectAll)
             {
                 <Checkbox WrapperClass="ant-transfer-list-checkbox" HideEmptyLabel="true" Checked="_leftCheckAllState" Indeterminate="_leftCheckAllIndeterminate" Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Left))" />
@@ -14,10 +14,10 @@
             </span>
             @if (Titles[0] != "")
             {
-                <span class="ant-transfer-list-header-title">@Titles[0]</span>
+                <span class="@SemanticClass("title", "ant-transfer-list-header-title", TransferDirection.Left)" style="@SemanticStyle("title", direction: TransferDirection.Left)">@Titles[0]</span>
             }
         </div>
-        <div class="ant-transfer-list-body @(ShowSearch ? "ant-transfer-list-body-with-search" : "")">
+        <div class="@SemanticClass("body", $"ant-transfer-list-body {(ShowSearch ? "ant-transfer-list-body-with-search" : "")}", TransferDirection.Left)" style="@SemanticStyle("body", direction: TransferDirection.Left)">
             @if (ShowSearch)
             {
                 <div class="ant-transfer-list-body-search-wrapper">
@@ -40,12 +40,12 @@
             }
             else
             {
-                <ul class="ant-transfer-list-content">
+                <ul class="@SemanticClass("list", "ant-transfer-list-content", TransferDirection.Left)" style="@SemanticStyle("list", direction: TransferDirection.Left)">
                     @foreach (var item in _leftDataSource)
                     {
-                        <li @key="item" title="@item.Title" class="ant-transfer-list-content-item @(item.Disabled || Disabled ? DisabledClass : _sourceSelectedKeys.Contains(item.Key) ? "ant-transfer-list-content-item-checked" : "")">
-                <Checkbox WrapperClass="ant-transfer-list-checkbox" HideEmptyLabel="true" Checked="_sourceSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Left, item.Key))" Disabled="@(item.Disabled || Disabled)" />
-                            <span class="ant-transfer-list-content-item-text">
+                        <li @key="item" title="@item.Title" class="@SemanticClass("item", $"ant-transfer-list-content-item {(item.Disabled || Disabled ? DisabledClass : _sourceSelectedKeys.Contains(item.Key) ? "ant-transfer-list-content-item-checked" : "")}", TransferDirection.Left)" style="@SemanticStyle("item", direction: TransferDirection.Left)">
+                <Checkbox WrapperClass="@SemanticClass("itemIcon", "ant-transfer-list-checkbox", TransferDirection.Left)" Style="@SemanticStyle("itemIcon", direction: TransferDirection.Left)" HideEmptyLabel="true" Checked="_sourceSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Left, item.Key))" Disabled="@(item.Disabled || Disabled)" />
+                            <span class="@SemanticClass("itemContent", "ant-transfer-list-content-item-text", TransferDirection.Left)" style="@SemanticStyle("itemContent", direction: TransferDirection.Left)">
                                 @if (Render == null)
                                 {
                                     @item.Title
@@ -70,7 +70,7 @@
         </div>
         @if (FooterTemplate != null || !string.IsNullOrEmpty(Footer))
         {
-            <div class="ant-transfer-list-footer">
+            <div class="@SemanticClass("footer", "ant-transfer-list-footer", TransferDirection.Left)" style="@SemanticStyle("footer", direction: TransferDirection.Left)">
                 @if (FooterTemplate != null)
                 {
                     @FooterTemplate
@@ -82,7 +82,7 @@
             </div>
         }
     </div>
-    <div class="ant-transfer-actions">
+    <div class="@SemanticClass("actions", "ant-transfer-actions")" style="@SemanticStyle("actions")">
         @if (String.IsNullOrEmpty(Operations[0]))
         {
             <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="left" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))" />
@@ -100,8 +100,8 @@
             <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="right" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))">@Operations[1]</Button>
         }
     </div>
-    <div class="ant-transfer-section @((FooterTemplate != null || !string.IsNullOrEmpty(Footer))?FooterClass:"")" @onscroll="@(e => HandleScroll(TransferDirection.Right, e))" style="@(ListStyle(TransferDirection.Right))">
-        <div class="ant-transfer-list-header">
+    <div class="@SemanticClass("section", (FooterTemplate != null || !string.IsNullOrEmpty(Footer)) ? $"ant-transfer-section {FooterClass}" : "ant-transfer-section", TransferDirection.Right)" @onscroll="@(e => HandleScroll(TransferDirection.Right, e))" style="@SemanticStyle("section", ListStyle(TransferDirection.Right), TransferDirection.Right)">
+        <div class="@SemanticClass("header", "ant-transfer-list-header", TransferDirection.Right)" style="@SemanticStyle("header", direction: TransferDirection.Right)">
             @if (ShowSelectAll)
             {
                 <Checkbox WrapperClass="ant-transfer-list-checkbox" HideEmptyLabel="true" Checked="_rightCheckAllState" Indeterminate="_rightCheckAllIndeterminate " Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Right))" />
@@ -112,10 +112,10 @@
             </span>
             @if (Titles[1] != "")
             {
-                <span class="ant-transfer-list-header-title">@Titles[1]</span>
+                <span class="@SemanticClass("title", "ant-transfer-list-header-title", TransferDirection.Right)" style="@SemanticStyle("title", direction: TransferDirection.Right)">@Titles[1]</span>
             }
         </div>
-        <div class="ant-transfer-list-body @(ShowSearch ? "ant-transfer-list-body-with-search" : "")">
+        <div class="@SemanticClass("body", $"ant-transfer-list-body {(ShowSearch ? "ant-transfer-list-body-with-search" : "")}", TransferDirection.Right)" style="@SemanticStyle("body", direction: TransferDirection.Right)">
             @if (ShowSearch)
             {
                 <div class="ant-transfer-list-body-search-wrapper">
@@ -138,12 +138,12 @@
             }
             else
             {
-                <ul class="ant-transfer-list-content">
+                <ul class="@SemanticClass("list", "ant-transfer-list-content", TransferDirection.Right)" style="@SemanticStyle("list", direction: TransferDirection.Right)">
                     @foreach (var item in _rightDataSource)
                     {
-                        <li @key="item" title="@item.Title" class="ant-transfer-list-content-item @(item.Disabled || Disabled ? DisabledClass : _targetSelectedKeys.Contains(item.Key) ? "ant-transfer-list-content-item-checked" : "")">
-                <Checkbox WrapperClass="ant-transfer-list-checkbox" HideEmptyLabel="true" Checked="_targetSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Right, item.Key))" Disabled="@(item.Disabled || Disabled)" />
-                            <span class="ant-transfer-list-content-item-text">
+                        <li @key="item" title="@item.Title" class="@SemanticClass("item", $"ant-transfer-list-content-item {(item.Disabled || Disabled ? DisabledClass : _targetSelectedKeys.Contains(item.Key) ? "ant-transfer-list-content-item-checked" : "")}", TransferDirection.Right)" style="@SemanticStyle("item", direction: TransferDirection.Right)">
+                <Checkbox WrapperClass="@SemanticClass("itemIcon", "ant-transfer-list-checkbox", TransferDirection.Right)" Style="@SemanticStyle("itemIcon", direction: TransferDirection.Right)" HideEmptyLabel="true" Checked="_targetSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Right, item.Key))" Disabled="@(item.Disabled || Disabled)" />
+                            <span class="@SemanticClass("itemContent", "ant-transfer-list-content-item-text", TransferDirection.Right)" style="@SemanticStyle("itemContent", direction: TransferDirection.Right)">
                                 @if (Render == null)
                                 {
                                     @item.Title
@@ -169,7 +169,7 @@
         </div>
         @if (FooterTemplate != null || !string.IsNullOrEmpty(Footer))
         {
-            <div class="ant-transfer-list-footer">
+            <div class="@SemanticClass("footer", "ant-transfer-list-footer", TransferDirection.Right)" style="@SemanticStyle("footer", direction: TransferDirection.Right)">
                 @if (FooterTemplate != null)
                 {
                     @FooterTemplate

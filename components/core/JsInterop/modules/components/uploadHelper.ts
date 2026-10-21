@@ -13,6 +13,7 @@ const CALLBACK_METHODS = {
   PERCENT: "UploadChanged",
   SUCCESS: "UploadSuccess",
   ERROR: "UploadError",
+  TRANSFORM_FILE: "TransformFileContent",
   PASTE_RESULT: "OnPasteResult"
 } as const;
 
@@ -27,9 +28,52 @@ interface UploadConfig {
   instance: any;
   method: string;
   withCredentials?: boolean;
+  transformFile?: boolean;
 }
 
 export class uploadHelper {
+  private static toBase64(content: Uint8Array): string {
+    let binary = "";
+    const chunkSize = 0x8000;
+    for (let i = 0; i < content.length; i += chunkSize) {
+      binary += String.fromCharCode(...content.subarray(i, i + chunkSize));
+    }
+    return btoa(binary);
+  }
+
+  private static fromBase64(content: string): Uint8Array {
+    const binary = atob(content);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes;
+  }
+
+  static async addImageWatermark(content: Uint8Array, contentType: string): Promise<Uint8Array> {
+    const image = await createImageBitmap(new Blob([content], { type: contentType }));
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const context = canvas.getContext("2d");
+    if (!context) {
+      image.close();
+      throw new Error("Unable to create a 2D canvas context.");
+    }
+
+    context.drawImage(image, 0, 0);
+    context.fillStyle = "red";
+    context.textBaseline = "middle";
+    context.font = "33px Arial";
+    context.fillText("Ant Design", 20, 20);
+    image.close();
+
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(result => result ? resolve(result) : reject(new Error("Unable to encode the watermarked image.")), contentType || "image/png");
+    });
+    return new Uint8Array(await blob.arrayBuffer());
+  }
+
   static addFileClickEventListener(btn: HTMLElement) {
     if (btn.addEventListener) {
       btn.addEventListener("click", uploadHelper.fileClickEvent);
@@ -146,14 +190,44 @@ export class uploadHelper {
     return url;
   }
 
-  static uploadFile({ element, index, data, headers, fileIds, url, name, instance, method, withCredentials }: UploadConfig) {
+  static async uploadFile({ element, index, data, headers, fileIds, url, name, instance, method, withCredentials, transformFile }: UploadConfig) {
     const formData = new FormData();
     const files = index === -1 ? Array.from(element.files) : [element.files[index]];
+    const uploadFiles: File[] = [];
+    const uploadFileIds: string[] = [];
 
-    files.forEach((file, i) => {
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i];
+      const id = fileIds[i];
+      if (transformFile) {
+        try {
+          const fileBytes = new Uint8Array(await file.arrayBuffer());
+          const transformed = await instance.invokeMethodAsync(CALLBACK_METHODS.TRANSFORM_FILE, id, uploadHelper.toBase64(fileBytes), file.type);
+          if (transformed?.content != null) {
+            file = new File([uploadHelper.fromBase64(transformed.content)], transformed.fileName || file.name, {
+              type: transformed.contentType || file.type,
+              lastModified: file.lastModified
+            });
+          }
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          await instance.invokeMethodAsync(CALLBACK_METHODS.ERROR, id, `File transform failed: ${message}`);
+          continue;
+        }
+      }
+
+      uploadFiles.push(file);
+      uploadFileIds.push(id);
+    }
+
+    if (uploadFiles.length === 0) {
+      return;
+    }
+
+    uploadFiles.forEach((file, i) => {
       formData.append(name, file);
       // Add file ID to track individual file progress
-      formData.append(`${name}_id`, fileIds[i]);
+      formData.append(`${name}_id`, uploadFileIds[i]);
     });
 
     if (data != null) {
@@ -175,25 +249,25 @@ export class uploadHelper {
         // #1655 Any 2xx response code is okay
         if (req.status < 200 || req.status > 299) {
           // #2857 should get error raw response
-          fileIds.forEach(id => {
+          uploadFileIds.forEach(id => {
             instance.invokeMethodAsync(CALLBACK_METHODS.ERROR, id, req.responseText);
           });
           return;
         }
-        fileIds.forEach(id => {
+        uploadFileIds.forEach(id => {
           instance.invokeMethodAsync(CALLBACK_METHODS.SUCCESS, id, req.responseText);
         });
       }
     }
     req.upload.onprogress = function (event) {
       const percent = Math.floor(event.loaded / event.total * 100);
-      fileIds.forEach(id => {
+      uploadFileIds.forEach(id => {
         instance.invokeMethodAsync(CALLBACK_METHODS.PERCENT, id, percent);
       });
     }
     req.onerror = function (e: ProgressEvent) {
       const errorMessage = `Upload failed: ${e.type} (${req.status} ${req.statusText})${req.responseText ? ` - ${req.responseText}` : ''}`;
-      fileIds.forEach(id => {
+      uploadFileIds.forEach(id => {
         instance.invokeMethodAsync(CALLBACK_METHODS.ERROR, id, errorMessage);
       });
     }

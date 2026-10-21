@@ -19,14 +19,14 @@
                 <div class="ant-cascader-menus">
                   @if (!ShowSearch || string.IsNullOrWhiteSpace(_searchValue))
                   {
-                    <ul class="@_menuClassMapper.Class" role="menu">
+                    <ul class="@GetSemanticClass("popup.list", _menuClassMapper.Class)" style="@GetSemanticStyle("popup.list")" role="menu">
                       @menuList((_nodelist, this))
                     </ul>
                     @foreach (CascaderNode node in _renderNodes)
                     {
                       if (node.HasChildren)
                       {
-                        <ul class="ant-cascader-menu" role="menu">
+                        <ul class="@GetSemanticClass("popup.list", "ant-cascader-menu")" style="@GetSemanticStyle("popup.list")" role="menu">
                           @menuList((node.Children, this))
                         </ul>
                       }
@@ -34,7 +34,7 @@
                   }
                   else
                   {
-                    <ul class="@_menuClassMapper.Class" role="menu">
+                    <ul class="@GetSemanticClass("popup.list", _menuClassMapper.Class)" style="@GetSemanticStyle("popup.list")" role="menu">
                       @searchList(this)
                     </ul>
                   }
@@ -60,12 +60,18 @@
             string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
             string disabledClass = node.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty;
             string expandClass = node.HasChildren ? "ant-cascader-menu-item-expand" : string.Empty;
+            bool checkedNode = cascader.Multiple && cascader.IsNodeChecked(node);
+            bool indeterminateNode = cascader.Multiple && cascader.IsNodeIndeterminate(node);
             var events = new Dictionary<string, object>
                 {
                   ["onclick"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnClick(node)),
                   ["onmouseover"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnMouseOver(node))
                 };
-            <li class="ant-cascader-menu-item @expandClass @activeClass @disabledClass" role="menuitemcheckbox" title="@node.Label" aria-checked="false" data-path-key="@GetPathKey(node)" @attributes="events">
+            <li class="@context.cascader.GetSemanticClass("popup.listItem", $"ant-cascader-menu-item {expandClass} {activeClass} {disabledClass}".Trim())" style="@context.cascader.GetSemanticStyle("popup.listItem")" role="@(cascader.Multiple ? "menuitemcheckbox" : "menuitem")" title="@node.Label" aria-checked="@(cascader.Multiple ? checkedNode.ToString().ToLowerInvariant() : null)" data-path-key="@GetPathKey(node)" @attributes="events">
+              @if (cascader.Multiple)
+              {
+                <span @onclick:stopPropagation @onmouseover:stopPropagation>@cascader.RenderCheckbox(node, checkedNode, indeterminateNode)</span>
+              }
               <div class="ant-cascader-menu-item-content">
                 @node.Label
               </div>
@@ -95,6 +101,8 @@
           @foreach (var node in cascader._matchList)
           {
             bool isActive = cascader._renderNodes.Where(n => n == node).Any();
+            bool checkedNode = cascader.Multiple && cascader.IsNodeChecked(node);
+            bool indeterminateNode = cascader.Multiple && cascader.IsNodeIndeterminate(node);
             string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
             string disabledClass = node.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty;
             string expandClass = node.HasChildren ? "ant-cascader-menu-item-expand" : string.Empty;
@@ -103,13 +111,19 @@
                   ["onclick"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnClick(node)),
                 };
             var label = node.Label.Replace(cascader._searchValue, $"<span class=\"ant-cascader-menu-item-keyword\">{cascader._searchValue}</span>");
-            <li class="ant-cascader-menu-item @expandClass @activeClass @disabledClass" title="@node.Label" role="menuitem" data-path-key="@GetPathKey(node)" @attributes="events">@((MarkupString)label)</li>
+            <li class="@cascader.GetSemanticClass("popup.listItem", $"ant-cascader-menu-item {expandClass} {activeClass} {disabledClass}".Trim())" style="@cascader.GetSemanticStyle("popup.listItem")" title="@node.Label" role="@(cascader.Multiple ? "menuitemcheckbox" : "menuitem")" aria-checked="@(cascader.Multiple ? checkedNode.ToString().ToLowerInvariant() : null)" data-path-key="@GetPathKey(node)" @attributes="events">
+              @if (cascader.Multiple)
+              {
+                <span @onclick:stopPropagation>@cascader.RenderCheckbox(node, checkedNode, indeterminateNode)</span>
+              }
+              @((MarkupString)label)
+            </li>
           }
         </Template>;
 
   protected override RenderFragment RenderTriggerContent(ForwardRef forwardRef)
   {
-    return builder => UnboundContent(forwardRef, builder);
+    return base.RenderTriggerContent(forwardRef);
   }
 
   void UnboundContent(ForwardRef context, RenderTreeBuilder __builder)
@@ -120,17 +134,17 @@
       }
       else
       {
-      <div @ref="context.Current" style="@GetComponentStyle("Cascader", Style)" class="@ClassMapper.Class">
-        <div class="ant-select-content @(string.IsNullOrEmpty(_displayText) ? string.Empty : "ant-select-content-has-value")" title="@(string.IsNullOrEmpty(_displayText) ? null : _displayText)" style="@(PrefixIcon is null ? null : "display:flex;align-items:center;padding-left: 4px;")">
+      <div @ref="context.Current" style="@GetSemanticStyle("root", GetComponentStyle("Cascader", Style))" class="@GetSemanticClass("root", ClassMapper.Class)">
+        <div class="@GetSemanticClass("content", $"ant-select-content {(string.IsNullOrEmpty(_displayText) ? string.Empty : "ant-select-content-has-value")}".Trim())" title="@(string.IsNullOrEmpty(_displayText) ? null : _displayText)" style="@GetSemanticStyle("content", PrefixIcon is null ? null : "display:flex;align-items:center;padding-left: 4px;")">
           @if (PrefixIcon is not null)
           {
-            <span class="ant-select-prefix" unselectable="on" aria-hidden="true" style="user-select: none;display:flex;align-items: center;padding-right: 4px;">
+            <span class="@GetSemanticClass("prefix", "ant-select-prefix")" unselectable="on" aria-hidden="true" style="@GetSemanticStyle("prefix", "user-select: none;display:flex;align-items: center;padding-right: 4px;")">
               @PrefixIcon
             </span>
           }
           @if (string.IsNullOrEmpty(_displayText)&& string.IsNullOrEmpty(_searchValue))
           {
-            <div class="ant-select-placeholder">@Placeholder</div>
+            <div class="@GetSemanticClass("placeholder", "ant-select-placeholder")" style="@GetSemanticStyle("placeholder")">@Placeholder</div>
           }
           else
           {
@@ -138,7 +152,8 @@
           }
           <input @ref="_inputRef"
                  autocomplete="new-password"
-                 class="ant-select-input"
+                 class="@GetSemanticClass("input", "ant-select-input")"
+                 style="@GetSemanticStyle("input")"
                  id="@Id"
                  readonly="@(!ShowSearch)"
                  role="combobox"
@@ -152,7 +167,7 @@
                  @oninput="OnSearchInput"
                  @onkeyup="OnKeyUpAsync">
         </div>
-        <div class="ant-select-suffix">
+        <div class="@GetSemanticClass("suffix", "ant-select-suffix")" style="@GetSemanticStyle("suffix")">
           @if (ShowSearch && _dropdownOpened)
           {
             <span role="img" aria-label="search" class="anticon anticon-search">
@@ -172,7 +187,7 @@
         </div>
         @if (AllowClear && _selectedNodes.Count > 0)
         {
-            <button type="button" aria-label="Clear" class="ant-select-clear" @onclick="ClearSelected" @onclick:stopPropagation>
+            <button type="button" aria-label="Clear" class="@GetSemanticClass("clear", "ant-select-clear")" style="@GetSemanticStyle("clear")" @onclick="ClearSelected" @onclick:stopPropagation>
                 <span role="img" aria-label="close-circle" class="anticon anticon-close-circle">
                     <svg viewBox="64 64 896 896" focusable="false" data-icon="close-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm165.4 618.2l-66-.3L512 563.4l-99.3 118.4-66.1.3c-4.4 0-8-3.5-8-8 0-1.9.7-3.7 1.9-5.2l130.1-155L340.5 359a8.32 8.32 0 01-1.9-5.2c0-4.4 3.6-8 8-8l66.1.3L512 464.6l99.3-118.4 66-.3c4.4 0 8 3.5 8 8 0 1.9-.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
                 </span>

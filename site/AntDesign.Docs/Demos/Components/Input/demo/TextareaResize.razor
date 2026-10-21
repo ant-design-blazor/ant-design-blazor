@@ -1,0 +1,33 @@
+@using AntDesign
+
+<div class="input-textarea-resize-demo">
+    <Button OnClick="ToggleAutoResize">Auto Resize: @_autoResize</Button>
+    <TextArea Rows="4" AutoSize="@_autoResize" @bind-Value="_value" />
+    <TextArea AllowClear Style="width: 93px" />
+    <TextArea Style="resize: both" ShowCount />
+    <Tooltip Title="Debug TextArea with Tooltip">
+        <Unbound>
+            <TextArea Placeholder="TextArea wrapped in Tooltip for debugging" Style="margin-top: 16px" />
+        </Unbound>
+    </Tooltip>
+</div>
+
+<style>
+    .input-textarea-resize-demo {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .input-textarea-resize-demo > textarea.ant-input {
+        width: 100%;
+    }
+</style>
+
+@code {
+    private bool _autoResize;
+    private string _value = "The autoSize property applies to textarea nodes, and only the height changes automatically. In addition, autoSize can be set to an object, specifying the minimum number of rows and the maximum number of rows.";
+
+    private void ToggleAutoResize() => _autoResize = !_autoResize;
+}

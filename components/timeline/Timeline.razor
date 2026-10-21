@@ -2,31 +2,38 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed>
-    <ol class="@ClassMapper.Class" style="@GetRootStyle()" id="@Id" @ref="Ref">
+    <ol class="@SemanticClass("root", ClassMapper.Class)" style="@SemanticStyle("root", GetRootStyle())" id="@Id" @ref="Ref">
         @ChildContent
 
         @foreach (var item in _displayItems)
         {
-            <li class="@item.ItemClass" @ref="item.Ref" style="@(item.HeadStyle + item.Style)" id="@item.Id">
-                <div class="ant-steps-item-wrapper ant-timeline-item-wrapper">
-                    <div class="@item._headClassMapper.Class">
+            <li class="@SemanticClass("item", item.ItemClass)" @ref="item.Ref" style="@SemanticStyle("item", item.HeadStyle + item.Style)" id="@item.Id">
+                <div class="@SemanticClass("itemWrapper", "ant-steps-item-wrapper ant-timeline-item-wrapper")" style="@SemanticStyle("itemWrapper")">
+                    <div class="@SemanticClass("itemIcon", item._headClassMapper.Class)" style="@SemanticStyle("itemIcon")">
                         @if (item.Dot != null)
                         {
                             @item.Dot
                         }
                     </div>
-                    <div class="ant-steps-item-section ant-timeline-item-section">
-                        <div class="ant-steps-item-header ant-timeline-item-header">
+                    <div class="@SemanticClass("itemSection", "ant-steps-item-section ant-timeline-item-section")" style="@SemanticStyle("itemSection")">
+                        <div class="@SemanticClass("itemHeader", "ant-steps-item-header ant-timeline-item-header")" style="@SemanticStyle("itemHeader")">
                             @if (!string.IsNullOrEmpty(item.Label))
                             {
-                                <div class="ant-steps-item-title ant-timeline-item-title">@item.Label</div>
+                                <div class="@SemanticClass("itemTitle", "ant-steps-item-title ant-timeline-item-title")" style="@SemanticStyle("itemTitle")">@if (item.TitleContent != null)
+                                    {
+                                        @item.TitleContent
+                                    }
+                                    else
+                                    {
+                                        @item.Label
+                                    }</div>
                             }
                             @if (!item.IsLast)
                             {
-                                <div class="ant-steps-item-rail ant-steps-item-rail-finish ant-timeline-item-rail"></div>
+                                <div class="@SemanticClass("itemRail", "ant-steps-item-rail ant-steps-item-rail-finish ant-timeline-item-rail")" style="@SemanticStyle("itemRail")"></div>
                             }
                         </div>
-                        <div class="ant-steps-item-content ant-timeline-item-content">
+                        <div class="@SemanticClass("itemContent", "ant-steps-item-content ant-timeline-item-content")" style="@SemanticStyle("itemContent")">
                             @item.ChildContent
                         </div>
                     </div>

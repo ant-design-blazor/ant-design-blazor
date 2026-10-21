@@ -8,18 +8,9 @@
 
 @if (RootMenu.InternalMode == MenuMode.Inline)
 {
-    <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="position:relative;@Style" @ref="Ref">
+    <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="@($"position:relative;{Style}")" @ref="Ref">
         <div class="@(prefixCls)-title" style="@PaddingStyle" role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
-            <span class="ant-menu-title-content">
-                @if (TitleTemplate != null)
-                {
-                    @TitleTemplate
-                }
-                else if (Title != null)
-                {
-                    @Title
-                }
-            </span>
+            @SubMenuTitleContent
             <i class="@(prefixCls)-arrow"></i>
         </div>
         <ul direction="ltr" class="@SubMenuMapper.Class" style="@_warpperStyle" @ref="@_warpperRef" role="menu" aria-expanded="@IsOpen">
@@ -47,25 +38,17 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
                             OnVisibleChange="OnOverlayVisibleChange"
                             OnOverlayHiding="OnOverlayHiding"
                             Trigger="new Trigger[] { RootMenu?.TriggerSubMenuAction ?? AntDesign.Trigger.Hover }"
-                            OverlayClassName="@PopupClassName"
+                            OverlayClassName="@RootMenu.GetSemanticClass("popup.root", PopupClassName)"
+                            OverlayStyle="@RootMenu.GetSemanticStyle("popup.root")"
                             PlacementCls="@($"{prefixCls}-popup {RootMenu.PrefixCls} {RootMenu.PrefixCls}-{RootMenu.Theme.ToString().ToLowerInvariant()} {prefixCls}-placement-{_placement.Name}")">
                 <ChildContent>
                     <div class="@(prefixCls)-title" role="button">
-                        <span class="ant-menu-title-content">
-                            @if (TitleTemplate != null)
-                            {
-                                @TitleTemplate
-                            }
-                            else if (Title != null)
-                            {
-                                @Title
-                            }
-                        </span>
+                        @SubMenuTitleContent
                         @GetArrow()
                     </div>
                 </ChildContent>
                 <Overlay>
-                    <ul direction="ltr" class="@(SubMenuMapper.Class)" style="@_popupMinWidthStyle" role="menu">
+                    <ul direction="ltr" class="@SubMenuMapper.Class" style="@_popupMinWidthStyle" role="menu">
                         <CascadingValue Value="this" IsFixed="@true">
                             @ChildContent
                         </CascadingValue>
@@ -78,6 +61,43 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
 
 @code
 {
+    private string SubMenuIconClass => RootMenu.GetSemanticClass("itemIcon", $"{RootMenu.PrefixCls}-item-icon");
+
+    private string SubMenuIconStyle => RootMenu.GetSemanticStyle("itemIcon");
+
+    private RenderFragment SubMenuTitleContent => builder =>
+    {
+        if (IconTemplate != null)
+        {
+            builder.OpenElement(0, "span");
+            builder.AddAttribute(1, "role", "img");
+            builder.AddAttribute(2, "class", $"anticon anticon-container {SubMenuIconClass}");
+            builder.AddAttribute(3, "style", SubMenuIconStyle);
+            builder.AddContent(4, IconTemplate);
+            builder.CloseElement();
+        }
+        else if (!string.IsNullOrEmpty(Icon))
+        {
+            builder.OpenComponent<AntDesign.Icon>(5);
+            builder.AddAttribute(6, "Type", Icon);
+            builder.AddAttribute(7, "Class", SubMenuIconClass);
+            builder.AddAttribute(8, "Style", SubMenuIconStyle);
+            builder.CloseComponent();
+        }
+
+        builder.OpenElement(9, "span");
+        builder.AddAttribute(10, "class", "ant-menu-title-content");
+        if (TitleTemplate != null)
+        {
+            builder.AddContent(11, TitleTemplate);
+        }
+        else if (Title != null)
+        {
+            builder.AddContent(12, Title);
+        }
+        builder.CloseElement();
+    };
+
     private RenderFragment GetArrow()
     {
         string prefixCls = $"{RootMenu.PrefixCls}-submenu";

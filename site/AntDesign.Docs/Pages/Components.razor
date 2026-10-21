@@ -20,6 +20,7 @@
         {
             var title = $"{(CurrentLanguage == "zh-CN" ? _demoComponent.SubTitle + " " : "")}{_demoComponent.Title} - Ant Design Blazor".Trim();
             <PageTitle>@title</PageTitle>
+            var componentTokenCount = ComponentTokenCatalog.Get(SemanticComponentKey).Count;
             var docDemos = _demoComponent.DemoList?.Where(x => x.Docs.HasValue && x.Docs.Value) ?? Enumerable.Empty<DemoItem>();
 
             if (_anchors.Any())
@@ -38,6 +39,10 @@
                             @if (!string.IsNullOrEmpty(_demoComponent.Faq))
                             {
                                 <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#Faq")" Title="@Localizer["app.footer.faq"]" />
+                            }
+                            @if (_demoComponent.Category == "Components")
+                            {
+                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#design-token")" Title="Design Token" />
                             }
                         </Anchor>
                     </Affix>
@@ -143,6 +148,11 @@
                 @((MarkupString)_demoComponent.Faq)
             </section>
 
+            @if (_demoComponent.Category == "Components")
+            {
+                <ComponentTokenDocumentation Component="@SemanticComponentKey" Language="@CurrentLanguage" />
+            }
+
             @if (SemanticDomCatalog.Get(SemanticComponentKey).Count > 0)
             {
                 <section class="markdown api-container semantic-dom-preview">
@@ -160,6 +170,26 @@
                         {
                             <NotificationSemanticPreview />
                         }
+                        else if (SemanticComponentKey == "select")
+                        {
+                            <SelectSemanticPreview />
+                        }
+                        else if (SemanticComponentKey == "image")
+                        {
+                            <ImageSemanticPreview />
+                        }
+                        else if (SemanticComponentKey == "menu")
+                        {
+                            <MenuSemanticPreview />
+                        }
+                        else if (SemanticComponentKey == "tag")
+                        {
+                            <TagSemanticPreview />
+                        }
+                        else if (SemanticComponentKey == "splitter")
+                        {
+                            <SplitterSemanticPreview />
+                        }
                         else if (SemanticPreviewType is { } previewType)
                         {
                             <DynamicComponent Type="previewType" />
@@ -175,6 +205,18 @@
                                     <FloatButton Icon="bug" />
                                     <FloatButton Icon="bulb" />
                                 </FloatButtonGroup>
+                            </div>
+                        </SemanticDomPreview>
+                    }
+                    @if (SemanticComponentKey == "card")
+                    {
+                        <SemanticDomPreview Component="card-meta">
+                            <div style="min-height:220px;display:grid;place-items:center">
+                                <Card Style="width:300px">
+                                    <CardMeta Avatar="https://api.dicebear.com/10.x/lorelei/svg?seed=8"
+                                              Title="Card Meta title"
+                                              Description="This is the description" />
+                                </Card>
                             </div>
                         </SemanticDomPreview>
                     }

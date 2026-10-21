@@ -1,0 +1,21 @@
+@using AntDesign
+
+<div class="input-status-demo">
+    <Input TValue="string" Status="FormValidateStatus.Error" Placeholder="Error" />
+    <Input TValue="string" Status="FormValidateStatus.Warning" Placeholder="Warning" />
+    <Input TValue="string" Status="FormValidateStatus.Error" Prefix="@_clock" Placeholder="Error with prefix" />
+    <Input TValue="string" Status="FormValidateStatus.Warning" Prefix="@_clock" Placeholder="Warning with prefix" />
+</div>
+
+<style>
+    .input-status-demo {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+</style>
+
+@code {
+    private RenderFragment _clock => @<Icon Type="clock-circle" />;
+}

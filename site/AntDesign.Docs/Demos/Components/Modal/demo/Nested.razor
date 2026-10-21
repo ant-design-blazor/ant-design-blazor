@@ -1,0 +1,17 @@
+<Button Type="ButtonType.Primary" OnClick="@(() => _parentVisible = true)">
+    Open parent modal
+</Button>
+
+<Modal Title="Parent modal" @bind-Visible="_parentVisible" MaskClosable="false">
+    <p>The parent modal remains open while the nested modal is shown.</p>
+    <Button OnClick="@(() => _nestedVisible = true)">Open nested modal</Button>
+
+    <Modal Title="Nested modal" @bind-Visible="_nestedVisible" ZIndex="1100">
+        <p>This dialog is rendered above its parent.</p>
+    </Modal>
+</Modal>
+
+@code {
+    private bool _parentVisible;
+    private bool _nestedVisible;
+}

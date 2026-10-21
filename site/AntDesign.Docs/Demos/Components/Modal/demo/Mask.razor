@@ -1,0 +1,26 @@
+@inject ModalService _modalService
+
+<Space>
+    <Button OnClick="@ShowBlurMask">Blur</Button>
+    <Button OnClick="@ShowDimmedMask">Dimmed mask</Button>
+    <Button OnClick="@ShowNoMask">No mask</Button>
+</Space>
+
+@code {
+    private void ShowBlurMask() => ShowConfirm("backdrop-filter: blur(4px);");
+
+    private void ShowDimmedMask() => ShowConfirm();
+
+    private void ShowNoMask() => ShowConfirm(mask: false);
+
+    private void ShowConfirm(string maskStyle = null, bool mask = true)
+    {
+        _modalService.Confirm(new ConfirmOptions
+        {
+            Title = "Title",
+            Content = "Some contents...",
+            Mask = mask,
+            MaskStyle = maskStyle,
+        });
+    }
+}

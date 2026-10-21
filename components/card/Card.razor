@@ -2,15 +2,15 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
-    <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+    <div class="@ClassMapper.Class" style="@(GetSemanticStyle("root", Style))" id="@Id" @ref="Ref">
         @if (TitleTemplate != null || Title != null || Extra != null || _cardTabs != null)
         {
-            <div class="ant-card-head">
+            <div class="@(GetSemanticClass("header", "ant-card-head"))" style="@(GetSemanticStyle("header", HeadStyle))">
 
                 <div class="ant-card-head-wrapper">
                     @if (TitleTemplate != null || Title != null)
                     {
-                        <div class="ant-card-head-title">
+                        <div class="@(GetSemanticClass("title", "ant-card-head-title"))" style="@(GetSemanticStyle("title"))">
                             @if (TitleTemplate != null)
                             {
                                 @TitleTemplate
@@ -22,7 +22,7 @@
                         </div>
                         @if (Extra != null)
                         {
-                            <div class="ant-card-extra">
+                            <div class="@(GetSemanticClass("extra", "ant-card-extra"))" style="@(GetSemanticStyle("extra"))">
                                 @Extra
                             </div>
                         }
@@ -38,14 +38,14 @@
 
         @if (Cover != null)
         {
-            <div class="ant-card-cover">
+            <div class="@(GetSemanticClass("cover", "ant-card-cover"))" style="@(GetSemanticStyle("cover"))">
                 @Cover
             </div>
         }
 
         @if (Body != null || ChildContent != null || _cardTabPanels != null)
         {
-            <div class="ant-card-body" style="@BodyStyle">
+            <div class="@(GetSemanticClass("body", "ant-card-body"))" style="@(GetSemanticStyle("body", BodyStyle))">
                 @if (!Loading)
                 {
                     @_cardTabPanels
@@ -60,13 +60,13 @@
         }
         @if (ActionTemplate != null)
         {
-            <ul class="ant-card-actions">
+            <ul class="@(GetSemanticClass("actions", "ant-card-actions"))" style="@(GetSemanticStyle("actions"))">
                 @ActionTemplate
             </ul>
         }
         else if (Actions.Count > 0)
         {
-            <ul class="ant-card-actions">
+            <ul class="@(GetSemanticClass("actions", "ant-card-actions"))" style="@(GetSemanticStyle("actions"))">
                 @foreach (var action in Actions)
                 {
                     <li style="@($"width:{100 / Actions.Count}%") ">

@@ -20,6 +20,8 @@ Tree selection control.
 | --- | --- | --- | --- | --- |
 | AccessKey | The [accesskey](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey) global attribute.  | string | |
 | AllowClear | Show clear button. Has no effect if Value type default is also in the list of options, unless used with `ValueOnClear`. | bool | false |  |
+| MaxCount | Maximum number of selected items in multiple mode. | int? | - |  |
+| ClassNames | Customize classes for semantic parts. Use flat keys such as `root`, `item`, and `popup.root`. | IReadOnlyDictionary&lt;string, string&gt; | - |  |
 | AutoClearSearchValue | Whether the current search will be cleared on selecting an item. | bool | true |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | CustomTagLabelToValue | Converts custom tag (a string) to TItemValue type. | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
@@ -59,7 +61,10 @@ Tree selection control.
 | SortByGroup | Sort items by group name. `None` \| `Ascending` \| `Descending` | SortDirection | SortDirection.None |  |
 | SortByLabel | Sort items by label value. `None` \| `Ascending` \| `Descending` | SortDirection | SortDirection.None |  |
 | Style | Set CSS style. | string | `width: 100%` |  |
+| Status | Validation status (`error` or `warning`). When omitted, inherits the containing FormItem status. | string | - |  |
+| Styles | Customize inline CSS for semantic parts. Use flat keys such as `root`, `item`, and `popup.root`. | IReadOnlyDictionary&lt;string, string&gt; | - |  |
 | SuffixIcon | The custom suffix icon. | RenderFragment | - |  |
+| Variant | Visual style: `outlined`, `filled`, `borderless`, or `underlined`. When omitted, derives from `Bordered`. | InputVariant? | `outlined` |  |
 | Value | Get or set the selected value. | TItemValue | - |  |
 | Values | Get or set the selected values. | IEnumerable&lt;TItemValues> | - |  |
 | ValueChanged | Used for the two-way binding. | EventCallback&lt;TItemValue> | - |  |
@@ -131,3 +136,23 @@ Tree selection control.
 | DataItem | dataitem |  Type |  |   | 
 | SwitcherIcon | Customize node toggle icon, the value is Icon types  | string | null | |
 | SwitcherIconTemplate | SwitcherIcon template | RenderFragment | null | |
+
+## Semantic DOM
+
+`ClassNames` and `Styles` accept dictionaries keyed by semantic path. `Styles` values are CSS declaration strings; popup paths use dot notation.
+
+| Semantic path | Element |
+| --- | --- |
+| `root` | Select trigger root |
+| `prefix` | Prefix element |
+| `input` | Input element |
+| `suffix` | Suffix element |
+| `content` | Selected value / input content |
+| `placeholder` | Placeholder element |
+| `item` | Selected tag |
+| `itemContent` | Selected tag content |
+| `itemRemove` | Selected tag remove button |
+| `popup.root` | Popup root |
+| `popup.item` | Tree node |
+| `popup.itemTitle` | Tree node title |
+| `popup.itemSwitcher` | Tree node expand/collapse switcher |

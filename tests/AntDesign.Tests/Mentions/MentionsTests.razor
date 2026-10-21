@@ -96,7 +96,7 @@
         });
 
         systemUnderTest.MarkupMatches(@"
-            <div class=""ant-mentions"">
+            <div class=""ant-mentions ant-mentions-outlined"">
                 <textarea value="""" class=""rc-textarea ant-mentions-textarea"" rows=""3""></textarea>
             </div>
             <div class:ignore style:ignore>
@@ -132,7 +132,7 @@
         });
 
         systemUnderTest.MarkupMatches(@"
-            <div class=""ant-mentions"">
+            <div class=""ant-mentions ant-mentions-outlined"">
                 <textarea value="""" class=""rc-textarea ant-mentions-textarea"" rows=""3""></textarea>
             </div>
             <div class:ignore style:ignore>
@@ -151,7 +151,7 @@
         var systemUnderTest = GetStandardRenderSystemUnderTest();
 
         systemUnderTest.MarkupMatches(@"
-            <div class=""ant-mentions"">
+            <div class=""ant-mentions ant-mentions-outlined"">
                 <textarea value="""" class=""rc-textarea ant-mentions-textarea"" rows=""3""></textarea>
             </div>
             <div class=""ant-mentions-dropdown ant-mentions-dropdown-placement-bottomLeft ant-mentions-dropdown-hidden""
@@ -165,6 +165,17 @@
                     </li>
                 </ul>
             </div>");
+    }
+
+    [Fact]
+    public void ItShouldRenderVariantAndValidationStatusClasses()
+    {
+        SetupJavascript();
+        var systemUnderTest = Render<AntDesign.Mentions>(@<AntDesign.Mentions Variant="InputVariant.Filled" Status="FormValidateStatus.Warning" />);
+
+        var root = systemUnderTest.Find(".ant-mentions");
+        root.ClassList.Should().Contain("ant-mentions-filled");
+        root.ClassList.Should().Contain("ant-mentions-status-warning");
     }
 
     [Fact]
@@ -348,8 +359,8 @@
         var systemUnderTest = GetTemplatedRenderSystemUnderTest();
 
         systemUnderTest.MarkupMatches(@"
-            <div class=""ant-mentions"">
-               <textarea class=""ant-input"" value="""" id:ignore style="""" rows=""2"" ></textarea>
+            <div class=""ant-mentions ant-mentions-outlined"">
+               <textarea class="" ant-input ant-input-outlined"" value="""" id:ignore style="""" rows=""2"" ></textarea>
             </div>
             <div class=""ant-mentions-dropdown ant-mentions-dropdown-placement-bottomLeft ant-mentions-dropdown-hidden"" 
                 style=""position: absolute; display: none;"">

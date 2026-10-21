@@ -1,0 +1,46 @@
+<Button OnClick="ShowDrawer">Open Drawer</Button>
+
+<Drawer @bind-Visible="_visible"
+        Title='("Semantic Drawer")'
+        Extra="@_extra"
+        Footer="@_footer"
+        ClassNames="_classNames"
+        Styles="_styles">
+    <p>The drawer exposes semantic classes and inline styles for its structural slots.</p>
+</Drawer>
+
+@code {
+    private bool _visible;
+    private readonly RenderFragment _extra = builder => builder.AddContent(0, "Custom slots");
+    private readonly RenderFragment _footer = builder => builder.AddContent(0, "Semantic DOM demo");
+
+    private readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-drawer-root",
+        ["mask"] = "demo-drawer-mask",
+        ["wrapper"] = "demo-drawer-wrapper",
+        ["section"] = "demo-drawer-section",
+        ["header"] = "demo-drawer-header",
+        ["title"] = "demo-drawer-title",
+        ["extra"] = "demo-drawer-extra",
+        ["close"] = "demo-drawer-close",
+        ["body"] = "demo-drawer-body",
+        ["footer"] = "demo-drawer-footer"
+    };
+
+    private readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "--drawer-semantic-root: enabled;",
+        ["mask"] = "background: rgba(22, 119, 255, .12);",
+        ["wrapper"] = "outline: 2px solid #1677ff; outline-offset: -2px;",
+        ["section"] = "border-radius: 8px;",
+        ["header"] = "border-bottom: 2px solid #1677ff;",
+        ["title"] = "color: #1677ff;",
+        ["extra"] = "color: #1677ff;",
+        ["close"] = "color: #1677ff;",
+        ["body"] = "background: #f0f7ff;",
+        ["footer"] = "border-top: 2px solid #1677ff;"
+    };
+
+    private void ShowDrawer() => _visible = true;
+}

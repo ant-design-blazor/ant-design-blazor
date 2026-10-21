@@ -20,6 +20,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | --- | --- | --- | --- | --- |
 | AccessKey | 指定 [accesskey](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey) 全局属性。  | string | |
 | AllowClear | 支持清除. Has no effect if Value type default is also in the list of options, unless used with `ValueOnClear`. | bool | false |  |
+| MaxCount | 多选模式下最多可选择的项目数。 | int? | - |  |
+| ClassNames | 通过语义路径自定义各节点 class，使用 `root`、`item`、`popup.root` 等扁平键。 | IReadOnlyDictionary&lt;string, string&gt; | - |  |
 | AutoClearSearchValue | 是否在选中项后清空搜索框 | bool | true |  |
 | BoundaryAdjustMode | `Dropdown` 调整策略（例如当浏览器调整大小时）        | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | CustomTagLabelToValue | 将自定义标签（字符串）转换为 TItemValue 类型 | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
@@ -59,7 +61,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | SortByGroup | 按组名排序项目. `None` \| `Ascending` \| `Descending` | SortDirection | SortDirection.None |  |
 | SortByLabel | 按标签名对项目进行排序. `None` \| `Ascending` \| `Descending` | SortDirection | SortDirection.None |  |
 | Style | 设置样式. | string | `width: 100%` |  |
+| Status | 校验状态，可选 `error` 或 `warning`；未设置时继承所在 FormItem 的状态。 | string | - |  |
+| Styles | 通过语义路径自定义各节点行内 CSS，使用 `root`、`item`、`popup.root` 等扁平键。 | IReadOnlyDictionary&lt;string, string&gt; | - |  |
 | SuffixIcon | 自定义的选择框后缀图标 | RenderFragment | - |  |
+| Variant | 选择器外观：`outlined`、`filled`、`borderless` 或 `underlined`。未设置时根据 `Bordered` 推导。 | InputVariant? | `outlined` |  |
 | Value |获取或设置选定的值。 | TItemValue | - |  |
 | Values | 获取或设置选定的值(多选). | IEnumerable&lt;TItemValues> | - |  |
 | ValueChanged | 用于双向绑定. | EventCallback&lt;TItemValue> | - |  |
@@ -131,5 +136,25 @@ cover: https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg
 | DataItem | 数据项  |  Type |  |   | 
 | SwitcherIcon | 该节点的展开图标 | string | null | |
 | SwitcherIconTemplate | 该节点的展开图标 | RenderFragment | null | |
+
+## Semantic DOM
+
+`ClassNames` 和 `Styles` 使用语义路径作为字典键；`Styles` 的值为 CSS 声明字符串。弹层节点使用点分隔路径。
+
+| 语义路径 | 对应元素 |
+| --- | --- |
+| `root` | 选择器触发器根节点 |
+| `prefix` | 前缀元素 |
+| `input` | 输入元素 |
+| `suffix` | 后缀元素 |
+| `content` | 已选值/输入内容 |
+| `placeholder` | 占位符 |
+| `item` | 已选标签 |
+| `itemContent` | 已选标签内容 |
+| `itemRemove` | 已选标签移除按钮 |
+| `popup.root` | 弹层根节点 |
+| `popup.item` | 树节点 |
+| `popup.itemTitle` | 树节点标题 |
+| `popup.itemSwitcher` | 树节点展开/收起切换器 |
 
 

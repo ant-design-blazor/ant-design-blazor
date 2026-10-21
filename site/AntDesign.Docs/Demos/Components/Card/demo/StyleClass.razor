@@ -1,0 +1,62 @@
+<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px;padding:16px">
+    <Card Title="Object Card" Variant="CardVariant.Borderless"
+          ClassNames="_cardClasses" Styles="_cardStyles" Actions="_actions" Style="width:300px">
+        <Extra>More</Extra>
+        <ChildContent>
+            <CardMeta Avatar="https://api.dicebear.com/10.x/lorelei/svg?seed=1"
+                      Title="Object Card Meta title" Description="This is the description"
+                      ClassNames="_metaClasses" Styles="_metaStyles" />
+        </ChildContent>
+    </Card>
+    <Card Title="Semantic styles" Variant="CardVariant.Outlined"
+          Styles="_outlinedStyles" Actions="_actions" Style="width:300px">
+        <Extra>More</Extra>
+        <ChildContent>
+            <CardMeta Avatar="https://api.dicebear.com/10.x/lorelei/svg?seed=2"
+                      Title="Styled Card Meta title" Description="Per-slot styles are supported"
+                      Styles="_metaStyles" />
+        </ChildContent>
+    </Card>
+</div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _cardClasses = new Dictionary<string, string>
+    {
+        ["root"] = "card-demo-root",
+        ["header"] = "card-demo-header",
+        ["body"] = "card-demo-body"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _cardStyles = new Dictionary<string, string>
+    {
+        ["root"] = "border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06)",
+        ["title"] = "font-size:16px;font-weight:500",
+        ["body"] = "padding-top:0"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _outlinedStyles = new Dictionary<string, string>
+    {
+        ["root"] = "border-color:#696fc7;border-radius:8px;box-shadow:0 2px 8px #a7aae1",
+        ["title"] = "color:#696fc7;font-size:16px;font-weight:500",
+        ["extra"] = "color:#696fc7"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _metaClasses = new Dictionary<string, string>
+    {
+        ["root"] = "card-meta-demo-root",
+        ["title"] = "card-meta-demo-title"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _metaStyles = new Dictionary<string, string>
+    {
+        ["title"] = "color:#696fc7",
+        ["description"] = "color:#a7aae1"
+    };
+
+    private readonly RenderFragment[] _actions =
+    [
+        @<Icon Type="@IconType.Outline.Heart" Style="color:#ff6b6b" />,
+        @<Icon Type="@IconType.Outline.ShareAlt" Style="color:#4ecdc4" />,
+        @<Icon Type="@IconType.Outline.Edit" Style="color:#45b7d1" />
+    ];
+}

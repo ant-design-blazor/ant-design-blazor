@@ -48,6 +48,18 @@ namespace AntDesign
         [Parameter]
         public bool Loading { get; set; }
 
+        /// <summary>
+        /// Visual style of the mentions input. Defaults to outlined.
+        /// </summary>
+        [Parameter]
+        public InputVariant? Variant { get; set; } = InputVariant.Outlined;
+
+        /// <summary>
+        /// Validation status of the mentions input.
+        /// </summary>
+        [Parameter]
+        public FormValidateStatus? Status { get; set; }
+
         [Parameter]
         public Dictionary<string, object> Attributes { get; set; }
 
@@ -106,8 +118,10 @@ namespace AntDesign
             var prefixCls = "ant-mentions";
             ClassMapper.Clear()
                 .Add(prefixCls)
+                .Add($"{prefixCls}-{(Variant ?? InputVariant.Outlined).ToString().ToLowerInvariant()}")
                 .If($"{prefixCls}-disable", () => Disable)
                 .If($"{prefixCls}-focused", () => Focused)
+                .GetIf(() => $"{prefixCls}-status-{Status.Value.ToString().ToLowerInvariant()}", () => Status is FormValidateStatus.Error or FormValidateStatus.Warning)
                 .If($"{prefixCls}-rtl", () => RTL);
         }
 

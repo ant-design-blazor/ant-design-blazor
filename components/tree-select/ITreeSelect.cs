@@ -7,5 +7,13 @@ namespace AntDesign
     public interface ITreeSelect
     {
         internal void UpdateValueAfterDataSourceChanged();
+
+        internal string GetSemanticClass(string slot, string baseClass = null);
+
+        internal string GetSemanticStyle(string slot, string baseStyle = null);
+
+        internal string GetPopupSemanticClass(string slot, string baseClass = null);
+
+        internal string GetPopupSemanticStyle(string slot, string baseStyle = null);
     }
 }

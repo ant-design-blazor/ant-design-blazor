@@ -1,0 +1,19 @@
+<Button Type="ButtonType.Primary" OnClick="OpenModal">
+    Open styled modal
+</Button>
+
+<Modal Title="Custom modal styles"
+       Class="modal-demo-custom"
+       Style="border-radius: 12px; overflow: hidden;"
+       BodyStyle="background: #f5f5f5; padding: 28px;"
+       MaskStyle="backdrop-filter: blur(2px);"
+       @bind-Visible="_visible">
+    <p>The modal root, body, and mask can be styled independently.</p>
+    <p>Use <code>Class</code>/<code>Style</code>, <code>BodyStyle</code>, and <code>MaskStyle</code> for the corresponding elements.</p>
+</Modal>
+
+@code {
+    private bool _visible;
+
+    private void OpenModal() => _visible = true;
+}

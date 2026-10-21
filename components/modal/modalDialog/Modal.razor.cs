@@ -100,6 +100,12 @@ namespace AntDesign
         public bool ConfirmLoading { get; set; }
 
         /// <summary>
+        /// Whether to display a skeleton in the modal body while content is loading
+        /// </summary>
+        [Parameter]
+        public bool Loading { get; set; }
+
+        /// <summary>
         /// Whether to unmount child components on onClose
         /// </summary>
         /// <default value="false" />
@@ -137,6 +143,18 @@ namespace AntDesign
         /// <default value="true" />
         [Parameter]
         public bool Mask { get; set; } = true;
+
+        /// <summary>
+        /// Coordinates used as the modal zoom animation origin.
+        /// </summary>
+        [Parameter]
+        public ModalMousePosition MousePosition { get; set; }
+
+        /// <summary>
+        /// Wraps the rendered modal panel in custom markup.
+        /// </summary>
+        [Parameter]
+        public RenderFragment<RenderFragment> ModalRender { get; set; }
 
         /// <summary>
         /// Whether to close the modal dialog when the mask (area outside the modal) is clicked
@@ -336,13 +354,15 @@ namespace AntDesign
                 CloseIcon = CloseIcon,
                 ConfirmLoading = ConfirmLoading,
                 Header = Header,
-                Footer = Footer,
+                Footer = Loading ? null : Footer,
 
                 GetContainer = GetContainer,
                 Keyboard = Keyboard,
                 Mask = Mask,
+                MousePosition = MousePosition,
                 MaskClosable = MaskClosable,
                 MaskStyle = MaskStyle,
+                ModalRender = ModalRender,
 
                 OkText = OkText ?? Locale.OkText,
                 OkType = OkType,

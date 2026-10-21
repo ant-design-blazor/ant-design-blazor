@@ -1,0 +1,18 @@
+<div style="display:flex;justify-content:center;padding:16px">
+    <Card Style="width:300px" Cover="_cover" Actions="_actions">
+        <CardMeta Avatar="https://api.dicebear.com/10.x/lorelei/svg?seed=8"
+                  Title="Card title"
+                  Description="This is the description" />
+    </Card>
+</div>
+
+@code {
+    private static readonly RenderFragment _cover = @<img draggable="false" alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />;
+
+    private readonly RenderFragment[] _actions =
+    [
+        @<Icon Type="@IconType.Outline.Setting" />,
+        @<Icon Type="@IconType.Outline.Edit" />,
+        @<Icon Type="@IconType.Outline.Ellipsis" />
+    ];
+}

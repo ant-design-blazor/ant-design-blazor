@@ -16,10 +16,13 @@ When part of the page is waiting for asynchronous data or during a rendering pro
 | Property | Description | Type | Default Value |
 | --- | --- | --- | --- |
 | Delay | specifies a delay in milliseconds for loading state (prevent flush) | number (milliseconds) | - |
+| Description | customize loading description content | string | - |
 | Indicator | React node of the spinning indicator | ReactNode | - |
+| ClassNames | CSS classes keyed by Spin semantic DOM parts (`root`, `section`, `indicator`, `description`, `container`) | `IReadOnlyDictionary<string, string>` | - | 6.0.0 |
+| Styles | Inline CSS declarations keyed by Spin semantic DOM parts (`root`, `section`, `indicator`, `description`, `container`) | `IReadOnlyDictionary<string, string>` | - | 6.0.0 |
 | Size | size of Spin, options: `small`, `default` and `large` | string | `default` |
 | Spinning | whether Spin is spinning | boolean | true |
-| Tip | customize description content when Spin has children | string | - |
+| Tip | customize description content when Spin has children; use `Description` instead | string | - | Deprecated |
 | WrapperClassName | className of wrapper when Spin has children | string | - |
 
 ### Static Method

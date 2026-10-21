@@ -1,6 +1,5 @@
 ---
 order: 9
-debug: true
 title:
   zh-CN: 自定义状态
   en-US: Status

@@ -1,0 +1,41 @@
+@inject ModalService _modalService
+
+<Space Wrap>
+    <Button OnClick="HandleInfo">Info</Button>
+    <Button OnClick="HandleSuccess">Success</Button>
+    <Button OnClick="HandleError">Error</Button>
+    <Button OnClick="HandleWarning">Warning</Button>
+</Space>
+
+@code {
+    private void HandleInfo()
+    {
+        RenderFragment content = @<div>
+            <p>Some messages...</p>
+            <p>More information is shown in this static dialog.</p>
+        </div>;
+
+        _modalService.Info(new ConfirmOptions
+        {
+            Title = "This is a notification message",
+            Content = content
+        });
+    }
+
+    private void HandleSuccess() => _modalService.Success(new ConfirmOptions
+    {
+        Content = "The operation completed successfully."
+    });
+
+    private void HandleError() => _modalService.Error(new ConfirmOptions
+    {
+        Title = "This is an error message",
+        Content = "Please review the error and try again."
+    });
+
+    private void HandleWarning() => _modalService.Warning(new ConfirmOptions
+    {
+        Title = "This is a warning message",
+        Content = "Please check the information before continuing."
+    });
+}

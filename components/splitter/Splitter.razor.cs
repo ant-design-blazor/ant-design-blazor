@@ -18,6 +18,30 @@ namespace AntDesign;
 [Documentation(DocumentationCategory.Components, DocumentationType.Layout, "", Columns = 1, Title = "Splitter", SubTitle = "分隔面板")]
 public partial class Splitter : AntDomComponentBase
 {
+    /// <summary>Semantic classes keyed by root, panel, dragger, dragger.default, and dragger.active.</summary>
+    [Parameter]
+    public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+    /// <summary>Semantic inline styles keyed by root, panel, dragger, dragger.default, and dragger.active.</summary>
+    [Parameter]
+    public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+    /// <summary>Custom content rendered in the splitter drag handle.</summary>
+    [Parameter]
+    public RenderFragment DraggerIcon { get; set; }
+
+    /// <summary>Hides the default drag-handle indicator when no custom icon is supplied.</summary>
+    [Parameter]
+    public bool HideDraggerIndicator { get; set; }
+
+    /// <summary>Custom collapse icon for the start side of each divider.</summary>
+    [Parameter]
+    public RenderFragment CollapseIconStart { get; set; }
+
+    /// <summary>Custom collapse icon for the end side of each divider.</summary>
+    [Parameter]
+    public RenderFragment CollapseIconEnd { get; set; }
+
     /// <summary>
     /// The left or top pane in the SplitContainer.
     /// </summary>
@@ -79,6 +103,14 @@ public partial class Splitter : AntDomComponentBase
     [Parameter]
     public EventCallback<string[]> OnResize { get; set; }
 
+    /// <summary>Updates panel sizes only after a drag completes.</summary>
+    [Parameter]
+    public bool Lazy { get; set; }
+
+    /// <summary>Raised when a dragger is double-clicked.</summary>
+    [Parameter]
+    public EventCallback<int> OnDraggerDoubleClick { get; set; }
+
     /// <summary>
     /// Determines the unit of the pane size. (Default: <see cref="UnitOfPaneSize.Pixel"/>)
     /// </summary>
@@ -98,9 +130,8 @@ public partial class Splitter : AntDomComponentBase
 
     private IList<SplitterPanel> _panes = [];
 
-    private bool Disabled => _panes.Any(x => !x.Resizable);
-
     private string[] _paneSizes = [];
+    private int _activeDraggerIndex = -1;
 
     internal int GetPaneIndex(SplitterPanel panel) => _panes.IndexOf(panel);
 
@@ -112,6 +143,7 @@ public partial class Splitter : AntDomComponentBase
 
 #if NET5_0_OR_GREATER
     [DynamicDependency(nameof(UpdateSize))]
+    [DynamicDependency(nameof(DraggerDoubleClick))]
 #endif
     public Splitter()
     {
@@ -130,11 +162,8 @@ public partial class Splitter : AntDomComponentBase
     internal void AddPane(SplitterPanel pane)
     {
         _panes.Add(pane);
-
-        if (_panes.Count == 2)
-        {
+        if (_panes.Count >= 2)
             UpdatePaneState();
-        }
     }
 
     internal void RemovePane(SplitterPanel pane)
@@ -142,11 +171,11 @@ public partial class Splitter : AntDomComponentBase
         _panes.Remove(pane);
     }
 
-    protected override bool ShouldRender() => _panes.Count == 2;
+    protected override bool ShouldRender() => _panes.Count >= 2;
 
     internal void UpdatePaneState()
     {
-        if (_panes.Count != 2)
+        if (_panes.Count < 2)
             return;
 
         FirstPane = _panes[0].ChildContent;
@@ -160,18 +189,81 @@ public partial class Splitter : AntDomComponentBase
         StateHasChanged();
     }
 
-    internal string GetPaneStyle(string paneSize, string minPaneSize)
+    internal string GetPaneStyle(SplitterPanel pane)
     {
         var styleKey = Vertical ? "width" : "height";
-        var format = "{0}";
-
-        static string GetSizeText(string prefix, string styleKey, string format, string size, string defaultValue)
+        var size = pane.EffectiveSize;
+        var styles = new List<string>
         {
-            return size != null ? $"{prefix}{styleKey}:{string.Format(format, size)};" : defaultValue;
-        }
-        ;
+            size == null ? "flex:1 1 0%" : $"{styleKey}:{size};flex:0 0 {size}",
+        };
 
-        return GetSizeText("min-", styleKey, format, minPaneSize, "") + GetSizeText("", styleKey, format, paneSize, "flex:1;");
+        if (!pane.IsCollapsed && pane.Min != null)
+            styles.Add($"min-{styleKey}:{pane.Min}");
+        if (pane.Max != null)
+            styles.Add($"max-{styleKey}:{pane.Max}");
+        if (pane.IsCollapsed)
+            styles.Add("overflow:hidden");
+
+        return string.Join(";", styles) + ";";
+    }
+
+    internal string SemanticClass(string slot, string baseClass)
+    {
+        var customClass = ClassNames != null && ClassNames.TryGetValue(slot, out var value) ? value : null;
+        return string.Join(" ", new[] { baseClass, customClass }.Where(x => !string.IsNullOrWhiteSpace(x)));
+    }
+
+    internal string SemanticStyle(string slot, string baseStyle = null)
+    {
+        var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+        var styles = new[] { baseStyle, customStyle }.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => x.Trim().TrimEnd(';') + ";");
+        return string.Join(" ", styles);
+    }
+
+    private bool IsDraggerDisabled(int index) => !_panes[index].Resizable || !_panes[index + 1].Resizable;
+
+    private string GetCollapseIconType(SplitterPanel pane, bool isStart)
+    {
+        if (Vertical)
+            return (isStart ^ pane.IsCollapsed) ? "left" : "right";
+
+        return (isStart ^ pane.IsCollapsed) ? "up" : "down";
+    }
+
+    private static string GetCollapseVisibilityClass(SplitterPanel pane) => pane.ShowCollapsibleIcon switch
+    {
+        true => "ant-splitter-bar-collapse-bar-always-visible",
+        false => "ant-splitter-bar-collapse-bar-always-hidden",
+        _ => "ant-splitter-bar-collapse-bar-hover-only",
+    };
+
+    private string GetDraggerClass(int index)
+    {
+        var isActive = _activeDraggerIndex == index;
+        var customizeClass = DraggerIcon != null || HideDraggerIndicator ? "ant-splitter-bar-dragger-customize" : null;
+        var baseClass = $"ant-splitter-bar-dragger spliter-bar {customizeClass} {(IsDraggerDisabled(index) ? "ant-splitter-bar-dragger-disabled" : null)}";
+        var stateClass = isActive ? "ant-splitter-bar-dragger-active" : null;
+        var stateSlot = isActive ? "dragger.active" : "dragger.default";
+        return SemanticClass(stateSlot, SemanticClass("dragger", $"{baseClass} {stateClass}"));
+    }
+
+    private string GetDraggerStyle(int index)
+    {
+        var stateSlot = _activeDraggerIndex == index ? "dragger.active" : "dragger.default";
+        var stateStyle = Styles != null && Styles.TryGetValue(stateSlot, out var value) ? value : null;
+        return SemanticStyle("dragger", stateStyle);
+    }
+
+    [JSInvokable]
+    public Task SetDragging(bool isDragging, int index = -1)
+    {
+        var nextIndex = isDragging ? index : -1;
+        if (_activeDraggerIndex == nextIndex)
+            return Task.CompletedTask;
+
+        _activeDraggerIndex = nextIndex;
+        return InvokeStateHasChangedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -181,7 +273,7 @@ public partial class Splitter : AntDomComponentBase
             this._thisRef = DotNetObjectReference.Create(this);
 
 #if NET5_0_OR_GREATER
-            this._handler = await JsInvokeAsync<IJSObjectReference>(JSInteropConstants.SplitterHelper.Attach, this._thisRef, this.Ref);
+            this._handler = await JsInvokeAsync<IJSObjectReference>(JSInteropConstants.SplitterHelper.Attach, this._thisRef, this.Ref, Lazy);
 #endif
         }
     }
@@ -190,14 +282,19 @@ public partial class Splitter : AntDomComponentBase
     public async Task UpdateSize(string[] paneSizes)
     {
         _paneSizes = paneSizes;
-        _panes[0].Size = paneSizes[0];
-        _panes[1].Size = paneSizes[1];
+        for (var i = 0; i < Math.Min(_panes.Count, paneSizes.Length); i++)
+            _panes[i].SetCurrentSize(paneSizes[i]);
+
+        await InvokeStateHasChangedAsync();
 
         if (OnResize.HasDelegate)
         {
             await OnResize.InvokeAsync(_paneSizes);
         }
     }
+
+    [JSInvokable]
+    public Task DraggerDoubleClick(int index) => OnDraggerDoubleClick.InvokeAsync(index);
 
     protected override void Dispose(bool disposing)
     {

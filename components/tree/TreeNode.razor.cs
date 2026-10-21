@@ -1163,10 +1163,10 @@ namespace AntDesign
             }
             else
             {
-                TreeComponent.ChildNodes.Remove(this);
+                TreeComponent?.ChildNodes?.Remove(this);
             }
 
-            TreeComponent.RemoveNode(this);
+            TreeComponent?.RemoveNode(this);
             base.Dispose(disposing);
         }
     }

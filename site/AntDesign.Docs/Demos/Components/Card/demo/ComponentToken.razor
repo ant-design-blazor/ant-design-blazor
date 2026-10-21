@@ -1,0 +1,54 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <div style="display:flex;flex-direction:column;gap:16px">
+        <Card Title="Card title" Style="width:300px" Actions="_actions">
+            <Extra>More</Extra>
+            <ChildContent>
+                <p>Card content</p>
+                <p>Card content</p>
+                <p>Card content</p>
+            </ChildContent>
+        </Card>
+        <Card Size="CardSize.Small" Title="Small size card" Style="width:300px">
+            <Extra><a>More</a></Extra>
+            <ChildContent>
+                <p>Card content</p>
+                <p>Card content</p>
+                <p>Card content</p>
+            </ChildContent>
+        </Card>
+    </div>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = new()
+    {
+        Components =
+        {
+            ["Card"] = new Dictionary<string, string>
+            {
+                ["headerBg"] = "#e6f4ff",
+                ["bodyPaddingSM"] = "22",
+                ["headerPaddingSM"] = "20",
+                ["headerPadding"] = "18",
+                ["bodyPadding"] = "26",
+                ["headerFontSize"] = "20",
+                ["headerFontSizeSM"] = "20",
+                ["headerHeight"] = "60",
+                ["headerHeightSM"] = "60",
+                ["actionsBg"] = "#e6f4ff",
+                ["actionsLiMargin"] = "2px 0",
+                ["tabsMarginBottom"] = "0",
+                ["extraColor"] = "rgba(0,0,0,0.25)"
+            }
+        }
+    };
+
+    private readonly RenderFragment[] _actions =
+    [
+        @<Icon Type="@IconType.Outline.Setting" />,
+        @<Icon Type="@IconType.Outline.Edit" />,
+        @<Icon Type="@IconType.Outline.Ellipsis" />
+    ];
+}

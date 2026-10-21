@@ -14,4 +14,7 @@ QRCode renders text as a QR code.
 | Value | QR code content | string | - |
 | Size | QR code size | int | 160 |
 | Status | Current status | string | active |
+| Color | Foreground color in HEX format | string | `#000000` |
+| BackgroundColor | Background color in HEX format | string | `#ffffff` |
+| StatusRender | Custom content rendered over a non-active QR code | RenderFragment | — |
 | Bordered | Whether to show a border | bool | true |

@@ -1,0 +1,26 @@
+<Button Type="ButtonType.Primary" OnClick="OpenModal">
+    Open custom-render modal
+</Button>
+
+<Modal Title="Custom modal render"
+       ModalRender="@WrapModal"
+       @bind-Visible="_visible">
+    <p>The panel is wrapped by the custom render fragment.</p>
+    <p>Any markup around the modal panel can be supplied here.</p>
+</Modal>
+
+<style>
+    .modal-demo-render-wrapper {
+        padding: 8px;
+        border: 1px dashed #1677ff;
+        border-radius: 12px;
+    }
+</style>
+
+@code {
+    private bool _visible;
+
+    private void OpenModal() => _visible = true;
+
+    private RenderFragment WrapModal(RenderFragment modal) => @<div class="modal-demo-render-wrapper">@modal</div>;
+}

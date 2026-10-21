@@ -1,0 +1,69 @@
+@using System.Collections.Generic
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Nested_spin_applies_semantic_classes_styles_and_tip_alias()
+    {
+        var classNames = new Dictionary<string, string>
+        {
+            ["root"] = "custom-root",
+            ["section"] = "custom-section",
+            ["indicator"] = "custom-indicator",
+            ["description"] = "custom-description",
+            ["tip"] = "legacy-tip",
+            ["container"] = "custom-container"
+        };
+        var styles = new Dictionary<string, string>
+        {
+            ["root"] = "outline: 1px solid red;",
+            ["section"] = "padding: 4px;",
+            ["indicator"] = "color: blue;",
+            ["description"] = "font-weight: 600;",
+            ["tip"] = "color: green;",
+            ["container"] = "opacity: 0.5;"
+        };
+
+        var cut = Context.Render(@<Spin ClassNames="@classNames" Styles="@styles" Tip="Loading">
+            Content
+        </Spin>);
+
+        var root = cut.Find(".ant-spin.custom-root");
+        Assert.Contains("outline: 1px solid red", root.GetAttribute("style"));
+        var section = root.QuerySelector(".ant-spin-section.custom-section");
+        Assert.NotNull(section);
+        Assert.Contains("padding: 4px", section!.GetAttribute("style"));
+        var indicator = root.QuerySelector(".ant-spin-dot-holder.custom-indicator");
+        Assert.NotNull(indicator);
+        Assert.Contains("color: blue", indicator!.GetAttribute("style"));
+        var description = root.QuerySelector(".ant-spin-description.custom-description.legacy-tip");
+        Assert.NotNull(description);
+        Assert.Contains("color: green", description!.GetAttribute("style"));
+        Assert.Contains("font-weight: 600", description.GetAttribute("style"));
+        var container = cut.Find(".ant-spin-container.custom-container");
+        Assert.NotNull(container);
+        Assert.Contains("opacity: 0.5", container!.GetAttribute("style"));
+    }
+
+    [Fact]
+    public void Simple_spin_applies_root_and_section_semantics_to_the_shared_element()
+    {
+        var classNames = new Dictionary<string, string>
+        {
+            ["root"] = "custom-root",
+            ["section"] = "custom-section"
+        };
+        var styles = new Dictionary<string, string>
+        {
+            ["root"] = "outline: 1px solid red;",
+            ["section"] = "padding: 4px;"
+        };
+
+        var cut = Context.Render(@<Spin ClassNames="@classNames" Styles="@styles" Description="Loading" />);
+
+        var root = cut.Find(".ant-spin.custom-root.ant-spin-section.custom-section");
+        Assert.Contains("outline: 1px solid red", root.GetAttribute("style"));
+        Assert.Contains("padding: 4px", root.GetAttribute("style"));
+        Assert.Equal("Loading", root.QuerySelector(".ant-spin-description")?.TextContent);
+    }
+}

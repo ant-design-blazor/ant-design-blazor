@@ -1,0 +1,21 @@
+<Splitter Style="height: 300px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)">
+    <SplitterPanel Collapsible>
+        @Panel("Left")
+    </SplitterPanel>
+    <SplitterPanel>
+        <Splitter Layout="SplitterLayout.Vertical">
+            <SplitterPanel>
+                @Panel("Top")
+            </SplitterPanel>
+            <SplitterPanel>
+                @Panel("Bottom")
+            </SplitterPanel>
+        </Splitter>
+    </SplitterPanel>
+</Splitter>
+
+@code {
+    private RenderFragment Panel(string text) => @<Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height: 100%">
+        <Title Type="TextElementType.Secondary" Level="5" Style="white-space: nowrap">@text</Title>
+    </Flex>;
+}

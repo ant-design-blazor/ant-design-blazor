@@ -1,0 +1,18 @@
+@inject IMessageService _message
+
+<Upload Accept=".png,image/png" BeforeUpload="ValidatePng">
+    <Button Icon="@IconType.Outline.Upload">Upload PNG only</Button>
+</Upload>
+
+@code {
+    private bool ValidatePng(UploadFileItem file)
+    {
+        var isPng = string.Equals(file.Type, "image/png", StringComparison.OrdinalIgnoreCase);
+        if (!isPng)
+        {
+            _message.Error($"{file.FileName} is not a PNG file");
+        }
+
+        return isPng;
+    }
+}

@@ -53,6 +53,18 @@ namespace AntDesign
         public string Title { get; set; }
 
         /// <summary>
+        /// Icon displayed before the submenu title.
+        /// </summary>
+        [Parameter]
+        public string Icon { get; set; }
+
+        /// <summary>
+        /// Custom icon content displayed before the submenu title.
+        /// </summary>
+        [Parameter]
+        public RenderFragment IconTemplate { get; set; }
+
+        /// <summary>
         /// Title template
         /// </summary>
         [Parameter]

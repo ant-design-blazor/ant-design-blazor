@@ -1,6 +1,5 @@
 ---
 order: 12
-debug: true
 title:
   zh-CN: 后缀图标
   en-US: Suffix

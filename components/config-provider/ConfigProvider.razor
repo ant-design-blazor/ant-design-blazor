@@ -7,12 +7,14 @@
     {
         <link rel="stylesheet" href="_content/AntDesign/css/antd-v6/pagination-wireframe.css" />
     }
-    <CascadingValue Value="this">
-        <CascadingValue Value="ThemeConfig">
-            <CascadingValue Name="AntDesignThemeConfig" Value="ThemeConfig">
-                <CascadingValue Name="AntDesignVariant" Value="ResolvedVariant">
-                    <CascadingValue Name="AntDesignThemeComponents" Value="ThemeConfig.GetResolvedComponentValues()">
-                        @ChildContent
+    <CascadingValue Name="AntDesignThemeStyle" Value="ThemeStyle">
+        <CascadingValue Value="this">
+            <CascadingValue Value="ThemeConfig">
+                <CascadingValue Name="AntDesignThemeConfig" Value="ThemeConfig">
+                    <CascadingValue Name="AntDesignVariant" Value="ResolvedVariant">
+                        <CascadingValue Name="AntDesignThemeComponents" Value="ThemeConfig.GetResolvedComponentValues()">
+                            @ChildContent
+                        </CascadingValue>
                     </CascadingValue>
                 </CascadingValue>
             </CascadingValue>

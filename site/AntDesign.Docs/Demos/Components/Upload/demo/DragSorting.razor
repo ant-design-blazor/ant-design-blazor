@@ -1,0 +1,12 @@
+<Upload @bind-FileList="_files" DragSort="true" ShowDownloadIcon="false" ShowPreviewIcon="false" ShowRemoveIcon="false" />
+
+<p>Current order: @string.Join(" → ", _files.Select(file => file.FileName))</p>
+
+@code {
+    private List<UploadFileItem> _files = new()
+    {
+        new() { Id = "drag-a", FileName = "Draggable file A.txt", State = UploadState.Success },
+        new() { Id = "drag-b", FileName = "Draggable file B.txt", State = UploadState.Success },
+        new() { Id = "drag-c", FileName = "Draggable file C.txt", State = UploadState.Success }
+    };
+}

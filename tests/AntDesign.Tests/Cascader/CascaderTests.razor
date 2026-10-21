@@ -58,16 +58,65 @@
 
         var cut = Render<AntDesign.Cascader>(@<AntDesign.Cascader Open="true" Options="@Options" />);
 
+        cut.WaitForState(() => !cut.Find(".ant-select-dropdown.ant-cascader-dropdown").ClassList.Contains("ant-select-dropdown-hidden"), timeout: TimeSpan.FromSeconds(2));
         var popup = cut.Find(".ant-select-dropdown.ant-cascader-dropdown");
-        Assert.DoesNotContain("ant-select-dropdown-hidden", popup.ClassList);
         Assert.NotNull(popup.QuerySelector(".ant-cascader-menu-item"));
         JSInterop.VerifyInvoke("AntDesign.interop.overlayHelper.addOverlayToContainer");
+    }
+
+    [Fact]
+    public void Applies_semantic_classes_and_styles_to_clear_and_popup_slots()
+    {
+        JSInterop.SetupVoid("AntDesign.interop.styleHelper.addClsToFirstChild", _ => true);
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.domInfoHelper.getOverlayPosition", _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition());
+
+        var cut = Render<AntDesign.Cascader>(@<AntDesign.Cascader
+            Options="@Options"
+            DefaultValue="city"
+            AllowClear="true"
+            Open="true"
+            ClassNames="@SemanticClasses"
+            Styles="@SemanticStyles" />);
+
+        Assert.Contains("semantic-root", cut.Find(".ant-cascader").ClassList);
+        Assert.Equal("border-color:red;", cut.Find(".ant-cascader").GetAttribute("style"));
+        Assert.Contains("semantic-clear", cut.Find("button.ant-select-clear").ClassList);
+        Assert.Equal("color:red;", cut.Find("button.ant-select-clear").GetAttribute("style"));
+
+        var popup = cut.Find(".ant-select-dropdown.ant-cascader-dropdown");
+        Assert.Contains("semantic-popup", popup.ClassList);
+        var list = popup.QuerySelector("ul.ant-cascader-menu");
+        Assert.Contains("semantic-list", list.ClassList);
+        Assert.Equal("background:yellow;", list.GetAttribute("style"));
+        var item = popup.QuerySelector("li.ant-cascader-menu-item");
+        Assert.Contains("semantic-item", item.ClassList);
+        Assert.Equal("padding:0;", item.GetAttribute("style"));
     }
 
     private static readonly CascaderNode[] Options =
     [
         new CascaderNode { Value = "province", Label = "Province", Children = [new CascaderNode { Value = "city", Label = "City" }] }
     ];
+
+    private static readonly IReadOnlyDictionary<string, string> SemanticClasses = new Dictionary<string, string>
+    {
+        ["root"] = "semantic-root",
+        ["clear"] = "semantic-clear",
+        ["popup.root"] = "semantic-popup",
+        ["popup.list"] = "semantic-list",
+        ["popup.listItem"] = "semantic-item"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> SemanticStyles = new Dictionary<string, string>
+    {
+        ["root"] = "border-color:red;",
+        ["clear"] = "color:red;",
+        ["popup.list"] = "background:yellow;",
+        ["popup.listItem"] = "padding:0;"
+    };
 
     [Fact]
     public void Selected_value_uses_the_v6_single_select_content_and_clear_button()
@@ -92,6 +141,36 @@
         Assert.Null(content.QuerySelector(".ant-select-selection-item"));
         Assert.NotNull(root.QuerySelector(":scope > button.ant-select-clear[aria-label='Clear']"));
         Assert.Null(root.QuerySelector(":scope > span.ant-select-clear"));
+    }
+
+    [Fact]
+    public async Task Multiple_mode_checks_a_branch_and_renders_a_parent_tag()
+    {
+        JSInterop.SetupVoid("AntDesign.interop.styleHelper.addClsToFirstChild", _ => true);
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.domInfoHelper.getOverlayPosition", _ => true).SetResult(new OverlayPosition());
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true).SetResult(new OverlayPosition());
+
+        var options = new[]
+        {
+            new CascaderNode { Label = "Bamboo", Value = "bamboo", Children = new[]
+            {
+                new CascaderNode { Label = "Little", Value = "little", Children = new[]
+                {
+                    new CascaderNode { Label = "Fish", Value = "fish" },
+                    new CascaderNode { Label = "Cards", Value = "cards" }
+                }}
+            }}
+        };
+        IEnumerable<string> selected = Array.Empty<string>();
+        var cut = Render<AntDesign.Cascader>(@<AntDesign.Cascader Options="@options" Multiple Open="true" ValuesChanged="values => selected = values" />);
+
+        await cut.InvokeAsync(() => cut.Find("li[data-path-key='bamboo'] input.ant-checkbox-input")
+            .ChangeAsync(new Microsoft.AspNetCore.Components.ChangeEventArgs { Value = true }));
+
+        Assert.Equal(new[] { "fish", "cards" }, selected);
+        Assert.NotEmpty(cut.FindAll(".ant-cascader-checkbox-checked"));
+        Assert.Equal("Bamboo", cut.Find(".ant-select-selection-item-content").TextContent.Trim());
+        Assert.Contains("ant-select-multiple", cut.Find(".ant-select.ant-cascader").ClassList);
     }
 
     [Fact]

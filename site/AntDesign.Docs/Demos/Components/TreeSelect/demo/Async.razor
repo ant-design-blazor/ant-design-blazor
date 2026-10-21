@@ -1,5 +1,44 @@
-﻿<h3>Async</h3>
+<TreeSelect TItem="AsyncTreeNode"
+            TItemValue="string"
+            DataSource="_nodes"
+            ItemLabel="node => node.Title"
+            ItemValue="node => node.Value"
+            KeyExpression="node => node.DataItem.Value"
+            TitleExpression="node => node.DataItem.Title"
+            ChildrenExpression="node => node.DataItem.Children"
+            IsLeafExpression="node => node.DataItem.IsLeaf"
+            OnNodeLoadDelayAsync="LoadData"
+            Style="width: 100%"
+            PopupContainerMaxHeight="400px"
+            Placeholder="Please select" />
 
 @code {
+    private readonly List<AsyncTreeNode> _nodes =
+    [
+        new("node-1", "1", "Expand to load"),
+        new("node-2", "2", "Expand to load"),
+        new("node-3", "3", "Tree Node", true)
+    ];
 
+    private int _nextNodeId = 4;
+
+    private async Task LoadData(TreeEventArgs<AsyncTreeNode> args)
+    {
+        if (args.Node?.DataItem is not { IsLeaf: false } parent || parent.Children.Count > 0)
+            return;
+
+        await Task.Delay(300);
+        parent.Children.Add(new AsyncTreeNode($"node-{_nextNodeId}", $"{_nextNodeId++}", "Expand to load"));
+        parent.Children.Add(new AsyncTreeNode($"node-{_nextNodeId}", $"{_nextNodeId++}", "Tree Node", true));
+        parent.Children.Add(new AsyncTreeNode($"node-{_nextNodeId}", $"{_nextNodeId++}", "Tree Node", true));
+    }
+
+    private sealed class AsyncTreeNode(string key, string value, string title, bool isLeaf = false)
+    {
+        public string Key { get; } = key;
+        public string Value { get; } = value;
+        public string Title { get; } = title;
+        public bool IsLeaf { get; } = isLeaf;
+        public List<AsyncTreeNode> Children { get; } = [];
+    }
 }

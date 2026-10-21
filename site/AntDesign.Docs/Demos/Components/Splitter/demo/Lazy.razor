@@ -1,0 +1,24 @@
+<Flex Vertical Style="width: 100%" Gap="FlexGap.Middle">
+    <Splitter Lazy Style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)">
+        <SplitterPanel DefaultSize="40%" Min="20%" Max="70%">
+            @Panel("First")
+        </SplitterPanel>
+        <SplitterPanel>
+            @Panel("Second")
+        </SplitterPanel>
+    </Splitter>
+    <Splitter Lazy Layout="SplitterLayout.Vertical" Style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)">
+        <SplitterPanel DefaultSize="40%" Min="30%" Max="70%">
+            @Panel("First")
+        </SplitterPanel>
+        <SplitterPanel>
+            @Panel("Second")
+        </SplitterPanel>
+    </Splitter>
+</Flex>
+
+@code {
+    private RenderFragment Panel(string text) => @<Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height: 100%">
+        <Title Type="TextElementType.Secondary" Level="5" Style="white-space: nowrap">@text</Title>
+    </Flex>;
+}

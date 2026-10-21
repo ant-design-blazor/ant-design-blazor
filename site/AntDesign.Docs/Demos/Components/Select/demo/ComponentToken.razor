@@ -1,0 +1,35 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+        <Select TItemValue="string" TItem="string" DefaultValue='@("blue")' Style="width: 240px;">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("blue")' Label="Blue" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("green")' Label="Green" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("purple")' Label="Purple" />
+            </SelectOptions>
+        </Select>
+        <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" DefaultValues="@_values" Style="width: 240px;">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("blue")' Label="Blue" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("green")' Label="Green" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("purple")' Label="Purple" />
+            </SelectOptions>
+        </Select>
+    </div>
+</ConfigProvider>
+
+@code {
+    private readonly string[] _values = ["blue", "green"];
+
+    private readonly ThemeConfig _theme = new ThemeConfig().SetComponentToken(
+        "Select",
+        new SelectComponentToken
+        {
+            ActiveBorderColor = "#722ed1",
+            OptionActiveBg = "#f9f0ff",
+            OptionSelectedBg = "#efdbff",
+            OptionSelectedColor = "#531dab",
+            MultipleItemBg = "#f9f0ff"
+        });
+}

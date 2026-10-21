@@ -31,6 +31,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | Accordion | SubMenu 手风琴模式 | boolean | false |
+| ClassNames | 按 Semantic DOM 路径自定义菜单节点 class，例如 `root`、`item`、`popup.root` 和 `subMenu.item` | `IReadOnlyDictionary<string, string>` | - | 6.0.0 |
 | DefaultOpenKeys | 初始展开的 SubMenu 菜单项 key 数组 | string\[] |  |  |
 | DefaultSelectedKeys | 初始选中的菜单项 key 数组 | string\[] |  |  |
 | ForceSubMenuRender | 在子菜单展示之前就渲染进 DOM | boolean | false |  |
@@ -46,6 +47,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 | SubMenuOpenDelay | 用户鼠标进入子菜单后开启延时，单位：秒 | number | 0 |  |
 | Theme | 主题颜色 | `light` \| `dark` | `light` |  |
 | TriggerSubMenuAction | SubMenu 展开/关闭的触发行为 | `hover` \| `click` | `hover` |  |
+| Styles | 按 Semantic DOM 路径自定义菜单节点内联样式 | `IReadOnlyDictionary<string, string>` | - | 6.0.0 |
 | OnClick | 点击 MenuItem 调用此函数 | function({ item, key, keyPath, domEvent }) | - |  |
 | OnDeselect | 取消选中时调用，仅在 multiple 生效 | function({ item, key, keyPath, selectedKeys, domEvent }) | - |  |
 | OnOpenChange | SubMenu 展开/关闭的回调 | function(openKeys: string\[]) | noop |  |
@@ -74,6 +76,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 | 参数           | 说明           | 类型                        | 默认值 | 版本 |
 | -------------- | -------------- | --------------------------- | ------ | ---- |
 | ChildContent   | 放置子菜单的菜单项列表 | RenderFragment |        |      |
+| Icon           | 显示在子菜单标题前的图标 | string | - |      |
+| IconTemplate   | 显示在子菜单标题前的自定义图标内容 | RenderFragment | - |      |
 | Disabled       | 是否禁用       | boolean                     | false  |      |
 | IsOpen         | 表示展开状态 | bool | false |  |
 | Key            | 唯一标志       | string                      |        |      |
@@ -94,3 +98,24 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 ### Menu.Divider
 
 菜单项分割线，只用在弹出菜单内。
+
+## Semantic DOM
+
+可通过 `ClassNames` 和 `Styles` 自定义以下路径：
+
+| Semantic DOM | 说明 |
+| --- | --- |
+| `root` | 菜单列表根节点 |
+| `item` | 菜单项 |
+| `itemContent` | 菜单项内容 |
+| `itemIcon` | 菜单项图标 |
+| `itemTitle` | 菜单分组标题 |
+| `list` | 菜单分组列表 |
+| `popup.root` | 弹出菜单根节点 |
+| `subMenu.item` | 子菜单项 |
+| `subMenu.itemTitle` | 子菜单标题 |
+| `subMenu.list` | 子菜单列表 |
+| `subMenu.itemContent` | 子菜单项内容 |
+| `subMenu.itemIcon` | 子菜单项图标 |
+
+参见[自定义 Semantic DOM 样式](#components-menu-demo-semantic-style)交互示例。

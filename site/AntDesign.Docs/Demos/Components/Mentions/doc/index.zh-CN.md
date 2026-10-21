@@ -25,6 +25,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg
 | notFoundContent | 当下拉列表为空时显示的内容 | ReactNode | 'Not Found' |
 | placement | 弹出层展示位置 | `top` \| `bottom` | `bottom` |
 | prefix | 设置触发关键字 | string \| string[] | '@' |
+| Variant | 输入框形态：`Outlined`、`Filled`、`Borderless` 或 `Underlined` | `InputVariant` | `Outlined` |
+| Status | 校验状态，可设置为 `Error` 或 `Warning` | `FormValidateStatus?` | 无 |
 | split | 设置选中项前后分隔符 | string | ' ' |
 | validateSearch | 自定义触发验证逻辑 | (text: string, props: MentionsProps) => void |  |
 | value | 设置值 | string |  |

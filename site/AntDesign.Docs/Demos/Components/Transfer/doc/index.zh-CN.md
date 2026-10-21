@@ -28,6 +28,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg
 | Disabled | 是否禁用 | bool | false |  |
 | Footer | 底部渲染函数 | OneOf<string, RenderFragment> | null |  |
 | Style | 修改整个组件的样式 | string |  |  |
+| ClassNames | 自定义语义节点的 CSS 类。可使用 `header` 等通用键，或 `source.header`、`target.header` 等方向限定键。 | IReadOnlyDictionary<string, string> | null |  |
+| Styles | 自定义语义节点的行内 CSS。通用样式与方向限定样式会合并，方向限定声明优先。 | IReadOnlyDictionary<string, string> | null |  |
 | Operations | 操作文案集合，顺序从上至下 | string\[] | \['right', 'left'] |  |
 | Render | 每行数据渲染函数，该函数的入参为 `DataSource` 中的项，返回值为 OneOf<string, RenderFragment>。 | Func<TransferItem, OneOf<string, RenderFragment>> |  |  |
 | SelectedKeys | 设置哪些项应该被选中 | string\[] | \[] |  |
@@ -42,6 +44,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg
 | OnScroll | 选项列表滚动时的回调函数 | TransferScrollArgs |  |  |
 | OnSearch | 搜索框内容时改变时的回调函数 | TransferSearchArgs | - |  |
 | OnSelectChange | 选中项发生改变时的回调函数 | TransferSelectChangeArgs |  |  |
+
+## Semantic DOM
+
+`ClassNames` 和 `Styles` 支持 `root`、`section`、`header`、`title`、`body`、`list`、`item`、`itemIcon`、`itemContent`、`footer`、`actions` 等通用语义节点。`source` 和 `target` 分别表示左侧和右侧区域；使用 `source.item`、`target.header` 等点分隔键可以只定制一侧的对应节点。
+
+<code src="./demo/SemanticStyle.razor">Semantic DOM 样式</code>
 
 ### Render Props
 

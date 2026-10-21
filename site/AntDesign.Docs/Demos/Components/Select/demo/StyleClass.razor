@@ -1,0 +1,20 @@
+<div class="select-semantic-style-demo">
+    <Select TItemValue="string" TItem="string" DefaultValue='@("blue")' Style="width: 240px;">
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value='@("blue")' Label="Blue" />
+            <SelectOption TItemValue="string" TItem="string" Value='@("green")' Label="Green" />
+            <SelectOption TItemValue="string" TItem="string" Value='@("purple")' Label="Purple" />
+        </SelectOptions>
+    </Select>
+</div>
+
+<style>
+    .select-semantic-style-demo .ant-select-selector {
+        border-radius: 2px !important;
+    }
+
+    .select-semantic-style-demo .ant-select-focused .ant-select-selector {
+        border-color: #722ed1 !important;
+        box-shadow: 0 0 0 2px rgb(114 46 209 / 15%) !important;
+    }
+</style>

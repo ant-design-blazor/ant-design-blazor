@@ -117,6 +117,20 @@ namespace AntDesign
         public bool Bordered { get; set; } = true;
 
         /// <summary>
+        /// Visual style of the input. When omitted, the legacy <see cref="Bordered"/> value is used.
+        /// </summary>
+        [Parameter]
+        public InputVariant? Variant { get; set; }
+
+        protected InputVariant EffectiveVariant => Variant ?? (Bordered ? InputVariant.Outlined : InputVariant.Borderless);
+
+        /// <summary>
+        /// The validation status of the input. When omitted, the status is inherited from the containing FormItem.
+        /// </summary>
+        [Parameter]
+        public FormValidateStatus? Status { get; set; }
+
+        /// <summary>
         /// Whether to change value on input
         /// </summary>
         [Parameter]
@@ -379,22 +393,24 @@ namespace AntDesign
 
         protected virtual void SetClasses()
         {
+            var status = Status ?? FormItem?.ValidateStatus;
+            var variantClass = $"{PrefixCls}-{EffectiveVariant.ToString().ToLowerInvariant()}";
+            var hasAffixWrapper = Prefix != null || Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount;
             var effectiveSize = Size == InputSize.Default && CompactItemContext?.Size.HasValue == true
                 ? CompactItemContext.Size.Value
                 : Size;
-            AffixWrapperClass = $"ant-input-css-var {PrefixCls}-affix-wrapper {(Bordered ? $"{PrefixCls}-outlined" : $"{PrefixCls}-borderless")} {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")}";
-            GroupWrapperClass = $"ant-input-css-var {PrefixCls}-group-wrapper {(Bordered ? $"{PrefixCls}-group-wrapper-outlined" : $"{PrefixCls}-group-wrapper-borderless")}";
+            AffixWrapperClass = $"ant-input-css-var {PrefixCls}-affix-wrapper {variantClass} {(IsFocused ? $"{PrefixCls}-affix-wrapper-focused" : "")}";
+            GroupWrapperClass = $"ant-input-css-var {PrefixCls}-group-wrapper {variantClass} {PrefixCls}-group-wrapper-{EffectiveVariant.ToString().ToLowerInvariant()}";
 
             ClassMapper.Clear()
                 .Add("ant-input-css-var")
                 .Add($"{PrefixCls}")
-                .If($"{PrefixCls}-outlined", () => Bordered)
-                .If($"{PrefixCls}-borderless", () => !Bordered)
+                .If(variantClass, () => !hasAffixWrapper)
                 .If($"{PrefixCls}-lg", () => effectiveSize == InputSize.Large)
                 .If($"{PrefixCls}-sm", () => effectiveSize == InputSize.Small)
                 .Add(CompactItemContext?.ClassFor(PrefixCls))
                 .If($"{PrefixCls}-rtl", () => RTL)
-                .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .GetIf(() => $"{PrefixCls}-status-{status.Value.ToString().ToLowerInvariant()}", () => status.HasValue && status.Value != FormValidateStatus.Default)
                 .If($"{InputElementSuffixClass}", () => !string.IsNullOrEmpty(InputElementSuffixClass))
                 ;
 
@@ -425,9 +441,10 @@ namespace AntDesign
             //    AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-affix-wrapper-status-error");
             //}
 
-            if (FormItem is { ValidateStatus: not FormValidateStatus.Default })
+            if (status.HasValue && status.Value != FormValidateStatus.Default)
             {
-                AffixWrapperClass += $" ant-input-affix-wrapper-status-{FormItem.ValidateStatus.ToString().ToLowerInvariant()}";
+                var statusClass = status.Value.ToString().ToLowerInvariant();
+                AffixWrapperClass += $" ant-input-status-{statusClass} ant-input-affix-wrapper-status-{statusClass}";
             }
 
             if (FormItem is { HasFeedback: true })
@@ -720,7 +737,7 @@ namespace AntDesign
                 container = "groupWrapper";
                 builder.OpenElement(1, "span");
                 builder.AddAttribute(2, "class", string.Join(" ", GroupWrapperClass, WrapperClass));
-                builder.AddAttribute(3, "style", $"{WidthStyle} {WrapperStyle}");
+                builder.AddAttribute(3, "style", GetComponentStyle("Input", $"{WidthStyle} {WrapperStyle}"));
                 builder.OpenElement(4, "span");
                 builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group {(RTL ? $" {PrefixCls}-group-rtl" : "")}");
             }
@@ -749,7 +766,7 @@ namespace AntDesign
                 if (container == "input")
                 {
                     container = "affixWrapper";
-                    builder.AddAttribute(23, "style", $"{WidthStyle} {WrapperStyle}");
+                    builder.AddAttribute(23, "style", GetComponentStyle("Input", $"{WidthStyle} {WrapperStyle}"));
                 }
                 if (WrapperRefBack != null)
                 {
@@ -769,7 +786,7 @@ namespace AntDesign
             // input
             builder.OpenElement(41, "input");
             builder.AddAttribute(42, "class", ClassMapper.Class);
-            builder.AddAttribute(43, "style", $"{WidthStyle} {Style}");
+            builder.AddAttribute(43, "style", GetComponentStyle("Input", $"{WidthStyle} {Style}"));
 
             bool needsDisabled = Disabled;
             if (Attributes != null)

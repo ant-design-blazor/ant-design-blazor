@@ -17,3 +17,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg
 
 - AutoComplete 是一个带提示的文本输入框，用户可以自由输入，关键词是辅助**输入**。
 - Select 是在限定的可选项中进行选择，关键词是**选择**。
+
+## Semantic DOM
+
+`ClassNames` 和 `Styles` 支持 `root`、`input`、`popup`/`popup.root`、
+`popup.list` 和 `popup.listItem` 槽位，可分别定制下拉弹层、选项列表和列表项。

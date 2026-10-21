@@ -10,24 +10,36 @@ namespace AntDesign.Theming
         public string Component { get; }
         public string Name { get; }
         public string CssVariable { get; }
+        public string Type { get; }
+        public string Description { get; }
+        public string DescriptionEn { get; }
+        public string DefaultValue { get; }
+        public bool Deprecated { get; }
+        public bool Documented { get; }
         public bool Reserved { get; }
+        public ComponentTokenDefinition(string component, string name, string cssVariable, string type, string description, string descriptionEn, string defaultValue, bool deprecated, bool documented, bool reserved)
+        { Component = component; Name = name; CssVariable = cssVariable; Type = type; Description = description; DescriptionEn = descriptionEn; DefaultValue = defaultValue; Deprecated = deprecated; Documented = documented; Reserved = reserved; }
         public ComponentTokenDefinition(string component, string name, string cssVariable, bool reserved)
-        { Component = component; Name = name; CssVariable = cssVariable; Reserved = reserved; }
+            : this(component, name, cssVariable, string.Empty, string.Empty, string.Empty, string.Empty, false, false, reserved) { }
     }
 
     public sealed class AffixComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class AlertComponentToken
     {
-        public string ComponentToken { get; set; }
+        public OneOf<string, double> BorderRadius { get; set; }
+        public OneOf<string, double> DefaultPadding { get; set; }
+        public OneOf<double, string> WithDescriptionIconSize { get; set; }
+        public OneOf<string, double> WithDescriptionPadding { get; set; }
     }
 
     public sealed class AnchorComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double LinkPaddingBlock { get; set; }
+        public double LinkPaddingInlineStart { get; set; }
     }
 
     public sealed class AppComponentToken
@@ -37,17 +49,36 @@ namespace AntDesign.Theming
 
     public sealed class AvatarComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double ContainerSize { get; set; }
+        public double ContainerSizeLG { get; set; }
+        public double ContainerSizeSM { get; set; }
+        public string GroupBorderColor { get; set; }
+        public double GroupOverlapping { get; set; }
+        public double GroupSpace { get; set; }
+        public double IconFontSize { get; set; }
+        public OneOf<double, string> IconFontSizeLG { get; set; }
+        public double IconFontSizeSM { get; set; }
+        public double TextFontSize { get; set; }
+        public double TextFontSizeLG { get; set; }
+        public double TextFontSizeSM { get; set; }
     }
 
     public sealed class BackTopComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class BadgeComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double DotSize { get; set; }
+        public OneOf<double, string> IndicatorHeight { get; set; }
+        public OneOf<double, string> IndicatorHeightSM { get; set; }
+        public OneOf<double, string> IndicatorZIndex { get; set; }
+        public OneOf<double, string> PaddingInline { get; set; }
+        public double StatusSize { get; set; }
+        public double TextFontSize { get; set; }
+        public double TextFontSizeSM { get; set; }
+        public OneOf<double, string> TextFontWeight { get; set; }
     }
 
     public sealed class BorderBeamComponentToken
@@ -57,7 +88,13 @@ namespace AntDesign.Theming
 
     public sealed class BreadcrumbComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double IconFontSize { get; set; }
+        public string ItemColor { get; set; }
+        public string LastItemColor { get; set; }
+        public string LinkColor { get; set; }
+        public string LinkHoverColor { get; set; }
+        public string SeparatorColor { get; set; }
+        public double SeparatorMargin { get; set; }
     }
 
     public sealed class ButtonComponentToken
@@ -109,22 +146,53 @@ namespace AntDesign.Theming
 
     public sealed class CalendarComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string FullBg { get; set; }
+        public string FullPanelBg { get; set; }
+        public string ItemActiveBg { get; set; }
+        public OneOf<double, string> MiniContentHeight { get; set; }
+        public OneOf<double, string> MonthControlWidth { get; set; }
+        public OneOf<double, string> YearControlWidth { get; set; }
     }
 
     public sealed class CardComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string ActionsBg { get; set; }
+        public string ActionsLiMargin { get; set; }
+        public double BodyPadding { get; set; }
+        public double BodyPaddingSM { get; set; }
+        public string ExtraColor { get; set; }
+        public string HeaderBg { get; set; }
+        public OneOf<double, string> HeaderFontSize { get; set; }
+        public OneOf<double, string> HeaderFontSizeSM { get; set; }
+        public OneOf<double, string> HeaderHeight { get; set; }
+        public OneOf<double, string> HeaderHeightSM { get; set; }
+        public double HeaderPadding { get; set; }
+        public double HeaderPaddingSM { get; set; }
+        public double TabsMarginBottom { get; set; }
     }
 
     public sealed class CarouselComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double ArrowOffset { get; set; }
+        public double ArrowSize { get; set; }
+        public OneOf<double, string> DotActiveWidth { get; set; }
+        public double DotGap { get; set; }
+        public OneOf<double, string> DotHeight { get; set; }
+        public double DotOffset { get; set; }
+        public OneOf<double, string> DotWidth { get; set; }
+        public double DotWidthActive { get; set; }
     }
 
     public sealed class CascaderComponentToken
     {
-        public string ComponentToken { get; set; }
+        public OneOf<double, string> ControlItemWidth { get; set; }
+        public OneOf<double, string> ControlWidth { get; set; }
+        public OneOf<double, string> DropdownHeight { get; set; }
+        public OneOf<string, double> MenuPadding { get; set; }
+        public OneOf<string, double> OptionPadding { get; set; }
+        public string OptionSelectedBg { get; set; }
+        public string OptionSelectedColor { get; set; }
+        public OneOf<string, double> OptionSelectedFontWeight { get; set; }
     }
 
     public sealed class CheckboxComponentToken
@@ -139,7 +207,16 @@ namespace AntDesign.Theming
 
     public sealed class CollapseComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string BorderlessContentBg { get; set; }
+        public OneOf<string, double> BorderlessContentPadding { get; set; }
+        public string ContentBg { get; set; }
+        public OneOf<string, double> ContentPadding { get; set; }
+        public OneOf<string, double> ContentPaddingLG { get; set; }
+        public OneOf<string, double> ContentPaddingSM { get; set; }
+        public string HeaderBg { get; set; }
+        public OneOf<string, double> HeaderPadding { get; set; }
+        public OneOf<string, double> HeaderPaddingLG { get; set; }
+        public OneOf<string, double> HeaderPaddingSM { get; set; }
     }
 
     public sealed class ColorPickerComponentToken
@@ -154,29 +231,81 @@ namespace AntDesign.Theming
 
     public sealed class DatePickerComponentToken
     {
+        public string ActiveBg { get; set; }
+        public string ActiveBorderColor { get; set; }
+        public string ActiveShadow { get; set; }
+        public string AddonBg { get; set; }
+        public string CellActiveWithRangeBg { get; set; }
+        public string CellBgDisabled { get; set; }
+        public double CellHeight { get; set; }
+        public string CellHoverBg { get; set; }
+        public string CellHoverWithRangeBg { get; set; }
+        public string CellRangeBorderColor { get; set; }
+        public double CellWidth { get; set; }
+        public string ErrorActiveShadow { get; set; }
+        public string HoverBg { get; set; }
+        public string HoverBorderColor { get; set; }
+        public double InputFontSize { get; set; }
+        public double InputFontSizeLG { get; set; }
+        public double InputFontSizeSM { get; set; }
+        public string MultipleItemBg { get; set; }
+        public string MultipleItemBorderColor { get; set; }
+        public string MultipleItemBorderColorDisabled { get; set; }
+        public string MultipleItemColorDisabled { get; set; }
+        public double MultipleItemHeight { get; set; }
+        public double MultipleItemHeightLG { get; set; }
+        public double MultipleItemHeightSM { get; set; }
+        public string MultipleSelectorBgDisabled { get; set; }
+        public double PaddingBlock { get; set; }
+        public double PaddingBlockLG { get; set; }
+        public double PaddingBlockSM { get; set; }
+        public double PaddingInline { get; set; }
+        public double PaddingInlineLG { get; set; }
+        public double PaddingInlineSM { get; set; }
         public double PresetsMaxWidth { get; set; }
         public double PresetsWidth { get; set; }
+        public double TextHeight { get; set; }
+        public double TimeCellHeight { get; set; }
+        public double TimeColumnHeight { get; set; }
+        public double TimeColumnWidth { get; set; }
+        public string WarningActiveShadow { get; set; }
+        public double WithoutTimeCellHeight { get; set; }
         public double ZIndexPopup { get; set; }
     }
 
     public sealed class DescriptionsComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double ColonMarginLeft { get; set; }
+        public double ColonMarginRight { get; set; }
+        public string ContentColor { get; set; }
+        public string ExtraColor { get; set; }
+        public double ItemPaddingBottom { get; set; }
+        public double ItemPaddingEnd { get; set; }
+        public string LabelBg { get; set; }
+        public string LabelColor { get; set; }
+        public string TitleColor { get; set; }
+        public double TitleMarginBottom { get; set; }
     }
 
     public sealed class DividerComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double OrientationMargin { get; set; }
+        public OneOf<string, double> TextPaddingInline { get; set; }
+        public OneOf<string, double> VerticalMarginInline { get; set; }
     }
 
     public sealed class DrawerComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double DraggerSize { get; set; }
+        public double FooterPaddingBlock { get; set; }
+        public double FooterPaddingInline { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class DropdownComponentToken
     {
-        public string ComponentToken { get; set; }
+        public OneOf<string, double> PaddingBlock { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class EmptyComponentToken
@@ -196,7 +325,17 @@ namespace AntDesign.Theming
 
     public sealed class FormComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double InlineItemMarginBottom { get; set; }
+        public double ItemMarginBottom { get; set; }
+        public double LabelColonMarginInlineEnd { get; set; }
+        public double LabelColonMarginInlineStart { get; set; }
+        public string LabelColor { get; set; }
+        public double LabelFontSize { get; set; }
+        public OneOf<double, string> LabelHeight { get; set; }
+        public string LabelRequiredMarkColor { get; set; }
+        public OneOf<double, string> VerticalLabelHeight { get; set; }
+        public OneOf<string, double> VerticalLabelMargin { get; set; }
+        public OneOf<string, double> VerticalLabelPadding { get; set; }
     }
 
     public sealed class GridComponentToken
@@ -206,12 +345,22 @@ namespace AntDesign.Theming
 
     public sealed class ImageComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string PreviewOperationColor { get; set; }
+        public string PreviewOperationColorDisabled { get; set; }
+        public string PreviewOperationHoverColor { get; set; }
+        public double PreviewOperationSize { get; set; }
+        public string ProgressAnimationDuration { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class InputNumberComponentToken
     {
+        public string ActiveBg { get; set; }
+        public string ActiveBorderColor { get; set; }
+        public string ActiveShadow { get; set; }
+        public string AddonBg { get; set; }
         public double ControlWidth { get; set; }
+        public string ErrorActiveShadow { get; set; }
         public string FilledHandleBg { get; set; }
         public string HandleActiveBg { get; set; }
         public string HandleBg { get; set; }
@@ -222,26 +371,83 @@ namespace AntDesign.Theming
         public OneOf<string, bool> HandleVisible { get; set; }
         public double HandleVisibleWidth { get; set; }
         public double HandleWidth { get; set; }
+        public string HoverBg { get; set; }
+        public string HoverBorderColor { get; set; }
+        public double InputFontSize { get; set; }
+        public double InputFontSizeLG { get; set; }
+        public double InputFontSizeSM { get; set; }
+        public double PaddingBlock { get; set; }
+        public double PaddingBlockLG { get; set; }
+        public double PaddingBlockSM { get; set; }
+        public double PaddingInline { get; set; }
+        public double PaddingInlineLG { get; set; }
+        public double PaddingInlineSM { get; set; }
+        public string WarningActiveShadow { get; set; }
     }
 
     public sealed class InputComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string ActiveBg { get; set; }
+        public string ActiveBorderColor { get; set; }
+        public string ActiveShadow { get; set; }
+        public string AddonBg { get; set; }
+        public string ErrorActiveShadow { get; set; }
+        public string HoverBg { get; set; }
+        public string HoverBorderColor { get; set; }
+        public double InputFontSize { get; set; }
+        public double InputFontSizeLG { get; set; }
+        public double InputFontSizeSM { get; set; }
+        public double PaddingBlock { get; set; }
+        public double PaddingBlockLG { get; set; }
+        public double PaddingBlockSM { get; set; }
+        public double PaddingInline { get; set; }
+        public double PaddingInlineLG { get; set; }
+        public double PaddingInlineSM { get; set; }
+        public string WarningActiveShadow { get; set; }
     }
 
     public sealed class LayoutComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string BodyBg { get; set; }
+        public string ColorBgBody { get; set; }
+        public string ColorBgHeader { get; set; }
+        public string ColorBgTrigger { get; set; }
+        public string FooterBg { get; set; }
+        public OneOf<string, double> FooterPadding { get; set; }
+        public string HeaderBg { get; set; }
+        public string HeaderColor { get; set; }
+        public OneOf<double, string> HeaderHeight { get; set; }
+        public OneOf<string, double> HeaderPadding { get; set; }
+        public string LightSiderBg { get; set; }
+        public string LightTriggerBg { get; set; }
+        public string LightTriggerColor { get; set; }
+        public string SiderBg { get; set; }
+        public string TriggerBg { get; set; }
+        public string TriggerColor { get; set; }
+        public OneOf<double, string> TriggerHeight { get; set; }
+        public double ZeroTriggerHeight { get; set; }
+        public double ZeroTriggerWidth { get; set; }
     }
 
     public sealed class ListComponentToken
     {
-        public string ComponentToken { get; set; }
+        public OneOf<string, double> AvatarMarginRight { get; set; }
+        public OneOf<double, string> ContentWidth { get; set; }
+        public double DescriptionFontSize { get; set; }
+        public OneOf<string, double> EmptyTextPadding { get; set; }
+        public string FooterBg { get; set; }
+        public string HeaderBg { get; set; }
+        public string ItemPadding { get; set; }
+        public string ItemPaddingLG { get; set; }
+        public string ItemPaddingSM { get; set; }
+        public OneOf<string, double> MetaMarginBottom { get; set; }
+        public OneOf<string, double> TitleMarginBottom { get; set; }
     }
 
     public sealed class ListyComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double ItemPaddingBlock { get; set; }
+        public double ItemPaddingInline { get; set; }
     }
 
     public sealed class MasonryComponentToken
@@ -251,47 +457,193 @@ namespace AntDesign.Theming
 
     public sealed class MentionsComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string ActiveBg { get; set; }
+        public string ActiveBorderColor { get; set; }
+        public string ActiveShadow { get; set; }
+        public string AddonBg { get; set; }
+        public OneOf<double, string> ControlItemWidth { get; set; }
+        public OneOf<double, string> DropdownHeight { get; set; }
+        public string ErrorActiveShadow { get; set; }
+        public string HoverBg { get; set; }
+        public string HoverBorderColor { get; set; }
+        public double InputFontSize { get; set; }
+        public double InputFontSizeLG { get; set; }
+        public double InputFontSizeSM { get; set; }
+        public double PaddingBlock { get; set; }
+        public double PaddingBlockLG { get; set; }
+        public double PaddingBlockSM { get; set; }
+        public double PaddingInline { get; set; }
+        public double PaddingInlineLG { get; set; }
+        public double PaddingInlineSM { get; set; }
+        public string WarningActiveShadow { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class MenuComponentToken
     {
-        public string ComponentToken { get; set; }
+        public OneOf<double, string> ActiveBarBorderWidth { get; set; }
+        public double ActiveBarHeight { get; set; }
+        public OneOf<double, string> ActiveBarWidth { get; set; }
+        public double CollapsedIconSize { get; set; }
+        public OneOf<double, string> CollapsedWidth { get; set; }
+        public double ColorActiveBarBorderSize { get; set; }
+        public double ColorActiveBarHeight { get; set; }
+        public OneOf<double, string> ColorActiveBarWidth { get; set; }
+        public string ColorDangerItemBgActive { get; set; }
+        public string ColorDangerItemBgSelected { get; set; }
+        public string ColorDangerItemText { get; set; }
+        public string ColorDangerItemTextHover { get; set; }
+        public string ColorDangerItemTextSelected { get; set; }
+        public string ColorGroupTitle { get; set; }
+        public string ColorItemBg { get; set; }
+        public string ColorItemBgActive { get; set; }
+        public string ColorItemBgHover { get; set; }
+        public string ColorItemBgSelected { get; set; }
+        public string ColorItemBgSelectedHorizontal { get; set; }
+        public string ColorItemText { get; set; }
+        public string ColorItemTextDisabled { get; set; }
+        public string ColorItemTextHover { get; set; }
+        public string ColorItemTextHoverHorizontal { get; set; }
+        public string ColorItemTextSelected { get; set; }
+        public string ColorItemTextSelectedHorizontal { get; set; }
+        public string ColorSubItemBg { get; set; }
+        public string DangerItemActiveBg { get; set; }
+        public string DangerItemColor { get; set; }
+        public string DangerItemHoverColor { get; set; }
+        public string DangerItemSelectedBg { get; set; }
+        public string DangerItemSelectedColor { get; set; }
+        public string DarkDangerItemActiveBg { get; set; }
+        public string DarkDangerItemColor { get; set; }
+        public string DarkDangerItemHoverColor { get; set; }
+        public string DarkDangerItemSelectedBg { get; set; }
+        public string DarkDangerItemSelectedColor { get; set; }
+        public string DarkGroupTitleColor { get; set; }
+        public string DarkItemBg { get; set; }
+        public string DarkItemColor { get; set; }
+        public string DarkItemDisabledColor { get; set; }
+        public string DarkItemHoverBg { get; set; }
+        public string DarkItemHoverColor { get; set; }
+        public string DarkItemSelectedBg { get; set; }
+        public string DarkItemSelectedColor { get; set; }
+        public string DarkPopupBg { get; set; }
+        public string DarkSubMenuItemBg { get; set; }
+        public OneOf<double, string> DropdownWidth { get; set; }
+        public string GroupTitleColor { get; set; }
+        public double GroupTitleFontSize { get; set; }
+        public OneOf<string, double> GroupTitleLineHeight { get; set; }
+        public double HorizontalItemBorderRadius { get; set; }
+        public string HorizontalItemHoverBg { get; set; }
+        public string HorizontalItemHoverColor { get; set; }
+        public string HorizontalItemSelectedBg { get; set; }
+        public string HorizontalItemSelectedColor { get; set; }
+        public OneOf<string, double> HorizontalLineHeight { get; set; }
+        public OneOf<string, double> IconMarginInlineEnd { get; set; }
+        public double IconSize { get; set; }
+        public string ItemActiveBg { get; set; }
+        public string ItemBg { get; set; }
+        public double ItemBorderRadius { get; set; }
+        public string ItemColor { get; set; }
+        public string ItemDisabledColor { get; set; }
+        public OneOf<double, string> ItemHeight { get; set; }
+        public string ItemHoverBg { get; set; }
+        public string ItemHoverColor { get; set; }
+        public OneOf<string, double> ItemMarginBlock { get; set; }
+        public double ItemMarginInline { get; set; }
+        public OneOf<string, double> ItemPaddingInline { get; set; }
+        public string ItemSelectedBg { get; set; }
+        public string ItemSelectedColor { get; set; }
+        public OneOf<double, string> ItemWidth { get; set; }
+        public string PopupBg { get; set; }
+        public double RadiusItem { get; set; }
+        public double RadiusSubMenuItem { get; set; }
+        public string SubMenuItemBg { get; set; }
+        public double SubMenuItemBorderRadius { get; set; }
+        public string SubMenuItemSelectedColor { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class MessageComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string ContentBg { get; set; }
+        public OneOf<string, double> ContentPadding { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class ModalComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double BodyPadding { get; set; }
+        public OneOf<string, double> ConfirmBodyPadding { get; set; }
+        public OneOf<string, double> ConfirmBtnsMarginTop { get; set; }
+        public OneOf<string, double> ConfirmIconMarginInlineEnd { get; set; }
+        public string ContentBg { get; set; }
+        public OneOf<double, string> ContentPadding { get; set; }
+        public string FooterBg { get; set; }
+        public OneOf<string, double> FooterBorderRadius { get; set; }
+        public string FooterBorderTop { get; set; }
+        public OneOf<string, double> FooterMarginTop { get; set; }
+        public OneOf<string, double> FooterPadding { get; set; }
+        public string HeaderBg { get; set; }
+        public string HeaderBorderBottom { get; set; }
+        public double HeaderMarginBottom { get; set; }
+        public OneOf<string, double> HeaderPadding { get; set; }
+        public string TitleColor { get; set; }
+        public OneOf<double, string> TitleFontSize { get; set; }
+        public OneOf<double, string> TitleLineHeight { get; set; }
     }
 
     public sealed class NotificationComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string ColorErrorBg { get; set; }
+        public string ColorInfoBg { get; set; }
+        public string ColorSuccessBg { get; set; }
+        public string ColorWarningBg { get; set; }
+        public string ProgressBg { get; set; }
+        public OneOf<double, string> Width { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class PaginationComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string ItemActiveBg { get; set; }
+        public string ItemActiveBgDisabled { get; set; }
+        public string ItemActiveColor { get; set; }
+        public string ItemActiveColorDisabled { get; set; }
+        public string ItemActiveColorHover { get; set; }
+        public string ItemBg { get; set; }
+        public string ItemInputBg { get; set; }
+        public string ItemLinkBg { get; set; }
+        public double ItemSize { get; set; }
+        public double ItemSizeLG { get; set; }
+        public double ItemSizeSM { get; set; }
+        public double MiniOptionsSizeChangerTop { get; set; }
     }
 
     public sealed class PopconfirmComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class PopoverComponentToken
     {
-        public string ComponentToken { get; set; }
+        public OneOf<double, string> InnerContentPadding { get; set; }
+        public double InnerPadding { get; set; }
+        public OneOf<double, string> MinWidth { get; set; }
+        public string TitleBorderBottom { get; set; }
+        public double TitleMarginBottom { get; set; }
+        public OneOf<double, string> TitleMinWidth { get; set; }
+        public OneOf<double, string> TitlePadding { get; set; }
+        public OneOf<double, string> Width { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class ProgressComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string CircleIconFontSize { get; set; }
+        public string CircleTextColor { get; set; }
+        public string CircleTextFontSize { get; set; }
+        public string DefaultColor { get; set; }
+        public double LineBorderRadius { get; set; }
+        public string RemainingColor { get; set; }
     }
 
     public sealed class QrCodeComponentToken
@@ -306,17 +658,40 @@ namespace AntDesign.Theming
 
     public sealed class RadioComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string ButtonBg { get; set; }
+        public string ButtonCheckedBg { get; set; }
+        public string ButtonCheckedBgDisabled { get; set; }
+        public string ButtonCheckedColorDisabled { get; set; }
+        public string ButtonColor { get; set; }
+        public double ButtonPaddingInline { get; set; }
+        public string ButtonSolidCheckedActiveBg { get; set; }
+        public string ButtonSolidCheckedBg { get; set; }
+        public string ButtonSolidCheckedColor { get; set; }
+        public string ButtonSolidCheckedHoverBg { get; set; }
+        public string DotColorDisabled { get; set; }
+        public double DotSize { get; set; }
+        public string RadioBgColor { get; set; }
+        public string RadioColor { get; set; }
+        public double RadioSize { get; set; }
+        public double WrapperMarginInlineEnd { get; set; }
     }
 
     public sealed class RateComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string StarBg { get; set; }
+        public string StarColor { get; set; }
+        public OneOf<string, double> StarHoverScale { get; set; }
+        public double StarSize { get; set; }
+        public double StarSizeLG { get; set; }
+        public double StarSizeSM { get; set; }
     }
 
     public sealed class ResultComponentToken
     {
-        public string ComponentToken { get; set; }
+        public OneOf<string, double> ExtraMargin { get; set; }
+        public OneOf<double, string> IconFontSize { get; set; }
+        public double SubtitleFontSize { get; set; }
+        public OneOf<double, string> TitleFontSize { get; set; }
     }
 
     public sealed class RowComponentToken
@@ -326,7 +701,14 @@ namespace AntDesign.Theming
 
     public sealed class SegmentedComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string ItemActiveBg { get; set; }
+        public string ItemColor { get; set; }
+        public string ItemHoverBg { get; set; }
+        public string ItemHoverColor { get; set; }
+        public string ItemSelectedBg { get; set; }
+        public string ItemSelectedColor { get; set; }
+        public string TrackBg { get; set; }
+        public OneOf<string, double> TrackPadding { get; set; }
     }
 
     public sealed class SelectComponentToken
@@ -335,6 +717,14 @@ namespace AntDesign.Theming
         public string ActiveOutlineColor { get; set; }
         public string ClearBg { get; set; }
         public string HoverBorderColor { get; set; }
+        public string MultipleItemBg { get; set; }
+        public string MultipleItemBorderColor { get; set; }
+        public string MultipleItemBorderColorDisabled { get; set; }
+        public string MultipleItemColorDisabled { get; set; }
+        public double MultipleItemHeight { get; set; }
+        public double MultipleItemHeightLG { get; set; }
+        public double MultipleItemHeightSM { get; set; }
+        public string MultipleSelectorBgDisabled { get; set; }
         public string OptionActiveBg { get; set; }
         public double OptionFontSize { get; set; }
         public double OptionHeight { get; set; }
@@ -351,12 +741,36 @@ namespace AntDesign.Theming
 
     public sealed class SkeletonComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double BlockRadius { get; set; }
+        public string Color { get; set; }
+        public string ColorGradientEnd { get; set; }
+        public string GradientFromColor { get; set; }
+        public string GradientToColor { get; set; }
+        public double ParagraphLiHeight { get; set; }
+        public double ParagraphMarginTop { get; set; }
+        public OneOf<double, string> TitleHeight { get; set; }
     }
 
     public sealed class SliderComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double ControlSize { get; set; }
+        public string DotActiveBorderColor { get; set; }
+        public string DotBorderColor { get; set; }
+        public double DotSize { get; set; }
+        public string HandleActiveColor { get; set; }
+        public string HandleActiveOutlineColor { get; set; }
+        public string HandleColor { get; set; }
+        public string HandleColorDisabled { get; set; }
+        public OneOf<double, string> HandleLineWidth { get; set; }
+        public OneOf<double, string> HandleLineWidthHover { get; set; }
+        public double HandleSize { get; set; }
+        public double HandleSizeHover { get; set; }
+        public string RailBg { get; set; }
+        public string RailHoverBg { get; set; }
+        public double RailSize { get; set; }
+        public string TrackBg { get; set; }
+        public string TrackBgDisabled { get; set; }
+        public string TrackHoverBg { get; set; }
     }
 
     public sealed class SpaceComponentToken
@@ -366,82 +780,206 @@ namespace AntDesign.Theming
 
     public sealed class SpinComponentToken
     {
-        public string ComponentToken { get; set; }
+        public OneOf<double, string> ContentHeight { get; set; }
+        public double DotSize { get; set; }
+        public double DotSizeLG { get; set; }
+        public double DotSizeSM { get; set; }
     }
 
     public sealed class SplitterComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double ResizeSpinnerSize { get; set; }
+        public double SplitBarDraggableSize { get; set; }
+        public double SplitBarSize { get; set; }
+        public double SplitTriggerSize { get; set; }
     }
 
     public sealed class StatisticComponentToken
     {
-        public string ComponentToken { get; set; }
+        public OneOf<double, string> ContentFontSize { get; set; }
+        public double TitleFontSize { get; set; }
     }
 
     public sealed class StepsComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double CustomIconFontSize { get; set; }
+        public double CustomIconSize { get; set; }
+        public double CustomIconTop { get; set; }
+        public double DescriptionMaxWidth { get; set; }
+        public double DotCurrentSize { get; set; }
+        public double DotSize { get; set; }
+        public double IconFontSize { get; set; }
+        public double IconSize { get; set; }
+        public OneOf<double, string> IconSizeSM { get; set; }
+        public double IconTop { get; set; }
+        public string NavArrowColor { get; set; }
+        public OneOf<string, double> NavContentMaxWidth { get; set; }
+        public OneOf<double, string> TitleLineHeight { get; set; }
     }
 
     public sealed class SwitchComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string HandleBg { get; set; }
+        public string HandleShadow { get; set; }
+        public double HandleSize { get; set; }
+        public double HandleSizeSM { get; set; }
+        public double InnerMaxMargin { get; set; }
+        public double InnerMaxMarginSM { get; set; }
+        public double InnerMinMargin { get; set; }
+        public double InnerMinMarginSM { get; set; }
+        public OneOf<double, string> TrackHeight { get; set; }
+        public OneOf<double, string> TrackHeightSM { get; set; }
+        public OneOf<double, string> TrackMinWidth { get; set; }
+        public OneOf<double, string> TrackMinWidthSM { get; set; }
+        public double TrackPadding { get; set; }
     }
 
     public sealed class TableComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string BodySortBg { get; set; }
+        public string BorderColor { get; set; }
+        public double CellFontSize { get; set; }
+        public double CellFontSizeMD { get; set; }
+        public double CellFontSizeSM { get; set; }
+        public double CellPaddingBlock { get; set; }
+        public double CellPaddingBlockMD { get; set; }
+        public double CellPaddingBlockSM { get; set; }
+        public double CellPaddingInline { get; set; }
+        public double CellPaddingInlineMD { get; set; }
+        public double CellPaddingInlineSM { get; set; }
+        public string ExpandIconBg { get; set; }
+        public double ExpandIconHalfInner { get; set; }
+        public double ExpandIconMarginTop { get; set; }
+        public double ExpandIconScale { get; set; }
+        public double ExpandIconSize { get; set; }
+        public string FilterDropdownBg { get; set; }
+        public string FilterDropdownMenuBg { get; set; }
+        public string FixedHeaderSortActiveBg { get; set; }
+        public string FooterBg { get; set; }
+        public string FooterColor { get; set; }
+        public string HeaderBg { get; set; }
+        public double HeaderBorderRadius { get; set; }
+        public string HeaderColor { get; set; }
+        public string HeaderFilterHoverBg { get; set; }
+        public string HeaderIconColor { get; set; }
+        public string HeaderIconHoverColor { get; set; }
+        public string HeaderSortActiveBg { get; set; }
+        public string HeaderSortHoverBg { get; set; }
+        public string HeaderSplitColor { get; set; }
+        public string RowExpandedBg { get; set; }
+        public string RowHoverBg { get; set; }
+        public string RowSelectedBg { get; set; }
+        public string RowSelectedHoverBg { get; set; }
+        public OneOf<double, string> SelectionColumnWidth { get; set; }
+        public string StickyScrollBarBg { get; set; }
+        public double StickyScrollBarBorderRadius { get; set; }
     }
 
     public sealed class TabsComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string CardBg { get; set; }
+        public double CardGutter { get; set; }
+        public double CardHeight { get; set; }
+        public double CardHeightLG { get; set; }
+        public double CardHeightSM { get; set; }
+        public string CardPadding { get; set; }
+        public string CardPaddingLG { get; set; }
+        public string CardPaddingSM { get; set; }
+        public double HorizontalItemGutter { get; set; }
+        public string HorizontalItemMargin { get; set; }
+        public string HorizontalItemMarginRTL { get; set; }
+        public string HorizontalItemPadding { get; set; }
+        public string HorizontalItemPaddingLG { get; set; }
+        public string HorizontalItemPaddingSM { get; set; }
+        public string HorizontalMargin { get; set; }
+        public string InkBarColor { get; set; }
+        public string ItemActiveColor { get; set; }
+        public string ItemColor { get; set; }
+        public string ItemHoverColor { get; set; }
+        public string ItemSelectedColor { get; set; }
+        public double TitleFontSize { get; set; }
+        public double TitleFontSizeLG { get; set; }
+        public double TitleFontSizeSM { get; set; }
+        public string VerticalItemMargin { get; set; }
+        public string VerticalItemPadding { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class TagComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string DefaultBg { get; set; }
+        public string DefaultColor { get; set; }
+        public string SolidTextColor { get; set; }
     }
 
     public sealed class TimelineComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string DotBg { get; set; }
+        public OneOf<double, string> DotBorderWidth { get; set; }
+        public OneOf<double, string> DotSize { get; set; }
+        public double ItemPaddingBottom { get; set; }
+        public string TailColor { get; set; }
+        public OneOf<double, string> TailWidth { get; set; }
     }
 
     public sealed class TooltipComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double MaxWidth { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class TourComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double CloseBtnSize { get; set; }
+        public string PrimaryNextBtnHoverBg { get; set; }
+        public string PrimaryPrevBtnBg { get; set; }
+        public double ZIndexPopup { get; set; }
     }
 
     public sealed class TransferComponentToken
     {
-        public string ComponentToken { get; set; }
+        public OneOf<double, string> HeaderHeight { get; set; }
+        public OneOf<double, string> ItemHeight { get; set; }
+        public OneOf<double, string> ItemPaddingBlock { get; set; }
+        public OneOf<double, string> ListHeight { get; set; }
+        public OneOf<double, string> ListWidth { get; set; }
+        public OneOf<double, string> ListWidthLG { get; set; }
     }
 
     public sealed class TreeSelectComponentToken
     {
-        public string ComponentToken { get; set; }
+        public double IndentSize { get; set; }
+        public string NodeHoverBg { get; set; }
+        public string NodeHoverColor { get; set; }
+        public string NodeSelectedBg { get; set; }
+        public string NodeSelectedColor { get; set; }
+        public double SwitcherSize { get; set; }
+        public double TitleHeight { get; set; }
     }
 
     public sealed class TreeComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string DirectoryNodeSelectedBg { get; set; }
+        public string DirectoryNodeSelectedColor { get; set; }
+        public double IndentSize { get; set; }
+        public string NodeHoverBg { get; set; }
+        public string NodeHoverColor { get; set; }
+        public string NodeSelectedBg { get; set; }
+        public string NodeSelectedColor { get; set; }
+        public double SwitcherSize { get; set; }
+        public double TitleHeight { get; set; }
     }
 
     public sealed class TypographyComponentToken
     {
-        public string ComponentToken { get; set; }
+        public OneOf<double, string> TitleMarginBottom { get; set; }
+        public OneOf<double, string> TitleMarginTop { get; set; }
     }
 
     public sealed class UploadComponentToken
     {
-        public string ComponentToken { get; set; }
+        public string ActionsColor { get; set; }
+        public double PictureCardSize { get; set; }
     }
 
     public sealed class ButtonStyleToken
@@ -562,147 +1100,677 @@ namespace AntDesign.Theming
     {
         public static IReadOnlyList<ComponentTokenDefinition> All { get; } = new ReadOnlyCollection<ComponentTokenDefinition>(new[]
         {
-            new ComponentTokenDefinition("affix", "componentToken", "--ant-affix-component-token", true),
-            new ComponentTokenDefinition("alert", "componentToken", "--ant-alert-component-token", true),
-            new ComponentTokenDefinition("anchor", "componentToken", "--ant-anchor-component-token", true),
-            new ComponentTokenDefinition("app", "componentToken", "--ant-app-component-token", true),
-            new ComponentTokenDefinition("avatar", "componentToken", "--ant-avatar-component-token", true),
-            new ComponentTokenDefinition("back-top", "componentToken", "--ant-back-top-component-token", true),
-            new ComponentTokenDefinition("badge", "componentToken", "--ant-badge-component-token", true),
-            new ComponentTokenDefinition("border-beam", "componentToken", "--ant-border-beam-component-token", true),
-            new ComponentTokenDefinition("breadcrumb", "componentToken", "--ant-breadcrumb-component-token", true),
-            new ComponentTokenDefinition("button", "borderColorDisabled", "--ant-button-border-color-disabled", false),
-            new ComponentTokenDefinition("button", "contentFontSize", "--ant-button-content-font-size", false),
-            new ComponentTokenDefinition("button", "contentFontSizeLG", "--ant-button-content-font-size-lg", false),
-            new ComponentTokenDefinition("button", "contentFontSizeSM", "--ant-button-content-font-size-sm", false),
-            new ComponentTokenDefinition("button", "contentLineHeight", "--ant-button-content-line-height", false),
-            new ComponentTokenDefinition("button", "contentLineHeightLG", "--ant-button-content-line-height-lg", false),
-            new ComponentTokenDefinition("button", "contentLineHeightSM", "--ant-button-content-line-height-sm", false),
-            new ComponentTokenDefinition("button", "dangerColor", "--ant-button-danger-color", false),
-            new ComponentTokenDefinition("button", "dangerShadow", "--ant-button-danger-shadow", false),
-            new ComponentTokenDefinition("button", "dashedBgDisabled", "--ant-button-dashed-bg-disabled", false),
-            new ComponentTokenDefinition("button", "defaultActiveBg", "--ant-button-default-active-bg", false),
-            new ComponentTokenDefinition("button", "defaultActiveBorderColor", "--ant-button-default-active-border-color", false),
-            new ComponentTokenDefinition("button", "defaultActiveColor", "--ant-button-default-active-color", false),
-            new ComponentTokenDefinition("button", "defaultBg", "--ant-button-default-bg", false),
-            new ComponentTokenDefinition("button", "defaultBgDisabled", "--ant-button-default-bg-disabled", false),
-            new ComponentTokenDefinition("button", "defaultBorderColor", "--ant-button-default-border-color", false),
-            new ComponentTokenDefinition("button", "defaultColor", "--ant-button-default-color", false),
-            new ComponentTokenDefinition("button", "defaultGhostBorderColor", "--ant-button-default-ghost-border-color", false),
-            new ComponentTokenDefinition("button", "defaultGhostColor", "--ant-button-default-ghost-color", false),
-            new ComponentTokenDefinition("button", "defaultHoverBg", "--ant-button-default-hover-bg", false),
-            new ComponentTokenDefinition("button", "defaultHoverBorderColor", "--ant-button-default-hover-border-color", false),
-            new ComponentTokenDefinition("button", "defaultHoverColor", "--ant-button-default-hover-color", false),
-            new ComponentTokenDefinition("button", "defaultShadow", "--ant-button-default-shadow", false),
-            new ComponentTokenDefinition("button", "fontWeight", "--ant-button-font-weight", false),
-            new ComponentTokenDefinition("button", "ghostBg", "--ant-button-ghost-bg", false),
-            new ComponentTokenDefinition("button", "iconGap", "--ant-button-icon-gap", false),
-            new ComponentTokenDefinition("button", "linkHoverBg", "--ant-button-link-hover-bg", false),
-            new ComponentTokenDefinition("button", "onlyIconSize", "--ant-button-only-icon-size", false),
-            new ComponentTokenDefinition("button", "onlyIconSizeLG", "--ant-button-only-icon-size-lg", false),
-            new ComponentTokenDefinition("button", "onlyIconSizeSM", "--ant-button-only-icon-size-sm", false),
-            new ComponentTokenDefinition("button", "paddingBlock", "--ant-button-padding-block", false),
-            new ComponentTokenDefinition("button", "paddingBlockLG", "--ant-button-padding-block-lg", false),
-            new ComponentTokenDefinition("button", "paddingBlockSM", "--ant-button-padding-block-sm", false),
-            new ComponentTokenDefinition("button", "paddingInline", "--ant-button-padding-inline", false),
-            new ComponentTokenDefinition("button", "paddingInlineLG", "--ant-button-padding-inline-lg", false),
-            new ComponentTokenDefinition("button", "paddingInlineSM", "--ant-button-padding-inline-sm", false),
-            new ComponentTokenDefinition("button", "primaryColor", "--ant-button-primary-color", false),
-            new ComponentTokenDefinition("button", "primaryShadow", "--ant-button-primary-shadow", false),
-            new ComponentTokenDefinition("button", "solidTextColor", "--ant-button-solid-text-color", false),
-            new ComponentTokenDefinition("button", "textHoverBg", "--ant-button-text-hover-bg", false),
-            new ComponentTokenDefinition("button", "textTextActiveColor", "--ant-button-text-text-active-color", false),
-            new ComponentTokenDefinition("button", "textTextColor", "--ant-button-text-text-color", false),
-            new ComponentTokenDefinition("button", "textTextHoverColor", "--ant-button-text-text-hover-color", false),
-            new ComponentTokenDefinition("calendar", "componentToken", "--ant-calendar-component-token", true),
-            new ComponentTokenDefinition("card", "componentToken", "--ant-card-component-token", true),
-            new ComponentTokenDefinition("carousel", "componentToken", "--ant-carousel-component-token", true),
-            new ComponentTokenDefinition("cascader", "componentToken", "--ant-cascader-component-token", true),
-            new ComponentTokenDefinition("checkbox", "componentToken", "--ant-checkbox-component-token", true),
-            new ComponentTokenDefinition("col", "componentToken", "--ant-col-component-token", true),
-            new ComponentTokenDefinition("collapse", "componentToken", "--ant-collapse-component-token", true),
-            new ComponentTokenDefinition("color-picker", "componentToken", "--ant-color-picker-component-token", true),
-            new ComponentTokenDefinition("config-provider", "componentToken", "--ant-config-provider-component-token", true),
-            new ComponentTokenDefinition("date-picker", "presetsMaxWidth", "--ant-date-picker-presets-max-width", false),
-            new ComponentTokenDefinition("date-picker", "presetsWidth", "--ant-date-picker-presets-width", false),
-            new ComponentTokenDefinition("date-picker", "zIndexPopup", "--ant-date-picker-z-index-popup", false),
-            new ComponentTokenDefinition("descriptions", "componentToken", "--ant-descriptions-component-token", true),
-            new ComponentTokenDefinition("divider", "componentToken", "--ant-divider-component-token", true),
-            new ComponentTokenDefinition("drawer", "componentToken", "--ant-drawer-component-token", true),
-            new ComponentTokenDefinition("dropdown", "componentToken", "--ant-dropdown-component-token", true),
-            new ComponentTokenDefinition("empty", "componentToken", "--ant-empty-component-token", true),
-            new ComponentTokenDefinition("flex", "componentToken", "--ant-flex-component-token", true),
-            new ComponentTokenDefinition("float-button", "componentToken", "--ant-float-button-component-token", true),
-            new ComponentTokenDefinition("form", "componentToken", "--ant-form-component-token", true),
-            new ComponentTokenDefinition("grid", "componentToken", "--ant-grid-component-token", true),
-            new ComponentTokenDefinition("image", "componentToken", "--ant-image-component-token", true),
-            new ComponentTokenDefinition("input-number", "controlWidth", "--ant-input-number-control-width", false),
-            new ComponentTokenDefinition("input-number", "filledHandleBg", "--ant-input-number-filled-handle-bg", false),
-            new ComponentTokenDefinition("input-number", "handleActiveBg", "--ant-input-number-handle-active-bg", false),
-            new ComponentTokenDefinition("input-number", "handleBg", "--ant-input-number-handle-bg", false),
-            new ComponentTokenDefinition("input-number", "handleBorderColor", "--ant-input-number-handle-border-color", false),
-            new ComponentTokenDefinition("input-number", "handleFontSize", "--ant-input-number-handle-font-size", false),
-            new ComponentTokenDefinition("input-number", "handleHoverColor", "--ant-input-number-handle-hover-color", false),
-            new ComponentTokenDefinition("input-number", "handleOpacity", "--ant-input-number-handle-opacity", false),
-            new ComponentTokenDefinition("input-number", "handleVisible", "--ant-input-number-handle-visible", false),
-            new ComponentTokenDefinition("input-number", "handleVisibleWidth", "--ant-input-number-handle-visible-width", false),
-            new ComponentTokenDefinition("input-number", "handleWidth", "--ant-input-number-handle-width", false),
-            new ComponentTokenDefinition("input", "componentToken", "--ant-input-component-token", false),
-            new ComponentTokenDefinition("layout", "componentToken", "--ant-layout-component-token", true),
-            new ComponentTokenDefinition("list", "componentToken", "--ant-list-component-token", true),
-            new ComponentTokenDefinition("listy", "componentToken", "--ant-listy-component-token", true),
-            new ComponentTokenDefinition("masonry", "componentToken", "--ant-masonry-component-token", true),
-            new ComponentTokenDefinition("mentions", "componentToken", "--ant-mentions-component-token", true),
-            new ComponentTokenDefinition("menu", "componentToken", "--ant-menu-component-token", true),
-            new ComponentTokenDefinition("message", "componentToken", "--ant-message-component-token", true),
-            new ComponentTokenDefinition("modal", "componentToken", "--ant-modal-component-token", true),
-            new ComponentTokenDefinition("notification", "componentToken", "--ant-notification-component-token", true),
-            new ComponentTokenDefinition("pagination", "componentToken", "--ant-pagination-component-token", true),
-            new ComponentTokenDefinition("popconfirm", "componentToken", "--ant-popconfirm-component-token", true),
-            new ComponentTokenDefinition("popover", "componentToken", "--ant-popover-component-token", true),
-            new ComponentTokenDefinition("progress", "componentToken", "--ant-progress-component-token", true),
-            new ComponentTokenDefinition("qr-code", "componentToken", "--ant-qr-code-component-token", true),
-            new ComponentTokenDefinition("qrcode", "componentToken", "--ant-qrcode-component-token", true),
-            new ComponentTokenDefinition("radio", "componentToken", "--ant-radio-component-token", true),
-            new ComponentTokenDefinition("rate", "componentToken", "--ant-rate-component-token", true),
-            new ComponentTokenDefinition("result", "componentToken", "--ant-result-component-token", true),
-            new ComponentTokenDefinition("row", "componentToken", "--ant-row-component-token", true),
-            new ComponentTokenDefinition("segmented", "componentToken", "--ant-segmented-component-token", true),
-            new ComponentTokenDefinition("select", "activeBorderColor", "--ant-select-active-border-color", false),
-            new ComponentTokenDefinition("select", "activeOutlineColor", "--ant-select-active-outline-color", false),
-            new ComponentTokenDefinition("select", "clearBg", "--ant-select-clear-bg", false),
-            new ComponentTokenDefinition("select", "hoverBorderColor", "--ant-select-hover-border-color", false),
-            new ComponentTokenDefinition("select", "optionActiveBg", "--ant-select-option-active-bg", false),
-            new ComponentTokenDefinition("select", "optionFontSize", "--ant-select-option-font-size", false),
-            new ComponentTokenDefinition("select", "optionHeight", "--ant-select-option-height", false),
-            new ComponentTokenDefinition("select", "optionLineHeight", "--ant-select-option-line-height", false),
-            new ComponentTokenDefinition("select", "optionPadding", "--ant-select-option-padding", false),
-            new ComponentTokenDefinition("select", "optionSelectedBg", "--ant-select-option-selected-bg", false),
-            new ComponentTokenDefinition("select", "optionSelectedColor", "--ant-select-option-selected-color", false),
-            new ComponentTokenDefinition("select", "optionSelectedFontWeight", "--ant-select-option-selected-font-weight", false),
-            new ComponentTokenDefinition("select", "selectorBg", "--ant-select-selector-bg", false),
-            new ComponentTokenDefinition("select", "showArrowPaddingInlineEnd", "--ant-select-show-arrow-padding-inline-end", false),
-            new ComponentTokenDefinition("select", "singleItemHeightLG", "--ant-select-single-item-height-lg", false),
-            new ComponentTokenDefinition("select", "zIndexPopup", "--ant-select-z-index-popup", false),
-            new ComponentTokenDefinition("skeleton", "componentToken", "--ant-skeleton-component-token", true),
-            new ComponentTokenDefinition("slider", "componentToken", "--ant-slider-component-token", true),
-            new ComponentTokenDefinition("space", "componentToken", "--ant-space-component-token", true),
-            new ComponentTokenDefinition("spin", "componentToken", "--ant-spin-component-token", true),
-            new ComponentTokenDefinition("splitter", "componentToken", "--ant-splitter-component-token", true),
-            new ComponentTokenDefinition("statistic", "componentToken", "--ant-statistic-component-token", true),
-            new ComponentTokenDefinition("steps", "componentToken", "--ant-steps-component-token", true),
-            new ComponentTokenDefinition("switch", "componentToken", "--ant-switch-component-token", true),
-            new ComponentTokenDefinition("table", "componentToken", "--ant-table-component-token", true),
-            new ComponentTokenDefinition("tabs", "componentToken", "--ant-tabs-component-token", true),
-            new ComponentTokenDefinition("tag", "componentToken", "--ant-tag-component-token", true),
-            new ComponentTokenDefinition("timeline", "componentToken", "--ant-timeline-component-token", true),
-            new ComponentTokenDefinition("tooltip", "componentToken", "--ant-tooltip-component-token", true),
-            new ComponentTokenDefinition("tour", "componentToken", "--ant-tour-component-token", true),
-            new ComponentTokenDefinition("transfer", "componentToken", "--ant-transfer-component-token", true),
-            new ComponentTokenDefinition("tree-select", "componentToken", "--ant-tree-select-component-token", true),
-            new ComponentTokenDefinition("tree", "componentToken", "--ant-tree-component-token", true),
-            new ComponentTokenDefinition("typography", "componentToken", "--ant-typography-component-token", true),
-            new ComponentTokenDefinition("upload", "componentToken", "--ant-upload-component-token", true),
+            new ComponentTokenDefinition("affix", "zIndexPopup", "--ant-affix-z-index-popup", "number", "弹出层的 z-index", "z-index of popup", "10", false, false, false),
+            new ComponentTokenDefinition("alert", "borderRadius", "--ant-alert-border-radius", "CSSProperties['borderRadius']", "组件圆角", "Border radius of alert", "8", false, true, false),
+            new ComponentTokenDefinition("alert", "defaultPadding", "--ant-alert-default-padding", "CSSProperties['padding']", "默认内间距", "Default padding", "8px 12px", false, true, false),
+            new ComponentTokenDefinition("alert", "withDescriptionIconSize", "--ant-alert-with-description-icon-size", "number | string", "带有描述时的图标尺寸", "Icon size with description", "24", false, true, false),
+            new ComponentTokenDefinition("alert", "withDescriptionPadding", "--ant-alert-with-description-padding", "CSSProperties['padding']", "带有描述的内间距", "Padding with description", "20px 24px", false, true, false),
+            new ComponentTokenDefinition("anchor", "linkPaddingBlock", "--ant-anchor-link-padding-block", "number", "链接纵向内间距", "Vertical padding of link", "4", false, true, false),
+            new ComponentTokenDefinition("anchor", "linkPaddingInlineStart", "--ant-anchor-link-padding-inline-start", "number", "链接横向内间距", "Horizontal padding of link", "16", false, true, false),
+            new ComponentTokenDefinition("app", "componentToken", "--ant-app-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("avatar", "containerSize", "--ant-avatar-container-size", "number", "头像尺寸", "Size of Avatar", "32", false, true, false),
+            new ComponentTokenDefinition("avatar", "containerSizeLG", "--ant-avatar-container-size-lg", "number", "大号头像尺寸", "Size of large Avatar", "40", false, true, false),
+            new ComponentTokenDefinition("avatar", "containerSizeSM", "--ant-avatar-container-size-sm", "number", "小号头像尺寸", "Size of small Avatar", "24", false, true, false),
+            new ComponentTokenDefinition("avatar", "groupBorderColor", "--ant-avatar-group-border-color", "string", "头像组边框颜色", "Border color of avatars in a group", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("avatar", "groupOverlapping", "--ant-avatar-group-overlapping", "number", "头像组重叠宽度", "Overlapping of avatars in a group", "-8", false, true, false),
+            new ComponentTokenDefinition("avatar", "groupSpace", "--ant-avatar-group-space", "number", "头像组间距", "Spacing between avatars in a group", "4", false, true, false),
+            new ComponentTokenDefinition("avatar", "iconFontSize", "--ant-avatar-icon-font-size", "number", "头像图标大小", "Font size of Avatar icon", "18", false, true, false),
+            new ComponentTokenDefinition("avatar", "iconFontSizeLG", "--ant-avatar-icon-font-size-lg", "number | string", "大号头像图标大小", "Font size of large Avatar icon", "24", false, true, false),
+            new ComponentTokenDefinition("avatar", "iconFontSizeSM", "--ant-avatar-icon-font-size-sm", "number", "小号头像图标大小", "Font size of small Avatar icon", "14", false, true, false),
+            new ComponentTokenDefinition("avatar", "textFontSize", "--ant-avatar-text-font-size", "number", "头像文字大小", "Font size of Avatar", "14", false, true, false),
+            new ComponentTokenDefinition("avatar", "textFontSizeLG", "--ant-avatar-text-font-size-lg", "number", "大号头像文字大小", "Font size of large Avatar", "14", false, true, false),
+            new ComponentTokenDefinition("avatar", "textFontSizeSM", "--ant-avatar-text-font-size-sm", "number", "小号头像文字大小", "Font size of small Avatar", "14", false, true, false),
+            new ComponentTokenDefinition("back-top", "zIndexPopup", "--ant-back-top-z-index-popup", "number", "弹出层的 z-index", "z-index of popup", "10", false, false, false),
+            new ComponentTokenDefinition("badge", "dotSize", "--ant-badge-dot-size", "number", "点状徽标尺寸", "Size of dot badge", "6", false, true, false),
+            new ComponentTokenDefinition("badge", "indicatorHeight", "--ant-badge-indicator-height", "number | string", "徽标高度", "Height of badge", "20", false, true, false),
+            new ComponentTokenDefinition("badge", "indicatorHeightSM", "--ant-badge-indicator-height-sm", "number | string", "小号徽标高度", "Height of small badge", "14", false, true, false),
+            new ComponentTokenDefinition("badge", "indicatorZIndex", "--ant-badge-indicator-zindex", "number | string", "徽标 z-index", "z-index of badge", "auto", false, true, false),
+            new ComponentTokenDefinition("badge", "paddingInline", "--ant-badge-padding-inline", "number | string", "多字符徽标水平内边距", "Inline padding of multiple words badge", "8", false, true, false),
+            new ComponentTokenDefinition("badge", "statusSize", "--ant-badge-status-size", "number", "状态徽标尺寸", "Size of status badge", "6", false, true, false),
+            new ComponentTokenDefinition("badge", "textFontSize", "--ant-badge-text-font-size", "number", "徽标文本尺寸", "Font size of badge text", "12", false, true, false),
+            new ComponentTokenDefinition("badge", "textFontSizeSM", "--ant-badge-text-font-size-sm", "number", "小号徽标文本尺寸", "Font size of small badge text", "12", false, true, false),
+            new ComponentTokenDefinition("badge", "textFontWeight", "--ant-badge-text-font-weight", "number | string", "徽标文本粗细", "Font weight of badge text", "normal", false, true, false),
+            new ComponentTokenDefinition("border-beam", "componentToken", "--ant-border-beam-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("breadcrumb", "iconFontSize", "--ant-breadcrumb-icon-font-size", "number", "图标大小", "Icon size", "14", false, true, false),
+            new ComponentTokenDefinition("breadcrumb", "itemColor", "--ant-breadcrumb-item-color", "string", "面包屑项文字颜色", "Text color of Breadcrumb item", "rgba(0,0,0,0.45)", false, true, false),
+            new ComponentTokenDefinition("breadcrumb", "lastItemColor", "--ant-breadcrumb-last-item-color", "string", "最后一项文字颜色", "Text color of the last item", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("breadcrumb", "linkColor", "--ant-breadcrumb-link-color", "string", "链接文字颜色", "Text color of link", "rgba(0,0,0,0.45)", false, true, false),
+            new ComponentTokenDefinition("breadcrumb", "linkHoverColor", "--ant-breadcrumb-link-hover-color", "string", "链接文字悬浮颜色", "Color of hovered link", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("breadcrumb", "separatorColor", "--ant-breadcrumb-separator-color", "string", "分隔符颜色", "Color of separator", "rgba(0,0,0,0.45)", false, true, false),
+            new ComponentTokenDefinition("breadcrumb", "separatorMargin", "--ant-breadcrumb-separator-margin", "number", "分隔符外间距", "Margin of separator", "8", false, true, false),
+            new ComponentTokenDefinition("button", "borderColorDisabled", "--ant-button-border-color-disabled", "string", "禁用状态边框颜色", "Border color of disabled button", "", true, false, false),
+            new ComponentTokenDefinition("button", "contentFontSize", "--ant-button-content-font-size", "number", "按钮内容字体大小", "Font size of button content", "14", false, true, false),
+            new ComponentTokenDefinition("button", "contentFontSizeLG", "--ant-button-content-font-size-lg", "number", "大号按钮内容字体大小", "Font size of large button content", "16", false, true, false),
+            new ComponentTokenDefinition("button", "contentFontSizeSM", "--ant-button-content-font-size-sm", "number", "小号按钮内容字体大小", "Font size of small button content", "14", false, true, false),
+            new ComponentTokenDefinition("button", "contentLineHeight", "--ant-button-content-line-height", "number", "按钮内容字体行高", "Line height of button content", "", true, false, false),
+            new ComponentTokenDefinition("button", "contentLineHeightLG", "--ant-button-content-line-height-lg", "number", "大号按钮内容字体行高", "Line height of large button content", "", true, false, false),
+            new ComponentTokenDefinition("button", "contentLineHeightSM", "--ant-button-content-line-height-sm", "number", "小号按钮内容字体行高", "Line height of small button content", "", true, false, false),
+            new ComponentTokenDefinition("button", "dangerColor", "--ant-button-danger-color", "string", "危险按钮文本颜色", "Text color of danger button", "#fff", false, true, false),
+            new ComponentTokenDefinition("button", "dangerShadow", "--ant-button-danger-shadow", "string", "危险按钮阴影", "Shadow of danger button", "0 2px 0 rgba(255,38,5,0.06)", false, true, false),
+            new ComponentTokenDefinition("button", "dashedBgDisabled", "--ant-button-dashed-bg-disabled", "string", "type='dashed' 禁用状态下的背景颜色", "", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("button", "defaultActiveBg", "--ant-button-default-active-bg", "string", "默认按钮激活态背景色", "Background color of default button when active", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("button", "defaultActiveBorderColor", "--ant-button-default-active-border-color", "string", "默认按钮激活态边框颜色", "Border color of default button when active", "#0958d9", false, true, false),
+            new ComponentTokenDefinition("button", "defaultActiveColor", "--ant-button-default-active-color", "string", "默认按钮激活态文字颜色", "Text color of default button when active", "#0958d9", false, true, false),
+            new ComponentTokenDefinition("button", "defaultBg", "--ant-button-default-bg", "string", "默认按钮背景色", "Background color of default button", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("button", "defaultBgDisabled", "--ant-button-default-bg-disabled", "string", "type='default' 禁用状态下的背景颜色", "", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("button", "defaultBorderColor", "--ant-button-default-border-color", "string", "默认按钮边框颜色", "Border color of default button", "#d9d9d9", false, true, false),
+            new ComponentTokenDefinition("button", "defaultColor", "--ant-button-default-color", "string", "默认按钮文本颜色", "Text color of default button", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("button", "defaultGhostBorderColor", "--ant-button-default-ghost-border-color", "string", "默认幽灵按钮边框颜色", "Border color of default ghost button", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("button", "defaultGhostColor", "--ant-button-default-ghost-color", "string", "默认幽灵按钮文本颜色", "Text color of default ghost button", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("button", "defaultHoverBg", "--ant-button-default-hover-bg", "string", "默认按钮悬浮态背景色", "Background color of default button when hover", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("button", "defaultHoverBorderColor", "--ant-button-default-hover-border-color", "string", "默认按钮悬浮态边框颜色", "Border color of default button", "#4096ff", false, true, false),
+            new ComponentTokenDefinition("button", "defaultHoverColor", "--ant-button-default-hover-color", "string", "默认按钮悬浮态文本颜色", "Text color of default button when hover", "#4096ff", false, true, false),
+            new ComponentTokenDefinition("button", "defaultShadow", "--ant-button-default-shadow", "string", "默认按钮阴影", "Shadow of default button", "0 2px 0 rgba(0,0,0,0.02)", false, true, false),
+            new ComponentTokenDefinition("button", "fontWeight", "--ant-button-font-weight", "CSSProperties['fontWeight']", "文字字重", "Font weight of text", "400", false, true, false),
+            new ComponentTokenDefinition("button", "ghostBg", "--ant-button-ghost-bg", "string", "幽灵按钮背景色", "Background color of ghost button", "transparent", false, true, false),
+            new ComponentTokenDefinition("button", "iconGap", "--ant-button-icon-gap", "CSSProperties['gap']", "图标文字间距", "Gap between icon and text", "8", false, true, false),
+            new ComponentTokenDefinition("button", "linkHoverBg", "--ant-button-link-hover-bg", "string", "链接按钮悬浮态背景色", "Background color of link button when hover", "transparent", false, true, false),
+            new ComponentTokenDefinition("button", "onlyIconSize", "--ant-button-only-icon-size", "number | string", "只有图标的按钮图标尺寸", "Icon size of button which only contains icon", "inherit", false, true, false),
+            new ComponentTokenDefinition("button", "onlyIconSizeLG", "--ant-button-only-icon-size-lg", "number | string", "大号只有图标的按钮图标尺寸", "Icon size of large button which only contains icon", "inherit", false, true, false),
+            new ComponentTokenDefinition("button", "onlyIconSizeSM", "--ant-button-only-icon-size-sm", "number | string", "小号只有图标的按钮图标尺寸", "Icon size of small button which only contains icon", "inherit", false, true, false),
+            new ComponentTokenDefinition("button", "paddingBlock", "--ant-button-padding-block", "CSSProperties['paddingBlock']", "按钮纵向内间距", "Vertical padding of button", "", true, false, false),
+            new ComponentTokenDefinition("button", "paddingBlockLG", "--ant-button-padding-block-lg", "CSSProperties['paddingBlock']", "大号按钮纵向内间距", "Vertical padding of large button", "", true, false, false),
+            new ComponentTokenDefinition("button", "paddingBlockSM", "--ant-button-padding-block-sm", "CSSProperties['paddingBlock']", "小号按钮纵向内间距", "Vertical padding of small button", "", true, false, false),
+            new ComponentTokenDefinition("button", "paddingInline", "--ant-button-padding-inline", "CSSProperties['paddingInline']", "按钮横向内间距", "Horizontal padding of button", "15", false, true, false),
+            new ComponentTokenDefinition("button", "paddingInlineLG", "--ant-button-padding-inline-lg", "CSSProperties['paddingInline']", "大号按钮横向内间距", "Horizontal padding of large button", "15", false, true, false),
+            new ComponentTokenDefinition("button", "paddingInlineSM", "--ant-button-padding-inline-sm", "CSSProperties['paddingInline']", "小号按钮横向内间距", "Horizontal padding of small button", "7", false, true, false),
+            new ComponentTokenDefinition("button", "primaryColor", "--ant-button-primary-color", "string", "主要按钮文本颜色", "Text color of primary button", "#fff", false, true, false),
+            new ComponentTokenDefinition("button", "primaryShadow", "--ant-button-primary-shadow", "string", "主要按钮阴影", "Shadow of primary button", "0 2px 0 rgba(5,145,255,0.1)", false, true, false),
+            new ComponentTokenDefinition("button", "solidTextColor", "--ant-button-solid-text-color", "string", "默认实心按钮的文本色", "Default text color for solid buttons.", "#fff", false, true, false),
+            new ComponentTokenDefinition("button", "textHoverBg", "--ant-button-text-hover-bg", "string", "文本按钮悬浮态背景色", "Background color of text button when hover", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("button", "textTextActiveColor", "--ant-button-text-text-active-color", "string", "默认文本按钮激活态文字颜色", "Default text color for text buttons on active", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("button", "textTextColor", "--ant-button-text-text-color", "string", "默认文本按钮的文本色", "Default text color for text buttons", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("button", "textTextHoverColor", "--ant-button-text-text-hover-color", "string", "默认文本按钮悬浮态文本颜色", "Default text color for text buttons on hover", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("calendar", "fullBg", "--ant-calendar-full-bg", "string", "完整日历背景色", "Background color of full calendar", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("calendar", "fullPanelBg", "--ant-calendar-full-panel-bg", "string", "完整日历面板背景色", "Background color of full calendar panel", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("calendar", "itemActiveBg", "--ant-calendar-item-active-bg", "string", "日期项选中背景色", "Background color of selected date item", "#e6f4ff", false, true, false),
+            new ComponentTokenDefinition("calendar", "miniContentHeight", "--ant-calendar-mini-content-height", "number | string", "迷你日历内容高度", "Height of mini calendar content", "256", false, true, false),
+            new ComponentTokenDefinition("calendar", "monthControlWidth", "--ant-calendar-month-control-width", "number | string", "月选择器宽度", "Width of month select", "70", false, true, false),
+            new ComponentTokenDefinition("calendar", "yearControlWidth", "--ant-calendar-year-control-width", "number | string", "年选择器宽度", "Width of year select", "80", false, true, false),
+            new ComponentTokenDefinition("card", "actionsBg", "--ant-card-actions-bg", "string", "操作区背景色", "Background color of card actions", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("card", "actionsLiMargin", "--ant-card-actions-li-margin", "string", "操作区每一项的外间距", "Margin of each item in card actions", "12px 0", false, true, false),
+            new ComponentTokenDefinition("card", "bodyPadding", "--ant-card-body-padding", "number", "卡片内边距", "Padding of card body", "24", false, true, false),
+            new ComponentTokenDefinition("card", "bodyPaddingSM", "--ant-card-body-padding-sm", "number", "小号卡片内边距", "Padding of small card body", "12", false, true, false),
+            new ComponentTokenDefinition("card", "extraColor", "--ant-card-extra-color", "string", "额外区文字颜色", "Text color of extra area", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("card", "headerBg", "--ant-card-header-bg", "string", "卡片头部背景色", "Background color of card header", "transparent", false, true, false),
+            new ComponentTokenDefinition("card", "headerFontSize", "--ant-card-header-font-size", "number | string", "卡片头部文字大小", "Font size of card header", "16", false, true, false),
+            new ComponentTokenDefinition("card", "headerFontSizeSM", "--ant-card-header-font-size-sm", "number | string", "小号卡片头部文字大小", "Font size of small card header", "14", false, true, false),
+            new ComponentTokenDefinition("card", "headerHeight", "--ant-card-header-height", "number | string", "卡片头部高度", "Height of card header", "56", false, true, false),
+            new ComponentTokenDefinition("card", "headerHeightSM", "--ant-card-header-height-sm", "number | string", "小号卡片头部高度", "Height of small card header", "38", false, true, false),
+            new ComponentTokenDefinition("card", "headerPadding", "--ant-card-header-padding", "number", "卡片头部内边距", "Padding of card head", "24", false, true, false),
+            new ComponentTokenDefinition("card", "headerPaddingSM", "--ant-card-header-padding-sm", "number", "小号卡片头部内边距", "Padding of small card head", "12", false, true, false),
+            new ComponentTokenDefinition("card", "tabsMarginBottom", "--ant-card-tabs-margin-bottom", "number", "内置标签页组件下间距", "Margin bottom of tabs component", "-17", false, true, false),
+            new ComponentTokenDefinition("carousel", "arrowOffset", "--ant-carousel-arrow-offset", "number", "切换箭头边距", "arrows offset to Carousel edge", "8", false, true, false),
+            new ComponentTokenDefinition("carousel", "arrowSize", "--ant-carousel-arrow-size", "number", "切换箭头大小", "Size of arrows", "16", false, true, false),
+            new ComponentTokenDefinition("carousel", "dotActiveWidth", "--ant-carousel-dot-active-width", "number | string", "激活态指示点宽度", "Width of active indicator", "24", false, true, false),
+            new ComponentTokenDefinition("carousel", "dotGap", "--ant-carousel-dot-gap", "number", "指示点之间的间距", "gap between indicator", "4", false, true, false),
+            new ComponentTokenDefinition("carousel", "dotHeight", "--ant-carousel-dot-height", "number | string", "指示点高度", "Height of indicator", "3", false, true, false),
+            new ComponentTokenDefinition("carousel", "dotOffset", "--ant-carousel-dot-offset", "number", "指示点距离边缘的距离", "dot offset to Carousel edge", "12", false, true, false),
+            new ComponentTokenDefinition("carousel", "dotWidth", "--ant-carousel-dot-width", "number | string", "指示点宽度", "Width of indicator", "16", false, true, false),
+            new ComponentTokenDefinition("carousel", "dotWidthActive", "--ant-carousel-dot-width-active", "number", "", "", "", true, false, false),
+            new ComponentTokenDefinition("cascader", "controlItemWidth", "--ant-cascader-control-item-width", "number | string", "选项宽度", "Width of item", "111", false, true, false),
+            new ComponentTokenDefinition("cascader", "controlWidth", "--ant-cascader-control-width", "number | string", "选择器宽度", "Width of Cascader", "184", false, true, false),
+            new ComponentTokenDefinition("cascader", "dropdownHeight", "--ant-cascader-dropdown-height", "number | string", "下拉菜单高度", "Height of dropdown", "180", false, true, false),
+            new ComponentTokenDefinition("cascader", "menuPadding", "--ant-cascader-menu-padding", "CSSProperties['padding']", "选项菜单（单列）内间距", "Padding of menu item (single column)", "4", false, true, false),
+            new ComponentTokenDefinition("cascader", "optionPadding", "--ant-cascader-option-padding", "CSSProperties['padding']", "选项内间距", "Padding of menu item", "5px 12px", false, true, false),
+            new ComponentTokenDefinition("cascader", "optionSelectedBg", "--ant-cascader-option-selected-bg", "string", "选项选中时背景色", "Background color of selected item", "#e6f4ff", false, true, false),
+            new ComponentTokenDefinition("cascader", "optionSelectedColor", "--ant-cascader-option-selected-color", "string", "选项选中时文本颜色", "Text color when option is selected", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("cascader", "optionSelectedFontWeight", "--ant-cascader-option-selected-font-weight", "CSSProperties['fontWeight']", "选项选中时字重", "Font weight of selected item", "600", false, true, false),
+            new ComponentTokenDefinition("checkbox", "componentToken", "--ant-checkbox-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("col", "componentToken", "--ant-col-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("collapse", "borderlessContentBg", "--ant-collapse-borderless-content-bg", "string", "简约风格折叠面板的内容背景", "Background of content in borderless style", "transparent", false, true, false),
+            new ComponentTokenDefinition("collapse", "borderlessContentPadding", "--ant-collapse-borderless-content-padding", "CSSProperties['padding']", "简约风格折叠面板的内容内边距", "Padding of content in borderless style", "4px 16px 16px", false, true, false),
+            new ComponentTokenDefinition("collapse", "contentBg", "--ant-collapse-content-bg", "string", "折叠面板内容背景", "Background of content", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("collapse", "contentPadding", "--ant-collapse-content-padding", "CSSProperties['padding']", "折叠面板内容内边距", "Padding of content", "16px 16px", false, true, false),
+            new ComponentTokenDefinition("collapse", "contentPaddingLG", "--ant-collapse-content-padding-lg", "CSSProperties['padding']", "大号折叠面板内容内边距", "Padding of large content", "24", false, true, false),
+            new ComponentTokenDefinition("collapse", "contentPaddingSM", "--ant-collapse-content-padding-sm", "CSSProperties['padding']", "小号折叠面板内容内边距", "Padding of small content", "12", false, true, false),
+            new ComponentTokenDefinition("collapse", "headerBg", "--ant-collapse-header-bg", "string", "折叠面板头部背景", "Background of header", "rgba(0,0,0,0.02)", false, true, false),
+            new ComponentTokenDefinition("collapse", "headerPadding", "--ant-collapse-header-padding", "CSSProperties['padding']", "折叠面板头部内边距", "Padding of header", "12px 16px", false, true, false),
+            new ComponentTokenDefinition("collapse", "headerPaddingLG", "--ant-collapse-header-padding-lg", "CSSProperties['padding']", "大号折叠面板头部内边距", "Padding of large header", "16px 24px 16px 16px", false, true, false),
+            new ComponentTokenDefinition("collapse", "headerPaddingSM", "--ant-collapse-header-padding-sm", "CSSProperties['padding']", "小号折叠面板头部内边距", "Padding of small header", "8px 12px 8px 8px", false, true, false),
+            new ComponentTokenDefinition("color-picker", "componentToken", "--ant-color-picker-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("config-provider", "componentToken", "--ant-config-provider-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("date-picker", "activeBg", "--ant-date-picker-active-bg", "string", "输入框激活状态时背景颜色", "Background color when the input box is activated", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("date-picker", "activeBorderColor", "--ant-date-picker-active-border-color", "string", "激活态边框色", "Active border color", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("date-picker", "activeShadow", "--ant-date-picker-active-shadow", "string", "激活态阴影", "Box-shadow when active", "0 0 0 2px rgba(5,145,255,0.1)", false, true, false),
+            new ComponentTokenDefinition("date-picker", "addonBg", "--ant-date-picker-addon-bg", "string", "前/后置标签背景色", "Background color of addon", "rgba(0,0,0,0.02)", false, true, false),
+            new ComponentTokenDefinition("date-picker", "cellActiveWithRangeBg", "--ant-date-picker-cell-active-with-range-bg", "string", "选取范围内的单元格背景色", "Background color of cell in range", "#e6f4ff", false, true, false),
+            new ComponentTokenDefinition("date-picker", "cellBgDisabled", "--ant-date-picker-cell-bg-disabled", "string", "单元格禁用态背景色", "Background color of disabled cell", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("date-picker", "cellHeight", "--ant-date-picker-cell-height", "number", "单元格高度", "Height of cell", "24", false, true, false),
+            new ComponentTokenDefinition("date-picker", "cellHoverBg", "--ant-date-picker-cell-hover-bg", "string", "单元格悬浮态背景色", "Background color of cell hover state", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("date-picker", "cellHoverWithRangeBg", "--ant-date-picker-cell-hover-with-range-bg", "string", "选取范围内的单元格悬浮态背景色", "Background color of hovered cell in range", "#cbe0fd", false, true, false),
+            new ComponentTokenDefinition("date-picker", "cellRangeBorderColor", "--ant-date-picker-cell-range-border-color", "string", "选取范围时单元格边框色", "Border color of cell in range when picking", "#82b4f9", false, true, false),
+            new ComponentTokenDefinition("date-picker", "cellWidth", "--ant-date-picker-cell-width", "number", "单元格宽度", "Width of cell", "36", false, true, false),
+            new ComponentTokenDefinition("date-picker", "errorActiveShadow", "--ant-date-picker-error-active-shadow", "string", "错误状态时激活态阴影", "Box-shadow when active in error status", "0 0 0 2px rgba(255,38,5,0.06)", false, true, false),
+            new ComponentTokenDefinition("date-picker", "hoverBg", "--ant-date-picker-hover-bg", "string", "输入框hover状态时背景颜色", "Background color when the input box hovers", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("date-picker", "hoverBorderColor", "--ant-date-picker-hover-border-color", "string", "悬浮态边框色", "Hover border color", "#4096ff", false, true, false),
+            new ComponentTokenDefinition("date-picker", "inputFontSize", "--ant-date-picker-input-font-size", "number", "字体大小", "Font size", "14", false, true, false),
+            new ComponentTokenDefinition("date-picker", "inputFontSizeLG", "--ant-date-picker-input-font-size-lg", "number", "大号字体大小", "Font size of large", "16", false, true, false),
+            new ComponentTokenDefinition("date-picker", "inputFontSizeSM", "--ant-date-picker-input-font-size-sm", "number", "小号字体大小", "Font size of small", "14", false, true, false),
+            new ComponentTokenDefinition("date-picker", "multipleItemBg", "--ant-date-picker-multiple-item-bg", "string", "多选标签背景色", "Background color of multiple tag", "rgba(0,0,0,0.06)", false, true, false),
+            new ComponentTokenDefinition("date-picker", "multipleItemBorderColor", "--ant-date-picker-multiple-item-border-color", "string", "多选标签边框色", "Border color of multiple tag", "transparent", false, true, false),
+            new ComponentTokenDefinition("date-picker", "multipleItemBorderColorDisabled", "--ant-date-picker-multiple-item-border-color-disabled", "string", "多选标签禁用边框色", "Border color of multiple tag when disabled", "transparent", false, true, false),
+            new ComponentTokenDefinition("date-picker", "multipleItemColorDisabled", "--ant-date-picker-multiple-item-color-disabled", "string", "多选标签禁用文本颜色", "Text color of multiple tag when disabled", "rgba(0,0,0,0.25)", false, true, false),
+            new ComponentTokenDefinition("date-picker", "multipleItemHeight", "--ant-date-picker-multiple-item-height", "number", "多选标签高度", "Height of multiple tag", "24", false, true, false),
+            new ComponentTokenDefinition("date-picker", "multipleItemHeightLG", "--ant-date-picker-multiple-item-height-lg", "number", "大号多选标签高度", "Height of multiple tag with large size", "32", false, true, false),
+            new ComponentTokenDefinition("date-picker", "multipleItemHeightSM", "--ant-date-picker-multiple-item-height-sm", "number", "小号多选标签高度", "Height of multiple tag with small size", "16", false, true, false),
+            new ComponentTokenDefinition("date-picker", "multipleSelectorBgDisabled", "--ant-date-picker-multiple-selector-bg-disabled", "string", "多选框禁用背景", "Background color of multiple selector when disabled", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("date-picker", "paddingBlock", "--ant-date-picker-padding-block", "number", "输入框纵向内边距", "Vertical padding of input", "4", false, true, false),
+            new ComponentTokenDefinition("date-picker", "paddingBlockLG", "--ant-date-picker-padding-block-lg", "number", "大号输入框纵向内边距", "Vertical padding of large input", "7", false, true, false),
+            new ComponentTokenDefinition("date-picker", "paddingBlockSM", "--ant-date-picker-padding-block-sm", "number", "小号输入框纵向内边距", "Vertical padding of small input", "0", false, true, false),
+            new ComponentTokenDefinition("date-picker", "paddingInline", "--ant-date-picker-padding-inline", "number", "输入框横向内边距", "Horizontal padding of input", "11", false, true, false),
+            new ComponentTokenDefinition("date-picker", "paddingInlineLG", "--ant-date-picker-padding-inline-lg", "number", "大号输入框横向内边距", "Horizontal padding of large input", "11", false, true, false),
+            new ComponentTokenDefinition("date-picker", "paddingInlineSM", "--ant-date-picker-padding-inline-sm", "number", "小号输入框横向内边距", "Horizontal padding of small input", "7", false, true, false),
+            new ComponentTokenDefinition("date-picker", "presetsMaxWidth", "--ant-date-picker-presets-max-width", "number", "预设区域最大宽度", "Max width of preset area", "200", false, true, false),
+            new ComponentTokenDefinition("date-picker", "presetsWidth", "--ant-date-picker-presets-width", "number", "预设区域宽度", "Width of preset area", "120", false, true, false),
+            new ComponentTokenDefinition("date-picker", "textHeight", "--ant-date-picker-text-height", "number", "单元格文本高度", "Height of cell text", "40", false, true, false),
+            new ComponentTokenDefinition("date-picker", "timeCellHeight", "--ant-date-picker-time-cell-height", "number", "时间单元格高度", "Height of time cell", "28", false, true, false),
+            new ComponentTokenDefinition("date-picker", "timeColumnHeight", "--ant-date-picker-time-column-height", "number", "时间列高度", "Height of time column", "224", false, true, false),
+            new ComponentTokenDefinition("date-picker", "timeColumnWidth", "--ant-date-picker-time-column-width", "number", "时间列宽度", "Width of time column", "56", false, true, false),
+            new ComponentTokenDefinition("date-picker", "warningActiveShadow", "--ant-date-picker-warning-active-shadow", "string", "警告状态时激活态阴影", "Box-shadow when active in warning status", "0 0 0 2px rgba(255,215,5,0.1)", false, true, false),
+            new ComponentTokenDefinition("date-picker", "withoutTimeCellHeight", "--ant-date-picker-without-time-cell-height", "number", "十年/年/季/月/周单元格高度", "Height of decade/year/quarter/month/week cell", "66", false, true, false),
+            new ComponentTokenDefinition("date-picker", "zIndexPopup", "--ant-date-picker-z-index-popup", "number", "弹窗 z-index", "z-index of popup", "1050", false, true, false),
+            new ComponentTokenDefinition("descriptions", "colonMarginLeft", "--ant-descriptions-colon-margin-left", "number", "冒号左间距", "Left margin of colon", "2", false, true, false),
+            new ComponentTokenDefinition("descriptions", "colonMarginRight", "--ant-descriptions-colon-margin-right", "number", "冒号右间距", "Right margin of colon", "8", false, true, false),
+            new ComponentTokenDefinition("descriptions", "contentColor", "--ant-descriptions-content-color", "string", "内容区域文字颜色", "Text color of content", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("descriptions", "extraColor", "--ant-descriptions-extra-color", "string", "额外区域文字颜色", "Text color of extra area", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("descriptions", "itemPaddingBottom", "--ant-descriptions-item-padding-bottom", "number", "子项下间距", "Bottom padding of item", "16", false, true, false),
+            new ComponentTokenDefinition("descriptions", "itemPaddingEnd", "--ant-descriptions-item-padding-end", "number", "子项结束间距", "End padding of item", "16", false, true, false),
+            new ComponentTokenDefinition("descriptions", "labelBg", "--ant-descriptions-label-bg", "string", "标签背景色", "Background color of label", "rgba(0,0,0,0.02)", false, true, false),
+            new ComponentTokenDefinition("descriptions", "labelColor", "--ant-descriptions-label-color", "string", "标签文字颜色", "Text color of label", "rgba(0,0,0,0.45)", false, true, false),
+            new ComponentTokenDefinition("descriptions", "titleColor", "--ant-descriptions-title-color", "string", "标题文字颜色", "Text color of title", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("descriptions", "titleMarginBottom", "--ant-descriptions-title-margin-bottom", "number", "标题下间距", "Bottom margin of title", "20", false, true, false),
+            new ComponentTokenDefinition("divider", "orientationMargin", "--ant-divider-orientation-margin", "number", "文本与边缘距离，取值 0 ～ 1", "Distance between text and edge, which should be a number between 0 and 1.", "0.05", false, true, false),
+            new ComponentTokenDefinition("divider", "textPaddingInline", "--ant-divider-text-padding-inline", "CSSProperties['paddingInline']", "文本横向内间距", "Horizontal padding of text", "1em", false, true, false),
+            new ComponentTokenDefinition("divider", "verticalMarginInline", "--ant-divider-vertical-margin-inline", "CSSProperties['marginInline']", "纵向分割线的横向外间距", "Horizontal margin of vertical Divider", "8", false, true, false),
+            new ComponentTokenDefinition("drawer", "draggerSize", "--ant-drawer-dragger-size", "number", "拖拽手柄大小", "Size of resize handle", "4", false, true, false),
+            new ComponentTokenDefinition("drawer", "footerPaddingBlock", "--ant-drawer-footer-padding-block", "number", "底部区域纵向内间距", "Vertical padding of footer", "8", false, true, false),
+            new ComponentTokenDefinition("drawer", "footerPaddingInline", "--ant-drawer-footer-padding-inline", "number", "底部区域横向内间距", "Horizontal padding of footer", "16", false, true, false),
+            new ComponentTokenDefinition("drawer", "zIndexPopup", "--ant-drawer-z-index-popup", "number", "弹窗 z-index", "z-index of drawer", "1000", false, true, false),
+            new ComponentTokenDefinition("dropdown", "paddingBlock", "--ant-dropdown-padding-block", "CSSProperties['paddingBlock']", "下拉菜单纵向内边距", "Vertical padding of dropdown", "5", false, true, false),
+            new ComponentTokenDefinition("dropdown", "zIndexPopup", "--ant-dropdown-z-index-popup", "number", "下拉菜单 z-index", "z-index of dropdown", "1050", false, true, false),
+            new ComponentTokenDefinition("empty", "componentToken", "--ant-empty-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("flex", "componentToken", "--ant-flex-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("float-button", "componentToken", "--ant-float-button-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("form", "inlineItemMarginBottom", "--ant-form-inline-item-margin-bottom", "number", "行内布局表单项间距", "Inline layout form item margin bottom", "0", false, true, false),
+            new ComponentTokenDefinition("form", "itemMarginBottom", "--ant-form-item-margin-bottom", "number", "表单项间距", "Form item margin bottom", "24", false, true, false),
+            new ComponentTokenDefinition("form", "labelColonMarginInlineEnd", "--ant-form-label-colon-margin-inline-end", "number", "标签冒号后间距", "Label colon margin-inline-end", "8", false, true, false),
+            new ComponentTokenDefinition("form", "labelColonMarginInlineStart", "--ant-form-label-colon-margin-inline-start", "number", "标签冒号前间距", "Label colon margin-inline-start", "2", false, true, false),
+            new ComponentTokenDefinition("form", "labelColor", "--ant-form-label-color", "string", "标签颜色", "Label color", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("form", "labelFontSize", "--ant-form-label-font-size", "number", "标签字体大小", "Label font size", "14", false, true, false),
+            new ComponentTokenDefinition("form", "labelHeight", "--ant-form-label-height", "number | string", "标签高度", "Label height", "32", false, true, false),
+            new ComponentTokenDefinition("form", "labelRequiredMarkColor", "--ant-form-label-required-mark-color", "string", "必填项标记颜色", "Required mark color", "#ff4d4f", false, true, false),
+            new ComponentTokenDefinition("form", "verticalLabelHeight", "--ant-form-vertical-label-height", "number | string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("form", "verticalLabelMargin", "--ant-form-vertical-label-margin", "CSSProperties['margin']", "垂直布局标签外边距", "Vertical layout label margin", "0", false, true, false),
+            new ComponentTokenDefinition("form", "verticalLabelPadding", "--ant-form-vertical-label-padding", "CSSProperties['padding']", "垂直布局标签内边距", "Vertical layout label padding", "0 0 8px", false, true, false),
+            new ComponentTokenDefinition("grid", "componentToken", "--ant-grid-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("image", "previewOperationColor", "--ant-image-preview-operation-color", "string", "预览操作图标颜色", "Color of preview operation icon", "rgba(255,255,255,0.65)", false, true, false),
+            new ComponentTokenDefinition("image", "previewOperationColorDisabled", "--ant-image-preview-operation-color-disabled", "string", "预览操作图标禁用颜色", "Disabled color of preview operation icon", "rgba(255,255,255,0.25)", false, true, false),
+            new ComponentTokenDefinition("image", "previewOperationHoverColor", "--ant-image-preview-operation-hover-color", "string", "预览操作图标悬浮颜色", "Color of hovered preview operation icon", "rgba(255,255,255,0.85)", false, true, false),
+            new ComponentTokenDefinition("image", "previewOperationSize", "--ant-image-preview-operation-size", "number", "预览操作图标大小", "Size of preview operation icon", "18", false, true, false),
+            new ComponentTokenDefinition("image", "progressAnimationDuration", "--ant-image-progress-animation-duration", "string", "加载动画基础时长", "Base duration of loading animation", "3s", false, true, false),
+            new ComponentTokenDefinition("image", "zIndexPopup", "--ant-image-z-index-popup", "number", "预览浮层 z-index", "z-index of preview popup", "1080", false, true, false),
+            new ComponentTokenDefinition("input-number", "activeBg", "--ant-input-number-active-bg", "string", "输入框激活状态时背景颜色", "Background color when the input box is activated", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("input-number", "activeBorderColor", "--ant-input-number-active-border-color", "string", "激活态边框色", "Active border color", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("input-number", "activeShadow", "--ant-input-number-active-shadow", "string", "激活态阴影", "Box-shadow when active", "0 0 0 2px rgba(5,145,255,0.1)", false, true, false),
+            new ComponentTokenDefinition("input-number", "addonBg", "--ant-input-number-addon-bg", "string", "前/后置标签背景色", "Background color of addon", "rgba(0,0,0,0.02)", false, true, false),
+            new ComponentTokenDefinition("input-number", "controlWidth", "--ant-input-number-control-width", "number", "输入框宽度", "Width of input", "90", false, true, false),
+            new ComponentTokenDefinition("input-number", "errorActiveShadow", "--ant-input-number-error-active-shadow", "string", "错误状态时激活态阴影", "Box-shadow when active in error status", "0 0 0 2px rgba(255,38,5,0.06)", false, true, false),
+            new ComponentTokenDefinition("input-number", "filledHandleBg", "--ant-input-number-filled-handle-bg", "string", "面性变体操作按钮背景色", "Background color of handle in filled variant", "#f0f0f0", false, true, false),
+            new ComponentTokenDefinition("input-number", "handleActiveBg", "--ant-input-number-handle-active-bg", "string", "操作按钮激活背景色", "Active background color of handle", "rgba(0,0,0,0.02)", false, true, false),
+            new ComponentTokenDefinition("input-number", "handleBg", "--ant-input-number-handle-bg", "string", "操作按钮背景色", "Background color of handle", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("input-number", "handleBorderColor", "--ant-input-number-handle-border-color", "string", "操作按钮边框颜色", "Border color of handle", "#d9d9d9", false, true, false),
+            new ComponentTokenDefinition("input-number", "handleFontSize", "--ant-input-number-handle-font-size", "number", "操作按钮图标大小", "Icon size of control button", "7", false, true, false),
+            new ComponentTokenDefinition("input-number", "handleHoverColor", "--ant-input-number-handle-hover-color", "string", "操作按钮悬浮颜色", "Hover color of handle", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("input-number", "handleOpacity", "--ant-input-number-handle-opacity", "number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("input-number", "handleVisible", "--ant-input-number-handle-visible", "'auto' | true", "操作按钮可见性", "Handle visible", "auto", false, true, false),
+            new ComponentTokenDefinition("input-number", "handleVisibleWidth", "--ant-input-number-handle-visible-width", "number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("input-number", "handleWidth", "--ant-input-number-handle-width", "number", "操作按钮宽度", "Width of control button", "22", false, true, false),
+            new ComponentTokenDefinition("input-number", "hoverBg", "--ant-input-number-hover-bg", "string", "输入框hover状态时背景颜色", "Background color when the input box hovers", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("input-number", "hoverBorderColor", "--ant-input-number-hover-border-color", "string", "悬浮态边框色", "Hover border color", "#4096ff", false, true, false),
+            new ComponentTokenDefinition("input-number", "inputFontSize", "--ant-input-number-input-font-size", "number", "字体大小", "Font size", "14", false, true, false),
+            new ComponentTokenDefinition("input-number", "inputFontSizeLG", "--ant-input-number-input-font-size-lg", "number", "大号字体大小", "Font size of large", "16", false, true, false),
+            new ComponentTokenDefinition("input-number", "inputFontSizeSM", "--ant-input-number-input-font-size-sm", "number", "小号字体大小", "Font size of small", "14", false, true, false),
+            new ComponentTokenDefinition("input-number", "paddingBlock", "--ant-input-number-padding-block", "number", "输入框纵向内边距", "Vertical padding of input", "4", false, true, false),
+            new ComponentTokenDefinition("input-number", "paddingBlockLG", "--ant-input-number-padding-block-lg", "number", "大号输入框纵向内边距", "Vertical padding of large input", "7", false, true, false),
+            new ComponentTokenDefinition("input-number", "paddingBlockSM", "--ant-input-number-padding-block-sm", "number", "小号输入框纵向内边距", "Vertical padding of small input", "0", false, true, false),
+            new ComponentTokenDefinition("input-number", "paddingInline", "--ant-input-number-padding-inline", "number", "输入框横向内边距", "Horizontal padding of input", "11", false, true, false),
+            new ComponentTokenDefinition("input-number", "paddingInlineLG", "--ant-input-number-padding-inline-lg", "number", "大号输入框横向内边距", "Horizontal padding of large input", "11", false, true, false),
+            new ComponentTokenDefinition("input-number", "paddingInlineSM", "--ant-input-number-padding-inline-sm", "number", "小号输入框横向内边距", "Horizontal padding of small input", "7", false, true, false),
+            new ComponentTokenDefinition("input-number", "warningActiveShadow", "--ant-input-number-warning-active-shadow", "string", "警告状态时激活态阴影", "Box-shadow when active in warning status", "0 0 0 2px rgba(255,215,5,0.1)", false, true, false),
+            new ComponentTokenDefinition("input", "activeBg", "--ant-input-active-bg", "string", "输入框激活状态时背景颜色", "Background color when the input box is activated", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("input", "activeBorderColor", "--ant-input-active-border-color", "string", "激活态边框色", "Active border color", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("input", "activeShadow", "--ant-input-active-shadow", "string", "激活态阴影", "Box-shadow when active", "0 0 0 2px rgba(5,145,255,0.1)", false, true, false),
+            new ComponentTokenDefinition("input", "addonBg", "--ant-input-addon-bg", "string", "前/后置标签背景色", "Background color of addon", "rgba(0,0,0,0.02)", false, true, false),
+            new ComponentTokenDefinition("input", "errorActiveShadow", "--ant-input-error-active-shadow", "string", "错误状态时激活态阴影", "Box-shadow when active in error status", "0 0 0 2px rgba(255,38,5,0.06)", false, true, false),
+            new ComponentTokenDefinition("input", "hoverBg", "--ant-input-hover-bg", "string", "输入框hover状态时背景颜色", "Background color when the input box hovers", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("input", "hoverBorderColor", "--ant-input-hover-border-color", "string", "悬浮态边框色", "Hover border color", "#4096ff", false, true, false),
+            new ComponentTokenDefinition("input", "inputFontSize", "--ant-input-input-font-size", "number", "字体大小", "Font size", "14", false, true, false),
+            new ComponentTokenDefinition("input", "inputFontSizeLG", "--ant-input-input-font-size-lg", "number", "大号字体大小", "Font size of large", "16", false, true, false),
+            new ComponentTokenDefinition("input", "inputFontSizeSM", "--ant-input-input-font-size-sm", "number", "小号字体大小", "Font size of small", "14", false, true, false),
+            new ComponentTokenDefinition("input", "paddingBlock", "--ant-input-padding-block", "number", "输入框纵向内边距", "Vertical padding of input", "4", false, true, false),
+            new ComponentTokenDefinition("input", "paddingBlockLG", "--ant-input-padding-block-lg", "number", "大号输入框纵向内边距", "Vertical padding of large input", "7", false, true, false),
+            new ComponentTokenDefinition("input", "paddingBlockSM", "--ant-input-padding-block-sm", "number", "小号输入框纵向内边距", "Vertical padding of small input", "0", false, true, false),
+            new ComponentTokenDefinition("input", "paddingInline", "--ant-input-padding-inline", "number", "输入框横向内边距", "Horizontal padding of input", "11", false, true, false),
+            new ComponentTokenDefinition("input", "paddingInlineLG", "--ant-input-padding-inline-lg", "number", "大号输入框横向内边距", "Horizontal padding of large input", "11", false, true, false),
+            new ComponentTokenDefinition("input", "paddingInlineSM", "--ant-input-padding-inline-sm", "number", "小号输入框横向内边距", "Horizontal padding of small input", "7", false, true, false),
+            new ComponentTokenDefinition("input", "warningActiveShadow", "--ant-input-warning-active-shadow", "string", "警告状态时激活态阴影", "Box-shadow when active in warning status", "0 0 0 2px rgba(255,215,5,0.1)", false, true, false),
+            new ComponentTokenDefinition("layout", "bodyBg", "--ant-layout-body-bg", "string", "主体部分背景色", "Background Color of body", "#f5f5f5", false, true, false),
+            new ComponentTokenDefinition("layout", "colorBgBody", "--ant-layout-color-bg-body", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("layout", "colorBgHeader", "--ant-layout-color-bg-header", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("layout", "colorBgTrigger", "--ant-layout-color-bg-trigger", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("layout", "footerBg", "--ant-layout-footer-bg", "string", "页脚背景色", "Background Color of footer", "#f5f5f5", false, true, false),
+            new ComponentTokenDefinition("layout", "footerPadding", "--ant-layout-footer-padding", "CSSProperties['padding']", "页脚内边距", "Padding of footer", "24px 50px", false, true, false),
+            new ComponentTokenDefinition("layout", "headerBg", "--ant-layout-header-bg", "string", "顶部背景色", "Background Color of header", "#001529", false, true, false),
+            new ComponentTokenDefinition("layout", "headerColor", "--ant-layout-header-color", "string", "顶部文字颜色", "Text color of header", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("layout", "headerHeight", "--ant-layout-header-height", "number | string", "顶部高度", "Height of header", "64", false, true, false),
+            new ComponentTokenDefinition("layout", "headerPadding", "--ant-layout-header-padding", "CSSProperties['padding']", "顶部内边距", "Padding of header", "0 50px", false, true, false),
+            new ComponentTokenDefinition("layout", "lightSiderBg", "--ant-layout-light-sider-bg", "string", "亮色主题侧边栏背景色", "Background Color of light theme sider", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("layout", "lightTriggerBg", "--ant-layout-light-trigger-bg", "string", "亮色主题侧边栏开关背景色", "Background Color of light theme sider trigger", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("layout", "lightTriggerColor", "--ant-layout-light-trigger-color", "string", "亮色主题侧边栏开关颜色", "Color of light theme sider trigger", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("layout", "siderBg", "--ant-layout-sider-bg", "string", "侧边栏背景色", "Background Color of sider", "#001529", false, true, false),
+            new ComponentTokenDefinition("layout", "triggerBg", "--ant-layout-trigger-bg", "string", "侧边栏开关背景色", "Background Color of sider trigger", "#002140", false, true, false),
+            new ComponentTokenDefinition("layout", "triggerColor", "--ant-layout-trigger-color", "string", "侧边栏开关颜色", "Color of sider trigger", "#fff", false, true, false),
+            new ComponentTokenDefinition("layout", "triggerHeight", "--ant-layout-trigger-height", "number | string", "侧边栏开关高度", "Height of sider trigger", "48", false, true, false),
+            new ComponentTokenDefinition("layout", "zeroTriggerHeight", "--ant-layout-zero-trigger-height", "number", "collapse 为 0 时侧边栏开关高度", "Height of sider trigger when collapse is 0", "40", false, true, false),
+            new ComponentTokenDefinition("layout", "zeroTriggerWidth", "--ant-layout-zero-trigger-width", "number", "collapse 为 0 时侧边栏开关宽度", "Width of sider trigger when collapse is 0", "40", false, true, false),
+            new ComponentTokenDefinition("list", "avatarMarginRight", "--ant-list-avatar-margin-right", "CSSProperties['marginRight']", "头像右间距", "Right margin of avatar", "16", false, true, false),
+            new ComponentTokenDefinition("list", "contentWidth", "--ant-list-content-width", "number | string", "内容宽度", "Width of content", "220", false, true, false),
+            new ComponentTokenDefinition("list", "descriptionFontSize", "--ant-list-description-font-size", "number", "描述文字大小", "Font size of description", "14", false, true, false),
+            new ComponentTokenDefinition("list", "emptyTextPadding", "--ant-list-empty-text-padding", "CSSProperties['padding']", "空文本内边距", "Padding of empty text", "16", false, true, false),
+            new ComponentTokenDefinition("list", "footerBg", "--ant-list-footer-bg", "string", "底部区域背景色", "Background color of footer", "transparent", false, true, false),
+            new ComponentTokenDefinition("list", "headerBg", "--ant-list-header-bg", "string", "头部区域背景色", "Background color of header", "transparent", false, true, false),
+            new ComponentTokenDefinition("list", "itemPadding", "--ant-list-item-padding", "string", "列表项内间距", "Padding of item", "12px 0", false, true, false),
+            new ComponentTokenDefinition("list", "itemPaddingLG", "--ant-list-item-padding-lg", "string", "大号列表项内间距", "Padding of large item", "16px 24px", false, true, false),
+            new ComponentTokenDefinition("list", "itemPaddingSM", "--ant-list-item-padding-sm", "string", "小号列表项内间距", "Padding of small item", "8px 16px", false, true, false),
+            new ComponentTokenDefinition("list", "metaMarginBottom", "--ant-list-meta-margin-bottom", "CSSProperties['marginBottom']", "Meta 下间距", "Margin bottom of meta", "16", false, true, false),
+            new ComponentTokenDefinition("list", "titleMarginBottom", "--ant-list-title-margin-bottom", "CSSProperties['marginBottom']", "标题下间距", "Margin bottom of title", "12", false, true, false),
+            new ComponentTokenDefinition("listy", "itemPaddingBlock", "--ant-listy-item-padding-block", "number", "列表项的纵向内间距。", "Vertical padding of a list item.", "12", false, true, false),
+            new ComponentTokenDefinition("listy", "itemPaddingInline", "--ant-listy-item-padding-inline", "number", "列表项的横向内间距。", "Horizontal padding of a list item.", "16", false, true, false),
+            new ComponentTokenDefinition("masonry", "componentToken", "--ant-masonry-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("mentions", "activeBg", "--ant-mentions-active-bg", "string", "输入框激活状态时背景颜色", "Background color when the input box is activated", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("mentions", "activeBorderColor", "--ant-mentions-active-border-color", "string", "激活态边框色", "Active border color", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("mentions", "activeShadow", "--ant-mentions-active-shadow", "string", "激活态阴影", "Box-shadow when active", "0 0 0 2px rgba(5,145,255,0.1)", false, true, false),
+            new ComponentTokenDefinition("mentions", "addonBg", "--ant-mentions-addon-bg", "string", "前/后置标签背景色", "Background color of addon", "rgba(0,0,0,0.02)", false, true, false),
+            new ComponentTokenDefinition("mentions", "controlItemWidth", "--ant-mentions-control-item-width", "number | string", "菜单项高度", "Height of menu item", "100", false, true, false),
+            new ComponentTokenDefinition("mentions", "dropdownHeight", "--ant-mentions-dropdown-height", "number | string", "弹层高度", "Height of popup", "250", false, true, false),
+            new ComponentTokenDefinition("mentions", "errorActiveShadow", "--ant-mentions-error-active-shadow", "string", "错误状态时激活态阴影", "Box-shadow when active in error status", "0 0 0 2px rgba(255,38,5,0.06)", false, true, false),
+            new ComponentTokenDefinition("mentions", "hoverBg", "--ant-mentions-hover-bg", "string", "输入框hover状态时背景颜色", "Background color when the input box hovers", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("mentions", "hoverBorderColor", "--ant-mentions-hover-border-color", "string", "悬浮态边框色", "Hover border color", "#4096ff", false, true, false),
+            new ComponentTokenDefinition("mentions", "inputFontSize", "--ant-mentions-input-font-size", "number", "字体大小", "Font size", "14", false, true, false),
+            new ComponentTokenDefinition("mentions", "inputFontSizeLG", "--ant-mentions-input-font-size-lg", "number", "大号字体大小", "Font size of large", "16", false, true, false),
+            new ComponentTokenDefinition("mentions", "inputFontSizeSM", "--ant-mentions-input-font-size-sm", "number", "小号字体大小", "Font size of small", "14", false, true, false),
+            new ComponentTokenDefinition("mentions", "paddingBlock", "--ant-mentions-padding-block", "number", "输入框纵向内边距", "Vertical padding of input", "4", false, true, false),
+            new ComponentTokenDefinition("mentions", "paddingBlockLG", "--ant-mentions-padding-block-lg", "number", "大号输入框纵向内边距", "Vertical padding of large input", "7", false, true, false),
+            new ComponentTokenDefinition("mentions", "paddingBlockSM", "--ant-mentions-padding-block-sm", "number", "小号输入框纵向内边距", "Vertical padding of small input", "0", false, true, false),
+            new ComponentTokenDefinition("mentions", "paddingInline", "--ant-mentions-padding-inline", "number", "输入框横向内边距", "Horizontal padding of input", "11", false, true, false),
+            new ComponentTokenDefinition("mentions", "paddingInlineLG", "--ant-mentions-padding-inline-lg", "number", "大号输入框横向内边距", "Horizontal padding of large input", "11", false, true, false),
+            new ComponentTokenDefinition("mentions", "paddingInlineSM", "--ant-mentions-padding-inline-sm", "number", "小号输入框横向内边距", "Horizontal padding of small input", "7", false, true, false),
+            new ComponentTokenDefinition("mentions", "warningActiveShadow", "--ant-mentions-warning-active-shadow", "string", "警告状态时激活态阴影", "Box-shadow when active in warning status", "0 0 0 2px rgba(255,215,5,0.1)", false, true, false),
+            new ComponentTokenDefinition("mentions", "zIndexPopup", "--ant-mentions-z-index-popup", "number", "弹层 z-index", "z-index of popup", "1050", false, true, false),
+            new ComponentTokenDefinition("menu", "activeBarBorderWidth", "--ant-menu-active-bar-border-width", "number | string", "菜单项指示条边框宽度", "Border width of menu item active bar", "1", false, true, false),
+            new ComponentTokenDefinition("menu", "activeBarHeight", "--ant-menu-active-bar-height", "number", "菜单项指示条高度", "Height of menu item active bar", "2", false, true, false),
+            new ComponentTokenDefinition("menu", "activeBarWidth", "--ant-menu-active-bar-width", "number | string", "菜单项指示条宽度", "Width of menu item active bar", "0", false, true, false),
+            new ComponentTokenDefinition("menu", "collapsedIconSize", "--ant-menu-collapsed-icon-size", "number", "收起时图标尺寸", "Size of icon when collapsed", "16", false, true, false),
+            new ComponentTokenDefinition("menu", "collapsedWidth", "--ant-menu-collapsed-width", "number | string", "收起后的宽度", "Width when collapsed", "80", false, true, false),
+            new ComponentTokenDefinition("menu", "colorActiveBarBorderSize", "--ant-menu-color-active-bar-border-size", "number", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorActiveBarHeight", "--ant-menu-color-active-bar-height", "number", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorActiveBarWidth", "--ant-menu-color-active-bar-width", "number | string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorDangerItemBgActive", "--ant-menu-color-danger-item-bg-active", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorDangerItemBgSelected", "--ant-menu-color-danger-item-bg-selected", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorDangerItemText", "--ant-menu-color-danger-item-text", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorDangerItemTextHover", "--ant-menu-color-danger-item-text-hover", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorDangerItemTextSelected", "--ant-menu-color-danger-item-text-selected", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorGroupTitle", "--ant-menu-color-group-title", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorItemBg", "--ant-menu-color-item-bg", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorItemBgActive", "--ant-menu-color-item-bg-active", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorItemBgHover", "--ant-menu-color-item-bg-hover", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorItemBgSelected", "--ant-menu-color-item-bg-selected", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorItemBgSelectedHorizontal", "--ant-menu-color-item-bg-selected-horizontal", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorItemText", "--ant-menu-color-item-text", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorItemTextDisabled", "--ant-menu-color-item-text-disabled", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorItemTextHover", "--ant-menu-color-item-text-hover", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorItemTextHoverHorizontal", "--ant-menu-color-item-text-hover-horizontal", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorItemTextSelected", "--ant-menu-color-item-text-selected", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorItemTextSelectedHorizontal", "--ant-menu-color-item-text-selected-horizontal", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "colorSubItemBg", "--ant-menu-color-sub-item-bg", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "dangerItemActiveBg", "--ant-menu-danger-item-active-bg", "string", "危险菜单项激活态背景色", "Background color of danger menu item when active", "#fff2f0", false, true, false),
+            new ComponentTokenDefinition("menu", "dangerItemColor", "--ant-menu-danger-item-color", "string", "危险菜单项文字颜色", "Color of danger menu item text", "#ff4d4f", false, true, false),
+            new ComponentTokenDefinition("menu", "dangerItemHoverColor", "--ant-menu-danger-item-hover-color", "string", "危险菜单项文字悬浮颜色", "Hover color of danger menu item text", "#ff4d4f", false, true, false),
+            new ComponentTokenDefinition("menu", "dangerItemSelectedBg", "--ant-menu-danger-item-selected-bg", "string", "危险菜单项选中背景色", "Background color of selected danger menu item", "#fff2f0", false, true, false),
+            new ComponentTokenDefinition("menu", "dangerItemSelectedColor", "--ant-menu-danger-item-selected-color", "string", "危险菜单项文字选中颜色", "Color of selected danger menu item text", "#ff4d4f", false, true, false),
+            new ComponentTokenDefinition("menu", "darkDangerItemActiveBg", "--ant-menu-dark-danger-item-active-bg", "string", "暗色模式下的危险菜单项激活态背景", "Background of active danger menu item in dark mode", "#ff4d4f", false, true, false),
+            new ComponentTokenDefinition("menu", "darkDangerItemColor", "--ant-menu-dark-danger-item-color", "string", "暗色模式下的危险菜单项文字颜色", "Color of danger menu item text in dark mode", "#ff4d4f", false, true, false),
+            new ComponentTokenDefinition("menu", "darkDangerItemHoverColor", "--ant-menu-dark-danger-item-hover-color", "string", "暗色模式下的危险菜单项悬浮文字背景", "Background of hovered danger menu item in dark mode", "#ff7875", false, true, false),
+            new ComponentTokenDefinition("menu", "darkDangerItemSelectedBg", "--ant-menu-dark-danger-item-selected-bg", "string", "暗色模式下的危险菜单项选中背景", "Background of active danger menu item in dark mode", "#ff4d4f", false, true, false),
+            new ComponentTokenDefinition("menu", "darkDangerItemSelectedColor", "--ant-menu-dark-danger-item-selected-color", "string", "暗色模式下的危险菜单项选中文字颜色", "Color of selected danger menu item in dark mode", "#fff", false, true, false),
+            new ComponentTokenDefinition("menu", "darkGroupTitleColor", "--ant-menu-dark-group-title-color", "string", "暗色模式下的分组标题文字颜色", "Color of group title text in dark mode", "rgba(255,255,255,0.65)", false, true, false),
+            new ComponentTokenDefinition("menu", "darkItemBg", "--ant-menu-dark-item-bg", "string", "暗色模式下的菜单项背景", "Background of menu item in dark mode", "#001529", false, true, false),
+            new ComponentTokenDefinition("menu", "darkItemColor", "--ant-menu-dark-item-color", "string", "暗色模式下的菜单项文字颜色", "Color of menu item text in dark mode", "rgba(255,255,255,0.65)", false, true, false),
+            new ComponentTokenDefinition("menu", "darkItemDisabledColor", "--ant-menu-dark-item-disabled-color", "string", "暗色模式下的菜单项禁用颜色", "Color of disabled menu item in dark mode", "rgba(255,255,255,0.25)", false, true, false),
+            new ComponentTokenDefinition("menu", "darkItemHoverBg", "--ant-menu-dark-item-hover-bg", "string", "暗色模式下的菜单项悬浮背景", "Background of hovered menu item in dark mode", "transparent", false, true, false),
+            new ComponentTokenDefinition("menu", "darkItemHoverColor", "--ant-menu-dark-item-hover-color", "string", "暗色模式下的菜单项悬浮颜色", "Color of hovered menu item in dark mode", "#fff", false, true, false),
+            new ComponentTokenDefinition("menu", "darkItemSelectedBg", "--ant-menu-dark-item-selected-bg", "string", "暗色模式下的菜单项选中背景", "Background of active menu item in dark mode", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("menu", "darkItemSelectedColor", "--ant-menu-dark-item-selected-color", "string", "暗色模式下的菜单项选中颜色", "Color of selected menu item in dark mode", "#fff", false, true, false),
+            new ComponentTokenDefinition("menu", "darkPopupBg", "--ant-menu-dark-popup-bg", "string", "暗色模式下的浮层菜单的背景颜色", "The background color of the overlay menu in dark mode.", "#001529", false, true, false),
+            new ComponentTokenDefinition("menu", "darkSubMenuItemBg", "--ant-menu-dark-sub-menu-item-bg", "string", "暗色模式下的子菜单项背景", "Background of submenu item in dark mode", "#000c17", false, true, false),
+            new ComponentTokenDefinition("menu", "dropdownWidth", "--ant-menu-dropdown-width", "number | string", "弹出菜单的宽度", "Width of popup menu", "160", false, true, false),
+            new ComponentTokenDefinition("menu", "groupTitleColor", "--ant-menu-group-title-color", "string", "分组标题文字颜色", "Color of group title text", "rgba(0,0,0,0.45)", false, true, false),
+            new ComponentTokenDefinition("menu", "groupTitleFontSize", "--ant-menu-group-title-font-size", "number", "分组标题文字大小", "font-size of group title", "14", false, true, false),
+            new ComponentTokenDefinition("menu", "groupTitleLineHeight", "--ant-menu-group-title-line-height", "string | number", "分组标题文字高度", "line-height of group title", "1.5714285714285714", false, true, false),
+            new ComponentTokenDefinition("menu", "horizontalItemBorderRadius", "--ant-menu-horizontal-item-border-radius", "number", "横向菜单项圆角", "Border radius of horizontal menu item", "0", false, true, false),
+            new ComponentTokenDefinition("menu", "horizontalItemHoverBg", "--ant-menu-horizontal-item-hover-bg", "string", "横向菜单项横悬浮态背景色", "Background color of horizontal menu item when hover", "transparent", false, true, false),
+            new ComponentTokenDefinition("menu", "horizontalItemHoverColor", "--ant-menu-horizontal-item-hover-color", "string", "水平菜单项文字悬浮颜色", "Hover color of horizontal menu item text", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("menu", "horizontalItemSelectedBg", "--ant-menu-horizontal-item-selected-bg", "string", "水平菜单项选中态背景色", "Background color of horizontal menu item when selected", "transparent", false, true, false),
+            new ComponentTokenDefinition("menu", "horizontalItemSelectedColor", "--ant-menu-horizontal-item-selected-color", "string", "水平菜单项文字选中颜色", "Color of selected horizontal menu item text", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("menu", "horizontalLineHeight", "--ant-menu-horizontal-line-height", "CSSProperties['lineHeight']", "横向菜单行高", "LineHeight of horizontal menu item", "46px", false, true, false),
+            new ComponentTokenDefinition("menu", "iconMarginInlineEnd", "--ant-menu-icon-margin-inline-end", "CSSProperties['marginInlineEnd']", "图标与文字间距", "Spacing between icon and text", "10", false, true, false),
+            new ComponentTokenDefinition("menu", "iconSize", "--ant-menu-icon-size", "number", "图标尺寸", "Size of icon", "14", false, true, false),
+            new ComponentTokenDefinition("menu", "itemActiveBg", "--ant-menu-item-active-bg", "string", "菜单项激活态背景色", "Background color of menu item when active", "#e6f4ff", false, true, false),
+            new ComponentTokenDefinition("menu", "itemBg", "--ant-menu-item-bg", "string", "菜单项背景色", "", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("menu", "itemBorderRadius", "--ant-menu-item-border-radius", "number", "菜单项的圆角", "Radius of menu item", "8", false, true, false),
+            new ComponentTokenDefinition("menu", "itemColor", "--ant-menu-item-color", "string", "菜单项文字颜色", "Color of menu item text", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("menu", "itemDisabledColor", "--ant-menu-item-disabled-color", "string", "菜单项文字禁用颜色", "Color of disabled menu item text", "rgba(0,0,0,0.25)", false, true, false),
+            new ComponentTokenDefinition("menu", "itemHeight", "--ant-menu-item-height", "number | string", "菜单项高度", "Height of menu item", "40", false, true, false),
+            new ComponentTokenDefinition("menu", "itemHoverBg", "--ant-menu-item-hover-bg", "string", "菜单项悬浮态背景色", "Background color of menu item when hover", "rgba(0,0,0,0.06)", false, true, false),
+            new ComponentTokenDefinition("menu", "itemHoverColor", "--ant-menu-item-hover-color", "string", "菜单项文字悬浮颜色", "Hover color of menu item text", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("menu", "itemMarginBlock", "--ant-menu-item-margin-block", "CSSProperties['marginBlock']", "菜单项纵向外间距", "margin-block of menu item", "4", false, true, false),
+            new ComponentTokenDefinition("menu", "itemMarginInline", "--ant-menu-item-margin-inline", "number", "菜单项横向外间距", "Horizontal margin of menu item", "4", false, true, false),
+            new ComponentTokenDefinition("menu", "itemPaddingInline", "--ant-menu-item-padding-inline", "CSSProperties['paddingInline']", "菜单项横向内间距", "padding-inline of menu item", "16", false, true, false),
+            new ComponentTokenDefinition("menu", "itemSelectedBg", "--ant-menu-item-selected-bg", "string", "菜单项选中态背景色", "Background color of menu item when selected", "#e6f4ff", false, true, false),
+            new ComponentTokenDefinition("menu", "itemSelectedColor", "--ant-menu-item-selected-color", "string", "菜单项文字选中颜色", "Color of selected menu item text", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("menu", "itemWidth", "--ant-menu-item-width", "number | string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("menu", "popupBg", "--ant-menu-popup-bg", "string", "弹出框背景色", "Background color of popup", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("menu", "radiusItem", "--ant-menu-radius-item", "number", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "radiusSubMenuItem", "--ant-menu-radius-sub-menu-item", "number", "", "", "", true, false, false),
+            new ComponentTokenDefinition("menu", "subMenuItemBg", "--ant-menu-sub-menu-item-bg", "string", "子菜单项背景色", "Background color of sub-menu item", "rgba(0,0,0,0.02)", false, true, false),
+            new ComponentTokenDefinition("menu", "subMenuItemBorderRadius", "--ant-menu-sub-menu-item-border-radius", "number", "子菜单项的圆角", "Radius of sub-menu item", "4", false, true, false),
+            new ComponentTokenDefinition("menu", "subMenuItemSelectedColor", "--ant-menu-sub-menu-item-selected-color", "string", "子菜单内有选中项时，子菜单标题色", "Color of submenu title when submenu has selected item", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("menu", "zIndexPopup", "--ant-menu-z-index-popup", "number", "弹出菜单的 z-index", "z-index of popup menu", "1050", false, true, false),
+            new ComponentTokenDefinition("message", "contentBg", "--ant-message-content-bg", "string", "提示框背景色", "Background color of Message", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("message", "contentPadding", "--ant-message-content-padding", "CSSProperties['padding']", "提示框内边距", "Padding of Message", "9px 12px", false, true, false),
+            new ComponentTokenDefinition("message", "zIndexPopup", "--ant-message-z-index-popup", "number", "提示框 z-index", "z-index of Message", "2010", false, true, false),
+            new ComponentTokenDefinition("modal", "bodyPadding", "--ant-modal-body-padding", "number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "confirmBodyPadding", "--ant-modal-confirm-body-padding", "string | number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "confirmBtnsMarginTop", "--ant-modal-confirm-btns-margin-top", "string | number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "confirmIconMarginInlineEnd", "--ant-modal-confirm-icon-margin-inline-end", "string | number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "contentBg", "--ant-modal-content-bg", "string", "内容区域背景色", "Background color of content", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("modal", "contentPadding", "--ant-modal-content-padding", "number | string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "footerBg", "--ant-modal-footer-bg", "string", "底部区域背景色", "Background color of footer", "transparent", false, true, false),
+            new ComponentTokenDefinition("modal", "footerBorderRadius", "--ant-modal-footer-border-radius", "string | number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "footerBorderTop", "--ant-modal-footer-border-top", "string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "footerMarginTop", "--ant-modal-footer-margin-top", "string | number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "footerPadding", "--ant-modal-footer-padding", "string | number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "headerBg", "--ant-modal-header-bg", "string", "顶部背景色", "Background color of header", "transparent", false, true, false),
+            new ComponentTokenDefinition("modal", "headerBorderBottom", "--ant-modal-header-border-bottom", "string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "headerMarginBottom", "--ant-modal-header-margin-bottom", "number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "headerPadding", "--ant-modal-header-padding", "string | number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("modal", "titleColor", "--ant-modal-title-color", "string", "标题字体颜色", "Font color of title", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("modal", "titleFontSize", "--ant-modal-title-font-size", "number | string", "标题字体大小", "Font size of title", "16", false, true, false),
+            new ComponentTokenDefinition("modal", "titleLineHeight", "--ant-modal-title-line-height", "number | string", "标题行高", "Line height of title", "1.5", false, true, false),
+            new ComponentTokenDefinition("notification", "colorErrorBg", "--ant-notification-color-error-bg", "string", "错误提醒框容器背景色", "Background color of error notification container", "", false, true, false),
+            new ComponentTokenDefinition("notification", "colorInfoBg", "--ant-notification-color-info-bg", "string", "信息提醒框容器背景色", "Background color of info notification container", "", false, true, false),
+            new ComponentTokenDefinition("notification", "colorSuccessBg", "--ant-notification-color-success-bg", "string", "成功提醒框容器背景色", "Background color of success notification container", "", false, true, false),
+            new ComponentTokenDefinition("notification", "colorWarningBg", "--ant-notification-color-warning-bg", "string", "警告提醒框容器背景色", "Background color of warning notification container", "", false, true, false),
+            new ComponentTokenDefinition("notification", "progressBg", "--ant-notification-progress-bg", "string", "提醒框进度条背景色", "Background color of Notification progress bar", "linear-gradient(90deg, #69b1ff, #1677ff)", false, true, false),
+            new ComponentTokenDefinition("notification", "width", "--ant-notification-width", "number | string", "提醒框宽度", "Width of Notification", "384", false, true, false),
+            new ComponentTokenDefinition("notification", "zIndexPopup", "--ant-notification-z-index-popup", "number", "提醒框 z-index", "z-index of Notification", "2050", false, true, false),
+            new ComponentTokenDefinition("pagination", "itemActiveBg", "--ant-pagination-item-active-bg", "string", "页码激活态背景色", "Background color of active Pagination item", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("pagination", "itemActiveBgDisabled", "--ant-pagination-item-active-bg-disabled", "string", "页码激活态禁用状态背景色", "Background color of disabled active Pagination item", "rgba(0,0,0,0.15)", false, true, false),
+            new ComponentTokenDefinition("pagination", "itemActiveColor", "--ant-pagination-item-active-color", "string", "页码激活态文字颜色", "Text color of active Pagination item", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("pagination", "itemActiveColorDisabled", "--ant-pagination-item-active-color-disabled", "string", "页码激活态禁用状态文字颜色", "Text color of disabled active Pagination item", "rgba(0,0,0,0.25)", false, true, false),
+            new ComponentTokenDefinition("pagination", "itemActiveColorHover", "--ant-pagination-item-active-color-hover", "string", "页码激活态文字颜色悬停态", "Text color of active Pagination item hover", "#4096ff", false, true, false),
+            new ComponentTokenDefinition("pagination", "itemBg", "--ant-pagination-item-bg", "string", "页码选项背景色", "Background color of Pagination item", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("pagination", "itemInputBg", "--ant-pagination-item-input-bg", "string", "输入框背景色", "Background color of input", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("pagination", "itemLinkBg", "--ant-pagination-item-link-bg", "string", "页码链接背景色", "Background color of Pagination item link", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("pagination", "itemSize", "--ant-pagination-item-size", "number", "页码尺寸", "Size of Pagination item", "32", false, true, false),
+            new ComponentTokenDefinition("pagination", "itemSizeLG", "--ant-pagination-item-size-lg", "number", "大号页码尺寸", "Size of large Pagination item", "40", false, true, false),
+            new ComponentTokenDefinition("pagination", "itemSizeSM", "--ant-pagination-item-size-sm", "number", "小号页码尺寸", "Size of small Pagination item", "24", false, true, false),
+            new ComponentTokenDefinition("pagination", "miniOptionsSizeChangerTop", "--ant-pagination-mini-options-size-changer-top", "number", "每页展示数量选择器 top", "Top of Pagination size changer", "0", false, true, false),
+            new ComponentTokenDefinition("popconfirm", "zIndexPopup", "--ant-popconfirm-z-index-popup", "number", "确认框 z-index", "z-index of Popconfirm", "1060", false, true, false),
+            new ComponentTokenDefinition("popover", "innerContentPadding", "--ant-popover-inner-content-padding", "number | string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("popover", "innerPadding", "--ant-popover-inner-padding", "number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("popover", "minWidth", "--ant-popover-min-width", "number | string", "气泡卡片最小宽度", "Min width of Popover", "", true, false, false),
+            new ComponentTokenDefinition("popover", "titleBorderBottom", "--ant-popover-title-border-bottom", "string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("popover", "titleMarginBottom", "--ant-popover-title-margin-bottom", "number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("popover", "titleMinWidth", "--ant-popover-title-min-width", "number | string", "气泡卡片标题最小宽度", "Min width of Popover title", "177", false, true, false),
+            new ComponentTokenDefinition("popover", "titlePadding", "--ant-popover-title-padding", "number | string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("popover", "width", "--ant-popover-width", "number | string", "气泡卡片宽度", "Width of Popover", "", true, false, false),
+            new ComponentTokenDefinition("popover", "zIndexPopup", "--ant-popover-z-index-popup", "number", "气泡卡片 z-index", "z-index of Popover", "1030", false, true, false),
+            new ComponentTokenDefinition("progress", "circleIconFontSize", "--ant-progress-circle-icon-font-size", "string", "圆形进度条图标大小", "Icon size of circular progress bar", "1.1666666666666667em", false, true, false),
+            new ComponentTokenDefinition("progress", "circleTextColor", "--ant-progress-circle-text-color", "string", "圆形进度条文字颜色", "Text color of circular progress bar", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("progress", "circleTextFontSize", "--ant-progress-circle-text-font-size", "string", "圆形进度条文本大小", "Text size of circular progress bar", "1em", false, true, false),
+            new ComponentTokenDefinition("progress", "defaultColor", "--ant-progress-default-color", "string", "进度条默认颜色", "Default color of progress bar", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("progress", "lineBorderRadius", "--ant-progress-line-border-radius", "number", "条状进度条圆角", "Border radius of line progress bar", "100", false, true, false),
+            new ComponentTokenDefinition("progress", "remainingColor", "--ant-progress-remaining-color", "string", "进度条剩余部分颜色", "Color of remaining part of progress bar", "rgba(0,0,0,0.06)", false, true, false),
+            new ComponentTokenDefinition("qr-code", "componentToken", "--ant-qr-code-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("qrcode", "componentToken", "--ant-qrcode-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("radio", "buttonBg", "--ant-radio-button-bg", "string", "单选框按钮背景色", "Background color of Radio button", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("radio", "buttonCheckedBg", "--ant-radio-button-checked-bg", "string", "单选框按钮选中背景色", "Background color of checked Radio button", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("radio", "buttonCheckedBgDisabled", "--ant-radio-button-checked-bg-disabled", "string", "单选框按钮选中并禁用时的背景色", "Background color of checked and disabled Radio button", "rgba(0,0,0,0.15)", false, true, false),
+            new ComponentTokenDefinition("radio", "buttonCheckedColorDisabled", "--ant-radio-button-checked-color-disabled", "string", "单选框按钮选中并禁用时的文本颜色", "Color of checked and disabled Radio button text", "rgba(0,0,0,0.25)", false, true, false),
+            new ComponentTokenDefinition("radio", "buttonColor", "--ant-radio-button-color", "string", "单选框按钮文本颜色", "Color of Radio button text", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("radio", "buttonPaddingInline", "--ant-radio-button-padding-inline", "number", "单选框按钮横向内间距", "Horizontal padding of Radio button", "15", false, true, false),
+            new ComponentTokenDefinition("radio", "buttonSolidCheckedActiveBg", "--ant-radio-button-solid-checked-active-bg", "string", "单选框实色按钮选中时的激活态背景色", "Background color of checked solid Radio button text when active", "#0958d9", false, true, false),
+            new ComponentTokenDefinition("radio", "buttonSolidCheckedBg", "--ant-radio-button-solid-checked-bg", "string", "单选框实色按钮选中时的背景色", "Background color of checked solid Radio button text", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("radio", "buttonSolidCheckedColor", "--ant-radio-button-solid-checked-color", "string", "单选框实色按钮选中时的文本颜色", "Color of checked solid Radio button text", "#fff", false, true, false),
+            new ComponentTokenDefinition("radio", "buttonSolidCheckedHoverBg", "--ant-radio-button-solid-checked-hover-bg", "string", "单选框实色按钮选中时的悬浮态背景色", "Background color of checked solid Radio button text when hover", "#4096ff", false, true, false),
+            new ComponentTokenDefinition("radio", "dotColorDisabled", "--ant-radio-dot-color-disabled", "string", "单选框圆点禁用颜色", "Color of disabled Radio dot", "rgba(0,0,0,0.25)", false, true, false),
+            new ComponentTokenDefinition("radio", "dotSize", "--ant-radio-dot-size", "number", "单选框圆点大小", "Size of Radio dot", "8", false, true, false),
+            new ComponentTokenDefinition("radio", "radioBgColor", "--ant-radio-radio-bg-color", "string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("radio", "radioColor", "--ant-radio-radio-color", "string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("radio", "radioSize", "--ant-radio-radio-size", "number", "单选框大小", "Radio size", "16", false, true, false),
+            new ComponentTokenDefinition("radio", "wrapperMarginInlineEnd", "--ant-radio-wrapper-margin-inline-end", "number", "单选框右间距", "Margin right of Radio button", "8", false, true, false),
+            new ComponentTokenDefinition("rate", "starBg", "--ant-rate-star-bg", "string", "星星背景色", "Star background color", "rgba(0,0,0,0.06)", false, true, false),
+            new ComponentTokenDefinition("rate", "starColor", "--ant-rate-star-color", "string", "星星颜色", "Star color", "#fadb14", false, true, false),
+            new ComponentTokenDefinition("rate", "starHoverScale", "--ant-rate-star-hover-scale", "CSSObject['transform']", "星星悬浮时的缩放", "Scale of star when hover", "scale(1.1)", false, true, false),
+            new ComponentTokenDefinition("rate", "starSize", "--ant-rate-star-size", "number", "星星尺寸", "Star size", "20", false, true, false),
+            new ComponentTokenDefinition("rate", "starSizeLG", "--ant-rate-star-size-lg", "number", "大星星尺寸", "Large star size", "25", false, true, false),
+            new ComponentTokenDefinition("rate", "starSizeSM", "--ant-rate-star-size-sm", "number", "小星星尺寸", "Small star size", "15", false, true, false),
+            new ComponentTokenDefinition("result", "extraMargin", "--ant-result-extra-margin", "CSSProperties['margin']", "额外区域外间距", "Margin of extra area", "24px 0 0 0", false, true, false),
+            new ComponentTokenDefinition("result", "iconFontSize", "--ant-result-icon-font-size", "number | string", "图标大小", "Icon size", "72", false, true, false),
+            new ComponentTokenDefinition("result", "subtitleFontSize", "--ant-result-subtitle-font-size", "number", "副标题字体大小", "Subtitle font size", "14", false, true, false),
+            new ComponentTokenDefinition("result", "titleFontSize", "--ant-result-title-font-size", "number | string", "标题字体大小", "Title font size", "24", false, true, false),
+            new ComponentTokenDefinition("row", "componentToken", "--ant-row-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("segmented", "itemActiveBg", "--ant-segmented-item-active-bg", "string", "选项激活态背景颜色", "Background color of item when active", "rgba(0,0,0,0.15)", false, true, false),
+            new ComponentTokenDefinition("segmented", "itemColor", "--ant-segmented-item-color", "string", "选项文本颜色", "Text color of item", "rgba(0,0,0,0.65)", false, true, false),
+            new ComponentTokenDefinition("segmented", "itemHoverBg", "--ant-segmented-item-hover-bg", "string", "选项悬浮态背景颜色", "Background color of item when hover", "rgba(0,0,0,0.06)", false, true, false),
+            new ComponentTokenDefinition("segmented", "itemHoverColor", "--ant-segmented-item-hover-color", "string", "选项悬浮态文本颜色", "Text color of item when hover", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("segmented", "itemSelectedBg", "--ant-segmented-item-selected-bg", "string", "选项选中时背景颜色", "Background color of item when selected", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("segmented", "itemSelectedColor", "--ant-segmented-item-selected-color", "string", "选项选中时文字颜色", "Text color of item when selected", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("segmented", "trackBg", "--ant-segmented-track-bg", "string", "Segmented 控件容器背景色", "Background of Segmented container", "#f5f5f5", false, true, false),
+            new ComponentTokenDefinition("segmented", "trackPadding", "--ant-segmented-track-padding", "string | number", "Segmented 控件容器的 padding", "Padding of Segmented container", "2", false, true, false),
+            new ComponentTokenDefinition("select", "activeBorderColor", "--ant-select-active-border-color", "string", "激活态边框色", "Active border color", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("select", "activeOutlineColor", "--ant-select-active-outline-color", "string", "激活态 outline 颜色", "Active outline color", "rgba(5,145,255,0.1)", false, true, false),
+            new ComponentTokenDefinition("select", "clearBg", "--ant-select-clear-bg", "string", "清空按钮背景色", "Background color of clear button", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("select", "hoverBorderColor", "--ant-select-hover-border-color", "string", "悬浮态边框色", "Hover border color", "#4096ff", false, true, false),
+            new ComponentTokenDefinition("select", "multipleItemBg", "--ant-select-multiple-item-bg", "string", "多选标签背景色", "Background color of multiple tag", "rgba(0,0,0,0.06)", false, true, false),
+            new ComponentTokenDefinition("select", "multipleItemBorderColor", "--ant-select-multiple-item-border-color", "string", "多选标签边框色", "Border color of multiple tag", "transparent", false, true, false),
+            new ComponentTokenDefinition("select", "multipleItemBorderColorDisabled", "--ant-select-multiple-item-border-color-disabled", "string", "多选标签禁用边框色", "Border color of multiple tag when disabled", "transparent", false, true, false),
+            new ComponentTokenDefinition("select", "multipleItemColorDisabled", "--ant-select-multiple-item-color-disabled", "string", "多选标签禁用文本颜色", "Text color of multiple tag when disabled", "rgba(0,0,0,0.25)", false, true, false),
+            new ComponentTokenDefinition("select", "multipleItemHeight", "--ant-select-multiple-item-height", "number", "多选标签高度", "Height of multiple tag", "24", false, true, false),
+            new ComponentTokenDefinition("select", "multipleItemHeightLG", "--ant-select-multiple-item-height-lg", "number", "大号多选标签高度", "Height of multiple tag with large size", "32", false, true, false),
+            new ComponentTokenDefinition("select", "multipleItemHeightSM", "--ant-select-multiple-item-height-sm", "number", "小号多选标签高度", "Height of multiple tag with small size", "16", false, true, false),
+            new ComponentTokenDefinition("select", "multipleSelectorBgDisabled", "--ant-select-multiple-selector-bg-disabled", "string", "多选框禁用背景", "Background color of multiple selector when disabled", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("select", "optionActiveBg", "--ant-select-option-active-bg", "string", "选项激活态时背景色", "Background color when option is active", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("select", "optionFontSize", "--ant-select-option-font-size", "number", "选项字体大小", "Font size of option", "14", false, true, false),
+            new ComponentTokenDefinition("select", "optionHeight", "--ant-select-option-height", "number", "选项高度", "Height of option", "32", false, true, false),
+            new ComponentTokenDefinition("select", "optionLineHeight", "--ant-select-option-line-height", "CSSProperties['lineHeight']", "选项行高", "Line height of option", "1.5714285714285714", false, true, false),
+            new ComponentTokenDefinition("select", "optionPadding", "--ant-select-option-padding", "CSSProperties['padding']", "选项内间距", "Padding of option", "5px 12px", false, true, false),
+            new ComponentTokenDefinition("select", "optionSelectedBg", "--ant-select-option-selected-bg", "string", "选项选中时背景色", "Background color when option is selected", "#e6f4ff", false, true, false),
+            new ComponentTokenDefinition("select", "optionSelectedColor", "--ant-select-option-selected-color", "string", "选项选中时文本颜色", "Text color when option is selected", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("select", "optionSelectedFontWeight", "--ant-select-option-selected-font-weight", "CSSProperties['fontWeight']", "选项选中时文本字重", "Font weight when option is selected", "600", false, true, false),
+            new ComponentTokenDefinition("select", "selectorBg", "--ant-select-selector-bg", "string", "选框背景色", "Background color of selector", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("select", "showArrowPaddingInlineEnd", "--ant-select-show-arrow-padding-inline-end", "number", "箭头的行末内边距", "Inline end padding of arrow", "18", false, true, false),
+            new ComponentTokenDefinition("select", "singleItemHeightLG", "--ant-select-single-item-height-lg", "number", "单选大号回填项高度", "Height of single selected item with large size", "40", false, true, false),
+            new ComponentTokenDefinition("select", "zIndexPopup", "--ant-select-z-index-popup", "number", "下拉菜单 z-index", "z-index of dropdown", "1050", false, true, false),
+            new ComponentTokenDefinition("skeleton", "blockRadius", "--ant-skeleton-block-radius", "number", "骨架屏圆角", "Border radius of skeleton", "4", false, true, false),
+            new ComponentTokenDefinition("skeleton", "color", "--ant-skeleton-color", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("skeleton", "colorGradientEnd", "--ant-skeleton-color-gradient-end", "string", "", "", "", true, false, false),
+            new ComponentTokenDefinition("skeleton", "gradientFromColor", "--ant-skeleton-gradient-from-color", "string", "渐变色起点颜色", "Start color of gradient", "rgba(0,0,0,0.06)", false, true, false),
+            new ComponentTokenDefinition("skeleton", "gradientToColor", "--ant-skeleton-gradient-to-color", "string", "渐变色终点颜色", "End color of gradient", "rgba(0,0,0,0.15)", false, true, false),
+            new ComponentTokenDefinition("skeleton", "paragraphLiHeight", "--ant-skeleton-paragraph-li-height", "number", "段落骨架屏单行高度", "Line height of paragraph skeleton", "16", false, true, false),
+            new ComponentTokenDefinition("skeleton", "paragraphMarginTop", "--ant-skeleton-paragraph-margin-top", "number", "段落骨架屏上间距", "Margin top of paragraph skeleton", "28", false, true, false),
+            new ComponentTokenDefinition("skeleton", "titleHeight", "--ant-skeleton-title-height", "number | string", "标题骨架屏高度", "Height of title skeleton", "16", false, true, false),
+            new ComponentTokenDefinition("slider", "controlSize", "--ant-slider-control-size", "number", "滑动输入高度", "Height of slider", "10", false, true, false),
+            new ComponentTokenDefinition("slider", "dotActiveBorderColor", "--ant-slider-dot-active-border-color", "string", "圆点激活态边框颜色", "Border color of dot when active", "#91caff", false, true, false),
+            new ComponentTokenDefinition("slider", "dotBorderColor", "--ant-slider-dot-border-color", "string", "圆点边框颜色", "Border color of dot", "#f0f0f0", false, true, false),
+            new ComponentTokenDefinition("slider", "dotSize", "--ant-slider-dot-size", "number", "滑块圆点尺寸", "Size of dot", "8", false, true, false),
+            new ComponentTokenDefinition("slider", "handleActiveColor", "--ant-slider-handle-active-color", "string", "滑块激活态边框色", "Border color of handle when active", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("slider", "handleActiveOutlineColor", "--ant-slider-handle-active-outline-color", "string", "滑块激活态外框色", "Outline color of handle when active", "rgba(22,119,255,0.2)", false, true, false),
+            new ComponentTokenDefinition("slider", "handleColor", "--ant-slider-handle-color", "string", "滑块颜色", "Color of handle", "#91caff", false, true, false),
+            new ComponentTokenDefinition("slider", "handleColorDisabled", "--ant-slider-handle-color-disabled", "string", "滑块禁用颜色", "Color of handle when disabled", "#bfbfbf", false, true, false),
+            new ComponentTokenDefinition("slider", "handleLineWidth", "--ant-slider-handle-line-width", "number | string", "滑块边框宽度", "Border width of handle", "2", false, true, false),
+            new ComponentTokenDefinition("slider", "handleLineWidthHover", "--ant-slider-handle-line-width-hover", "number | string", "滑块边框宽度（悬浮态）", "Border width of handle when hover", "2.5", false, true, false),
+            new ComponentTokenDefinition("slider", "handleSize", "--ant-slider-handle-size", "number", "滑块尺寸", "Size of handle", "10", false, true, false),
+            new ComponentTokenDefinition("slider", "handleSizeHover", "--ant-slider-handle-size-hover", "number", "滑块尺寸（悬浮态）", "Size of handle when hover", "12", false, true, false),
+            new ComponentTokenDefinition("slider", "railBg", "--ant-slider-rail-bg", "string", "轨道背景色", "Background color of rail", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("slider", "railHoverBg", "--ant-slider-rail-hover-bg", "string", "轨道背景色（悬浮态）", "Background color of rail when hover", "rgba(0,0,0,0.06)", false, true, false),
+            new ComponentTokenDefinition("slider", "railSize", "--ant-slider-rail-size", "number", "轨道高度", "Height of rail", "4", false, true, false),
+            new ComponentTokenDefinition("slider", "trackBg", "--ant-slider-track-bg", "string", "轨道已覆盖部分背景色", "Background color of track", "#91caff", false, true, false),
+            new ComponentTokenDefinition("slider", "trackBgDisabled", "--ant-slider-track-bg-disabled", "string", "轨道禁用态背景色", "Background color of track when disabled", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("slider", "trackHoverBg", "--ant-slider-track-hover-bg", "string", "轨道已覆盖部分背景色（悬浮态）", "Background color of track when hover", "#69b1ff", false, true, false),
+            new ComponentTokenDefinition("space", "componentToken", "--ant-space-component-token", "unknown", "", "", "", false, false, true),
+            new ComponentTokenDefinition("spin", "contentHeight", "--ant-spin-content-height", "number | string", "内容区域高度", "Height of content area", "400", false, true, false),
+            new ComponentTokenDefinition("spin", "dotSize", "--ant-spin-dot-size", "number", "加载图标尺寸", "Loading icon size", "20", false, true, false),
+            new ComponentTokenDefinition("spin", "dotSizeLG", "--ant-spin-dot-size-lg", "number", "大号加载图标尺寸", "Large loading icon size", "32", false, true, false),
+            new ComponentTokenDefinition("spin", "dotSizeSM", "--ant-spin-dot-size-sm", "number", "小号加载图标尺寸", "Small loading icon size", "14", false, true, false),
+            new ComponentTokenDefinition("splitter", "resizeSpinnerSize", "--ant-splitter-resize-spinner-size", "number", "拖拽标识元素大小", "Drag and drop the identity element size", "", true, false, false),
+            new ComponentTokenDefinition("splitter", "splitBarDraggableSize", "--ant-splitter-split-bar-draggable-size", "number", "拖拽标识元素大小", "Drag and drop the identity element size", "20", false, true, false),
+            new ComponentTokenDefinition("splitter", "splitBarSize", "--ant-splitter-split-bar-size", "number", "拖拽元素显示大小", "Drag the element display size", "2", false, true, false),
+            new ComponentTokenDefinition("splitter", "splitTriggerSize", "--ant-splitter-split-trigger-size", "number", "拖拽触发区域大小", "Drag and drop trigger area size", "6", false, true, false),
+            new ComponentTokenDefinition("statistic", "contentFontSize", "--ant-statistic-content-font-size", "number | string", "内容字体大小", "Content font size", "24", false, true, false),
+            new ComponentTokenDefinition("statistic", "titleFontSize", "--ant-statistic-title-font-size", "number", "标题字体大小", "Title font size", "14", false, true, false),
+            new ComponentTokenDefinition("steps", "customIconFontSize", "--ant-steps-custom-icon-font-size", "number", "自定义图标大小", "Font size of custom icon", "24", false, true, false),
+            new ComponentTokenDefinition("steps", "customIconSize", "--ant-steps-custom-icon-size", "number", "自定义图标容器尺寸", "Size of custom icon container", "32", false, true, false),
+            new ComponentTokenDefinition("steps", "customIconTop", "--ant-steps-custom-icon-top", "number", "自定义图标 top", "Top of custom icon", "0", false, true, false),
+            new ComponentTokenDefinition("steps", "descriptionMaxWidth", "--ant-steps-description-max-width", "number", "描述区域最大宽度", "Max width of description area", "", true, false, false),
+            new ComponentTokenDefinition("steps", "dotCurrentSize", "--ant-steps-dot-current-size", "number", "点状步骤点当前大小", "Current size of dot", "10", false, true, false),
+            new ComponentTokenDefinition("steps", "dotSize", "--ant-steps-dot-size", "number", "点状步骤点大小", "Size of dot", "8", false, true, false),
+            new ComponentTokenDefinition("steps", "iconFontSize", "--ant-steps-icon-font-size", "number", "图标大小", "Size of icon", "14", false, true, false),
+            new ComponentTokenDefinition("steps", "iconSize", "--ant-steps-icon-size", "number", "图标容器尺寸", "Size of icon container", "32", false, true, false),
+            new ComponentTokenDefinition("steps", "iconSizeSM", "--ant-steps-icon-size-sm", "number | string", "小号步骤条图标大小", "Size of small steps icon", "24", false, true, false),
+            new ComponentTokenDefinition("steps", "iconTop", "--ant-steps-icon-top", "number", "图标 top", "Top of icon", "-0.5", false, true, false),
+            new ComponentTokenDefinition("steps", "navArrowColor", "--ant-steps-nav-arrow-color", "string", "可跳转步骤条箭头颜色", "Color of arrow in nav", "rgba(0,0,0,0.25)", false, true, false),
+            new ComponentTokenDefinition("steps", "navContentMaxWidth", "--ant-steps-nav-content-max-width", "CSSProperties['maxWidth']", "可跳转步骤条内容最大宽度", "Max width of nav content", "unset", false, true, false),
+            new ComponentTokenDefinition("steps", "titleLineHeight", "--ant-steps-title-line-height", "number | string", "标题行高", "Line height of title", "", true, false, false),
+            new ComponentTokenDefinition("switch", "handleBg", "--ant-switch-handle-bg", "string", "开关把手背景色", "Background color of Switch handle", "#fff", false, true, false),
+            new ComponentTokenDefinition("switch", "handleShadow", "--ant-switch-handle-shadow", "string", "开关把手阴影", "Shadow of Switch handle", "0 2px 4px 0 rgba(0,35,11,0.2)", false, true, false),
+            new ComponentTokenDefinition("switch", "handleSize", "--ant-switch-handle-size", "number", "开关把手大小", "Size of Switch handle", "18", false, true, false),
+            new ComponentTokenDefinition("switch", "handleSizeSM", "--ant-switch-handle-size-sm", "number", "小号开关把手大小", "Size of small Switch handle", "12", false, true, false),
+            new ComponentTokenDefinition("switch", "innerMaxMargin", "--ant-switch-inner-max-margin", "number", "内容区域最大边距", "Maximum margin of content area", "24", false, true, false),
+            new ComponentTokenDefinition("switch", "innerMaxMarginSM", "--ant-switch-inner-max-margin-sm", "number", "小号开关内容区域最大边距", "Maximum margin of content area of small Switch", "18", false, true, false),
+            new ComponentTokenDefinition("switch", "innerMinMargin", "--ant-switch-inner-min-margin", "number", "内容区域最小边距", "Minimum margin of content area", "9", false, true, false),
+            new ComponentTokenDefinition("switch", "innerMinMarginSM", "--ant-switch-inner-min-margin-sm", "number", "小号开关内容区域最小边距", "Minimum margin of content area of small Switch", "6", false, true, false),
+            new ComponentTokenDefinition("switch", "trackHeight", "--ant-switch-track-height", "number | string", "开关高度", "Height of Switch", "22", false, true, false),
+            new ComponentTokenDefinition("switch", "trackHeightSM", "--ant-switch-track-height-sm", "number | string", "小号开关高度", "Height of small Switch", "16", false, true, false),
+            new ComponentTokenDefinition("switch", "trackMinWidth", "--ant-switch-track-min-width", "number | string", "开关最小宽度", "Minimum width of Switch", "44", false, true, false),
+            new ComponentTokenDefinition("switch", "trackMinWidthSM", "--ant-switch-track-min-width-sm", "number | string", "小号开关最小宽度", "Minimum width of small Switch", "28", false, true, false),
+            new ComponentTokenDefinition("switch", "trackPadding", "--ant-switch-track-padding", "number", "开关内边距", "Padding of Switch", "2", false, true, false),
+            new ComponentTokenDefinition("table", "bodySortBg", "--ant-table-body-sort-bg", "string", "表格排序列背景色", "Background color of table sorted column", "#fafafa", false, true, false),
+            new ComponentTokenDefinition("table", "borderColor", "--ant-table-border-color", "string", "表格边框/分割线颜色", "Border color of table", "#f0f0f0", false, true, false),
+            new ComponentTokenDefinition("table", "cellFontSize", "--ant-table-cell-font-size", "number", "单元格文字大小（默认大尺寸）", "Font size of table cell (large size by default)", "14", false, true, false),
+            new ComponentTokenDefinition("table", "cellFontSizeMD", "--ant-table-cell-font-size-md", "number", "单元格文字大小（中等尺寸）", "Font size of table cell (middle size)", "14", false, true, false),
+            new ComponentTokenDefinition("table", "cellFontSizeSM", "--ant-table-cell-font-size-sm", "number", "单元格文字大小（小尺寸）", "Font size of table cell (small size)", "14", false, true, false),
+            new ComponentTokenDefinition("table", "cellPaddingBlock", "--ant-table-cell-padding-block", "number", "单元格纵向内间距", "Vertical padding of table cell", "16", false, true, false),
+            new ComponentTokenDefinition("table", "cellPaddingBlockMD", "--ant-table-cell-padding-block-md", "number", "单元格纵向内间距（中等尺寸）", "Vertical padding of table cell (middle size)", "12", false, true, false),
+            new ComponentTokenDefinition("table", "cellPaddingBlockSM", "--ant-table-cell-padding-block-sm", "number", "单元格纵向内间距（小尺寸）", "Vertical padding of table cell (small size)", "8", false, true, false),
+            new ComponentTokenDefinition("table", "cellPaddingInline", "--ant-table-cell-padding-inline", "number", "单元格横向内间距（默认大尺寸）", "Horizontal padding of table cell (large size by default)", "16", false, true, false),
+            new ComponentTokenDefinition("table", "cellPaddingInlineMD", "--ant-table-cell-padding-inline-md", "number", "单元格横向内间距（中等尺寸）", "Horizontal padding of table cell (middle size)", "8", false, true, false),
+            new ComponentTokenDefinition("table", "cellPaddingInlineSM", "--ant-table-cell-padding-inline-sm", "number", "单元格横向内间距（小尺寸）", "Horizontal padding of table cell (small size)", "8", false, true, false),
+            new ComponentTokenDefinition("table", "expandIconBg", "--ant-table-expand-icon-bg", "string", "展开按钮背景色", "Background of expand button", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("table", "expandIconHalfInner", "--ant-table-expand-icon-half-inner", "number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("table", "expandIconMarginTop", "--ant-table-expand-icon-margin-top", "number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("table", "expandIconScale", "--ant-table-expand-icon-scale", "number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("table", "expandIconSize", "--ant-table-expand-icon-size", "number", "", "", "", false, false, false),
+            new ComponentTokenDefinition("table", "filterDropdownBg", "--ant-table-filter-dropdown-bg", "string", "过滤下拉菜单颜色", "Color of filter dropdown", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("table", "filterDropdownMenuBg", "--ant-table-filter-dropdown-menu-bg", "string", "过滤下拉菜单选项背景", "Background of filter dropdown menu item", "#ffffff", false, true, false),
+            new ComponentTokenDefinition("table", "fixedHeaderSortActiveBg", "--ant-table-fixed-header-sort-active-bg", "string", "固定表头排序激活态背景色", "Background color of fixed table header when sorted", "#f0f0f0", false, true, false),
+            new ComponentTokenDefinition("table", "footerBg", "--ant-table-footer-bg", "string", "表格底部背景色", "Background of footer", "#fafafa", false, true, false),
+            new ComponentTokenDefinition("table", "footerColor", "--ant-table-footer-color", "string", "表格底部文字颜色", "Color of footer text", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("table", "headerBg", "--ant-table-header-bg", "string", "表头背景", "Background of table header", "#fafafa", false, true, false),
+            new ComponentTokenDefinition("table", "headerBorderRadius", "--ant-table-header-border-radius", "number", "表头圆角", "Border radius of table header", "8", false, true, false),
+            new ComponentTokenDefinition("table", "headerColor", "--ant-table-header-color", "string", "表头文字颜色", "Color of table header text", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("table", "headerFilterHoverBg", "--ant-table-header-filter-hover-bg", "string", "表头过滤按钮悬浮背景色", "Background color of table header filter button when hovered", "rgba(0,0,0,0.06)", false, true, false),
+            new ComponentTokenDefinition("table", "headerIconColor", "--ant-table-header-icon-color", "string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("table", "headerIconHoverColor", "--ant-table-header-icon-hover-color", "string", "", "", "", false, false, false),
+            new ComponentTokenDefinition("table", "headerSortActiveBg", "--ant-table-header-sort-active-bg", "string", "表头排序激活态背景色", "Background color of table header when sorted", "#f0f0f0", false, true, false),
+            new ComponentTokenDefinition("table", "headerSortHoverBg", "--ant-table-header-sort-hover-bg", "string", "表头排序激活态悬浮背景色", "Background color of table header when sorted and hovered", "#f0f0f0", false, true, false),
+            new ComponentTokenDefinition("table", "headerSplitColor", "--ant-table-header-split-color", "string", "表头分割线颜色", "Split border color of table header", "#f0f0f0", false, true, false),
+            new ComponentTokenDefinition("table", "rowExpandedBg", "--ant-table-row-expanded-bg", "string", "表格行展开背景色", "Background color of table expanded row", "rgba(0,0,0,0.02)", false, true, false),
+            new ComponentTokenDefinition("table", "rowHoverBg", "--ant-table-row-hover-bg", "string", "表格行悬浮背景色", "Background color of table hovered row", "#fafafa", false, true, false),
+            new ComponentTokenDefinition("table", "rowSelectedBg", "--ant-table-row-selected-bg", "string", "表格行选中背景色", "Background color of table selected row", "#e6f4ff", false, true, false),
+            new ComponentTokenDefinition("table", "rowSelectedHoverBg", "--ant-table-row-selected-hover-bg", "string", "表格行选中悬浮背景色", "Background color of table selected row when hovered", "#bae0ff", false, true, false),
+            new ComponentTokenDefinition("table", "selectionColumnWidth", "--ant-table-selection-column-width", "number | string", "选择列宽度", "Width of selection column", "32", false, true, false),
+            new ComponentTokenDefinition("table", "stickyScrollBarBg", "--ant-table-sticky-scroll-bar-bg", "string", "Sticky 模式下滚动条背景色", "Background of sticky scrollbar", "rgba(0,0,0,0.25)", false, true, false),
+            new ComponentTokenDefinition("table", "stickyScrollBarBorderRadius", "--ant-table-sticky-scroll-bar-border-radius", "number", "Sticky 模式下滚动条圆角", "Border radius of sticky scrollbar", "100", false, true, false),
+            new ComponentTokenDefinition("tabs", "cardBg", "--ant-tabs-card-bg", "string", "卡片标签页背景色", "Background color of card tab", "rgba(0,0,0,0.02)", false, true, false),
+            new ComponentTokenDefinition("tabs", "cardGutter", "--ant-tabs-card-gutter", "number", "卡片标签间距", "Gutter of card tab", "2", false, true, false),
+            new ComponentTokenDefinition("tabs", "cardHeight", "--ant-tabs-card-height", "number", "卡片标签页高度", "Height of card tab", "40", false, true, false),
+            new ComponentTokenDefinition("tabs", "cardHeightLG", "--ant-tabs-card-height-lg", "number", "大尺寸卡片标签页高度", "Height of large card tab", "48", false, true, false),
+            new ComponentTokenDefinition("tabs", "cardHeightSM", "--ant-tabs-card-height-sm", "number", "小尺寸卡片标签页高度", "Height of small card tab", "32", false, true, false),
+            new ComponentTokenDefinition("tabs", "cardPadding", "--ant-tabs-card-padding", "string", "卡片标签页内间距", "Padding of card tab", "8px 16px", false, true, false),
+            new ComponentTokenDefinition("tabs", "cardPaddingLG", "--ant-tabs-card-padding-lg", "string", "大号卡片标签页内间距", "Padding of large card tab", "11px 16px", false, true, false),
+            new ComponentTokenDefinition("tabs", "cardPaddingSM", "--ant-tabs-card-padding-sm", "string", "小号卡片标签页内间距", "Padding of small card tab", "4px 8px", false, true, false),
+            new ComponentTokenDefinition("tabs", "horizontalItemGutter", "--ant-tabs-horizontal-item-gutter", "number", "横向标签页标签间距", "Horizontal gutter of horizontal tab", "32", false, true, false),
+            new ComponentTokenDefinition("tabs", "horizontalItemMargin", "--ant-tabs-horizontal-item-margin", "string", "横向标签页标签外间距", "Horizontal margin of horizontal tab item", "", false, true, false),
+            new ComponentTokenDefinition("tabs", "horizontalItemMarginRTL", "--ant-tabs-horizontal-item-margin-rtl", "string", "横向标签页标签外间距（RTL）", "Horizontal margin of horizontal tab item (RTL)", "", false, true, false),
+            new ComponentTokenDefinition("tabs", "horizontalItemPadding", "--ant-tabs-horizontal-item-padding", "string", "横向标签页标签内间距", "Horizontal padding of horizontal tab item", "12px 0", false, true, false),
+            new ComponentTokenDefinition("tabs", "horizontalItemPaddingLG", "--ant-tabs-horizontal-item-padding-lg", "string", "大号横向标签页标签内间距", "Horizontal padding of large horizontal tab item", "16px 0", false, true, false),
+            new ComponentTokenDefinition("tabs", "horizontalItemPaddingSM", "--ant-tabs-horizontal-item-padding-sm", "string", "小号横向标签页标签内间距", "Horizontal padding of small horizontal tab item", "8px 0", false, true, false),
+            new ComponentTokenDefinition("tabs", "horizontalMargin", "--ant-tabs-horizontal-margin", "string", "横向标签页外间距", "Horizontal margin of horizontal tab", "0 0 16px 0", false, true, false),
+            new ComponentTokenDefinition("tabs", "inkBarColor", "--ant-tabs-ink-bar-color", "string", "指示条颜色", "Color of indicator", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("tabs", "itemActiveColor", "--ant-tabs-item-active-color", "string", "标签激活态文本颜色", "Text color of active tab", "#0958d9", false, true, false),
+            new ComponentTokenDefinition("tabs", "itemColor", "--ant-tabs-item-color", "string", "标签文本颜色", "Text color of tab", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("tabs", "itemHoverColor", "--ant-tabs-item-hover-color", "string", "标签悬浮态文本颜色", "Text color of hover tab", "#4096ff", false, true, false),
+            new ComponentTokenDefinition("tabs", "itemSelectedColor", "--ant-tabs-item-selected-color", "string", "标签选中态文本颜色", "Text color of selected tab", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("tabs", "titleFontSize", "--ant-tabs-title-font-size", "number", "标签页标题文本大小", "Font size of title", "14", false, true, false),
+            new ComponentTokenDefinition("tabs", "titleFontSizeLG", "--ant-tabs-title-font-size-lg", "number", "大号标签页标题文本大小", "Font size of large title", "16", false, true, false),
+            new ComponentTokenDefinition("tabs", "titleFontSizeSM", "--ant-tabs-title-font-size-sm", "number", "小号标签页标题文本大小", "Font size of small title", "14", false, true, false),
+            new ComponentTokenDefinition("tabs", "verticalItemMargin", "--ant-tabs-vertical-item-margin", "string", "纵向标签页标签外间距", "Vertical margin of vertical tab item", "16px 0 0 0", false, true, false),
+            new ComponentTokenDefinition("tabs", "verticalItemPadding", "--ant-tabs-vertical-item-padding", "string", "纵向标签页标签内间距", "Vertical padding of vertical tab item", "8px 24px", false, true, false),
+            new ComponentTokenDefinition("tabs", "zIndexPopup", "--ant-tabs-z-index-popup", "number", "下拉菜单 z-index", "z-index of dropdown menu", "1050", false, true, false),
+            new ComponentTokenDefinition("tag", "defaultBg", "--ant-tag-default-bg", "string", "默认背景色", "Default background color", "#f5f5f5", false, true, false),
+            new ComponentTokenDefinition("tag", "defaultColor", "--ant-tag-default-color", "string", "默认文字颜色", "Default text color", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("tag", "solidTextColor", "--ant-tag-solid-text-color", "string", "默认实心标签的文本色", "Default text color for solid tag.", "#fff", false, true, false),
+            new ComponentTokenDefinition("timeline", "dotBg", "--ant-timeline-dot-bg", "string", "节点背景色", "Background color of node", "", false, true, false),
+            new ComponentTokenDefinition("timeline", "dotBorderWidth", "--ant-timeline-dot-border-width", "number | string", "节点边框宽度", "Border width of node", "2", false, true, false),
+            new ComponentTokenDefinition("timeline", "dotSize", "--ant-timeline-dot-size", "number | string", "节点大小", "Node size", "", false, true, false),
+            new ComponentTokenDefinition("timeline", "itemPaddingBottom", "--ant-timeline-item-padding-bottom", "number", "时间项下间距", "Bottom padding of item", "20", false, true, false),
+            new ComponentTokenDefinition("timeline", "tailColor", "--ant-timeline-tail-color", "string", "轨迹颜色", "Line color", "rgba(5,5,5,0.06)", false, true, false),
+            new ComponentTokenDefinition("timeline", "tailWidth", "--ant-timeline-tail-width", "number | string", "轨迹宽度", "Line width", "2", false, true, false),
+            new ComponentTokenDefinition("tooltip", "maxWidth", "--ant-tooltip-max-width", "number", "文字提示最大宽度", "Max width of tooltip", "250", false, true, false),
+            new ComponentTokenDefinition("tooltip", "zIndexPopup", "--ant-tooltip-z-index-popup", "number", "文字提示 z-index", "z-index of tooltip", "1070", false, true, false),
+            new ComponentTokenDefinition("tour", "closeBtnSize", "--ant-tour-close-btn-size", "number", "关闭按钮尺寸", "Close button size", "22", false, true, false),
+            new ComponentTokenDefinition("tour", "primaryNextBtnHoverBg", "--ant-tour-primary-next-btn-hover-bg", "string", "Primary 模式下一步按钮悬浮背景色", "Hover background color of next button in primary type", "rgb(240,240,240)", false, true, false),
+            new ComponentTokenDefinition("tour", "primaryPrevBtnBg", "--ant-tour-primary-prev-btn-bg", "string", "Primary 模式上一步按钮背景色", "Background color of previous button in primary type", "rgba(255,255,255,0.15)", false, true, false),
+            new ComponentTokenDefinition("tour", "zIndexPopup", "--ant-tour-z-index-popup", "number", "弹层 z-index", "Tour popup z-index", "1070", false, true, false),
+            new ComponentTokenDefinition("transfer", "headerHeight", "--ant-transfer-header-height", "number | string", "顶部高度", "Height of header", "40", false, true, false),
+            new ComponentTokenDefinition("transfer", "itemHeight", "--ant-transfer-item-height", "number | string", "列表项高度", "Height of list item", "32", false, true, false),
+            new ComponentTokenDefinition("transfer", "itemPaddingBlock", "--ant-transfer-item-padding-block", "number | string", "列表项纵向内边距", "Vertical padding of list item", "5", false, true, false),
+            new ComponentTokenDefinition("transfer", "listHeight", "--ant-transfer-list-height", "number | string", "列表高度", "Height of list", "200", false, true, false),
+            new ComponentTokenDefinition("transfer", "listWidth", "--ant-transfer-list-width", "number | string", "列表宽度", "Width of list", "180", false, true, false),
+            new ComponentTokenDefinition("transfer", "listWidthLG", "--ant-transfer-list-width-lg", "number | string", "大号列表宽度", "Width of large list", "250", false, true, false),
+            new ComponentTokenDefinition("tree-select", "indentSize", "--ant-tree-select-indent-size", "number", "缩进宽度", "Indent width of tree", "24", false, true, false),
+            new ComponentTokenDefinition("tree-select", "nodeHoverBg", "--ant-tree-select-node-hover-bg", "string", "节点悬浮态背景色", "Background color of hovered node", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("tree-select", "nodeHoverColor", "--ant-tree-select-node-hover-color", "string", "节点悬浮态态文字颜色", "Text color of hovered node", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("tree-select", "nodeSelectedBg", "--ant-tree-select-node-selected-bg", "string", "节点选中态背景色", "Background color of selected node", "#e6f4ff", false, true, false),
+            new ComponentTokenDefinition("tree-select", "nodeSelectedColor", "--ant-tree-select-node-selected-color", "string", "节点选中态文字颜色", "Text color of selected node", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("tree-select", "switcherSize", "--ant-tree-select-switcher-size", "number", "展开按钮宽度", "Switcher width of tree", "24", false, true, false),
+            new ComponentTokenDefinition("tree-select", "titleHeight", "--ant-tree-select-title-height", "number", "节点标题高度", "Node title height", "24", false, true, false),
+            new ComponentTokenDefinition("tree", "directoryNodeSelectedBg", "--ant-tree-directory-node-selected-bg", "string", "目录树节点选中背景色", "Background color of selected directory node", "#1677ff", false, true, false),
+            new ComponentTokenDefinition("tree", "directoryNodeSelectedColor", "--ant-tree-directory-node-selected-color", "string", "目录树节点选中文字颜色", "Text color of selected directory node", "#fff", false, true, false),
+            new ComponentTokenDefinition("tree", "indentSize", "--ant-tree-indent-size", "number", "缩进宽度", "Indent width of tree", "24", false, true, false),
+            new ComponentTokenDefinition("tree", "nodeHoverBg", "--ant-tree-node-hover-bg", "string", "节点悬浮态背景色", "Background color of hovered node", "rgba(0,0,0,0.04)", false, true, false),
+            new ComponentTokenDefinition("tree", "nodeHoverColor", "--ant-tree-node-hover-color", "string", "节点悬浮态态文字颜色", "Text color of hovered node", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("tree", "nodeSelectedBg", "--ant-tree-node-selected-bg", "string", "节点选中态背景色", "Background color of selected node", "#e6f4ff", false, true, false),
+            new ComponentTokenDefinition("tree", "nodeSelectedColor", "--ant-tree-node-selected-color", "string", "节点选中态文字颜色", "Text color of selected node", "rgba(0,0,0,0.88)", false, true, false),
+            new ComponentTokenDefinition("tree", "switcherSize", "--ant-tree-switcher-size", "number", "展开按钮宽度", "Switcher width of tree", "24", false, true, false),
+            new ComponentTokenDefinition("tree", "titleHeight", "--ant-tree-title-height", "number", "节点标题高度", "Node title height", "24", false, true, false),
+            new ComponentTokenDefinition("typography", "titleMarginBottom", "--ant-typography-title-margin-bottom", "number | string", "标题下间距", "Margin bottom of title", "0.5em", false, true, false),
+            new ComponentTokenDefinition("typography", "titleMarginTop", "--ant-typography-title-margin-top", "number | string", "标题上间距", "Margin top of title", "1.2em", false, true, false),
+            new ComponentTokenDefinition("upload", "actionsColor", "--ant-upload-actions-color", "string", "操作按扭颜色", "Action button color", "rgba(0,0,0,0.45)", false, true, false),
+            new ComponentTokenDefinition("upload", "pictureCardSize", "--ant-upload-picture-card-size", "number", "卡片类型文件列表项的尺寸（对 picture-card 和 picture-circle 生效）", "Size of list items in card type (affects both picture-card and picture-circle)", "102", false, true, false),
         });
     }
 }

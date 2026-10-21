@@ -26,6 +26,9 @@ There are 2 rendering approaches for `Tooltip`:
 | -------- | ----------------------------- | ---------------------------------- | ------- |
 | Title    | The text shown in the tooltip | string | string.Empty |
 | TitleTemplate | The content shown in the tooltip | RenderFragment | - |
+| Arrow | Whether to show the tooltip arrow | bool | `true` |
+| ArrowPointAtCenter | Whether to point the arrow at the center of the trigger | bool | `false` |
+| Color | Preset color name or custom CSS color | string | - |
 
 ### Common API
 

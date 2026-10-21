@@ -14,6 +14,8 @@ public partial class ColorPicker : AntDomComponentBase
 {
     [Parameter] public string Value { get; set; } = "#1677ff";
     [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    /// <summary>Optional custom trigger content. When provided, it replaces the built-in color swatch trigger.</summary>
+    [Parameter] public RenderFragment ChildContent { get; set; }
     [Parameter] public bool Open { get; set; }
     [Parameter] public EventCallback<bool> OpenChanged { get; set; }
     /// <summary>Trigger size: small, middle, or large.</summary>
@@ -70,9 +72,12 @@ public partial class ColorPicker : AntDomComponentBase
             };
             var stateClass = (Open && !Disabled ? " ant-color-picker-trigger-active" : string.Empty)
                 + (Disabled ? " ant-color-picker-trigger-disabled" : string.Empty);
-            return $"ant-color-picker-trigger ant-color-picker-css-var{sizeClass}{stateClass} {Class}".Trim();
+            var triggerClass = ChildContent is null ? "ant-color-picker-trigger" : "ant-color-picker-custom-trigger";
+            return $"{triggerClass} ant-color-picker-css-var{sizeClass}{stateClass} {Class}".Trim();
         }
     }
+
+    private string TriggerStyle => ChildContent is null ? Style : $"display:inline-flex; {Style}";
 
     private string DisplayValue => IsCleared ? "Transparent" : ToFormatString(Hsva, _format);
 

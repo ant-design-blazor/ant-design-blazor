@@ -1,0 +1,17 @@
+@namespace AntDesign.Docs.Components
+
+<div id="select-semantic-preview" style="min-height: 180px; display: grid; place-items: center;">
+    <Select TItemValue="string" TItem="string"
+            DefaultValue='@("lucy")'
+            Open="true"
+            AllowClear
+            Style="width: 220px;"
+            PopupContainerSelector="#select-semantic-preview">
+        <SelectOptions>
+            <SelectOption TItemValue="string" TItem="string" Value='@("jack")' Label="Jack" />
+            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
+            <SelectOption TItemValue="string" TItem="string" Value='@("yiminghe")' Label="Yiminghe" />
+            <SelectOption TItemValue="string" TItem="string" Value='@("disabled")' Label="Disabled" Disabled />
+        </SelectOptions>
+    </Select>
+</div>

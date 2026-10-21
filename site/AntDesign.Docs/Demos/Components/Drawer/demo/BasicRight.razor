@@ -1,0 +1,11 @@
+<Button Type="ButtonType.Primary" OnClick="() => _visible = true">Open</Button>
+
+<Drawer @bind-Visible="_visible" Title='("Basic Drawer")' Closable>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+</Drawer>
+
+@code {
+    private bool _visible;
+}

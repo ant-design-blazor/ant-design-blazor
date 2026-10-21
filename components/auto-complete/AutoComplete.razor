@@ -19,30 +19,28 @@
                     OnVisibleChange="@OnOverlayTriggerVisibleChange">
         <Overlay>
             <CascadingValue Value="this" IsFixed="@true">
-                <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @_minWidth">
-                    <div style="display: flex;flex-direction: column;">
-                        @if (OverlayTemplate != null)
+                <div class="@PopupListClass" style="@PopupListStyle">
+                    @if (OverlayTemplate != null)
+                    {
+                        @OverlayTemplate
+                    }
+                    else if (_filteredOptions?.Any()==true)
+                    {
+                        @foreach (var option in _filteredOptions)
                         {
-                            @OverlayTemplate
-                        }
-                        else if (_filteredOptions?.Any()==true)
-                        {
-                            @foreach (var option in _filteredOptions)
+                            @if (OptionTemplate != null)
                             {
-                                @if (OptionTemplate != null)
-                                {
-                                    @OptionTemplate(option)
-                                }
-                                else
-                                {
-                                    var label = OptionFormat == null ? option.Label : OptionFormat(option);
-                                    <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
-                                        @label
-                                    </AutoCompleteOption>
-                                }
+                                @OptionTemplate(option)
+                            }
+                            else
+                            {
+                                var label = OptionFormat == null ? option.Label : OptionFormat(option);
+                                <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
+                                    @label
+                                </AutoCompleteOption>
                             }
                         }
-                    </div>
+                    }
                 </div>
             </CascadingValue>
         </Overlay>

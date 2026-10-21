@@ -18,21 +18,37 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg
 
 ## API
 
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| ClassNames | 为根节点、触发器、文件列表和文件项设置语义 class | `IReadOnlyDictionary<string, string>` | - |
+| Styles | 为根节点、触发器、文件列表和文件项设置语义内联样式 | `IReadOnlyDictionary<string, string>` | - |
+| RemoveIcon | 自定义移除操作的内容 | `RenderFragment<UploadFileItem>` | 删除图标 |
+| PreviewIcon | 自定义预览操作的内容 | `RenderFragment<UploadFileItem>` | 预览图标 |
+| DownloadIcon | 自定义下载操作的内容 | `RenderFragment<UploadFileItem>` | 下载图标 |
+| Extra | 在文件名旁按文件渲染的附加内容 | `RenderFragment<UploadFileItem>` | - |
+| DragSort | 允许通过拖动重新排列文件列表 | bool | false |
+
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | Accept | 接受上传的文件类型, 详见 [input accept Attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept) | string | 无 |  |
 | Action | 上传的地址 | string\|(file) => `Promise` | 无 |  |
 | Directory | 支持上传文件夹（[caniuse](https://caniuse.com/#feat=input-file-directory)） | boolean | false |  |
 | BeforeUpload | 上传文件之前的钩子，参数为上传的文件，若返回 `false` 则停止上传。支持返回一个 Promise 对象，Promise 对象 reject 时则停止上传，resolve 时开始上传（ resolve 传入 `File` 或 `Blob` 对象则上传 resolve 传入对象）。**注意：IE9 不支持该方法**。 | (file, fileList) => `boolean | Promise` | 无 |  |
+| TransformFile | 上传前异步替换文件内容。文件字节会经 Blazor 回调传输，适用于较小文件。 | `Func<UploadFileTransformContext, Task<UploadFileTransformResult>>` | 无 |  |
 | BeforeAllUpload & BeforeAllUploadAsync | 上传文件之前的钩子，参数为上传的文件，若返回 `false` 则停止上传。支持返回一个 Promise 对象，Promise 对象 reject 时则停止上传，resolve 时开始上传（ resolve 传入 `File` 或 `Blob` 对象则上传 resolve 传入对象）。**注意：IE9 不支持该方法**。 | (file, fileList) => `boolean | Promise` | 无 |  |
 | Data | 上传所需额外参数或返回上传额外参数的方法 | object\|(file) => object | 无 |  |
 | DefaultFileList | 默认已经上传的文件列表 | object\[] | 无 |  |
 | Disabled | 是否禁用 | boolean | false |  |
 | FileList | 已经上传的文件列表（受控），使用此参数时，如果遇到 `onChange` 只调用一次的问题，请参考 [#2423](https://github.com/ant-design/ant-design/issues/2423) | object\[] | 无 |  |
 | Headers | 设置上传的请求头部，IE10 以上有效 | object | 无 |  |
-| ListType | 上传列表的内建样式，支持三种基本样式 `text`, `picture` 和 `picture-card` | string | 'text' |  |
+| ListType | 上传列表的内建样式：`text`、`picture`、`picture-card` 或 `picture-circle` | string | 'text' | `picture-circle` (5.2.0+) |
 | Method | 上传请求的 http method | string | 'post' |  |
 | Multiple | 是否支持多选文件，`ie10+` 支持。开启后按住 ctrl 可选择多个文件 | boolean | false |  |
+| MaxCount | 文件列表的最大数量；设置为 `1` 时，新文件会替换当前文件 | number | - |  |
+| ProgressStrokeColor | 上传列表进度条的渐变色节点 | `Dictionary<string, string>` | - |  |
+| ProgressStrokeWidth | 上传列表进度条的像素宽度 | `int?` | `2` |  |
+| ProgressFormat | 格式化进度条旁显示的上传百分比 | `Func<double, string>` | - |  |
+| ProgressShowInfo | 是否在进度条旁显示格式化后的百分比 | `bool` | `false` |  |
 | Name | 发到后台的文件参数名 | string | 'file' |  |
 | OnChange | 上传文件改变时的状态，详见 [onChange](#onChange) | Function | 无 |  |
 | OnCompleted | 回调函数，当所有上传成功或失败时执行 | Function(file) | - |  |
@@ -93,3 +109,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg
 ### `customRequest` 怎么使用？
 
 请参考 <https://github.com/react-component/upload#customrequest>。
+
+## 设计 Token
+
+| Token | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| ActionsColor | 上传列表操作图标的颜色 | string | `colorIcon` |
+| PictureCardSize | picture-card 和 picture-circle 上传项的尺寸 | number | `controlHeightLG * 2.55` |

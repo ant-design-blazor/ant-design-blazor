@@ -45,7 +45,7 @@
     }
     else
     {
-        <span class="ant-tree-title @(TreeComponent.IsInTreeSelect ? "ant-select-tree-title" : null)">
+        <span class="@TreeComponent.GetTreeSelectSemanticClass("itemTitle", $"ant-tree-title {(TreeComponent.IsInTreeSelect ? "ant-select-tree-title" : null)}")" style="@TreeComponent.GetTreeSelectSemanticStyle("itemTitle")">
 			@{
 				bool shouldMarkup = SelfNode.Matched && !string.IsNullOrWhiteSpace(TreeComponent.SearchValue);
 				int index = -1;

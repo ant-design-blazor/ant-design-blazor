@@ -13,7 +13,14 @@
     <CascadingValue Value=@($"#ant-modal-wrap_{_dialogWrapper.Id}") Name="PopupContainerSelector">
         <CascadingValue Value="true" Name="InModal">
             <CascadingValue Value="@_dialogWrapper.Dialog.IsShow()" Name="ModalCompleteShow">
-                    @ChildContent
+                    @if (Loading)
+                    {
+                        <Skeleton Active Title="false" ParagraphRows="4" Class="ant-modal-body-skeleton" />
+                    }
+                    else
+                    {
+                        @ChildContent
+                    }
             </CascadingValue>
         </CascadingValue>
     </CascadingValue>

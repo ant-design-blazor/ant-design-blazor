@@ -25,6 +25,8 @@ One or more elements can be selected from either column, one click on the proper
 | Disabled | Whether disabled transfer | bool | false |  |
 | Footer | A function used for rendering the footer. | OneOf<string, RenderFragment> | null |  |
 | Style | Custom the css for the whole componet. | string |  |  |
+| ClassNames | Customize classes for semantic elements. Use shared keys such as `header`, or direction-specific dotted keys such as `source.header` and `target.header`. | IReadOnlyDictionary<string, string> | null |  |
+| Styles | Customize inline CSS for semantic elements. Shared and direction-specific styles are merged, with direction-specific declarations taking precedence. | IReadOnlyDictionary<string, string> | null |  |
 | operations | A set of operations that are sorted from top to bottom. | string\[] | \['right', 'left'] |  |
 | Render | The function to generate the item shown on a column. Based on an record (element of the DataSource array), this function should return a OneOf<string, RenderFragment> which is generated from that record. | Func<TransferItem, OneOf<string, RenderFragment>> |  |  |
 | SelectedKeys | A set of keys of selected items. | string\[] | \[] |  |
@@ -39,6 +41,12 @@ One or more elements can be selected from either column, one click on the proper
 | OnScroll | A callback function which is executed when scroll options list | TransferScrollArgs |  |  |
 | OnSearch | A callback function which is executed when search field are changed | TransferSearchArgs                                | - |  |
 | OnSelectChange | A callback function which is executed when selected items are changed. | TransferSelectChangeArgs |  |  |
+
+## Semantic DOM
+
+`ClassNames` and `Styles` support the shared slots `root`, `section`, `header`, `title`, `body`, `list`, `item`, `itemIcon`, `itemContent`, `footer`, and `actions`. The `source` and `target` keys customize the left and right section respectively; use dotted keys such as `source.item` or `target.header` to customize a slot on only one side.
+
+<code src="./demo/SemanticStyle.razor">Semantic DOM styling</code>
 
 ### Render Props
 

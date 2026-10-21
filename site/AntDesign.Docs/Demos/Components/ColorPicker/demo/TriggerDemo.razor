@@ -1,0 +1,7 @@
+<ColorPicker @bind-Value="_color">
+    <Button Type="ButtonType.Primary" Style="@($"background-color:{_color};border-color:{_color}")">Open color picker</Button>
+</ColorPicker>
+
+@code {
+    private string _color = "#1677ff";
+}

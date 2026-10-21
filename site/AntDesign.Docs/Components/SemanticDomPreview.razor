@@ -88,8 +88,11 @@
 
         foreach (var node in Nodes)
         {
-            var activeNode = $"&[data-active-semantic=\"{NodeKey(node)}\"] {node.Selector}";
-            root[activeNode] = CreateHighlightRule(node);
+            foreach (var selector in GetHighlightSelectors(node))
+            {
+                var activeNode = $"&[data-active-semantic=\"{NodeKey(node)}\"] {selector}";
+                root[activeNode] = CreateHighlightRule(node);
+            }
 
             if (Component.Equals("table", StringComparison.OrdinalIgnoreCase) && node.Name == "body.cell")
             {
@@ -168,12 +171,31 @@
         {
             if (!IsPortaledNode(node)) continue;
             var activePreview = $"body:has(.{PreviewStyles["root"]}[data-active-semantic=\"{NodeKey(node)}\"])";
-            foreach (var selector in node.Selector.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+            foreach (var selector in GetHighlightSelectors(node))
             {
                 rules.Add(new System.Collections.Generic.KeyValuePair<string, object>($"{activePreview} {selector}", CreateHighlightRule(node)));
             }
         }
         return CssInJs.CreateGlobalStyles(rules);
+    }
+
+    private IEnumerable<string> GetHighlightSelectors(SemanticDomNode node)
+    {
+        if (Component.Equals("select", StringComparison.OrdinalIgnoreCase))
+        {
+            var selector = node.Name switch
+            {
+                // Select's popup list and options use the rc-select-compatible
+                // classes/roles in Blazor rather than React's semantic marker names.
+                "popup.list" => ".ant-select-dropdown [role=\"listbox\"]",
+                "popup.listItem" => ".ant-select-dropdown .ant-select-item-option",
+                _ => node.Selector
+            };
+
+            return selector.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        return node.Selector.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
     }
 
     private bool IsPortaledNode(SemanticDomNode node)

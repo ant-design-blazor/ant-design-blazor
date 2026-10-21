@@ -13,6 +13,6 @@ cover: https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg
 - 当需要自由拖拽调整各区域大小。
 - 当需要指定区域的最大最小宽高时。
 
-## 注意
+在 `SplitterPanel` 上设置 `ShowCollapsibleIcon`，可控制折叠按钮始终显示、始终隐藏或仅在悬停分隔线时显示。
 
-目前只支持两个面板，多面板的支持会在不久之后增加。
+`自定义操作元素` 示例还演示了自定义拖动手柄、折叠图标以及 Splitter 组件 Design Token。

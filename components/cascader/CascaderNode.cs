@@ -25,6 +25,11 @@ namespace AntDesign
         /// <default value="false" />
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Disable the checkbox without disabling the option.
+        /// </summary>
+        public bool DisableCheckbox { get; set; }
+
         internal int Level { get; set; }
 
         internal CascaderNode ParentNode { get; set; }

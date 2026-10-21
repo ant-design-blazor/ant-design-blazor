@@ -1,0 +1,34 @@
+<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        DefaultFileList="_files"
+        RemoveIcon="_removeIcon"
+        DownloadIcon="_downloadIcon"
+        Extra="_extra">
+    <Button Icon="upload">Upload</Button>
+</Upload>
+
+@code {
+    private static readonly RenderFragment<UploadFileItem> _removeIcon = _ => builder =>
+    {
+        builder.OpenComponent<Icon>(0);
+        builder.AddAttribute(1, nameof(Icon.Type), IconType.Outline.Star);
+        builder.CloseComponent();
+    };
+
+    private static readonly RenderFragment<UploadFileItem> _downloadIcon = _ => builder =>
+    {
+        builder.AddContent(0, "Download");
+    };
+
+    private static readonly RenderFragment<UploadFileItem> _extra = file => builder =>
+    {
+        var megabytes = file.Size / 1024d / 1024d;
+        builder.AddContent(0, $"({megabytes:0.00} MB)");
+    };
+
+    private static readonly List<UploadFileItem> _files = new()
+    {
+        new() { Id = "custom-1", FileName = "photo-one.png", Size = 1234567, State = UploadState.Success, Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" },
+        new() { Id = "custom-2", FileName = "photo-two.png", Size = 2345678, State = UploadState.Success, Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" },
+        new() { Id = "custom-3", FileName = "photo-error.png", Size = 345678, State = UploadState.Fail, Response = "Server Error 500" }
+    };
+}

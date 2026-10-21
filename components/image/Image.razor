@@ -4,7 +4,7 @@
 
 @if (IsProgressPlaceholder)
 {
-    <div class="ant-image ant-image-progress-wrapper css-var-root ant-image-css-var" style="@_wrapperStyle"
+    <div class="@SemanticClass("placeholder.progress.root", "ant-image ant-image-progress-wrapper css-var-root ant-image-css-var")" style="@SemanticStyle("placeholder.progress.root", _wrapperStyle)"
          role="@(HasProgressPercent ? "progressbar" : null)"
          aria-valuemin="@(HasProgressPercent ? "0" : null)"
          aria-valuemax="@(HasProgressPercent ? "100" : null)"
@@ -17,11 +17,14 @@
         }
         <div class="ant-image-progress-ink-1"></div>
         <div class="ant-image-progress-ink-2"></div>
-        <div class="ant-image-progress-content">
+        <div class="@SemanticClass("placeholder.progress.content", "ant-image-progress-content")" style="@SemanticStyle("placeholder.progress.content")">
             @if (HasProgressPercent)
             {
-                <div class="ant-image-progress-rail" style="@($"--progress-percent:{ProgressPercentText}%")"></div>
-                <div class="ant-image-progress-indicator">@ProgressPercentText%</div>
+                @GetProgressContent()
+            }
+            else if (ProgressRender != null)
+            {
+                @GetProgressContent()
             }
             else if (Placeholder != null)
             {
@@ -32,9 +35,9 @@
 }
 else
 {
-    <div class="@ClassMapper.Class" style="@_wrapperStyle" id="@Id"
+    <div class="@SemanticClass("root", ClassMapper.Class)" style="@SemanticStyle("root", _wrapperStyle)" id="@Id"
          role="@(Preview ? "button" : null)" tabindex="@(Preview ? "0" : null)" @ref="Ref">
-        <img alt="@Alt" class="ant-image-img" src="@Src" style="@Style"
+        <img alt="@Alt" class="@SemanticClass("image", "ant-image-img")" src="@Src" style="@SemanticStyle("image", Style)"
              @onerror="HandleOnError"
              @onloadstart="HandleOnLoadStart"
              @onload="HandleOnLoad"
@@ -49,8 +52,12 @@ else
 
         @if (Preview)
         {
-            <div class="ant-image-cover ant-image-cover-center" @onclick="OnMaskClick" @onclick:stopPropagation>
-                @if (_loaded && !_isError)
+            <div class="@SemanticClass("cover", $"ant-image-cover {PreviewCoverPlacementClass}")" style="@SemanticStyle("cover")" @onclick="OnMaskClick" @onclick:stopPropagation>
+                @if (_loaded && !_isError && PreviewCover != null)
+                {
+                    @PreviewCover
+                }
+                else if (_loaded && !_isError)
                 {
                     <div class="ant-image-mask-info">
                         <Icon Type="eye" /> @Locale.Preview

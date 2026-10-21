@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
 using OneOf;
@@ -26,6 +27,57 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/antfincdn/vJmo00mmgR/Timeline.svg", Title = "Timeline", SubTitle = "时间轴")]
     public partial class Timeline : AntDomComponentBase
     {
+        /// <summary>
+        /// Visual style of the timeline nodes.
+        /// </summary>
+        /// <default value="TimelineVariant.Outlined" />
+        [Parameter]
+        public TimelineVariant Variant { get; set; } = TimelineVariant.Outlined;
+
+        /// <summary>
+        /// Layout direction of the timeline.
+        /// </summary>
+        /// <default value="TimelineOrientation.Vertical" />
+        [Parameter]
+        public TimelineOrientation Orientation { get; set; } = TimelineOrientation.Vertical;
+
+        /// <summary>
+        /// Width of the timeline title span. Numbers use the component's title spacing scale;
+        /// strings accept CSS lengths or percentages.
+        /// </summary>
+        /// <default value="12" />
+        [Parameter]
+        public OneOf<double, string> TitleSpan { get; set; } = 12d;
+
+        /// <summary>
+        /// Semantic class names keyed by the Timeline v6 DOM slots.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>
+        /// Semantic inline styles keyed by the Timeline v6 DOM slots.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        /// <summary>
+        /// Data-driven timeline items. Use either Items or TimelineItem child components.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyList<TimelineItemData> Items
+        {
+            get => _dataItems;
+            set
+            {
+                if (!ReferenceEquals(_dataItems, value))
+                {
+                    _dataItems = value;
+                    _waitingItemUpdate = true;
+                }
+            }
+        }
+
         /// <summary>
         /// Where the line will be in relation to the items - left, right or alternate
         /// </summary>
@@ -133,6 +185,7 @@ namespace AntDesign
         private bool _waitingItemUpdate = false;
         private TimelineMode? _mode;
         private bool _hasLabel;
+        private IReadOnlyList<TimelineItemData> _dataItems;
 
         protected override void OnInitialized()
         {
@@ -144,8 +197,38 @@ namespace AntDesign
         private void SetItems()
         {
             var pitems = _pendingItem != null ? new[] { _pendingItem } : Array.Empty<TimelineItem>();
-            _displayItems = Reverse ? pitems.Concat(UpdateChildren(_items.Reverse())).ToList() : UpdateChildren(_items).Concat(pitems).ToList();
+            var items = Items?.Select(CreateTimelineItem).ToList() ?? _items.ToList();
+            _hasLabel = items.Any(item => !string.IsNullOrEmpty(item.Label) || item.TitleContent != null);
+            SetClassMap();
+            _displayItems = Reverse ? pitems.Concat(UpdateChildren(items.AsEnumerable().Reverse())).ToList() : UpdateChildren(items).Concat(pitems).ToList();
         }
+
+        private static TimelineItem CreateTimelineItem(TimelineItemData data)
+        {
+            if (data == null) return new TimelineItem();
+
+            var item = new TimelineItem
+            {
+                Label = data.Title,
+                TitleContent = data.TitleContent ?? TextContent(data.Title),
+                ChildContent = data.ContentContent ?? TextContent(data.Content),
+                Dot = data.Icon ?? (data.Loading ? _loadingDot : null),
+                Class = data.Class,
+                Style = data.Style,
+                Placement = data.Placement
+            };
+
+            if (data.Color.HasValue)
+            {
+                item.Color = data.Color.Value;
+            }
+
+            return item;
+        }
+
+        private static RenderFragment TextContent(string content) => string.IsNullOrEmpty(content)
+            ? null
+            : builder => builder.AddContent(0, content);
 
         protected override void OnAfterRender(bool firstRender)
         {
@@ -162,9 +245,14 @@ namespace AntDesign
         {
             var prefix = "ant-timeline";
             ClassMapper.Clear()
-                .Add("ant-steps ant-steps-vertical ant-steps-title-horizontal ant-steps-outlined ant-steps-dot")
+                .Add(Orientation == TimelineOrientation.Horizontal
+                    ? "ant-steps ant-steps-horizontal ant-steps-title-vertical"
+                    : "ant-steps ant-steps-vertical ant-steps-title-horizontal")
+                .Add(Variant == TimelineVariant.Filled ? "ant-steps-filled" : "ant-steps-outlined")
+                .Add("ant-steps-dot")
                 .Add(prefix)
                 .Add("css-var-root ant-timeline-css-var")
+                .If($"{prefix}-horizontal", () => Orientation == TimelineOrientation.Horizontal)
                 .If($"{prefix}-layout-alternate", () => Mode == TimelineMode.Alternate || _hasLabel)
                 .If($"{prefix}-pending", () => Pending.Value != null)
                 .If($"{prefix}-reverse", () => Reverse)
@@ -174,7 +262,25 @@ namespace AntDesign
         protected string GetRootStyle()
         {
             const string stepsOffset = "--ant-cmp-steps-items-offset: 0;";
-            return string.IsNullOrWhiteSpace(Style) ? stepsOffset : $"{stepsOffset}{Style}";
+            var titleSpanStyle = TitleSpan.IsT0
+                ? TitleSpan.AsT0 == 12 ? string.Empty : $"--ant-timeline-head-span: {TitleSpan.AsT0.ToString(CultureInfo.InvariantCulture)};"
+                : $"--ant-timeline-head-span-ptg: {TitleSpan.AsT1};";
+            return $"{stepsOffset}{titleSpanStyle}{Style}";
+        }
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return semanticStyle;
+            if (string.IsNullOrWhiteSpace(semanticStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
         }
 
         internal void RemoveItem(TimelineItem item)
@@ -204,7 +310,7 @@ namespace AntDesign
             {
                 var item = items.ElementAt(i);
                 item.IsLast = i == length - 1;
-                item.Position = _mode switch
+                item.Position = item.Placement ?? _mode switch
                 {
                     TimelineMode.Left => TimelineMode.Left,
                     TimelineMode.Right => TimelineMode.Right,

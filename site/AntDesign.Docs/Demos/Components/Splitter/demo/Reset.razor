@@ -1,0 +1,24 @@
+<Splitter Style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)" OnResize="OnResize" OnDraggerDoubleClick="OnDraggerDoubleClick">
+    <SplitterPanel Size="@_sizes[0]">
+        @Panel("1")
+    </SplitterPanel>
+    <SplitterPanel Size="@_sizes[1]">
+        @Panel("2")
+    </SplitterPanel>
+    <SplitterPanel Size="@_sizes[2]">
+        @Panel("3")
+    </SplitterPanel>
+</Splitter>
+
+@code {
+    private static readonly string[] DefaultSizes = ["30%", "40%", "30%"];
+    private string[] _sizes = [.. DefaultSizes];
+
+    private void OnResize(string[] sizes) => _sizes = sizes;
+
+    private void OnDraggerDoubleClick(int index) => _sizes = [.. DefaultSizes];
+
+    private RenderFragment Panel(string text) => @<Flex Justify="FlexJustify.Center" Align="FlexAlign.Center" Style="height: 100%">
+        <Title Type="TextElementType.Secondary" Level="5" Style="white-space: nowrap">Panel @text</Title>
+    </Flex>;
+}

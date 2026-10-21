@@ -1,0 +1,10 @@
+<Timeline Mode="TimelineMode.Alternate" TitleSpan="@("96px")" Items="_items" />
+
+@code {
+    private static readonly IReadOnlyList<TimelineItemData> _items = new List<TimelineItemData>
+    {
+        new() { Title = "2015-09-01", Content = "Create a services site" },
+        new() { Title = "2015-09-02", Content = "Solve initial network problems", Color = TimelineDotColor.Green },
+        new() { Title = "2015-09-03", Content = "Complete technical testing", Color = TimelineDotColor.Red, Loading = true }
+    };
+}

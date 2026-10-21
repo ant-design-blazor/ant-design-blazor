@@ -1,0 +1,30 @@
+<Select TItemValue="string"
+        TItem="SelectLabelOption"
+        DataSource="@_options"
+        ValueName="@nameof(SelectLabelOption.Value)"
+        LabelName="@nameof(SelectLabelOption.Label)"
+        DefaultValue="@("gold")"
+        Style="width: 100%;">
+    <LabelTemplate Context="option">
+        @if (option is not null)
+        {
+            <span><strong>@option.Label</strong> (@option.Value)</span>
+        }
+        else
+        {
+            <span>No option match</span>
+        }
+    </LabelTemplate>
+</Select>
+
+@code {
+    private sealed record SelectLabelOption(string Value, string Label);
+
+    private readonly SelectLabelOption[] _options =
+    [
+        new("gold", "Gold"),
+        new("lime", "Lime"),
+        new("green", "Green"),
+        new("cyan", "Cyan")
+    ];
+}

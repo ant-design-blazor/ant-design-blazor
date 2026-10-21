@@ -23,7 +23,7 @@ Select component to select value from options.
 | AllowClear | Show clear button. Has no effect if Value type default is also in the list of options, unless used with `ValueOnClear`. | bool | false |  |
 | AutoClearSearchValue | Whether the current search will be cleared on selecting an item. | bool | true |  |
 | AutoFocus | get focus when component mounted                             | boolean        | false         |
-| Bordered | Toggle the border style. | bool | true |  |
+| Bordered | Legacy border toggle. Prefer `Variant` for new code. | bool | true |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | CustomTagLabelToValue | Converts custom tag (a string) to TItemValue type. | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
 | DataSource | The datasource for this component. | IEnumerable&lt;TItem> | - |  |
@@ -51,6 +51,8 @@ Select component to select value from options.
 | Loading | Show loading indicator. You have to write the loading logic on your own. | bool | false |  |
 | ListboxStyle | custom listbox styles | string | display: flex; flex-direction: column; |  |
 | MaxTagCount | Max tag count to show. responsive will cost render performance. | int | `ResponsiveTag.Responsive` | - |  |
+| MaxCount | Maximum number of options that can be selected in multiple or tags mode. | int? | - | 6.0.0 |  |
+| Status | Set validation status to `error` or `warning`; inherits from `FormItem` when omitted. | string | - |  |
 | MaxTagPlaceholder | Placeholder for hidden tags. If used with `ResponsiveTag.Responsive`, implement your own handling logic. | RenderFragment<IEnumerable<TItem>>> | - |  |
 | MaxTagTextLength | Max tag text length (number of characters) to show. | int | - |  |
 | Mode | Set mode of Select - `default` \| `multiple` \| `tags` | string | default |  |
@@ -80,6 +82,7 @@ Select component to select value from options.
 | Style | Set CSS style. | string | `width: 100%` |  |
 | SuffixIcon | The custom suffix icon. | RenderFragment | - |  |
 | TokenSeparators | Define what characters will be treated as token separators for newly created tags. Useful when creating new tags using only keyboard. | char[] | - |  |
+| Tokenize | Optional callback that maps search text to committed values. Applies to multiple and tags modes; return an empty sequence until the input is ready to commit. | Func&lt;string, IEnumerable&lt;string&gt;&gt; | - |  |
 | Value | Get or set the selected value. | TItemValue | - |  |
 | Values | Get or set the selected values. | IEnumerable&lt;TItemValues> | - |  |
 | ValueChanged | Used for the two-way binding. | EventCallback&lt;TItemValue> | - |  |
@@ -87,6 +90,7 @@ Select component to select value from options.
 | ValueName | The name of the property to be used for the value. | string | - |  |
 | ValueOnClear | When Clear button is pressed, Value will be set to whatever is set in ValueOnClear. | TItemValue | - | 0.11 |
 | ValueProperty | Specifies the value property in the option object. | Func<TItem, TItemValue> | - |
+| Variant | Selector appearance: `Outlined`, `Filled`, `Borderless`, or `Underlined`. Defaults to the legacy `Bordered` value when omitted. | `InputVariant?` | - | 6.0.0 |
 
 ### SelectOption props
 
@@ -97,3 +101,34 @@ Select component to select value from options.
 | Label     | Label of Select after selecting this Option | string         | -      |      |
 | Value     | Value of Select after selecting this Option | TItemValue          | -      |      |
 | Item      | Item of the option                          | TItem          |  -  |    |
+
+## Design Token
+
+Select component tokens are available through `ThemeConfig.Components["Select"]` and are emitted as CSS variables under `--ant-select-*`. They follow the React v6 Select token contract; changing them does not require application-level CSS overrides.
+
+| Token | CSS variable | Description | Default |
+| --- | --- | --- | --- |
+| ActiveBorderColor | `--ant-select-active-border-color` | Border color while active | `colorPrimary` |
+| ActiveOutlineColor | `--ant-select-active-outline-color` | Focus outline color while active | `controlOutline` |
+| ClearBg | `--ant-select-clear-bg` | Clear button background | `colorBgContainer` |
+| HoverBorderColor | `--ant-select-hover-border-color` | Border color on hover | `colorPrimaryHover` |
+| MultipleItemBg | `--ant-select-multiple-item-bg` | Background of a multiple-selection tag | `colorFillSecondary` |
+| MultipleItemBorderColor | `--ant-select-multiple-item-border-color` | Border color of a multiple-selection tag | `transparent` |
+| MultipleItemBorderColorDisabled | `--ant-select-multiple-item-border-color-disabled` | Disabled tag border color | `transparent` |
+| MultipleItemColorDisabled | `--ant-select-multiple-item-color-disabled` | Disabled tag text color | `colorTextDisabled` |
+| MultipleItemHeight | `--ant-select-multiple-item-height` | Multiple tag height | min(`controlHeight - 2 × paddingXXS`, `controlHeight - 2 × lineWidth`) |
+| MultipleItemHeightLG | `--ant-select-multiple-item-height-lg` | Large multiple tag height | min(`controlHeightLG - 2 × paddingXXS`, `controlHeightLG - 2 × lineWidth`) |
+| MultipleItemHeightSM | `--ant-select-multiple-item-height-sm` | Small multiple tag height | min(`controlHeightSM - 2 × paddingXXS`, `controlHeightSM - 2 × lineWidth`) |
+| MultipleSelectorBgDisabled | `--ant-select-multiple-selector-bg-disabled` | Disabled multiple selector background | `colorBgContainerDisabled` |
+| OptionActiveBg | `--ant-select-option-active-bg` | Active option background | `controlItemBgHover` |
+| OptionFontSize | `--ant-select-option-font-size` | Option font size | `fontSize` |
+| OptionHeight | `--ant-select-option-height` | Option height | `controlHeight` |
+| OptionLineHeight | `--ant-select-option-line-height` | Option line height | `lineHeight` |
+| OptionPadding | `--ant-select-option-padding` | Option padding | `(controlHeight - fontSize × lineHeight) / 2` vertically; `controlPaddingHorizontal` horizontally |
+| OptionSelectedBg | `--ant-select-option-selected-bg` | Selected option background | `controlItemBgActive` |
+| OptionSelectedColor | `--ant-select-option-selected-color` | Selected option text color | `colorText` |
+| OptionSelectedFontWeight | `--ant-select-option-selected-font-weight` | Selected option font weight | `fontWeightStrong` |
+| SelectorBg | `--ant-select-selector-bg` | Selector background | `colorBgContainer` |
+| ShowArrowPaddingInlineEnd | `--ant-select-show-arrow-padding-inline-end` | Inline-end padding when the arrow is shown | `ceil(fontSize × 1.25)` |
+| SingleItemHeightLG | `--ant-select-single-item-height-lg` | Selected item height in large size | `controlHeightLG` |
+| ZIndexPopup | `--ant-select-z-index-popup` | Dropdown z-index | `zIndexPopupBase + 50` |

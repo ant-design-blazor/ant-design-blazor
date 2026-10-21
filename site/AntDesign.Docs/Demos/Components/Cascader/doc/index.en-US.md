@@ -23,6 +23,9 @@ Cascader
 | AllowClear           |  whether allow clear                                      |  bool               |  true	      |
 | BoundaryAdjustMode   | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | ChangeOnSelect       |  change value on each selection if set to true, see above demo for details  |  bool               |  false	      |
+| Multiple             |  enable checkbox-based multiple selection                    |  bool               |  false       |
+| Values               |  selected leaf values in multiple mode                       |  IEnumerable<string> |  -          |
+| ShowCheckedStrategy  |  controls which checked nodes are displayed as tags          |  CascaderCheckedStrategy | ShowParent |
 | Style                |  additional css class                                       |  string             |  -	          |
 | DefaultValue         |  initial selected value                                      |  string             |  -	          |
 | ExpandTrigger        |  expand current item when click or hover, one of 'click' 'hover'       |  string             |  'click'	  |
@@ -40,5 +43,12 @@ CascaderNode
 | Label            |  Label                |  string        |  -        |
 | Value            |  Value                   |  string        |  -        |
 | Disabled         |  Disabled            |  bool          |  false    |
+| DisableCheckbox  |  Disable the checkbox while keeping the option enabled | bool | false |
 | HasChildren      |  HasChildren    |  bool          |  -        |
 | Children         |  Children                 |  AntCheckbox[] |  -        |
+
+## Semantic DOM
+
+Use `ClassNames` and `Styles` with the semantic keys `root`, `prefix`, `suffix`,
+`input`, `content`, `placeholder`, `clear`, `popup.root`, `popup.list`, and
+`popup.listItem`. The popup list slots apply to each rendered Cascader column.

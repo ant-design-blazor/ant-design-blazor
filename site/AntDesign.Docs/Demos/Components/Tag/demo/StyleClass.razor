@@ -1,0 +1,32 @@
+<Space Size="SpaceSize.Large">
+    <Tag Icon="@IconType.Outline.CheckCircle" ClassNames="_tagClasses" Styles="_tagStyles">
+        Object style
+    </Tag>
+    <Tag Icon="@IconType.Outline.CloseCircle" Color="TagColor.Purple"
+         ClassNames="_tagClasses" Styles="_outlinedStyles">
+        Semantic styles
+    </Tag>
+</Space>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _tagClasses = new Dictionary<string, string>
+    {
+        ["root"] = "tag-demo-root",
+        ["icon"] = "tag-demo-icon",
+        ["content"] = "tag-demo-content"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _tagStyles = new Dictionary<string, string>
+    {
+        ["root"] = "background-color:#e6f7ff;border-radius:4px;padding:2px 6px",
+        ["icon"] = "color:#52c41a",
+        ["content"] = "color:#262626"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _outlinedStyles = new Dictionary<string, string>
+    {
+        ["root"] = "background-color:#f5efff;border-radius:4px;padding:2px 6px",
+        ["icon"] = "color:#8f87f1",
+        ["content"] = "color:#8f87f1"
+    };
+}

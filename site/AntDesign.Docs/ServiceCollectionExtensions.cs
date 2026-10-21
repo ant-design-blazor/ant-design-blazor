@@ -6,6 +6,7 @@ using System.Reflection;
 using AntDesign.Docs.Highlight;
 using AntDesign.Docs.Services;
 using AntDesign.Extensions.Localization;
+using Cropper.Blazor.Extensions;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -14,6 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddAntDesignDocs(this IServiceCollection services)
         {
             services.AddAntDesign();
+            services.AddCropper();
             services.AddScoped<DemoService>();
             services.AddScoped<IconListService>();
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();

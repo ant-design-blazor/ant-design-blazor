@@ -1,0 +1,31 @@
+@using System.Collections.Generic
+@using System.Linq
+
+<Transfer DataSource="_dataSource"
+          TargetKeys="_targetKeys"
+          Titles="_titles"
+          ClassNames="_classNames"
+          Styles="_styles"
+          ShowSearch="true" />
+
+@code {
+    private readonly string[] _titles = ["Source", "Target"];
+    private readonly string[] _targetKeys = ["3", "4"];
+    private readonly List<TransferItem> _dataSource = Enumerable.Range(1, 6)
+        .Select(index => new TransferItem { Key = index.ToString(), Title = $"Content {index}" })
+        .ToList();
+
+    private readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["header"] = "transfer-demo-header",
+        ["source.header"] = "transfer-demo-source-header",
+        ["target.item"] = "transfer-demo-target-item"
+    };
+
+    private readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["header"] = "background: #f0f5ff;",
+        ["source.header"] = "border-bottom-color: #1677ff;",
+        ["target.item"] = "font-weight: 600;"
+    };
+}

@@ -17,7 +17,7 @@ namespace AntDesign
         [Inject]
         protected IJSRuntime Js { get; set; }
 
-        private ElementReference _previewImg;
+        private ElementReference _previewBody;
         private double _zoomOutTimes = 1;
         private int _rotateTimes;
         private bool _visible = true;
@@ -67,6 +67,14 @@ namespace AntDesign
             _flipY = !_flipY;
         }
 
+        private void HandleReset()
+        {
+            _zoomOutTimes = 1;
+            _rotateTimes = 0;
+            _flipX = false;
+            _flipY = false;
+        }
+
         private void SwitchPrevious()
         {
             ImageRef.SwitchTo(ImageRef.CurrentIndex - 1);
@@ -101,7 +109,7 @@ namespace AntDesign
         {
             if (firstRender)
             {
-                await Js.InvokeVoidAsync(JSInteropConstants.ImgDragAndDrop, _previewImg);
+                await Js.InvokeVoidAsync(JSInteropConstants.ImgDragAndDrop, _previewBody);
             }
         }
     }

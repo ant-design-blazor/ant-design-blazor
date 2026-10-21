@@ -1,0 +1,25 @@
+<Select TItemValue="string"
+        TItem="string"
+        Mode="SelectMode.Tags"
+        EnableSearch
+        Tokenize="@TokenizeInput"
+        Placeholder="Type values separated by ; (for example: alpha;beta;)"
+        Style="width: 360px;">
+    <SelectOptions>
+        <SelectOption TItemValue="string" TItem="string" Value='@("alpha")' Label="alpha" />
+        <SelectOption TItemValue="string" TItem="string" Value='@("beta")' Label="beta" />
+        <SelectOption TItemValue="string" TItem="string" Value='@("gamma")' Label="gamma" />
+    </SelectOptions>
+</Select>
+
+@code {
+    private static IEnumerable<string> TokenizeInput(string input)
+    {
+        if (!input.EndsWith(';'))
+        {
+            return [];
+        }
+
+        return input.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    }
+}

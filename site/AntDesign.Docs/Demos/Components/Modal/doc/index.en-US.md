@@ -31,6 +31,8 @@ When requiring users to interact with the application, but without jumping to a 
 | Mask              | Whether show mask or not.                                    | bool                          | true          |
 | MaskClosable      | Whether to close the modal  dialog when the mask (area outside the modal) is clicked | bool                          | true          |
 | MaskStyle         | Style for modal's mask  element.                             | string                        | -             |
+| ModalRender       | Wrap the rendered modal panel in custom markup.               | RenderFragment<RenderFragment> | -             |
+| MousePosition     | Coordinates used as the modal zoom animation origin.          | ModalMousePosition            | -             |
 | OkText            | Text of the OK button                                        | string\|RenderFragment        | OK            |
 | OkType            | Button type of the OK button                                 | string                        | primary       |
 | OkButtonProps     | The ok button props                                          | ButtonProps                   | -             |

@@ -1,0 +1,29 @@
+<Image Width="200"
+       Src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+       Alt="Custom image preview toolbar"
+       ActionsRender="@_actionsRender" />
+
+@code {
+    private RenderFragment<ImagePreviewActionsRenderContext> _actionsRender => context => builder =>
+    {
+        var sequence = 0;
+        builder.OpenElement(sequence++, "button");
+        builder.AddAttribute(sequence++, "type", "button");
+        builder.AddAttribute(sequence++, "class", "demo-image-custom-zoom");
+        builder.AddAttribute(sequence++, "onclick", context.OnZoomIn);
+        builder.AddContent(sequence++, $"Zoom in ({context.Scale.ToString("0.0")})");
+        builder.CloseElement();
+
+        builder.OpenElement(sequence++, "button");
+        builder.AddAttribute(sequence++, "type", "button");
+        builder.AddAttribute(sequence++, "class", "demo-image-custom-reset");
+        builder.AddAttribute(sequence++, "onclick", context.OnReset);
+        builder.AddContent(sequence++, "Reset");
+        builder.CloseElement();
+
+        builder.OpenElement(sequence++, "span");
+        builder.AddContent(sequence++, $"{context.Current} / {context.Total}");
+        builder.CloseElement();
+        builder.AddContent(sequence++, context.OriginalNode);
+    };
+}

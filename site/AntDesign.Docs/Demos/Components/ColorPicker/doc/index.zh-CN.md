@@ -16,6 +16,8 @@ title: ColorPicker
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | Value | 当前颜色值 | string | `#1677ff` |
+| ValueChanged | 颜色变化时触发；使用 `@bind-Value` 进行双向绑定 | `EventCallback<string>` | — |
+| ChildContent | 可选的自定义触发器内容，替代默认色块 | `RenderFragment` | — |
 | Size | 触发器尺寸：`small`、`middle` 或 `large` | string | `middle` |
 | Open | 是否打开面板 | bool | false |
 | ShowText | 是否显示颜色文本 | bool | false |

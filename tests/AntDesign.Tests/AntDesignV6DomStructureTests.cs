@@ -541,8 +541,168 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
                 .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("Second")));
 
         Assert.NotNull(cut.Find(".ant-splitter"));
+        Assert.Contains("ant-splitter-css-var", cut.Find(".ant-splitter").ClassName);
         Assert.Equal(2, cut.FindAll(".ant-splitter-panel").Count);
         Assert.NotNull(cut.Find(".ant-splitter-bar-dragger"));
+        Assert.Equal("separator", cut.Find(".ant-splitter-bar-dragger").GetAttribute("role"));
+    }
+
+    [Fact]
+    public void Splitter_renders_a_dragger_between_each_panel_in_multiple_layouts()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var cut = Context.RenderComponent<AntDesign.Splitter>(parameters =>
+            parameters.AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("First"))
+                .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("Second"))
+                .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("Third")));
+
+        Assert.Equal(3, cut.FindAll(".ant-splitter-panel").Count);
+        Assert.Equal(2, cut.FindAll(".ant-splitter-bar").Count);
+        Assert.Equal(new[] { "0", "1" }, cut.FindAll(".ant-splitter-bar-dragger").Select(x => x.GetAttribute("data-index")));
+    }
+
+    [Fact]
+    public void Splitter_panel_minimum_and_maximum_sizes_are_rendered()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var cut = Context.RenderComponent<AntDesign.Splitter>(parameters =>
+            parameters.AddChildContent<AntDesign.SplitterPanel>(panel => panel
+                    .Add(x => x.Min, "100px")
+                    .Add(x => x.Max, "200px")
+                    .AddChildContent("First"))
+                .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("Second")));
+
+        Assert.Equal("100px", cut.FindAll(".ant-splitter-panel")[0].GetAttribute("data-min"));
+        Assert.Equal("200px", cut.FindAll(".ant-splitter-panel")[0].GetAttribute("data-max"));
+        Assert.Contains("min-width:100px", cut.FindAll(".ant-splitter-panel")[0].GetAttribute("style"));
+    }
+
+    [Fact]
+    public void Splitter_collapsible_panel_restores_its_size_after_expanding()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var cut = Context.RenderComponent<AntDesign.Splitter>(parameters =>
+            parameters.AddChildContent<AntDesign.SplitterPanel>(panel => panel
+                    .Add(x => x.Collapsible, true)
+                    .AddChildContent("First"))
+                .AddChildContent<AntDesign.SplitterPanel>(panel => panel
+                    .Add(x => x.Collapsible, true)
+                    .AddChildContent("Second")));
+
+        Assert.Equal(2, cut.FindAll(".ant-splitter-bar-collapse-bar-hover-only").Count);
+        Assert.Equal(2, cut.FindAll(".ant-splitter-bar-collapse-bar").Count);
+
+        var firstPanel = cut.FindAll(".ant-splitter-panel")[0];
+        Assert.Contains("flex:1 1 0%", firstPanel.GetAttribute("style"));
+
+        cut.Find(".ant-splitter-bar-collapse-bar-start").Click();
+        Assert.Contains("width:0px", cut.FindAll(".ant-splitter-panel")[0].GetAttribute("style"));
+
+        cut.Find(".ant-splitter-bar-collapse-bar-start").Click();
+        var expandedPanelStyle = cut.FindAll(".ant-splitter-panel")[0].GetAttribute("style");
+        Assert.Contains("flex:1 1 0%", expandedPanelStyle);
+        Assert.DoesNotContain("width:0px", expandedPanelStyle);
+    }
+
+    [Fact]
+    public void Splitter_collapsible_icon_visibility_matches_configured_mode()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var cut = Context.RenderComponent<AntDesign.Splitter>(parameters =>
+            parameters.AddChildContent<AntDesign.SplitterPanel>(panel => panel
+                    .Add(x => x.Collapsible, true)
+                    .Add(x => x.ShowCollapsibleIcon, true)
+                    .AddChildContent("First"))
+                .AddChildContent<AntDesign.SplitterPanel>(panel => panel
+                    .Add(x => x.Collapsible, true)
+                    .Add(x => x.ShowCollapsibleIcon, false)
+                    .AddChildContent("Second")));
+
+        Assert.Single(cut.FindAll(".ant-splitter-bar-collapse-bar-always-visible"));
+        Assert.Single(cut.FindAll(".ant-splitter-bar-collapse-bar-always-hidden"));
+    }
+
+    [Fact]
+    public void Splitter_supports_custom_dragger_and_collapse_icons()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        RenderFragment draggerIcon = builder => builder.AddContent(0, "custom-dragger");
+        RenderFragment collapseStart = builder => builder.AddContent(0, "custom-start");
+        RenderFragment collapseEnd = builder => builder.AddContent(0, "custom-end");
+
+        var cut = Context.RenderComponent<AntDesign.Splitter>(parameters => parameters
+            .Add(x => x.DraggerIcon, draggerIcon)
+            .Add(x => x.CollapseIconStart, collapseStart)
+            .Add(x => x.CollapseIconEnd, collapseEnd)
+            .AddChildContent<AntDesign.SplitterPanel>(panel => panel
+                .Add(x => x.Collapsible, true)
+                .AddChildContent("First"))
+            .AddChildContent<AntDesign.SplitterPanel>(panel => panel
+                .Add(x => x.Collapsible, true)
+                .AddChildContent("Second")));
+
+        Assert.Contains("ant-splitter-bar-dragger-customize", cut.Find(".ant-splitter-bar-dragger").ClassName);
+        Assert.Equal("custom-dragger", cut.Find(".ant-splitter-bar-dragger-icon").TextContent);
+        Assert.Equal("custom-start", cut.Find(".ant-splitter-bar-collapse-bar-start .ant-splitter-bar-collapse-icon").TextContent);
+        Assert.Equal("custom-end", cut.Find(".ant-splitter-bar-collapse-bar-end .ant-splitter-bar-collapse-icon").TextContent);
+        Assert.Equal(2, cut.FindAll(".ant-splitter-bar-collapse-bar-customize").Count);
+    }
+
+    [Fact]
+    public void Splitter_can_hide_the_default_dragger_indicator_when_customizing()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var cut = Context.RenderComponent<AntDesign.Splitter>(parameters => parameters
+            .Add(x => x.HideDraggerIndicator, true)
+            .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("First"))
+            .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("Second")));
+
+        Assert.Contains("ant-splitter-bar-dragger-customize", cut.Find(".ant-splitter-bar-dragger").ClassName);
+        Assert.Empty(cut.FindAll(".ant-splitter-bar-dragger-icon"));
+    }
+
+    [Fact]
+    public void Splitter_applies_component_tokens_to_the_root_element()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var componentTokens = new Dictionary<string, IDictionary<string, string>>
+        {
+            ["Splitter"] = new Dictionary<string, string>
+            {
+                ["splitBarSize"] = "1",
+                ["splitTriggerSize"] = "16",
+            }
+        };
+
+        var cut = Context.RenderComponent<CascadingValue<IReadOnlyDictionary<string, IDictionary<string, string>>>>(parameters => parameters
+            .Add(x => x.Name, "AntDesignThemeComponents")
+            .Add(x => x.Value, componentTokens)
+            .AddChildContent<AntDesign.Splitter>(splitter => splitter
+                .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("First"))
+                .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("Second"))));
+
+        var style = cut.Find(".ant-splitter").GetAttribute("style");
+        Assert.Contains("--ant-splitter-split-bar-size:1px", style);
+        Assert.Contains("--ant-splitter-split-trigger-size:16px", style);
+    }
+
+    [Fact]
+    public void Splitter_lazy_mode_renders_a_drag_preview_for_each_bar()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var cut = Context.RenderComponent<AntDesign.Splitter>(parameters => parameters
+            .Add(x => x.Lazy, true)
+            .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("First"))
+            .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("Second"))
+            .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("Third")));
+
+        Assert.Equal(2, cut.FindAll(".ant-splitter-bar-preview").Count);
     }
 
 

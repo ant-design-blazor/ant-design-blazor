@@ -141,6 +141,7 @@ namespace AntDesign
 
         private ClassMapper _warpperClassMapper = new();
         private ClassMapper _textareaClassMapper = new();
+        private bool HasTextareaWrapper => Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount;
 
         private bool _afterFirstRender = false;
         private PressEnterEventArgs _duringPressEnterArgs;
@@ -151,9 +152,11 @@ namespace AntDesign
 
             _warpperClassMapper
                 .Add($"{PrefixCls}-affix-wrapper")
+                .Add($"{PrefixCls}-{EffectiveVariant.ToString().ToLowerInvariant()}")
                 .If($"{PrefixCls}-affix-wrapper-textarea-with-clear-btn", () => AllowClear)
                 .If($"{PrefixCls}-affix-wrapper-has-feedback", () => FormItem?.HasFeedback == true)
-                .GetIf(() => $"{PrefixCls}-affix-wrapper-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .GetIf(() => $"{PrefixCls}-status-{(Status ?? FormItem?.ValidateStatus).Value.ToString().ToLowerInvariant()}", () => (Status ?? FormItem?.ValidateStatus) is { } wrapperStatus && wrapperStatus != FormValidateStatus.Default)
+                .GetIf(() => $"{PrefixCls}-affix-wrapper-status-{(Status ?? FormItem?.ValidateStatus).Value.ToString().ToLowerInvariant()}", () => (Status ?? FormItem?.ValidateStatus) is { } status && status != FormValidateStatus.Default)
                 .If($"{PrefixCls}-affix-wrapper-rtl", () => RTL)
                 .GetIf(() => $"{PrefixCls}-affix-wrapper-disabled", () => Disabled)
                 ;
@@ -163,13 +166,13 @@ namespace AntDesign
                 .If("ant-input-textarea-show-count", () => ShowCount)
                 .If("ant-input-textarea-in-form-item", () => FormItem != null)
                 .If("ant-input-textarea-has-feedback", () => FormItem?.HasFeedback == true)
-                .GetIf(() => $"ant-input-textarea-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .GetIf(() => $"ant-input-textarea-status-{(Status ?? FormItem?.ValidateStatus).Value.ToString().ToLowerInvariant()}", () => (Status ?? FormItem?.ValidateStatus) is { } status && status != FormValidateStatus.Default)
                 ;
 
             _textareaClassMapper
                 .Add("ant-input")
-                .If("ant-input-borderless", () => !Bordered)
-                .GetIf(() => $"ant-input-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .If($"{PrefixCls}-{EffectiveVariant.ToString().ToLowerInvariant()}", () => !HasTextareaWrapper)
+                .GetIf(() => $"ant-input-status-{(Status ?? FormItem?.ValidateStatus).Value.ToString().ToLowerInvariant()}", () => (Status ?? FormItem?.ValidateStatus) is { } status && status != FormValidateStatus.Default)
                 ;
         }
 

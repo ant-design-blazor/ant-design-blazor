@@ -18,4 +18,8 @@ ConfigProvider 用于为组件树提供统一的方向、主题和表单配置�
 | Direction | 文字方向 | string | -- |
 | Theme | 全局主题 | GlobalTheme | -- |
 | ThemeConfig | Design Token 与组件主题配置 | ThemeConfig | -- |
-| Form | 表单全局配置 | FormConfig | -- |
+| Form | 全局表单配置 | FormConfig | -- |
+
+## 主题变量（Design Token）
+
+ConfigProvider 本身不定义组件专属样式 token，而是为全局 Seed、Map、Alias token、预设算法（`default`、`dark`、`compact`）和各组件 token 覆盖提供作用域。v6 token 体系与示例参见[定制主题](/docs/customize-theme)。

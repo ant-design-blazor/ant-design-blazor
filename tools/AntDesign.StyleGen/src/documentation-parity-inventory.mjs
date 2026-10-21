@@ -86,12 +86,43 @@ async function waitForSettledPage(page) {
   }, { timeout: 8000, polling: 250 }).catch(() => {});
 }
 
+async function scrollToLoadAllDemos(page) {
+  await page.evaluate(async () => {
+    const pause = (duration) => new Promise((resolve) => setTimeout(resolve, duration));
+    let previousHeight = 0;
+    let stableBottomPasses = 0;
+
+    // Dumi defers demo mounts until their code boxes approach the viewport.
+    // Walk the page in viewport-sized increments so inventory does not mistake
+    // unvisited, lazy-mounted React demos for missing Blazor documentation.
+    for (let pass = 0; pass < 120; pass += 1) {
+      const height = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      const step = Math.max(Math.floor(window.innerHeight * 0.8), 400);
+      window.scrollTo(0, Math.min(window.scrollY + step, height));
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await pause(80);
+
+      const nextHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      const atBottom = window.scrollY + window.innerHeight >= nextHeight - 2;
+      if (atBottom && nextHeight === previousHeight) stableBottomPasses += 1;
+      else stableBottomPasses = 0;
+      if (stableBottomPasses >= 2) break;
+      previousHeight = nextHeight;
+    }
+
+    window.scrollTo(0, 0);
+  });
+}
+
 async function readPageDemos(page, url) {
   const errors = [];
-  page.on('pageerror', (error) => errors.push(error.message));
+  const onPageError = (error) => errors.push(error.message);
+  page.on('pageerror', onPageError);
   try {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForSelector('.code-box-demo', { timeout: 20000 });
+    await waitForSettledPage(page);
+    await scrollToLoadAllDemos(page);
     await waitForSettledPage(page);
     const demos = await page.evaluate(() => [...document.querySelectorAll('.code-box-demo')].map((scope, index) => {
       const owner = scope.closest('[id]');
@@ -123,6 +154,8 @@ async function readPageDemos(page, url) {
     return { demos, errors };
   } catch (error) {
     return { demos: [], errors: [...errors, String(error?.message ?? error).split('\n')[0]] };
+  } finally {
+    page.off('pageerror', onPageError);
   }
 }
 

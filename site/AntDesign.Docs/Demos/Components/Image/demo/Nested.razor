@@ -1,0 +1,31 @@
+<Button Type="ButtonType.Primary" OnClick="@(() => _firstVisible = true)">Open first modal</Button>
+
+<Modal Title="First modal" @bind-Visible="_firstVisible" MaskClosable="false">
+    <p>Open two nested dialogs, then preview an image from the innermost dialog.</p>
+    <Button OnClick="@(() => _secondVisible = true)">Open second modal</Button>
+
+    <Modal Title="Second modal" @bind-Visible="_secondVisible" MaskClosable="false" ZIndex="1100">
+        <Button OnClick="@(() => _thirdVisible = true)">Open third modal</Button>
+
+        <Modal Title="Image preview" @bind-Visible="_thirdVisible" MaskClosable="false" ZIndex="1200">
+            <Image Width="200"
+                   Alt="Ant Design"
+                   Src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
+            <Divider />
+            <ImagePreviewGroup>
+                <Image Width="200"
+                       Alt="Ant Design"
+                       Src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
+                <Image Width="200"
+                       Alt="Method drawing"
+                       Src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg" />
+            </ImagePreviewGroup>
+        </Modal>
+    </Modal>
+</Modal>
+
+@code {
+    private bool _firstVisible;
+    private bool _secondVisible;
+    private bool _thirdVisible;
+}

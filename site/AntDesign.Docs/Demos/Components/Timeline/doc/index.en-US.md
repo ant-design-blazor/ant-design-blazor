@@ -22,6 +22,12 @@ Timeline
 | Pending | Set the last ghost node's existence or its content | RenderFragment        | -         |
 | PendingDot   | Set the dot of the last ghost node when pending is true| RenderFragment  |-    |
 | Reverse | reverse nodes or not | boolean         |-       |
+| Orientation | Set the timeline direction | TimelineOrientation (`Vertical`, `Horizontal`) | `Vertical` |
+| TitleSpan | Set title span space (number, CSS length, or percentage) | `OneOf<double, string>` | `12` |
+| Variant | Set the timeline node style | TimelineVariant (`Outlined`, `Filled`) | `Outlined` |
+| ClassNames | Semantic class names for root and timeline item slots | `IReadOnlyDictionary<string, string>` | - |
+| Styles | Semantic inline styles for root and timeline item slots | `IReadOnlyDictionary<string, string>` | - |
+| Items | Data source for the timeline nodes | `IReadOnlyList<TimelineItemData>` | - |
 | Mode |By sending `alternate` the timeline will distribute the nodes to the `left` and `right`.| string  | -  |
 
 Timeline.Item

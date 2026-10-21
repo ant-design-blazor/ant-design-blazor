@@ -23,10 +23,17 @@ public class SplitterPanel : ComponentBase, IDisposable
     public string Max { get; set; }
 
     [Parameter]
-    public string Size { get; set; } = "50%";
+    public string Size { get; set; }
 
     [Parameter]
     public bool Collapsible { get; set; }
+
+    /// <summary>
+    /// Controls the visibility of collapse icons. True keeps them visible, false hides them,
+    /// and null shows them while the divider is hovered (the default).
+    /// </summary>
+    [Parameter]
+    public bool? ShowCollapsibleIcon { get; set; }
 
     [Parameter]
     public bool Resizable { get; set; } = true;
@@ -36,43 +43,22 @@ public class SplitterPanel : ComponentBase, IDisposable
 
     private bool _isCollapsed;
     public bool IsCollapsed => _isCollapsed;
+    private string _currentSize;
+    internal string EffectiveSize => _isCollapsed ? "0px" : _currentSize ?? Size ?? DefaultSize;
 
     private string _prevSize;
 
     internal void ToggleCollapse()
     {
-        var isSecondPane = Splitter.GetPaneIndex(this) == 1;
-        var otherPane = Splitter.GetPanes()[isSecondPane ? 0 : 1];
-
-        // If the other panel is collapsed, restore it first
-        if (otherPane._isCollapsed)
-        {
-            otherPane._isCollapsed = false;
-            otherPane.Size = otherPane._prevSize;
-        }
-
+        var currentSize = EffectiveSize;
         _isCollapsed = !_isCollapsed;
         if (_isCollapsed)
         {
-            _prevSize = Size;
-            Size = Min ?? "0px";
-
-            if (isSecondPane)
-            {
-                // When second panel is collapsed, first panel should take full size
-                otherPane.Size = "100%";
-            }
-            else
-            {
-                // When first panel is collapsed, second panel should take full size
-                otherPane.Size = "100%";
-            }
+            _prevSize = currentSize;
         }
         else
         {
-            Size = _prevSize;
-            // Restore other panel to default size
-            otherPane.Size = "50%";
+            _currentSize = _prevSize ?? Size ?? DefaultSize;
         }
 
         Splitter.UpdatePaneState();
@@ -93,12 +79,23 @@ public class SplitterPanel : ComponentBase, IDisposable
     {
         var isSizeChanged = parameters.IsParameterChanged(nameof(Size), Size);
         var isResizableChanged = parameters.IsParameterChanged(nameof(Resizable), Resizable);
+        var isDefaultSizeChanged = parameters.IsParameterChanged(nameof(DefaultSize), DefaultSize);
+        var isMinChanged = parameters.IsParameterChanged(nameof(Min), Min);
+        var isMaxChanged = parameters.IsParameterChanged(nameof(Max), Max);
+        var isShowCollapsibleIconChanged = parameters.IsParameterChanged(nameof(ShowCollapsibleIcon), ShowCollapsibleIcon);
 
         await base.SetParametersAsync(parameters);
 
-        if (isSizeChanged || isResizableChanged)
+        if (isSizeChanged)
+            _currentSize = Size;
+        else if (isDefaultSizeChanged && Size == null)
+            _currentSize = DefaultSize;
+
+        if (isSizeChanged || isResizableChanged || isDefaultSizeChanged || isMinChanged || isMaxChanged || isShowCollapsibleIconChanged)
         {
             Splitter.UpdatePaneState();
         }
     }
+
+    internal void SetCurrentSize(string size) => _currentSize = size;
 }

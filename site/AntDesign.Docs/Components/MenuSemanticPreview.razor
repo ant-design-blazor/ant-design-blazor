@@ -1,0 +1,16 @@
+<div style="width:100%;max-width:320px;">
+    <Menu Mode="@MenuMode.Vertical"
+          DefaultSelectedKeys="@(new[] { "mail" })"
+          DefaultOpenKeys="@(new[] { "submenu" })">
+        <MenuItem Key="mail" Icon="mail">Navigation One</MenuItem>
+        <MenuItemGroup Key="group" Title="Group">
+            <MenuItem Key="group-item" Icon="setting">Grouped Item</MenuItem>
+        </MenuItemGroup>
+        <SubMenu Key="submenu" Title="Navigation Two" Icon="appstore">
+            <MenuItemGroup Key="sub-group" Title="Submenu Group">
+                <MenuItem Key="nested-one" Icon="mail">Nested Item</MenuItem>
+                <MenuItem Key="nested-two">Another Item</MenuItem>
+            </MenuItemGroup>
+        </SubMenu>
+    </Menu>
+</div>

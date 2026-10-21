@@ -1,0 +1,26 @@
+@using System.Collections.Generic
+
+<TreeSelect TItemValue="string"
+            TItem="string"
+            Multiple
+            TreeCheckable
+            ShowCheckedStrategy="TreeCheckedStrategy.ShowChild"
+            MaxCount="3"
+            @bind-Values="_values"
+            TreeDefaultExpandAll
+            Style="width: 100%">
+    <ChildContent>
+        <TreeNode TItem="string" Key="parent1" Title="Parent 1">
+            <TreeNode TItem="string" Key="child1-1" Title="Child 1-1" />
+            <TreeNode TItem="string" Key="child1-2" Title="Child 1-2" />
+        </TreeNode>
+        <TreeNode TItem="string" Key="parent2" Title="Parent 2">
+            <TreeNode TItem="string" Key="child2-1" Title="Child 2-1" />
+            <TreeNode TItem="string" Key="child2-2" Title="Child 2-2" />
+        </TreeNode>
+    </ChildContent>
+</TreeSelect>
+
+@code {
+    private IEnumerable<string> _values = ["child1-1"];
+}

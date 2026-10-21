@@ -73,6 +73,37 @@ namespace AntDesign
             return $"position: absolute; left: 0px; top: {rightTop};";
         }
 
+        private bool IsPresetColor => Color is "pink" or "magenta" or "red" or "volcano" or "orange" or "yellow" or "gold" or "cyan" or "lime" or "green" or "blue" or "geekblue" or "purple";
+
+        internal override string GetOverlayAdditionalClass() => IsPresetColor ? $"ant-tooltip-{Color}" : string.Empty;
+
+        internal override string GetOverlayAdditionalStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? string.Empty : $"--ant-tooltip-overlay-color: {GetColorText()}; --ant-tooltip-arrow-background-color: {Color};";
+
+        private string GetTooltipContainerStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? string.Empty : $"background-color: {Color}; color: {GetColorText()};";
+
+        private string GetTooltipArrowContentStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? string.Empty : $"--ant-tooltip-arrow-background-color: {Color};";
+
+        private string GetColorText()
+        {
+            if (Color.Length == 4 && Color[0] == '#'
+                && int.TryParse(new string(Color[1], 2), System.Globalization.NumberStyles.HexNumber, null, out var r3)
+                && int.TryParse(new string(Color[2], 2), System.Globalization.NumberStyles.HexNumber, null, out var g3)
+                && int.TryParse(new string(Color[3], 2), System.Globalization.NumberStyles.HexNumber, null, out var b3))
+            {
+                return (0.299 * r3 + 0.587 * g3 + 0.114 * b3) / 255 < 0.5 ? "#fff" : "#000";
+            }
+
+            if (Color.Length == 7 && Color[0] == '#'
+                && int.TryParse(Color.Substring(1, 2), System.Globalization.NumberStyles.HexNumber, null, out var r6)
+                && int.TryParse(Color.Substring(3, 2), System.Globalization.NumberStyles.HexNumber, null, out var g6)
+                && int.TryParse(Color.Substring(5, 2), System.Globalization.NumberStyles.HexNumber, null, out var b6))
+            {
+                return (0.299 * r6 + 0.587 * g6 + 0.114 * b6) / 255 < 0.5 ? "#fff" : "#000";
+            }
+
+            return "#fff";
+        }
+
         /// <summary>
         /// The text shown in the tooltip
         /// </summary>
@@ -91,6 +122,19 @@ namespace AntDesign
         /// <default value="false" />
         [Parameter]
         public bool ArrowPointAtCenter { get; set; } = false;
+
+        /// <summary>
+        /// Whether to show the tooltip arrow.
+        /// </summary>
+        /// <default value="true" />
+        [Parameter]
+        public bool Arrow { get; set; } = true;
+
+        /// <summary>
+        /// Preset color name or custom CSS color for the tooltip.
+        /// </summary>
+        [Parameter]
+        public string Color { get; set; }
 
         /// <summary>
         /// Delay in seconds, before tooltip is shown on mouse enter

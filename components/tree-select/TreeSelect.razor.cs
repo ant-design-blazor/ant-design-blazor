@@ -36,10 +36,32 @@ namespace AntDesign
 
     public partial class TreeSelect<TItemValue, TItem> : SelectBase<TItemValue, TItem>, ITreeSelect
     {
-        protected override string OverlayClassName => "ant-tree-select-dropdown ant-select-css-var ant-tree-select-css-var";
+        protected override string OverlayClassName => $"{base.OverlayClassName} ant-tree-select-dropdown ant-tree-select-css-var";
+
+        string ITreeSelect.GetSemanticClass(string slot, string baseClass) => GetSemanticClass(slot, baseClass);
+
+        string ITreeSelect.GetSemanticStyle(string slot, string baseStyle) => GetSemanticStyle(slot, baseStyle);
+
+        string ITreeSelect.GetPopupSemanticClass(string slot, string baseClass) => GetSemanticClass($"popup.{slot}", baseClass);
+
+        string ITreeSelect.GetPopupSemanticStyle(string slot, string baseStyle) => GetSemanticStyle($"popup.{slot}", baseStyle);
 
         [Parameter]
         public bool Bordered { get; set; } = true;
+
+        /// <summary>
+        /// Validation status of the selector. When omitted, the status is inherited from the containing FormItem.
+        /// </summary>
+        [Parameter]
+        public string Status { get; set; }
+
+        /// <summary>
+        /// Visual style of the selector. When omitted, the legacy <see cref="Bordered"/> value is used.
+        /// </summary>
+        [Parameter]
+        public InputVariant? Variant { get; set; }
+
+        private InputVariant EffectiveVariant => Variant ?? (Bordered ? InputVariant.Outlined : InputVariant.Borderless);
 
         /// <summary>
         /// Whether to allow multiple selections or not
@@ -570,12 +592,13 @@ namespace AntDesign
                 var value = GetValueFromNode(node);
                 if (_tree.SelectedKeys.Contains(key))
                 {
-                    Values = Values.Append(value);
+                    Values = Values == null ? [value] : Values.Append(value);
                 }
                 else
                 {
                     Values = Values.Where(v => !v.AllNullOrEquals(value)).ToArray();
                 }
+                await OnValuesChangeAsync(Values);
                 if (IsSearchEnabled && AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
                 {
                     ClearSearch();
@@ -607,12 +630,22 @@ namespace AntDesign
             if (_tree.CheckedKeys is not { Length: > 0 })
             {
                 Values = [];
+                await OnValuesChangeAsync(Values);
                 return;
             }
             var node = args.Node;
 
             var key = node.Key;
             var value = GetValueFromNode(node);
+            var checkedNodes = _tree._allNodes.Where(x => _tree.CheckedKeys.Contains(x.Key)).ToArray();
+            if (MaxCount is > 0 && GetDisplayedCheckedNodeCount(checkedNodes) > MaxCount.Value)
+            {
+                // TreeNode applies checkbox changes before raising OnCheck. Restore the previous
+                // controlled values when this change would exceed the select's visible tag limit.
+                UpdateTreeCheckedKeys(Values?.Select(GetTreeKeyFormValue) ?? []);
+                return;
+            }
+
             if (_tree.CheckedKeys.Contains(key))
             {
                 Values = Values == null ? [value] : Values.Append(value);
@@ -621,6 +654,28 @@ namespace AntDesign
             {
                 Values = Values?.Where(v => !v.AllNullOrEquals(value)).ToArray();
             }
+            await OnValuesChangeAsync(Values);
+        }
+
+        private int GetDisplayedCheckedNodeCount(IReadOnlyCollection<TreeNode<TItem>> checkedNodes)
+        {
+            if (TreeCheckStrictly || ShowCheckedStrategy == TreeCheckedStrategy.ShowAll)
+                return checkedNodes.Count;
+
+            if (ShowCheckedStrategy == TreeCheckedStrategy.ShowChild)
+                return checkedNodes.Count(node => !node.HasChildNodes);
+
+            var checkedKeys = checkedNodes.Select(node => node.Key).ToHashSet();
+            return checkedNodes.Count(node =>
+            {
+                for (var parent = node.ParentNode; parent != null; parent = parent.ParentNode)
+                {
+                    if (checkedKeys.Contains(parent.Key))
+                        return false;
+                }
+
+                return true;
+            });
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -690,11 +745,11 @@ namespace AntDesign
 
         protected override void SetClassMap()
         {
+            var status = GetValidationStatus();
             ClassMapper
                 .Add("ant-tree-select")
                 .Add($"{ClassPrefix}")
-                .If($"{ClassPrefix}-outlined", () => Bordered)
-                .If($"{ClassPrefix}-borderless", () => !Bordered)
+                .If($"{ClassPrefix}-{EffectiveVariant.ToString().ToLowerInvariant()}", () => true)
                 .Add($"{ClassPrefix}-css-var")
                 .Add("ant-tree-select-css-var")
                 .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
@@ -708,8 +763,19 @@ namespace AntDesign
                 .If($"{ClassPrefix}-loading", () => Loading)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
                 .If($"{ClassPrefix}-rtl", () => RTL)
+                .GetIf(() => $"{ClassPrefix}-status-{status}", () => status is not null)
                 .If($"{ClassPrefix}-allow-clear", () => AllowClear)
                 ;
+        }
+
+        private string GetValidationStatus()
+        {
+            if (!string.IsNullOrWhiteSpace(Status))
+                return Status.ToLowerInvariant();
+
+            return FormItem?.ValidateStatus is FormValidateStatus.Error or FormValidateStatus.Warning
+                ? FormItem.ValidateStatus.ToString().ToLowerInvariant()
+                : null;
         }
 
         // bind the option once after fetching the data source asynchronously

@@ -135,6 +135,18 @@ namespace AntDesign
         public int InlineIndent { get; set; } = 24;
 
         /// <summary>
+        /// Semantic CSS classes for menu elements.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>
+        /// Semantic inline styles for menu elements, keyed by Semantic DOM path.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        /// <summary>
         /// Close dropdown when clicking an item
         /// </summary>
         /// <default value="true" />
@@ -339,6 +351,28 @@ namespace AntDesign
                 .If($"{PrefixCls}-inline-collapsed", () => _inlineCollapsed)
                 .If($"{PrefixCls}-unselectable", () => !Selectable)
                 .If($"{PrefixCls}-rtl", () => RTL);
+        }
+
+        internal string GetSemanticClass(string slot, string baseClass = null)
+        {
+            if (ClassNames != null && ClassNames.TryGetValue(slot, out var customClass)
+                && !string.IsNullOrWhiteSpace(customClass))
+            {
+                return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+            }
+
+            return baseClass;
+        }
+
+        internal string GetSemanticStyle(string slot, string baseStyle = null)
+        {
+            if (Styles == null || !Styles.TryGetValue(slot, out var semanticStyle)
+                || string.IsNullOrWhiteSpace(semanticStyle))
+            {
+                return baseStyle;
+            }
+
+            return string.IsNullOrWhiteSpace(baseStyle) ? semanticStyle : $"{baseStyle.TrimEnd(';')};{semanticStyle}";
         }
 
         protected override void OnInitialized()

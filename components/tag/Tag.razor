@@ -3,19 +3,33 @@
 
 @if (!_closed)
 {
-    <span class="@ClassMapper.Class" style="@_style" id="@Id" @ref="Ref" @onclick="ClickTag">
+    <span @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@_style" id="@Id" @ref="Ref" @onclick="ClickTag"
+          role="@(Checkable ? "checkbox" : null)" aria-checked="@(Checkable ? Checked.ToString().ToLowerInvariant() : null)"
+          aria-disabled="@(Checkable && Disabled ? "true" : null)" tabindex="@(Checkable && !Disabled ? "0" : null)"
+          @onkeydown="HandleCheckableKeyDown">
         @if (IconTemplate != null)
         {
-            <span class="ant-tag-icon">@IconTemplate</span>
+            <span class="@SemanticClass("icon", "ant-tag-icon")" style="@SemanticStyle("icon")">@IconTemplate</span>
+            @if (ChildContent != null)
+            {
+                <span class="@SemanticClass("content", "ant-tag-content")" style="@SemanticStyle("content")">@ChildContent</span>
+            }
         }
         else if (!string.IsNullOrEmpty(Icon))
         {
-            <span class="ant-tag-icon"><Icon Type="@Icon" Theme="@IconTheme"></Icon></span>
+            <span class="@SemanticClass("icon", "ant-tag-icon")" style="@SemanticStyle("icon")"><Icon Type="@Icon" Theme="@IconTheme"></Icon></span>
+            @if (ChildContent != null)
+            {
+                <span class="@SemanticClass("content", "ant-tag-content")" style="@SemanticStyle("content")">@ChildContent</span>
+            }
         }
-        <span class="ant-tag-content">@ChildContent</span>
+        else
+        {
+            @ChildContent
+        }
         @if (Closable)
         {
-            <span class="ant-tag-close">
+            <span role="button" tabindex="0" class="@SemanticClass("close", "ant-tag-close-icon")" style="@SemanticStyle("close")" @onkeydown="CloseTagFromKeyboard">
                 <Icon Type="close" TabIndex="-1" OnClick="CloseTag" StopPropagation="true" />
             </span>
         }

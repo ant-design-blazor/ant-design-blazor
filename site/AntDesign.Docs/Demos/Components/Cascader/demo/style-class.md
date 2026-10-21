@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-通过 `Class` 和 `Style` 自定义 Cascader 选择框的样式。
+通过 `ClassNames` 和 `Styles` 自定义 Cascader 选择框、清除按钮和弹出菜单。
 
 ## en-US
 
-Customize the Cascader selector with `Class` and `Style`.
+Customize the Cascader selector, clear button, and popup menus with `ClassNames` and `Styles`.

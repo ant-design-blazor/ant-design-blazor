@@ -1,0 +1,29 @@
+<Select TItemValue="string"
+        TItem="CenteredOption"
+        DataSource="@_options"
+        ValueName="@nameof(CenteredOption.Value)"
+        LabelName="@nameof(CenteredOption.Label)"
+        DefaultValue='@("first")'
+        Style="width: 240px;">
+    <ItemTemplate Context="option">
+        <span class="select-option-centered-label">@option.Label</span>
+    </ItemTemplate>
+</Select>
+
+<style>
+    .select-option-centered-label {
+        display: block;
+        text-align: center;
+    }
+</style>
+
+@code {
+    private sealed record CenteredOption(string Value, string Label);
+
+    private readonly CenteredOption[] _options =
+    [
+        new("first", "Option one"),
+        new("second", "Option two"),
+        new("third", "Option three")
+    ];
+}

@@ -58,11 +58,11 @@ namespace AntDesign
         [Parameter]
         public FormValidateStatus Status { get; set; } = FormValidateStatus.Default;
 
-        /// <summary>Semantic class names for the root and popup nodes.</summary>
+        /// <summary>Semantic class names for root, input, popup, popup list, and popup list items.</summary>
         [Parameter]
         public IReadOnlyDictionary<string, string> ClassNames { get; set; }
 
-        /// <summary>Semantic inline styles for the root and popup nodes.</summary>
+        /// <summary>Semantic inline styles for root, input, popup, popup list, and popup list items.</summary>
         [Parameter]
         public IReadOnlyDictionary<string, string> Styles { get; set; }
 
@@ -296,8 +296,10 @@ namespace AntDesign
         }
 
         internal string RootStyle => SemanticStyle("root", Style);
-        internal string PopupClass => SemanticClass("popup", OverlayClassName);
-        internal string PopupStyle => SemanticStyle("popup", OverlayStyle);
+        internal string PopupClass => SemanticClass("popup.root", SemanticClass("popup", OverlayClassName));
+        internal string PopupStyle => SemanticStyle("popup.root", SemanticStyle("popup", OverlayStyle));
+        internal string PopupListClass => SemanticClass("popup.list", null);
+        internal string PopupListStyle => SemanticStyle("popup.list", $"max-height:256px; overflow-y:auto; overflow-anchor:none; {_minWidth}");
 
         internal string InputStatusClass
         {
@@ -328,6 +330,10 @@ namespace AntDesign
             if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
             return $"{baseStyle.Trim().TrimEnd(';')}; {customStyle}";
         }
+
+        string IAutoCompleteRef.GetSemanticClass(string slot, string baseClass) => SemanticClass(slot, baseClass);
+
+        string IAutoCompleteRef.GetSemanticStyle(string slot, string baseStyle) => SemanticStyle(slot, baseStyle);
 
         void IAutoCompleteRef.SetInputComponent(IAutoCompleteInput input)
         {

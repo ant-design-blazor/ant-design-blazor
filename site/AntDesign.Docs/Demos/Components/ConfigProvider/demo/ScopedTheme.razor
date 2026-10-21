@@ -1,0 +1,27 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_brandTheme">
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+        <Button Type="ButtonType.Primary">Brand scope</Button>
+        <ConfigProvider ThemeConfig="@_localTheme">
+            <Card Title="Nested local theme">
+                <Space>
+                    <Button Type="ButtonType.Primary">Local theme</Button>
+                    <Input TValue="string" Placeholder="Inherited and overridden tokens" Style="width: 240px;" />
+                </Space>
+            </Card>
+        </ConfigProvider>
+    </div>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _brandTheme = new()
+    {
+        Token = new ThemeToken { ["colorPrimary"] = "#722ed1" }
+    };
+
+    private static readonly ThemeConfig _localTheme = new()
+    {
+        Token = new ThemeToken { ["colorPrimary"] = "#13a8a8", ["borderRadius"] = "12" }
+    };
+}

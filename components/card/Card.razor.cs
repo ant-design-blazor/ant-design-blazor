@@ -52,6 +52,31 @@ namespace AntDesign
         public bool Bordered { get; set; } = true;
 
         /// <summary>
+        /// Visual style of the card. When omitted, the legacy <see cref="Bordered"/> value is used.
+        /// </summary>
+        [Parameter]
+        public CardVariant? Variant { get; set; }
+
+        /// <summary>
+        /// Semantic classes keyed by root, header, title, extra, cover, body, and actions.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>
+        /// Semantic inline styles keyed by root, header, title, extra, cover, body, and actions.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        /// <summary>
+        /// Inline style for the card header. Use <see cref="Styles"/> with the header slot for new code.
+        /// </summary>
+        [Obsolete("Use Styles with the 'header' semantic slot instead.")]
+        [Parameter]
+        public string HeadStyle { get; set; }
+
+        /// <summary>
         /// Make card hoverable
         /// </summary>
         /// <default value="false" />
@@ -118,14 +143,35 @@ namespace AntDesign
         private bool _hasGrids;
         internal IList<CardAction> _cardActions;
 
+        private bool IsBordered => Variant.HasValue ? Variant == CardVariant.Outlined : Bordered;
+
+        internal string GetSemanticClass(string slot, string baseClass = null)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var semanticClass) || string.IsNullOrWhiteSpace(semanticClass))
+                return baseClass;
+
+            return string.IsNullOrWhiteSpace(baseClass) ? semanticClass : $"{baseClass} {semanticClass}";
+        }
+
+        internal string GetSemanticStyle(string slot, string baseStyle = null)
+        {
+            if (Styles == null || !Styles.TryGetValue(slot, out var semanticStyle) || string.IsNullOrWhiteSpace(semanticStyle))
+                return baseStyle;
+
+            if (string.IsNullOrWhiteSpace(baseStyle))
+                return semanticStyle;
+
+            return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
+        }
+
         protected void SetClassMap()
         {
             this.ClassMapper
-                .Add("ant-card")
+                .Add(GetSemanticClass("root", "ant-card"))
                 .Add("css-var-root")
                 .If("ant-card-rtl", () => RTL)
                 .If("ant-card-loading", () => Loading)
-                .If("ant-card-bordered", () => Bordered)
+                .If("ant-card-bordered", () => IsBordered)
                 .If("ant-card-hoverable", () => Hoverable)
                 .If("ant-card-small", () => Size == CardSize.Small)
                 .If("ant-card-contain-grid", () => _hasGrids)

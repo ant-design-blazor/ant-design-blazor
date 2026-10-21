@@ -1,10 +1,10 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+<div class="@(GetSemanticClass("root", ClassMapper.Class))" style="@(GetSemanticStyle("root", Style))" id="@Id" @ref="Ref">
     @if (!string.IsNullOrWhiteSpace(Avatar) || AvatarTemplate != null)
     {
-        <div class="ant-card-meta-avatar">
+        <div class="@(GetSemanticClass("avatar", "ant-card-meta-avatar"))" style="@(GetSemanticStyle("avatar"))">
             @if (AvatarTemplate != null)
             {
                 @AvatarTemplate
@@ -19,10 +19,10 @@
     @if (!string.IsNullOrWhiteSpace(Title) || TitleTemplate != null
             || !string.IsNullOrWhiteSpace(Description) || DescriptionTemplate != null)
     {
-        <div class="ant-card-meta-section">
+        <div class="@(GetSemanticClass("section", "ant-card-meta-section"))" style="@(GetSemanticStyle("section"))">
             @if (!string.IsNullOrWhiteSpace(Title) || TitleTemplate != null)
             {
-                <div class="ant-card-meta-title">
+                <div class="@(GetSemanticClass("title", "ant-card-meta-title"))" style="@(GetSemanticStyle("title"))">
                     @if (TitleTemplate != null)
                     {
                         @TitleTemplate
@@ -33,7 +33,7 @@
                     }
                 </div>
             }
-            <div class="ant-card-meta-description">
+            <div class="@(GetSemanticClass("description", "ant-card-meta-description"))" style="@(GetSemanticStyle("description"))">
                 @if (DescriptionTemplate != null)
                 {
                     @DescriptionTemplate
@@ -84,6 +84,37 @@
     /// </summary>
     [Parameter]
     public RenderFragment AvatarTemplate { get; set; }
+
+    /// <summary>
+    /// Semantic classes keyed by root, section, avatar, title, and description.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+    /// <summary>
+    /// Semantic inline styles keyed by root, section, avatar, title, and description.
+    /// </summary>
+    [Parameter]
+    public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+    private string GetSemanticClass(string slot, string baseClass)
+    {
+        if (ClassNames == null || !ClassNames.TryGetValue(slot, out var semanticClass) || string.IsNullOrWhiteSpace(semanticClass))
+            return baseClass;
+
+        return $"{baseClass} {semanticClass}";
+    }
+
+    private string GetSemanticStyle(string slot, string baseStyle = null)
+    {
+        if (Styles == null || !Styles.TryGetValue(slot, out var semanticStyle) || string.IsNullOrWhiteSpace(semanticStyle))
+            return baseStyle;
+
+        if (string.IsNullOrWhiteSpace(baseStyle))
+            return semanticStyle;
+
+        return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
+    }
 
     protected override void OnInitialized()
     {

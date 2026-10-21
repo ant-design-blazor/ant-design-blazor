@@ -1,0 +1,23 @@
+<Spin ClassNames="_classNames" Styles="_styles" Description="Loading semantic content">
+    <div class="spin-semantic-demo-content">Content covered by Spin</div>
+</Spin>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-spin-root",
+        ["section"] = "demo-spin-section",
+        ["indicator"] = "demo-spin-indicator",
+        ["description"] = "demo-spin-description",
+        ["container"] = "demo-spin-container"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "border: 1px solid #91caff",
+        ["section"] = "padding: 8px",
+        ["indicator"] = "color: #1677ff",
+        ["description"] = "font-weight: 600",
+        ["container"] = "opacity: 0.6"
+    };
+}

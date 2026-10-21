@@ -5,19 +5,19 @@
 
 @if (ParentSelect.SuffixIcon != null)
 {
-    <div class="ant-select-suffix">
+    <div class="@ParentSelect.GetSemanticClass("suffix", "ant-select-suffix")" style="@ParentSelect.GetSemanticStyle("suffix")">
         @ParentSelect.SuffixIcon
     </div>
 }
 else if (Loading)
 {
-    <div class="ant-select-suffix">
+    <div class="@ParentSelect.GetSemanticClass("suffix", "ant-select-suffix")" style="@ParentSelect.GetSemanticStyle("suffix")">
         <LoadingOutlined />
     </div>
 }
 else if (ShowArrowIcon || ParentSelect.FeedbackIcon != null)
 {
-    <div class="ant-select-suffix">
+    <div class="@ParentSelect.GetSemanticClass("suffix", "ant-select-suffix")" style="@ParentSelect.GetSemanticStyle("suffix")">
         @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
         {
             if (ShowSearchIcon)
@@ -38,7 +38,7 @@ else if (ShowArrowIcon || ParentSelect.FeedbackIcon != null)
 }
 else
 {
-    <div class="ant-select-suffix">
+    <div class="@ParentSelect.GetSemanticClass("suffix", "ant-select-suffix")" style="@ParentSelect.GetSemanticStyle("suffix")">
         @if (ParentSelect.IsSearchEnabled && IsOverlayShow)
         {
             if (ShowSearchIcon)
@@ -51,7 +51,8 @@ else
 
 @if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
 {
-    <button class="ant-select-clear"
+    <button class="@ParentSelect.GetSemanticClass("clear", "ant-select-clear")"
+          style="@ParentSelect.GetSemanticStyle("clear")"
           type="button"
           aria-label="Clear"
           @ref="@_clearRef">

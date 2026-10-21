@@ -45,12 +45,14 @@
 		var icon = cut.Find("span.anticon");
 		icon.Click();
 		cut.MarkupMatches(@<span class:ignore id:ignore >Tag 1
-            <span role="img" class="anticon anticon-close" id:ignore   tabindex="-1" >       
-                <svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024">
-                    <path d:ignore></path>
-                </svg>
-            </span>
-        </span>
+			<span role="button" tabindex="0" class="ant-tag-close-icon">
+				<span role="img" class="anticon anticon-close" id:ignore tabindex="-1" >
+					<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024">
+						<path d:ignore></path>
+					</svg>
+				</span>
+			</span>
+		</span>
     );
     }
 
@@ -113,11 +115,50 @@
 	}
 
 	[Fact]
+	public void Checkable_tag_exposes_accessible_state_and_disabled_behavior()
+	{
+		var cut = Context.Render<AntDesign.Tag>(@<AntDesign.Tag Checkable Disabled Checked>Tag 1</AntDesign.Tag>);
+		var tag = cut.Find(".ant-tag");
+		tag.GetAttribute("role").Should().Be("checkbox");
+		tag.GetAttribute("aria-checked").Should().Be("true");
+		tag.GetAttribute("aria-disabled").Should().Be("true");
+		tag.GetAttribute("tabindex").Should().BeNull();
+		tag.ClassList.Should().Contain("ant-tag-checkable-disabled");
+		tag.Click();
+		cut.Instance.Checked.Should().BeTrue();
+	}
+
+	[Fact]
+	public void Checkable_tag_group_renders_options_and_emits_single_selection()
+	{
+		string selected = null;
+		var options = new[]
+		{
+			new CheckableTagOption { Value = "one", Label = "One" },
+			new CheckableTagOption { Value = "two", Label = "Two" },
+		};
+		var cut = Context.Render<CheckableTagGroup>(@<CheckableTagGroup Options="options" Value="@selected" ValueChanged="value => selected = value" />);
+
+		cut.FindAll(".ant-tag-checkable-group-item").Should().HaveCount(2);
+		cut.Find(".ant-tag-checkable-group").GetAttribute("role").Should().Be("group");
+		cut.FindAll(".ant-tag")[1].Click();
+		selected.Should().Be("two");
+	}
+
+	[Fact]
 	public void Renders_custom_style_and_custom_color_tag()
     {
 		var cut = Context.Render(@<AntDesign.Tag Color="@("#108ee9")" Style="margin-left:5px;">Tag 1</AntDesign.Tag>);
         cut.MarkupMatches(@<span class="ant-tag ant-tag-has-color" id:ignore style="margin-left: 5px; background-color: #108ee9; ">Tag 1</span>);
     }
+
+	[Fact]
+	public void Forwards_additional_html_attributes_to_root()
+	{
+		var cut = Context.Render(@<AntDesign.Tag draggable="true" data-test-id="draggable-tag">Drag me</AntDesign.Tag>);
+		cut.Find(".ant-tag").GetAttribute("draggable").Should().Be("true");
+		cut.Find(".ant-tag").GetAttribute("data-test-id").Should().Be("draggable-tag");
+	}
 
 	[Fact]
 	public void Renders_icon_template_when_provided()
@@ -129,7 +170,33 @@
 			<ChildContent>Label</ChildContent>
 		</AntDesign.Tag>);
 
-		cut.MarkupMatches(@<span class="ant-tag ant-tag-default" id:ignore><span class="my-icon">X</span>Label</span>);
+		cut.MarkupMatches(@<span class="ant-tag ant-tag-default" id:ignore><span class="ant-tag-icon"><span class="my-icon">X</span></span><span class="ant-tag-content">Label</span></span>);
+	}
+
+	[Fact]
+	public void Applies_semantic_classes_and_styles_to_tag_slots()
+	{
+		var classes = new Dictionary<string, string>
+		{
+			["root"] = "custom-root",
+			["icon"] = "custom-icon",
+			["content"] = "custom-content",
+			["close"] = "custom-close"
+		};
+		var styles = new Dictionary<string, string>
+		{
+			["root"] = "padding: 2px",
+			["icon"] = "color: red",
+			["content"] = "font-weight: 600",
+			["close"] = "opacity: .5"
+		};
+
+		var cut = Context.Render(@<AntDesign.Tag Closable Icon="twitter" ClassNames="classes" Styles="styles">Styled</AntDesign.Tag>);
+
+		cut.Find(".custom-root").GetAttribute("style").Should().Contain("padding: 2px");
+		cut.Find(".custom-icon").GetAttribute("style").Should().Contain("color: red");
+		cut.Find(".custom-content").GetAttribute("style").Should().Contain("font-weight: 600");
+		cut.Find(".custom-close").GetAttribute("style").Should().Contain("opacity: .5");
 	}
 
 	[Fact]

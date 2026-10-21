@@ -1,0 +1,24 @@
+<div style="display: flex; align-items: center; gap: 16px;">
+    <Image Width="100"
+           Alt="Blur preview mask"
+           Src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+           PreviewMaskBlur
+           PreviewCover="@_blurCover" />
+    <Image Width="100"
+           Alt="Dimmed preview mask"
+           Src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+           PreviewCover="@_dimCover"
+           PreviewCoverPlacement="ImageCoverPlacement.Top" />
+    <Image Width="100"
+           Alt="Hidden preview mask"
+           Src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
+           PreviewMaskVisible="false"
+           PreviewCover="@_noMaskCover"
+           PreviewCoverPlacement="ImageCoverPlacement.Bottom" />
+</div>
+
+@code {
+    private readonly RenderFragment _blurCover = builder => builder.AddContent(0, "Blur");
+    private readonly RenderFragment _dimCover = builder => builder.AddContent(0, "Dimmed mask");
+    private readonly RenderFragment _noMaskCover = builder => builder.AddContent(0, "No mask");
+}

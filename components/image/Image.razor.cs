@@ -68,12 +68,70 @@ namespace AntDesign
         [Parameter]
         public double? ProgressPercent { get; set; }
 
+        /// <summary>Customize the determinate progress placeholder, with access to the normalized percentage and default progress UI.</summary>
+        [Parameter]
+        public RenderFragment<ImageProgressRenderContext> ProgressRender { get; set; }
+
         /// <summary>
         /// Enable or disable preview functionality
         /// </summary>
         /// <default value="true" />
         [Parameter]
         public bool Preview { get; set; } = true;
+
+        /// <summary>Whether the image preview popup mask is visible.</summary>
+        [Parameter]
+        public bool PreviewMaskVisible { get; set; } = true;
+
+        /// <summary>Whether to blur the background through the image preview popup mask.</summary>
+        [Parameter]
+        public bool PreviewMaskBlur { get; set; }
+
+        /// <summary>Custom content rendered on the image thumbnail's preview cover.</summary>
+        [Parameter]
+        public RenderFragment PreviewCover { get; set; }
+
+        /// <summary>Position of <see cref="PreviewCover"/> on the image thumbnail.</summary>
+        [Parameter]
+        public ImageCoverPlacement PreviewCoverPlacement { get; set; } = ImageCoverPlacement.Center;
+
+        /// <summary>CSS classes keyed by Image semantic DOM parts.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Inline CSS declarations keyed by Image semantic DOM parts.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        /// <summary>Custom content for the preview toolbar action group.</summary>
+        [Parameter]
+        public RenderFragment<ImagePreviewActionsRenderContext> ActionsRender { get; set; }
+
+        /// <summary>Custom rendering for the preview image content.</summary>
+        [Parameter]
+        public RenderFragment<ImagePreviewImageRenderContext> ImageRender { get; set; }
+
+        private string PreviewCoverPlacementClass => PreviewCoverPlacement switch
+        {
+            ImageCoverPlacement.Top => "ant-image-cover-top",
+            ImageCoverPlacement.Bottom => "ant-image-cover-bottom",
+            _ => "ant-image-cover-center"
+        };
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return semanticStyle;
+            if (string.IsNullOrWhiteSpace(semanticStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
+        }
 
         /// <summary>
         /// If the preview is visible or not
@@ -176,6 +234,36 @@ namespace AntDesign
             : 0;
 
         private string ProgressPercentText => ProgressPercentValue.ToString(CultureInfo.InvariantCulture);
+
+        private RenderFragment DefaultProgressContent => builder =>
+        {
+            if (!HasProgressPercent)
+                return;
+
+            builder.OpenElement(0, "div");
+            builder.AddAttribute(1, "class", SemanticClass("placeholder.progress.rail", "ant-image-progress-rail"));
+            builder.AddAttribute(2, "style", SemanticStyle("placeholder.progress.rail", $"--progress-percent:{ProgressPercentText}%"));
+            builder.CloseElement();
+            builder.OpenElement(3, "div");
+            builder.AddAttribute(4, "class", SemanticClass("placeholder.progress.indicator", "ant-image-progress-indicator"));
+            builder.AddAttribute(5, "style", SemanticStyle("placeholder.progress.indicator"));
+            builder.AddContent(6, $"{ProgressPercentText}%");
+            builder.CloseElement();
+        };
+
+        private RenderFragment GetProgressContent()
+        {
+            var defaultProgress = DefaultProgressContent;
+            if (ProgressRender == null)
+                return defaultProgress;
+
+            return ProgressRender(new ImageProgressRenderContext
+            {
+                Percent = ProgressPercentValue,
+                HasPercent = HasProgressPercent,
+                DefaultProgress = defaultProgress
+            });
+        }
 
         protected override void OnInitialized()
         {

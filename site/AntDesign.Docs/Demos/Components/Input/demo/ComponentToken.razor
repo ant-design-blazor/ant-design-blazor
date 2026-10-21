@@ -1,0 +1,45 @@
+@using AntDesign.Theming
+
+<div class="input-component-token-demo">
+    <ConfigProvider ThemeConfig="@_globalTheme">
+        <Input TValue="string" Placeholder="Global control height: 28px" />
+    </ConfigProvider>
+
+    <ConfigProvider ThemeConfig="@_smallInputTheme">
+        <Input TValue="string" Size="InputSize.Small" Placeholder="Small input font size: 12px" />
+    </ConfigProvider>
+
+    <ConfigProvider ThemeConfig="@_inputTheme">
+        <Input TValue="string" Placeholder="Input font size: 10px" Prefix="@_userIcon" />
+    </ConfigProvider>
+</div>
+
+<style>
+    .input-component-token-demo {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 320px;
+    }
+</style>
+
+@code {
+    private static readonly ThemeConfig _globalTheme = CreateGlobalTheme();
+
+    private static readonly ThemeConfig _smallInputTheme = new ThemeConfig().SetComponentToken(
+        "Input",
+        new InputComponentToken { InputFontSizeSM = 12 });
+
+    private static readonly ThemeConfig _inputTheme = new ThemeConfig().SetComponentToken(
+        "Input",
+        new InputComponentToken { InputFontSize = 10 });
+
+    private RenderFragment _userIcon => @<Icon Type="user" />;
+
+    private static ThemeConfig CreateGlobalTheme()
+    {
+        var theme = new ThemeConfig();
+        theme.Token["controlHeight"] = "28";
+        return theme;
+    }
+}

@@ -1,0 +1,17 @@
+<Space Wrap>
+    <QRCode Value="https://ant.design" Status="loading">
+        <StatusRender><Spin Spinning="true" /> <span>Preparing code…</span></StatusRender>
+    </QRCode>
+    <QRCode Value="https://ant.design" Status="expired" OnRefresh="Refresh">
+        <StatusRender>
+            <div style="text-align:center">
+                <p>Code expired</p>
+                <Button Type="ButtonType.Link" OnClick="Refresh">Refresh</Button>
+            </div>
+        </StatusRender>
+    </QRCode>
+</Space>
+
+@code {
+    private void Refresh() { }
+}

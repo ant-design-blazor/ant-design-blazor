@@ -23,7 +23,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | AccessKey | 指定 [accesskey](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/accesskey) 全局属性。  | string | |
 | AllowClear | 支持清除. Has no effect if Value type default is also in the list of options, unless used with `ValueOnClear`. | bool | false |  |
 | AutoClearSearchValue | 是否在选中项后清空搜索框 | bool | true |  |
-| Bordered | 是否有边框 | bool | true |  |
+| Bordered | 旧版边框开关，新代码建议使用 `Variant`。 | bool | true |  |
 | BoundaryAdjustMode | `Dropdown` 调整策略（例如当浏览器调整大小时）        | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | CustomTagLabelToValue | 将自定义标签（字符串）转换为 TItemValue 类型 | Func<string, TItemValue> | (label) => <br/>    (TItemValue)TypeDescriptor<br/>    .GetConverter(typeof(TItemValue))<br/>    .ConvertFromInvariantString(label) |  |
 | DataSource | 此组件的数据源 | IEnumerable&lt;TItem> | - |  |
@@ -51,6 +51,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | Loading | 显示加载指示器。 必须编写加载逻辑. | bool | false |  |
 | ListboxStyle | 自定义下拉列表样式 | string | display: flex; flex-direction: column; |  |
 | MaxTagCount | 最多显示多少个 tag，响应式模式会对性能产生损耗 | int | `ResponsiveTag.Responsive` | - |  |
+| MaxCount | 多选或标签模式下可选择的最大数量 | int? | - | 6.0.0 |  |
+| Status | 设置 `error` 或 `warning` 校验状态；未设置时继承 `FormItem` 的校验状态 | string | - |  |
 | MaxTagPlaceholder | 隐藏 tag 时显示的内容.如果与 ResponsiveTag.Responsive 一起使用，请实现处理逻辑。 | RenderFragment<IEnumerable<TItem>>> | - |  |
 | MaxTagTextLength | 最大显示的 tag 文本长度. | int | - |  |
 | Mode | 设置 Select 的模式为多选或标签 - `default` \| `multiple` \| `tags` | string | default |  |
@@ -80,6 +82,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | Style | 设置样式. | string | `width: 100%` |  |
 | SuffixIcon | 自定义的选择框后缀图标 | RenderFragment | - |  |
 | TokenSeparators | 定义哪些字符将被视为新创建标签的标记分隔符, 仅使用键盘创建新标签时很有用. | char[] | - |  |
+| Tokenize | 可选回调，将搜索文本转换为已提交的值。仅适用于多选和标签模式；输入尚未完成时返回空序列。 | Func&lt;string, IEnumerable&lt;string&gt;&gt; | - |  |
 | Value |获取或设置选定的值。 | TItemValue | - |  |
 | Values | 获取或设置选定的值(多选). | IEnumerable&lt;TItemValues> | - |  |
 | ValueChanged | 用于双向绑定. | EventCallback&lt;TItemValue> | - |  |
@@ -87,6 +90,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | ValueName | 用于值的属性的名称. | string | - |  |
 | ValueOnClear | 按下清除按钮时，值将设置为 ValueOnClear 中设置的值. | TItemValue | - | 0.11 |
 | ValueProperty | 指定 option 对象的 value 属性. | `Func<TItem, TItemValue>` | - |
+| Variant | 选择器外观：`Outlined`、`Filled`、`Borderless` 或 `Underlined`。未设置时使用旧版 `Bordered` 值。 | `InputVariant?` | - | 6.0.0 |
 
 ### SelectOption props
 
@@ -97,3 +101,34 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | Label     | 选择此选项后选择的标签内容    | string         | -      |      |
 | Value     | 选择此选项后的 Select 值    | TItemValue          | -      |      |
 | Item      | option 对象                | TItem          |  -  |    |
+
+## 主题变量（Design Token）
+
+Select 组件 token 可通过 `ThemeConfig.Components["Select"]` 配置，并以 `--ant-select-*` CSS 变量输出。命名遵循 React v6 Select token 契约，修改主题时无需自行覆盖组件 CSS。
+
+| Token | CSS 变量 | 说明 | 默认值 |
+| --- | --- | --- | --- |
+| ActiveBorderColor | `--ant-select-active-border-color` | 激活状态边框颜色 | `colorPrimary` |
+| ActiveOutlineColor | `--ant-select-active-outline-color` | 激活状态轮廓颜色 | `controlOutline` |
+| ClearBg | `--ant-select-clear-bg` | 清除按钮背景色 | `colorBgContainer` |
+| HoverBorderColor | `--ant-select-hover-border-color` | 悬浮状态边框颜色 | `colorPrimaryHover` |
+| MultipleItemBg | `--ant-select-multiple-item-bg` | 多选标签背景色 | `colorFillSecondary` |
+| MultipleItemBorderColor | `--ant-select-multiple-item-border-color` | 多选标签边框色 | `transparent` |
+| MultipleItemBorderColorDisabled | `--ant-select-multiple-item-border-color-disabled` | 禁用标签边框色 | `transparent` |
+| MultipleItemColorDisabled | `--ant-select-multiple-item-color-disabled` | 禁用标签文本色 | `colorTextDisabled` |
+| MultipleItemHeight | `--ant-select-multiple-item-height` | 多选标签高度 | min(`controlHeight - 2 × paddingXXS`, `controlHeight - 2 × lineWidth`) |
+| MultipleItemHeightLG | `--ant-select-multiple-item-height-lg` | 大号多选标签高度 | min(`controlHeightLG - 2 × paddingXXS`, `controlHeightLG - 2 × lineWidth`) |
+| MultipleItemHeightSM | `--ant-select-multiple-item-height-sm` | 小号多选标签高度 | min(`controlHeightSM - 2 × paddingXXS`, `controlHeightSM - 2 × lineWidth`) |
+| MultipleSelectorBgDisabled | `--ant-select-multiple-selector-bg-disabled` | 禁用多选框背景色 | `colorBgContainerDisabled` |
+| OptionActiveBg | `--ant-select-option-active-bg` | 激活选项背景色 | `controlItemBgHover` |
+| OptionFontSize | `--ant-select-option-font-size` | 选项字号 | `fontSize` |
+| OptionHeight | `--ant-select-option-height` | 选项高度 | `controlHeight` |
+| OptionLineHeight | `--ant-select-option-line-height` | 选项行高 | `lineHeight` |
+| OptionPadding | `--ant-select-option-padding` | 选项内边距 | 垂直 `(controlHeight - fontSize × lineHeight) / 2`；水平 `controlPaddingHorizontal` |
+| OptionSelectedBg | `--ant-select-option-selected-bg` | 选中选项背景色 | `controlItemBgActive` |
+| OptionSelectedColor | `--ant-select-option-selected-color` | 选中选项文本色 | `colorText` |
+| OptionSelectedFontWeight | `--ant-select-option-selected-font-weight` | 选中选项字重 | `fontWeightStrong` |
+| SelectorBg | `--ant-select-selector-bg` | 选择框背景色 | `colorBgContainer` |
+| ShowArrowPaddingInlineEnd | `--ant-select-show-arrow-padding-inline-end` | 显示箭头时的行末内边距 | `ceil(fontSize × 1.25)` |
+| SingleItemHeightLG | `--ant-select-single-item-height-lg` | 大号单选回填项高度 | `controlHeightLG` |
+| ZIndexPopup | `--ant-select-z-index-popup` | 下拉菜单层级 | `zIndexPopupBase + 50` |

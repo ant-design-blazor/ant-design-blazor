@@ -1,0 +1,21 @@
+@inject IJSRuntime JS
+
+<Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        Name="file"
+        ListType="UploadListType.Picture"
+        Accept="image/*"
+        TransformFile="AddWatermark">
+    <Button Icon="upload">Upload and add watermark</Button>
+</Upload>
+
+@code {
+    private async Task<UploadFileTransformResult> AddWatermark(UploadFileTransformContext context)
+    {
+        var content = await JS.InvokeAsync<byte[]>(JSInteropConstants.AddImageWatermark, context.Content, context.ContentType);
+        return new UploadFileTransformResult
+        {
+            Content = content,
+            ContentType = context.ContentType
+        };
+    }
+}

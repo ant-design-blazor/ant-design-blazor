@@ -1,0 +1,20 @@
+<div style="display:flex;justify-content:center;padding:16px">
+    <Card Title="Card title" Style="width:300px" Cover="cover" Actions="actions">
+        <Extra>More</Extra>
+        <ChildContent>
+            <CardMeta Avatar="https://api.dicebear.com/10.x/lorelei/svg?seed=8"
+                      Title="Card Meta title"
+                      Description="This is the description" />
+        </ChildContent>
+    </Card>
+</div>
+
+@code {
+    private RenderFragment cover = @<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />;
+    private RenderFragment[] actions =
+    [
+        @<Icon Type="@IconType.Outline.Setting" />,
+        @<Icon Type="@IconType.Outline.Edit" />,
+        @<Icon Type="@IconType.Outline.Ellipsis" />
+    ];
+}

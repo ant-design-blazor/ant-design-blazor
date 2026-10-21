@@ -1,0 +1,45 @@
+@using System.Linq
+
+<Flex Gap="FlexGap.Small" Align="FlexAlign.Center" Wrap="FlexWrap.Wrap">
+    @foreach (var item in _items)
+    {
+        <Tag @key="item.Id" draggable="true"
+             @ondragstart="() => StartDrag(item.Id)"
+             @ondragover:preventDefault
+             @ondrop="() => DropOn(item.Id)"
+             Style="cursor:move; transition:unset;">
+            @item.Text
+        </Tag>
+    }
+</Flex>
+
+@code {
+    private readonly List<DraggableItem> _items = new()
+    {
+        new(1, "Tag 1"),
+        new(2, "Tag 2"),
+        new(3, "Tag 3"),
+    };
+
+    private int? _draggedId;
+
+    private void StartDrag(int id) => _draggedId = id;
+
+    private void DropOn(int targetId)
+    {
+        if (_draggedId is not int draggedId || draggedId == targetId)
+            return;
+
+        var from = _items.FindIndex(item => item.Id == draggedId);
+        var to = _items.FindIndex(item => item.Id == targetId);
+        if (from < 0 || to < 0)
+            return;
+
+        var item = _items[from];
+        _items.RemoveAt(from);
+        _items.Insert(to, item);
+        _draggedId = null;
+    }
+
+    private sealed record DraggableItem(int Id, string Text);
+}

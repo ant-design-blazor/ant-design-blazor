@@ -24,6 +24,9 @@ Cascader
 | AllowClear           |  是否支持清除                                      |  bool               |  true	      |
 | BoundaryAdjustMode   |  边界自动调整的模式，默认在可视范围调整        | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | ChangeOnSelect       |  当此项为 true 时，点选每级菜单选项值都会发生变化  |  bool               |  false	      |
+| Multiple             |  启用复选框多选                                      |  bool               |  false       |
+| Values               |  多选模式下已选叶子节点的值                          |  IEnumerable<string> |  -          |
+| ShowCheckedStrategy  |  控制已选标签显示父节点、子节点或全部节点            |  CascaderCheckedStrategy | ShowParent |
 | Style                |  自定义类名                                        |  string             |  -	          |
 | DefaultValue         |  默认的选中项                                      |  string             |  -	          |
 | ExpandTrigger        |  次级菜单的展开方式，可选 'click' 和 'hover'       |  string             |  'click'	  |
@@ -41,5 +44,12 @@ CascaderNode
 | Label            |  节点名称                |  string        |  -        |
 | Value            |  节点值                  |  string        |  -        |
 | Disabled         |  节点是否禁用            |  bool          |  false    |
+| DisableCheckbox  |  仅禁用节点复选框，不禁用选项 | bool | false |
 | HasChildren      |  是否存在子节点(只读)    |  bool          |  -        |
 | Children         |  子节点                  |  AntCheckbox[] |  -        |
+
+## Semantic DOM
+
+通过 `ClassNames` 和 `Styles` 设置语义节点，支持 `root`、`prefix`、`suffix`、
+`input`、`content`、`placeholder`、`clear`、`popup.root`、`popup.list` 和
+`popup.listItem`。弹出列表插槽会应用到每一级级联菜单。

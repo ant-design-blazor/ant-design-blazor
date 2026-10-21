@@ -6,6 +6,10 @@
     {
         @((MarkupString)SvgMarkup)
     }
+    else if (StatusRender is not null)
+    {
+        <div class="ant-qrcode-cover" aria-live="polite">@StatusRender</div>
+    }
     else
     {
         <div class="ant-qrcode-cover" aria-live="polite">

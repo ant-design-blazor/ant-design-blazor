@@ -4,14 +4,14 @@
   "source": {
     "repository": "ant-design",
     "path": "../ant-design/components",
-    "semanticSource": "export *SemanticType definitions"
+    "semanticSource": "exported SemanticType definitions and public Props semantic schemas"
   },
   "scope": {
-    "semanticDefinitions": 69,
-    "uniqueComponents": 59,
+    "semanticDefinitions": 70,
+    "uniqueComponents": 61,
     "uniqueSemanticPaths": 119,
-    "dumiSemanticDemoFiles": 70,
-    "dumiSemanticPaths": 350,
+    "dumiSemanticDemoFiles": 71,
+    "dumiSemanticPaths": 352,
     "cssComponents": 72,
     "existingBlazorComponents": 71,
     "existingBlazorComponentsWithSemanticDefinition": [
@@ -41,6 +41,7 @@
       "listy",
       "masonry",
       "mentions",
+      "menu",
       "message",
       "modal",
       "notification",
@@ -84,7 +85,6 @@
       "flex",
       "grid",
       "list",
-      "menu",
       "qrcode",
       "rate",
       "row"
@@ -263,7 +263,9 @@
         "content",
         "input",
         "placeholder",
-        "popup",
+        "popup.list",
+        "popup.listItem",
+        "popup.root",
         "prefix",
         "root"
       ],
@@ -272,7 +274,9 @@
         "content",
         "input",
         "placeholder",
-        "popup",
+        "popup.list",
+        "popup.listItem",
+        "popup.root",
         "prefix",
         "root"
       ],
@@ -281,7 +285,9 @@
         "content",
         "input",
         "placeholder",
-        "popup",
+        "popup.list",
+        "popup.listItem",
+        "popup.root",
         "prefix",
         "root"
       ],
@@ -317,7 +323,19 @@
           "status": "structure-migrated-pending-semantic-injection"
         },
         {
-          "semanticPath": "popup",
+          "semanticPath": "popup.list",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "popup.listItem",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "popup.root",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "structure-migrated-pending-semantic-injection"
@@ -664,18 +682,13 @@
       "migrationStatus": "structure-migrated"
     },
     {
-      "component": "card",
+      "component": "card-meta",
       "reactSource": "components/card/CardMeta.tsx",
       "blazorDirectory": "components/card",
       "semanticType": "CardMetaSemanticType",
       "semanticPaths": [
-        "actions",
         "avatar",
-        "body",
-        "cover",
         "description",
-        "extra",
-        "header",
         "root",
         "section",
         "title"
@@ -696,18 +709,6 @@
       ],
       "dumiSemanticSources": [
         {
-          "source": "components/card/demo/_semantic.tsx",
-          "semanticPaths": [
-            "actions",
-            "body",
-            "cover",
-            "extra",
-            "header",
-            "root",
-            "title"
-          ]
-        },
-        {
           "source": "components/card/demo/_semantic_meta.tsx",
           "semanticPaths": [
             "avatar",
@@ -720,43 +721,13 @@
       ],
       "classNameMapping": [
         {
-          "semanticPath": "actions",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
           "semanticPath": "avatar",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "structure-migrated-pending-semantic-injection"
         },
         {
-          "semanticPath": "body",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "cover",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
           "semanticPath": "description",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "extra",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "header",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "structure-migrated-pending-semantic-injection"
@@ -793,14 +764,11 @@
       "semanticType": "CardSemanticType",
       "semanticPaths": [
         "actions",
-        "avatar",
         "body",
         "cover",
-        "description",
         "extra",
         "header",
         "root",
-        "section",
         "title"
       ],
       "classNames": [
@@ -833,27 +801,11 @@
             "root",
             "title"
           ]
-        },
-        {
-          "source": "components/card/demo/_semantic_meta.tsx",
-          "semanticPaths": [
-            "avatar",
-            "description",
-            "root",
-            "section",
-            "title"
-          ]
         }
       ],
       "classNameMapping": [
         {
           "semanticPath": "actions",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "avatar",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "structure-migrated-pending-semantic-injection"
@@ -866,12 +818,6 @@
         },
         {
           "semanticPath": "cover",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "description",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "structure-migrated-pending-semantic-injection"
@@ -890,12 +836,6 @@
         },
         {
           "semanticPath": "root",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "section",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "structure-migrated-pending-semantic-injection"
@@ -925,7 +865,9 @@
         "itemContent",
         "itemRemove",
         "placeholder",
-        "popup",
+        "popup.list",
+        "popup.listItem",
+        "popup.root",
         "prefix",
         "root",
         "suffix"
@@ -937,7 +879,9 @@
         "itemContent",
         "itemRemove",
         "placeholder",
-        "popup",
+        "popup.list",
+        "popup.listItem",
+        "popup.root",
         "prefix",
         "root",
         "suffix"
@@ -949,7 +893,9 @@
         "itemContent",
         "itemRemove",
         "placeholder",
-        "popup",
+        "popup.list",
+        "popup.listItem",
+        "popup.root",
         "prefix",
         "root",
         "suffix"
@@ -965,68 +911,80 @@
           "semanticPath": "content",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "input",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "itemContent",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "itemRemove",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "placeholder",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
-          "semanticPath": "popup",
+          "semanticPath": "popup.list",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "popup.listItem",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "popup.root",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "prefix",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "suffix",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "checkbox",
@@ -1169,7 +1127,6 @@
         "body",
         "content",
         "description",
-        "popup",
         "popup.root",
         "popupOverlayInner",
         "root"
@@ -1178,7 +1135,6 @@
         "body",
         "content",
         "description",
-        "popup",
         "popup.root",
         "root"
       ],
@@ -1186,7 +1142,6 @@
         "body",
         "content",
         "description",
-        "popup",
         "popup.root",
         "popupOverlayInner",
         "root"
@@ -1223,12 +1178,6 @@
           "status": "structure-migrated-pending-semantic-injection"
         },
         {
-          "semanticPath": "popup",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
           "semanticPath": "popup.root",
           "reactClassName": null,
           "blazorClassName": null,
@@ -1260,7 +1209,6 @@
       "semanticType": "DatePickerSemanticType",
       "semanticPaths": [
         "input",
-        "popup",
         "popup.body",
         "popup.container",
         "popup.content",
@@ -1274,14 +1222,19 @@
       ],
       "classNames": [
         "input",
-        "popup",
+        "popup.body",
+        "popup.container",
+        "popup.content",
+        "popup.footer",
+        "popup.header",
+        "popup.item",
+        "popup.root",
         "prefix",
         "root",
         "suffix"
       ],
       "styles": [
         "input",
-        "popup",
         "popup.body",
         "popup.container",
         "popup.content",
@@ -1316,80 +1269,74 @@
           "semanticPath": "input",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "popup",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.body",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.container",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.content",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.footer",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.header",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "prefix",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "suffix",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "descriptions",
@@ -1680,80 +1627,80 @@
           "semanticPath": "body",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "close",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "content",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "dragger",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "extra",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "footer",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "header",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "mask",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "section",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "title",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "wrapper",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "dropdown",
@@ -2237,13 +2184,10 @@
       "semanticPaths": [
         "cover",
         "image",
-        "placeholder",
-        "placeholder.progress",
         "placeholder.progress.content",
         "placeholder.progress.indicator",
         "placeholder.progress.rail",
         "placeholder.progress.root",
-        "popup",
         "popup.actions",
         "popup.body",
         "popup.close",
@@ -2255,13 +2199,10 @@
       "classNames": [
         "cover",
         "image",
-        "placeholder",
-        "placeholder.progress",
         "placeholder.progress.content",
         "placeholder.progress.indicator",
         "placeholder.progress.rail",
         "placeholder.progress.root",
-        "popup",
         "popup.actions",
         "popup.body",
         "popup.close",
@@ -2273,13 +2214,10 @@
       "styles": [
         "cover",
         "image",
-        "placeholder",
-        "placeholder.progress",
         "placeholder.progress.content",
         "placeholder.progress.indicator",
         "placeholder.progress.rail",
         "placeholder.progress.root",
-        "popup",
         "popup.actions",
         "popup.body",
         "popup.close",
@@ -2309,104 +2247,86 @@
           "semanticPath": "cover",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "image",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "placeholder",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "placeholder.progress",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "placeholder.progress.content",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "placeholder.progress.indicator",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "placeholder.progress.rail",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "placeholder.progress.root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "popup",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.actions",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.body",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.close",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.footer",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.mask",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "input-number",
@@ -2498,7 +2418,6 @@
       "blazorDirectory": "components/input",
       "semanticType": "InputSearchSemanticType",
       "semanticPaths": [
-        "button",
         "button.content",
         "button.icon",
         "button.root",
@@ -2512,7 +2431,6 @@
         "textarea"
       ],
       "classNames": [
-        "button",
         "button.content",
         "button.icon",
         "button.root",
@@ -2524,7 +2442,6 @@
         "suffix"
       ],
       "styles": [
-        "button",
         "button.content",
         "button.icon",
         "button.root",
@@ -2591,12 +2508,6 @@
         }
       ],
       "classNameMapping": [
-        {
-          "semanticPath": "button",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
         {
           "semanticPath": "button.content",
           "reactClassName": null,
@@ -3356,6 +3267,139 @@
       "migrationStatus": "structure-migrated"
     },
     {
+      "component": "menu",
+      "reactSource": "components/menu/menu.tsx",
+      "blazorDirectory": "components/menu",
+      "semanticType": "MenuPropsSemanticSchema",
+      "semanticPaths": [
+        "item",
+        "itemContent",
+        "itemIcon",
+        "itemTitle",
+        "list",
+        "popup.root",
+        "root",
+        "subMenu.item",
+        "subMenu.itemContent",
+        "subMenu.itemIcon",
+        "subMenu.itemTitle",
+        "subMenu.list"
+      ],
+      "classNames": [
+        "item",
+        "itemContent",
+        "itemIcon",
+        "itemTitle",
+        "list",
+        "popup.root",
+        "root",
+        "subMenu.item",
+        "subMenu.itemContent",
+        "subMenu.itemIcon",
+        "subMenu.itemTitle",
+        "subMenu.list"
+      ],
+      "styles": [
+        "item",
+        "itemContent",
+        "itemIcon",
+        "itemTitle",
+        "list",
+        "popup.root",
+        "root",
+        "subMenu.item",
+        "subMenu.itemContent",
+        "subMenu.itemIcon",
+        "subMenu.itemTitle",
+        "subMenu.list"
+      ],
+      "dumiSemanticSources": [
+        {
+          "source": "components/menu/demo/_semantic.tsx",
+          "semanticPaths": []
+        }
+      ],
+      "classNameMapping": [
+        {
+          "semanticPath": "item",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "itemContent",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "itemIcon",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "itemTitle",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "list",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "popup.root",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "root",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "subMenu.item",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "subMenu.itemContent",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "subMenu.itemIcon",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "subMenu.itemTitle",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        },
+        {
+          "semanticPath": "subMenu.list",
+          "reactClassName": null,
+          "blazorClassName": null,
+          "status": "structure-migrated-pending-semantic-injection"
+        }
+      ],
+      "htmlSnapshot": {
+        "react": "pending-runtime-render",
+        "blazor": "structure-test-covered"
+      },
+      "migrationStatus": "structure-migrated"
+    },
+    {
       "component": "message",
       "reactSource": "components/message/interface.ts",
       "blazorDirectory": "components/message",
@@ -3500,62 +3544,62 @@
           "semanticPath": "body",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "close",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "container",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "footer",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "header",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "mask",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "title",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "wrapper",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "notification",
@@ -4244,7 +4288,6 @@
         "itemContent",
         "itemRemove",
         "placeholder",
-        "popup",
         "popup.list",
         "popup.listItem",
         "popup.root",
@@ -4260,7 +4303,6 @@
         "itemContent",
         "itemRemove",
         "placeholder",
-        "popup",
         "popup.list",
         "popup.listItem",
         "popup.root",
@@ -4276,7 +4318,6 @@
         "itemContent",
         "itemRemove",
         "placeholder",
-        "popup",
         "popup.list",
         "popup.listItem",
         "popup.root",
@@ -4295,92 +4336,86 @@
           "semanticPath": "clear",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "content",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "input",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "itemContent",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "itemRemove",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "placeholder",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "popup",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.list",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.listItem",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "prefix",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "suffix",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "skeleton",
@@ -4813,12 +4848,12 @@
         "root"
       ],
       "classNames": [
-        "dragger",
+        "dragger.active",
+        "dragger.default",
         "panel",
         "root"
       ],
       "styles": [
-        "dragger",
         "dragger.active",
         "dragger.default",
         "panel",
@@ -5226,17 +5261,14 @@
       "blazorDirectory": "components/table",
       "semanticType": "TableSemanticType",
       "semanticPaths": [
-        "body",
         "body.cell",
         "body.row",
         "body.wrapper",
         "content",
         "footer",
-        "header",
         "header.cell",
         "header.row",
         "header.wrapper",
-        "pagination",
         "pagination.item",
         "pagination.root",
         "root",
@@ -5244,17 +5276,14 @@
         "title"
       ],
       "classNames": [
-        "body",
         "body.cell",
         "body.row",
         "body.wrapper",
         "content",
         "footer",
-        "header",
         "header.cell",
         "header.row",
         "header.wrapper",
-        "pagination",
         "pagination.item",
         "pagination.root",
         "root",
@@ -5262,17 +5291,14 @@
         "title"
       ],
       "styles": [
-        "body",
         "body.cell",
         "body.row",
         "body.wrapper",
         "content",
         "footer",
-        "header",
         "header.cell",
         "header.row",
         "header.wrapper",
-        "pagination",
         "pagination.item",
         "pagination.root",
         "root",
@@ -5300,12 +5326,6 @@
         }
       ],
       "classNameMapping": [
-        {
-          "semanticPath": "body",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
         {
           "semanticPath": "body.cell",
           "reactClassName": null,
@@ -5337,12 +5357,6 @@
           "status": "structure-migrated-pending-semantic-injection"
         },
         {
-          "semanticPath": "header",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
           "semanticPath": "header.cell",
           "reactClassName": null,
           "blazorClassName": null,
@@ -5356,12 +5370,6 @@
         },
         {
           "semanticPath": "header.wrapper",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "pagination",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "structure-migrated-pending-semantic-injection"
@@ -5414,7 +5422,6 @@
         "header",
         "indicator",
         "item",
-        "popup",
         "popup.root",
         "remove",
         "root"
@@ -5425,7 +5432,6 @@
         "header",
         "indicator",
         "item",
-        "popup",
         "popup.root",
         "remove",
         "root"
@@ -5436,7 +5442,6 @@
         "header",
         "indicator",
         "item",
-        "popup",
         "popup.root",
         "remove",
         "root"
@@ -5483,12 +5488,6 @@
         },
         {
           "semanticPath": "item",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "structure-migrated-pending-semantic-injection"
-        },
-        {
-          "semanticPath": "popup",
           "reactClassName": null,
           "blazorClassName": null,
           "status": "structure-migrated-pending-semantic-injection"
@@ -5681,7 +5680,6 @@
       "semanticType": "TimePickerSemanticType",
       "semanticPaths": [
         "input",
-        "popup",
         "popup.container",
         "popup.content",
         "popup.footer",
@@ -5693,14 +5691,17 @@
       ],
       "classNames": [
         "input",
-        "popup",
+        "popup.container",
+        "popup.content",
+        "popup.footer",
+        "popup.item",
+        "popup.root",
         "prefix",
         "root",
         "suffix"
       ],
       "styles": [
         "input",
-        "popup",
         "popup.container",
         "popup.content",
         "popup.footer",
@@ -5721,68 +5722,62 @@
           "semanticPath": "input",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "popup",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.container",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.content",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.footer",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "popup.root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "prefix",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "suffix",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "timeline",
@@ -5843,104 +5838,104 @@
           "semanticPath": "content",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "header",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "icon",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "itemContent",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "itemHeader",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "itemIcon",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "itemRail",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "itemSection",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "itemTitle",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "itemWrapper",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "rail",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "section",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "title",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         },
         {
           "semanticPath": "wrapper",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "structure-migrated-pending-semantic-injection"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "tooltip",
@@ -6160,7 +6155,6 @@
         "list",
         "root",
         "section",
-        "source",
         "source.body",
         "source.footer",
         "source.header",
@@ -6170,7 +6164,6 @@
         "source.list",
         "source.section",
         "source.title",
-        "target",
         "target.body",
         "target.footer",
         "target.header",
@@ -6193,7 +6186,6 @@
         "list",
         "root",
         "section",
-        "source",
         "source.body",
         "source.footer",
         "source.header",
@@ -6203,7 +6195,6 @@
         "source.list",
         "source.section",
         "source.title",
-        "target",
         "target.body",
         "target.footer",
         "target.header",
@@ -6226,7 +6217,6 @@
         "list",
         "root",
         "section",
-        "source",
         "source.body",
         "source.footer",
         "source.header",
@@ -6236,7 +6226,6 @@
         "source.list",
         "source.section",
         "source.title",
-        "target",
         "target.body",
         "target.footer",
         "target.header",
@@ -6289,194 +6278,182 @@
           "semanticPath": "actions",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "body",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "footer",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "header",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "itemContent",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "itemIcon",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "list",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "section",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "source",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "source.body",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "source.footer",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "source.header",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "source.item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "source.itemContent",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "source.itemIcon",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "source.list",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "source.section",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "source.title",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "target",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "target.body",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "target.footer",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "target.header",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "target.item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "target.itemContent",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "target.itemIcon",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "target.list",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "target.section",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "target.title",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "title",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "tree-select",
@@ -6484,22 +6461,22 @@
       "blazorDirectory": "components/tree-select",
       "semanticType": "TreeSelectPopupSemanticType",
       "semanticPaths": [
-        "item",
-        "itemSwitcher",
-        "itemTitle",
-        "root"
+        "popup.item",
+        "popup.itemSwitcher",
+        "popup.itemTitle",
+        "popup.root"
       ],
       "classNames": [
-        "item",
-        "itemSwitcher",
-        "itemTitle",
-        "root"
+        "popup.item",
+        "popup.itemSwitcher",
+        "popup.itemTitle",
+        "popup.root"
       ],
       "styles": [
-        "item",
-        "itemSwitcher",
-        "itemTitle",
-        "root"
+        "popup.item",
+        "popup.itemSwitcher",
+        "popup.itemTitle",
+        "popup.root"
       ],
       "dumiSemanticSources": [
         {
@@ -6509,35 +6486,35 @@
       ],
       "classNameMapping": [
         {
-          "semanticPath": "item",
+          "semanticPath": "popup.item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
-          "semanticPath": "itemSwitcher",
+          "semanticPath": "popup.itemSwitcher",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
-          "semanticPath": "itemTitle",
+          "semanticPath": "popup.itemTitle",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
-          "semanticPath": "root",
+          "semanticPath": "popup.root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "tree-select",
@@ -6551,7 +6528,6 @@
         "itemContent",
         "itemRemove",
         "placeholder",
-        "popup",
         "popup.item",
         "popup.itemSwitcher",
         "popup.itemTitle",
@@ -6567,7 +6543,6 @@
         "itemContent",
         "itemRemove",
         "placeholder",
-        "popup",
         "popup.item",
         "popup.itemSwitcher",
         "popup.itemTitle",
@@ -6583,7 +6558,6 @@
         "itemContent",
         "itemRemove",
         "placeholder",
-        "popup",
         "popup.item",
         "popup.itemSwitcher",
         "popup.itemTitle",
@@ -6603,92 +6577,86 @@
           "semanticPath": "content",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "input",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "itemContent",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "itemRemove",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "placeholder",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
-        },
-        {
-          "semanticPath": "popup",
-          "reactClassName": null,
-          "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "popup.item",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "popup.itemSwitcher",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "popup.itemTitle",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "popup.root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "prefix",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "root",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         },
         {
           "semanticPath": "suffix",
           "reactClassName": null,
           "blazorClassName": null,
-          "status": "pending"
+          "status": "semantic-injection-tested-pending-class-mapping"
         }
       ],
       "htmlSnapshot": {
         "react": "pending-runtime-render",
-        "blazor": "pending-render"
+        "blazor": "structure-test-covered"
       },
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "component": "tree",
@@ -7010,7 +6978,7 @@
       "reactStyleSource": "components/cascader/style/index.ts",
       "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "checkbox",
@@ -7058,7 +7026,7 @@
       "reactStyleSource": "components/date-picker/style/index.ts",
       "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "descriptions",
@@ -7082,7 +7050,7 @@
       "reactStyleSource": "components/drawer/style/index.ts",
       "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "dropdown",
@@ -7138,7 +7106,7 @@
       "reactStyleSource": "components/image/style/index.ts",
       "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "input",
@@ -7201,8 +7169,8 @@
       "className": "ant-menu",
       "reactStyleSource": "components/menu/style/index.ts",
       "implementedInBlazor": true,
-      "hasSemanticDefinition": false,
-      "migrationStatus": "inventory-only"
+      "hasSemanticDefinition": true,
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "message",
@@ -7218,7 +7186,7 @@
       "reactStyleSource": "components/modal/style/index.ts",
       "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "notification",
@@ -7322,7 +7290,7 @@
       "reactStyleSource": "components/select/style/index.ts",
       "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "skeleton",
@@ -7418,7 +7386,7 @@
       "reactStyleSource": "components/timeline/style/index.ts",
       "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "tooltip",
@@ -7442,7 +7410,7 @@
       "reactStyleSource": "components/transfer/style/index.ts",
       "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "tree",
@@ -7458,7 +7426,7 @@
       "reactStyleSource": "components/tree-select/style/index.ts",
       "implementedInBlazor": true,
       "hasSemanticDefinition": true,
-      "migrationStatus": "inventory-only"
+      "migrationStatus": "structure-migrated"
     },
     {
       "name": "typography",

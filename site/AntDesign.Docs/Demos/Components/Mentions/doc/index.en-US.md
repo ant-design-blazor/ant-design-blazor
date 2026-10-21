@@ -24,6 +24,8 @@ When need to mention someone or something.
 | notFoundContent | Set mentions content when not match | ReactNode | 'Not Found' |
 | placement | Set popup placement | `top` \| `bottom` | `bottom` |
 | prefix | Set trigger prefix keyword | string \| string[] | '@' |
+| Variant | Input appearance: `Outlined`, `Filled`, `Borderless`, or `Underlined` | `InputVariant` | `Outlined` |
+| Status | Validation status; supports `Error` or `Warning` | `FormValidateStatus?` | - |
 | split | Set split string before and after selected mention | string | ' ' |
 | validateSearch | Customize trigger search logic | (text: string, props: MentionsProps) => void |  |
 | value | Set value of mentions | string |  |

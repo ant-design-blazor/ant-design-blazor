@@ -27,6 +27,10 @@
     z-index: @zindex-modal;
     background: @modal-mask-bg;
     pointer-events: auto;
+
+    &-blur {
+      backdrop-filter: blur(4px);
+    }
   }
 
   // ==================== Content =====================

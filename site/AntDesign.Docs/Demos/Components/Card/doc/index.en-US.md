@@ -24,8 +24,12 @@ Card
 | ActionTemplate | The template placeholder for CardAction | RenderFragment | -
 | Body |Body area on card | RenderFragment |-        |
 | Extra |Content to render in the top-right corner of the card | RenderFragment |-        |
-| Bordered |Toggles rendering of the border around the card | boolean |-        |
-| BodyStyle |Inline style to apply to the card content | Css Properties |-        |
+| Variant | Visual style of the card: `Outlined` or `Borderless`. | `CardVariant` | `Outlined` |
+| Bordered | Legacy border toggle. Prefer `Variant`; when `Variant` is set it takes precedence. | boolean | true |
+| ClassNames | Custom classes keyed by the Card semantic slots `root`, `header`, `title`, `extra`, `cover`, `body`, and `actions`. | `IReadOnlyDictionary<string, string>` | - |
+| Styles | Custom inline styles keyed by the Card semantic slots `root`, `header`, `title`, `extra`, `cover`, `body`, and `actions`. | `IReadOnlyDictionary<string, string>` | - |
+| HeadStyle | Deprecated header style. Prefer `Styles["header"]`. | string | - |
+| BodyStyle | Deprecated body style. Prefer `Styles["body"]`. | string | - |
 | CardAction | A component for actions, and it should be put in ActionTemplate | CardAction | -
 | Cover |Card cover | RenderFragment |-        |
 | Loading |Shows a loading indicator while the contents of the card are being fetched | boolean |-        |
@@ -50,3 +54,5 @@ Card.Meta
 | Description | description content | boolean |-        |
 | Style | style object of container| CSS Properties |-        |
 | Title |	title content | String or RenderFragement |-        |
+| ClassNames | Custom classes keyed by `root`, `section`, `avatar`, `title`, and `description`. | `IReadOnlyDictionary<string, string>` | - |
+| Styles | Custom inline styles keyed by `root`, `section`, `avatar`, `title`, and `description`. | `IReadOnlyDictionary<string, string>` | - |

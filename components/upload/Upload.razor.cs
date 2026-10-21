@@ -36,12 +36,66 @@ namespace AntDesign
     public partial class Upload : AntDomComponentBase
     {
         /// <summary>
+        /// Semantic class names for the root, trigger, file list, and file items.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>
+        /// Semantic inline styles for the root, trigger, file list, and file items.
+        /// </summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        /// <summary>Custom remove action icon content.</summary>
+        [Parameter]
+        public RenderFragment<UploadFileItem> RemoveIcon { get; set; }
+
+        /// <summary>Custom preview action icon content.</summary>
+        [Parameter]
+        public RenderFragment<UploadFileItem> PreviewIcon { get; set; }
+
+        /// <summary>Custom download action icon content.</summary>
+        [Parameter]
+        public RenderFragment<UploadFileItem> DownloadIcon { get; set; }
+
+        /// <summary>Extra content rendered beside each file name.</summary>
+        [Parameter]
+        public RenderFragment<UploadFileItem> Extra { get; set; }
+
+        /// <summary>Allow users to reorder files by dragging list items.</summary>
+        [Parameter]
+        public bool DragSort { get; set; }
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return semanticStyle;
+            if (string.IsNullOrWhiteSpace(semanticStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
+        }
+
+        /// <summary>
         /// Function which will be executed before uploading each file. 
         /// Uploading will be stopped if false is returned.
         /// Warning：This function is not supported in IE9.
         /// </summary>
         [Parameter]
         public Func<UploadFileItem, bool> BeforeUpload { get; set; }
+
+        /// <summary>
+        /// Transforms a file before it is sent. The browser file bytes are transferred through Blazor,
+        /// so this callback is intended for small files; return null content to keep the original file.
+        /// </summary>
+        [Parameter]
+        public Func<UploadFileTransformContext, Task<UploadFileTransformResult>> TransformFile { get; set; }
 
         /// <summary>
         /// Hook function which will be executed before starting the overall upload.
@@ -85,7 +139,7 @@ namespace AntDesign
         public Dictionary<string, object> Data { get; set; }
 
         /// <summary>
-        /// Built-in stylesheets, support for three types: <c>Text</c>, <c>Picture</c> or <c>PictureCard</c>
+        /// Built-in file list styles: <c>Text</c>, <c>Picture</c>, <c>PictureCard</c> or <c>PictureCircle</c>.
         /// </summary>
         /// <default value="UploadListType.Text" />
         [Parameter]
@@ -104,6 +158,28 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public bool Multiple { get; set; }
+
+        /// <summary>
+        /// Maximum number of files that can be kept in the upload list. A value of 1 replaces the current file.
+        /// </summary>
+        [Parameter]
+        public int? MaxCount { get; set; }
+
+        /// <summary>Gradient color stops for the upload-list progress bar.</summary>
+        [Parameter]
+        public Dictionary<string, string> ProgressStrokeColor { get; set; }
+
+        /// <summary>Width, in pixels, of the upload-list progress bar. Defaults to 2.</summary>
+        [Parameter]
+        public int? ProgressStrokeWidth { get; set; }
+
+        /// <summary>Formats the upload percentage displayed next to the progress bar.</summary>
+        [Parameter]
+        public Func<double, string> ProgressFormat { get; set; }
+
+        /// <summary>Whether to display the formatted percentage next to the progress bar.</summary>
+        [Parameter]
+        public bool ProgressShowInfo { get; set; }
 
         /// <summary>
         /// File types that can be accepted. 
@@ -263,17 +339,24 @@ namespace AntDesign
 
         private bool IsText => ListType == UploadListType.Text;
 
-        private bool IsPictureCard => ListType == UploadListType.PictureCard;
+        private bool IsPictureCircle => ListType == UploadListType.PictureCircle;
+
+        private bool IsPictureCard => ListType == UploadListType.PictureCard || IsPictureCircle;
+
+        private static string DefaultProgressFormat(double percent) => $"{percent}%";
 
         private readonly ClassMapper _listClassMapper = new();
 
         internal bool _dragHover;
+        private UploadFileItem _draggingFile;
+        private UploadFileItem _dragOverFile;
 
         private static readonly Dictionary<UploadListType, string> _typeMap = new()
         {
             [UploadListType.Text] = "text",
             [UploadListType.Picture] = "picture",
             [UploadListType.PictureCard] = "picture-card",
+            [UploadListType.PictureCircle] = "picture-circle",
         };
 
         protected override void OnInitialized()
@@ -283,7 +366,8 @@ namespace AntDesign
             const string PrefixCls = "ant-upload";
 
             ClassMapper
-                .GetIf(() => $"{PrefixCls}-picture-card-wrapper", () => IsPictureCard)
+                .GetIf(() => $"{PrefixCls}-picture-card-wrapper", () => ListType == UploadListType.PictureCard)
+                .GetIf(() => $"{PrefixCls}-picture-circle-wrapper", () => IsPictureCircle)
                 .GetIf(() => $"{PrefixCls}-no-btn", () => ChildContent == null);
 
             _listClassMapper
@@ -297,6 +381,71 @@ namespace AntDesign
         private void HandleDrag(DragEventArgs args)
         {
             _dragHover = args.Type == "dragover";
+        }
+
+        private string DragSortClass(UploadFileItem file)
+        {
+            if (!DragSort)
+            {
+                return string.Empty;
+            }
+
+            if (ReferenceEquals(_draggingFile, file))
+            {
+                return "ant-upload-list-item-dragging";
+            }
+
+            return ReferenceEquals(_dragOverFile, file) ? "ant-upload-list-item-drag-over" : string.Empty;
+        }
+
+        private string FileItemStyle(UploadFileItem file)
+        {
+            var dragStyle = ReferenceEquals(_draggingFile, file)
+                ? "opacity: 0.45;"
+                : ReferenceEquals(_dragOverFile, file)
+                    ? "border-top: 2px solid var(--ant-color-primary, #1677ff);"
+                    : null;
+            return SemanticStyle("item", dragStyle);
+        }
+
+        private void StartFileDrag(UploadFileItem file)
+        {
+            if (DragSort && !Disabled)
+            {
+                _draggingFile = file;
+            }
+        }
+
+        private void DragOverFile(UploadFileItem file)
+        {
+            if (DragSort && _draggingFile != null && !ReferenceEquals(_draggingFile, file))
+            {
+                _dragOverFile = file;
+            }
+        }
+
+        private async Task DropFile(UploadFileItem target)
+        {
+            var sourceIndex = FileList.IndexOf(_draggingFile);
+            var targetIndex = FileList.IndexOf(target);
+            if (DragSort && sourceIndex >= 0 && targetIndex >= 0 && sourceIndex != targetIndex)
+            {
+                var file = FileList[sourceIndex];
+                FileList.RemoveAt(sourceIndex);
+                FileList.Insert(targetIndex, file);
+                await FileListChanged.InvokeAsync(FileList);
+            }
+
+            _draggingFile = null;
+            _dragOverFile = null;
+            await InvokeAsync(StateHasChanged);
+        }
+
+        private async Task EndFileDrag()
+        {
+            _draggingFile = null;
+            _dragOverFile = null;
+            await InvokeAsync(StateHasChanged);
         }
 
         private async Task RemoveFile(UploadFileItem item)

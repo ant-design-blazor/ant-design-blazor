@@ -1,0 +1,55 @@
+<Upload @bind-FileList="_files"
+        OnPreview="HandlePreview"
+        ListType="UploadListType.PictureCard"
+        ShowUploadList="true"
+        ShowPreviewIcon="true"
+        ShowDownloadIcon="false"
+        ShowRemoveIcon="false">
+    <Button Type="ButtonType.Primary">Upload</Button>
+</Upload>
+
+<Modal @bind-Visible="_previewVisible" Title="@_previewFile?.FileName" Width="720">
+    @if (_previewFile != null && IsVideo(_previewFile))
+    {
+        <video controls autoplay style="display: block; width: 100%; max-height: 70vh;" src="@PreviewUrl(_previewFile)">
+            Your browser does not support video playback.
+        </video>
+    }
+    else if (_previewFile != null)
+    {
+        <img alt="@_previewFile.FileName" src="@PreviewUrl(_previewFile)" style="display: block; width: 100%;" />
+    }
+</Modal>
+
+@code {
+    private bool _previewVisible;
+    private UploadFileItem _previewFile;
+
+    private List<UploadFileItem> _files = new()
+    {
+        new()
+        {
+            Id = "preview-image",
+            FileName = "image.png",
+            State = UploadState.Success,
+            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        },
+        new()
+        {
+            Id = "preview-video",
+            FileName = "flower.mp4",
+            State = UploadState.Success,
+            Url = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+        }
+    };
+
+    private void HandlePreview(UploadFileItem file)
+    {
+        _previewFile = file;
+        _previewVisible = true;
+    }
+
+    private static bool IsVideo(UploadFileItem file) => file.FileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase);
+
+    private static string PreviewUrl(UploadFileItem file) => string.IsNullOrEmpty(file.Url) ? file.ObjectURL : file.Url;
+}

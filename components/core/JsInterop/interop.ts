@@ -15,6 +15,7 @@ export {
   downloadHelper,
   watermarkHelper,
   splitterHelper,
+  drawerHelper,
 } from './modules/components/export'
 
 

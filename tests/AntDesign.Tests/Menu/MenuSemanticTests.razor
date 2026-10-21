@@ -1,0 +1,132 @@
+@using System.Collections.Generic
+@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public void Applies_semantic_classes_and_styles_to_menu_items_groups_and_submenus()
+    {
+        var classNames = new Dictionary<string, string>
+        {
+            ["root"] = "semantic-root",
+            ["item"] = "semantic-item",
+            ["itemContent"] = "semantic-item-content",
+            ["itemIcon"] = "semantic-item-icon",
+            ["itemTitle"] = "semantic-item-title",
+            ["list"] = "semantic-list",
+            ["subMenu.item"] = "semantic-submenu-item",
+            ["subMenu.itemTitle"] = "semantic-submenu-title",
+            ["subMenu.list"] = "semantic-submenu-list",
+            ["subMenu.itemContent"] = "semantic-submenu-item-content",
+            ["subMenu.itemIcon"] = "semantic-submenu-item-icon"
+        };
+        var styles = new Dictionary<string, string>
+        {
+            ["root"] = "width: 240px;",
+            ["item"] = "outline: 1px solid red;",
+            ["itemContent"] = "letter-spacing: 1px;",
+            ["itemIcon"] = "opacity: 0.5;",
+            ["itemTitle"] = "font-weight: 700;",
+            ["list"] = "padding: 2px;",
+            ["subMenu.item"] = "margin: 1px;",
+            ["subMenu.itemTitle"] = "color: blue;",
+            ["subMenu.list"] = "border-left: 1px solid blue;",
+            ["subMenu.itemContent"] = "text-transform: uppercase;",
+            ["subMenu.itemIcon"] = "color: green;"
+        };
+
+        var cut = Context.Render(@<Menu Mode="@MenuMode.Inline"
+                                         DefaultOpenKeys="@(new[] { "sub" })"
+                                         ClassNames="@classNames"
+                                         Styles="@styles">
+            <MenuItem Key="top" Icon="mail">Top level</MenuItem>
+            <MenuItemGroup Key="group" Title="Group">
+                <MenuItem Key="group-item">Grouped item</MenuItem>
+            </MenuItemGroup>
+            <SubMenu Key="sub" Title="Sub menu" Icon="appstore">
+                <MenuItemGroup Key="nested-group" Title="Nested group">
+                    <MenuItem Key="nested" Icon="setting">Nested item</MenuItem>
+                </MenuItemGroup>
+            </SubMenu>
+        </Menu>);
+
+        var root = cut.Find("ul.semantic-root");
+        Assert.Contains("width: 240px", root.GetAttribute("style"));
+
+        var item = root.QuerySelector("li.ant-menu-item.semantic-item");
+        Assert.Contains("outline: 1px solid red", item?.GetAttribute("style"));
+        Assert.Contains("semantic-item-content", item?.QuerySelector(".ant-menu-title-content")?.GetAttribute("class"));
+        Assert.Contains("letter-spacing: 1px", item?.QuerySelector(".ant-menu-title-content")?.GetAttribute("style"));
+        Assert.Contains("semantic-item-icon", item?.QuerySelector(".ant-menu-item-icon")?.GetAttribute("class"));
+        Assert.Contains("opacity: 0.5", item?.QuerySelector(".ant-menu-item-icon")?.GetAttribute("style"));
+
+        var group = root.QuerySelector(".ant-menu-item-group");
+        Assert.Contains("semantic-item-title", group?.QuerySelector(".ant-menu-item-group-title")?.GetAttribute("class"));
+        Assert.Contains("font-weight: 700", group?.QuerySelector(".ant-menu-item-group-title")?.GetAttribute("style"));
+        Assert.Contains("semantic-list", group?.QuerySelector(".ant-menu-item-group-list")?.GetAttribute("class"));
+        Assert.Contains("padding: 2px", group?.QuerySelector(".ant-menu-item-group-list")?.GetAttribute("style"));
+
+        var submenu = root.QuerySelector("li.ant-menu-submenu");
+        Assert.DoesNotContain("semantic-submenu-item", submenu?.GetAttribute("class"));
+        Assert.DoesNotContain("margin: 1px", submenu?.GetAttribute("style"));
+        Assert.Contains("semantic-item-icon", submenu?.QuerySelector(".ant-menu-submenu-title .ant-menu-item-icon")?.GetAttribute("class"));
+        Assert.Contains("opacity: 0.5", submenu?.QuerySelector(".ant-menu-submenu-title .ant-menu-item-icon")?.GetAttribute("style"));
+
+        var nestedGroup = submenu?.QuerySelector(".ant-menu-item-group");
+        Assert.Contains("semantic-submenu-title", nestedGroup?.QuerySelector(".ant-menu-item-group-title")?.GetAttribute("class"));
+        Assert.Contains("color: blue", nestedGroup?.QuerySelector(".ant-menu-item-group-title")?.GetAttribute("style"));
+        Assert.Contains("semantic-submenu-list", nestedGroup?.QuerySelector(".ant-menu-item-group-list")?.GetAttribute("class"));
+        Assert.Contains("border-left: 1px solid blue", nestedGroup?.QuerySelector(".ant-menu-item-group-list")?.GetAttribute("style"));
+
+        var nestedItem = submenu?.QuerySelector("li.ant-menu-item.semantic-submenu-item");
+        Assert.Contains("semantic-submenu-item-content", nestedItem?.QuerySelector(".ant-menu-title-content")?.GetAttribute("class"));
+        Assert.Contains("text-transform: uppercase", nestedItem?.QuerySelector(".ant-menu-title-content")?.GetAttribute("style"));
+        Assert.Contains("semantic-submenu-item-icon", nestedItem?.QuerySelector(".ant-menu-item-icon")?.GetAttribute("class"));
+        Assert.Contains("color: green", nestedItem?.QuerySelector(".ant-menu-item-icon")?.GetAttribute("style"));
+    }
+
+    [Fact]
+    public async Task Applies_popup_root_semantics_to_the_portal_overlay()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.RightTop });
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetFirstChildDomInfo, _ => true)
+            .SetResult(new HtmlElement { ClientWidth = 123 });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true);
+
+        var classNames = new Dictionary<string, string>
+        {
+            ["popup.root"] = "semantic-menu-popup",
+            ["subMenu.item"] = "semantic-popup-submenu-item",
+            ["subMenu.itemTitle"] = "semantic-popup-submenu-title"
+        };
+        var styles = new Dictionary<string, string>
+        {
+            ["popup.root"] = "z-index: 7;",
+            ["subMenu.item"] = "margin: 3px;",
+            ["subMenu.itemTitle"] = "color: blue;"
+        };
+        var cut = Context.Render(@<Menu Mode="@MenuMode.Vertical" ClassNames="@classNames" Styles="@styles">
+            <SubMenu Key="sub" Title="Sub menu">
+                <MenuItemGroup Key="group" Title="Nested group">
+                    <MenuItem Key="nested">Nested item</MenuItem>
+                </MenuItemGroup>
+            </SubMenu>
+        </Menu>);
+
+        var trigger = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        await cut.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
+        await cut.InvokeAsync(() => trigger.Instance.Show());
+
+        var submenuItem = cut.Find("li.semantic-popup-submenu-item");
+        Assert.Contains("margin: 3px", submenuItem.GetAttribute("style"));
+        var submenuTitle = cut.Find(".ant-menu-item-group-title");
+        Assert.Contains("semantic-popup-submenu-title", submenuTitle.GetAttribute("class"));
+        Assert.Contains("color: blue", submenuTitle.GetAttribute("style"));
+
+        var popup = trigger.FindComponent<AntDesign.Internal.Overlay>().Find(".semantic-menu-popup");
+        Assert.Contains("z-index: 7", popup.GetAttribute("style"));
+    }
+}

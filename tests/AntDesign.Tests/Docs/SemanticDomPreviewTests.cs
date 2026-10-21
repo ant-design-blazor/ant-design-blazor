@@ -136,25 +136,26 @@ public sealed class SemanticDomPreviewTests : DocumentationTestBase
         var items = cut.FindAll(".adb-semantic-preview-item");
         Assert.Equal(new[]
         {
-            "content", "input", "item", "itemContent", "itemRemove", "placeholder", "popup", "prefix", "root", "suffix"
+            "clear", "content", "input", "item", "itemContent", "itemRemove", "placeholder", "popup.list", "popup.listItem", "popup.root", "prefix", "root", "suffix"
         }, items.Select(item => item.QuerySelector("strong")!.TextContent).ToArray());
         Assert.Equal(new[]
         {
-            ".ant-select-content, .ant-select-selection-item", ".ant-select-selection-search-input",
-            ".ant-cascader-menu-item", ".ant-cascader-menu-item-content", ".ant-select-selection-item-remove",
-            ".ant-select-selection-placeholder", ".ant-cascader-dropdown", ".ant-select-prefix",
-            ".ant-select.ant-cascader", ".ant-select-suffix"
+            ".ant-select-clear", ".ant-select-content", ".ant-select-selection-search-input",
+            ".ant-select-selection-item", ".ant-select-selection-item-content", ".ant-select-selection-item-remove",
+            ".ant-select-selection-placeholder", ".ant-cascader-menu", ".ant-cascader-menu-item", ".ant-select-dropdown", ".ant-select-prefix",
+            ".ant-select", ".ant-select-suffix"
         }, items.Select(item => item.QuerySelector("code")!.TextContent).ToArray());
         Assert.NotNull(cut.Find(".ant-select.ant-cascader"));
         Assert.Equal("prefix", cut.Find(".ant-select-prefix").TextContent.Trim());
-        Assert.Contains("display:flex", cut.Find(".ant-select-content").GetAttribute("style"));
+        Assert.Contains("padding-left: 4px;", cut.Find(".ant-select-content").GetAttribute("style"));
         Assert.NotNull(cut.Find(".ant-select-input"));
         Assert.NotNull(cut.Find(".ant-cascader-menu-item"));
         Assert.NotNull(cut.Find(".ant-cascader-menu-item-content"));
         Assert.NotNull(cut.Find(".ant-select-clear"));
 
         var css = cut.Find("style").TextContent;
-        Assert.Contains("body:has(.adb-semantic-preview-root[data-active-semantic=\"cascader-popup\"]) .ant-cascader-dropdown", css);
+        Assert.Contains("data-active-semantic=\"cascader-popup.root\"", css);
+        Assert.Contains(".ant-select-dropdown", css);
     }
 
     [Fact]

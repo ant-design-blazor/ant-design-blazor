@@ -1,0 +1,21 @@
+<Space Direction="SpaceDirection.Vertical" Align="SpaceAlign.Start">
+    <Button Type="ButtonType.Primary" OnClick="@(() => _wideVisible = true)">
+        Open 1000px modal
+    </Button>
+    <Modal Title="Wide modal (1000px)" Width="1000" Centered @bind-Visible="_wideVisible">
+        <p>Custom modal width using a numeric value.</p>
+        <p>The content area follows the configured width.</p>
+    </Modal>
+
+    <Button Type="ButtonType.Primary" OnClick="@(() => _fluidVisible = true)">
+        Open 70% modal
+    </Button>
+    <Modal Title="Fluid modal (70%)" Width="@("70%")" Centered @bind-Visible="_fluidVisible">
+        <p>Width also accepts a CSS length.</p>
+    </Modal>
+</Space>
+
+@code {
+    private bool _wideVisible;
+    private bool _fluidVisible;
+}

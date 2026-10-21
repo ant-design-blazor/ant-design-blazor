@@ -1,0 +1,31 @@
+<div style="display: flex; flex-direction: column; gap: 32px;">
+    <Timeline Orientation="TimelineOrientation.Horizontal">
+        <TimelineItem>Init</TimelineItem>
+        <TimelineItem>Start</TimelineItem>
+        <TimelineItem Color="TimelineDotColor.Red" Dot="_clockDot">Pending</TimelineItem>
+        <TimelineItem>Complete</TimelineItem>
+    </Timeline>
+
+    <Timeline Orientation="TimelineOrientation.Horizontal" Mode="TimelineMode.Right">
+        <TimelineItem>Init</TimelineItem>
+        <TimelineItem>Start</TimelineItem>
+        <TimelineItem Color="TimelineDotColor.Red" Dot="_clockDot">Pending</TimelineItem>
+        <TimelineItem>Complete</TimelineItem>
+    </Timeline>
+
+    <Timeline Orientation="TimelineOrientation.Horizontal" Mode="TimelineMode.Alternate">
+        <TimelineItem>Init</TimelineItem>
+        <TimelineItem>Start</TimelineItem>
+        <TimelineItem Color="TimelineDotColor.Red" Dot="_clockDot">Pending</TimelineItem>
+        <TimelineItem>Complete</TimelineItem>
+    </Timeline>
+</div>
+
+@code {
+    private readonly RenderFragment _clockDot = builder =>
+    {
+        builder.OpenComponent<Icon>(0);
+        builder.AddAttribute(1, nameof(Icon.Type), IconType.Outline.ClockCircle);
+        builder.CloseComponent();
+    };
+}

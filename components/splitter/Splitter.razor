@@ -5,38 +5,60 @@
     @ChildContent
 </CascadingValue>
 
-<div id="@Id" class="split-container splitter-orientation-@(Vertical?"vertical":"horizontal") @(ClassMapper.Class)"
-    style="@Style" @ref="@Ref">
+<div id="@Id" class="split-container splitter-orientation-@(Vertical?"vertical":"horizontal") @SemanticClass("root", $"{ClassMapper.Class} ant-splitter-css-var")"
+    style="@GetComponentStyle("Splitter", SemanticStyle("root", Style))" @ref="@Ref">
+    @for (var paneIndex = 0; paneIndex < _panes.Count; paneIndex++)
+    {
+        var pane = _panes[paneIndex];
+        <div class="@SemanticClass("panel", "pane-of-split-container ant-splitter-panel")"
+            style="@SemanticStyle("panel", GetPaneStyle(pane))"
+            data-resizable="@pane.Resizable.ToString().ToLowerInvariant()" data-min="@pane.Min" data-max="@pane.Max">
+            @pane.ChildContent
+        </div>
 
-    <div class="pane-of-split-container ant-splitter-panel"
-        style="@this.GetPaneStyle(this.FirstPaneSize, this.FirstPaneMinSize)">
-        @FirstPane
-    </div>
-
-    <div class="ant-splitter-bar">
-        <div class="ant-splitter-bar-dragger spliter-bar @(Disabled?"ant-splitter-bar-dragger-disabled":"")"></div>
-
-        @if (_panes.Count == 2)
+        @if (paneIndex < _panes.Count - 1)
         {
-            @if (_panes[0].Collapsible && !_panes[0].IsCollapsed)
-            {
-                <div class="ant-splitter-bar-collapse-bar ant-splitter-bar-collapse-bar-start" @onclick="_panes[0].ToggleCollapse">
-                    <Icon Class="ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-start" Type="@(Layout== SplitterLayout.Horizontal?"left":"up")"></Icon>
+            var nextPane = _panes[paneIndex + 1];
+            <div class="ant-splitter-bar">
+                @if (Lazy)
+                {
+                    <div class="ant-splitter-bar-preview" style="--ant-splitter-bar-preview-offset: 0px"></div>
+                }
+                <div class="@GetDraggerClass(paneIndex)" style="@GetDraggerStyle(paneIndex)" data-index="@paneIndex"
+                    role="separator" aria-disabled="@IsDraggerDisabled(paneIndex)" aria-orientation="@(Vertical ? "vertical" : "horizontal")">
+                    @if (DraggerIcon != null)
+                    {
+                        <span class="ant-splitter-bar-dragger-icon">@DraggerIcon</span>
+                    }
                 </div>
-            }
-            @if (_panes[1].Collapsible && !_panes[1].IsCollapsed)
-            {
-                <div class="ant-splitter-bar-collapse-bar ant-splitter-bar-collapse-bar-end" @onclick="_panes[1].ToggleCollapse">
-                    <Icon Class="ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-end" Type="@(Layout== SplitterLayout.Horizontal?"right":"down")"></Icon>
-                </div>
-            }
+                @if (pane.Collapsible)
+                {
+                    <div class="ant-splitter-bar-collapse-bar ant-splitter-bar-collapse-bar-start @GetCollapseVisibilityClass(pane) @(CollapseIconStart != null ? "ant-splitter-bar-collapse-bar-customize" : null)" @onclick="pane.ToggleCollapse">
+                        @if (CollapseIconStart != null)
+                        {
+                            <span class="ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-start">@CollapseIconStart</span>
+                        }
+                        else
+                        {
+                            <Icon Class="ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-start" Type="@GetCollapseIconType(pane, true)"></Icon>
+                        }
+                    </div>
+                }
+                @if (nextPane.Collapsible)
+                {
+                    <div class="ant-splitter-bar-collapse-bar ant-splitter-bar-collapse-bar-end @GetCollapseVisibilityClass(nextPane) @(CollapseIconEnd != null ? "ant-splitter-bar-collapse-bar-customize" : null)" @onclick="nextPane.ToggleCollapse">
+                        @if (CollapseIconEnd != null)
+                        {
+                            <span class="ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-end">@CollapseIconEnd</span>
+                        }
+                        else
+                        {
+                            <Icon Class="ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-end" Type="@GetCollapseIconType(nextPane, false)"></Icon>
+                        }
+                    </div>
+                }
+            </div>
         }
-
-    </div>
-
-    <div class="pane-of-split-container ant-splitter-panel"
-        style="@this.GetPaneStyle(this.SecondPaneSize, this.SecondPaneMinSize)">
-        @SecondPane
-    </div>
+    }
 
 </div>

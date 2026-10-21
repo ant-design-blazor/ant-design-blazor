@@ -1,0 +1,28 @@
+<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        ClassNames="_classNames" Styles="_styles"
+        DefaultFileList="_files">
+    <Button Type="ButtonType.Primary" Icon="upload">Upload file</Button>
+</Upload>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "upload-demo-root",
+        ["trigger"] = "upload-demo-trigger",
+        ["list"] = "upload-demo-list",
+        ["item"] = "upload-demo-item"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "padding: 12px; border: 1px dashed #91caff; border-radius: 8px;",
+        ["trigger"] = "border-radius: 6px;",
+        ["list"] = "margin-top: 8px;",
+        ["item"] = "color: #1677ff;"
+    };
+
+    private static readonly List<UploadFileItem> _files = new()
+    {
+        new() { Id = "semantic-file", FileName = "semantic-demo.txt", State = UploadState.Success }
+    };
+}

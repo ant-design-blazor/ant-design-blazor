@@ -1,7 +1,5 @@
-<Space Direction="SpaceDirection.Vertical">
-    <Cascader Options="@_options" Placeholder="Default style" />
-    <Cascader Options="@_options" Placeholder="Custom class and style" Class="custom-cascader-demo" Style="max-width: 360px; border-color: #1677ff;" />
-</Space>
+<Cascader Options="@_options" DefaultValue="hangzhou" AllowClear Open="true"
+          ClassNames="@_classNames" Styles="@_styles" />
 
 @code {
     private readonly CascaderNode[] _options =
@@ -9,4 +7,21 @@
         new() { Value = "zhejiang", Label = "Zhejiang", Children = [new() { Value = "hangzhou", Label = "Hangzhou" }] },
         new() { Value = "jiangsu", Label = "Jiangsu", Children = [new() { Value = "nanjing", Label = "Nanjing" }] }
     ];
+
+    private readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["root"] = "demo-cascader-root",
+        ["clear"] = "demo-cascader-clear",
+        ["popup.root"] = "demo-cascader-popup",
+        ["popup.list"] = "demo-cascader-list",
+        ["popup.listItem"] = "demo-cascader-item"
+    };
+
+    private readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["root"] = "border-color:#1677ff;",
+        ["clear"] = "color:#1677ff;",
+        ["popup.list"] = "background:#f5faff;",
+        ["popup.listItem"] = "padding-inline-start:16px;"
+    };
 }

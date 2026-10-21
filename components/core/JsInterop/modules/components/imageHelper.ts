@@ -1,7 +1,8 @@
 export class imageHelper {
-  static imgDragAndDrop(element: HTMLImageElement): void {
-    if (!element) {
-      throw new Error('Element not found.');
+  static imgDragAndDrop(element: HTMLElement | HTMLImageElement): void {
+    const image = element instanceof HTMLImageElement ? element : element?.querySelector('img');
+    if (!image) {
+      return;
     }
 
     let mouseX: number, mouseY: number, imgX: number, imgY: number;
@@ -10,11 +11,11 @@ export class imageHelper {
     function handleMouseDown(event: MouseEvent) {
       mouseX = event.clientX;
       mouseY = event.clientY;
-      imgX = element.offsetLeft;
-      imgY = element.offsetTop;
+      imgX = image.offsetLeft;
+      imgY = image.offsetTop;
       isDragging = true;
 
-      element.style.cursor = 'grabbing';
+      image.style.cursor = 'grabbing';
 
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
@@ -25,24 +26,24 @@ export class imageHelper {
         const deltaX = event.clientX - mouseX;
         const deltaY = event.clientY - mouseY;
 
-        element.style.left = imgX + deltaX + 'px';
-        element.style.top = imgY + deltaY + 'px';
+        image.style.left = imgX + deltaX + 'px';
+        image.style.top = imgY + deltaY + 'px';
       }
     }
 
     function handleMouseUp() {
       if (isDragging) {
         isDragging = false;
-        element.style.cursor = 'grab';
+        image.style.cursor = 'grab';
 
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       }
     }
 
-    element.addEventListener('mousedown', handleMouseDown);
+    image.addEventListener('mousedown', handleMouseDown);
 
-    element.addEventListener('dragstart', (event: DragEvent) => {
+    image.addEventListener('dragstart', (event: DragEvent) => {
       event.preventDefault();
     });
 

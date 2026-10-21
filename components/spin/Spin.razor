@@ -27,29 +27,29 @@ else
         @<Template>
             @if (spin._isLoading)
             {
-                <div class="@spin.ClassMapper.Class @(spin.Simple ? "ant-spin-section" : string.Empty)" id="@spin.Id" style="@spin.Style" @ref="spin.Ref">
+                <div class="@spin.SemanticClass("root", $"{spin.ClassMapper.Class} {(spin.Simple ? "ant-spin-section" : string.Empty)}", spin.Simple ? "section" : null)" id="@spin.Id" style="@spin.SemanticStyle("root", spin.Style, spin.Simple ? "section" : null)" @ref="spin.Ref">
                     @if (!spin.Simple)
                     {
-                        <div class="ant-spin-section">
-                            <span class="ant-spin-dot-holder">
+                        <div class="@spin.SemanticClass("section", "ant-spin-section")" style="@spin.SemanticStyle("section")">
+                            <span class="@spin.SemanticClass("indicator", "ant-spin-dot-holder")" style="@spin.SemanticStyle("indicator")">
                                 @if (spin.Indicator != null) { @spin.Indicator } else { @spin.defaultTemplate }
                             </span>
-                            @if (spin.Tip != null) { <div class="ant-spin-description ant-spin-text">@spin.Tip</div> }
+                            @if (spin.EffectiveDescription != null) { <div class="@spin.SemanticClass("description", "ant-spin-description ant-spin-text", "tip")" style="@spin.SemanticStyle("description", legacySlot: "tip")">@spin.EffectiveDescription</div> }
                         </div>
                     }
                     else
                     {
-                        <span class="ant-spin-dot-holder">
+                        <span class="@spin.SemanticClass("indicator", "ant-spin-dot-holder")" style="@spin.SemanticStyle("indicator")">
                             @if (spin.Indicator != null) { @spin.Indicator } else { @spin.defaultTemplate }
                         </span>
-                        @if (spin.Tip != null) { <div class="ant-spin-description ant-spin-text">@spin.Tip</div> }
+                        @if (spin.EffectiveDescription != null) { <div class="@spin.SemanticClass("description", "ant-spin-description ant-spin-text", "tip")" style="@spin.SemanticStyle("description", legacySlot: "tip")">@spin.EffectiveDescription</div> }
                     }
                 </div>
             }
 
             @if (!spin.Simple)
             {
-                <div class="ant-spin-container @spin.ContainerClass">
+                <div class="@spin.SemanticClass("container", $"ant-spin-container {spin.ContainerClass}")" style="@spin.SemanticStyle("container")">
                     @spin.ChildContent
                 </div>
             }

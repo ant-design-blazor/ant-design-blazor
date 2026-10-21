@@ -1,0 +1,21 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="@SemanticClass("root", "ant-tag-checkable-group")" style="@SemanticStyle("root", Style)" id="@Id" role="group" @ref="Ref">
+    @if (Options != null)
+    {
+        @foreach (var option in Options)
+        {
+            var selected = Multiple ? (Values?.Contains(option.Value) ?? false) : Value == option.Value;
+            <Tag Checkable="true"
+                 Checked="@selected"
+                 CheckedChanged="@(isChecked => HandleChange(option.Value, isChecked))"
+                 Disabled="@Disabled"
+                 Class="@GetItemClass(option)"
+                 Style="@GetItemStyle(option)"
+                 @key="option.Value">
+                @option.Label
+            </Tag>
+        }
+    }
+</div>

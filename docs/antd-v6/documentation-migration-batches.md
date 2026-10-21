@@ -310,3 +310,487 @@ catalog are shared infrastructure rather than UI components.
   retain the required `false` state instead of being omitted by Blazor's
   boolean-attribute handling.
 - Focused documentation preview tests pass: 4/4; build passes with 0 errors.
+
+## Browser comparison checkpoint: Select semantic popup and MaxCount
+
+- The Select Semantic DOM preview now uses a dedicated real Blazor Select with
+  its popup initially open and contained inside the preview. This matches the
+  React semantic example's open-popup state instead of reusing the closed Basic
+  Usage demo.
+- The preview's Select popup slots resolve against the rendered Blazor popup
+  listbox and option classes, so `popup.list` and `popup.listItem` can be
+  highlighted even though their React semantic marker selectors are not
+  classes emitted by the Blazor implementation.
+- Added React v6 `MaxCount` selection limiting for multiple/tags modes, a
+  matching Max Count example, and a focused regression test. Removing
+  selections remains available after reaching the limit.
+- Added Select's React `variant` (`outlined`, `filled`, `borderless`,
+  `underlined`) and `status` (`error`, `warning`) APIs. Legacy `Bordered`
+  remains the fallback when Variant is omitted, and FormItem validation still
+  supplies status when Select.Status is omitted. Dedicated Variants and Status
+  demos were added and visually checked against the compiled v6 CSS.
+- Added the Select Design Token section in English and Chinese, including all
+  24 public React v6 Select tokens, their `--ant-select-*` CSS variables,
+  descriptions, and defaults/dependencies. The existing C# generated
+  `SelectComponentToken` exposes the same 24 public properties.
+- React Select's 36 documented demo sources were compared against Blazor demo
+  metadata. The prior 24 matched React names now include Max Count, Status and
+  Variants (27/36); the remaining nine names—mostly React's debug-only demos,
+  plus component-token, custom-tokenization, option-label-center, and
+  style-class—still need an explicit one-by-one parity disposition. React
+  Icon's five documented demos all have Blazor counterparts; the Blazor
+  searchable categorized icon gallery is an additional capability.
+- Focused MaxCount test passes (1/1). Documentation site build passes for
+  `net10.0`; browser check confirms the semantic popup is open with four
+  options, Max Count allows three selected entries and rejects a fourth, and
+  Variants emit the four expected classes with matching filled/borderless/
+  underlined computed styling. Status emits the expected error/warning classes.
+- Added the missing user-facing React Select counterparts for Component Token,
+  Custom tokenization, Centered option labels, and Semantic DOM styling. The
+  `Tokenize` callback accepts a search string and returns values to commit;
+  the browser test typed `alpha;beta;` and observed both tags committed with an
+  empty search box. Component-token CSS variables were verified in the browser.
+  Blazor now has 31/36 React Select demo names; the five remaining sources are
+  React debug-only fixtures, which are not promoted into ordinary Blazor demos.
+- `net10.0` docs server build succeeds. The focused MaxCount test passes; the
+  wider Select-filtered suite has one unrelated existing failure in
+  `SemanticDomPreviewTests.Exposes_keyboard_focus_contract_and_selector_mapping`
+  (Alert selector order assertion).
+
+## Documentation and Tooltip parity batch
+
+- Refreshed the English and Chinese theme guides for v6 `ThemeConfig`, global
+  seed/map/alias tokens, component tokens, algorithms, CSS variables, and
+  nested `ConfigProvider` scoping. Added three interactive ConfigProvider
+  examples: token customization, preset algorithms, and nested scoped themes.
+- Added Tooltip's React v6 `arrow` and `color` capabilities. `Arrow=false`
+  removes the arrow while preserving the default; preset colors use the v6
+  palette classes and custom colors set the popup background, contrasting text,
+  and arrow variable. Added Arrow, Placement, Disabled and Colorful examples.
+- Regenerated component metadata after rebuilding the docs CLI so both the
+  demo list and reflected Tooltip API include the new examples and parameters.
+- `net10.0` docs server rebuild passes (0 errors). Browser check confirms all
+  four Tooltip examples are listed, both API parameters appear, no runtime
+  error banner is rendered, and hovering the pink preset yields the expected
+  pink popup, white text and matching arrow color. ConfigProvider browser
+  check also confirmed scoped `--ant-color-primary` values (#722ed1 and nested
+  #13a8a8).
+- Upload follow-up: implemented the React `maxCount` behavior (single-file
+  mode replaces the current entry; multi-file mode accepts only remaining
+  capacity), documented it in English and Chinese, and added Max Count and
+  File Type examples. The focused Upload tests pass 3/3; the docs server
+  rebuild passes with 0 errors. Browser verification confirms both examples
+  appear, `MaxCount` is in the API, PNG accept is present on the correct file
+  input, and no runtime error banner is shown.
+- Upload progress follow-up: exposed gradient stroke stops, stroke width,
+  percentage formatting, and percentage visibility for list progress bars.
+  Added the React `customize-progress-bar` counterpart using a static uploading
+  file so the demo is deterministic and offline, plus an `upload-png-only`
+  example validating MIME type through `BeforeUpload`; focused Upload tests
+  pass 4/4.
+- ColorPicker follow-up: added a custom `ChildContent` trigger while retaining
+  the built-in trigger as the default. Added controlled, disabled-alpha,
+  format, and custom-trigger examples, and documented the child trigger API in
+  English and Chinese. Browser interaction confirms the custom Button opens
+  the picker panel; the four new demos render without runtime errors.
+- QRCode follow-up: added sanitized HEX foreground/background color support
+  and a custom `StatusRender` fragment, then added size, error-correction,
+  custom-color, status, and custom-status demos. Docs server rebuild passes;
+  browser inspection confirms the custom SVG fill/background values and status
+  fragment are rendered with no runtime error. Canvas output, embedded icons,
+  and direct download remain separate feature gaps.
+- Drawer follow-up: added an active body skeleton for the React `loading`
+  behavior and a `MaskBlur` option with the v6 blur-mask class. Added loading,
+  basic-right, and three-way mask demos plus bilingual API documentation.
+  Focused Drawer tests pass, and browser interaction confirmed skeleton-to-body
+  transition after the loading delay.
+- Upload follow-up: completed React v6 `picture-circle` list support, including
+  its enum/DOM classes, token-driven item size, circular thumbnail layout, and
+  the `PictureCardSize`/`ActionsColor` component-token documentation. Added the
+  picture-circle and component-token demos. Browser verification confirms the
+  default 102px size, 144px scoped token override, 50% trigger/item radius,
+  8px flex-list gap, and a live file input; Upload tests pass 10/10.
+- Image follow-up: added the missing React `nested` demo with three nested
+  dialogs and a grouped image preview. Browser interaction opened all three
+  dialogs, opened the image preview from the innermost dialog, and showed no
+  Blazor runtime errors. The docs server rebuild passes with 0 errors.
+- Image parity follow-up: added preview-mask visibility, backdrop blur, custom
+  thumbnail cover content, and top/center/bottom cover placement. The React
+  `mask` demo exercises blurred, dimmed, and hidden masks with custom covers.
+  Focused Image tests pass 8/8. Browser verification confirms all three cover
+  placements, a computed `blur(4px)` backdrop filter, and `display: none` for
+  the hidden mask. Rebuilt the docs server with 0 errors and regenerated the
+  bilingual demo metadata.
+- Image Semantic DOM follow-up: added `ClassNames` and `Styles` mappings for
+  the thumbnail's root/image/cover and the preview's root/mask/body/footer/
+  actions/close slots. Added the React custom semantic styling demo and bilingual
+  API rows; Image tests pass 9/9, including class and inline-style checks across
+  the preview popup. Browser interaction confirms all thumbnail/popup classes
+  and inline declarations are applied.
+- Image render customization follow-up: implemented typed `ActionsRender` and
+  `ImageRender` contexts, including transform state and callable zoom/rotate/
+  flip/reset/close actions. Added both React v6 demos and bilingual API entries.
+  Image tests pass 11/11; browser interaction confirms the custom toolbar
+  invokes zoom and the custom image renderer observes the updated 2× state.
+  Image now has counterparts for all 12 current React demo names.
+- Timeline follow-up: exposed React v6's outlined/filled node variant, retaining
+  outlined as the default. Added the bilingual Variant demo and API rows; the
+  Timeline tests pass 14/14, including assertions for filled and horizontal
+  classes and numeric/string title-span values. Added React's horizontal layout
+  with start/end/alternate examples and title-span examples for 100px, 25%, and
+  numeric spacing. Browser verification confirms horizontal steps classes,
+  side-by-side item geometry, and the emitted `--ant-timeline-head-span` /
+  `--ant-timeline-head-span-ptg` values. Docs CLI metadata was regenerated and
+  the net10.0 docs server rebuild passes with 0 errors. Added the remaining
+  Title, Semantic Sample, and custom semantic styling demos.
+  Timeline now has counterparts for all 11 current React demo names.
+- Re-audited React's non-debug demo names after regeneration: largest remaining
+  gap groups include Upload (7), Drawer (7), ConfigProvider/List/Mentions/Tag/
+  TimePicker (9 each). These counts include feature-level gaps (for example Upload crop-image),
+  so continue by verifying each underlying API rather than adding showcase-only
+  placeholders.
+- Timeline Semantic DOM follow-up: added `ClassNames` and `Styles` for all
+  React v6 timeline slots and applied them to the matching nested nodes. Added
+  title, semantic sample, and semantic styling demos plus bilingual API rows.
+  Timeline structure tests pass 7/7; browser verification confirms custom
+  root/item/title classes and inline styles are applied without runtime errors.
+- Timeline data API follow-up: added `Items` with `TimelineItemData` for data-
+  driven title/content, rich fragments, color, loading icon, per-item placement,
+  class, and style, while retaining child-component usage. The Semantic Sample
+  demo now uses `Items`; Timeline tests pass 16/16. Browser verification shows
+  all three data nodes, colors, loading icon, and placement. Generated API
+  metadata and the rendered API table now include `Items` and
+  `IReadOnlyList<TimelineItemData>`.
+- Upload Semantic DOM follow-up: began implementing React's root, trigger, list,
+  and item `ClassNames`/`Styles` slots. Focused Upload and Timeline tests pass
+  13/13. Added the custom semantic styling demo; browser verification confirms
+  the four slot classes and inline styles are applied with no runtime error.
+- Re-audited React v6 demo names after regenerating metadata: Image (12/12) and
+  Timeline (11/11) now have counterparts for every current React demo name.
+  Upload's remaining named demo gaps are `transform-file`,
+  `upload-with-aliyun-oss`, and `crop-image`.
+- Upload action customization follow-up: added per-file `RemoveIcon`,
+  `PreviewIcon`, `DownloadIcon`, and `Extra` fragments, including download
+  actions for completed files. Added the React custom action icon/extra demo and
+  bilingual API rows. Combined Upload/Timeline tests pass 23/23; browser check
+  confirms the custom Star icon removes one item (3 files to 2), download
+  actions render for completed files, and per-file extras are shown without a
+  runtime error.
+- Upload preview follow-up: added the React `preview-file` counterpart with
+  `OnPreview` handling for both image and video files in a PictureCard list.
+  Added a focused callback test (Upload tests pass 13/13); browser interaction
+  confirms the video and image open the matching media in the preview modal,
+  with no runtime errors.
+- Upload drag-sorting follow-up: added the `DragSort` option, which reorders
+  the bound file list on drop and provides dragging/drop-target styling. Added
+  the bilingual React demo counterpart and a reorder notification test. Upload
+  tests pass 15/15. Browser event simulation dispatched native `dragstart`,
+  `dragover`, and `drop` events on the rendered file rows and verified the bound
+  order changed from A-B-C to B-C-A. The docs server must run in Development
+  for its static web assets to load during this browser check.
+- Semantic structure audit: the inventory generator now marks Cascader,
+  DatePicker, Drawer, Image, Modal, Select, TimePicker, and Timeline as
+  structure-tested based on their focused v6 markup tests. This corrects the
+  stale migration flags and moves the verified structure count from 58/69 to
+  66/69 definitions. The remaining unverified definitions are Transfer and
+  TreeSelect (two definitions). The StyleGen test suite passes 96 tests with 1
+  existing skip.
+- Transfer Semantic DOM follow-up: implemented shared and directional
+  `ClassNames`/`Styles` support (`source.*` and `target.*`), including styles
+  on the checkbox wrapper used by `itemIcon`. Added bilingual API/slot
+  documentation and a semantic styling example. The Transfer structure test
+  verifies shared styles, directional overrides, list-item/checkbox/footer
+  slots, and the existing `ListStyle` merge. Semantic inventory now records
+  Transfer as structure- and injection-tested; structure coverage is 67/69,
+  with TreeSelect's two definitions remaining. The net10 Transfer test passes
+  (1/1) and StyleGen tests pass (96/96, 1 existing skip). Browser verification
+  on an isolated Development server confirms the demo is listed, both custom
+  headers carry the shared semantic class, the source header also carries its
+  directional class/style, and target items carry their directional class and
+  inline style. The page is left open in a retained browser tab on port 5002;
+  the existing server on port 5000 was not stopped.
+- TreeSelect Semantic DOM follow-up: completed the two remaining structure
+  definitions, forwarding `ClassNames`/`Styles` through the shared Select
+  trigger and Tree popup nodes. Added bilingual semantic API docs and an
+  expanded, multiple-selection styling demo. Corrected catalog selectors to
+  match the rendered Blazor tree-select classes. Focused tests pass (2/2), the
+  net10 docs server builds with 0 errors, and browser inspection confirms the
+  selected tag and popup root/node/title/switcher render with their custom
+  semantic classes and inline styles. Semantic structure coverage is now
+  69/69. The isolated Development docs site is running on port 5004 and its
+  TreeSelect page remains open in the browser.
+- Upload OSS demo follow-up: added the React `upload-with-aliyun-oss` named
+  counterpart using the existing multipart `Data`, `Action`, `BeforeUpload`,
+  and `OnChange` APIs. The demo uses an upload mock plus explicitly marked
+  placeholder credentials, and documents that production credentials must be
+  server-issued. Regenerated bilingual docs metadata, verified the demo is
+  listed and renders an upload input in the browser, and rebuilt the net10 docs
+  server with 0 errors. Remaining parity review: React `transform-file` returns
+  a replacement Blob from `beforeUpload`, while Blazor's current callback only
+  accepts/rejects; React `crop-image` wraps Upload with the separate
+  `antd-img-crop` package, so it needs an integration sample rather than a
+  fabricated core Upload API.
+- Upload transform-file follow-up: added an asynchronous `TransformFile`
+  callback with a typed context/result, browser-side replacement of the
+  multipart `File`, and error reporting if transformation fails. Added the
+  React watermark demo using Canvas, bilingual API and demo docs, and a focused
+  callback test. Upload tests pass 15/15; ESLint and standalone TypeScript
+  checking pass. Docs metadata lists the new demo, and the net10 docs server
+  build succeeds with 0 errors. The Blazor byte round-trip is base64 encoded
+  and documented as intended for small files. Next Upload gap: integrate an
+  image-cropper sample matching React's external `antd-img-crop` wrapper.
+- Mentions follow-up: added React v6 `Variant` (outlined/filled/borderless/
+  underlined) and validation `Status` (error/warning) support, with bilingual
+  API docs and interactive demos. Focused Mentions tests pass 15/15, and the
+  net10 docs server builds with 0 errors. The generated API metadata includes
+  both demo entries. Fixed the Development layout to omit the legacy
+  `blazor.polyfill.min.js` on .NET 7+ (the net10 host does not serve that
+  endpoint); after rebuilding, browser inspection confirms all four variant
+  classes and both error/warning status classes are present in the real DOM.
+  The Mentions page is left open on port 5010 for manual review. StyleGen tests
+  pass 103/103 and `git diff --check` is clean.
+- AutoComplete Semantic DOM follow-up: aligned the popup's documented `list`
+  and `listItem` slots with React v6, exposed class/style injection for both,
+  and removed a redundant wrapper so the scroll container is the semantic
+  list node. Added bilingual slot docs and a visible style-customization demo.
+  Focused AutoComplete tests pass 4/4; the net10 docs server builds with 0
+  errors. Browser verification on the AutoComplete page confirms the demo
+  opens with four options and that the list and each option render the custom
+  class and inline style.
+- Cascader Semantic DOM follow-up: wired semantic class/style injection to the
+  root trigger, clear button, popup root, each menu column, and menu items; the
+  popup root now also honors the nested `popup.root` class. Expanded the style
+  demo and bilingual docs. The focused semantic-slot test passes, the net10
+  docs server builds with 0 errors, and browser verification confirms the
+  custom classes/styles on the clear button, popup root, both menu columns, and
+  all three visible items. In the broader Cascader suite, 8/9 tests passed; an
+  existing controlled-overlay test intermittently sees the hidden class (it
+  passes when run alone), unrelated to the semantic-slot assertion.
+- Design Token and Semantic DOM audit follow-up: corrected phase-one tracking
+  to recognize the shared runtime Design Token section rendered on every React
+  component page in both locales, rather than requiring duplicate headings in
+  each Markdown file. The audit now compares all 584 React-documented component
+  token rows against generated IR and the C# documentation catalog; token names,
+  bilingual descriptions, defaults, CSS variables, and row coverage all report
+  zero differences. Ten components have an upstream token table but no concrete
+  documented token rows, matching React's empty token metadata. Semantic DOM
+  generation remains based on React `semantic.md` (421/421 documented slots).
+  StyleGen tests pass 104/104, the net10 docs site is running on port 5010, and
+  the Spin page with its generated token table remains open for manual review.
+- Semantic type inventory follow-up: fixed TypeScript AST flattening so nested
+  records (for example `popup`, `body`, and `pagination`) are namespaces rather
+  than fictitious DOM nodes, and resolves `NonNullable<...>['popup']` aliases.
+  `TreeSelectPopupSemanticType` now maps to its actual `popup.*` paths. The
+  DatePicker Dumi demo's `popup.root` path is recognized as an alias for the
+  semantic.md `popup` node (`.ant-picker-dropdown`). Coverage improves from
+  56/69 to 66/69 definitions, 384/409 to 392/400 leaf slots, and 349/350 to
+  350/350 Dumi paths; all 421/421 semantic.md slots remain covered. Eight
+  remaining API-type-only paths are isolated to Drawer, Image, and Spin for
+  follow-up. Focused AST/catalog tests pass 25/25 and the full StyleGen suite
+  passes 106/106.
+- Semantic Markdown selector follow-up: corrected Image `popup.root` in the
+  generated Semantic DOM catalog from `.ant-image-preview-root` to the actual
+  React v6 semantic node `.ant-image-preview`, as confirmed by the generated
+  React semantic DOM snapshot. Added a generator regression test. The StyleGen
+  suite passes 106/106; the net10 docs server rebuilds with 0 errors (469
+  existing warnings). Browser verification opens the Image preview and selects
+  `popup.root`; the matching `.ant-image-preview` has a 2px orange semantic
+  highlight, while `.ant-image-preview-root` matches no elements. The page is
+  left open on port 5010 for manual review.
+- Spin capability/demo follow-up: added React-v6-style `Description`,
+  `ClassNames`, and `Styles` parameters, retained `Tip` as an obsolete alias,
+  and wired semantic classes/styles to root, section, indicator, description,
+  and nested content container. Added a semantic styling demo and bilingual API
+  documentation. Focused Spin tests pass 2/2 and the net10 docs server builds
+  with 0 errors. The Docs CLI dependency versions were aligned to 10.0.2 so it
+  can rebuild against the current component assembly; regenerated metadata now
+  includes the demo and all four API parameters. The refreshed Spin page is open
+  on port 5006 for manual review.
+- Image progress-render follow-up: implemented the React v6
+  `ImageProgressConfig.render(progress, percent)` capability as the typed
+  `ProgressRender` fragment, providing the normalized percentage, a
+  `HasPercent` flag, and a reusable default rail/indicator fragment (including
+  the indeterminate callback case). Added a bilingual API entry and an
+  interactive custom-progress demo. Image render tests pass 13/13; the net10
+  Docs Server builds with 0 errors. Browser verification clicked the demo's
+  +10% control and confirmed its custom label, progressbar ARIA value, and rail
+  all update from 63% to 73% without a demo error. The Image page is left open
+  on port 5017 for review.
+- Drawer Semantic DOM selector audit: corrected the generator and synchronized
+  catalog selector for `dragger` to React v6's `.ant-drawer-resizable-dragger`
+  (the old `.ant-drawer-resize-handle` matched no DOM). Added a generator
+  regression test. The StyleGen suite passes 108/108 and the net10 Docs Server
+  builds with 0 errors. Browser verification opened the resizable Drawer and
+  selected the `dragger` Semantic DOM item; the real dragger received the
+  expected orange 2px outline and highlight shadow. The page is left open on
+  port 5017 for manual review.
+- Semantic DOM completeness follow-up: catalog generation now unions React
+  `semantic.md` documentation nodes with all API-inventory `classNames` and
+  `styles` slots, instead of dropping API paths whenever a semantic page exists.
+  Added explicit React selectors for 13 previously omitted paths across Drawer,
+  Image, Menu, Spin, Splitter, DatePicker, and TimePicker. Coverage now reports
+  70/70 definitions and 423/423 API slots while retaining 421/421 documented
+  slots and 350/350 Dumi demo paths. Added union/selector regression tests; the
+  StyleGen suite passes 109/109 and the net10 Docs Server builds with 0 errors
+  (470 existing warnings). Browser inspection confirms all four Image progress
+  slots appear in the generated Semantic DOM list with their intended selectors,
+  and the Semantic DOM preview now renders the basic Image plus indeterminate
+  and determinate progress examples in the same scoped container. Selecting
+  `placeholder.progress.indicator` visibly outlines the actual 63% indicator
+  with the warning highlight. The Image Semantic DOM page remains open on port
+  5017 for manual review. API-only entries use generated fallback descriptions
+  where React has no semantic.md description.
+- Menu Semantic DOM follow-up: corrected API-only selector mappings and the
+  Blazor slot ownership for `subMenu.item`, `subMenu.itemContent`,
+  `subMenu.itemIcon`, `subMenu.itemTitle`, and `subMenu.list`; these map to
+  nested menu items and group nodes, not the submenu trigger. Added icon support
+  to `SubMenu`, expanded the semantic preview with a grouped, icon-bearing
+  submenu, and made it open by default. Focused Menu tests pass 2/2, the full
+  StyleGen suite passes 109/109, and the net10 Docs Server builds with 0 errors
+  (470 existing warnings). Browser verification clicked the nested item,
+  nested item icon/list, and `popup.root` entries; each highlights its actual
+  DOM target, including the open popup. The Menu page remains open on port 5017
+  for manual review.
+- TreeSelect parity follow-up: promoted the React-matching async, tree-line,
+  placement, status, and suffix demos from debug-only to the public docs, and
+  added Variant, MaxCount, and semantic style/class examples plus bilingual API
+  rows. Added React-v6 variant/status classes and enforced MaxCount on the
+  TreeSelect checkbox path using the visible checked-node strategy; tree
+  multiple-selection changes now propagate through the standard value-change
+  callbacks. Fixed the placement demo's invalid TreeNode `Value` attributes and
+  wired its placement radio group to the selector. The net10 Docs Server builds
+  with 0 errors (472 existing warnings), focused TreeSelect tests pass 7/7, and
+  generated metadata exposes 18 TreeSelect demos. Browser checks confirmed all
+  four variant classes, error/warning status classes, asynchronous expansion
+  from 3 to 6 nodes, and MaxCount allowing three checked leaves while rejecting
+  the fourth. No demo runtime exceptions remain; the TreeSelect page is open on
+  port 5017 for manual review.
+- Card Semantic DOM and API parity: split Card and Card.Meta into independent
+  semantic catalogs based on React's `semantic.md` and `semantic_meta.md`,
+  correcting Card's root selector and providing the five Card.Meta selectors.
+  Added Variant, ClassNames, and Styles support to Card, and ClassNames/Styles
+  to Card.Meta, while preserving deprecated legacy styling parameters. Added
+  separate real-component semantic demos and showed the Card.Meta preview on the
+  Card docs page. Semantic generator tests pass 26/26, focused Card render tests
+  pass 8/8, and the net10 Docs Server builds with 0 errors (472 existing
+  warnings). Browser verification confirms Card and Card.Meta are independently
+  selectable and Card.Meta root resolves to the rendered `.ant-card-meta`; the
+  page is left open at `http://127.0.0.1:5025/en-US/components/card` for review.
+- Card demo coverage follow-up: added the four missing React v6 demos—Component
+  Token, Flexible Content, Meta, and Style and Class—using real Card/CardMeta
+  components, ConfigProvider tokens, and semantic `ClassNames`/`Styles` maps.
+  Regenerated docs demo metadata (the Card page now lists all four demos) and
+  rebuilt the net10 Docs Server with 0 errors (472 existing warnings). Browser
+  inspection confirms the Component Token example renders both card sizes and
+  the Card page has no demo error alerts; the page remains open on port 5025.
+- Card React-name parity: renamed the existing no-border, grid, column, and
+  tabs demo identifiers to React's `border-less`, `grid-card`, `in-column`,
+  and `tabs`. The generated Card metadata now contains all 13 React demo names
+  (plus the additional Blazor component-token, semantic, and styling demos).
+- Demo parity audit reliability: fixed the browser inventory to unregister each
+  page's `pageerror` listener after reading it, preventing later route errors
+  from leaking into all preceding component results. The complete scan is being
+  rerun against the rebuilt Development server on port 5025.
+- Tag Semantic DOM and demo parity: added Tag `ClassNames`/`Styles`, mapped its
+  icon/content/close slots to rendered DOM, aligned simple text structure and
+  the close wrapper selector with React v6, and made the close control keyboard
+  activatable. Added bilingual style-class and semantic demos, plus a dedicated
+  Semantic DOM preview with an icon-bearing closable tag. Renamed existing
+  controlled, animation, icon, and status demos to React's identifiers; Tag now
+  matches 9/11 React demo names, with `draggable` and the CheckableTagGroup
+  semantic demo remaining. Corrected generated Tag selectors for content and
+  close; Tag render tests pass 20/20, StyleGen semantic catalog tests pass 3/3,
+  the net10 Docs Server builds with 0 errors, and browser inspection confirms
+  the content slot highlights the real `.ant-tag-content` node. The Tag page is
+  open on port 5025 for manual review.
+- CheckableTagGroup capability follow-up: added a reusable Blazor group with
+  single and multiple selection, per-item styling, semantic `root`/`item`
+  mappings, disabled behavior, and accessible checkbox roles/states. Added
+  keyboard support and disabled state to individual checkable Tags, upgraded
+  the Checkable demo to exercise both selection modes, and added the missing
+  CheckableTagGroup Semantic DOM demo. The generated selectors now cover both
+  Tag and group roots and target the actual `.ant-tag-checkable-group-item`.
+  Tag reaches 10/11 React demo names (only `draggable` remains missing). Focused
+  Tag tests pass 22/22, semantic-catalog tests pass 3/3, `git diff --check` is
+  clean, and the net10 Docs Server builds with 0 errors (472 existing warnings).
+  The browser confirms the single-selection initial value, checkbox roles, and
+  semantic item highlighting; the page remains open at port 5025.
+- Tag draggable parity: added root-level additional-attribute/event forwarding
+  so consumers can use native HTML drag events directly on `Tag`, then added a
+  reorderable three-tag demo matching React's `draggable` example. Expanded
+  bilingual API guidance. Tag now covers all 11/11 React demo names. Focused
+  Tag tests pass 23/23 and the Docs Server builds with 0 errors. Browser drag
+  simulation moved Tag 1 after Tag 2 and verified the rendered order changed to
+  Tag 2, Tag 1, Tag 3; the updated Tag page remains open on port 5025.
+- React-name inventory refresh: reran the browser audit across all 68 shared
+  component routes. It found 881 React demo names and 646 exact name matches
+  before this Splitter batch; 235 React names remained missing at that point.
+  This uses React names as the deficit measure and does not count Blazor-only
+  demos as coverage. React pages that fail hydration remain flagged separately.
+- Splitter Semantic DOM/style capability: implemented `ClassNames` and `Styles`
+  for root, panel, dragger, and the dragger default/active states; wired active
+  state to pointer dragging; added real style-class and Semantic DOM demos and
+  an interactive semantic preview. The catalog preview highlights the actual
+  default dragger with the warning outline, and the net10 Docs Server builds
+  with 0 errors. Splitter now has 6/12 React demo names; multiple panels,
+  collapsible-icon modes, lazy, customize, and reset remain to implement.
+- Splitter multiple-panel support: replaced the fixed two-pane markup with
+  panel/bar rendering for N panes, made each bar resize only its adjacent
+  panels, and applied panel `min`/`max` constraints. Added the React `multiple`
+  and `group` demos and removed the obsolete two-panel-only notice. Added
+  splitter CSS-variable class so token-backed trigger dimensions load; this
+  fixed the dragger's previously zero-width hit area. Collapsed panels now
+  restore their original automatic or explicit size and reverse their icon.
+  Focused Splitter tests pass 3/3 and the net10 Docs Server builds with 0
+  errors. Browser verification at port 5025 shows three equal panels/two
+  handles, a 45px drag changes only the selected adjacent pair, and collapse /
+  expand restores the original layout. The Splitter page remains open for
+  manual review. At this checkpoint, `lazy` and `reset` had been added; the
+  React demos `customize`, `collapsibleIcon`, `size-mix`, and `nested-in-tabs`
+  still remained.
+- Splitter collapsible visibility parity: fixed invisible collapse controls by
+  applying React's default `collapse-bar-hover-only` class. Added
+  `SplitterPanel.ShowCollapsibleIcon` for the React `auto` / `true` / `false`
+  visibility modes, including parent re-render notifications when the setting
+  changes, a bilingual `collapsibleIcon` demo, and render tests. Splitter now
+  includes 12 of the 15 React demo names; `customize`, `debug`, and
+  `nested-in-tabs` remain. Focused tests pass 6/6 and the
+  net10 Docs Server builds with 0 errors. Browser checks changed the live demo
+  from True to Auto (opacity 1 only on the hovered divider), False (all four
+  controls `display:none`), and back to True (all four visible). The Splitter
+  page is left open on port 5025 at the collapsible-icon demo for manual review.
+- Splitter mixed-size parity: added the React `size-mix` demo with two
+  interactive constraint sets (pixel defaults, min/max bounds, and percentage
+  minimums), plus bilingual demo documentation. `SplitterPanel` now notifies its
+  parent when `Min` or `Max` changes so live size-bucket switches re-render
+  panel styles. Focused Splitter tests pass 6/6, the Docs Server builds with 0
+  errors, and regenerated metadata includes the exact `size-mix` name. Browser
+  interaction switched to bucket 2 and verified panel widths of 300/100/600px;
+  the Splitter page remains open at the mixed-size demo for manual review.
+- Splitter customization parity: added the React `customize` demo and APIs for
+  custom dragger/collapse icons and hiding the default dragger indicator. Added
+  the matching customized dragger/collapse-bar CSS and the React component-token
+  overrides for split bar/trigger size. Browser inspection exposed that Splitter
+  was not applying cascaded `ThemeConfig.Components` values to its root; wired
+  the existing component-token style helper into the root and added a regression
+  test. Focused Splitter tests pass 9/9, docs metadata includes `customize`, and
+  the net10 Docs Server builds with 0 errors. Splitter now has counterparts for
+  13/15 React demo names (`debug` and `nested-in-tabs` remain); the live page is
+  left open at the customization demo for manual review.
+- Splitter collapse-control state parity: aligned the Less source with React's
+  hover/active backgrounds, keyboard focus outline, touch-device visibility,
+  and the `hover-only` / `always-visible` / `always-hidden` visibility modes.
+  Less compilation and `git diff --check` pass; browser computed styles match
+  React's 12×24px horizontal controls, 2px radius and blue hover token, and a
+  browser click collapses the adjacent panel.
+- Full React-name inventory refresh (2026-10-21): the live documentation
+  inventory now sees 68 matched routes and 881 React demo names, of which 654
+  names match Blazor; 227 React names remain missing. It also reports 41 pages
+  with React hydration errors, so those pages' demo counts require a static
+  source cross-check before being treated as final. Highest reported deficits
+  include Cascader, Input, QRCode, TimePicker and Breadcrumb.
+- Inventory reliability follow-up: the parity runner now scrolls both docs
+  sites through their full pages before counting demos, then waits for the
+  mounted demo list to stabilize. The complete rerun confirms the same 881 / 654
+  / 227 totals, while reducing React hydration-blocked pages from 41 to 39;
+  these pages remain explicitly flagged rather than silently accepted.
