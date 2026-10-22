@@ -127,7 +127,7 @@ node tools/AntDesign.StyleGen/src/cli.mjs sync-v6 \
 
 1. 从 React 项目生成组件/主题 Style IR。
 2. 生成 `GeneratedComponentTokens.cs`。
-3. 生成 `GeneratedThemeTokens.cs`。
+3. 生成 `GeneratedThemeTokens.cs`：包含 React Seed 默认值、全局 Token 元数据，以及各组件实际使用的全局 Token 关联。组件文档通过此关联生成中英文全局 Token 表格。
 4. 生成 `ThemeTokenProperties.cs` 快捷属性。
 5. 保存 React 编译 CSS 基准。
 6. 从 Ant Design checkout 的 `.dumi/theme/builtins/IconSearch/fields.ts` 同步图标分类，保存在 Blazor 文档项目的生成目录，并生成文档侧 `IconSearchCategories.g.cs`；图标 NuGet 包仅提供 SVG 名称、主题和组件类型清单。

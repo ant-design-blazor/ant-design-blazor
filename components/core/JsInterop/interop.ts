@@ -16,6 +16,7 @@ export {
   watermarkHelper,
   splitterHelper,
   drawerHelper,
+  qrCodeHelper,
 } from './modules/components/export'
 
 

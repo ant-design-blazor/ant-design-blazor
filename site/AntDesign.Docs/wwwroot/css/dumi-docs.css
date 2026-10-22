@@ -9,6 +9,14 @@ html {
   overscroll-behavior-x: contain;
 }
 
+/* React docs load Tailwind preflight's neutral border reset. Component theme
+ * rules are unlayered and take precedence over this host-page baseline. */
+@layer docs-reset {
+  *, ::before, ::after, ::backdrop, ::file-selector-button {
+    border: 0 solid;
+  }
+}
+
 @supports (text-autospace: normal) {
   html {
     text-autospace: normal;

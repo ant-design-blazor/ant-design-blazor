@@ -1,0 +1,15 @@
+<Space Direction="SpaceDirection.Vertical">
+    <SpaceItem><Segmented TValue="string" Labels="_types" @bind-Value="_type" /></SpaceItem>
+    <SpaceItem>
+        <QRCode @ref="_qrCode" Type="@_type" Value="https://ant.design/" BackgroundColor="rgba(255,255,255,0.5)"
+                Style="margin-bottom:16px" Icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
+        <Button Type="ButtonType.Primary" OnClick="DownloadCode">Download</Button>
+    </SpaceItem>
+</Space>
+
+@code {
+    private readonly string[] _types = ["canvas", "svg"];
+    private string _type = "canvas";
+    private AntDesign.QRCode _qrCode;
+    private Task DownloadCode() => _qrCode.DownloadAsync().AsTask();
+}

@@ -19,6 +19,8 @@ test('phase-one progress audits every React component token row and both runtime
     const report = JSON.parse(readFileSync(outputPath, 'utf8'));
     assert.deepEqual(report.documentation.componentTokenPages, { total: 65, migrated: 65, pending: 0 });
     assert.deepEqual(report.documentation.componentTokenRows, { total: 584, migrated: 584, pending: 0 });
+    assert.deepEqual(report.documentation.componentGlobalTokenPages, { total: 64, migrated: 64, pending: 0 });
+    assert.deepEqual(report.documentation.componentGlobalTokenRows, { total: 1464, migrated: 1464, pending: 0 });
     for (const [name, metric] of Object.entries(report.componentTokenDocumentation.tokenMetadataParity)) {
       assert.equal(metric.count, 0, `${name}: ${metric.samples.join(', ')}`);
     }

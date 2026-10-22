@@ -22,7 +22,7 @@ namespace AntDesign.Tests.Theming
             var mui = GeneratedPreviewThemes.All.Single(theme => theme.Key == "mui");
             Assert.Equal("#1976d2", mui.Tokens["colorPrimary"]);
             Assert.Equal("#fff", mui.Components["Button"]["primaryColor"]);
-            Assert.Contains("defaultTheme.components", GeneratedPreviewThemes.All.Single(theme => theme.Key == "v4").Unresolved);
+            Assert.Contains("components:defaultTheme.components", GeneratedPreviewThemes.All.Single(theme => theme.Key == "v4").Unresolved);
 
             var config = PreviewThemeConfigFactory.Create("mui");
             Assert.Equal("mui", config.Key);

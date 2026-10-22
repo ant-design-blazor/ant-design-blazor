@@ -111,9 +111,10 @@ namespace AntDesign
                 GetSemanticValue(Styles, legacySlot),
                 GetSemanticValue(Styles, slot)
             };
-            return string.Join(";", styleParts
+            var declarations = styleParts
                 .Where(value => !string.IsNullOrWhiteSpace(value))
-                .Select(value => value!.Trim().TrimEnd(';')));
+                .Select(value => value!.Trim().TrimEnd(';')).ToArray();
+            return declarations.Length == 0 ? null : string.Join(";", declarations);
         }
 
         private static string GetSemanticValue(IReadOnlyDictionary<string, string> values, string key)

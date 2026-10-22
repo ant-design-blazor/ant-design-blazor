@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "upstream": { "repository": "ant-design/ant-design", "component": "QRCode" },
+  "config": {
+    "timeoutMs": 30000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "sortClassTokens": true,
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "qrcode-base",
+      "component": "QRCode",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/qr-code?theme=light",
+        "scopeSelector": "#qr-code-demo-base .code-box-demo",
+        "rootSelector": ".ant-qrcode"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5540/en-US/components/qrcode",
+        "scopeSelector": "#components-qrcode-demo-base .code-box-demo",
+        "rootSelector": ".ant-qrcode"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minWidth", "padding", "margin", "alignItems", "alignSelf", "justifyContent", "flex", "fontFamily", "fontSize", "lineHeight", "color", "backgroundColor", "border", "borderRadius", "overflow"],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "canvas", "selector": "canvas", "minimumCount": 1 }
+      ],
+      "scenarios": [
+        { "id": "default" },
+        {
+          "id": "edit-value",
+          "actions": [
+            { "type": "fill", "reactSelector": "#qr-code-demo-base input", "blazorSelector": "#components-qrcode-demo-base input", "value": "https://ant.design/blazor-v6-check" },
+            { "type": "press", "reactSelector": "#qr-code-demo-base input", "blazorSelector": "#components-qrcode-demo-base input", "key": "Tab" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qrcode-loading",
+      "component": "QRCode loading cover",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/qr-code?theme=light",
+        "scopeSelector": "#qr-code-demo-status .code-box-demo",
+        "rootSelector": ".ant-qrcode:first-child"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5540/en-US/components/qrcode",
+        "scopeSelector": "#components-qrcode-demo-status .code-box-demo",
+        "rootSelector": ".ant-qrcode:first-child"
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "minWidth", "padding", "margin", "alignItems", "alignSelf", "justifyContent", "flex", "fontFamily", "fontSize", "lineHeight", "color", "backgroundColor", "border", "borderRadius", "overflow"],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "canvas", "selector": "canvas", "minimumCount": 1 },
+        { "path": "cover", "selector": ".ant-qrcode-cover", "minimumCount": 1 }
+      ],
+      "scenarios": [{ "id": "loading" }]
+    }
+  ]
+}

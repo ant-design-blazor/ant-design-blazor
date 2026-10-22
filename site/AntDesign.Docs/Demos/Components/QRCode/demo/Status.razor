@@ -1,5 +1,9 @@
-<Space Wrap>
+<Flex Gap="FlexGap.Medium" Wrap="FlexWrap.Wrap">
     <QRCode Value="https://ant.design" Status="loading" />
-    <QRCode Value="https://ant.design" Status="expired" />
+    <QRCode Value="https://ant.design" Status="expired" OnRefresh="Refresh" />
     <QRCode Value="https://ant.design" Status="scanned" />
-</Space>
+</Flex>
+
+@code {
+    private void Refresh() => Console.WriteLine("refresh");
+}

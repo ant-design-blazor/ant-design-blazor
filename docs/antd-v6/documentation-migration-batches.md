@@ -794,3 +794,34 @@ catalog are shared infrastructure rather than UI components.
   mounted demo list to stabilize. The complete rerun confirms the same 881 / 654
   / 227 totals, while reducing React hydration-blocked pages from 41 to 39;
   these pages remain explicitly flagged rather than silently accepted.
+
+### QRCode and global-token follow-up (2026-10-22)
+
+Added the seven missing public React QRCode demo names (`base`, `icon`, `type`,
+`customSize`, `download`, `Popover`, and `style-class`). The live page contains
+all 11 public React names, plus two retained Blazor examples. QRCode now supports
+canvas/SVG rendering, centered rectangular icons, explicit module margins,
+error-correction boosting, localized status templates, semantic root/cover
+customization, and a download API. The Semantic DOM preview exposes the cover
+as well as the canvas. Spin now emits live/busy ARIA attributes and omits unset
+semantic style attributes.
+
+The CLI generates seed defaults and component-to-global-token usage from the
+pinned React source. Shared documentation renders 1,464 consumed global-token
+rows across 64 component pages. Tests confirm nonempty defaults for all 234
+documented global tokens; this is coverage, not proof of complete algorithm or
+value parity. Targeted .NET 10 tests pass 50/50; the five targeted Node suites
+pass 10/10. Browser interaction verified size and error-level changes, and an
+independent QR decoder recovered the edited URL from the rendered canvas.
+
+The base QRCode normalized DOM tree and 20 sampled computed styles match React.
+Loading root/canvas styles also match; follow-up Spin markup and host border-reset
+changes still require a fresh browser capture. Raw HTML retains Razor whitespace
+differences. File download was canceled and a subsequent headless-browser launch
+failed with system-volume ENOSPC, so successful download-to-disk is not claimed.
+SVG path byte equality across the different QR encoders remains unaudited.
+
+A more complete pre-QRCode whole-site scan found 1,098 React demos, 974 Blazor
+demos, 764 exact normalized name matches, and 334 missing React names over 68
+paired routes, with one blocked page. Older totals based on incomplete hydration
+are superseded; a post-batch whole-site inventory is still required.

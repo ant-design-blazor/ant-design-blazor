@@ -1,6 +1,8 @@
-<Space Wrap>
-    <QRCode Value="https://ant.design" ErrorLevel="L" />
-    <QRCode Value="https://ant.design" ErrorLevel="M" />
-    <QRCode Value="https://ant.design" ErrorLevel="Q" />
-    <QRCode Value="https://ant.design" ErrorLevel="H" />
-</Space>
+<QRCode ErrorLevel="@_level" Style="margin-bottom:16px"
+        Value="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
+<Segmented TValue="string" Labels="_levels" @bind-Value="_level" />
+
+@code {
+    private readonly string[] _levels = ["L", "M", "Q", "H"];
+    private string _level = "L";
+}

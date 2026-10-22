@@ -3,12 +3,14 @@
 
 @{
     var tokens = ComponentTokenCatalog.Get(Component);
+    var globalTokens = ComponentTokenCatalog.GetGlobal(Component);
 }
 
 <section class="markdown api-container component-token-documentation" id="design-token">
     <h2>@(IsChinese ? "Design Token" : "Design Token")</h2>
     @if (tokens.Count > 0)
     {
+        <h3>@(IsChinese ? "组件 Token" : "Component Token")</h3>
         <p>
             @if (IsChinese)
             {
@@ -56,13 +58,44 @@
             </tbody>
         </table>
     }
-    else if (IsChinese)
+    else if (globalTokens.Count == 0 && IsChinese)
     {
         <p>此组件没有独立的组件级 Design Token；尺寸、颜色和状态由全局 Design Token 与组件默认样式提供。</p>
     }
-    else
+    else if (globalTokens.Count == 0)
     {
         <p>This component has no component-specific Design Tokens; its dimensions, colors, and states inherit from global Design Tokens and component defaults.</p>
+    }
+    @if (globalTokens.Count > 0)
+    {
+        <h3>@(IsChinese ? "全局 Token" : "Global Token")</h3>
+        <p>
+            @(IsChinese ? "以下为 React v6 记录的此组件使用的全局 Token。通过 ConfigProvider 的 ThemeConfig.Token 修改，默认值与 Blazor 默认算法一致。" : "These global tokens are used by this component in React v6. Customize them through ConfigProvider ThemeConfig.Token. Defaults are resolved by the Blazor default algorithm.")
+            <a href="/@Language/docs/customize-theme#global-token-reference">@(IsChinese ? "定制主题" : "Customize Theme")</a>
+        </p>
+        <table class="api properties-api global-token-table">
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>@(IsChinese ? "说明" : "Description")</th>
+                    <th>@(IsChinese ? "CSS 变量" : "CSS Variable")</th>
+                    <th>@(IsChinese ? "类型" : "Type")</th>
+                    <th>@(IsChinese ? "默认值" : "Default Value")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var token in globalTokens)
+                {
+                    <tr>
+                        <td class="api-code-identifier">@token.Name</td>
+                        <td class="api-description">@(IsChinese ? token.Description : token.DescriptionEn)</td>
+                        <td><code>@token.CssVariable</code></td>
+                        <td><code>@token.Type</code></td>
+                        <td><code>@(DefaultGlobalTokens.TryGetValue(token.Name, out var value) ? value : "—")</code></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 </section>
 
@@ -71,4 +104,5 @@
     [Parameter] public string Language { get; set; } = "en-US";
 
     private bool IsChinese => string.Equals(Language, "zh-CN", StringComparison.OrdinalIgnoreCase);
+    private static readonly IReadOnlyDictionary<string, string> DefaultGlobalTokens = new ThemeConfig().GetResolvedTokenValues();
 }

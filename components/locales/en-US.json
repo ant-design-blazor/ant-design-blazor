@@ -1,5 +1,10 @@
 ﻿{
   "locale": "en-US",
+  "QRCode": {
+    "expired": "QR code expired",
+    "refresh": "Refresh",
+    "scanned": "Scanned"
+  },
   "Pagination": {
     "items_per_page": "/ page",
     "jump_to": "Go to",

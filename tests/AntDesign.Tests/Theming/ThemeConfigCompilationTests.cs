@@ -7,6 +7,24 @@ namespace AntDesign.Tests.Theming
     public sealed class ThemeConfigCompilationTests
     {
         [Fact]
+        public void DefaultAndDarkAlgorithmsResolveGeneratedSeedAndHeadingDefaults()
+        {
+            var light = new ThemeConfig().GetResolvedTokenValues();
+            Assert.Equal("#1677ff", light["colorPrimary"]);
+            Assert.Equal("32", light["controlHeight"]);
+            Assert.Equal("38", light["fontSizeHeading1"]);
+            Assert.Equal("16", light["fontSizeHeading5"]);
+            Assert.Equal("1.5", light["lineHeightHeading5"]);
+            Assert.Equal("0.1s", light["motionDurationFast"]);
+            Assert.Equal("#4096ff", light["colorPrimaryHover"]);
+            Assert.Equal(light["colorError3"], light["colorErrorBgActive"]);
+
+            var dark = new ThemeConfig { Algorithm = "dark" }.GetResolvedTokenValues();
+            Assert.Equal("rgba(255, 255, 255, 0.85)", dark["colorText"]);
+            Assert.Equal("#141414", dark["colorBgContainer"]);
+        }
+
+        [Fact]
         public void MergesTypedSeedAliasAndDynamicTokens()
         {
             var config = new ThemeConfig

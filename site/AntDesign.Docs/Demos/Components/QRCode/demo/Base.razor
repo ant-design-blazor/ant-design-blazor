@@ -1,0 +1,8 @@
+<Space Direction="SpaceDirection.Vertical" Align="SpaceAlign.Center">
+    <SpaceItem><QRCode Value="@(string.IsNullOrEmpty(_text) ? "-" : _text)" /></SpaceItem>
+    <SpaceItem><Input @bind-Value="_text" Placeholder="-" MaxLength="60" /></SpaceItem>
+</Space>
+
+@code {
+    private string _text = "https://ant.design/";
+}

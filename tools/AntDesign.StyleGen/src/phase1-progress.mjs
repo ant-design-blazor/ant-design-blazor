@@ -25,6 +25,7 @@ const reactComponentsRoot = path.resolve(repoRoot, inventory.source?.path ?? '..
 const componentsPage = fs.readFileSync(path.join(repoRoot, 'site/AntDesign.Docs/Pages/Components.razor'), 'utf8');
 const componentTokenRenderer = fs.readFileSync(path.join(repoRoot, 'site/AntDesign.Docs/Components/ComponentTokenDocumentation.razor'), 'utf8');
 const generatedComponentTokens = fs.readFileSync(path.join(repoRoot, 'components/theming/GeneratedComponentTokens.cs'), 'utf8');
+const generatedThemeTokens = fs.readFileSync(path.join(repoRoot, 'components/theming/GeneratedThemeTokens.cs'), 'utf8');
 const reactTokenMetadata = JSON.parse(fs.readFileSync(path.join(reactComponentsRoot, 'version/token-meta.json'), 'utf8'));
 const reactTokenValues = JSON.parse(fs.readFileSync(path.join(reactComponentsRoot, 'version/token.json'), 'utf8'));
 const componentTokenIr = styleIr.tokens.filter(token => token.kind === 'component');
@@ -61,6 +62,19 @@ const expectedDocumentedTokens = Object.entries(reactTokenMetadata.components ??
   ? tokens.map(token => ({ component, token }))
   : []);
 const tokenMetadataParity = { missingIrTokens: [], missingDocumentedRows: [], unexpectedDocumentedRows: [], mismatchedDescriptions: [], mismatchedEnglishDescriptions: [], mismatchedDefaults: [], mismatchedCssVariables: [] };
+const globalSectionIsWired = /ComponentTokenCatalog\.GetGlobal\(Component\)/.test(componentTokenRenderer)
+  && /global-token-table/.test(componentTokenRenderer);
+const globalUsageRows = new Set([...generatedThemeTokens.matchAll(/\["([^"\n]+)"\] = new string\[\] \{ ([^\n]*) \}/g)]
+  .flatMap(([, component, names]) => [...names.matchAll(/"([^"\n]+)"/g)].map(([, name]) => tokenKey(component, name))));
+const expectedGlobalUsage = Object.entries(reactTokenValues).flatMap(([component, values]) =>
+  documentedComponentNames.has(normalizeTokenOwner(component))
+    ? (values.global ?? []).filter(name => Object.hasOwn(reactTokenMetadata.global ?? {}, name)).map(name => ({ component, name }))
+    : []);
+const expectedGlobalUsageKeys = new Set(expectedGlobalUsage.map(({ component, name }) => tokenKey(component, name)));
+tokenMetadataParity.missingGlobalUsageRows = expectedGlobalUsage.filter(({ component, name }) => !globalSectionIsWired || !globalUsageRows.has(tokenKey(component, name)))
+  .map(({ component, name }) => `${component}.${name}`);
+tokenMetadataParity.unexpectedGlobalUsageRows = [...globalUsageRows].filter(key => documentedComponentNames.has(key.split(':')[0]) && !expectedGlobalUsageKeys.has(key));
+const globalUsageComponents = [...new Set(expectedGlobalUsage.map(({ component }) => normalizeTokenOwner(component)))];
 for (const { component, token } of expectedDocumentedTokens) {
   const key = tokenKey(component, token.token);
   const irToken = componentTokenIrByKey.get(key);
@@ -87,6 +101,7 @@ for (const [key, definition] of generatedTokenDocumentation) {
 const report = {
   schemaVersion: 1,
   phase: 1,
+  verificationScope: 'Generated API, token, documentation, and semantic catalog coverage. Runtime DOM/CSS/visual parity requires the component-specific browser reports recorded in dom-style-parity.md.',
   source: {
     semanticInventory: 'docs/antd-v6/semantic-dom-inventory.json',
     styleIr: '.vibedev/generated/antd-v6/ir/style-ir.json',
@@ -110,6 +125,9 @@ const report = {
     themePreview: metric(1, fs.existsSync(path.join(repoRoot, 'site/AntDesign.Docs/Pages/ThemeMigrationPreview.razor')) ? 1 : 0),
     componentTokenPages: metric(componentTokenDocs.length, tokenDocsComplete),
     componentTokenRows: metric(expectedDocumentedTokens.length, expectedDocumentedTokens.length - tokenMetadataParity.missingDocumentedRows.length),
+    componentGlobalTokenPages: metric(globalUsageComponents.length, globalSectionIsWired ? globalUsageComponents.filter(component =>
+      expectedGlobalUsage.filter(value => normalizeTokenOwner(value.component) === component).every(({ name }) => globalUsageRows.has(tokenKey(component, name)))).length : 0),
+    componentGlobalTokenRows: metric(expectedGlobalUsage.length, expectedGlobalUsage.length - tokenMetadataParity.missingGlobalUsageRows.length),
   },
   componentTokenDocumentation: {
     totalReactComponentsWithTokenTable: componentTokenDocs.length,

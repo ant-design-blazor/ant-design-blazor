@@ -69,7 +69,7 @@ async function readRoutes(page, url) {
   });
 }
 
-async function waitForSettledPage(page) {
+export async function waitForSettledPage(page) {
   // Dumi and Blazor may append demos after the initial document load. Waiting for
   // full network idle can hang for minutes on pages with long-lived requests,
   // so use a short idle window followed by bounded DOM stability sampling.
@@ -86,7 +86,7 @@ async function waitForSettledPage(page) {
   }, { timeout: 8000, polling: 250 }).catch(() => {});
 }
 
-async function scrollToLoadAllDemos(page) {
+export async function scrollToLoadAllDemos(page) {
   await page.evaluate(async () => {
     const pause = (duration) => new Promise((resolve) => setTimeout(resolve, duration));
     let previousHeight = 0;

@@ -10,6 +10,8 @@ import { generateReactCssBaseline } from './react-css-baseline.mjs';
 import { generateIconCategoriesSource, syncAntDesignIconCategories } from './icon-categories.mjs';
 import { extractComponentTokenDefinitions } from './component-tokens.mjs';
 import { syncGlobalTokenDocs } from './global-token-docs.mjs';
+import { renderComponentGlobalTokenCatalog } from './component-global-tokens.mjs';
+import { renderSeedTokenDefaults } from './seed-token-defaults.mjs';
 
 const usage = `Usage:
   node src/cli.mjs sync --antd-path <path> [--blazor-path <path>] [--revision <revision>] --output <path>
@@ -516,6 +518,9 @@ async function generateCsharpThemeTokens(args) {
   }
   const tokenMetaPath = join(root, 'components/version/token-meta.json');
   const tokenMetadata = existsSync(tokenMetaPath) ? await readJson(tokenMetaPath, 'React Design Token metadata') : null;
+  const tokenDataPath = join(root, 'components/version/token.json');
+  const tokenData = existsSync(tokenDataPath) ? await readJson(tokenDataPath, 'React component token usage') : {};
+  const seedSource = await readFile(join(root, 'components/theme/themes/seed.ts'), 'utf8');
   const globalTokens = Object.entries(tokenMetadata?.global ?? {}).map(([name, token]) => ({
     name,
     description: token.desc ?? '',
@@ -543,6 +548,7 @@ async function generateCsharpThemeTokens(args) {
       '    }',
       '',
     ]),
+    ...renderSeedTokenDefaults(seedSource).split('\n'),
     '    public sealed class GlobalTokenDefinition',
     '    {',
     '        public string Name { get; }',
@@ -563,6 +569,7 @@ async function generateCsharpThemeTokens(args) {
     '        });',
     '    }',
     '',
+    ...renderComponentGlobalTokenCatalog(tokenData, tokenMetadata ?? {}).split('\n'),
     '    public sealed class GeneratedThemeAlgorithmDefinition',
     '    {',
     '        public string Name { get; }',

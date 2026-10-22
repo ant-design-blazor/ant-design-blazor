@@ -1,30 +1,56 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="ant-qrcode @(Bordered ? "ant-qrcode-bordered" : string.Empty) @Class" style="width:@(Size)px;height:@(Size)px;@Style" role="img" aria-label="QR code for @Value">
-    @if (Status == "active")
-    {
-        @((MarkupString)SvgMarkup)
-    }
-    else if (StatusRender is not null)
-    {
-        <div class="ant-qrcode-cover" aria-live="polite">@StatusRender</div>
-    }
-    else
-    {
-        <div class="ant-qrcode-cover" aria-live="polite">
-            @if (Status == "loading")
-            {
-                <Spin Spinning="true" />
-            }
-            else
-            {
-                <span>@Status</span>
-                @if (Status == "expired")
+@if (HasValue)
+{
+    <div class="@RootClass" style="@RootStyle" id="@Id" @ref="Ref">
+        @if (Status != "active")
+        {
+            <div class="@Join(" ", "ant-qrcode-cover", SemanticValue(ClassNames, "cover"))" style="@SemanticValue(Styles, "cover")">
+                @if (StatusTemplate is not null)
                 {
-                    <button type="button" @onclick="Refresh">Refresh</button>
+                    @StatusTemplate(StatusInfo)
                 }
+                else if (StatusRender is not null)
+                {
+                    @StatusRender
+                }
+                else if (Status == "loading")
+                {
+                    <Spin />
+                }
+                else if (Status == "scanned")
+                {
+                    <p class="ant-qrcode-scanned">@Locale.Scanned</p>
+                }
+                else if (Status == "expired")
+                {
+                    <p class="ant-qrcode-expired">@Locale.Expired</p>
+                    @if (OnRefresh.HasDelegate)
+                    {
+                        <Button Type="ButtonType.Link" Icon="reload" OnClick="Refresh">@Locale.Refresh</Button>
+                    }
+                }
+            </div>
+        }
+        @if (IsSvg)
+        {
+            <svg xmlns="http://www.w3.org/2000/svg" width="@Size" height="@Size" viewBox="0 0 @ModuleCount @ModuleCount" role="img">
+                <path fill="@BackgroundColor" d="@BackgroundPath" shape-rendering="crispEdges" />
+                <path fill="@(Color ?? "currentColor")" d="@ForegroundPath" shape-rendering="crispEdges" />
+                @if (!string.IsNullOrEmpty(Icon))
+                {
+                    <image href="@Icon" x="@Number(ImageX)" y="@Number(ImageY)" width="@Number(ImageWidth)" height="@Number(ImageHeight)" preserveAspectRatio="none" crossorigin="anonymous" />
+                }
+            </svg>
+        }
+        else
+        {
+            <canvas height="@Size" width="@Size" role="img"></canvas>
+            @if (!string.IsNullOrEmpty(Icon))
+            {
+                <img alt="QR-Code" src="@Icon" style="display:none" crossorigin="anonymous" />
             }
-        </div>
-    }
-</div>
+        }
+    </div>
+}

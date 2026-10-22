@@ -315,6 +315,13 @@ namespace AntDesign
             public static string TriggerFileDownload => $"{FUNC_PREFIX}triggerFileDownload";
         }
 
+        public static class QRCodeHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "qrCodeHelper.";
+            public static string Draw => $"{FUNC_PREFIX}draw";
+            public static string Download => $"{FUNC_PREFIX}download";
+        }
+
         public static class WatermarkHelper
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "watermarkHelper.";

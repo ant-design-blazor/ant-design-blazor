@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "phase": 1,
+  "verificationScope": "Generated API, token, documentation, and semantic catalog coverage. Runtime DOM/CSS/visual parity requires the component-specific browser reports recorded in dom-style-parity.md.",
   "source": {
     "semanticInventory": "docs/antd-v6/semantic-dom-inventory.json",
     "styleIr": ".vibedev/generated/antd-v6/ir/style-ir.json"
@@ -79,6 +80,16 @@
       "total": 584,
       "migrated": 584,
       "pending": 0
+    },
+    "componentGlobalTokenPages": {
+      "total": 64,
+      "migrated": 64,
+      "pending": 0
+    },
+    "componentGlobalTokenRows": {
+      "total": 1464,
+      "migrated": 1464,
+      "pending": 0
     }
   },
   "componentTokenDocumentation": {
@@ -125,6 +136,14 @@
         "samples": []
       },
       "mismatchedCssVariables": {
+        "count": 0,
+        "samples": []
+      },
+      "missingGlobalUsageRows": {
+        "count": 0,
+        "samples": []
+      },
+      "unexpectedGlobalUsageRows": {
         "count": 0,
         "samples": []
       }

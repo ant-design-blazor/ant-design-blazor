@@ -17,7 +17,8 @@ namespace AntDesign.Theming
         public string Name => "default";
         public IEnumerable<ResolvedToken> Resolve(IEnumerable<DesignToken> tokens)
         {
-            var values = tokens.ToDictionary(token => token.Name, token => token.Value, StringComparer.Ordinal);
+            var values = GeneratedSeedTokenDefaults.All.ToDictionary(token => token.Key, token => token.Value, StringComparer.Ordinal);
+            foreach (var token in tokens) values[token.Name] = token.Value;
             AddDerived(values, "controlHeightSM", values.Get("controlHeight", "32"), value => Scale(value, .75));
             AddDerived(values, "controlHeightXS", values.Get("controlHeight", "32"), value => Scale(value, .5));
             AddDerived(values, "controlHeightLG", values.Get("controlHeight", "32"), value => Scale(value, 1.25));
@@ -93,11 +94,12 @@ namespace AntDesign.Theming
             values["fontSize"] = Number(sizes[1]);
             values["fontSizeLG"] = Number(sizes[2]);
             values["fontSizeXL"] = Number(sizes[3]);
-            values["fontSizeHeading5"] = Number(sizes[4]);
-            values["fontSizeHeading4"] = Number(sizes[5]);
-            values["fontSizeHeading3"] = Number(sizes[6]);
-            values["fontSizeHeading2"] = Number(sizes[7]);
-            values["fontSizeHeading1"] = Number(sizes[8]);
+            for (var heading = 1; heading <= 5; heading++)
+            {
+                var size = sizes[7 - heading];
+                values[$"fontSizeHeading{heading}"] = Number(size);
+                values[$"lineHeightHeading{heading}"] = Number((size + 8) / size);
+            }
             values["lineHeight"] = Number((baseSize + 8) / baseSize);
             values["lineHeightSM"] = Number((sizes[0] + 8) / sizes[0]);
             values["lineHeightLG"] = Number((sizes[2] + 8) / sizes[2]);
@@ -129,6 +131,8 @@ namespace AntDesign.Theming
         {
             var background = values.Get("colorBgBase", dark ? "#000000" : "#ffffff");
             var text = values.Get("colorTextBase", dark ? "#ffffff" : "#000000");
+            if (string.IsNullOrEmpty(background)) background = dark ? "#000000" : "#ffffff";
+            if (string.IsNullOrEmpty(text)) text = dark ? "#ffffff" : "#000000";
             values["colorBgBase"] = background;
             values["colorTextBase"] = text;
             values["colorShadow"] = values.Get("colorShadow", dark ? "rgba(255, 255, 255, 0.2)" : "#000000");
@@ -165,13 +169,14 @@ namespace AntDesign.Theming
                 values[$"{prefix}BgHover"] = values.Get(prefix + "2", "");
                 values[$"{prefix}Border"] = values.Get(prefix + "3", "");
                 values[$"{prefix}BorderHover"] = values.Get(prefix + "4", "");
-                values[$"{prefix}Hover"] = values.Get(prefix + (name == "Error" ? "5" : "4"), "");
+                values[$"{prefix}Hover"] = values.Get(prefix + (name is "Primary" or "Error" ? "5" : "4"), "");
                 values[$"{prefix}Active"] = values.Get(prefix + "7", "");
                 values[$"{prefix}TextHover"] = values.Get(prefix + "8", "");
                 values[$"{prefix}Text"] = values.Get(prefix + "9", "");
                 values[$"{prefix}TextActive"] = values.Get(prefix + "10", "");
             }
             var link = values.Get("colorLink", values.Get("colorInfo", ""));
+            if (string.IsNullOrEmpty(link)) link = values.Get("colorInfo", "");
             var linkPalette = dark ? AntColorPalette.GenerateDark(link, "#141414") : AntColorPalette.Generate(link);
             if (linkPalette.Length == 10)
             {
@@ -180,6 +185,7 @@ namespace AntDesign.Theming
                 values["colorLinkActive"] = dark ? linkPalette[4] : linkPalette[6];
             }
             values["colorErrorBgFilledHover"] = ColorMath.Mix(values.Get("colorError2", ""), values.Get("colorError4", ""), 50);
+            values["colorErrorBgActive"] = values.Get("colorError3", "");
             values["colorBgMask"] = ColorMath.Alpha("#000000", .45);
         }
 
@@ -255,8 +261,13 @@ namespace AntDesign.Theming
         public string Name => "dark";
         public IEnumerable<ResolvedToken> Resolve(IEnumerable<DesignToken> tokens)
         {
-            var values = new DefaultThemeAlgorithm().Resolve(tokens).ToList();
+            var input = tokens.ToArray();
+            var overrides = input.ToDictionary(token => token.Name, token => token.Value, StringComparer.Ordinal);
+            var values = new DefaultThemeAlgorithm().Resolve(input).ToList();
             var map = values.ToDictionary(token => token.Name, token => token.Value, StringComparer.Ordinal);
+            map["colorBgBase"] = overrides.Get("colorBgBase", "");
+            map["colorTextBase"] = overrides.Get("colorTextBase", "");
+            map["colorShadow"] = overrides.Get("colorShadow", "rgba(255, 255, 255, 0.2)");
             foreach (var name in new[] { "colorPrimary", "colorSuccess", "colorWarning", "colorError", "colorInfo", "colorLink" })
             {
                 if (!map.TryGetValue(name, out var color)) continue;

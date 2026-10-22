@@ -7,6 +7,17 @@ namespace AntDesign.Docs.Services;
 
 public static class ComponentTokenCatalog
 {
+    private static readonly IReadOnlyDictionary<string, GlobalTokenDefinition> GlobalTokens = GeneratedGlobalTokens.All
+        .ToDictionary(token => token.Name, StringComparer.Ordinal);
+
+    public static IReadOnlyList<GlobalTokenDefinition> GetGlobal(string component)
+    {
+        var key = (component ?? string.Empty).Replace("-", "").ToLowerInvariant();
+        return GeneratedComponentGlobalTokens.All.TryGetValue(key, out var names)
+            ? names.Where(GlobalTokens.ContainsKey).Select(name => GlobalTokens[name]).ToArray()
+            : Array.Empty<GlobalTokenDefinition>();
+    }
+
     public static IReadOnlyList<ComponentTokenDefinition> Get(string component)
     {
         if (string.IsNullOrWhiteSpace(component)) return Array.Empty<ComponentTokenDefinition>();

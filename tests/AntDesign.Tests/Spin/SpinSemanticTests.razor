@@ -3,6 +3,17 @@
 
 @code {
     [Fact]
+    public void Simple_spin_announces_loading_and_omits_unset_semantic_style_attributes()
+    {
+        var cut = Context.Render(@<Spin />);
+        var root = cut.Find(".ant-spin");
+        Assert.Equal("polite", root.GetAttribute("aria-live"));
+        Assert.Equal("true", root.GetAttribute("aria-busy"));
+        Assert.False(root.HasAttribute("style"));
+        Assert.False(cut.Find(".ant-spin-dot-holder").HasAttribute("style"));
+    }
+
+    [Fact]
     public void Nested_spin_applies_semantic_classes_styles_and_tip_alias()
     {
         var classNames = new Dictionary<string, string>

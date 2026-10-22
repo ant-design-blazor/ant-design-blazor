@@ -1234,12 +1234,14 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
     {
         var cut = Context.RenderComponent<AntDesign.QRCode>(parameters => parameters
             .Add(x => x.Value, "https://ant.design")
+            .Add(x => x.Type, "svg")
+            .Add(x => x.OnRefresh, () => { })
             .Add(x => x.Size, 128));
 
         Assert.NotNull(cut.Find(".ant-qrcode"));
         Assert.NotNull(cut.Find(".ant-qrcode svg"));
         Assert.Contains("<path", cut.Find(".ant-qrcode svg").InnerHtml, StringComparison.Ordinal);
-        Assert.Contains("width:128px", cut.Find(".ant-qrcode").GetAttribute("style"), StringComparison.Ordinal);
+        Assert.Contains("width: 128px", cut.Find(".ant-qrcode").GetAttribute("style"), StringComparison.Ordinal);
 
         cut.SetParametersAndRender(parameters => parameters.Add(x => x.Status, "expired"));
         Assert.NotNull(cut.Find(".ant-qrcode-cover"));

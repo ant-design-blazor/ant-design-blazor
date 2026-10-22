@@ -1,0 +1,21 @@
+<Flex Gap="FlexGap.Medium" Wrap="FlexWrap.Wrap">
+    <QRCode Value="https://ant.design/" Size="160" ClassNames="_classes" Styles="_blueStyles" />
+    <QRCode Value="https://ant.design/" Size="160" Type="canvas" ClassNames="_classes" Styles="CanvasStyles"
+            Icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
+</Flex>
+
+<style>
+    .qrcode-semantic-root { border:1px solid #ccc; border-radius:8px; padding:16px; }
+</style>
+
+@code {
+    private readonly Dictionary<string, string> _classes = new() { ["root"] = "qrcode-semantic-root" };
+    private readonly Dictionary<string, string> _blueStyles = new()
+    {
+        ["root"] = "border:2px solid #1890ff;border-radius:8px;padding:16px;background-color:rgba(24,144,255,0.1)"
+    };
+    private IReadOnlyDictionary<string, string> CanvasStyles => new Dictionary<string, string>
+    {
+        ["root"] = "border:2px solid #ff4d4f;border-radius:8px;padding:16px;background-color:rgba(255,77,79,0.1)"
+    };
+}

@@ -1,17 +1,27 @@
-<Space Wrap>
+<Flex Gap="FlexGap.Medium" Wrap="FlexWrap.Wrap">
     <QRCode Value="https://ant.design" Status="loading">
-        <StatusRender><Spin Spinning="true" /> <span>Preparing code…</span></StatusRender>
+        <StatusTemplate>
+            <Space Direction="SpaceDirection.Vertical">
+                <SpaceItem><Spin /></SpaceItem>
+                <SpaceItem><p>Loading...</p></SpaceItem>
+            </Space>
+        </StatusTemplate>
     </QRCode>
     <QRCode Value="https://ant.design" Status="expired" OnRefresh="Refresh">
-        <StatusRender>
+        <StatusTemplate Context="info">
             <div style="text-align:center">
-                <p>Code expired</p>
-                <Button Type="ButtonType.Link" OnClick="Refresh">Refresh</Button>
+                <AntDesign.Icon Type="close-circle" Theme="IconThemeType.Fill" Style="color:red" /> @info.Locale.Expired
+                <p><Button Type="ButtonType.Link" Icon="reload" OnClick="@(() => info.OnRefresh())">@info.Locale.Refresh</Button></p>
             </div>
-        </StatusRender>
+        </StatusTemplate>
     </QRCode>
-</Space>
+    <QRCode Value="https://ant.design" Status="scanned">
+        <StatusTemplate Context="info">
+            <div><AntDesign.Icon Type="check-circle" Theme="IconThemeType.Fill" Style="color:green" /> @info.Locale.Scanned</div>
+        </StatusTemplate>
+    </QRCode>
+</Flex>
 
 @code {
-    private void Refresh() { }
+    private void Refresh() => Console.WriteLine("refresh");
 }

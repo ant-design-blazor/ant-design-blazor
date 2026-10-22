@@ -5,4 +5,10 @@ title:
   en-US: Custom Status Render
 ---
 
-Provide `StatusRender` to customize the content shown while the QR code is not active.
+## zh-CN
+
+`StatusTemplate` 可访问当前状态、语言文本和刷新回调，定制 loading、expired、scanned 的显示内容。
+
+## en-US
+
+Use `StatusTemplate` to customize loading, expired, and scanned states with the current status, localized text, and refresh callback.

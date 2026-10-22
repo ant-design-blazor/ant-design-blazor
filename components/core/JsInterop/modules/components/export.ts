@@ -11,3 +11,4 @@ export { imageHelper } from './imageHelper';
 export { watermarkHelper } from './watermarkHelper';
 export { splitterHelper } from './splitterHelper';
 export { drawerHelper } from './drawerHelper';
+export { qrCodeHelper } from './qrCodeHelper';

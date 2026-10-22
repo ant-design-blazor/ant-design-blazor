@@ -1,0 +1,18 @@
+<SpaceCompact Style="margin-bottom:16px">
+    <SpaceCompactItem Position="SpaceCompactItemPosition.First">
+        <Button Icon="minus" Disabled="@(_size <= MinSize)" OnClick="Smaller">Smaller</Button>
+    </SpaceCompactItem>
+    <SpaceCompactItem Position="SpaceCompactItemPosition.Last">
+        <Button Icon="plus" Disabled="@(_size >= MaxSize)" OnClick="Larger">Larger</Button>
+    </SpaceCompactItem>
+</SpaceCompact>
+<QRCode ErrorLevel="H" Size="_size" IconSize="@(_size / 4)" Value="https://ant.design/"
+        Icon="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
+
+@code {
+    private const int MinSize = 48;
+    private const int MaxSize = 300;
+    private int _size = 160;
+    private void Smaller() => _size = Math.Max(MinSize, _size - 10);
+    private void Larger() => _size = Math.Min(MaxSize, _size + 10);
+}

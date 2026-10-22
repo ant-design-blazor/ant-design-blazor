@@ -97,7 +97,7 @@ async function waitForDemo(page, sideSpec, timeoutMs, minimumRoots) {
   }, { rootSelector, scopeSelector });
 }
 
-async function applyAction(page, side, action, timeoutMs) {
+export async function applyAction(page, side, action, timeoutMs) {
   // CSS transitions and ResizeObserver callbacks are throttled in background
   // tabs. Activate the page before dispatching input so the resulting DOM and
   // computed styles are sampled from the same settled state.
@@ -133,7 +133,8 @@ async function applyAction(page, side, action, timeoutMs) {
       await page.locator(selector).fill(action.value ?? '', { timeout: timeoutMs });
       break;
     case 'press':
-      await page.locator(selector).press(action.key, { timeout: timeoutMs });
+      await page.locator(selector).focus({ timeout: timeoutMs });
+      await page.keyboard.press(action.key);
       break;
     case 'wait':
       await new Promise((resolvePromise) => setTimeout(resolvePromise, action.milliseconds ?? 0));

@@ -190,6 +190,10 @@
                         {
                             <SplitterSemanticPreview />
                         }
+                        else if (SemanticComponentKey is "qrcode" or "qr-code")
+                        {
+                            <QRCode Value="https://ant.design" Status="loading" />
+                        }
                         else if (SemanticPreviewType is { } previewType)
                         {
                             <DynamicComponent Type="previewType" />

@@ -1,5 +1,10 @@
 ﻿{
   "locale": "zh-CN",
+  "QRCode": {
+    "expired": "二维码过期",
+    "refresh": "点击刷新",
+    "scanned": "已扫描"
+  },
   "Pagination": {
     "items_per_page": "条/页",
     "jump_to": "跳至",
