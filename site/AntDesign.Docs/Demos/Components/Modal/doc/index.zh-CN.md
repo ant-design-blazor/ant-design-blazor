@@ -118,6 +118,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg
 | Button1Props | 在LTR模式中最左侧按钮的属性 | ButtonProps | Type = ButtonType.Primary, ChildContent 与 ConfirmButtons 顺序相同 |
 | Button2Props | 在LTR模式中左边第二个按钮的属性 | ButtonProps |  ChildContent 与 ConfirmButtons 顺序相同|
 | Button3Props | 在LTR模式中左边第三个按钮的属性 | ButtonProps |  ChildContent 与 ConfirmButtons 顺序相同 |
+| KeepOnRouteChange | 路由切换时是否保留弹窗 | bool | false |
 
 以上函数调用后，会返回一个引用，可以通过该引用更新和关闭弹窗。
 

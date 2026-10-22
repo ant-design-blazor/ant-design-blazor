@@ -116,6 +116,7 @@ There are some ways to display the information based on the content's nature:
 | Button1Props | the props of the leftmost button in LTR layout  | ButtonProps | Type = ButtonType.Primary, ChildContent is in the same order as ConfirmButtons |
 | Button2Props | the props of the second button on the left is in the LTR layout  | ButtonProps |  ChildContent is in the same order as ConfirmButtons|
 | Button3Props | the props of the rightmost button in LTR layout | ButtonProps | ChildContent is in the same order as ConfirmButtons |
+| KeepOnRouteChange | Whether to keep the dialog open when the route changes | bool | false |
 
 All the `ModalService.Method`s will return a reference, and then we can update and close the modal dialog by the reference.
 

@@ -151,6 +151,11 @@ namespace AntDesign
         /// </summary>
         public bool Rtl { get; set; } = false;
 
+        /// <summary>
+        /// Whether to keep the dialog open when the route changes
+        /// </summary>
+        public bool KeepOnRouteChange { get; set; }
+
         internal bool CreateByService { get; set; }
     }
 }
