@@ -2,18 +2,17 @@
     <Transfer DataSource="dataSource"
               TargetKeys="targetKeys.ToArray()"
               ShowSearch="true"
-              SelectedKeys="selectedKeys"
+              @bind-SelectedKeys="selectedKeys"
               Titles="titles"
               OnChange="OnChange"
               OnSearch="OnSearch"
-              OnScroll="OnScroll"
-              OnSelectChange="OnSelectChange"></Transfer>
+              OnScroll="OnScroll"></Transfer>
 </div>
 
 @code {
     private List<TransferItem> dataSource = new List<TransferItem>();
     private List<string> targetKeys = new List<string>();
-    private string[] selectedKeys = Array.Empty<string>();
+    private IEnumerable<string> selectedKeys = Array.Empty<string>();
     private string[] titles = { "Source", "Target" };
     private bool Disabled = false;
 
@@ -48,6 +47,7 @@
 
     private void OnChange(TransferChangeArgs e)
     {
+        targetKeys = e.TargetKeys.ToList();
         Console.WriteLine(e.Direction);
         Console.WriteLine($"MoveKeys:{string.Join(',', e.MoveKeys)}");
         Console.WriteLine($"TargetKeys:{string.Join(',', e.TargetKeys)}");
@@ -64,9 +64,4 @@
         Console.WriteLine(e.Direction);
     }
 
-    private void OnSelectChange(TransferSelectChangeArgs e)
-    {
-        Console.WriteLine($"SourceSelectedKeys:{string.Join(',', e.SourceSelectedKeys)}");
-        Console.WriteLine($"TargetSelectedKeys:{string.Join(',', e.TargetSelectedKeys)}");
-    }
 }

@@ -25,7 +25,7 @@
         {
             <div class="ant-transfer-list-body-search-wrapper">
                 <CascadingValue TValue="AntDesign.Internal.IFormItem" Value="null" IsFixed>
-                    <AntDesign.Input Class="ant-transfer-list-search" Value="SearchValue" ValueChanged="SearchAsync"
+                    <AntDesign.Input Class="ant-transfer-list-search" Value="@SearchValue" ValueChanged="SearchAsync"
                                      Placeholder="@SearchPlaceholder" AllowClear TValue="string">
                         <Prefix>
                             @if (ShowSearchIcon)
@@ -47,31 +47,7 @@
         }
         else
         {
-            <ul class="@(ResolvedClass("list", "ant-transfer-list-content"))" style="@(ResolvedStyle("list"))">
-                @foreach (var item in VisibleDataSource)
-                {
-                    var key = KeySelector(item);
-                    var itemDisabled = Disabled || IsItemDisabled(item);
-                    <li @key="key" title="@ItemTitle(item)" class="@(ResolvedClass("item", $"ant-transfer-list-content-item {(itemDisabled ? "ant-transfer-list-content-item-disabled" : SelectedKeys.Contains(key) ? "ant-transfer-list-content-item-checked" : "")}"))" style="@(ResolvedStyle("item"))">
-                        @if (Selectable)
-                        {
-                            <Checkbox WrapperClass="@(ResolvedClass("itemIcon", "ant-transfer-list-checkbox"))" Style="@(ResolvedStyle("itemIcon"))" HideEmptyLabel="true"
-                                      Checked="SelectedKeys.Contains(key)" Disabled="@(Disabled || IsItemDisabled(item))"
-                                      CheckedChange="@(checkedState => SelectItemAsync(key, checkedState))" />
-                        }
-                        <span class="@(ResolvedClass("itemContent", "ant-transfer-list-content-item-text"))" style="@(ResolvedStyle("itemContent"))" @onclick="@(Selectable && !itemDisabled ? () => SelectItemAsync(key, !SelectedKeys.Contains(key)) : null)">
-                            @if (ItemTemplate != null)
-                            {
-                                @ItemTemplate(item)
-                            }
-                            else
-                            {
-                                @item?.ToString()
-                            }
-                        </span>
-                    </li>
-                }
-            </ul>
+            @DefaultContent
             @if (PageSize > 0 && DataItems.Count > PageSize)
             {
                 <div class="ant-transfer-list-pagination">
@@ -103,6 +79,7 @@
     [Parameter] public TransferDirection Direction { get; set; }
     [Parameter] public string Title { get; set; }
     [Parameter] public IEnumerable<string> SelectedKeys { get; set; } = Array.Empty<string>();
+    [Parameter] public IEnumerable<string> TargetKeys { get; set; } = Array.Empty<string>();
     [Parameter] public bool Disabled { get; set; }
     [Parameter] public bool Selectable { get; set; } = true;
     [Parameter] public bool ShowSelectAll { get; set; } = true;
@@ -132,7 +109,7 @@
     [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
 
     private IReadOnlyList<TItem> DataItems => DataSource?.ToArray() ?? Array.Empty<TItem>();
-    private TransferSidePanelContext<TItem> Context => new(DataItems, Direction, SelectedKeys, KeySelector, SelectItemAsync);
+    private TransferSidePanelContext<TItem> Context => new(DataItems, Direction, SelectedKeys, KeySelector, SelectItemAsync, TargetKeys, Disabled, DefaultContent);
     private IEnumerable<TItem> VisibleDataSource => PageSize > 0 ? DataItems.Skip((CurrentPage - 1) * PageSize).Take(PageSize) : DataItems;
     private bool AllSelected => AllSelectedOverride ?? (DataItems.Any(x => !IsItemDisabled(x)) && DataItems.Where(x => !IsItemDisabled(x)).All(x => SelectedKeys.Contains(KeySelector(x))));
     private bool Indeterminate => IndeterminateOverride ?? (!AllSelected && DataItems.Any(x => SelectedKeys.Contains(KeySelector(x))));
@@ -141,6 +118,31 @@
     private string ResolvedClass(string slot, string baseClass) => ClassResolver?.Invoke(slot, baseClass, Direction) ?? baseClass;
     private string ResolvedStyle(string slot) => StyleResolver?.Invoke(slot, null, Direction);
     private string ItemTitle(TItem item) => ItemTitleSelector?.Invoke(item);
+    private RenderFragment DefaultContent => @<ul class="@(ResolvedClass("list", "ant-transfer-list-content"))" style="@(ResolvedStyle("list"))">
+        @foreach (var item in VisibleDataSource)
+        {
+            var key = KeySelector(item);
+            var itemDisabled = Disabled || IsItemDisabled(item);
+            <li @key="key" title="@ItemTitle(item)" class="@(ResolvedClass("item", $"ant-transfer-list-content-item {(itemDisabled ? "ant-transfer-list-content-item-disabled" : SelectedKeys.Contains(key) ? "ant-transfer-list-content-item-checked" : "")}"))" style="@(ResolvedStyle("item"))">
+                @if (Selectable)
+                {
+                    <Checkbox WrapperClass="@(ResolvedClass("itemIcon", "ant-transfer-list-checkbox"))" Style="@(ResolvedStyle("itemIcon"))" HideEmptyLabel="true"
+                              Checked="SelectedKeys.Contains(key)" Disabled="@itemDisabled"
+                              CheckedChange="@(checkedState => SelectItemAsync(key, checkedState))" />
+                }
+                <span class="@(ResolvedClass("itemContent", "ant-transfer-list-content-item-text"))" style="@(ResolvedStyle("itemContent"))" @onclick="@(Selectable && !itemDisabled ? () => SelectItemAsync(key, !SelectedKeys.Contains(key)) : null)">
+                    @if (ItemTemplate != null)
+                    {
+                        @ItemTemplate(item)
+                    }
+                    else
+                    {
+                        @item?.ToString()
+                    }
+                </span>
+            </li>
+        }
+    </ul>;
     private string SelectedCountText => SelectedCount == 0
         ? FormatItemCount(DataItems.Count)
         : $"{SelectedCount}/{FormatItemCount(DataItems.Count)}";

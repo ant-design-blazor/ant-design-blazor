@@ -3,13 +3,14 @@
 @using AntDesign.Internal
 @inherits AntDomComponentBase
 
-<div class="@SemanticClass("root", ClassMapper.Class)" @ref="Ref" style="@SemanticStyle("root", Style)" id="@Id">
+<div class="@SemanticClass("root", RootClass)" @ref="Ref" style="@SemanticStyle("root", Style)" id="@Id">
     <TransferSidePanel TItem="TransferItem" DataSource="_leftDataSource" Direction="TransferDirection.Left"
                        Title="@(Titles[0] == "" ? null : Titles[0])" SelectedKeys="_sourceSelectedKeys"
-                       CountText="_leftCountText"
+                       TargetKeys="_targetKeys" ChildContent="ChildContent"
+                       CountText="@_leftCountText"
                        Disabled="Disabled" ShowSelectAll="ShowSelectAll" ShowDropdown ShowSearch="ShowSearch"
                        AllSelectedOverride="_leftCheckAllState" IndeterminateOverride="_leftCheckAllIndeterminate"
-                       SearchValue="_leftFilterValue" SearchPlaceholder="@Locale.SearchPlaceholder" ShowSearchIcon
+                       SearchValue="@_leftFilterValue" SearchPlaceholder="@Locale.SearchPlaceholder" ShowSearchIcon
                        SearchValueChanged="value => HandlePanelSearch(value, TransferDirection.Left)"
                        ItemTitleSelector="item => item.Title" ItemTemplate="RenderTransferItem"
                        IsItemDisabled="item => item.Disabled" KeySelector="item => item.Key"
@@ -23,26 +24,26 @@
     <div class="@SemanticClass("actions", "ant-transfer-actions")" style="@SemanticStyle("actions")">
         @if (String.IsNullOrEmpty(Operations[0]))
         {
-            <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))">
+            <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))">
                 <IconContent><RightOutlined /></IconContent>
             </Button>
         }
         else
         {
-            <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))">
+            <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))">
                 <IconContent><RightOutlined /></IconContent>
                 <ChildContent>@Operations[0]</ChildContent>
             </Button>
         }
         @if (String.IsNullOrEmpty(Operations[1]))
         {
-            <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))">
+            <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))">
                 <IconContent><LeftOutlined /></IconContent>
             </Button>
         }
         else
         {
-            <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))">
+            <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))">
                 <IconContent><LeftOutlined /></IconContent>
                 <ChildContent>@Operations[1]</ChildContent>
             </Button>
@@ -51,10 +52,11 @@
 
     <TransferSidePanel TItem="TransferItem" DataSource="_rightDataSource" Direction="TransferDirection.Right"
                        Title="@(Titles[1] == "" ? null : Titles[1])" SelectedKeys="_targetSelectedKeys"
-                       CountText="_rightCountText"
+                       TargetKeys="_targetKeys" ChildContent="ChildContent"
+                       CountText="@_rightCountText"
                        Disabled="Disabled" ShowSelectAll="ShowSelectAll" ShowDropdown ShowSearch="ShowSearch"
                        AllSelectedOverride="_rightCheckAllState" IndeterminateOverride="_rightCheckAllIndeterminate"
-                       SearchValue="_rightFilterValue" SearchPlaceholder="@Locale.SearchPlaceholder" ShowSearchIcon
+                       SearchValue="@_rightFilterValue" SearchPlaceholder="@Locale.SearchPlaceholder" ShowSearchIcon
                        SearchValueChanged="value => HandlePanelSearch(value, TransferDirection.Right)"
                        ItemTitleSelector="item => item.Title" ItemTemplate="RenderTransferItem"
                        IsItemDisabled="item => item.Disabled" KeySelector="item => item.Key"
@@ -68,6 +70,7 @@
 
 @code {
     private bool HasFooter => FooterTemplate != null || !string.IsNullOrEmpty(Footer);
+    private string RootClass => ChildContent == null ? ClassMapper.Class : $"{ClassMapper.Class} ant-transfer-customize-list";
 
     private string ResolvePanelClass(string slot, string baseClass, TransferDirection direction) =>
         SemanticClass(slot, baseClass, direction);

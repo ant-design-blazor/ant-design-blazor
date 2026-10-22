@@ -1,39 +1,30 @@
-﻿@using AntDesign.Docs.Shared
-
-<div class="ant-transfer tree-transfer-demo">
-    <TransferSidePanel TItem="TreeTransferItem" DataSource="_sourceItems" Direction="TransferDirection.Left" ShowSelectAll="false"
-                       Title="Source" KeySelector="item => item.Key" IsItemDisabled="item => _targetKeys.Contains(item.Key)"
-                       SelectedKeys="_sourceSelectedKeys" OnItemSelect="OnItemSelect" OnSelectAll="OnSelectAll">
-        <ChildContent Context="panel">
-            <Tree TItem="string" BlockNode Checkable CheckStrictly DefaultExpandAll
-                  CheckedKeys="panel.SelectedKeys.Concat(_targetKeys).ToArray()"
-                  CheckedKeysChanged="keys => OnTreeCheckedKeysChanged(panel, keys)">
-                @foreach (var root in TreeItems)
-                {
-                    <TreeNode TItem="string" Key="@root.Key" Title="@root.Title" Disabled="@_targetKeys.Contains(root.Key)">
-                        @foreach (var child in root.Children)
-                        {
-                            <TreeNode TItem="string" Key="@child.Key" Title="@child.Title" Disabled="@_targetKeys.Contains(child.Key)" />
-                        }
-                    </TreeNode>
-                }
-            </Tree>
-        </ChildContent>
-    </TransferSidePanel>
-    <div class="ant-transfer-actions">
-        <Button Type="ButtonType.Primary" Size="ButtonSize.Small" Disabled="@(_sourceSelectedKeys.Count == 0)" OnClick="MoveRight">
-            <IconContent><RightOutlined /></IconContent>
-        </Button>
-        <Button Type="ButtonType.Primary" Size="ButtonSize.Small" Disabled="@(_targetSelectedKeys.Count == 0)" OnClick="MoveLeft">
-            <IconContent><LeftOutlined /></IconContent>
-        </Button>
-    </div>
-    <TransferSidePanel TItem="TreeTransferItem" DataSource="_targetItems" Direction="TransferDirection.Right" ShowSelectAll="false"
-                       Title="Target" KeySelector="item => item.Key" SelectedKeys="_targetSelectedKeys"
-                       OnItemSelect="OnItemSelect" OnSelectAll="OnSelectAll">
-        <ItemTemplate Context="item"><span>@item.Title</span></ItemTemplate>
-    </TransferSidePanel>
-</div>
+<Transfer DataSource="_dataSource" TargetKeys="_targetKeys" SelectedKeys="_selectedKeys"
+          OnChange="HandleTransferChange" OnSelectChange="HandleSelectChange" ShowSelectAll="false">
+    <ChildContent Context="panel">
+        @if (panel.Direction == TransferDirection.Left)
+        {
+            <div style="padding: 8px;">
+                <Tree @key="GetTreeKey(panel)" TItem="string" BlockNode Checkable CheckStrictly DefaultExpandAll
+                      CheckedKeys="GetCheckedKeys(panel)"
+                      OnCheck="args => OnTreeNodeChecked(panel, args)">
+                    @foreach (var root in TreeItems)
+                    {
+                        <TreeNode TItem="string" Key="@root.Key" Title="@root.Title" DisableCheckbox="@panel.TargetKeys.Contains(root.Key)">
+                            @foreach (var child in root.Children)
+                            {
+                                <TreeNode TItem="string" Key="@child.Key" Title="@child.Title" DisableCheckbox="@panel.TargetKeys.Contains(child.Key)" />
+                            }
+                        </TreeNode>
+                    }
+                </Tree>
+            </div>
+        }
+        else
+        {
+            @panel.DefaultContent
+        }
+    </ChildContent>
+</Transfer>
 
 @code {
     private static readonly TreeTransferItem[] TreeItems =
@@ -44,57 +35,43 @@
         new("0-3", "0-3", []),
         new("0-4", "0-4", [])
     ];
-    private static readonly IReadOnlyList<TreeTransferItem> FlatItems = Flatten(TreeItems).ToArray();
+    private static readonly List<TransferItem> _dataSource = Flatten(TreeItems)
+        .Select(item => new TransferItem { Key = item.Key, Title = item.Title })
+        .ToList();
     private List<string> _targetKeys = [];
-    private List<string> _sourceSelectedKeys = [];
-    private List<string> _targetSelectedKeys = [];
-    private IReadOnlyList<TreeTransferItem> _sourceItems => FlatItems.Where(item => !_targetKeys.Contains(item.Key)).ToArray();
-    private IReadOnlyList<TreeTransferItem> _targetItems => FlatItems.Where(item => _targetKeys.Contains(item.Key)).ToArray();
+    private List<string> _selectedKeys = [];
+    private string[] _checkedKeys = [];
 
-    private static IEnumerable<TreeTransferItem> Flatten(IEnumerable<TreeTransferItem> items) => items.SelectMany(item => new[] { item }.Concat(Flatten(item.Children)));
-
-    private Task OnItemSelect(TransferSideSelection selection)
+    private string[] GetCheckedKeys(TransferSidePanelContext<TransferItem> panel)
     {
-        var keys = selection.Direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
-        if (selection.Selected && !keys.Contains(selection.Key)) keys.Add(selection.Key);
-        if (!selection.Selected) keys.Remove(selection.Key);
-        return Task.CompletedTask;
+        var checkedKeys = panel.SelectedKeys.Concat(panel.TargetKeys).ToArray();
+        if (!_checkedKeys.SequenceEqual(checkedKeys, StringComparer.Ordinal))
+            _checkedKeys = checkedKeys;
+        return _checkedKeys;
     }
 
-    private Task OnSelectAll(TransferSideSelectAll selection)
+    private static IEnumerable<TreeTransferItem> Flatten(IEnumerable<TreeTransferItem> items) =>
+        items.SelectMany(item => new[] { item }.Concat(Flatten(item.Children)));
+
+    private string GetTreeKey(TransferSidePanelContext<TransferItem> panel) =>
+        string.Join("|", panel.TargetKeys.OrderBy(key => key, StringComparer.Ordinal));
+
+    private Task OnTreeNodeChecked(TransferSidePanelContext<TransferItem> panel, TreeEventArgs<string> args)
     {
-        var items = selection.Direction == TransferDirection.Left ? _sourceItems : _targetItems;
-        var keys = selection.Direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
-        if (selection.Selected)
-        {
-            foreach (var item in items)
-                if (!keys.Contains(item.Key)) keys.Add(item.Key);
-        }
-        else keys.Clear();
-        return Task.CompletedTask;
+        // Ignore events from an obsolete panel snapshot while an item is being moved.
+        if (!panel.TargetKeys.SetEquals(_targetKeys))
+            return Task.CompletedTask;
+
+        var key = args.Node.Key;
+        return panel.TargetKeys.Contains(key)
+            ? Task.CompletedTask
+            : panel.SelectItemAsync(key, args.Node.Checked);
     }
 
-    private async Task OnTreeCheckedKeysChanged(TransferSidePanelContext<TreeTransferItem> panel, string[] keys)
-    {
-        var checkedKeys = keys.Where(key => !_targetKeys.Contains(key)).ToHashSet(StringComparer.Ordinal);
-        foreach (var key in panel.SelectedKeys.Except(checkedKeys))
-            await panel.SelectItemAsync(key, false);
-        foreach (var key in checkedKeys.Except(panel.SelectedKeys))
-            await panel.SelectItemAsync(key, true);
-    }
+    private void HandleTransferChange(TransferChangeArgs args) => _targetKeys = args.TargetKeys.ToList();
 
-    private void MoveRight() => Move(TransferDirection.Right);
-    private void MoveLeft() => Move(TransferDirection.Left);
-
-    private void Move(TransferDirection direction)
-    {
-        var moving = direction == TransferDirection.Right ? _sourceSelectedKeys : _targetSelectedKeys;
-        if (direction == TransferDirection.Right)
-            _targetKeys.AddRange(moving.Where(key => !_targetKeys.Contains(key)));
-        else
-            _targetKeys.RemoveAll(moving.Contains);
-        moving.Clear();
-    }
+    private void HandleSelectChange(TransferSelectChangeArgs args) =>
+        _selectedKeys = args.SourceSelectedKeys.Concat(args.TargetSelectedKeys).Distinct(StringComparer.Ordinal).ToList();
 
     private sealed record TreeTransferItem(string Key, string Title, IReadOnlyList<TreeTransferItem> Children);
 }

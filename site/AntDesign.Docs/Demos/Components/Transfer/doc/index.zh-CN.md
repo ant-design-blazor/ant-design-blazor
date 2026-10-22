@@ -33,8 +33,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg
 | Styles | 自定义语义节点的行内 CSS。通用样式与方向限定样式会合并，方向限定声明优先。 | IReadOnlyDictionary<string, string> | null |  |
 | Operations | 操作文案集合，顺序从上至下 | string\[] | \['right', 'left'] |  |
 | Render | 每行数据渲染函数，该函数的入参为 `DataSource` 中的项，返回值为 OneOf<string, RenderFragment>。 | Func<TransferItem, OneOf<string, RenderFragment>> |  |  |
-| SelectedKeys | 设置哪些项应该被选中 | string\[] | \[] |  |
+| SelectedKeys | 设置选中项。支持 `@bind-SelectedKeys` 双向绑定；单向传入时，需在变更回调中更新该值以控制选中状态。 | string\[] | \[] |  |
+| SelectedKeysChanged | 选中项变化时触发，也用于 `@bind-SelectedKeys`。 | EventCallback\<IEnumerable\<string\>> |  |  |
 | ShowSearch | 是否显示搜索框 | bool | false |  |
+| FilterOption | 自定义搜索过滤谓词。 | Func<string, TransferItem, bool> | 搜索标题 |  |
 | ShowSelectAll | 是否展示全选勾选框 | bool | true |  |
 | TargetKeys | 显示在右侧框数据的 key 集合 | string\[] | \[] |  |
 | Titles | 标题集合，顺序从左至右 | string\[] | \['', ''] |  |
@@ -54,16 +56,18 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg
 
 ### Render Props
 
-Transfer 支持接收 `ChildContent` 自定义渲染列表，并返回以下参数：
+Transfer 的 `ChildContent` 是一个带 `TransferSidePanelContext<TransferItem>` 的模板。Transfer 会将同一个模板用于左右面板；Table demo 根据当前方向显示对应数据，Tree demo 只在左侧显示树，并通过 `DefaultContent` 在右侧回退到默认列表。
 
-| 参数            | 说明           | 类型                                | 版本 |
-| --------------- | -------------- | ----------------------------------- | ---- |
-| direction       | 渲染列表的方向 | `left` \| `right`                   |      |
-| disabled        | 是否禁用列表   | bool                                |      |
-| filteredItems   | 过滤后的数据   | List\<TransferItem>                 |      |
-| onItemSelect    | 勾选条目       | (key: string, selected: boolean)    |      |
-| onItemSelectAll | 勾选一组条目   | (keys: string[], selected: boolean) |      |
-| selectedKeys    | 选中的条目     | string[]                            |      |
+| 属性             | 说明                     | 类型                                      |
+| ---------------- | ------------------------ | ----------------------------------------- |
+| Direction        | 当前面板方向（左/右）    | `TransferDirection`                       |
+| DataSource       | 当前面板过滤后的数据     | `IReadOnlyList<TransferItem>`              |
+| SelectedKeys     | 当前面板选中的 key       | `IReadOnlySet<string>`                     |
+| TargetKeys       | 目标面板中的 key         | `IReadOnlySet<string>`                     |
+| Disabled         | Transfer 是否禁用        | `bool`                                     |
+| KeySelector      | 获取数据项 key 的函数    | `Func<TransferItem, string>`               |
+| SelectItemAsync  | 更新当前面板条目选中状态 | `Task SelectItemAsync(string key, bool selected)` |
+| DefaultContent   | 默认条目列表模板         | `RenderFragment`                           |
 
 ## 注意
 

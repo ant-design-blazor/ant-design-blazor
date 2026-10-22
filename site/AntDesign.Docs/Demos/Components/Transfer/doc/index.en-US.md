@@ -30,8 +30,10 @@ One or more elements can be selected from either column, one click on the proper
 | Styles | Customize inline CSS for semantic elements. Shared and direction-specific styles are merged, with direction-specific declarations taking precedence. | IReadOnlyDictionary<string, string> | null |  |
 | operations | A set of operations that are sorted from top to bottom. | string\[] | \['right', 'left'] |  |
 | Render | The function to generate the item shown on a column. Based on an record (element of the DataSource array), this function should return a OneOf<string, RenderFragment> which is generated from that record. | Func<TransferItem, OneOf<string, RenderFragment>> |  |  |
-| SelectedKeys | A set of keys of selected items. | string\[] | \[] |  |
+| SelectedKeys | A set of keys of selected items. Supports `@bind-SelectedKeys` for two-way binding; passing it without updating it from a change callback keeps selection externally controlled. | string\[] | \[] |  |
+| SelectedKeysChanged | Callback invoked when selected keys change; also used by `@bind-SelectedKeys`. | EventCallback\<IEnumerable\<string\>> |  |  |
 | ShowSearch | If included, a search box is shown on each column. | bool | false |  |
+| FilterOption | Custom predicate used to filter items from the search input. | Func<string, TransferItem, bool> | Search title |  |
 | ShowSelectAll | Show select all checkbox on the header | bool | true |  |
 | TargetKeys | A set of keys of elements that are listed on the right column. | string\[] | \[] |  |
 | Titles | A set of titles that are sorted from left to right. | string\[] | - |  |
@@ -51,16 +53,18 @@ One or more elements can be selected from either column, one click on the proper
 
 ### Render Props
 
-Transfer accept `children` to customize render list, using follow props:
+`ChildContent` is a template receiving `TransferSidePanelContext<TransferItem>`. Transfer applies the same template to both panels. The Table demo renders the current panel's rows in the table; the Tree demo renders a tree on the left and uses `DefaultContent` for the default list on the right.
 
-| Property        | Description             | Type                             | Version |
-| --------------- | ----------------------- | -------------------------------- | ------- |
-| direction       | List render direction   | `left` \| `right`                |         |
-| disabled        | Disable list or not     | bool                             |         |
-| filteredItems   | Filtered items          | TransferItem[]                   |         |
-| onItemSelect    | Select item             | (key: string, selected: bool)    |         |
-| onItemSelectAll | Select a group of items | (keys: string[], selected: bool) |         |
-| selectedKeys    | Selected items          | string[]                         |         |
+| Property        | Description                              | Type                          |
+| --------------- | ---------------------------------------- | ----------------------------- |
+| Direction       | Current panel direction                  | `TransferDirection`           |
+| DataSource      | Filtered items for this panel            | `IReadOnlyList<TransferItem>` |
+| SelectedKeys    | Selected keys in this panel              | `IReadOnlySet<string>`        |
+| TargetKeys      | Keys currently in the target panel       | `IReadOnlySet<string>`        |
+| Disabled        | Whether Transfer is disabled             | `bool`                        |
+| KeySelector     | Gets an item's key                        | `Func<TransferItem, string>`  |
+| SelectItemAsync | Changes an item's selected state         | `Task SelectItemAsync(string key, bool selected)` |
+| DefaultContent  | The default item-list template            | `RenderFragment`              |
 
 ## Warning
 

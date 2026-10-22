@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Xunit;
@@ -119,6 +120,64 @@ public sealed class TransferV6StructureTests : AntDesignTestBase
             icon => Assert.Equal("left", icon.GetAttribute("aria-label")));
         Assert.All(actionIcons, icon =>
             Assert.Equal("64 64 896 896", icon.QuerySelector("svg")!.GetAttribute("viewBox")));
+    }
+
+    [Fact]
+    public void Selected_keys_support_two_way_binding_and_are_cleared_when_moved()
+    {
+        var data = new[]
+        {
+            new TransferItem { Key = "one", Title = "One" },
+            new TransferItem { Key = "two", Title = "Two" }
+        };
+        var selectedKeys = System.Array.Empty<string>();
+        var targetKeys = System.Array.Empty<string>();
+        var transfer = RenderComponent<AntDesign.Transfer>(parameters => parameters
+            .Add(component => component.DataSource, data)
+            .Add(component => component.TargetKeys, targetKeys)
+            .Add(component => component.SelectedKeys, selectedKeys)
+            .Add(component => component.SelectedKeysChanged,
+                EventCallback.Factory.Create<IEnumerable<string>>(this, keys => selectedKeys = keys.ToArray()))
+            .Add(component => component.OnChange,
+                EventCallback.Factory.Create<TransferChangeArgs>(this, args => targetKeys = args.TargetKeys)));
+
+        transfer.Find(".ant-transfer-list-content-item input[type=checkbox]").Change(true);
+        Assert.Equal(new[] { "one" }, selectedKeys);
+
+        transfer.SetParametersAndRender(parameters => parameters
+            .Add(component => component.DataSource, data)
+            .Add(component => component.TargetKeys, targetKeys)
+            .Add(component => component.SelectedKeys, selectedKeys)
+            .Add(component => component.SelectedKeysChanged,
+                EventCallback.Factory.Create<IEnumerable<string>>(this, keys => selectedKeys = keys.ToArray()))
+            .Add(component => component.OnChange,
+                EventCallback.Factory.Create<TransferChangeArgs>(this, args => targetKeys = args.TargetKeys)));
+
+        transfer.Find(".ant-transfer-actions button").Click();
+        Assert.Empty(selectedKeys);
+        Assert.Equal(new[] { "one" }, targetKeys);
+    }
+
+    [Fact]
+    public void Selected_keys_can_be_controlled_externally()
+    {
+        var data = new[]
+        {
+            new TransferItem { Key = "one", Title = "One" },
+            new TransferItem { Key = "two", Title = "Two" }
+        };
+        var transfer = RenderComponent<AntDesign.Transfer>(parameters => parameters
+            .Add(component => component.DataSource, data)
+            .Add(component => component.TargetKeys, System.Array.Empty<string>())
+            .Add(component => component.SelectedKeys, new[] { "one" }));
+
+        var checkboxes = transfer.FindAll(".ant-transfer-list-content-item input[type=checkbox]");
+        Assert.True(checkboxes[0].HasAttribute("checked"));
+        checkboxes[1].Change(true);
+
+        checkboxes = transfer.FindAll(".ant-transfer-list-content-item input[type=checkbox]");
+        Assert.True(checkboxes[0].HasAttribute("checked"));
+        Assert.False(checkboxes[1].HasAttribute("checked"));
     }
 
     [Theory]
