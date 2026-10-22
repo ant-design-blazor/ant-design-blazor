@@ -10,7 +10,7 @@ import * as path from 'path';
 
 import { buildConfig } from '../build-config';
 
-const CleanCSS = require('clean-css');
+const lessPluginCleanCSS = require('less-plugin-clean-css');
 const npmImportPlugin = require('less-plugin-npm-import');
 
 async function compileLess(
@@ -20,8 +20,13 @@ async function compileLess(
   sub?: boolean,
   rootPath?: string
 ): Promise<void> {
-  const plugins: Less.Plugin[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const plugins: any[] = [];
   const lessOptions: Less.Options = { plugins, javascriptEnabled: true };
+
+  if (min) {
+    plugins.push(new lessPluginCleanCSS({ advanced: true }));
+  }
 
   if (sub) {
     lessOptions.paths = [path.dirname(rootPath as string)];
@@ -36,8 +41,7 @@ async function compileLess(
   return less
     .render(content, lessOptions)
     .then(({ css }) => {
-      const output = min ? new CleanCSS({ level: 2 }).minify(css).styles : css;
-      return fs.writeFile(savePath, output);
+      return fs.writeFile(savePath, css);
     })
     .catch(err => Promise.reject(err));
 }
