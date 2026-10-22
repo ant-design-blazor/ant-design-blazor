@@ -1,184 +1,105 @@
-﻿@namespace AntDesign
+@namespace AntDesign
+@using AntDesign.Icons
+@using AntDesign.Internal
 @inherits AntDomComponentBase
 
 <div class="@SemanticClass("root", ClassMapper.Class)" @ref="Ref" style="@SemanticStyle("root", Style)" id="@Id">
-    <div class="@SemanticClass("section", (FooterTemplate != null || !string.IsNullOrEmpty(Footer)) ? $"ant-transfer-section {FooterClass}" : "ant-transfer-section", TransferDirection.Left)" @onscroll="@(e=>HandleScroll(TransferDirection.Left,e))" style="@SemanticStyle("section", ListStyle(TransferDirection.Left), TransferDirection.Left)">
-        <div class="@SemanticClass("header", "ant-transfer-list-header", TransferDirection.Left)" style="@SemanticStyle("header", direction: TransferDirection.Left)">
-            @if (ShowSelectAll)
-            {
-                <Checkbox WrapperClass="ant-transfer-list-checkbox" HideEmptyLabel="true" Checked="_leftCheckAllState" Indeterminate="_leftCheckAllIndeterminate" Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Left))" />
-                <Icon Type="down" Class="ant-transfer-list-header-dropdown" />
-            }
-            <span class="ant-transfer-list-header-selected">
-                @_leftCountText
-            </span>
-            @if (Titles[0] != "")
-            {
-                <span class="@SemanticClass("title", "ant-transfer-list-header-title", TransferDirection.Left)" style="@SemanticStyle("title", direction: TransferDirection.Left)">@Titles[0]</span>
-            }
-        </div>
-        <div class="@SemanticClass("body", $"ant-transfer-list-body {(ShowSearch ? "ant-transfer-list-body-with-search" : "")}", TransferDirection.Left)" style="@SemanticStyle("body", direction: TransferDirection.Left)">
-            @if (ShowSearch)
-            {
-                <div class="ant-transfer-list-body-search-wrapper">
-                    <div>
-                        <CascadingValue TValue="AntDesign.Internal.IFormItem" Value="null" IsFixed>
-                            <AntDesign.Input Class="ant-transfer-list-search" Value="@_leftFilterValue" Placeholder="@Locale.SearchPlaceholder" OnInput="@(e => HandleSearch(e, TransferDirection.Left))" OnClear="() => ClearFilterValueAsync(TransferDirection.Left)" TValue="string" AllowClear>
-                                <Prefix>
-                                    <Icon Type="search" />
-                                </Prefix>
-                            </AntDesign.Input>
-                        </CascadingValue>
-                    </div>
-                </div>
-            }
-            @if (!_leftDataSource.Any())
-            {
-                <div class="ant-transfer-list-body-not-found">
-                    <Empty Simple Small />
-                </div>
-            }
-            else
-            {
-                <ul class="@SemanticClass("list", "ant-transfer-list-content", TransferDirection.Left)" style="@SemanticStyle("list", direction: TransferDirection.Left)">
-                    @foreach (var item in _leftDataSource)
-                    {
-                        <li @key="item" title="@item.Title" class="@SemanticClass("item", $"ant-transfer-list-content-item {(item.Disabled || Disabled ? DisabledClass : _sourceSelectedKeys.Contains(item.Key) ? "ant-transfer-list-content-item-checked" : "")}", TransferDirection.Left)" style="@SemanticStyle("item", direction: TransferDirection.Left)">
-                <Checkbox WrapperClass="@SemanticClass("itemIcon", "ant-transfer-list-checkbox", TransferDirection.Left)" Style="@SemanticStyle("itemIcon", direction: TransferDirection.Left)" HideEmptyLabel="true" Checked="_sourceSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Left, item.Key))" Disabled="@(item.Disabled || Disabled)" />
-                            <span class="@SemanticClass("itemContent", "ant-transfer-list-content-item-text", TransferDirection.Left)" style="@SemanticStyle("itemContent", direction: TransferDirection.Left)">
-                                @if (Render == null)
-                                {
-                                    @item.Title
-                                }
-                                else
-                                {
-                                    var text = Render(item);
-                                    @if (text.IsT0)
-                                    {
-                                        @text.AsT0
-                                    }
-                                    else
-                                    {
-                                        @text.AsT1
-                                    }
-                                }
-                            </span>
-                        </li>
-                    }
-                </ul>
-            }
-        </div>
-        @if (FooterTemplate != null || !string.IsNullOrEmpty(Footer))
-        {
-            <div class="@SemanticClass("footer", "ant-transfer-list-footer", TransferDirection.Left)" style="@SemanticStyle("footer", direction: TransferDirection.Left)">
-                @if (FooterTemplate != null)
-                {
-                    @FooterTemplate
-                }
-                else
-                {
-                    @Footer
-                }
-            </div>
-        }
-    </div>
+    <TransferSidePanel TItem="TransferItem" DataSource="_leftDataSource" Direction="TransferDirection.Left"
+                       Title="@(Titles[0] == "" ? null : Titles[0])" SelectedKeys="_sourceSelectedKeys"
+                       CountText="_leftCountText"
+                       Disabled="Disabled" ShowSelectAll="ShowSelectAll" ShowDropdown ShowSearch="ShowSearch"
+                       AllSelectedOverride="_leftCheckAllState" IndeterminateOverride="_leftCheckAllIndeterminate"
+                       SearchValue="_leftFilterValue" SearchPlaceholder="@Locale.SearchPlaceholder" ShowSearchIcon
+                       SearchValueChanged="value => HandlePanelSearch(value, TransferDirection.Left)"
+                       ItemTitleSelector="item => item.Title" ItemTemplate="RenderTransferItem"
+                       IsItemDisabled="item => item.Disabled" KeySelector="item => item.Key"
+                       OnItemSelect="HandlePanelItemSelect" OnSelectAll="HandlePanelSelectAll"
+                       OnScroll="args => HandleScroll(TransferDirection.Left, args)"
+                       PanelClass="@SemanticClass("section", HasFooter ? $"ant-transfer-section {FooterClass}" : "ant-transfer-section", TransferDirection.Left)"
+                       PanelStyle="@SemanticStyle("section", ListStyle(TransferDirection.Left), TransferDirection.Left)"
+                       ClassResolver="ResolvePanelClass" StyleResolver="ResolvePanelStyle"
+                       Footer="@Footer" FooterTemplate="@FooterTemplate" />
+
     <div class="@SemanticClass("actions", "ant-transfer-actions")" style="@SemanticStyle("actions")">
         @if (String.IsNullOrEmpty(Operations[0]))
         {
-            <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="left" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))" />
+            <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))">
+                <IconContent><RightOutlined /></IconContent>
+            </Button>
         }
         else
         {
-            <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="left" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))">@Operations[0]</Button>
+            <Button Disabled="@(_leftButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Left))">
+                <IconContent><RightOutlined /></IconContent>
+                <ChildContent>@Operations[0]</ChildContent>
+            </Button>
         }
         @if (String.IsNullOrEmpty(Operations[1]))
         {
-            <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="right" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))" />
+            <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))">
+                <IconContent><LeftOutlined /></IconContent>
+            </Button>
         }
         else
         {
-            <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Icon="right" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))">@Operations[1]</Button>
+            <Button Disabled="@(_rightButtonDisabled||Disabled)" Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="@(e=>MoveItem(e,TransferDirection.Right))">
+                <IconContent><LeftOutlined /></IconContent>
+                <ChildContent>@Operations[1]</ChildContent>
+            </Button>
         }
     </div>
-    <div class="@SemanticClass("section", (FooterTemplate != null || !string.IsNullOrEmpty(Footer)) ? $"ant-transfer-section {FooterClass}" : "ant-transfer-section", TransferDirection.Right)" @onscroll="@(e => HandleScroll(TransferDirection.Right, e))" style="@SemanticStyle("section", ListStyle(TransferDirection.Right), TransferDirection.Right)">
-        <div class="@SemanticClass("header", "ant-transfer-list-header", TransferDirection.Right)" style="@SemanticStyle("header", direction: TransferDirection.Right)">
-            @if (ShowSelectAll)
-            {
-                <Checkbox WrapperClass="ant-transfer-list-checkbox" HideEmptyLabel="true" Checked="_rightCheckAllState" Indeterminate="_rightCheckAllIndeterminate " Disabled="@Disabled" CheckedChange="@(checkedState => SelectAll(checkedState, TransferDirection.Right))" />
-                <Icon Type="down" Class="ant-transfer-list-header-dropdown" />
-            }
-            <span class="ant-transfer-list-header-selected">
-                @_rightCountText
-            </span>
-            @if (Titles[1] != "")
-            {
-                <span class="@SemanticClass("title", "ant-transfer-list-header-title", TransferDirection.Right)" style="@SemanticStyle("title", direction: TransferDirection.Right)">@Titles[1]</span>
-            }
-        </div>
-        <div class="@SemanticClass("body", $"ant-transfer-list-body {(ShowSearch ? "ant-transfer-list-body-with-search" : "")}", TransferDirection.Right)" style="@SemanticStyle("body", direction: TransferDirection.Right)">
-            @if (ShowSearch)
-            {
-                <div class="ant-transfer-list-body-search-wrapper">
-                    <div>
-                        <CascadingValue TValue="AntDesign.Internal.IFormItem" Value="null" IsFixed>
-                            <AntDesign.Input Class="ant-transfer-list-search" Value="@_rightFilterValue" Placeholder="@Locale.SearchPlaceholder" OnInput="@(e => HandleSearch(e, TransferDirection.Right))" OnClear="() => ClearFilterValueAsync(TransferDirection.Right)" TValue="string" AllowClear>
-                                <Prefix>
-                                    <Icon Type="search" />
-                                </Prefix>
-                            </AntDesign.Input>
-                        </CascadingValue>
-                    </div>
-                </div>
-            }
-            @if (!_rightDataSource.Any())
-            {
-                <div class="ant-transfer-list-body-not-found">
-                    <Empty Simple Small />
-                </div>
-            }
-            else
-            {
-                <ul class="@SemanticClass("list", "ant-transfer-list-content", TransferDirection.Right)" style="@SemanticStyle("list", direction: TransferDirection.Right)">
-                    @foreach (var item in _rightDataSource)
-                    {
-                        <li @key="item" title="@item.Title" class="@SemanticClass("item", $"ant-transfer-list-content-item {(item.Disabled || Disabled ? DisabledClass : _targetSelectedKeys.Contains(item.Key) ? "ant-transfer-list-content-item-checked" : "")}", TransferDirection.Right)" style="@SemanticStyle("item", direction: TransferDirection.Right)">
-                <Checkbox WrapperClass="@SemanticClass("itemIcon", "ant-transfer-list-checkbox", TransferDirection.Right)" Style="@SemanticStyle("itemIcon", direction: TransferDirection.Right)" HideEmptyLabel="true" Checked="_targetSelectedKeys.Contains(item.Key)" CheckedChange="@(checkedState => SelectItem(checkedState, TransferDirection.Right, item.Key))" Disabled="@(item.Disabled || Disabled)" />
-                            <span class="@SemanticClass("itemContent", "ant-transfer-list-content-item-text", TransferDirection.Right)" style="@SemanticStyle("itemContent", direction: TransferDirection.Right)">
-                                @if (Render == null)
-                                {
-                                    @item.Title
-                                }
-                                else
-                                {
-                                    var text = Render(item);
-                                    @if (text.IsT0)
-                                    {
-                                        @text.AsT0
-                                    }
-                                    else
-                                    {
-                                        @text.AsT1
-                                    }
-                                }
-                            </span>
-                        </li>
-                    }
 
-                </ul>
-            }
-        </div>
-        @if (FooterTemplate != null || !string.IsNullOrEmpty(Footer))
-        {
-            <div class="@SemanticClass("footer", "ant-transfer-list-footer", TransferDirection.Right)" style="@SemanticStyle("footer", direction: TransferDirection.Right)">
-                @if (FooterTemplate != null)
-                {
-                    @FooterTemplate
-                }
-                else
-                {
-                    @Footer
-                }
-            </div>
-        }
-    </div>
+    <TransferSidePanel TItem="TransferItem" DataSource="_rightDataSource" Direction="TransferDirection.Right"
+                       Title="@(Titles[1] == "" ? null : Titles[1])" SelectedKeys="_targetSelectedKeys"
+                       CountText="_rightCountText"
+                       Disabled="Disabled" ShowSelectAll="ShowSelectAll" ShowDropdown ShowSearch="ShowSearch"
+                       AllSelectedOverride="_rightCheckAllState" IndeterminateOverride="_rightCheckAllIndeterminate"
+                       SearchValue="_rightFilterValue" SearchPlaceholder="@Locale.SearchPlaceholder" ShowSearchIcon
+                       SearchValueChanged="value => HandlePanelSearch(value, TransferDirection.Right)"
+                       ItemTitleSelector="item => item.Title" ItemTemplate="RenderTransferItem"
+                       IsItemDisabled="item => item.Disabled" KeySelector="item => item.Key"
+                       OnItemSelect="HandlePanelItemSelect" OnSelectAll="HandlePanelSelectAll"
+                       OnScroll="args => HandleScroll(TransferDirection.Right, args)"
+                       PanelClass="@SemanticClass("section", HasFooter ? $"ant-transfer-section {FooterClass}" : "ant-transfer-section", TransferDirection.Right)"
+                       PanelStyle="@SemanticStyle("section", ListStyle(TransferDirection.Right), TransferDirection.Right)"
+                       ClassResolver="ResolvePanelClass" StyleResolver="ResolvePanelStyle"
+                       Footer="@Footer" FooterTemplate="@FooterTemplate" />
 </div>
+
+@code {
+    private bool HasFooter => FooterTemplate != null || !string.IsNullOrEmpty(Footer);
+
+    private string ResolvePanelClass(string slot, string baseClass, TransferDirection direction) =>
+        SemanticClass(slot, baseClass, direction);
+
+    private string ResolvePanelStyle(string slot, string baseStyle, TransferDirection direction) =>
+        SemanticStyle(slot, baseStyle, direction);
+
+    private RenderFragment<TransferItem> RenderTransferItem => item => builder =>
+    {
+        if (Render == null)
+        {
+            builder.AddContent(0, item.Title);
+            return;
+        }
+
+        var content = Render(item);
+        if (content.IsT0)
+        {
+            builder.AddContent(1, content.AsT0);
+        }
+        else
+        {
+            builder.AddContent(2, content.AsT1);
+        }
+    };
+
+    private Task HandlePanelItemSelect(TransferSideSelection selection) =>
+        SelectItem(selection.Selected, selection.Direction, selection.Key);
+
+    private Task HandlePanelSelectAll(TransferSideSelectAll selection) =>
+        SelectAll(selection.Selected, selection.Direction);
+
+    private Task HandlePanelSearch(string value, TransferDirection direction) =>
+        HandleSearch(new ChangeEventArgs { Value = value }, direction);
+}

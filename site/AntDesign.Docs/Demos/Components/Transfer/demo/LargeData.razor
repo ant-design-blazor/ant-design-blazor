@@ -1,5 +1,65 @@
-﻿<h3>LargeData</h3>
+@using AntDesign.Docs.Shared
+
+<div class="ant-transfer">
+    <TransferSidePanel TItem="TransferLargeDataItem" DataSource="_sourceItems" Direction="TransferDirection.Left"
+                       Title="Source" KeySelector="item => item.Key" SelectedKeys="_sourceSelectedKeys"
+                       PageSize="10" CurrentPage="_sourcePage" CurrentPageChanged="page => _sourcePage = page"
+                       OnItemSelect="OnItemSelect">
+        <ItemTemplate Context="item"><span>@item.Title</span></ItemTemplate>
+    </TransferSidePanel>
+    <div class="ant-transfer-actions">
+        <Button Type="ButtonType.Primary" Size="ButtonSize.Small" Disabled="@(_sourceSelectedKeys.Count == 0)" OnClick="MoveRight">
+            <IconContent><RightOutlined /></IconContent>
+        </Button>
+        <Button Type="ButtonType.Primary" Size="ButtonSize.Small" Disabled="@(_targetSelectedKeys.Count == 0 || _oneWay)" OnClick="MoveLeft">
+            <IconContent><LeftOutlined /></IconContent>
+        </Button>
+    </div>
+    <TransferSidePanel TItem="TransferLargeDataItem" DataSource="_targetItems" Direction="TransferDirection.Right"
+                       Title="Target" KeySelector="item => item.Key" SelectedKeys="_targetSelectedKeys"
+                       PageSize="10" CurrentPage="_targetPage" CurrentPageChanged="page => _targetPage = page"
+                       OnItemSelect="OnItemSelect">
+        <ItemTemplate Context="item"><span>@item.Title</span></ItemTemplate>
+    </TransferSidePanel>
+</div>
+<br />
+<Switch Checked="_oneWay" CheckedChildren="one way" UnCheckedChildren="one way" CheckedChanged="value => _oneWay = value" />
 
 @code {
+    private readonly List<TransferLargeDataItem> _allItems = Enumerable.Range(0, 2000)
+        .Select(i => new TransferLargeDataItem(i.ToString(), $"content{i + 1}")).ToList();
+    private List<string> _targetKeys = Enumerable.Range(0, 2000).Where(i => i % 2 == 0).Select(i => i.ToString()).ToList();
+    private List<string> _sourceSelectedKeys = [];
+    private List<string> _targetSelectedKeys = [];
+    private int _sourcePage = 1;
+    private int _targetPage = 1;
+    private bool _oneWay;
+    private IReadOnlyList<TransferLargeDataItem> _sourceItems => _allItems.Where(item => !_targetKeys.Contains(item.Key)).ToArray();
+    private IReadOnlyList<TransferLargeDataItem> _targetItems => _allItems.Where(item => _targetKeys.Contains(item.Key)).ToArray();
 
+    private Task OnItemSelect(TransferSideSelection selection)
+    {
+        var keys = selection.Direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
+        if (selection.Selected && !keys.Contains(selection.Key)) keys.Add(selection.Key);
+        if (!selection.Selected) keys.Remove(selection.Key);
+        return Task.CompletedTask;
+    }
+
+    private void MoveRight() => Move(TransferDirection.Right);
+    private void MoveLeft() => Move(TransferDirection.Left);
+
+    private void Move(TransferDirection direction)
+    {
+        var moving = direction == TransferDirection.Right ? _sourceSelectedKeys : _targetSelectedKeys;
+        if (direction == TransferDirection.Left && _oneWay) return;
+        if (direction == TransferDirection.Right)
+            _targetKeys.AddRange(moving.Where(key => !_targetKeys.Contains(key)));
+        else
+            _targetKeys.RemoveAll(moving.Contains);
+        moving.Clear();
+        _sourcePage = Math.Min(_sourcePage, Math.Max(1, (int)Math.Ceiling(_sourceItems.Count / 10d)));
+        _targetPage = Math.Min(_targetPage, Math.Max(1, (int)Math.Ceiling(_targetItems.Count / 10d)));
+    }
+
+    private sealed record TransferLargeDataItem(string Key, string Title);
 }

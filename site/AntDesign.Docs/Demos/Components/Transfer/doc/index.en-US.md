@@ -23,6 +23,7 @@ One or more elements can be selected from either column, one click on the proper
 | --- | --- | --- | --- | --- |
 | DataSource | Used for setting the source data. The elements that are part of this array will be present the left column. Except the elements whose keys are included in `targetKeys` prop. | List\<TransferItem> | null |  |
 | Disabled | Whether disabled transfer | bool | false |  |
+| Status | Set the validation status (`error` or `warning`) of the transfer lists. | string | - |  |
 | Footer | A function used for rendering the footer. | OneOf<string, RenderFragment> | null |  |
 | Style | Custom the css for the whole componet. | string |  |  |
 | ClassNames | Customize classes for semantic elements. Use shared keys such as `header`, or direction-specific dotted keys such as `source.header` and `target.header`. | IReadOnlyDictionary<string, string> | null |  |

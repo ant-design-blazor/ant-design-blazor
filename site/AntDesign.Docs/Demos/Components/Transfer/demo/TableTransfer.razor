@@ -1,5 +1,125 @@
-﻿<h3>TableTransfer</h3>
+﻿@using AntDesign.Docs.Shared
+
+<Flex Gap="FlexGap.Middle" Vertical>
+    <div class="ant-transfer ant-transfer-customize-list table-transfer-demo">
+        <TransferSidePanel TItem="TransferRow" DataSource="_sourceRows.ToArray()" Direction="TransferDirection.Left" ShowSelectAll="false"
+                           Title="Source" KeySelector="row => row.Key" IsItemDisabled="row => row.Disabled"
+                           SelectedKeys="_sourceSelectedKeys" ShowSearch SearchValue="@_sourceSearch"
+                           SearchValueChanged="value => SetSearchAsync(TransferDirection.Left, value)"
+                           OnItemSelect="OnItemSelect" OnSelectAll="OnSelectAll">
+            <ChildContent Context="panel">
+                <Table TItem="TransferRow" DataSource="panel.DataSource" RowKey="row => row.Key"
+                       Size="TableSize.Small" PageSize="5" Class="table-transfer-table" Style="@(_disabled ? "pointer-events: none;" : null)"
+                       SelectedRows="RowsForSelection(panel.Direction)"
+                       SelectedRowsChanged="rows => OnRowsSelected(panel.Direction, rows)">
+                    <Selection Disabled="_disabled" />
+                    <PropertyColumn Property="row => row.Title" Title="Name" />
+                    <PropertyColumn Property="row => row.Tag" Title="Tag" />
+                    <PropertyColumn Property="row => row.Description" Title="Description" />
+                </Table>
+            </ChildContent>
+        </TransferSidePanel>
+        <div class="ant-transfer-actions">
+            <Button Type="ButtonType.Primary" Size="ButtonSize.Small" Disabled="@(_disabled || _sourceSelectedKeys.Count == 0)" OnClick="MoveRightAsync">
+                <IconContent><RightOutlined /></IconContent>
+            </Button>
+            <Button Type="ButtonType.Primary" Size="ButtonSize.Small" Disabled="@(_disabled || _targetSelectedKeys.Count == 0)" OnClick="MoveLeftAsync">
+                <IconContent><LeftOutlined /></IconContent>
+            </Button>
+        </div>
+        <TransferSidePanel TItem="TransferRow" DataSource="_targetRows.ToArray()" Direction="TransferDirection.Right" ShowSelectAll="false"
+                           Title="Target" KeySelector="row => row.Key" IsItemDisabled="row => row.Disabled"
+                           SelectedKeys="_targetSelectedKeys" ShowSearch SearchValue="@_targetSearch"
+                           SearchValueChanged="value => SetSearchAsync(TransferDirection.Right, value)"
+                           OnItemSelect="OnItemSelect" OnSelectAll="OnSelectAll">
+            <ChildContent Context="panel">
+                <Table TItem="TransferRow" DataSource="panel.DataSource" RowKey="row => row.Key"
+                       Size="TableSize.Small" Class="table-transfer-table" Style="@(_disabled ? "pointer-events: none;" : null)"
+                       SelectedRows="RowsForSelection(panel.Direction)"
+                       SelectedRowsChanged="rows => OnRowsSelected(panel.Direction, rows)">
+                    <Selection Disabled="_disabled" />
+                    <PropertyColumn Property="row => row.Title" Title="Name" />
+                    <PropertyColumn Property="row => row.Tag" Title="Tag" />
+                    <PropertyColumn Property="row => row.Description" Title="Description" />
+                </Table>
+            </ChildContent>
+        </TransferSidePanel>
+    </div>
+    <Switch Checked="_disabled" CheckedChanged="value => _disabled = value" UnCheckedChildren="enabled" CheckedChildren="disabled" />
+</Flex>
 
 @code {
+    private static readonly string[] Tags = ["cat", "dog", "bird"];
+    private readonly List<TransferRow> _allRows = Enumerable.Range(0, 20)
+        .Select(i => new TransferRow(i.ToString(), $"content{i + 1}", $"description of content{i + 1}", Tags[i % Tags.Length]))
+        .ToList();
+    private List<string> _targetKeys = [];
+    private List<string> _sourceSelectedKeys = [];
+    private List<string> _targetSelectedKeys = [];
+    private IEnumerable<TransferRow> _sourceRows => FilterRows(_allRows.Where(row => !_targetKeys.Contains(row.Key)), _sourceSearch);
+    private IEnumerable<TransferRow> _targetRows => FilterRows(_allRows.Where(row => _targetKeys.Contains(row.Key)), _targetSearch);
+    private string _sourceSearch = string.Empty;
+    private string _targetSearch = string.Empty;
+    private bool _disabled;
 
+    private static IEnumerable<TransferRow> FilterRows(IEnumerable<TransferRow> rows, string search) =>
+        string.IsNullOrWhiteSpace(search) ? rows : rows.Where(row => row.Title.Contains(search, StringComparison.OrdinalIgnoreCase) || row.Tag.Contains(search, StringComparison.OrdinalIgnoreCase));
+
+    private IEnumerable<TransferRow> RowsForSelection(TransferDirection direction)
+    {
+        var keys = direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
+        return _allRows.Where(row => keys.Contains(row.Key));
+    }
+
+    private Task OnItemSelect(TransferSideSelection selection)
+    {
+        var keys = selection.Direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
+        if (selection.Selected && !keys.Contains(selection.Key)) keys.Add(selection.Key);
+        if (!selection.Selected) keys.Remove(selection.Key);
+        return Task.CompletedTask;
+    }
+
+    private Task OnSelectAll(TransferSideSelectAll selection)
+    {
+        var rows = selection.Direction == TransferDirection.Left ? _sourceRows : _targetRows;
+        var keys = selection.Direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
+        if (selection.Selected)
+        {
+            foreach (var row in rows.Where(row => !row.Disabled))
+                if (!keys.Contains(row.Key)) keys.Add(row.Key);
+        }
+        else keys.Clear();
+        return Task.CompletedTask;
+    }
+
+    private Task SetSearchAsync(TransferDirection direction, string value)
+    {
+        if (direction == TransferDirection.Left) _sourceSearch = value;
+        else _targetSearch = value;
+        return Task.CompletedTask;
+    }
+
+    private Task OnRowsSelected(TransferDirection direction, IEnumerable<TransferRow> rows)
+    {
+        var selected = rows.Select(row => row.Key).ToList();
+        if (direction == TransferDirection.Left) _sourceSelectedKeys = selected;
+        else _targetSelectedKeys = selected;
+        return Task.CompletedTask;
+    }
+
+    private Task MoveRightAsync() => MoveAsync(TransferDirection.Right);
+    private Task MoveLeftAsync() => MoveAsync(TransferDirection.Left);
+
+    private Task MoveAsync(TransferDirection direction)
+    {
+        var moving = direction == TransferDirection.Right ? _sourceSelectedKeys : _targetSelectedKeys;
+        if (direction == TransferDirection.Right)
+            _targetKeys.AddRange(moving.Where(key => !_targetKeys.Contains(key)));
+        else
+            _targetKeys.RemoveAll(moving.Contains);
+        moving.Clear();
+        return Task.CompletedTask;
+    }
+
+    private sealed record TransferRow(string Key, string Title, string Description, string Tag, bool Disabled = false);
 }

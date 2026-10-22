@@ -26,6 +26,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg
 | --- | --- | --- | --- | --- |
 | DataSource | 数据源，其中的数据将会被渲染到左边一栏中，`targetKeys` 中指定的除外。 | List\<TransferItem> | null |  |
 | Disabled | 是否禁用 | bool | false |  |
+| Status | 设置穿梭框列表的校验状态（`error` 或 `warning`）。 | string | - |  |
 | Footer | 底部渲染函数 | OneOf<string, RenderFragment> | null |  |
 | Style | 修改整个组件的样式 | string |  |  |
 | ClassNames | 自定义语义节点的 CSS 类。可使用 `header` 等通用键，或 `source.header`、`target.header` 等方向限定键。 | IReadOnlyDictionary<string, string> | null |  |

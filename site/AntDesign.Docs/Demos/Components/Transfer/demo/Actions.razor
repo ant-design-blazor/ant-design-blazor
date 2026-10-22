@@ -1,0 +1,63 @@
+@using AntDesign.Docs.Shared
+
+<div class="ant-transfer">
+    <TransferSidePanel TItem="TransferActionItem" DataSource="_sourceItems" Direction="TransferDirection.Left"
+                       Title="Source" KeySelector="item => item.Key" SelectedKeys="_sourceSelectedKeys"
+                       OnItemSelect="OnItemSelect" />
+    <div class="ant-transfer-actions transfer-action-buttons">
+        <Button Type="ButtonType.Primary" Disabled="@(_rightLoading || _sourceSelectedKeys.Count == 0)" Loading="_rightLoading" OnClick="MoveRightAsync">
+            <Icon Type="@IconType.Outline.DoubleRight" /> Move To Right
+        </Button>
+        <Button Type="ButtonType.Primary" Disabled="@(_leftLoading || _targetSelectedKeys.Count == 0)" Loading="_leftLoading" OnClick="MoveLeftAsync">
+            <Icon Type="@IconType.Outline.DoubleLeft" /> Move To Left
+        </Button>
+    </div>
+    <TransferSidePanel TItem="TransferActionItem" DataSource="_targetItems" Direction="TransferDirection.Right"
+                       Title="Target" KeySelector="item => item.Key" SelectedKeys="_targetSelectedKeys"
+                       OnItemSelect="OnItemSelect" />
+</div>
+
+@code {
+    private readonly List<TransferActionItem> _allItems = Enumerable.Range(0, 20)
+        .Select(i => new TransferActionItem(i.ToString(), $"Content {i + 1}")).ToList();
+    private List<string> _targetKeys = Enumerable.Range(0, 20).Where(i => i > 10).Select(i => i.ToString()).ToList();
+    private List<string> _sourceSelectedKeys = [];
+    private List<string> _targetSelectedKeys = [];
+    private bool _rightLoading;
+    private bool _leftLoading;
+    private IReadOnlyList<TransferActionItem> _sourceItems => _allItems.Where(item => !_targetKeys.Contains(item.Key)).ToArray();
+    private IReadOnlyList<TransferActionItem> _targetItems => _allItems.Where(item => _targetKeys.Contains(item.Key)).ToArray();
+
+    private Task OnItemSelect(TransferSideSelection selection)
+    {
+        var keys = selection.Direction == TransferDirection.Left ? _sourceSelectedKeys : _targetSelectedKeys;
+        if (selection.Selected && !keys.Contains(selection.Key)) keys.Add(selection.Key);
+        if (!selection.Selected) keys.Remove(selection.Key);
+        return Task.CompletedTask;
+    }
+
+    private Task MoveRightAsync() => MoveAsync(TransferDirection.Right);
+    private Task MoveLeftAsync() => MoveAsync(TransferDirection.Left);
+
+    private async Task MoveAsync(TransferDirection direction)
+    {
+        var moving = direction == TransferDirection.Right ? _sourceSelectedKeys : _targetSelectedKeys;
+        if (moving.Count == 0) return;
+        if (direction == TransferDirection.Right) _rightLoading = true;
+        else _leftLoading = true;
+        await Task.Delay(600);
+        if (direction == TransferDirection.Right)
+        {
+            _targetKeys.AddRange(moving.Where(key => !_targetKeys.Contains(key)));
+            _rightLoading = false;
+        }
+        else
+        {
+            _targetKeys.RemoveAll(moving.Contains);
+            _leftLoading = false;
+        }
+        moving.Clear();
+    }
+
+    private sealed record TransferActionItem(string Key, string Title);
+}

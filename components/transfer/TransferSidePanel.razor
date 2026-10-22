@@ -1,0 +1,152 @@
+@typeparam TItem
+@namespace AntDesign.Internal
+@using AntDesign.Icons
+
+<div class="@PanelClass" @onscroll="OnScroll" style="@PanelStyle">
+    <div class="@(ResolvedClass("header", "ant-transfer-list-header"))" style="@(ResolvedStyle("header"))">
+        @if (ShowSelectAll)
+        {
+            <Checkbox WrapperClass="@(ResolvedClass("itemIcon", "ant-transfer-list-checkbox"))" Style="@(ResolvedStyle("itemIcon"))" HideEmptyLabel="true"
+                      Checked="AllSelected" Indeterminate="Indeterminate" Disabled="Disabled"
+                      CheckedChange="SelectAllAsync" />
+            @if (ShowDropdown)
+            {
+                <DownOutlined Class="ant-dropdown-trigger" />
+            }
+        }
+        <span class="ant-transfer-list-header-selected">@(CountText ?? SelectedCountText)</span>
+        @if (!string.IsNullOrEmpty(Title))
+        {
+            <span class="@(ResolvedClass("title", "ant-transfer-list-header-title"))" style="@(ResolvedStyle("title"))">@Title</span>
+        }
+    </div>
+    <div class="@(ResolvedClass("body", $"ant-transfer-list-body {(ShowSearch ? "ant-transfer-list-body-with-search" : "")}"))" style="@(ResolvedStyle("body"))">
+        @if (ShowSearch)
+        {
+            <div class="ant-transfer-list-body-search-wrapper">
+                <CascadingValue TValue="AntDesign.Internal.IFormItem" Value="null" IsFixed>
+                    <AntDesign.Input Class="ant-transfer-list-search" Value="SearchValue" ValueChanged="SearchAsync"
+                                     Placeholder="@SearchPlaceholder" AllowClear TValue="string">
+                        <Prefix>
+                            @if (ShowSearchIcon)
+                        {
+                                <SearchOutlined />
+                            }
+                        </Prefix>
+                    </AntDesign.Input>
+                </CascadingValue>
+            </div>
+        }
+        @if (ChildContent != null)
+        {
+            <div class="ant-transfer-list-body-customize-wrapper">@ChildContent(Context)</div>
+        }
+        else if (DataItems.Count == 0)
+        {
+            <div class="ant-transfer-list-body-not-found"><Empty Simple Small /></div>
+        }
+        else
+        {
+            <ul class="@(ResolvedClass("list", "ant-transfer-list-content"))" style="@(ResolvedStyle("list"))">
+                @foreach (var item in VisibleDataSource)
+                {
+                    var key = KeySelector(item);
+                    var itemDisabled = Disabled || IsItemDisabled(item);
+                    <li @key="key" title="@ItemTitle(item)" class="@(ResolvedClass("item", $"ant-transfer-list-content-item {(itemDisabled ? "ant-transfer-list-content-item-disabled" : SelectedKeys.Contains(key) ? "ant-transfer-list-content-item-checked" : "")}"))" style="@(ResolvedStyle("item"))">
+                        @if (Selectable)
+                        {
+                            <Checkbox WrapperClass="@(ResolvedClass("itemIcon", "ant-transfer-list-checkbox"))" Style="@(ResolvedStyle("itemIcon"))" HideEmptyLabel="true"
+                                      Checked="SelectedKeys.Contains(key)" Disabled="@(Disabled || IsItemDisabled(item))"
+                                      CheckedChange="@(checkedState => SelectItemAsync(key, checkedState))" />
+                        }
+                        <span class="@(ResolvedClass("itemContent", "ant-transfer-list-content-item-text"))" style="@(ResolvedStyle("itemContent"))" @onclick="@(Selectable && !itemDisabled ? () => SelectItemAsync(key, !SelectedKeys.Contains(key)) : null)">
+                            @if (ItemTemplate != null)
+                            {
+                                @ItemTemplate(item)
+                            }
+                            else
+                            {
+                                @item?.ToString()
+                            }
+                        </span>
+                    </li>
+                }
+            </ul>
+            @if (PageSize > 0 && DataItems.Count > PageSize)
+            {
+                <div class="ant-transfer-list-pagination">
+                    <Pagination Size="PaginationSize.Small" Current="CurrentPage" PageSize="PageSize"
+                                Total="DataItems.Count" HideOnSinglePage OnChange="HandlePageChangeAsync" />
+                </div>
+            }
+        }
+    </div>
+    @if (FooterTemplate != null || !string.IsNullOrEmpty(Footer))
+    {
+        <div class="@(ResolvedClass("footer", "ant-transfer-list-footer"))" style="@(ResolvedStyle("footer"))">
+            @if (FooterTemplate != null)
+            {
+                @FooterTemplate
+            }
+            else
+            {
+                @Footer
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public IEnumerable<TItem> DataSource { get; set; } = Array.Empty<TItem>();
+    [Parameter, EditorRequired] public Func<TItem, string> KeySelector { get; set; }
+    [Parameter] public Func<TItem, bool> IsItemDisabled { get; set; } = _ => false;
+    [Parameter] public TransferDirection Direction { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public IEnumerable<string> SelectedKeys { get; set; } = Array.Empty<string>();
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool Selectable { get; set; } = true;
+    [Parameter] public bool ShowSelectAll { get; set; } = true;
+    [Parameter] public bool ShowDropdown { get; set; }
+    [Parameter] public bool? AllSelectedOverride { get; set; }
+    [Parameter] public bool? IndeterminateOverride { get; set; }
+    [Parameter] public bool ShowSearch { get; set; }
+    [Parameter] public bool ShowSearchIcon { get; set; }
+    [Parameter] public string SearchPlaceholder { get; set; } = "Search";
+    [Parameter] public string CountText { get; set; }
+    [Parameter] public string PanelClass { get; set; } = "ant-transfer-list ant-transfer-section";
+    [Parameter] public string PanelStyle { get; set; }
+    [Parameter] public Func<string, string, TransferDirection, string> ClassResolver { get; set; }
+    [Parameter] public Func<string, string, TransferDirection, string> StyleResolver { get; set; }
+    [Parameter] public Func<TItem, string> ItemTitleSelector { get; set; }
+    [Parameter] public EventCallback<EventArgs> OnScroll { get; set; }
+    [Parameter] public string Footer { get; set; }
+    [Parameter] public RenderFragment FooterTemplate { get; set; }
+    [Parameter] public string SearchValue { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> SearchValueChanged { get; set; }
+    [Parameter] public EventCallback<TransferSideSelection> OnItemSelect { get; set; }
+    [Parameter] public EventCallback<TransferSideSelectAll> OnSelectAll { get; set; }
+    [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
+    [Parameter] public RenderFragment<TransferSidePanelContext<TItem>> ChildContent { get; set; }
+    [Parameter] public int PageSize { get; set; }
+    [Parameter] public int CurrentPage { get; set; } = 1;
+    [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
+
+    private IReadOnlyList<TItem> DataItems => DataSource?.ToArray() ?? Array.Empty<TItem>();
+    private TransferSidePanelContext<TItem> Context => new(DataItems, Direction, SelectedKeys, KeySelector, SelectItemAsync);
+    private IEnumerable<TItem> VisibleDataSource => PageSize > 0 ? DataItems.Skip((CurrentPage - 1) * PageSize).Take(PageSize) : DataItems;
+    private bool AllSelected => AllSelectedOverride ?? (DataItems.Any(x => !IsItemDisabled(x)) && DataItems.Where(x => !IsItemDisabled(x)).All(x => SelectedKeys.Contains(KeySelector(x))));
+    private bool Indeterminate => IndeterminateOverride ?? (!AllSelected && DataItems.Any(x => SelectedKeys.Contains(KeySelector(x))));
+    private int SelectedCount => DataItems.Count(x => SelectedKeys.Contains(KeySelector(x)));
+    private static string FormatItemCount(int count) => $"{count} {(count == 1 ? "item" : "items")}";
+    private string ResolvedClass(string slot, string baseClass) => ClassResolver?.Invoke(slot, baseClass, Direction) ?? baseClass;
+    private string ResolvedStyle(string slot) => StyleResolver?.Invoke(slot, null, Direction);
+    private string ItemTitle(TItem item) => ItemTitleSelector?.Invoke(item);
+    private string SelectedCountText => SelectedCount == 0
+        ? FormatItemCount(DataItems.Count)
+        : $"{SelectedCount}/{FormatItemCount(DataItems.Count)}";
+
+    private Task SelectItemAsync(string key, bool selected) => OnItemSelect.InvokeAsync(new TransferSideSelection(Direction, key, selected));
+    private Task SelectAllAsync(bool selected) => OnSelectAll.InvokeAsync(new TransferSideSelectAll(Direction, selected));
+    private Task SearchAsync(string value) => SearchValueChanged.InvokeAsync(value);
+    private Task HandlePageChangeAsync(PaginationEventArgs args) => CurrentPageChanged.InvokeAsync(args.Page);
+}

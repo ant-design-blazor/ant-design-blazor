@@ -1,0 +1,19 @@
+<Flex Gap="FlexGap.Middle" Vertical>
+    <Transfer DataSource="_dataSource"
+              TargetKeys="_targetKeys"
+              SelectedKeys="_selectedKeys"
+              Status="error" />
+    <Transfer DataSource="_dataSource"
+              TargetKeys="_targetKeys"
+              SelectedKeys="_selectedKeys"
+              Status="warning"
+              ShowSearch />
+</Flex>
+
+@code {
+    private readonly List<TransferItem> _dataSource = Enumerable.Range(1, 8)
+        .Select(index => new TransferItem { Key = index.ToString(), Title = $"Content {index}" })
+        .ToList();
+    private readonly string[] _targetKeys = { "5", "6", "7", "8" };
+    private readonly string[] _selectedKeys = Array.Empty<string>();
+}

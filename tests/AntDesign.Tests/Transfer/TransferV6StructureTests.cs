@@ -89,4 +89,49 @@ public sealed class TransferV6StructureTests : AntDesignTestBase
         Assert.Contains("custom-actions", transfer.Find(".ant-transfer-actions").ClassList);
         Assert.Contains("gap: 8px", transfer.Find(".ant-transfer-actions").GetAttribute("style"));
     }
+
+    [Fact]
+    public void Renders_v6_icons_and_omits_empty_section_styles()
+    {
+        var transfer = RenderComponent<AntDesign.Transfer>(parameters => parameters
+            .Add(component => component.DataSource, new[]
+            {
+                new TransferItem { Key = "one", Title = "One" },
+                new TransferItem { Key = "two", Title = "Two" }
+            })
+            .Add(component => component.TargetKeys, new string[0])
+            .Add(component => component.SelectedKeys, new string[0]));
+
+        Assert.All(transfer.FindAll(".ant-transfer-section"), section =>
+            Assert.Null(section.GetAttribute("style")));
+
+        var headerIcons = transfer.FindAll(".ant-transfer-list-header .anticon-down");
+        Assert.Equal(2, headerIcons.Count);
+        Assert.All(headerIcons, icon =>
+        {
+            Assert.Equal("down", icon.GetAttribute("aria-label"));
+            Assert.Equal("64 64 896 896", icon.QuerySelector("svg")!.GetAttribute("viewBox"));
+        });
+
+        var actionIcons = transfer.FindAll(".ant-transfer-actions .anticon");
+        Assert.Collection(actionIcons,
+            icon => Assert.Equal("right", icon.GetAttribute("aria-label")),
+            icon => Assert.Equal("left", icon.GetAttribute("aria-label")));
+        Assert.All(actionIcons, icon =>
+            Assert.Equal("64 64 896 896", icon.QuerySelector("svg")!.GetAttribute("viewBox")));
+    }
+
+    [Theory]
+    [InlineData("error")]
+    [InlineData("warning")]
+    public void Applies_v6_status_class(string status)
+    {
+        var transfer = RenderComponent<AntDesign.Transfer>(parameters => parameters
+            .Add(component => component.DataSource, new[] { new TransferItem { Key = "one", Title = "One" } })
+            .Add(component => component.TargetKeys, new string[0])
+            .Add(component => component.SelectedKeys, new string[0])
+            .Add(component => component.Status, status));
+
+        Assert.Contains($"ant-transfer-status-{status}", transfer.Find(".ant-transfer").ClassList);
+    }
 }

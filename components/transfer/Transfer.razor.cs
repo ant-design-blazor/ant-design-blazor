@@ -91,7 +91,7 @@ namespace AntDesign
                 style = AppendStyle(style, directionStyle);
             }
 
-            return style;
+            return string.IsNullOrWhiteSpace(style) ? null : style;
         }
 
         private static string AppendStyle(string current, string additional)
@@ -101,6 +101,13 @@ namespace AntDesign
         }
 
         private static string SemanticDirection(TransferDirection direction) => direction == TransferDirection.Left ? "source" : "target";
+
+        private string GetStatusClass() => Status?.ToLowerInvariant() switch
+        {
+            "error" => $"{PrefixName}-status-error",
+            "warning" => $"{PrefixName}-status-warning",
+            _ => null
+        };
 
         /// <summary>
         /// Used for setting the source data. 
@@ -127,6 +134,12 @@ namespace AntDesign
         /// <default value="false"/>
         [Parameter]
         public bool Disabled { get; set; } = false;
+
+        /// <summary>
+        /// Set the validation status of the transfer lists.
+        /// </summary>
+        [Parameter]
+        public string Status { get; set; }
 
         /// <summary>
         /// Whether to show search bars in the columns or not
@@ -243,6 +256,7 @@ namespace AntDesign
         {
             ClassMapper
                 .Add(PrefixName)
+                .GetIf(GetStatusClass, () => GetStatusClass() != null)
                 .If($"{PrefixName}-rtl", () => RTL);
         }
 
