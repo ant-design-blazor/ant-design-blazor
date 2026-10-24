@@ -1,9 +1,9 @@
 ﻿window.DocSearchInit = function (locale) {
-  if (typeof window.docsearch !== "function") {
+  if (!docsearch) {
     return;
   }
   const lang = locale === 'zh-CN' ? 'cn' : 'en';
-  window.docsearch({
+  docsearch({
     apiKey: '93dc26e7c963c887f9b096b349dd47ce',
     appId: 'C9UTAZSOWW',
     indexName: 'ant-design-blazor-docs',
