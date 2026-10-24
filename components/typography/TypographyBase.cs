@@ -240,8 +240,9 @@ namespace AntDesign
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.OpenElement(1, _editing ? "div" : HtmlType);
-            builder.AddAttribute(2, "class", ClassMapper.Class);
-            builder.AddAttribute(3, "style", Style);
+            builder.AddMultipleAttributes(2, AdditionalAttributes);
+            builder.AddAttribute(3, "class", ClassMapper.Class);
+            builder.AddAttribute(4, "style", Style);
 
             if (Editing && EditConfig != null)
             {

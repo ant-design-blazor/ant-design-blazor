@@ -7,7 +7,7 @@
 }
 else
 {
-    <div class="@WrapperClassMapper.Class" @ref="Ref">
+    <div @attributes="AdditionalAttributes" class="@WrapperClassMapper.Class" @ref="Ref">
         <div>
             @simpleTemplate(this)
         </div>
@@ -27,7 +27,7 @@ else
         @<Template>
             @if (spin._isLoading)
             {
-                <div class="@spin.ClassMapper.Class" id="@spin.Id" style="@spin.Style" @ref="spin.Ref">
+                <div @attributes="spin.AdditionalAttributes" class="@spin.ClassMapper.Class" id="@spin.Id" style="@spin.Style" @ref="spin.Ref">
                     @if (spin.Indicator != null)
                     {
                         @spin.Indicator

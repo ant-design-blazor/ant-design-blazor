@@ -1,6 +1,6 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<span class="@ClassMapper.Class" style="@(_compactStyleOverride+Style)" Id="@Id" @ref="Ref">
+<span @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@(_compactStyleOverride+Style)" Id="@Id" @ref="Ref">
     @ChildContent
 </span>

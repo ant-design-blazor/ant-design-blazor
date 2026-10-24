@@ -8,7 +8,7 @@
     var cancelProps = ModalProps.CancelButtonProps ?? new ButtonProps();
 }
 
-<div>
+<div @attributes="AdditionalAttributes">
     <Button OnClick="@HandleOk"
             Loading="@okProps.Loading"
             Type="@okProps.Type"

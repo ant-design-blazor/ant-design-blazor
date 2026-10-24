@@ -35,7 +35,7 @@ namespace AntDesign
         [Parameter]
         public RenderFragment ChildContent { get; set; }
 
-        [Parameter(CaptureUnmatchedValues = true)]
+        [Parameter]
         public Dictionary<string, object> Attributes { get; set; }
 
         /// <summary>
@@ -135,16 +135,16 @@ namespace AntDesign
             if (builder != null)
             {
                 builder.OpenElement(0, "a");
-                builder.AddAttribute(1, "href", Href);
-                builder.AddAttribute(2, "class", ClassMapper.Class);
-                builder.AddAttribute(3, "style", Style);
+                builder.AddMultipleAttributes(1, GetAdditionalAttributes(Attributes));
+                builder.AddAttribute(2, "href", Href);
+                builder.AddAttribute(3, "class", ClassMapper.Class);
+                builder.AddAttribute(4, "style", Style);
 
                 if (Target.HasValue)
-                    builder.AddAttribute(4, "target", _targetMap[Target.Value]);
+                    builder.AddAttribute(5, "target", _targetMap[Target.Value]);
 
                 builder.SetKey(MenuItem.Key);
-                builder.AddMultipleAttributes(5, Attributes);
-                builder.AddContent(6, ChildContent);
+                builder.AddContent(7, ChildContent);
                 builder.CloseElement();
             }
         }

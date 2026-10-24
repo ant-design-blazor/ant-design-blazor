@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @using AntDesign.Internal;
 
-<div class="@ClassMapper.Class" style="@Style" id="@Id">
+<div @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@Style" id="@Id">
     <Row Class="ant-form-item-row">
         @if (!NoStyle && ( !string.IsNullOrEmpty(DisplayName) || LabelTemplate != null))
         {

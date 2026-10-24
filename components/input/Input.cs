@@ -759,27 +759,9 @@ namespace AntDesign
 
             // input
             builder.OpenElement(41, "input");
-            builder.AddAttribute(42, "class", ClassMapper.Class);
-            builder.AddAttribute(43, "style", $"{WidthStyle} {Style}");
-
-            bool needsDisabled = Disabled;
-            if (Attributes != null)
-            {
-                builder.AddMultipleAttributes(44, Attributes);
-                if (!Attributes.TryGetValue("disabled", out object disabledAttribute))
-                {
-                    needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
-                }
-            }
-
-            if (AdditionalAttributes != null)
-            {
-                builder.AddMultipleAttributes(45, AdditionalAttributes);
-                if (!AdditionalAttributes.TryGetValue("disabled", out object disabledAttribute))
-                {
-                    needsDisabled = ((bool?)disabledAttribute ?? needsDisabled) | Disabled;
-                }
-            }
+            builder.AddMultipleAttributes(42, GetAdditionalAttributes(Attributes));
+            builder.AddAttribute(43, "class", ClassMapper.Class);
+            builder.AddAttribute(44, "style", $"{WidthStyle} {Style}");
 
             if (!string.IsNullOrWhiteSpace(NameAttributeValue))
             {
@@ -793,7 +775,7 @@ namespace AntDesign
                 builder.AddAttribute(60, "placeholder", Placeholder);
             }
             builder.AddAttribute(61, "value", CurrentValueAsString);
-            builder.AddAttribute(62, "disabled", needsDisabled);
+            builder.AddAttribute(62, "disabled", Disabled);
             builder.AddAttribute(63, "readonly", ReadOnly);
 
             if (!AutoComplete)

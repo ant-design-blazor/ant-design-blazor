@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" @ref="@Ref" style="@Style" id="@Id">
+<div @attributes="AdditionalAttributes" class="@ClassMapper.Class" @ref="@Ref" style="@Style" id="@Id">
     <div class="@(_prefixCls)-image" style="@ImageStyle">
         @if (ImageTemplate != null)
         {

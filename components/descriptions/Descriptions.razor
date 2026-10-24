@@ -5,7 +5,7 @@
     @ChildContent
 </CascadingValue>
 
-<div @ref="@Ref" class="@ClassMapper.Class" style="@Style" id="@Id">
+<div @attributes="AdditionalAttributes" @ref="@Ref" class="@ClassMapper.Class" style="@Style" id="@Id">
     @if (Title != null || TitleTemplate != null)
     {
         <div class="ant-descriptions-header">

@@ -1,13 +1,12 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<li
+<li @attributes="GetAdditionalAttributes(UnmatchedAttributes)"
     title="@(ShowTitle ? Page : null)"
     class="@ClassMapper.Class"
     @onclick="HandleClick"
     @onkeypress="HandleKeyPress"
     tabIndex="0"
-    @attributes="@UnmatchedAttributes"
     >
     @ItemRender(new PaginationItemRenderContext(Page, PaginationItemType.Page, _ => @<a rel="nofollow">@Page</a>, Disabled))
 </li>
@@ -38,7 +37,7 @@
     [Parameter]
     public RenderFragment<PaginationItemRenderContext> ItemRender { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
+    [Parameter]
     public Dictionary<string, object> UnmatchedAttributes { get; set; }
 
     protected override void OnInitialized()

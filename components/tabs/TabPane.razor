@@ -36,7 +36,7 @@
              class="@_tabClassMapper.Class"
              id="@TabId"
              ondragover="event.preventDefault();">
-            <div @onkeydown="@HandleKeydown"
+            <div @attributes="AdditionalAttributes" @onkeydown="@HandleKeydown"
                  @ref="_tabBtnRef"
                  role="tab"
                  aria-selected="@(_isActive ? "true" : "false")"

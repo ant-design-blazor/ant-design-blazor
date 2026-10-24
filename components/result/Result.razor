@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="@ClassMapper.Class" style="@Style" @ref="Ref">
+<div @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@Style" @ref="Ref">
     @if (IsShowIcon)
     {
         <div class="@IconClassMapper.Class">

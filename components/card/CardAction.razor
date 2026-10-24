@@ -1,6 +1,6 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<li style="@($"width:{100 / Card._cardActions.Count}%;") @Style" class="@ClassMapper.Class" @ref="Ref">
+<li @attributes="AdditionalAttributes" style="@($"width:{100 / Card._cardActions.Count}%;") @Style" class="@ClassMapper.Class" @ref="Ref">
     <span>@ChildContent</span>
 </li>
