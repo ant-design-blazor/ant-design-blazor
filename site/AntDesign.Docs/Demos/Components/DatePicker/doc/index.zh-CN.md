@@ -52,7 +52,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg
 | getPopupContainer | 定义浮层的容器，默认为 body 上新建 div | function(trigger) | 无 |  |
 | locale（TODO） | 国际化配置 | object | [默认配置](https://github.com/ant-design/ant-design/blob/master/components/date-picker/locale/example.json) |  |
 | mode（TODO） | 日期面板的状态（[设置后无法选择年份/月份？](/docs/react/faq#当我指定了-DatePicker/RangePicker-的-mode-属性后，点击后无法选择年份/月份？)） | `time` \| `date` \| `month` \| `year` \| `decade` | - |  |
-| open | 控制弹层是否展开 | boolean | - |  |
+| Open | 控制弹层是否展开 | boolean | false |  |
+| Inline | 将面板内联渲染并预留其布局空间；不播放展开或关闭动画 | boolean | false |  |
 | picker | 设置选择器类型 | `date` \| `week` \| `month` \| `quarter` (4.1.0) \| `year` | `date` |  |
 | placeholder | 输入框提示文字 | string\|RangePicker\[] | - |  |
 | placement | 选择框弹出的位置 | `bottomLeft` `bottomRight` `topLeft` `topRight` | bottomLeft |  |

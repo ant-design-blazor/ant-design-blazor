@@ -107,6 +107,21 @@ namespace AntDesign
         public bool Open { get; set; }
 
         /// <summary>
+        /// Callback executed when the picker requests a change to its open state.
+        /// </summary>
+        [Parameter]
+        public EventCallback<bool> OpenChanged { get; set; }
+
+        /// <summary>
+        /// Renders the picker popup inside the component, reserving space for it.
+        /// This mirrors Ant Design's internal pure-panel presentation.
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        public bool Inline { get; set; }
+
+
+        /// <summary>
         /// If the picker is read-only or not
         /// </summary>
         /// <default value="false"/>

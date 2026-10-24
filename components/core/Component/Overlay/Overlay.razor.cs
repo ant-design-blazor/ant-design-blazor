@@ -223,7 +223,7 @@ namespace AntDesign.Internal
             _overlayCls = Trigger.GetOverlayEnterClass();
             await Trigger.OnVisibleChange.InvokeAsync(true);
 
-            if (Trigger != null && Trigger.VisibleChanged.HasDelegate)
+            if (!Trigger.Inline && Trigger != null && Trigger.VisibleChanged.HasDelegate)
             {
                 await Trigger.VisibleChanged.InvokeAsync(true);
             }
@@ -274,7 +274,7 @@ namespace AntDesign.Internal
 
             await Trigger.OnVisibleChange.InvokeAsync(false);
 
-            if (Trigger != null && Trigger.VisibleChanged.HasDelegate)
+            if (!Trigger.Inline && Trigger != null && Trigger.VisibleChanged.HasDelegate)
             {
                 await Trigger.VisibleChanged.InvokeAsync(false);
             }
@@ -376,7 +376,7 @@ namespace AntDesign.Internal
                 }
 
                 _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
-                    Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
+                    Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.EffectivePopupContainerSelector,
                     Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
                     VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
                 if (_position is null && _recurenceGuard <= 10) //up to 10 attempts
@@ -509,7 +509,7 @@ namespace AntDesign.Internal
             bool triggerIsWrappedInDiv = Trigger.Unbound is null;
 
             _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition,
-                Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
+                Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.EffectivePopupContainerSelector,
                 Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
                 VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
             if (_position is not null)
