@@ -10,6 +10,18 @@ namespace AntDesign.JsInterop
 {
     public class DomEventSubscriptionStore : ConcurrentDictionary<DomEventKey, List<DomEventSubscription>>
     {
+        private readonly ConcurrentDictionary<DomEventKey, IDisposable> _dotNetObjectStore = new();
+
+        public bool TryAddDotNetObject(DomEventKey key, IDisposable dotNetObject)
+        {
+            return _dotNetObjectStore.TryAdd(key, dotNetObject);
+        }
+
+        public bool TryRemoveDotNetObject(DomEventKey key, out IDisposable dotNetObject)
+        {
+            return _dotNetObjectStore.TryRemove(key, out dotNetObject);
+        }
+
         public (DomEventKey key, DomEventSubscription subscription) FindDomEventSubscription(string id)
         {
             DomEventKey key = null;

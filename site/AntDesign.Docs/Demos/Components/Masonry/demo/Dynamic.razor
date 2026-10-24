@@ -1,0 +1,37 @@
+﻿<Masonry T="int" Columns="4" Gutter="16" Items="_items" ItemRender="RenderItem" OnLayoutChange="OnLayoutChange" />
+<Button Block="true" Style="margin-top: 16px;" OnClick="AddItem">Add Item</Button>
+
+@code {
+    private readonly Random _random = new();
+    private List<MasonryItem<int>> _items = new[] { 150, 50, 90, 70, 110, 150, 130, 80, 50, 90, 100, 150, 70, 50, 80 }
+        .Select((height, index) => new MasonryItem<int> { Key = index, Column = index % 4, Data = height })
+        .ToList();
+
+    private RenderFragment<MasonryItemRenderContext<int>> RenderItem => item => @<Card Size="CardSize.Small" Style="@($"height: {item.Data}px; position: relative;")">
+        @(Convert.ToInt32(item.Key) + 1)
+        <Button Size="ButtonSize.Small" Shape="ButtonShape.Circle" Icon="@IconType.Outline.Close" Style="position: absolute; top: 8px; right: 8px;" OnClick="@(() => RemoveItem(item.Key))" />
+    </Card>;
+
+    private void RemoveItem(object key)
+    {
+        _items = _items.Where(item => !Equals(item.Key, key)).ToList();
+    }
+
+    private void AddItem()
+    {
+        var key = _items.Count == 0 ? 0 : Convert.ToInt32(_items[^1].Key) + 1;
+        _items = _items.Append(new MasonryItem<int> { Key = key, Data = _random.Next(50, 150) }).ToList();
+    }
+
+    private void OnLayoutChange(IEnumerable<MasonryLayoutItem> layout)
+    {
+        var columns = layout.ToDictionary(item => item.Key, item => item.Column);
+        foreach (var item in _items)
+        {
+            if (columns.TryGetValue(item.Key, out var column))
+            {
+                item.Column = column;
+            }
+        }
+    }
+}
