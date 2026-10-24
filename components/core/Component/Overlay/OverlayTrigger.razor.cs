@@ -604,7 +604,8 @@ namespace AntDesign.Internal
             {
                 return OverlayLeaveCls;
             }
-            return $"ant-slide-{_actualPlacement.SlideName}-leave ant-slide-{_actualPlacement.SlideName}-leave-active ant-slide-{_actualPlacement.SlideName}";
+            var leavePlacement = _actualPlacement.GetReverseType();
+            return $"ant-slide-{leavePlacement.SlideName}-leave ant-slide-{leavePlacement.SlideName}-leave-active ant-slide-{leavePlacement.SlideName}";
         }
 
         internal virtual string GetOverlayHiddenClass()
