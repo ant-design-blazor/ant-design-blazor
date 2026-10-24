@@ -11,7 +11,7 @@
                     Disabled="IsDisabled(0)"
                     PopupContainerSelector="@PopupContainerSelector"
                     OnVisibleChange="OverlayVisibleChange"
-                    OverlayAnimation="slide-up"
+                    OverlayAnimation="@(new OverlayAnimationOptions { Animation = "slide", Direction = "up" })"
                     Placement="Placement"
                     Trigger="new[] { Trigger.Click }">
         <Overlay>

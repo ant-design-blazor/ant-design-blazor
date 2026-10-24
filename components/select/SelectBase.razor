@@ -26,7 +26,7 @@
                             Unbound="@(!UseChildContentAsTrigger || TriggerContent == null? (RenderFragment<ForwardRef>)RenderTriggerContent : null)"
                             ChildContent="@(UseChildContentAsTrigger && Unbound == null? TriggerContent : null)"
                             OverlayClassName="@OverlayClassName"
-                            OverlayAnimation="slide-up">
+                            OverlayAnimation="@(new OverlayAnimationOptions { Animation = "slide", Direction = "up" })">
                 <Overlay>
                     <div style="@_dropdownStyle">
                         @if (DropdownRender != null)

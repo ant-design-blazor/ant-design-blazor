@@ -11,7 +11,7 @@
                     Trigger="[]"
                     BoundaryAdjustMode="@BoundaryAdjustMode"
                     PopupContainerSelector="@PopupContainerSelector"
-                    OverlayAnimation="slide-up"
+                    OverlayAnimation="@(new OverlayAnimationOptions { Animation = "slide", Direction = "up" })"
                     OverlayClassName="@OverlayClassName"
                     OverlayStyle="@OverlayStyle"
                     OnVisibleChange="@OnOverlayTriggerVisibleChange">

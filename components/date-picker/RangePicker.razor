@@ -13,7 +13,7 @@
                     Placement="Placement"
                     OnVisibleChange="OverlayVisibleChange"
                     OverlayClassName="ant-picker-dropdown-range"
-                    OverlayAnimation="slide-up"
+                    OverlayAnimation="@(new OverlayAnimationOptions { Animation = "slide", Direction = "up" })"
                     Trigger="new[] { Trigger.Click }">
         <Overlay>
             <div class="@(PrefixCls)-range-arrow" style="@_rangeArrowStyle" />

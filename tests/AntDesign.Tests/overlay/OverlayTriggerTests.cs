@@ -28,10 +28,26 @@ namespace AntDesign.Tests.Overlay
             Assert.Equal("ant-slide-up-enter ant-slide-up-enter-active ant-slide-up", cut.Instance.GetOverlayEnterClass());
             Assert.Equal("ant-slide-down-leave ant-slide-down-leave-active ant-slide-down", cut.Instance.GetOverlayLeaveClass());
 
-            cut.Instance.OverlayAnimation = "slide-up";
+            cut.Instance.OverlayAnimation = new OverlayAnimationOptions
+            {
+                Animation = "slide",
+                DirectionFactory = placement => placement == Placement.BottomLeft ? "up" : "down"
+            };
             cut.Instance.ChangePlacementForShow(PlacementType.Create(Placement.TopLeft));
-            Assert.Equal("ant-slide-up-enter ant-slide-up-enter-active ant-slide-up", cut.Instance.GetOverlayEnterClass());
+            Assert.Equal("ant-slide-down-enter ant-slide-down-enter-active ant-slide-down", cut.Instance.GetOverlayEnterClass());
             Assert.Equal("ant-slide-up-leave ant-slide-up-leave-active ant-slide-up", cut.Instance.GetOverlayLeaveClass());
+
+            cut.Instance.OverlayAnimation = new OverlayAnimationOptions
+            {
+                Prefix = "custom",
+                Animation = "fade",
+                Direction = "in",
+                Enter = "appear",
+                Leave = "exit",
+                Active = "current"
+            };
+            Assert.Equal("custom-fade-in-appear custom-fade-in-appear-current custom-fade-in", cut.Instance.GetOverlayEnterClass());
+            Assert.Equal("custom-fade-in-exit custom-fade-in-exit-current custom-fade-in", cut.Instance.GetOverlayLeaveClass());
         }
     }
 }
