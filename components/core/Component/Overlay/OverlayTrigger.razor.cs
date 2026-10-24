@@ -142,6 +142,13 @@ namespace AntDesign.Internal
         public string OverlayEnterCls { get; set; }
 
         /// <summary>
+        /// Animation class stem used to build enter and leave classes. Placement-aware
+        /// styles can use the placement class to select the corresponding direction.
+        /// </summary>
+        [Parameter]
+        public string OverlayAnimation { get; set; }
+
+        /// <summary>
         /// Css class added to overlay when overlay is hidden.
         /// </summary>
         [Parameter]
@@ -595,7 +602,8 @@ namespace AntDesign.Internal
             {
                 return OverlayEnterCls;
             }
-            return $"ant-slide-{_actualPlacement.SlideName}-enter ant-slide-{_actualPlacement.SlideName}-enter-active ant-slide-{_actualPlacement.SlideName}";
+            var animation = string.IsNullOrEmpty(OverlayAnimation) ? $"slide-{_actualPlacement.SlideName}" : OverlayAnimation;
+            return GetOverlayAnimationClass(animation, "enter");
         }
 
         internal virtual string GetOverlayLeaveClass()
@@ -605,7 +613,13 @@ namespace AntDesign.Internal
                 return OverlayLeaveCls;
             }
             var leavePlacement = _actualPlacement.GetReverseType();
-            return $"ant-slide-{leavePlacement.SlideName}-leave ant-slide-{leavePlacement.SlideName}-leave-active ant-slide-{leavePlacement.SlideName}";
+            var animation = string.IsNullOrEmpty(OverlayAnimation) ? $"slide-{leavePlacement.SlideName}" : OverlayAnimation;
+            return GetOverlayAnimationClass(animation, "leave");
+        }
+
+        private static string GetOverlayAnimationClass(string animation, string phase)
+        {
+            return $"ant-{animation}-{phase} ant-{animation}-{phase}-active ant-{animation}";
         }
 
         internal virtual string GetOverlayHiddenClass()

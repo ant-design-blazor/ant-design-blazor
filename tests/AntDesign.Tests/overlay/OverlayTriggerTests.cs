@@ -27,6 +27,11 @@ namespace AntDesign.Tests.Overlay
             cut.Instance.ChangePlacementForShow(PlacementType.Create(Placement.BottomLeft));
             Assert.Equal("ant-slide-up-enter ant-slide-up-enter-active ant-slide-up", cut.Instance.GetOverlayEnterClass());
             Assert.Equal("ant-slide-down-leave ant-slide-down-leave-active ant-slide-down", cut.Instance.GetOverlayLeaveClass());
+
+            cut.Instance.OverlayAnimation = "slide-up";
+            cut.Instance.ChangePlacementForShow(PlacementType.Create(Placement.TopLeft));
+            Assert.Equal("ant-slide-up-enter ant-slide-up-enter-active ant-slide-up", cut.Instance.GetOverlayEnterClass());
+            Assert.Equal("ant-slide-up-leave ant-slide-up-leave-active ant-slide-up", cut.Instance.GetOverlayLeaveClass());
         }
     }
 }
