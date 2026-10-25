@@ -10,7 +10,7 @@ by the job:
 | --- | --- | --- |
 | Check out source in the PR build | `github.token` | `contents: read` |
 | Download the PR build artifact in the deployment workflow | `github.token` | `actions: read` |
-| Add or update a pull request preview comment | `github.token` | `issues: write` |
+| Add or update a pull request preview comment | `github.token` | `issues: write`, `pull-requests: write` |
 | Publish the documentation output to this repository's `gh-pages` branch | `github.token` | `contents: write` |
 
 The preview build does not need a GitHub secret: it builds untrusted pull
