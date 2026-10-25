@@ -13,6 +13,7 @@ jobs:
       - name: Sync styles from ant-design
         shell: bash
         env:
+          # PAT required: pushes a branch and opens a PR whose workflows must run.
           GITHUB_TOKEN: ${{secrets.GH_PUSH_TOKEN}}
         run: |
           git clone https://github.com/ant-design/ant-design.git
