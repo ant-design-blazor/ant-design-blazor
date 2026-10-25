@@ -8,16 +8,17 @@ by the job:
 
 | Workflow operation | Credential | Permission |
 | --- | --- | --- |
-| Check out source in the PR build | `github.token` | `contents: read` |
-| Download the PR build artifact in the deployment workflow | `github.token` | `actions: read` |
+| Check out source in the isolated PR build job | `github.token` | `contents: read` |
 | Add or update a pull request preview comment | `github.token` | `issues: write`, `pull-requests: write` |
 | Publish the documentation output to this repository's `gh-pages` branch | `github.token` | `contents: write` |
 
-The preview build does not need a GitHub secret: it builds untrusted pull
-request code and uploads its output as an Actions artifact. The separate
-`workflow_run` deployment downloads that artifact with its own `github.token`,
-then publishes the files to the Cloudflare Pages branch `preview-pr-<PR>`.
-Its stable URL is `https://preview-pr-<PR>.ant-design-blazor.pages.dev`.
+The single `Preview` workflow is triggered by `pull_request_target`. Its build
+job checks out the PR merge commit with `persist-credentials: false`, has only
+`contents: read`, and receives no Cloudflare secret. A separate deployment job
+downloads the same-run artifact and publishes the static files to the Cloudflare
+Pages branch `preview-pr-<PR>`. Artifact transfer uses the Actions runtime
+credential; it does not need a GitHub PAT. The stable preview URL is
+`https://preview-pr-<PR>.ant-design-blazor.pages.dev`.
 
 ## Keep a PAT only for style synchronization
 

@@ -1,0 +1,165 @@
+name: Preview
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: none
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview-start:
+    name: start preview
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: update status comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          cat > comment.md <<'EOF'
+          [![Prepare preview](https://user-images.githubusercontent.com/5378891/72351368-2c979e00-371b-11ea-9652-eb4e825d745e.gif)](https://preview-pr-${PR_NUMBER}.ant-design-blazor.pages.dev)
+          <!-- AUTO_PREVIEW_HOOK -->
+          EOF
+          comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.body | contains("<!-- AUTO_PREVIEW_HOOK -->")) | .id' | head -n 1)
+          if [ -n "$comment_id" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" -X PATCH -f body="$(cat comment.md)"
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -X POST -f body="$(cat comment.md)"
+          fi
+
+  build-site:
+    name: build preview site
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # This job checks out and builds untrusted PR code. Keep it isolated from
+      # deployment secrets and do not persist the checkout token in Git config.
+      - name: checkout PR merge commit
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+          persist-credentials: false
+
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            3.1.x
+            5.0.x
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+            10.0.x
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18.x"
+
+      - name: build site
+        run: bash ./scripts/build-cloudflare-pages.sh _site/wwwroot
+        env:
+          PACKAGE_VERSION: ${{ github.event.pull_request.number }}
+          ENABLE_AOT: false
+
+      - name: upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview-site
+          path: _site/wwwroot/
+          retention-days: 5
+
+  deploy-cloudflare:
+    name: deploy preview to Cloudflare
+    needs: [preview-start, build-site]
+    if: always() && needs.build-site.result == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      preview_url: ${{ steps.preview.outputs.url }}
+    steps:
+      - name: download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: preview-site
+          path: site-artifact
+
+      - name: set Cloudflare preview branch
+        id: preview
+        env:
+          PR_ID: ${{ github.event.pull_request.number }}
+        run: |
+          echo "branch=preview-pr-${PR_ID}" >> $GITHUB_OUTPUT
+          echo "url=https://preview-pr-${PR_ID}.ant-design-blazor.pages.dev" >> $GITHUB_OUTPUT
+
+      - name: publish preview to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CF_TOKEN }}
+          accountId: ${{ secrets.CF_ID }}
+          command: pages deploy site-artifact --project-name=ant-design-blazor --branch=${{ steps.preview.outputs.branch }}
+
+  update-preview-comment:
+    name: report preview deployment
+    needs: [build-site, deploy-cloudflare]
+    if: always() && needs.build-site.result == 'success' && needs.deploy-cloudflare.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Update status comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PREVIEW_URL: ${{ needs.deploy-cloudflare.outputs.preview_url }}
+        run: |
+          cat > comment.md <<EOF
+          [<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">]($PREVIEW_URL)
+          <!-- AUTO_PREVIEW_HOOK -->
+          EOF
+          comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.body | contains("<!-- AUTO_PREVIEW_HOOK -->")) | .id' | head -n 1)
+          if [ -n "$comment_id" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" -X PATCH -f body="$(cat comment.md)"
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -X POST -f body="$(cat comment.md)"
+          fi
+
+  report-preview-failure:
+    name: report preview failure
+    needs: [preview-start, build-site, deploy-cloudflare]
+    if: always() && (needs.build-site.result == 'failure' || needs.deploy-cloudflare.result == 'failure')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Update failure comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PREVIEW_URL: https://preview-pr-${{ github.event.pull_request.number }}.ant-design-blazor.pages.dev
+        run: |
+          cat > comment.md <<EOF
+          [<img width="534" src="https://user-images.githubusercontent.com/5378891/75333447-1e63a280-58c1-11ea-975d-235367fd1522.png">]($PREVIEW_URL)
+          <!-- AUTO_PREVIEW_HOOK -->
+          EOF
+          comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.body | contains("<!-- AUTO_PREVIEW_HOOK -->")) | .id' | head -n 1)
+          if [ -n "$comment_id" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" -X PATCH -f body="$(cat comment.md)"
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -X POST -f body="$(cat comment.md)"
+          fi
