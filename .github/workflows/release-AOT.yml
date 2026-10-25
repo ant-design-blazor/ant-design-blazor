@@ -7,6 +7,9 @@ on:
     branches:
       - doc-fix
 
+permissions:
+  contents: read
+
 jobs:
   build-site:
     name: Build docs site
@@ -80,6 +83,8 @@ jobs:
     name: Push to GitHub Pages
     needs: build-site
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     if: github.repository_owner == 'ant-design-blazor'
     steps:
       - name: Download site artifact
@@ -91,7 +96,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ github.token }}
           publish_dir: ./cargo/wwwroot
           publish_branch: gh-pages
           force_orphan: true

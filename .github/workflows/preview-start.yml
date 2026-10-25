@@ -6,7 +6,12 @@
 
 name: Preview Start
 
-on: pull_request_target
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
 
 jobs:
   preview-start:
@@ -17,11 +22,11 @@ jobs:
     steps:
       - name: update status comment
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           cat > comment.md <<'EOF'
-          ![Prepare preview](https://user-images.githubusercontent.com/5378891/72351368-2c979e00-371b-11ea-9652-eb4e825d745e.gif)
+          [![Prepare preview](https://user-images.githubusercontent.com/5378891/72351368-2c979e00-371b-11ea-9652-eb4e825d745e.gif)](https://preview-pr-${PR_NUMBER}.ant-design-blazor.pages.dev)
           <!-- AUTO_PREVIEW_HOOK -->
           EOF
           comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \

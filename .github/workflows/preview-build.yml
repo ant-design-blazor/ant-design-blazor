@@ -4,6 +4,9 @@ name: Preview Build
 
 on: pull_request
 
+permissions:
+  contents: read
+
 jobs:
 
   build-site:
@@ -44,15 +47,3 @@ jobs:
           name: site
           path: _site/wwwroot/
           retention-days: 5
-
-      # Upload PR id for next workflow use
-      - name: Save PR number
-        if: ${{ always() }}
-        run: echo ${{ github.event.number }} > ./pr-id.txt
-
-      - name: Upload PR number
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr
-          path: ./pr-id.txt

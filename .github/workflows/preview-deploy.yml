@@ -8,28 +8,28 @@ on:
     types:
       - completed
 
+permissions:
+  contents: read
+
 jobs:
   deploy-cloudflare:
     name: deploy preview to Cloudflare
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
     if: >
       github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success'
     outputs:
-      preview_url: ${{ steps.deploy.outputs.pages-deployment-alias-url || steps.deploy.outputs.deployment-url }}
+      preview_url: ${{ steps.preview.outputs.url }}
     steps:
-      # We need get PR id first
-      - name: download pr artifact
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: ${{ github.event.workflow_run.workflow_id }}
-          name: pr
-
-      # Save PR id to output and validate it's a number
+      # Read the PR number from GitHub's workflow_run payload, not an artifact
+      # produced by untrusted pull request code.
       - name: save PR id
         id: pr
+        env:
+          PR_ID: ${{ github.event.workflow_run.pull_requests[0].number }}
         run: |
-          PR_ID=$(cat pr-id.txt)
           if ! [[ "$PR_ID" =~ ^[0-9]+$ ]]; then
             echo "Invalid PR ID: Not a number"
             exit 1
@@ -38,11 +38,12 @@ jobs:
 
       # Download site artifact
       - name: download site artifact
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
-          workflow: ${{ github.event.workflow_run.workflow_id }}
-          workflow_conclusion: success
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.workflow_run.id }}
           name: site
+          path: site-artifact
 
       - name: set Cloudflare preview branch
         id: preview
@@ -50,6 +51,7 @@ jobs:
           PR_ID: ${{ steps.pr.outputs.id }}
         run: |
           echo "branch=preview-pr-${PR_ID}" >> $GITHUB_OUTPUT
+          echo "url=https://preview-pr-${PR_ID}.ant-design-blazor.pages.dev" >> $GITHUB_OUTPUT
 
       - name: Publish to Cloudflare Pages
         id: deploy
@@ -57,14 +59,13 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_TOKEN }}
           accountId: ${{ secrets.CF_ID }}
-          command: pages deploy . --project-name=ant-design-blazor --branch=${{ steps.preview.outputs.branch }}
+          command: pages deploy site-artifact --project-name=ant-design-blazor --branch=${{ steps.preview.outputs.branch }}
 
   update-preview-comment:
     name: update preview comment
     needs: deploy-cloudflare
     runs-on: ubuntu-latest
     permissions:
-      actions: read
       issues: write
     if: >
       always() &&
@@ -72,16 +73,11 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       needs.deploy-cloudflare.result == 'success'
     steps:
-      - name: download pr artifact
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: ${{ github.event.workflow_run.workflow_id }}
-          name: pr
-
       - name: save PR id
         id: pr
+        env:
+          PR_ID: ${{ github.event.workflow_run.pull_requests[0].number }}
         run: |
-          PR_ID=$(cat pr-id.txt)
           if ! [[ "$PR_ID" =~ ^[0-9]+$ ]]; then
             echo "Invalid PR ID: Not a number"
             exit 1
@@ -90,7 +86,7 @@ jobs:
 
       - name: Update status comment
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ steps.pr.outputs.id }}
           PREVIEW_URL: ${{ needs.deploy-cloudflare.outputs.preview_url }}
         run: |
@@ -111,7 +107,6 @@ jobs:
     needs: deploy-cloudflare
     runs-on: ubuntu-latest
     permissions:
-      actions: read
       issues: write
     if: >
       always() &&
@@ -119,16 +114,11 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       needs.deploy-cloudflare.result == 'failure'
     steps:
-      - name: download pr artifact
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: ${{ github.event.workflow_run.workflow_id }}
-          name: pr
-
       - name: save PR id
         id: pr
+        env:
+          PR_ID: ${{ github.event.workflow_run.pull_requests[0].number }}
         run: |
-          PR_ID=$(cat pr-id.txt)
           if ! [[ "$PR_ID" =~ ^[0-9]+$ ]]; then
             echo "Invalid PR ID: Not a number"
             exit 1
@@ -137,11 +127,12 @@ jobs:
 
       - name: Report deploy failure
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ steps.pr.outputs.id }}
+          PREVIEW_URL: https://preview-pr-${{ steps.pr.outputs.id }}.ant-design-blazor.pages.dev
         run: |
-          cat > comment.md <<'EOF'
-          <img width="534" src="https://user-images.githubusercontent.com/5378891/75333447-1e63a280-58c1-11ea-975d-235367fd1522.png">
+          cat > comment.md <<EOF
+          [<img width="534" src="https://user-images.githubusercontent.com/5378891/75333447-1e63a280-58c1-11ea-975d-235367fd1522.png">]($PREVIEW_URL)
           <!-- AUTO_PREVIEW_HOOK -->
           EOF
           comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
@@ -156,24 +147,17 @@ jobs:
     name: build preview failed
     runs-on: ubuntu-latest
     permissions:
-      actions: read
       issues: write
     if: >
       github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'failure'
     steps:
-      # We need get PR id first
-      - name: download pr artifact
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: ${{ github.event.workflow_run.workflow_id }}
-          name: pr
-
-      # Save PR id to output and validate it's a number
+      # Read the PR number from the trusted workflow_run event payload.
       - name: save PR id
         id: pr
+        env:
+          PR_ID: ${{ github.event.workflow_run.pull_requests[0].number }}
         run: |
-          PR_ID=$(cat pr-id.txt)
           if ! [[ "$PR_ID" =~ ^[0-9]+$ ]]; then
             echo "Invalid PR ID: Not a number"
             exit 1
@@ -182,11 +166,12 @@ jobs:
 
       - name: The job has failed
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ steps.pr.outputs.id }}
+          PREVIEW_URL: https://preview-pr-${{ steps.pr.outputs.id }}.ant-design-blazor.pages.dev
         run: |
-          cat > comment.md <<'EOF'
-          <img width="534" src="https://user-images.githubusercontent.com/5378891/75333447-1e63a280-58c1-11ea-975d-235367fd1522.png">
+          cat > comment.md <<EOF
+          [<img width="534" src="https://user-images.githubusercontent.com/5378891/75333447-1e63a280-58c1-11ea-975d-235367fd1522.png">]($PREVIEW_URL)
           <!-- AUTO_PREVIEW_HOOK -->
           EOF
           comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
