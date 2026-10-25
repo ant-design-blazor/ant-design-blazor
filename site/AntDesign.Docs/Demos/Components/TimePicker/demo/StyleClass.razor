@@ -1,0 +1,22 @@
+<Space Direction="SpaceDirection.Vertical" Size="SpaceSize.Large">
+    <TimePicker TValue="TimeOnly?" ClassNames="@_classNames" Styles="@_styles" Placeholder="@("Semantic styles")" />
+    <RangePicker TValue="TimeOnly[]" Picker="DatePickerType.Time" ClassNames="@_classNames" Styles="@_styles" />
+</Space>
+
+@code {
+    private readonly Dictionary<string, string> _classNames = new()
+    {
+        ["root"] = "time-picker-custom-root",
+        ["input"] = "time-picker-custom-input",
+        ["suffix"] = "time-picker-custom-suffix",
+        ["popup.root"] = "time-picker-custom-popup"
+    };
+
+    private readonly Dictionary<string, string> _styles = new()
+    {
+        ["root"] = "border-color: #1677ff",
+        ["input"] = "background: #e6f4ff",
+        ["suffix"] = "color: #1677ff",
+        ["popup.root"] = "border: 1px solid #1677ff"
+    };
+}

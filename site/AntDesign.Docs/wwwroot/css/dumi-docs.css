@@ -22,3 +22,196 @@ html {
     text-autospace: normal;
   }
 }
+
+/* Transfer style-class demo: mirror React's classNames-generated styles. */
+.transfer-custom-header {
+  color: var(--ant-color-primary);
+}
+
+.transfer-custom-actions button {
+  background-color: rgba(255, 242, 232, 0.6);
+}
+
+/* Match React's customize-list layout: each custom table owns half of the available width. */
+.table-transfer-demo .ant-transfer-list {
+  flex: 1 1 50%;
+  min-width: 0;
+  width: auto;
+  height: auto;
+}
+
+.table-transfer-demo .ant-table-wrapper,
+.table-transfer-demo .ant-table,
+.table-transfer-demo .table-transfer-table {
+  min-width: 0;
+  width: 100%;
+}
+
+.table-transfer-demo .ant-table table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.table-transfer-demo .ant-table-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-transfer-demo .ant-transfer-actions {
+  align-self: center;
+}
+
+/* Keep custom Tree content scrollable inside the token-sized Transfer body. */
+.tree-transfer-demo .ant-transfer-list-body {
+  overflow: hidden;
+}
+
+.tree-transfer-demo .ant-transfer-list-body-customize-wrapper {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Shared component metadata, matching React's compact three-row introduction. */
+.docs-carbon-ad {
+  float: right;
+  max-width: 100%;
+}
+
+.docs-component-overview {
+  container-type: inline-size;
+}
+
+.docs-component-overview-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--ant-margin-lg, 24px);
+}
+
+.docs-component-overview-content {
+  min-width: 0;
+}
+
+.docs-component-overview .docs-component-overview-ad {
+  float: none;
+  width: min(300px, 100%);
+  max-width: 100%;
+  min-width: 0;
+  justify-self: start;
+  font-size: var(--ant-font-size-sm, 12px);
+  line-height: var(--ant-line-height, 1.5714285714285714);
+}
+
+.docs-component-overview-ad #carbonads {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.docs-component-overview-ad img {
+  max-width: 100%;
+  height: auto;
+}
+
+.docs-component-overview-ad #carbon-responsive {
+  --carbon-padding: 12px;
+  --carbon-max-char: 15ch;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  font-size: var(--ant-font-size-sm, 12px);
+}
+
+.docs-component-overview-ad #carbon-responsive .carbon-img img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Use the actual article width, not the viewport (which includes the sidebars).
+   The metadata keeps at least 556px before the ad may sit beside it. */
+@container (min-width: 880px) {
+  .docs-component-overview-layout {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+}
+
+.markdown .docs-component-meta {
+  display: flow-root;
+  margin-block-start: var(--ant-margin, 16px);
+  min-width: 0;
+}
+
+.docs-component-meta .ant-descriptions-item-label {
+  flex: 0 0 56px;
+  width: 56px;
+  padding-inline-end: var(--ant-padding, 16px);
+  color: var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45));
+}
+
+.docs-component-meta .ant-descriptions-item-label::after {
+  content: none;
+}
+
+.docs-component-meta .ant-descriptions-item-content {
+  min-width: 0;
+}
+
+.docs-component-meta-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ant-padding-xxs, 4px) var(--ant-padding-xs, 8px);
+  min-width: 0;
+}
+
+.markdown .docs-component-meta .docs-component-meta-code {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ant-margin-xxs, 4px);
+  max-width: 100%;
+  padding: 0 var(--ant-padding-xxs, 4px);
+  border: 0;
+  border-radius: var(--ant-border-radius-sm, 4px);
+  background: transparent;
+  color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+  font-family: var(--ant-font-family-code, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace);
+  font-size: inherit;
+  line-height: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: background var(--ant-motion-duration-slow, 0.3s);
+}
+
+.docs-component-meta-code > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.docs-component-meta-code .anticon {
+  flex: none;
+}
+
+.markdown .docs-component-meta-code:hover {
+  background: var(--ant-control-item-bg-hover, rgba(0, 0, 0, 0.04));
+}
+
+.markdown a.docs-component-meta-code:hover {
+  text-decoration: underline;
+}
+
+.docs-component-meta-code:focus-visible {
+  outline: 2px solid var(--ant-color-primary, #1677ff);
+  outline-offset: 2px;
+}
+
+.docs-component-meta-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Splitter"
+  },
+  "config": {
+    "timeoutMs": 30000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*", "id"],
+      "removeClassPatterns": [
+        "^css-dev-only-do-not-override-",
+        "^css-var-_[rR]_",
+        "^css-[a-z0-9]+$"
+      ],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "splitter-size-demo",
+      "component": "Splitter",
+      "matchScopeWidth": "react",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/splitter/",
+        "scopeSelector": "#splitter-demo-size .code-box-demo",
+        "rootSelector": ".ant-splitter",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5021/en-US/components/splitter",
+        "scopeSelector": "#components-splitter-demo-size .code-box-demo",
+        "rootSelector": ".ant-splitter",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "styleProperties": [
+        "display", "position", "boxSizing", "width", "height", "minWidth", "minHeight",
+        "maxWidth", "maxHeight", "flexDirection", "flex", "flexBasis", "flexGrow", "flexShrink",
+        "overflow", "boxShadow", "backgroundColor", "borderRadius", "borderColor",
+        "--ant-splitter-split-bar-size", "--ant-splitter-split-trigger-size", "--ant-splitter-split-bar-draggable-size"
+      ],
+      "semanticNodes": [
+        { "path": "root", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
+        { "path": "panel", "reactSelector": ".ant-splitter-panel", "blazorSelector": ".ant-splitter-panel", "minimumCount": 2 },
+        { "path": "dragger", "reactSelector": ".ant-splitter-bar-dragger", "blazorSelector": ".ant-splitter-bar-dragger", "minimumCount": 1 }
+      ],
+      "scenarios": [{ "id": "default", "minimumRoots": 1 }]
+    }
+  ]
+}

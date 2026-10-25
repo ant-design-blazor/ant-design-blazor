@@ -22,6 +22,10 @@ cover: https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg
 | ---------------------- | --------------------- | ------------------- | ------- |
 | `Accordion`          | 是否每次只打开一个tab | `boolean`           | `false` |
 | `Bordered`           | 是否有边框            | `boolean`           | `true`  |
+| `Ghost`              | 是否移除背景和边框    | `boolean`           | `false` |
+| `Size`               | 设置面板尺寸          | `CollapseSize`      | `Middle` |
+| `Collapsible`        | null：整个头部；Header：仅标题和图标；Icon：仅图标；Disabled：禁用 | `CollapseCollapsible?` | `null` |
+| `ClassNames` / `Styles` | 自定义 Semantic DOM 节点 | `IReadOnlyDictionary<string, string>` | - |
 | `ExpandIconPosition` | 设置图标位置          | `'left' \| 'right'` | `left`  |
 | `Animation`          | 是否开启动画          | `boolean` | `false` |
 
@@ -30,6 +34,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg
 | 参数           | 说明                                       | 类型                       | 默认值  |
 | -------------- | ------------------------------------------ | -------------------------- | ------- |
 | `Disabled`     | 禁用后的面板展开与否将无法通过用户交互改变 | `boolean`                  | `false` |
+| `Collapsible`  | 覆盖父级的触发展开方式                     | `CollapseCollapsible?`     | 跟随父级 |
 | `Header`       | 面板头内容                                 | `string \| RenderFragment` | -       |
 | `ExpandedIcon` | 自定义切换图标                             | `string \| RenderFragment` | -       |
 | `Extra`        | 自定义渲染每个面板右上角的内容             | `string \| RenderFragment` | -       |

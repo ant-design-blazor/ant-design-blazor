@@ -120,7 +120,9 @@ public partial class Splitter : AntDomComponentBase
 
 #if NET5_0_OR_GREATER
     private IJSObjectReference _handler;
+    private Task _attachTask = Task.CompletedTask;
 #endif
+    private bool _disposed;
     /// <summary>
     /// Determines if the spliter is vertical or horizontal.
     /// </summary>
@@ -191,17 +193,12 @@ public partial class Splitter : AntDomComponentBase
 
     internal string GetPaneStyle(SplitterPanel pane)
     {
-        var styleKey = Vertical ? "width" : "height";
         var size = pane.EffectiveSize;
         var styles = new List<string>
         {
-            size == null ? "flex:1 1 0%" : $"{styleKey}:{size};flex:0 0 {size}",
+            size == null ? "flex-basis:auto;flex-grow:1" : $"flex-basis:{size};flex-grow:0",
         };
 
-        if (!pane.IsCollapsed && pane.Min != null)
-            styles.Add($"min-{styleKey}:{pane.Min}");
-        if (pane.Max != null)
-            styles.Add($"max-{styleKey}:{pane.Max}");
         if (pane.IsCollapsed)
             styles.Add("overflow:hidden");
 
@@ -212,6 +209,12 @@ public partial class Splitter : AntDomComponentBase
     {
         var customClass = ClassNames != null && ClassNames.TryGetValue(slot, out var value) ? value : null;
         return string.Join(" ", new[] { baseClass, customClass }.Where(x => !string.IsNullOrWhiteSpace(x)));
+    }
+
+    private string GetPanelClass(SplitterPanel pane)
+    {
+        var baseClass = pane.IsCollapsed ? "ant-splitter-panel ant-splitter-panel-hidden" : "ant-splitter-panel";
+        return SemanticClass("panel", baseClass);
     }
 
     internal string SemanticStyle(string slot, string baseStyle = null)
@@ -242,10 +245,16 @@ public partial class Splitter : AntDomComponentBase
     {
         var isActive = _activeDraggerIndex == index;
         var customizeClass = DraggerIcon != null || HideDraggerIndicator ? "ant-splitter-bar-dragger-customize" : null;
-        var baseClass = $"ant-splitter-bar-dragger spliter-bar {customizeClass} {(IsDraggerDisabled(index) ? "ant-splitter-bar-dragger-disabled" : null)}";
+        var classes = new List<string> { "ant-splitter-bar-dragger" };
+        if (customizeClass != null)
+            classes.Add(customizeClass);
+        if (IsDraggerDisabled(index))
+            classes.Add("ant-splitter-bar-dragger-disabled");
         var stateClass = isActive ? "ant-splitter-bar-dragger-active" : null;
         var stateSlot = isActive ? "dragger.active" : "dragger.default";
-        return SemanticClass(stateSlot, SemanticClass("dragger", $"{baseClass} {stateClass}"));
+        if (stateClass != null)
+            classes.Add(stateClass);
+        return SemanticClass(stateSlot, SemanticClass("dragger", string.Join(" ", classes)));
     }
 
     private string GetDraggerStyle(int index)
@@ -258,6 +267,7 @@ public partial class Splitter : AntDomComponentBase
     [JSInvokable]
     public Task SetDragging(bool isDragging, int index = -1)
     {
+        if (_disposed) return Task.CompletedTask;
         var nextIndex = isDragging ? index : -1;
         if (_activeDraggerIndex == nextIndex)
             return Task.CompletedTask;
@@ -268,19 +278,39 @@ public partial class Splitter : AntDomComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender && !_disposed)
         {
             this._thisRef = DotNetObjectReference.Create(this);
 
 #if NET5_0_OR_GREATER
-            this._handler = await JsInvokeAsync<IJSObjectReference>(JSInteropConstants.SplitterHelper.Attach, this._thisRef, this.Ref, Lazy);
+            var paneOptions = _panes.Select(pane => new
+            {
+                resizable = pane.Resizable,
+                min = pane.Min,
+                max = pane.Max,
+                size = pane.Size,
+                defaultSize = pane.DefaultSize,
+            }).ToArray();
+            _attachTask = AttachInteropAsync(paneOptions);
+            await _attachTask;
 #endif
         }
     }
 
     [JSInvokable]
+    public Task InitializeSizes(string[] paneSizes)
+    {
+        if (_disposed) return Task.CompletedTask;
+        for (var i = 0; i < Math.Min(_panes.Count, paneSizes.Length); i++)
+            _panes[i].SetCurrentSize(paneSizes[i]);
+
+        return InvokeStateHasChangedAsync();
+    }
+
+    [JSInvokable]
     public async Task UpdateSize(string[] paneSizes)
     {
+        if (_disposed) return;
         _paneSizes = paneSizes;
         for (var i = 0; i < Math.Min(_panes.Count, paneSizes.Length); i++)
             _panes[i].SetCurrentSize(paneSizes[i]);
@@ -298,22 +328,41 @@ public partial class Splitter : AntDomComponentBase
 
     protected override void Dispose(bool disposing)
     {
+        _disposed = true;
 #if NET5_0_OR_GREATER
-        if (this._handler != null)
-        {
-            try
-            {
-                _ = this._handler.InvokeVoidAsync("dispose");
-                _ = this._handler.DisposeAsync();
-            }
-#if NET6_0_OR_GREATER
-            catch (JSDisconnectedException) { }
-#endif
-            catch { }
-        }
-#endif
+        _ = DisposeInteropAsync();
+#else
         this._thisRef?.Dispose();
+#endif
         base.Dispose(disposing);
     }
+
+#if NET5_0_OR_GREATER
+    private async Task AttachInteropAsync(object paneOptions)
+    {
+        _handler = await JsInvokeAsync<IJSObjectReference>(JSInteropConstants.SplitterHelper.Attach, _thisRef, Ref, Lazy, paneOptions);
+    }
+
+    private async Task DisposeInteropAsync()
+    {
+        // A responsive host may unmount while attach is awaiting InitializeSizes.
+        // Keep the .NET reference alive until that handshake and JS cleanup end.
+        try
+        {
+            await _attachTask;
+            if (_handler != null)
+            {
+                await _handler.InvokeVoidAsync("dispose");
+                await _handler.DisposeAsync();
+            }
+        }
+#if NET6_0_OR_GREATER
+        catch (JSDisconnectedException) { }
+#endif
+        catch (TaskCanceledException) { }
+        catch (ObjectDisposedException) { }
+        finally { _thisRef?.Dispose(); }
+    }
+#endif
 
 }

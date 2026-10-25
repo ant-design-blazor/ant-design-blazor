@@ -1,0 +1,34 @@
+@using System.Globalization
+@inject IJSRuntime JS
+
+<div class="main-color" aria-label="@Name">
+    @for (var index = 0; index < Colors.Count; index++)
+    {
+        var i = index;
+        var color = Colors[i];
+        <button type="button" class="main-color-item palette-@Name-@(i + 1)"
+                style="background:@color;color:@TextColor(i);font-weight:@(i == (Generated ? 5 : 6) ? "bold" : "normal")"
+                title="@(IsChinese ? "点击复制颜色" : "click to copy color")" aria-label="@($"{Name}-{(Generated ? i + 1 : i)} {color}")"
+                @onclick="() => CopyAsync(color)">
+            <span class="main-color-text">@Name-@(Generated ? i + 1 : i)</span>
+            <span class="main-color-value">@color.ToLowerInvariant()</span>
+        </button>
+    }
+</div>
+<span class="color-copy-status" role="status">@_status</span>
+
+@code {
+    [Parameter] public string Name { get; set; } = "color";
+    [Parameter] public IReadOnlyList<string> Colors { get; set; } = Array.Empty<string>();
+    [Parameter] public bool Generated { get; set; }
+    [Parameter] public bool Dark { get; set; }
+    [Parameter] public bool IsChinese { get; set; }
+    private string _status = "";
+    private string TextColor(int index) => Generated ? (Dark ? (index >= 5 ? "#314659" : "#fff") : (index >= 5 ? "#fff" : "inherit"))
+        : index > (Name == "yellow" ? 6 : 5) ? "#fff" : "rgba(0, 0, 0, 0.85)";
+    private async Task CopyAsync(string color)
+    {
+        try { await JS.InvokeVoidAsync("navigator.clipboard.writeText", color); _status = (IsChinese ? "已复制：" : "Copied: ") + color; }
+        catch (JSException) { _status = IsChinese ? "无法复制颜色" : "Could not copy color"; }
+    }
+}

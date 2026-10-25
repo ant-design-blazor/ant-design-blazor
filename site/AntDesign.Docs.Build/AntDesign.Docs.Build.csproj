@@ -41,6 +41,10 @@
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) demo2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/meta" ContinueOnError="true" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) menu2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/docs $(ProjectDir)/wwwroot/meta" ContinueOnError="true" />
     <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) docs2html $(ProjectDir)/wwwroot/docs ./site/AntDesign.Docs/wwwroot/docs" ContinueOnError="true" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) llms-tokens $(SolutionDir)docs/antd-v6/llms-tokens.json" />
+    <!-- Rebuild compiled metadata after demo2json, then export the same full
+         Markdown used by the server endpoint for static/WASM hosting. -->
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) llms $(SolutionDir)site/AntDesign.Docs.Wasm/wwwroot" />
 
     <!-- Copy generated meta JSON into the MCP project's data directory so it's included in the package -->
     <ItemGroup>

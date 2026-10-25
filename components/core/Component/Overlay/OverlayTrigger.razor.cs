@@ -20,6 +20,9 @@ namespace AntDesign.Internal
 
         internal virtual string GetOverlayAdditionalStyle() => string.Empty;
 
+        // Custom triggers can render the anchor itself rather than a wrapper.
+        internal virtual bool IsTriggerWrappedInDiv => Unbound is null;
+
         [CascadingParameter(Name = "PrefixCls")]
         public string PrefixCls { get; set; } = "ant-dropdown";
 
@@ -75,6 +78,12 @@ namespace AntDesign.Internal
         [Parameter]
         public bool HiddenMode { get; set; } = false;
 
+        /// <summary>Use the popup's CSS token for its stacking level.</summary>
+        [Parameter] public bool UseCssZIndex { get; set; }
+
+        /// <summary>Display mode forwarded to Overlay; hidden popups remain hidden.</summary>
+        [Parameter] public string OverlayDisplayStyle { get; set; }
+
         /// <summary>
         /// (not used in Unbound) Sets wrapping div style to `display: inline-flex;`.
         /// </summary>
@@ -95,6 +104,9 @@ namespace AntDesign.Internal
         /// </summary>
         [Parameter]
         public EventCallback<MouseEventArgs> OnClick { get; set; }
+
+        /// <summary>Descendant controls whose clicks must not toggle an unbound trigger.</summary>
+        [Parameter] public string ClickIgnoreSelector { get; set; }
 
         /// <summary>
         ///  Callback - equivalent of OnMouseUp event on the trigger trigger.
@@ -318,7 +330,7 @@ namespace AntDesign.Internal
                 {
                     Ref = RefBack.Current;
 
-                    DomEventListener.AddExclusive<JsonElement>(Ref, "click", OnUnboundClick);
+                    DomEventListener.AddExclusive<JsonElement>(Ref, "click", OnUnboundClick, ignoreSelector: ClickIgnoreSelector);
                     DomEventListener.AddExclusive<JsonElement>(Ref, "mouseover", OnUnboundMouseEnter);
                     DomEventListener.AddExclusive<JsonElement>(Ref, "mouseout", OnUnboundMouseLeave);
                     DomEventListener.AddExclusive<JsonElement>(Ref, "focusin", OnUnboundFocusIn);

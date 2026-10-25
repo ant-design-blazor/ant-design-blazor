@@ -14,6 +14,8 @@ namespace AntDesign
         [CascadingParameter]
         public SubMenu ParentMenu { get; set; }
 
+        [CascadingParameter] private MenuItemGroup ParentGroup { get; set; }
+
         /// <summary>
         /// Title of the group
         /// </summary>
@@ -40,7 +42,15 @@ namespace AntDesign
 
         protected override void OnInitialized()
         {
+            base.OnInitialized();
             ClassMapper.Add($"{RootMenu.PrefixCls}-item-group");
+            if (ParentMenu == null && ParentGroup == null) RootMenu.RegisterOverflowItem(Id, OverflowContent, InvokeStateHasChanged);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            RootMenu?.UnregisterOverflowItem(Id);
+            base.Dispose(disposing);
         }
     }
 }

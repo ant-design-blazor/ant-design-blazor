@@ -1,0 +1,117 @@
+@using System.Text.RegularExpressions
+@inject IJSRuntime JSRuntime
+@inject IComponentIssueCountService IssueCounts
+
+<section class="docs-component-meta" aria-label="@(IsChinese ? "组件元数据" : "Component metadata")">
+    <Descriptions Column="1" Colon="false" Size="DescriptionsSize.Small">
+        <DescriptionsItem Title="@(IsChinese ? "使用" : "Import")">
+            <button type="button" class="docs-component-meta-code docs-component-meta-import"
+                    title="@CopyLabel" aria-label="@CopyLabel" @onclick="CopyImportAsync">@ImportCode</button>
+            <span class="docs-component-meta-status" role="status">@_copyStatus</span>
+        </DescriptionsItem>
+        <DescriptionsItem Title="@(IsChinese ? "反馈" : "GitHub")">
+            <div class="docs-component-meta-links">
+                <a class="docs-component-meta-code" href="@SourceUrl" target="_blank" rel="noopener noreferrer">
+                    <Icon Type="@IconType.Outline.Github" /><span>components/@ComponentKey</span>
+                </a>
+                <a class="docs-component-meta-code" href="@(RepositoryUrl + "/issues/new/choose")" target="_blank" rel="noopener noreferrer">
+                    <Icon Type="@IconType.Outline.Bug" /><span>@(IsChinese ? "提交问题" : "Issue")</span>
+                </a>
+                <a class="docs-component-meta-code" href="@IssueSearchUrl" target="_blank" rel="noopener noreferrer">
+                    <Icon Type="@IconType.Outline.IssuesClose" /><span>@(IsChinese ? "待解决" : "Open issues")</span>
+                    <span class="docs-component-meta-issue-count" aria-live="polite" aria-busy="@(_issueCountLoading ? "true" : "false")" title="@IssueCountTitle">
+                        @if (_issueCountLoading) { <Icon Type="@IconType.Outline.Loading" /> }
+                        else { @(_issueCount?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "—") }
+                    </span>
+                </a>
+            </div>
+        </DescriptionsItem>
+        <DescriptionsItem Title="@(IsChinese ? "文档" : "Docs")">
+            <div class="docs-component-meta-links">
+                @if (HasMarkdown)
+                {
+                    <a class="docs-component-meta-code" href="@(RepositoryUrl + "/edit/master/" + DocumentationPath)" target="_blank" rel="noopener noreferrer">
+                        <Icon Type="@IconType.Outline.Edit" /><span>@(IsChinese ? "编辑此页" : "Edit this page")</span>
+                    </a>
+                    <a class="docs-component-meta-code" href="@MarkdownUrl" target="_blank" rel="noopener noreferrer"
+                       title="@(IsChinese ? "Blazor 组件 Markdown 文档" : "Blazor component Markdown documentation")">
+                        <Icon Type="@IconType.Outline.FileText" /><span>LLMs.md</span>
+                    </a>
+                }
+                <a class="docs-component-meta-code" href="@(RepositoryUrl + "/blob/master/CHANGELOG." + NormalizedLanguage + ".md")" target="_blank" rel="noopener noreferrer">
+                    <Icon Type="@IconType.Outline.History" /><span>@(IsChinese ? "更新日志" : "Changelog")</span>
+                </a>
+            </div>
+        </DescriptionsItem>
+    </Descriptions>
+    @if (ShowDivider)
+    {
+        <Divider />
+    }
+</section>
+
+@code {
+    [Parameter] public string ComponentName { get; set; } = string.Empty;
+    [Parameter] public string ComponentKey { get; set; } = string.Empty;
+    [Parameter] public string Language { get; set; } = "en-US";
+    [Parameter] public string FilePath { get; set; }
+    [Parameter] public bool ShowDivider { get; set; } = true;
+
+    private const string RepositoryUrl = "https://github.com/ant-design-blazor/ant-design-blazor";
+    private static readonly Regex SectionHeading = new(@"<h[2-6](?:\s|>)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+    private bool IsChinese => Language == "zh-CN";
+    private string NormalizedLanguage => IsChinese ? "zh-CN" : "en-US";
+    private bool HasMarkdown => GeneratedComponentMarkdown.HasDocument(ComponentName, NormalizedLanguage);
+    private string ImportCode => ComponentName == "Icon" ? "@using AntDesign.Icons" : "@using AntDesign";
+    private string SourceUrl => RepositoryUrl + "/tree/master/components/" + ComponentKey;
+    private string DocumentationPath => FilePath ?? $"site/AntDesign.Docs/Demos/Components/{ComponentName}/doc/index.{NormalizedLanguage}.md";
+    // Build-time static assets keep this aligned with the deployed docs, not an
+    // unrelated React API or the possibly older Markdown on the default branch.
+    private string MarkdownUrl => $"{NormalizedLanguage}/components/{ComponentKey}.md";
+    private string IssueSearchUrl => ComponentIssueCountService.SearchUrl(ComponentName);
+    private string _requestedComponent;
+    private int? _issueCount;
+    private bool _issueCountLoading = true;
+    private string IssueCountTitle => _issueCountLoading ? (IsChinese ? "正在加载" : "Loading") : _issueCount.HasValue ? null : (IsChinese ? "暂时无法获取问题数量" : "Issue count temporarily unavailable");
+    private string _copyStatus = string.Empty;
+    private string CopyLabel => string.IsNullOrEmpty(_copyStatus) ? (IsChinese ? "复制" : "Copy") : _copyStatus;
+
+    protected override void OnParametersSet() => _copyStatus = string.Empty;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_requestedComponent == ComponentName) return;
+        var component = ComponentName;
+        _requestedComponent = component;
+        _issueCount = null;
+        _issueCountLoading = true;
+        StateHasChanged();
+        var count = await IssueCounts.GetCountAsync(component);
+        if (_requestedComponent != component) return;
+        _issueCount = count;
+        _issueCountLoading = false;
+        StateHasChanged();
+    }
+
+    private async Task CopyImportAsync()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", ImportCode);
+            _copyStatus = IsChinese ? "已复制" : "Copied";
+        }
+        catch (JSException)
+        {
+            _copyStatus = IsChinese ? "复制失败" : "Copy failed";
+        }
+    }
+
+    // Desc is compiler-generated HTML. Keep the introduction before the metadata,
+    // and all usage sections after it, without altering the original Markdown.
+    public static (string Introduction, string Remainder) SplitDescription(string html)
+    {
+        html ??= string.Empty;
+        var heading = SectionHeading.Match(html);
+        return heading.Success ? (html.Substring(0, heading.Index), html.Substring(heading.Index)) : (html, string.Empty);
+    }
+}

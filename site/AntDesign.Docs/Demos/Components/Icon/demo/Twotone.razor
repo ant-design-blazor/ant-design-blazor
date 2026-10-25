@@ -1,18 +1,7 @@
-<div>
-    <Icon Type="@IconType.TwoTone.Smile" Height="2em" Width="2em" />
-    <Icon Type="@IconType.TwoTone.Heart" TwoToneColor="#eb2f96" Height="2em" Width="2em" />
-    <Icon Type="@IconType.TwoTone.CheckCircle" TwoToneColor="@color" Height="2em" Width="2em" OnClick="ChangeColor"/>
-</div>
-<br/>
+@using AntDesign.Icons
 
-<Button OnClick="ChangeColor">Change Color</Button>
-
-@code{
-  string color = "#52c41a";
-  string[] colors = { "#f759ab", "#2f54eb", "#722ed1", "#1890ff", "#f5222d" };
-  int index = 0;
-  void ChangeColor()
-  {
-    color = colors[index++ % 5];
-  }
-}
+<Space>
+    <SpaceItem><SmileTwoTone /></SpaceItem>
+    <SpaceItem><HeartTwoTone TwoToneColor='@(new[] { "#eb2f96" })' /></SpaceItem>
+    <SpaceItem><CheckCircleTwoTone TwoToneColor='@(new[] { "#52c41a" })' /></SpaceItem>
+</Space>

@@ -17,19 +17,7 @@
     <div class="main-wrapper @_styles["mainWrapper"]">
         @if (_isMobile)
         {
-            <div class="drawer-wrapper">
-                <div class="drawer drawer-left @(_drawerVisible?"drawer-open":"") @_styles["drawer"]">
-                    <div class="drawer-mask" @onclick="()=> { _drawerVisible = false; }"></div>
-                    <div class="drawer-content-wrapper">
-                        <div class="drawer-content">
-                            <NavMenu />
-                        </div>
-                        <div class="drawer-handle" @onclick="()=> { _drawerVisible = !_drawerVisible; }">
-                            <i class="drawer-handle-icon"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <MobileDocsNavigation />
         }
 
         <Row>
@@ -44,7 +32,7 @@
                 </GridCol>
             }
 
-            <GridCol Xs="24" Sm="24" Md="24" Lg="18" Xl="19" Xxl="20">
+            <GridCol Class="docs-main-content" Xs="24" Sm="24" Md="18" Lg="18" Xl="19" Xxl="20">
                 <CascadingValue Value="this">
                     @Body
                     @*<div class="fixed-widgets">
@@ -109,6 +97,7 @@
         {
             ["position"] = "relative", ["padding"] = "40px 0 0", ["background"] = "#fff",
             ["transition"] = "all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)",
+            ["& .docs-main-content"] = new System.Collections.Generic.Dictionary<string, object> { ["minWidth"] = 0 },
             ["& .main-container"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["position"] = "relative", ["minHeight"] = 500, ["padding"] = "0 170px 32px 64px", ["background"] = "#fff",
@@ -125,14 +114,16 @@
             ["@media only screen and (max-width: 992px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["& .main-container"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 48, ["paddingLeft"] = 48 },
-                ["& .main-container-component"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingInline"] = "48px 164px" },
+                ["& .main-container-component"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingInline"] = "32px" },
                 ["& .main-container .toc-affix"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" }
             },
             ["@media only screen and (max-width: 767.99px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["&"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%", ["margin"] = 0, ["borderRadius"] = 0 },
                 ["& .main-container, .ant-row-rtl & .main-container"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 0, ["marginLeft"] = 0, ["paddingRight"] = 16, ["paddingLeft"] = 16 },
-                ["& .main-container-component"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingInline"] = "48px 164px" },
+                ["& .main-container-component"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingInline"] = "16px" },
+                // Hide the prerendered desktop column before JS reports the breakpoint.
+                ["& > .ant-row > .main-menu"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
                 ["& .main-container > .markdown > *, .ant-row-rtl & .main-container > .markdown > *"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100% !important" },
                 ["& .drawer .ant-menu-inline .ant-menu-item::after, & .drawer .ant-menu-vertical .ant-menu-item::after"] = new System.Collections.Generic.Dictionary<string, object> { ["right"] = "auto", ["left"] = 0 }
             }
@@ -144,48 +135,6 @@
             [".main-menu-inner"] = new System.Collections.Generic.Dictionary<string, object> { ["height"] = "100%", ["maxHeight"] = "100vh", ["overflow"] = "hidden" }
         },
         ["mainMenuInner"] = new System.Collections.Generic.Dictionary<string, object> { ["height"] = "100%" },
-        ["drawer"] = new System.Collections.Generic.Dictionary<string, object>
-        {
-            ["position"] = "fixed", ["top"] = 0, ["left"] = 0, ["zIndex"] = 9999, ["width"] = "0%", ["height"] = "100%",
-            ["transition"] = "width 0s ease 0.3s, height 0s ease 0.3s, transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)",
-            ["& > *"] = new System.Collections.Generic.Dictionary<string, object> { ["transition"] = "transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), opacity 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), box-shadow 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)" },
-            ["&.drawer-open"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%", ["transition"] = "transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)" },
-            ["&.drawer-open .drawer-mask"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 0.3, ["height"] = "100%", ["transition"] = "opacity 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)" },
-            ["&.drawer-open .drawer-handle-icon"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "transparent" },
-            ["&.drawer-open .drawer-handle-icon:before"] = new System.Collections.Generic.Dictionary<string, object> { ["transform"] = "translateY(5px) rotate(45deg)" },
-            ["&.drawer-open .drawer-handle-icon:after"] = new System.Collections.Generic.Dictionary<string, object> { ["transform"] = "translateY(-5px) rotate(-45deg)" },
-            ["& .drawer-mask"] = new System.Collections.Generic.Dictionary<string, object>
-            {
-                ["position"] = "absolute", ["top"] = 0, ["left"] = 0, ["width"] = "100%", ["height"] = 0,
-                ["background"] = "#000", ["opacity"] = 0,
-                ["transition"] = "opacity 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), height 0s ease 0.3s"
-            },
-            ["& .drawer-content-wrapper"] = new System.Collections.Generic.Dictionary<string, object>
-            {
-                ["position"] = "absolute", ["height"] = "100%", ["background"] = "#fff", ["transform"] = "translateX(-100%)"
-            },
-            ["&.drawer-open .drawer-content-wrapper"] = new System.Collections.Generic.Dictionary<string, object> { ["transform"] = "translateX(0)", ["boxShadow"] = "2px 0 8px rgba(0, 0, 0, 0.15)" },
-            ["& .drawer-content"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["zIndex"] = 1, ["height"] = "100%", ["overflow"] = "auto", ["padding"] = "40px 0" },
-            ["& .drawer-handle"] = new System.Collections.Generic.Dictionary<string, object>
-            {
-                ["position"] = "absolute", ["top"] = 72, ["right"] = -40, ["zIndex"] = 0, ["display"] = "flex",
-                ["alignItems"] = "center", ["justifyContent"] = "center", ["width"] = 41, ["height"] = 40,
-                ["background"] = "#fff", ["boxShadow"] = "2px 0 8px rgba(0, 0, 0, 0.15)", ["borderRadius"] = "0 4px 4px 0",
-                ["fontSize"] = 16, ["lineHeight"] = "40px", ["textAlign"] = "center", ["cursor"] = "pointer"
-            },
-            ["& .drawer-handle-icon"] = new System.Collections.Generic.Dictionary<string, object>
-            {
-                ["position"] = "relative", ["width"] = 14, ["height"] = 2, ["background"] = "#333",
-                ["transition"] = "background 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)"
-            },
-            ["& .drawer-handle-icon:before, & .drawer-handle-icon:after"] = new System.Collections.Generic.Dictionary<string, object>
-            {
-                ["position"] = "absolute", ["display"] = "block", ["width"] = "100%", ["height"] = 2,
-                ["background"] = "#333", ["content"] = "''", ["transition"] = "transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)"
-            },
-            ["& .drawer-handle-icon:before"] = new System.Collections.Generic.Dictionary<string, object> { ["top"] = -5 },
-            ["& .drawer-handle-icon:after"] = new System.Collections.Generic.Dictionary<string, object> { ["top"] = 5 }
-        }
     });
 
     private string MainMenuClass => $"main-menu {_styles["mainMenu"]}";

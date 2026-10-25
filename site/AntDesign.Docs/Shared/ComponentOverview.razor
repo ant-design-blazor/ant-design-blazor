@@ -1,0 +1,15 @@
+<div class="docs-component-overview">
+    <div class="docs-component-overview-layout">
+        <div class="docs-component-overview-content">@ChildContent</div>
+        <CarbonAd Class="docs-component-overview-ad" />
+    </div>
+    @if (ShowDivider)
+    {
+        <Divider />
+    }
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public bool ShowDivider { get; set; } = true;
+}

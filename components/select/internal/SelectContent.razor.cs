@@ -40,6 +40,8 @@ namespace AntDesign.Select.Internal
         [Parameter] public string Placeholder { get; set; }
         [Parameter] public bool IsOverlayShow { get; set; }
 
+        internal void RefreshActiveDescendant() => _ = InvokeAsync(StateHasChanged);
+
         [Parameter]
         public int MaxTagCount
         {
@@ -120,11 +122,15 @@ namespace AntDesign.Select.Internal
             if (firstRender)
             {
                 _firstRender = true;
+                // Readonly single selectors also use arrow-key navigation.
+                // Prevent native page scrolling before the server keyup handler
+                // runs, or the popup can move under the pointer and change the
+                // active option a second time.
+                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
+                await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect._dropDownRef);
                 if (ParentSelect.IsSearchEnabled)
                 {
                     DomEventListener.AddShared<JsonElement>("window", "beforeunload", Reloading);
-                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, ParentSelect._inputRef, new[] { "ArrowUp", "ArrowDown" });
-                    await Js.InvokeVoidAsync(JSInteropConstants.AddPreventEnterOnOverlayVisible, ParentSelect._inputRef, ParentSelect._dropDownRef);
                 }
                 if (ParentSelect.IsResponsive)
                 {
@@ -345,10 +351,6 @@ namespace AntDesign.Select.Internal
         private void SetInputWidth()
         {
             _inputWidth = string.Empty;
-            if (ParentSelect.PrefixIcon != null && ParentSelect.Mode == SelectMode.Default)
-            {
-                _inputWidth = "left: 22px;";
-            }
             if (ParentSelect.Mode != SelectMode.Default)
             {
                 if (!string.IsNullOrWhiteSpace(_inputString))
@@ -391,16 +393,6 @@ namespace AntDesign.Select.Internal
             return label;
         }
 
-        private Dictionary<string, object> AdditonalAttributes()
-        {
-            var dict = new Dictionary<string, object>();
-
-            if (ParentSelect.Disabled)
-                dict.Add("tabindex", "-1");
-
-            return dict;
-        }
-
         /// <summary>
         /// Indicates that a page is being refreshed
         /// </summary>
@@ -419,9 +411,12 @@ namespace AntDesign.Select.Internal
             }
         }
 
+        private string GetTagClass(SelectOptionItem<TItemValue, TItem> option) => ParentSelect.GetSemanticClass("item",
+            $"{Prefix}-selection-item{(option.IsDisabled ? $" {Prefix}-selection-item-disabled" : string.Empty)}");
+
         private async Task RemoveClicked(MouseEventArgs e, SelectOptionItem<TItemValue, TItem> selectedOption)
         {
-            if (e.Button == 0)
+            if (e.Button == 0 && !ParentSelect.Disabled && !selectedOption.IsDisabled)
             {
                 await OnRemoveSelected.InvokeAsync(selectedOption);
             }

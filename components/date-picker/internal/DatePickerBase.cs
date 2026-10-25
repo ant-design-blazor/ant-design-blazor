@@ -92,6 +92,22 @@ namespace AntDesign
         [Parameter]
         public bool Bordered { get; set; } = true;
 
+        /// <summary>Visual style of the picker input.</summary>
+        [Parameter]
+        public InputVariant? Variant { get; set; }
+
+        /// <summary>Validation status displayed by the picker.</summary>
+        [Parameter]
+        public string Status { get; set; }
+
+        /// <summary>Semantic classes keyed by root, prefix, input, suffix and popup slots.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Semantic inline styles keyed by root, prefix, input, suffix and popup slots.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
         /// <summary>
         /// Autofocus on the input or not
         /// </summary>
@@ -480,9 +496,13 @@ namespace AntDesign
                 _placeholder = IsRange ? Array.Empty<string>() : string.Empty;
             }
 
-            this.SetClass();
-
             base.OnInitialized();
+        }
+
+        protected override void OnParametersSet()
+        {
+            SetClass();
+            base.OnParametersSet();
         }
 
         protected bool _shouldRender = true;
@@ -511,20 +531,23 @@ namespace AntDesign
 
         protected void SetClass()
         {
+            var effectiveVariant = Variant ?? (Bordered ? InputVariant.Outlined : InputVariant.Borderless);
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
                 .Add($"{PrefixCls}-css-var")
-                .If($"{PrefixCls}-outlined", () => Bordered != false)
+                .If($"{PrefixCls}-outlined", () => effectiveVariant == InputVariant.Outlined)
+                .If($"{PrefixCls}-filled", () => effectiveVariant == InputVariant.Filled)
+                .If($"{PrefixCls}-borderless", () => effectiveVariant == InputVariant.Borderless)
+                .If($"{PrefixCls}-underlined", () => effectiveVariant == InputVariant.Underlined)
                 .If($"{PrefixCls}-large", () => Size == InputSize.Large)
                 .If($"{PrefixCls}-small", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-rtl", () => RTL)
-                .If($"{PrefixCls}-borderless", () => Bordered == false)
                 .If($"{PrefixCls}-disabled", () => IsDisabled() == true)
                 .If($"{ClassName}", () => !string.IsNullOrEmpty(ClassName))
                 .If($"{PrefixCls}-range", () => IsRange == true)
                 .If($"{PrefixCls}-focused", () => AutoFocus == true)
                 .If($"{PrefixCls}-has-feedback", () => FormItem?.HasFeedback == true)
-                .GetIf(() => $"{PrefixCls}-status-{FormItem?.ValidateStatus.ToString().ToLowerInvariant()}", () => FormItem is { ValidateStatus: not FormValidateStatus.Default })
+                .GetIf(() => $"{PrefixCls}-status-{(Status ?? FormItem?.ValidateStatus.ToString())?.ToLowerInvariant()}", () => !string.IsNullOrWhiteSpace(Status) || FormItem is { ValidateStatus: not FormValidateStatus.Default })
                ;
 
             _panelClassMapper
@@ -532,11 +555,31 @@ namespace AntDesign
                 .If($"{PrefixCls}-panel-rtl", () => RTL);
         }
 
+        internal string SemanticClass(string slot, string baseClass = null)
+        {
+            var customClass = ClassNames != null && ClassNames.TryGetValue(slot, out var value) ? value : null;
+            return string.IsNullOrWhiteSpace(customClass) ? baseClass : $"{baseClass} {customClass}".Trim();
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return customStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {customStyle}";
+        }
+
+        internal string SemanticPopupClass(string slot, string baseClass = null) =>
+            SemanticClass(slot, SemanticClass("popup", baseClass));
+
+        internal string SemanticPopupStyle(string slot, string baseStyle = null) =>
+            SemanticStyle(slot, SemanticStyle("popup", baseStyle));
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
 
-            if (firstRender)
+            if (firstRender && _inputStart != null)
             {
                 await Js.InvokeVoidAsync(JSInteropConstants.AddPreventKeys, _inputStart.Ref, new[] { "ArrowUp", "ArrowDown" });
             }
@@ -944,7 +987,8 @@ namespace AntDesign
         protected void RefreshComponentState()
         {
 #if NET10_0_OR_GREATER
-            _dropDown.GetOverlayComponent().RefreshComponentState();
+            if (_dropDown != null) _dropDown.GetOverlayComponent()?.RefreshComponentState();
+            else StateHasChanged();
 #endif
         }
 

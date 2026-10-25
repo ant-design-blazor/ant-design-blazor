@@ -5,6 +5,7 @@ import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import process from 'node:process';
 import { compareDomSnapshots } from './dom-style-parity.mjs';
+import { captureDomStyles } from './dom-style-capture.mjs';
 
 const DEFAULT_STYLE_PROPERTIES = [
   'display', 'position', 'boxSizing', 'width', 'height', 'minHeight', 'maxHeight',
@@ -97,6 +98,30 @@ async function waitForDemo(page, sideSpec, timeoutMs, minimumRoots) {
   }, { rootSelector, scopeSelector });
 }
 
+export async function waitForSvgUses(page, side, sideSpec, semanticNodes, timeoutMs) {
+  const definitions = (semanticNodes ?? []).filter(node => node.verifySvgUse);
+  if (!definitions.length) return;
+  await page.waitForFunction(({ side, scopeSelector, rootSelector, definitions }) => {
+    const scope = document.querySelector(scopeSelector);
+    if (!scope) return false;
+    const roots = [...scope.querySelectorAll(rootSelector)];
+    return definitions.every(definition => {
+      const selector = definition[`${side}Selector`] ?? definition.selector;
+      const nodes = definition.portal ? [...document.querySelectorAll(selector)]
+        : roots.flatMap(root => selector === '$root' ? [root] : [...root.querySelectorAll(selector)]);
+      return nodes.length >= Math.max(1, definition.minimumCount ?? 0) && nodes.every(element => {
+        if (!element.matches('use')) return false;
+        const href = element.getAttribute('xlink:href') ?? element.getAttribute('href');
+        const rect = element.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0 && [...document.querySelectorAll('symbol[id]')]
+          .some(symbol => `#${symbol.getAttribute('id')}` === href);
+      });
+    });
+  }, { timeout: timeoutMs, polling: 100 }, {
+    side, scopeSelector: sideSpec.scopeSelector, rootSelector: sideSpec.rootSelector, definitions,
+  });
+}
+
 export async function applyAction(page, side, action, timeoutMs) {
   // CSS transitions and ResizeObserver callbacks are throttled in background
   // tabs. Activate the page before dispatching input so the resulting DOM and
@@ -127,13 +152,15 @@ export async function applyAction(page, side, action, timeoutMs) {
       await page.waitForSelector(selector, { visible: action.state !== 'hidden', timeout: timeoutMs });
       break;
     case 'focus':
-      await page.locator(selector).focus({ timeout: timeoutMs });
+      await page.waitForSelector(selector, { timeout: timeoutMs });
+      await page.focus(selector);
       break;
     case 'fill':
       await page.locator(selector).fill(action.value ?? '', { timeout: timeoutMs });
       break;
     case 'press':
-      await page.locator(selector).focus({ timeout: timeoutMs });
+      await page.waitForSelector(selector, { timeout: timeoutMs });
+      await page.focus(selector);
       await page.keyboard.press(action.key);
       break;
     case 'wait':
@@ -222,71 +249,9 @@ async function waitForVisiblePortals(page, semanticNodes, side, timeoutMs, trigg
   }
 }
 
-async function capture(page, side, sideSpec, semanticNodes, styleProperties, pseudoElements, pseudoStyleProperties) {
-  return page.evaluate(({ side, scopeSelector, rootSelector, semanticNodes, styleProperties, pseudoElements, pseudoStyleProperties }) => {
-    const scope = document.querySelector(scopeSelector);
-    if (!scope) throw new Error(`capture scope not found: ${scopeSelector}`);
-    const roots = [...scope.querySelectorAll(rootSelector)];
-    const readStyle = (element) => {
-      const computed = getComputedStyle(element);
-      return Object.fromEntries(styleProperties.map((property) => [property, computed.getPropertyValue(property.startsWith('--') ? property : property.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)).trim()]));
-    };
-    const readComputedStyle = (element) => {
-      const styles = readStyle(element);
-      for (const pseudo of pseudoElements) {
-        const computed = getComputedStyle(element, pseudo);
-        for (const property of pseudoStyleProperties) {
-          const cssName = property.startsWith('--') ? property : property.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
-          styles[`${pseudo}.${property}`] = computed.getPropertyValue(cssName).trim();
-        }
-      }
-      return styles;
-    };
-    const semantic = {};
-    for (const definition of semanticNodes) {
-      const selector = definition[`${side}Selector`] ?? definition.selector;
-      const nodes = definition.portal
-        ? [...document.querySelectorAll(selector)].filter((element) => {
-          const tooltipRoot = element.matches('.ant-tooltip') ? element : element.closest('.ant-tooltip');
-          if (definition.portalVisible) {
-            const style = tooltipRoot && getComputedStyle(tooltipRoot);
-            if (!style || style.display === 'none' || style.visibility === 'hidden'
-              || Number(style.opacity) === 0 || tooltipRoot.classList.contains('ant-tooltip-hidden')) return false;
-          }
-          if (!definition.portalText) return true;
-          const textNode = element.matches('[role="tooltip"]')
-            ? element
-            : tooltipRoot?.querySelector('[role="tooltip"]');
-          return textNode?.textContent.trim() === definition.portalText;
-        })
-        : roots.flatMap((root) => selector === '$root'
-          ? [root]
-          : [...root.querySelectorAll(selector)]);
-      semantic[definition.path] = nodes.map((element) => ({
-        html: element.outerHTML,
-        tag: element.tagName.toLowerCase(),
-        computedStyle: readComputedStyle(element),
-        ...(definition.portal && roots[0] ? (() => {
-          const rect = element.getBoundingClientRect();
-          const triggerRect = roots[0].getBoundingClientRect();
-          return { relativeGeometry: {
-            left: rect.left - triggerRect.left,
-            top: rect.top - triggerRect.top,
-            width: rect.width,
-            height: rect.height,
-          } };
-        })() : {}),
-      }));
-    }
-    const computedStyles = Object.fromEntries(roots.map((element, index) => [`root[${index}]`, readComputedStyle(element)]));
-    return {
-      html: roots.map((root) => root.outerHTML).join('\n'),
-      semantic,
-      computedStyles,
-      rootCount: roots.length,
-      environment: { viewportWidth: innerWidth, viewportHeight: innerHeight, devicePixelRatio, zoom: getComputedStyle(document.documentElement).zoom },
-    };
-  }, {
+// Read-only collector, also usable through the in-app browser's evaluate API.
+export async function capture(page, side, sideSpec, semanticNodes, styleProperties, pseudoElements = [], pseudoStyleProperties = []) {
+  return page.evaluate(captureDomStyles, {
     side,
     scopeSelector: sideSpec.scopeSelector,
     rootSelector: sideSpec.rootSelector,
@@ -334,20 +299,6 @@ async function runGroup(browser, group, config) {
     }
   }
 
-  if (!readinessBlocker && group.matchScopeWidth) {
-    const sourceSide = group.matchScopeWidth;
-    const targetSide = sourceSide === 'react' ? 'blazor' : 'react';
-    const sourcePage = sourceSide === 'react' ? reactPage : blazorPage;
-    const targetPage = targetSide === 'react' ? reactPage : blazorPage;
-    const sourceSpec = group[sourceSide];
-    const targetSpec = group[targetSide];
-    const sourceWidth = await sourcePage.$eval(sourceSpec.scopeSelector,
-      (element) => element.getBoundingClientRect().width);
-    await targetPage.$eval(targetSpec.scopeSelector, (element, width) => {
-      element.style.width = `${width}px`;
-    }, sourceWidth);
-  }
-
   for (const scenario of group.scenarios) {
     const scenarioResult = { id: scenario.id, status: 'failed', actions: [] };
     let activeStage = 'scenario setup';
@@ -362,6 +313,23 @@ async function runGroup(browser, group, config) {
         reactPage.setViewport(config.viewport),
         blazorPage.setViewport(config.viewport),
       ]);
+      if (group.matchScopeWidth) {
+        const sourceSide = group.matchScopeWidth;
+        const targetSide = sourceSide === 'react' ? 'blazor' : 'react';
+        const sourcePage = sourceSide === 'react' ? reactPage : blazorPage;
+        const targetPage = targetSide === 'react' ? reactPage : blazorPage;
+        const sourceSpec = group[sourceSide];
+        const targetSpec = group[targetSide];
+        await sourcePage.bringToFront();
+        await sourcePage.waitForSelector(sourceSpec.scopeSelector, { timeout: config.timeoutMs });
+        const sourceWidth = await sourcePage.$eval(sourceSpec.scopeSelector,
+          (element) => element.getBoundingClientRect().width);
+        await targetPage.bringToFront();
+        await targetPage.waitForSelector(targetSpec.scopeSelector, { timeout: config.timeoutMs });
+        await targetPage.$eval(targetSpec.scopeSelector, (element, width) => {
+          element.style.width = `${width}px`;
+        }, sourceWidth);
+      }
       for (const action of scenario.actions ?? []) {
         activeStage = `${action.type} action`;
         await applyAction(reactPage, 'react', action, config.timeoutMs);
@@ -389,7 +357,15 @@ async function runGroup(browser, group, config) {
         scenarioResult.finalHoverState ??= {};
         scenarioResult.finalHoverState.react = await reactPage.$eval(selector, (element) => ({ html: element.outerHTML, hovered: element.matches(':hover') }));
       }
+      // Keep non-hover captures in the foreground too. Background pages may
+      // suspend React's render/layout work, which can invalidate the demo scope
+      // after readiness was checked and before its DOM/CSS snapshot is read.
+      await reactPage.bringToFront();
+      await waitForDemo(reactPage, group.react, config.timeoutMs, minimumRoots);
       await new Promise((resolvePromise) => setTimeout(resolvePromise, 800));
+      await waitForDemo(reactPage, group.react, config.timeoutMs, minimumRoots);
+      activeStage = 'React SVG glyph readiness';
+      await waitForSvgUses(reactPage, 'react', group.react, group.semanticNodes, config.timeoutMs);
       activeStage = 'React DOM/CSS capture';
       const react = await capture(reactPage, 'react', group.react, group.semanticNodes,
         group.styleProperties ?? DEFAULT_STYLE_PROPERTIES,
@@ -406,16 +382,22 @@ async function runGroup(browser, group, config) {
         scenarioResult.finalHoverState ??= {};
         scenarioResult.finalHoverState.blazor = await blazorPage.$eval(selector, (element) => ({ html: element.outerHTML, hovered: element.matches(':hover') }));
       }
+      await waitForDemo(blazorPage, group.blazor, config.timeoutMs, minimumRoots);
       await new Promise((resolvePromise) => setTimeout(resolvePromise, 800));
+      await waitForDemo(blazorPage, group.blazor, config.timeoutMs, minimumRoots);
+      activeStage = 'Blazor SVG glyph readiness';
+      await waitForSvgUses(blazorPage, 'blazor', group.blazor, group.semanticNodes, config.timeoutMs);
       activeStage = 'Blazor DOM/CSS capture';
       const blazor = await capture(blazorPage, 'blazor', group.blazor, group.semanticNodes,
         group.styleProperties ?? DEFAULT_STYLE_PROPERTIES,
         group.pseudoElements ?? ['::before', '::after'],
         group.pseudoStyleProperties ?? DEFAULT_PSEUDO_STYLE_PROPERTIES);
+      const comparisonPolicy = group.comparisonPolicy ?? config.comparisonPolicy;
       const comparison = compareDomSnapshots(react, blazor, {
-        ...config.comparisonPolicy,
+        ...comparisonPolicy,
         geometryTolerancePx: group.geometryTolerancePx ?? config.comparisonPolicy.geometryTolerancePx ?? 0,
         semanticMinimumCounts: Object.fromEntries((group.semanticNodes ?? []).map(({ path, minimumCount }) => [path, minimumCount ?? 0])),
+        svgUsePaths: (group.semanticNodes ?? []).filter(node => node.verifySvgUse).map(node => node.path),
       });
       scenarioResult.status = comparison.equal ? 'passed' : 'differences';
       scenarioResult.rootCount = { react: react.rootCount, blazor: blazor.rootCount };

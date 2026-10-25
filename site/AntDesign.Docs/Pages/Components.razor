@@ -30,7 +30,7 @@
                         <Anchor Key="@_demoComponent.Title">
                             @foreach (var demo in _anchors)
                             {
-                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#components-{_demoComponent.Title.ToLower()}-demo-{demo.Name.ToLower()}")" Title="@demo.Title" />
+                                <AnchorLink Href="@($"/{CurrentLanguage}/components/{_demoComponent.Title}#{CodeBox.GetDemoId(_demoComponent.Title, demo.Name)}")" Title="@demo.Title" />
                             }
                             @if (!string.IsNullOrEmpty(_demoComponent.ApiDoc))
                             {
@@ -50,6 +50,7 @@
             }
 
             <section class="markdown">
+                <ComponentOverview ShowDivider="@HasComponentMetadata">
                 <h1>
                     @_demoComponent.Title
                     @if (CurrentLanguage == "zh-CN")
@@ -57,27 +58,42 @@
                         <span class="subtitle">@_demoComponent.SubTitle</span>
                     }
                     <span class="widget"></span>
-                    <Tooltip Title="@Localizer["app.content.edit-demo"]">
-                        <Unbound>
-                            <a @ref="context.Current" href="@EditUrl" class="edit-button" rel="noopener noreferrer" target="_blank">
-                                <Icon Type="@IconType.Outline.Edit" />
-                            </a>
-                        </Unbound>
-                    </Tooltip>
-                    <Tooltip Title="@Localizer["app.content.component-source"]">
-                        <Unbound>
-                            <a href="@ComponentSourceUrl" class="edit-button component-source-button" aria-label="@Localizer["app.content.component-source"]" rel="noopener noreferrer" target="_blank">
-                                <Icon Type="@IconType.Outline.Github" />
-                            </a>
-                        </Unbound>
-                    </Tooltip>
-                    <div class="@_styles["carbonAd"]">
-                        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CW7I6K7I&placement=antblazorcom&format=cover" id="_carbonads_js"></script>
-                    </div>
+                    @if (!HasComponentMetadata)
+                    {
+                        <Tooltip Title="@Localizer["app.content.edit-demo"]">
+                            <Unbound>
+                                <a @ref="context.Current" href="@EditUrl" class="edit-button" rel="noopener noreferrer" target="_blank">
+                                    <Icon Type="@IconType.Outline.Edit" />
+                                </a>
+                            </Unbound>
+                        </Tooltip>
+                        <Tooltip Title="@Localizer["app.content.component-source"]">
+                            <Unbound>
+                                <a href="@ComponentSourceUrl" class="edit-button component-source-button" aria-label="@Localizer["app.content.component-source"]" rel="noopener noreferrer" target="_blank">
+                                    <Icon Type="@IconType.Outline.Github" />
+                                </a>
+                            </Unbound>
+                        </Tooltip>
+                    }
                 </h1>
                 <section class="markdown">
-                    @((MarkupString)_demoComponent.Desc)
+                    @if (HasComponentMetadata)
+                    {
+                        var description = ComponentMetadata.SplitDescription(_demoComponent.Desc);
+                        @((MarkupString)description.Introduction)
+                        <ComponentMetadata ComponentName="@_demoComponent.Title" ComponentKey="@SemanticComponentKey"
+                                           Language="@CurrentLanguage" FilePath="@_filePath" ShowDivider="false" @key="_demoComponent.Title" />
+                    }
+                    else
+                    {
+                        @((MarkupString)_demoComponent.Desc)
+                    }
                 </section>
+                </ComponentOverview>
+                @if (HasComponentMetadata)
+                {
+                    @((MarkupString)ComponentMetadata.SplitDescription(_demoComponent.Desc).Remainder)
+                }
 
                 @foreach (var docDemo in docDemos)
                 {
@@ -101,7 +117,11 @@
                                 }
                             }
                             <Icon Type="@IconType.Outline.Code" Theme="@(_expandAllCode ? IconThemeType.Fill : IconThemeType.Outline)" Class="code-box-expand-trigger" OnClick="()=>_expandAllCode=!_expandAllCode" />
-                            @*<Icon Type="@IconType.Outline.Bug" Class="code-box-expand-trigger" />*@
+                            @if (_demoComponent.DemoList.Any(x => x.Debug))
+                            {
+                                <Button Type="ButtonType.Text" Size="ButtonSize.Small" Icon="@IconType.Outline.Bug"
+                                        Class="docs-debug-toggle" AriaPressed="_showDebugDemos" OnClick="ToggleDebugDemos">Debug</Button>
+                            }
                         </span>
                     </h2>
                 }
@@ -181,6 +201,10 @@
                         else if (SemanticComponentKey == "menu")
                         {
                             <MenuSemanticPreview />
+                        }
+                        else if (SemanticComponentKey == "collapse")
+                        {
+                            <CollapseSemanticPreview />
                         }
                         else if (SemanticComponentKey == "tag")
                         {
@@ -263,6 +287,7 @@
             ["& .toc-affix .ant-anchor .ant-anchor-link .ant-anchor-link-title"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 110, ["color"] = "rgba(0, 0, 0, 0.85)", ["whiteSpace"] = "nowrap", ["textOverflow"] = "ellipsis" },
             ["& .markdown h1 .subtitle"] = new System.Collections.Generic.Dictionary<string, object> { ["marginLeft"] = 12 },
             ["& .all-code-box-controls"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "right" },
+            ["& .docs-debug-toggle"] = new System.Collections.Generic.Dictionary<string, object> { ["marginInlineStart"] = 8, ["verticalAlign"] = "middle" },
             [".ant-row-rtl & .all-code-box-controls"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "left" },
             ["& .code-box-expand-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["marginLeft"] = 12, ["color"] = "#3b4357", ["fontSize"] = 20, ["cursor"] = "pointer", ["opacity"] = 0.75, ["transition"] = "all 0.3s" },
             ["& .code-box-expand-trigger:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["opacity"] = 1 },
@@ -274,6 +299,10 @@
                 ["& .code-boxes-col-2-1, & .code-boxes-col-1-1"] = new System.Collections.Generic.Dictionary<string, object> { ["float"] = "none", ["width"] = "100%" }
             },
             ["& .markdown.api-container hr"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = "12px 0" },
+            ["& .markdown.api-container > table"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["display"] = "block", ["width"] = "100%", ["maxWidth"] = "100%", ["overflowX"] = "auto"
+            },
             ["[data-theme='dark'] & .markdown.api-container table tbody tr:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#262626" },
             [".ant-row-rtl & #components-tooltip-demo-placement .code-box-demo, .ant-row-rtl & #components-popover-demo-placement .code-box-demo, .ant-row-rtl & #components-popconfirm-demo-placement .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["direction"] = "ltr" },
             ["& .ant-page-header"] = new System.Collections.Generic.Dictionary<string, object>

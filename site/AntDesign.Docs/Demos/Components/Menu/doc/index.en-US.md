@@ -27,6 +27,12 @@ More layouts with navigation: [Layout](/components/layout).
 
 ### Menu
 
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| ShowCollapsedTooltip | Enable tooltips for collapsed root items | bool | true |
+| CollapsedTooltipPlacement | Placement of collapsed item tooltips | Placement | Right |
+| PopupRender | Customize submenu popups; context contains Item, Keys and Content | RenderFragment&lt;MenuPopupContext&gt; | - |
+
 | Param | Description | Type | Default value | Version |
 | --- | --- | --- | --- | --- |
 | Accordion | SubMenu accordion mode | boolean | false |
@@ -42,7 +48,9 @@ More layouts with navigation: [Layout](/components/layout).
 | OnDeselect | Called when a menu item is deselected (multiple mode only) | function({ item, key, keyPath, selectedKeys, domEvent }) | - | (Not implemented) |
 | OnOpenChange | Called when sub-menus are opened or closed | function(openKeys: string\[]) | noop | (Not implemented) |
 | OnSelect | Called when a menu item is selected | function({ item, key, keyPath, selectedKeys, domEvent }) | none | (Not implemented) |
-| OverflowedIndicator | Customized icon when menu is collapsed | RenderFragment | - | (Not implemented) |
+| DisabledOverflow | Disable automatic item overflow in horizontal mode | boolean | false | 6.0.0 |
+| OverflowedIndicator | Custom content of the horizontal overflow indicator | RenderFragment | Ellipsis icon | 6.0.0 |
+| OverflowedIndicatorPopupClassName | CSS class of the overflow submenu popup | string | - | 6.0.0 |
 | Selectable | Allows selecting menu items. When it is `false` the menu item is not selected after `OnClick`. | boolean | true |  |
 | SelectedKeys | Array with the keys of currently selected menu items | string\[] |  |  |
 | Style | Style of the root node | string |  |  |
@@ -69,6 +77,11 @@ More layouts with navigation: [Layout](/components/layout).
 | IconTemplate | Custom icon template, when `Icon` and `IconTemplate` are set at the same time, `IconTemplate` is preferred   | RenderFragment                | -             |         |
 
 ### SubMenu
+
+| Property | Description | Type | Default |
+| --- | --- | --- | --- |
+| Theme | Override submenu theme; inherited when unspecified | MenuTheme? | - |
+| PopupRender | Customize this popup, overriding Menu.PopupRender | RenderFragment&lt;MenuPopupContext&gt; | - |
 
 | Param | Description | Type | Default value | Version |
 | --- | --- | --- | --- | --- |

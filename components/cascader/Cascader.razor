@@ -1,6 +1,7 @@
 ﻿@using AntDesign.Internal
 @using Microsoft.AspNetCore.Components.Rendering
 @namespace AntDesign
+@using AntDesign.Icons
 @inherits SelectBase<string,string>
 
 @{
@@ -59,15 +60,17 @@
             bool isActive = cascader._renderNodes.Where(n => n == node).Any();
             string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
             string disabledClass = node.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty;
-            string expandClass = node.HasChildren ? "ant-cascader-menu-item-expand" : string.Empty;
+            string expandClass = node.IsExpandable ? "ant-cascader-menu-item-expand" : string.Empty;
+            string loadingClass = node.IsLoading ? "ant-cascader-menu-item-loading" : string.Empty;
             bool checkedNode = cascader.Multiple && cascader.IsNodeChecked(node);
             bool indeterminateNode = cascader.Multiple && cascader.IsNodeIndeterminate(node);
+            Func<MouseEventArgs, Task> onClick = _ => cascader.NodeOnClickAsync(node);
             var events = new Dictionary<string, object>
                 {
-                  ["onclick"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnClick(node)),
+                  ["onclick"] = cascader._callbackFactory.Create(cascader, onClick),
                   ["onmouseover"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnMouseOver(node))
                 };
-            <li class="@context.cascader.GetSemanticClass("popup.listItem", $"ant-cascader-menu-item {expandClass} {activeClass} {disabledClass}".Trim())" style="@context.cascader.GetSemanticStyle("popup.listItem")" role="@(cascader.Multiple ? "menuitemcheckbox" : "menuitem")" title="@node.Label" aria-checked="@(cascader.Multiple ? checkedNode.ToString().ToLowerInvariant() : null)" data-path-key="@GetPathKey(node)" @attributes="events">
+            <li class="@context.cascader.GetSemanticClass("popup.listItem", $"ant-cascader-menu-item {expandClass} {activeClass} {disabledClass} {loadingClass}".Trim())" style="@context.cascader.GetSemanticStyle("popup.listItem")" role="@(cascader.Multiple ? "menuitemcheckbox" : "menuitem")" title="@node.Label" aria-checked="@(cascader.Multiple ? checkedNode.ToString().ToLowerInvariant() : null)" aria-busy="@(node.IsLoading ? "true" : null)" data-path-key="@GetPathKey(node)" @attributes="events">
               @if (cascader.Multiple)
               {
                 <span @onclick:stopPropagation @onmouseover:stopPropagation>@cascader.RenderCheckbox(node, checkedNode, indeterminateNode)</span>
@@ -75,7 +78,11 @@
               <div class="ant-cascader-menu-item-content">
                 @node.Label
               </div>
-              @if (node.HasChildren)
+              @if (node.IsLoading)
+              {
+                <div class="ant-cascader-menu-item-loading-icon"><Icon Type="loading" Spin /></div>
+              }
+              else if (node.IsExpandable)
               {
                 <div class="ant-cascader-menu-item-expand-icon">
                   <span role="img" aria-label="right" class="anticon anticon-right">
@@ -105,10 +112,11 @@
             bool indeterminateNode = cascader.Multiple && cascader.IsNodeIndeterminate(node);
             string activeClass = isActive ? "ant-cascader-menu-item-active" : string.Empty;
             string disabledClass = node.Disabled ? "ant-cascader-menu-item-disabled" : string.Empty;
-            string expandClass = node.HasChildren ? "ant-cascader-menu-item-expand" : string.Empty;
+            string expandClass = node.IsExpandable ? "ant-cascader-menu-item-expand" : string.Empty;
+            Func<MouseEventArgs, Task> onClick = _ => cascader.NodeOnClickAsync(node);
             var events = new Dictionary<string, object>
                 {
-                  ["onclick"] = cascader._callbackFactory.Create(cascader, e => cascader.NodeOnClick(node)),
+                  ["onclick"] = cascader._callbackFactory.Create(cascader, onClick),
                 };
             var label = node.Label.Replace(cascader._searchValue, $"<span class=\"ant-cascader-menu-item-keyword\">{cascader._searchValue}</span>");
             <li class="@cascader.GetSemanticClass("popup.listItem", $"ant-cascader-menu-item {expandClass} {activeClass} {disabledClass}".Trim())" style="@cascader.GetSemanticStyle("popup.listItem")" title="@node.Label" role="@(cascader.Multiple ? "menuitemcheckbox" : "menuitem")" aria-checked="@(cascader.Multiple ? checkedNode.ToString().ToLowerInvariant() : null)" data-path-key="@GetPathKey(node)" @attributes="events">

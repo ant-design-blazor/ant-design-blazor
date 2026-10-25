@@ -61,6 +61,8 @@ namespace AntDesign.Docs.Pages
 
         private string SemanticComponentKey => ToKebabCase(_demoComponent?.Title);
 
+        private bool HasComponentMetadata => _demoComponent?.Category == "Components" && _demoComponent.Title != "Overview";
+
         private Type? SemanticPreviewType => _demos.Count > 0
             ? DemoService.GetShowCase(_demos[0].Type)
             : null;
@@ -182,14 +184,15 @@ namespace AntDesign.Docs.Pages
 
         private async Task LoadDemos(string pageName)
         {
-            var showDemos = _demoComponent?.DemoList?.Where(x => !x.Debug && !x.Docs.HasValue).OrderBy(x => x.Order) ?? Enumerable.Empty<DemoItem>();
+            var version = ++_demoLoadVersion;
+            var showDemos = _demoComponent?.DemoList?.Where(x => (_showDebugDemos || !x.Debug) && !x.Docs.HasValue).OrderBy(x => x.Order) ?? Enumerable.Empty<DemoItem>();
             _anchors = showDemos.Select(x => (x.Name, x.Title)).ToArray();
             _demos = [];
             _filePaths = new() { _filePath };
             foreach (var item in showDemos)
             {
                 // compoennt is changed
-                if (pageName != _currentPageName)
+                if (pageName != _currentPageName || version != _demoLoadVersion)
                 {
                     return;
                 }
@@ -199,6 +202,15 @@ namespace AntDesign.Docs.Pages
                 StateHasChanged();
                 await Task.Delay(100); //Make outgoing threads avoid lagging operations (e.g. switching menus)
             }
+        }
+
+        private bool _showDebugDemos;
+        private int _demoLoadVersion;
+
+        private Task ToggleDebugDemos()
+        {
+            _showDebugDemos = !_showDebugDemos;
+            return LoadDemos(_currentPageName);
         }
 
         public void Dispose()

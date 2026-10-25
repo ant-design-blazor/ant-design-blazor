@@ -150,7 +150,6 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
         });
 
         Assert.NotNull(cut.Find(".ant-collapse"));
-        Assert.Contains("css-var-root", cut.Find(".ant-collapse").ClassList);
         Assert.Contains("ant-collapse-icon-placement-start", cut.Find(".ant-collapse").ClassList);
         Assert.NotNull(cut.Find(".ant-collapse-header"));
         Assert.NotNull(cut.Find(".ant-collapse-title"));
@@ -559,7 +558,7 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
 
         Assert.Equal(3, cut.FindAll(".ant-splitter-panel").Count);
         Assert.Equal(2, cut.FindAll(".ant-splitter-bar").Count);
-        Assert.Equal(new[] { "0", "1" }, cut.FindAll(".ant-splitter-bar-dragger").Select(x => x.GetAttribute("data-index")));
+        Assert.Equal(new[] { "First", "Second", "Third" }, cut.FindAll(".ant-splitter-panel").Select(x => x.TextContent.Trim()));
     }
 
     [Fact]
@@ -574,9 +573,10 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
                     .AddChildContent("First"))
                 .AddChildContent<AntDesign.SplitterPanel>(panel => panel.AddChildContent("Second")));
 
-        Assert.Equal("100px", cut.FindAll(".ant-splitter-panel")[0].GetAttribute("data-min"));
-        Assert.Equal("200px", cut.FindAll(".ant-splitter-panel")[0].GetAttribute("data-max"));
-        Assert.Contains("min-width:100px", cut.FindAll(".ant-splitter-panel")[0].GetAttribute("style"));
+        var panel = cut.FindAll(".ant-splitter-panel")[0];
+        Assert.Null(panel.GetAttribute("data-min"));
+        Assert.Null(panel.GetAttribute("data-max"));
+        Assert.Equal("flex-basis:auto;flex-grow:1;", panel.GetAttribute("style"));
     }
 
     [Fact]
@@ -596,15 +596,16 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
         Assert.Equal(2, cut.FindAll(".ant-splitter-bar-collapse-bar").Count);
 
         var firstPanel = cut.FindAll(".ant-splitter-panel")[0];
-        Assert.Contains("flex:1 1 0%", firstPanel.GetAttribute("style"));
+        Assert.Contains("flex-basis:auto;flex-grow:1", firstPanel.GetAttribute("style"));
 
         cut.Find(".ant-splitter-bar-collapse-bar-start").Click();
-        Assert.Contains("width:0px", cut.FindAll(".ant-splitter-panel")[0].GetAttribute("style"));
+        Assert.Contains("ant-splitter-panel-hidden", cut.FindAll(".ant-splitter-panel")[0].ClassName);
+        Assert.Contains("flex-basis:0px;flex-grow:0", cut.FindAll(".ant-splitter-panel")[0].GetAttribute("style"));
 
         cut.Find(".ant-splitter-bar-collapse-bar-start").Click();
         var expandedPanelStyle = cut.FindAll(".ant-splitter-panel")[0].GetAttribute("style");
-        Assert.Contains("flex:1 1 0%", expandedPanelStyle);
-        Assert.DoesNotContain("width:0px", expandedPanelStyle);
+        Assert.Contains("flex-basis:auto;flex-grow:1", expandedPanelStyle);
+        Assert.DoesNotContain("flex-basis:0px", expandedPanelStyle);
     }
 
     [Fact]
@@ -1066,7 +1067,7 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
             })
             .AddChildContent("Actions"));
 
-        Assert.NotNull(cut.Find(".ant-dropdown"));
+        cut.WaitForAssertion(() => Assert.NotNull(cut.Find(".ant-dropdown")));
         Assert.NotNull(cut.Find(".ant-dropdown-menu-item"));
         Assert.NotNull(cut.Find(".ant-dropdown-menu-item-icon"));
         Assert.Equal("Rename", cut.Find(".ant-dropdown-menu-title-content").TextContent.Trim());
@@ -1305,7 +1306,7 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
             .Add(x => x.Title, "Confirm action")
             .AddChildContent("Trigger"));
 
-        Assert.NotNull(cut.Find(".ant-popover-arrow"));
+        cut.WaitForAssertion(() => Assert.NotNull(cut.Find(".ant-popover-arrow")));
         Assert.NotNull(cut.Find(".ant-popover.ant-popover-css-var"));
         Assert.NotNull(cut.Find(".ant-popover-container[role='tooltip']"));
         Assert.NotNull(cut.Find(".ant-popconfirm-message-icon"));

@@ -1,0 +1,67 @@
+@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+@code {
+    public MenuPopupTests()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, _ => true).SetResult(new HtmlElement { ClientWidth = 100 });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true).SetResult(new OverlayPosition { Placement = Placement.BottomLeft });
+    }
+
+    [Fact]
+    public async Task Popup_uses_the_menu_item_anchor_and_builtin_overlay_direction_calculation()
+    {
+        var cut = Render(@<Menu Mode="MenuMode.Horizontal" DisabledOverflow><SubMenu Key="sub" Title="Sub" Placement="Placement.BottomRight"><MenuItem>One</MenuItem></SubMenu></Menu>);
+        var trigger = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        await cut.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
+        await cut.InvokeAsync(() => trigger.Instance.Show());
+        var call = JSInterop.Invocations.Last(x => x.Identifier == JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer);
+        Assert.Equal(Placement.BottomRight, call.Arguments[3]);
+        Assert.Equal(TriggerBoundaryAdjustMode.InView, call.Arguments[5]);
+        Assert.Equal(false, call.Arguments[6]);
+    }
+
+    [Fact]
+    public async Task Popup_context_preserves_owner_path_content_and_clicks()
+    {
+        MenuPopupContext context = null;
+        var clicked = 0;
+        RenderFragment<MenuPopupContext> render = popup => @<div class="custom-popup">@{ context = popup; }@popup.Content</div>;
+        var cut = Render(@<Menu Mode="MenuMode.Horizontal" DisabledOverflow PopupRender="render"><SubMenu Key="settings" Title="Settings"><MenuItem Key="profile" OnClick="@(_ => clicked++)">Profile</MenuItem></SubMenu></Menu>);
+        var trigger = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        await cut.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
+        await cut.InvokeAsync(() => trigger.Instance.Show());
+        var overlay = trigger.FindComponent<AntDesign.Internal.Overlay>();
+        overlay.WaitForAssertion(() => Assert.NotNull(overlay.Find(".custom-popup .ant-menu-item")));
+        Assert.Equal("settings", context.Item.Key);
+        Assert.Equal(new[] { "settings" }, context.Keys);
+        await overlay.Find(".custom-popup .ant-menu-item").ClickAsync(new MouseEventArgs());
+        Assert.Equal(1, clicked);
+    }
+
+    [Fact]
+    public async Task Submenu_renderer_overrides_root_and_theme_updates_without_changing_root()
+    {
+        RenderFragment<MenuPopupContext> root = popup => @<div class="root-renderer">@popup.Content</div>;
+        RenderFragment<MenuPopupContext> local = popup => @<div class="local-renderer">@popup.Content</div>;
+        var cut = Render(@<Menu Mode="MenuMode.Vertical" Theme="MenuTheme.Dark" PopupRender="root"><SubMenu Key="sub" Title="Sub" Theme="MenuTheme.Light" PopupRender="local"><MenuItem Key="1">One</MenuItem></SubMenu></Menu>);
+        var trigger = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
+        await cut.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
+        await cut.InvokeAsync(() => trigger.Instance.Show());
+        var overlay = trigger.FindComponent<AntDesign.Internal.Overlay>();
+        overlay.WaitForAssertion(() => Assert.NotNull(overlay.Find(".local-renderer .ant-menu-light")));
+        Assert.Empty(overlay.FindAll(".root-renderer"));
+        Assert.Contains("ant-menu-dark", cut.Find("ul.ant-menu-root").ClassList);
+        cut.FindComponent<SubMenu>().SetParametersAndRender(p => p.Add(x => x.Theme, MenuTheme.Dark));
+        overlay.WaitForAssertion(() => Assert.NotNull(overlay.Find(".local-renderer .ant-menu-dark")));
+    }
+
+    [Fact]
+    public void Collapsed_tooltip_placement_and_disable_are_component_options()
+    {
+        var cut = Render(@<Menu Mode="MenuMode.Inline" InlineCollapsed CollapsedTooltipPlacement="Placement.Left"><MenuItem Icon="mail">Mail</MenuItem></Menu>);
+        Assert.Equal(Placement.Left, cut.FindComponent<AntDesign.Tooltip>().Instance.Placement);
+        cut.FindComponent<AntDesign.Menu>().SetParametersAndRender(p => p.Add(x => x.ShowCollapsedTooltip, false));
+        Assert.Empty(cut.FindComponents<AntDesign.Tooltip>());
+    }
+}

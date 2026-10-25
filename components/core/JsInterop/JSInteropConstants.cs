@@ -150,7 +150,6 @@ namespace AntDesign
 
         public static string DisposeObj => $"{FUNC_PREFIX}state.disposeObj";
         public static string Log => $"{FUNC_PREFIX}log";
-        public static string GenerateColor => $"{FUNC_PREFIX}generateColor";
 
         public static class DomInfoHelper
         {
@@ -334,6 +333,12 @@ namespace AntDesign
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "splitterHelper.";
             public static string Attach => $"{FUNC_PREFIX}attach";
+        }
+
+        public static class SelectHelper
+        {
+            public static string ScrollToIndex => FUNC_PREFIX + "selectHelper.scrollToIndex";
+            public static string CancelScroll => FUNC_PREFIX + "selectHelper.cancelScroll";
         }
 
         public static class DrawerHelper

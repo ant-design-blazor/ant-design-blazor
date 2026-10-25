@@ -1,0 +1,20 @@
+<Cascader Options="@_options" LoadData="LoadDataAsync" ChangeOnSelect />
+
+@code {
+    private readonly CascaderNode[] _options =
+    [
+        new() { Value = "zhejiang", Label = "Zhejiang", IsLeaf = false },
+        new() { Value = "jiangsu", Label = "Jiangsu", IsLeaf = false }
+    ];
+
+    private static async Task LoadDataAsync(CascaderNode[] selectedOptions)
+    {
+        var target = selectedOptions[^1];
+        await Task.Delay(500);
+        target.Children =
+        [
+            new() { Value = "dynamic1", Label = $"{target.Label} Dynamic 1" },
+            new() { Value = "dynamic2", Label = $"{target.Label} Dynamic 2" }
+        ];
+    }
+}

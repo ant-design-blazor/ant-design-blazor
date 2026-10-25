@@ -1,0 +1,18 @@
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%">
+    <Space Wrap="true">
+        <Button OnClick="FocusAtStart">Focus at first</Button>
+        <Button OnClick="FocusAtEnd">Focus at last</Button>
+        <Button OnClick="SelectAll">Focus to select all</Button>
+        <Button OnClick="FocusWithoutScroll">Focus prevent scroll</Button>
+    </Space>
+    <AntDesign.InputNumber @ref="_inputNumber" TValue="double" Style="width: 100%" DefaultValue="999" />
+</Space>
+
+@code {
+    private AntDesign.InputNumber<double> _inputNumber;
+
+    private Task FocusAtStart() => _inputNumber.Focus(FocusBehavior.FocusAtFirst);
+    private Task FocusAtEnd() => _inputNumber.Focus(FocusBehavior.FocusAtLast);
+    private Task SelectAll() => _inputNumber.Focus(FocusBehavior.FocusAndSelectAll);
+    private Task FocusWithoutScroll() => _inputNumber.Focus(preventScroll: true);
+}

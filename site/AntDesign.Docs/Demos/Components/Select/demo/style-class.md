@@ -5,10 +5,10 @@ title:
   en-US: Semantic DOM styling
 ---
 
-## 语义节点样式
+## zh-CN
 
-使用 Select 外层作用域和语义节点 CSS 类自定义选择框样式，避免影响页面中的其他 Select。
+通过 `ClassNames` 自定义根节点，通过 `Styles` 字典设置前后缀颜色。第二个示例使用 C# 函数根据填充变体返回样式，并为弹出层设置紫色边框。
 
-## Semantic DOM styling
+## en-US
 
-Scope CSS to a Select wrapper and target its semantic DOM class so the customization does not affect other Select instances.
+Use `ClassNames` for the root and a `Styles` dictionary for prefix and suffix colors. The second example computes its styles with a C# function based on the filled variant, including a purple popup border.

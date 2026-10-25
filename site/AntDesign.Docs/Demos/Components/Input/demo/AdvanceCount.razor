@@ -1,0 +1,76 @@
+@using System.Globalization
+@using System.Collections.Generic
+@using AntDesign
+
+<div class="input-advance-count-demo">
+    <div>
+        <h5>Exceed Max</h5>
+        <Input TValue="string" Count="@_exceedCount" DefaultValue="@_initialExceed" />
+    </div>
+    <div>
+        <h5>Emoji count as length 1</h5>
+        <Input TValue="string" Count="@_emojiCount" DefaultValue="@_initialEmoji" />
+    </div>
+    <div>
+        <h5>Not exceed max</h5>
+        <Input TValue="string" Count="@_limitedCount" DefaultValue="@_initialLimited" />
+    </div>
+</div>
+
+<style>
+    .input-advance-count-demo {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .input-advance-count-demo > div {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+</style>
+
+@code {
+    private const string _initialExceed = "Hello, antd!";
+    private const string _initialEmoji = "\U0001F525\U0001F525\U0001F525";
+    private const string _initialLimited = "\U0001F525 antd";
+
+    private readonly InputCountOptions _exceedCount = new() { Max = 10 };
+
+    private readonly InputCountOptions _emojiCount = new()
+    {
+        Strategy = CountTextElements
+    };
+
+    private readonly InputCountOptions _limitedCount = new()
+    {
+        Max = 6,
+        Strategy = CountTextElements,
+        ExceedFormatter = LimitTextElements
+    };
+
+    private static int CountTextElements(string value)
+    {
+        var count = 0;
+        var enumerator = StringInfo.GetTextElementEnumerator(value);
+        while (enumerator.MoveNext())
+        {
+            count++;
+        }
+
+        return count;
+    }
+
+    private static string LimitTextElements(string value, int max)
+    {
+        var enumerator = StringInfo.GetTextElementEnumerator(value);
+        var elements = new List<string>();
+        while (enumerator.MoveNext() && elements.Count < max)
+        {
+            elements.Add(enumerator.GetTextElement());
+        }
+
+        return string.Concat(elements);
+    }
+}

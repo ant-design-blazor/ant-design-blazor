@@ -1,26 +1,47 @@
 ﻿@using AntDesign.Docs.Services
 
-<div id="search-box">
-    <div id="docsearch"></div>
+@if (!IsMobile)
+{
+    <div id="search-box"><div id="docsearch"></div></div>
+}
+<div class="header-navigation">
+    <Menu Mode="@(IsMobile ? MenuMode.Inline : MenuMode.Horizontal)" DisabledOverflow="IsMobile" Id="nav" Class="menu-site">
+        @foreach (var item in NavigationItems)
+        {
+            @RenderNavigationItem(item)
+        }
+        @if (IsMobile)
+        {
+            @AdditionalMenuItems
+        }
+        else
+        {
+            <SubMenu Class="header-more-options" Key="additional" Title="More" Placement="Placement.BottomRight">
+                <TitleTemplate><Icon Type="@IconType.Outline.UnorderedList" /></TitleTemplate>
+                <ChildContent>
+                    @AdditionalMenuItems
+                </ChildContent>
+            </SubMenu>
+        }
+    </Menu>
 </div>
+@if (!IsMobile)
+{
+    <div class="header-desktop-utilities">
+        <Button Class="header-button" Size="ButtonSize.Small">@VersionLabel</Button>
+        <Button Class="header-button header-lang-button" Size="ButtonSize.Small" OnClick="@(_ => ChangeLanguage(CurrentLanguage == "en-US" ? "zh-CN" : "en-US"))">@(CurrentLanguage == "en-US" ? "简体中文" : "English")</Button>
+        <Button Class="header-button" Size="ButtonSize.Small" OnClick="@(() => ConfigProvider?.ChangeDirection(Direction?.ToUpperInvariant() == "RTL" ? "ltr" : "rtl"))">@(Direction?.ToUpperInvariant() == "RTL" ? "LTR" : "RTL")</Button>
+        <GithubButton />
+    </div>
+}
 
-<Menu Mode="@(IsMobile?MenuMode.Inline: MenuMode.Horizontal)" Id="nav" Class="menu-site">
-    @foreach (var item in _menuItems.OrderBy(x => x.Order))
-    {
-        <MenuItem Class="ant-menu-item-only-child" Key="@item.Url" RouterLink="@($"{CurrentLanguage}/{item.Url}")" RouterMatch="NavLinkMatch.Prefix">
-            <span>@item.Title</span>
-        </MenuItem>
-    }
 
-    @if (CurrentLanguage == "zh-CN")
-    {
-       <MenuItem Class="ant-menu-item-only-child" RouterLink="@($"{CurrentLanguage}/support")">支持 & 服务</MenuItem>
-    }
+<style>@((MarkupString)_searchStyles.CssText)</style>
 
-    <MenuItem Class="ant-menu-item-only-child" RouterLink="@($"https://x.antblazor.com/{CurrentLanguage}")">AI</MenuItem>
-    
-    @if (IsMobile)
-    {
+@code {
+    private RenderFragment RenderNavigationItem(HeaderNavigationItem item) => @<MenuItem Class="ant-menu-item-only-child" Key="@item.Key" RouterLink="@item.Url" RouterMatch="NavLinkMatch.Prefix"><span>@item.Title</span></MenuItem>;
+
+    private RenderFragment AdditionalMenuItems => @<text>
         <MenuItem><a href="https://github.com/ant-design-blazor/ant-design-blazor">Github</a></MenuItem>
 
         @if (CurrentLanguage != "en-US")
@@ -39,38 +60,8 @@
         {
             <MenuItem Class="header-button" OnClick="@(()=>ConfigProvider?.ChangeDirection("ltr"))">LTR</MenuItem>
         }
-    }
-</Menu>
+    </text>;
 
-@if (!IsMobile)
-{
-    <Button Class="header-button" Size="ButtonSize.Small">@VersionLabel</Button>
-
-    @if (CurrentLanguage != "en-US")
-    {
-        <Button Class="header-button header-lang-button" Size="ButtonSize.Small" OnClick="@(_ => ChangeLanguage("en-US"))">English</Button>
-    }
-    else
-    {
-        <Button Class="header-button header-lang-button" Size="ButtonSize.Small" OnClick="@(_ => ChangeLanguage("zh-CN"))">简体中文</Button>
-    }
-
-    @if (Direction?.ToUpperInvariant() != "RTL")
-    {
-        <Button Class="header-button" Size="ButtonSize.Small" OnClick="@(()=>ConfigProvider?.ChangeDirection("rtl"))">RTL</Button>
-    }
-    else
-    {
-        <Button Class="header-button" Size="ButtonSize.Small" OnClick="@(()=>ConfigProvider?.ChangeDirection("ltr"))">LTR</Button>
-    }
-
-    <GithubButton />
-
-}
-
-<style>@((MarkupString)_searchStyles.CssText)</style>
-
-@code {
     private static readonly CssStyleSheet _searchStyles = CssInJs.CreateStyles("docs-search", new System.Collections.Generic.Dictionary<string, object>
     {
         ["portal"] = new System.Collections.Generic.Dictionary<string, object>

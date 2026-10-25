@@ -6,7 +6,11 @@
 }
 <li class="@TriggerClass"
     role="menuitem"
-    style="@SubMenuComponent.RootMenu.GetSemanticStyle("subMenu.item", $"position:relative;{SubMenuComponent.Style}")"
+    style="@SubMenuComponent.OverflowStyle(SubMenuComponent.RootMenu.GetSemanticStyle("subMenu.item", $"position:relative;{SubMenuComponent.Style}"))"
+    data-menu-overflow-item="@SubMenuComponent.RootMenu.OverflowItemId(SubMenuComponent.Id, SubMenuComponent.IsOverflowRoot)"
+    data-menu-overflow-rest="@(SubMenuComponent.IsOverflowIndicator ? "true" : null)"
+    aria-hidden="@(SubMenuComponent.OverflowHidden ? "true" : null)"
+    inert="@SubMenuComponent.OverflowHidden"
     @key="SubMenuComponent.Key"
     @ref="@Ref"
     @onclick="OnClickDiv"

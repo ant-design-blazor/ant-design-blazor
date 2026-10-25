@@ -20,6 +20,12 @@ namespace AntDesign
         [CascadingParameter]
         public SubMenu Parent { get; set; }
 
+        [CascadingParameter] private MenuItemGroup ParentGroup { get; set; }
+        internal bool IsOverflowIndicator => Key == RootMenu?.OverflowKey;
+        internal bool IsOverflowRoot => Parent == null && ParentGroup == null && !IsOverflowIndicator;
+        internal bool OverflowHidden => RootMenu?.IsOverflowed(Id) == true || (IsOverflowIndicator && !RootMenu.HasOverflowItems);
+        internal string OverflowStyle(string style) => RootMenu.OverflowItemStyle(Id, style, IsOverflowIndicator);
+
         /// <summary>
         /// Menu placement
         /// </summary>
@@ -45,6 +51,23 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string PopupClassName { get; set; }
+
+        /// <summary>Submenu theme, inherited from the parent when unspecified.</summary>
+        [Parameter] public MenuTheme? Theme { get; set; }
+
+        /// <summary>Customize this submenu popup, overriding Menu.PopupRender.</summary>
+        [Parameter] public RenderFragment<MenuPopupContext> PopupRender { get; set; }
+
+        internal MenuTheme EffectiveTheme => Theme ?? Parent?.EffectiveTheme ?? RootMenu.Theme;
+
+        private RenderFragment RenderPopup()
+        {
+            var render = PopupRender ?? RootMenu.PopupRender;
+            if (render == null) return DefaultPopup;
+            var keys = new System.Collections.Generic.List<string>();
+            for (var item = this; item != null; item = item.Parent) keys.Insert(0, item.Key);
+            return render(new MenuPopupContext(this, keys, DefaultPopup));
+        }
 
         /// <summary>
         /// Title 
@@ -116,6 +139,7 @@ namespace AntDesign
         private ClassMapper SubMenuMapper { get; } = new ClassMapper();
 
         private bool _isSelected;
+        internal bool IsSelected => _isSelected;
 
         private string _key;
 
@@ -149,7 +173,7 @@ namespace AntDesign
                 .GetIf(() => $"{prefixCls}-vertical", () => RootMenu?.InternalMode != MenuMode.Inline)
                 .GetIf(() => $"{prefixCls}-inline", () => RootMenu?.InternalMode == MenuMode.Inline)
                 .If($"{prefixCls}-disabled", () => Disabled)
-                .If($"{prefixCls}-selected", () => _isSelected)
+                .If($"{prefixCls}-selected", () => _isSelected || RootMenu.HasSelectedSubmenu(Key) || (IsOverflowIndicator && RootMenu.OverflowHasSelected))
                 .If($"{prefixCls}-rtl", () => RTL)
                 .If($"{prefixCls}-open", () => RootMenu?.InternalMode == MenuMode.Inline && IsOpen)
                 ;
@@ -157,8 +181,8 @@ namespace AntDesign
             SubMenuMapper
                 .Add(RootMenu?.PrefixCls)
                 .Add($"{RootMenu?.PrefixCls}-sub")
-                .GetIf(() => $"{RootMenu?.PrefixCls}-light", () => RootMenu?.Theme == MenuTheme.Light)
-                .GetIf(() => $"{RootMenu?.PrefixCls}-dark", () => RootMenu?.Theme == MenuTheme.Dark)
+                .GetIf(() => $"{RootMenu?.PrefixCls}-light", () => EffectiveTheme == MenuTheme.Light)
+                .GetIf(() => $"{RootMenu?.PrefixCls}-dark", () => EffectiveTheme == MenuTheme.Dark)
                 .GetIf(() => $"{RootMenu?.PrefixCls}-vertical", () => RootMenu?.InternalMode != MenuMode.Inline)
                 .GetIf(() => $"{RootMenu?.PrefixCls}-inline", () => RootMenu?.InternalMode == MenuMode.Inline)
                 //.If($"{RootMenu.PrefixCls}-submenu-popup", () => RootMenu.InternalMode != MenuMode.Inline)
@@ -215,6 +239,7 @@ namespace AntDesign
             SetClass();
 
             RootMenu?.AddSubmenu(this);
+            if (IsOverflowRoot) RootMenu?.RegisterOverflowItem(Id, OverflowContent, InvokeStateHasChanged);
 
             if (RootMenu.DefaultOpenKeys.Contains(Key))
                 IsOpen = true;
@@ -242,15 +267,16 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             RootMenu?.RemoveSubmenu(this);
+            RootMenu?.UnregisterOverflowItem(Id);
             base.Dispose(disposing);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender && RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
+            if (firstRender && !IsOverflowIndicator && RootMenu.InternalMode != MenuMode.Inline && _overlayTrigger != null)
             {
                 var domInfo = await _overlayTrigger.GetTriggerDomInfo();
-                _popupMinWidthStyle = $"min-width: {domInfo.ClientWidth}px";
+                _popupMinWidthStyle = $"min-width:min({domInfo.ClientWidth}px,calc(100vw - 32px))";
             }
 
             await base.OnAfterRenderAsync(firstRender);

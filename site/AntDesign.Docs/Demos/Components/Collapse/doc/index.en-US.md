@@ -21,6 +21,10 @@ A content area which can be collapsed and expanded.
 | -------------------- | ------------------------ | ------------------- | ------- |
 | `Accordion`          | Accordion mode           | `boolean`           | `false` |
 | `Bordered`           | Set border style         | `boolean`           | `true`  |
+| `Ghost`              | Remove the background and border | `boolean` | `false` |
+| `Size`               | Set the panel size       | `CollapseSize`       | `Middle` |
+| `Collapsible`        | Null: whole header; Header: title and icon only; Icon: icon only; Disabled: no interaction | `CollapseCollapsible?` | `null` |
+| `ClassNames` / `Styles` | Customize semantic DOM slots | `IReadOnlyDictionary<string, string>` | - |
 | `ExpandIconPosition` | Set expand icon position | `'left' \| 'right'` | `left`  |
 | `Animation`          | Whether enable the animation | `boolean` | `false` |
 
@@ -29,6 +33,7 @@ A content area which can be collapsed and expanded.
 | Property | Description | Type | Default |
 | -------------- | ------------------------------------------- | -------------------------- | ------- |
 | `Disabled`     | If `true`, panel cannot be opened or closed | `boolean`                  | `false` |
+| `Collapsible`  | Override the parent trigger behavior       | `CollapseCollapsible?`     | Parent value |
 | `Header`       | Title of the panel                          | `string \| RenderFragment` | -       |
 | `ExpandedIcon` | Customize an icon for toggle                | `string \| RenderFragment` | -       |
 | `Extra`        | Extra element in the corner                 | `string \| RenderFragment` | -       |

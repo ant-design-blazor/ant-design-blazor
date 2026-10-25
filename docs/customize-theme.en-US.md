@@ -35,7 +35,19 @@ private static readonly ThemeConfig BrandTheme = new()
 
 ## Preset algorithms
 
-The default algorithm derives Map and Alias tokens from the supplied Seed tokens. `dark` and `compact` are also available. Global explicit tokens are applied after the algorithm, so a supplied value takes precedence over its derived value.
+All theme color calculations and two-tone icons share the independent `AntDesign.Colors` library.
+It ports `@ant-design/colors` 8.0.1 and the required `@ant-design/fast-color` 3.0.1 operations
+from the pinned Ant Design v6 dependency tree. There is no separate icon palette algorithm or JavaScript color calculation.
+
+```csharp
+using AntDesign.Colors;
+
+string[] light = ColorPalette.Generate("#1677ff"); // all 10 swatches
+string[] dark = ColorPalette.Generate("#1677ff", dark: true, backgroundColor: "#141414");
+string secondary = light[0]; // also used by two-tone icons
+```
+
+The default algorithm derives Map and Alias tokens from the supplied Seed tokens. `dark` and `compact` are also available. Seed inputs participate in the algorithm (so compact reduces `controlHeight` and dark transforms `colorPrimary`). Explicit Map overrides are merged before Alias derivation, and explicit Alias overrides take final precedence.
 
 ```csharp
 private static readonly ThemeConfig DarkTheme = new()
@@ -83,6 +95,8 @@ Every component page's Design Token section documents that component's available
 ## Nested themes and CSS variables
 
 Nested `ConfigProvider` instances create a local theme scope. Unspecified global values inherit from the parent; overrides only affect descendants of that provider. By default `CssVar` is enabled, and the provider emits resolved tokens as `--ant-*` CSS custom properties on its scope element. Component tokens use names such as `--ant-select-option-selected-bg`.
+
+Inheritance merges explicit configuration, not the parent's already-derived palette. A child with no `Algorithm` setting inherits the parent's algorithm; setting `Algorithm = "default"` explicitly switches back to the default algorithm. Set `Inherit = false` to start a fresh default theme without parent tokens or component overrides.
 
 ```razor
 <ConfigProvider ThemeConfig="@BrandTheme">

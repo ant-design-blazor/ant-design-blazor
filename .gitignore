@@ -377,3 +377,10 @@ components/LocalizedIntellisenseFiles/AntDesign.xml
 .DS_Store
 package-lock.json
 /site/AntDesign.Docs.MCP/data
+
+# Generated LLM documentation for the static/WASM site
+/site/AntDesign.Docs.Wasm/wwwroot/en-US/components/*.md
+/site/AntDesign.Docs.Wasm/wwwroot/zh-CN/components/*.md
+/site/AntDesign.Docs.Wasm/wwwroot/llms.txt
+/site/AntDesign.Docs.Wasm/wwwroot/en-US/docs/*.md
+/site/AntDesign.Docs.Wasm/wwwroot/zh-CN/docs/*.md

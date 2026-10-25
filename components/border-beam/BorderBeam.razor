@@ -1,0 +1,7 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+@for (var index = 0; index < Math.Max(1, Count); index++)
+{
+    <div aria-hidden="true" class="ant-border-beam @Class" style="@GetBeamStyle(index)" @ref="Ref"></div>
+}

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using AntColorPalette = AntDesign.Colors.ColorPalette;
+using ColorMath = AntDesign.Colors.ThemeColorMath;
 
 namespace AntDesign.Theming
 {
@@ -51,7 +53,7 @@ namespace AntDesign.Theming
                     }
                 }
             }
-            foreach (var preset in PresetColorPalettes.All)
+            foreach (var preset in PresetColorPalettes.TokenPalettes)
             {
                 var color = values.Get(preset.Key, PresetColorPalettes.Primary(preset.Key));
                 var palette = AntColorPalette.Generate(color);
@@ -60,6 +62,8 @@ namespace AntDesign.Theming
                     values[$"{preset.Key}{index + 1}"] = palette[index];
                     values[$"{preset.Key}-{index + 1}"] = palette[index];
                 }
+                values[$"{preset.Key}Hover"] = palette[4];
+                values[$"{preset.Key}Active"] = palette[6];
             }
             AddNeutralColorMap(values, false);
             AddColorSemanticMap(values);
@@ -170,6 +174,7 @@ namespace AntDesign.Theming
                 values[$"{prefix}Border"] = values.Get(prefix + "3", "");
                 values[$"{prefix}BorderHover"] = values.Get(prefix + "4", "");
                 values[$"{prefix}Hover"] = values.Get(prefix + (name is "Primary" or "Error" ? "5" : "4"), "");
+                values[prefix] = values.Get(prefix + "6", values.Get(prefix, ""));
                 values[$"{prefix}Active"] = values.Get(prefix + "7", "");
                 values[$"{prefix}TextHover"] = values.Get(prefix + "8", "");
                 values[$"{prefix}Text"] = values.Get(prefix + "9", "");
@@ -177,14 +182,14 @@ namespace AntDesign.Theming
             }
             var link = values.Get("colorLink", values.Get("colorInfo", ""));
             if (string.IsNullOrEmpty(link)) link = values.Get("colorInfo", "");
-            var linkPalette = dark ? AntColorPalette.GenerateDark(link, "#141414") : AntColorPalette.Generate(link);
+            var linkPalette = AntColorPalette.Generate(link, dark);
             if (linkPalette.Length == 10)
             {
-                values["colorLinkHover"] = dark ? linkPalette[3] : linkPalette[4];
+                values["colorLinkHover"] = linkPalette[3];
                 values["colorLink"] = linkPalette[5];
                 values["colorLinkActive"] = dark ? linkPalette[4] : linkPalette[6];
             }
-            values["colorErrorBgFilledHover"] = ColorMath.Mix(values.Get("colorError2", ""), values.Get("colorError4", ""), 50);
+            values["colorErrorBgFilledHover"] = ColorMath.Mix(values.Get("colorError1", ""), values.Get("colorError3", ""), 50);
             values["colorErrorBgActive"] = values.Get("colorError3", "");
             values["colorBgMask"] = ColorMath.Alpha("#000000", .45);
         }
@@ -203,10 +208,15 @@ namespace AntDesign.Theming
                 ("controlItemBgActive", "colorPrimaryBg"), ("controlItemBgActiveHover", "colorPrimaryBgHover"), ("controlItemBgActiveDisabled", "colorFill")
             };
             foreach (var pair in aliases) values[pair.Item1] = values.Get(pair.Item2, "");
+            values["colorErrorOutline"] = ColorMath.GetAlphaColor(values.Get("colorErrorBg", ""), values.Get("colorBgContainer", ""));
+            values["colorWarningOutline"] = ColorMath.GetAlphaColor(values.Get("colorWarningBg", ""), values.Get("colorBgContainer", ""));
             values["colorSplit"] = ColorMath.GetAlphaColor(values.Get("colorBorderSecondary", ""), values.Get("colorBgContainer", ""));
-            values["controlOutline"] = values.Get("colorPrimaryBg", "");
+            values["controlOutline"] = ColorMath.GetAlphaColor(values.Get("colorPrimaryBg", ""), values.Get("colorBgContainer", ""));
             values["controlTmpOutline"] = values.Get("colorFillQuaternary", "");
             values["fontSizeIcon"] = values.Get("fontSizeSM", "");
+            values["fontHeight"] = Number(RoundJs(Parse(values.Get("fontSize", "14"), 14) * Parse(values.Get("lineHeight", "1"), 1)));
+            values["fontHeightSM"] = Number(RoundJs(Parse(values.Get("fontSizeSM", "12"), 12) * Parse(values.Get("lineHeightSM", "1"), 1)));
+            values["fontHeightLG"] = Number(RoundJs(Parse(values.Get("fontSizeLG", "16"), 16) * Parse(values.Get("lineHeightLG", "1"), 1)));
             values["fontWeightStrong"] = "600";
             values["opacityLoading"] = ".65";
             values["linkDecoration"] = values["linkHoverDecoration"] = values["linkFocusDecoration"] = "none";
@@ -271,7 +281,7 @@ namespace AntDesign.Theming
             foreach (var name in new[] { "colorPrimary", "colorSuccess", "colorWarning", "colorError", "colorInfo", "colorLink" })
             {
                 if (!map.TryGetValue(name, out var color)) continue;
-                var palette = AntColorPalette.GenerateDark(color, "#141414");
+                var palette = AntColorPalette.Generate(color, true);
                 if (palette.Length == 10)
                 {
                     var mapped = new[] { palette[0], palette[1], palette[2], palette[3], palette[6], palette[5], palette[4], palette[6], palette[5], palette[4] };
@@ -282,17 +292,17 @@ namespace AntDesign.Theming
                     }
                 }
             }
-            foreach (var preset in PresetColorPalettes.All)
+            foreach (var preset in PresetColorPalettes.TokenPalettes)
             {
                 var color = map.Get(preset.Key, PresetColorPalettes.Primary(preset.Key));
-                var palette = AntColorPalette.GenerateDark(color, "#141414");
+                var palette = AntColorPalette.Generate(color, true);
                 for (var index = 0; index < palette.Length; index++)
                 {
                     map[$"{preset.Key}{index + 1}"] = palette[index];
                     map[$"{preset.Key}-{index + 1}"] = palette[index];
                 }
-                map[$"{preset.Key}Hover"] = palette[6];
-                map[$"{preset.Key}Active"] = palette[4];
+                map[$"{preset.Key}Hover"] = palette[4];
+                map[$"{preset.Key}Active"] = palette[6];
             }
             DefaultThemeAlgorithm.AddNeutralColorMap(map, true);
             DefaultThemeAlgorithm.AddColorSemanticMap(map, dark: true);
@@ -337,147 +347,7 @@ namespace AntDesign.Theming
         }
     }
 
-    internal static class ColorMath
-    {
-        public static string Alpha(string color, double alpha)
-        {
-            if (color == null) return string.Empty;
-            if (color.StartsWith("#", StringComparison.Ordinal) && color.Length == 7 &&
-                int.TryParse(color.Substring(1, 2), System.Globalization.NumberStyles.HexNumber, null, out var r) &&
-                int.TryParse(color.Substring(3, 2), System.Globalization.NumberStyles.HexNumber, null, out var g) &&
-                int.TryParse(color.Substring(5, 2), System.Globalization.NumberStyles.HexNumber, null, out var b))
-                return $"rgba({r}, {g}, {b}, {alpha.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)})";
-            return color;
-        }
 
-        public static string WithAlpha(string color, double alpha)
-        {
-            if (color != null && color.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase)) return color;
-            return Alpha(color, alpha);
-        }
-
-        public static string Darken(string color, double amount)
-        {
-            if (!TryHex(color, out var r, out var g, out var b)) return color;
-            var factor = Math.Max(0, 1 - amount / 100);
-            return $"#{(int)Math.Floor(r * factor + .5):X2}{(int)Math.Floor(g * factor + .5):X2}{(int)Math.Floor(b * factor + .5):X2}".ToLowerInvariant();
-        }
-
-        public static string Lighten(string color, double amount)
-        {
-            if (!TryHex(color, out var r, out var g, out var b)) return color;
-            var factor = Math.Clamp(amount / 100, 0, 1);
-            return $"#{(int)Math.Floor(r + (255 - r) * factor + .5):X2}{(int)Math.Floor(g + (255 - g) * factor + .5):X2}{(int)Math.Floor(b + (255 - b) * factor + .5):X2}".ToLowerInvariant();
-        }
-
-        public static string Mix(string first, string second, int amount)
-        {
-            if (!TryHex(first, out var r1, out var g1, out var b1) || !TryHex(second, out var r2, out var g2, out var b2)) return second;
-            var p = amount / 100d;
-            return $"#{(int)Math.Floor(r1 + (r2 - r1) * p + .5):X2}{(int)Math.Floor(g1 + (g2 - g1) * p + .5):X2}{(int)Math.Floor(b1 + (b2 - b1) * p + .5):X2}".ToLowerInvariant();
-        }
-
-        public static string GetAlphaColor(string frontColor, string backgroundColor)
-        {
-            if (string.IsNullOrWhiteSpace(frontColor) || frontColor.StartsWith("rgba(", StringComparison.OrdinalIgnoreCase)) return frontColor;
-            if (!TryHex(frontColor, out var frontR, out var frontG, out var frontB)
-                || !TryHex(backgroundColor, out var backgroundR, out var backgroundG, out var backgroundB)) return frontColor;
-
-            for (var alpha = 0.01; alpha <= 1; alpha += 0.01)
-            {
-                var r = (int)Math.Floor((frontR - backgroundR * (1 - alpha)) / alpha + .5);
-                var g = (int)Math.Floor((frontG - backgroundG * (1 - alpha)) / alpha + .5);
-                var b = (int)Math.Floor((frontB - backgroundB * (1 - alpha)) / alpha + .5);
-                if (r is >= 0 and <= 255 && g is >= 0 and <= 255 && b is >= 0 and <= 255)
-                {
-                    return $"rgba({r}, {g}, {b}, {(Math.Floor(alpha * 100 + .5) / 100).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)})";
-                }
-            }
-
-            return frontColor;
-        }
-
-        private static bool TryHex(string value, out int r, out int g, out int b)
-        {
-            r = g = b = 0;
-            var hex = value?.Trim().TrimStart('#');
-            if (hex?.Length == 3)
-                hex = string.Concat(hex.Select(character => new string(character, 2)));
-            return hex?.Length == 6 && int.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out r) && int.TryParse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber, null, out g) && int.TryParse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out b);
-        }
-    }
-
-    internal static class AntColorPalette
-    {
-        private const double HueStep = 2, SaturationStep = .16, SaturationStep2 = .05, BrightnessStep1 = .05, BrightnessStep2 = .15;
-
-        public static string[] Generate(string value)
-        {
-            if (!TryHex(value, out var r, out var g, out var b)) return Array.Empty<string>();
-            ToHsv(r, g, b, out var h, out var s, out var v);
-            var colors = new List<string>();
-            for (var i = 5; i > 0; i--) colors.Add(FromHsv(Hue(h, i, true), Saturation(h, s, i, true), Value(v, i, true)));
-            colors.Add(value.ToLowerInvariant());
-            for (var i = 1; i <= 4; i++) colors.Add(FromHsv(Hue(h, i, false), Saturation(h, s, i, false), Value(v, i, false)));
-            return colors.ToArray();
-        }
-
-        public static string[] GenerateDark(string value, string background)
-        {
-            var patterns = Generate(value);
-            if (patterns.Length != 10) return Array.Empty<string>();
-            var indexes = new[] { 7, 6, 5, 5, 5, 5, 4, 3, 2, 1 };
-            var amounts = new[] { 15, 25, 30, 45, 65, 85, 90, 95, 97, 98 };
-            return indexes.Select((index, position) => Mix(background, patterns[index], amounts[position])).ToArray();
-        }
-
-        private static double Hue(double h, int i, bool light)
-        {
-            var result = h >= 60 && h <= 240 ? h + (light ? -HueStep * i : HueStep * i) : h + (light ? HueStep * i : -HueStep * i);
-            return (result % 360 + 360) % 360;
-        }
-
-        private static double Saturation(double h, double s, int i, bool light)
-        {
-            if (h == 0 && s == 0) return 0;
-            var result = light ? s - SaturationStep * i : i == 4 ? s + SaturationStep : s + SaturationStep2 * i;
-            if (light && i == 5 && result > .1) result = .1;
-            return Math.Round(Math.Clamp(result, .06, 1) * 100, MidpointRounding.AwayFromZero) / 100;
-        }
-
-        private static double Value(double v, int i, bool light) => Math.Round(Math.Clamp(v + (light ? BrightnessStep1 * i : -BrightnessStep2 * i), 0, 1) * 100, MidpointRounding.AwayFromZero) / 100;
-
-        private static string FromHsv(double h, double s, double v)
-        {
-            var sector = h / 60; var i = (int)Math.Floor(sector); var f = sector - i;
-            var p = Round(v * (1 - s) * 255); var q = Round(v * (1 - s * f) * 255); var t = Round(v * (1 - s * (1 - f)) * 255); var vv = Round(v * 255);
-            var channels = i switch { 0 => (vv, t, p), 1 => (q, vv, p), 2 => (p, vv, t), 3 => (p, q, vv), 4 => (t, p, vv), _ => (vv, p, q) };
-            return $"#{channels.Item1:X2}{channels.Item2:X2}{channels.Item3:X2}".ToLowerInvariant();
-        }
-
-        private static int Round(double value) => (int)Math.Floor(value + .5);
-
-        private static string Mix(string first, string second, int amount)
-        {
-            if (!TryHex(first, out var r1, out var g1, out var b1) || !TryHex(second, out var r2, out var g2, out var b2)) return second;
-            var p = amount / 100d;
-            return $"#{Round((r2 - r1) * p + r1):X2}{Round((g2 - g1) * p + g1):X2}{Round((b2 - b1) * p + b1):X2}".ToLowerInvariant();
-        }
-
-        private static bool TryHex(string value, out int r, out int g, out int b)
-        {
-            r = g = b = 0; var hex = value?.Trim().TrimStart('#');
-            if (hex?.Length == 3) hex = string.Concat(hex[0], hex[0], hex[1], hex[1], hex[2], hex[2]);
-            return hex?.Length == 6 && int.TryParse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber, null, out r) && int.TryParse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber, null, out g) && int.TryParse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber, null, out b);
-        }
-
-        private static void ToHsv(int r, int g, int b, out double h, out double s, out double v)
-        {
-            var rf = r / 255d; var gf = g / 255d; var bf = b / 255d; var max = Math.Max(rf, Math.Max(gf, bf)); var min = Math.Min(rf, Math.Min(gf, bf)); var delta = max - min;
-            h = delta == 0 ? 0 : max == rf ? 60 * ((gf - bf) / delta + (gf < bf ? 6 : 0)) : max == gf ? 60 * ((bf - rf) / delta + 2) : 60 * ((rf - gf) / delta + 4);
-            h = Math.Floor(h + .5); s = max == 0 ? 0 : delta / max; v = max;
-        }
-    }
 
     internal static class TokenDictionaryExtensions
     {
@@ -493,12 +363,15 @@ namespace AntDesign.Theming
         {
             ["red"] = "#f5222d", ["volcano"] = "#fa541c", ["orange"] = "#fa8c16", ["gold"] = "#faad14",
             ["yellow"] = "#fadb14", ["lime"] = "#a0d911", ["green"] = "#52c41a", ["cyan"] = "#13c2c2",
-            ["blue"] = "#1677ff", ["geekblue"] = "#2f54eb", ["purple"] = "#722ed1", ["magenta"] = "#eb2f96",
+            ["blue"] = "#1677ff", ["geekblue"] = "#2f54eb", ["purple"] = "#722ed1", ["magenta"] = "#eb2f96", ["pink"] = "#eb2f96",
             ["grey"] = "#8c8c8c"
         };
 
-        public static IReadOnlyDictionary<string, string[]> All { get; } = PrimaryColors.ToDictionary(item => item.Key, item => AntColorPalette.Generate(item.Value), StringComparer.Ordinal);
-        public static IReadOnlyDictionary<string, string[]> Dark { get; } = PrimaryColors.ToDictionary(item => item.Key, item => AntColorPalette.GenerateDark(item.Value, "#141414"), StringComparer.Ordinal);
+        // The @ant-design/colors public preset export excludes the deprecated
+        // pink alias; Ant Design's theme derivative nevertheless emits its tokens.
+        internal static IReadOnlyDictionary<string, string[]> TokenPalettes { get; } = PrimaryColors.ToDictionary(item => item.Key, item => AntColorPalette.Generate(item.Value), StringComparer.Ordinal);
+        public static IReadOnlyDictionary<string, string[]> All { get; } = TokenPalettes.Where(item => item.Key != "pink").ToDictionary(item => item.Key, item => item.Value, StringComparer.Ordinal);
+        public static IReadOnlyDictionary<string, string[]> Dark { get; } = PrimaryColors.Where(item => item.Key != "pink").ToDictionary(item => item.Key, item => AntColorPalette.Generate(item.Value, true), StringComparer.Ordinal);
         public static string Primary(string name) => PrimaryColors.TryGetValue(name, out var color) ? color : null;
     }
 

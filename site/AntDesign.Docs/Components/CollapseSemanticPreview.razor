@@ -1,0 +1,13 @@
+<div style="position:absolute;inset:0;margin:var(--ant-margin-xl,32px)">
+    <Collapse DefaultActiveKey="@(new[] { "1" })" ClassNames="_classes">
+        <Panel Header="This is panel header" Key="1"><p>This is panel body</p></Panel>
+    </Collapse>
+</div>
+
+@code {
+    private readonly Dictionary<string, string> _classes = new()
+    {
+        ["root"] = "semantic-mark-root", ["header"] = "semantic-mark-header", ["icon"] = "semantic-mark-icon",
+        ["title"] = "semantic-mark-title", ["body"] = "semantic-mark-body"
+    };
+}

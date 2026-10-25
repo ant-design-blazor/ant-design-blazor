@@ -102,7 +102,7 @@
             </div>
         }
 
-        <div class="@(PrefixCls)-content">
+        <div class="@SemanticClass("popup.content", $"{PrefixCls}-content")" style="@SemanticStyle("popup.content")">
             @if (timeFormat.Contains("hh", StringComparison.OrdinalIgnoreCase))
             {
                 var selectFirstHour = Value is not null && disabledTime._disabledHours.Contains(Value.Value.Hour);
@@ -119,7 +119,7 @@
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
                         var hourValue=use12Hours && hour==0? 12 :  hour;
 
-                        <li @ref="@_hours[hourValue]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                        <li @ref="@_hours[hourValue]" class="@SemanticClass("popup.item", $"{PrefixCls}-time-panel-cell @isSelectedCls @disabledCls")" style="@SemanticStyle("popup.item")">
                                 <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectHour(viewTime.AddHours(hoursOffset)); }">
                                 @hourValue
                             </div>
@@ -145,7 +145,7 @@
                         string isSelectedCls = selected(viewTime.Minute, Value?.Minute);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li @ref="@_minutes[viewTime.Minute]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                        <li @ref="@_minutes[viewTime.Minute]" class="@SemanticClass("popup.item", $"{PrefixCls}-time-panel-cell @isSelectedCls @disabledCls")" style="@SemanticStyle("popup.item")">
                             <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectMinute(viewTime); }">
                                 @minute
                             </div>
@@ -165,7 +165,7 @@
                         string isSelectedCls = selected(viewTime.Second, Value?.Second);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li @ref="@_seconds[viewTime.Second]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                        <li @ref="@_seconds[viewTime.Second]" class="@SemanticClass("popup.item", $"{PrefixCls}-time-panel-cell @isSelectedCls @disabledCls")" style="@SemanticStyle("popup.item")">
                             <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectSecond(viewTime); }">
                                 @second
                             </div>
@@ -184,14 +184,14 @@
                         bool disabled = false;
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li class="@(PrefixCls)-time-panel-cell @isAmSelectedCls @disabledCls">
+                        <li class="@SemanticClass("popup.item", $"{PrefixCls}-time-panel-cell @isAmSelectedCls @disabledCls")" style="@SemanticStyle("popup.item")">
                             <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => {if (!disabled && (isPM || Value is null)) if(Value is not null) OnSelectHour(Value.Value.AddHours(-12));
                                  else OnSelectTime(DateTime.Today); }">
                                 @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.AMDesignator
                             </div>
                         </li>
 
-                        <li class="@(PrefixCls)-time-panel-cell @isPmSelectedCls @disabledCls">
+                        <li class="@SemanticClass("popup.item", $"{PrefixCls}-time-panel-cell @isPmSelectedCls @disabledCls")" style="@SemanticStyle("popup.item")">
                             <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => {if (!disabled && (!isPM || Value is null)) if(Value is not null) OnSelectHour(Value.Value.AddHours(12));
                                  else OnSelectTime(DateTime.Today.AddHours(12)); }">
                                 @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.PMDesignator

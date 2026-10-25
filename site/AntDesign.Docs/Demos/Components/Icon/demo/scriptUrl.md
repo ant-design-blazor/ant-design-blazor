@@ -7,10 +7,10 @@ title:
 
 ## zh-CN
 
-可通过 `<script>` 引用多个资源，用户可灵活的管理 [iconfont.cn](http://iconfont.cn/) 图标。如果资源的图标出现重名，会按照数组顺序进行覆盖。
+将多个资源地址作为数组传给 `IconFont.ScriptUrl`，即可管理 [iconfont.cn](https://iconfont.cn/) 图标。组件与 React 一样反向、逐个加载资源，保留数组定义的同名图标覆盖顺序。多个实例共享加载中的请求，某个资源加载失败也不会阻止后续资源。
 
 
 
 ## en-US
 
-You can use `<script>` multiple times, manage icons in one `<Icon />` from multiple [iconfont.cn](http://iconfont.cn/) resources. If icon with a duplicate name in resources, it will overrided in array order.
+Pass an array of resource URLs to `IconFont.ScriptUrl` to combine [iconfont.cn](https://iconfont.cn/) collections. As in React, scripts load sequentially in reverse order to preserve array-defined precedence for duplicate icon names. Instances share pending requests, and a failed resource does not block the remaining resources.

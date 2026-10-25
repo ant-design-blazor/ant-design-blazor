@@ -1,6 +1,6 @@
 ﻿@using AntDesign.Docs.Services
 
-<Menu Class="@MenuClass" Theme="MenuTheme.Light" Mode="MenuMode.Inline">
+<Menu Class="@MenuClass" Theme="MenuTheme.Light" Mode="MenuMode.Inline" OnMenuItemClicked="OnItemClicked">
     @menuItemTemplate((MenuItems, LocalizationService, 1))
 </Menu>
 
@@ -12,6 +12,9 @@
 @code {
     [Parameter]
     public DemoMenuItem[] MenuItems { get; set; } = {};
+
+    [Parameter]
+    public EventCallback<MenuItem> OnItemClicked { get; set; }
 
     static readonly RenderFragment<(DemoMenuItem[] items, ILocalizationService LocalizationService, int level)> menuItemTemplate = context =>
         @<Template>

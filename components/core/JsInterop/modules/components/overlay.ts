@@ -188,7 +188,7 @@ export class Overlay {
     //containerInfo & scrollbars have to be obtained here, because after
     //removal of classes, the overlay goes to left: -9999 what causes artificial 
     //scrollbars and viewport dimensions are changing
-    this.containerInfo = domInfoHelper.getInfo(container);
+    this.containerInfo = domInfoHelper.getInfo(container, true);
     this.container = container;
     this.isContainerBody = container === document.body;
     this.calculateScrollBarSizes()
@@ -225,6 +225,8 @@ export class Overlay {
 
     this.observe();
   }
+
+  private motionEndListener: (event: Event) => void;
 
   updateOffsets(verticalOffset: number, horizontalOffset: number) {
     this.overlayConstraints.verticalOffset = verticalOffset;
@@ -403,6 +405,11 @@ export class Overlay {
   }
 
   private observe() {
+    // rc-trigger realigns when popup motion finishes. During scale animations
+    // the first bounding rectangle is not the final unscaled popup geometry.
+    this.motionEndListener = this.onMotionEnd.bind(this);
+    this.overlay.addEventListener('animationend', this.motionEndListener);
+    this.overlay.addEventListener('transitionend', this.motionEndListener);
     resize.create(`container-${this.blazorId}`, this.resizing.bind(this), false);
     resize.observe(`container-${this.blazorId}`, this.container);    
     resize.observe(`container-${this.blazorId}`, this.trigger);    
@@ -435,13 +442,8 @@ export class Overlay {
         const diff = window.pageYOffset - this.lastScrollPosition; //positive -> down, negative -> up        
         this.position.top += diff;
         this.position.bottom = Overlay.reversePositionValue(this.position.top, this.containerInfo.scrollHeight, this.overlayInfo.clientHeight);      
-        if (this.selectedVerticalPosition === "top") {        
-          this.sanitizedPosition.top = this.position.top;
-          this.overlay.style.top = this.sanitizedPosition.top + "px";        
-        } else {
-          this.sanitizedPosition.bottom = this.getAdjustedBottom();
-          this.overlay.style.bottom = this.sanitizedPosition.bottom + "px";
-        }
+        this.sanitizeCalculatedPositions();
+        this.applyLocation();
         this.lastScrollPosition = window.pageYOffset;
       }
     } else {
@@ -453,6 +455,12 @@ export class Overlay {
       //   || !this.overlayFitsContainer("vertical", this.position.top, this.position.bottom)) {    
       //     this.calculatePosition(true, false, this.overlayPreset)
       // }    
+      this.calculatePosition(true, false, this.overlayPreset);
+    }
+  }
+
+  private onMotionEnd(event: Event) {
+    if (event.target === this.overlay && this.overlay.offsetParent) {
       this.calculatePosition(true, false, this.overlayPreset);
     }
   }
@@ -487,6 +495,8 @@ export class Overlay {
   }
 
   public dispose(): void {    
+    this.overlay.removeEventListener('animationend', this.motionEndListener);
+    this.overlay.removeEventListener('transitionend', this.motionEndListener);
     resize.dispose(`container-${this.blazorId}`);
     mutation.dispose(`trigger-${this.blazorId}`);
     if (this.container.contains(this.overlay)) {
@@ -566,6 +576,22 @@ export class Overlay {
     else {
       this.sanitizedPosition.top = null;
       this.sanitizedPosition.bottom = this.getAdjustedBottom();
+    }
+
+    // Match rc-trigger/useAlign: retain fractional measurements until alignment
+    // is complete, then floor the final CSS offset on each unscaled axis.
+    // Rounding the anchor first can move a popup one pixel to the wrong side.
+    const rect = this.overlay.getBoundingClientRect();
+    const style = getComputedStyle(this.overlay);
+    const scaleX = Math.round(rect.width / parseFloat(style.width) * 1000) / 1000;
+    const scaleY = Math.round(rect.height / parseFloat(style.height) * 1000) / 1000;
+    if (scaleX === 1) {
+      const axis = this.selectedHorizontalPosition;
+      this.sanitizedPosition[axis] = Math.floor(this.sanitizedPosition[axis]);
+    }
+    if (scaleY === 1) {
+      const axis = this.selectedVerticalPosition;
+      this.sanitizedPosition[axis] = Math.floor(this.sanitizedPosition[axis]);
     }
   }
 
@@ -789,11 +815,11 @@ export class Overlay {
    */
   private getKeyElementDimensions(firstTime: boolean) {
     if (!firstTime) {
-      this.containerInfo = domInfoHelper.getInfo(this.container);
+      this.containerInfo = domInfoHelper.getInfo(this.container, true);
       this.calculateScrollBarSizes()
     }    
-    this.triggerInfo = domInfoHelper.getInfo(this.trigger);
-    this.overlayInfo = domInfoHelper.getInfo(this.overlay);    
+    this.triggerInfo = domInfoHelper.getInfo(this.trigger, true);
+    this.overlayInfo = domInfoHelper.getInfo(this.overlay, true);
   }
 
   /**
@@ -1036,6 +1062,18 @@ export class Overlay {
         this.selectedHorizontalPosition = selectedPositionCache;
         this.placement = placementCache;
         this.horizontalCalculation = horizontalCalculationCache;
+      }
+    }
+
+    // Flipping may still leave both directions partly outside a narrow viewport.
+    // Keep the chosen direction/calculation, but contain the popup for InView.
+    if (this.boundyAdjustMode === TriggerBoundyAdjustMode.InView) {
+      const minLeft = this.containerBoundarySize.left;
+      const maxLeft = this.containerBoundarySize.right - this.overlayInfo.clientWidth;
+      if (maxLeft >= minLeft) {
+        this.position.left = Math.max(minLeft, Math.min(this.position.left, maxLeft));
+        this.position.right = Overlay.reversePositionValue(
+          this.position.left, this.containerInfo.scrollWidth, this.overlayInfo.clientWidth);
       }
     }
   }

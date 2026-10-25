@@ -14,8 +14,8 @@
   <link rel="stylesheet" href="@("https://fastly.jsdelivr.net/npm/@docsearch/css@3")" />
   <link id="docs-theme-v6" href="_content/AntDesign/css/antd-v6/light.css" rel="stylesheet">
   <link href="_content/Cropper.Blazor/cropper.min.css" rel="stylesheet">
-  <link href="_content/AntDesign.Docs/css/docs-layout.css" rel="stylesheet">
-  <link href="_content/AntDesign.Docs/css/dumi-docs.css" rel="stylesheet">
+  <link href="~/_content/AntDesign.Docs/css/docs-layout.css" asp-append-version="true" rel="stylesheet">
+  <link href="~/_content/AntDesign.Docs/css/dumi-docs.css" asp-append-version="true" rel="stylesheet">
   <component type="typeof(AntiforgeryToken)" render-mode="Static" />
 </head>
 <body class="ant-theme" data-theme="default">
@@ -29,7 +29,7 @@
 #endif
   <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
   <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
-  @* <script src="_content/AntDesign/js/ant-design-blazor.js"></script> *@
+  <script src="~/_content/AntDesign/js/ant-design-blazor.js" asp-append-version="true" no-antblazor-js></script>
   <script src="_content/AntDesign.Docs/js/prism.js"></script>
   <script>
     window.XPrism = {};

@@ -19,6 +19,12 @@ namespace AntDesign
         [CascadingParameter]
         internal SubMenu ParentMenu { get; set; }
 
+        [CascadingParameter] private MenuItemGroup ParentGroup { get; set; }
+        [CascadingParameter(Name = "MenuOverflowSource")] internal string OverflowSourceId { get; set; }
+        internal string OverflowGroupId => ParentGroup?.Id;
+
+        private bool IsOverflowRoot => ParentMenu == null && ParentGroup == null;
+
         /// <summary>
         /// Display title
         /// </summary>
@@ -131,6 +137,7 @@ namespace AntDesign
             SetClass();
 
             RootMenu?.AddMenuItem(this);
+            if (IsOverflowRoot) RootMenu?.RegisterOverflowItem(Id, OverflowContent, InvokeStateHasChanged);
 
             if (RootMenu?.DefaultSelectedKeys.Contains(Key) == true)
                 Select(false, true);
@@ -139,6 +146,7 @@ namespace AntDesign
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
+            RootMenu?.RememberMenuPath(this);
 
             if (RootMenu?.SelectedKey(Key) == true && !IsSelected)
                 Select();
@@ -149,6 +157,7 @@ namespace AntDesign
         protected override void Dispose(bool disposing)
         {
             RootMenu?.RemoveMenuItem(this);
+            RootMenu?.UnregisterOverflowItem(Id);
 
             base.Dispose(disposing);
         }
@@ -169,6 +178,8 @@ namespace AntDesign
         {
             if (Disabled)
                 return;
+            if (RootMenu?.IsOverflowed(Id) == true || RootMenu?.IsOverflowed(OverflowSourceId) == true)
+                await RootMenu.CloseOverflowAsync();
             // Hide overlay before handling OnClick to make sure the overlay is not on top of modal created in OnClick delegate
             if (RootMenu?.Selectable == true)
             {

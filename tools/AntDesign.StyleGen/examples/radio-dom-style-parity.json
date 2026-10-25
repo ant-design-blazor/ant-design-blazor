@@ -12,7 +12,7 @@
       "normalization": {
         "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_r_[a-zA-Z0-9_-]+)$",
         "removeAttributes": ["_bl_*", "id", "checked", "name"],
-        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_", "^ant-radio-css-var$"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_r_", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$", "^ant-radio-css-var$"],
         "sortClassTokens": true,
         "removeCommentMarkers": ["<!--!-->"]
       }

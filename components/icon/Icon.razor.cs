@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AntDesign.Icons;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
@@ -14,6 +15,7 @@ namespace AntDesign
     <summary>
     Semantic vector graphics. Before use icons。
     </summary>
+    <seealso cref="AntDesign.IconFont"/>
     */
     [Documentation(DocumentationCategory.Components, DocumentationType.General, "https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg", Title = "Icon", SubTitle = "图标")]
     public partial class Icon : AntDomComponentBase
@@ -73,12 +75,7 @@ namespace AntDesign
             get => _primaryColor;
             set
             {
-                if (_primaryColor != value)
-                {
-                    _primaryColor = value;
-                    _twoToneColorChanged = true;
-                }
-
+                _primaryColor = string.IsNullOrWhiteSpace(value) ? "#1677ff" : value;
                 Theme = IconThemeType.TwoTone;
             }
         }
@@ -135,22 +132,44 @@ namespace AntDesign
         [Parameter]
         public RenderFragment Component { get; set; }
 
+        /// <summary>
+        /// Custom component template receiving the SVG attributes forwarded by the icon wrapper.
+        /// </summary>
+        [Parameter]
+        public RenderFragment<IReadOnlyDictionary<string, object>> ComponentTemplate { get; set; }
+
+        private IReadOnlyDictionary<string, object> ComponentAttributes => new Dictionary<string, object>
+        {
+            ["width"] = Width,
+            ["height"] = Height,
+            ["fill"] = Fill,
+            ["focusable"] = "false",
+            ["aria-hidden"] = "true"
+        };
+
         [Inject]
         public IconService IconService { get; set; }
 
-        internal string SecondaryColor => _secondaryColor;
+        internal string SecondaryColor => Colors.ColorPalette.Generate(_primaryColor)[0];
 
         protected string _svgImg;
-        private string _primaryColor = "#1890ff";
-        private string _secondaryColor = null;
-        private bool _twoToneColorChanged = false;
+        private string _primaryColor = "#1677ff";
 
         private Dictionary<string, object> _attributes = new();
+
+        private string IconTabIndex => TabIndex ?? (OnClick.HasDelegate ? "-1" : null);
 
         protected override async Task OnInitializedAsync()
         {
             ClassMapper.Add($"anticon")
-                .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type));
+                .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type) && string.IsNullOrEmpty(IconFont));
+
+            await base.OnInitializedAsync();
+        }
+
+        protected override void OnParametersSet()
+        {
+            _attributes.Clear();
 
             if (OnClick.HasDelegate)
             {
@@ -173,44 +192,19 @@ namespace AntDesign
                 _attributes.Add("alt", Alt);
             }
 
-            await base.OnInitializedAsync();
-        }
-
-        protected override void OnParametersSet()
-        {
             SetupSvgImg();
 
             base.OnParametersSet();
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (Theme == IconThemeType.TwoTone && (firstRender || _twoToneColorChanged))
-            {
-                _twoToneColorChanged = false;
-                await ChangeTwoToneColor();
-
-                SetupSvgImg();
-
-                await InvokeAsync(StateHasChanged);
-            }
-
-            await base.OnAfterRenderAsync(firstRender);
-        }
-
         private void SetupSvgImg()
         {
-            if (Component != null)
+            if (Component != null || ComponentTemplate != null)
             {
                 return;
             }
 
             _svgImg = IconService.GetStyledSvg(this);
-        }
-
-        private async Task ChangeTwoToneColor()
-        {
-            _secondaryColor = await IconService.GetSecondaryColor(_primaryColor);
         }
 
         private async Task HandleOnClick(MouseEventArgs args)

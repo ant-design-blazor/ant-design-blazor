@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Select"
+  },
+  "config": {
+    "timeoutMs": 30000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "select-virtual-big-data",
+      "component": "Select",
+      "react": { "url": "http://127.0.0.1:8000/components/select", "scopeSelector": "body", "rootSelector": "#select-demo-big-data .ant-select", "skeletonSelector": "" },
+      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/select", "scopeSelector": "body", "rootSelector": "#components-select-demo-big-data .ant-select", "skeletonSelector": "" },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "overflow", "paddingBlock", "paddingInline", "fontSize", "lineHeight", "color", "backgroundColor", "borderRadius", "zIndex", "borderColor", "borderStyle", "borderWidth", "cursor", "opacity"],
+      "semanticNodes": [
+        { "path": "item", "selector": ".ant-select-selection-item", "minimumCount": 2 },
+        { "path": "item.disabled", "selector": ".ant-select-selection-item-disabled", "minimumCount": 1 },
+        { "path": "itemRemove", "selector": ".ant-select-selection-item-remove", "minimumCount": 1 },
+        { "path": "popup.root", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='00'])", "portal": true, "minimumCount": 1 },
+        { "path": "popup.a11y", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='00']) [role='listbox']", "portal": true, "minimumCount": 1 },
+        { "path": "popup.a11yOption", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='00']) [role='option']", "portal": true, "minimumCount": 2 }
+      ],
+      "scenarios": [ {
+        "id": "open",
+        "minimumRoots": 1,
+        "actions": [
+          { "type": "click", "reactSelector": "#select-demo-big-data input", "blazorSelector": "#components-select-demo-big-data input" },
+          { "type": "waitForSelector", "reactSelector": "#select-demo-big-data input[aria-expanded='true'][aria-activedescendant]", "blazorSelector": "#components-select-demo-big-data input[aria-expanded='true'][aria-activedescendant]" }
+        ]
+      } ]
+    }
+  ]
+}

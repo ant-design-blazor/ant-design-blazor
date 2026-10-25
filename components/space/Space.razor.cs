@@ -90,7 +90,14 @@ namespace AntDesign
 
         private string _gapStyle = "";
 
-        private string RootStyle => SemanticStyle("root", $"{Style} {InnerStyle} {_gapStyle}");
+        private string RootStyle
+        {
+            get
+            {
+                var style = SemanticStyle("root", $"{Style} {InnerStyle} {_gapStyle}");
+                return string.IsNullOrWhiteSpace(style) ? null : style.Trim();
+            }
+        }
 
         private readonly static Dictionary<SpaceAlign, string> _alignMap = new()
         {
@@ -107,6 +114,8 @@ namespace AntDesign
                 .Get(() => $"{PrefixCls}-{Direction.ToString().ToLowerInvariant()}")
                 .GetIf(() => $"{PrefixCls}-align-{_alignMap[Align]}", () => HasAlign)
                 .If($"{PrefixCls}-align-center", () => !HasAlign && Direction == SpaceDirection.Horizontal)
+                .GetIf(() => $"{PrefixCls}-gap-row-{_size.AsT0.ToString().ToLowerInvariant()}", () => _size.IsT0)
+                .GetIf(() => $"{PrefixCls}-gap-col-{_size.AsT0.ToString().ToLowerInvariant()}", () => _size.IsT0)
                 .If($"{PrefixCls}-rtl", () => RTL);
         }
 
@@ -130,7 +139,8 @@ namespace AntDesign
             Size.Switch(
                 singleSize =>
                 {
-                    _gapStyle = $"column-gap:{GetSize(singleSize)};row-gap:{GetSize(singleSize)}";
+                    // Named gaps are token-driven CSS classes, as in React v6.
+                    _gapStyle = "";
                 },
                 singleSize =>
                 {
@@ -143,29 +153,7 @@ namespace AntDesign
             );
         }
 
-        private static readonly Dictionary<SpaceSize, string> _spaceSize = new()
-        {
-            [SpaceSize.Small] = "8",
-            [SpaceSize.Middle] = "16",
-            [SpaceSize.Large] = "24"
-        };
-
-        private CssSizeLength GetSize(SpaceSize size)
-        {
-            var originalSize = _spaceSize[size];
-
-            return GetSize(originalSize);
-        }
-
-        private CssSizeLength GetSize(string size)
-        {
-            if (Split != null)
-            {
-                return ((CssSizeLength)size).Value / 2;
-            }
-
-            return size;
-        }
+        private CssSizeLength GetSize(string size) => size;
 
         protected override void OnInitialized()
         {

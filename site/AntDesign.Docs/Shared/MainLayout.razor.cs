@@ -11,8 +11,6 @@ namespace AntDesign.Docs.Shared
 {
     public partial class MainLayout : LayoutComponentBase
     {
-        private bool _drawerVisible = false;
-
         public string CurrentLanguage => LocalizationService.CurrentCulture.Name;
 
         private bool _isMobile;

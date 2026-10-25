@@ -1,0 +1,14 @@
+<Space Direction="SpaceDirection.Vertical" Size="SpaceSize.Large">
+    <Cascader Options="@_options" Placeholder="Please select" Variant="InputVariant.Borderless" />
+    <Cascader Options="@_options" Placeholder="Please select" Variant="InputVariant.Filled" />
+    <Cascader Options="@_options" Placeholder="Please select" Variant="InputVariant.Outlined" />
+    <Cascader Options="@_options" Placeholder="Please select" Variant="InputVariant.Underlined" />
+</Space>
+
+@code {
+    private readonly CascaderNode[] _options =
+    [
+        new() { Value = "zhejiang", Label = "Zhejiang", Children = [new() { Value = "hangzhou", Label = "Hangzhou" }] },
+        new() { Value = "jiangsu", Label = "Jiangsu", Children = [new() { Value = "nanjing", Label = "Nanjing" }] }
+    ];
+}

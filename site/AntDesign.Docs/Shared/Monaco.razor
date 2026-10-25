@@ -52,6 +52,7 @@
 
             _monaco = await JSRuntime.InvokeAsync<IJSObjectReference>("createEditor", _editor, _id, _reference, new
             {
+                value = Value ?? string.Empty,
                 language = Language,
                 theme = "vs",
                 codeLens = false,
@@ -63,29 +64,36 @@
                 automaticLaout = true
             });
 
-            _value = Value;
-
-            await _monaco.InvokeVoidAsync("setValue", _value);
+            _value = Value ?? string.Empty;
+            await MarkLoadedAsync();
         }
     }
 
     [JSInvokable]
     public async Task OnChangeAsync(string value)
     {
-        if (!_loaded)
-        {
-            _loaded = true;
-            if (OnLoaded.HasDelegate)
-            {
-                OnLoaded.InvokeAsync();
-               
-            }
-        }
+        await MarkLoadedAsync();
 
         if (Value != value)
         {
             _value = value;
             await ValueChanged.InvokeAsync(value);
+        }
+    }
+
+    private async Task MarkLoadedAsync()
+    {
+        if (_loaded)
+        {
+            return;
+        }
+
+        _loaded = true;
+        await InvokeAsync(StateHasChanged);
+
+        if (OnLoaded.HasDelegate)
+        {
+            await OnLoaded.InvokeAsync();
         }
     }
 

@@ -33,7 +33,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         return new(selector, eventName, _id);
     }
 
-    public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false)
+    public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false, string ignoreSelector = null)
     {
         var key = FormatKey(dom, eventName);
         if (_exclusiveDotNetObjectStore.ContainsKey(key))
@@ -43,11 +43,11 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         {
             callback(p);
         }));
-        jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject, stopPropagation);
+        jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject, stopPropagation, ignoreSelector);
         _exclusiveDotNetObjectStore.Add(key, dotNetObject);
     }
 
-    public void AddExclusive<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false, bool stopPropagation = false)
+    public void AddExclusive<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false, bool stopPropagation = false, string ignoreSelector = null)
     {
         var key = FormatKey(dom, eventName);
         if (_exclusiveDotNetObjectStore.ContainsKey(key))
@@ -57,7 +57,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
         {
             return callback(p);
         }));
-        jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject, stopPropagation);
+        jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject, stopPropagation, ignoreSelector);
         _exclusiveDotNetObjectStore.Add(key, dotNetObject);
     }
 
@@ -96,7 +96,10 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
                         return;
 
                     var jsonOpt = JsonSerializerHelper.DefaultOptions;
-                    foreach (var subscription in tempList)
+                    // A callback can mount/unmount components (for example at
+                    // a responsive breakpoint), changing this very list.
+                    // Dispatch the current event from a stable snapshot.
+                    foreach (var subscription in tempList.ToArray())
                     {
                         var tP = JsonSerializer.Deserialize(p, subscription.Type, jsonOpt);
                         subscription.Delegate.DynamicInvoke(tP);
@@ -129,7 +132,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
                         return;
 
                     var jsonOpt = JsonSerializerHelper.DefaultOptions;
-                    foreach (var subscription in tempList)
+                    foreach (var subscription in tempList.ToArray())
                     {
                         var tP = JsonSerializer.Deserialize(p, subscription.Type, jsonOpt);
                         if (subscription.IsAsync)
@@ -229,7 +232,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
                 {
                     await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), DotNetObjectReference.Create(new Invoker<string>((p) =>
                     {
-                        foreach (var subscription in subscriptions)
+                        foreach (var subscription in subscriptions.ToArray())
                         {
                             var tP = JsonSerializer.Deserialize(p, subscription.Type);
                             subscription.Delegate.DynamicInvoke(tP);
@@ -265,7 +268,7 @@ public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore do
                 {
                     await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), DotNetObjectReference.Create(new AsyncInvoker<string>(async (p) =>
                     {
-                        foreach (var subscription in subscriptions)
+                        foreach (var subscription in subscriptions.ToArray())
                         {
                             var tP = JsonSerializer.Deserialize(p, subscription.Type);
                             if (subscription.IsAsync)

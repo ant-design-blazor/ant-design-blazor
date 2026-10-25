@@ -14,10 +14,11 @@
         RenderFragment SelectOptionsRender()
         {
 #if NET5_0_OR_GREATER
-            if(EnableVirtualization)
+            if(UsesVirtualAccessibility)
             {
                 return @<Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
                     Items=@SortedSelectOptionItems.Where(x => !x.IsHidden).ToList()
+                    ItemSize="32"
                     ChildContent="optionRender(ItemTemplate)"/>;
             }
 #endif
@@ -39,11 +40,33 @@
 
     protected override RenderFragment RenderOptionDropdown()
     {
-        @if (SelectOptions != null)
+        var empty = AllOptionsHidden();
+        return @<Template>
+        @if (SelectOptions != null || !empty)
         {
-            return @<div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;" @ref="_scrollableSelectDiv">
+            @if (!empty && UsesVirtualAccessibility)
+            {
+                var options = SortedSelectOptionItems.Where(option => !option.IsHidden).ToList();
+                var activeIndex = options.FindIndex(option => option == ActiveOption);
+                <div role="listbox" id="@ListboxId" style="height: 0px; width: 0px; overflow: hidden;">
+                    @for (var index = activeIndex - 1; index <= activeIndex + 1; index++)
+                    {
+                        if (index >= 0 && index < options.Count)
+                        {
+                            var option = options[index];
+                            <div aria-label="@option.Label" role="option" id="@GetOptionId(option.InternalId)"
+                                 aria-selected="@option.IsSelected.ToString().ToLowerInvariant()"
+                                 aria-disabled="@option.IsDisabled.ToString().ToLowerInvariant()">@option.Value</div>
+                        }
+                    }
+                </div>
+            }
+            <div class="@GetSemanticClass("popup.list", "ant-select-dropdown-list")" style="@GetSemanticStyle("popup.list", empty ? "position: relative;display:none;" : "position: relative;")">
+              <div class="ant-select-dropdown-list-holder" style="max-height: @PopupContainerMaxHeight; overflow-y: auto; overflow-anchor: none;" @ref="_scrollableSelectDiv">
                 <div>
-                    <div class="" role="listbox" style="@ListboxStyle">
+                    <div class="ant-select-dropdown-list-holder-inner" role="@(empty || UsesVirtualAccessibility ? null : "listbox")" id="@(empty || UsesVirtualAccessibility ? null : ListboxId)" style="@ListboxStyle">
+                      @if (SelectOptions != null)
+                      {
                         @if (CustomTagSelectOptionItem != null)
                         {
                             <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
@@ -70,35 +93,25 @@
                                 </CascadingValue>
                             }
                         }
+                      }
+                      else if (!IsGroupingEnabled)
+                      {
+                          @SelectOptionsRender()
+                      }
+                      else
+                      {
+                          <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
+                              <SelectOptionGroup TItemValue="TItemValue" TItem="TItem" />
+                          </CascadingValue>
+                      }
                     </div>
                 </div>
+              </div>
             </div>
-    ;
         }
-        else if (SelectOptions == null && !AllOptionsHidden())
+        @if (empty)
         {
-            return@<div class="" style="max-height: @PopupContainerMaxHeight; overflow-y: auto;" @ref="_scrollableSelectDiv">
-                <div>
-                    <div class="" role="listbox" style="@ListboxStyle">
-                        @{
-                            @if (!IsGroupingEnabled)
-                            {
-                                @SelectOptionsRender()
-                            }
-                            else
-                            {
-                                <CascadingValue Value="@ItemTemplate" Name="ItemTemplate">
-                                    <SelectOptionGroup TItemValue="TItemValue" TItem="TItem"></SelectOptionGroup>
-                                </CascadingValue>
-                            }
-                        }
-                    </div>
-                </div>
-            </div>;
-        }
-        @if (AllOptionsHidden())
-        {
-            return@<div role="listbox" id="@(Id)_list" class="@ClassPrefix-item-empty">
+            <div role="listbox" id="@ListboxId" class="@ClassPrefix-item-empty">
                 @if (NotFoundContent != null)
                 {
                     @NotFoundContent
@@ -108,10 +121,8 @@
                     <Empty Simple Small />
                 }
             </div>
-    ;
         }
-
-        return builder => { };
+        </Template>;
     }
 
 }

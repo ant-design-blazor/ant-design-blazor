@@ -78,6 +78,12 @@ namespace AntDesign
         public string AriaLabel { get; set; }
 
         /// <summary>
+        /// Sets the pressed state of a toggle button. Omitted for ordinary buttons.
+        /// </summary>
+        [Parameter]
+        public bool? AriaPressed { get; set; }
+
+        /// <summary>
         /// Set the color of the button.
         /// </summary>
         /// <default value="Color.None" />
@@ -142,6 +148,13 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string Icon { get; set; }
+
+        /// <summary>
+        /// Set custom icon content for the button. Use this when the icon is a component
+        /// that cannot be represented by the legacy <see cref="Icon"/> name parameter.
+        /// </summary>
+        [Parameter]
+        public RenderFragment IconContent { get; set; }
 
         /// <summary>
         /// Set the icon component of button using IconFont.
@@ -311,7 +324,7 @@ namespace AntDesign
                 .If($"{prefixName}-sm", () => Size == ButtonSize.Small || CompactItemContext?.Size == InputSize.Small)
                 .Add(CompactItemContext?.ClassFor(prefixName))
                 .If($"{prefixName}-loading", () => Loading)
-                .If($"{prefixName}-icon-only", () => !string.IsNullOrEmpty(this.Icon) && this.ChildContent == null)
+                .If($"{prefixName}-icon-only", () => (IconContent != null || !string.IsNullOrEmpty(this.Icon)) && this.ChildContent == null)
                 .If($"{prefixName}-icon-end", () => IconPlacement == ButtonIconPlacement.End)
                 .If($"{prefixName}-background-ghost", () => Ghost)
                 .If($"{prefixName}-block", () => this.Block)

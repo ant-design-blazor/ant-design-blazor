@@ -19,7 +19,9 @@
         "removeAttributes": ["_bl_*"],
         "removeClassPatterns": [
           "^css-dev-only-do-not-override-",
-          "^css-var-_r_"
+          "^css-var-_r_",
+          "^css-var-_R_",
+          "^css-[a-z0-9]+$"
         ],
         "removeCommentMarkers": ["<!--!-->"]
       }
@@ -37,7 +39,7 @@
         "skeletonSelector": ".ant-skeleton"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8182/en-US/components/select",
+        "url": "http://127.0.0.1:5540/en-US/components/select",
         "scopeSelector": "#components-select-demo-size .code-box-demo",
         "rootSelector": ".ant-select",
         "skeletonSelector": ".ant-skeleton"

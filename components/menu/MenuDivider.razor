@@ -1,11 +1,15 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<li Class="@ClassMapper.Class"></li>
+<li class="@ClassMapper.Class" style="@RootMenu.OverflowItemStyle(Id, Style)" data-menu-overflow-item="@RootMenu.OverflowItemId(Id, ParentMenu == null && ParentGroup == null)" aria-hidden="@(RootMenu.IsOverflowed(Id) ? "true" : null)" inert="@RootMenu.IsOverflowed(Id)"></li>
 
 @code {
     [CascadingParameter]
     public Menu RootMenu { get; set; }
+
+    [CascadingParameter] private SubMenu ParentMenu { get; set; }
+    [CascadingParameter] private MenuItemGroup ParentGroup { get; set; }
+    private RenderFragment OverflowContent => @<MenuDivider Class="@Class" Style="@Style" />;
 
     private void setClass()
     {        
@@ -17,6 +21,13 @@
     {
         setClass();
         base.OnInitialized();
+        if (ParentMenu == null && ParentGroup == null) RootMenu.RegisterOverflowItem(Id, OverflowContent, InvokeStateHasChanged);
     }
 
-} 
+    protected override void Dispose(bool disposing)
+    {
+        RootMenu?.UnregisterOverflowItem(Id);
+        base.Dispose(disposing);
+    }
+
+}

@@ -12,6 +12,9 @@ namespace AntDesign.Tests.Theming
             Assert.Equal(13, GeneratedPreviewThemes.All.Count);
             Assert.Equal(new[] { "light", "mui", "shadcn", "bootstrap", "cartoon", "dark", "illustration", "glass", "geek", "lark", "blossom", "v4", "serene" }, GeneratedPreviewThemes.All.Select(theme => theme.Key));
             Assert.Equal("dark", GeneratedPreviewThemes.All.Single(theme => theme.Key == "dark").Algorithm);
+            Assert.Equal("dark", GeneratedPreviewThemes.All.Single(theme => theme.Key == "geek").Algorithm);
+            Assert.Equal("Document", GeneratedPreviewThemes.All.Single(theme => theme.Key == "lark").Name);
+            Assert.All(GeneratedPreviewThemes.All, theme => Assert.NotEmpty(theme.Icon));
             Assert.All(GeneratedPreviewThemes.All, theme => Assert.False(string.IsNullOrWhiteSpace(theme.ReactSource)));
             var light = GeneratedPreviewThemes.All.Single(theme => theme.Key == "light");
             Assert.Equal("#f5f8ff", light.Components["Layout"]["bodyBg"]);
@@ -22,7 +25,11 @@ namespace AntDesign.Tests.Theming
             var mui = GeneratedPreviewThemes.All.Single(theme => theme.Key == "mui");
             Assert.Equal("#1976d2", mui.Tokens["colorPrimary"]);
             Assert.Equal("#fff", mui.Components["Button"]["primaryColor"]);
-            Assert.Contains("components:defaultTheme.components", GeneratedPreviewThemes.All.Single(theme => theme.Key == "v4").Unresolved);
+            var v4 = GeneratedPreviewThemes.All.Single(theme => theme.Key == "v4");
+            Assert.Equal("#1890ff", v4.Tokens["colorPrimary"]);
+            Assert.Equal("true", v4.Tokens["wireframe"]);
+            Assert.Equal("3", v4.Components["Menu"]["activeBarWidth"]);
+            Assert.Contains("algorithm:@ant-design/compatible/defaultAlgorithm", v4.Unresolved);
 
             var config = PreviewThemeConfigFactory.Create("mui");
             Assert.Equal("mui", config.Key);

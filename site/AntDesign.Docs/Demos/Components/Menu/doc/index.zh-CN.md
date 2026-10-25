@@ -28,6 +28,12 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 
 ### Menu
 
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| ShowCollapsedTooltip | 是否显示折叠根菜单项的提示 | bool | true |
+| CollapsedTooltipPlacement | 折叠菜单项提示的位置 | Placement | Right |
+| PopupRender | 自定义子菜单弹层，上下文包含 Item、Keys 和 Content | RenderFragment&lt;MenuPopupContext&gt; | - |
+
 | 参数 | 说明 | 类型 | 默认值 | 版本 |
 | --- | --- | --- | --- | --- |
 | Accordion | SubMenu 手风琴模式 | boolean | false |
@@ -52,7 +58,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 | OnDeselect | 取消选中时调用，仅在 multiple 生效 | function({ item, key, keyPath, selectedKeys, domEvent }) | - |  |
 | OnOpenChange | SubMenu 展开/关闭的回调 | function(openKeys: string\[]) | noop |  |
 | OnSelect | 被选中时调用 | function({ item, key, keyPath, selectedKeys, domEvent }) | 无   |  |
-| OverflowedIndicator | 自定义 Menu 折叠时的图标 | ReactNode | - |  |
+| DisabledOverflow | 禁用横向菜单按可用宽度自动收纳 | boolean | false | 6.0.0 |
+| OverflowedIndicator | 自定义横向菜单收纳入口内容 | RenderFragment | 省略号图标 | 6.0.0 |
+| OverflowedIndicatorPopupClassName | 收纳子菜单弹层的 CSS 类名 | string | - | 6.0.0 |
 
 > More options in [rc-menu](https://github.com/react-component/menu#api)
 
@@ -72,6 +80,11 @@ cover: https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg
 | IconTemplate | 自定义Icon模板，当`Icon`和`IconTemplate`同时设置时，优先使用`IconTemplate` | RenderFragment                  | -     |    |
 
 ### SubMenu
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| Theme | 子菜单独立主题，未设置时继承父级 | MenuTheme? | - |
+| PopupRender | 自定义当前弹层，优先于 Menu.PopupRender | RenderFragment&lt;MenuPopupContext&gt; | - |
 
 | 参数           | 说明           | 类型                        | 默认值 | 版本 |
 | -------------- | -------------- | --------------------------- | ------ | ---- |

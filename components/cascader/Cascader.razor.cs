@@ -78,6 +78,12 @@ namespace AntDesign
         public FormValidateStatus Status { get; set; } = FormValidateStatus.Default;
 
         /// <summary>
+        /// Visual style of the selector.
+        /// </summary>
+        [Parameter]
+        public InputVariant Variant { get; set; } = InputVariant.Outlined;
+
+        /// <summary>
         /// Callback executed when the selected value changes
         /// </summary>
         [Obsolete("Instead use SelectedNodesChanged.")]
@@ -89,6 +95,13 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback<CascaderNode[]> SelectedNodesChanged { get; set; }
+
+        /// <summary>
+        /// Loads the children of a node on demand. The callback receives the selected path;
+        /// add the loaded nodes to the last node's <see cref="CascaderNode.Children"/>.
+        /// </summary>
+        [Parameter]
+        public EventCallback<CascaderNode[]> LoadData { get; set; }
 
         /// <summary>
         /// Options for the overlay
@@ -258,7 +271,7 @@ namespace AntDesign
         /// 下拉节点单击
         /// </summary>
         /// <param name="node"></param>
-        private void NodeOnClick(CascaderNode node)
+        private async Task NodeOnClickAsync(CascaderNode node)
         {
             if (node.Disabled) return;
             _searchValue = string.Empty;
@@ -269,6 +282,35 @@ namespace AntDesign
                 return;
             }
             SetSelectedNode(node, SelectedTypeEnum.Click);
+
+            if (LoadData.HasDelegate && node.IsLeaf == false && node.Children?.Any() != true)
+            {
+                node.IsLoading = true;
+                await InvokeAsync(StateHasChanged);
+                try
+                {
+                    await LoadData.InvokeAsync(GetNodePath(node));
+                    if (node.Children?.Any() != true)
+                    {
+                        node.IsLeaf = true;
+                    }
+                    _searchList.Clear();
+                    InitCascaderNodeState(_nodelist, null, 0);
+                }
+                finally
+                {
+                    node.IsLoading = false;
+                    RefreshComponentState();
+                }
+            }
+        }
+
+        private CascaderNode[] GetNodePath(CascaderNode node)
+        {
+            var path = new List<CascaderNode>();
+            SetSelectedNodeWithParent(node, ref path);
+            path.Reverse();
+            return path.ToArray();
         }
 
         private async Task NodeCheckboxChanged(CascaderNode node, bool isChecked)
@@ -495,7 +537,7 @@ namespace AntDesign
 
                 _renderNodes = _selectedNodes;
 
-                if (ChangeOnSelect || !cascaderNode.HasChildren)
+                if (ChangeOnSelect || !cascaderNode.IsExpandable)
                 {
                     SetValue(cascaderNode.Value);
                 }
@@ -530,7 +572,7 @@ namespace AntDesign
             RefreshComponentState();
 #endif
 
-            if (!cascaderNode.HasChildren)
+            if (!cascaderNode.IsExpandable)
             {
                 CloseAsync();
                 _isOnCascader = false;
@@ -708,7 +750,8 @@ namespace AntDesign
             string selectCls = "ant-select";
 
             ClassMapper
-                .Add("ant-select ant-cascader ant-select-outlined ant-select-show-arrow")
+                .Add("ant-select ant-cascader ant-select-show-arrow")
+                .Add($"{selectCls}-{Variant.ToString().ToLowerInvariant()}")
                 .GetIf(() => "ant-select-multiple", () => Multiple)
                 .GetIf(() => "ant-select-single", () => !Multiple)
                 .Add("ant-select-css-var ant-cascader-css-var")

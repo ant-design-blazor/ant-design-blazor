@@ -5,14 +5,13 @@
     @ChildContent
 </CascadingValue>
 
-<div id="@Id" class="split-container splitter-orientation-@(Vertical?"vertical":"horizontal") @SemanticClass("root", $"{ClassMapper.Class} ant-splitter-css-var")"
+<div id="@Id" class="@SemanticClass("root", $"{ClassMapper.Class} ant-splitter-css-var")"
     style="@GetComponentStyle("Splitter", SemanticStyle("root", Style))" @ref="@Ref">
     @for (var paneIndex = 0; paneIndex < _panes.Count; paneIndex++)
     {
         var pane = _panes[paneIndex];
-        <div class="@SemanticClass("panel", "pane-of-split-container ant-splitter-panel")"
-            style="@SemanticStyle("panel", GetPaneStyle(pane))"
-            data-resizable="@pane.Resizable.ToString().ToLowerInvariant()" data-min="@pane.Min" data-max="@pane.Max">
+        <div class="@GetPanelClass(pane)"
+            style="@SemanticStyle("panel", GetPaneStyle(pane))">
             @pane.ChildContent
         </div>
 
@@ -24,8 +23,8 @@
                 {
                     <div class="ant-splitter-bar-preview" style="--ant-splitter-bar-preview-offset: 0px"></div>
                 }
-                <div class="@GetDraggerClass(paneIndex)" style="@GetDraggerStyle(paneIndex)" data-index="@paneIndex"
-                    role="separator" aria-disabled="@IsDraggerDisabled(paneIndex)" aria-orientation="@(Vertical ? "vertical" : "horizontal")">
+                <div class="@GetDraggerClass(paneIndex)" style="@GetDraggerStyle(paneIndex)"
+                    role="separator" aria-disabled="@IsDraggerDisabled(paneIndex).ToString().ToLowerInvariant()" aria-orientation="@(Vertical ? "vertical" : "horizontal")">
                     @if (DraggerIcon != null)
                     {
                         <span class="ant-splitter-bar-dragger-icon">@DraggerIcon</span>

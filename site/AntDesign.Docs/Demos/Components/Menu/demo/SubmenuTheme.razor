@@ -1,0 +1,10 @@
+<Switch @bind-Checked="_dark" CheckedChildren="Dark" UnCheckedChildren="Light" />
+<br /><br />
+<Menu Theme="MenuTheme.Dark" Mode="MenuMode.Vertical" Style="width:256px;max-width:100%" TriggerSubMenuAction="Trigger.Click" DefaultOpenKeys="@(new[] { "sub1" })" OnMenuItemClicked="@(item => _selected = item.Key)">
+    <SubMenu Key="sub1" Title="Navigation One" Icon="mail" Theme="@(_dark ? MenuTheme.Dark : MenuTheme.Light)">
+        <MenuItem Key="1">Option 1</MenuItem><MenuItem Key="2">Option 2</MenuItem><MenuItem Key="3">Option 3</MenuItem>
+    </SubMenu>
+    <MenuItem Key="5">Option 5</MenuItem><MenuItem Key="6">Option 6</MenuItem>
+</Menu>
+<p role="status">Selected: @_selected</p>
+@code { private bool _dark; private string _selected = "1"; }

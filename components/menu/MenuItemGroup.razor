@@ -1,15 +1,16 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<li class="@(RootMenu.PrefixCls)-item-group" style="@Style" @key="Key" @ref="Ref">
+<li class="@(RootMenu.PrefixCls)-item-group" style="@RootMenu.OverflowItemStyle(Id, Style)" data-menu-overflow-item="@RootMenu.OverflowItemId(Id, ParentMenu == null && ParentGroup == null)" aria-hidden="@(RootMenu.IsOverflowed(Id) ? "true" : null)" inert="@RootMenu.IsOverflowed(Id)" @key="Key" @ref="Ref">
     <div class="@RootMenu.GetSemanticClass(SemanticSlot("itemTitle"), $"{RootMenu.PrefixCls}-item-group-title")" style="@RootMenu.GetSemanticStyle(SemanticSlot("itemTitle"))">
         @if (TitleTemplate != null)@TitleTemplate else @Title
     </div>
     <ul class="@RootMenu.GetSemanticClass(SemanticSlot("list"), $"{RootMenu.PrefixCls}-item-group-list")" style="@RootMenu.GetSemanticStyle(SemanticSlot("list"))">
-        @ChildContent
+        <CascadingValue Value="this" IsFixed>@ChildContent</CascadingValue>
     </ul>
 </li>
 
 @code {
+    private RenderFragment OverflowContent => @<MenuItemGroup Key="@Key" Title="@Title" TitleTemplate="@TitleTemplate" Class="@Class" Style="@Style">@ChildContent</MenuItemGroup>;
     private string SemanticSlot(string slot) => ParentMenu == null ? slot : $"subMenu.{slot}";
 }

@@ -1,27 +1,35 @@
 <Space Wrap>
+  <SpaceItem>
     <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" OnSelectedItemChanged="HandleChange">
         <SelectOptions>
             <SelectOption TItemValue="string" TItem="string" Value='@("jack")' Label="Jack" />
             <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("yiminghe")' Label="yiminghe" />
+            <SelectOption TItemValue="string" TItem="string" Value='@("Yiminghe")' Label="yiminghe" />
             <SelectOption TItemValue="string" TItem="string" Value='@("disabled")' Label="Disabled" Disabled />
         </SelectOptions>
     </Select>
+  </SpaceItem>
+  <SpaceItem>
     <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" Disabled>
         <SelectOptions>
             <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
         </SelectOptions>
     </Select>
+  </SpaceItem>
+  <SpaceItem>
     <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" Loading>
         <SelectOptions>
             <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
         </SelectOptions>
     </Select>
+  </SpaceItem>
+  <SpaceItem>
     <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" AllowClear Placeholder="select it">
         <SelectOptions>
             <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
         </SelectOptions>
     </Select>
+  </SpaceItem>
 </Space>
 
 @code {

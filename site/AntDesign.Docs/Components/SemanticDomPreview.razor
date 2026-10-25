@@ -86,6 +86,15 @@
             ["gridTemplateColumns"] = "minmax(0, 2fr) minmax(0, 1fr)"
         };
 
+        if (Component.Equals("collapse", StringComparison.OrdinalIgnoreCase))
+        {
+            // React mounts this preview inside a bordered code box, outside
+            // Markdown's paragraph margins. Match that real preview frame.
+            root["border"] = "1px solid var(--ant-color-border-secondary,#f0f0f0)";
+            content["minHeight"] = 600;
+            content["& .ant-collapse-body p"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = 0 };
+        }
+
         foreach (var node in Nodes)
         {
             foreach (var selector in GetHighlightSelectors(node))
@@ -181,20 +190,6 @@
 
     private IEnumerable<string> GetHighlightSelectors(SemanticDomNode node)
     {
-        if (Component.Equals("select", StringComparison.OrdinalIgnoreCase))
-        {
-            var selector = node.Name switch
-            {
-                // Select's popup list and options use the rc-select-compatible
-                // classes/roles in Blazor rather than React's semantic marker names.
-                "popup.list" => ".ant-select-dropdown [role=\"listbox\"]",
-                "popup.listItem" => ".ant-select-dropdown .ant-select-item-option",
-                _ => node.Selector
-            };
-
-            return selector.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-        }
-
         return node.Selector.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
     }
 
@@ -214,6 +209,18 @@
     private System.Collections.Generic.Dictionary<string, object> CreateHighlightRule(SemanticDomNode node)
     {
         var color = "var(--ant-color-warning, #faad14)";
+
+        // QRCode deliberately clips its status cover to the rounded root. An
+        // outward outline is clipped too, so highlight this slot on the inside.
+        if (Component.ToLowerInvariant() is "qrcode" or "qr-code" && node.Name == "cover")
+        {
+            return new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["outline"] = $"2px solid {color}",
+                ["outlineOffset"] = "-2px",
+                ["boxShadow"] = $"inset 0 0 0 2px {color}"
+            };
+        }
 
         if (Component.Equals("table", StringComparison.OrdinalIgnoreCase) && node.Name == "body.row")
         {

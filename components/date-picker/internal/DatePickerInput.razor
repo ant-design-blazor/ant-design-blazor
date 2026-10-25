@@ -3,7 +3,7 @@
 
 @if (!IsRange)
 {
-    <div class="@(PrefixCls)-input">
+    <div class="@SemanticClass("input", $"{PrefixCls}-input")" style="@SemanticStyle("input")">
         <input @ref="Ref"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
@@ -19,7 +19,7 @@
                readonly="@ReadOnly">
         @if (ShowSuffixIcon || FeedbackIcon != null)
         {
-            <span class="@(PrefixCls)-suffix" style="pointer-events: auto;" onclick="@OnSuffixIconClick">
+            <span class="@SemanticClass("suffix", $"{PrefixCls}-suffix")" style="@SemanticStyle("suffix", "pointer-events: auto;")" onclick="@OnSuffixIconClick">
 
                 @if (SuffixIcon != null)
                 {
@@ -50,7 +50,7 @@
 }
 else
 {
-    <div class="@(PrefixCls)-input @(Active ? $"{PrefixCls}-input-active" : "")">
+    <div class="@SemanticClass("input", $"{PrefixCls}-input {(Active ? $"{PrefixCls}-input-active" : "")}")" style="@SemanticStyle("input")">
         <input @ref="Ref"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
@@ -109,6 +109,12 @@ else
     public RenderFragment SuffixIcon { get; set; }
 
     [Parameter]
+    public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+    [Parameter]
+    public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+    [Parameter]
     public EventCallback OnClick { get; set; }
 
     [Parameter]
@@ -145,6 +151,20 @@ else
     public bool Active { get; set; }
 
     internal bool IsOnFocused { get; set; } = false;
+
+    private string SemanticClass(string slot, string baseClass)
+    {
+        var customClass = ClassNames != null && ClassNames.TryGetValue(slot, out var value) ? value : null;
+        return string.IsNullOrWhiteSpace(customClass) ? baseClass : $"{baseClass} {customClass}";
+    }
+
+    private string SemanticStyle(string slot, string baseStyle = null)
+    {
+        var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+        if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
+        if (string.IsNullOrWhiteSpace(baseStyle)) return customStyle;
+        return $"{baseStyle.Trim().TrimEnd(';')}; {customStyle}";
+    }
 
     internal bool ShowClear()
     {

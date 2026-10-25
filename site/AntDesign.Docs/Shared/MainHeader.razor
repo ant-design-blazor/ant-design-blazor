@@ -1,7 +1,7 @@
 ﻿@using AntDesign.Docs.Services
 <header id="header" class="clearfix @(IsHome?"home-header":"") @_styles["root"]">
     <Row Style="flex-flow: nowrap; height: 64px;" OnBreakpoint="OnBreakpoint">
-        <GridCol Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
+        <GridCol Class="docs-header-logo" Xs="24" Sm="24" Md="6" Lg="6" Xl="5" Xxl="4">
             <h1>
                 <a id="logo" href="/">
                     <img alt="logo" src="/docs/assets/logo.svg">Ant Design Blazor
@@ -10,14 +10,12 @@
         </GridCol>
         @if (_isMobile)
         {
-            <Dropdown Placement="Placement.BottomRight" Trigger="new[] { Trigger.Click }">
-                <Overlay>
+            <Popover Class="docs-header-mobile-trigger" Placement="Placement.BottomRight" Trigger="new[] { Trigger.Click }" ArrowPointAtCenter OverlayClassName="docs-header-mobile-popup" OverlayStyle="width:300px;max-width:calc(100vw - 16px);inset-inline-start:auto!important;inset-inline-end:8px!important;">
+                <ContentTemplate>
                     <HeaderMenu IsMobile />
-                </Overlay>
-                <ChildContent>
-                    <Icon Type="@IconType.Outline.UnorderedList" Class="nav-phone-icon" />
-                </ChildContent>
-            </Dropdown>
+                </ContentTemplate>
+                <ChildContent><Button Type="ButtonType.Text" Icon="@IconType.Outline.UnorderedList" Class="nav-phone-icon" AriaLabel="Open navigation" /></ChildContent>
+            </Popover>
         }
         @if (!_isMobile)
         {
@@ -29,6 +27,14 @@
 </header>
 
 <style>@((MarkupString)_styles.CssText)</style>
+<style>
+    .docs-header-mobile-popup .ant-popover-inner,.docs-header-mobile-popup .ant-popover-inner-content{padding:0;width:100%;box-sizing:border-box}
+    .docs-header-mobile-popup .ant-popover-content{width:100%}
+    .docs-header-mobile-popup .ant-popover-inner{background:var(--ant-color-bg-elevated,#fff);border-radius:var(--ant-border-radius-lg,8px);box-shadow:var(--ant-box-shadow-secondary,0 6px 16px rgba(0,0,0,.12))}
+    .docs-header-mobile-popup .header-navigation{width:100%}
+    .docs-header-mobile-popup .ant-menu{width:100%;border-inline-end:0}
+    .docs-header-mobile-popup .ant-popover-arrow{inset-inline-start:auto!important;inset-inline-end:16px!important}
+</style>
 
 @code {
     private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-header", new System.Collections.Generic.Dictionary<string, object>
@@ -37,7 +43,7 @@
         {
             ["&#header"] = new System.Collections.Generic.Dictionary<string, object>
             {
-                ["position"] = "relative", ["zIndex"] = 10, ["maxWidth"] = "100%", ["background"] = "#fff", ["boxShadow"] = "0 2px 8px #f0f1f2",
+                ["position"] = "relative", ["zIndex"] = 10, ["maxWidth"] = "100%", ["background"] = "var(--ant-color-bg-container)", ["boxShadow"] = "0 2px 8px #f0f1f2",
                 ["transition"] = "all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)"
             },
             ["[data-theme='dark'] &#header"] = new System.Collections.Generic.Dictionary<string, object> { ["boxShadow"] = "0 2px 8px 0 rgba(0, 0, 0, 0.65)" },
@@ -52,6 +58,33 @@
             ["html.rtl &.home-header #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 40, ["paddingLeft"] = 16 },
             ["&#header.home-header .ant-menu"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "transparent" },
             ["&#header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["alignItems"] = "center", ["margin"] = 0 },
+            ["&#header .header-navigation"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["minWidth"] = 0, ["flex"] = "1 1 0 !important" },
+            ["&#header #nav.ant-menu-horizontal"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["flexWrap"] = "nowrap", ["width"] = "100%", ["minWidth"] = 0, ["borderBottom"] = "none" },
+            ["&#header #nav > li"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "none", ["margin"] = 0 },
+            ["&#header .header-more-options"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
+            ["&#header .docs-header-mobile-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["insetInlineEnd"] = 16, ["top"] = 16, ["width"] = 32, ["height"] = 32 },
+            ["&#header .nav-phone-icon"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 32, ["height"] = 32, ["padding"] = 0 },
+            ["&#header .header-desktop-utilities"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["alignItems"] = "center", ["gap"] = 12 },
+            ["@media (min-width: 768px)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["&#header .docs-header-logo"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "0 0 auto", ["width"] = "auto", ["maxWidth"] = "none" },
+                ["&#header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["minWidth"] = 0, ["flex"] = "1 1 0", ["maxWidth"] = "none" },
+            },
+            ["@media (width < 768px)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                // Apply the narrow layout immediately, including while the
+                // debounced Row breakpoint callback is still in flight.
+                ["&#header .menu-row"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
+                ["&#header .docs-header-logo"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "1 1 0", ["width"] = "100%", ["maxWidth"] = "100%" },
+                ["&#header"] = new System.Collections.Generic.Dictionary<string, object> { ["textAlign"] = "center" },
+                ["&#header #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingInline"] = 0 },
+            },
+            ["@media (width < 1120px)"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                ["&#header .header-desktop-utilities"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
+                ["&#header .header-more-options"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "inline-block" },
+                ["&#header .DocSearch-Button-Placeholder, &#header .DocSearch-Button-Keys"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
+            },
             ["&#header .menu-row > *"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "none", ["margin"] = "0 12px 0 0" },
             ["&#header .menu-row > *:last-child"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 40 },
             ["&#header .ant-row-rtl .menu-row > *:last-child"] = new System.Collections.Generic.Dictionary<string, object> { ["marginRight"] = 12, ["marginLeft"] = 40 },
@@ -62,14 +95,13 @@
                 ["fontFamily"] = "Avenir, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif",
                 ["border"] = 0
             },
-            ["&#header #nav.ant-menu-horizontal"] = new System.Collections.Generic.Dictionary<string, object> { ["borderBottom"] = "none" },
             ["&#header #nav.ant-menu-horizontal > .ant-menu-item, &#header #nav.ant-menu-horizontal > .ant-menu-submenu"] = new System.Collections.Generic.Dictionary<string, object>
             {
-                ["minWidth"] = 64, ["height"] = 64, ["paddingRight"] = 12, ["paddingLeft"] = 12, ["lineHeight"] = "64px"
+                ["minWidth"] = 56, ["height"] = 64, ["paddingRight"] = 8, ["paddingLeft"] = 8, ["lineHeight"] = "64px"
             },
             ["&#header #nav.ant-menu-horizontal > .ant-menu-item::after, &#header #nav.ant-menu-horizontal > .ant-menu-submenu::after"] = new System.Collections.Generic.Dictionary<string, object>
             {
-                ["top"] = 0, ["right"] = 12, ["bottom"] = "auto", ["left"] = 12, ["borderWidth"] = 2
+                ["top"] = 0, ["right"] = 12, ["bottom"] = "auto", ["left"] = 12, ["borderWidth"] = "0 0 2px"
             },
             ["&#header #nav.ant-menu-horizontal .ant-menu-submenu-title .anticon"] = new System.Collections.Generic.Dictionary<string, object> { ["margin"] = 0 },
             ["&#header #nav.ant-menu-horizontal > .ant-menu-item-selected a"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-primary-color)" },
@@ -78,7 +110,7 @@
             ["&#header #nav .ant-menu-item-selected > a, &#header #nav .ant-menu-item > a:hover"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "var(--ant-primary-color)" },
             ["&#header #search-box"] = new System.Collections.Generic.Dictionary<string, object>
             {
-                ["position"] = "relative", ["display"] = "flex", ["flex"] = "auto !important", ["alignItems"] = "center", ["height"] = 22,
+                ["position"] = "relative", ["display"] = "flex", ["flex"] = "0 1 180px !important", ["minWidth"] = 0, ["alignItems"] = "center", ["height"] = 22,
                 ["margin"] = "0 auto 0 0 !important", ["paddingLeft"] = 16, ["lineHeight"] = "22px", ["whiteSpace"] = "nowrap",
                 ["borderLeft"] = "1px solid rgba(0, 0, 0, 0.06)", ["transition"] = "width 0.5s"
             },
@@ -88,6 +120,7 @@
                 ["borderRight"] = "1px solid rgba(0, 0, 0, 0.06)", ["borderLeft"] = "none"
             },
             ["&#header #search-box > *"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "auto" },
+            ["&#header .DocSearch-Button"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = "100%", ["maxWidth"] = "100%", ["minWidth"] = 0, ["boxSizing"] = "border-box", ["overflow"] = "hidden" },
             ["&#header #search-box .anticon"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["position"] = "absolute", ["top"] = "50%", ["zIndex"] = 1, ["flex"] = "none", ["color"] = "#ced4d9",
@@ -112,7 +145,7 @@
             ["&#header #github-btn.responsive-mode .gh-count, .ant-row-rtl &#header #github-btn .gh-count"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none !important" },
             ["&#header #logo"] = new System.Collections.Generic.Dictionary<string, object>
             {
-                ["height"] = 64, ["paddingLeft"] = 40, ["overflow"] = "hidden", ["color"] = "rgba(0, 0, 0, 0.85)",
+                ["height"] = 64, ["paddingLeft"] = 40, ["overflow"] = "hidden", ["color"] = "var(--ant-color-text)",
                 ["fontWeight"] = "bold", ["fontSize"] = 18,
                 ["fontFamily"] = "PuHuiTi, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif",
                 ["lineHeight"] = "64px", ["letterSpacing"] = "-0.18px", ["whiteSpace"] = "nowrap", ["textDecoration"] = "none"
@@ -124,7 +157,6 @@
             {
                 ["&#header"] = new System.Collections.Generic.Dictionary<string, object> { ["textAlign"] = "center" },
                 ["&#header #logo"] = new System.Collections.Generic.Dictionary<string, object> { ["paddingRight"] = 0, ["paddingLeft"] = 0 },
-                ["&#header #search-box"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" }
             },
             ["@media (max-width: 576px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
@@ -143,7 +175,7 @@
 
     private void OnBreakpoint(BreakpointType breakpoint)
     {
-        _isMobile = breakpoint.IsIn(BreakpointType.Sm, BreakpointType.Xs, BreakpointType.Md);
+        _isMobile = breakpoint.IsIn(BreakpointType.Sm, BreakpointType.Xs);
         if (OnMobileModeChanged.HasDelegate)
         {
             OnMobileModeChanged.InvokeAsync(_isMobile);

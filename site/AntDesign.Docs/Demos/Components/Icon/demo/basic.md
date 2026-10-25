@@ -7,15 +7,8 @@ title:
 
 ## zh-CN
 
-通过`Type`属性设置图标名称，`Theme`属性设置主题，还可以通过设置 `Spin` 属性来实现动画旋转效果。
+直接使用生成式图标组件；`Outlined`、`Filled` 后缀区分主题。通过 `Spin` 开启旋转动画，通过 `Rotate` 设置 SVG 的旋转角度。
 
 ## en-US
 
-Set icon name with `Type` property, set theme with `Theme` property. You can also specify the `Spin` property to show spinning animation.
-
-<style>
-.icons-list .anticon {
-  margin-right: 6px;
-  font-size: 24px;
-}
-</style>
+Use generated icon components directly; the `Outlined` and `Filled` suffixes select the theme. Set `Spin` for animation and `Rotate` for the SVG rotation angle.

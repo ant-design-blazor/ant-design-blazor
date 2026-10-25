@@ -11,23 +11,7 @@
     <MainHeader IsHome />
     <div class="home-container @_styles["root"]">
         <div class="home-banner @_styles["banner"]">
-            <div class="home-banner-background">
-                <img alt="background" src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*kJM2Q6uPXCAAAAAAAAAAAABkARQnAQ">
-                <svg viewBox="0 0 1440 448">
-                    <g transform="translate(388.81209591472725, 12.625704082033366)" opacity="1" frame="477">
-                        <g transform="matrix(1, 0, 0, 1, 0, 0)"><g transform="rotate(0, 170, 170)"><svg><defs><filter id="banner-circle-shadow-1"><feDropShadow dx="10" dy="10" stdDeviation="10" flood-color="rgba(0,0,0,0.05)"></feDropShadow></filter><linearGradient id="banner-circle-fill-1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color: rgb(250, 252, 254);"></stop><stop offset="100%" style="stop-color: rgb(249, 252, 254);"></stop></linearGradient></defs><circle cx="170" cy="170" r="140" fill="url(#banner-circle-fill-1)" filter="url(#banner-circle-shadow-1)"></circle></svg></g></g>
-                    </g>
-                    <g transform="translate(-214.60241042016168, 234.40402566849292)" opacity="1" frame="477">
-                        <g transform="matrix(1, 0, 0, 1, 0, 0)"><g transform="rotate(0, 230, 230)"><svg><defs><filter id="banner-circle-shadow-2"><feDropShadow dx="10" dy="10" stdDeviation="10" flood-color="rgba(0,0,0,0.05)"></feDropShadow></filter><linearGradient id="banner-circle-fill-2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color: rgb(250, 252, 254);"></stop><stop offset="50%" style="stop-color: rgb(243, 249, 252);"></stop></linearGradient></defs><circle cx="230" cy="230" r="200" fill="url(#banner-circle-fill-2)" filter="url(#banner-circle-shadow-2)"></circle></svg></g></g>
-                    </g>
-                    <g transform="translate(1291.4648476694722, 182.0455763805469)" opacity="1" frame="477">
-                        <g transform="matrix(1, 0, 0, 1, 0, 0)"><g transform="rotate(0, 120, 120)"><svg><defs><filter id="banner-rect-shadow-1"><feDropShadow dx="10" dy="10" stdDeviation="10" flood-color="rgba(0,0,0,0.05)"></feDropShadow></filter><linearGradient id="banner-rect-fill-1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="25%" style="stop-color: rgb(248, 252, 255);"></stop><stop offset="100%" style="stop-color: rgb(248, 251, 255);"></stop></linearGradient></defs><rect x="30" y="30" width="180" height="180" fill="url(#banner-rect-fill-1)" filter="url(#banner-rect-shadow-1)"></rect></svg></g></g>
-                    </g>
-                    <g transform="translate(673.9823138574723, -667.8768834546102)" opacity="1" frame="477">
-                        <g transform="matrix(1, 0, 0, 1, 0, 0)"><g transform="rotate(0, 430, 430)"><svg width="860" height="860"><defs><filter id="banner-diamond-shadow-1"><feDropShadow dx="10" dy="10" stdDeviation="10" flood-color="rgba(0,0,0,0.05)"></feDropShadow></filter><linearGradient id="banner-diamond-fill-1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="60%" style="stop-color: rgb(252, 253, 255);"></stop><stop offset="100%" style="stop-color: rgb(252, 253, 254);"></stop></linearGradient></defs><path d="M 30 430 430 30 830 430 430 830 Z" fill="url(#banner-diamond-fill-1)" filter="url(#banner-diamond-shadow-1)"></path></svg></g></g>
-                    </g>
-                </svg>
-            </div>
+            <HomeBannerBackground />
             <div class="home-banner-holder">
                 <div class="home-banner-content">
                     <div>
@@ -48,56 +32,63 @@
                 </div>
             </div>
         </div>
-        <div class="@_styles["contentWidth"]">
             <HomeThemePreview />
-            @if (_recommends.Any())
-            {
-                <div class="home-block-content">
-                    <h2 class="ant-typography @_styles["sectionTitle"]" direction="ltr">@Localizer["app.home.recommend"]</h2>
-                    <Row Class="@_styles["recommendRow"]">
-                        <AntDesign.Col Xs="24" Sm="14" Class="@_styles["recommendColumn"]">
-                            <Recommend Data="_recommends[0]" Main />
-                        </AntDesign.Col>
-                        <AntDesign.Col Xs="24" Sm="10" Class="@_styles["recommendColumn"]">
-                            <Row Class="@_styles["nestedRecommendRow"]">
-                                <AntDesign.Col Span="24" Class="@_styles["recommendColumn"]">
-                                    <Recommend Data="_recommends[1]" />
+            <HomeRichComponents />
+            <section class="home-framework">
+                <div class="home-framework-decoration" aria-hidden="true"><img draggable="false" alt="" src="https://gw.alipayobjects.com/zos/bmw-prod/ba37a413-28e6-4be4-b1c5-01be1a0ebb1c.svg" /></div>
+                <div class="home-framework-content">
+                    @if (_recommends.Any())
+                    {
+                        <div class="home-block-content">
+                            <h2 class="ant-typography @_styles["sectionTitle"]" direction="ltr">@Localizer["app.home.recommend"]</h2>
+                            <Row Class="@_styles["recommendRow"]">
+                                <AntDesign.Col Xs="24" Sm="14" Class="@_styles["recommendColumn"]">
+                                    <Recommend Data="_recommends[0]" Main />
                                 </AntDesign.Col>
-                                <AntDesign.Col Span="24" Class="@_styles["recommendColumn"]">
-                                    <Recommend Data="_recommends[2]" />
+                                <AntDesign.Col Xs="24" Sm="10" Class="@_styles["recommendColumn"]">
+                                    <Row Class="@_styles["nestedRecommendRow"]">
+                                        <AntDesign.Col Span="24" Class="@_styles["recommendColumn"]">
+                                            <Recommend Data="_recommends[1]" />
+                                        </AntDesign.Col>
+                                        <AntDesign.Col Span="24" Class="@_styles["recommendColumn"]">
+                                            <Recommend Data="_recommends[2]" />
+                                        </AntDesign.Col>
+                                    </Row>
                                 </AntDesign.Col>
                             </Row>
-                        </AntDesign.Col>
-                    </Row>
-                </div>
-            }
+                        </div>
+                    }
 
-            @if (_products.Any())
-            {
-                <div class="home-block-content">
-                    <h2 class="ant-typography @_styles["sectionTitle"]" direction="ltr">@Localizer["app.home.products"]</h2>
-                    <div class="@_styles["productsContent"]">
-                        <Row Class="@($"design-mini-panels {_styles["miniPanels"]}")">
-                            @foreach (var item in _products)
-                            {
-                                <AntDesign.Col Xs="24" Sm="8" Class="@_styles["productColumn"]">
-                                    <a href="@item.Href" target="_blank" rel="noopener noreferrer">
-                                        <Card Class="@($"design-mini-panel {_styles["miniPanel"]}")" Hoverable>
-                                            <Cover>
-                                                <img alt="@item.Title" src="@item.Img">
-                                            </Cover>
-                                            <Body>
-                                                <CardMeta Title="@item.Title" Description="@Localizer[item.Description]" />
-                                            </Body>
-                                        </Card>
-                                    </a>
-                                </AntDesign.Col>
-                            }
-                        </Row>
-                    </div>
-                </div>
-            }
+                    @if (_products.Any())
+                    {
+                        <div class="home-block-content">
+                            <h2 class="ant-typography @_styles["sectionTitle"]" direction="ltr">@Localizer["app.home.products"]</h2>
+                            <div class="@_styles["productsContent"]">
+                                <Row Class="@($"design-mini-panels {_styles["miniPanels"]}")">
+                                    @foreach (var item in _products)
+                                    {
+                                        <AntDesign.Col Xs="24" Sm="8" Class="@_styles["productColumn"]">
+                                            <a href="@item.Href" target="_blank" rel="noopener noreferrer">
+                                                <Card Class="@($"design-mini-panel {_styles["miniPanel"]}")" Hoverable>
+                                                    <Cover>
+                                                        <img alt="@item.Title" src="@item.Img">
+                                                    </Cover>
+                                                    <Body>
+                                                        <CardMeta Title="@item.Title" Description="@Localizer[item.Description]" />
+                                                    </Body>
+                                                </Card>
+                                            </a>
+                                        </AntDesign.Col>
+                                    }
+                                </Row>
+                            </div>
+                        </div>
+                    }
 
+                </div>
+            </section>
+
+        <div class="@_styles["contentWidth"]">
             @if (_sponsors.Any())
             {
                 <div class="home-block-content">
@@ -139,7 +130,15 @@
         </div>
 
     <MainFooter />
+    <FixedWidgets />
     </div>
 </div>
 
 <style>@((MarkupString)_styles.CssText)</style>
+<style>
+    .home-framework{width:100%;position:relative;display:flow-root;background:#f5f8ff}
+    .home-framework-decoration{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .home-framework-decoration img{position:absolute;inset-inline-start:0;top:-50px;height:160px}
+    .home-framework-content{position:relative;z-index:1;max-width:1256px;margin-inline:auto;display:flow-root}
+    [data-theme=dark] .home-framework{background:#393f4a}
+</style>

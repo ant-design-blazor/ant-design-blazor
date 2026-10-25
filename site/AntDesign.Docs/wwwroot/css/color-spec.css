@@ -1,0 +1,42 @@
+/* React ColorStyle.tsx, scoped to the Blazor colors document. Layout values use v6 tokens. */
+.docs-colors { container-type: inline-size; }
+.docs-colors .color-palettes { margin: 0 1%; display: flex; flex-wrap: wrap; }
+.docs-colors .color-palette { position: relative; display: inline-block; width: 31%; margin: 45px 1%; min-width: 0; }
+.docs-colors .color-title { margin: 0 0 var(--ant-margin-lg, 24px); color: #5c6b77; font-weight: 500; font-size: 22px; text-align: center; text-transform: capitalize; }
+.docs-colors .color-description { display: block; color: #777; font-weight: lighter; font-size: var(--ant-font-size, 14px); min-height: 22px; }
+.docs-colors .main-color { text-align: start; }
+.docs-colors .main-color-item { display: block; position: relative; box-sizing: border-box; width: calc(100% - var(--ant-margin-xxs, 4px)); height: 44px; margin-inline-end: var(--ant-margin-xxs, 4px); padding: 0 var(--ant-padding-sm, 12px); border: 0; font-size: var(--ant-font-size, 14px); font-family: Consolas, sans-serif; line-height: 44px; cursor: pointer; text-align: start; transition: all var(--ant-motion-duration-mid, .2s); }
+.docs-colors .main-color-item:first-child { border-radius: var(--ant-border-radius-sm, 4px) var(--ant-border-radius-sm, 4px) 0 0; }
+.docs-colors .main-color-item:last-child { border-radius: 0 0 var(--ant-border-radius-sm, 4px) var(--ant-border-radius-sm, 4px); }
+.docs-colors .main-color-item:hover { width: calc(100% + var(--ant-margin-xs, 8px)); margin-inline-end: calc(-1 * var(--ant-margin-xs, 8px)); border-radius: 0 var(--ant-border-radius-sm, 4px) var(--ant-border-radius-sm, 4px) 0; }
+.docs-colors .main-color-item:focus-visible { outline: 2px solid var(--ant-color-primary, #1677ff); outline-offset: 2px; z-index: 1; }
+.docs-colors .main-color-text { float: inline-start; }
+.docs-colors .main-color-value { position: relative; inset-inline-start: var(--ant-margin-xxs, 4px); float: inline-end; transform: scale(.85); transform-origin: 100% 50%; opacity: 0; transition: all var(--ant-motion-duration-slow, .3s); }
+.docs-colors .main-color:hover .main-color-value, .docs-colors .main-color:focus-within .main-color-value { inset-inline-start: 0; opacity: .7; }
+.docs-colors .color-copy-status { position: absolute; inset-inline-start: 0; z-index: 2; padding: 4px 8px; background: var(--ant-color-bg-container, #fff); font-size: var(--ant-font-size-sm, 12px); color: var(--ant-color-text-secondary, rgba(0,0,0,.65)); box-shadow: var(--ant-box-shadow-secondary, 0 2px 8px #0002); }
+.docs-colors .color-copy-status:empty { display: none; }
+.docs-colors .color-palette-horizontal { box-sizing: border-box; width: 100%; }
+.docs-colors .color-palette-pick { margin: 0 0 var(--ant-margin-md, 20px); font-size: var(--ant-font-size-xl, 20px); text-align: center; }
+.docs-colors .color-strip-scroll { position: relative; overflow-x: auto; padding-top: 10px; }
+.docs-colors .color-palette-horizontal .main-color { display: flex; min-width: 520px; }
+.docs-colors .color-palette-horizontal .main-color-item { flex: 1; min-width: 0; width: auto; height: 86px; margin-inline-end: 0; padding: 37px 0 0; line-height: normal; text-align: center; border-radius: 0; }
+.docs-colors .color-palette-horizontal .main-color-text { float: none; }
+.docs-colors .color-palette-horizontal .main-color-item:hover { height: 96px; margin-top: -10px; border-radius: var(--ant-border-radius-sm, 4px) var(--ant-border-radius-sm, 4px) 0 0; }
+.docs-colors .color-palette-horizontal .main-color-value { position: absolute; bottom: 0; inset-inline-start: 0; width: 100%; text-align: center; transform-origin: unset; }
+.docs-colors .color-palette-horizontal .main-color:hover .main-color-item { padding-top: var(--ant-padding-xs, 8px); }
+.docs-colors .color-palette-horizontal .main-color:hover .main-color-value { bottom: 8px; }
+.docs-colors .color-palette-picker { display: flex; flex-wrap: wrap; gap: var(--ant-margin, 16px); align-items: center; margin: var(--ant-margin-lg, 24px) 0; }
+.docs-colors .color-palette-control { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ant-margin, 16px); }
+.docs-colors .color-palette-picker-value { font-size: var(--ant-font-size, 14px); font-family: Consolas, sans-serif; }
+.docs-colors .color-palette-picker-validation { color: var(--ant-color-error, #ff4d4f); font-size: var(--ant-font-size, 14px); }
+.docs-colors .color-palette-horizontal-dark { padding: var(--ant-padding-xl, 32px) 28px; color: #fff; }
+.docs-colors .color-palette-horizontal-dark .color-palette-control { flex: 1 1 200px; }
+.docs-colors .color-palette-horizontal-dark .color-palette-pick { flex-basis: 100%; color: rgba(255,255,255,.65); text-align: start; }
+.docs-colors .preview-img { max-width: 100%; display: block; }
+.docs-colors .color-token-compare { overflow-x: auto; border-radius: var(--ant-border-radius-lg, 8px); background: #fff; }
+.docs-colors .color-token-row { display: flex; min-width: 640px; }
+.docs-colors .color-token-row > span { display: flex; align-items: center; justify-content: center; gap: 4px; flex: 1 1 33%; min-width: 0; height: var(--ant-control-height-lg, 40px); color: rgba(0,0,0,.88); border-inline-end: 1px solid rgba(0,0,0,.1); font-size: 12px; }
+.docs-colors .color-token-row .color-token-dark { background: #000; color: #fff; }
+.docs-colors .color-token-row i { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(150,150,150,.25); flex-shrink: 0; }
+@container (max-width: 680px) { .docs-colors .color-palette { width: 48%; } }
+@container (max-width: 400px) { .docs-colors .color-palette { width: 100%; margin-inline: 0; } }

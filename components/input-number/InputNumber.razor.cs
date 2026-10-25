@@ -141,6 +141,30 @@ namespace AntDesign
         public bool Keyboard { get; set; } = true;
 
         /// <summary>
+        /// Whether to show the increase and decrease controls.
+        /// </summary>
+        [Parameter]
+        public bool Controls { get; set; } = true;
+
+        /// <summary>
+        /// Custom content for the increase control.
+        /// </summary>
+        [Parameter]
+        public RenderFragment ControlsUpIcon { get; set; }
+
+        /// <summary>
+        /// Custom content for the decrease control.
+        /// </summary>
+        [Parameter]
+        public RenderFragment ControlsDownIcon { get; set; }
+
+        /// <summary>
+        /// Whether the mouse wheel changes the value while the input is focused.
+        /// </summary>
+        [Parameter]
+        public bool ChangeOnWheel { get; set; }
+
+        /// <summary>
         /// Callback executed when the input value changes
         /// </summary>
         [Parameter]
@@ -564,12 +588,63 @@ namespace AntDesign
             }
         }
 
+        private async Task OnWheel(WheelEventArgs e)
+        {
+            if (!ChangeOnWheel || !_focused || Disabled)
+            {
+                return;
+            }
+
+            if (e.DeltaY < 0 && !_equalToFunc(Value, Max))
+            {
+                await IncreaseChangeValue();
+            }
+            else if (e.DeltaY > 0 && !_equalToFunc(Value, Min))
+            {
+                await DecreaseChangeValue();
+            }
+        }
+
         #endregion Value Increase and Decrease Methods
 
         private async Task SetFocus()
         {
             _focused = true;
             await FocusAsync(Ref);
+        }
+
+        /// <summary>
+        /// Focuses the input and optionally positions or selects its text cursor.
+        /// </summary>
+        /// <param name="behavior">Cursor behavior when the input receives focus.</param>
+        /// <param name="preventScroll">Whether to prevent the page from scrolling to the input.</param>
+        public async Task Focus(FocusBehavior behavior = FocusBehavior.FocusAtLast, bool preventScroll = false)
+        {
+            if (Disabled)
+            {
+                return;
+            }
+
+            if (behavior == FocusBehavior.FocusAndClear)
+            {
+                await ChangeValueAsync(default);
+                _inputString = null;
+                behavior = FocusBehavior.FocusAtLast;
+            }
+
+            _focused = true;
+            await FocusAsync(Ref, behavior, preventScroll);
+            StateHasChanged();
+        }
+
+        /// <summary>
+        /// Removes focus from the input.
+        /// </summary>
+        public async Task Blur()
+        {
+            await BlurAsync(Ref);
+            _focused = false;
+            StateHasChanged();
         }
 
         private void OnInput(ChangeEventArgs args)

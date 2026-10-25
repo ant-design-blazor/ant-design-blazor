@@ -19,8 +19,10 @@ public sealed class SemanticDomPreviewTests : DocumentationTestBase
         var root = cut.Find(".adb-semantic-preview-root");
         var items = cut.FindAll(".adb-semantic-preview-item");
         Assert.Equal(3, items.Count);
-        Assert.Equal(new[] { ".ant-btn", ".ant-btn-icon", ".ant-btn > span:not(.ant-btn-icon)" },
-            cut.FindAll(".adb-semantic-preview-item code").Select(code => code.TextContent).ToArray());
+        Assert.Equal(new[] { "content", "icon", "root" }, items.Select(item => item.QuerySelector("strong")!.TextContent).OrderBy(name => name));
+        Assert.Equal(".ant-btn", items.Single(item => item.QuerySelector("strong")!.TextContent == "root").QuerySelector("code")!.TextContent);
+        Assert.Equal(".ant-btn-icon", items.Single(item => item.QuerySelector("strong")!.TextContent == "icon").QuerySelector("code")!.TextContent);
+        Assert.Equal(".ant-btn > span:not(.ant-btn-icon)", items.Single(item => item.QuerySelector("strong")!.TextContent == "content").QuerySelector("code")!.TextContent);
         Assert.NotNull(cut.Find(".ant-btn"));
         Assert.Contains("@media (max-width: 767.99px)", cut.Find("style").TextContent);
         Assert.All(items, item =>
@@ -30,25 +32,26 @@ public sealed class SemanticDomPreviewTests : DocumentationTestBase
             Assert.Equal("false", item.GetAttribute("aria-pressed"));
         });
 
-        await items[0].TriggerEventAsync("onmouseenter", new MouseEventArgs());
+        AngleSharp.Dom.IElement Item(string name) => cut.FindAll(".adb-semantic-preview-item").Single(item => item.QuerySelector("strong")!.TextContent == name);
+        await Item("root").TriggerEventAsync("onmouseenter", new MouseEventArgs());
         Assert.Equal("button-root", root.GetAttribute("data-active-semantic"));
-        Assert.Contains("adb-semantic-preview-active", cut.FindAll(".adb-semantic-preview-item")[0].ClassName);
-        Assert.Equal("true", cut.FindAll(".adb-semantic-preview-item")[0].GetAttribute("aria-pressed"));
+        Assert.Contains("adb-semantic-preview-active", Item("root").ClassName);
+        Assert.Equal("true", Item("root").GetAttribute("aria-pressed"));
 
-        await cut.FindAll(".adb-semantic-preview-item")[1]
+        await Item("icon")
             .TriggerEventAsync("onfocus", new FocusEventArgs());
         Assert.Equal("button-icon", root.GetAttribute("data-active-semantic"));
-        Assert.Equal("true", cut.FindAll(".adb-semantic-preview-item")[1].GetAttribute("aria-pressed"));
+        Assert.Equal("true", Item("icon").GetAttribute("aria-pressed"));
 
-        await cut.FindAll(".adb-semantic-preview-item")[1]
+        await Item("icon")
             .TriggerEventAsync("onkeydown", new KeyboardEventArgs { Key = "Enter" });
         Assert.Equal("button-icon", root.GetAttribute("data-active-semantic"));
 
-        await cut.FindAll(".adb-semantic-preview-item")[2]
+        await Item("content")
             .TriggerEventAsync("onkeydown", new KeyboardEventArgs { Key = " " });
         Assert.Equal("button-content", root.GetAttribute("data-active-semantic"));
 
-        await cut.FindAll(".adb-semantic-preview-item")[0]
+        await Item("root")
             .TriggerEventAsync("onkeydown", new KeyboardEventArgs { Key = "Escape" });
         Assert.Equal("button-content", root.GetAttribute("data-active-semantic"));
     }
@@ -73,7 +76,7 @@ public sealed class SemanticDomPreviewTests : DocumentationTestBase
         {
             ".ant-alert", ".ant-alert-icon", ".ant-alert-section", ".ant-alert-title",
             ".ant-alert-description", ".ant-alert-actions", ".ant-alert-close-icon"
-        }, items.Select(item => item.QuerySelector("code")!.TextContent).ToArray());
+        }.OrderBy(selector => selector), items.Select(item => item.QuerySelector("code")!.TextContent).OrderBy(selector => selector));
         Assert.NotNull(cut.Find(".ant-alert"));
         Assert.NotNull(cut.Find(".ant-alert-section"));
     }
@@ -85,6 +88,8 @@ public sealed class SemanticDomPreviewTests : DocumentationTestBase
     [InlineData("popconfirm", "popconfirm-root", ".ant-popover")]
     [InlineData("popover", "popover-root", ".ant-popover")]
     [InlineData("tooltip", "tooltip-root", ".ant-tooltip")]
+    [InlineData("select", "select-popup.list", ".ant-select-dropdown-list")]
+    [InlineData("select", "select-popup.listItem", ".ant-select-item")]
     public void Emits_component_scoped_global_highlight_rules_for_portals(string component, string activeKey, string portalSelector)
     {
         var cut = Context.RenderComponent<SemanticDomPreview>(parameters => parameters
@@ -140,14 +145,15 @@ public sealed class SemanticDomPreviewTests : DocumentationTestBase
         }, items.Select(item => item.QuerySelector("strong")!.TextContent).ToArray());
         Assert.Equal(new[]
         {
-            ".ant-select-clear", ".ant-select-content", ".ant-select-selection-search-input",
+            ".ant-select-clear", ".ant-select-content", ".ant-select-input",
             ".ant-select-selection-item", ".ant-select-selection-item-content", ".ant-select-selection-item-remove",
-            ".ant-select-selection-placeholder", ".ant-cascader-menu", ".ant-cascader-menu-item", ".ant-select-dropdown", ".ant-select-prefix",
+            ".ant-select-placeholder", ".ant-cascader-menu", ".ant-cascader-menu-item", ".ant-select-dropdown", ".ant-select-prefix",
             ".ant-select", ".ant-select-suffix"
         }, items.Select(item => item.QuerySelector("code")!.TextContent).ToArray());
         Assert.NotNull(cut.Find(".ant-select.ant-cascader"));
         Assert.Equal("prefix", cut.Find(".ant-select-prefix").TextContent.Trim());
-        Assert.Contains("padding-left: 4px;", cut.Find(".ant-select-content").GetAttribute("style"));
+        Assert.Equal("DIV", cut.Find(".ant-select > .ant-select-prefix").TagName);
+        Assert.DoesNotContain("padding-left", cut.Find(".ant-select-content").GetAttribute("style") ?? "");
         Assert.NotNull(cut.Find(".ant-select-input"));
         Assert.NotNull(cut.Find(".ant-cascader-menu-item"));
         Assert.NotNull(cut.Find(".ant-cascader-menu-item-content"));
@@ -165,5 +171,18 @@ public sealed class SemanticDomPreviewTests : DocumentationTestBase
             .Add(x => x.Component, "button"));
 
         Assert.DoesNotContain(":has(", cut.Find("style").TextContent);
+    }
+
+    [Theory]
+    [InlineData("qrcode")]
+    [InlineData("qr-code")]
+    public void Qrcode_cover_highlight_stays_inside_the_clipped_root(string component)
+    {
+        var cut = Context.RenderComponent<SemanticDomPreview>(parameters => parameters
+            .Add(x => x.Component, component));
+        var css = cut.Find("style").TextContent;
+        Assert.Contains(".ant-qrcode-cover{outline:2px solid", css);
+        Assert.Contains("outline-offset:-2px;box-shadow:inset 0 0 0 2px", css);
+        Assert.DoesNotContain("body:has(", css);
     }
 }

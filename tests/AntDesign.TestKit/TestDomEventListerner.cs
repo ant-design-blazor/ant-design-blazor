@@ -24,12 +24,12 @@ namespace AntDesign.Tests
             return;
         }
 
-        public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false)
+        public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false, string ignoreSelector = null)
         {
             return;
         }
 
-        public void AddExclusive<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false, bool stopPropagation = false)
+        public void AddExclusive<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false, bool stopPropagation = false, string ignoreSelector = null)
         {
             return;
         }

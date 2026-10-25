@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Select"
+  },
+  "config": {
+    "timeoutMs": 20000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"]
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "select-basic",
+      "component": "Select",
+      "react": { "url": "http://127.0.0.1:8000/components/select", "scopeSelector": "#select-demo-basic .code-box-demo", "rootSelector": ".ant-select" },
+      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/select", "scopeSelector": "#components-select-demo-basic .code-box-demo", "rootSelector": ".ant-select" },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "fontSize", "lineHeight", "fontWeight", "color", "backgroundColor", "borderRadius", "boxShadow", "zIndex"],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 4 },
+        { "path": "content", "selector": ".ant-select-content", "minimumCount": 4 },
+        { "path": "input", "selector": ".ant-select-input", "minimumCount": 4 },
+        { "path": "suffix", "selector": ".ant-select-suffix", "minimumCount": 4 }
+      ],
+      "scenarios": [
+        { "id": "closed", "minimumRoots": 4 },
+        {
+          "id": "escape-closed",
+          "minimumRoots": 4,
+          "actions": [
+            { "type": "click", "reactSelector": "#select-demo-basic .ant-space-item:first-child input", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child input" },
+            { "type": "waitForSelector", "reactSelector": "#select-demo-basic input[aria-expanded='true']", "blazorSelector": "#components-select-demo-basic input[aria-expanded='true']" },
+            { "type": "press", "key": "Escape", "reactSelector": "#select-demo-basic .ant-space-item:first-child input", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child input" },
+            { "type": "waitForSelector", "reactSelector": "#select-demo-basic .ant-space-item:first-child input[aria-expanded='false']:not([aria-controls])", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child input[aria-expanded='false']:not([aria-controls])" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "select-basic-popup",
+      "component": "Select",
+      "react": { "url": "http://127.0.0.1:8000/components/select", "scopeSelector": "body", "rootSelector": "#select-demo-basic .ant-space-item:first-child .ant-select", "skeletonSelector": "" },
+      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/select", "scopeSelector": "body", "rootSelector": "#components-select-demo-basic .ant-space-item:first-child .ant-select", "skeletonSelector": "" },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "fontSize", "lineHeight", "fontWeight", "color", "backgroundColor", "borderRadius", "boxShadow", "zIndex"],
+      "semanticNodes": [
+        { "path": "popup.root", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='yiminghe'])", "portal": true, "minimumCount": 1 },
+        { "path": "popup.list", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='yiminghe']) .ant-select-dropdown-list", "portal": true, "minimumCount": 1 },
+        { "path": "popup.option", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='yiminghe']) .ant-select-item-option", "portal": true, "minimumCount": 4 },
+        { "path": "popup.content", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='yiminghe']) .ant-select-item-option-content", "portal": true, "minimumCount": 4 },
+        { "path": "popup.state", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='yiminghe']) .ant-select-item-option-state", "portal": true, "minimumCount": 4 }
+      ],
+      "scenarios": [{
+        "id": "open",
+        "minimumRoots": 1,
+        "actions": [
+          { "type": "click", "reactSelector": "#select-demo-basic .ant-space-item:first-child .ant-select", "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child .ant-select" },
+          { "type": "waitForSelector", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='yiminghe'])" }
+        ]
+      }]
+    }
+  ]
+}

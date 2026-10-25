@@ -17,9 +17,9 @@ namespace AntDesign.JsInterop
 
         void AddEventListenerToFirstChild<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false);
 
-        void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false);
+        void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false, string ignoreSelector = null);
 
-        void AddExclusive<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false, bool stopPropagation = false);
+        void AddExclusive<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false, bool stopPropagation = false, string ignoreSelector = null);
 
         ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback);
 

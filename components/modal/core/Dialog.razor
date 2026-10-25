@@ -1,6 +1,12 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
+@if (PurePanel)
+{
+    @ModalPanel
+}
+else
+{
 <div @ref="@_element" id="@Id">
     <div class="@GetRootClass()" style="@ThemeStyle">
         @if (Config.Mask)
@@ -27,6 +33,7 @@
         @AdditionalContent
     }
 </div>
+}
 
 @code {
     private RenderFragment ModalPanel => @<div @ref="@_modal" role="dialog" aria-modal="true" aria-labelledby="@(HasTitle ? _titleId : null)" tabindex="-1"
@@ -35,6 +42,7 @@
                  @onmousedown:stopPropagation
                  @onmousedown="@EventUtil.AsNonRenderingEventHandler(OnDialogMouseDown)"
                  style="@GetStyle()">
+        <div class="@($"{Config.PrefixCls}-container")">
         @if (Config.Closable)
         {
             <button type="button" aria-label="Close" class="@($"{Config.PrefixCls}-close")" @onclick="OnCloserClick">
@@ -62,7 +70,6 @@
                 </span>
             </button>
         }
-        <div class="@($"{Config.PrefixCls}-container")">
             @if (Config.Header != null)
             {
                 <CascadingValue Value="@Config">
@@ -94,7 +101,10 @@
                 </div>
             }
         </div>
-        <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
-        <div id="@_sentinelEnd" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
+        @if (!PurePanel)
+        {
+            <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
+            <div id="@_sentinelEnd" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
+        }
     </div>;
 }

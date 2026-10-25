@@ -1,9 +1,9 @@
-@inject IconService iconService;
+<Space>
+    <SpaceItem><IconFont Type="icon-tuichu" ScriptUrl="@Script" /></SpaceItem>
+    <SpaceItem><IconFont Type="icon-facebook" ScriptUrl="@Script" Style="color: rgb(24, 119, 242);" /></SpaceItem>
+    <SpaceItem><IconFont Type="icon-twitter" ScriptUrl="@Script" /></SpaceItem>
+</Space>
 
-<div class="icons-list">
-  <IconFont Type="icon-tuichu" />
-  <IconFont Type="icon-facebook" />
-  <IconFont Type="icon-twitter" />
-</div>
-
-<script src="//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js"></script>
+@code {
+    private const string Script = "//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js";
+}

@@ -182,6 +182,11 @@ namespace AntDesign.Select.Internal
             get => _childComponent;
             set
             {
+                if (value == null)
+                {
+                    _childComponent = null;
+                    return;
+                }
                 if (value != null)
                 {
                     _childComponent = value;

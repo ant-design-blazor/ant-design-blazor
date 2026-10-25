@@ -128,6 +128,7 @@ node tools/AntDesign.StyleGen/src/cli.mjs sync-v6 \
 1. 从 React 项目生成组件/主题 Style IR。
 2. 生成 `GeneratedComponentTokens.cs`。
 3. 生成 `GeneratedThemeTokens.cs`：包含 React Seed 默认值、全局 Token 元数据，以及各组件实际使用的全局 Token 关联。组件文档通过此关联生成中英文全局 Token 表格。
+   同时执行该 checkout 的真实 `getDesignToken`，生成 C# 回归测试使用的 `tests/AntDesign.Tests/Theming/Fixtures/react-theme-tokens.json`。基准包含 default/dark/compact 的默认、自定义 Seed、无动画/焦点、Map/Alias 覆盖共 12 个场景，每个场景比较全部 536 个返回值。也可单独运行 `generate-theme-reference --antd-path <path> --output <json>`。C# 测试保留全部字段，只规范等价 CSS 写法和 1e-12 以内的浮点序列化误差；这不等于任意输入或组合算法已完全对齐。
 4. 生成 `ThemeTokenProperties.cs` 快捷属性。
 5. 保存 React 编译 CSS 基准。
 6. 从 Ant Design checkout 的 `.dumi/theme/builtins/IconSearch/fields.ts` 同步图标分类，保存在 Blazor 文档项目的生成目录，并生成文档侧 `IconSearchCategories.g.cs`；图标 NuGet 包仅提供 SVG 名称、主题和组件类型清单。
@@ -240,3 +241,87 @@ node tools/AntDesign.StyleGen/src/extract-icon-search-meta.cjs \
 ```
 
 生成文件包含 `meta/index.ts` 的图标别名及标签；`IconSearchMetadataTests` 验证代表性关键词、主题后缀和大小写行为。React 更新后重新生成并运行这些测试。
+
+## 首页响应式宽度门禁
+
+浏览器验收还必须采集 `document.documentElement.clientWidth/scrollWidth`、导航可见性、
+Header 宽度、三个背景分区边界和两个 Banner 按钮边界。仅验证卡片尺寸或媒体查询命中，
+不能证明页面没有横向溢出；`innerWidth` 也不能代替扣除滚动条后的 `clientWidth`。
+临界尺寸需等待导航和轮播完成断点切换后再采集，记录实际 `width` 以排除尺寸应用错标签页。
+
+```sh
+node tools/AntDesign.StyleGen/src/homepage-layout-check.mjs /path/to/browser-observations.json
+node --test tools/AntDesign.StyleGen/test/homepage-layout-check.test.mjs
+```
+
+输入为浏览器采集的 observation 数组（字段见测试样例）。允许主题图标条在内部滚动，
+但不允许整个文档撑宽、导航消失、拥挤态菜单换行或按钮被裁切。
+该门禁的 scope 为 `homepage-layout-only`，不代表整页字符级 DOM/CSS 对齐通过。
+
+## Icon 字体资源的 DOM/CSS 校验
+
+共享颜色算法的参考数据由实际 React 依赖生成：
+
+```sh
+node tools/AntDesign.StyleGen/src/color-palette-reference.mjs /path/to/ant-design tests/AntDesign.Tests/Theming/Fixtures/react-color-palettes.json
+```
+
+## 色彩规范页
+
+从 React 色彩文档组件提取基础色板顺序、中英文名称/说明、主色、中性色定义和默认展示数量：
+
+```sh
+node tools/AntDesign.StyleGen/src/cli.mjs sync-color-spec --antd-path /path/to/ant-design --output site/AntDesign.Docs/Services/ColorSpecCatalog.g.cs
+# CI 校验生成目录未过期
+node tools/AntDesign.StyleGen/src/cli.mjs sync-color-spec --antd-path /path/to/ant-design --output site/AntDesign.Docs/Services/ColorSpecCatalog.g.cs --check
+```
+
+`/{language}/docs/colors` 使用共享 `AntDesign.Colors` 算法生成 12×10 色板，并使用真实
+Blazor ColorPicker 交互。默认中性色预览与 React 一样为 10 档，完整 13 档定义保留于目录。
+另提供暗色色板工具和实际 C# 明暗主题的中性色 Token 对比。窄屏色条局部滚动，不撑宽文档。
+
+## 编译期 LLM Markdown
+
+`AntDesign.Docs.Generator` 在编译期从 components JSON、Semantic DOM JSON、Token JSON
+和 docs Markdown 生成完整文档，打包为压缩常量以避开 CLR 字符串堆限制。服务端
+`/{language}/components/{component}.md` 与 `/{language}/docs/{document}.md` 只查找、
+解压并缓存已生成的文本；不在请求时转换 HTML、计算主题、读取文件、反射或请求 JSON。
+组件文档包含 Blazor API、Semantic DOM、Token 和非 debug Razor 示例。原始静态说明地址保留。
+
+Token 定义、使用关系或算法默认值变更后，先刷新生成器的输入：
+
+```sh
+dotnet run --project site/AntDesign.Docs.Build.CLI -- llms-tokens docs/antd-v6/llms-tokens.json
+```
+
+然后重新编译 Docs。静态/WASM 站点使用相同生成结果导出，中英文各 75 个当前已注册组件，
+以及通用文档（含色彩页）：
+
+```sh
+dotnet run --project site/AntDesign.Docs.Build.CLI -- llms /path/to/static-site-root
+```
+
+先生成并重新编译 docs 元数据，再执行此命令；`AntDesign.Docs.Build` 的 RunCli 已按
+`demo2json → menu2json → docs2html → llms-tokens → llms` 顺序接入。生成的静态 Markdown
+不纳入源码；生成器输入 JSON 纳入源码。服务端响应和 CLI 导出的同一文件应逐字节一致。
+
+## Icon 字体资源门禁细节
+
+`examples/icon-dom-style-parity.json` 覆盖 React 的五个公共示例。字体图标的
+`verifySvgUse: true` 节点会先等待对应 symbol 和非零绘制尺寸，再采集实际
+`use` 边界与所有同名 symbol 的有序定义；只有空的 SVG 壳不能通过校验。
+`svgUsePaintTolerancePx: 0.01` 仅容纳滚动坐标导致的亚像素边界精度差，
+不放宽 CSS 值或 symbol 定义比较。
+
+`removeUnreferencedRuntimeIds` 只移除符合显式运行时 ID 模式且未被捕获子树引用的
+ID；静态 symbol ID、ARIA/HTML 引用和 SVG `href`/`url(#id)` 关系仍保留。
+报告分别列出原始 HTML、规范化 DOM 和声明的 CSS/glyph 门禁，不能把后两项通过
+描述为原始 HTML 字节相同，或整个组件的所有状态均已对齐。
+
+## Select 基础状态与弹层门禁
+
+`examples/select-basic-popup-dom-style-parity.json` 补充四个基础状态和打开弹层，
+分别检查真实触发器、portaled popup、list、option/content/state。弹层使用可见
+Basic 选项的 selector，不能混入页面底部常开的 Semantic DOM 示例或隐藏的其他下拉。
+门禁保留默认零几何容差和完整结构比较：声明 CSS 一致不代表虚拟列表的 DOM、
+ARIA 辅助树或定位已经对齐。当前报告明确保留这些差异，不忽略 role/ARIA/style 来过关。

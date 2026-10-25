@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -20,6 +21,16 @@ namespace AntDesign
         {
             _menuItems.Add(menuItem);
             MenuItemLoaded?.Invoke();
+        }
+
+        internal void RemoveMenuItem(MenuItem menuItem)
+        {
+            _menuItems.Remove(menuItem);
+            // Lazy overflow submenus mount/unmount real child components. Do
+            // not retain disposed items or return their fragments from caches.
+            foreach (var key in _titleCache.Where(pair => ReferenceEquals(pair.Value, menuItem)).Select(pair => pair.Key).ToArray())
+                _titleCache.Remove(key);
+            _breadcrumbCache.Clear();
         }
 
         public RenderFragment GetMenuTitle(string url)
@@ -77,7 +88,7 @@ namespace AntDesign
 
             while (subMenu != null)
             {
-                options.Insert(0, new()
+                if (!subMenu.IsOverflowIndicator) options.Insert(0, new()
                 {
                     Title = subMenu.Title,
                     TitleTemplate = subMenu.TitleTemplate,

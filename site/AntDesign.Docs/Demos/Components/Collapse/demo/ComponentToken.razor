@@ -1,0 +1,26 @@
+@using AntDesign.Theming
+<ConfigProvider ThemeConfig="_theme">
+    <Collapse>
+        @for (var index = 1; index <= 3; index++)
+        {
+            <Panel Key="@index.ToString()" Header="@($"This is panel header {index}, ({text})")">@text</Panel>
+        }
+    </Collapse>
+</ConfigProvider>
+
+@code {
+    private static readonly string text = string.Concat(Enumerable.Repeat("Ant Design! ", 26));
+    private readonly ThemeConfig _theme = new()
+    {
+        Components = new Dictionary<string, IDictionary<string, string>>
+        {
+            ["Collapse"] = new Dictionary<string, string>
+            {
+                ["headerPadding"] = "0px 10px 20px 30px",
+                ["headerBg"] = "#eaeeff",
+                ["contentPadding"] = "0px 10px 20px 30px",
+                ["contentBg"] = "#e6f7ff"
+            }
+        }
+    };
+}

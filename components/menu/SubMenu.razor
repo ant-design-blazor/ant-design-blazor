@@ -9,7 +9,7 @@
 @if (RootMenu.InternalMode == MenuMode.Inline)
 {
     <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="@($"position:relative;{Style}")" @ref="Ref">
-        <div class="@(prefixCls)-title" style="@PaddingStyle" role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
+        <div class="@(prefixCls)-title" style="@PaddingStyle" role="button" aria-label="@(TitleTemplate != null ? Title : null)" @onclick="HandleOnTitleClick" aria-haspopup="true">
             @SubMenuTitleContent
             <i class="@(prefixCls)-arrow"></i>
         </div>
@@ -32,27 +32,23 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
                             TriggerClass="@ClassMapper.Class"
                             Visible="IsOpen"
                             ComplexAutoCloseAndVisible="true"
-						    BoundaryAdjustMode="@TriggerBoundaryAdjustMode.None"
-                            Disabled="Disabled"
+						    BoundaryAdjustMode="@TriggerBoundaryAdjustMode.InView"
+                            Disabled="@(Disabled || OverflowHidden)"
                             Placement="Placement.Value"
                             OnVisibleChange="OnOverlayVisibleChange"
                             OnOverlayHiding="OnOverlayHiding"
                             Trigger="new Trigger[] { RootMenu?.TriggerSubMenuAction ?? AntDesign.Trigger.Hover }"
                             OverlayClassName="@RootMenu.GetSemanticClass("popup.root", PopupClassName)"
-                            OverlayStyle="@RootMenu.GetSemanticStyle("popup.root")"
-                            PlacementCls="@($"{prefixCls}-popup {RootMenu.PrefixCls} {RootMenu.PrefixCls}-{RootMenu.Theme.ToString().ToLowerInvariant()} {prefixCls}-placement-{_placement.Name}")">
+                            OverlayStyle="@RootMenu.GetSemanticStyle("popup.root", "max-width:calc(100vw - 16px);")"
+                            PlacementCls="@($"{prefixCls}-popup {RootMenu.PrefixCls} {RootMenu.PrefixCls}-{EffectiveTheme.ToString().ToLowerInvariant()} {prefixCls}-placement-{_placement.Name}")">
                 <ChildContent>
-                    <div class="@(prefixCls)-title" role="button">
+                    <div class="@(prefixCls)-title" role="button" aria-label="@(TitleTemplate != null ? Title : null)" aria-haspopup="true" aria-expanded="@(_overlayVisible ? "true" : "false")">
                         @SubMenuTitleContent
                         @GetArrow()
                     </div>
                 </ChildContent>
                 <Overlay>
-                    <ul direction="ltr" class="@SubMenuMapper.Class" style="@_popupMinWidthStyle" role="menu">
-                        <CascadingValue Value="this" IsFixed="@true">
-                            @ChildContent
-                        </CascadingValue>
-                    </ul>
+                    @RenderPopup()
                 </Overlay>
             </SubMenuTrigger>
         </CascadingValue>
@@ -61,6 +57,10 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
 
 @code
 {
+    private RenderFragment DefaultPopup => @<ul direction="ltr" class="@SubMenuMapper.Class" style="@($"max-width:100%;{_popupMinWidthStyle}")" role="menu"><CascadingValue Value="this" IsFixed="true">@ChildContent</CascadingValue></ul>;
+
+    private RenderFragment OverflowContent => @<SubMenu Key="@Key" Title="@Title" TitleTemplate="@TitleTemplate" Icon="@Icon" IconTemplate="@IconTemplate" Disabled="@Disabled" Class="@Class" Style="@Style" Theme="@Theme" PopupRender="@PopupRender" PopupClassName="@PopupClassName" OnTitleClick="@OnTitleClick" IsOpen="@IsOpen" Placement="AntDesign.Placement.RightTop">@ChildContent</SubMenu>;
+
     private string SubMenuIconClass => RootMenu.GetSemanticClass("itemIcon", $"{RootMenu.PrefixCls}-item-icon");
 
     private string SubMenuIconStyle => RootMenu.GetSemanticStyle("itemIcon");

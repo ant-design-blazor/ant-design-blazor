@@ -1,0 +1,20 @@
+<Collapse DefaultActiveKey="@(new[] { "1" })"
+          ClassNames="@(_classNames)"
+          Styles="@(_styles)">
+    <Panel Header="Custom semantic header" Key="1">Semantic slots accept custom classes and inline styles.</Panel>
+    <Panel Header="Another panel" Key="2">Panel content.</Panel>
+</Collapse>
+
+@code {
+    private readonly Dictionary<string, string> _classNames = new()
+    {
+        ["root"] = "demo-collapse-root",
+        ["header"] = "demo-collapse-header"
+    };
+
+    private readonly Dictionary<string, string> _styles = new()
+    {
+        ["root"] = "border-color: #1677ff",
+        ["header"] = "font-weight: 600"
+    };
+}

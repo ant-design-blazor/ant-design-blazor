@@ -1,14 +1,19 @@
 ﻿@namespace AntDesign
+@using AntDesign.Icons
 @inherits AntDomComponentBase
 
 <div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
-    <div class="ant-collapse-header" @onclick="OnHeaderClick" @onkeydown="OnHeaderKeyDown" role="button" aria-disabled="@Disabled.ToString().ToLowerInvariant()" aria-expanded="@(Active?"true":"false")" tabindex="@(Disabled ? -1 : 0)">
+    <div class="@HeaderClass" style="@Collapse.SemanticStyle("header")" @onclick="OnHeaderClick" @onkeydown="OnHeaderKeyDown" role="@(HeaderOwnsInteraction ? TriggerRole : null)" aria-disabled="@(HeaderOwnsInteraction ? IsInteractionDisabled.ToString().ToLowerInvariant() : null)" aria-expanded="@(HeaderOwnsInteraction ? Active.ToString().ToLowerInvariant() : null)" tabindex="@(HeaderOwnsInteraction ? (IsInteractionDisabled ? -1 : 0) : null)">
         @if (ShowArrow)
         {
-            <div class="ant-collapse-expand-icon">
+            <div class="@Collapse.SemanticClass("icon", "ant-collapse-expand-icon")" style="@Collapse.SemanticStyle("icon")" @onclick="OnExpandIconClick" @onclick:stopPropagation="@IconOwnsInteraction" role="@(IconOwnsInteraction ? TriggerRole : null)" aria-expanded="@(IconOwnsInteraction ? Active.ToString().ToLowerInvariant() : null)" aria-disabled="@(IconOwnsInteraction ? "false" : null)" tabindex="@(IconOwnsInteraction ? 0 : null)" @onkeydown="OnExpandIconKeyDown">
                 @if (Collapse.ExpandIconTemplate != null)
                 {
                     @Collapse.ExpandIconTemplate(Active)
+                }
+                else if (Collapse.ExpandIcon == IconType.Outline.Right)
+                {
+                    <RightOutlined Class="ant-collapse-arrow" Rotate="@(Active ? (RTL ? -90 : 90) : 0)" AriaLabel="@(IconOwnsInteraction ? (Active ? "expanded" : "collapsed") : null)" aria-hidden="@(IconOwnsInteraction ? null : "true")" />
                 }
                 else
                 {
@@ -17,7 +22,7 @@
             </div>
         }
 
-        <span class="ant-collapse-title">
+        <span class="@Collapse.SemanticClass("title", "ant-collapse-title")" style="@Collapse.SemanticStyle("title")" @onclick="OnTitleClick" @onclick:stopPropagation="@TitleOwnsInteraction" @onkeydown="OnTitleKeyDown" role="@(TitleOwnsInteraction ? TriggerRole : null)" aria-expanded="@(TitleOwnsInteraction ? Active.ToString().ToLowerInvariant() : null)" aria-disabled="@(TitleOwnsInteraction ? "false" : null)" tabindex="@(TitleOwnsInteraction ? 0 : null)">
             @if (HeaderTemplate != null)@HeaderTemplate else @Header
         </span>
 
@@ -30,8 +35,8 @@
     </div>
     @if (_hasRendered)
     {
-        <div class="@_contentClassMapper.Class" @ref="@_warpperRef" style="@_warpperStyle">
-            <div class="ant-collapse-body">@ChildContent</div>
+        <div class="@_contentClassMapper.Class" @ref="@_warpperRef" style="@(string.IsNullOrWhiteSpace(_warpperStyle) ? null : _warpperStyle)" role="@(Collapse.Accordion ? "tabpanel" : null)">
+            <div class="@Collapse.SemanticClass("body", "ant-collapse-body")" style="@Collapse.SemanticStyle("body")">@ChildContent</div>
         </div>
     }
 </div>

@@ -1,22 +1,28 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<CascadingValue Value="this" IsFixed="@true">
-    <button class="@SemanticClass("root", ClassMapper.Class)" style="@SemanticStyle("root", GetComponentStyle("Button", this.Danger ? BtnWave + Style : Style))" id="@Id" type="@HtmlType" @ref="@Ref"
+<CascadingValue Value="this" IsFixed="@true"><button class="@SemanticClass("root", ClassMapper.Class)" style="@SemanticStyle("root", GetComponentStyle("Button", this.Danger ? BtnWave + Style : Style))" id="@Id" type="@HtmlType" @ref="@Ref"
             @onclick="HandleOnClick" disabled="@Disabled"
             @onclick:stopPropagation="@OnClickStopPropagation"
             @onmouseup="OnMouseUp"
-            ant-click-animating-without-extra-node="@(this._animating ? "true" : null)" aria-label="@AriaLabel">
+            ant-click-animating-without-extra-node="@(this._animating ? "true" : null)" aria-label="@AriaLabel" aria-pressed="@(AriaPressed?.ToString().ToLowerInvariant())">
         @if (Loading)
         {
             <span class="@SemanticClass("icon", "ant-btn-icon ant-btn-loading-icon")" style="@SemanticStyle("icon")">
                 <Icon Type="loading" />
             </span>
         }
-        else if (!string.IsNullOrEmpty(Icon))
+        else if (IconContent != null || !string.IsNullOrEmpty(Icon))
         {
             <span class="@SemanticClass("icon", "ant-btn-icon")" style="@SemanticStyle("icon")">
-                <Icon Type="@Icon" />
+                @if (IconContent != null)
+                {
+                    @IconContent
+                }
+                else
+                {
+                    <Icon Type="@Icon" />
+                }
             </span>
 		}
 		else if (!string.IsNullOrEmpty(IconFont))
@@ -36,5 +42,4 @@
                 <span class="@SemanticClass("content", null)" style="@SemanticStyle("content")">@ChildContent</span>
             }
         }
-    </button>
-</CascadingValue>
+    </button></CascadingValue>

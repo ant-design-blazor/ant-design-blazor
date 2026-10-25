@@ -4,10 +4,11 @@
 <aside class="@ClassMapper.Class" style="@RootStyle">
     @if ((_showTrigger || _isCollapsed) && CollapsedWidth == 0 && !NoTrigger)
     {
-        <span class="ant-layout-sider-zero-width-trigger ant-layout-sider-zero-width-trigger-left"
+        <button type="button" class="ant-layout-sider-zero-width-trigger ant-layout-sider-zero-width-trigger-left"
+              aria-label="Toggle sidebar" aria-expanded="@(!_isCollapsed ? "true" : "false")" style="padding:0;border:0;"
               @onclick="ToggleCollapsed">
             <Icon Type="bars" />
-        </span>
+        </button>
     }
     <CascadingValue Value="this" IsFixed="@true">
         <div class="@BodyClass" style="@BodyStyle">

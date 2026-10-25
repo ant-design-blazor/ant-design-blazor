@@ -1,0 +1,10 @@
+<Space Align="SpaceAlign.Center">
+    <AntDesign.InputNumber TValue="double" DefaultValue="3" Controls="@_controls" ControlsUpIcon="@UpIcon" ControlsDownIcon="@DownIcon" />
+    <Checkbox @bind-Checked="_controls">Show controls</Checkbox>
+</Space>
+
+@code {
+    private bool _controls = true;
+    private static RenderFragment UpIcon => @<Icon Type="@IconType.Outline.CaretUp" />;
+    private static RenderFragment DownIcon => @<Icon Type="@IconType.Outline.CaretDown" />;
+}

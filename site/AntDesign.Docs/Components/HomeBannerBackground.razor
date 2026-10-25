@@ -1,0 +1,50 @@
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<style id="home-banner-background-style">
+    .home-luminous-background{position:absolute;inset:0;overflow:hidden;background:var(--ant-color-bg-container);pointer-events:none}
+    .home-luminous-background [data-desc=luminous-bubble]{position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(100px);opacity:var(--bubble-light-opacity);transform:translate(-50%,-50%) translate(var(--bubble-x,0px),var(--bubble-y,0px)) scale(var(--bubble-scale,1));transition:all 5s ease-in-out}
+    [data-theme=dark] .home-luminous-background [data-desc=luminous-bubble]{opacity:var(--bubble-dark-opacity)}
+    @@media(prefers-reduced-motion:reduce){.home-luminous-background [data-desc=luminous-bubble]{transition:none}}
+</style>
+<div class="home-luminous-background" aria-hidden="true" @ref="_element">
+    <div data-desc="luminous-bubble" data-offset-x="2" data-offset-y="1" style="left:0vw;top:0vh;background:#ee35f1;--bubble-light-opacity:.2;--bubble-dark-opacity:.2"></div>
+    <div data-desc="luminous-bubble" data-offset-x="1" data-offset-y="1" style="left:30vw;top:80vh;background:#5939dc;--bubble-light-opacity:.1;--bubble-dark-opacity:.1"></div>
+    <div data-desc="luminous-bubble" data-offset-x="1" data-offset-y="2" style="left:100vw;top:50vh;background:#00d6ff;--bubble-light-opacity:.2;--bubble-dark-opacity:.2"></div>
+</div>
+
+@code {
+    private ElementReference _element;
+    private IJSObjectReference _module;
+    private Task _initialization;
+    private bool _disposed;
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return Task.CompletedTask;
+        return _initialization = InitializeAsync();
+    }
+
+    private async Task InitializeAsync()
+    {
+        _module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/home-background.js");
+        if (!_disposed && _module != null) await _module.InvokeVoidAsync("mount", _element);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_disposed) return;
+        _disposed = true;
+        try
+        {
+            if (_initialization != null) await _initialization;
+            if (_module != null)
+            {
+                await _module.InvokeVoidAsync("unmount", _element);
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException) { }
+        catch (TaskCanceledException) { }
+    }
+}

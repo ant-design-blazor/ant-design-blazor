@@ -170,7 +170,7 @@ namespace AntDesign
                     ProgressType.Line => Size,
                     _ => ProgressSize.Small // Type is Circle or Dashboard
                 };
-                StrokeWidth = _sizeMap[size];
+                StrokeWidth = Type == ProgressType.Circle ? Math.Max((int)Math.Ceiling(300d / Math.Max(1, Width)), 6) : _sizeMap[size];
             }
 
             if (Status is null && Percent is double percent && percent == 100)
@@ -189,7 +189,8 @@ namespace AntDesign
                 .Add(PrefixCls)
                 .Get(() => $"{PrefixCls}-status-{Status.ToString().ToLowerInvariant()}")
                 .GetIf(() => $"{PrefixCls}-small", () => Size == ProgressSize.Small)
-                .GetIf(() => $"{PrefixCls}-default", () => Size == ProgressSize.Default)
+                .GetIf(() => $"{PrefixCls}-line-align-end {PrefixCls}-line-position-outer", () => Type == ProgressType.Line)
+                .GetIf(() => $"{PrefixCls}-inline-circle", () => Type == ProgressType.Circle && Width <= 20)
                 .GetIf(() => $"{PrefixCls}-{Type.ToString().ToLowerInvariant()}", () => Type != ProgressType.Dashboard)
                 .GetIf(() => $"{PrefixCls}-circle", () => Type == ProgressType.Dashboard)
                 .GetIf(() => $"{PrefixCls}-show-info", () => ShowInfo)
@@ -209,7 +210,8 @@ namespace AntDesign
             }
             else if (Type == ProgressType.Circle)
             {
-                _bgStyle = Size == ProgressSize.Default ? $"width: {Width}px; height: {Width}px; font-size: 24px;" : "width: 80px; height: 80px; font-size: 18px;";
+                var circleWidth = Size == ProgressSize.Default ? Width : 80;
+                _bgStyle = FormattableString.Invariant($"width:{circleWidth}px;height:{circleWidth}px;font-size:{circleWidth * .15 + 6}px;");
                 _circleTrailStyle = FormattableString.Invariant($"stroke:{TrailColor}; transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {CircleDash}px, {CircleDash}px; stroke-dashoffset: 0px;");
                 if (SuccessPercent == 0)
                 {
@@ -237,6 +239,18 @@ namespace AntDesign
                     _circleSuccessStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * SuccessPercent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset - circumference * SuccessPercent / 100}px;");
                 }
             }
+        }
+
+        private double CircleRadius => 50d - StrokeWidth / 2d;
+
+        private string GetCircleSegmentStyle(double percent, double offset, string color)
+        {
+            var perimeter = Math.PI * 2 * CircleRadius;
+            var validPercent = Math.Max(0, Math.Min(100, percent));
+            var dashOffset = (100 - validPercent) / 100 * perimeter;
+            if (StrokeLinecap == ProgressStrokeLinecap.Round && validPercent != 100)
+                dashOffset = Math.Min(dashOffset + StrokeWidth / 2d, perimeter - .01);
+            return FormattableString.Invariant($"{(string.IsNullOrWhiteSpace(color) ? string.Empty : $"stroke:{color};")}stroke-dasharray:{perimeter}px,{perimeter};stroke-dashoffset:{dashOffset};transform:rotate({-90 + offset / 100 * 360}deg);transform-origin:50px 50px;transition:stroke-dashoffset .3s,stroke-dasharray .3s,stroke .3s,stroke-width .06s .3s,opacity .3s;fill-opacity:0;");
         }
 
         private string GetCircleColor()

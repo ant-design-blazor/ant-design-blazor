@@ -1,0 +1,14 @@
+<Space Wrap Align="SpaceAlign.Start">
+    @foreach (var mode in new[] { MenuMode.Vertical, MenuMode.Inline })
+    {
+        <Menu Mode="mode" Style="width:256px;max-width:100%" ClassNames="_classes" Styles="_styles" DefaultOpenKeys="@(new[] { "sub" })">
+            <SubMenu Key="sub" Title="Navigation One" Icon="mail"><MenuItemGroup Title="Group"><MenuItem Key="1">Option 1</MenuItem><MenuItem Key="2">Option 2</MenuItem></MenuItemGroup></SubMenu>
+            <MenuItem Key="3" Icon="appstore">Navigation Two</MenuItem>
+        </Menu>
+    }
+</Space>
+<style>.menu-custom-semantic-item { font-weight:600; }</style>
+@code {
+    private readonly IReadOnlyDictionary<string, string> _classes = new Dictionary<string, string> { ["item"] = "menu-custom-semantic-item" };
+    private readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string> { ["root"] = "border:1px solid #d9d9d9;border-radius:8px", ["item"] = "color:#1677ff", ["subMenu.list"] = "color:#fa541c" };
+}

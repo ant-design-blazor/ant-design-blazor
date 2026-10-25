@@ -93,4 +93,15 @@
         </button>);
     }
 
+    [Fact]
+    public void Renders_custom_icon_content_as_an_icon_only_button()
+    {
+        var cut = Render<AntDesign.Button>(@<AntDesign.Button Type="@ButtonType.Primary">
+            <IconContent><AntDesign.Icons.RightOutlined /></IconContent>
+        </AntDesign.Button>);
+
+        cut.Find("button").ClassList.Should().Contain("ant-btn-icon-only");
+        cut.Find(".ant-btn-icon .anticon-right").GetAttribute("aria-label").Should().Be("right");
+    }
+
 }

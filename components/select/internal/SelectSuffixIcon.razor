@@ -11,8 +11,8 @@
 }
 else if (Loading)
 {
-    <div class="@ParentSelect.GetSemanticClass("suffix", "ant-select-suffix")" style="@ParentSelect.GetSemanticStyle("suffix")">
-        <LoadingOutlined />
+    <div class="@ParentSelect.GetSemanticClass("suffix", "ant-select-suffix ant-select-suffix-loading")" style="@ParentSelect.GetSemanticStyle("suffix")">
+        <LoadingOutlined Spin />
     </div>
 }
 else if (ShowArrowIcon || ParentSelect.FeedbackIcon != null)
@@ -49,7 +49,7 @@ else
     </div>
 }
 
-@if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
+@if (ShowClearIcon)
 {
     <button class="@ParentSelect.GetSemanticClass("clear", "ant-select-clear")"
           style="@ParentSelect.GetSemanticStyle("clear")"

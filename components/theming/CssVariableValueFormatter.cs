@@ -33,7 +33,15 @@ namespace AntDesign.Theming
             if (string.IsNullOrWhiteSpace(value) || !double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var number))
                 return value;
 
-            if (number == 0 || Unitless.Contains(name))
+            // A component override can contain both component and global tokens.
+            // Keep the original token's unit semantics after prefixing its name.
+            var tokenName = name.Substring(name.LastIndexOf('-') + 1);
+            if (number == 0 || Unitless.Contains(name) || Unitless.Contains(tokenName)
+                || tokenName.StartsWith("lineHeight", StringComparison.Ordinal)
+                || tokenName.StartsWith("contentLineHeight", StringComparison.Ordinal)
+                || tokenName.StartsWith("fontWeight", StringComparison.Ordinal)
+                || tokenName.StartsWith("zIndex", StringComparison.Ordinal)
+                || tokenName.StartsWith("opacity", StringComparison.Ordinal))
                 return value;
 
             return $"{value}px";

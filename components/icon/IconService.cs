@@ -4,10 +4,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using AntDesign.Icons;
 using Microsoft.JSInterop;
 
 #pragma warning disable CA1822
@@ -37,11 +36,17 @@ namespace AntDesign
 
         internal static string GetStyledSvg(Icon icon)
         {
+            if (!string.IsNullOrEmpty(icon.IconFont))
+            {
+                var rotation = icon.Rotate == 0 ? string.Empty : $" style=\"transform: rotate({icon.Rotate}deg);\"";
+                return $"<svg width=\"{WebUtility.HtmlEncode(icon.Width)}\" height=\"{WebUtility.HtmlEncode(icon.Height)}\" fill=\"{WebUtility.HtmlEncode(icon.Fill)}\" aria-hidden=\"true\" focusable=\"false\" class=\"{(icon.Spin ? "anticon-spin" : string.Empty)}\"{rotation}><use xlink:href=\"#{WebUtility.HtmlEncode(icon.IconFont)}\"></use></svg>";
+            }
+
+            if (string.IsNullOrEmpty(icon.Type)) return null;
+
             string svgClass = icon.Spin || icon.Type == "loading" ? "anticon-spin" : null;
 
-            var svg = !string.IsNullOrEmpty(icon.IconFont) ?
-                $"<svg><use xlink:href=#{icon.IconFont} /></svg>"
-                : icon.Type.EndsWith("</svg>", StringComparison.OrdinalIgnoreCase) ? icon.Type :
+            var svg = icon.Type.EndsWith("</svg>", StringComparison.OrdinalIgnoreCase) ? icon.Type :
                 GetIconImg(icon.Type.ToLowerInvariant(), icon.Theme);
 
             if (string.IsNullOrEmpty(svg))
@@ -75,6 +80,13 @@ namespace AntDesign
             await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, scriptUrl);
         }
 
+        /// <summary>Loads iconfont resources in React's order, sharing requests across icon instances.</summary>
+        public async ValueTask CreateFromIconfontCN(string[] scriptUrls)
+        {
+            if (scriptUrls == null || scriptUrls.Length == 0) return;
+            await _js.InvokeVoidAsync(JSInteropConstants.CreateIconFromfontCN, (object)scriptUrls);
+        }
+
         public static IDictionary<IconThemeType, string[]> GetAllIcons()
             => IconStore.AllIconsByTheme.Value;
 
@@ -85,39 +97,20 @@ namespace AntDesign
             return !string.IsNullOrEmpty(icon);
         }
 
-        public async Task<string> GetSecondaryColor(string primaryColor)
-        {
-            var secondaryColors = await _js.InvokeAsync<string[]>(JSInteropConstants.GenerateColor, primaryColor);
-            return secondaryColors[0];
-        }
+        /// <summary>Computes the first light palette color without JavaScript.</summary>
+        public Task<string> GetSecondaryColor(string primaryColor)
+            => Task.FromResult(Colors.ColorPalette.Generate(string.IsNullOrWhiteSpace(primaryColor) ? "#1677ff" : primaryColor)[0]);
 
         private static string GetTwoToneIconSvg(string iconSvg, string primaryColor, string secondaryColor)
         {
-            if (string.IsNullOrWhiteSpace(secondaryColor))
-            {
-                return iconSvg.Replace("fill=\"#333\"", $"fill=\"{primaryColor}\"");
-            }
-
-            iconSvg = iconSvg.Replace("fill=\"#333\"", "fill=\"primaryColor\"")
-           .Replace("fill=\"#E6E6E6\"", "fill=\"secondaryColor\"")
-           .Replace("fill=\"#D9D9D9\"", "fill=\"secondaryColor\"")
-           .Replace("fill=\"#D8D8D8\"", "fill=\"secondaryColor\"");
-
-            var document = XDocument.Load(new StringReader(iconSvg));
-            var svgRoot = document.Root;
-            foreach (var path in svgRoot.Nodes().OfType<XElement>())
-            {
-                if (path.Attribute("fill")?.Value == "secondaryColor")
-                {
-                    path.SetAttributeValue("fill", secondaryColor);
-                }
-                else
-                {
-                    path.SetAttributeValue("fill", primaryColor);
-                }
-            }
-
-            return svgRoot.ToString();
+            // Only replace the catalog's color slots; preserve nested groups,
+            // explicit fill="none", and all unrelated SVG attributes.
+            var primary = WebUtility.HtmlEncode(string.IsNullOrWhiteSpace(primaryColor) ? "#1677ff" : primaryColor);
+            var secondary = WebUtility.HtmlEncode(secondaryColor);
+            return iconSvg.Replace("fill=\"#333\"", $"fill=\"{primary}\"")
+                .Replace("fill=\"#E6E6E6\"", $"fill=\"{secondary}\"")
+                .Replace("fill=\"#D9D9D9\"", $"fill=\"{secondary}\"")
+                .Replace("fill=\"#D8D8D8\"", $"fill=\"{secondary}\"");
         }
     }
 }

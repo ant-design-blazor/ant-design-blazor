@@ -1,0 +1,29 @@
+@using AntDesign.Theming
+
+<CascadingValue Value="this">
+    <ConfigProvider ThemeConfig="@Theme">@ChildContent</ConfigProvider>
+</CascadingValue>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    public string Appearance { get; private set; } = "light";
+    public bool Compact { get; private set; }
+    // The selected, generated v6 stylesheet owns root variables. Emitting a
+    // second default palette inline here would override stylesheet switching.
+    public ThemeConfig Theme { get; private set; } = new ThemeConfig { Key = "light", CssVar = false };
+
+    public Task ApplyAsync(string appearance, bool compact)
+    {
+        appearance = appearance == "dark" ? "dark" : "light";
+        if (Appearance == appearance && Compact == compact) return Task.CompletedTask;
+        Appearance = appearance;
+        Compact = compact;
+        Theme = new ThemeConfig
+        {
+            Key = compact ? appearance + "-compact" : appearance,
+            Algorithm = appearance == "dark" ? "dark" : compact ? "compact" : "default",
+            CssVar = false
+        };
+        return InvokeAsync(StateHasChanged);
+    }
+}

@@ -1,0 +1,18 @@
+<Space Direction="SpaceDirection.Vertical" Size="SpaceSize.Large">
+    <Space Wrap>
+        <TimePicker TValue="TimeOnly?" Placeholder="@("Outlined")" />
+        <RangePicker TValue="TimeOnly[]" Picker="DatePickerType.Time" Placeholder="@(new[] { "Outlined start", "Outlined end" })" />
+    </Space>
+    <Space Wrap>
+        <TimePicker TValue="TimeOnly?" Variant="@(InputVariant.Filled)" Placeholder="@("Filled")" />
+        <RangePicker TValue="TimeOnly[]" Picker="DatePickerType.Time" Variant="@(InputVariant.Filled)" Placeholder="@(new[] { "Filled start", "Filled end" })" />
+    </Space>
+    <Space Wrap>
+        <TimePicker TValue="TimeOnly?" Variant="@(InputVariant.Borderless)" Placeholder="@("Borderless")" />
+        <RangePicker TValue="TimeOnly[]" Picker="DatePickerType.Time" Variant="@(InputVariant.Borderless)" Placeholder="@(new[] { "Borderless start", "Borderless end" })" />
+    </Space>
+    <Space Wrap>
+        <TimePicker TValue="TimeOnly?" Variant="@(InputVariant.Underlined)" Placeholder="@("Underlined")" />
+        <RangePicker TValue="TimeOnly[]" Picker="DatePickerType.Time" Variant="@(InputVariant.Underlined)" Placeholder="@(new[] { "Underlined start", "Underlined end" })" />
+    </Space>
+</Space>

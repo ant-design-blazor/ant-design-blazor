@@ -26,6 +26,8 @@ namespace AntDesign.Select.Internal
         [Parameter]
         public bool Loading { get; set; }
 
+        [Parameter] public bool ShowClearIcon { get; set; }
+
         [Parameter]
         public EventCallback<MouseEventArgs> OnClearClick { get; set; }
 
@@ -40,7 +42,7 @@ namespace AntDesign.Select.Internal
             if (firstRender)
             {
                 _id = _clearRef.Id;
-                if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
+                if (ShowClearIcon)
                 {
                     DomEventListener.AddExclusive<JsonElement>(_clearRef, "click", OnClear, true, true);
                 }
@@ -49,7 +51,7 @@ namespace AntDesign.Select.Internal
             if (_clearRef.Id != _id)
             {
                 _id = _clearRef.Id;
-                if (!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)
+                if (ShowClearIcon)
                 {
                     DomEventListener.AddExclusive<JsonElement>(_clearRef, "click", OnClear, true, true);
                 }

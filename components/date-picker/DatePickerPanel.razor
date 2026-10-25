@@ -1,0 +1,46 @@
+@namespace AntDesign
+@inherits DatePicker<TValue>
+@typeparam TValue
+@using AntDesign.Internal
+@using System.Collections.Generic
+@using System.Linq
+
+<div class="ant-picker-pure-wrapper" style="position:relative">
+@if (ShowInput)
+{
+    <div class="@ClassMapper.Class" style="@GetComponentStyle("DatePicker", null)">
+        <DatePickerInput PrefixCls="ant-picker" Value="@GetInputValue(0)" ReadOnly="true" Size="Size" SuffixIcon="SuffixIcon" HtmlInputSize="HtmlInputSize" AllowClear="AllowClear" OnClickClear="e => ClearValue(0)" />
+    </div>
+}
+<div class="ant-picker-dropdown ant-picker-dropdown-pure ant-picker-css-var @Class" style="@GetComponentStyle("DatePicker", $"position:relative;inset:auto;{(ShowInput ? "margin-top:8px;" : string.Empty)}{Style}")" @ref="Ref">
+    <div class="ant-picker-panel-container">
+        <div class="ant-picker-panel-layout">
+            @if (Presets != null && Presets.Any())
+            {
+                <div class="ant-picker-presets"><ul>
+                    @foreach (var preset in Presets)
+                    {
+                        <li @onclick="() => SelectPreset(preset.Value)">@preset.Key</li>
+                    }
+                </ul></div>
+            }
+            <div class="ant-picker-panels">
+                <DatePickerPanelChooser TValue="TValue" DatePicker="this" OnSelect="async (date, index) => await OnSelect(date, index)" />
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+@code {
+    /// <summary>Named preset values displayed beside the standalone picker panel.</summary>
+    [Parameter] public IEnumerable<KeyValuePair<string, TValue>> Presets { get; set; }
+    /// <summary>Display the selected date above the always-open panel. Selection is made in the panel.</summary>
+    [Parameter] public bool ShowInput { get; set; }
+
+    private void SelectPreset(TValue value)
+    {
+        CurrentValue = value;
+        ChangePickerValue(AntDesign.Internal.InternalConvert.ToDateTime(value).GetValueOrDefault());
+    }
+}

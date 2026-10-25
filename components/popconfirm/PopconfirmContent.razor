@@ -1,0 +1,35 @@
+@namespace AntDesign.Internal
+
+<div class="ant-popconfirm-inner-content">
+    <div class="ant-popconfirm-message">
+        <span class="ant-popconfirm-message-icon">
+            @if (IconTemplate != null) { @IconTemplate }
+            else { <Icon Type="@Icon" Theme="@(Icon == "exclamation-circle" ? IconThemeType.Fill : IconThemeType.Outline)" /> }
+        </span>
+        <div class="ant-popconfirm-message-text"><div class="ant-popconfirm-title">@if (TitleTemplate != null) { @TitleTemplate } else { @Title }</div></div>
+    </div>
+    <div class="ant-popconfirm-buttons">
+        @if (CancelButtonProps != null)
+        {
+            <Button OnClick="OnCancel" Size="@CancelButtonProps.Size" Block="@CancelButtonProps.Block" Ghost="@CancelButtonProps.Ghost" Loading="@CancelButtonProps.Loading" Type="@CancelButtonProps.Type" Shape="@CancelButtonProps.Shape" Icon="@CancelButtonProps.Icon" Disabled="@CancelButtonProps.Disabled" Danger="@CancelButtonProps.IsDanger">@CancelText</Button>
+        }
+        @if (OkButtonProps != null)
+        {
+            <Button OnClick="OnConfirm" Size="ButtonSize.Small" Type="@OkType" Block="@OkButtonProps.Block" Ghost="@OkButtonProps.Ghost" Loading="@OkButtonProps.Loading" Shape="@OkButtonProps.Shape" Icon="@OkButtonProps.Icon" Disabled="@OkButtonProps.Disabled" Danger="@OkButtonProps.IsDanger">@OkText</Button>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public RenderFragment TitleTemplate { get; set; }
+    [Parameter] public string Icon { get; set; } = "exclamation-circle";
+    [Parameter] public RenderFragment IconTemplate { get; set; }
+    [Parameter] public string CancelText { get; set; } = "Cancel";
+    [Parameter] public string OkText { get; set; } = "OK";
+    [Parameter] public ButtonType OkType { get; set; } = ButtonType.Primary;
+    [Parameter] public ButtonProps OkButtonProps { get; set; } = new() { Size = ButtonSize.Small };
+    [Parameter] public ButtonProps CancelButtonProps { get; set; } = new() { Size = ButtonSize.Small };
+    [Parameter] public EventCallback<MouseEventArgs> OnCancel { get; set; }
+    [Parameter] public EventCallback<MouseEventArgs> OnConfirm { get; set; }
+}

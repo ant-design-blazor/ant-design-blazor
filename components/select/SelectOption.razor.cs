@@ -352,10 +352,10 @@ namespace AntDesign
             ClassMapper.Clear()
                 .Add("ant-select-item")
                 .Add(ClassPrefix)
-                .If($"{ClassPrefix}-disabled", () => IsDisabled)
-                .If($"{ClassPrefix}-selected", () => IsSelected)
+                .If($"{ClassPrefix}-grouped", () => (SelectParent as Select<TItemValue, TItem>)?.IsGroupingEnabled ?? false)
                 .If($"{ClassPrefix}-active", () => IsActive)
-                .If($"{ClassPrefix}-grouped", () => (SelectParent as Select<TItemValue, TItem>)?.IsGroupingEnabled ?? false);
+                .If($"{ClassPrefix}-disabled", () => IsDisabled)
+                .If($"{ClassPrefix}-selected", () => IsSelected);
 
             StateHasChanged();
         }
@@ -392,11 +392,14 @@ namespace AntDesign
 
         protected void OnMouseEnter()
         {
-            SelectParent.ActiveOption = Model;
+            if (!IsDisabled && !IsHidden)
+                SelectParent.ActiveOption = Model;
         }
 
         protected override void Dispose(bool disposing)
         {
+            if (SelectParent?.HasSelectOptions == false && Model?.ChildComponent == this)
+                Model.ChildComponent = null;
             if (SelectParent?.HasSelectOptions == true)
             {
                 // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource .

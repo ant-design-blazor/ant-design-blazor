@@ -92,6 +92,12 @@ namespace AntDesign
 
         internal ClassMapper CurrentClassMapper => ClassMapper;
 
+        internal string ListboxId => $"{Id}_list";
+        internal virtual bool UsesVirtualAccessibility => false;
+        internal string GetOptionId(Guid optionId) => $"{ListboxId}_{optionId:N}";
+        internal string ActiveOptionId => ActiveOption is { IsHidden: false, IsDisabled: false }
+            ? GetOptionId(ActiveOption.InternalId) : null;
+
         // The dropdown is rendered outside the Select root element. Give it the
         // Select CSS-variable scope so the v6 popup and option tokens are available
         // when the React-compatible styles are resolved.
@@ -123,7 +129,7 @@ namespace AntDesign
         {
             if (Styles == null || !Styles.TryGetValue(slot, out var semanticStyle) || string.IsNullOrWhiteSpace(semanticStyle))
             {
-                return baseStyle;
+                return string.IsNullOrWhiteSpace(baseStyle) ? null : baseStyle;
             }
 
             if (string.IsNullOrWhiteSpace(baseStyle))
@@ -329,6 +335,21 @@ namespace AntDesign
 
         internal virtual List<SelectOptionItem<TItemValue, TItem>> GetOrderedSelectedItems()
         {
+            // Single selection is initialized by child SelectOption components after the
+            // Select first renders. Do not cache an empty result before those children have
+            // applied the selected state, otherwise the trigger remains visually blank.
+            if (Mode == SelectMode.Default)
+            {
+                var selectedItem = SelectOptionItems.FirstOrDefault(item => item.IsSelected);
+                if (selectedItem == null && HasValue)
+                {
+                    selectedItem = SelectOptionItems.FirstOrDefault(item =>
+                        EqualityComparer<TItemValue>.Default.Equals(item.Value, Value));
+                }
+
+                return selectedItem == null ? [] : [selectedItem];
+            }
+
             if (_cachedOrderedSelectedItems != null) return _cachedOrderedSelectedItems;
             _cachedOrderedSelectedItems = [];
             if (SelectedOptionItems.Count > 0 && _selectedValues != null)
@@ -377,6 +398,9 @@ namespace AntDesign
                     {
                         _activeOption.IsActive = true;
                     }
+                    _selectContent?.RefreshActiveDescendant();
+                    if (UsesVirtualAccessibility)
+                        _dropDown?.GetOverlayComponent()?.RefreshComponentState();
                 }
             }
         }
@@ -446,7 +470,20 @@ namespace AntDesign
         /// <returns>true if SelectOptions has any selected Items, otherwise false</returns>
         internal virtual bool HasValue => SelectOptionItems.Any(x => x.IsSelected);
 
-        internal virtual string GetSelectedItemLabel(SelectOptionItem<TItemValue, TItem> option) => option.Label;
+        internal virtual string GetSelectedItemLabel(SelectOptionItem<TItemValue, TItem> option)
+        {
+            if (!string.IsNullOrEmpty(option.Label))
+            {
+                return option.Label;
+            }
+
+            if (!string.IsNullOrEmpty(option.ChildComponent?.InternalLabel))
+            {
+                return option.ChildComponent.InternalLabel;
+            }
+
+            return option.Value?.ToString() ?? string.Empty;
+        }
 
         /// <summary>
         ///     Returns whether the user can input a pattern to search matched items

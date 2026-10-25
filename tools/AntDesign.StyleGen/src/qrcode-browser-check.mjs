@@ -12,6 +12,7 @@ const output = resolve(args.output);
 const require = createRequire(join(upstream, 'package.json'));
 await mkdir(output, { recursive: true });
 let browser;
+let page;
 const report = { checks: {}, downloads: [], errors: [] };
 const check = (name, passed) => {
   report.checks[name] = Boolean(passed);
@@ -19,7 +20,7 @@ const check = (name, passed) => {
 };
 try {
   browser = await require('puppeteer').launch({ executablePath: args.chrome, headless: true, args: ['--no-sandbox'] });
-  const page = await browser.newPage();
+  page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 900, deviceScaleFactor: 1 });
   page.on('pageerror', error => report.errors.push(error.message));
   await page.goto(args.url ?? 'http://127.0.0.1:5540/en-US/components/qrcode', { waitUntil: 'domcontentloaded' });
@@ -35,6 +36,7 @@ try {
   check('all-public-react-demos', comparison.missingReact.length === 0);
 
   const clickText = async (scope, selector, text) => {
+    await page.bringToFront();
     for (const handle of await page.$$(`${scope} ${selector}`)) {
       if ((await handle.evaluate(node => node.textContent.trim())) === text) { await handle.click(); return; }
     }
@@ -46,10 +48,21 @@ try {
   check('interactive-size', true);
 
   const levelScope = '#components-qrcode-demo-errorlevel';
+  report.phase = 'initial error-level canvas paint';
+  await page.bringToFront();
+  await page.$eval(`${levelScope} canvas`, canvas => canvas.scrollIntoView({ block: 'center' }));
+  await page.waitForFunction(scope => {
+    const canvas = document.querySelector(`${scope} canvas`);
+    return [...canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data].some((value, index) => index % 4 === 3 && value > 0);
+  }, {}, levelScope);
   const beforeLevel = await page.$eval(`${levelScope} canvas`, canvas => canvas.toDataURL());
+  report.phase = 'error-level H selection';
   await clickText(levelScope, 'label', 'H');
+  await page.waitForFunction(scope => document.querySelector(`${scope} .ant-segmented-item-selected`)?.textContent.trim() === 'H', {}, levelScope);
+  report.phase = 'error-level H canvas redraw';
   await page.waitForFunction(({ scope, before }) => document.querySelector(`${scope} canvas`).toDataURL() !== before, {}, { scope: levelScope, before: beforeLevel });
   check('interactive-error-level', true);
+  report.phase = 'downloads and remaining checks';
 
   const cdp = await browser.target().createCDPSession();
   const downloadDirectory = await mkdtemp(join(output, 'downloads-'));
@@ -95,8 +108,14 @@ try {
   report.globalTokens = rows;
   await page.$eval('#components-qrcode-demo-customSize', node => node.scrollIntoView({ block: 'center' }));
   await page.screenshot({ path: join(output, 'qrcode-browser-check.png') });
+  report.phase = 'complete';
 } catch (error) {
   report.failure = error.message;
+  if (page) report.failureDetails = await page.evaluate(() => ({
+    visibility: document.visibilityState,
+    selectedLevel: document.querySelector('#components-qrcode-demo-errorlevel .ant-segmented-item-selected')?.textContent.trim(),
+    canvas: document.querySelector('#components-qrcode-demo-errorlevel canvas')?.outerHTML,
+  })).catch(() => null);
   process.exitCode = 1;
 } finally {
   await browser?.close();

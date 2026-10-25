@@ -21,6 +21,32 @@
     <EmbeddedResource Include="Resources\*.json" />
   </ItemGroup>
 
+  <!-- Publish the same Markdown used to build the docs, without copying it into
+       the source tree or loading source files/metadata at runtime. -->
+  <Target Name="ResolveDocumentationMarkdownAssets" BeforeTargets="ResolveStaticWebAssetsInputs"
+          DependsOnTargets="ResolveStaticWebAssetsConfiguration">
+    <ItemGroup>
+      <_DocumentationMarkdown Include="Demos\Components\**\doc\index.*.md">
+        <RelativePath>%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
+      </_DocumentationMarkdown>
+    </ItemGroup>
+    <DefineStaticWebAssets CandidateAssets="@(_DocumentationMarkdown)"
+                           SourceId="$(PackageId)" SourceType="Computed"
+                           ContentRoot="$(MSBuildProjectDirectory)\Demos\Components\"
+                           BasePath="$(StaticWebAssetBasePath)/markdown"
+                           AssetKind="All" AssetMode="All" AssetRole="Primary"
+                           CopyToOutputDirectory="Never" CopyToPublishDirectory="PreserveNewest">
+      <Output TaskParameter="Assets" ItemName="StaticWebAsset" />
+      <Output TaskParameter="Assets" ItemName="_DocumentationMarkdownAsset" />
+    </DefineStaticWebAssets>
+    <!-- Endpoints are available in SDK 9+. Older SDKs use the file-provider manifest. -->
+    <DefineStaticWebAssetEndpoints Condition="'$(StaticWebAssetEndpointsBuildManifestPath)' != ''"
+                                   CandidateAssets="@(_DocumentationMarkdownAsset)"
+                                   ContentTypeMappings="@(StaticWebAssetContentTypeMapping)">
+      <Output TaskParameter="Endpoints" ItemName="StaticWebAssetEndpoint" />
+    </DefineStaticWebAssetEndpoints>
+  </Target>
+
   <ItemGroup>
     <Compile Remove="Demos\Components\List\**" />
     <Content Remove="Demos\Components\List\**" />
@@ -53,7 +79,10 @@
     <ProjectReference Include="..\..\src\AntDesign.Extensions.Localization\AntDesign.Extensions.Localization.csproj" />
     <ProjectReference Include="..\..\src\AntDesign.Docs.Generator\AntDesign.Docs.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <AdditionalFiles Include="..\..\docs\antd-v6\semantic-dom-catalog.json" />
+    <AdditionalFiles Include="..\..\docs\antd-v6\llms-tokens.json" />
+    <AdditionalFiles Include="..\..\docs\*.en-US.md;..\..\docs\*.zh-CN.md" />
     <AdditionalFiles Include="wwwroot\meta\components.*.json;wwwroot\meta\menu.*.json;wwwroot\meta\demos.*.json;wwwroot\meta\docs.*.json" />
+    <AdditionalFiles Include="Demos\Components\**\doc\index.*.md" />
   </ItemGroup>
 
   <ItemGroup>

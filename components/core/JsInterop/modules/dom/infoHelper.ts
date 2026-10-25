@@ -24,7 +24,7 @@ export class infoHelper {
     return element;
   }
 
-  static getInfo(element: any): domTypes.domInfo {
+  static getInfo(element: any, preservePositionPrecision = false): domTypes.domInfo {
     let domElement = this.get(element);
     if (!domElement) {
       domElement = {};
@@ -55,8 +55,8 @@ export class infoHelper {
       clientHeight: domElement.clientHeight || 0,
       clientWidth: domElement.clientWidth || 0,
       selectionStart: domElement.selectionStart || 0,
-      absoluteTop: Math.round(absolutePosition.y),
-      absoluteLeft: Math.round(absolutePosition.x),
+      absoluteTop: preservePositionPrecision ? absolutePosition.y : Math.round(absolutePosition.y),
+      absoluteLeft: preservePositionPrecision ? absolutePosition.x : Math.round(absolutePosition.x),
       marginTop: elementMarginTop,
       marginBottom: elementMarginBottom,
       marginLeft: elementMarginLeft,

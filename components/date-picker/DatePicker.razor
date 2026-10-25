@@ -14,17 +14,17 @@
                     OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                     OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
                     Placement="Placement"
-                    OverlayClassName="ant-picker-css-var"
+                    OverlayClassName="@SemanticPopupClass("popup.root", "ant-picker-css-var")"
                     Trigger="new[] { Trigger.Click }">
         <Overlay>
-            <div class="@(PrefixCls)-panel-container @(Picker == DatePickerType.Time ? $"{PrefixCls}-time-panel-container" : $"{PrefixCls}-date-panel-container")" @onclick="@PickerClicked">
+            <div class="@SemanticPopupClass("popup.container", $"{PrefixCls}-panel-container {(Picker == DatePickerType.Time ? $"{PrefixCls}-time-panel-container" : $"{PrefixCls}-date-panel-container")}")" style="@SemanticPopupStyle("popup.container")" @onclick="@PickerClicked">
                 <div class="@(PrefixCls)-panel-layout">
                     <div class="@_panelClassMapper.Class">
                         <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date, index)" />
                     </div>
                         @if (NeedConfirm && !HasTimeInput)
                         {
-                            <div class="@(PrefixCls)-footer">
+                            <div class="@SemanticClass("popup.footer", $"{PrefixCls}-footer")" style="@SemanticStyle("popup.footer")">
                                 <ul class="@(PrefixCls)-ranges">
                                     <li class="@(PrefixCls)-ok">
                                         <Button Type="@ButtonType.Primary" Size="@ButtonSize.Small" OnClick="OnOkClick">
@@ -38,13 +38,13 @@
             </div>
         </Overlay>
         <Unbound>
-            <div class="@ClassMapper.Class"
+            <div class="@SemanticClass("root", ClassMapper.Class)"
                  @ref="@context.Current"
-                 style="@Style"
+                 style="@SemanticStyle("root", Style)"
                  Id="@Id">
                 @if (Prefix != null)
                 {
-                    <span class="@(PrefixCls)-prefix">@Prefix</span>
+                    <span class="@SemanticClass("prefix", $"{PrefixCls}-prefix")" style="@SemanticStyle("prefix")">@Prefix</span>
                 }
                 <DatePickerInput @ref="_inputStart"
                                  PrefixCls="@PrefixCls"
@@ -65,6 +65,8 @@
                                  OnClickClear="e => ClearValue(0)"
                                  HtmlInputSize="@HtmlInputSize"
                                  SuffixIcon="@SuffixIcon"
+                                 ClassNames="@ClassNames"
+                                 Styles="@Styles"
                                  FeedbackIcon="@FormItem?.FeedbackIcon"
                                  AllowClear="@AllowClear" />
             </div>

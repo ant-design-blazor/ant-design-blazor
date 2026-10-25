@@ -378,10 +378,6 @@ mark {
 .anticon .anticon-icon {
   display: block;
 }
-.anticon > .anticon {
-  line-height: 0;
-  vertical-align: 0;
-}
 .anticon[tabindex] {
   cursor: pointer;
 }

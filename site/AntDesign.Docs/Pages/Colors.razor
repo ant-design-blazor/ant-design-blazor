@@ -1,0 +1,70 @@
+@page "/docs/colors"
+@page "/{Locale}/docs/colors"
+@page "/{Locale}/docs/spec/colors"
+@using AntDesign.Colors
+@using AntDesign.Theming
+@using AntDesign.Docs.Services
+@using AntDesign.Docs.Components
+
+<PageTitle>@(IsChinese ? "色彩" : "Colors") - Ant Design Blazor</PageTitle>
+<link rel="stylesheet" href="_content/AntDesign.Docs/css/color-spec.css" />
+<section class="main-container docs-colors">
+    <article class="markdown">
+        <h1>@(IsChinese ? "色彩" : "Colors")</h1>
+        <p>@(IsChinese ? "Ant Design 将色彩体系解读成两个层面：系统级色彩体系和产品级色彩体系。" : "Ant Design interprets the color system into two levels: a system-level color system and a product-level color system.")</p>
+        <p>@(IsChinese ? "系统级色彩体系定义基础色板、中性色板和数据可视化色板。产品级色彩体系基于系统色彩进一步定义符合产品调性以及功能诉求的颜色。" : "The system-level color system defines basic, neutral and data visualization palettes. The product-level color system builds on these to reflect the requirements and functions of a product.")</p>
+        <h2 id="color-model">@(IsChinese ? "色彩模型" : "Color Model")</h2>
+        <p>@(IsChinese ? "设计团队采用 HSB 色彩模型，让调整颜色时的预期更加明确，也方便团队沟通。" : "The HSB color model makes it easier to predict color adjustments and communicate within a team.")</p>
+        <h2 id="system-colors">@(IsChinese ? "系统级色彩体系" : "System-level Color System")</h2>
+        <h3 id="base-palettes">@(IsChinese ? "基础色板" : "Base Color Palettes")</h3>
+        <p>@(IsChinese ? "基础色板共 120 个颜色，包含 12 个主色及其衍生色。悬停查看色值，点击色块复制。" : "The base palette contains 120 colors: 12 primary colors and their derivatives. Hover to inspect values; click a swatch to copy.")</p>
+        <div class="color-palettes">
+            @foreach (var palette in ColorSpecCatalog.Palettes)
+            {
+                <div class="color-palette" @key="palette.Name">
+                    <div class="color-title">@(IsChinese ? palette.TitleZh : palette.TitleEn)<span class="color-description">@(IsChinese ? palette.DescriptionZh : palette.DescriptionEn)</span></div>
+                    <ColorSwatches Name="@palette.Name" Colors="@ColorPalette.Generate(palette.PrimaryColor)" IsChinese="@IsChinese" />
+                </div>
+            }
+        </div>
+        <h3 id="neutral-palette">@(IsChinese ? "中性色板" : "Neutral Color Palette")</h3>
+        <p>@(IsChinese ? "中性色包含黑、白、灰，帮助页面建立清晰的信息层次。此处与 React 色彩文档一致，展示前 10 档中性色。" : "Neutral colors establish clear information hierarchy. This preview shows the first ten neutral swatches, matching the React color documentation.")</p>
+        <div class="color-palette-horizontal color-strip-scroll"><ColorSwatches Name="gray" Colors="@NeutralPreview" IsChinese="@IsChinese" /></div>
+        <h3 id="data-visualization">@(IsChinese ? "数据可视化色板" : "Data Visualization Color Palette")</h3>
+        <p>@(IsChinese ? "结合基础色板和中性色板，遵循 AntV「有效、清晰、准确、美」的原则。" : "Data visualization palettes combine basic and neutral colors with AntV's effective, clear, accurate and beautiful design principles.") <a href="@(IsChinese ? "https://antv.antgroup.com/specification/language/palette" : "https://antv.antgroup.com/en/specification/language/palette")" target="_blank" rel="noopener noreferrer">@(IsChinese ? "查看色板" : "View Palette")</a></p>
+        <h3 id="palette-tool">@(IsChinese ? "色板生成工具" : "Palette Generation Tool")</h3>
+        <p>@(IsChinese ? "选择一个主色，共享 C# 色板算法会即时生成完整衍生色，与主题和 Icon 使用相同算法。" : "Choose a primary color to generate the complete palette with the same C# algorithm used by themes and Icons.")</p>
+        <ColorPaletteTool IsChinese="@IsChinese" />
+        <h3 id="dark-palette-tool">@(IsChinese ? "暗色色板生成工具" : "Dark Palette Generation Tool")</h3>
+        <ColorPaletteTool IsChinese="@IsChinese" Dark />
+        <h3 id="programmatic-usage">@(IsChinese ? "在代码中使用色板" : "Programmatic Usage")</h3>
+        <pre><code>@("using AntDesign.Colors;\n\nvar blue = ColorPalette.Generate(\"#1677ff\");\nvar primary = blue[5];\nvar secondary = blue[0];\nvar dark = ColorPalette.Generate(\"#1677ff\", dark: true, backgroundColor: \"#141414\");")</code></pre>
+        <h2 id="product-colors">@(IsChinese ? "产品级色彩体系" : "Product-level Color System")</h2>
+        <h3>@(IsChinese ? "品牌色" : "Brand Color")</h3>
+        <img class="preview-img no-padding" alt="@(IsChinese ? "品牌色的界面应用" : "Brand color in product interfaces")" src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*1c74TKxuEW4AAAAAAAAAAABkARQnAQ" />
+        <p>@(IsChinese ? "建议选择基础色板的第六个颜色作为主色。Ant Design 品牌色为 #1677ff，用于关键行动点、重要信息高亮和状态反馈。" : "Choose the sixth swatch as the primary color. Ant Design's brand color is #1677ff, used for key actions, important information and status feedback.")</p>
+        <h3>@(IsChinese ? "功能色" : "Functional Color")</h3>
+        <img class="preview-img no-padding" alt="@(IsChinese ? "成功、错误和提醒等功能色" : "Functional colors for success, errors and warnings")" src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*QY4JRa92gHQAAAAAAAAAAABkARQnAQ" />
+        <p>@(IsChinese ? "成功、出错、提醒和链接应保持一致的功能色，符合用户认知，避免不必要的自定义。" : "Keep functional colors for success, errors, warnings and links consistent with user expectations across the product.")</p>
+        <h3>@(IsChinese ? "中性色" : "Neutral Color")</h3>
+        <div class="color-token-compare" aria-label="@(IsChinese ? "明暗主题中性色对比" : "Light and dark neutral token comparison")">
+            @foreach (var token in NeutralTokenNames)
+            {
+                <div class="color-token-row"><span>@token</span><span><i style="background:@LightTokens[token]"></i>@LightTokens[token]</span><span class="color-token-dark"><i style="background:@DarkTokens[token]"></i>@DarkTokens[token]</span></div>
+            }
+        </div>
+        <h2>@(IsChinese ? "企业级产品设计中的色彩应用" : "Color Application In Enterprise Product Design")</h2>
+        <p>@(IsChinese ? "克制地使用色彩，优先服务信息传递、操作引导和交互反馈，避免影响阅读清晰度和操作效率。" : "Use color with restraint to communicate information, guide actions and provide feedback without reducing clarity or efficiency.")</p>
+        <p><a href="@($"{Language}/docs/colors.md")" target="_blank" rel="noopener noreferrer">LLMs.md</a></p>
+    </article>
+</section>
+
+@code {
+    [Parameter] public string Locale { get; set; } = "en-US";
+    private bool IsChinese => Locale == "zh-CN";
+    private string Language => IsChinese ? "zh-CN" : "en-US";
+    private static readonly string[] NeutralPreview = ColorSpecCatalog.Neutral.Take(ColorSpecCatalog.NeutralPreviewCount).ToArray();
+    private static readonly string[] NeutralTokenNames = { "colorTextHeading", "colorText", "colorTextSecondary", "colorTextDisabled", "colorBorder", "colorSplit", "colorBgLayout" };
+    private static readonly IReadOnlyDictionary<string, string> LightTokens = new ThemeConfig().GetResolvedTokenValues();
+    private static readonly IReadOnlyDictionary<string, string> DarkTokens = new ThemeConfig { Algorithm = "dark" }.GetResolvedTokenValues();
+}

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Reflection;
+using System.Net.Http;
 using AntDesign.Docs.Highlight;
 using AntDesign.Docs.Services;
 using AntDesign.Extensions.Localization;
@@ -18,6 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddCropper();
             services.AddScoped<DemoService>();
             services.AddScoped<IconListService>();
+            services.AddSingleton<IComponentIssueCountService>(_ => new ComponentIssueCountService(new HttpClient { Timeout = System.TimeSpan.FromSeconds(10) }));
             services.AddScoped<IPrismHighlighter, PrismHighlighter>();
 
             services.AddSimpleEmbeddedJsonLocalization(options =>

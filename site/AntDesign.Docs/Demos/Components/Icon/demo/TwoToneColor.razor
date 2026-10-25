@@ -1,0 +1,19 @@
+@using AntDesign.Icons
+
+<Space Direction="SpaceDirection.Vertical">
+    <SpaceItem>
+        <Space>
+            <SpaceItem><CheckCircleTwoTone TwoToneColor='@(new[] { _color })' Style="font-size:28px" /></SpaceItem>
+            <SpaceItem><Icon Type="@IconType.TwoTone.CheckCircle" TwoToneColor="@_color" Style="font-size:28px" /></SpaceItem>
+        </Space>
+    </SpaceItem>
+    <SpaceItem>Primary: <code>@_color</code> Secondary: <code>@AntDesign.Colors.ColorPalette.Generate(_color)[0]</code></SpaceItem>
+    <SpaceItem><Button OnClick="ChangeColor">Change Color</Button></SpaceItem>
+</Space>
+
+@code {
+    private string _color = "#52c41a";
+    private readonly string[] _colors = { "#f759ab", "#2f54eb", "#722ed1", "#1677ff", "#f5222d" };
+    private int _index;
+    private void ChangeColor() => _color = _colors[_index++ % _colors.Length];
+}

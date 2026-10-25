@@ -1,0 +1,7 @@
+<Switch @bind-Checked="_dark" CheckedChildren="Dark" UnCheckedChildren="Light" />
+<br /><br />
+<Menu Mode="MenuMode.Inline" InlineCollapsed ShowCollapsedTooltip="false" Theme="@(_dark ? MenuTheme.Dark : MenuTheme.Light)" Styles="_styles"><MenuExampleItems /></Menu>
+@code {
+    private bool _dark;
+    private readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string> { ["item"] = "text-decoration:underline", ["subMenu.item"] = "background:rgba(255,255,255,.3)" };
+}

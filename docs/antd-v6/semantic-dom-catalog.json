@@ -376,7 +376,7 @@
         },
         {
           "name": "input",
-          "selector": ".ant-select-selection-search-input",
+          "selector": ".ant-select-input",
           "description": "输入框元素，包含搜索输入框的样式、光标控制、字体继承等搜索相关样式，去除了边框样式",
           "version": "6.0.0"
         },
@@ -400,7 +400,7 @@
         },
         {
           "name": "placeholder",
-          "selector": ".ant-select-selection-placeholder",
+          "selector": ".ant-select-placeholder",
           "description": "占位符元素，包含占位符文本的字体样式和颜色",
           "version": "6.0.0"
         },

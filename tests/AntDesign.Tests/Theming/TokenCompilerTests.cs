@@ -159,7 +159,7 @@ namespace AntDesign.Tests.Theming
         [Fact]
         public void DefaultAlgorithmMatchesAntDesignPrimaryPalette()
         {
-            var palette = AntColorPalette.Generate("#1677ff");
+            var palette = AntDesign.Colors.ColorPalette.Generate("#1677ff");
 
             Assert.Equal(new[] { "#e6f4ff", "#bae0ff", "#91caff", "#69b1ff", "#4096ff", "#1677ff", "#0958d9", "#003eb3", "#002c8c", "#001d66" }, palette);
         }
@@ -167,7 +167,7 @@ namespace AntDesign.Tests.Theming
         [Fact]
         public void DarkAlgorithmMatchesOfficialAntDesignColorsCases()
         {
-            var palette = AntColorPalette.GenerateDark("#1890ff", "#141414");
+            var palette = AntDesign.Colors.ColorPalette.Generate("#1890ff", true, "#141414");
 
             Assert.Equal(new[] { "#111d2c", "#112a45", "#15395b", "#164c7e", "#1765ad", "#177ddc", "#3c9ae8", "#65b7f3", "#8dcff8", "#b7e3fa" }, palette);
         }
@@ -184,8 +184,8 @@ namespace AntDesign.Tests.Theming
         [Fact]
         public void HandlesOfficialGreyBoundaryCase()
         {
-            Assert.NotEmpty(AntColorPalette.Generate("#666666"));
-            Assert.NotEmpty(AntColorPalette.GenerateDark("#666666", "#141414"));
+            Assert.NotEmpty(AntDesign.Colors.ColorPalette.Generate("#666666"));
+            Assert.NotEmpty(AntDesign.Colors.ColorPalette.Generate("#666666", true, "#141414"));
         }
     }
 }

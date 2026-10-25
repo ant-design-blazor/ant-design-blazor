@@ -56,10 +56,33 @@ namespace AntDesign
             ? (string.IsNullOrWhiteSpace(ParentVariant) ? "outlined" : ParentVariant)
             : Variant;
 
-        public string ThemeCssClass => ThemeConfig?.Seed?.Wireframe == true ? "ant-theme-wireframe" : string.Empty;
+        public bool IsWireframe => ExplicitThemeTokens.TryGetValue("wireframe", out var value) && value == "true";
+        public string ThemeCssClass => IsWireframe ? "ant-theme-wireframe" : string.Empty;
 
-        [CascadingParameter(Name = "AntDesignThemeConfig")]
-        private ThemeConfig ParentThemeConfig { get; set; }
+        [CascadingParameter(Name = "AntDesignExplicitThemeTokens")]
+        private System.Collections.Generic.IReadOnlyDictionary<string, string> ParentExplicitThemeTokens { get; set; }
+
+        [CascadingParameter(Name = "AntDesignThemeAlgorithm")]
+        private string ParentThemeAlgorithm { get; set; }
+
+        public string ResolvedAlgorithm => ThemeConfig?.HasExplicitAlgorithm == true
+            ? ThemeConfig.Algorithm : (ThemeConfig?.Inherit == false ? "default" : ParentThemeAlgorithm ?? ThemeConfig?.Algorithm ?? "default");
+
+        public System.Collections.Generic.IReadOnlyDictionary<string, string> ExplicitThemeTokens
+        {
+            get
+            {
+                var values = ThemeConfig?.Inherit == false || ParentExplicitThemeTokens == null
+                    ? new System.Collections.Generic.Dictionary<string, string>()
+                    : new System.Collections.Generic.Dictionary<string, string>(ParentExplicitThemeTokens);
+                if (ThemeConfig != null)
+                    foreach (var token in ThemeConfig.GetExplicitTokenValues()) values[token.Key] = token.Value;
+                return values;
+            }
+        }
+
+        public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IDictionary<string, string>> ResolvedComponentValues =>
+            ThemeConfig.GetResolvedComponentValues(ParentThemeComponents, ParentExplicitThemeTokens, ResolvedAlgorithm);
 
         [CascadingParameter(Name = "AntDesignThemeComponents")]
         private System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IDictionary<string, string>> ParentThemeComponents { get; set; }
@@ -74,10 +97,12 @@ namespace AntDesign
             {
                 if (ThemeConfig == null || !ThemeConfig.CssVar) return string.Empty;
                 var declarations = new System.Collections.Generic.List<string>();
-                var inherited = ParentThemeConfig?.GetResolvedTokenValues();
-                foreach (var token in ThemeConfig.GetResolvedTokenValues(inherited))
+                // Inherit explicit config, never the parent's resolved palette:
+                // a light parent's derived white background must not become a
+                // seed override when this provider selects the dark algorithm.
+                foreach (var token in ThemeConfig.GetResolvedTokenValues(ParentExplicitThemeTokens, ResolvedAlgorithm))
                     AddCssVariable(declarations, token.Key, token.Value);
-                foreach (var component in ThemeConfig.GetResolvedComponentValues(ParentThemeComponents))
+                foreach (var component in ResolvedComponentValues)
                     foreach (var token in component.Value)
                         AddCssVariable(declarations, $"{component.Key}-{token.Key}", token.Value);
                 return string.Join(";", declarations);

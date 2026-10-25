@@ -15,6 +15,9 @@ namespace AntDesign
         public NotificationConfig Config { get; set; }
 
         [Parameter]
+        public bool PurePanel { get; set; }
+
+        [Parameter]
         public Func<NotificationConfig, Task> OnClose { get; set; }
 
         [Parameter]
@@ -37,13 +40,14 @@ namespace AntDesign
         {
             if (Config.ClassName != null)
             {
-                return Config.ClassName + Config.AnimationClass;
+                return Config.ClassName + (PurePanel ? null : Config.AnimationClass);
             }
-            return Config.AnimationClass;
+            return PurePanel ? null : Config.AnimationClass;
         }
 
         private string GetStyle()
         {
+            if (PurePanel) return GetComponentStyle("Notification", "--notification-index: 0;");
             // React's rc-notification positions notices absolutely and calculates each
             // notice's coordinates at runtime. Blazor doesn't run that positioning
             // algorithm, so keep notices in the list's flex flow to prevent overlap.
@@ -51,10 +55,10 @@ namespace AntDesign
             var customStyle = Config.Style?.Trim();
             if (string.IsNullOrEmpty(customStyle))
             {
-                return listLayoutStyle;
+                return GetComponentStyle("Notification", listLayoutStyle);
             }
 
-            return $"{listLayoutStyle} {customStyle.TrimEnd(';')};";
+            return GetComponentStyle("Notification", $"{listLayoutStyle} {customStyle.TrimEnd(';')};");
         }
 
         private async Task Close(MouseEventArgs e)

@@ -36,10 +36,19 @@ namespace AntDesign
 
         internal bool HasChildren { get { return Children?.Any() == true; } }
 
+        internal bool IsExpandable { get { return HasChildren || IsLeaf == false; } }
+
         /// <summary>
         /// Options under this one
         /// </summary>
         public IEnumerable<CascaderNode> Children { get; set; }
+
+        /// <summary>
+        /// Marks a node as a leaf. Set to false when its children will be loaded on demand.
+        /// </summary>
+        public bool? IsLeaf { get; set; }
+
+        internal bool IsLoading { get; set; }
     }
 
     internal enum SelectedTypeEnum

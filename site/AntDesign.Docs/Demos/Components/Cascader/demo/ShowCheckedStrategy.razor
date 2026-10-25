@@ -1,0 +1,43 @@
+@using AntDesign.Select
+
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+    <Cascader Options="@_options"
+              Multiple
+              ShowCheckedStrategy="CascaderCheckedStrategy.ShowChild"
+              DefaultValues="@_values"
+              MaxTagCount="ResponsiveTag.Responsive"
+              Style="width: 100%;" />
+    <Cascader Options="@_options"
+              Multiple
+              ShowCheckedStrategy="CascaderCheckedStrategy.ShowParent"
+              DefaultValues="@_values"
+              MaxTagCount="ResponsiveTag.Responsive"
+              Style="width: 100%;" />
+</Space>
+
+@code {
+    private readonly string[] _values = ["fish", "cards", "bird"];
+
+    private readonly CascaderNode[] _options =
+    [
+        new()
+        {
+            Value = "bamboo",
+            Label = "Bamboo",
+            Children =
+            [
+                new()
+                {
+                    Value = "little",
+                    Label = "Little",
+                    Children =
+                    [
+                        new() { Value = "fish", Label = "Toy Fish" },
+                        new() { Value = "cards", Label = "Toy Cards" },
+                        new() { Value = "bird", Label = "Toy Bird" }
+                    ]
+                }
+            ]
+        }
+    ];
+}

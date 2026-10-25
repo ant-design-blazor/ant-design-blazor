@@ -1,0 +1,13 @@
+<Space Direction="SpaceDirection.Vertical">
+    <Menu Mode="MenuMode.Inline" Style="width:256px;max-width:100%" DefaultOpenKeys="@(new[] { "sub1" })" DefaultSelectedKeys="@(new[] { "1" })">
+        <SubMenu Key="sub1" Title="Navigation One" Icon="mail">
+            <MenuItem Key="1"><span style="display:flex;justify-content:space-between">Option 1 <Icon Type="down" /></span></MenuItem>
+            <MenuItem Key="2"><ChildContent>Option 2</ChildContent><Extra>⌘P</Extra></MenuItem>
+            <MenuItem Key="3" Disabled RouterLink="https://www.baidu.com">Link Option</MenuItem>
+        </SubMenu>
+    </Menu>
+    <Menu Theme="MenuTheme.Dark" Style="width:256px;max-width:100%">
+        <MenuItem Key="users"><ChildContent>Users</ChildContent><Extra>⌘U</Extra></MenuItem>
+        <MenuItem Key="profile"><ChildContent>Profile</ChildContent><Extra>⌘P</Extra></MenuItem>
+    </Menu>
+</Space>

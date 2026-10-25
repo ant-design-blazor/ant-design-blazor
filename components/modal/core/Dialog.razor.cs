@@ -35,6 +35,10 @@ namespace AntDesign
         [Parameter]
         public bool Visible { get; set; }
 
+        /// <summary>Render the reusable dialog panel inline, without a portal, mask, or focus trap.</summary>
+        [Parameter]
+        public bool PurePanel { get; set; }
+
         [Parameter]
         public EventCallback<bool> VisibleChanged { get; set; }
 
@@ -86,6 +90,7 @@ namespace AntDesign
         /// <returns></returns>
         private string GetStyle()
         {
+            if (PurePanel) return GetComponentStyle("Modal", Style);
             if (_modalStyle == null)
             {
                 _modalStyle = CalcModalStyle();
@@ -247,7 +252,7 @@ namespace AntDesign
 
         private async Task CloseAsync()
         {
-            if (_hasDestroy)
+            if (_hasDestroy && !PurePanel)
             {
                 return;
             }
@@ -415,6 +420,7 @@ namespace AntDesign
         {
             var clsList = new List<string>()
             {
+                PurePanel ? Config.PrefixCls + "-pure-panel ant-modal-css-var" : null,
                 Config.ClassName,
                 _modalAnimationClsName,
                 Status == ModalStatus.Max ? "ant-modal-max" : "",
@@ -444,6 +450,7 @@ namespace AntDesign
         /// <returns></returns>
         protected override async Task OnParametersSetAsync()
         {
+            if (PurePanel) { await base.OnParametersSetAsync(); return; }
             //Reduce one rendering when showing and not destroyed
             if (Visible)
             {
@@ -475,7 +482,8 @@ namespace AntDesign
         /// <param name="isFirst"></param>
         /// <returns></returns>
         protected override async Task OnAfterRenderAsync(bool firstRender)
-        { 
+        {
+            if (PurePanel) { await base.OnAfterRenderAsync(firstRender); return; }
             if (firstRender)
             {
                 _afterFirstRender = true;
@@ -526,6 +534,7 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+            if (PurePanel) { base.Dispose(disposing); return; }
 
             _ = TryResetModalStyle();
             // When a modal is defined in template, it will be destroyed when the page is navigated to different page component.

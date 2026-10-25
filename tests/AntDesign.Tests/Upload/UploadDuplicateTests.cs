@@ -78,9 +78,9 @@ namespace AntDesign.Tests.Upload
                 .Add(p => p.ProgressFormat, percent => $"{percent:0.00}%")
                 .Add(p => p.ProgressShowInfo, true));
 
-            component.Find(".ant-progress-bg").GetAttribute("style").Should().Contain("linear-gradient");
-            component.Find(".ant-progress-bg").GetAttribute("style").Should().Contain("height: 3px");
-            component.Find(".ant-progress-text").TextContent.Should().Be("68.00%");
+            component.Find(".ant-progress-track").GetAttribute("style").Should().Contain("linear-gradient");
+            component.Find(".ant-progress-track").GetAttribute("style").Should().Contain("height: 3px");
+            component.Find(".ant-progress-indicator").TextContent.Should().Be("68.00%");
         }
 
         [Fact]

@@ -1,9 +1,10 @@
 ﻿@using System.Reflection
 @using System.Globalization
 @using Microsoft.AspNetCore.Components.Rendering
+@using AntDesign.Docs.Components
 
 <CascadingValue Value="this" IsFixed>
-    <ConfigProvider>
+    <DocsThemeProvider>
         <Router AppAssembly="typeof(App).Assembly" OnNavigateAsync="OnNavigateAsync">
             <Found Context="routeData">
 
@@ -24,7 +25,7 @@
             </NotFound>
         </Router>
         <AntContainer />
-    </ConfigProvider>
+    </DocsThemeProvider>
 </CascadingValue>
 
 @inject ILocalizationService LocalizationService;

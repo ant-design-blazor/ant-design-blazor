@@ -5,11 +5,13 @@
 @typeparam TItem
 <div @ref="Ref"
       @key="@this"
-      class="@ClassMapper.Class"
-      role="option"
-      aria-selected="@IsSelected"
-      aria-label="@InternalLabel"
-      style="@InnerStyle"
+      id="@(SelectParent.UsesVirtualAccessibility ? null : SelectParent.GetOptionId(InternalId))"
+      class="@SelectParent.GetSemanticClass("popup.listItem", ClassMapper.Class)"
+      role="@(SelectParent.UsesVirtualAccessibility ? null : "option")"
+      aria-selected="@(SelectParent.UsesVirtualAccessibility ? null : IsSelected.ToString().ToLowerInvariant())"
+      aria-disabled="@IsDisabled.ToString().ToLowerInvariant()"
+      title="@InternalLabel"
+      style="@SelectParent.GetSemanticStyle("popup.listItem", InnerStyle)"
       @onclick="@OnClick"
       @onclick:stopPropagation
       @onmouseenter="@OnMouseEnter">

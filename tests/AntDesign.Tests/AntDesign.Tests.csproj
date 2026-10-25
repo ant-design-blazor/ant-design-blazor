@@ -25,9 +25,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
     <ProjectReference Include="..\..\site\AntDesign.Docs\AntDesign.Docs.csproj" />
+    <ProjectReference Include="..\..\src\AntDesign.Docs.Generator\AntDesign.Docs.Generator.csproj" />
     <ProjectReference Include="..\AntDesign.TestKit\AntDesign.TestKit.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Theming/Fixtures/react-theme-tokens.json" />
+    <EmbeddedResource Include="Theming/Fixtures/react-color-palettes.json" />
   </ItemGroup>
 </Project>

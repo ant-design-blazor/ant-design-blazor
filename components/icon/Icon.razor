@@ -1,8 +1,12 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<span class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="@TabIndex" @ref="Ref" @attributes="_attributes" @onclick:stopPropagation="StopPropagation">
-    @if (Component == null)
+<span class="@ClassMapper.Class" style="@Style" id="@Id" tabindex="@IconTabIndex" @ref="Ref" @attributes="_attributes" @onclick:stopPropagation="StopPropagation">
+    @if (ComponentTemplate != null)
+    {
+        @ComponentTemplate(ComponentAttributes)
+    }
+    else if (Component == null)
     {
         @((MarkupString)_svgImg)
     }

@@ -1,0 +1,100 @@
+@inject ILocalizationService LocalizationService
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<div class="@_styles["root"]" @ref="_host">
+    @if (!_collapsed)
+    {
+        <div class="@_styles["mask"]" aria-hidden="true"></div>
+    }
+    <Sider Class="@_styles["sider"]" Theme="SiderTheme.Light" Width="300" CollapsedWidth="0"
+           Breakpoint="BreakpointType.Md" @bind-Collapsed="_collapsed" DefaultCollapsed Styles="@_bodyStyles"
+           Style="max-width:calc(100vw - 48px);min-width:0;">
+        @if (!_collapsed)
+        {
+            <nav aria-label="@NavigationLabel"><NavMenu OnItemClicked="@(_ => _collapsed = true)" /></nav>
+        }
+    </Sider>
+</div>
+<style>@((MarkupString)_styles.CssText)</style>
+
+@code {
+    private bool _collapsed = true;
+    private ElementReference _host;
+    private IJSObjectReference _module;
+    private DotNetObjectReference<MobileDocsNavigation> _reference;
+    private Task _initialization;
+    private bool _disposed;
+    private string NavigationLabel => LocalizationService.CurrentCulture.Name == "zh-CN" ? "组件导航" : "Component navigation";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _reference = DotNetObjectReference.Create(this);
+            await (_initialization = InitializeAsync());
+        }
+        if (!_disposed && _module != null)
+            await _module.InvokeVoidAsync("setOpen", _host, !_collapsed, _reference);
+    }
+
+    private async Task InitializeAsync()
+        => _module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/mobile-docs-navigation.js");
+
+    [JSInvokable]
+    public Task CloseFromOutside() => InvokeAsync(() =>
+    {
+        if (_disposed || _collapsed) return;
+        _collapsed = true;
+        StateHasChanged();
+    });
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_disposed) return;
+        _disposed = true;
+        try
+        {
+            if (_initialization != null) await _initialization;
+            if (_module != null)
+            {
+                await _module.InvokeVoidAsync("unmount", _host);
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException) { }
+        catch (TaskCanceledException) { }
+        finally { _reference?.Dispose(); }
+    }
+
+    private readonly IReadOnlyDictionary<string, string> _bodyStyles = new Dictionary<string, string>
+    {
+        ["body"] = "height:100%;overflow-y:auto;overscroll-behavior:contain;background:var(--ant-color-bg-container,#fff);"
+    };
+
+    private static readonly CssStyleSheet _styles = CssInJs.CreateStyles("docs-mobile-navigation", new Dictionary<string, object>
+    {
+        ["root"] = new Dictionary<string, object> { ["display"] = "contents" },
+        ["mask"] = new Dictionary<string, object>
+        {
+            ["position"] = "fixed", ["inset"] = 0, ["zIndex"] = 999,
+            ["background"] = "transparent", ["pointerEvents"] = "none",
+            ["@media (min-width: 768px)"] = new Dictionary<string, object> { ["display"] = "none" }
+        },
+        ["sider"] = new Dictionary<string, object>
+        {
+            ["position"] = "fixed", ["top"] = 0, ["bottom"] = 0, ["insetInlineStart"] = 0,
+            ["zIndex"] = 1000,
+            ["background"] = "var(--ant-color-bg-container,#fff)",
+            ["&.ant-layout-sider-collapsed"] = new Dictionary<string, object> { ["pointerEvents"] = "none" },
+            ["&:not(.ant-layout-sider-collapsed)"] = new Dictionary<string, object> { ["boxShadow"] = "var(--ant-box-shadow-secondary)" },
+            ["& .ant-layout-sider-zero-width-trigger"] = new Dictionary<string, object>
+            {
+                ["top"] = 80, ["width"] = 40, ["height"] = 40, ["insetInlineEnd"] = -40,
+                ["pointerEvents"] = "auto", ["color"] = "var(--ant-color-text,rgba(0,0,0,.88))",
+                ["background"] = "var(--ant-color-bg-container,#fff)", ["boxShadow"] = "var(--ant-box-shadow-secondary)"
+            },
+            ["@media (min-width: 768px)"] = new Dictionary<string, object> { ["display"] = "none" }
+        }
+    });
+}

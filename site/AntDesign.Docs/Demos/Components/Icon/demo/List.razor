@@ -1,4 +1,5 @@
 ﻿
+<h2>@(LocalizationService.CurrentCulture.Name == "zh-CN" ? "图标列表" : "List of icons")</h2>
 <style>@((MarkupString)galleryStyles.CssText)</style>
 <div class="@galleryStyles["toolbar"]">
     <RadioGroup @bind-Value="currentTheme" ButtonStyle="RadioButtonStyle.Solid" Size="InputSize.Large" TValue="IconGalleryTheme" OnChange="OnThemeChanged">

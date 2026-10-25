@@ -4,24 +4,24 @@
 	public void Renders_basic_tag()
 	{
 		var cut = Context.Render(@<AntDesign.Tag>Tag 1</AntDesign.Tag>);		
-		cut.MarkupMatches(@<span class="ant-tag ant-tag-default" id:ignore>Tag 1</span>);
+		cut.MarkupMatches(@<span class="ant-tag ant-tag-filled ant-tag-default" id:ignore>Tag 1</span>);
 	}
 
 	[Fact]
 	public void Renders_basic_tag_invisible()
 	{
 		var cut = Context.Render(@<AntDesign.Tag Visible="false"> Tag 1</AntDesign.Tag>);		
-		cut.MarkupMatches(@<span class="ant-tag ant-tag-default ant-tag-hidden" id:ignore>Tag 1</span>);
+		cut.MarkupMatches(@<span class="ant-tag ant-tag-filled ant-tag-default ant-tag-hidden" id:ignore>Tag 1</span>);
 	}
 
 	[Theory]
-	[InlineData("success", "ant-tag-success")]
-	[InlineData("processing", "ant-tag-processing")]
-	[InlineData("error", "ant-tag-error")]
-	[InlineData("MAGENTA", "ant-tag-magenta")]
-	[InlineData("blue-inverse", "ant-tag-blue-inverse")]
-	[InlineData("", "ant-tag-default")]
-	[InlineData(null, "ant-tag-default")]
+	[InlineData("success", "ant-tag-filled ant-tag-success")]
+	[InlineData("processing", "ant-tag-filled ant-tag-processing")]
+	[InlineData("error", "ant-tag-filled ant-tag-error")]
+	[InlineData("MAGENTA", "ant-tag-filled ant-tag-magenta")]
+	[InlineData("blue-inverse", "ant-tag-solid ant-tag-blue-inverse ant-tag-blue")]
+	[InlineData("", "ant-tag-filled ant-tag-default")]
+	[InlineData(null, "ant-tag-filled ant-tag-default")]
 	public void Renders_predefined_tag(string color, string expectedClass)
 	{
 		var cut = Context.Render(@<AntDesign.Tag Color="@color">Tag 1</AntDesign.Tag>);		
@@ -149,7 +149,7 @@
 	public void Renders_custom_style_and_custom_color_tag()
     {
 		var cut = Context.Render(@<AntDesign.Tag Color="@("#108ee9")" Style="margin-left:5px;">Tag 1</AntDesign.Tag>);
-        cut.MarkupMatches(@<span class="ant-tag ant-tag-has-color" id:ignore style="margin-left: 5px; background-color: #108ee9; ">Tag 1</span>);
+        cut.MarkupMatches(@<span class="ant-tag ant-tag-filled ant-tag-has-color" id:ignore style="margin-left: 5px; background-color: #e7f4fd; color:#108ee9;">Tag 1</span>);
     }
 
 	[Fact]
@@ -170,7 +170,7 @@
 			<ChildContent>Label</ChildContent>
 		</AntDesign.Tag>);
 
-		cut.MarkupMatches(@<span class="ant-tag ant-tag-default" id:ignore><span class="ant-tag-icon"><span class="my-icon">X</span></span><span class="ant-tag-content">Label</span></span>);
+		cut.MarkupMatches(@<span class="ant-tag ant-tag-filled ant-tag-default" id:ignore><span class="ant-tag-icon"><span class="my-icon">X</span></span><span class="ant-tag-content">Label</span></span>);
 	}
 
 	[Fact]

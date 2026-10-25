@@ -30,7 +30,10 @@ namespace AntDesign.Theming
     public sealed class ThemeConfig
     {
         public string Key { get; set; } = "default";
-        public string Algorithm { get; set; } = "default";
+        private string _algorithm;
+        public string Algorithm { get => _algorithm ?? "default"; set => _algorithm = value; }
+        internal bool HasExplicitAlgorithm => _algorithm != null;
+        public bool Inherit { get; set; } = true;
         public bool CssVar { get; set; } = true;
         public string ThemeScope { get; set; } = "ant-theme";
         public ThemeToken Token { get; set; } = new ThemeToken();
@@ -76,23 +79,34 @@ namespace AntDesign.Theming
             return values;
         }
 
-        public IReadOnlyDictionary<string, string> GetResolvedTokenValues(IReadOnlyDictionary<string, string> inherited = null)
+        public IReadOnlyDictionary<string, string> GetResolvedTokenValues(IReadOnlyDictionary<string, string> inherited = null, string inheritedAlgorithm = null)
         {
-            var seed = inherited == null
+            var seed = !Inherit || inherited == null
                 ? new Dictionary<string, string>(StringComparer.Ordinal)
                 : new Dictionary<string, string>(inherited, StringComparer.Ordinal);
             foreach (var pair in GetExplicitTokenValues()) seed[pair.Key] = pair.Value;
-            var algorithm = ThemeAlgorithmFactory.Create(Algorithm);
+            var algorithm = ThemeAlgorithmFactory.Create(HasExplicitAlgorithm ? Algorithm : (Inherit ? inheritedAlgorithm : null) ?? Algorithm);
             var resolved = algorithm.Resolve(seed.Select(item => new SeedToken { Name = item.Key, Value = item.Value }));
             var values = resolved.ToDictionary(item => item.Name, item => item.Value, StringComparer.Ordinal);
-            foreach (var pair in GetExplicitTokenValues()) values[pair.Key] = pair.Value;
+            var overrides = seed.Where(pair => !GeneratedSeedTokenDefaults.All.ContainsKey(pair.Key)).ToArray();
+            // formatToken merges map overrides before deriving aliases, then
+            // reapplies explicit aliases. Otherwise colorText changes would not
+            // reach colorTextHeading, and sizeSM would not reach paddingSM.
+            foreach (var pair in overrides) values[pair.Key] = pair.Value;
+            DefaultThemeAlgorithm.AddAliasMap(values);
+            DefaultThemeAlgorithm.AddResponsiveAndShadowMap(values);
+            // React reapplies map/alias overrides after derivation, but seed
+            // inputs must retain the algorithm's result (e.g. dark primary or
+            // compact controlHeight/fontSize).
+            foreach (var pair in overrides) values[pair.Key] = pair.Value;
             return values;
         }
 
-        public IReadOnlyDictionary<string, IDictionary<string, string>> GetResolvedComponentValues(IReadOnlyDictionary<string, IDictionary<string, string>> inherited = null)
+        public IReadOnlyDictionary<string, IDictionary<string, string>> GetResolvedComponentValues(IReadOnlyDictionary<string, IDictionary<string, string>> inherited = null,
+            IReadOnlyDictionary<string, string> inheritedTokens = null, string inheritedAlgorithm = null)
         {
             var result = new Dictionary<string, IDictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
-            if (inherited != null)
+            if (Inherit && inherited != null)
                 foreach (var item in inherited)
                     result[item.Key] = new Dictionary<string, string>(item.Value, StringComparer.Ordinal);
             foreach (var component in Components)
@@ -111,7 +125,7 @@ namespace AntDesign.Theming
                     foreach (var value in values) componentValues[value.Key] = value.Value;
                 }
             }
-            ResolveInputComponentValues(result, GetResolvedTokenValues());
+            ResolveInputComponentValues(result, GetResolvedTokenValues(inheritedTokens, inheritedAlgorithm));
             return result;
         }
 
@@ -191,6 +205,10 @@ namespace AntDesign.Theming
         private static string SerializeScalar(object value)
         {
             if (value == null) return null;
+            // Unwrap the union before serialization. Its diagnostic ToString()
+            // ("System.String: ") is not a CSS value and must not overwrite an
+            // explicitly configured dynamic token with an unset typed default.
+            if (value is OneOf.IOneOf union) return SerializeScalar(union.Value);
             if (value is string text) return string.IsNullOrWhiteSpace(text) ? null : text;
             if (value is bool boolean) return boolean ? "true" : null;
             if (value is double number) return number == 0 ? null : number.ToString("0.####################", CultureInfo.InvariantCulture);

@@ -1,0 +1,96 @@
+@inherits AntDesignTestBase
+@code {
+    public MenuOverflowTests()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetFirstChildDomInfo, _ => true)
+            .SetResult(new HtmlElement { ClientWidth = 90, ClientHeight = 46 });
+    }
+
+    [Fact]
+    public async Task Horizontal_menu_moves_measured_items_into_rest_and_restores_them()
+    {
+        var clicks = 0;
+        var cut = Render(@<Menu Mode="MenuMode.Horizontal"><MenuItem Key="one">One</MenuItem><MenuItem Key="two" RouterLink="/two" OnClick="@(_ => clicks++)">Two</MenuItem><MenuItem Key="three" Disabled>Three</MenuItem></Menu>);
+        var menu = cut.FindComponent<AntDesign.Menu>();
+        var items = cut.FindAll("[data-menu-overflow-item]");
+        var ids = items.Skip(1).Select(item => item.GetAttribute("data-menu-overflow-item")).ToArray();
+        await cut.InvokeAsync(() => menu.Instance.SetOverflowItems(ids));
+        Assert.Equal(2, cut.FindAll("[data-menu-overflow-item][inert]").Count);
+        Assert.Null(cut.Find("[data-menu-overflow-rest]").GetAttribute("aria-hidden"));
+        var rest = cut.FindComponents<SubMenu>().Single(item => item.Instance.Key.EndsWith("-overflow-indicator"));
+        // Render the actual lazy popup fragment. Layout measurements themselves
+        // are covered by the JS tests and real browser resize verification.
+        var popup = RenderComponent<CascadingValue<AntDesign.Menu>>(p => p.Add(x => x.Value, menu.Instance).AddChildContent(rest.Instance.ChildContent));
+        var popupItems = popup.FindAll("li");
+        Assert.Equal(new[] { "Two", "Three" }, popupItems.Select(item => item.TextContent.Trim()));
+        Assert.Empty(popup.FindAll("[data-menu-overflow-item]"));
+        Assert.Equal("/two", popup.Find("a").GetAttribute("href"));
+        await popupItems[0].ClickAsync(new MouseEventArgs());
+        Assert.Equal(1, clicks);
+        Assert.Contains("ant-menu-item-selected", cut.FindAll("[data-menu-overflow-item]")[1].ClassList);
+        Assert.Contains("ant-menu-submenu-selected", cut.Find("[data-menu-overflow-rest]").ClassList);
+        await popupItems[1].ClickAsync(new MouseEventArgs());
+        Assert.Equal(1, clicks);
+        await cut.InvokeAsync(() => menu.Instance.SetOverflowItems(Array.Empty<string>()));
+        Assert.Empty(cut.FindAll("[data-menu-overflow-item][inert]"));
+        Assert.Equal("true", cut.Find("[data-menu-overflow-rest]").GetAttribute("aria-hidden"));
+    }
+
+    [Theory]
+    [InlineData(MenuMode.Vertical, false)]
+    [InlineData(MenuMode.Inline, false)]
+    [InlineData(MenuMode.Horizontal, true)]
+    public void Only_enabled_horizontal_menus_measure_items(MenuMode mode, bool disabled)
+    {
+        var cut = Render(@<Menu Mode="mode" DisabledOverflow="disabled"><MenuItem>One</MenuItem></Menu>);
+        Assert.Empty(cut.FindAll("[data-menu-overflow-item],[data-menu-overflow-rest]"));
+    }
+
+    [Fact]
+    public async Task Nested_selection_survives_disposing_the_lazy_overflow_popup_and_restoring_the_bar()
+    {
+        var cut = Render(@<Menu Mode="MenuMode.Horizontal"><SubMenu Key="settings" Title="Settings"><MenuItem Key="profile">Profile</MenuItem></SubMenu></Menu>);
+        var menu = cut.FindComponent<AntDesign.Menu>();
+        var id = cut.Find("[data-menu-overflow-item]").GetAttribute("data-menu-overflow-item");
+        await cut.InvokeAsync(() => menu.Instance.SetOverflowItems(new[] { id }));
+        var rest = cut.FindComponents<SubMenu>().Single(item => item.Instance.Key.EndsWith("-overflow-indicator"));
+        var popup = RenderComponent<CascadingValue<AntDesign.Menu>>(p => p.Add(x => x.Value, menu.Instance)
+            .AddChildContent<CascadingValue<SubMenu>>(p => p.Add(x => x.Value, rest.Instance).AddChildContent(rest.Instance.ChildContent)));
+        var submenu = popup.FindComponent<SubMenu>();
+        var nested = RenderComponent<CascadingValue<AntDesign.Menu>>(p => p.Add(x => x.Value, menu.Instance)
+            .AddChildContent<CascadingValue<SubMenu>>(p => p.Add(x => x.Value, submenu.Instance)
+                .AddChildContent<CascadingValue<string>>(p => p.Add(x => x.Name, "MenuOverflowSource").Add(x => x.Value, id).AddChildContent(submenu.Instance.ChildContent))));
+        await nested.Find("li").ClickAsync(new MouseEventArgs());
+        Assert.Contains("ant-menu-submenu-selected", cut.Find("[data-menu-overflow-rest]").ClassList);
+        nested.Dispose();
+        popup.Dispose();
+        await cut.InvokeAsync(() => menu.Instance.SetOverflowItems(Array.Empty<string>()));
+        Assert.Contains("ant-menu-submenu-selected", cut.Find("[data-menu-overflow-item]").ClassList);
+        menu.SetParametersAndRender(p => p.Add(x => x.SelectedKeys, Array.Empty<string>()));
+        Assert.DoesNotContain("ant-menu-submenu-selected", cut.Find("[data-menu-overflow-item]").ClassList);
+    }
+
+    [Fact]
+    public async Task Submenu_group_and_custom_indicator_are_supported_without_registering_descendants_as_root_items()
+    {
+        var cut = Render(@<Menu Mode="MenuMode.Horizontal">
+            <OverflowedIndicator><span>Other actions</span></OverflowedIndicator>
+            <ChildContent>
+                <SubMenu Key="sub" Title="Nested"><MenuItem Key="nested">Nested item</MenuItem></SubMenu>
+                <MenuItemGroup Title="Group"><MenuItem Key="grouped">Grouped item</MenuItem></MenuItemGroup>
+            </ChildContent>
+        </Menu>);
+        var menu = cut.FindComponent<AntDesign.Menu>();
+        var rootItems = cut.FindAll("[data-menu-overflow-item]");
+        Assert.Equal(2, rootItems.Count);
+        Assert.Contains("Other actions", cut.Find("[data-menu-overflow-rest]").TextContent);
+        await cut.InvokeAsync(() => menu.Instance.SetOverflowItems(rootItems.Select(item => item.GetAttribute("data-menu-overflow-item")).ToArray()));
+        var rest = cut.FindComponents<SubMenu>().Single(item => item.Instance.Key.EndsWith("-overflow-indicator"));
+        var popup = RenderComponent<CascadingValue<AntDesign.Menu>>(p => p.Add(x => x.Value, menu.Instance)
+            .AddChildContent<CascadingValue<SubMenu>>(p => p.Add(x => x.Value, rest.Instance).AddChildContent(rest.Instance.ChildContent)));
+        Assert.Single(popup.FindComponents<SubMenu>());
+        Assert.Single(popup.FindComponents<MenuItemGroup>());
+        Assert.Empty(popup.FindAll("[data-menu-overflow-item]"));
+    }
+}

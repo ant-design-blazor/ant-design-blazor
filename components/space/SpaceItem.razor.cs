@@ -33,7 +33,7 @@ namespace AntDesign
 
         internal string SeparatorClass => Parent?.SemanticClass("separator", "ant-space-item-separator") ?? "ant-space-item-separator";
 
-        internal string SeparatorStyle => Parent?.SemanticStyle("separator", "margin-right: 4px;");
+        internal string SeparatorStyle => Parent?.SemanticStyle("separator");
 
         protected override void OnParametersSet()
         {

@@ -15,7 +15,7 @@
     private RenderFragment GetBasicHorizontalRender()
     {
         return 
-    @<Menu Mode=MenuMode.Horizontal>
+    @<Menu Mode=MenuMode.Horizontal DisabledOverflow>
         <MenuItem>Navigation One</MenuItem>
         <SubMenu Title="Navigation Two">
             <MenuItemGroup Title="Item 1">
@@ -84,7 +84,7 @@
 			        </span>
 		        </li>
                 <li class=""ant-menu-submenu ant-menu-submenu-vertical"" role=""menuitem"" style=""position:relative;"">
-                    <div class=""ant-menu-submenu-title"" role=""button"">
+                    <div class=""ant-menu-submenu-title"" role=""button"" aria-haspopup=""true"" aria-expanded=""false"">
                         <span class=""ant-menu-title-content"">
                             Navigation Two
                         </span>
@@ -176,7 +176,7 @@
         //Assert
         topOverlay.MarkupMatches(@"
             <div class=""ant-menu-submenu ant-menu-css-var ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-bottomLeft ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"" style:ignore>
-                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">
+                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""max-width:100%;min-width:min(123px,calc(100vw - 32px))"" role=""menu"">
                     <li class=""ant-menu-item-group"">
                         <div class=""ant-menu-item-group-title"">
                             Item 1
@@ -206,7 +206,7 @@
 			                    </span>
 		                    </li>
                             <li class=""ant-menu-submenu ant-menu-submenu-vertical"" role=""menuitem"" style=""position:relative;"">
-                                <div class=""ant-menu-submenu-title"" role=""button"">
+                                <div class=""ant-menu-submenu-title"" role=""button"" aria-haspopup=""true"" aria-expanded=""false"">
                                     <span class=""ant-menu-title-content"">
                                         Option 4
                                     </span>
@@ -237,14 +237,14 @@
         //Assert
         midOverlay.MarkupMatches(@"
             <div style:ignore class=""ant-menu-submenu ant-menu-css-var ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-zoom-big-enter ant-zoom-big-enter-active ant-zoom-big"">
-                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">
+                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""max-width:100%;min-width:min(123px,calc(100vw - 32px))"" role=""menu"">
                     <li class=""ant-menu-item"" role=""menuitem"" style="""">
                 		<span class=""ant-menu-title-content"">
                             Option 1
                 		</span>
 		            </li>
                     <li class=""ant-menu-submenu ant-menu-submenu-vertical"" role=""menuitem"" style=""position:relative;"">
-                        <div class=""ant-menu-submenu-title"" role=""button"">
+                        <div class=""ant-menu-submenu-title"" role=""button"" aria-haspopup=""true"" aria-expanded=""false"">
                             <span class=""ant-menu-title-content"">
                                 Option 5
                             </span>
@@ -275,7 +275,7 @@
         //Assert
         bottomOverlay.MarkupMatches(@"
             <div style:ignore class=""ant-menu-submenu ant-menu-css-var ant-menu-submenu-popup ant-menu ant-menu-light ant-menu-submenu-placement-rightTop ant-zoom-big-enter ant-zoom-big-enter-active ant-zoom-big"">
-                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""min-width: 123px"" role=""menu"">
+                <ul direction=""ltr"" class=""ant-menu ant-menu-sub ant-menu-light ant-menu-vertical"" style=""max-width:100%;min-width:min(123px,calc(100vw - 32px))"" role=""menu"">
                     <li class=""ant-menu-item"" role=""menuitem"" style="""">
                 		<span class=""ant-menu-title-content"">
                             Option 1

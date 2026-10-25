@@ -1,4 +1,11 @@
 /* Component rules kept outside the generated theme snapshots so their behavior stays token-driven. */
+/* The documentation shell still has a legacy `.anticon { display: inline-block; }`
+   rule. Restore the v6 flex icon box so inline SVGs do not increase line boxes. */
+.ant-theme .anticon {
+  display: inline-flex;
+  align-items: center;
+}
+
 .ant-float-btn.ant-btn {
   display: flex;
   box-sizing: border-box;
@@ -77,7 +84,7 @@
   cursor: not-allowed;
 }
 
-.ant-tour {
+.ant-tour:not(.ant-tour-pure) {
   position: fixed;
   width: 520px;
   max-width: calc(100vw - 16px);

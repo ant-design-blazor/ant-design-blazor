@@ -288,6 +288,12 @@ namespace AntDesign
         public bool ShowCount { get; set; }
 
         /// <summary>
+        /// Customizes the character counting strategy and overflow behavior.
+        /// </summary>
+        [Parameter]
+        public InputCountOptions Count { get; set; }
+
+        /// <summary>
         /// The width of the input
         /// </summary>
         [Parameter]
@@ -359,7 +365,13 @@ namespace AntDesign
 
         protected bool IsFocused { get; set; }
 
-        private string CountString => $"{_inputString?.Length ?? 0}{(MaxLength > 0 ? $" / {MaxLength}" : "")}";
+        private bool ShouldShowCount => ShowCount || Count?.Show == true;
+
+        private int CharacterCount => Count?.Strategy?.Invoke(_inputString ?? string.Empty) ?? (_inputString?.Length ?? 0);
+
+        private int? CountMax => Count?.Max ?? (MaxLength > 0 ? MaxLength : null);
+
+        private string CountString => $"{CharacterCount}{(CountMax.HasValue ? $" / {CountMax.Value}" : "")}";
 
         private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
 
@@ -395,7 +407,7 @@ namespace AntDesign
         {
             var status = Status ?? FormItem?.ValidateStatus;
             var variantClass = $"{PrefixCls}-{EffectiveVariant.ToString().ToLowerInvariant()}";
-            var hasAffixWrapper = Prefix != null || Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount;
+            var hasAffixWrapper = Prefix != null || Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShouldShowCount;
             var effectiveSize = Size == InputSize.Default && CompactItemContext?.Size.HasValue == true
                 ? CompactItemContext.Size.Value
                 : Size;
@@ -719,6 +731,15 @@ namespace AntDesign
         {
             _inputString = args?.Value.ToString();
 
+            if (Count?.Max is int max && Count.ExceedFormatter != null && CharacterCount > max)
+            {
+                _inputString = Count.ExceedFormatter(_inputString ?? string.Empty, max);
+                if (typeof(TValue) == typeof(string))
+                {
+                    CurrentValueAsString = _inputString;
+                }
+            }
+
             if (OnInput.HasDelegate)
             {
                 await OnInput.InvokeAsync(args);
@@ -730,7 +751,7 @@ namespace AntDesign
             base.BuildRenderTree(builder);
 
             string container = "input";
-            var hasSuffix = Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShowCount;
+            var hasSuffix = Suffix != null || AllowClear || FormItem?.FeedbackIcon != null || ShouldShowCount;
 
             if (AddOnBefore != null || AddOnAfter != null)
             {
@@ -813,7 +834,7 @@ namespace AntDesign
             }
 
             builder.AddAttribute(50, "id", Id);
-            builder.AddAttribute(51, "type", Type);
+            builder.AddAttribute(51, "type", Type == AntDesign.InputType.DateTimeLocal ? "datetime-local" : Type.ToString().ToLowerInvariant());
             if (!string.IsNullOrWhiteSpace(Placeholder))
             {
                 builder.AddAttribute(60, "placeholder", Placeholder);
@@ -870,7 +891,7 @@ namespace AntDesign
                     builder.AddContent(93, ClearIcon);
                 }
 
-                if (ShowCount)
+                if (ShouldShowCount)
                 {
                     builder.AddContent(110, Counter);
                 }

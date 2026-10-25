@@ -1,0 +1,28 @@
+@inject NavigationManager Navigation
+
+<Space Wrap>
+    <span>Menu width</span>
+    <AntDesign.InputNumber TValue="int" Min="120" Max="800" Step="20" @bind-Value="_width" />
+    <Button OnClick="@(() => _extra = !_extra)">Toggle extra item</Button>
+</Space>
+<div style="@($"width:{_width}px;max-width:100%;margin-top:16px")">
+    <Menu Mode="MenuMode.Horizontal" TriggerSubMenuAction="Trigger.Click" OnMenuItemClicked="@(item => _selected = item.Key)">
+        <MenuItem Key="overview" Icon="@IconType.Outline.Home">Overview</MenuItem>
+        <MenuItem Key="components">Components</MenuItem>
+        <MenuItem Key="disabled" Disabled>Disabled</MenuItem>
+        <SubMenu Key="settings" Title="Settings">
+            <MenuItem Key="profile">Profile</MenuItem>
+            <MenuItem Key="security">Security</MenuItem>
+        </SubMenu>
+        <MenuItem Key="support" RouterLink="@SupportLink">Support</MenuItem>
+        @if (_extra) { <MenuItem Key="extra">Extra navigation item</MenuItem> }
+    </Menu>
+</div>
+<p role="status">Selected: @_selected</p>
+
+@code {
+    private int _width = 400;
+    private bool _extra;
+    private string _selected = "none";
+    private string SupportLink => new Uri(Navigation.Uri).AbsolutePath + "#components-menu-demo-responsive";
+}

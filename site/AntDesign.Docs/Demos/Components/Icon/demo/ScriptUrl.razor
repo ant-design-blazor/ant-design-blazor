@@ -1,12 +1,15 @@
-﻿@inject IconService iconService;
+﻿<Space>
+    <SpaceItem><IconFont Type="icon-javascript" ScriptUrl="@_scripts" /></SpaceItem>
+    <SpaceItem><IconFont Type="icon-java" ScriptUrl="@_scripts" /></SpaceItem>
+    <SpaceItem><IconFont Type="icon-shoppingcart" ScriptUrl="@_scripts" /></SpaceItem>
+    <SpaceItem><IconFont Type="icon-python" ScriptUrl="@_scripts" /></SpaceItem>
+</Space>
 
-<div class="icons-list">
-  <IconFont Type="icon-javascript" />
-  <IconFont Type="icon-java" />
-  <IconFont Type="icon-shoppingcart" />
-  <IconFont Type="icon-python" />
-</div>
-
-<script src="//at.alicdn.com/t/font_1788044_0dwu4guekcwr.js"></script>
-<script src="//at.alicdn.com/t/font_1788592_a5xf2bdic3u.js"></script>
+@code {
+    private readonly string[] _scripts =
+    {
+        "//at.alicdn.com/t/font_1788044_0dwu4guekcwr.js",
+        "//at.alicdn.com/t/font_1788592_a5xf2bdic3u.js"
+    };
+}
 

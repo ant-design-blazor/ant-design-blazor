@@ -22,24 +22,16 @@
                     @switch (Config.NotificationType)
                     {
                         case NotificationType.Success:
-                            <span role="img" aria-label="check-circle" class="anticon anticon-check-circle">
-                                <Icon Type="@IconType.Outline.CheckCircle" />
-                            </span>
+                            <Icon Type="@IconType.Fill.CheckCircle" />
                             break;
                         case NotificationType.Warning:
-                            <span role="img" aria-label="exclamation-circle" class="anticon anticon-exclamation-circle">
-                                <Icon Type="@IconType.Outline.ExclamationCircle" />
-                            </span>
+                            <Icon Type="@IconType.Fill.ExclamationCircle" />
                             break;
                         case NotificationType.Error:
-                            <span role="img" aria-label="close-circle" class="anticon anticon-close-circle">
-                                <Icon Type="@IconType.Outline.CloseCircle" />
-                            </span>
+                            <Icon Type="@IconType.Fill.CloseCircle" />
                             break;
                         case NotificationType.Info:
-                            <span role="img" aria-label="info-circle" class="anticon anticon-info-circle">
-                                <Icon Type="@IconType.Outline.InfoCircle" />
-                            </span>
+                            <Icon Type="@IconType.Fill.InfoCircle" />
                             break;
                     }
                 }
@@ -78,16 +70,14 @@
     }
 
     <button type="button" aria-label="Close" class="@(ClassPrefix)-notice-close" @onclick="Close" @onclick:stopPropagation>
-        <span class="@(ClassPrefix)-notice-close-x">
             @if (Config.CloseIcon != null)
             {
                 @Config.CloseIcon
             }
             else
             {
-                <Icon Type="@IconType.Outline.Close" Class="@($"{ClassPrefix}-notice-close-icon")" />
+                <Icon Type="@IconType.Outline.Close" Class="@($"{ClassPrefix}-close-icon")" />
             }
-        </span>
     </button>
 
     @if (Config.ShowProgress)

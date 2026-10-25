@@ -60,6 +60,11 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>Visual variant. Defaults to filled, or solid for legacy inverse colors.</summary>
+        [Parameter] public TagVariant? Variant { get; set; }
+
+        private TagVariant ResolvedVariant => Variant ?? (_isPresetColor && _colorMap[_presetColor].EndsWith("-inverse", StringComparison.Ordinal) ? TagVariant.Solid : TagVariant.Filled);
+
         /// <summary>
         /// Callback executed when Tag is checked/unchecked
         /// </summary>
@@ -252,10 +257,12 @@ namespace AntDesign
         private void UpdateClassMap()
         {
             this.ClassMapper.Add(StylePrefix)
+                .Get(() => $"{StylePrefix}-{ResolvedVariant.ToString().ToLowerInvariant()}")
                 .Add(GetSemanticValue(ClassNames, "root"))
                 .If($"{StylePrefix}-has-color", () => !_isPresetColor)
                 .If($"{StylePrefix}-hidden", () => !Visible)
                 .GetIf(() => $"{StylePrefix}-{_colorMap[_presetColor]}", () => _isPresetColor)
+                .GetIf(() => $"{StylePrefix}-{_colorMap[_presetColor].Replace("-inverse", string.Empty)}", () => _isPresetColor && _colorMap[_presetColor].EndsWith("-inverse", StringComparison.Ordinal))
                 .If($"{StylePrefix}-checkable", () => Checkable)
                 .If($"{StylePrefix}-checkable-checked", () => Checked)
                 .If($"{StylePrefix}-checkable-disabled", () => Checkable && Disabled)
@@ -290,9 +297,13 @@ namespace AntDesign
 
         private string GetStyle()
         {
-            var styleBuilder = new StringBuilder()
-                .AppendIfNotNullOrEmpty(Style)
-                .AppendIf($"background-color: {_customColor};", !_isPresetColor);
+            var styleBuilder = new StringBuilder().AppendIfNotNullOrEmpty(Style);
+            if (!_isPresetColor)
+            {
+                styleBuilder.Append($"background-color: {(ResolvedVariant == TagVariant.Solid ? _customColor : AntDesign.Colors.ThemeColorMath.WithHslLightness(_customColor, .95))};");
+                if (ResolvedVariant != TagVariant.Solid) styleBuilder.Append($"color:{_customColor};");
+                if (ResolvedVariant == TagVariant.Outlined) styleBuilder.Append($"border-color:{_customColor};");
+            }
 
             return SemanticStyle("root", styleBuilder.Length > 0 ? styleBuilder.ToString() : null);
         }

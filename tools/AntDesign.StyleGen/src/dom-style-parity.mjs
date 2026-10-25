@@ -15,6 +15,7 @@ export function normalizeRuntimeHtml(html, policy = {}) {
   const idPattern = compilePattern(policy.runtimeIdPattern);
   const referenceAttributes = new Set(policy.runtimeIdReferenceAttributes ?? [
     'aria-activedescendant', 'aria-controls', 'aria-describedby', 'aria-labelledby', 'aria-owns', 'for',
+    'aria-details', 'aria-errormessage', 'aria-flowto', 'headers', 'form', 'list', 'popovertarget', 'commandfor',
   ]);
   const removeAttributes = policy.removeAttributes ?? [];
   const removeClassPatterns = (policy.removeClassPatterns ?? []).map((pattern) => compilePattern(pattern));
@@ -35,11 +36,22 @@ export function normalizeRuntimeHtml(html, policy = {}) {
   for (const marker of policy.removeCommentMarkers ?? []) {
     source = source.split(marker).join('');
   }
+  const referencedIds = new Set();
+  if (policy.removeUnreferencedRuntimeIds) {
+    for (const [, name, , value] of source.matchAll(/\s+([\w:-]+)=(['"])(.*?)\2/g)) {
+      if (referenceAttributes.has(name)) for (const id of value.split(/\s+/)) referencedIds.add(id);
+      if ((name === 'href' || name === 'xlink:href') && value.startsWith('#')) referencedIds.add(value.slice(1));
+      for (const match of value.matchAll(/url\(\s*['"]?#([^'"\s)]+)/g)) referencedIds.add(match[1]);
+    }
+  }
+  const dropRuntimeId = value => policy.removeUnreferencedRuntimeIds && isRuntimeId(value) && !referencedIds.has(value);
   if (idPattern) {
     // Seed IDs in DOM order before rewriting any references. Markup often
     // emits aria-controls before id, and the mapping must remain relationship-
     // stable regardless of each framework's attribute order.
-    for (const match of source.matchAll(/\sid=(['"])(.*?)\1/g)) normalizeId(match[2]);
+    for (const match of source.matchAll(/\sid=(['"])(.*?)\1/g)) {
+      if (!dropRuntimeId(match[2])) normalizeId(match[2]);
+    }
   }
 
   return source.replace(/\s+([\w:-]+)=(['"])(.*?)\2/g, (attribute, name, quote, value) => {
@@ -48,11 +60,19 @@ export function normalizeRuntimeHtml(html, policy = {}) {
       : name === removed)) return '';
 
     if (name === 'id' && idPattern) {
+      if (dropRuntimeId(value)) return '';
       return ` ${name}=${quote}${normalizeId(value)}${quote}`;
     }
     if (referenceAttributes.has(name) && idPattern) {
       const normalizedReferences = value.replace(/\S+/g, normalizeId);
       return ` ${name}=${quote}${normalizedReferences}${quote}`;
+    }
+    if (idPattern && (name === 'href' || name === 'xlink:href') && value.startsWith('#')) {
+      return ` ${name}=${quote}#${normalizeId(value.slice(1))}${quote}`;
+    }
+    if (idPattern && value.includes('url(')) {
+      const normalized = value.replace(/(url\(\s*['"]?#)([^'"\s)]+)/g, (_, prefix, id) => prefix + normalizeId(id));
+      return ` ${name}=${quote}${normalized}${quote}`;
     }
 
     if (name === 'class' && (removeClassPatterns.length || policy.sortClassTokens)) {
@@ -108,6 +128,35 @@ export function compareComputedStyles(expected = {}, actual = {}) {
   return { equal: differences.length === 0, differences };
 }
 
+function compareSvgUses(left, right, enabled, tolerancePx) {
+  const differences = [];
+  if (!enabled) return { equal: true, differences, tolerancePx };
+  if (left.length === 0 || right.length === 0) differences.push({ field: 'emptySvgUseCapture' });
+  for (let index = 0; index < Math.max(left.length, right.length); index += 1) {
+    const expected = left[index]?.svgUse;
+    const actual = right[index]?.svgUse;
+    if (!expected || !actual) {
+      differences.push({ index, field: 'missingSvgUseCapture' });
+      continue;
+    }
+    for (const [side, glyph] of [['expected', expected], ['actual', actual]]) {
+      if (!glyph.definitions?.length || !Number.isFinite(glyph.width) || !Number.isFinite(glyph.height) || !(glyph.width > 0) || !(glyph.height > 0)) {
+        differences.push({ index, field: 'unpaintedSvgUse', side, href: glyph.href });
+      }
+    }
+    if (expected.href !== actual.href) differences.push({ index, field: 'svgUseHref', expected: expected.href, actual: actual.href });
+    if (JSON.stringify(expected.definitions) !== JSON.stringify(actual.definitions)) {
+      differences.push({ index, field: 'svgSymbolDefinitionOrder', href: expected.href });
+    }
+    for (const property of ['width', 'height']) {
+      if (Math.abs(expected[property] - actual[property]) > tolerancePx) {
+        differences.push({ index, field: `svgUse.${property}`, expected: expected[property], actual: actual[property], tolerancePx });
+      }
+    }
+  }
+  return { equal: differences.length === 0, differences, tolerancePx };
+}
+
 /** Build independent strict-HTML, browser-DOM-tree, Semantic DOM and CSS gates. */
 export function compareDomSnapshots(expected, actual, policy = {}) {
   const expectedHtml = normalizeRuntimeHtml(expected?.html, policy.normalization);
@@ -117,7 +166,8 @@ export function compareDomSnapshots(expected, actual, policy = {}) {
 
   const expectedSemantic = expected?.semantic ?? {};
   const actualSemantic = actual?.semantic ?? {};
-  const semanticPaths = [...new Set([...Object.keys(expectedSemantic), ...Object.keys(actualSemantic)])].sort();
+  const semanticPaths = [...new Set([...Object.keys(expectedSemantic), ...Object.keys(actualSemantic),
+    ...Object.keys(policy.semanticMinimumCounts ?? {}), ...(policy.svgUsePaths ?? [])])].sort();
   const semantic = semanticPaths.map((path) => {
     const left = expectedSemantic[path] ?? [];
     const right = actualSemantic[path] ?? [];
@@ -141,6 +191,8 @@ export function compareDomSnapshots(expected, actual, policy = {}) {
       }, { equal: true, differences: [] })
       : { equal: false, differences: [{ field: 'count', expected: left.length, actual: right.length }] };
     const count = left.length >= requiredCount && right.length >= requiredCount;
+    const svgUse = compareSvgUses(left, right,
+      policy.svgUsePaths?.includes(path) || [...left, ...right].some(node => node.svgUse), policy.svgUsePaintTolerancePx ?? 0);
     const geometryDifferences = [];
     const geometryTolerancePx = policy.geometryTolerancePx ?? 0;
     if (left.length !== right.length) {
@@ -166,7 +218,7 @@ export function compareDomSnapshots(expected, actual, policy = {}) {
     }
     return {
       path,
-      equal: semanticTree.equal && count && computedStyles.equal && geometryDifferences.length === 0,
+      equal: semanticTree.equal && count && computedStyles.equal && geometryDifferences.length === 0 && svgUse.equal,
       requiredCount,
       expectedCount: left.length,
       actualCount: right.length,
@@ -174,6 +226,7 @@ export function compareDomSnapshots(expected, actual, policy = {}) {
       domTree: semanticTree,
       computedStyles,
       geometry: { equal: geometryDifferences.length === 0, tolerancePx: geometryTolerancePx, differences: geometryDifferences },
+      svgUse,
     };
   });
   const styles = compareComputedStyles(expected?.computedStyles, actual?.computedStyles);
@@ -182,6 +235,7 @@ export function compareDomSnapshots(expected, actual, policy = {}) {
   const semanticStyleDifferences = semantic.flatMap((item) => [
     ...item.computedStyles.differences,
     ...item.geometry.differences.map((difference) => ({ path: item.path, ...difference })),
+    ...item.svgUse.differences.map((difference) => ({ path: item.path, ...difference })),
   ]);
   const missingSemanticPaths = semantic
     .filter((item) => item.expectedCount < item.requiredCount || item.actualCount < item.requiredCount)

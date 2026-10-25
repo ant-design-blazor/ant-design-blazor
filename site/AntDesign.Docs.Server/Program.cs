@@ -4,6 +4,7 @@
 
 using AntDesign.Docs.Services;
 using Blazor.Polyfill.Server;
+using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,10 +59,24 @@ app.UseBlazorPolyfill();
 app.UseBlazorPolyfill();
 #endif
 
-app.UseStaticFiles();
+// Let browsers display LLMs.md links as raw Markdown instead of treating
+// text/markdown as an unsupported download. The contents remain unchanged.
+var contentTypeProvider = new FileExtensionContentTypeProvider();
+contentTypeProvider.Mappings[".md"] = "text/plain; charset=utf-8";
+app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = contentTypeProvider });
 
 app.UseRouting();
 app.MapControllers();
+app.MapGet("/{language}/components/{component}.md", (string language, string component) =>
+{
+    var markdown = ComponentMarkdown.Get(component, language);
+    return markdown == null ? Results.NotFound() : Results.Text(markdown, "text/plain; charset=utf-8");
+});
+app.MapGet("/{language}/docs/{document}.md", (string language, string document) =>
+{
+    var markdown = ComponentMarkdown.GetDoc(document, language);
+    return markdown == null ? Results.NotFound() : Results.Text(markdown, "text/plain; charset=utf-8");
+});
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

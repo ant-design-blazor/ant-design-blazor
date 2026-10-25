@@ -12,12 +12,17 @@ import { extractComponentTokenDefinitions } from './component-tokens.mjs';
 import { syncGlobalTokenDocs } from './global-token-docs.mjs';
 import { renderComponentGlobalTokenCatalog } from './component-global-tokens.mjs';
 import { renderSeedTokenDefaults } from './seed-token-defaults.mjs';
+import { generateReactThemeReference } from './react-theme-reference.mjs';
+import { extractPreviewThemeMetadata, extractPreviewAlgorithm, extractCompatibleV4Defaults } from './preview-theme-metadata.mjs';
+import { syncColorSpec } from './color-spec-catalog.mjs';
 
 const usage = `Usage:
   node src/cli.mjs sync --antd-path <path> [--blazor-path <path>] [--revision <revision>] --output <path>
   node src/cli.mjs baseline-update --antd-path <path> [--revision <revision>] --output <path>
   node src/cli.mjs generate-csharp-tokens --ir <style-ir.json> [--antd-path <path>] --output <GeneratedComponentTokens.cs>
   node src/cli.mjs generate-csharp-theme-tokens --antd-path <path> --output <GeneratedThemeTokens.cs>
+  node src/cli.mjs generate-theme-reference --antd-path <path> --output <react-theme-tokens.json>
+  node src/cli.mjs sync-color-spec --antd-path <path> --output <ColorSpecCatalog.g.cs> [--check]
   node src/cli.mjs generate-preview-theme-catalog --ir <themes.json> --output <GeneratedPreviewThemes.cs>
   node src/cli.mjs sync-v6 --antd-path <path> [--blazor-path <path>] [--output <path>]
   node src/cli.mjs sync-semantic-dom --antd-path <path> [--blazor-path <path>] [--output <semantic-dom-catalog.json>] [--semantic-docs-path <react-_site>] [--semantic-md-output <path>]
@@ -654,6 +659,8 @@ async function syncV6(args) {
   await writeFile(iconCategoriesSourceOutput, generateIconCategoriesSource(await readFile(iconCategoriesOutput, 'utf8')), 'utf8');
   await generateCsharpTokens({ ir: join(irOutput, 'style-ir.json'), output: generatedComponents, 'antd-path': antdPath });
   await generateCsharpThemeTokens({ 'antd-path': antdPath, output: generatedTheme, 'shortcuts-output': generatedShortcuts });
+  const themeReference = join(blazorPath, 'tests/AntDesign.Tests/Theming/Fixtures/react-theme-tokens.json');
+  await generateReactThemeReference(antdPath, themeReference);
   const globalTokenCount = await syncGlobalTokenDocs({
     metadataPath: join(antdPath, 'components/version/token-meta.json'),
     englishPath: join(blazorPath, 'docs/customize-theme.en-US.md'),
@@ -692,6 +699,7 @@ async function syncV6(args) {
       iconCategoriesSource: relative(blazorPath, iconCategoriesSourceOutput),
       components: relative(blazorPath, generatedComponents),
       theme: relative(blazorPath, generatedTheme),
+      themeReference: relative(blazorPath, themeReference),
       shortcuts: relative(blazorPath, generatedShortcuts),
       themes: relative(blazorPath, generatedThemes),
       globalTokenDocs: [relative(blazorPath, join(blazorPath, 'docs/customize-theme.en-US.md')), relative(blazorPath, join(blazorPath, 'docs/customize-theme.zh-CN.md'))],
@@ -727,6 +735,9 @@ async function generatePreviewThemeCatalog(args) {
   const previewRoot = join(resolve(args['antd-path']), '.dumi/pages/index/components/ThemePreview/previewThemes');
   const indexPath = join(previewRoot, 'index.ts');
   const indexSource = existsSync(indexPath) ? await readFile(indexPath, 'utf8') : '';
+  const metadata = extractPreviewThemeMetadata(indexSource);
+  const compatiblePath = join(resolve(args['antd-path']), 'node_modules/@ant-design/compatible/lib/theme/index.js');
+  const compatible = existsSync(compatiblePath) ? extractCompatibleV4Defaults(await readFile(compatiblePath, 'utf8')) : null;
   const previewThemeComponents = parseThemeLiteral(findNamedObject(indexSource, 'previewThemeComponents'), { DEFAULT_COLOR: '#1677FF' });
   const darkPreviewComponents = {
     Layout: parseThemeLiteral(findNamedObject(indexSource, 'darkPreviewLayoutToken')),
@@ -734,12 +745,26 @@ async function generatePreviewThemeCatalog(args) {
     Progress: parseThemeLiteral(findNamedObject(indexSource, 'darkPreviewProgressToken'), { DEFAULT_COLOR: '#1677FF' }),
   };
   for (const theme of themes) {
+    const entry = metadata.find(item => item.key === theme.key);
+    if (!entry) throw new Error(`Missing React preview metadata for ${theme.key}`);
+    theme.icon = entry.icon;
+    theme.background = entry.background;
+    theme.darkBackground = entry.darkBackground;
+    theme.name = entry.name;
+    theme.algorithm = theme.key === 'dark' ? 'dark' : 'default';
     const sourcePath = join(previewRoot, `${theme.key}Theme.ts`);
     if (existsSync(sourcePath)) {
       const source = await readFile(sourcePath, 'utf8');
+      theme.algorithm = extractPreviewAlgorithm(source);
       theme.tokens = extractThemeObject(source, 'token', { DEFAULT_COLOR: '#1677FF' });
       theme.components = extractThemeObject(source, 'components', { DEFAULT_COLOR: '#1677FF', DEFAULT_COLOR_V4: '#1890ff' });
       theme.unresolved = [...new Set([...findUnresolvedSpreads(source, 'token'), ...findUnresolvedSpreads(source, 'components')])];
+      if (theme.key === 'v4' && compatible) {
+        theme.tokens = compatible.token;
+        theme.components = mergeThemeObjects(compatible.components, theme.components);
+        theme.components.Progress.defaultColor = compatible.token.colorPrimary;
+        theme.unresolved = ['algorithm:@ant-design/compatible/defaultAlgorithm'];
+      }
       theme.source = `.dumi/pages/index/components/ThemePreview/previewThemes/${theme.key}Theme.ts`;
     } else {
       theme.tokens = {};
@@ -768,18 +793,21 @@ async function generatePreviewThemeCatalog(args) {
     '        public string Appearance { get; }',
     '        public string Algorithm { get; }',
     '        public string ReactSource { get; }',
+    '        public string Icon { get; }',
+    '        public string Background { get; }',
+    '        public bool DarkBackground { get; }',
     '        public IReadOnlyDictionary<string, string> Tokens { get; }',
     '        public IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> Components { get; }',
     '        public IReadOnlyList<string> Unresolved { get; }',
-    '        public PreviewThemeDefinition(string key, string name, string appearance, string algorithm, string reactSource, IReadOnlyDictionary<string, string> tokens, IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> components, IReadOnlyList<string> unresolved)',
-    '        { Key = key; Name = name; Appearance = appearance; Algorithm = algorithm; ReactSource = reactSource; Tokens = tokens; Components = components; Unresolved = unresolved; }',
+    '        public PreviewThemeDefinition(string key, string name, string appearance, string algorithm, string reactSource, IReadOnlyDictionary<string, string> tokens, IReadOnlyDictionary<string, IReadOnlyDictionary<string, string>> components, IReadOnlyList<string> unresolved, string icon = null, string background = null, bool darkBackground = false)',
+    '        { Key = key; Name = name; Appearance = appearance; Algorithm = algorithm; ReactSource = reactSource; Tokens = tokens; Components = components; Unresolved = unresolved; Icon = icon; Background = background; DarkBackground = darkBackground; }',
     '    }',
     '',
     '    public static class GeneratedPreviewThemes',
     '    {',
     '        public static IReadOnlyList<PreviewThemeDefinition> All { get; } = new ReadOnlyCollection<PreviewThemeDefinition>(new[]',
     '        {',
-    ...themes.map((theme) => `            new PreviewThemeDefinition(${quote(theme.key)}, ${quote(theme.name)}, ${quote(theme.appearance)}, ${quote(theme.key === 'dark' ? 'dark' : 'default')}, ${quote(theme.source)}, ${toCsharpStringDictionary(theme.tokens)}, ${toCsharpNestedStringDictionary(theme.components)}, ${toCsharpStringList(theme.unresolved)}),`),
+    ...themes.map((theme) => `            new PreviewThemeDefinition(${quote(theme.key)}, ${quote(theme.name)}, ${quote(theme.appearance)}, ${quote(theme.algorithm)}, ${quote(theme.source)}, ${toCsharpStringDictionary(theme.tokens)}, ${toCsharpNestedStringDictionary(theme.components)}, ${toCsharpStringList(theme.unresolved)}, ${quote(theme.icon)}, ${quote(theme.background)}, ${theme.darkBackground}),`),
     '        });',
     '    }',
     '}',
@@ -969,7 +997,10 @@ function pascalCase(value) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-if (args.command === 'sync') {
+if (args.command === 'sync-color-spec') {
+  if (!args['antd-path'] || !args.output) fail('sync-color-spec requires --antd-path and --output');
+  else syncColorSpec({ antdPath: args['antd-path'], output: args.output, check: Boolean(args.check) }).then(result => console.log(JSON.stringify(result))).catch(error => fail(error.message));
+} else if (args.command === 'sync') {
   sync(args).catch((error) => fail(error.message));
 } else if (args.command === 'baseline-update') {
   updateBaseline(args).catch((error) => fail(error.message));
@@ -981,6 +1012,9 @@ if (args.command === 'sync') {
   generateCsharpTokens(args).catch((error) => fail(error.message));
 } else if (args.command === 'generate-csharp-theme-tokens') {
   generateCsharpThemeTokens(args).catch((error) => fail(error.message));
+} else if (args.command === 'generate-theme-reference') {
+  if (!args['antd-path'] || !args.output) fail('generate-theme-reference requires --antd-path and --output');
+  else generateReactThemeReference(args['antd-path'], args.output).then(result => console.log(JSON.stringify({ source: result.source, scenarios: result.scenarios.length }))).catch(error => fail(error.message));
 } else if (args.command === 'generate-preview-theme-catalog') {
   generatePreviewThemeCatalog(args).catch((error) => fail(error.message));
 } else if (args.command === 'sync-v6') {
@@ -1015,5 +1049,5 @@ if (args.command === 'sync') {
     .then((result) => console.log(JSON.stringify(result, null, 2)))
     .catch((error) => fail(error.message));
 } else {
-  fail('supported commands are sync, baseline-update, css-baseline-update, generate-csharp-tokens, generate-csharp-theme-tokens, sync-v6, sync-semantic-dom, exact-check and theme-exact-check');
+  fail('supported commands are sync, baseline-update, css-baseline-update, generate-csharp-tokens, generate-csharp-theme-tokens, generate-theme-reference, sync-v6, sync-semantic-dom, exact-check and theme-exact-check');
 }

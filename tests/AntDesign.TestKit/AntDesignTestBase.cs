@@ -39,6 +39,8 @@ namespace AntDesign.Tests
 
             // Provide a default getWindow stub so layout components calling into domInfoHelper.getWindow do not fail in tests
             JSInterop.Setup<Window>(JSInteropConstants.GetWindow, _ => true).SetResult(new Window());
+            JSInterop.SetupVoid("AntDesign.interop.menuOverflowHelper.observe", _ => true).SetVoidResult();
+            JSInterop.SetupVoid("AntDesign.interop.menuOverflowHelper.unobserve", _ => true).SetVoidResult();
 
             JSInterop.Mode = JSRuntimeMode.Strict;
 

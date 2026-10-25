@@ -1,0 +1,130 @@
+@using AntDesign.Theming
+@inherits AntDesignTestBase
+@code {
+    public CollapseTests() => JSInterop.Mode = JSRuntimeMode.Loose;
+
+    [Theory]
+    [InlineData(null, false)]
+    [InlineData(CollapseCollapsible.Header, false)]
+    [InlineData(CollapseCollapsible.Icon, false)]
+    [InlineData(CollapseCollapsible.Disabled, false)]
+    [InlineData(null, true)]
+    [InlineData(CollapseCollapsible.Header, true)]
+    [InlineData(CollapseCollapsible.Icon, true)]
+    [InlineData(CollapseCollapsible.Disabled, true)]
+    public async Task Interactive_roles_and_click_targets_match_React(CollapseCollapsible? mode, bool accordion)
+    {
+        var cut = Render<AntDesign.Collapse>(@<AntDesign.Collapse Collapsible="mode" Accordion="accordion">
+            <Panel Key="1" Header="Header">Content</Panel>
+        </AntDesign.Collapse>);
+        var header = cut.Find(".ant-collapse-header");
+        var icon = cut.Find(".ant-collapse-expand-icon");
+        var title = cut.Find(".ant-collapse-title");
+        var role = accordion ? "tab" : "button";
+        Assert.Equal(accordion ? "tablist" : null, cut.Find(".ant-collapse").GetAttribute("role"));
+        Assert.Equal(mode == null || mode == CollapseCollapsible.Disabled ? role : null, header.GetAttribute("role"));
+        Assert.Equal(mode == CollapseCollapsible.Header || mode == CollapseCollapsible.Icon ? role : null, icon.GetAttribute("role"));
+        Assert.Equal(mode == CollapseCollapsible.Header ? role : null, title.GetAttribute("role"));
+        var interactiveIcon = mode is CollapseCollapsible.Header or CollapseCollapsible.Icon;
+        Assert.Equal(interactiveIcon ? "collapsed" : "right", cut.Find(".ant-collapse-arrow").GetAttribute("aria-label"));
+        Assert.Equal(interactiveIcon ? null : "true", cut.Find(".ant-collapse-arrow").GetAttribute("aria-hidden"));
+        if (mode.HasValue) Assert.Contains("ant-collapse-collapsible-" + mode.ToString().ToLowerInvariant(), header.ClassList);
+        await header.ClickAsync(new());
+        Assert.Equal(mode == null, cut.FindComponent<Panel>().Instance.Active);
+        if (mode == null) await header.ClickAsync(new());
+        await title.ClickAsync(new());
+        Assert.Equal(mode == null || mode == CollapseCollapsible.Header, cut.FindComponent<Panel>().Instance.Active);
+        if (cut.FindComponent<Panel>().Instance.Active) await title.ClickAsync(new());
+        await icon.ClickAsync(new());
+        Assert.Equal(mode != CollapseCollapsible.Disabled, cut.FindComponent<Panel>().Instance.Active);
+        if (mode != CollapseCollapsible.Disabled)
+        {
+            Assert.Equal(accordion ? "tabpanel" : null, cut.Find(".ant-collapse-panel").GetAttribute("role"));
+            Assert.Null(cut.Find(".ant-collapse-panel").GetAttribute("style"));
+            await icon.ClickAsync(new());
+            Assert.Contains("ant-collapse-panel-inactive", cut.Find(".ant-collapse-panel").ClassList);
+            Assert.Contains("ant-collapse-panel-hidden", cut.Find(".ant-collapse-panel").ClassList);
+        }
+        else
+        {
+            Assert.Equal("-1", header.GetAttribute("tabindex"));
+            Assert.Equal("true", header.GetAttribute("aria-disabled"));
+            Assert.Empty(cut.FindAll(".ant-collapse-panel"));
+        }
+    }
+
+    [Fact]
+    public void Default_active_panels_do_not_run_appear_motion()
+    {
+        var cut = Render(@<AntDesign.Collapse Animation DefaultActiveKey="@(new[] { "1" })">
+            <Panel Key="1" Header="Header">Content</Panel>
+        </AntDesign.Collapse>);
+        Assert.Equal("ant-collapse-panel ant-collapse-panel-active", cut.Find(".ant-collapse-panel").ClassName);
+        Assert.Null(cut.Find(".ant-collapse-panel").GetAttribute("style"));
+    }
+
+    [Fact]
+    public async Task Icon_keyboard_and_per_panel_override_do_not_toggle_twice()
+    {
+        var cut = Render(@<AntDesign.Collapse Collapsible="CollapseCollapsible.Icon" Accordion>
+            <Panel Key="1" Header="Icon">First</Panel>
+            <Panel Key="2" Header="Header" Collapsible="CollapseCollapsible.Header">Second</Panel>
+            <Panel Key="3" Header="Disabled" Disabled>Third</Panel>
+        </AntDesign.Collapse>);
+        var panels = cut.FindComponents<Panel>();
+        await cut.FindAll(".ant-collapse-expand-icon")[0].KeyDownAsync(new KeyboardEventArgs { Key = "Enter" });
+        Assert.True(panels[0].Instance.Active);
+        await cut.FindAll(".ant-collapse-title")[1].KeyDownAsync(new KeyboardEventArgs { Key = "Enter" });
+        Assert.False(panels[0].Instance.Active);
+        Assert.True(panels[1].Instance.Active);
+        await cut.FindAll(".ant-collapse-header")[2].KeyDownAsync(new KeyboardEventArgs { Key = "Enter" });
+        Assert.False(panels[2].Instance.Active);
+        Assert.True(panels[1].Instance.Active);
+    }
+
+    [Fact]
+    public void All_five_semantic_slots_accept_classes_and_styles_and_the_default_arrow_is_a_real_v6_icon()
+    {
+        var slots = new Dictionary<string, string>
+        {
+            ["root"] = ".ant-collapse", ["header"] = ".ant-collapse-header", ["icon"] = ".ant-collapse-expand-icon",
+            ["title"] = ".ant-collapse-title", ["body"] = ".ant-collapse-body"
+        };
+        var classes = slots.ToDictionary(slot => slot.Key, slot => "test-" + slot.Key);
+        var styles = slots.ToDictionary(slot => slot.Key, slot => "color:purple");
+        var cut = Render(@<AntDesign.Collapse ClassNames="classes" Styles="styles" DefaultActiveKey="@(new[] { "1" })">
+            <Panel Key="1" Header="Header">Content</Panel>
+        </AntDesign.Collapse>);
+        foreach (var slot in slots)
+        {
+            var element = cut.Find(slot.Value);
+            Assert.Contains("test-" + slot.Key, element.ClassList);
+            Assert.Contains("color:purple", element.GetAttribute("style"));
+        }
+        var arrow = cut.Find(".ant-collapse-arrow");
+        Assert.Equal("right", arrow.GetAttribute("aria-label"));
+        Assert.Equal("true", arrow.GetAttribute("aria-hidden"));
+        Assert.Equal("64 64 896 896", arrow.QuerySelector("svg").GetAttribute("viewBox"));
+        Assert.Equal("transform: rotate(90deg);", arrow.QuerySelector("svg").GetAttribute("style"));
+    }
+
+    [Fact]
+    public void Component_theme_tokens_are_applied_to_the_collapse_root_without_leaking_to_siblings()
+    {
+        var theme = new ThemeConfig();
+        theme.Components["Collapse"] = new Dictionary<string, string>
+        {
+            ["headerPadding"] = "0px 10px 20px 30px", ["contentBg"] = "#e6f7ff", ["fontSize"] = "22"
+        };
+        var cut = Render(@<ConfigProvider ThemeConfig="theme">
+            <AntDesign.Collapse><Panel Header="Theme" Key="1">Content</Panel></AntDesign.Collapse>
+            <Button>Sibling</Button>
+        </ConfigProvider>);
+        var style = cut.Find(".ant-collapse").GetAttribute("style");
+        Assert.Contains("--ant-collapse-header-padding:0px 10px 20px 30px", style);
+        Assert.Contains("--ant-collapse-content-bg:#e6f7ff", style);
+        Assert.Contains("--ant-font-size:22px", style);
+        Assert.DoesNotContain("--ant-collapse", cut.Find("button.ant-btn").GetAttribute("style") ?? "");
+        Assert.DoesNotContain("--ant-font-size:22px", cut.Find("button.ant-btn").GetAttribute("style") ?? "");
+    }
+}

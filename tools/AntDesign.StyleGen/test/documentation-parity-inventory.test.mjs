@@ -1,6 +1,31 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { compareReactDemoNames, matchComponentRoutes, normalizeDemoId } from '../src/documentation-parity-inventory.mjs';
+import {
+  compareReactDemoNames,
+  matchComponentRoutes,
+  normalizeDemoId,
+  withIsolatedPage,
+} from '../src/documentation-parity-inventory.mjs';
+
+test('closes each isolated browser page after both success and failure', async () => {
+  const pages = [];
+  const browser = {
+    async newPage() {
+      const page = {
+        closed: false,
+        isClosed() { return this.closed; },
+        async close() { this.closed = true; },
+      };
+      pages.push(page);
+      return page;
+    },
+  };
+
+  assert.equal(await withIsolatedPage(browser, async (page) => pages.includes(page)), true);
+  await assert.rejects(withIsolatedPage(browser, async () => { throw new Error('route failed'); }), /route failed/);
+  assert.equal(pages.length, 2);
+  assert.ok(pages.every(({ closed }) => closed));
+});
 
 test('normalizes Dumi and Blazor demo id differences without conflating demo suffixes', () => {
   assert.equal(normalizeDemoId('components-button-demo-Basic'), 'buttondemobasic');

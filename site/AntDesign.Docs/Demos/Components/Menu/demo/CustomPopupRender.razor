@@ -1,0 +1,30 @@
+<Menu Mode="MenuMode.Horizontal" TriggerSubMenuAction="Trigger.Click" OnMenuItemClicked="@(item => _selected = item.Key)">
+    <PopupRender Context="popup">
+        <div class="menu-navigation-popup">
+            <h3>@popup.Item.Title</h3>
+            @popup.Content
+        </div>
+    </PopupRender>
+    <ChildContent>
+        <MenuItem Key="home">Home</MenuItem>
+        <SubMenu Key="features" Title="Features">
+            <MenuItem Key="getting-started"><b>Getting Started</b><small>Quick start guide and learn the basics.</small></MenuItem>
+            <MenuItem Key="components"><b>Components</b><small>Explore our component library.</small></MenuItem>
+            <MenuItem Key="templates"><b>Templates</b><small>Ready-to-use template designs.</small></MenuItem>
+        </SubMenu>
+        <SubMenu Key="resources" Title="Resources">
+            <MenuItem Key="blog"><b>Blog</b><small>Latest updates and articles.</small></MenuItem>
+            <MenuItem Key="community"><b>Community</b><small>Join our developer community.</small></MenuItem>
+        </SubMenu>
+    </ChildContent>
+</Menu>
+<p role="status">Selected: @_selected</p>
+<style>
+    .menu-navigation-popup { padding:var(--ant-padding,16px);width:480px;max-width:calc(100vw - 32px);box-sizing:border-box;background:var(--ant-color-bg-elevated,#fff);border-radius:var(--ant-border-radius-lg,8px);box-shadow:var(--ant-box-shadow-secondary); }
+    .menu-navigation-popup h3 { margin:0;padding-bottom:8px;border-bottom:1px solid var(--ant-color-split,#f0f0f0); }
+    .menu-navigation-popup > ul.ant-menu { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));box-shadow:none;min-width:0!important; }
+    .menu-navigation-popup > ul.ant-menu::before,.menu-navigation-popup > ul.ant-menu::after { display:none; }
+    .menu-navigation-popup > ul.ant-menu > li.ant-menu-item { height:auto;line-height:1.5;padding:12px;white-space:normal; }
+    .menu-navigation-popup small { display:block;color:var(--ant-color-text-secondary); }
+</style>
+@code { private string _selected = "none"; }

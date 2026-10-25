@@ -12,14 +12,14 @@
                     BoundaryAdjustMode="@BoundaryAdjustMode"
                     Placement="Placement"
                     OnVisibleChange="OverlayVisibleChange"
-                    OverlayClassName="ant-picker-dropdown-range ant-picker-css-var"
+                    OverlayClassName="@SemanticPopupClass("popup.root", "ant-picker-dropdown-range ant-picker-css-var")"
                     OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                     OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
                     Trigger="new[] { Trigger.Click }">
         <Overlay>
             <div class="@(PrefixCls)-range-wrapper @(Picker == DatePickerType.Time ? $"{PrefixCls}-time-range-wrapper" : null)">
                 <div class="@(PrefixCls)-range-arrow" style="@_rangeArrowStyle" />
-                <div class="@(PrefixCls)-panel-container @(Picker == DatePickerType.Time ? $"{PrefixCls}-time-panel-container" : $"{PrefixCls}-date-panel-container")" @onclick="@PickerClicked">
+                <div class="@SemanticPopupClass("popup.container", $"{PrefixCls}-panel-container {(Picker == DatePickerType.Time ? $"{PrefixCls}-time-panel-container" : $"{PrefixCls}-date-panel-container")}")" style="@SemanticPopupStyle("popup.container")" @onclick="@PickerClicked">
                     <div class="@(PrefixCls)-panel-layout">
                         <div class="@(PrefixCls)-panels">
                             <div class="@_panelClassMapper.Class" style="@(Picker == DatePickerType.Date && IsShowTime && GetOnFocusPickerIndex() == (RTL ? 0 : 1) ? "display: none;": "")">
@@ -31,7 +31,7 @@
                         </div>
                         @if (ShowFooter)
                         {
-                            <div class="@(PrefixCls)-footer">
+                            <div class="@SemanticClass("popup.footer", $"{PrefixCls}-footer")" style="@SemanticStyle("popup.footer")">
                                 @if (RenderExtraFooter != null)
                                 {
                                     <div class="@(PrefixCls)-footer-extra">
@@ -57,13 +57,13 @@
             </div>
         </Overlay>
         <Unbound>
-            <div class="@ClassMapper.Class"
+            <div class="@SemanticClass("root", ClassMapper.Class)"
                  @ref="@context.Current"
-                 style="@Style"
+                 style="@SemanticStyle("root", Style)"
                  Id="@Id">
                 @if (Prefix != null)
                 {
-                    <span class="@(PrefixCls)-prefix">@Prefix</span>
+                    <span class="@SemanticClass("prefix", $"{PrefixCls}-prefix")" style="@SemanticStyle("prefix")">@Prefix</span>
                 }
                 <DatePickerInput @ref="_inputStart"
                                  PrefixCls="@PrefixCls"
@@ -85,6 +85,8 @@
                                  AllowClear="@AllowClear"
                                  HtmlInputSize="@HtmlInputSize"
                                  FeedbackIcon="@FormItem?.FeedbackIcon"
+                                 ClassNames="@ClassNames"
+                                 Styles="@Styles"
                                  OnClickClear="e => ClearValue(-1)" />
 
                 <div class="@(PrefixCls)-range-separator">
@@ -114,11 +116,13 @@
                                  HtmlInputSize="@HtmlInputSize"
                                  SuffixIcon="@SuffixIcon"
                                  FeedbackIcon="@FormItem?.FeedbackIcon"
+                                 ClassNames="@ClassNames"
+                                 Styles="@Styles"
                                  OnClickClear="e => ClearValue(-1)" />
 
                 <div class="@(PrefixCls)-active-bar" style="@_activeBarStyle"></div>
 
-                <span class="@(PrefixCls)-suffix" @onclick="@(_=> OnSuffixIconClick())">
+                <span class="@SemanticClass("suffix", $"{PrefixCls}-suffix")" style="@SemanticStyle("suffix")" @onclick="@(_=> OnSuffixIconClick())">
                     @if (SuffixIcon != null)
                     {
                         @SuffixIcon

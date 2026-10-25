@@ -1,0 +1,5 @@
+<div style="width:256px;max-width:100%">
+    <Space Wrap Style="margin-bottom:16px"><Button OnClick="@(() => _collapsed = !_collapsed)">Toggle collapsed</Button><Switch @bind-Checked="_tooltip" CheckedChildren="Tooltip On" UnCheckedChildren="Tooltip Off" /></Space>
+    <Menu Mode="MenuMode.Inline" Theme="MenuTheme.Dark" InlineCollapsed="_collapsed" ShowCollapsedTooltip="_tooltip" CollapsedTooltipPlacement="Placement.Left" DefaultSelectedKeys="@(new[] { "1" })" DefaultOpenKeys="@(new[] { "sub1" })"><MenuExampleItems Extra /></Menu>
+</div>
+@code { private bool _collapsed; private bool _tooltip = true; }

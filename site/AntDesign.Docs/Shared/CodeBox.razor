@@ -16,6 +16,7 @@
             {
                 @if (_demoType != null)
                 {
+                    <div class="demo">
                      <ErrorBoundary @ref="_errorBoundary">
                         <ChildContent>
                               <DynamicComponent Type="_demoType" />
@@ -27,6 +28,7 @@
                             </Alert>
                         </ErrorContent>
                     </ErrorBoundary>
+                    </div>
                 }
             }
         }
@@ -119,6 +121,9 @@
             ["& .code-box-title, & .code-box-title a, & .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["background"] = "#fff" },
             ["& .code-box-title, & .code-box-title a"] = new System.Collections.Generic.Dictionary<string, object> { ["color"] = "rgba(0, 0, 0, 0.85)" },
             ["& .code-box-demo"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "42px 24px 50px", ["color"] = "var(--ant-color-text)", ["borderBottom"] = "1px solid rgba(0, 0, 0, 0.06)" },
+            // Match React's demo wrapper: fixed-width examples scroll locally,
+            // rather than widening the entire component documentation page.
+            ["& .code-box-demo > .demo"] = new System.Collections.Generic.Dictionary<string, object> { ["overflow"] = "auto" },
             ["&[id^='components-grid-demo-'] .code-box-demo .ant-row > div"] = new System.Collections.Generic.Dictionary<string, object>
             {
                 ["minHeight"] = 30, ["marginTop"] = 8, ["marginBottom"] = 8, ["color"] = "#fff", ["textAlign"] = "center", ["borderRadius"] = 0
@@ -224,7 +229,9 @@
     private bool _codeExpand;
     private string _activeFileTab; // 当前激活的文件Tab
 
-    protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
+    public static string GetDemoId(string componentName, string demoName) => $"components-{componentName.ToLowerInvariant()}-demo-{demoName}";
+
+    protected string DemoId => GetDemoId(ComponentName, Demo.Name);
 
     private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/{Demo.Type.Replace(".", "/")}.razor";
 

@@ -10,8 +10,16 @@ export class eventHelper {
     return element.dispatchEvent(evt);
   }
 
-  static addDomEventListener(element, eventName: string, preventDefault: boolean, invoker: any, stopPropagation: boolean = false) {
+  static addDomEventListener(element, eventName: string, preventDefault: boolean, invoker: any, stopPropagation: boolean = false, ignoreSelector?: string) {
     const callback = args => {
+      // Nested controls can own their click without toggling an unbound
+      // trigger. Leave propagation intact for Blazor's delegated handler.
+      if (ignoreSelector) {
+        for (const target of args.composedPath?.() ?? []) {
+          if (target === dom) break;
+          if (target instanceof Element && target.matches(ignoreSelector)) return;
+        }
+      }
       const obj = {};
       for (const k in args) {
         if (k !== 'originalTarget') { //firefox occasionally raises Permission Denied when this property is being stringified

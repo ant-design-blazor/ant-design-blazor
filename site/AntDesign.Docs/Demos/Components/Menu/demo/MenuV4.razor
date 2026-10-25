@@ -1,0 +1,12 @@
+@using AntDesign.Theming
+<Switch @bind-Checked="_vertical" /> Change Mode
+<br /><br />
+<ConfigProvider ThemeConfig="_theme">
+    <Menu Mode="@(_vertical ? MenuMode.Vertical : MenuMode.Inline)" Style="width:256px;max-width:100%" DefaultSelectedKeys="@(new[] { "1" })" DefaultOpenKeys="@(new[] { "sub1" })"><MenuExampleItems /></Menu>
+</ConfigProvider>
+@code {
+    private bool _vertical;
+    private readonly ThemeConfig _theme = new() { Components = new Dictionary<string, IDictionary<string, string>> {
+        ["Menu"] = new Dictionary<string, string> { ["itemBorderRadius"] = "0", ["subMenuItemBorderRadius"] = "0", ["itemHoverColor"] = "#1890ff", ["itemSelectedColor"] = "#1890ff", ["itemSelectedBg"] = "#e6f7ff", ["activeBarWidth"] = "3", ["itemMarginInline"] = "0", ["itemHoverBg"] = "transparent" }
+    } };
+}

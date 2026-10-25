@@ -58,6 +58,8 @@ namespace AntDesign.Docs.Build.CLI
             services.AddSingleton<IAppCommand, GenerateMenuJsonCommand>();
             services.AddSingleton<IAppCommand, GenerateDocsToHtmlCommand>();
             services.AddSingleton<IAppCommand, GenerateIconsToJsonCommand>();
+            services.AddSingleton<IAppCommand, GenerateLlmsCommand>();
+            services.AddSingleton<IAppCommand, GenerateLlmsTokenInputsCommand>();
             services.AddHttpClient<GoogleTranslate>(client =>
             {
                 client.BaseAddress = new Uri("https://translate.google.com");

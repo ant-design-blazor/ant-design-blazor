@@ -246,7 +246,6 @@ namespace AntDesign
         /// <summary>
         /// Show or hide the next/previous buttons
         /// </summary>
-        /// <default value="true" />
         [Parameter]
         public bool ShowPrevNextJumpers { get; set; } = true;
 

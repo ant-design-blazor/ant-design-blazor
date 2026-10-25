@@ -794,6 +794,66 @@ catalog are shared infrastructure rather than UI components.
   mounted demo list to stabilize. The complete rerun confirms the same 881 / 654
   / 227 totals, while reducing React hydration-blocked pages from 41 to 39;
   these pages remain explicitly flagged rather than silently accepted.
+- Cascader parity follow-up: added the missing React `variant` demo and exposed
+  `InputVariant` on Cascader, replacing the hard-coded outlined class with the
+  selected v6 variant class. Added the missing `showCheckedStrategy` demo using
+  the existing ShowChild/ShowParent behavior. Cascader tests pass 16/16; the
+  net10 Docs Server builds successfully. Browser comparison confirms both
+  implementations render all four variant classes at 32px height and the
+  expected border/background modes; React's current page is dark-themed while
+  Blazor is light-themed, so palette values differ by theme as expected. The
+  browser also confirms ShowChild renders three leaf tags while ShowParent
+  collapses them to a single Bamboo tag, with no demo error alerts. The
+  Cascader page remains open on the variant demo for manual review.
+- Transfer follow-up (2026-10-22): a fresh 68-route browser inventory found
+  881 React demos, 957 Blazor demos, 661 exact name matches, 220 unmatched
+  React names, and 39 hydration/route-blocked pages. Transfer was among the
+  unblocked routes and was missing the React `oneway`, `actions`, and
+  `large-data` demos (in addition to React's internal `_semantic` demo name).
+  Added One Way and Custom Actions examples, implemented the 2,000-item
+  Performance Test with a reusable paginated one-side panel, and completed
+  Table Transfer and Tree Transfer on that same panel. After the three public
+  demos were added, the live Blazor Transfer page shows all 11 public React
+  demo names; the React page shows those same 11 plus its internal `_semantic`
+  preview. Browser interaction verified one-way movement, custom-action
+  movement, and page-two data (`content22`/`content24`) with 10 rendered rows
+  per side. The adjusted whole-site name counts are 664 matched and 217
+  unmatched; a full rerun is still needed for a post-change global snapshot.
+  Table Transfer's empty target now retains the custom Table and its empty row;
+  both sides carry React's `ant-transfer-list-body-with-search` class. Its
+  side width is token-sized (180px vs React's measured 175.6px), and its empty
+  target table row/height matches React (190px). The source table is 267px vs
+  React's intrinsic 274.2px at the same browser viewport.
+  Follow-up browser verification on the Development docs server confirmed the
+  Table demo uses five visible rows per page, stays within the card width, and
+  moves a selected row right and back left (20/0 → 19/1 → 20/0). Tree Transfer
+  likewise moves a checked node right, disables it in the source tree, then
+  restores it when moved left (7/0 → 6/1 → 7/0). The shared side panel formats
+  singular item counts correctly; the Transfer-filtered test run passes 5/5.
+  Tree content now scrolls within the standard 200px Transfer list instead of
+  overflowing its border; browser measurements show a 158px scroll viewport
+  for 196px of Tree content.
+  The browser remains open on the Tree Transfer demo at port 5538 for manual
+  review.
+  Docs and Docs Server build on .NET 10 with 0 errors. The live Blazor Transfer
+  page is open at port 5534 for manual review.
+- Collapse parity follow-up (2026-10-22): compared the public React demo list
+  with Blazor and added the missing `Size`, `Ghost`, custom panel `Icon`,
+  `Collapsible`, and `Semantic class and style` demos. Added the component
+  `Size`, `Ghost`, `Collapsible`, `ClassNames`, and `Styles` API plus per-panel
+  trigger overrides; header, title, icon, body, and root slots now accept
+  semantic custom classes/styles. The new Icon trigger toggles only from the
+  expand control, while the default header trigger continues to toggle from
+  both header and arrow, and Disabled remains non-interactive.
+  Browser verification on .NET 10 confirmed those interaction rules and the
+  disabled ARIA state. Large/default/small header padding matches React exactly
+  at 16px 24px 16px 16px, 12px 16px, and 8px 12px 8px 8px. Root/header semantic
+  class/style overrides render on their intended elements. The docs CLI's demo
+  index generation is now unblocked by correcting a malformed Pagination XML
+  doc comment; the Collapse index lists all 13 public demos. Docs and Docs
+  Server build on .NET 10 with 0 errors. Full multi-target builds still report
+  unrelated existing Drawer/Slider errors on netstandard2.1/net5.0. The latest
+  Blazor Collapse docs page is open at port 5537 for manual review.
 
 ### QRCode and global-token follow-up (2026-10-22)
 
@@ -825,3 +885,330 @@ A more complete pre-QRCode whole-site scan found 1,098 React demos, 974 Blazor
 demos, 764 exact normalized name matches, and 334 missing React names over 68
 paired routes, with one blocked page. Older totals based on incomplete hydration
 are superseded; a post-batch whole-site inventory is still required.
+
+### Algorithm output and nested-theme verification (2026-10-22)
+
+The new CLI `generate-theme-reference` executes the actual pinned React
+`getDesignToken` implementation; `sync-v6` refreshes its C# test fixture too.
+Twelve scenarios cover default/dark/compact with default seeds, customized
+seeds, disabled motion/focus, and Map/Alias overrides. Every one of the 536
+returned tokens is compared per scenario (6,432 comparisons). The initial
+nine-scenario run exposed 577 differences; the added override scenarios exposed
+36 more dependency/order errors. Corrections include deprecated pink tokens,
+preset hover/active tokens, semantic base colors, link hover, error-background
+mixing, alpha outlines, FastColor-compatible neutral lightness, shadow alpha
+multiplication, and Seed/Map/Alias precedence. All 6,432 comparisons now pass
+with only CSS-equivalent serialization and 1e-12 numeric tolerance normalized.
+The public preset-palette export remains separate from the theme's pink alias.
+
+Live browser inspection then exposed a separate ConfigProvider inheritance bug:
+passing a parent's resolved light palette into a child dark algorithm kept the
+card white. Providers now cascade merged explicit inputs and the selected
+algorithm rather than resolved colors, including three-level inheritance,
+explicit child `default`, and `Inherit = false`. Four rendered-provider tests
+cover those cases. The rebuilt live ConfigProvider page confirms dark background
+`#141414`, primary `#1668dc`, text white at 85% opacity, correctly scaled white
+shadows, and Default/Dark/Compact control heights of 32/32/28px. Both customize-
+theme locales document these semantics. Targeted .NET 10 tests pass 69/69; the
+seven targeted Node suites pass 36/36; Docs Server builds with zero errors.
+
+QRCode follow-up: actual PNG and SVG downloads now succeed after disk space
+recovery, and all eight functional browser checks pass with zero page errors.
+The default, edited-value, and loading browser cases all have equal normalized
+DOM trees and zero sampled CSS/geometry differences. The strict HTML byte gate
+still reports Razor whitespace in all three cases; these are not counted as
+strict passes. Fixed the runner's actual Puppeteer focus/keyboard API and reran
+the input scenario, rather than accepting the mock-only result. The clipped
+QRCode cover highlight now uses an inner outline, visibly verified in browser.
+
+Browser reports and screenshots are in
+`/Volumes/Data/antd-v6.OYfUQf/qr-check/` (`recheck/parity-final.json`,
+`final-latest/browser-check.json`, `recheck/algorithm-scopes.jpg`, and
+`recheck/semantic-cover.jpg`). The server remains on port 5540. Algorithm
+composition arrays, additional CSS color input syntax, SVG matrix byte parity,
+and the remaining component/demo gaps are not proven complete by this batch.
+
+A final functional rerun initially timed out at the error-level canvas check;
+its failure remains in `final/browser-check.json`. Native browser interaction
+confirmed L→H selection and a changed QR matrix (8,800 differing thresholded
+pixels in the sampled canvas area). The checker now waits for initial canvas
+paint, foregrounds interactions, and verifies the selected H control before
+waiting for the new drawing. The subsequent `final-latest` run completes all
+eight checks successfully. Both theme documentation locales were also opened
+in-browser and confirmed to contain the updated precedence/inheritance text.
+
+### Homepage preview, rich components, and v6 backgrounds (2026-10-22–23)
+
+The homepage now uses the pinned React preview catalog's thirteen theme
+configurations, images and icons. Component-level global token overrides are
+emitted as scoped CSS variables; preview examples use real Blazor components,
+including the dropdown button, icon-bearing Segmented items, OTP, inline
+notification/modal/popconfirm panels, and BorderBeam card decoration. Shared
+panel implementations are reused instead of copying static component HTML.
+
+Rich components now contains real DatePicker, Tour, FloatButton, Splitter and
+Masonry examples. Below 768px it uses the real five-slide Carousel. Browser
+interaction verified date selection (2025-11-22 to 2025-11-23), FloatButton Sync
+feedback, Tour navigation, and dragging the Splitter from 40% to 60%. The
+Splitter initialization/disposal handshake now retains its .NET reference
+until the pending JavaScript attach finishes, including breakpoint unmounts.
+
+Replaced the legacy homepage background image and frozen geometric SVG with
+the three luminous bubbles from React's PreviewBanner/LuminousBg: 300px,
+blur(100px), pink/purple/cyan, matching viewport-relative anchors, random
+offset/scale/opacity ranges, 5s transitions and 3–5s scheduling. Animation is
+client-side, respects reduced motion, and cleans up on navigation/removal.
+The ecology area uses React's decorative SVG and light/dark background colors,
+while retaining Blazor-specific recommendations and products. Backgrounds
+and foreground colors consume the library's theme variables, not a second
+document-only token system. The homepage exposes the existing theme switch.
+The docs root now delegates CSS variables to that selected generated stylesheet
+instead of shadowing it with an inline light palette. Its ConfigProvider and
+Theme Preview selection track appearance changes while locally selected preview
+themes remain independent.
+
+Browser breakpoint cycling also reproduced `Collection was modified` in the
+shared resize dispatcher. Event and ResizeObserver dispatch now enumerate a
+snapshot, allowing callbacks to mount/unmount subscribers safely. Sync/async
+regressions cover replacing subscriptions during dispatch; six further browser
+breakpoint switches completed without new console errors. Reduced-motion
+emulation stopped bubble updates and transitions; clearing it restored motion.
+
+Validation: 155 selected .NET 10 tests pass (`home-theme-test-28.log`), including
+the new background and component regressions; four Node tests pass, including
+background animation lifecycle and generated preview metadata checks. Tested
+390/768/1024/1440px; the 768px title boundary now matches React's `<768` rule.
+Artifacts are under `/Volumes/Data/antd-v6.OYfUQf/home-preview-check/`; the docs
+server is on port 5540. This is not a whole-homepage strict HTML/CSS pass:
+random animation frames cannot be pixel-identical, React's mobile theme strip
+also overflows, preview action/AI tooling and dashboard differences remain,
+and the compatible-v4 custom derivative is not yet reproduced in full.
+
+### 2026-10-24 — Menu responsive overflow and documentation Header boundaries
+
+Verified the responsibility split against the pinned React v6 source:
+`@rc-component/menu` uses `@rc-component/overflow` with `Overflow.RESPONSIVE`,
+but `.dumi/theme/slots/Header/Navigation.tsx` explicitly sets `disabledOverflow`.
+Blazor's documentation Header now also sets `DisabledOverflow`; it must not
+perform a second, docs-only item-fitting algorithm. The mobile 300px Popover
+and crowded additional-actions submenu remain Header responsibilities.
+
+The reusable horizontal Menu now exposes `DisabledOverflow`,
+`OverflowedIndicator`, and `OverflowedIndicatorPopupClassName`. Its measurement
+and observer cleanup live in
+`components/core/JsInterop/modules/components/menuOverflowHelper.ts`, exported
+through the existing interop bundle. Measurements use actual menu elements,
+not label-length estimates. Blazor owns all rendering; overflow measurements
+never reparent its DOM. Hidden measurement items are inert, and the rest menu
+preserves click handlers, routing, disabled state, semantic classes/styles,
+selection, and nested selection paths when items return to the bar. Disposed
+lazy menu items are removed from the MenuService caches.
+
+Added the bilingual `responsive` Menu demo with width control, dynamic item
+add/remove, disabled items, a route link, nested submenus, and selected-state
+feedback. Both generated metadata inputs expose 12 Menu demos and the three
+overflow API rows. This is an additional Blazor regression/demo scenario, not
+evidence that another missing React demo has been filled.
+
+The Header keeps its navigation at natural width while allowing its search
+control to shrink. The homepage layout gate now rejects clipped navigation,
+not just document scroll overflow. Eleven actual viewport observations from
+320 through 1280px pass with no clipped navigation and no document overflow;
+the Header never renders the automatic rest indicator. The mobile Popover
+uses a normal Blazor child trigger and is bounded inside the viewport. Its
+legacy inner wrapper receives scoped token-based background/shadow styles;
+this does not migrate the shared Popover DOM to React v6.
+
+Also fixed a script-loader regression revealed by browser testing: a versioned
+explicit script reference was not recognized, so the initializer loaded an
+unversioned cached copy over the current interop object. The initializer now
+compares URL pathnames, and the server host appends a content version.
+
+Verification: 63 selected .NET 10 Menu/docs tests and 10 Node tests pass. The
+browser functional report verifies eight width observations, disabled and
+routed items, dynamic add/remove, and nested selection after restoring width,
+with no browser errors. Reports and screenshots are in
+`/Volumes/Data/antd-v6.OYfUQf/menu-overflow-check/`; server port 5540 is retained
+for manual checks. These are functional/layout checks, not a whole Menu or
+whole-homepage byte-identical DOM/computed-style certification.
+
+Other checks remain incomplete: the wider 138-test DOM/docs run had Tag close
+and Steps matchMedia-fixture failures; netstandard2.1 still fails in existing
+Transfer/Drawer code. The gulp entry point also references missing style-build
+modules, so the JS bundle was rebuilt using its Browserify/tsify/Babel chain
+directly. None of these checks is recorded as a passing full-repository gate.
+
+## 2026-10-24 — Component-page responsiveness and Menu demo gaps
+
+Fixed the shared component-page shell: the desktop sidebar and body now sum
+to 24 columns at the md breakpoint, mobile component pages use 16px inline
+padding, and tablet pages no longer reserve space for a hidden TOC. API tables
+scroll locally. CodeBox now uses React's `.code-box-demo > .demo` scroll wrapper,
+so fixed-width examples such as Flex Combination do not widen the document.
+
+Compared Menu examples by the names in the pinned React `components/menu/index`
+instead of total demo counts. Added four public examples (`tooltip`,
+`submenu-theme`, `style-class`, `custom-popup-render`) and seven explicitly debug
+examples (`horizontal-dark`, `style-debug`, `menu-v4`, `component-token`,
+`extra-style`, `extra-collapsed-debug`, `collapsed-icon-debug`). React-name
+coverage is now 18/18: 11 public and 7 debug. Blazor has 23 examples including
+five additional Blazor examples; these extras do not reduce the React deficit.
+Debug examples can be toggled separately, and shared debug source files are
+included through the existing additional-files metadata.
+
+Implemented the supporting library APIs: `Menu.PopupRender`, per-submenu
+`PopupRender` and inherited/overridden `Theme`, plus collapsed-tooltip placement.
+Popup contexts preserve the owner, key path and original interactive content.
+Menu popups now use viewport boundary adjustment and horizontal shifting when
+flipping alone cannot fit. This is component behavior, not a docs-only patch;
+other overlay types keep their existing placement behavior.
+
+Verification: .NET 10 server build succeeded; 69 selected Menu/docs tests and
+9 selected Node tests pass. Browser checks covered all 23 Menu demos at nine
+widths (320–1280px), plus Flex at 320/820/1280px: no document overflow or demo
+error panels. Interactions verified custom popup selection, tooltip collapse
+and disable, submenu theme switching, debug visibility and auxiliary source
+tabs. Evidence is under `/Volumes/Data/antd-v6.OYfUQf/menu-docs-responsive/`;
+the docs server remains on port 5540. This is named-demo coverage and scoped
+functional/layout acceptance, not full byte-identical Menu DOM/CSS parity or
+completion of the remaining component migration.
+
+## 2026-10-24 — Mobile component navigation uses Layout.Sider
+
+Replaced the old hand-written drawer markup with the requested Layout.Sider,
+not the Drawer component. The responsive Sider starts collapsed at zero width
+and keeps its native edge trigger for both expanding and collapsing. The
+trigger is now a keyboard-operable button with expanded-state accessibility.
+Expanded navigation has an opaque background and its own scrolling body;
+collapsed navigation does not render menu links. Selecting a route collapses
+it again. A CSS breakpoint guard also hides the prerendered desktop column
+before the interactive breakpoint callback runs.
+
+Verified in the browser at 320px and 390px (272px/300px sidebars respectively,
+with the edge trigger still inside the viewport), including Enter activation,
+collapse/reopen, routing to Flex, and desktop/mobile round trips. Closed menus
+have no links or document overflow. One old-circuit disconnect was logged during
+the full-page reload; subsequent interactions produced no additional errors.
+81 selected Menu/docs/Layout tests pass. Evidence is in
+`/Volumes/Data/antd-v6.OYfUQf/mobile-sider-check/`; server port 5540 is retained.
+
+## 2026-10-24 — Menu uses shared Overlay placement and boundary adjustment
+
+Removed the earlier Menu-only horizontal coordinate correction. SubMenu now
+identifies its actual `<li>` anchor through OverlayTrigger's internal wrapper
+contract; Overlay no longer measures the inner title as though the `<li>` were
+an extra wrapping div. Both initial placement and updates use that contract.
+Menu supplies Placement and InView; flipping and direction state remain owned
+by Overlay. Shared Overlay InView now contains a popup horizontally when
+neither candidate direction fits, without changing the chosen direction or
+its calculation function. None and InScroll keep their existing behavior.
+This supersedes the Menu-specific shifting approach recorded above.
+
+Per the newer request for progressive header overflow, the desktop documentation
+header now enables Menu overflow and gives its navigation a shrinkable flex
+slot. Mobile inline navigation still disables overflow. Hidden desktop utility
+groups are excluded from the measured items, and search visibility follows the
+same mobile render branch rather than a conflicting CSS breakpoint.
+
+Verification: the .NET 10 documentation server build succeeded and 82 selected
+Menu/docs/Layout tests pass. Twelve Node tests cover measurement, repeated
+placement calculations, direction flipping, resizing, scrolled viewports,
+centered popups, boundary modes and script loading. Browser checks at 320–1280px
+show no document overflow: the header hides AI at 860px, then Support & Services
+at 800px, with the overflow popup opening against its real anchor. The normal
+viewport example aligns popup and ellipsis right edges within 1px; nested
+selection of Option 3 works. The mobile header panel remains 300px at a 390px
+viewport. No browser errors occurred during the functional checks after reload.
+Evidence is in `/Volumes/Data/antd-v6.OYfUQf/menu-overlay-native-check/`.
+Server port 5540 remains available; these scoped checks are not a full-repository
+or byte-identical DOM/CSS parity gate.
+
+## 2026-10-24 — Single Carbon ad lifecycle and real Debug button
+
+Replaced executable Carbon scripts in both component and general documentation
+pages with one shared CarbonAd host. Its client module loads only after the
+interactive render, keeps vendor-owned DOM outside Blazor's diff, and reuses
+one slot across SPA navigation. Disposed hosts park the connected slot while
+an asynchronous response may still arrive; stale disposal cannot detach a
+slot already adopted by another page. No CSS hiding of duplicate ads is used.
+
+The Debug toggle now uses the real small text Button, including the v6 variant
+classes and icon wrapper, rather than a native button with incomplete legacy
+classes. Button supports an optional AriaPressed state; ordinary buttons omit
+the attribute and Debug updates it with the displayed examples.
+
+Verification: .NET 10 server build succeeds, 100 selected .NET Menu/docs/Button
+tests pass, and four isolated JS lifecycle tests pass without loading remote
+advertising resources. Browser testing confirms one actual Carbon ad and one
+vendor script on initial load, both Debug toggle states, Menu → Icon → Menu
+navigation, and a separate general-docs load. The Debug control is 24px high
+with transparent background/border at rest. Evidence and a screenshot are in
+`/Volumes/Data/antd-v6.OYfUQf/ad-debug-check/`; server port 5540 remains available.
+
+### Shared component metadata (2026-10-24)
+
+Added a shared `ComponentMetadata` block after the introduction and before usage
+sections on component pages. It follows React's compact Import/GitHub/Docs rows,
+using real Blazor Descriptions, localized labels, keyboard-accessible namespace
+copying, component source and issue links, editing, Markdown and changelog links.
+Icon imports use `AntDesign.Icons`; other components use `AntDesign`. Issue search
+is component-scoped, without inventing a live count. The old duplicate title-bar
+edit/source icons are omitted on these pages; overview/charts do not receive
+component metadata.
+
+The Markdown links are static assets from the deployed build, not React API
+documentation or possibly older default-branch sources. The SDK asset manifest
+maps the original files without source-tree copies or runtime metadata loading.
+The source generator also derives an available-document catalog from Markdown
+AdditionalFiles; pages without a source document (currently App) omit the edit
+and Markdown links instead of linking to nonexistent files.
+All 148 localized Markdown assets return 200 and match their sources byte for
+byte; the Debug publish output also contains all 148 unchanged files. The docs
+server serves Markdown as plain text. The in-app browser still blocks direct
+`.md` previews (`ERR_BLOCKED_BY_CLIENT`), so that browser-navigation check is not
+claimed as passing.
+
+Verification: .NET 10 build succeeds; 154 selected docs/Select/Space tests pass,
+including ten new metadata cases and a responsive overview structure test. Browser checks cover English Select and
+Chinese Icon, the import copy status, and desktop/narrow layout. At 375px the
+metadata occupies 343px with no overflowing links. Scoped styles suppress the
+legacy Descriptions colon.
+
+The advertisement is outside the heading and metadata, in a container-query grid.
+It sits alongside the intro only when the actual article is at least 880px wide;
+otherwise it follows the metadata at full content width. Its slot is capped at
+300px, shrinks below that when needed, and uses the vendor's responsive image/text
+layout with compact spacing and 12px text. The section divider follows the whole
+overview. Browser checks at 280/375/1280/1600px confirm one real ad, no overlap or
+horizontal overflow, and the expected stacked/two-column switch. Metadata widths
+are respectively 248/343/801.328/797.328px; ad widths are 248/300/300/300px. Default
+Blazor browser sizing was restored. Evidence and screenshot:
+`/Volumes/Data/antd-v6.OYfUQf/component-metadata-check/`.
+
+### Two-tone colors without JavaScript (2026-10-24)
+
+Generated icons already calculate their secondary color in C#. The compatibility
+`Icon` now uses that same palette algorithm on the initial parameter render,
+instead of asking JavaScript for a palette after rendering. Its default primary
+is the v6 `#1677ff`; a single primary color produces the first light palette
+swatch, for example `#52c41a` → `#f6ffed`. Removed the old `generateColor` interop
+export/constant and the extra render cycle, and rebuilt the browser bundle.
+`IconService.GetSecondaryColor` keeps its existing Task-returning API but performs
+the calculation synchronously with no interop. SVG substitution preserves nested
+groups and unrelated fills, and HTML-encodes color values.
+
+The Icons repository exposes `IconColorPalette.GetSecondaryColor` for consumers
+of the same implementation. Local package
+`0.2.0-beta.3-local.20261024.3` includes all seven existing target frameworks and
+is referenced by the main project. This change has not been pushed. Updated both
+Icon documentation languages and the extra dynamic-color demo: generated and
+compatibility icons are side by side, with primary/secondary values displayed.
+The offline metadata CLI refreshed only the Icon record in each locale.
+
+Verification: .NET 10 docs build succeeds; 1,671 selected Icon/docs tests and 24
+Icons generator/palette tests pass. Tests include real HtmlRenderer prerendering,
+14 palette fixtures, independent instances, dynamic updates, SVG attribute safety,
+and zero color-related JS calls. Browser interaction cycles five primary colors
+and confirms matching secondary fills for both components, no console errors,
+and no changes to canonical two-tone examples. Evidence and screenshots are in
+`/Volumes/Data/antd-v6.OYfUQf/two-tone-check/`; the docs server remains on port 5540.

@@ -32,6 +32,13 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         /// <summary>
+        /// Decorative content rendered directly inside the card, outside its body.
+        /// Use this slot for a <see cref="BorderBeam"/> without adding a layout wrapper.
+        /// </summary>
+        [Parameter]
+        public RenderFragment Decoration { get; set; }
+
+        /// <summary>
         /// Content for the card's body. Shown above <see cref="ChildContent"/>
         /// </summary>
         [Obsolete("Use ChildContent instead")]
@@ -155,13 +162,10 @@ namespace AntDesign
 
         internal string GetSemanticStyle(string slot, string baseStyle = null)
         {
-            if (Styles == null || !Styles.TryGetValue(slot, out var semanticStyle) || string.IsNullOrWhiteSpace(semanticStyle))
-                return baseStyle;
-
-            if (string.IsNullOrWhiteSpace(baseStyle))
-                return semanticStyle;
-
-            return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
+            var merged = baseStyle;
+            if (Styles != null && Styles.TryGetValue(slot, out var semanticStyle) && !string.IsNullOrWhiteSpace(semanticStyle))
+                merged = string.IsNullOrWhiteSpace(baseStyle) ? semanticStyle : $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
+            return slot == "root" ? GetComponentStyle("Card", merged) : merged;
         }
 
         protected void SetClassMap()

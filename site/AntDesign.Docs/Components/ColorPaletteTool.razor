@@ -1,0 +1,47 @@
+@using AntDesign.Colors
+@using System.Globalization
+
+<div class="color-palette-horizontal @(Dark ? "color-palette-horizontal-dark" : "")" style="@(Dark ? $"background:{_background}" : null)">
+    @if (!Dark) { <div class="color-palette-pick">@(IsChinese ? "选择你的主色" : "Pick your primary color")</div> }
+    <div class="color-strip-scroll"><ColorSwatches Colors="@Swatches" Generated Dark="@Dark" IsChinese="@IsChinese" /></div>
+    <div class="color-palette-picker">
+        <div class="color-palette-control">
+            @if (Dark) { <div class="color-palette-pick">@(IsChinese ? "选择你的主色" : "Pick your primary color")</div> }
+            <ColorPicker Value="@_primary" ValueChanged="ChangePrimary" DisabledAlpha AriaLabel="@(IsChinese ? "主色" : "Primary color")" />
+            <span class="color-palette-picker-value">@_primary</span>
+        </div>
+        @if (Dark)
+        {
+            <div class="color-palette-control">
+                <div class="color-palette-pick">@(IsChinese ? "选择背景色" : "Pick your background color")</div>
+                <ColorPicker @bind-Value="_background" DisabledAlpha AriaLabel="@(IsChinese ? "背景色" : "Background color")" />
+                <span class="color-palette-picker-value">@_background</span>
+            </div>
+        }
+        <span class="color-palette-picker-validation">@Validation</span>
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool Dark { get; set; }
+    [Parameter] public bool IsChinese { get; set; }
+    private string _primary = "#1890ff";
+    private string _background = "#141414";
+    private bool _changed;
+    private IReadOnlyList<string> Swatches => ColorPalette.Generate(_primary, Dark, _background).Distinct().ToArray();
+    private void ChangePrimary(string color) { _primary = color; _changed = true; }
+    private string Validation
+    {
+        get
+        {
+            if (!_changed) return "";
+            var (r, g, b, _) = ColorPalette.ToRgba(_primary);
+            var max = Math.Max(r, Math.Max(g, b)); var min = Math.Min(r, Math.Min(g, b));
+            var s = max == 0 ? 0 : (max - min) / (double)max * 100; var v = max / 255d * 100;
+            var result = new List<string>();
+            if (s < 70) result.Add(IsChinese ? $"饱和度建议不低于70（当前值 {s.ToString("F2", CultureInfo.InvariantCulture)}）" : $"Saturation is recommended not to be lower than 70 (currently {s.ToString("F2", CultureInfo.InvariantCulture)})");
+            if (v < 70) result.Add(IsChinese ? $"亮度建议不低于70（当前值 {v.ToString("F2", CultureInfo.InvariantCulture)}）" : $"Brightness is recommended not to be lower than 70 (currently {v.ToString("F2", CultureInfo.InvariantCulture)})");
+            return string.Join(" ", result);
+        }
+    }
+}

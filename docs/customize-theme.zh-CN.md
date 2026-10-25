@@ -35,7 +35,19 @@ private static readonly ThemeConfig BrandTheme = new()
 
 ## 预设算法
 
-默认算法会根据 Seed token 推导 Map 和 Alias token。还提供 `dark` 和 `compact` 算法。算法执行后会应用显式指定的全局 token，因此用户设置的值优先于派生值。
+主题颜色与双色图标共用独立的 `AntDesign.Colors` 库，迁移自当前 Ant v6 依赖中的
+`@ant-design/colors` 8.0.1 和所需的 `@ant-design/fast-color` 3.0.1 运算，
+不再维护 Icon 专用色板算法，也不通过 JavaScript 计算颜色。
+
+```csharp
+using AntDesign.Colors;
+
+string[] light = ColorPalette.Generate("#1677ff"); // 完整十档色板
+string[] dark = ColorPalette.Generate("#1677ff", dark: true, backgroundColor: "#141414");
+string secondary = light[0]; // 双色图标也取同一色板的第一档
+```
+
+默认算法会根据 Seed token 推导 Map 和 Alias token。还提供 `dark` 和 `compact` 算法。Seed 输入参与算法推导（因此 compact 会缩小 `controlHeight`，dark 会转换 `colorPrimary`）；显式 Map 覆盖在 Alias 推导前合并，显式 Alias 覆盖拥有最终优先级。
 
 ```csharp
 private static readonly ThemeConfig DarkTheme = new()
@@ -83,6 +95,8 @@ private static readonly ThemeConfig SelectTheme = new ThemeConfig()
 ## 嵌套主题与 CSS 变量
 
 嵌套的 `ConfigProvider` 会创建局部主题作用域。未指定的全局值从父级继承，覆盖值只影响该 Provider 的后代。默认启用 `CssVar`，Provider 会在作用域元素上输出解析后的 `--ant-*` CSS 自定义属性。组件 token 的变量示例为 `--ant-select-option-selected-bg`。
+
+继承时合并的是显式配置，而不是父级已派生的色板。子级未设置 `Algorithm` 时继承父级算法；显式设置 `Algorithm = "default"` 可切回默认算法。设置 `Inherit = false` 可创建全新的默认主题，不继承父级 token 和组件覆盖。
 
 ```razor
 <ConfigProvider ThemeConfig="@BrandTheme">

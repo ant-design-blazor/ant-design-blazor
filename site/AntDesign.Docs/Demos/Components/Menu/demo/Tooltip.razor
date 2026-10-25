@@ -1,0 +1,22 @@
+<div style="width:256px;max-width:100%">
+    <Space Wrap Style="margin-bottom:16px">
+        <Button Type="ButtonType.Primary" OnClick="@(() => _collapsed = !_collapsed)" Icon="@(_collapsed ? "menu-unfold" : "menu-fold")">Toggle collapsed</Button>
+        <Switch @bind-Checked="_tooltip" CheckedChildren="Tooltip On" UnCheckedChildren="Tooltip Off" />
+    </Space>
+    <Menu Mode="MenuMode.Inline" Theme="MenuTheme.Dark" InlineCollapsed="_collapsed" ShowCollapsedTooltip="_tooltip" CollapsedTooltipPlacement="Placement.Left" DefaultSelectedKeys="@(new[] { "1" })" DefaultOpenKeys="@(new[] { "sub1" })">
+        <MenuItem Key="1" Icon="pie-chart">Option 1</MenuItem>
+        <MenuItem Key="2" Icon="desktop">Option 2</MenuItem>
+        <MenuItem Key="3" Icon="container">Option 3</MenuItem>
+        <SubMenu Key="sub1" Title="Navigation One" Icon="mail">
+            <MenuItem Key="5">Option 5</MenuItem><MenuItem Key="6">Option 6</MenuItem><MenuItem Key="7">Option 7</MenuItem><MenuItem Key="8">Option 8</MenuItem>
+        </SubMenu>
+        <SubMenu Key="sub2" Title="Navigation Two" Icon="appstore">
+            <MenuItem Key="9">Option 9</MenuItem><MenuItem Key="10">Option 10</MenuItem>
+            <SubMenu Key="sub3" Title="Submenu"><MenuItem Key="11">Option 11</MenuItem><MenuItem Key="12">Option 12</MenuItem></SubMenu>
+        </SubMenu>
+    </Menu>
+</div>
+@code {
+    private bool _collapsed;
+    private bool _tooltip = true;
+}

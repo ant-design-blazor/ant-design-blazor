@@ -1,0 +1,26 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<div class="@RootClass" style="@GetComponentStyle("Input", SlotStyle("root", Style))" id="@Id" role="group" @ref="Ref">
+    @for (var index = 0; index < EffectiveLength; index++)
+    {
+        var cell = index;
+        <span class="ant-otp-input-wrapper" role="presentation" @key="cell">
+            @if (IsMasked && CellValue(cell).Length > 0)
+            {
+                <span class="ant-otp-mask-icon" aria-hidden="true">@MaskCharacter</span>
+            }
+            <Input TValue="string" @ref="_inputs[cell]" Value="@CellValue(cell)"
+                   Class="@SlotClass("input", "ant-otp-input" + (IsMasked ? " ant-otp-mask-input" : ""))"
+                   Style="@SlotStyle("input")" Size="@Size" Variant="@Variant" Status="@Status"
+                   Disabled="@Disabled" Type="@(IsMasked && Type == InputType.Text ? InputType.Password : Type)"
+                   AutoFocus="@(cell == 0 && AutoFocus)" AdditionalAttributes="@InputAttributes(cell)"
+                   OnInput="args => ChangeCell(cell, args.Value?.ToString() ?? string.Empty)"
+                   OnKeyDown="args => KeyDown(cell, args)" OnFocus="args => FocusCell(cell)" />
+        </span>
+        @if (cell < EffectiveLength - 1 && (Separator != null || !string.IsNullOrEmpty(SeparatorText)))
+        {
+            <span class="@SlotClass("separator", "ant-otp-separator")" style="@SlotStyle("separator")">@if (Separator != null) { @Separator(cell) } else { @SeparatorText }</span>
+        }
+    }
+</div>

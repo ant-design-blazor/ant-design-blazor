@@ -24,6 +24,30 @@ namespace AntDesign.Internal
         public string Format { get; set; }
 
         [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            var customClass = ClassNames != null && ClassNames.TryGetValue(slot, out var value) ? value : null;
+            var popupClass = ClassNames != null && ClassNames.TryGetValue("popup", out var popup) ? popup : null;
+            if (!string.IsNullOrWhiteSpace(popupClass)) baseClass = $"{baseClass} {popupClass}";
+            return string.IsNullOrWhiteSpace(customClass) ? baseClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            var popupStyle = Styles != null && Styles.TryGetValue("popup", out var popup) ? popup : null;
+            if (!string.IsNullOrWhiteSpace(popupStyle)) baseStyle = string.IsNullOrWhiteSpace(baseStyle) ? popupStyle : $"{baseStyle.Trim().TrimEnd(';')}; {popupStyle}";
+            if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return customStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {customStyle}";
+        }
+
+        [Parameter]
         public Func<DateTime, int[]> DisabledHours { get; set; } = null;
 
         [Parameter]

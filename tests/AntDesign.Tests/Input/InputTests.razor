@@ -1,4 +1,5 @@
-﻿@using AntDesign.Internal
+﻿@using System.Globalization
+@using AntDesign.Internal
 @inherits AntDesignTestBase	
 @code {
 
@@ -103,6 +104,37 @@
 		//Assert           
 		classList.Contains("testClass").Should().BeTrue();
 	}
+
+    [Fact]
+    public void Input_custom_count_uses_strategy_and_max()
+    {
+        var count = new InputCountOptions
+        {
+            Max = 6,
+            Strategy = value => StringInfo.ParseCombiningCharacters(value).Length
+        };
+        string value = "\U0001F525 antd";
+        var cut = Render(@<AntDesign.Input TValue="string" Count="@count" Value="@value" />);
+
+        cut.Find(".ant-input-show-count-suffix").TextContent.Should().Be("6 / 6");
+    }
+
+    [Fact]
+    public void Input_custom_count_formats_overflow()
+    {
+        var count = new InputCountOptions
+        {
+            Max = 3,
+            Strategy = value => value.Length,
+            ExceedFormatter = (value, max) => value[..max]
+        };
+        var cut = Render<AntDesign.Input<string>>(@<AntDesign.Input TValue="string" Count="@count" DebounceMilliseconds="0" />);
+
+        cut.Find("input").Input("12345");
+
+        cut.Find("input").GetAttribute("value").Should().Be("123");
+        cut.Find(".ant-input-show-count-suffix").TextContent.Should().Be("3 / 3");
+    }
 
     [Fact]
     public void Input_no_warpper_apply_class()

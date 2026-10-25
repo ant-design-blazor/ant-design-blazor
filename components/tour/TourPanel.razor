@@ -1,12 +1,14 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<div class="ant-tour ant-tour-pure @Class" style="@Style" id="@Id" @ref="Ref">
+<div class="ant-tour ant-tour-pure ant-tour-placement-top @Class" style="@GetComponentStyle("Tour", Style)" id="@Id" @ref="Ref">
+    <div class="ant-tour-arrow"></div>
+    <div class="ant-tour-container" role="tooltip">
     <div class="ant-tour-panel">
         <div class="ant-tour-section">
             @if (Closable)
             {
-                <button type="button" class="ant-tour-close" aria-label="Close">×</button>
+                <button type="button" class="ant-tour-close" aria-label="Close" @onclick="() => OnClose.InvokeAsync()"><Icon Type="close" /></button>
             }
             @if (Cover != null)
             {
@@ -23,22 +25,12 @@
             <div class="ant-tour-footer">
                 @if (Total > 1)
                 {
-                    <div class="ant-tour-indicators">
-                        @for (var i = 0; i < Total; i++)
-                        {
-                            <span class="ant-tour-indicator @(i == Current ? "ant-tour-indicator-active" : string.Empty)"></span>
-                        }
-                    </div>
+                    <div class="ant-tour-indicators">@for (var i = 0; i < Total; i++) {<span class="ant-tour-indicator @(i == Current ? "ant-tour-indicator-active" : string.Empty)"></span>}</div>
                 }
-                <div class="ant-tour-actions">
-                    @if (Current > 0)
-                    {
-                        <Button Size="ButtonSize.Small" Type="ButtonType.Default">Previous</Button>
-                    }
-                    <Button Size="ButtonSize.Small" Type="@(Type == TourType.Primary ? ButtonType.Default : ButtonType.Primary)">@(Current == Total - 1 ? "Finish" : "Next")</Button>
-                </div>
+                <div class="ant-tour-actions"><TourActions Current="Current" Total="Total" Type="Type" Previous="PreviousAsync" Next="NextAsync" /></div>
             </div>
         </div>
+    </div>
     </div>
 </div>
 
@@ -59,6 +51,12 @@
     /// Zero-based current step index.
     /// </summary>
     [Parameter] public int Current { get; set; }
+    /// <summary>Raised when the inline panel changes step.</summary>
+    [Parameter] public EventCallback<int> CurrentChanged { get; set; }
+    /// <summary>Raised when the close button is clicked.</summary>
+    [Parameter] public EventCallback OnClose { get; set; }
+    /// <summary>Raised when the last step finishes.</summary>
+    [Parameter] public EventCallback OnFinish { get; set; }
     /// <summary>
     /// Total number of steps.
     /// </summary>
@@ -71,4 +69,11 @@
     /// Whether the close button is shown.
     /// </summary>
     [Parameter] public bool Closable { get; set; } = true;
+
+    private async Task PreviousAsync() { Current = Math.Max(0, Current - 1); await CurrentChanged.InvokeAsync(Current); }
+    private async Task NextAsync()
+    {
+        if (Current >= Total - 1) { await OnFinish.InvokeAsync(); return; }
+        Current++; await CurrentChanged.InvokeAsync(Current);
+    }
 }

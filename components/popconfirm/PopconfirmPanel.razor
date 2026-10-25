@@ -1,0 +1,27 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+@using AntDesign.Internal
+
+<div class="ant-popover ant-popover-pure ant-popconfirm ant-popover-placement-@PlacementClass @Class" style="@GetComponentStyle("Popconfirm", Style)" @ref="Ref">
+    <div class="ant-popover-arrow"></div>
+    <div class="ant-popover-container" role="tooltip"><div class="ant-popover-content">
+        <PopconfirmContent Title="@Title" TitleTemplate="@TitleTemplate" Icon="@Icon" IconTemplate="@IconTemplate"
+                           CancelText="@(CancelText ?? LocaleProvider.CurrentLocale.Popconfirm.CancelText)" OkText="@(OkText ?? LocaleProvider.CurrentLocale.Popconfirm.OkText)"
+                           OnCancel="OnCancel" OnConfirm="OnConfirm" OkButtonProps="OkButtonProps" CancelButtonProps="CancelButtonProps" />
+    </div></div>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public RenderFragment TitleTemplate { get; set; }
+    [Parameter] public string Icon { get; set; } = "exclamation-circle";
+    [Parameter] public RenderFragment IconTemplate { get; set; }
+    [Parameter] public string CancelText { get; set; }
+    [Parameter] public string OkText { get; set; }
+    [Parameter] public Placement Placement { get; set; } = Placement.Top;
+    [Parameter] public ButtonProps OkButtonProps { get; set; } = new() { Size = ButtonSize.Small };
+    [Parameter] public ButtonProps CancelButtonProps { get; set; } = new() { Size = ButtonSize.Small };
+    [Parameter] public EventCallback<MouseEventArgs> OnCancel { get; set; }
+    [Parameter] public EventCallback<MouseEventArgs> OnConfirm { get; set; }
+    private string PlacementClass => char.ToLowerInvariant(Placement.ToString()[0]) + Placement.ToString().Substring(1);
+}

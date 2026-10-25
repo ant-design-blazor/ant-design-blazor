@@ -5,7 +5,7 @@
 <CascadingValue Value="this" IsFixed>
     @if (ShowTooltip)
     {
-        <Tooltip @ref="_tooltip" TitleTemplate="@content" Placement="@Placement.Right" Disabled="TooltipDisabled">
+        <Tooltip @ref="_tooltip" TitleTemplate="@content" Placement="@RootMenu.CollapsedTooltipPlacement" Disabled="TooltipDisabled">
             <Unbound Context="tooltip">
                 @MenuItemContent(tooltip)
             </Unbound>
@@ -18,12 +18,15 @@
 </CascadingValue>
 
 @code {
+    private readonly ForwardRef _overflowRef = new();
+    private RenderFragment OverflowContent => @<CascadingValue Value="this" IsFixed>@MenuItemContent(_overflowRef, true)</CascadingValue>;
 
-    RenderFragment MenuItemContent(ForwardRef refBack)
+    RenderFragment MenuItemContent(ForwardRef refBack, bool overflow = false)
     {
-        return@<li class="@RootMenu.GetSemanticClass(SemanticSlot("item"), ClassMapper.Class)" role="menuitem" style="@RootMenu.GetSemanticStyle(SemanticSlot("item"), $"{PaddingStyle} {Style}")" @onclick="HandleOnClick" @key="Key" @ref="refBack.Current">
-            @icon
-            <span class="@RootMenu.GetSemanticClass(SemanticSlot("itemContent"), $"{RootMenu?.PrefixCls ?? "ant-menu"}-title-content")" style="@RootMenu.GetSemanticStyle(SemanticSlot("itemContent"))">
+        var slot = overflow ? "subMenu.item" : SemanticSlot("item");
+        return@<li class="@RootMenu.GetSemanticClass(slot, ClassMapper.Class)" role="menuitem" style="@(overflow ? RootMenu.GetSemanticStyle(slot, Style) : RootMenu.OverflowItemStyle(Id, RootMenu.GetSemanticStyle(slot, $"{PaddingStyle} {Style}")))" data-menu-overflow-item="@(!overflow ? RootMenu.OverflowItemId(Id, IsOverflowRoot) : null)" aria-hidden="@(!overflow && RootMenu.IsOverflowed(Id) ? "true" : null)" inert="@(!overflow && RootMenu.IsOverflowed(Id))" @onclick="HandleOnClick" @key="Key" @ref="refBack.Current">
+            @if (overflow) { @OverflowIcon } else { @icon }
+            <span class="@RootMenu.GetSemanticClass(overflow ? "subMenu.itemContent" : SemanticSlot("itemContent"), $"{RootMenu?.PrefixCls ?? "ant-menu"}-title-content")" style="@RootMenu.GetSemanticStyle(overflow ? "subMenu.itemContent" : SemanticSlot("itemContent"))">
                 @if (RouterLink == null)
                 {
                     @content
@@ -72,6 +75,17 @@
         icon(__builder);
         content(__builder);
     }
+
+    private RenderFragment OverflowIcon => @<text>
+        @if (IconTemplate != null)
+        {
+            <span role="img" class="anticon anticon-container @RootMenu.GetSemanticClass("subMenu.itemIcon", $"{RootMenu.PrefixCls}-item-icon")" style="@RootMenu.GetSemanticStyle("subMenu.itemIcon")">@IconTemplate</span>
+        }
+        else if (Icon != null)
+        {
+            <Icon Type="@Icon" Class="@RootMenu.GetSemanticClass("subMenu.itemIcon", $"{RootMenu.PrefixCls}-item-icon")" Style="@RootMenu.GetSemanticStyle("subMenu.itemIcon")" />
+        }
+    </text>;
 
     internal RenderFragment GetTitleContent()
     {

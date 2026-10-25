@@ -223,6 +223,12 @@ namespace AntDesign
         [Parameter]
         public bool ShowCollapsedTooltip { get; set; } = true;
 
+        /// <summary>Placement of the tooltip shown for collapsed root items.</summary>
+        [Parameter] public Placement CollapsedTooltipPlacement { get; set; } = Placement.Right;
+
+        /// <summary>Customize submenu popup content. SubMenu.PopupRender takes precedence.</summary>
+        [Parameter] public RenderFragment<MenuPopupContext> PopupRender { get; set; }
+
         /// <summary>
         /// Enable or disable animation
         /// </summary>
@@ -276,9 +282,9 @@ namespace AntDesign
             {
                 foreach (MenuItem menuitem in _menuItems.Where(x => x != item))
                 {
-                    if (item.RouterLink != null && menuitem.RouterLink != null && menuitem.RouterLink.Equals(item.RouterLink) && !menuitem.IsSelected)
+                    if (menuitem.Key == item.Key || (item.RouterLink != null && menuitem.RouterLink != null && menuitem.RouterLink.Equals(item.RouterLink)))
                     {
-                        menuitem.Select();
+                        if (!menuitem.IsSelected) menuitem.Select();
                         selectedKeys.Add(menuitem.Key);
                     }
                     else if (menuitem.IsSelected || menuitem.FirstRun)
@@ -295,7 +301,7 @@ namespace AntDesign
                 item.Select(skipParentSelection);
             }
             selectedKeys.Add(item.Key);
-            _selectedKeys = selectedKeys.ToArray();
+            _selectedKeys = selectedKeys.Distinct().ToArray();
 
             StateHasChanged();
 
@@ -330,7 +336,7 @@ namespace AntDesign
             if (OnSubmenuClicked.HasDelegate)
                 OnSubmenuClicked.InvokeAsync(menu);
 
-            var openKeys = _submenus.Where(x => x.IsOpen).Select(x => x.Key).ToArray();
+            var openKeys = _submenus.Where(x => x.IsOpen).Select(x => x.Key).Distinct().ToArray();
             HandleOpenChange(openKeys);
 
             StateHasChanged();
@@ -384,6 +390,7 @@ namespace AntDesign
 
             InternalMode = Mode;
             InitialMode = Mode;
+            if (SelectedKeys == null) _selectedKeys = DefaultSelectedKeys?.ToArray() ?? Array.Empty<string>();
             Parent?.AddMenu(this);
 
             OpenKeys = DefaultOpenKeys?.ToArray() ?? OpenKeys;
@@ -399,6 +406,7 @@ namespace AntDesign
         internal void AddMenuItem(MenuItem item)
         {
             _menuItems.Add(item);
+            RememberMenuPath(item);
             MenusService.SetMenuItem(item);
         }
 
@@ -410,6 +418,7 @@ namespace AntDesign
         internal void RemoveMenuItem(MenuItem item)
         {
             _menuItems.Remove(item);
+            MenusService.RemoveMenuItem(item);
         }
 
         internal void CollapseUpdated(bool collapsed)

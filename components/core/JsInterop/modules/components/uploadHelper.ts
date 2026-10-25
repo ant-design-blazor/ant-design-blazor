@@ -36,7 +36,7 @@ export class uploadHelper {
     let binary = "";
     const chunkSize = 0x8000;
     for (let i = 0; i < content.length; i += chunkSize) {
-      binary += String.fromCharCode(...content.subarray(i, i + chunkSize));
+      binary += String.fromCharCode(...Array.from(content.subarray(i, i + chunkSize)));
     }
     return btoa(binary);
   }

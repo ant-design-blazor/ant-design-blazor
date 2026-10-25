@@ -1,0 +1,118 @@
+@using AntDesign.JsInterop
+@using System.Collections.Generic
+@using System.Linq
+@implements IDisposable
+@inject IStringLocalizer Localizer
+@inject IJSRuntime JS
+@inject IDomEventListener DomEvents
+
+<style>
+    .home-rich-components{width:100%;position:relative;background:var(--ant-color-bg-elevated);padding-block:calc(var(--ant-margin-xxl) * 5 / 3);--home-section-heading-size:var(--ant-font-size-heading-1)}
+    .home-rich-heading{text-align:center}
+    .home-rich-heading p{margin-top:var(--ant-margin-sm);margin-bottom:calc(var(--ant-margin-xxl) * 7 / 6)}
+    .home-rich-list{display:flex;justify-content:center;width:100%;overflow:hidden}
+    .home-rich-row{display:flex;align-items:stretch;gap:var(--ant-margin-lg)}
+    .home-rich-card{border-radius:var(--ant-border-radius);border:var(--ant-line-width) var(--ant-line-type) transparent;background:#f5f8ff;padding:var(--ant-padding-xl);flex:none;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:stretch}
+    .home-rich-card>*{flex:none}
+    .home-rich-card-circle{position:absolute;width:120px;height:120px;background:#1677ff;border-radius:50%;filter:blur(40px);opacity:.1;pointer-events:none}
+    .home-rich-node{margin-top:var(--ant-padding-lg);flex:auto;display:flex;align-items:center;justify-content:center}
+    .home-rich-tour{width:350px}
+    .home-rich-floats{gap:var(--ant-margin-lg)}
+    .home-rich-splitter{height:320px;width:200px;background:var(--ant-color-bg-container);box-shadow:0 0 10px rgba(0,0,0,.1)}
+    .home-rich-splitter-content{height:100%;display:flex;align-items:center;justify-content:center}
+    .home-rich-mobile{margin-inline:var(--ant-margin)}
+    .home-rich-mobile .home-rich-card{height:395px}
+    .home-rich-mobile .home-rich-tour{width:auto;max-width:100%}
+    .home-rich-mobile .slick-dots.slick-dots-bottom{bottom:-22px}
+    .home-rich-mobile .slick-dots li{width:6px!important;height:6px;background:#e1eeff;border-radius:50%}
+    .home-rich-mobile .slick-dots li button{height:6px;background:#e1eeff;border-radius:50%}
+    .home-rich-mobile .slick-dots li.slick-active,.home-rich-mobile .slick-dots li.slick-active button{background:#4b9cff}
+    [data-theme=dark] .home-rich-card{border-color:var(--ant-color-border);background:var(--ant-color-bg-container)}
+    @((MarkupString)"@media(width < 768px){.home-rich-components{--home-section-heading-size:var(--ant-font-size-heading-2)}.home-rich-heading p{margin-bottom:var(--ant-margin-xxl)}}")
+</style>
+<section class="home-rich-components">
+    <div class="home-rich-heading">
+        <Title Level="1" Id="design" Style="font-weight:900;margin:0;font-size:var(--home-section-heading-size)">@Localizer["app.home.components-title"]</Title>
+        <p>@Localizer["app.home.components-description"]</p>
+    </div>
+    @if (_isMobile)
+    {
+        <div class="home-rich-mobile"><Carousel Dots EnableSwipe>
+            @foreach (var index in Enumerable.Range(0, Names.Length)) { <CarouselSlick>@RenderCard(index)</CarouselSlick> }
+        </Carousel></div>
+    }
+    else
+    {
+        <div class="home-rich-list"><div class="home-rich-row">
+            @foreach (var index in Enumerable.Range(0, Names.Length)) { @RenderCard(index) }
+        </div></div>
+    }
+</section>
+
+@code {
+    private static readonly string[] Names = { "DatePicker", "Tour", "FloatButton", "Splitter", "Masonry" };
+    private bool _isMobile;
+    private DateTime? _date = new DateTime(2025, 11, 22);
+    private int _tourCurrent = 3;
+    private bool _tourVisible = true;
+    private string _floatFeedback;
+    private readonly MasonryItem<int>[] _masonryItems = new[] { 80, 60, 40, 120, 90, 40, 60, 70, 120 }
+        .Select((height, index) => new MasonryItem<int> { Key = $"home-{index}", Data = height }).ToArray();
+
+    private IEnumerable<KeyValuePair<string, DateTime?>> Presets => new[] {
+        new KeyValuePair<string, DateTime?>(Localizer["app.home.yesterday"], DateTime.Today.AddDays(-1)),
+        new KeyValuePair<string, DateTime?>(Localizer["app.home.last-week"], DateTime.Today.AddDays(-7)),
+        new KeyValuePair<string, DateTime?>(Localizer["app.home.last-month"], DateTime.Today.AddMonths(-1)),
+        new KeyValuePair<string, DateTime?>(Localizer["app.home.last-year"], DateTime.Today.AddYears(-1))
+    };
+
+    private RenderFragment RenderCard(int index) => @<div class="home-rich-card" data-component="@Names[index]">
+        <div class="home-rich-card-circle" style="inset-inline-end:@((index % 2) * -20 - 20)px;bottom:@((index % 3) * -40 - 20)px"></div>
+        <Flex Align="FlexAlign.Center" Gap="FlexGap.Small"><Title Level="4" Style="font-weight:normal;margin:0">@Names[index]</Title><Tag Color="@(index < 3 ? TagColor.Warning : TagColor.Processing)">@Localizer[index < 3 ? "app.home.component-update" : "app.home.component-new"]</Tag></Flex>
+        <div class="home-rich-node">@RenderSample(index)</div>
+    </div>;
+
+    private RenderFragment RenderSample(int index) => index switch {
+        0 => @<DatePickerPanel TValue="DateTime?" @bind-Value="_date" ShowInput ShowToday="false" Presets="@(_isMobile ? null : Presets)" />,
+        1 => @<div>@if (_tourVisible) { <TourPanel @bind-Current="_tourCurrent" Total="9" Class="home-rich-tour" OnClose="() => _tourVisible = false" OnFinish="() => _tourCurrent = 0"><Title>Ant Design</Title><Description>@Localizer["app.home.tour-description"]</Description></TourPanel> } else { <Button OnClick="() => { _tourCurrent = 3; _tourVisible = true; }">Tour</Button> }</div>,
+        2 => @<div><Flex Class="home-rich-floats" Align="FlexAlign.Center">
+            <FloatButtonGroup Shape="FloatButtonShape.Square" Style="position:relative;inset:auto">
+                <FloatButton Icon="question-circle" AriaLabel="Help" OnClick='() => FloatClicked("Help")' />
+                <FloatButton Icon="customer-service" AriaLabel="Customer service" OnClick='() => FloatClicked("Customer service")' />
+                <FloatButton Icon="sync" AriaLabel="Sync" OnClick='() => FloatClicked("Sync")' />
+            </FloatButtonGroup>
+            <FloatButtonBackTop VisibilityHeight="0" Style="position:relative;inset:auto" />
+            <FloatButtonGroup Style="position:relative;inset:auto">
+                <FloatButton Icon="question-circle" AriaLabel="Help" OnClick='() => FloatClicked("Help")' />
+                <FloatButton Icon="customer-service" AriaLabel="Customer service" OnClick='() => FloatClicked("Customer service")' />
+                <FloatButton Icon="sync" AriaLabel="Sync" OnClick='() => FloatClicked("Sync")' />
+            </FloatButtonGroup>
+            </Flex>@if (_floatFeedback != null) { <span role="status">@_floatFeedback</span> }</div>,
+        3 => @<Splitter Layout="SplitterLayout.Vertical" Class="home-rich-splitter">
+            <SplitterPanel DefaultSize="40%" Min="20%" Max="70%"><div class="home-rich-splitter-content"><Title Level="5" Type="TextElementType.Secondary" Style="white-space:nowrap">First</Title></div></SplitterPanel>
+            <SplitterPanel><div class="home-rich-splitter-content"><Title Level="5" Type="TextElementType.Secondary" Style="white-space:nowrap">Second</Title></div></SplitterPanel>
+        </Splitter>,
+        _ => @<Masonry T="int" Columns="2" Gutter="8" Style="width:300px;height:320px" Items="_masonryItems" ItemRender="RenderMasonryItem" />
+    };
+
+    private RenderFragment<MasonryItemRenderContext<int>> RenderMasonryItem => item => @<Card Size="CardSize.Small" Style="@($"height:{item.Data}px")">@(item.Index + 1)</Card>;
+    private void FloatClicked(string action) => _floatFeedback = action;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        DomEvents.AddShared<AntDesign.JsInterop.Window>("window", "resize", OnResize);
+        var window = await JS.InvokeAsync<AntDesign.JsInterop.Window>(JSInteropConstants.GetWindow);
+        if (window != null) OnResize(window);
+    }
+
+    private void OnResize(AntDesign.JsInterop.Window window)
+    {
+        var mobile = window.InnerWidth < 768;
+        if (mobile == _isMobile) return;
+        _isMobile = mobile;
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose() => DomEvents.RemoveShared<AntDesign.JsInterop.Window>("window", "resize", OnResize);
+}

@@ -398,7 +398,7 @@ namespace AntDesign.Internal
 
             if (Trigger.CheckPlacementChanged() || !_hasAddOverlayToBody)
             {
-                bool triggerIsWrappedInDiv = Trigger.Unbound is null;
+                bool triggerIsWrappedInDiv = Trigger.IsTriggerWrappedInDiv;
                 _recurenceGuard++;
 
                 //In ServerSide it may happen that trigger element reference has not yet been retrieved.
@@ -556,7 +556,7 @@ namespace AntDesign.Internal
 
         internal async Task UpdatePosition(int? overlayLeft = null, int? overlayTop = null)
         {
-            bool triggerIsWrappedInDiv = Trigger.Unbound is null;
+            bool triggerIsWrappedInDiv = Trigger.IsTriggerWrappedInDiv;
 
             _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition,
                 Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,

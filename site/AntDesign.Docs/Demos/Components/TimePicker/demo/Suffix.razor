@@ -1,0 +1,9 @@
+<Space Direction="SpaceDirection.Vertical" Size="SpaceSize.Large">
+    <TimePicker TValue="TimeOnly?" SuffixIcon="@_smileIcon" />
+    <TimePicker TValue="TimeOnly?" Prefix="@_smileIcon" />
+    <RangePicker TValue="TimeOnly[]" Picker="DatePickerType.Time" Prefix="@_smileIcon" />
+</Space>
+
+@code {
+    private RenderFragment _smileIcon => @<Icon Type="smile" />;
+}

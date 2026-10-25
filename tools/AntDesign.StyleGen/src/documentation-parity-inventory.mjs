@@ -159,6 +159,45 @@ async function readPageDemos(page, url) {
   }
 }
 
+export async function withIsolatedPage(browser, action) {
+  // Keep a hydration or navigation failure isolated to one route. Reusing a
+  // page whose main frame has detached makes every later component look like
+  // it has zero demos, obscuring the actual per-route blocker.
+  const page = await browser.newPage();
+  try {
+    return await action(page);
+  } finally {
+    if (!page.isClosed()) await page.close();
+  }
+}
+
+async function readRouteDemos(browser, url) {
+  return withIsolatedPage(browser, (page) => readPageDemos(page, url));
+}
+
+function createInventoryReport(reactRoutes, blazorRoutes, pairs, components, reactBaseUrl, blazorBaseUrl) {
+  return {
+    generatedAt: new Date().toISOString(),
+    bases: { react: reactBaseUrl, blazor: blazorBaseUrl },
+    summary: {
+      reactRoutes: reactRoutes.length,
+      blazorRoutes: blazorRoutes.length,
+      matchedComponents: pairs.matched.length,
+      missingBlazorRoutes: pairs.missing,
+      excludedReactRoutes: pairs.excluded,
+      extraBlazorRoutes: pairs.extra,
+      completedComponents: components.length,
+      reactDemos: components.reduce((total, item) => total + item.demos.react, 0),
+      blazorDemos: components.reduce((total, item) => total + item.demos.blazor, 0),
+      matchedDemos: components.reduce((total, item) => total + item.demos.matched, 0),
+      missingReactDemos: components.reduce((total, item) => total + item.demos.missingReactNames.length, 0),
+      extraBlazorDemos: components.reduce((total, item) => total + item.demos.extraBlazorNames.length, 0),
+      blockedPages: components.filter((item) => item.blockers.react.length || item.blockers.blazor.length).length,
+    },
+    components,
+  };
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const reactRoot = resolve(args['antd-path'] ?? process.cwd());
@@ -166,21 +205,28 @@ async function main() {
   const puppeteer = requireFromReact('puppeteer');
   const reactBaseUrl = args['react-base-url'] ?? 'http://127.0.0.1:8000';
   const blazorBaseUrl = args['blazor-base-url'] ?? 'http://127.0.0.1:8186';
-  const browser = await puppeteer.launch({
+  const launchBrowser = () => puppeteer.launch({
     headless: true,
     executablePath: args.chrome,
-    args: ['--no-sandbox', '--disable-dev-shm-usage'],
+    args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
   });
+  let browser = await launchBrowser();
   try {
     const routePage = await browser.newPage();
     const reactRoutes = await readRoutes(routePage, `${reactBaseUrl}/components`);
     const blazorRoutes = await readRoutes(routePage, `${blazorBaseUrl}/en-US/components`);
+    await routePage.close();
     const pairs = matchComponentRoutes(reactRoutes, blazorRoutes);
-    const page = await browser.newPage();
     const components = [];
-    for (const pair of pairs.matched) {
-      const react = await readPageDemos(page, `${reactBaseUrl}${pair.react.path}`);
-      const blazor = await readPageDemos(page, `${blazorBaseUrl}${pair.blazor.path}`);
+    for (const [index, pair] of pairs.matched.entries()) {
+      // Dumi pages are large; periodically reclaim Chromium memory while
+      // retaining a JSON checkpoint after every completed component.
+      if (index > 0 && index % 10 === 0) {
+        await browser.close().catch(() => {});
+        browser = await launchBrowser();
+      }
+      const react = await readRouteDemos(browser, `${reactBaseUrl}${pair.react.path}`);
+      const blazor = await readRouteDemos(browser, `${blazorBaseUrl}${pair.blazor.path}`);
       const demoComparison = compareReactDemoNames(react.demos, blazor.demos);
       const matchedDemos = demoComparison.matched.map((reactDemo) => ({
         react: reactDemo,
@@ -204,30 +250,16 @@ async function main() {
         blockers: { react: react.errors, blazor: blazor.errors },
       });
       process.stdout.write(`[${components.length}/${pairs.matched.length}] ${pair.react.slug}: React ${react.demos.length}, Blazor ${blazor.demos.length}, matched ${matchedDemos.length}\n`);
+      if (args.report) {
+        const checkpoint = createInventoryReport(reactRoutes, blazorRoutes, pairs, components, reactBaseUrl, blazorBaseUrl);
+        await writeFile(resolve(args.report), `${JSON.stringify(checkpoint, null, 2)}\n`);
+      }
     }
-    const report = {
-      generatedAt: new Date().toISOString(),
-      bases: { react: reactBaseUrl, blazor: blazorBaseUrl },
-      summary: {
-        reactRoutes: reactRoutes.length,
-        blazorRoutes: blazorRoutes.length,
-        matchedComponents: pairs.matched.length,
-        missingBlazorRoutes: pairs.missing,
-        excludedReactRoutes: pairs.excluded,
-        extraBlazorRoutes: pairs.extra,
-        reactDemos: components.reduce((total, item) => total + item.demos.react, 0),
-        blazorDemos: components.reduce((total, item) => total + item.demos.blazor, 0),
-        matchedDemos: components.reduce((total, item) => total + item.demos.matched, 0),
-        missingReactDemos: components.reduce((total, item) => total + item.demos.missingReactNames.length, 0),
-        extraBlazorDemos: components.reduce((total, item) => total + item.demos.extraBlazorNames.length, 0),
-        blockedPages: components.filter((item) => item.blockers.react.length || item.blockers.blazor.length).length,
-      },
-      components,
-    };
+    const report = createInventoryReport(reactRoutes, blazorRoutes, pairs, components, reactBaseUrl, blazorBaseUrl);
     if (args.report) await writeFile(resolve(args.report), `${JSON.stringify(report, null, 2)}\n`);
     process.stdout.write(`${JSON.stringify({ report: args.report ?? null, ...report.summary }, null, 2)}\n`);
   } finally {
-    await browser.close();
+    await browser.close().catch(() => {});
   }
 }
 

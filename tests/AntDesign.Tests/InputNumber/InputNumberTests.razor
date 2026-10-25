@@ -58,6 +58,60 @@
         cut.Instance.Value.Should().Be(3d);
     }
 
+    [Fact]
+    public void InputNumber_controls_can_be_hidden()
+    {
+        var cut = Context.RenderComponent<AntDesign.InputNumber<double>>(
+            parameters => parameters.Add(component => component.Controls, false));
+
+        cut.FindAll(".ant-input-number-actions").Should().BeEmpty();
+        cut.Find("input").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void InputNumber_renders_custom_control_icons()
+    {
+        RenderFragment upIcon = builder => builder.AddMarkupContent(0, "<i class=\"custom-up-icon\"></i>");
+        RenderFragment downIcon = builder => builder.AddMarkupContent(0, "<i class=\"custom-down-icon\"></i>");
+
+        var cut = Context.RenderComponent<AntDesign.InputNumber<double>>(
+            parameters => parameters
+                .Add(component => component.ControlsUpIcon, upIcon)
+                .Add(component => component.ControlsDownIcon, downIcon));
+
+        cut.Find(".custom-up-icon").Should().NotBeNull();
+        cut.Find(".custom-down-icon").Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task InputNumber_focus_passes_cursor_behavior_to_js()
+    {
+#pragma warning disable CS0618
+        var invocation = JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
+#pragma warning restore CS0618
+        var cut = Context.RenderComponent<AntDesign.InputNumber<double>>();
+
+        await cut.InvokeAsync(() => cut.Instance.Focus(FocusBehavior.FocusAtFirst, preventScroll: true));
+
+        invocation.Invocations.Single().Arguments[2].Should().Be(FocusBehavior.FocusAtFirst);
+        invocation.Invocations.Single().Arguments[1].Should().Be(true);
+    }
+
+    [Fact]
+    public void InputNumber_change_on_wheel_steps_while_focused()
+    {
+        var cut = Context.RenderComponent<AntDesign.InputNumber<double>>(
+            parameters => parameters
+                .Add(component => component.ChangeOnWheel, true)
+                .Add(component => component.DefaultValue, 3d));
+
+        var input = cut.Find("input");
+        input.TriggerEvent("onfocus", new FocusEventArgs());
+        input.TriggerEvent("onwheel", new WheelEventArgs { DeltaY = -100 });
+
+        cut.Instance.Value.Should().Be(4d);
+    }
+
     [Theory]
     [InlineData("outlined", "ant-input-number-outlined")]
     [InlineData("filled", "ant-input-number-filled")]

@@ -1,10 +1,6 @@
 @namespace AntDesign
 
-@if (Current > 0)
-{
-    <Button Size="ButtonSize.Small" Type="ButtonType.Default" Class="ant-tour-prev-btn" OnClick="Previous">@(Step?.PreviousText ?? "Previous")</Button>
-}
-<Button Size="ButtonSize.Small" Type="@(Type == TourType.Primary ? ButtonType.Default : ButtonType.Primary)" Class="ant-tour-next-btn" OnClick="Next">@(Current == Total - 1 ? (Step?.FinishText ?? "Finish") : (Step?.NextText ?? "Next"))</Button>
+@if (Current > 0) {<Button Size="ButtonSize.Small" Type="ButtonType.Default" Class="ant-tour-prev-btn" OnClick="Previous">@(Step?.PreviousText ?? "Previous")</Button>}<Button Size="ButtonSize.Small" Type="@(Type == TourType.Primary ? ButtonType.Default : ButtonType.Primary)" Class="ant-tour-next-btn" OnClick="Next">@(Current == Total - 1 ? (Step?.FinishText ?? "Finish") : (Step?.NextText ?? "Next"))</Button>
 
 @code {
     /// <summary>

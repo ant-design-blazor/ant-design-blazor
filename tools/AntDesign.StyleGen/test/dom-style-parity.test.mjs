@@ -11,6 +11,56 @@ import { getFinalHoverAction, getPortalWaitTargets, validateParityManifest } fro
 import { setTooltipTriggerState } from '../../../components/wwwroot/js/tooltipTriggerHelper.js';
 import { getSemanticCatalogCoverage } from '../src/semantic-catalog-coverage.mjs';
 
+test('Select virtual gate retains full popup DOM checks alongside its independent accessibility list', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../examples/select-virtual-dom-style-parity.json', import.meta.url), 'utf8'));
+  validateParityManifest(manifest);
+  assert.equal(manifest.config.comparisonPolicy.ignoredAttributes, undefined);
+  assert.equal(manifest.config.comparisonPolicy.geometryTolerancePx, undefined);
+  assert.deepEqual(manifest.groups[0].semanticNodes.map(node => node.path), ['item', 'item.disabled', 'itemRemove', 'popup.root', 'popup.a11y', 'popup.a11yOption']);
+  assert.ok(manifest.groups[0].styleProperties.includes('overflow'));
+  assert.ok(manifest.groups[0].styleProperties.includes('cursor'));
+  assert.equal(manifest.groups[0].semanticNodes.find(node => node.path === 'item.disabled').minimumCount, 1);
+});
+
+test('Collapse gate retains meaningful attributes and requires every React semantic slot', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../examples/collapse-dom-style-parity.json', import.meta.url), 'utf8'));
+  validateParityManifest(manifest);
+  assert.equal(manifest.config.comparisonPolicy.ignoredAttributes, undefined);
+  assert.equal(manifest.config.comparisonPolicy.geometryTolerancePx, undefined);
+  assert.deepEqual(manifest.config.comparisonPolicy.normalization.removeAttributes, ['_bl_*']);
+  const basic = manifest.groups.find(group => group.id === 'collapse-basic');
+  assert.deepEqual(basic.semanticNodes.map(node => node.path), ['root', 'header', 'icon', 'title', 'body']);
+  assert.ok(basic.styleProperties.includes('--ant-collapse-header-padding'));
+  assert.equal(manifest.groups.find(group => group.id === 'collapse-collapsible').scenarios[0].minimumRoots, 3);
+});
+
+test('Select Escape gate waits for actual expanded/collapsed DOM state and cleared ownership', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../examples/select-basic-popup-dom-style-parity.json', import.meta.url), 'utf8'));
+  validateParityManifest(manifest);
+  const scenario = manifest.groups[0].scenarios.find(scenario => scenario.id === 'escape-closed');
+  assert.equal(scenario.actions[1].type, 'waitForSelector');
+  assert.match(scenario.actions[1].blazorSelector, /aria-expanded='true'/);
+  assert.equal(scenario.actions[2].type, 'press');
+  assert.equal(scenario.actions[2].key, 'Escape');
+  for (const side of ['react', 'blazor']) {
+    assert.match(scenario.actions[3][`${side}Selector`], /aria-expanded='false'/);
+    assert.match(scenario.actions[3][`${side}Selector`], /:not\(\[aria-controls\]\)/);
+  }
+});
+
+test('Select semantic-style gate includes prefix/input offsets and the filled popup border without ignoring DOM differences', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../examples/select-semantic-style-dom-style-parity.json', import.meta.url), 'utf8'));
+  validateParityManifest(manifest);
+  assert.equal(manifest.config.comparisonPolicy.ignoredAttributes, undefined);
+  assert.equal(manifest.config.comparisonPolicy.geometryTolerancePx, undefined);
+  const [closed, opened] = manifest.groups;
+  assert.ok(closed.styleProperties.includes('left'));
+  assert.ok(closed.styleProperties.includes('transform'));
+  assert.equal(closed.semanticNodes.find(node => node.path === 'input').minimumCount, 2);
+  assert.ok(opened.styleProperties.includes('borderColor'));
+  assert.match(opened.scenarios[0].actions[0].blazorSelector, /ant-select-filled/);
+});
+
 test('validates the Select parity manifest before launching either browser', async () => {
   const source = await readFile(new URL('../examples/select-dom-style-parity.json', import.meta.url), 'utf8');
   const manifest = JSON.parse(source);
@@ -23,6 +73,68 @@ test('validates the Select parity manifest before launching either browser', asy
   const invalidSemantic = structuredClone(manifest);
   delete invalidSemantic.groups[0].semanticNodes[1].blazorSelector;
   assert.throws(() => validateParityManifest(invalidSemantic), /content requires a blazor selector/);
+});
+
+test('Icon parity covers full Space trees, SVG geometry, colors and required node counts', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../examples/icon-dom-style-parity.json', import.meta.url), 'utf8'));
+  validateParityManifest(manifest);
+  assert.deepEqual(manifest.groups.map(group => group.id).sort(), ['icon-basic', 'icon-custom', 'icon-font', 'icon-font-resources', 'icon-two-tone']);
+  for (const group of manifest.groups) {
+    assert.equal(group.react.rootSelector, '.ant-space');
+    assert.equal(group.blazor.rootSelector, '.ant-space');
+    assert.ok(group.semanticNodes.every(node => node.minimumCount > 0));
+    assert.match(group.react.scopeSelector, /#components-icon-demo-/);
+  }
+  assert.ok(manifest.groups.find(group => group.id === 'icon-two-tone').styleProperties.includes('fill'));
+  for (const [id, count] of [['icon-font', 3], ['icon-font-resources', 4]]) {
+    assert.equal(manifest.groups.find(group => group.id === id).semanticNodes.find(node => node.path === 'use').minimumCount, count);
+  }
+  assert.ok(!manifest.config.comparisonPolicy.normalization.removeAttributes.includes('id'), 'static SVG symbol IDs must not be discarded');
+  assert.equal(manifest.config.comparisonPolicy.normalization.removeUnreferencedRuntimeIds, true);
+  assert.equal(manifest.config.comparisonPolicy.ignoredAttributes, undefined, 'SVG paths and inline styles are not ignored');
+});
+
+test('optional runtime ID removal keeps static symbols, ARIA references and SVG fragment relationships', () => {
+  const policy = { runtimeIdPattern: '^ant-blazor-[a-z]+$', removeUnreferencedRuntimeIds: true };
+  const html = '<div id="ant-blazor-unused"><svg><symbol id="icon-cart"></symbol><use xlink:href="#icon-cart"></use>' +
+    '<linearGradient id="ant-blazor-gradient"></linearGradient><path fill="url(#ant-blazor-gradient)"></path></svg>' +
+    '<label for="ant-blazor-input"></label><input id="ant-blazor-input" aria-describedby="ant-blazor-note"><span id="ant-blazor-note"></span></div>';
+  const normalized = normalizeRuntimeHtml(html, policy);
+  assert.ok(!normalized.includes('ant-blazor-unused'));
+  assert.match(normalized, /id="icon-cart"/);
+  assert.match(normalized, /xlink:href="#icon-cart"/);
+  assert.match(normalized, /id="__runtime-id-1"/);
+  assert.match(normalized, /fill="url\(#__runtime-id-1\)"/);
+  assert.match(normalized, /for="__runtime-id-2"/);
+  assert.match(normalized, /id="__runtime-id-2"/);
+  assert.match(normalized, /aria-describedby="__runtime-id-3"/);
+  assert.match(normalized, /id="__runtime-id-3"/);
+  assert.ok(normalizeRuntimeHtml('<div id="ant-blazor-unused"></div>', { runtimeIdPattern: policy.runtimeIdPattern }).includes('id='), 'default normalization must keep ID presence');
+});
+
+test('SVG use gates require painted glyphs, matching definitions and the declared subpixel tolerance', () => {
+  const snapshot = () => ({ html: '<svg><use href="#cart"></use></svg>', semantic: { use: [{
+    html: '<use href="#cart"></use>', computedStyle: {},
+    svgUse: { href: '#cart', width: 11.2, height: 11.2, definitions: ['<symbol id="cart"><path d="M0 0"></path></symbol>'] },
+  }] } });
+  const expected = snapshot();
+  const actual = snapshot();
+  const policy = { svgUsePaths: ['use'], svgUsePaintTolerancePx: 0.01, semanticMinimumCounts: { use: 1 } };
+  actual.semantic.use[0].svgUse.height += 0.0013;
+  assert.equal(compareDomSnapshots(expected, actual, policy).visualStyles.equal, true);
+  actual.semantic.use[0].svgUse.width += 1;
+  assert.equal(compareDomSnapshots(expected, actual, policy).visualStyles.equal, false);
+  const unpainted = snapshot();
+  unpainted.semantic.use[0].svgUse.width = 0;
+  assert.equal(compareDomSnapshots(unpainted, unpainted, policy).visualStyles.equal, false, 'two unloaded glyphs are not a match');
+  const missing = snapshot();
+  delete missing.semantic.use[0].svgUse;
+  assert.equal(compareDomSnapshots(missing, missing, policy).visualStyles.equal, false);
+  const missingPath = { ...snapshot(), semantic: {} };
+  assert.equal(compareDomSnapshots(missingPath, missingPath, policy).visualStyles.equal, false);
+  const different = snapshot();
+  different.semantic.use[0].svgUse.definitions = ['<symbol id="cart"><path d="M1 1"></path></symbol>'];
+  assert.equal(compareDomSnapshots(expected, different, policy).visualStyles.equal, false);
 });
 
 test('keeps React and Blazor Semantic DOM selectors and required counts explicit', async () => {
@@ -220,6 +332,11 @@ test('compiled v6 Select CSS styles the migrated trigger, tags, and clear button
   assert.match(css, /\.ant-select-clear\{[^}]*appearance:none/);
   assert.ok(css.includes('.ant-select-multiple{'));
   assert.ok(css.includes('--ant-select-multi-item-height'));
+});
+
+test('v6 theme parity restores the React icon flex box after legacy docs CSS', async () => {
+  const css = await readFile(new URL('../../../components/wwwroot/css/antd-v6/component-parity.css', import.meta.url), 'utf8');
+  assert.match(css, /\.ant-theme\s+\.anticon\s*\{[^}]*display:\s*inline-flex;[^}]*align-items:\s*center;/s);
 });
 
 test('documentation demos inherit the active Ant Design v6 text token instead of a v5 color literal', async () => {

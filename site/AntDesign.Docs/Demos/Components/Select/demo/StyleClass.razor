@@ -1,20 +1,44 @@
-<div class="select-semantic-style-demo">
-    <Select TItemValue="string" TItem="string" DefaultValue='@("blue")' Style="width: 240px;">
+@using AntDesign.Icons
+
+<Flex Direction="FlexDirection.Vertical" Gap="FlexGap.Medium">
+    <Select TItemValue="string" TItem="string" ClassNames="_classes" Styles="_styles" Placeholder="Object">
+        <PrefixIcon><MehOutlined /></PrefixIcon>
         <SelectOptions>
-            <SelectOption TItemValue="string" TItem="string" Value='@("blue")' Label="Blue" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("green")' Label="Green" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("purple")' Label="Purple" />
+            @foreach (var city in _cities)
+            {
+                <SelectOption TItemValue="string" TItem="string" Value="@city" Label="@city" />
+            }
         </SelectOptions>
     </Select>
-</div>
+    <Select TItemValue="string" TItem="string" ClassNames="_classes" Styles="@GetStyles(InputVariant.Filled)"
+            Variant="InputVariant.Filled" Placeholder="Function">
+        <PrefixIcon><MehOutlined /></PrefixIcon>
+        <SelectOptions>
+            @foreach (var city in _cities)
+            {
+                <SelectOption TItemValue="string" TItem="string" Value="@city" Label="@city" />
+            }
+        </SelectOptions>
+    </Select>
+</Flex>
+<style>@((MarkupString)_sheet.CssText)</style>
 
-<style>
-    .select-semantic-style-demo .ant-select-selector {
-        border-radius: 2px !important;
-    }
+@code {
+    private static readonly string[] _cities = { "GuangZhou", "ShenZhen" };
+    private static readonly CssStyleSheet _sheet = CssInJs.CreateStyles("select-semantic-demo", new Dictionary<string, object>
+    {
+        ["root"] = new Dictionary<string, object> { ["borderRadius"] = 8, ["width"] = 300 }
+    });
+    private readonly IReadOnlyDictionary<string, string> _classes = new Dictionary<string, string> { ["root"] = _sheet["root"] };
+    private readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
+    {
+        ["prefix"] = "color:#1890ff", ["suffix"] = "color:#1890ff"
+    };
 
-    .select-semantic-style-demo .ant-select-focused .ant-select-selector {
-        border-color: #722ed1 !important;
-        box-shadow: 0 0 0 2px rgb(114 46 209 / 15%) !important;
-    }
-</style>
+    private static IReadOnlyDictionary<string, string> GetStyles(InputVariant variant) => variant == InputVariant.Filled
+        ? new Dictionary<string, string>
+        {
+            ["prefix"] = "color:#722ed1", ["suffix"] = "color:#722ed1", ["popup.root"] = "border:1px solid #722ed1"
+        }
+        : new Dictionary<string, string>();
+}

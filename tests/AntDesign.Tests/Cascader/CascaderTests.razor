@@ -35,6 +35,21 @@
         Assert.Contains("ant-cascader-css-var", root.ClassList);
     }
 
+    [Theory]
+    [InlineData(InputVariant.Outlined, "ant-select-outlined")]
+    [InlineData(InputVariant.Filled, "ant-select-filled")]
+    [InlineData(InputVariant.Borderless, "ant-select-borderless")]
+    [InlineData(InputVariant.Underlined, "ant-select-underlined")]
+    public void Applies_the_selected_v6_variant(InputVariant variant, string expectedClass)
+    {
+        var cut = Context.Render(@<AntDesign.Cascader Variant="@variant" />);
+        var root = cut.Find(".ant-select.ant-cascader");
+
+        Assert.Contains(expectedClass, root.ClassList);
+        Assert.Equal(1, root.ClassList.Count(x => x.StartsWith("ant-select-") &&
+            new[] { "ant-select-outlined", "ant-select-filled", "ant-select-borderless", "ant-select-underlined" }.Contains(x)));
+    }
+
     [Fact]
     public void Trigger_uses_the_v6_select_content_structure()
     {
@@ -62,6 +77,46 @@
         var popup = cut.Find(".ant-select-dropdown.ant-cascader-dropdown");
         Assert.NotNull(popup.QuerySelector(".ant-cascader-menu-item"));
         JSInterop.VerifyInvoke("AntDesign.interop.overlayHelper.addOverlayToContainer");
+    }
+
+    [Fact]
+    public async Task Lazily_loads_children_for_an_is_leaf_false_node()
+    {
+        JSInterop.SetupVoid("AntDesign.interop.styleHelper.addClsToFirstChild", _ => true);
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.domInfoHelper.getOverlayPosition", _ => true)
+            .SetResult(new OverlayPosition());
+        JSInterop.Setup<OverlayPosition>("AntDesign.interop.overlayHelper.addOverlayToContainer", _ => true)
+            .SetResult(new OverlayPosition());
+
+        var option = new CascaderNode { Value = "province", Label = "Province", IsLeaf = false };
+        var loadStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var finishLoading = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        CascaderNode[] loadedPath = null;
+        var loadData = EventCallback.Factory.Create<CascaderNode[]>(this, async path =>
+        {
+            loadedPath = path;
+            loadStarted.SetResult();
+            await finishLoading.Task;
+            option.Children = [new CascaderNode { Value = "city", Label = "City" }];
+        });
+
+        var cut = Render<AntDesign.Cascader>(@<AntDesign.Cascader Open="true" Options="@([option])" LoadData="@loadData" />);
+        var clickTask = cut.InvokeAsync(() => cut.Find("li[data-path-key='province']")
+            .ClickAsync(new Microsoft.AspNetCore.Components.Web.MouseEventArgs()));
+
+        await loadStarted.Task.WaitAsync(TimeSpan.FromSeconds(2));
+        cut.WaitForState(() => cut.Find("li[data-path-key='province']").GetAttribute("aria-busy") == "true");
+        Assert.Contains("ant-cascader-menu-item-loading", cut.Find("li[data-path-key='province']").ClassList);
+
+        finishLoading.SetResult();
+        await clickTask;
+
+        Assert.Equal(new[] { "province" }, loadedPath.Select(x => x.Value));
+        Assert.Same(option, loadedPath[^1]);
+        Assert.NotNull(option.Children);
+        Assert.False(option.IsLoading, cut.Markup);
+        Assert.True(cut.FindAll("li[data-path-key='province__RC_CASCADER_SPLIT__city']").Count == 1, cut.Markup);
+        Assert.Null(cut.Find("li[data-path-key='province']").GetAttribute("aria-busy"));
     }
 
     [Fact]

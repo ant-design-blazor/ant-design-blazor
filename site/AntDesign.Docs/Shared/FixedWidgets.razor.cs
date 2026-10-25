@@ -14,6 +14,7 @@ namespace AntDesign.Docs.Shared
     {
         [Inject] private IStringLocalizer Localizer { get; set; }
         [Inject] private IJSRuntime JS { get; set; }
+        [CascadingParameter] private AntDesign.Docs.Components.DocsThemeProvider SiteTheme { get; set; }
 
         private const string ThemeStorageKey = "ant-design-blazor-doc-theme";
         private const string HappyWorkStorageKey = "ant-design-blazor-doc-happy-work";
@@ -71,6 +72,7 @@ namespace AntDesign.Docs.Shared
 
         private async Task ApplyThemeAsync()
         {
+            if (SiteTheme != null) await SiteTheme.ApplyAsync(_appearance, _compact);
             await JS.InvokeVoidAsync(JSInteropConstants.SetDomAttribute, "html", new Dictionary<string, string>
             {
                 ["data-theme"] = _appearance == "dark" ? "dark" : "default",

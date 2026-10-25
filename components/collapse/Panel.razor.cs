@@ -31,6 +31,10 @@ namespace AntDesign
         [Parameter]
         public bool Disabled { get; set; }
 
+        /// <summary>Override the parent Collapse trigger behavior for this panel.</summary>
+        [Parameter]
+        public CollapseCollapsible? Collapsible { get; set; }
+
         /// <summary>
         /// Display an arrow or not for the panel
         /// </summary>
@@ -83,6 +87,7 @@ namespace AntDesign
 
         private bool _isActive = false;
         private bool _hasRendered;
+        private bool _initialized;
         private bool _isInactive = true;
         private bool _isHidden = true;
         private bool _isCollapseEnterPrepare;
@@ -94,6 +99,17 @@ namespace AntDesign
         private bool _isCollapseLeaveActive;
 
         private ClassMapper _contentClassMapper = new ClassMapper();
+        private CollapseCollapsible? EffectiveCollapsible => Disabled ? CollapseCollapsible.Disabled : Collapsible ?? this.Collapse?.Collapsible;
+        private bool IsInteractionDisabled => EffectiveCollapsible == CollapseCollapsible.Disabled;
+        private bool HeaderOwnsInteraction => EffectiveCollapsible is null or CollapseCollapsible.Disabled;
+        private bool IconOwnsInteraction => EffectiveCollapsible is CollapseCollapsible.Header or CollapseCollapsible.Icon;
+        private bool TitleOwnsInteraction => EffectiveCollapsible == CollapseCollapsible.Header;
+        private string TriggerRole => Collapse.Accordion ? "tab" : "button";
+        private string HeaderClass => Collapse.SemanticClass(
+            "header",
+            EffectiveCollapsible == null
+                ? "ant-collapse-header"
+                : $"ant-collapse-header ant-collapse-collapsible-{EffectiveCollapsible.ToString().ToLowerInvariant()}");
 
         private void SetClassMap()
         {
@@ -101,11 +117,12 @@ namespace AntDesign
                 .Add("ant-collapse-item")
                 .If("ant-collapse-no-arrow", () => !this.ShowArrow)
                 .If("ant-collapse-item-active", () => this.Active)
-                .If("ant-collapse-item-disabled", () => this.Disabled);
+                .If("ant-collapse-item-disabled", () => IsInteractionDisabled);
 
             _contentClassMapper
                 .Add("ant-collapse-panel")
                 .If("ant-collapse-panel-active", () => _isActive)
+                .If("ant-collapse-panel-inactive", () => _isInactive)
                 .If("ant-collapse-panel-hidden", () => _isHidden)
                 .If("ant-motion-collapse-enter ant-motion-collapse-enter-prepare ant-motion-collapse", () => _isCollapseEnterPrepare)
                 .If("ant-motion-collapse-enter ant-motion-collapse-enter-start ant-motion-collapse", () => _isCollapseEnterStart)
@@ -128,22 +145,50 @@ namespace AntDesign
                 _isHidden = false;
                 _isInactive = false;
             }
+            _initialized = true;
         }
 
         private void OnHeaderClick()
         {
-            if (!this.Disabled)
+            if (!IsInteractionDisabled && HeaderOwnsInteraction)
             {
                 this.Collapse?.TogglePanelState(this);
             }
         }
 
+        private void OnExpandIconClick()
+        {
+            if (!IsInteractionDisabled && IconOwnsInteraction)
+            {
+                this.Collapse?.TogglePanelState(this);
+            }
+        }
+
+        private void OnExpandIconKeyDown(KeyboardEventArgs args)
+        {
+            if (args.Key == "Enter")
+            {
+                OnExpandIconClick();
+            }
+        }
+
         private void OnHeaderKeyDown(KeyboardEventArgs args)
         {
-            if (args.Key is "Enter" or " ")
+            if (args.Key == "Enter" && HeaderOwnsInteraction)
             {
                 OnHeaderClick();
             }
+        }
+
+        private void OnTitleClick()
+        {
+            if (!IsInteractionDisabled && TitleOwnsInteraction)
+                Collapse.TogglePanelState(this);
+        }
+
+        private void OnTitleKeyDown(KeyboardEventArgs args)
+        {
+            if (args.Key == "Enter") OnTitleClick();
         }
 
         protected override void Dispose(bool disposing)
@@ -162,7 +207,7 @@ namespace AntDesign
                 if (Active)
                 {
                     _hasRendered = true;
-                    if (Collapse.Animation)
+                    if (_initialized && Collapse.Animation)
                     {
                         HandleExpand();
                     }
@@ -176,7 +221,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    if (Collapse.Animation)
+                    if (_initialized && Collapse.Animation)
                     {
                         HandleCollapse();
                     }

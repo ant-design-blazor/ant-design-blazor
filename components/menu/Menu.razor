@@ -2,7 +2,22 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed>
-    <ul class="@GetSemanticClass("root", ClassMapper.Class)" style="@GetSemanticStyle("root", Style)" id="@Id" direction="ltr" role="menu" @ref="Ref">
+    <ul class="@GetSemanticClass("root", ClassMapper.Class)" style="@GetSemanticStyle("root", OverflowRootStyle)" id="@Id" direction="ltr" role="menu" @ref="Ref">
         @ChildContent
+        @if (OverflowEnabled)
+        {
+            <SubMenu @ref="_overflowSubmenu" Key="@OverflowKey" Title="More" Class="ant-menu-overflow-item-rest" PopupClassName="@OverflowedIndicatorPopupClassName" Placement="Placement.BottomRight">
+                <TitleTemplate>
+                    @if (OverflowedIndicator != null) { @OverflowedIndicator }
+                    else { <Icon Type="@IconType.Outline.Ellipsis" /> }
+                </TitleTemplate>
+                <ChildContent>
+                    @foreach (var item in _overflowOrder.Select(id => _overflowItems.FirstOrDefault(item => item.Id == id)).Where(item => item != null).ToArray())
+                    {
+                        <CascadingValue Value="item.Id" Name="MenuOverflowSource" @key="item.Id">@item.Content</CascadingValue>
+                    }
+                </ChildContent>
+            </SubMenu>
+        }
     </ul>
 </CascadingValue>

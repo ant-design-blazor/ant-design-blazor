@@ -1,0 +1,16 @@
+<Flex Vertical Gap="FlexGap.Medium" Align="FlexAlign.Start">
+    <Title Level="5">With formatter (UpCase)</Title>
+    <InputOTP Formatter="value => value.ToUpperInvariant()" OnChange="OnComplete" />
+    <Title Level="5">With default value</Title>
+    <InputOTP DefaultValue="123456" />
+    <Title Level="5">With mask</Title>
+    <InputOTP Mask="true" />
+    <Title Level="5">With separator</Title>
+    <InputOTP SeparatorText="-" />
+    @if (_completed is not null) { <span role="status">Completed: @_completed</span> }
+</Flex>
+
+@code {
+    private string _completed;
+    private void OnComplete(string value) => _completed = value;
+}

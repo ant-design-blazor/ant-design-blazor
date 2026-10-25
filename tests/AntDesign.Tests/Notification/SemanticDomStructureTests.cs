@@ -48,7 +48,7 @@ public sealed class SemanticDomStructureTests : AntDesignTestBase
         Assert.Equal("Hello World?", cut.Find(".ant-notification-notice-description").TextContent.Trim());
         Assert.Equal("My Button", cut.Find(".ant-notification-notice-actions").TextContent.Trim());
         Assert.NotNull(cut.Find("button.ant-notification-notice-close"));
-        Assert.NotNull(cut.Find(".ant-notification-notice-close-icon"));
+        Assert.NotNull(cut.Find(".ant-notification-close-icon"));
         Assert.NotNull(cut.Find("progress.ant-notification-notice-progress[value='100'][max='100']"));
     }
 

@@ -1,0 +1,44 @@
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div class="docs-carbon-ad @Class" @ref="_host"></div>
+
+@code {
+    [Parameter] public string Class { get; set; }
+
+    private ElementReference _host;
+    private IJSObjectReference _module;
+    private Task _initialization;
+    private bool _disposed;
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return Task.CompletedTask;
+        return _initialization = InitializeAsync();
+    }
+
+    private async Task InitializeAsync()
+    {
+        // OnAfterRender does not run during server prerendering. The vendor's
+        // DOM is owned by the module, not diffed or reinjected by Blazor.
+        _module = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/AntDesign.Docs/js/carbon-ad.js");
+        if (!_disposed && _module != null) await _module.InvokeVoidAsync("mount", _host);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_disposed) return;
+        _disposed = true;
+        try
+        {
+            if (_initialization != null) await _initialization;
+            if (_module != null)
+            {
+                await _module.InvokeVoidAsync("unmount", _host);
+                await _module.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException) { }
+        catch (TaskCanceledException) { }
+    }
+}

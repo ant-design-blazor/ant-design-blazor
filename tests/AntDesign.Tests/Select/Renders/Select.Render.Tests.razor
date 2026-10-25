@@ -98,16 +98,44 @@
     [Fact]
     public void Render_single_selected_value_as_text_without_a_selection_item_wrapper()
     {
-        var cut = Render(@<Select TItemValue="string" TItem="string" Value='@("lucy")'>
+        var cut = Render<Select<string, string>>(@<Select TItemValue="string" TItem="string" Value='@("lucy")'>
             <SelectOptions>
                 <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
             </SelectOptions>
         </Select>);
+        cut.Render();
 
         var content = cut.Find(".ant-select-content");
         Assert.Contains("ant-select-content-has-value", content.ClassList);
         Assert.Equal("Lucy", content.TextContent.Trim());
         Assert.Empty(cut.FindAll(".ant-select-content .ant-select-selection-item"));
+    }
+
+    [Fact]
+    public void Render_default_value_label_for_single_select()
+    {
+        var cut = Render<Select<string, string>>(@<Select TItemValue="string" TItem="string" DefaultValue='@("lucy")'>
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
+            </SelectOptions>
+        </Select>);
+        cut.Render();
+
+        var content = cut.Find(".ant-select-content");
+        Assert.Contains("Lucy", content.TextContent);
+        Assert.Empty(cut.FindAll(".ant-select-placeholder"));
+    }
+
+    [Fact]
+    public void Loading_select_spins_its_loading_icon()
+    {
+        var cut = Render(@<Select TItemValue="string" TItem="string" Loading />);
+
+        var loadingIcon = cut.Find(".ant-select-suffix .anticon-loading");
+        Assert.Equal("loading", loadingIcon.GetAttribute("aria-label"));
+        Assert.Contains("anticon-spin", loadingIcon.ClassList);
+        Assert.Contains("ant-select-suffix-loading", cut.Find(".ant-select-suffix").ClassList);
+        Assert.Equal("0 0 1024 1024", cut.Find(".ant-select-suffix .anticon-loading svg").GetAttribute("viewBox"));
     }
 
     [Fact]
@@ -230,6 +258,7 @@
         Assert.Equal("button", clear.GetAttribute("type"));
         Assert.Equal("Clear", clear.GetAttribute("aria-label"));
         Assert.NotNull(clear.QuerySelector(".anticon-close-circle"));
+        Assert.Contains("ant-select-allow-clear", cut.Find(".ant-select").ClassList);
     }
 
     [Fact]
@@ -354,7 +383,7 @@
         initial.Select(x => x.TextContent.Trim()).Should().Contain(new[] { "Apple", "Pear" });
 
         // Act - remove tags via the remove control
-        // The remove control handles 'onmousedown' rather than 'onclick' in the component,
+        // The remove control handles 'onclick' while mousedown only preserves focus,
         // and removing a tag will re-render the component and change the DOM. Re-query the
         // remove control and trigger the event until there are no more tags left.
         while (true)
@@ -367,7 +396,7 @@
 
             // Use InvokeAsync and await to ensure the DOM updates complete before continuing
             // (prevents UnknownEventHandlerIdException and timing races with bound value updates).
-            await cut.InvokeAsync(() => remove.TriggerEvent("onmousedown", new MouseEventArgs()));
+            await cut.InvokeAsync(() => remove.ClickAsync(new MouseEventArgs()));
             // Slight delay to allow Blazor to process the event and update bound values/DOM
             await Task.Delay(1);
         }
@@ -396,7 +425,7 @@
         var initial = cut.FindAll("span.ant-select-selection-item-content");
         initial.Select(x => x.TextContent.Trim()).Should().Contain(new[] { "Apple", "Pear" });
 
-        // Act - remove tags via the remove control (handles 'onmousedown') as the
+        // Act - remove tags via the remove control (handles 'onclick') as the
         // clear button relies on a DOM event listener that isn't present in bUnit.
         while (true)
         {
@@ -406,7 +435,7 @@
                 break;
             }
 
-            await cut.InvokeAsync(() => remove.TriggerEvent("onmousedown", new MouseEventArgs()));
+            await cut.InvokeAsync(() => remove.ClickAsync(new MouseEventArgs()));
             await Task.Delay(1);
         }
 

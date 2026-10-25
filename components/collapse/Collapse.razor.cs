@@ -42,6 +42,26 @@ namespace AntDesign
         [Parameter]
         public bool Bordered { get; set; } = true;
 
+        /// <summary>Whether to render the Collapse without its container background and border.</summary>
+        [Parameter]
+        public bool Ghost { get; set; }
+
+        /// <summary>Set the size of the Collapse headers.</summary>
+        [Parameter]
+        public CollapseSize Size { get; set; } = CollapseSize.Middle;
+
+        /// <summary>Controls which part of each panel header is clickable. Null makes the whole header interactive; Header limits interaction to title and icon.</summary>
+        [Parameter]
+        public CollapseCollapsible? Collapsible { get; set; }
+
+        /// <summary>Semantic classes for the root, header, title, body and icon slots.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Semantic inline styles for the root, header, title, body and icon slots.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
         /// <summary>
         /// Expand icon position
         /// </summary>
@@ -115,11 +135,27 @@ namespace AntDesign
         {
             ClassMapper
                 .Add("ant-collapse")
-                .Add("css-var-root")
                 .If("ant-collapse-icon-placement-start", () => ExpandIconPosition == CollapseExpandIconPosition.Left)
                 .If("ant-collapse-icon-placement-end", () => ExpandIconPosition == CollapseExpandIconPosition.Right)
                 .If("ant-collapse-borderless", () => !this.Bordered)
+                .If("ant-collapse-ghost", () => Ghost)
+                .If("ant-collapse-small", () => Size == CollapseSize.Small)
+                .If("ant-collapse-large", () => Size == CollapseSize.Large)
                 .If("ant-collapse-rtl", () => RTL);
+        }
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            var customClass = ClassNames != null && ClassNames.TryGetValue(slot, out var value) ? value : null;
+            return string.IsNullOrWhiteSpace(customClass) ? baseClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return customStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {customStyle}";
         }
 
         protected override async Task OnInitializedAsync()

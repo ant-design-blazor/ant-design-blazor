@@ -4,11 +4,13 @@
 
 using Microsoft.AspNetCore.Components;
 using AntDesign.Theming;
+using System.Linq;
 
 namespace AntDesign
 {
     public abstract class AntDomComponentBase : AntComponentBase
     {
+        private static readonly System.Collections.Generic.HashSet<string> GlobalTokenNames = new(GeneratedGlobalTokens.All.Select(token => token.Name), System.StringComparer.Ordinal);
         [Inject]
         private IComponentIdGenerator ComponentIdGenerator { get; set; }
 
@@ -62,6 +64,11 @@ namespace AntDesign
                 var name = $"{component}-{token.Key}";
                 var value = CssVariableValueFormatter.Format(name, token.Value);
                 declarations.Add($"--ant-{TokenView.ToKebabCase(name)}:{value}");
+                // React permits global tokens in a component theme. The shared
+                // CSS consumes their global variable names; emit these only on
+                // the component root so sibling components remain unaffected.
+                if (GlobalTokenNames.Contains(token.Key))
+                    declarations.Add($"--ant-{TokenView.ToKebabCase(token.Key)}:{CssVariableValueFormatter.Format(token.Key, token.Value)}");
             }
 
             return string.Join(";", declarations);

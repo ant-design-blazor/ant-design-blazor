@@ -8,6 +8,9 @@ namespace AntDesign.Internal
 {
     public partial class SubMenuTrigger : OverlayTrigger
     {
+        // The <li> is the actual menu trigger, not an extra wrapping <div>.
+        internal override bool IsTriggerWrappedInDiv => false;
+
         [CascadingParameter(Name = "SubMenu")]
         public SubMenu SubMenuComponent { get; set; }
 

@@ -357,6 +357,19 @@ namespace AntDesign
         }
 
         internal override bool HasSelectOptions => SelectOptions != null;
+        private bool _lastVirtualAccessibility;
+
+        internal override bool UsesVirtualAccessibility
+        {
+            get
+            {
+#if NET5_0_OR_GREATER
+                return EnableVirtualization && !HasSelectOptions && !IsGroupingEnabled;
+#else
+                return false;
+#endif
+            }
+        }
 
         internal ElementReference DropDownRef => _dropDown.GetOverlayComponent().Ref;
         private ElementReference _scrollableSelectDiv;
@@ -451,6 +464,8 @@ namespace AntDesign
 
         protected override async Task OnParametersSetAsync()
         {
+            var virtualAccessibilityChanged = _lastVirtualAccessibility != UsesVirtualAccessibility;
+            _lastVirtualAccessibility = UsesVirtualAccessibility;
             SetClassMap();
             EvaluateDataSourceChange();
 
@@ -479,6 +494,12 @@ namespace AntDesign
                 await OnValueChangeAsync(_selectedValue);
             }
             await base.OnParametersSetAsync();
+            if (virtualAccessibilityChanged)
+            {
+                if (!UsesVirtualAccessibility && _scrollableSelectDiv.Id != null)
+                    await JsInvokeAsync(JSInteropConstants.SelectHelper.CancelScroll, _scrollableSelectDiv);
+                _dropDown?.GetOverlayComponent()?.RefreshComponentState();
+            }
         }
 
         private void EvaluateDataSourceChange()
@@ -798,16 +819,17 @@ namespace AntDesign
                 .If($"{ClassPrefix}-lg", () => Size == InputSize.Large)
                 .If($"{ClassPrefix}-{EffectiveVariant.ToString().ToLowerInvariant()}", () => true)
                 .Add($"{ClassPrefix}-css-var")
-                .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
                 .If($"{ClassPrefix}-focused", () => Focused)
                 .If($"{ClassPrefix}-single", () => Mode == SelectMode.Default)
                 .If($"{ClassPrefix}-multiple", () => Mode != SelectMode.Default)
                 .If($"{ClassPrefix}-in-form-item ", () => FormItem != null)
                 .If($"{ClassPrefix}-has-feedback", () => FormItem?.HasFeedback == true)
+                .If($"{ClassPrefix}-allow-clear", () => !Disabled && AllowClear && HasValue)
                 .If($"{ClassPrefix}-show-arrow", () => ShowArrowIcon)
-                .If($"{ClassPrefix}-show-search", () => IsSearchEnabled)
-                .If($"{ClassPrefix}-loading", () => Loading)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
+                .If($"{ClassPrefix}-loading", () => Loading)
+                .If($"{ClassPrefix}-open", () => _dropDown?.IsOverlayShow() ?? false)
+                .If($"{ClassPrefix}-show-search", () => IsSearchEnabled)
                 .If($"{ClassPrefix}-rtl", () => RTL)
                 .GetIf(() => $"{ClassPrefix}-status-{status}", () => status is not null)
 
@@ -843,7 +865,7 @@ namespace AntDesign
         {
             string maxWidth = "", minWidth = "", definedWidth = "";
             var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _selectContent.Ref);
-            var width = domRect.Width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            var width = domRect.Width.ToString("0.############################", System.Globalization.CultureInfo.InvariantCulture);
             minWidth = $"min-width: {width}px;";
             if (DropdownMatchSelectWidth.IsT0 && DropdownMatchSelectWidth.AsT0)
             {
@@ -874,6 +896,8 @@ namespace AntDesign
             }
             else
             {
+                if (UsesVirtualAccessibility && _scrollableSelectDiv.Id != null)
+                    await JsInvokeAsync(JSInteropConstants.SelectHelper.CancelScroll, _scrollableSelectDiv);
                 OnOverlayHide();
             }
         }
@@ -885,6 +909,14 @@ namespace AntDesign
         /// <returns></returns>
         private async Task ElementScrollIntoViewAsync(ElementReference element)
         {
+            if (UsesVirtualAccessibility)
+            {
+                var index = SortedSelectOptionItems.Where(option => !option.IsHidden).ToList()
+                    .FindIndex(option => option == ActiveOption);
+                if (index >= 0)
+                    await JsInvokeAsync(JSInteropConstants.SelectHelper.ScrollToIndex, _scrollableSelectDiv, index, ActiveOption.Label);
+                return;
+            }
             await JsInvokeAsync(JSInteropConstants.ScrollTo, element, _scrollableSelectDiv);
         }
 
@@ -1260,6 +1292,9 @@ namespace AntDesign
                 }
             }
             OnSearch?.Invoke(_searchValue);
+            // The portaled Overlay owns its own render tree. Updating option
+            // children alone leaves its list/empty-state fragment stale.
+            _dropDown.GetOverlayComponent()?.RefreshComponentState();
         }
 
         private async Task TokenizeSearchedPhrase(string searchValue)
@@ -1822,8 +1857,12 @@ namespace AntDesign
                 var orderedSelectedItems = GetOrderedSelectedItems();
                 if (string.IsNullOrEmpty(_prevSearchValue) && orderedSelectedItems.Count > 0)
                 {
-                    await SetValueAsync(orderedSelectedItems.Last());
-                    FocusIfInSearch();
+                    var removable = orderedSelectedItems.LastOrDefault(item => !item.IsDisabled);
+                    if (!Disabled && removable != null)
+                    {
+                        await SetValueAsync(removable);
+                        FocusIfInSearch();
+                    }
                 }
                 else if (!string.IsNullOrEmpty(_prevSearchValue))
                     _prevSearchValue = _searchValue;
@@ -1885,7 +1924,11 @@ namespace AntDesign
         protected async Task ScrollToFirstSelectedItemAsync()
         {
             // Check if there is a selected item and set it as active
-            var currentSelected = SelectOptionItems.FirstOrDefault(x => x.IsSelected);
+            // React only scrolls a single selector to its selected option.
+            // Multiple selectors must not activate a disabled selected tag.
+            var currentSelected = Mode == SelectMode.Default
+                ? SortedSelectOptionItems.FirstOrDefault(x => x.IsSelected && !x.IsHidden)
+                : null;
 
             if (currentSelected != null)
             {
@@ -1903,9 +1946,9 @@ namespace AntDesign
                 }
                 await ElementScrollIntoViewAsync(currentSelected.Ref);
             }
-            else if (ActiveOption == null)//position on first element in the list
+            else if (ActiveOption == null || ActiveOption.IsHidden || ActiveOption.IsDisabled)
             {
-                var selectionCandidate = SelectOptionItems.FirstOrDefault();
+                var selectionCandidate = SortedSelectOptionItems.FirstOrDefault(x => !x.IsHidden && !x.IsDisabled);
                 if (selectionCandidate != null)
                 {
                     ActiveOption = selectionCandidate;
@@ -1919,6 +1962,7 @@ namespace AntDesign
         protected override async Task OnRemoveSelectedAsync(SelectOptionItem<TItemValue, TItem> selectOption)
         {
             if (selectOption == null) throw new ArgumentNullException(nameof(selectOption));
+            if (Disabled || selectOption.IsDisabled) return;
             await SetValueAsync(selectOption);
             FocusIfInSearch();
         }

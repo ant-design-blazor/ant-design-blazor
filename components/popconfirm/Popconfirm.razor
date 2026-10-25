@@ -35,54 +35,9 @@
             </div>
             <div class="ant-popover-container ant-popconfirm-container" role="tooltip">
                 <div class="ant-popover-content">
-                    <div class="ant-popconfirm-inner-content">
-                        <div class="ant-popconfirm-message">
-                            <span class="ant-popconfirm-message-icon">
-                                @if (IconTemplate != null)
-                                {
-                                    @IconTemplate
-                                }
-                                else
-                                {
-                                    <Icon Type="@Icon" />
-                                }
-                            </span>
-                            <div class="ant-popconfirm-message-text">
-                                <div class="ant-popconfirm-title">
-                                    @if (TitleTemplate != null)@TitleTemplate else @Title
-                                </div>
-                            </div>
-                        </div>
-                        <div class="ant-popconfirm-buttons">
-                            @if (CancelButtonProps != null)
-                            {
-                                <Button OnClick="@Cancel" Size="@CancelButtonProps.Size"
-                                        Block="@CancelButtonProps.Block"
-                                        Ghost="@CancelButtonProps.Ghost"
-                                        Loading="@CancelButtonProps.Loading"
-                                        Type="@CancelButtonProps.Type"
-                                        Shape="@CancelButtonProps.Shape"
-                                        Icon="@CancelButtonProps.Icon"
-                                        Disabled="@CancelButtonProps.Disabled"
-                                        Danger="@CancelButtonProps.IsDanger">
-                                    @CancelText
-                                </Button>
-                            }
-                            @if (OkButtonProps != null)
-                            {
-                                <Button OnClick="@Confirm" Size="@ButtonSize.Small" Type="@OkType"
-                                        Block="@OkButtonProps.Block"
-                                        Ghost="@OkButtonProps.Ghost"
-                                        Loading="@OkButtonProps.Loading"
-                                        Shape="@OkButtonProps.Shape"
-                                        Icon="@OkButtonProps.Icon"
-                                        Disabled="@OkButtonProps.Disabled"
-                                        Danger="@OkButtonProps.IsDanger">
-                                    @OkText
-                                </Button>
-                            }
-                        </div>
-                    </div>
+                    <PopconfirmContent Title="@Title" TitleTemplate="@TitleTemplate" Icon="@Icon" IconTemplate="@IconTemplate"
+                                       CancelText="@CancelText" OkText="@OkText" OkType="@OkType" CancelButtonProps="CancelButtonProps" OkButtonProps="OkButtonProps"
+                                       OnCancel="Cancel" OnConfirm="Confirm" />
                 </div>
             </div>
         </Overlay>

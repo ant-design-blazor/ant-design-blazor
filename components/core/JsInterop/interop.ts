@@ -17,12 +17,13 @@ export {
   splitterHelper,
   drawerHelper,
   qrCodeHelper,
+  borderBeamHelper,
+  menuOverflowHelper,
+  selectHelper,
 } from './modules/components/export'
 
 
 export { enableDraggable, disableDraggable, resetModalPosition } from "./modules/dom/dragHelper";
-
-export { generate as generateColor } from "@ant-design/colors";
 
 export function log(text) {
   console.log(text);
