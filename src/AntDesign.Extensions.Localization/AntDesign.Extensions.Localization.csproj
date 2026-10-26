@@ -31,7 +31,7 @@
     <None Include="..\..\components\logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
   
-  <ItemGroup Condition="'$(TargetFramework)' != 'net9.0' and '$(TargetFramework)' != 'net10.0' and '$(TargetFramework)' != 'net11.0'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'net9.0' and '$(TargetFramework)' != 'net10.0'">
     <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4" />
   </ItemGroup>
 
@@ -45,17 +45,8 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework) == 'net11.0'">
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="11.0.0-rc.2.26504.105" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="11.0.0-rc.2.26504.105" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' != 'net11.0'">
+  <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="8.0.3" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework) == 'net11.0'">
-    <PackageReference Include="System.Text.Json" Version="11.0.0-rc.2.26504.105" />
   </ItemGroup>
 
 </Project>

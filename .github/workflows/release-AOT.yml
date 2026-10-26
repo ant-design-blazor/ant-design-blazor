@@ -30,7 +30,7 @@ jobs:
             8.0.x
             9.0.x
             10.0.x
-            11.0.100-rc.2.26504.105
+            11.0.x
           include-prerelease: true
 
       - uses: actions/setup-node@v1

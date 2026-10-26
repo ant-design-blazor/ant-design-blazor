@@ -16,10 +16,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          # Install .NET 10 for the build CLI and .NET 11 RC2 for AntDesign packaging
+          # Use .NET 10 for the build CLI and .NET 11 for AntDesign packaging
           dotnet-version: |
             10.0.x
-            11.0.100-rc.2.26504.105
+            11.0.x
           include-prerelease: true
 
       - name: Verify .NET
