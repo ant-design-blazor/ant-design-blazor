@@ -154,7 +154,7 @@
         var cut = Render<Select<int, Person>>(
             @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="int" TItem="Person"
                                DataSource="@dataSource" ValueName="Id" LabelName="Name"
-                               CustomTagLabelToValue="@(label => int.Parse(label))"
+                               CustomTagLabelToValue="ConvertTagValue"
                                EnableSearch SearchDebounceMilliseconds="0" />);
         var input = cut.Find("input.ant-select-selection-search-input");
 
@@ -168,6 +168,8 @@
 
         cut.Instance.SelectedOptionItems.Should().ContainSingle().Which.Key.Should().Be(42);
     }
+
+    private static int ConvertTagValue(string label) => int.Parse(label);
 
     private record Person(int Id, string Name);
 }
