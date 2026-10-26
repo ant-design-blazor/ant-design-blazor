@@ -31,7 +31,23 @@
     <None Include="..\..\components\logo.png" Pack="true" PackagePath="" />
   </ItemGroup>
   
-  <ItemGroup Condition="'$(TargetFramework)' != 'net9.0' and '$(TargetFramework)' != 'net10.0'">
+  <ItemGroup Condition="$(TargetFramework) == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework) == 'net5.0'">
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework) == 'net6.0'">
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework) == 'net7.0'">
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework) == 'net8.0'">
     <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4" />
   </ItemGroup>
 
@@ -43,6 +59,10 @@
   <ItemGroup Condition="$(TargetFramework) == 'net10.0'">
     <PackageReference Include="Microsoft.Extensions.Localization" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework) == 'net11.0'">
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="11.0.0-rc.2.26504.105" />
   </ItemGroup>
 
   <ItemGroup>
