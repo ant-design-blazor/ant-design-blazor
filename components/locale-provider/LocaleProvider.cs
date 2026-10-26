@@ -143,7 +143,12 @@ namespace AntDesign
 
             if (culture != null)
             {
-                CultureInfo.DefaultThreadCurrentUICulture = culture;
+                // Do NOT set CultureInfo.DefaultThreadCurrentUICulture here: it is a process-wide static
+                // default shared by all threads/execution contexts. In Blazor Server, each browser tab
+                // runs on its own circuit but shares the same process, so mutating this static would leak
+                // the language change from one user's circuit into every other user's circuit.
+                // CurrentCulture/CurrentUICulture flow with the ExecutionContext of the current circuit,
+                // so setting them here only affects the calling circuit.
                 CultureInfo.CurrentCulture = culture;
                 CultureInfo.CurrentUICulture = culture;
             }
