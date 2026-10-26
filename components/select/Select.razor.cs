@@ -730,7 +730,7 @@ namespace AntDesign
                     if (isSelected)
                     {
                         processedSelectedCount--;
-                        SelectedOptionItems.Add(newItem.Value, newItem);
+                        SelectedOptionItems[newItem.Value] = newItem;
                     }
                 }
                 else if (exists && !IgnoreItemChanges)

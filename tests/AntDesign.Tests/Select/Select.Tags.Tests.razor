@@ -143,5 +143,32 @@
 
         cut.Instance.SelectedOptionItems.Should().ContainSingle().Which.Value.Value.Should().Be("Tag1");
     }
+
+    [Fact]
+    public async Task Refreshing_DataSource_with_same_value_as_added_tag_does_not_throw()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+
+        var dataSource = new List<Person>();
+        var cut = Render<Select<int, Person>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="int" TItem="Person"
+                               DataSource="@dataSource" ValueName="Id" LabelName="Name"
+                               CustomTagLabelToValue="@(label => int.Parse(label))"
+                               EnableSearch SearchDebounceMilliseconds="0" />);
+        var input = cut.Find("input.ant-select-selection-search-input");
+
+        await cut.InvokeAsync(() => input.Input("42"));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption?.Value == 42));
+        input.KeyUp("ENTER");
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().ContainKey(42));
+
+        dataSource.Add(new Person(42, "Forty two"));
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.DataSource, dataSource));
+
+        cut.Instance.SelectedOptionItems.Should().ContainSingle().Which.Key.Should().Be(42);
+    }
+
+    private record Person(int Id, string Name);
 }
 }
