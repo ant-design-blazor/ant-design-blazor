@@ -1,0 +1,34 @@
+<Button Type="ButtonType.Primary" OnClick="StartTour">Begin Tour</Button>
+<Divider />
+<Space>
+    <span @ref="_firstTarget"><Button>Upload</Button></span>
+    <span @ref="_secondTarget"><Button Type="ButtonType.Primary">Save</Button></span>
+    <span @ref="_thirdTarget"><Button>⋯</Button></span>
+</Space>
+
+<Tour Open="@_open" OpenChanged="OnOpenChanged" MaskStyle="box-shadow: inset 0 0 15px #333;" MaskColor="rgba(80,255,255,.4)" Steps="@_steps" />
+
+@code {
+    private bool _open;
+    private ElementReference _firstTarget;
+    private ElementReference _secondTarget;
+    private ElementReference _thirdTarget;
+
+    private IReadOnlyList<TourStep> _steps => new[]
+    {
+        new TourStep { Target = _firstTarget, Title = Text("Upload File"), Description = Text("Put your files here.") },
+        new TourStep
+        {
+            Target = _secondTarget,
+            Title = Text("Save"),
+            Description = Text("This step has its own mask style."),
+            MaskStyle = "box-shadow: inset 0 0 15px #fff;",
+            MaskColor = "rgba(40,0,255,.4)"
+        },
+        new TourStep { Target = _thirdTarget, Title = Text("Other Actions"), Description = Text("This step disables the mask."), Mask = false }
+    };
+
+    private void StartTour() => _open = true;
+    private Task OnOpenChanged(bool value) { _open = value; return Task.CompletedTask; }
+    private static RenderFragment Text(string value) => builder => builder.AddContent(0, value);
+}
