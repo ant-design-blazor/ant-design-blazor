@@ -3,6 +3,19 @@
 @inherits AntDesignTestBase
 
 @code {
+    [Fact]
+    public void DatePickerBase_MarksInitializationComplete()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        var cut = Render<RangePicker<DateTime?[]>>(@<RangePicker TValue="DateTime?[]" />);
+
+        var initialized = (bool)typeof(DatePickerBase<DateTime?[]>)
+            .GetField("_isInitialized", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
+            .GetValue(cut.Instance)!;
+
+        Assert.True(initialized);
+    }
+
     [Theory]
     [MemberData(nameof(RangePickerTestData.NullData), MemberType = typeof(RangePickerTestData))]
     public void Renders_custom_placeholder<T>(T value)

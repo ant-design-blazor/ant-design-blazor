@@ -1,7 +1,9 @@
-﻿<Tabs DefaultActiveKey="1" Type="TabType.EditableCard" OnAddClick="OnAddClick" OnClose="OnTabClose" @bind-ActiveKey="activeKey">
+﻿@inject IConfirmService ConfirmService
+
+<Tabs DefaultActiveKey="1" Type="TabType.EditableCard" OnAddClick="OnAddClick" OnClose="OnTabClose" @bind-ActiveKey="activeKey">
     @foreach (var pane in panes)
     {
-        <TabPane Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable">
+        <TabPane Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable" OnClosing="ConfirmClosing">
             @pane.Content
         </TabPane>
     }
@@ -38,6 +40,15 @@
         var key = panes.Count + 1;
         activeKey = $"newTab{newTabIndex++}";
         panes.Add(new Pane($"Tab {key}", $"Content of Tab Pane {key}", activeKey));
+    }
+
+    private async Task ConfirmClosing(CloseEventArgs<MouseEventArgs> args)
+    {
+        var result = await ConfirmService.Show(
+            "Do you confirm to close this tab?",
+            "Confirm");
+
+        args.Cancel = result == ConfirmResult.Cancel;
     }
 
     void OnTabClose(string key)

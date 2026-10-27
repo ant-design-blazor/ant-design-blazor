@@ -33,7 +33,7 @@ Keyboard navigation is available when the focus is on the tab.
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| ActiveKey | Current TabPane's key£¬support two-way binding. | string | - |
+| ActiveKey | Current TabPane's key, supports two-way binding. | string | - |
 | Animated | Whether to change tabs with animation. Only works while `TabPosition="TabPosition.Top"\|"TabPosition.Bottom"` | boolean | `false` |
 | DefaultActiveKey | Initial active TabPane's key, if `ActiveKey` is not set. | string | - |
 | HideAdd | Hide plus icon or not. Only works while `Type="TabType.EditableCard"` | boolean | `false` |
@@ -58,6 +58,8 @@ Keyboard navigation is available when the focus is on the tab.
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
 | ForceRender | Forced render of content in tabs, not lazy render after clicking on tabs | boolean | false |
+| Closable | Whether the tab can be closed when `Tabs.Type` is `TabType.EditableCard` | boolean | true |
+| OnClosing | Callback executed before the tab is closed. Set `CloseEventArgs.Cancel` to `true` to prevent closing | `EventCallback<CloseEventArgs<MouseEventArgs>>` | - |
 | Key | TabPane's key | string | - |
 | Tab | Show text in TabPane's head | string | - |
 | TabTemplate | Template of TabPane's head | RenderFargment | - |
