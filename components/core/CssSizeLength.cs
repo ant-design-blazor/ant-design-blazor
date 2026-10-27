@@ -73,9 +73,14 @@ namespace AntDesign
         {
         }
 
-        public CssSizeLength(double value, bool noUnit = false) : this(Convert.ToDecimal(value), EvalUnitless(noUnit))
+        public CssSizeLength(double value, bool noUnit = false) : this(ToDecimal(value), EvalUnitless(noUnit))
         {
         }
+
+        private static decimal ToDecimal(double value) => decimal.Parse(
+            value.ToString("R", CultureInfo.InvariantCulture),
+            NumberStyles.Float,
+            CultureInfo.InvariantCulture);
 
         public CssSizeLength(decimal value, bool noUnit = false) : this(value, EvalUnitless(noUnit))
         {
