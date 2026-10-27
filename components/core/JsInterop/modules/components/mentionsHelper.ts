@@ -27,6 +27,11 @@
     }
   }
 
+  public static clearEditorKeyHandler = function (element: HTMLTextAreaElement): void {
+    const textArea = mentionsHelper.getTextarea(element);
+    textArea.onkeydown = null;
+  }
+
   public static getProp = function (e: HTMLElement, propName: string): any {
     const textArea = mentionsHelper.getTextarea(e);
 
