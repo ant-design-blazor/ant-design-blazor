@@ -6,6 +6,8 @@
 <CascadingValue Value='$"{PrefixCls}-dropdown"' Name="PrefixCls">
     <OverlayTrigger @ref="@_dropDown"
                     Visible="Open"
+                    VisibleChanged="OpenChanged"
+                    Inline="Inline"
                     IsButton="@true"
                     BoundaryAdjustMode="@BoundaryAdjustMode"
                     Disabled="IsDisabled(0)"
