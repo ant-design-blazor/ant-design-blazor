@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <AntDesignBuildNodeVersion Condition="'$(AntDesignBuildNodeVersion)' == ''">18</AntDesignBuildNodeVersion>
+    <AntDesignBuildNodeCommand>npm exec --yes --package=node@$(AntDesignBuildNodeVersion) -- node</AntDesignBuildNodeCommand>
   </PropertyGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SolutionDir)node_modules') ">
@@ -15,14 +17,14 @@
   </Target>
 
   <Target Name="DebugRunGulp" BeforeTargets="DebugEnsureNodeEnv" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:lib" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:doc" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="$(AntDesignBuildNodeCommand) ./node_modules/gulp/bin/gulp.js build:library" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="$(AntDesignBuildNodeCommand) --max-old-space-size=81920 ./node_modules/gulp/bin/gulp.js build:preview" />
   </Target>
 
   <Target Name="PublishRunGulp" AfterTargets="ComputeFilesToPublish">
     <Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:lib" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:doc" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="$(AntDesignBuildNodeCommand) ./node_modules/gulp/bin/gulp.js build:library" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="$(AntDesignBuildNodeCommand) --max-old-space-size=81920 ./node_modules/gulp/bin/gulp.js build:preview" />
   </Target>
 
   <PropertyGroup>

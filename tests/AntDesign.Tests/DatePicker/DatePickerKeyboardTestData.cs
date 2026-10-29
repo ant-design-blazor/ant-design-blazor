@@ -59,11 +59,6 @@ public static class DatePickerKeyboardTestData
 #if NET6_0_OR_GREATER                  
             yield return new object[] { DateOnly.MinValue, new DateOnly(2020, 1, 1), DefaultDateFormat, "2022-01-03" };
 #endif
-            yield return new object[] { DateTime.MinValue, new DateTime(2020, 1, 1), DefaultDateFormat, "2022-01-03" };
-            yield return new object[] { DateTimeOffset.MinValue, new DateTimeOffset(2020, 1, 1, 10, 30, 0, TimeSpan.FromHours(5)), DefaultDateFormat, "2022-01-03" };
-#if NET6_0_OR_GREATER                  
-            yield return new object[] { DateOnly.MinValue, new DateOnly(2020, 1, 1), DefaultDateFormat, "2022-01-03" };
-#endif
         }
     }
 
