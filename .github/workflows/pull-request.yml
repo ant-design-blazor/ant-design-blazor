@@ -24,8 +24,11 @@ jobs:
             8.0.x
             9.0.x
             10.0.x
-            11.0.x
-          include-prerelease: true
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 11.0.x
+          dotnet-quality: preview
 
       - uses: actions/setup-node@v1
         with:
@@ -36,26 +39,78 @@ jobs:
           npm install
           dotnet build
 
-  test:
-    runs-on: ubuntu-latest
+  test-dotnet:
+    name: Test (${{ matrix.tfm }})
     needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - tfm: net6
+            sdk-version: 6.0.x
+            sdk-quality: ga
+            coverage-flag: dotnet-net6
+          - tfm: net8
+            sdk-version: 8.0.x
+            sdk-quality: ga
+            coverage-flag: dotnet-net8
+          - tfm: net9
+            sdk-version: 9.0.x
+            sdk-quality: ga
+            coverage-flag: dotnet-net9
+          - tfm: net10.0
+            sdk-version: 10.0.x
+            sdk-quality: ga
+            coverage-flag: dotnet-net10
+          - tfm: net11.0
+            sdk-version: 11.0.x
+            sdk-quality: preview
+            coverage-flag: dotnet-net11
 
     steps:
       - uses: actions/checkout@v1
 
-      - name: Setup .NET SDKs
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: |
-            3.1.x
-            5.0.x
-            6.0.x
-            7.0.x
-            8.0.x
-            9.0.x
-            10.0.x
-            11.0.x
-          include-prerelease: true
+          dotnet-version: ${{ matrix.sdk-version }}
+          dotnet-quality: ${{ matrix.sdk-quality }}
+
+      - name: Test
+        run: >-
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release
+          --collect:"XPlat Code Coverage" -f ${{ matrix.tfm }} --logger "console;verbosity=detailed"
+          --blame-hang --blame-hang-timeout 10m
+
+      - name: Collect .NET coverage
+        if: always()
+        run: find ./tests -name "coverage.cobertura.xml" -type f -exec cp {} ./ \;
+
+      - name: Upload .NET coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.cobertura.xml
+          flags: ${{ matrix.coverage-flag }}
+          fail_ci_if_error: false
+
+      - name: Upload test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-diagnostics-${{ matrix.tfm }}
+          path: tests/AntDesign.Tests/TestResults/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  test-javascript:
+    name: Lint and JavaScript tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
 
       - uses: actions/setup-node@v1
         with:
@@ -67,47 +122,20 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test (.NET 6)
-        run: >-
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release
-          --collect:"XPlat Code Coverage" -f net6 --logger "console;verbosity=detailed"
-          --blame-hang --blame-hang-timeout 10m
-
-      - name: Test (.NET 8)
-        run: >-
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release
-          --collect:"XPlat Code Coverage" -f net8 --logger "console;verbosity=detailed"
-          --blame-hang --blame-hang-timeout 10m
-
-      - name: Test (.NET 9)
-        run: >-
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release
-          --collect:"XPlat Code Coverage" -f net9 --logger "console;verbosity=detailed"
-          --blame-hang --blame-hang-timeout 10m
-
-      - name: Test (.NET 10)
-        run: >-
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release
-          --collect:"XPlat Code Coverage" -f net10.0 --logger "console;verbosity=detailed"
-          --blame-hang --blame-hang-timeout 10m
-
-      - name: Test (.NET 11 RC)
-        run: >-
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release
-          --collect:"XPlat Code Coverage" -f net11.0 --logger "console;verbosity=detailed"
-          --blame-hang --blame-hang-timeout 10m
-
       - name: Test JavaScript
         run: |
           npm install ./tests/AntDesign.Tests.Js
           npm --prefix ./tests/AntDesign.Tests.Js run test-cov
 
-      - name: Collect coverage reports
-        run: find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
+      - name: Collect JavaScript coverage
+        if: always()
+        run: find ./coverage -name "*coverage*.xml" -type f -exec cp {} ./ \;
 
-      - name: Upload coverage to Codecov
+      - name: Upload JavaScript coverage to Codecov
+        if: always()
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.cobertura.xml,./cobertura-coverage.xml
+          files: ./cobertura-coverage.xml
+          flags: javascript
           fail_ci_if_error: false
