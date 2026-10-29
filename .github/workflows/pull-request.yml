@@ -103,6 +103,39 @@ jobs:
           flags: ${{ matrix.coverage-flag }}
           fail_ci_if_error: false
 
+      - name: Analyze hang dumps
+        if: failure()
+        continue-on-error: true
+        shell: bash
+        run: |
+          mapfile -t sequences < <(find tests/AntDesign.Tests/TestResults -type f -name 'Sequence*.xml' 2>/dev/null)
+          for sequence in "${sequences[@]}"; do
+            echo "Test sequence: $sequence"
+            cat "$sequence"
+          done
+
+          mapfile -t dumps < <(find tests/AntDesign.Tests/TestResults -type f \( -name '*.dmp' -o -name '*.core' \) 2>/dev/null)
+          if [ ${#dumps[@]} -eq 0 ]; then
+            echo "No hang dump found."
+            exit 0
+          fi
+
+          mkdir -p "$RUNNER_TEMP/dotnet-tools"
+          if ! dotnet tool install dotnet-dump --tool-path "$RUNNER_TEMP/dotnet-tools"; then
+            echo "Could not install dotnet-dump; the original test diagnostics will still be uploaded."
+            exit 0
+          fi
+
+          for dump in "${dumps[@]}"; do
+            report="${dump}.analysis.txt"
+            echo "Analyzing $dump"
+            "$RUNNER_TEMP/dotnet-tools/dotnet-dump" analyze "$dump" \
+              -c "clrthreads" \
+              -c "clrstack -all" \
+              -c "syncblk" \
+              -c "exit" 2>&1 | tee "$report"
+          done
+
       - name: Upload test diagnostics
         if: failure()
         uses: actions/upload-artifact@v4
