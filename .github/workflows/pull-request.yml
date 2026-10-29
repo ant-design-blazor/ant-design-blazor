@@ -77,6 +77,13 @@ jobs:
           dotnet-version: ${{ matrix.sdk-version }}
           dotnet-quality: ${{ matrix.sdk-quality }}
 
+      - name: Setup .NET 11 SDK for multi-targeting
+        if: matrix.tfm != 'net11.0'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 11.0.x
+          dotnet-quality: preview
+
       - name: Test
         run: >-
           dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release
