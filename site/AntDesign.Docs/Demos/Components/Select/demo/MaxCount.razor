@@ -1,5 +1,6 @@
 <Select Mode="SelectMode.Multiple"
-        @bind-Values="_selectedValues"
+        Values="@_selectedValues"
+        ValuesChanged="@OnValuesChanged"
         TItemValue="string"
         TItem="string"
         MaxCount="@SelectionLimit"
@@ -18,6 +19,12 @@
     private const int SelectionLimit = 3;
     private readonly string[] _names = ["Ava Swift", "Cole Reed", "Mia Blake", "Jake Stone", "Lily Lane", "Ryan Chase", "Zoe Fox", "Alex Grey", "Elle Blair"];
     private IEnumerable<string> _selectedValues = ["Ava Swift"];
+
+    private Task OnValuesChanged(IEnumerable<string> values)
+    {
+        _selectedValues = values?.ToArray() ?? [];
+        return InvokeAsync(StateHasChanged);
+    }
 
     private RenderFragment Suffix => builder =>
     {
