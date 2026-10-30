@@ -1,0 +1,31 @@
+<style>
+    .tooltip-semantic-container {
+        padding: 10px;
+    }
+</style>
+
+<Space>
+    <Tooltip Title="Object text" Arrow="false" ClassNames="@_classNames" Styles="@_objectStyles">
+        <Button>Object Style</Button>
+    </Tooltip>
+    <Tooltip Title="Custom text color and background" Arrow="false" ClassNames="@_classNames" Styles="@_customStyles">
+        <Button Type="ButtonType.Primary">Custom Style</Button>
+    </Tooltip>
+</Space>
+
+@code {
+    private readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
+    {
+        ["container"] = "tooltip-semantic-container"
+    };
+
+    private readonly IReadOnlyDictionary<string, string> _objectStyles = new Dictionary<string, string>
+    {
+        ["container"] = "border-radius: 12px; box-shadow: inset 0 0 8px #ccc;"
+    };
+
+    private readonly IReadOnlyDictionary<string, string> _customStyles = new Dictionary<string, string>
+    {
+        ["container"] = "background-color: rgba(53, 71, 125, 0.8); padding: 12px; color: #fff; border-radius: 4px;"
+    };
+}

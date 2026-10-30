@@ -123,13 +123,24 @@ export class selectHelper {
     // popup and its ancestor wrappers so opening it starts the same transient
     // scrollbar visibility window as React's virtual list.
     if (typeof MutationObserver !== 'undefined' && dropdown) {
+      let dropdownWasVisible = dropdown.getClientRects().length > 0;
       state.popupObserver = new MutationObserver(() => {
-        if (state.detached || !dropdown.isConnected || dropdown.getClientRects().length === 0) return;
+        if (state.detached || !dropdown.isConnected) return;
+        const dropdownIsVisible = dropdown.getClientRects().length > 0;
+        if (!dropdownIsVisible) {
+          dropdownWasVisible = false;
+          return;
+        }
+        // Overlay position updates can mutate style/class while the popup stays
+        // open. Only treat a hidden-to-visible transition as a popup opening;
+        // otherwise selection and focus updates keep the scrollbar flashing.
+        if (dropdownWasVisible) return;
+        dropdownWasVisible = true;
+        scheduleUpdate();
         if (state.scrollbarFrame) window.cancelAnimationFrame(state.scrollbarFrame);
         state.scrollbarFrame = window.requestAnimationFrame(() => {
           state.scrollbarFrame = 0;
           updateScrollbar();
-          scheduleUpdate();
         });
       });
       for (let element: HTMLElement | null = dropdown; element && element !== document.body; element = element.parentElement) {

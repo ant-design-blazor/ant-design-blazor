@@ -55,7 +55,7 @@
                             var option = options[index];
                             <div aria-label="@option.Label" role="option" id="@GetOptionId(option.InternalId)"
                                  aria-selected="@(IsVirtualOptionSelected(option) ? "true" : "false")"
-                                 aria-disabled="@option.IsDisabled.ToString().ToLowerInvariant()">@option.Value</div>
+                                 aria-disabled="@(option.IsDisabled ? "true" : null)">@option.Value</div>
                         }
                     }
                 </div>

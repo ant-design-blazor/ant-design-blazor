@@ -42,9 +42,9 @@
             {
                 @if (Arrow)
                 {
-                    <div class="ant-tooltip-arrow" style="@GetTooltipArrowStyle()"><span class="ant-tooltip-arrow-content" style="@GetTooltipArrowContentStyle()"></span></div>
+                    <div class="@GetSemanticClass("arrow") ant-tooltip-arrow" style="@GetTooltipArrowStyle()"><span class="ant-tooltip-arrow-content" style="@GetTooltipArrowContentStyle()"></span></div>
                 }
-                <div id="@_tooltipId" class="ant-tooltip-container" role="tooltip" style="@GetTooltipContainerStyle()">@TooltipContent</div>
+                <div id="@_tooltipId" class="@GetSemanticClass("container") ant-tooltip-container" role="tooltip" style="@GetSemanticStyle("container", GetTooltipContainerStyle())">@TooltipContent</div>
             }
         </Overlay>
     </CascadingValue>

@@ -1,0 +1,18 @@
+<Space Direction="SpaceDirection.Vertical">
+    <RadioGroup TValue="string" @bind-Value="_direction" Options="@_directions" ButtonStyle="RadioButtonStyle.Outline" />
+    <ConfigProvider Direction="@_direction">
+        <Space>
+            <Button Type="ButtonType.Primary">Button</Button>
+            <Input TValue="string" Placeholder="Input" Style="width: 140px;" />
+            <Select TItemValue="string" TItem="string" DataSource="@_options"
+                    ItemValue="value => value" ItemLabel="value => value"
+                    DefaultValue="@("Apple")" Style="width: 140px;" />
+        </Space>
+    </ConfigProvider>
+</Space>
+
+@code {
+    private string _direction = "ltr";
+    private readonly string[] _directions = ["ltr", "rtl"];
+    private readonly string[] _options = ["Apple", "Orange", "Banana"];
+}

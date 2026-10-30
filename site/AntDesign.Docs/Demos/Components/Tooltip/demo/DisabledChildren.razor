@@ -1,0 +1,22 @@
+<Space>
+    <Tooltip Title="Thanks for using Ant Design Blazor. Have a nice day!">
+        <Button Disabled>Disabled</Button>
+    </Tooltip>
+    <Tooltip Title="Thanks for using Ant Design Blazor. Have a nice day!">
+        <Input TValue="string" Disabled Placeholder="disabled" />
+    </Tooltip>
+    <Tooltip Title="Thanks for using Ant Design Blazor. Have a nice day!">
+        <AntDesign.InputNumber TValue="decimal?" Disabled />
+    </Tooltip>
+    <Tooltip Title="Thanks for using Ant Design Blazor. Have a nice day!">
+        <Checkbox Disabled>Disabled</Checkbox>
+    </Tooltip>
+    <Tooltip Title="Thanks for using Ant Design Blazor. Have a nice day!">
+        <Select TItemValue="string" TItem="string" DataSource="@_options"
+                ItemValue="value => value" ItemLabel="value => value" Disabled />
+    </Tooltip>
+</Space>
+
+@code {
+    private readonly string[] _options = ["Option 1", "Option 2"];
+}

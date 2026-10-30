@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
@@ -56,28 +57,60 @@ namespace AntDesign
             if (placement.StartsWith("top", System.StringComparison.Ordinal))
             {
                 var left = placement == "topLeft" ? "33%" : placement == "topRight" ? "66%" : "50%";
-                return $"position: absolute; bottom: 0px; left: {left};";
+                return GetSemanticStyle("arrow", $"position: absolute; bottom: 0px; left: {left};");
             }
             if (placement.StartsWith("bottom", System.StringComparison.Ordinal))
             {
                 var left = placement == "bottomLeft" ? "33%" : placement == "bottomRight" ? "66%" : "50%";
-                return $"position: absolute; top: 0px; left: {left};";
+                return GetSemanticStyle("arrow", $"position: absolute; top: 0px; left: {left};");
             }
             if (placement.StartsWith("left", System.StringComparison.Ordinal))
             {
                 var top = placement == "leftTop" ? "33%" : placement == "leftBottom" ? "66%" : "50%";
-                return $"position: absolute; right: 0px; top: {top};";
+                return GetSemanticStyle("arrow", $"position: absolute; right: 0px; top: {top};");
             }
 
             var rightTop = placement == "rightTop" ? "33%" : placement == "rightBottom" ? "66%" : "50%";
-            return $"position: absolute; left: 0px; top: {rightTop};";
+            return GetSemanticStyle("arrow", $"position: absolute; left: 0px; top: {rightTop};");
         }
 
         private bool IsPresetColor => Color is "pink" or "magenta" or "red" or "volcano" or "orange" or "yellow" or "gold" or "cyan" or "lime" or "green" or "blue" or "geekblue" or "purple";
 
-        internal override string GetOverlayAdditionalClass() => IsPresetColor ? $"ant-tooltip-{Color}" : string.Empty;
+        internal override string GetOverlayAdditionalClass() => string.Join(" ", new[]
+        {
+            IsPresetColor ? $"ant-tooltip-{Color}" : null,
+            GetSemanticClass("root")
+        }.Where(x => !string.IsNullOrWhiteSpace(x)));
 
-        internal override string GetOverlayAdditionalStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? string.Empty : $"--ant-tooltip-overlay-color: {GetColorText()}; --ant-tooltip-arrow-background-color: {Color};";
+        internal override string GetOverlayAdditionalStyle() => MergeStyles(
+            string.IsNullOrWhiteSpace(Color) || IsPresetColor ? null : $"--ant-tooltip-overlay-color: {GetColorText()}; --ant-tooltip-arrow-background-color: {Color};",
+            GetSemanticStyle("root"));
+
+        /// <summary>Semantic classes keyed by root, container, and arrow.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Semantic inline styles keyed by root, container, and arrow.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        private string GetSemanticClass(string slot)
+        {
+            return ClassNames != null && ClassNames.TryGetValue(slot, out var value) ? value : null;
+        }
+
+        private string GetSemanticStyle(string slot, string baseStyle = null)
+        {
+            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            return MergeStyles(baseStyle, semanticStyle);
+        }
+
+        private static string MergeStyles(string baseStyle, string additionalStyle)
+        {
+            if (string.IsNullOrWhiteSpace(baseStyle)) return additionalStyle;
+            if (string.IsNullOrWhiteSpace(additionalStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {additionalStyle}";
+        }
 
         private string GetTooltipContainerStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? null : $"background-color: {Color}; color: {GetColorText()};";
 
