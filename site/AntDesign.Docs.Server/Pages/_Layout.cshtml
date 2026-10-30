@@ -22,11 +22,6 @@
   <app>
     @RenderBody()
   </app>
-#if NET5_0 || NET6_0
-  <script src="_framework/blazor.polyfill.min.js"></script>
-#elif !NET7_0_OR_GREATER
-  <script src="https://raw.githubusercontent.com/Daddoon/Blazor.Polyfill@3.0.8/Publish/Blazor.Polyfill.Publish/blazor.polyfill.min.js"></script>
-#endif
   <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
   <script src="_content/AntDesign.Charts/ant-design-charts-blazor.js"></script>
   <script src="~/_content/AntDesign/js/ant-design-blazor.js" asp-append-version="true" no-antblazor-js></script>

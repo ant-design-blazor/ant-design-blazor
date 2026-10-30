@@ -10,7 +10,7 @@
         </GridCol>
         @if (_isMobile)
         {
-            <Popover Class="docs-header-mobile-trigger" Placement="Placement.BottomRight" Trigger="new[] { Trigger.Click }" ArrowPointAtCenter OverlayClassName="docs-header-mobile-popup" OverlayStyle="width:300px;max-width:calc(100vw - 16px);inset-inline-start:auto!important;inset-inline-end:8px!important;">
+            <Popover Class="docs-header-mobile-trigger" Style="position:absolute;inset-inline-end:16px;top:16px;width:32px;height:32px;margin:0;" Placement="Placement.BottomRight" BoundaryAdjustMode="TriggerBoundaryAdjustMode.InView" PopupWidthMode="custom" PopupWidth="min(300px, calc(100vw - 16px))" PopupMaxWidth="calc(100vw - 16px)" Trigger="new[] { Trigger.Click }" OverlayClassName="docs-header-mobile-popup">
                 <ContentTemplate>
                     <HeaderMenu IsMobile />
                 </ContentTemplate>
@@ -33,7 +33,6 @@
     .docs-header-mobile-popup .ant-popover-inner{background:var(--ant-color-bg-elevated,#fff);border-radius:var(--ant-border-radius-lg,8px);box-shadow:var(--ant-box-shadow-secondary,0 6px 16px rgba(0,0,0,.12))}
     .docs-header-mobile-popup .header-navigation{width:100%}
     .docs-header-mobile-popup .ant-menu{width:100%;border-inline-end:0}
-    .docs-header-mobile-popup .ant-popover-arrow{inset-inline-start:auto!important;inset-inline-end:16px!important}
 </style>
 
 @code {
@@ -63,7 +62,7 @@
             ["&#header #nav > li"] = new System.Collections.Generic.Dictionary<string, object> { ["flex"] = "none", ["margin"] = 0 },
             ["&#header .header-more-options"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "none" },
             ["&#header .docs-header-mobile-trigger"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "absolute", ["insetInlineEnd"] = 16, ["top"] = 16, ["width"] = 32, ["height"] = 32 },
-            ["&#header .nav-phone-icon"] = new System.Collections.Generic.Dictionary<string, object> { ["width"] = 32, ["height"] = 32, ["padding"] = 0 },
+            ["&#header .nav-phone-icon"] = new System.Collections.Generic.Dictionary<string, object> { ["position"] = "relative", ["top"] = "auto", ["right"] = "auto", ["zIndex"] = "auto", ["display"] = "inline-flex", ["width"] = 32, ["height"] = 32, ["padding"] = 0 },
             ["&#header .header-desktop-utilities"] = new System.Collections.Generic.Dictionary<string, object> { ["display"] = "flex", ["alignItems"] = "center", ["gap"] = 12 },
             ["@media (min-width: 768px)"] = new System.Collections.Generic.Dictionary<string, object>
             {

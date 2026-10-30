@@ -612,7 +612,14 @@ export class Overlay {
     this.sanitizedPosition = { ...this.position};
     this.sanitizedPosition.zIndex = domInfoHelper.getMaxZIndex();
     this.sanitizedPosition.placement = this.placement;    
-    if (this.selectedHorizontalPosition === "left") {
+    // A body popup in InView mode is bounded by the viewport, even when the
+    // document has horizontal overflow. Keep the measured viewport coordinate
+    // as an explicit left/top offset. Converting it to right/bottom against a
+    // wider document makes the browser anchor it to the document edge instead
+    // of the viewport edge (most visible with right-aligned mobile popovers).
+    const useViewportCoordinates = this.isContainerBody
+      && this.boundyAdjustMode === TriggerBoundyAdjustMode.InView;
+    if (useViewportCoordinates || this.selectedHorizontalPosition === "left") {
       this.sanitizedPosition.right = null;
     }
     else {
@@ -620,7 +627,7 @@ export class Overlay {
       this.sanitizedPosition.right = this.getAdjustedRight();
     }
 
-    if (this.selectedVerticalPosition === "top") {
+    if (useViewportCoordinates || this.selectedVerticalPosition === "top") {
       this.sanitizedPosition.bottom = null;
     }
     else {

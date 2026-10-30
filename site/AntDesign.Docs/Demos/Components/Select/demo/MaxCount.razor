@@ -2,9 +2,10 @@
         @bind-Values="_selectedValues"
         TItemValue="string"
         TItem="string"
-        MaxCount="3"
+        MaxCount="@SelectionLimit"
         Style="width: 100%;"
-        Placeholder="Please select">
+        Placeholder="Please select"
+        SuffixIcon="@Suffix">
     <SelectOptions>
         @foreach (var name in _names)
         {
@@ -14,6 +15,17 @@
 </Select>
 
 @code {
-    private readonly string[] _names = ["Ava Swift", "Cole Reed", "Mia Blake", "Jake Stone", "Lily Lane", "Ryan Chase"];
+    private const int SelectionLimit = 3;
+    private readonly string[] _names = ["Ava Swift", "Cole Reed", "Mia Blake", "Jake Stone", "Lily Lane", "Ryan Chase", "Zoe Fox", "Alex Grey", "Elle Blair"];
     private IEnumerable<string> _selectedValues = ["Ava Swift"];
+
+    private RenderFragment Suffix => builder =>
+    {
+        builder.OpenElement(0, "span");
+        builder.AddContent(1, $"{_selectedValues.Count()} / {SelectionLimit}");
+        builder.CloseElement();
+        builder.OpenComponent<Icon>(2);
+        builder.AddAttribute(3, nameof(Icon.Type), IconType.Outline.Down);
+        builder.CloseComponent();
+    };
 }

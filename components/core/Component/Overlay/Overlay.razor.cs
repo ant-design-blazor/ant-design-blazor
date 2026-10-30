@@ -620,7 +620,15 @@ namespace AntDesign.Internal
         private string GetDisplayStyle()
         {
             if (!_isOverlayShow && !_isWaitForOverlayFirstRender)
-                return "";
+            {
+                // Keep an already attached popup measurable while it is closed.
+                // The hidden CSS class uses display:none, which makes the next
+                // open calculate its position with a zero width/height and can
+                // leave the popup outside the viewport. It is absolutely
+                // positioned, so visibility:hidden keeps it out of view and
+                // layout while preserving its real dimensions for Overlay.
+                return _hasAddOverlayToBody ? "display: inline-flex; visibility: hidden;" : "";
+            }
 
             if (_isOverlayShow && _hasAddOverlayToBody)
                 return "display: inline-flex;";

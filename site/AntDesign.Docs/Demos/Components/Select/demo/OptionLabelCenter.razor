@@ -2,7 +2,7 @@
 
 <Space Wrap>
     <SpaceItem>
-        <Select TItemValue="string" TItem="OptionItem" Style="width:120px" AllowClear @bind-Value="_unmatchedValue" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" />
+        <Select TItemValue="string" TItem="OptionItem" Style="width: 120px;" AllowClear @bind-Value="_unmatchedValue" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" />
     </SpaceItem>
     <SpaceItem>
         <Select TItemValue="string" TItem="OptionItem" Style="width:120px;height:60px" Placeholder="Select a option" AllowClear DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" />
