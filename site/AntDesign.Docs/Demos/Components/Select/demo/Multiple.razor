@@ -1,57 +1,64 @@
-﻿<Select Mode="SelectMode.Multiple"
-        Placeholder="Please select"
-		@bind-Values="@_selectedValues1"
-		TItemValue="string"
-		TItem="string"
-		OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
-		Style="width: 100%; margin-bottom: 8px;"
-		EnableSearch
-		AllowClear>
-		<SelectOptions>
-			@foreach(var item in _items)
-			{
-				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
-			}
-		</SelectOptions>
-</Select>
-<Select Mode="SelectMode.Multiple"
-        Placeholder="Please select"
-		@bind-Values="@_selectedValues2"
-		TItemValue="string"
-		TItem="string"
-		Disabled
-		Style="width: 100%;">
-		<SelectOptions>
-			@foreach(var item in _items)
-			{
-				<SelectOption TItemValue="string" TItem="string" Value=@item Label=@item />
-			}
-		</SelectOptions>
-</Select>
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+    <SpaceItem>
+    <Select Mode="SelectMode.Multiple"
+            Placeholder="Please select"
+            @bind-Values="@_selectedValues1"
+            TItemValue="string"
+            TItem="string"
+            OnSelectedItemsChanged="OnSelectedItemsChangedHandler"
+            Style="width: 100%;"
+            EnableSearch
+            AllowClear>
+        <SelectOptions>
+            @foreach (var item in _items)
+            {
+                <SelectOption TItemValue="string" TItem="string" Value="@item" Label="@item" />
+            }
+        </SelectOptions>
+    </Select>
+    </SpaceItem>
+    <SpaceItem>
+    <Select Mode="SelectMode.Multiple"
+            Placeholder="Please select"
+            @bind-Values="@_selectedValues2"
+            TItemValue="string"
+            TItem="string"
+            Disabled
+            Style="width: 100%;">
+        <SelectOptions>
+            @foreach (var item in _items)
+            {
+                <SelectOption TItemValue="string" TItem="string" Value="@item" Label="@item" />
+            }
+        </SelectOptions>
+    </Select>
+    </SpaceItem>
+</Space>
+
 @code
 {
-    List<string> _items;
-    IEnumerable<string> _selectedValues1, _selectedValues2;
+    private readonly List<string> _items = Enumerable.Range(10, 26).Select(ToBase36Value).ToList();
+    private IEnumerable<string> _selectedValues1 = new[] { "a10", "c12" };
+    private IEnumerable<string> _selectedValues2 = new[] { "a10", "c12" };
 
-	protected override void OnInitialized()
+    private static string ToBase36Value(int value)
     {
-        const int min = 10;
-        const int max = 36;
-        _items = new List<string>();
-
-        for (var i = min; max > i; i++)
+        var decimalValue = value;
+        const string digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+        var buffer = new char[8];
+        var index = buffer.Length;
+        do
         {
-            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
-            _items.Add(value);
-        }
+            buffer[--index] = digits[value % 36];
+            value /= 36;
+        } while (value > 0);
 
-		_selectedValues1 = new List<string> { "0a10" , "0c12"};
-		_selectedValues2 = new List<string> { "0a10" , "0c12"};
+        var radix = new string(buffer, index, buffer.Length - index);
+        return radix + decimalValue; // React concatenates the base-36 value and the decimal value.
     }
 
-    private void OnSelectedItemsChangedHandler(IEnumerable<string> values)
+    private static void OnSelectedItemsChangedHandler(IEnumerable<string> values)
     {
-		if (values != null)
-			Console.WriteLine($"selected: ${string.Join(",", values)}");
+        Console.WriteLine($"selected: {string.Join(",", values ?? Array.Empty<string>())}");
     }
 }

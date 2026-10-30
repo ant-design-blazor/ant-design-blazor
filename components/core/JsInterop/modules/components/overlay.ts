@@ -163,6 +163,10 @@ export class Overlay {
 
   private overlayConstraints: overlayConstraints; 
   private duringInit = true;
+  private positionMonitorFrame = 0;
+  private lastTriggerClientRect: Pick<DOMRect, "left" | "top" | "width" | "height"> | null = null;
+  private pixelSnapAxes: { horizontal: boolean; vertical: boolean } | null = null;
+  private scrollListener = () => this.onScroll();
   private selectedVerticalPosition: "top" | "bottom";
   private selectedHorizontalPosition: "left" | "right";
   private calculationsToPerform: Set<"horizontal"|"vertical">;
@@ -231,6 +235,35 @@ export class Overlay {
   updateOffsets(verticalOffset: number, horizontalOffset: number) {
     this.overlayConstraints.verticalOffset = verticalOffset;
     this.overlayConstraints.horizontalOffset = horizontalOffset;
+  }
+
+  matchesContext(
+    overlay: HTMLDivElement,
+    container: HTMLElement,
+    trigger: HTMLElement,
+    triggerBoundyAdjustMode: TriggerBoundyAdjustMode,
+    triggerIsWrappedInDiv: boolean,
+    triggerPrefixCls: string
+  ): boolean {
+    return this.overlay === overlay
+      && this.container === container
+      && this.trigger === Overlay.getFirstValidChild(trigger, triggerIsWrappedInDiv)
+      && this.boundyAdjustMode === triggerBoundyAdjustMode
+      && this.triggerPrefixCls === triggerPrefixCls;
+  }
+
+  updatePlacement(placement: Placement, arrowPointAtCenter: boolean) {
+    const effectivePlacement = arrowPointAtCenter
+      ? Overlay.arrowCenterPlacementMatch.get(placement)
+      : placement;
+    if (this.initialPlacement === effectivePlacement) return;
+
+    this.placement = effectivePlacement;
+    this.initialPlacement = effectivePlacement;
+    this.selectedHorizontalPosition = Overlay.appliedStylePositionMap.get(effectivePlacement).horizontal;
+    this.selectedVerticalPosition = Overlay.appliedStylePositionMap.get(effectivePlacement).vertical;
+    this.verticalCalculation = Overlay.setVerticalCalculation(effectivePlacement, this.selectedVerticalPosition);
+    this.horizontalCalculation = Overlay.setHorizontalCalculation(effectivePlacement, this.selectedHorizontalPosition);
   }
 
   static getFirstValidChild(element: HTMLElement, triggerIsWrappedInDiv: boolean): HTMLElement {
@@ -413,6 +446,7 @@ export class Overlay {
     resize.create(`container-${this.blazorId}`, this.resizing.bind(this), false);
     resize.observe(`container-${this.blazorId}`, this.container);    
     resize.observe(`container-${this.blazorId}`, this.trigger);    
+    resize.observe(`container-${this.blazorId}`, this.overlay);
     mutation.create(`trigger-${this.blazorId}`, this.mutating.bind(this), false);
     mutation.observe(`trigger-${this.blazorId}`, this.trigger, {
       attributes: true,
@@ -424,15 +458,15 @@ export class Overlay {
     });
     
     if (this.isContainerBody) {
-      window.addEventListener("scroll", this.onScroll.bind(this));
+      window.addEventListener("scroll", this.scrollListener);
     }
     else {
-      this.container.addEventListener("scroll", this.onScroll.bind(this));
+      this.container.addEventListener("scroll", this.scrollListener);
     }
 
     // for sometime the trigger would be scrolled by any parent contaniners but not body or the popup container.
     this.scrollableContainers.forEach(container => {
-      container.addEventListener('scroll', this.onScroll.bind(this));
+      container.addEventListener('scroll', this.scrollListener);
     });
   }  
 
@@ -441,7 +475,7 @@ export class Overlay {
       if (this.lastScrollPosition !== window.pageYOffset) {
         const diff = window.pageYOffset - this.lastScrollPosition; //positive -> down, negative -> up        
         this.position.top += diff;
-        this.position.bottom = Overlay.reversePositionValue(this.position.top, this.containerInfo.scrollHeight, this.overlayInfo.clientHeight);      
+        this.position.bottom = Overlay.reversePositionValue(this.position.top, this.containerInfo.scrollHeight, this.getOverlayHeight());
         this.sanitizeCalculatedPositions();
         this.applyLocation();
         this.lastScrollPosition = window.pageYOffset;
@@ -461,15 +495,27 @@ export class Overlay {
 
   private onMotionEnd(event: Event) {
     if (event.target === this.overlay && this.overlay.offsetParent) {
+      this.removeEnterMotionClasses();
       this.calculatePosition(true, false, this.overlayPreset);
     }
   }
 
+  private removeEnterMotionClasses() {
+    const classes = Array.from(this.overlay.classList);
+    const enterClasses = classes.filter(className => className.endsWith('-enter') || className.endsWith('-enter-active'));
+    const motionClasses = new Set(enterClasses);
+    enterClasses.forEach(className => {
+      motionClasses.add(className.replace(/-enter(?:-active)?$/, ''));
+    });
+    motionClasses.forEach(className => this.overlay.classList.remove(className));
+  }
+
   private resizing(entries, observer) {
+    const overlayResized = Array.isArray(entries) && entries.some(entry => entry?.target === this.overlay);
     //prevents from recalculation right on the spot during constructor run
     if (this.duringInit) { 
       this.duringInit = false;
-      return;
+      if (!overlayResized) return;
     }
     this.calculatePosition(true, false, this.overlayPreset);
   }
@@ -504,15 +550,19 @@ export class Overlay {
     }
 
     if (this.isContainerBody) {      
-      window.removeEventListener("scroll", this.onScroll);
+      window.removeEventListener("scroll", this.scrollListener);
     }
     else {
-      this.container.removeEventListener("scroll", this.onScroll);
+      this.container.removeEventListener("scroll", this.scrollListener);
     }
 
     this.scrollableContainers.forEach(container => {
-      container.removeEventListener('scroll', this.onScroll);
+      container.removeEventListener('scroll', this.scrollListener);
     });
+    if (this.positionMonitorFrame) {
+      window.cancelAnimationFrame(this.positionMonitorFrame);
+      this.positionMonitorFrame = 0;
+    }
   }
 
   public calculatePosition(applyLocation: boolean, firstTime = false, overlayPreset?: domTypes.position): overlayPosition {        
@@ -581,15 +631,28 @@ export class Overlay {
     // Match rc-trigger/useAlign: retain fractional measurements until alignment
     // is complete, then floor the final CSS offset on each unscaled axis.
     // Rounding the anchor first can move a popup one pixel to the wrong side.
-    const rect = this.overlay.getBoundingClientRect();
-    const style = getComputedStyle(this.overlay);
-    const scaleX = Math.round(rect.width / parseFloat(style.width) * 1000) / 1000;
-    const scaleY = Math.round(rect.height / parseFloat(style.height) * 1000) / 1000;
-    if (scaleX === 1) {
+    if (!this.pixelSnapAxes) {
+      const rect = this.overlay.getBoundingClientRect();
+      const style = getComputedStyle(this.overlay);
+      const width = parseFloat(style.width);
+      const height = parseFloat(style.height);
+      const scaleX = Number.isFinite(width) && width > 0 ? Math.round(rect.width / width * 1000) / 1000 : 1;
+      const scaleY = Number.isFinite(height) && height > 0 ? Math.round(rect.height / height * 1000) / 1000 : 1;
+      // A second Overlay can be created while the enter motion is already
+      // running (for example, after a Blazor Server render). Do not let its
+      // transient scale change the alignment policy: the pre-motion and
+      // post-motion coordinates must use the same pixel snap decision.
+      const motionRunning = this.overlay.getAnimations?.().some(animation => animation.playState === "running") ?? false;
+      this.pixelSnapAxes = {
+        horizontal: motionRunning || scaleX === 1,
+        vertical: motionRunning || scaleY === 1
+      };
+    }
+    if (this.pixelSnapAxes.horizontal) {
       const axis = this.selectedHorizontalPosition;
       this.sanitizedPosition[axis] = Math.floor(this.sanitizedPosition[axis]);
     }
-    if (scaleY === 1) {
+    if (this.pixelSnapAxes.vertical) {
       const axis = this.selectedVerticalPosition;
       this.sanitizedPosition[axis] = Math.floor(this.sanitizedPosition[axis]);
     }
@@ -609,7 +672,7 @@ export class Overlay {
     const width = this.containerBoundarySize.right - this.containerBoundarySize.left;
     const directionsToCalculate = new Set<"horizontal"|"vertical">();
 
-    if (this.boundyAdjustMode != TriggerBoundyAdjustMode.None && width < this.overlayInfo.clientWidth && this.isContainerBody) {
+    if (this.boundyAdjustMode != TriggerBoundyAdjustMode.None && width < this.getOverlayWidth() && this.isContainerBody) {
       if (this.selectedHorizontalPosition === "left") {
         this.position.left = 0;
       } else {
@@ -622,7 +685,7 @@ export class Overlay {
       directionsToCalculate.add("horizontal");
     }
     //same for height exceeding container height - top defaults to 0   
-    if (this.boundyAdjustMode != TriggerBoundyAdjustMode.None && height < this.overlayInfo.clientHeight && this.isContainerBody) {      
+    if (this.boundyAdjustMode != TriggerBoundyAdjustMode.None && height < this.getOverlayHeight() && this.isContainerBody) {
       if (this.selectedVerticalPosition === "top") {
         this.position.top = 0;
       } else {
@@ -688,8 +751,8 @@ export class Overlay {
           triggerPrefixCls: this.triggerPrefixCls
         },
         overlay: { 
-          clientHeight: this.overlayInfo.clientHeight,
-          clientWidth: this.overlayInfo.clientWidth,
+          clientHeight: this.getOverlayHeight(),
+          clientWidth: this.getOverlayWidth(),
           offsetHeight: this.overlayInfo.offsetHeight,
           offsetWidth: this.overlayInfo.offsetWidth,
           class: this.overlay.className,
@@ -785,21 +848,56 @@ export class Overlay {
     }
 
     this.applyPlacement();
+    this.lastTriggerClientRect = this.getTriggerClientRect();
+    this.monitorTriggerPosition();
+  }
+
+  /**
+   * Layout shifts can move a trigger without resizing it or dispatching a scroll
+   * event (for example, when content above it finishes rendering). Keep visible
+   * overlays anchored to the live trigger rectangle, as rc-trigger does.
+   */
+  private monitorTriggerPosition() {
+    if (this.positionMonitorFrame || !this.overlay?.offsetParent || typeof window.requestAnimationFrame !== "function") return;
+
+    this.positionMonitorFrame = window.requestAnimationFrame(() => {
+      this.positionMonitorFrame = 0;
+      const style = getComputedStyle(this.overlay);
+      if (!this.overlay.isConnected || style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) {
+        this.lastTriggerClientRect = null;
+        return;
+      }
+
+      const currentRect = this.getTriggerClientRect();
+      const previousRect = this.lastTriggerClientRect;
+      this.lastTriggerClientRect = currentRect;
+      if (previousRect && currentRect && (previousRect.left !== currentRect.left || previousRect.top !== currentRect.top
+        || previousRect.width !== currentRect.width || previousRect.height !== currentRect.height)) {
+        this.calculatePosition(true, false, this.overlayPreset);
+      }
+
+      this.monitorTriggerPosition();
+    });
+  }
+
+  private getTriggerClientRect(): Pick<DOMRect, "left" | "top" | "width" | "height"> | null {
+    const rect = domInfoHelper.getBoundingClientRect(this.trigger);
+    return rect ? { left: rect.left, top: rect.top, width: rect.width, height: rect.height } : null;
   }
 
   private applyPlacement() {
     if (this.recentPlacement !== this.placement) {
-      let currentPlacement: string;
       const stringMach = `${this.triggerPrefixCls}-placement-`;
-      const start = this.overlay.className.indexOf(stringMach);
-      const end = this.overlay.className.indexOf(" ", start + stringMach.length);
-      if (start >= 0) {
-        currentPlacement = this.overlay.className.substr(start, end-start);
-      } else {
-        currentPlacement = Overlay.appliedStylePositionMap.get(this.initialPlacement).class;
-      }
       const newPlacement = stringMach + Overlay.appliedStylePositionMap.get(this.placement).class;
-      this.overlay.classList.replace(currentPlacement, newPlacement);
+      const currentPlacement = Array.from(this.overlay.classList)
+        .find(className => className.startsWith(stringMach));
+
+      if (currentPlacement === newPlacement) return;
+      if (currentPlacement) {
+        this.overlay.classList.replace(currentPlacement, newPlacement);
+      } else {
+        this.overlay.classList.add(newPlacement);
+      }
     }
   }
 
@@ -823,6 +921,41 @@ export class Overlay {
   }
 
   /**
+   * Uses the untransformed layout border-box size for placement. A popup may
+   * still be scaling during its enter animation; getBoundingClientRect then
+   * reports a transient size and shifts centered placements by a pixel.
+   * Computed dimensions retain fractional CSS pixels without that transform.
+   */
+  private getOverlaySize(axis: "width" | "height"): number {
+    const style = getComputedStyle(this.overlay);
+    const size = parseFloat(style[axis]);
+    if (Number.isFinite(size) && size > 0) {
+      if (style.boxSizing === "border-box") return size;
+
+      const padding = axis === "width"
+        ? parseFloat(style.paddingLeft) + parseFloat(style.paddingRight)
+        : parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+      const border = axis === "width"
+        ? parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth)
+        : parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+      return size + (Number.isFinite(padding) ? padding : 0) + (Number.isFinite(border) ? border : 0);
+    }
+
+    const rect = domInfoHelper.getBoundingClientRect(this.overlay);
+    const rectSize = rect?.[axis];
+    if (rectSize) return rectSize;
+    return axis === "width" ? this.overlayInfo.clientWidth : this.overlayInfo.clientHeight;
+  }
+
+  private getOverlayWidth(): number {
+    return this.getOverlaySize("width");
+  }
+
+  private getOverlayHeight(): number {
+    return this.getOverlaySize("height");
+  }
+
+  /**
    * Calculates trigger top & bottom positions and trigger height and
    * uses these to return nominal position values depending on placement and
    * expected attachment point (top/bottom)
@@ -831,8 +964,9 @@ export class Overlay {
   private getVerticalPosition(): verticalPosition {
     let position: verticalPosition;
     //usually first offsetHeight is taken, as the measurement contains the borders
-    this.triggerPosition.height = this.triggerInfo.offsetHeight != 0 ? this.triggerInfo.offsetHeight 
-      : this.triggerInfo.clientHeight;    
+    const triggerRect = domInfoHelper.getBoundingClientRect(this.trigger);
+    this.triggerPosition.height = triggerRect?.height || (this.triggerInfo.offsetHeight != 0 ? this.triggerInfo.offsetHeight
+      : this.triggerInfo.clientHeight);
     if (this.overlayPreset) {
       this.triggerPosition.top = this.triggerInfo.absoluteTop + this.overlayPreset.y;
       this.triggerPosition.height = 0;
@@ -844,12 +978,12 @@ export class Overlay {
 
     if (this.selectedVerticalPosition === "top"){
       position = this.verticalCalculation(this.triggerPosition.top, this.triggerPosition.height, this.containerInfo,
-        this.triggerInfo, this.overlayInfo.clientHeight, this.overlayConstraints);
+        this.triggerInfo, this.getOverlayHeight(), this.overlayConstraints);
     }
     else { //bottom
       this.triggerPosition.bottom = this.containerInfo.scrollHeight - this.triggerPosition.top - this.triggerPosition.height;
       position = this.verticalCalculation(this.triggerPosition.bottom, this.triggerPosition.height, this.containerInfo,
-        this.triggerInfo, this.overlayInfo.clientHeight, this.overlayConstraints);
+        this.triggerInfo, this.getOverlayHeight(), this.overlayConstraints);
     }
     return position;
   }
@@ -863,7 +997,8 @@ export class Overlay {
   private getHorizontalPosition(): horizontalPosition {
     let position: horizontalPosition;
     //usually first offsetHeight is taken, as the measurement contains the borders    
-    this.triggerPosition.width = this.triggerInfo.offsetWidth != 0 ? this.triggerInfo.offsetWidth : this.triggerInfo.clientWidth;
+    const triggerRect = domInfoHelper.getBoundingClientRect(this.trigger);
+    this.triggerPosition.width = triggerRect?.width || (this.triggerInfo.offsetWidth != 0 ? this.triggerInfo.offsetWidth : this.triggerInfo.clientWidth);
     
     //let triggerLeft: number;
     if (this.overlayPreset) {
@@ -877,12 +1012,12 @@ export class Overlay {
 
     if (this.selectedHorizontalPosition === "left"){      
       position = this.horizontalCalculation(this.triggerPosition.left, this.triggerPosition.width, this.containerInfo,
-        this.triggerInfo, this.overlayInfo.clientWidth, this.overlayConstraints);
+        this.triggerInfo, this.getOverlayWidth(), this.overlayConstraints);
     }
     else { //right
       this.triggerPosition.right = this.containerInfo.scrollWidth - this.triggerPosition.left - this.triggerPosition.width;
       position = this.horizontalCalculation(this.triggerPosition.right, this.triggerPosition.width, this.containerInfo,
-        this.triggerInfo, this.overlayInfo.clientWidth, this.overlayConstraints);
+        this.triggerInfo, this.getOverlayWidth(), this.overlayConstraints);
     }
     return position;    
   }
@@ -1069,11 +1204,11 @@ export class Overlay {
     // Keep the chosen direction/calculation, but contain the popup for InView.
     if (this.boundyAdjustMode === TriggerBoundyAdjustMode.InView) {
       const minLeft = this.containerBoundarySize.left;
-      const maxLeft = this.containerBoundarySize.right - this.overlayInfo.clientWidth;
+      const maxLeft = this.containerBoundarySize.right - this.getOverlayWidth();
       if (maxLeft >= minLeft) {
         this.position.left = Math.max(minLeft, Math.min(this.position.left, maxLeft));
         this.position.right = Overlay.reversePositionValue(
-          this.position.left, this.containerInfo.scrollWidth, this.overlayInfo.clientWidth);
+          this.position.left, this.containerInfo.scrollWidth, this.getOverlayWidth());
       }
     }
   }
@@ -1123,13 +1258,13 @@ export class Overlay {
 
   private overlayFitsContainer(type: "horizontal" | "vertical", start: number, end: number): boolean {    
     if (type === "horizontal") {
-      const endExpressedAsLeft = start + this.overlayInfo.clientWidth;
+      const endExpressedAsLeft = start + this.getOverlayWidth();
       return this.containerBoundarySize.left <= start
           && start <= this.containerBoundarySize.right //overlay left is between container left and right
           && this.containerBoundarySize.left <= endExpressedAsLeft
           && endExpressedAsLeft <= this.containerBoundarySize.right //and overlay right is between container left and right
     }
-    const endExpressedAsTop = start + this.overlayInfo.clientHeight;
+    const endExpressedAsTop = start + this.getOverlayHeight();
     return this.containerBoundarySize.top <= start
         && start <= this.containerBoundarySize.bottom //overlay top is between container top and bottom
         && this.containerBoundarySize.top <= endExpressedAsTop 

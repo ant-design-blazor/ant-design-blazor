@@ -1,0 +1,26 @@
+<Flex Vertical Gap="FlexGap.Middle">
+    <Checkbox ClassNames="@objectClasses" Styles="@objectStyles">Object styles</Checkbox>
+    <Checkbox ClassNames="@checkedClasses" Styles="@checkedStyles" Checked="true">Checked semantic styles</Checkbox>
+</Flex>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> objectClasses = new Dictionary<string, string>
+    {
+        ["root"] = "checkbox-custom-root", ["icon"] = "checkbox-custom-icon", ["label"] = "checkbox-custom-label"
+    };
+    private static readonly IReadOnlyDictionary<string, string> objectStyles = new Dictionary<string, string>
+    {
+        ["root"] = "border-radius:6px;background:#fafafa;padding:8px",
+        ["icon"] = "border-radius:6px",
+        ["label"] = "color:blue"
+    };
+    private static readonly IReadOnlyDictionary<string, string> checkedClasses = new Dictionary<string, string>
+    {
+        ["root"] = "checkbox-checked-root", ["icon"] = "checkbox-checked-icon", ["label"] = "checkbox-checked-label"
+    };
+    private static readonly IReadOnlyDictionary<string, string> checkedStyles = new Dictionary<string, string>
+    {
+        ["icon"] = "background:#faad14;border-color:#faad14",
+        ["label"] = "color:#d48806;font-weight:bold"
+    };
+}

@@ -24,7 +24,7 @@
         "rootSelector": ".ant-qrcode"
       },
       "blazor": {
-        "url": "http://127.0.0.1:5540/en-US/components/qrcode",
+        "url": "http://127.0.0.1:5000/en-US/components/qrcode?theme=light",
         "scopeSelector": "#components-qrcode-demo-base .code-box-demo",
         "rootSelector": ".ant-qrcode"
       },
@@ -53,7 +53,7 @@
         "rootSelector": ".ant-qrcode:first-child"
       },
       "blazor": {
-        "url": "http://127.0.0.1:5540/en-US/components/qrcode",
+        "url": "http://127.0.0.1:5000/en-US/components/qrcode?theme=light",
         "scopeSelector": "#components-qrcode-demo-status .code-box-demo",
         "rootSelector": ".ant-qrcode:first-child"
       },

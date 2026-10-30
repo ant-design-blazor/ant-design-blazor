@@ -36,6 +36,14 @@ namespace AntDesign
 
     public partial class TreeSelect<TItemValue, TItem> : SelectBase<TItemValue, TItem>, ITreeSelect
     {
+        protected override string ImmediatePopupWidthMode => DropdownMatchSelectWidth.IsT0
+            ? (DropdownMatchSelectWidth.AsT0 ? "match-trigger" : "content")
+            : "custom";
+        protected override string ImmediatePopupWidth => DropdownMatchSelectWidth.IsT1
+            ? DropdownMatchSelectWidth.AsT1
+            : string.Empty;
+        protected override string ImmediatePopupMaxWidth => DropdownMaxWidth;
+
         protected override string OverlayClassName => $"{base.OverlayClassName} ant-tree-select-dropdown ant-tree-select-css-var";
 
         string ITreeSelect.GetSemanticClass(string slot, string baseClass) => GetSemanticClass(slot, baseClass);
@@ -540,6 +548,10 @@ namespace AntDesign
             {
                 OnOverlayShow();
 
+                // Width is measured by Overlay while the rendered popup is
+                // hidden, before it is positioned and its enter motion starts.
+                // Applying it here used to resize the popup after it was
+                // already visible (and sometimes after the animation began).
                 await SetDropdownStyleAsync();
                 FocusIfInSearch();
             }
@@ -683,6 +695,7 @@ namespace AntDesign
             bool checkStricklyChanged = parameters.IsParameterChanged("TreeCheckStrictly", TreeCheckStrictly);
             bool checkedStrategyChanged = parameters.IsParameterChanged("ShowCheckedStrategy", ShowCheckedStrategy);
             await base.SetParametersAsync(parameters);
+            _dropdownStyle = DropdownStyle ?? string.Empty;
             if ((Values != null) && TreeCheckable && (checkStricklyChanged || checkedStrategyChanged))
             {
                 UpdateTreeCheckedKeys(Values.Select(x => GetTreeKeyFormValue(x)));
@@ -693,28 +706,14 @@ namespace AntDesign
             }
         }
 
-        protected async Task SetDropdownStyleAsync()
+        protected Task SetDropdownStyleAsync()
         {
-            string maxWidth = "", minWidth = "", definedWidth = "";
-            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _selectContent.Ref);
-            var width = domRect.Width.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-            minWidth = $"min-width: {width}px;";
-            if (DropdownMatchSelectWidth.IsT0 && DropdownMatchSelectWidth.AsT0)
-            {
-                definedWidth = $"width: {width}px;";
-            }
-            else if (DropdownMatchSelectWidth.IsT1)
-            {
-                definedWidth = $"width: {DropdownMatchSelectWidth.AsT1};";
-            }
-            if (!DropdownMaxWidth.Equals("auto", StringComparison.CurrentCultureIgnoreCase))
-                maxWidth = $"max-width: {DropdownMaxWidth};";
-            _dropdownStyle = minWidth + definedWidth + maxWidth + DropdownStyle ?? "";
+            _dropdownStyle = DropdownStyle ?? string.Empty;
 
             if (IsMultiple)
             {
                 if (Values == null)
-                    return;
+                    return Task.CompletedTask;
                 var checkedKeys = Values.Select(x => GetTreeKeyFormValue(x));
                 if (TreeCheckable)
                 {
@@ -729,9 +728,11 @@ namespace AntDesign
             else
             {
                 if (Value == null)
-                    return;
+                    return Task.CompletedTask;
                 _tree?.FindFirstOrDefaultNode(node => node.Key == GetTreeKeyFormValue(Value))?.SetSelected(true);
             }
+
+            return Task.CompletedTask;
         }
 
         private void UpdateTreeCheckedKeys(IEnumerable<string> checkedKeys)

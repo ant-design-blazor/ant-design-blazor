@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "revision": "599b251da933709d7b25fc9e9018ed7f4c093b96",
+    "component": "Select"
+  },
+  "config": {
+    "timeoutMs": 25000,
+    "navigationTimeoutMs": 120000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
+        "removeAttributes": ["_bl_*"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "normalizeStyleAttributes": true
+      },
+      "ignoredSemanticAttributes": { "popup.root": ["style"] }
+    }
+  },
+  "groups": [
+    {
+      "id": "select-search-filter-interaction",
+      "component": "Select",
+      "captureReactBeforeBlazor": true,
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#select-demo-search .ant-select",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#components-select-demo-search .ant-select",
+        "skeletonSelector": ""
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "fontSize", "lineHeight", "color", "backgroundColor", "borderRadius", "boxShadow"],
+      "includeAntDesignTokens": ["--ant-select-"],
+      "semanticNodes": [
+        { "path": "popup.root", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])", "portal": true, "portalMatch": "nearest-trigger", "geometryAnchor": { "mode": "pixel-snap-to-trigger", "verticalOffset": 4 }, "minimumCount": 1 },
+        { "path": "popup.option", "selector": ".ant-select-item-option", "portal": true, "portalParentPath": "popup.root", "geometryParentSelector": ".ant-select-dropdown", "minimumCount": 1 },
+        { "path": "popup.content", "selector": ".ant-select-item-option-content", "portal": true, "portalParentPath": "popup.root", "geometryParentSelector": ".ant-select-dropdown", "minimumCount": 1 }
+      ],
+      "scenarios": [
+        {
+          "id": "filter-lucy",
+          "minimumRoots": 1,
+          "actions": [
+            { "type": "click", "reactSelector": "#select-demo-search .ant-select input", "blazorSelector": "#components-select-demo-search .ant-select input" },
+            { "type": "waitForSelector", "reactSelector": "#select-demo-search .ant-select-open", "blazorSelector": "#components-select-demo-search .ant-select-open" },
+            { "type": "typeText", "reactSelector": "#select-demo-search .ant-select input", "blazorSelector": "#components-select-demo-search .ant-select input", "value": "luc", "delayMs": 50 },
+            { "type": "waitForSelectOptions", "reactSelector": "#select-demo-search .ant-select", "blazorSelector": "#components-select-demo-search .ant-select", "visibleLabels": ["Lucy"], "hiddenLabels": ["Jack", "Tom"] },
+            { "type": "waitForSelector", "reactSelector": "#select-demo-search .ant-select-focused", "blazorSelector": "#components-select-demo-search .ant-select-focused" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "select-multiple-selection-interaction",
+      "component": "Select",
+      "captureReactBeforeBlazor": true,
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "#select-demo-multiple .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "#components-select-demo-multiple .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ""
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "gap", "paddingBlock", "paddingInline", "fontSize", "lineHeight", "color", "backgroundColor", "borderRadius", "borderWidth", "borderColor", "boxShadow"],
+      "includeAntDesignTokens": ["--ant-select-"],
+      "semanticNodes": [
+        { "path": "popup.root", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])", "portal": true, "portalMatch": "nearest-trigger", "reactTriggerSelector": "#select-demo-multiple .ant-select:not(.ant-select-disabled)", "blazorTriggerSelector": "#components-select-demo-multiple .ant-select:not(.ant-select-disabled)", "geometryAnchor": { "mode": "pixel-snap-to-trigger", "verticalOffset": 4 }, "minimumCount": 1 },
+        { "path": "popup.option", "selector": ".ant-select-item-option", "portal": true, "portalParentPath": "popup.root", "geometryParentSelector": ".ant-select-dropdown", "minimumCount": 1 },
+        { "path": "item", "selector": ".ant-select-selection-item", "minimumCount": 4 },
+        { "path": "clear", "selector": ".ant-select-clear", "minimumCount": 1 }
+      ],
+      "scenarios": [
+        {
+          "id": "select-option-and-close",
+          "minimumRoots": 2,
+          "actions": [
+            { "type": "click", "reactSelector": "#select-demo-multiple .ant-select:not(.ant-select-disabled) input", "blazorSelector": "#components-select-demo-multiple .ant-select:not(.ant-select-disabled) input" },
+            { "type": "waitForSelectOptions", "reactSelector": "#select-demo-multiple .ant-select:not(.ant-select-disabled)", "blazorSelector": "#components-select-demo-multiple .ant-select:not(.ant-select-disabled)", "visibleLabels": ["d13"] },
+            { "type": "click", "reactSelector": ".ant-select-dropdown .ant-select-item-option[title='d13']", "blazorSelector": ".ant-select-dropdown .ant-select-item-option[title='d13']", "visible": true },
+            { "type": "waitForSelector", "reactSelector": "#select-demo-multiple .ant-select-selection-item[title='d13']", "blazorSelector": "#components-select-demo-multiple .ant-select-selection-item[title='d13']" },
+            { "type": "wait", "milliseconds": 250 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "select-unmatched-value-clear-interaction",
+      "component": "Select",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "#select-demo-option-label-center .code-box-demo",
+        "rootSelector": ".ant-space-item:first-child .ant-select",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "#components-select-demo-option-label-center .code-box-demo",
+        "rootSelector": ".ant-space-item:first-child .ant-select",
+        "skeletonSelector": ""
+      },
+      "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "fontSize", "lineHeight", "color", "backgroundColor", "borderRadius", "boxShadow"],
+      "includeAntDesignTokens": ["--ant-select-"],
+      "semanticNodes": [
+        { "path": "root", "selector": "$root", "minimumCount": 1 },
+        { "path": "item", "selector": ".ant-select-selection-item", "minimumCount": 0 },
+        { "path": "clear", "selector": ".ant-select-clear", "minimumCount": 0 }
+      ],
+      "scenarios": [
+        {
+          "id": "clear-unmatched-value",
+          "minimumRoots": 1,
+          "actions": [
+            { "type": "click", "reactSelector": "#select-demo-option-label-center .ant-space-item:first-child .ant-select-clear", "blazorSelector": "#components-select-demo-option-label-center .ant-space-item:first-child .ant-select-clear" },
+            { "type": "wait", "milliseconds": 300 }
+          ]
+        }
+      ]
+    }
+  ]
+}

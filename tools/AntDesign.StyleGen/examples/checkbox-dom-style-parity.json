@@ -23,12 +23,12 @@
       "id": "checkbox-basic-demo",
       "component": "Checkbox",
       "react": {
-        "url": "http://localhost:8001/components/checkbox",
+        "url": "http://127.0.0.1:8000/components/checkbox?theme=light",
         "scopeSelector": "#checkbox-demo-basic .code-box-demo",
         "rootSelector": ".ant-checkbox-wrapper"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/checkbox",
+        "url": "http://127.0.0.1:5000/en-US/components/checkbox?theme=light",
         "scopeSelector": "#components-checkbox-demo-Basic .code-box-demo",
         "rootSelector": ".ant-checkbox-wrapper"
       },
@@ -49,12 +49,12 @@
       "id": "checkbox-group-demo",
       "component": "Checkbox.Group",
       "react": {
-        "url": "http://localhost:8001/components/checkbox",
+        "url": "http://127.0.0.1:8000/components/checkbox?theme=light",
         "scopeSelector": "#checkbox-demo-group .code-box-demo",
         "rootSelector": ".ant-checkbox-group"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/checkbox",
+        "url": "http://127.0.0.1:5000/en-US/components/checkbox?theme=light",
         "scopeSelector": "#components-checkbox-demo-Group .code-box-demo",
         "rootSelector": ".ant-checkbox-group"
       },

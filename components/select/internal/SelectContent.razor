@@ -15,12 +15,11 @@
     var rawValueText = canRenderRawValue && !hasMatchingOption ? Convert.ToString(ParentSelect.Value) : null;
     var hasUnmatchedValue = !ParentSelect.HasValue && !string.IsNullOrEmpty(rawValueText);
     var canShowUnmatchedValue = !IsOverlayShow || string.IsNullOrEmpty(_inputString);
-    var showPlaceholder = !ParentSelect.HasValue && !hasUnmatchedValue && string.IsNullOrEmpty(_inputString);
+    var showPlaceholder = !ParentSelect.HasValue && !hasUnmatchedValue;
     var selectedItem = ParentSelect.GetOrderedSelectedItems().FirstOrDefault();
-    var canShowItem = !IsOverlayShow || string.IsNullOrEmpty(_inputString);
     var contentTitle = hasUnmatchedValue ? rawValueText : selectedItem?.Label;
-    var contentClass = $"{Prefix}-content{(ParentSelect.Mode == SelectMode.Default && (ParentSelect.HasValue || hasUnmatchedValue) ? $" {Prefix}-content-has-value" : string.Empty)}";
-    var contentStyle = ParentSelect.PrefixIcon is null ? null : "padding-left: 4px;";
+    var contentClass = $"{Prefix}-content{(ParentSelect.Mode == SelectMode.Default && (ParentSelect.HasValue || hasUnmatchedValue) ? $" {Prefix}-content-has-value" : string.Empty)}{(ParentSelect.Mode == SelectMode.Default && !string.IsNullOrEmpty(_inputString) ? $" {Prefix}-content-has-search-value" : string.Empty)}";
+    var placeholderStyle = !string.IsNullOrEmpty(_inputString) ? "visibility: hidden;" : null;
 }
 <div class="@ParentSelect.GetSemanticClass("root", ParentSelect.CurrentClassMapper.Class)"
      style="@ParentSelect.GetSemanticStyle("root", ParentSelect.Style)"
@@ -41,9 +40,9 @@
         }
         @if (showPlaceholder)
         {
-          <div class="@ParentSelect.GetSemanticClass("placeholder", $"{Prefix}-placeholder")" style="@ParentSelect.GetSemanticStyle("placeholder")">@Placeholder</div>
+          <div class="@ParentSelect.GetSemanticClass("placeholder", $"{Prefix}-placeholder")" style="@ParentSelect.GetSemanticStyle("placeholder", placeholderStyle)">@Placeholder</div>
         }
-        else if (canShowItem && selectedItem != null)
+        else if (selectedItem != null)
         {
           @if (ParentLabelTemplate != null)
           {
@@ -84,7 +83,7 @@
             TItem="TItem" 
             TItemValue="TItemValue" 
             IsOverlayShow="@IsOverlayShow"
-            ShowClearIcon="@(!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)"
+            ShowClearIcon="@(!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValueOrUnmatched)"
             OnClearClick="@OnClearClick" 
             ShowArrowIcon="@ShowArrowIcon" 
             ShowSearchIcon="@ShowArrowIcon"
@@ -92,15 +91,13 @@
     }
     else //ParentSelect.SelectMode != SelectMode.Default
     {
-      <div class="@ParentSelect.GetSemanticClass("content", contentClass)" @ref="@_overflow" style="@ParentSelect.GetSemanticStyle("content", contentStyle)">
-          @if (ParentSelect.PrefixIcon != null)
-          {
-            <div class="@Prefix-content-item @Prefix-content-item-prefix" style="opacity: 1;order:-100;">
-              <span @ref="@_prefixRef" class="@ParentSelect.GetSemanticClass("prefix", $"{Prefix}-prefix")" unselectable="on" aria-hidden="true" style="@ParentSelect.GetSemanticStyle("prefix", "user-select: none;display:flex;align-items: center;padding-right: 4px;min-height:28px;")">
-                @ParentSelect.PrefixIcon
-              </span>
-            </div>
-          }
+      @if (ParentSelect.PrefixIcon != null)
+      {
+        <div @ref="@_prefixRef" class="@ParentSelect.GetSemanticClass("prefix", $"{Prefix}-prefix")" style="@ParentSelect.GetSemanticStyle("prefix")">
+          @ParentSelect.PrefixIcon
+        </div>
+      }
+      <div class="@ParentSelect.GetSemanticClass("content", contentClass)" @ref="@_overflow" style="@ParentSelect.GetSemanticStyle("content")">
           @if (showPlaceholder)
           {
               <div class="@Prefix-content-item @Prefix-content-item-prefix" style="opacity: 1;">
@@ -271,7 +268,7 @@
             TItem="TItem" 
             TItemValue="TItemValue" 
             IsOverlayShow="@IsOverlayShow"
-            ShowClearIcon="@(!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValue)"
+            ShowClearIcon="@(!ParentSelect.Disabled && ParentSelect.AllowClear && ParentSelect.HasValueOrUnmatched)"
             OnClearClick="@OnClearClick" 
             ShowArrowIcon="@ShowArrowIcon" 
             ShowSearchIcon="@ShowArrowIcon"

@@ -14,9 +14,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 
 通过 `Type` 指定图标名称，`Theme` 设置为 `Outline`、`Fill` 或 `TwoTone`。下方可搜索的图标库直接读取包中的图标目录和分类元数据。
 
-生成式组件提供 `Class`、`Style`、`Spin`、`Rotate`、`Role`、`AriaLabel` 和 `AdditionalAttributes`。生成式双色组件的 `TwoToneColor` 类型为 `string[]`，可传一个主题色，或主题色与次要颜色两个值。下方 API 表介绍按名称使用的 `Icon` 适配组件。
+生成式组件提供 `Class`、`Style`、`Spin`、`Rotate`、`Role`、`AriaLabel` 和 `AdditionalAttributes`。生成式双色组件的 `TwoToneColor` 类型为 `string[]`，可传一个主题色，或主题色与次要颜色两个值。不传颜色时会保留 SVG 原色。下方 API 表介绍按名称使用的 `Icon` 适配组件。
 
-只传主色时，生成式组件与 `Icon` 适配组件都使用 `AntDesign.Colors.ColorPalette.Generate(primary)[0]`。这个独立 C# 库迁移自 Ant v6 的 `@ant-design/colors`，默认/暗色主题 Token、预设色板、中性色和阴影也使用它；生成完整十档明暗色板，而不是 Icon 专用的近似算法。无需 JavaScript，首次渲染和服务端预渲染即可得到正确颜色。例如 `#52c41a` 对应 `#f6ffed`。`IconColorPalette.GetSecondaryColor` 和 `IconService.GetSecondaryColor` 保留为兼容包装。
+只传主色时，生成式组件通过 `AntDesign.Colors.ColorPalette.Generate(primary)[0]` 计算次色；`Icon` 适配组件使用 `TwoToneColor` 执行相同计算。需要指定两种颜色时，生成式组件传入包含主色和次色的双元素数组；`Icon` 适配组件同时设置 `TwoToneColor` 和 `TwoToneSecondaryColor`。这个独立 C# 库迁移自 Ant v6 的 `@ant-design/colors`，默认/暗色主题 Token、预设色板、中性色和阴影也使用它；生成完整十档明暗色板，而不是 Icon 专用的近似算法。无需 JavaScript，首次渲染和服务端预渲染即可得到正确颜色。例如 `#52c41a` 对应 `#f6ffed`。`IconColorPalette.GetSecondaryColor` 和 `IconService.GetSecondaryColor` 保留为兼容包装。
 
 与 React v6 对应的五个示例为：基本用法、多色图标、自定义图标、使用 iconfont.cn、使用多个 iconfont.cn 资源。基本用法和双色示例直接使用 `AntDesign.Icons` 的生成式组件。Blazor 另外提供可搜索、按分类分组的完整图标库，以及独立的动态双色改色示例。
 
@@ -40,7 +40,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 | Style | 行内样式，例如 `font-size` 和 `color` | string | - |
 | TabIndex | 包装元素的 `tabindex` 值 | string | - |
 | Theme | 图标主题 | `IconThemeType` | `Outline` |
-| TwoToneColor | 双主题图标的主色；设置后也会自动选择 TwoTone 主题 | string | - |
+| TwoToneColor | 可选主色；设置后自动选择 TwoTone 主题，并在未指定次色时计算次色 | string | - |
+| TwoToneSecondaryColor | 可选的显式次色；设置后不再计算次色 | string | - |
 | Type | 要渲染的生成图标名称 | string | - |
 | Width | SVG 宽度 | string | `1em` |
 
@@ -56,3 +57,9 @@ cover: https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg
 ## 主题变量（Design Token）
 
 React v6 和 Blazor 的 Icon 均无独立组件 Design Token。图标大小和颜色继承 CSS 的 `font-size` 与 `color`（也可通过 `Width`、`Height`、`Fill` 设置 SVG 属性）；若需全局调整这些继承值，请使用全局主题 token。
+
+## 常见问题
+
+### 图标会改变组件样式的加载顺序吗？
+
+React v6 文档提到，`@ant-design/icons` 的运行时样式注入与 `@layer antd` 及 `message`、`Modal`、`notification` 静态方法组合时可能影响样式优先级。这是 React 专属问题：Blazor 的生成式 `AntDesign.Icons` 组件直接渲染 SVG，不使用 React 的 CSS-in-JS 分层注入。若 Blazor 页面样式缺失，请检查 Ant Design Blazor 样式表和配置的主题资源是否正确加载；不要通过添加 React 图标组件来规避。

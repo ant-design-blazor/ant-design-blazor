@@ -24,18 +24,18 @@
       "id": "tooltip-basic-portal",
       "component": "Tooltip",
       "react": {
-        "url": "http://127.0.0.1:8000/components/tooltip",
+        "url": "http://127.0.0.1:8000/components/tooltip?theme=light",
         "scopeSelector": "body",
         "rootSelector": "#tooltip-demo-basic .code-box-demo span:first-of-type",
         "skeletonSelector": ""
       },
       "blazor": {
-        "url": "http://127.0.0.1:8186/en-US/components/tooltip",
+        "url": "http://127.0.0.1:5000/en-US/components/tooltip?theme=light",
         "scopeSelector": "body",
         "rootSelector": "#components-tooltip-demo-basic .code-box-demo span:first-of-type",
       "skeletonSelector": ""
       },
-      "geometryTolerancePx": 1.5,
+      "geometryTolerancePx": 0,
       "styleProperties": [
         "display", "position", "zIndex", "transformOrigin",
         "boxSizing", "width", "height", "paddingBlock", "paddingInline", "marginBlock", "gap",
@@ -46,9 +46,9 @@
       "pseudoElements": ["::before", "::after"],
       "semanticNodes": [
         { "path": "trigger", "reactSelector": "$root", "blazorSelector": "$root", "minimumCount": 1 },
-        { "path": "tooltip", "reactSelector": ".ant-tooltip", "blazorSelector": ".ant-tooltip", "minimumCount": 0, "portal": true, "portalText": "prompt text", "portalVisible": true },
-        { "path": "arrow", "reactSelector": ".ant-tooltip-arrow", "blazorSelector": ".ant-tooltip-arrow", "minimumCount": 0, "portal": true, "portalText": "prompt text", "portalVisible": true },
-        { "path": "content", "reactSelector": ".ant-tooltip-container", "blazorSelector": ".ant-tooltip-container", "minimumCount": 0, "portal": true, "portalText": "prompt text", "portalVisible": true }
+        { "path": "tooltip", "reactSelector": ".ant-tooltip", "blazorSelector": ".ant-tooltip", "minimumCount": 0, "portal": true, "geometryAnchor": { "mode": "pixel-snap-to-trigger" }, "portalText": "prompt text", "portalVisible": true },
+        { "path": "arrow", "reactSelector": ".ant-tooltip-arrow", "blazorSelector": ".ant-tooltip-arrow", "minimumCount": 0, "portal": true, "geometryParentSelector": ".ant-tooltip:not(.ant-tooltip-hidden)", "portalText": "prompt text", "portalVisible": true },
+        { "path": "content", "reactSelector": ".ant-tooltip-container", "blazorSelector": ".ant-tooltip-container", "minimumCount": 0, "portal": true, "geometryParentSelector": ".ant-tooltip:not(.ant-tooltip-hidden)", "portalText": "prompt text", "portalVisible": true }
       ],
       "scenarios": [
         { "id": "initial" },

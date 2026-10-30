@@ -75,10 +75,16 @@ namespace AntDesign
             get => _primaryColor;
             set
             {
-                _primaryColor = string.IsNullOrWhiteSpace(value) ? "#1677ff" : value;
+                _primaryColor = string.IsNullOrWhiteSpace(value) ? null : value;
                 Theme = IconThemeType.TwoTone;
             }
         }
+
+        /// <summary>
+        /// Specify the secondary color when using the TwoTone theme. When omitted, the SVG's original secondary color is kept unless <see cref="TwoToneColor"/> is set.
+        /// </summary>
+        [Parameter]
+        public string TwoToneSecondaryColor { get; set; }
 
         /// <summary>
         /// The type of <see cref="AntDesign.IconFont" />
@@ -150,19 +156,30 @@ namespace AntDesign
         [Inject]
         public IconService IconService { get; set; }
 
-        internal string SecondaryColor => Colors.ColorPalette.Generate(_primaryColor)[0];
+        internal string SecondaryColor => !string.IsNullOrWhiteSpace(TwoToneSecondaryColor)
+            ? TwoToneSecondaryColor
+            : !string.IsNullOrWhiteSpace(_primaryColor) ? Colors.ColorPalette.Generate(_primaryColor)[0] : null;
 
         protected string _svgImg;
-        private string _primaryColor = "#1677ff";
+        private string _primaryColor;
 
         private Dictionary<string, object> _attributes = new();
 
         private string IconTabIndex => TabIndex ?? (OnClick.HasDelegate ? "-1" : null);
 
+        protected override void OnInitialized()
+        {
+            // React icons do not create an ID unless the caller supplies one.
+            // Avoid consuming a generated DOM ID here: icons are often nested
+            // inside controls whose own IDs are part of their accessibility tree.
+            // Explicit Id values remain supported by the inherited parameter.
+        }
+
         protected override async Task OnInitializedAsync()
         {
             ClassMapper.Add($"anticon")
-                .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type) && string.IsNullOrEmpty(IconFont));
+                .GetIf(() => $"anticon-{Type}", () => !string.IsNullOrWhiteSpace(Type) && string.IsNullOrEmpty(IconFont))
+                .GetIf(() => "anticon-spin", () => Spin || Type == "loading");
 
             await base.OnInitializedAsync();
         }
@@ -176,7 +193,15 @@ namespace AntDesign
                 _attributes.Add("onclick", (Delegate)HandleOnClick);
             }
 
-            _attributes.Add("aria-label", AriaLabel);
+            var accessibleName = !string.IsNullOrWhiteSpace(AriaLabel)
+                ? AriaLabel
+                : !string.IsNullOrWhiteSpace(Type) ? Type.ToLowerInvariant() : null;
+            // React's createFromIconfontCN wrapper does not infer an accessible
+            // name from the font glyph's type; only forward an explicit label.
+            if (IconFont == null || !string.IsNullOrWhiteSpace(AriaLabel))
+            {
+                _attributes.Add("aria-label", accessibleName);
+            }
 
             if (String.IsNullOrEmpty(Role))
             {

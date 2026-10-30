@@ -1,0 +1,15 @@
+<p style="margin-bottom:20px">
+    <Checkbox Checked="@isChecked" CheckedChanged="OnCheckedChanged" Disabled="@disabled">
+        @($"{(isChecked ? "Checked" : "Unchecked")}-{(disabled ? "Disabled" : "Enabled")}")
+    </Checkbox>
+</p>
+<Button Type="ButtonType.Primary" Size="ButtonSize.Small" OnClick="ToggleChecked">@(isChecked ? "Uncheck" : "Check")</Button>
+<Button Style="margin:0 10px" Type="ButtonType.Primary" Size="ButtonSize.Small" OnClick="ToggleDisabled">@(disabled ? "Enable" : "Disable")</Button>
+
+@code {
+    private bool isChecked = true;
+    private bool disabled;
+    private Task OnCheckedChanged(bool value) { isChecked = value; return Task.CompletedTask; }
+    private void ToggleChecked() => isChecked = !isChecked;
+    private void ToggleDisabled() => disabled = !disabled;
+}

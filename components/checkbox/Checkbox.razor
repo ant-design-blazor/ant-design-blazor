@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntInputBoolComponentBase
 
-<label class="@ClassMapperLabel.Class" style="@(string.IsNullOrEmpty(Style) ? null : Style)" @ref="Ref" @onclick:stopPropagation>
+<label class="@SemanticClass("root", ClassMapperLabel.Class)" style="@SemanticStyle("root", Style)" @ref="Ref" @onclick:stopPropagation>
     <span class="@ClassMapper.Class">
         <input id="@Id"
                value="@(CheckboxGroup == null ? null : ItemValue?.ToString() ?? Label)"
@@ -12,17 +12,18 @@
                type="checkbox"
                class="ant-checkbox-input"
                @attributes="_attributes" />
+        <span class="@SemanticClass("icon", "ant-checkbox-inner")" style="@SemanticStyle("icon")"></span>
     </span>
 
     @if (ChildContent != null)
     {
-        <span class="ant-checkbox-label">
+        <span class="@SemanticClass("label", "ant-checkbox-label")" style="@SemanticStyle("label")">
             @ChildContent
         </span>
     }
     else if (!HideEmptyLabel || !string.IsNullOrEmpty(Label))
     {
-        <span class="ant-checkbox-label">@Label</span>
+        <span class="@SemanticClass("label", "ant-checkbox-label")" style="@SemanticStyle("label")">@Label</span>
     }
 
 </label>

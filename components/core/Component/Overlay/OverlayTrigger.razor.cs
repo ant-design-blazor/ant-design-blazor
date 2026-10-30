@@ -175,6 +175,58 @@ namespace AntDesign.Internal
         [Parameter]
         public string OverlayStyle { get; set; }
 
+        /// <summary>
+        /// Opens a pre-rendered overlay on pointer down before a Blazor Server
+        /// event round trip completes. Intended for controls such as Select
+        /// whose popup is already present in the DOM in HiddenMode.
+        /// </summary>
+        [Parameter]
+        public bool ImmediateOpenOnPointerDown { get; set; }
+
+        [Parameter]
+        public string ImmediateOpenClass { get; set; }
+
+        /// <summary>Width strategy applied before an immediate-open popup is positioned and revealed.</summary>
+        [Parameter]
+        public string ImmediateOpenWidthMode { get; set; }
+
+        /// <summary>
+        /// Width strategy used before an overlay becomes visible. Defaults to
+        /// matching the trigger; set to <c>content</c> to size to the content
+        /// while keeping at least the trigger width, or <c>custom</c> to use
+        /// <see cref="PopupWidth"/>.
+        /// </summary>
+        [Parameter]
+        public string PopupWidthMode { get; set; } = "match-trigger";
+
+        /// <summary>Explicit width used when <see cref="PopupWidthMode"/> is <c>custom</c>.</summary>
+        [Parameter]
+        public string PopupWidth { get; set; }
+
+        /// <summary>Optional maximum width applied while measuring the popup.</summary>
+        [Parameter]
+        public string PopupMaxWidth { get; set; }
+
+        internal string EffectivePopupWidthMode => string.IsNullOrWhiteSpace(ImmediateOpenWidthMode)
+            ? PopupWidthMode
+            : ImmediateOpenWidthMode;
+
+        internal string EffectivePopupWidth => string.IsNullOrWhiteSpace(ImmediateOpenWidth)
+            ? PopupWidth
+            : ImmediateOpenWidth;
+
+        internal string EffectivePopupMaxWidth => string.IsNullOrWhiteSpace(ImmediateOpenMaxWidth)
+            ? PopupMaxWidth
+            : ImmediateOpenMaxWidth;
+
+        /// <summary>Explicit width used when <see cref="ImmediateOpenWidthMode"/> is <c>custom</c>.</summary>
+        [Parameter]
+        public string ImmediateOpenWidth { get; set; }
+
+        /// <summary>Optional maximum width applied while measuring an immediate-open popup.</summary>
+        [Parameter]
+        public string ImmediateOpenMaxWidth { get; set; }
+
         /*
          * 当前的placement，某些情况下可能会被Overlay组件修改（通过ChangePlacementForShow函数）
          * Current placement, would change by overlay in some cases(via ChangePlacementForShow function)
@@ -355,16 +407,22 @@ namespace AntDesign.Internal
                 }
             }
 
+            if (firstRender && ImmediateOpenOnPointerDown)
+            {
+                await _overlay.BindImmediateOpenAsync(ClickIgnoreSelector, ImmediateOpenClass,
+                    EffectivePopupWidthMode, EffectivePopupWidth, EffectivePopupMaxWidth);
+            }
+
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        protected void OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
+        protected Task OnUnboundMouseEnter(JsonElement jsonElement) => OnTriggerMouseEnter();
 
-        protected void OnUnboundMouseLeave(JsonElement jsonElement) => OnTriggerMouseLeave();
+        protected Task OnUnboundMouseLeave(JsonElement jsonElement) => OnTriggerMouseLeave();
 
-        protected void OnUnboundFocusIn(JsonElement jsonElement) => OnTriggerFocusIn();
+        protected Task OnUnboundFocusIn(JsonElement jsonElement) => OnTriggerFocusIn();
 
-        protected void OnUnboundFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
+        protected Task OnUnboundFocusOut(JsonElement jsonElement) => OnTriggerFocusOut();
 
         protected async Task OnUnboundClick(JsonElement jsonElement)
         {

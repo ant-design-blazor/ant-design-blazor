@@ -1,37 +1,36 @@
 <Space Wrap>
   <SpaceItem>
-    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" OnSelectedItemChanged="HandleChange">
-        <SelectOptions>
-            <SelectOption TItemValue="string" TItem="string" Value='@("jack")' Label="Jack" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("Yiminghe")' Label="yiminghe" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("disabled")' Label="Disabled" Disabled />
-        </SelectOptions>
-    </Select>
+    <Select TItemValue="string" TItem="Option" DefaultValue='@("lucy")' DataSource="@_options"
+            ItemValue="option => option.Value" ItemLabel="option => option.Label"
+            DisabledName="@nameof(Option.Disabled)" EnableVirtualization Style="width: 120px;" />
   </SpaceItem>
   <SpaceItem>
-    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" Disabled>
-        <SelectOptions>
-            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
-        </SelectOptions>
-    </Select>
+    <Select TItemValue="string" TItem="Option" DefaultValue='@("lucy")' DataSource="@_singleOption"
+            ItemValue="option => option.Value" ItemLabel="option => option.Label"
+            DisabledName="@nameof(Option.Disabled)" EnableVirtualization Style="width: 120px;" Disabled />
   </SpaceItem>
   <SpaceItem>
-    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" Loading>
-        <SelectOptions>
-            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
-        </SelectOptions>
-    </Select>
+    <Select TItemValue="string" TItem="Option" DefaultValue='@("lucy")' DataSource="@_singleOption"
+            ItemValue="option => option.Value" ItemLabel="option => option.Label"
+            DisabledName="@nameof(Option.Disabled)" EnableVirtualization Style="width: 120px;" Loading />
   </SpaceItem>
   <SpaceItem>
-    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Style="width: 120px;" AllowClear Placeholder="select it">
-        <SelectOptions>
-            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
-        </SelectOptions>
-    </Select>
+    <Select TItemValue="string" TItem="Option" DefaultValue='@("lucy")' DataSource="@_singleOption"
+            ItemValue="option => option.Value" ItemLabel="option => option.Label"
+            DisabledName="@nameof(Option.Disabled)" EnableVirtualization Style="width: 120px;" AllowClear Placeholder="select it" />
   </SpaceItem>
 </Space>
 
 @code {
-    private void HandleChange(string value) => Console.WriteLine($"selected {value}");
+    private sealed record Option(string Value, string Label, bool Disabled = false);
+
+    private readonly Option[] _options =
+    {
+        new("jack", "Jack"),
+        new("lucy", "Lucy"),
+        new("Yiminghe", "yiminghe"),
+        new("disabled", "Disabled", true)
+    };
+
+    private readonly Option[] _singleOption = { new("lucy", "Lucy") };
 }

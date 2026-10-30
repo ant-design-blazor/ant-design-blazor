@@ -283,8 +283,12 @@ namespace AntDesign
             public static string AddPreventEnterOnOverlayVisible => $"{FUNC_PREFIX}addPreventEnterOnOverlayVisible";
             public static string RemovePreventEnterOnOverlayVisible => $"{FUNC_PREFIX}removePreventEnterOnOverlayVisible";
             public static string AddOverlayToContainer => $"{FUNC_PREFIX}addOverlayToContainer";
+            public static string GetInheritedAntDesignTokenStyle => $"{FUNC_PREFIX}getInheritedAntDesignTokenStyle";
             public static string UpdateOverlayPosition => $"{FUNC_PREFIX}updateOverlayPosition";
             public static string DeleteOverlayFromContainer => $"{FUNC_PREFIX}deleteOverlayFromContainer";
+            public static string BindImmediateOpen => $"{FUNC_PREFIX}bindImmediateOpen";
+            public static string PrepareOverlayWidthForShow => $"{FUNC_PREFIX}prepareOverlayWidthForShow";
+            public static string RevealOverlayForShow => $"{FUNC_PREFIX}revealOverlayForShow";
         }
 
         public static class TableComponentHelper
@@ -339,12 +343,21 @@ namespace AntDesign
         {
             public static string ScrollToIndex => FUNC_PREFIX + "selectHelper.scrollToIndex";
             public static string CancelScroll => FUNC_PREFIX + "selectHelper.cancelScroll";
+            public static string AttachVirtualList => FUNC_PREFIX + "selectHelper.attachVirtualList";
+            public static string DetachVirtualList => FUNC_PREFIX + "selectHelper.detachVirtualList";
         }
 
         public static class DrawerHelper
         {
             private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "drawerHelper.";
             public static string Attach => $"{FUNC_PREFIX}attach";
+        }
+
+        public static class CollapseHelper
+        {
+            private const string FUNC_PREFIX = JSInteropConstants.FUNC_PREFIX + "collapseHelper.";
+            public static string Attach => $"{FUNC_PREFIX}attach";
+            public static string Detach => $"{FUNC_PREFIX}detach";
         }
     }
 }

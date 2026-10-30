@@ -52,6 +52,36 @@ html {
 [class*= ant-] input::-ms-reveal {
   display: none;
 }
+/* Keep the documentation shell aligned with the React docs typography. */
+@font-face {
+  font-family: AlibabaSans;
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*1GSgSYDD_aIAAAAAQsAAAAgAegCCAQ/AlibabaSans-Light.woff2') format('woff2');
+}
+@font-face {
+  font-family: AlibabaSans;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*2zEUQqnPNesAAAAAQtAAAAgAegCCAQ/AlibabaSans-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: AlibabaSans;
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*E_cxRbMlZqUAAAAAQuAAAAgAegCCAQ/AlibabaSans-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: AlibabaSans;
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+  src: url('https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*E_cxRbMlZqUAAAAAQuAAAAgAegCCAQ/AlibabaSans-Bold.woff2') format('woff2');
+}
+
 /* stylelint-disable property-no-vendor-prefix, at-rule-no-vendor-prefix */
 html,
 body {
@@ -82,7 +112,7 @@ body {
   margin: 0;
   color: rgba(0, 0, 0, 0.85);
   font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-family: AlibabaSans, -apple-system, 'system-ui', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   font-variant: tabular-nums;
   line-height: 1.5715;
   background-color: #fff;
@@ -381,8 +411,10 @@ mark {
 .anticon[tabindex] {
   cursor: pointer;
 }
-.anticon-spin,
-.anticon-spin::before {
+.anticon.anticon-spin::before {
+  display: none !important;
+}
+.anticon-spin {
   display: inline-block;
   animation: loadingCircle 1s infinite linear;
 }

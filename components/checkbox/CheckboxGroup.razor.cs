@@ -96,6 +96,7 @@ namespace AntDesign
         public CheckboxGroup()
         {
             ClassMapper
+                .Add("ant-checkbox-css-var")
                 .Add("ant-checkbox-group")
                 .If("ant-checkbox-group-rtl", () => RTL);
         }

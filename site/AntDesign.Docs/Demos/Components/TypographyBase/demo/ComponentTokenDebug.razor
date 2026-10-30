@@ -1,0 +1,35 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@_theme">
+    <Typography>
+        <Title>Introduction</Title>
+        <Paragraph>
+            Ant Design is a design language for background applications, refined through extensive project practice.
+            <Text Strong> Strong text uses the customized weight.</Text>
+        </Paragraph>
+        <Title Level="2">Guidelines and Resources</Title>
+        <Paragraph>
+            <Text Type="TextElementType.Success">Success text</Text><br />
+            <Text Type="TextElementType.Warning">Warning text</Text><br />
+            <Text Type="TextElementType.Danger">Danger text</Text>
+        </Paragraph>
+    </Typography>
+</ConfigProvider>
+
+@code {
+    private static readonly ThemeConfig _theme = CreateTheme();
+
+    private static ThemeConfig CreateTheme()
+    {
+        var theme = new ThemeConfig();
+        theme.Token.ColorSuccessText = "#ff0000";
+        theme.Token.ColorWarningText = "#00aa00";
+        theme.Token.ColorErrorText = "#0000ff";
+        theme.SetComponentToken("Typography", new TypographyComponentToken
+        {
+            TitleMarginTop = "2.4em",
+            TitleMarginBottom = "1em"
+        });
+        return theme;
+    }
+}

@@ -1,14 +1,4 @@
-<Space Wrap>
-    <Select TItemValue="string" TItem="string" Status="error" Placeholder="Error status" Style="width: 180px;">
-        <SelectOptions>
-            <SelectOption TItemValue="string" TItem="string" Value='@("one")' Label="Option One" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("two")' Label="Option Two" />
-        </SelectOptions>
-    </Select>
-    <Select TItemValue="string" TItem="string" Status="warning" Placeholder="Warning status" Style="width: 180px;">
-        <SelectOptions>
-            <SelectOption TItemValue="string" TItem="string" Value='@("one")' Label="Option One" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("two")' Label="Option Two" />
-        </SelectOptions>
-    </Select>
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+    <Select TItemValue="string" TItem="string" Status="error" Style="width: 100%;" />
+    <Select TItemValue="string" TItem="string" Status="warning" Style="width: 100%;" />
 </Space>

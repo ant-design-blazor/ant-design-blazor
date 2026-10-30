@@ -33,13 +33,13 @@
       "component": "Select",
       "matchScopeWidth": "react",
       "react": {
-        "url": "http://127.0.0.1:8000/components/select",
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
         "scopeSelector": "#select-demo-size .code-box-demo",
         "rootSelector": ".ant-select",
         "skeletonSelector": ".ant-skeleton"
       },
       "blazor": {
-        "url": "http://127.0.0.1:5540/en-US/components/select",
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
         "scopeSelector": "#components-select-demo-size .code-box-demo",
         "rootSelector": ".ant-select",
         "skeletonSelector": ".ant-skeleton"

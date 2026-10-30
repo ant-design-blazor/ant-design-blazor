@@ -32,9 +32,9 @@ public static class LlmsMarkdownBuilder
         foreach (var node in Array(Property(slots, "nodes")))
             output.AppendLine($"| {Cell(Text(node, "name"))} | {Cell(Text(node, "selector"))} | {Cell(Text(node, "description"))} | {Cell(Text(node, "version"))} |");
         output.AppendLine().AppendLine("## Design Token").AppendLine()
-            .AppendLine("| Token | Description | Type | Default | CSS variable |").AppendLine("| --- | --- | --- | --- | --- |");
+            .AppendLine("| Token | Description | C# Type | Default | CSS variable |").AppendLine("| --- | --- | --- | --- | --- |");
         foreach (var token in Array(Property(tokens, "componentTokens")).Where(t => Text(t, "Component") == key && Flag(t, "Documented") && !Flag(t, "Reserved")).OrderBy(t => Text(t, "Name"), StringComparer.Ordinal))
-            output.AppendLine($"| {Cell(Text(token, "Name"))} | {Cell(Text(token, cn ? "Description" : "DescriptionEn"))} | {Cell(Text(token, "Type"))} | {Cell(Text(token, "DefaultValue"))} | {Cell(Text(token, "CssVariable"))} |");
+            output.AppendLine($"| {Cell(Text(token, "Name"))} | {Cell(Text(token, cn ? "Description" : "DescriptionEn"))} | `{Cell(Text(token, "CSharpType").Length > 0 ? Text(token, "CSharpType") : Text(token, "Type"))}` | {Cell(Text(token, "DefaultValue"))} | {Cell(Text(token, "CssVariable"))} |");
         output.AppendLine().AppendLine("### Global tokens used by this component").AppendLine()
             .AppendLine("| Token | Description | Type | Default |").AppendLine("| --- | --- | --- | --- |");
         var globals = Array(Property(tokens, "globalTokens")).ToDictionary(t => Text(t, "Name"), StringComparer.Ordinal);

@@ -1,0 +1,41 @@
+<div style="height:100%;min-height:500px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative">
+    <Space Style="position:absolute;top:0;inset-inline-start:50%;transform:translateX(-50%)">
+        <RadioGroup TValue="string" @bind-Value="_placement" ButtonStyle="RadioButtonStyle.Outline">
+            <Radio RadioButton Value="@("topLeft")">TL</Radio>
+            <Radio RadioButton Value="@("topRight")">TR</Radio>
+            <Radio RadioButton Value="@("bottomLeft")">BL</Radio>
+            <Radio RadioButton Value="@("bottomRight")">BR</Radio>
+        </RadioGroup>
+        <Switch @bind-Checked="_open" />
+        <Button OnClick="Randomize">Random</Button>
+    </Space>
+    <Select TItemValue="int" TItem="OptionItem" Open="_open" OpenChanged="value => _open = value"
+            Style="width:120px" Placement="@GetPlacement()" DataSource="_options"
+            ItemValue="item => item.Value" ItemLabel="item => item.Label" DropdownMatchSelectWidth="@("200px")" />
+</div>
+
+@code {
+    private string _placement = "topLeft";
+    private bool _open;
+    private int _count = 3;
+    private IReadOnlyList<OptionItem> _options = CreateOptions(3);
+
+    private AntDesign.Placement GetPlacement() => _placement switch
+    {
+        "topRight" => AntDesign.Placement.TopRight,
+        "bottomRight" => AntDesign.Placement.BottomRight,
+        "bottomLeft" => AntDesign.Placement.BottomLeft,
+        _ => AntDesign.Placement.TopLeft
+    };
+
+    private void Randomize()
+    {
+        _count = Random.Shared.Next(1, 6);
+        _options = CreateOptions(_count);
+    }
+
+    private static IReadOnlyList<OptionItem> CreateOptions(int count) =>
+        Enumerable.Range(0, count).Select(index => new OptionItem(index, $"Option {index}")).ToArray();
+
+    private sealed record OptionItem(int Value, string Label);
+}

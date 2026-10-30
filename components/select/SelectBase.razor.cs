@@ -31,6 +31,9 @@ namespace AntDesign
     public abstract partial class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>, IEqualityComparer<TItem>
     {
         protected virtual string DefaultWidth => string.Empty;
+        protected virtual string ImmediatePopupWidthMode => string.Empty;
+        protected virtual string ImmediatePopupWidth => string.Empty;
+        protected virtual string ImmediatePopupMaxWidth => string.Empty;
         protected virtual bool UseChildContentAsTrigger => true;
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
         private SelectOptionItem<TItemValue, TItem> _selectOptionEqualToTypeDefault;
@@ -469,6 +472,12 @@ namespace AntDesign
         /// </summary>
         /// <returns>true if SelectOptions has any selected Items, otherwise false</returns>
         internal virtual bool HasValue => SelectOptionItems.Any(x => x.IsSelected);
+
+        internal virtual bool HasValueOrUnmatched => HasValue
+            || (Mode == SelectMode.Default
+                && Value is string value
+                && !string.IsNullOrEmpty(value)
+                && !SelectOptionItems.Any(item => EqualityComparer<TItemValue>.Default.Equals(item.Value, Value)));
 
         internal virtual string GetSelectedItemLabel(SelectOptionItem<TItemValue, TItem> option)
         {
@@ -1093,6 +1102,13 @@ namespace AntDesign
                 InvokeValuesChanged(selectOption);
                 await UpdateOverlayPositionAsync();
             }
+
+            // The virtual accessibility proxy is rendered by Select rather than by
+            // the option component. Refresh its aria-selected state after selection.
+            if (UsesVirtualAccessibility)
+            {
+                RefreshComponentState();
+            }
         }
 
         protected void InvokeValuesChanged(SelectOptionItem<TItemValue, TItem> newSelection = null)
@@ -1175,6 +1191,7 @@ namespace AntDesign
                 await ClearMultipleMode();
             }
             await OnClearSelected.InvokeAsync(_);
+            await SetInputFocusAsync();
         }
 
         private async Task ClearMultipleMode()
@@ -1215,6 +1232,13 @@ namespace AntDesign
         {
             if (SelectedOptionItems.Count == 0)
             {
+                // An unmatched controlled value is rendered as plain text and has no
+                // SelectOptionItem. It is still a value the user can clear.
+                if (HasValueOrUnmatched)
+                {
+                    CurrentValue = default;
+                    await ClearSelectedAsync();
+                }
                 return;
             }
             if (_hasValueOnClear && EqualityComparer<TItemValue>.Default.Equals(Value, _valueOnClear))

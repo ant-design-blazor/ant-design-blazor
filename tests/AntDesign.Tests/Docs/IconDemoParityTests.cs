@@ -32,6 +32,7 @@ public sealed class IconDemoParityTests : DocumentationTestBase
         Assert.Equal(4, multiple.FindAll(".ant-space > .ant-space-item").Count);
         Assert.Empty(single.FindAll("script"));
         Assert.Empty(multiple.FindAll("script"));
+        Assert.All(single.FindAll(".anticon"), icon => Assert.False(icon.HasAttribute("aria-label")));
         Assert.Equal("color: rgb(24, 119, 242);", single.FindAll(".anticon")[1].GetAttribute("style"));
         Assert.All(multiple.FindComponents<IconFont>(), font => Assert.Equal(2, font.Instance.ScriptUrl.AsT1.Length));
     }
@@ -70,7 +71,7 @@ public sealed class IconDemoParityTests : DocumentationTestBase
     }
 
     [Fact]
-    public void Two_tone_uses_normal_size_and_the_upstream_primary_and_secondary_colors()
+    public void Two_tone_uses_normal_size_and_preserves_original_colors_unless_a_primary_is_set()
     {
         var cut = RenderComponent<IconDemos.Twotone>();
         Assert.Equal(3, cut.FindAll(".ant-space > .ant-space-item").Count);
@@ -103,16 +104,31 @@ public sealed class IconDemoParityTests : DocumentationTestBase
     public void Blazor_extra_retains_dynamic_color_changes_without_changing_the_React_demo()
     {
         var cut = RenderComponent<IconDemos.TwoToneColor>();
-        var initial = cut.Find(".anticon-check-circle").InnerHtml;
+        var initial = cut.FindAll(".anticon-check-circle").Select(icon => icon.InnerHtml).ToArray();
+        Assert.Equal(6, initial.Length);
+        Assert.Equal(new[] { "#333", "#E6E6E6", "#333" }, cut.FindAll(".anticon-check-circle")[0]
+            .QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.Equal(new[] { "#333", "#E6E6E6", "#333" }, cut.FindAll(".anticon-check-circle")[1]
+            .QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
         cut.Find("button").Click();
-        Assert.NotEqual(initial, cut.Find(".anticon-check-circle").InnerHtml);
-        Assert.Contains("#f759ab", cut.Find(".anticon-check-circle").InnerHtml);
+        var changed = cut.FindAll(".anticon-check-circle").Select(icon => icon.InnerHtml).ToArray();
+        Assert.Equal(6, changed.Length);
+        Assert.Equal(initial[0], changed[0]);
+        Assert.Equal(initial[1], changed[1]);
+        Assert.NotEqual(initial[2], changed[2]);
+        Assert.NotEqual(initial[4], changed[4]);
         var icons = cut.FindAll(".anticon-check-circle");
-        Assert.Equal(2, icons.Count);
-        Assert.All(icons, icon =>
-        {
-            Assert.Contains("#f759ab", icon.InnerHtml);
-            Assert.Contains("#fff0f5", icon.InnerHtml);
-        });
+        Assert.Equal(new[] { "#333", "#E6E6E6", "#333" },
+            icons[0].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.Equal(new[] { "#333", "#E6E6E6", "#333" },
+            icons[1].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.Equal(new[] { "#f759ab", "#fff0f5", "#f759ab" },
+            icons[2].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.Equal(new[] { "#f759ab", "#fff0f5", "#f759ab" },
+            icons[3].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.Equal(new[] { "#f759ab", "#1677ff", "#f759ab" },
+            icons[4].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.Equal(new[] { "#f759ab", "#1677ff", "#f759ab" },
+            icons[5].QuerySelectorAll("path").Select(path => path.GetAttribute("fill")));
     }
 }

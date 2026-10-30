@@ -181,7 +181,7 @@ const semanticPathSelectors = {
   'popconfirm/content': '.ant-popconfirm-inner-content',
   'qr-code/root': '.ant-qrcode',
   'qr-code/cover': '.ant-qrcode-cover',
-  'radio/icon': '.ant-radio-inner',
+  'radio/icon': '.ant-radio',
   'radio/label': '.ant-radio-wrapper',
   'skeleton/content': '.ant-skeleton',
   'space/separator': '.ant-space-item',

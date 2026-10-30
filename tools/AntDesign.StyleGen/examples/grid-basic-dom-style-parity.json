@@ -21,12 +21,12 @@
       "id": "grid-basic-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid?theme=light",
         "scopeSelector": "#grid-demo-basic .code-box-demo",
         "rootSelector": ".ant-row"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid?theme=light",
         "scopeSelector": "#components-grid-demo-basic .code-box-demo",
         "rootSelector": ".ant-row"
       },

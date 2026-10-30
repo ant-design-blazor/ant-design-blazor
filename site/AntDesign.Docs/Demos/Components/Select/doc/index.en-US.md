@@ -34,7 +34,7 @@ Select component to select value from options.
 | Disabled | Whether the Select component is disabled. | bool | false |  |
 | DisabledName | The name of the property to be used as a disabled indicator. | string |  |  |
 | DisabledPredicate | Specifies predicate for disabled options |  -  |  -  |
-| DropdownMatchSelectWidth |  Will match drowdown width: <br/>- for boolean: `true` - with widest item in the dropdown list <br/> - for string: with value (e.g.: `256px`). | OneOf<bool, string> | true |  |
+| DropdownMatchSelectWidth | Controls dropdown width: `true` matches the Select trigger; `false` fits the widest option while keeping the trigger width as a minimum; a string sets an explicit width (e.g. `256px`). | OneOf<bool, string> | true |  |
 | DropdownMaxWidth | Will not allow dropdown width to grow above stated in here value (eg. "768px"). | string | "auto" |  |
 | DropdownRender | Customize dropdown content. | Renderfragment | - |  |
 | SearchDebounceMilliseconds | Delays the processing of the search input event until the user has stopped typing for a predetermined amount of time | int        |  250         |

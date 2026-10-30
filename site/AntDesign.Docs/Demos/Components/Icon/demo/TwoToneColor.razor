@@ -3,16 +3,31 @@
 <Space Direction="SpaceDirection.Vertical">
     <SpaceItem>
         <Space>
+            <SpaceItem><CheckCircleTwoTone Style="font-size:28px" /></SpaceItem>
+            <SpaceItem><Icon Type="@IconType.TwoTone.CheckCircle" Theme="IconThemeType.TwoTone" Style="font-size:28px" /></SpaceItem>
+        </Space>
+    </SpaceItem>
+    <SpaceItem>Original SVG colors: <code>#333</code> and <code>#E6E6E6</code></SpaceItem>
+    <SpaceItem>
+        <Space>
             <SpaceItem><CheckCircleTwoTone TwoToneColor='@(new[] { _color })' Style="font-size:28px" /></SpaceItem>
             <SpaceItem><Icon Type="@IconType.TwoTone.CheckCircle" TwoToneColor="@_color" Style="font-size:28px" /></SpaceItem>
         </Space>
     </SpaceItem>
     <SpaceItem>Primary: <code>@_color</code> Secondary: <code>@AntDesign.Colors.ColorPalette.Generate(_color)[0]</code></SpaceItem>
+    <SpaceItem>
+        <Space>
+            <SpaceItem><CheckCircleTwoTone TwoToneColor='@(new[] { _color, _secondaryColor })' Style="font-size:28px" /></SpaceItem>
+            <SpaceItem><Icon Type="@IconType.TwoTone.CheckCircle" TwoToneColor="@_color" TwoToneSecondaryColor="@_secondaryColor" Style="font-size:28px" /></SpaceItem>
+        </Space>
+    </SpaceItem>
+    <SpaceItem>Explicit colors: <code>@_color</code> and <code>@_secondaryColor</code></SpaceItem>
     <SpaceItem><Button OnClick="ChangeColor">Change Color</Button></SpaceItem>
 </Space>
 
 @code {
     private string _color = "#52c41a";
+    private readonly string _secondaryColor = "#1677ff";
     private readonly string[] _colors = { "#f759ab", "#2f54eb", "#722ed1", "#1677ff", "#f5222d" };
     private int _index;
     private void ChangeColor() => _color = _colors[_index++ % _colors.Length];

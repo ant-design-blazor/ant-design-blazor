@@ -25,8 +25,13 @@ public sealed class ComponentMarkdownTests
             Assert.Contains("## Design Token", md);
             Assert.DoesNotContain("\uE000", md);
             var key = Regex.Replace(Regex.Replace(name, "([A-Z]+)([A-Z][a-z])", "$1-$2"), "([a-z0-9])([A-Z])", "$1-$2").ToLowerInvariant();
+            var tokenSection = md.Split("## Design Token")[1].Split("### Global tokens")[0];
             foreach (var token in ComponentTokenCatalog.Get(key))
+            {
                 Assert.Contains("| " + token.Name + " |", md);
+                var row = System.Linq.Enumerable.Single(tokenSection.Split('\n'), line => line.StartsWith("| " + token.Name + " |", StringComparison.Ordinal));
+                Assert.Contains("| `" + token.CSharpType + "` |", row);
+            }
             foreach (var node in SemanticDomCatalog.Get(key))
                 Assert.Contains("| " + node.Name + " |", md);
         }

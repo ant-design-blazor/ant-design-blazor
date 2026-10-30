@@ -30,7 +30,7 @@
     }
 }
 
-<div class='@($"{PrefixCls}-panel")' @ref="Ref">
+<div class='@($"{PrefixCls}-panel{(RTL ? $" {PrefixCls}-panel-rtl" : string.Empty)}")' tabindex="0" @ref="Ref">
     <DatePickerTemplate TValue="TValue"
                         @attributes="GetAttributes()"
                            MaxRow="6"
@@ -84,22 +84,28 @@
     </DatePickerTemplate>
 </div>
 
-@if (RenderExtraFooter != null && !IsRange)
+@if ((RenderExtraFooter != null && !IsRange) || (ShowToday && !IsRange && Picker != DatePickerType.Time))
 {
     <div class="@(PrefixCls)-footer">
-        <div class="@(PrefixCls)-footer-extra">
-            @RenderExtraFooter
-        </div>
-    </div>
-}
+        @if (RenderExtraFooter != null && !IsRange)
+        {
+            <div class="@(PrefixCls)-footer-extra">
+                @RenderExtraFooter
+            </div>
+        }
 
-@if (ShowToday && !IsRange && Picker != DatePickerType.Time)
-{
-    <div class="@(PrefixCls)-footer">
-        <a class="@(PrefixCls)-today-btn"
-           @onclick="e => { OnSelectDate(DateTime.Now); Close(); }">
-            @Locale.Lang.Today
-        </a>
+        @if (ShowToday && !IsRange && Picker != DatePickerType.Time)
+        {
+            <ul class="@(PrefixCls)-ranges">
+                <li class="@(PrefixCls)-now">
+                    <a class="@(PrefixCls)-now-btn"
+                       aria-disabled="false"
+                       @onclick="e => { OnSelectDate(DateTime.Now); Close(); }">
+                        @Locale.Lang.Today
+                    </a>
+                </li>
+            </ul>
+        }
     </div>
 }
 

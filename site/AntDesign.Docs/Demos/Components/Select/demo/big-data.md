@@ -7,8 +7,8 @@ title:
 
 ## zh-CN
 
-当需要展示大量数据时，可以设置 `EnableVirtualization=true` 启用虚拟化。此功能需要用 .NET 5 以上。
+Select 默认启用虚拟化，与 React 版本一致。在需要渲染全部选项的场景，可以设置 `EnableVirtualization=false`。此功能需要 .NET 5 或更高版本。
 
 ## en-US
 
-Improve performance with `EnableVirtualization=true` when you have many options, .NET 5 or higher framework is required.
+Select virtualization is enabled by default to match the React version. Set `EnableVirtualization=false` when every option must be rendered directly. This feature requires .NET 5 or higher.

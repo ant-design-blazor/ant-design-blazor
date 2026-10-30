@@ -15,3 +15,4 @@ export { qrCodeHelper } from './qrCodeHelper';
 export { borderBeamHelper } from './borderBeamHelper';
 export { menuOverflowHelper } from './menuOverflowHelper';
 export { selectHelper } from './selectHelper';
+export { collapseHelper } from './collapseHelper';

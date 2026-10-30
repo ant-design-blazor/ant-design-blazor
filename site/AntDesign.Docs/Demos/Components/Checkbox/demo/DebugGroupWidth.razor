@@ -1,0 +1,13 @@
+<div style="width:280px;border:1px solid #eee;padding:16px">
+    <CheckboxGroup TValue="string" Options="@options" Value="@selected" />
+</div>
+
+@code {
+    private static readonly CheckboxOption<string>[] options =
+    [
+        new() { Label = "Short", Value = "a" },
+        new() { Label = "Long label that may wrap in narrow container", Value = "b" },
+        new() { Label = "Medium", Value = "c" }
+    ];
+    private static readonly string[] selected = ["a"];
+}

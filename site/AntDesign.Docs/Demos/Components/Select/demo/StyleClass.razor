@@ -1,24 +1,14 @@
 @using AntDesign.Icons
 
 <Flex Direction="FlexDirection.Vertical" Gap="FlexGap.Medium">
-    <Select TItemValue="string" TItem="string" ClassNames="_classes" Styles="_styles" Placeholder="Object">
+    <Select TItemValue="string" TItem="string" DataSource="@_cities" ItemValue="city => city" ItemLabel="city => city"
+            EnableVirtualization ClassNames="_classes" Styles="_styles" Placeholder="Object">
         <PrefixIcon><MehOutlined /></PrefixIcon>
-        <SelectOptions>
-            @foreach (var city in _cities)
-            {
-                <SelectOption TItemValue="string" TItem="string" Value="@city" Label="@city" />
-            }
-        </SelectOptions>
     </Select>
-    <Select TItemValue="string" TItem="string" ClassNames="_classes" Styles="@GetStyles(InputVariant.Filled)"
+    <Select TItemValue="string" TItem="string" DataSource="@_cities" ItemValue="city => city" ItemLabel="city => city"
+            EnableVirtualization ClassNames="_classes" Styles="@GetStyles(InputVariant.Filled)"
             Variant="InputVariant.Filled" Placeholder="Function">
         <PrefixIcon><MehOutlined /></PrefixIcon>
-        <SelectOptions>
-            @foreach (var city in _cities)
-            {
-                <SelectOption TItemValue="string" TItem="string" Value="@city" Label="@city" />
-            }
-        </SelectOptions>
     </Select>
 </Flex>
 <style>@((MarkupString)_sheet.CssText)</style>
@@ -32,13 +22,13 @@
     private readonly IReadOnlyDictionary<string, string> _classes = new Dictionary<string, string> { ["root"] = _sheet["root"] };
     private readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
     {
-        ["prefix"] = "color:#1890ff", ["suffix"] = "color:#1890ff"
+        ["prefix"] = "color: rgb(24, 144, 255);", ["suffix"] = "color: rgb(24, 144, 255);"
     };
 
     private static IReadOnlyDictionary<string, string> GetStyles(InputVariant variant) => variant == InputVariant.Filled
         ? new Dictionary<string, string>
         {
-            ["prefix"] = "color:#722ed1", ["suffix"] = "color:#722ed1", ["popup.root"] = "border:1px solid #722ed1"
+            ["prefix"] = "color: rgb(114, 46, 209);", ["suffix"] = "color: rgb(114, 46, 209);", ["popup.root"] = "border:1px solid #722ed1"
         }
         : new Dictionary<string, string>();
 }

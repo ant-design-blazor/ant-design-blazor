@@ -79,9 +79,9 @@ namespace AntDesign
 
         internal override string GetOverlayAdditionalStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? string.Empty : $"--ant-tooltip-overlay-color: {GetColorText()}; --ant-tooltip-arrow-background-color: {Color};";
 
-        private string GetTooltipContainerStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? string.Empty : $"background-color: {Color}; color: {GetColorText()};";
+        private string GetTooltipContainerStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? null : $"background-color: {Color}; color: {GetColorText()};";
 
-        private string GetTooltipArrowContentStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? string.Empty : $"--ant-tooltip-arrow-background-color: {Color};";
+        private string GetTooltipArrowContentStyle() => string.IsNullOrWhiteSpace(Color) || IsPresetColor ? null : $"--ant-tooltip-arrow-background-color: {Color};";
 
         private string GetColorText()
         {

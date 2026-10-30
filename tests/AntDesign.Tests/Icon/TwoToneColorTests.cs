@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AntDesign.Icons;
 using Bunit;
@@ -13,13 +14,12 @@ public sealed class TwoToneColorTests : AntDesignTestBase
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
-    public async Task Missing_primary_keeps_the_same_default_in_both_icon_APIs_and_the_compatibility_service(string primary)
+    public async Task Unspecified_primary_preserves_the_original_svg_colors(string primary)
     {
-        var legacy = RenderComponent<AntDesign.Icon>(p => p.Add(x => x.Type, "check-circle").Add(x => x.TwoToneColor, primary));
-        var generated = RenderComponent<CheckCircleTwoTone>(p => p.Add(x => x.TwoToneColor, new[] { primary }));
-        Assert.Contains("#e6f4ff", legacy.Markup);
-        Assert.Contains("#1677ff", legacy.Markup);
-        Assert.Contains("#e6f4ff", generated.Markup);
+        var legacy = RenderComponent<AntDesign.Icon>(p => p.Add(x => x.Type, "check-circle").Add(x => x.Theme, IconThemeType.TwoTone).Add(x => x.TwoToneColor, primary));
+        var generated = RenderComponent<CheckCircleTwoTone>();
+        Assert.Equal(GetOriginalFills(), legacy.FindAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.Equal(GetOriginalFills(), generated.FindAll("path").Select(path => path.GetAttribute("fill")));
         Assert.Equal("#e6f4ff", await Services.GetRequiredService<IconService>().GetSecondaryColor(primary));
         Assert.Empty(JSInterop.Invocations);
     }
@@ -90,6 +90,33 @@ public sealed class TwoToneColorTests : AntDesignTestBase
         cut.SetParametersAndRender(p => p.Add(x => x.Theme, IconThemeType.Outline));
         cut.SetParametersAndRender(p => p.Add(x => x.Theme, IconThemeType.TwoTone));
         Assert.Contains("#fff0f6", cut.Markup);
+        cut.SetParametersAndRender(p => p.Add(x => x.TwoToneColor, (string)null));
+        Assert.Equal(GetOriginalFills(), cut.FindAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.Empty(JSInterop.Invocations);
+    }
+
+    [Fact]
+    public void Explicit_secondary_color_is_used_with_the_primary_color()
+    {
+        var cut = RenderComponent<AntDesign.Icon>(p => p
+            .Add(x => x.Type, "check-circle")
+            .Add(x => x.TwoToneColor, "#52c41a")
+            .Add(x => x.TwoToneSecondaryColor, "#123456"));
+
+        Assert.Contains("#52c41a", cut.FindAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.Contains("#123456", cut.FindAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.DoesNotContain("#f6ffed", cut.Markup);
+        Assert.Empty(JSInterop.Invocations);
+    }
+
+    [Fact]
+    public void Generated_icon_uses_an_explicit_primary_secondary_pair()
+    {
+        var cut = RenderComponent<CheckCircleTwoTone>(p => p.Add(x => x.TwoToneColor, new[] { "#123456", "#abcdef" }));
+
+        Assert.Contains("#123456", cut.FindAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.Contains("#abcdef", cut.FindAll("path").Select(path => path.GetAttribute("fill")));
+        Assert.DoesNotContain("#e6f4ff", cut.Markup);
         Assert.Empty(JSInterop.Invocations);
     }
 
@@ -98,8 +125,7 @@ public sealed class TwoToneColorTests : AntDesignTestBase
     {
         var colored = RenderComponent<AntDesign.Icon>(p => p.Add(x => x.Type, "check-circle").Add(x => x.TwoToneColor, "#52c41a"));
         var normal = RenderComponent<AntDesign.Icon>(p => p.Add(x => x.Type, "check-circle").Add(x => x.Theme, IconThemeType.TwoTone));
-        Assert.Contains("#1677ff", normal.Markup);
-        Assert.Contains("#e6f4ff", normal.Markup);
+        Assert.Equal(GetOriginalFills(), normal.FindAll("path").Select(path => path.GetAttribute("fill")));
         Assert.Contains("#52c41a", colored.Markup);
         Assert.Contains("#f6ffed", colored.Markup);
         Assert.Empty(JSInterop.Invocations);
@@ -115,4 +141,9 @@ public sealed class TwoToneColorTests : AntDesignTestBase
         Assert.Empty(cut.FindAll("[onload]"));
         Assert.Empty(JSInterop.Invocations);
     }
+
+    private static string[] GetOriginalFills()
+        => Regex.Matches(IconService.GetIconImg("check-circle", IconThemeType.TwoTone), "fill=\"([^\"]+)\"")
+            .Select(match => match.Groups[1].Value)
+            .ToArray();
 }

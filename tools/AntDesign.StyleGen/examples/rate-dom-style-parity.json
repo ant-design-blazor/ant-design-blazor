@@ -20,12 +20,12 @@
       "id": "rate-basic-demo",
       "component": "Rate",
       "react": {
-        "url": "http://localhost:8001/components/rate",
+        "url": "http://127.0.0.1:8000/components/rate?theme=light",
         "scopeSelector": "#rate-demo-basic .code-box-demo",
         "rootSelector": ".ant-rate"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/rate",
+        "url": "http://127.0.0.1:5000/en-US/components/rate?theme=light",
         "scopeSelector": "#components-rate-demo-basic .code-box-demo",
         "rootSelector": ".ant-rate"
       },
@@ -47,12 +47,12 @@
       "id": "rate-half-demo",
       "component": "Rate allowHalf",
       "react": {
-        "url": "http://localhost:8001/components/rate",
+        "url": "http://127.0.0.1:8000/components/rate?theme=light",
         "scopeSelector": "#rate-demo-half .code-box-demo",
         "rootSelector": ".ant-rate"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/rate",
+        "url": "http://127.0.0.1:5000/en-US/components/rate?theme=light",
         "scopeSelector": "#components-rate-demo-half .code-box-demo",
         "rootSelector": ".ant-rate"
       },

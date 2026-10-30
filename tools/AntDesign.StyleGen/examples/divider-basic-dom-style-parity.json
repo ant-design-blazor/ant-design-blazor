@@ -21,12 +21,12 @@
       "id": "divider-horizontal-demo",
       "component": "Divider",
       "react": {
-        "url": "http://127.0.0.1:8001/components/divider",
+        "url": "http://127.0.0.1:8000/components/divider?theme=light",
         "scopeSelector": "#divider-demo-horizontal .code-box-demo",
         "rootSelector": ".ant-divider"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/divider",
+        "url": "http://127.0.0.1:5000/en-US/components/divider?theme=light",
         "scopeSelector": "#components-divider-demo-Horizontal .code-box-demo",
         "rootSelector": ".ant-divider"
       },

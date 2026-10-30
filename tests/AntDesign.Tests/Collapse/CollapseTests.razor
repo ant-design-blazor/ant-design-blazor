@@ -44,6 +44,7 @@
             await icon.ClickAsync(new());
             Assert.Contains("ant-collapse-panel-inactive", cut.Find(".ant-collapse-panel").ClassList);
             Assert.Contains("ant-collapse-panel-hidden", cut.Find(".ant-collapse-panel").ClassList);
+            Assert.True(cut.Find(".ant-collapse-panel").HasAttribute("hidden"));
         }
         else
         {
@@ -59,8 +60,59 @@
         var cut = Render(@<AntDesign.Collapse Animation DefaultActiveKey="@(new[] { "1" })">
             <Panel Key="1" Header="Header">Content</Panel>
         </AntDesign.Collapse>);
-        Assert.Equal("ant-collapse-panel ant-collapse-panel-active", cut.Find(".ant-collapse-panel").ClassName);
+        Assert.Contains("ant-motion-collapse", cut.Find(".ant-collapse-panel").ClassList);
+        Assert.DoesNotContain("ant-motion-collapse-enter", cut.Find(".ant-collapse-panel").ClassList);
+        Assert.DoesNotContain("ant-motion-collapse-leave", cut.Find(".ant-collapse-panel").ClassList);
         Assert.Null(cut.Find(".ant-collapse-panel").GetAttribute("style"));
+    }
+
+    [Fact]
+    public async Task Client_active_key_sync_updates_panels_without_waiting_for_motion()
+    {
+        string[] changedKeys = null;
+        var cut = Render(@<AntDesign.Collapse Accordion Animation DefaultActiveKey="@(new[] { "1" })" OnChange="keys => changedKeys = keys">
+            <Panel Key="1" Header="One">First body</Panel>
+            <Panel Key="2" Header="Two">Second body</Panel>
+        </AntDesign.Collapse>);
+        var collapse = cut.FindComponent<AntDesign.Collapse>().Instance;
+
+        await cut.InvokeAsync(() => collapse.ApplyClientActiveKeys(new[] { "2" }));
+
+        Assert.Equal(new[] { "2" }, changedKeys);
+        Assert.Single(cut.FindAll(".ant-collapse-item-active"));
+        Assert.Contains("ant-collapse-item-active", cut.FindAll(".ant-collapse-item")[1].ClassList);
+        Assert.Contains("ant-collapse-panel-active", cut.FindAll(".ant-collapse-panel")[1].ClassList);
+        Assert.DoesNotContain("ant-collapse-panel-hidden", cut.FindAll(".ant-collapse-panel")[1].ClassList);
+        Assert.False(cut.FindAll(".ant-collapse-panel")[1].HasAttribute("hidden"));
+        Assert.Contains("inert", cut.FindAll(".ant-collapse-panel")[0].Attributes.Select(attribute => attribute.Name));
+
+        await cut.InvokeAsync(() => collapse.SetPanelClientHidden("1", true));
+        Assert.Contains("ant-collapse-panel-hidden", cut.FindAll(".ant-collapse-panel")[0].ClassList);
+        Assert.True(cut.FindAll(".ant-collapse-panel")[0].HasAttribute("hidden"));
+    }
+
+    [Fact]
+    public async Task Animated_panels_mount_closed_content_on_first_open_and_wait_for_client_motion_to_reveal_it()
+    {
+        var cut = Render(@<AntDesign.Collapse Animation>
+            <Panel Key="1" Header="One">First body</Panel>
+            <Panel Key="2" Header="Two">Second body</Panel>
+        </AntDesign.Collapse>);
+        var collapse = cut.FindComponent<AntDesign.Collapse>().Instance;
+
+        Assert.Empty(cut.FindAll(".ant-collapse-panel"));
+        await cut.InvokeAsync(() => collapse.ApplyClientActiveKeys(new[] { "2" }, deferInitialContent: true));
+
+        var panel = cut.FindAll(".ant-collapse-panel").Single();
+        Assert.Contains("ant-collapse-panel-hidden", panel.ClassList);
+        Assert.True(panel.HasAttribute("hidden"));
+        Assert.Contains("Second body", panel.TextContent);
+
+        await cut.InvokeAsync(() => collapse.SetPanelClientHidden("2", false));
+
+        panel = cut.FindAll(".ant-collapse-panel").Single();
+        Assert.DoesNotContain("ant-collapse-panel-hidden", panel.ClassList);
+        Assert.False(panel.HasAttribute("hidden"));
     }
 
     [Fact]

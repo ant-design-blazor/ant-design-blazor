@@ -118,6 +118,8 @@ export class splitterHelper {
     const initialSizes = containerSize
       ? autoPercentages(requestedSizes, minPercentages, maxPercentages).map((size) => size * containerSize)
       : panes.map((pane) => sizeOf(pane));
+    const initialSizeValues = initialSizes.map((size) => `${size}px`);
+    const initialRenderSizeValues = initialSizes.map((size) => `${Number(size.toFixed(3))}px`);
     const setAriaValues = () => {
       const containerSize = sizeOf(container);
       if (!containerSize)
@@ -144,13 +146,23 @@ export class splitterHelper {
     };
 
     panes.forEach((pane, index) => {
-      const size = `${Number(initialSizes[index].toFixed(3))}px`;
       pane.style.removeProperty(dimension);
-      pane.style.flexBasis = size;
+      pane.style.flexBasis = initialSizeValues[index];
       pane.style.flexGrow = "0";
     });
     setAriaValues();
-    await component.invokeMethodAsync("InitializeSizes", initialSizes.map((size) => `${Number(size.toFixed(3))}px`));
+    await component.invokeMethodAsync("InitializeSizes", initialRenderSizeValues);
+
+    // Wait for Blazor to apply its canonical three-decimal inline style, then
+    // restore the full ResizeObserver precision through CSSOM. Updating from
+    // the canonical value keeps outerHTML in sync with React while retaining
+    // the subpixel value Flexbox uses for layout.
+    await new Promise<void>(resolve => window.requestAnimationFrame(() => resolve()));
+    panes.forEach((pane, index) => {
+      pane.style.flexBasis = initialRenderSizeValues[index];
+      pane.style.flexBasis = initialSizeValues[index];
+      pane.style.flexGrow = "0";
+    });
 
     const onPointerDown = (event) => {
       const dragger = event.currentTarget;

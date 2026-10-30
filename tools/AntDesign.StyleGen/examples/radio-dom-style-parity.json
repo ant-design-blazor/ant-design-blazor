@@ -23,12 +23,12 @@
       "id": "radio-basic-demo",
       "component": "Radio",
       "react": {
-        "url": "http://localhost:8001/components/radio",
+        "url": "http://127.0.0.1:8000/components/radio?theme=light",
         "scopeSelector": "#radio-demo-basic .code-box-demo",
         "rootSelector": ".ant-radio-wrapper"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/radio",
+        "url": "http://127.0.0.1:5000/en-US/components/radio?theme=light",
         "scopeSelector": "#components-radio-demo-Basic .code-box-demo",
         "rootSelector": ".ant-radio-wrapper"
       },
@@ -49,12 +49,12 @@
       "id": "radio-button-groups-demo",
       "component": "Radio.Button",
       "react": {
-        "url": "http://localhost:8001/components/radio",
+        "url": "http://127.0.0.1:8000/components/radio?theme=light",
         "scopeSelector": "#radio-demo-radiobutton .code-box-demo",
         "rootSelector": ".ant-radio-group"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/radio",
+        "url": "http://127.0.0.1:5000/en-US/components/radio?theme=light",
         "scopeSelector": "#components-radio-demo-Style .code-box-demo",
         "rootSelector": ".ant-radio-group"
       },

@@ -1,0 +1,10 @@
+@using AntDesign.Theming
+
+<ConfigProvider ThemeConfig="@wideBorderTheme">
+    <Checkbox Checked="true" /> <Checkbox />
+</ConfigProvider>
+<Checkbox Checked="true" /> <Checkbox />
+
+@code {
+    private static readonly ThemeConfig wideBorderTheme = new() { Token = new ThemeToken { LineWidth = "6" } };
+}

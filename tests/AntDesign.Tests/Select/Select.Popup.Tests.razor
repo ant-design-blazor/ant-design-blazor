@@ -21,11 +21,13 @@
     {
         var classes = new Dictionary<string, string> { ["popup.list"] = "custom-list", ["popup.listItem"] = "custom-option" };
         var styles = new Dictionary<string, string> { ["popup.list"] = "outline:1px solid orange", ["popup.listItem"] = "color:purple" };
+        JSInterop.Setup<string>(JSInteropConstants.OverlayComponentHelper.PrepareOverlayWidthForShow, _ => true).SetResult("120");
         var cut = Render(@<Select TItemValue="string" TItem="string" ClassNames="classes" Styles="styles">
             <SelectOptions><SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" /></SelectOptions>
         </Select>);
+        Assert.Contains(JSInterop.Invocations, call => call.Identifier == JSInteropConstants.OverlayComponentHelper.BindImmediateOpen);
         await cut.InvokeAsync(() => cut.FindComponent<AntDesign.Internal.OverlayTrigger>().Instance.Show());
-        cut.WaitForAssertion(() => Assert.Contains("width: 120px", cut.Find(".ant-select-dropdown").GetAttribute("style")));
+        cut.WaitForAssertion(() => Assert.Contains("width:120px", cut.Find(".ant-select-dropdown").GetAttribute("style")));
         Assert.Contains("display: block", cut.Find(".ant-select-dropdown").GetAttribute("style"));
         Assert.DoesNotContain("z-index:", cut.Find(".ant-select-dropdown").GetAttribute("style"));
         Assert.NotNull(cut.Find(".ant-select-dropdown-list.custom-list > .ant-select-dropdown-list-holder > div > .ant-select-dropdown-list-holder-inner"));
@@ -38,7 +40,8 @@
     [InlineData(SelectMode.Multiple)]
     public async Task Input_controls_the_real_list_and_hover_updates_active_descendant(SelectMode mode)
     {
-        var cut = Render(@<Select Id="city" TItemValue="string" TItem="string" Mode="mode" Value='@("lucy")'>
+        var values = mode == SelectMode.Multiple ? new[] { "lucy" } : Array.Empty<string>();
+        var cut = Render(@<Select Id="city" TItemValue="string" TItem="string" Mode="mode" Value='@("lucy")' Values="values" EnableVirtualization="false">
             <SelectOptions>
                 <SelectOption TItemValue="string" TItem="string" Value='@("jack")' Label="Jack" />
                 <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
@@ -52,8 +55,14 @@
         Assert.Equal(list.Id, cut.Find("input").GetAttribute("aria-controls"));
         var options = cut.FindAll(".ant-select-item-option");
         Assert.Equal("false", options[0].GetAttribute("aria-selected"));
-        Assert.Equal(mode == SelectMode.Default ? "true" : "false", options[1].GetAttribute("aria-selected"));
+        Assert.Equal("true", options[1].GetAttribute("aria-selected"));
         Assert.Equal("true", options[2].GetAttribute("aria-disabled"));
+        if (mode == SelectMode.Multiple)
+        {
+            var checkIcon = options[1].QuerySelector(".anticon-check");
+            Assert.Equal("check", checkIcon.GetAttribute("aria-label"));
+            Assert.Equal("64 64 896 896", checkIcon.QuerySelector("svg").GetAttribute("viewBox"));
+        }
         await options[0].TriggerEventAsync("onmouseenter", EventArgs.Empty);
         cut.WaitForAssertion(() => Assert.Equal(options[0].Id, cut.Find("input").GetAttribute("aria-activedescendant")));
         await options[2].TriggerEventAsync("onmouseenter", EventArgs.Empty);
@@ -69,6 +78,28 @@
         cut.WaitForAssertion(() => Assert.Equal("false", cut.Find("input").GetAttribute("aria-expanded")));
         Assert.Null(cut.Find("input").GetAttribute("aria-controls"));
         Assert.Null(cut.Find("input").GetAttribute("aria-activedescendant"));
+    }
+
+    [Fact]
+    public async Task Default_small_option_list_uses_virtual_accessibility_proxy()
+    {
+        var cut = Render(@<Select Id="small-list" TItemValue="string" TItem="string">
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("jack")' Label="Jack" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
+                <SelectOption TItemValue="string" TItem="string" Value='@("tom")' Label="Tom" />
+            </SelectOptions>
+        </Select>);
+
+        await cut.InvokeAsync(() => cut.FindComponent<AntDesign.Internal.OverlayTrigger>().Instance.Show());
+
+        var list = Assert.Single(cut.FindAll("[role=listbox]"));
+        Assert.Equal("small-list_list", list.Id);
+        Assert.Contains("height: 0px", list.GetAttribute("style"));
+        Assert.Equal("small-list_list", cut.Find("input").GetAttribute("aria-controls"));
+        Assert.Equal(list.Children[0].Id, cut.Find("input").GetAttribute("aria-activedescendant"));
+        Assert.Equal(3, cut.FindAll(".ant-select-dropdown-list-holder-inner > .ant-select-item-option").Count);
+        Assert.DoesNotContain(cut.FindAll(".ant-select-dropdown-list-holder-inner > .ant-select-item-option"), option => option.HasAttribute("role"));
     }
 
     [Fact]
@@ -105,7 +136,7 @@
     public async Task Data_source_popup_has_stable_unique_option_ids_and_disabled_click_does_not_select()
     {
         var options = new[] { new PopupOption("one", "One", false), new PopupOption("two", "Two", true) };
-        var cut = Render<Select<string, PopupOption>>(@<Select TItemValue="string" TItem="PopupOption" DataSource="options" LabelName="Label" ValueName="Value" DisabledName="Disabled" />);
+        var cut = Render<Select<string, PopupOption>>(@<Select TItemValue="string" TItem="PopupOption" DataSource="options" LabelName="Label" ValueName="Value" DisabledName="Disabled" EnableVirtualization="false" />);
         await cut.InvokeAsync(() => cut.FindComponent<AntDesign.Internal.OverlayTrigger>().Instance.Show());
         var ids = cut.FindAll("[role=option]").Select(e => e.Id).ToArray();
         Assert.Equal(2, ids.Distinct().Count());
@@ -130,10 +161,12 @@
             System.Globalization.CultureInfo.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("fr-FR");
             JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
                 .SetResult(new DomRect { Width = decimal.Parse(width, System.Globalization.CultureInfo.InvariantCulture) });
+            JSInterop.Setup<string>(JSInteropConstants.OverlayComponentHelper.PrepareOverlayWidthForShow, _ => true).SetResult(width);
             var cut = Render(@<Select TItemValue="string" TItem="string" DataSource='@(new[] { "One" })' />);
             await cut.InvokeAsync(() => cut.FindComponent<AntDesign.Internal.OverlayTrigger>().Instance.Show());
-            cut.WaitForAssertion(() => Assert.Contains($"min-width: {width}px;width: {width}px;",
-                cut.Find(".ant-select-dropdown").GetAttribute("style")));
+            var popupStyle = cut.Find(".ant-select-dropdown").GetAttribute("style");
+            Assert.Contains($"min-width:{width}px", popupStyle);
+            Assert.Contains($"width:{width}px", popupStyle);
         }
         finally
         {
@@ -155,7 +188,7 @@
         var options = new[] { new PopupOption("enabled", "Enabled", false), new PopupOption("locked", "Locked", true) };
         var values = new[] { "enabled", "locked" };
         var classes = new Dictionary<string, string> { ["item"] = "custom-tag" };
-        var cut = Render<Select<string, PopupOption>>(@<Select TItemValue="string" TItem="PopupOption" Mode="SelectMode.Multiple"
+        var cut = Render<Select<string, PopupOption>>(@<Select TItemValue="string" TItem="PopupOption" Mode="SelectMode.Multiple" AllowClear
             DataSource="options" Values="values" LabelName="Label" ValueName="Value" DisabledName="Disabled"
             MaxTagCount="maxTagCount" Disabled="disabled" ClassNames="classes" />);
         var locked = cut.Find(".ant-select-selection-item[title=Locked]");
@@ -179,7 +212,7 @@
         else
         {
             await cut.InvokeAsync(() => cut.FindComponent<AntDesign.Internal.OverlayTrigger>().Instance.Show());
-            Assert.Equal(".ant-select-selection-item-remove", cut.FindComponent<AntDesign.Internal.OverlayTrigger>().Instance.ClickIgnoreSelector);
+            Assert.Equal(".ant-select-selection-item-remove, .ant-select-clear", cut.FindComponent<AntDesign.Internal.OverlayTrigger>().Instance.ClickIgnoreSelector);
             await enabled.QuerySelector(".ant-select-selection-item-remove").ClickAsync(new MouseEventArgs { Button = 0 });
             cut.WaitForAssertion(() => Assert.Equal(new[] { "locked" }, cut.Instance.GetOrderedSelectedItems().Select(item => item.Value)));
             Assert.Equal("true", cut.Find("input").GetAttribute("aria-expanded"));
@@ -214,12 +247,22 @@
             DataSource="source" Value='@("v20")' LabelName="Label" ValueName="Value" DisabledName="Disabled" EnableVirtualization />);
         await cut.InvokeAsync(() => cut.FindComponent<AntDesign.Internal.OverlayTrigger>().Instance.Show());
         cut.WaitForAssertion(() => Assert.Equal("true", cut.Find("input").GetAttribute("aria-expanded")));
+        var holder = cut.Find(".ant-select-dropdown-list-holder");
+        var visibleOptions = cut.FindAll(".ant-select-dropdown-list-holder-inner > .ant-select-item-option");
+        Assert.Equal(10, visibleOptions.Count);
+        Assert.Equal("Row 0", visibleOptions[0].GetAttribute("title"));
+        await cut.Instance.UpdateVirtualWindow(19, 29);
+        cut.WaitForAssertion(() => Assert.Equal("Row 19", cut.Find(".ant-select-dropdown-list-holder-inner > .ant-select-item-option").GetAttribute("title")));
+        visibleOptions = cut.FindAll(".ant-select-dropdown-list-holder-inner > .ant-select-item-option");
+        Assert.Equal(10, visibleOptions.Count);
+
         var list = Assert.Single(cut.FindAll("[role=listbox]"));
         Assert.Equal("virtual_list", list.Id);
         Assert.Contains("height: 0px", list.GetAttribute("style"));
         Assert.Equal(new[] { "v19", "v20", "v21" }, list.Children.Select(item => item.TextContent).ToArray());
         Assert.Equal("Row 20", list.Children[1].GetAttribute("aria-label"));
         Assert.Equal("true", list.Children[1].GetAttribute("aria-selected"));
+        Assert.All(list.Children, item => Assert.Null(item.GetAttribute("aria-disabled")));
         Assert.Equal(list.Children[1].Id, cut.Find("input").GetAttribute("aria-activedescendant"));
         Assert.Null(cut.Find(".ant-select-dropdown-list-holder-inner").GetAttribute("role"));
 
@@ -243,6 +286,63 @@
         cut.SetParametersAndRender(parameters => parameters.Add(select => select.EnableVirtualization, true));
         cut.WaitForAssertion(() => Assert.Contains("height: 0px", Assert.Single(cut.FindAll("[role=listbox]")).GetAttribute("style")));
         Assert.Equal("v20", cut.Instance.Value);
+    }
+
+    [Fact]
+    public async Task Virtual_child_options_keep_registered_models_when_the_window_recycles_components()
+    {
+        var options = Enumerable.Range(0, 12).Select(index => $"option-{index}").ToArray();
+        var values = new[] { "option-0", "option-1" };
+        var cut = Render<Select<string, string>>(@<Select Id="child-virtual" TItemValue="string" TItem="string"
+            Mode="SelectMode.Multiple" Values="values">
+            <SelectOptions>
+                @foreach (var option in options)
+                {
+                    <SelectOption TItemValue="string" TItem="string" Value="@option" Label="@option" />
+                }
+            </SelectOptions>
+        </Select>);
+
+        await cut.InvokeAsync(() => cut.FindComponent<AntDesign.Internal.OverlayTrigger>().Instance.Show());
+        cut.WaitForAssertion(() => Assert.Equal(12, cut.Instance.SelectOptionItems.Count));
+        Assert.True(cut.Instance.UsesVirtualWindow);
+        Assert.Equal(10, cut.FindAll(".ant-select-dropdown-list-holder-inner > .ant-select-item-option").Count);
+
+        await cut.Instance.UpdateVirtualWindow(10, 12);
+        cut.WaitForAssertion(() => Assert.Equal("option-10", cut.Find(".ant-select-dropdown-list-holder-inner > .ant-select-item-option").GetAttribute("title")));
+        Assert.Equal(12, cut.Instance.SelectOptionItems.Count);
+        await cut.Find(".ant-select-dropdown-list-holder-inner > .ant-select-item-option").ClickAsync(new MouseEventArgs());
+        Assert.Contains("option-10", cut.Instance.Values);
+        Assert.Equal(12, cut.Instance.SelectOptionItems.Count);
+    }
+
+    [Fact]
+    public async Task Virtual_multiple_proxy_reports_selection_immediately_after_click()
+    {
+        var options = Enumerable.Range(0, 12).Select(index => $"option-{index}").ToArray();
+        var values = Array.Empty<string>();
+        var cut = Render<Select<string, string>>(@<Select Id="multiple-virtual" TItemValue="string" TItem="string"
+            Mode="SelectMode.Multiple" Values="values" EnableVirtualization>
+            <SelectOptions>
+                @foreach (var option in options)
+                {
+                    <SelectOption TItemValue="string" TItem="string" Value="@option" Label="@option" />
+                }
+            </SelectOptions>
+        </Select>);
+
+        await cut.InvokeAsync(() => cut.FindComponent<AntDesign.Internal.OverlayTrigger>().Instance.Show());
+        cut.WaitForAssertion(() => Assert.Equal(12, cut.Instance.SelectOptionItems.Count));
+        await cut.InvokeAsync(() => cut.Instance.ActiveOption = cut.Instance.SelectOptionItems[2]);
+        await cut.Find(".ant-select-dropdown-list-holder-inner > .ant-select-item-option[title='option-2']")
+            .ClickAsync(new MouseEventArgs());
+
+        cut.WaitForAssertion(() =>
+        {
+            Assert.Contains("option-2", cut.Instance.Values);
+            var proxyOption = cut.FindAll("[role=listbox] [role=option]").Single(item => item.TextContent == "option-2");
+            Assert.Equal("true", proxyOption.GetAttribute("aria-selected"));
+        });
     }
 
     [Fact]

@@ -3,23 +3,16 @@
         Mode="SelectMode.Tags"
         EnableSearch
         Tokenize="@TokenizeInput"
-        Placeholder="Type values separated by ; (for example: alpha;beta;)"
-        Style="width: 360px;">
-    <SelectOptions>
-        <SelectOption TItemValue="string" TItem="string" Value='@("alpha")' Label="alpha" />
-        <SelectOption TItemValue="string" TItem="string" Value='@("beta")' Label="beta" />
-        <SelectOption TItemValue="string" TItem="string" Value='@("gamma")' Label="gamma" />
-    </SelectOptions>
+        Placeholder='Try paste: "San Francisco, CA", New York'
+        Style="width: 100%;">
 </Select>
 
 @code {
     private static IEnumerable<string> TokenizeInput(string input)
     {
-        if (!input.EndsWith(';'))
-        {
-            return [];
-        }
-
-        return input.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        return System.Text.RegularExpressions.Regex.Matches(input ?? string.Empty, @"""([^""]*)""|([^,\r\n]+)")
+            .Select(match => (match.Groups[1].Success ? match.Groups[1].Value : match.Groups[2].Value).Trim())
+            .Where(token => token.Length > 0)
+            .ToArray();
     }
 }

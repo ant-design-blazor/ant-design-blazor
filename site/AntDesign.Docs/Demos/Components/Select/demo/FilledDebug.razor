@@ -1,0 +1,18 @@
+<Flex Direction="FlexDirection.Vertical" Gap="@("12px")">
+    <Flex Gap="@("8px")">
+        <Select TItemValue="string" TItem="string" Value="@("lucy")" Variant="InputVariant.Filled" Disabled DataSource="_options" Style="flex:1 1 50%;min-width:0" />
+        <Select TItemValue="string" TItem="string" Value="@("lucy")" Variant="InputVariant.Filled" Disabled Mode="SelectMode.Multiple" Placeholder="Outlined" DataSource="_options" Style="flex:1 1 50%;min-width:0" />
+    </Flex>
+    <Flex Gap="@("8px")">
+        <Select TItemValue="string" TItem="string" Value="@("lucy")" Variant="InputVariant.Filled" Status="error" DataSource="_options" Style="flex:1 1 50%;min-width:0" />
+        <Select TItemValue="string" TItem="string" Value="@("lucy")" Variant="InputVariant.Filled" Status="error" Mode="SelectMode.Multiple" Placeholder="Outlined" DataSource="_options" Style="flex:1 1 50%;min-width:0" />
+    </Flex>
+    <Flex Gap="@("8px")">
+        <Select TItemValue="string" TItem="string" Value="@("lucy")" Variant="InputVariant.Filled" Disabled Status="error" DataSource="_options" Style="flex:1 1 50%;min-width:0" />
+        <Select TItemValue="string" TItem="string" Value="@("lucy")" Variant="InputVariant.Filled" Disabled Status="error" Mode="SelectMode.Multiple" Placeholder="Outlined" DataSource="_options" Style="flex:1 1 50%;min-width:0" />
+    </Flex>
+</Flex>
+
+@code {
+    private static readonly string[] _options = ["Jack", "Lucy", "Yiminghe"];
+}

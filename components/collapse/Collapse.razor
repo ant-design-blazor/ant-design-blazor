@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed="@true">
-    <div class="@SemanticClass("root", ClassMapper.Class)" style="@GetComponentStyle("Collapse", SemanticStyle("root", Style))" id="@Id" @ref="Ref" role="@(Accordion ? "tablist" : null)">
+    <div class="@SemanticClass("root", ClassMapper.Class)" style="@GetComponentStyle("Collapse", SemanticStyle("root", Style))" id="@Id" @ref="Ref" role="@(Accordion ? "tablist" : null)" data-collapse-root="@(Animation ? "true" : null)" data-collapse-accordion="@(Animation ? (Accordion ? "true" : "false") : null)" data-collapse-animation="@(Animation ? "true" : null)" data-collapse-active-keys="@(Animation ? ClientActiveKeysJson : null)">
         @ChildContent
     </div>
 </CascadingValue>

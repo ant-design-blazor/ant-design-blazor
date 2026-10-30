@@ -1,3 +1,17 @@
+// Shared by typed token properties and documentation metadata. Keep the React
+// source type separately; docs must not present it as a C# property type.
+export function csharpTokenType(type) {
+  const source = String(type ?? 'unknown').replace(/\s+/g, ' ').trim();
+  const members = source.includes('|') ? source.split('|').map(item => item.trim()) : [source];
+  const mapped = [...new Set(members.map(member => {
+    if (/^(string|CSSProperties\[|CSSObject\[|React\.CSSProperties)/.test(member)) return member === 'string' ? 'string' : 'OneOf<string, double>';
+    if (/^(number|CSSNumericValue)/.test(member)) return 'double';
+    if (member === 'boolean' || /^(true|false)$/.test(member)) return 'bool';
+    return 'string';
+  }))];
+  return mapped.length === 1 ? mapped[0] : `OneOf<${mapped.join(', ')}>`;
+}
+
 export function extractComponentTokenDefinitions(source) {
   const interfaces = new Map();
   for (const match of source.matchAll(/interface\s+([A-Za-z_$][\w$]*)(?:\s+extends\s+([^\{]+))?\s*\{([\s\S]*?)\}/g)) {

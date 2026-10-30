@@ -110,14 +110,12 @@ namespace AntDesign.Select.Internal
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (string.IsNullOrEmpty(_inputString))
-            {
-                // Blazor synchronizes an empty input value as a DOM property and
-                // omits the empty HTML attribute. React serializes value="";
-                // keep the reflected attribute in sync, including after clearing.
-                await Js.InvokeVoidAsync(JSInteropConstants.SetDomAttribute, ParentSelect._inputRef,
-                    new Dictionary<string, string> { ["value"] = string.Empty });
-            }
+            // Keep the reflected HTML attribute in sync with the live value.
+            // React serializes the current search text (and the empty value) in
+            // the input markup; updating only the DOM property leaves outerHTML
+            // stale and prevents reliable DOM parity inspection.
+            await Js.InvokeVoidAsync(JSInteropConstants.SetDomAttribute, ParentSelect._inputRef,
+                new Dictionary<string, string> { ["value"] = _inputString ?? string.Empty });
 
             if (firstRender)
             {

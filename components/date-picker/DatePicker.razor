@@ -10,16 +10,19 @@
                     BoundaryAdjustMode="@BoundaryAdjustMode"
                     Disabled="IsDisabled(0)"
                     PopupContainerSelector="@PopupContainerSelector"
+                    PopupWidthMode="content"
                     OnVisibleChange="OverlayVisibleChange"
                     OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
                     OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
                     Placement="Placement"
                     OverlayClassName="@SemanticPopupClass("popup.root", "ant-picker-css-var")"
+                    OverlayDisplayStyle="block"
+                    UseCssZIndex
                     Trigger="new[] { Trigger.Click }">
         <Overlay>
-            <div class="@SemanticPopupClass("popup.container", $"{PrefixCls}-panel-container {(Picker == DatePickerType.Time ? $"{PrefixCls}-time-panel-container" : $"{PrefixCls}-date-panel-container")}")" style="@SemanticPopupStyle("popup.container")" @onclick="@PickerClicked">
+            <div class="@SemanticPopupClass("popup.container", $"{PrefixCls}-panel-container {(Picker == DatePickerType.Time ? $"{PrefixCls}-time-panel-container" : $"{PrefixCls}-date-panel-container")}")" style="@SemanticPopupStyle("popup.container")" tabindex="-1" @onclick="@PickerClicked">
                 <div class="@(PrefixCls)-panel-layout">
-                    <div class="@_panelClassMapper.Class">
+                    <div>
                         <DatePickerPanelChooser TValue="TValue" DatePicker="@this" OnSelect="async (date, index) => await OnSelect(date, index)" />
                     </div>
                         @if (NeedConfirm && !HasTimeInput)
@@ -52,6 +55,7 @@
                                  Disabled="IsDisabled(0)"
                                  Value="@GetInputValue(0)"
                                  Placeholder="@_placeholders[0]"
+                                 AriaInvalid="@IsInvalid"
                                  ReadOnly="@InputReadOnly"
                                  AutoFocus="@AutoFocus"
                                  OnClick="async e => { await OnInputClick(); }"

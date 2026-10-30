@@ -1,12 +1,13 @@
 ---
-order: 6
+order: 2
 title:
-  zh-CN: 文本
-  en-US: Text
+  zh-CN: 文本组件
+  en-US: Text and Link Component
 ---
 
 ## zh-CN
-展示文本类型、装饰状态以及链接。
+内置不同样式的文本。
+
 
 ## en-US
-Show text types, decorations, and links.
+Provides multiple types of text and link.

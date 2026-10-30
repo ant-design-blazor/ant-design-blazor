@@ -1,47 +1,46 @@
-<Select TItem="Province"
-        TItemValue="int?"
-        DataSource="@_provinces"
-        @bind-Value="@_selectedProvince"
-        ValueName="@nameof(Province.Id)"
-        LabelName="@nameof(Province.Name)"
-        Style="width: 120px"
-        Placeholder="Select a province"
-        OnSelectedItemChanged="OnSelectedItemChangedHandler">
-</Select>
+<Space Wrap>
+    <SpaceItem>
+        <Select TItem="Province"
+                TItemValue="string"
+                DataSource="@_provinces"
+                @bind-Value="@_selectedProvince"
+                ValueName="@nameof(Province.Name)"
+                LabelName="@nameof(Province.Name)"
+                Style="width: 120px"
+                OnSelectedItemChanged="OnSelectedItemChangedHandler">
+        </Select>
+    </SpaceItem>
 
-<Select DataSource="@_cities"
-        @bind-Value="@_selectedCity"
-        ValueName="@nameof(City.Id)"
-        LabelName="@nameof(City.Name)"
-        Style="width: 120px"
-        Placeholder="Select a city">
-</Select>
-<br /><br />
-<p>
-    Selected Province: @_selectedProvince <br/>
-    Selected City: @_selectedCity
-</p>
+    <SpaceItem>
+        <Select TItem="City"
+                TItemValue="string"
+                DataSource="@_cities"
+                @bind-Value="@_selectedCity"
+                ValueName="@nameof(City.Name)"
+                LabelName="@nameof(City.Name)"
+                Style="width: 120px">
+        </Select>
+    </SpaceItem>
+</Space>
 
 @code
 {
     class Province
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public List<City> Cities { get; set; } = new List<City>();
     }
 
     class City
     {
-        public int Id { get; set; }
         public string Name { get; set; }
     }
 
     List<Province> _provinces;
     List<City> _cities = new List<City>();
 
-    int? _selectedProvince;
-    int? _selectedCity;
+    string _selectedProvince;
+    string _selectedCity;
 
     protected override void OnInitialized()
     {
@@ -49,48 +48,35 @@
         {
             new Province()
             {
-                Id = 1,
                 Name = "Zhejiang",
                 Cities = new List<City>()
                 {
-                    new City { Id = 100, Name = "Hangzhou" },
-                    new City { Id = 101, Name = "Ningbo" },
-                    new City { Id = 102, Name = "Wenzhou" }
+                    new City { Name = "Hangzhou" },
+                    new City { Name = "Ningbo" },
+                    new City { Name = "Wenzhou" }
                 }
             },
             new Province()
             {
-                Id = 2,
                 Name = "Jiangsu",
                 Cities = new List<City>()
                 {
-                    new City { Id = 200, Name = "Nanjing" },
-                    new City { Id = 201, Name = "Suzhou" },
-                    new City { Id = 202, Name = "Zhenjiang" }
+                    new City { Name = "Nanjing" },
+                    new City { Name = "Suzhou" },
+                    new City { Name = "Zhenjiang" }
                 }
             },
-            new Province()
-            {
-                Id = 3,
-                Name = "Beijing"
-            },
-            new Province()
-            {
-                Id = 4,
-                Name = "Shanghai",
-                Cities = null
-            }
         };
-        _selectedProvince = 1;
-        _selectedCity = 100;
+        _selectedProvince = "Zhejiang";
+        _selectedCity = "Hangzhou";
     }
 
     private void OnSelectedItemChangedHandler(Province value)
     {
         _cities = value?.Cities;
-        if (_cities?.Any(x => x.Id == _selectedCity) != true)
+        if (_cities?.Any(x => x.Name == _selectedCity) != true)
         {
-            _selectedCity = _cities?.FirstOrDefault()?.Id;
+            _selectedCity = _cities?.FirstOrDefault()?.Name;
         }
     }
 }

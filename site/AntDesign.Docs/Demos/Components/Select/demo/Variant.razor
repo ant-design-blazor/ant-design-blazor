@@ -1,26 +1,34 @@
-<Space Wrap>
-    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Variant="InputVariant.Outlined" Style="width: 180px;">
-        <SelectOptions>
-            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("jack")' Label="Jack" />
-        </SelectOptions>
-    </Select>
-    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Variant="InputVariant.Filled" Style="width: 180px;">
-        <SelectOptions>
-            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("jack")' Label="Jack" />
-        </SelectOptions>
-    </Select>
-    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Variant="InputVariant.Borderless" Style="width: 180px;">
-        <SelectOptions>
-            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("jack")' Label="Jack" />
-        </SelectOptions>
-    </Select>
-    <Select TItemValue="string" TItem="string" DefaultValue='@("lucy")' Variant="InputVariant.Underlined" Style="width: 180px;">
-        <SelectOptions>
-            <SelectOption TItemValue="string" TItem="string" Value='@("lucy")' Label="Lucy" />
-            <SelectOption TItemValue="string" TItem="string" Value='@("jack")' Label="Jack" />
-        </SelectOptions>
-    </Select>
-</Space>
+<Flex Vertical Gap='@("12px")'>
+    @foreach (var variant in _variants)
+    {
+        <Flex Gap='@("8px")'>
+            <Select TItemValue="string" TItem="OptionItem"
+                    DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label"
+                    Placeholder="@variant.Placeholder" Variant="@variant.Variant" Style="flex: 1;" />
+            <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple"
+                    DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label"
+                    DefaultValues="@_selectedValues" Placeholder="@variant.Placeholder"
+                    Variant="@variant.Variant" Style="flex: 1;" />
+        </Flex>
+    }
+</Flex>
+
+@code {
+    private sealed record OptionItem(string Value, string Label);
+    private sealed record VariantRow(string Placeholder, InputVariant Variant);
+
+    private readonly OptionItem[] _options =
+    [
+        new("jack", "Jack"),
+        new("lucy", "Lucy"),
+        new("Yiminghe", "yiminghe")
+    ];
+    private readonly string[] _selectedValues = ["lucy"];
+    private readonly VariantRow[] _variants =
+    [
+        new("Outlined", InputVariant.Outlined),
+        new("Filled", InputVariant.Filled),
+        new("Borderless", InputVariant.Borderless),
+        new("Underlined", InputVariant.Underlined)
+    ];
+}

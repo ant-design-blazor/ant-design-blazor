@@ -21,12 +21,12 @@
       "id": "flex-basic-demo",
       "component": "Flex",
       "react": {
-        "url": "http://127.0.0.1:8001/components/flex",
+        "url": "http://127.0.0.1:8000/components/flex?theme=light",
         "scopeSelector": "#flex-demo-basic .code-box-demo",
         "rootSelector": ".ant-flex-vertical > .ant-flex"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/flex",
+        "url": "http://127.0.0.1:5000/en-US/components/flex?theme=light",
         "scopeSelector": "#components-flex-demo-basic .code-box-demo",
         "rootSelector": ".ant-flex-vertical > .ant-flex"
       },

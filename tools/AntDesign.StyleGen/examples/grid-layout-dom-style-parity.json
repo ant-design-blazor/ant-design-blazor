@@ -18,12 +18,12 @@
       "id": "grid-flex-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid",
         "scopeSelector": "#grid-demo-flex .code-box-demo",
         "rootSelector": ".ant-row"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
         "scopeSelector": "#components-grid-demo-flex .code-box-demo",
         "rootSelector": ".ant-row"
       },
@@ -38,12 +38,12 @@
       "id": "grid-flex-align-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid",
         "scopeSelector": "#grid-demo-flex-align .code-box-demo",
         "rootSelector": ".ant-row"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
         "scopeSelector": "#components-grid-demo-flex-align .code-box-demo",
         "rootSelector": ".ant-row"
       },
@@ -59,12 +59,12 @@
       "id": "grid-flex-order-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid",
         "scopeSelector": "#grid-demo-flex-order .code-box-demo",
         "rootSelector": ".ant-row"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
         "scopeSelector": "#components-grid-demo-flex-order .code-box-demo",
         "rootSelector": ".ant-row"
       },
@@ -79,12 +79,12 @@
       "id": "grid-offset-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid",
         "scopeSelector": "#grid-demo-offset .code-box-demo",
         "rootSelector": ".ant-row"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
         "scopeSelector": "#components-grid-demo-offset .code-box-demo",
         "rootSelector": ".ant-row"
       },
@@ -99,12 +99,12 @@
       "id": "grid-responsive-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid",
         "scopeSelector": "#grid-demo-responsive .code-box-demo",
         "rootSelector": ".ant-row"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
         "scopeSelector": "#components-grid-demo-responsive .code-box-demo",
         "rootSelector": ".ant-row"
       },
@@ -119,12 +119,12 @@
       "id": "grid-flex-stretch-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid",
         "scopeSelector": "#grid-demo-flex-stretch .code-box-demo",
         "rootSelector": ".ant-row"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
         "scopeSelector": "#components-grid-demo-flex-stretch .code-box-demo",
         "rootSelector": ".ant-row"
       },
@@ -139,12 +139,12 @@
       "id": "grid-sort-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid",
         "scopeSelector": "#grid-demo-sort .code-box-demo",
         "rootSelector": ".ant-row"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
         "scopeSelector": "#components-grid-demo-sort .code-box-demo",
         "rootSelector": ".ant-row"
       },
@@ -159,12 +159,12 @@
       "id": "grid-responsive-more-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid",
         "scopeSelector": "#grid-demo-responsive-more .code-box-demo",
         "rootSelector": ".ant-row"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
         "scopeSelector": "#components-grid-demo-responsive-more .code-box-demo",
         "rootSelector": ".ant-row"
       },
@@ -179,12 +179,12 @@
       "id": "grid-responsive-flex-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid",
         "scopeSelector": "#grid-demo-responsive-flex .code-box-demo",
         "rootSelector": ".ant-row"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
         "scopeSelector": "#components-grid-demo-responsive-flex .code-box-demo",
         "rootSelector": ".ant-row"
       },
@@ -199,12 +199,12 @@
       "id": "grid-use-breakpoint-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid",
         "scopeSelector": "#grid-demo-usebreakpoint .code-box-demo",
         "rootSelector": ".ant-tag"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
         "scopeSelector": "#components-grid-demo-useBreakpoint .code-box-demo",
         "rootSelector": ".ant-tag"
       },
@@ -218,12 +218,12 @@
       "id": "grid-playground-demo",
       "component": "Grid",
       "react": {
-        "url": "http://127.0.0.1:8001/components/grid",
+        "url": "http://127.0.0.1:8000/components/grid",
         "scopeSelector": "#grid-demo-playground .code-box-demo",
         "rootSelector": ".ant-row"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8188/en-US/components/grid",
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
         "scopeSelector": "#components-grid-demo-playground .code-box-demo",
         "rootSelector": ".ant-row"
       },

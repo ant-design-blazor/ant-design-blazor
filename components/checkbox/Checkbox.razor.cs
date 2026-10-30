@@ -116,11 +116,35 @@ namespace AntDesign
         [Parameter]
         public bool HideEmptyLabel { get; set; }
 
+        /// <summary>Semantic class names keyed by root, icon, and label.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> ClassNames { get; set; }
+
+        /// <summary>Semantic inline styles keyed by root, icon, and label.</summary>
+        [Parameter]
+        public IReadOnlyDictionary<string, string> Styles { get; set; }
+
         private string _prefixCls = "ant-checkbox";
+
+        internal string SemanticClass(string slot, string baseClass)
+        {
+            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+                return baseClass;
+            return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
+        }
+
+        internal string SemanticStyle(string slot, string baseStyle = null)
+        {
+            var customStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            if (string.IsNullOrWhiteSpace(baseStyle)) return customStyle;
+            if (string.IsNullOrWhiteSpace(customStyle)) return baseStyle;
+            return $"{baseStyle.Trim().TrimEnd(';')}; {customStyle}";
+        }
 
         protected void SetClass()
         {
             ClassMapperLabel
+                .Add($"{_prefixCls}-css-var")
                 .Add($"{_prefixCls}-wrapper")
                 .Add(WrapperClass)
                 .If($"{_prefixCls}-wrapper-checked", () => Checked)

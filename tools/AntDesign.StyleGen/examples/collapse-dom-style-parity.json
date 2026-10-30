@@ -8,8 +8,8 @@
       "normalization": {
         "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
         "removeUnreferencedRuntimeIds": true,
-        "removeAttributes": ["_bl_*"],
-        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeAttributes": ["_bl_*", "data-collapse-*"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$", "^ant-motion-collapse$"],
         "removeCommentMarkers": ["<!--!-->"]
       }
     }
@@ -18,8 +18,8 @@
     {
       "id": "collapse-basic",
       "component": "Collapse",
-      "react": { "url": "http://127.0.0.1:8000/components/collapse", "scopeSelector": "#collapse-demo-basic .code-box-demo", "rootSelector": ".ant-collapse" },
-      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/collapse", "scopeSelector": "#components-collapse-demo-Basic .code-box-demo", "rootSelector": ".ant-collapse" },
+      "react": { "url": "http://127.0.0.1:8000/components/collapse?theme=light", "scopeSelector": "#collapse-demo-basic .code-box-demo", "rootSelector": ".ant-collapse" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/collapse?theme=light", "scopeSelector": "#components-collapse-demo-Basic .code-box-demo", "rootSelector": ".ant-collapse" },
       "styleProperties": ["display", "boxSizing", "width", "height", "padding", "borderWidth", "borderStyle", "borderColor", "borderRadius", "backgroundColor", "color", "fontSize", "lineHeight", "cursor", "transform", "--ant-collapse-header-bg", "--ant-collapse-header-padding", "--ant-collapse-content-bg", "--ant-collapse-content-padding"],
       "semanticNodes": [
         { "path": "root", "selector": "$root", "minimumCount": 1 },
@@ -33,8 +33,8 @@
     {
       "id": "collapse-collapsible",
       "component": "Collapse",
-      "react": { "url": "http://127.0.0.1:8000/components/collapse", "scopeSelector": "#collapse-demo-collapsible .code-box-demo", "rootSelector": ".ant-collapse" },
-      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/collapse", "scopeSelector": "#components-collapse-demo-collapsible .code-box-demo", "rootSelector": ".ant-collapse" },
+      "react": { "url": "http://127.0.0.1:8000/components/collapse?theme=light", "scopeSelector": "#collapse-demo-collapsible .code-box-demo", "rootSelector": ".ant-collapse" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/collapse?theme=light", "scopeSelector": "#components-collapse-demo-collapsible .code-box-demo", "rootSelector": ".ant-collapse" },
       "styleProperties": ["display", "boxSizing", "width", "height", "padding", "backgroundColor", "color", "cursor", "fontSize", "lineHeight"],
       "semanticNodes": [
         { "path": "header", "selector": ".ant-collapse-header", "minimumCount": 3 },
@@ -47,8 +47,8 @@
     {
       "id": "collapse-semantic",
       "component": "Collapse",
-      "react": { "url": "http://127.0.0.1:8000/components/collapse", "scopeSelector": "body", "rootSelector": ".ant-collapse.semantic-mark-root" },
-      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/collapse", "scopeSelector": "body", "rootSelector": ".ant-collapse.semantic-mark-root" },
+      "react": { "url": "http://127.0.0.1:8000/components/collapse?theme=light", "scopeSelector": "#collapse-demo-_semantic .code-box-demo", "rootSelector": ".ant-collapse.semantic-mark-root" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/collapse?theme=light", "scopeSelector": ".semantic-dom-preview .adb-semantic-preview-content", "rootSelector": ".ant-collapse.semantic-mark-root" },
       "styleProperties": ["display", "boxSizing", "width", "height", "padding", "borderColor", "backgroundColor", "color", "cursor", "fontSize", "lineHeight"],
       "semanticNodes": [
         { "path": "root", "selector": "$root", "minimumCount": 1 },

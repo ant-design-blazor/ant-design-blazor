@@ -248,9 +248,15 @@
 
     @if (!IsShowTime && ShowToday && Picker != DatePickerType.Time)
     {
-      <a class="@(PrefixCls)-today-btn" @onclick="e => { OnSelectTime(DateTime.Today); Close(); }">
-        @Locale.Lang.Today
-      </a>
+      <ul class="@(PrefixCls)-ranges">
+        <li class="@(PrefixCls)-now">
+          <a class="@(PrefixCls)-now-btn"
+             aria-disabled="false"
+             @onclick="e => { OnSelectTime(DateTime.Today); Close(); }">
+            @Locale.Lang.Today
+          </a>
+        </li>
+      </ul>
     }
   </div>
 }

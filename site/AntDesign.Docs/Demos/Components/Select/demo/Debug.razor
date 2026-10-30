@@ -1,0 +1,22 @@
+<Flex Direction="FlexDirection.Vertical" Gap="FlexGap.Middle">
+    <Space Wrap Style="width:500px;position:relative;z-index:1;border:1px solid red;background:#fff">
+        <Input Value="222" Style="width:100px" />
+        <Select TItemValue="string" TItem="string" Style="width:120px" EnableSearch Placeholder="233" DataSource="_options" />
+        <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" Style="width:120px" DefaultValues="_selected" EnableSearch DataSource="_options" />
+        <span>AntDesign</span>
+        <Button>222</Button>
+        <Select TItemValue="string" TItem="string" Style="width:120px" DefaultValue="@(" ")" Placeholder="Please select" DataSource="_options" />
+    </Space>
+    <div style="width:200px">
+        <Select TItemValue="int" TItem="OptionItem" Mode="SelectMode.Multiple" Style="width:100%" DefaultValues="_oneSelected" DataSource="_longOptions" ItemValue="item => item.Value" ItemLabel="item => item.Label" />
+    </div>
+    <Select TItemValue="string" TItem="string" DefaultValue="@(" ")" DataSource="_options" />
+</Flex>
+
+@code {
+    private static readonly string[] _options = ["Jack", "Lucy", "Disabled", "Yiminghe", "I am super super long!"];
+    private static readonly string[] _selected = ["Lucy"];
+    private static readonly OptionItem[] _longOptions = [new(1, "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈")];
+    private static readonly int[] _oneSelected = [1];
+    private sealed record OptionItem(int Value, string Label);
+}

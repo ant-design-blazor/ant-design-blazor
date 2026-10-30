@@ -5,7 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -125,6 +127,9 @@ namespace AntDesign
         private IList<Panel> Items { get; } = new List<Panel>();
 
         private string[] _internalActiveKeys;
+        private DotNetObjectReference<Collapse> _dotNetReference;
+        private bool _clientMotionAttached;
+        internal string ClientActiveKeysJson => JsonSerializer.Serialize(EffectiveActiveKeys ?? Array.Empty<string>());
 
         /// <summary>
         /// Get the effective active keys, either from external binding or internal state
@@ -180,6 +185,56 @@ namespace AntDesign
                     }
                 }
             }
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (Animation && !_clientMotionAttached && !IsDisposed)
+            {
+                _dotNetReference ??= DotNetObjectReference.Create(this);
+                await JsInvokeAsync(JSInteropConstants.CollapseHelper.Attach, _dotNetReference, Ref);
+                _clientMotionAttached = true;
+            }
+            else if (!Animation && _clientMotionAttached)
+            {
+                await DetachClientMotionAsync();
+            }
+        }
+
+        [JSInvokable]
+        public async Task ApplyClientActiveKeys(string[] activeKeys, bool deferInitialContent = false)
+        {
+            activeKeys ??= Array.Empty<string>();
+            var selectedKeys = Items.Where(item => activeKeys.Contains(item.Key)).Select(item => item.Key).ToArray();
+            foreach (var item in Items)
+            {
+                await item.SetActiveFromClientAsync(selectedKeys.Contains(item.Key), deferInitialContent);
+            }
+
+            if (ActiveKeys == null)
+            {
+                _internalActiveKeys = selectedKeys;
+            }
+            else if (ActiveKeysChanged.HasDelegate)
+            {
+                await ActiveKeysChanged.InvokeAsync(selectedKeys);
+            }
+
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(selectedKeys);
+            }
+        }
+
+        [JSInvokable]
+        public Task SetPanelClientHidden(string key, bool hidden)
+        {
+            var panel = Items.FirstOrDefault(item => item.Key == key);
+            // A close transition can finish after the same panel has already been reopened.
+            if (panel == null || (hidden && panel.Active)) return Task.CompletedTask;
+            panel.SetClientHidden(hidden);
+            return Task.CompletedTask;
         }
 
         internal void AddPanel(Panel panel)
@@ -335,6 +390,36 @@ namespace AntDesign
             if (OnChange.HasDelegate)
             {
                 OnChange.InvokeAsync(selectedKeys);
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (_clientMotionAttached)
+            {
+                _ = DetachClientMotionAsync();
+            }
+            else
+            {
+                _dotNetReference?.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        private async Task DetachClientMotionAsync()
+        {
+            try
+            {
+                await JsInvokeAsync(JSInteropConstants.CollapseHelper.Detach, Ref);
+            }
+            catch (JSDisconnectedException) { }
+            catch (TaskCanceledException) { }
+            catch (ObjectDisposedException) { }
+            finally
+            {
+                _clientMotionAttached = false;
+                _dotNetReference?.Dispose();
+                _dotNetReference = null;
             }
         }
     }

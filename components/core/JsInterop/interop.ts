@@ -20,6 +20,7 @@ export {
   borderBeamHelper,
   menuOverflowHelper,
   selectHelper,
+  collapseHelper,
 } from './modules/components/export'
 
 

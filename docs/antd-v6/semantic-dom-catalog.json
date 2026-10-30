@@ -1651,8 +1651,8 @@
       "nodes": [
         {
           "name": "icon",
-          "selector": ".ant-radio-inner",
-          "description": "选中框元素，包含圆角样式、过渡动画、边框样式、悬停状态、焦点状态等交互样式",
+          "selector": ".ant-radio",
+          "description": "单选框图标元素，包含圆角边框、选中圆点、过渡动画及交互状态样式",
           "version": "6.0.0"
         },
         {

@@ -1,0 +1,20 @@
+<Flex Direction="FlexDirection.Vertical" Gap="FlexGap.Middle" Align="FlexAlign.Center">
+    <Segmented TValue="string" Labels="@_modes" @bind-Value="_mode" />
+    @if (_mode == "multiple")
+    {
+        <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" Open DefaultValues="_selected" AllowClear
+                Placeholder="Please select" Style="width:300px" DataSource="_options" />
+    }
+    else
+    {
+        <Select TItemValue="string" TItem="string" Open DefaultValue="@("aojunhao123")" AllowClear
+                Placeholder="Please select" Style="width:300px" DataSource="_options" />
+    }
+</Flex>
+
+@code {
+    private string _mode = "single";
+    private static readonly string[] _modes = ["single", "multiple"];
+    private static readonly string[] _options = ["aojunhao123", "thinkasany", "meet-student"];
+    private static readonly string[] _selected = ["aojunhao123"];
+}

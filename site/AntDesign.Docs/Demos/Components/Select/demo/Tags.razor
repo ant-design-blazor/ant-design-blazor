@@ -1,5 +1,5 @@
 <Select Mode="SelectMode.Tags"
-        Placeholder="Please select"
+        Placeholder="Tags Mode"
 		@bind-Values="@_selectedValues"
 		TItemValue="string"
 		TItem="string"
@@ -26,11 +26,25 @@
 
         for (var i = min; max > i; i++)
         {
-            var value = Convert.ToString(i, 16).PadLeft(2, '0') + i.ToString();
+            var value = ToBase36(i) + i.ToString();
             _items.Add(value);
         }
 
 		_selectedValues = new List<string>();
+    }
+
+    private static string ToBase36(int value)
+    {
+        const string digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+        Span<char> buffer = stackalloc char[8];
+        var position = buffer.Length;
+        do
+        {
+            buffer[--position] = digits[value % 36];
+            value /= 36;
+        } while (value > 0);
+
+        return new string(buffer[position..]);
     }
 
     private void OnSelectedItemsChangedHandler(IEnumerable<string> values)

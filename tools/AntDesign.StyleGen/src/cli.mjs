@@ -8,7 +8,7 @@ import { createArtifact, createBaseline, readBaseline, sha256, writeBaseline } f
 import { compareArtifactSets, compareCss } from './style-diff.mjs';
 import { generateReactCssBaseline } from './react-css-baseline.mjs';
 import { generateIconCategoriesSource, syncAntDesignIconCategories } from './icon-categories.mjs';
-import { extractComponentTokenDefinitions } from './component-tokens.mjs';
+import { csharpTokenType, extractComponentTokenDefinitions } from './component-tokens.mjs';
 import { syncGlobalTokenDocs } from './global-token-docs.mjs';
 import { renderComponentGlobalTokenCatalog } from './component-global-tokens.mjs';
 import { renderSeedTokenDefaults } from './seed-token-defaults.mjs';
@@ -414,18 +414,6 @@ async function generateCsharpTokens(args) {
     .sort((left, right) => `${left.component}:${left.name}`.localeCompare(`${right.component}:${right.name}`));
   const quote = (value) => JSON.stringify(String(value));
   const pascal = (value) => String(value).replace(/(^|[-_\s])([A-Za-z0-9])/g, (_, __, character) => character.toUpperCase());
-  const csharpType = (type) => {
-    const source = String(type ?? 'unknown').replace(/\s+/g, ' ').trim();
-    const members = source.includes('|') ? source.split('|').map((item) => item.trim()) : [source];
-    const mapped = [...new Set(members.map((member) => {
-      if (/^(string|CSSProperties\[|CSSObject\[|React\.CSSProperties)/.test(member)) return member === 'string' ? 'string' : 'OneOf<string, double>';
-      if (/^(number|CSSNumericValue)/.test(member)) return 'double';
-      if (member === 'boolean') return 'bool';
-      if (/^(true|false)$/.test(member)) return 'bool';
-      return 'string';
-    }))];
-    return mapped.length === 1 ? mapped[0] : `OneOf<${mapped.join(', ')}>`;
-  };
   const byComponent = new Map();
   for (const token of tokens) (byComponent.get(token.component) ?? byComponent.set(token.component, []).get(token.component)).push(token);
   const compositions = args['antd-path'] ? await discoverStyleCompositions(resolve(args['antd-path'])) : [];
@@ -443,6 +431,7 @@ async function generateCsharpTokens(args) {
     '        public string Name { get; }',
     '        public string CssVariable { get; }',
     '        public string Type { get; }',
+    '        public string CSharpType { get; }',
     '        public string Description { get; }',
     '        public string DescriptionEn { get; }',
     '        public string DefaultValue { get; }',
@@ -450,7 +439,9 @@ async function generateCsharpTokens(args) {
     '        public bool Documented { get; }',
     '        public bool Reserved { get; }',
     '        public ComponentTokenDefinition(string component, string name, string cssVariable, string type, string description, string descriptionEn, string defaultValue, bool deprecated, bool documented, bool reserved)',
-    '        { Component = component; Name = name; CssVariable = cssVariable; Type = type; Description = description; DescriptionEn = descriptionEn; DefaultValue = defaultValue; Deprecated = deprecated; Documented = documented; Reserved = reserved; }',
+    '            : this(component, name, cssVariable, type, string.Empty, description, descriptionEn, defaultValue, deprecated, documented, reserved) { }',
+    '        public ComponentTokenDefinition(string component, string name, string cssVariable, string type, string cSharpType, string description, string descriptionEn, string defaultValue, bool deprecated, bool documented, bool reserved)',
+    '        { Component = component; Name = name; CssVariable = cssVariable; Type = type; CSharpType = cSharpType; Description = description; DescriptionEn = descriptionEn; DefaultValue = defaultValue; Deprecated = deprecated; Documented = documented; Reserved = reserved; }',
     '        public ComponentTokenDefinition(string component, string name, string cssVariable, bool reserved)',
     '            : this(component, name, cssVariable, string.Empty, string.Empty, string.Empty, string.Empty, false, false, reserved) { }',
     '    }',
@@ -458,7 +449,7 @@ async function generateCsharpTokens(args) {
     ...[...byComponent.entries()].flatMap(([component, componentTokens]) => [
       `    public sealed class ${pascal(component)}ComponentToken`,
       '    {',
-      ...componentTokens.map((token) => `        public ${csharpType(token.sourceType ?? token.type)} ${pascal(token.name)} { get; set; }`),
+      ...componentTokens.map((token) => `        public ${csharpTokenType(token.sourceType ?? token.type)} ${pascal(token.name)} { get; set; }`),
       '    }',
       '',
     ]),
@@ -484,7 +475,7 @@ async function generateCsharpTokens(args) {
     '    {',
     '        public static IReadOnlyList<ComponentTokenDefinition> All { get; } = new ReadOnlyCollection<ComponentTokenDefinition>(new[]',
     '        {',
-    ...tokens.map((token) => `            new ComponentTokenDefinition(${quote(token.component)}, ${quote(token.name)}, ${quote(token.cssVariable)}, ${quote(token.sourceType ?? token.type)}, ${quote(token.description ?? '')}, ${quote(token.descriptionEn ?? '')}, ${quote(token.defaultValue ?? '')}, ${Boolean(token.deprecated).toString().toLowerCase()}, ${Boolean(token.documented).toString().toLowerCase()}, ${Boolean(token.reserved).toString().toLowerCase()}),`),
+    ...tokens.map((token) => `            new ComponentTokenDefinition(${quote(token.component)}, ${quote(token.name)}, ${quote(token.cssVariable)}, ${quote(token.sourceType ?? token.type)}, ${quote(csharpTokenType(token.sourceType ?? token.type))}, ${quote(token.description ?? '')}, ${quote(token.descriptionEn ?? '')}, ${quote(token.defaultValue ?? '')}, ${Boolean(token.deprecated).toString().toLowerCase()}, ${Boolean(token.documented).toString().toLowerCase()}, ${Boolean(token.reserved).toString().toLowerCase()}),`),
     '        });',
     '    }',
     '}',

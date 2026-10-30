@@ -32,13 +32,13 @@
       "id": "transfer-basic-demo",
       "component": "Transfer",
       "react": {
-        "url": "http://127.0.0.1:8000/components/transfer",
+        "url": "http://127.0.0.1:8000/components/transfer?theme=light",
         "scopeSelector": "#transfer-demo-basic .code-box-demo",
         "rootSelector": ".ant-transfer",
         "skeletonSelector": ".ant-skeleton"
       },
       "blazor": {
-        "url": "http://127.0.0.1:5524/en-US/components/transfer",
+        "url": "http://127.0.0.1:5000/en-US/components/transfer?theme=light",
         "scopeSelector": "#components-transfer-demo-basic .code-box-demo",
         "rootSelector": ".ant-transfer",
         "skeletonSelector": ".ant-skeleton"

@@ -11,7 +11,8 @@ import * as sinon from 'sinon';
 import * as rewire from 'rewire'
 import { domInfo } from '../../../../../components/core/JsInterop/modules/dom/types';
 import exp = require('constants');
-import { domInfoHelper, domTypes } from '../../../../../components/core/JsInterop/modules/dom/exports';
+import { domInfoHelper, domTypes, domManipulationHelper } from '../../../../../components/core/JsInterop/modules/dom/exports';
+import { overlayHelper } from '../../../../../components/core/JsInterop/modules/components/overlayHelper';
 
 const domInfoDefaults: domInfo = {
   offsetTop: 0,
@@ -76,6 +77,366 @@ describe ('Overlay maps test', () => {
     var actual = rewClass.reverseHorizontalPlacementMap.get(placement)("right");
     expect(actual).to.equal(Placement.BottomLeft);    
   });      
+});
+
+describe('Overlay placement class update', () => {
+  it('replaces a final placement class without passing an empty token to DOMTokenList.replace', () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'ant-select-dropdown ant-select-placement-bottomLeft';
+    const instance: any = Object.create(Overlay.prototype);
+    instance.overlay = overlay;
+    instance.triggerPrefixCls = 'ant-select';
+    instance.recentPlacement = Placement.BottomLeft;
+    instance.initialPlacement = Placement.BottomLeft;
+    instance.placement = Placement.TopRight;
+
+    instance.applyPlacement();
+
+    expect(overlay.classList.contains('ant-select-placement-bottomLeft')).to.equal(false);
+    expect(overlay.classList.contains('ant-select-placement-topRight')).to.equal(true);
+  });
+
+  it('adds the placement class if the overlay has no placement token yet', () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'ant-select-dropdown';
+    const instance: any = Object.create(Overlay.prototype);
+    instance.overlay = overlay;
+    instance.triggerPrefixCls = 'ant-select';
+    instance.recentPlacement = Placement.BottomLeft;
+    instance.initialPlacement = Placement.BottomLeft;
+    instance.placement = Placement.TopRight;
+
+    instance.applyPlacement();
+
+    expect(overlay.classList.contains('ant-select-placement-topRight')).to.equal(true);
+  });
+});
+
+describe('Overlay configuration reuse', () => {
+  it('locks a Select popup to the trigger width before it is revealed', () => {
+    const trigger = document.createElement('div');
+    const overlay = document.createElement('div');
+    trigger.getBoundingClientRect = () => ({ width: 176 } as DOMRect);
+    overlay.classList.add('ant-select-dropdown-hidden');
+
+    const width = overlayHelper.prepareOverlayWidth(overlay, trigger, 'match-trigger', '', 'auto');
+
+    expect(width).to.equal(176);
+    expect(overlay.style.width).to.equal('176px');
+    expect(overlay.style.minWidth).to.equal('176px');
+    expect(overlay.style.visibility).to.equal('hidden');
+    expect(overlay.style.getPropertyValue('transition')).to.equal('none');
+    expect(overlay.style.getPropertyPriority('transition')).to.equal('important');
+    expect(overlay.classList.contains('ant-select-dropdown-hidden')).to.equal(true);
+  });
+
+  it('restores the popup transition after its measured width is committed and before enter motion', async () => {
+    const trigger = document.createElement('div');
+    const overlay = document.createElement('div');
+    overlay.style.setProperty('transition', 'width 200ms ease-in');
+    document.body.appendChild(overlay);
+    trigger.getBoundingClientRect = () => ({ width: 176 } as DOMRect);
+
+    const originalRequestAnimationFrame = Object.getOwnPropertyDescriptor(globalThis, 'requestAnimationFrame');
+    Object.defineProperty(globalThis, 'requestAnimationFrame', { configurable: true, value: callback => {
+      callback(0);
+      return 1;
+    } });
+    try {
+      overlayHelper.prepareOverlayWidth(overlay, trigger, 'match-trigger', '', 'auto');
+      await overlayHelper.revealMeasuredOverlay(overlay, 'ant-overlay-hidden', 'ant-overlay-enter', 'block');
+
+      expect(overlay.style.width).to.equal('176px');
+      expect(overlay.style.getPropertyValue('transition')).to.equal('width 200ms ease-in');
+      expect(overlay.style.getPropertyPriority('transition')).to.equal('');
+      expect(overlay.style.visibility).to.equal('');
+      expect(overlay.classList.contains('ant-overlay-enter')).to.equal(true);
+    } finally {
+      if (originalRequestAnimationFrame) {
+        Object.defineProperty(globalThis, 'requestAnimationFrame', originalRequestAnimationFrame);
+      } else {
+        delete (globalThis as any).requestAnimationFrame;
+      }
+      overlay.remove();
+    }
+  });
+
+  it('measures and locks content-fit and explicit popup widths while hidden', () => {
+    const trigger = document.createElement('div');
+    const overlay = document.createElement('div');
+    trigger.getBoundingClientRect = () => ({ width: 120 } as DOMRect);
+    overlay.getBoundingClientRect = () => ({ width: 248 } as DOMRect);
+
+    const contentWidth = overlayHelper.prepareOverlayWidth(overlay, trigger, 'content', '', '320px');
+    expect(contentWidth).to.equal(248);
+    expect(overlay.style.width).to.equal('248px');
+    expect(overlay.style.maxWidth).to.equal('320px');
+
+    overlay.getBoundingClientRect = () => ({ width: 200 } as DOMRect);
+    const customWidth = overlayHelper.prepareOverlayWidth(overlay, trigger, 'custom', '12rem', 'auto');
+    expect(customWidth).to.equal(200);
+    expect(overlay.style.width).to.equal('200px');
+    expect(overlay.style.maxWidth).to.equal('');
+  });
+
+  it('measures content width against the actual Select trigger before revealing the popup', () => {
+    const container = document.createElement('div');
+    const wrapper = document.createElement('div');
+    const trigger = document.createElement('div');
+    const overlay = document.createElement('div');
+    trigger.className = 'ant-select';
+    wrapper.appendChild(trigger);
+    wrapper.getBoundingClientRect = () => ({ width: 320 } as DOMRect);
+    trigger.getBoundingClientRect = () => ({ width: 184 } as DOMRect);
+    overlay.getBoundingClientRect = () => ({ width: 276 } as DOMRect);
+    Object.defineProperty(overlay, 'isConnected', { configurable: true, value: false });
+    overlay.classList.add('ant-select-dropdown-hidden');
+
+    const getElement = sinon.stub(domInfoHelper, 'get').callsFake((element: unknown) => {
+      if (element === '#overlay') return overlay;
+      if (element === '#trigger') return wrapper;
+      if (element === '#container') return container;
+      return null;
+    });
+    try {
+      const width = overlayHelper.prepareOverlayWidthForShow('#overlay', '#trigger', '#container', 'content', '', 'auto');
+
+      expect(width).to.equal('276');
+      expect(overlay.parentElement).to.equal(container);
+      expect(overlay.style.width).to.equal('276px');
+      expect(overlay.style.minWidth).to.equal('184px');
+      expect(overlay.style.visibility).to.equal('hidden');
+      expect(overlay.classList.contains('ant-select-dropdown-hidden')).to.equal(true);
+    } finally {
+      getElement.restore();
+    }
+  });
+
+  it('reuses an immediate-open width without hiding an animating popup', () => {
+    const trigger = document.createElement('div');
+    const overlay = document.createElement('div');
+    overlay.style.width = '224px';
+    Object.defineProperty(overlay, 'isConnected', { configurable: true, value: true });
+    Object.defineProperty(overlay, 'offsetParent', { configurable: true, value: document.body });
+    const getElement = sinon.stub(domInfoHelper, 'get').callsFake((element: unknown) => element === '#overlay' ? overlay : trigger);
+    try {
+      const width = overlayHelper.prepareOverlayWidthForShow('#overlay', '#trigger', '#container', 'content', '', 'auto');
+
+      expect(width).to.equal('224');
+      expect(overlay.style.visibility).to.equal('');
+      expect(overlay.style.width).to.equal('224px');
+    } finally {
+      getElement.restore();
+    }
+  });
+
+  it('removes completed enter motion classes without changing the popup identity classes', () => {
+    const overlayElement = document.createElement('div') as HTMLDivElement;
+    overlayElement.className = 'ant-select-dropdown ant-slide-up-enter ant-slide-up-enter-active ant-slide-up';
+    Object.defineProperty(overlayElement, 'offsetParent', { configurable: true, value: document.body });
+    const overlay = Object.create(Overlay.prototype) as Overlay;
+    Object.assign(overlay, {
+      overlay: overlayElement,
+      overlayPreset: undefined,
+      calculatePosition: sinon.stub()
+    });
+
+    (overlay as any).onMotionEnd({ target: overlayElement } as unknown as Event);
+
+    expect([...overlayElement.classList]).to.deep.equal(['ant-select-dropdown']);
+    expect((overlay as any).calculatePosition.calledOnceWith(true, false, undefined)).to.equal(true);
+  });
+
+  it('matches the overlay context and updates placement without replacing the instance', () => {
+    const trigger = document.createElement('div');
+    const overlayElement = document.createElement('div') as HTMLDivElement;
+    const overlay = Object.create(Overlay.prototype) as Overlay;
+    Object.assign(overlay, {
+      overlay: overlayElement,
+      container: document.body,
+      trigger,
+      initialPlacement: Placement.BottomLeft,
+      boundyAdjustMode: TriggerBoundyAdjustMode.InView,
+      triggerPrefixCls: 'ant-select'
+    });
+
+    expect(overlay.matchesContext(
+      overlayElement, document.body, trigger, TriggerBoundyAdjustMode.InView,
+      false, 'ant-select'
+    )).to.equal(true);
+    expect(overlay.matchesContext(
+      overlayElement, document.body, document.createElement('button'),
+      TriggerBoundyAdjustMode.InView, false, 'ant-select'
+    )).to.equal(false);
+    expect(overlay.matchesContext(
+      overlayElement, document.body, trigger, TriggerBoundyAdjustMode.None,
+      false, 'ant-select'
+    )).to.equal(false);
+    overlay.updatePlacement(Placement.TopRight, true);
+    expect((overlay as any).initialPlacement).to.equal(Placement.Top);
+  });
+
+  it('keeps the registered Overlay and its DOM in place when the same popup is added again', () => {
+    const trigger = document.createElement('div');
+    const overlayElement = document.createElement('div') as HTMLDivElement;
+    const container = document.createElement('div');
+    const position = { top: 12, left: 24, zIndex: 1050 };
+    const previousOverlay = {
+      matchesContext: sinon.stub().returns(true),
+      updateOffsets: sinon.stub(),
+      updatePlacement: sinon.stub(),
+      calculatePosition: sinon.stub().returns(position),
+      dispose: sinon.stub()
+    };
+    const previousRegistryEntry = overlayHelper.overlayRegistry['immediate-open-test'];
+    overlayHelper.overlayRegistry['immediate-open-test'] = previousOverlay as any;
+    const getElement = sinon.stub(domInfoHelper, 'get').callsFake((selector: string) => {
+      if (selector === 'overlay') return overlayElement;
+      if (selector === 'container') return container;
+      if (selector === 'trigger') return trigger;
+      return null;
+    });
+    const addElement = sinon.stub(domManipulationHelper, 'addElementTo');
+
+    try {
+      const result = overlayHelper.addOverlayToContainer(
+        'immediate-open-test', 'overlay', 'trigger', Placement.BottomLeft,
+        'container', TriggerBoundyAdjustMode.InView, false, 'ant-select',
+        4, 4, undefined, false
+      );
+
+      expect(result).to.equal(position);
+      expect(previousOverlay.dispose.called).to.equal(false);
+      expect(previousOverlay.updateOffsets.calledOnceWith(4, 4)).to.equal(true);
+      expect(previousOverlay.updatePlacement.calledOnceWith(Placement.BottomLeft, false)).to.equal(true);
+      expect(addElement.called).to.equal(false);
+      expect(overlayHelper.overlayRegistry['immediate-open-test']).to.equal(previousOverlay);
+    } finally {
+      getElement.restore();
+      addElement.restore();
+      if (previousRegistryEntry) {
+        overlayHelper.overlayRegistry['immediate-open-test'] = previousRegistryEntry;
+      } else {
+        delete overlayHelper.overlayRegistry['immediate-open-test'];
+      }
+    }
+  });
+
+  it('defers replacing an Overlay instance until the popup enter motion ends', () => {
+    const trigger = document.createElement('div');
+    const overlayElement = document.createElement('div') as HTMLDivElement;
+    const container = document.createElement('div');
+    overlayElement.className = 'ant-select-dropdown ant-slide-up-enter ant-slide-up-enter-active';
+    // The browser creates the Animation object on the next style/layout
+    // flush. At this point the enter classes and CSS duration exist but
+    // getAnimations() can still return an empty array.
+    overlayElement.style.animationDuration = '300ms';
+    overlayElement.getAnimations = () => [];
+    const previousOverlay = {
+      matchesContext: sinon.stub().returns(false),
+      calculatePosition: sinon.stub().returns({ top: 12, left: 24, zIndex: 1050 }),
+      dispose: sinon.stub()
+    };
+    const id = 'overlay-enter-rebuild-test';
+    const previousRegistryEntry = overlayHelper.overlayRegistry[id];
+    overlayHelper.overlayRegistry[id] = previousOverlay as any;
+    const getElement = sinon.stub(domInfoHelper, 'get').callsFake((selector: string) => {
+      if (selector === 'overlay') return overlayElement;
+      if (selector === 'container') return container;
+      if (selector === 'trigger') return trigger;
+      return null;
+    });
+    const addElement = sinon.stub(domManipulationHelper, 'addElementTo');
+    let rebuild: sinon.SinonStub | undefined;
+
+    try {
+      overlayHelper.addOverlayToContainer(
+        id, 'overlay', 'trigger', Placement.BottomLeft, 'container',
+        TriggerBoundyAdjustMode.InView, false, 'ant-select', 4, 4, undefined, false
+      );
+
+      // A second render can arrive before the enter transition completes.
+      // It must not replace the live instance, and the deferred rebuild must
+      // use the newest render parameters rather than stale ones.
+      overlayHelper.addOverlayToContainer(
+        id, 'overlay', 'trigger', Placement.TopRight, 'container',
+        TriggerBoundyAdjustMode.InView, false, 'ant-select', 8, 12, undefined, true
+      );
+
+      expect(previousOverlay.dispose.called).to.equal(false);
+      expect(overlayHelper.overlayRegistry[id]).to.equal(previousOverlay);
+      expect(addElement.called).to.equal(false);
+
+      rebuild = sinon.stub(overlayHelper, 'addOverlayToContainer');
+      // Overlay's motion listener removes the enter classes before the
+      // rebuild listener handles the same animationend event.
+      overlayElement.classList.remove('ant-slide-up-enter', 'ant-slide-up-enter-active');
+      const animationEnd = document.createEvent('Event');
+      animationEnd.initEvent('animationend', true, true);
+      overlayElement.dispatchEvent(animationEnd);
+      expect(rebuild.calledOnce).to.equal(true);
+      expect(rebuild.firstCall.args[0]).to.equal(id);
+      expect(rebuild.firstCall.args[3]).to.equal(Placement.TopRight);
+      expect(rebuild.firstCall.args[8]).to.equal(8);
+      expect(rebuild.firstCall.args[9]).to.equal(12);
+      expect(rebuild.firstCall.args[11]).to.equal(true);
+    } finally {
+      rebuild?.restore();
+      (overlayHelper as any).clearPendingOverlayRebuild(id);
+      getElement.restore();
+      addElement.restore();
+      if (previousRegistryEntry) {
+        overlayHelper.overlayRegistry[id] = previousRegistryEntry;
+      } else {
+        delete overlayHelper.overlayRegistry[id];
+      }
+    }
+  });
+
+  it('keeps popup coordinates idempotent when recalculated during and after enter motion', () => {
+    const overlayElement = document.createElement('div') as HTMLDivElement;
+    overlayElement.style.width = '100px';
+    overlayElement.style.height = '40px';
+    let motionRunning = true;
+    let scale = 0.92;
+    overlayElement.getBoundingClientRect = () => ({
+      x: 0, y: 0, top: 0, left: 0, right: 100 * scale, bottom: 40 * scale,
+      width: 100 * scale, height: 40 * scale, toJSON: () => ({})
+    } as DOMRect);
+    overlayElement.getAnimations = () => motionRunning ? [{ playState: 'running' } as Animation] : [];
+
+    const overlay = Object.create(Overlay.prototype) as Overlay;
+    Object.assign(overlay, {
+      overlay: overlayElement,
+      trigger: document.createElement('button'),
+      position: { zIndex: 0 },
+      placement: Placement.BottomLeft,
+      initialPlacement: Placement.BottomLeft,
+      recentPlacement: Placement.BottomLeft,
+      selectedHorizontalPosition: 'left',
+      selectedVerticalPosition: 'top',
+      pixelSnapAxes: null,
+      getKeyElementDimensions: sinon.stub(),
+      restoreInitialPlacement: sinon.stub(),
+      getNominalPositions: sinon.stub().callsFake(function (this: Overlay) {
+        this.position = { left: 24.75, right: 875.25, top: 64.75, bottom: 695.25, zIndex: 0 };
+        return new Set();
+      })
+    });
+    Object.defineProperty(overlayElement, 'offsetParent', { configurable: true, value: document.body });
+    Object.defineProperty((overlay as any).trigger, 'offsetParent', { configurable: true, value: document.body });
+
+    const enteringPosition = { ...(overlay as any).calculatePosition(false) };
+
+    // The popup's client rect changes while scale animation runs, but its
+    // untransformed layout box and anchor coordinates have not changed.
+    scale = 0.98;
+    expect((overlay as any).calculatePosition(false)).to.deep.equal(enteringPosition);
+
+    motionRunning = false;
+    scale = 1;
+    expect((overlay as any).calculatePosition(false)).to.deep.equal(enteringPosition);
+  });
 });
 
 type positionCalculationTheory = {  
@@ -398,7 +759,7 @@ const theoryPositionData: Array<positionTheory> = [
         "overlay": { clientHeight: 744, clientWidth: 372 },
       },       
        expected: { top: 992, bottom: 1147, left: 1940, right: 3504 },
-       expectedCorrected: { top: null, bottom: -24, left: null, right: -111, placement: Placement.TopRight }
+       expectedCorrected: { top: null, bottom: -24, left: null, right: -81, placement: Placement.TopRight }
     },
     { 
       theoryName: "scenario 6",

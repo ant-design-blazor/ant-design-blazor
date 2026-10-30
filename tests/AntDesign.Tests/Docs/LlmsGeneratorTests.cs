@@ -15,6 +15,18 @@ namespace AntDesign.Tests.Docs;
 
 public sealed class LlmsGeneratorTests
 {
+    [Fact]
+    public void Token_markdown_prefers_generated_CSharp_types_over_the_retained_React_source_type()
+    {
+        using var doc = System.Text.Json.JsonDocument.Parse("{\"Title\":\"Collapse\",\"DemoList\":[]}");
+        using var semantics = System.Text.Json.JsonDocument.Parse("{}");
+        using var tokens = System.Text.Json.JsonDocument.Parse("{\"componentTokens\":[{\"Component\":\"collapse\",\"Name\":\"headerPadding\",\"Documented\":true,\"Reserved\":false,\"Type\":\"CSSProperties['padding']\",\"CSharpType\":\"OneOf<string, double>\"}]}");
+        var markdown = LlmsMarkdownBuilder.Build(doc.RootElement, "en-US", semantics.RootElement, tokens.RootElement);
+        Assert.Contains("C# Type", markdown);
+        Assert.Contains("OneOf<string, double>", markdown);
+        Assert.DoesNotContain("CSSProperties", markdown);
+    }
+
     private sealed class Input : AdditionalText
     {
         public override string Path { get; }

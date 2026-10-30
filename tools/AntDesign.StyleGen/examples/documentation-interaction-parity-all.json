@@ -1,0 +1,3090 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design-blazor parity scenarios",
+    "revision": "2026-10-29"
+  },
+  "config": {
+    "timeoutMs": 30000,
+    "navigationTimeoutMs": 120000,
+    "viewport": {
+      "width": 1280,
+      "height": 900,
+      "deviceScaleFactor": 1
+    },
+    "colorScheme": "light"
+  },
+  "groups": [
+    {
+      "id": "breadcrumb-basic-demo",
+      "component": "Breadcrumb",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/breadcrumb?theme=light",
+        "scopeSelector": "#breadcrumb-demo-basic .code-box-demo",
+        "rootSelector": ".ant-breadcrumb"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/breadcrumb?theme=light",
+        "scopeSelector": "#components-breadcrumb-demo-Basic .code-box-demo",
+        "rootSelector": ".ant-breadcrumb"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingInline",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "item",
+          "reactSelector": ".ant-breadcrumb-item",
+          "blazorSelector": ".ant-breadcrumb-item",
+          "minimumCount": 3
+        },
+        {
+          "path": "separator",
+          "reactSelector": ".ant-breadcrumb-separator",
+          "blazorSelector": ".ant-breadcrumb-separator",
+          "minimumCount": 2
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "button-basic-demo",
+      "component": "Button",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/button",
+        "scopeSelector": "#button-demo-basic .code-box-demo",
+        "rootSelector": "button.ant-btn"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/button",
+        "scopeSelector": "#components-button-demo-Basic .code-box-demo",
+        "rootSelector": "button.ant-btn"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingInline",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "icon",
+          "reactSelector": ".ant-btn-icon",
+          "blazorSelector": ".ant-btn-icon",
+          "minimumCount": 0
+        },
+        {
+          "path": "content",
+          "reactSelector": "span:not(.ant-btn-icon)",
+          "blazorSelector": "span:not(.ant-btn-icon)",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "checkbox-basic-demo",
+      "component": "Checkbox",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/checkbox?theme=light",
+        "scopeSelector": "#checkbox-demo-basic .code-box-demo",
+        "rootSelector": ".ant-checkbox-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/checkbox?theme=light",
+        "scopeSelector": "#components-checkbox-demo-Basic .code-box-demo",
+        "rootSelector": ".ant-checkbox-wrapper"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingInline",
+        "marginInlineStart",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "icon",
+          "reactSelector": ".ant-checkbox",
+          "blazorSelector": ".ant-checkbox",
+          "minimumCount": 1
+        },
+        {
+          "path": "input",
+          "reactSelector": ".ant-checkbox-input",
+          "blazorSelector": ".ant-checkbox-input",
+          "minimumCount": 1
+        },
+        {
+          "path": "label",
+          "reactSelector": ".ant-checkbox-label",
+          "blazorSelector": ".ant-checkbox-label",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "checkbox-group-demo",
+      "component": "Checkbox.Group",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/checkbox?theme=light",
+        "scopeSelector": "#checkbox-demo-group .code-box-demo",
+        "rootSelector": ".ant-checkbox-group"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/checkbox?theme=light",
+        "scopeSelector": "#components-checkbox-demo-Group .code-box-demo",
+        "rootSelector": ".ant-checkbox-group"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingInline",
+        "marginInlineStart",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "option",
+          "reactSelector": ".ant-checkbox-wrapper",
+          "blazorSelector": ".ant-checkbox-wrapper",
+          "minimumCount": 3
+        },
+        {
+          "path": "icon",
+          "reactSelector": ".ant-checkbox",
+          "blazorSelector": ".ant-checkbox",
+          "minimumCount": 3
+        },
+        {
+          "path": "label",
+          "reactSelector": ".ant-checkbox-label",
+          "blazorSelector": ".ant-checkbox-label",
+          "minimumCount": 3
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "collapse-basic",
+      "component": "Collapse",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/collapse?theme=light",
+        "scopeSelector": "#collapse-demo-basic .code-box-demo",
+        "rootSelector": ".ant-collapse"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/collapse?theme=light",
+        "scopeSelector": "#components-collapse-demo-Basic .code-box-demo",
+        "rootSelector": ".ant-collapse"
+      },
+      "styleProperties": [
+        "display",
+        "boxSizing",
+        "width",
+        "height",
+        "padding",
+        "borderWidth",
+        "borderStyle",
+        "borderColor",
+        "borderRadius",
+        "backgroundColor",
+        "color",
+        "fontSize",
+        "lineHeight",
+        "cursor",
+        "transform",
+        "--ant-collapse-header-bg",
+        "--ant-collapse-header-padding",
+        "--ant-collapse-content-bg",
+        "--ant-collapse-content-padding"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "selector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "header",
+          "selector": ".ant-collapse-header",
+          "minimumCount": 3
+        },
+        {
+          "path": "icon",
+          "selector": ".ant-collapse-expand-icon",
+          "minimumCount": 3
+        },
+        {
+          "path": "title",
+          "selector": ".ant-collapse-title",
+          "minimumCount": 3
+        },
+        {
+          "path": "body",
+          "selector": ".ant-collapse-body",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "initial",
+          "minimumRoots": 1
+        }
+      ]
+    },
+    {
+      "id": "collapse-collapsible",
+      "component": "Collapse",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/collapse?theme=light",
+        "scopeSelector": "#collapse-demo-collapsible .code-box-demo",
+        "rootSelector": ".ant-collapse"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/collapse?theme=light",
+        "scopeSelector": "#components-collapse-demo-collapsible .code-box-demo",
+        "rootSelector": ".ant-collapse"
+      },
+      "styleProperties": [
+        "display",
+        "boxSizing",
+        "width",
+        "height",
+        "padding",
+        "backgroundColor",
+        "color",
+        "cursor",
+        "fontSize",
+        "lineHeight"
+      ],
+      "semanticNodes": [
+        {
+          "path": "header",
+          "selector": ".ant-collapse-header",
+          "minimumCount": 3
+        },
+        {
+          "path": "icon",
+          "selector": ".ant-collapse-expand-icon",
+          "minimumCount": 3
+        },
+        {
+          "path": "title",
+          "selector": ".ant-collapse-title",
+          "minimumCount": 3
+        },
+        {
+          "path": "body",
+          "selector": ".ant-collapse-body",
+          "minimumCount": 2
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "initial",
+          "minimumRoots": 3
+        }
+      ]
+    },
+    {
+      "id": "collapse-semantic",
+      "component": "Collapse",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/collapse?theme=light",
+        "scopeSelector": "#collapse-demo-_semantic .code-box-demo",
+        "rootSelector": ".ant-collapse.semantic-mark-root"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/collapse?theme=light",
+        "scopeSelector": ".semantic-dom-preview .adb-semantic-preview-content",
+        "rootSelector": ".ant-collapse.semantic-mark-root"
+      },
+      "styleProperties": [
+        "display",
+        "boxSizing",
+        "width",
+        "height",
+        "padding",
+        "borderColor",
+        "backgroundColor",
+        "color",
+        "cursor",
+        "fontSize",
+        "lineHeight"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "selector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "header",
+          "selector": ".ant-collapse-header",
+          "minimumCount": 1
+        },
+        {
+          "path": "icon",
+          "selector": ".ant-collapse-expand-icon",
+          "minimumCount": 1
+        },
+        {
+          "path": "title",
+          "selector": ".ant-collapse-title",
+          "minimumCount": 1
+        },
+        {
+          "path": "body",
+          "selector": ".ant-collapse-body",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "initial",
+          "minimumRoots": 1
+        }
+      ]
+    },
+    {
+      "id": "datepicker-basic-popup",
+      "component": "DatePicker",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/date-picker?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#date-picker-demo-basic .ant-picker:first-of-type",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/datepicker?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#components-datepicker-demo-basic .ant-picker:first-of-type",
+        "skeletonSelector": ""
+      },
+      "geometryTolerancePx": 0,
+      "captureReactBeforeBlazor": true,
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingBlock",
+        "paddingInline",
+        "lineHeight",
+        "fontFamily",
+        "fontSize",
+        "fontWeight",
+        "letterSpacing",
+        "textAlign",
+        "verticalAlign",
+        "backgroundColor",
+        "borderRadius",
+        "boxShadow",
+        "zIndex"
+      ],
+      "semanticNodes": [
+        {
+          "path": "trigger",
+          "selector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "popup",
+          "selector": ".ant-picker-dropdown:not(.ant-picker-dropdown-hidden)",
+          "portal": true,
+          "portalVisible": true,
+          "portalMatch": "nearest-trigger",
+          "geometryAnchor": {
+            "mode": "pixel-snap-to-trigger",
+            "verticalOffset": 4
+          },
+          "minimumCount": 1
+        },
+        {
+          "path": "footer.ranges",
+          "selector": ".ant-picker-ranges",
+          "portal": true,
+          "portalParentPath": "popup",
+          "geometryParentSelector": ".ant-picker-dropdown",
+          "minimumCount": 1
+        },
+        {
+          "path": "footer.today",
+          "selector": ".ant-picker-now-btn",
+          "portal": true,
+          "portalParentPath": "popup",
+          "geometryParentSelector": ".ant-picker-dropdown",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "open-basic-picker",
+          "minimumRoots": 1,
+          "actions": [
+            {
+              "type": "click",
+              "reactSelector": "#date-picker-demo-basic .ant-picker:first-of-type input",
+              "blazorSelector": "#components-datepicker-demo-basic .ant-picker:first-of-type input"
+            },
+            {
+              "type": "waitForPortal",
+              "reactTriggerSelector": "#date-picker-demo-basic .ant-picker:first-of-type",
+              "blazorTriggerSelector": "#components-datepicker-demo-basic .ant-picker:first-of-type",
+              "portalSelector": ".ant-picker-dropdown:not(.ant-picker-dropdown-hidden)",
+              "maxDistance": 100
+            },
+            {
+              "type": "wait",
+              "milliseconds": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "divider-horizontal-demo",
+      "component": "Divider",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/divider?theme=light",
+        "scopeSelector": "#divider-demo-horizontal .code-box-demo",
+        "rootSelector": ".ant-divider"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/divider?theme=light",
+        "scopeSelector": "#components-divider-demo-Horizontal .code-box-demo",
+        "rootSelector": ".ant-divider"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "marginBlock",
+        "marginInline",
+        "borderColor",
+        "borderTopWidth",
+        "borderTopStyle",
+        "color",
+        "fontSize",
+        "lineHeight",
+        "verticalAlign"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "start",
+          "reactSelector": ".ant-divider-rail-start",
+          "blazorSelector": ".ant-divider-rail-start",
+          "minimumCount": 0
+        },
+        {
+          "path": "label",
+          "reactSelector": ".ant-divider-inner-text",
+          "blazorSelector": ".ant-divider-inner-text",
+          "minimumCount": 0
+        },
+        {
+          "path": "end",
+          "reactSelector": ".ant-divider-rail-end",
+          "blazorSelector": ".ant-divider-rail-end",
+          "minimumCount": 0
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "flex-basic-demo",
+      "component": "Flex",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/flex?theme=light",
+        "scopeSelector": "#flex-demo-basic .code-box-demo",
+        "rootSelector": ".ant-flex-vertical > .ant-flex"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/flex?theme=light",
+        "scopeSelector": "#components-flex-demo-basic .code-box-demo",
+        "rootSelector": ".ant-flex-vertical > .ant-flex"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "flexDirection",
+        "flexWrap",
+        "justifyContent",
+        "alignItems",
+        "gap",
+        "rowGap",
+        "columnGap"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "grid-basic-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid?theme=light",
+        "scopeSelector": "#grid-demo-basic .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid?theme=light",
+        "scopeSelector": "#components-grid-demo-basic .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "flex",
+        "flexBasis",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 4
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".ant-col",
+          "blazorSelector": ".ant-col",
+          "minimumCount": 10
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "grid-gutter-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-gutter .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-gutter .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "rowGap",
+        "flex",
+        "flexBasis",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 4
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".gutter-row",
+          "blazorSelector": ".gutter-row",
+          "minimumCount": 20
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "desktop-xl"
+        }
+      ]
+    },
+    {
+      "id": "grid-flex-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-flex .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-flex .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "rowGap",
+        "flex",
+        "flexBasis",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight",
+        "justifyContent",
+        "alignItems"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 6
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".ant-col",
+          "blazorSelector": ".ant-col",
+          "minimumCount": 24
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "grid-flex-align-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-flex-align .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-flex-align .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "rowGap",
+        "flex",
+        "flexBasis",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight",
+        "justifyContent",
+        "alignItems"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 3
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".ant-col",
+          "blazorSelector": ".ant-col",
+          "minimumCount": 12
+        },
+        {
+          "path": "heightSamples",
+          "reactSelector": "p",
+          "blazorSelector": "p",
+          "minimumCount": 12
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "grid-flex-order-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-flex-order .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-flex-order .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "rowGap",
+        "flex",
+        "flexBasis",
+        "order",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 2
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".ant-col",
+          "blazorSelector": ".ant-col",
+          "minimumCount": 8
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "grid-offset-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-offset .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-offset .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginInlineStart",
+        "marginInlineEnd",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "flex",
+        "flexBasis",
+        "order",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 3
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".ant-col",
+          "blazorSelector": ".ant-col",
+          "minimumCount": 5
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "grid-responsive-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-responsive .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-responsive .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "flex",
+        "flexGrow",
+        "flexShrink",
+        "flexBasis",
+        "order",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".ant-col",
+          "blazorSelector": ".ant-col",
+          "minimumCount": 3
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "desktop-xl"
+        }
+      ]
+    },
+    {
+      "id": "grid-flex-stretch-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-flex-stretch .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-flex-stretch .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "flex",
+        "flexGrow",
+        "flexShrink",
+        "flexBasis",
+        "order",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight",
+        "justifyContent",
+        "alignItems",
+        "whiteSpace"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 4
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".ant-col",
+          "blazorSelector": ".ant-col",
+          "minimumCount": 8
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "grid-sort-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-sort .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-sort .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "flex",
+        "flexBasis",
+        "order",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".ant-col",
+          "blazorSelector": ".ant-col",
+          "minimumCount": 2
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "grid-responsive-more-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-responsive-more .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-responsive-more .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "flex",
+        "flexBasis",
+        "order",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".ant-col",
+          "blazorSelector": ".ant-col",
+          "minimumCount": 3
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "desktop-xl"
+        }
+      ]
+    },
+    {
+      "id": "grid-responsive-flex-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-responsive-flex .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-responsive-flex .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "flex",
+        "flexGrow",
+        "flexShrink",
+        "flexBasis",
+        "order",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".ant-col",
+          "blazorSelector": ".ant-col",
+          "minimumCount": 10
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "desktop-xl"
+        }
+      ]
+    },
+    {
+      "id": "grid-use-breakpoint-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-usebreakpoint .code-box-demo",
+        "rootSelector": ".ant-tag"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-useBreakpoint .code-box-demo",
+        "rootSelector": ".ant-tag"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "fontSize",
+        "lineHeight"
+      ],
+      "semanticNodes": [
+        {
+          "path": "breakpoints",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 4
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "desktop-xl"
+        }
+      ]
+    },
+    {
+      "id": "grid-playground-demo",
+      "component": "Grid",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/grid",
+        "scopeSelector": "#grid-demo-playground .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/grid",
+        "scopeSelector": "#components-grid-demo-playground .code-box-demo",
+        "rootSelector": ".ant-row"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "marginLeft",
+        "marginRight",
+        "marginTop",
+        "marginBottom",
+        "paddingLeft",
+        "paddingRight",
+        "paddingTop",
+        "paddingBottom",
+        "flex",
+        "flexGrow",
+        "flexShrink",
+        "flexBasis",
+        "order",
+        "maxWidth",
+        "color",
+        "backgroundColor",
+        "textAlign",
+        "borderRadius",
+        "fontSize",
+        "lineHeight",
+        "justifyContent",
+        "alignItems"
+      ],
+      "semanticNodes": [
+        {
+          "path": "rows",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 2
+        },
+        {
+          "path": "columns",
+          "reactSelector": ".ant-col",
+          "blazorSelector": ".ant-col",
+          "minimumCount": 10
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "icon-font",
+      "component": "Icon",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-iconfont .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-iconfont .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "styleProperties": [
+        "display",
+        "width",
+        "height",
+        "gap",
+        "alignItems",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "fill",
+        "verticalAlign"
+      ],
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".ant-space-item",
+          "minimumCount": 3
+        },
+        {
+          "path": "icon",
+          "selector": ".anticon",
+          "minimumCount": 3
+        },
+        {
+          "path": "svg",
+          "selector": "svg",
+          "minimumCount": 3
+        },
+        {
+          "path": "use",
+          "selector": "use",
+          "minimumCount": 3,
+          "verifySvgUse": true
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ],
+      "comparisonPolicy": {
+        "normalization": {
+          "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
+          "removeAttributes": [
+            "_bl_*"
+          ],
+          "removeClassPatterns": [
+            "^css-dev-only-do-not-override-",
+            "^css-var-_[rR]_",
+            "^css-[a-zA-Z0-9]+$"
+          ],
+          "removeCommentMarkers": [
+            "<!--!-->"
+          ],
+          "removeUnreferencedRuntimeIds": true
+        },
+        "svgUsePaintTolerancePx": 0.02
+      }
+    },
+    {
+      "id": "icon-font-resources",
+      "component": "Icon",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-scripturl .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-scriptUrl .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "styleProperties": [
+        "display",
+        "width",
+        "height",
+        "gap",
+        "alignItems",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "fill",
+        "verticalAlign"
+      ],
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".ant-space-item",
+          "minimumCount": 4
+        },
+        {
+          "path": "icon",
+          "selector": ".anticon",
+          "minimumCount": 4
+        },
+        {
+          "path": "svg",
+          "selector": "svg",
+          "minimumCount": 4
+        },
+        {
+          "path": "use",
+          "selector": "use",
+          "minimumCount": 4,
+          "verifySvgUse": true
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ],
+      "comparisonPolicy": {
+        "normalization": {
+          "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
+          "removeAttributes": [
+            "_bl_*"
+          ],
+          "removeClassPatterns": [
+            "^css-dev-only-do-not-override-",
+            "^css-var-_[rR]_",
+            "^css-[a-zA-Z0-9]+$"
+          ],
+          "removeCommentMarkers": [
+            "<!--!-->"
+          ],
+          "removeUnreferencedRuntimeIds": true
+        },
+        "svgUsePaintTolerancePx": 0.02
+      }
+    },
+    {
+      "id": "icon-basic",
+      "component": "Icon",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-basic .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-basic .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "styleProperties": [
+        "display",
+        "width",
+        "height",
+        "gap",
+        "alignItems",
+        "fontSize",
+        "lineHeight",
+        "color"
+      ],
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".ant-space-item",
+          "minimumCount": 6
+        },
+        {
+          "path": "icon",
+          "selector": ".anticon",
+          "minimumCount": 6
+        },
+        {
+          "path": "svg",
+          "selector": "svg",
+          "minimumCount": 6
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ]
+    },
+    {
+      "id": "icon-two-tone",
+      "component": "Icon",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-two-tone .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-two-tone .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "styleProperties": [
+        "display",
+        "width",
+        "height",
+        "gap",
+        "alignItems",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "fill"
+      ],
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".ant-space-item",
+          "minimumCount": 3
+        },
+        {
+          "path": "icon",
+          "selector": ".anticon",
+          "minimumCount": 3
+        },
+        {
+          "path": "path",
+          "selector": "path",
+          "minimumCount": 8
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ]
+    },
+    {
+      "id": "icon-custom",
+      "component": "Icon",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-custom .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light",
+        "scopeSelector": "#components-icon-demo-custom .code-box-demo",
+        "rootSelector": ".ant-space"
+      },
+      "styleProperties": [
+        "display",
+        "width",
+        "height",
+        "gap",
+        "alignItems",
+        "fontSize",
+        "lineHeight",
+        "color"
+      ],
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".ant-space-item",
+          "minimumCount": 4
+        },
+        {
+          "path": "icon",
+          "selector": ".anticon",
+          "minimumCount": 5
+        },
+        {
+          "path": "svg",
+          "selector": "svg",
+          "minimumCount": 4
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ]
+    },
+    {
+      "id": "qrcode-base",
+      "component": "QRCode",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/qr-code?theme=light",
+        "scopeSelector": "#qr-code-demo-base .code-box-demo",
+        "rootSelector": ".ant-qrcode"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/qrcode?theme=light",
+        "scopeSelector": "#components-qrcode-demo-base .code-box-demo",
+        "rootSelector": ".ant-qrcode"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minWidth",
+        "padding",
+        "margin",
+        "alignItems",
+        "alignSelf",
+        "justifyContent",
+        "flex",
+        "fontFamily",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "border",
+        "borderRadius",
+        "overflow"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "selector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "canvas",
+          "selector": "canvas",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        },
+        {
+          "id": "edit-value",
+          "actions": [
+            {
+              "type": "fill",
+              "reactSelector": "#qr-code-demo-base input",
+              "blazorSelector": "#components-qrcode-demo-base input",
+              "value": "https://ant.design/blazor-v6-check"
+            },
+            {
+              "type": "press",
+              "reactSelector": "#qr-code-demo-base input",
+              "blazorSelector": "#components-qrcode-demo-base input",
+              "key": "Tab"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qrcode-loading",
+      "component": "QRCode loading cover",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/qr-code?theme=light",
+        "scopeSelector": "#qr-code-demo-status .code-box-demo",
+        "rootSelector": ".ant-qrcode:first-child"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/qrcode?theme=light",
+        "scopeSelector": "#components-qrcode-demo-status .code-box-demo",
+        "rootSelector": ".ant-qrcode:first-child"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minWidth",
+        "padding",
+        "margin",
+        "alignItems",
+        "alignSelf",
+        "justifyContent",
+        "flex",
+        "fontFamily",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "border",
+        "borderRadius",
+        "overflow"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "selector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "canvas",
+          "selector": "canvas",
+          "minimumCount": 1
+        },
+        {
+          "path": "cover",
+          "selector": ".ant-qrcode-cover",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "loading"
+        }
+      ]
+    },
+    {
+      "id": "radio-basic-demo",
+      "component": "Radio",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/radio?theme=light",
+        "scopeSelector": "#radio-demo-basic .code-box-demo",
+        "rootSelector": ".ant-radio-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/radio?theme=light",
+        "scopeSelector": "#components-radio-demo-Basic .code-box-demo",
+        "rootSelector": ".ant-radio-wrapper"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingInline",
+        "marginInlineEnd",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontFamily",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "icon",
+          "reactSelector": ".ant-radio",
+          "blazorSelector": ".ant-radio",
+          "minimumCount": 1
+        },
+        {
+          "path": "input",
+          "reactSelector": ".ant-radio-input",
+          "blazorSelector": ".ant-radio-input",
+          "minimumCount": 1
+        },
+        {
+          "path": "label",
+          "reactSelector": ".ant-radio-label",
+          "blazorSelector": ".ant-radio-label",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "radio-button-groups-demo",
+      "component": "Radio.Button",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/radio?theme=light",
+        "scopeSelector": "#radio-demo-radiobutton .code-box-demo",
+        "rootSelector": ".ant-radio-group"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/radio?theme=light",
+        "scopeSelector": "#components-radio-demo-Style .code-box-demo",
+        "rootSelector": ".ant-radio-group"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingInline",
+        "marginInlineEnd",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 3
+        },
+        {
+          "path": "option",
+          "reactSelector": ".ant-radio-button-wrapper",
+          "blazorSelector": ".ant-radio-button-wrapper",
+          "minimumCount": 12
+        },
+        {
+          "path": "icon",
+          "reactSelector": ".ant-radio-button",
+          "blazorSelector": ".ant-radio-button",
+          "minimumCount": 12
+        },
+        {
+          "path": "input",
+          "reactSelector": ".ant-radio-button-input",
+          "blazorSelector": ".ant-radio-button-input",
+          "minimumCount": 12
+        },
+        {
+          "path": "label",
+          "reactSelector": ".ant-radio-button-label",
+          "blazorSelector": ".ant-radio-button-label",
+          "minimumCount": 12
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "rate-basic-demo",
+      "component": "Rate",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/rate?theme=light",
+        "scopeSelector": "#rate-demo-basic .code-box-demo",
+        "rootSelector": ".ant-rate"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/rate?theme=light",
+        "scopeSelector": "#components-rate-demo-basic .code-box-demo",
+        "rootSelector": ".ant-rate"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingInline",
+        "marginInlineEnd",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontFamily",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "star",
+          "reactSelector": ".ant-rate-star",
+          "blazorSelector": ".ant-rate-star",
+          "minimumCount": 5
+        },
+        {
+          "path": "radio",
+          "reactSelector": "[role=radio]",
+          "blazorSelector": "[role=radio]",
+          "minimumCount": 5
+        },
+        {
+          "path": "first",
+          "reactSelector": ".ant-rate-star-first",
+          "blazorSelector": ".ant-rate-star-first",
+          "minimumCount": 5
+        },
+        {
+          "path": "second",
+          "reactSelector": ".ant-rate-star-second",
+          "blazorSelector": ".ant-rate-star-second",
+          "minimumCount": 5
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "rate-half-demo",
+      "component": "Rate allowHalf",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/rate?theme=light",
+        "scopeSelector": "#rate-demo-half .code-box-demo",
+        "rootSelector": ".ant-rate"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/rate?theme=light",
+        "scopeSelector": "#components-rate-demo-half .code-box-demo",
+        "rootSelector": ".ant-rate"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingInline",
+        "marginInlineEnd",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontFamily",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "star",
+          "reactSelector": ".ant-rate-star",
+          "blazorSelector": ".ant-rate-star",
+          "minimumCount": 5
+        },
+        {
+          "path": "radio",
+          "reactSelector": "[role=radio]",
+          "blazorSelector": "[role=radio]",
+          "minimumCount": 5
+        },
+        {
+          "path": "first",
+          "reactSelector": ".ant-rate-star-first",
+          "blazorSelector": ".ant-rate-star-first",
+          "minimumCount": 5
+        },
+        {
+          "path": "second",
+          "reactSelector": ".ant-rate-star-second",
+          "blazorSelector": ".ant-rate-star-second",
+          "minimumCount": 5
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default"
+        }
+      ]
+    },
+    {
+      "id": "select-basic",
+      "component": "Select",
+      "captureReactBeforeBlazor": true,
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "#select-demo-basic .code-box-demo",
+        "rootSelector": ".ant-select"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "#components-select-demo-basic .code-box-demo",
+        "rootSelector": ".ant-select"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingBlock",
+        "paddingInline",
+        "fontSize",
+        "lineHeight",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "boxShadow",
+        "zIndex"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "selector": "$root",
+          "minimumCount": 4
+        },
+        {
+          "path": "content",
+          "selector": ".ant-select-content",
+          "minimumCount": 4
+        },
+        {
+          "path": "input",
+          "selector": ".ant-select-input",
+          "minimumCount": 4
+        },
+        {
+          "path": "suffix",
+          "selector": ".ant-select-suffix",
+          "minimumCount": 4
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "closed",
+          "minimumRoots": 4
+        },
+        {
+          "id": "escape-closed",
+          "minimumRoots": 4,
+          "actions": [
+            {
+              "type": "click",
+              "reactSelector": "#select-demo-basic .ant-space-item:first-child .ant-select",
+              "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child .ant-select"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": "#select-demo-basic input[aria-expanded='true']",
+              "blazorSelector": "#components-select-demo-basic input[aria-expanded='true']"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 300
+            },
+            {
+              "type": "press",
+              "key": "Escape",
+              "reactSelector": "#select-demo-basic .ant-space-item:first-child input",
+              "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child input"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 300
+            },
+            {
+              "type": "wait",
+              "milliseconds": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "select-basic-popup",
+      "component": "Select",
+      "comparisonPolicy": {
+        "normalization": {
+          "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
+          "removeAttributes": [
+            "_bl_*"
+          ],
+          "removeClassPatterns": [
+            "^css-dev-only-do-not-override-",
+            "^css-var-_[rR]_",
+            "^css-[a-zA-Z0-9]+$"
+          ],
+          "removeCommentMarkers": [
+            "<!--!-->"
+          ]
+        },
+        "ignoredSemanticAttributes": {
+          "popup.root": [
+            "style"
+          ]
+        }
+      },
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#select-demo-basic .ant-space-item:first-child .ant-select",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#components-select-demo-basic .ant-space-item:first-child .ant-select",
+        "skeletonSelector": ""
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingBlock",
+        "paddingInline",
+        "fontSize",
+        "lineHeight",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "boxShadow",
+        "zIndex"
+      ],
+      "semanticNodes": [
+        {
+          "path": "popup.root",
+          "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])",
+          "portal": true,
+          "portalMatch": "nearest-trigger",
+          "geometryAnchor": {
+            "mode": "pixel-snap-to-trigger",
+            "verticalOffset": 4
+          },
+          "portalVisible": true,
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.list",
+          "selector": ".ant-select-dropdown-list",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.option",
+          "selector": ".ant-select-item-option",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 4
+        },
+        {
+          "path": "popup.content",
+          "selector": ".ant-select-item-option-content",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 4
+        },
+        {
+          "path": "popup.state",
+          "selector": ".ant-select-item-option-state",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 4
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "open",
+          "minimumRoots": 1,
+          "actions": [
+            {
+              "type": "click",
+              "reactSelector": "#select-demo-basic .ant-space-item:first-child .ant-select",
+              "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child .ant-select"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": "#select-demo-basic .ant-space-item:first-child .ant-select-open",
+              "blazorSelector": "#components-select-demo-basic .ant-space-item:first-child .ant-select-open"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 1200
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "select-size-demo",
+      "component": "Select",
+      "matchScopeWidth": "react",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "#select-demo-size .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "#components-select-demo-size .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "maxHeight",
+        "paddingBlock",
+        "paddingInline",
+        "marginBlock",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth",
+        "--ant-select-height",
+        "--ant-select-multi-item-height",
+        "--ant-select-multi-padding-vertical"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 3
+        },
+        {
+          "path": "content",
+          "reactSelector": ".ant-select-content",
+          "blazorSelector": ".ant-select-content",
+          "minimumCount": 3
+        },
+        {
+          "path": "input",
+          "reactSelector": ".ant-select-input",
+          "blazorSelector": ".ant-select-input",
+          "minimumCount": 3
+        },
+        {
+          "path": "item",
+          "reactSelector": ".ant-select-selection-item",
+          "blazorSelector": ".ant-select-selection-item",
+          "minimumCount": 4
+        },
+        {
+          "path": "suffix",
+          "reactSelector": ".ant-select-suffix",
+          "blazorSelector": ".ant-select-suffix",
+          "minimumCount": 3
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 3
+        },
+        {
+          "id": "large",
+          "minimumRoots": 3,
+          "actions": [
+            {
+              "id": "select-large",
+              "type": "click",
+              "reactSelector": "#select-demo-size input[value=large]",
+              "blazorSelector": "#components-select-demo-size input[value=Large]",
+              "reactCheckedValue": "large",
+              "blazorCheckedValue": "Large",
+              "force": true,
+              "stableForMs": 1000
+            }
+          ]
+        },
+        {
+          "id": "small",
+          "minimumRoots": 3,
+          "actions": [
+            {
+              "id": "select-small",
+              "type": "click",
+              "reactSelector": "#select-demo-size input[value=small]",
+              "blazorSelector": "#components-select-demo-size input[value=Small]",
+              "reactCheckedValue": "small",
+              "blazorCheckedValue": "Small",
+              "force": true,
+              "stableForMs": 1000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "select-search-filter-interaction",
+      "component": "Select",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#select-demo-search .ant-select",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#components-select-demo-search .ant-select",
+        "skeletonSelector": ""
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingBlock",
+        "paddingInline",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "boxShadow"
+      ],
+      "includeAntDesignTokens": [
+        "--ant-select-"
+      ],
+      "semanticNodes": [
+        {
+          "path": "popup.root",
+          "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])",
+          "portal": true,
+          "portalMatch": "nearest-trigger",
+          "geometryAnchor": {
+            "mode": "pixel-snap-to-trigger",
+            "verticalOffset": 4
+          },
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.option",
+          "selector": ".ant-select-item-option",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.content",
+          "selector": ".ant-select-item-option-content",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "filter-lucy",
+          "minimumRoots": 1,
+          "actions": [
+            {
+              "type": "click",
+              "reactSelector": "#select-demo-search .ant-select input",
+              "blazorSelector": "#components-select-demo-search .ant-select input"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": "#select-demo-search .ant-select-open",
+              "blazorSelector": "#components-select-demo-search .ant-select-open"
+            },
+            {
+              "type": "typeText",
+              "reactSelector": "#select-demo-search .ant-select input",
+              "blazorSelector": "#components-select-demo-search .ant-select input",
+              "value": "luc",
+              "delayMs": 50
+            },
+            {
+              "type": "waitForSelectOptions",
+              "reactSelector": "#select-demo-search .ant-select",
+              "blazorSelector": "#components-select-demo-search .ant-select",
+              "visibleLabels": [
+                "Lucy"
+              ],
+              "hiddenLabels": [
+                "Jack",
+                "Tom"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "select-multiple-selection-interaction",
+      "component": "Select",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "#select-demo-multiple .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "#components-select-demo-multiple .code-box-demo",
+        "rootSelector": ".ant-select",
+        "skeletonSelector": ""
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "gap",
+        "paddingBlock",
+        "paddingInline",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderWidth",
+        "borderColor",
+        "boxShadow"
+      ],
+      "includeAntDesignTokens": [
+        "--ant-select-"
+      ],
+      "semanticNodes": [
+        {
+          "path": "popup.root",
+          "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none'])",
+          "portal": true,
+          "portalMatch": "nearest-trigger",
+          "reactTriggerSelector": "#select-demo-multiple .ant-select:not(.ant-select-disabled)",
+          "blazorTriggerSelector": "#components-select-demo-multiple .ant-select:not(.ant-select-disabled)",
+          "geometryAnchor": {
+            "mode": "pixel-snap-to-trigger",
+            "verticalOffset": 4
+          },
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.option",
+          "selector": ".ant-select-item-option",
+          "portal": true,
+          "portalParentPath": "popup.root",
+          "geometryParentSelector": ".ant-select-dropdown",
+          "minimumCount": 1
+        },
+        {
+          "path": "item",
+          "selector": ".ant-select-selection-item",
+          "minimumCount": 4
+        },
+        {
+          "path": "clear",
+          "selector": ".ant-select-clear",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "select-option-and-close",
+          "minimumRoots": 2,
+          "actions": [
+            {
+              "type": "click",
+              "reactSelector": "#select-demo-multiple .ant-select:not(.ant-select-disabled) input",
+              "blazorSelector": "#components-select-demo-multiple .ant-select:not(.ant-select-disabled) input"
+            },
+            {
+              "type": "waitForSelectOptions",
+              "reactSelector": "#select-demo-multiple .ant-select:not(.ant-select-disabled)",
+              "blazorSelector": "#components-select-demo-multiple .ant-select:not(.ant-select-disabled)",
+              "visibleLabels": [
+                "d13"
+              ]
+            },
+            {
+              "type": "click",
+              "reactSelector": ".ant-select-dropdown .ant-select-item-option[title='d13']",
+              "blazorSelector": ".ant-select-dropdown .ant-select-item-option[title='d13']",
+              "visible": true
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": "#select-demo-multiple .ant-select-selection-item[title='d13']",
+              "blazorSelector": "#components-select-demo-multiple .ant-select-selection-item[title='d13']"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 250
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "select-semantic-style",
+      "component": "Select",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "#select-demo-style-class .code-box-demo",
+        "rootSelector": ".ant-select"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "#components-select-demo-style-class .code-box-demo",
+        "rootSelector": ".ant-select"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "gap",
+        "top",
+        "right",
+        "bottom",
+        "left",
+        "transform",
+        "paddingBlock",
+        "paddingInline",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderWidth",
+        "borderColor"
+      ],
+      "semanticNodes": [
+        {
+          "path": "prefix",
+          "selector": ".ant-select-prefix",
+          "minimumCount": 2
+        },
+        {
+          "path": "content",
+          "selector": ".ant-select-content",
+          "minimumCount": 2
+        },
+        {
+          "path": "input",
+          "selector": ".ant-select-input",
+          "minimumCount": 2
+        },
+        {
+          "path": "placeholder",
+          "selector": ".ant-select-placeholder",
+          "minimumCount": 2
+        },
+        {
+          "path": "suffix",
+          "selector": ".ant-select-suffix",
+          "minimumCount": 2
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "closed",
+          "minimumRoots": 2
+        }
+      ]
+    },
+    {
+      "id": "select-semantic-style-popup",
+      "component": "Select",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#select-demo-style-class .ant-select-filled",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#components-select-demo-style-class .ant-select-filled",
+        "skeletonSelector": ""
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "paddingBlock",
+        "paddingInline",
+        "borderWidth",
+        "borderStyle",
+        "borderColor",
+        "borderRadius",
+        "boxShadow",
+        "zIndex"
+      ],
+      "semanticNodes": [
+        {
+          "path": "popup.root",
+          "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='GuangZhou'])",
+          "portal": true,
+          "geometryAnchor": {
+            "mode": "pixel-snap-to-trigger",
+            "verticalOffset": 4
+          },
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "filled-open",
+          "minimumRoots": 1,
+          "actions": [
+            {
+              "type": "click",
+              "reactSelector": "#select-demo-style-class .ant-select-filled",
+              "blazorSelector": "#components-select-demo-style-class .ant-select-filled"
+            },
+            {
+              "type": "waitForSelector",
+              "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='GuangZhou'])"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "select-virtual-big-data",
+      "component": "Select",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/select?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#select-demo-big-data .ant-select",
+        "skeletonSelector": ""
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/select?theme=light",
+        "scopeSelector": "body",
+        "rootSelector": "#components-select-demo-big-data .ant-select",
+        "skeletonSelector": ""
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "overflow",
+        "paddingBlock",
+        "paddingInline",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "zIndex",
+        "borderColor",
+        "borderStyle",
+        "borderWidth",
+        "cursor",
+        "opacity"
+      ],
+      "semanticNodes": [
+        {
+          "path": "item",
+          "selector": ".ant-select-selection-item",
+          "minimumCount": 2
+        },
+        {
+          "path": "item.disabled",
+          "selector": ".ant-select-selection-item-disabled",
+          "minimumCount": 1
+        },
+        {
+          "path": "itemRemove",
+          "selector": ".ant-select-selection-item-remove",
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.root",
+          "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='00'])",
+          "portal": true,
+          "geometryAnchor": {
+            "mode": "pixel-snap-to-trigger",
+            "verticalOffset": 4
+          },
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.a11y",
+          "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='00']) [role='listbox']",
+          "portal": true,
+          "geometryParentSelector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='00'])",
+          "minimumCount": 1
+        },
+        {
+          "path": "popup.a11yOption",
+          "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='00']) [role='option']",
+          "portal": true,
+          "geometryParentSelector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='00'])",
+          "minimumCount": 2
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "open",
+          "minimumRoots": 1,
+          "actions": [
+            {
+              "type": "measureClickVisible",
+              "id": "popup-visible",
+              "reactSelector": "#select-demo-big-data input",
+              "blazorSelector": "#components-select-demo-big-data input",
+              "reactVisibleSelector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):has(.ant-select-item-option[title='00'])",
+              "blazorVisibleSelector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):has(.ant-select-item-option[title='00'])"
+            },
+            {
+              "type": "waitForSelector",
+              "reactSelector": "#select-demo-big-data input[aria-expanded='true'][aria-activedescendant]",
+              "blazorSelector": "#components-select-demo-big-data input[aria-expanded='true'][aria-activedescendant]"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 800
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "splitter-size-demo",
+      "component": "Splitter",
+      "matchScopeWidth": "react",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/splitter/?theme=light",
+        "scopeSelector": "#splitter-demo-size .code-box-demo",
+        "rootSelector": ".ant-splitter",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/splitter?theme=light",
+        "scopeSelector": "#components-splitter-demo-size .code-box-demo",
+        "rootSelector": ".ant-splitter",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minWidth",
+        "minHeight",
+        "maxWidth",
+        "maxHeight",
+        "flexDirection",
+        "flex",
+        "flexBasis",
+        "flexGrow",
+        "flexShrink",
+        "overflow",
+        "boxShadow",
+        "backgroundColor",
+        "borderRadius",
+        "borderColor",
+        "columnGap",
+        "rowGap",
+        "paddingLeft",
+        "paddingRight",
+        "marginLeft",
+        "marginRight",
+        "borderLeftWidth",
+        "borderRightWidth",
+        "direction",
+        "writingMode",
+        "transform",
+        "zoom",
+        "alignSelf",
+        "order",
+        "--ant-splitter-split-bar-size",
+        "--ant-splitter-split-trigger-size",
+        "--ant-splitter-split-bar-draggable-size"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "panel",
+          "reactSelector": ".ant-splitter-panel",
+          "blazorSelector": ".ant-splitter-panel",
+          "minimumCount": 2
+        },
+        {
+          "path": "bar",
+          "reactSelector": ".ant-splitter-bar",
+          "blazorSelector": ".ant-splitter-bar",
+          "minimumCount": 1
+        },
+        {
+          "path": "dragger",
+          "reactSelector": ".ant-splitter-bar-dragger",
+          "blazorSelector": ".ant-splitter-bar-dragger",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ]
+    },
+    {
+      "id": "transfer-basic-demo",
+      "component": "Transfer",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/transfer?theme=light",
+        "scopeSelector": "#transfer-demo-basic .code-box-demo",
+        "rootSelector": ".ant-transfer",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/transfer?theme=light",
+        "scopeSelector": "#components-transfer-demo-basic .code-box-demo",
+        "rootSelector": ".ant-transfer",
+        "skeletonSelector": ".ant-skeleton"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minHeight",
+        "maxHeight",
+        "flex",
+        "flexDirection",
+        "paddingBlock",
+        "paddingInline",
+        "marginBlock",
+        "marginInline",
+        "gap",
+        "alignItems",
+        "lineHeight",
+        "fontSize",
+        "fontWeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderTopWidth",
+        "borderRightWidth",
+        "borderBottomWidth",
+        "borderLeftWidth",
+        "--ant-transfer-list-width",
+        "--ant-transfer-list-height",
+        "--ant-transfer-header-height",
+        "--ant-transfer-item-height"
+      ],
+      "semanticNodes": [
+        {
+          "path": "root",
+          "reactSelector": "$root",
+          "blazorSelector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "section",
+          "reactSelector": ".ant-transfer-section",
+          "blazorSelector": ".ant-transfer-section",
+          "minimumCount": 2
+        },
+        {
+          "path": "actions",
+          "reactSelector": ".ant-transfer-actions",
+          "blazorSelector": ".ant-transfer-actions",
+          "minimumCount": 1
+        },
+        {
+          "path": "header",
+          "reactSelector": ".ant-transfer-list-header",
+          "blazorSelector": ".ant-transfer-list-header",
+          "minimumCount": 2
+        },
+        {
+          "path": "body",
+          "reactSelector": ".ant-transfer-list-body",
+          "blazorSelector": ".ant-transfer-list-body",
+          "minimumCount": 2
+        },
+        {
+          "path": "list",
+          "reactSelector": ".ant-transfer-list-content",
+          "blazorSelector": ".ant-transfer-list-content",
+          "minimumCount": 2
+        },
+        {
+          "path": "item",
+          "reactSelector": ".ant-transfer-list-content-item",
+          "blazorSelector": ".ant-transfer-list-content-item",
+          "minimumCount": 20
+        },
+        {
+          "path": "itemContent",
+          "reactSelector": ".ant-transfer-list-content-item-text",
+          "blazorSelector": ".ant-transfer-list-content-item-text",
+          "minimumCount": 20
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ]
+    }
+  ]
+}

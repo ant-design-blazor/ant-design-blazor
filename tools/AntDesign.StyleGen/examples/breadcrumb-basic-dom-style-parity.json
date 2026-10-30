@@ -23,12 +23,12 @@
       "id": "breadcrumb-basic-demo",
       "component": "Breadcrumb",
       "react": {
-        "url": "http://127.0.0.1:8000/components/breadcrumb",
+        "url": "http://127.0.0.1:8000/components/breadcrumb?theme=light",
         "scopeSelector": "#breadcrumb-demo-basic .code-box-demo",
         "rootSelector": ".ant-breadcrumb"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8186/en-US/components/breadcrumb",
+        "url": "http://127.0.0.1:5000/en-US/components/breadcrumb?theme=light",
         "scopeSelector": "#components-breadcrumb-demo-Basic .code-box-demo",
         "rootSelector": ".ant-breadcrumb"
       },

@@ -12,7 +12,8 @@ function fixture() {
   const scroll = { x: 0, y: 0 };
   const computedStyle = { width: '260.8671875px', height: '100px' };
   vm.runInNewContext(script, { exports: exported, window, getComputedStyle: () => computedStyle, require: name => {
-    if (name === '../dom/exports') return { domInfoHelper: { getMaxZIndex: () => 1000, getWindow: () => window, getScroll: () => scroll } };
+    if (name === '../dom/exports') return { domInfoHelper: { getMaxZIndex: () => 1000, getWindow: () => window, getScroll: () => scroll,
+      getBoundingClientRect: element => element.getBoundingClientRect?.() ?? null } };
     return {};
   } });
   const { Overlay, Placement, TriggerBoundyAdjustMode } = exported;
@@ -86,6 +87,39 @@ test('Select alignment floors final offsets rather than rounding a fractional an
   assert.equal(overlay.position.left, 339.6640625, 'unrounded measurement survives until final alignment');
 });
 
+test('centered Popover alignment uses rendered trigger and popup bounds before pixel snapping', () => {
+  const { overlay, computedStyle, Placement, Overlay } = fixture();
+  overlay.initialPlacement = overlay.placement = Placement.Top;
+  overlay.selectedHorizontalPosition = 'left';
+  overlay.horizontalCalculation = Overlay.setHorizontalCalculation(Placement.Top, 'left');
+  overlay.triggerInfo.absoluteLeft = 339.65625;
+  overlay.triggerInfo.offsetWidth = 96;
+  overlay.triggerInfo.clientWidth = 96;
+  overlay.trigger.getBoundingClientRect = () => ({ left: 339.65625, right: 435.296875, width: 95.640625, height: 32 });
+  overlay.overlayInfo.clientWidth = 200;
+  overlay.overlay.getBoundingClientRect = () => ({ width: 201, height: 100 });
+  computedStyle.width = '201px';
+
+  const result = overlay.calculatePosition(false, true);
+  assert.equal(result.left, 286, 'uses the 201px rendered popup box rather than the truncated 200px client width');
+});
+
+test('centered tooltip alignment uses the untransformed popup size during enter motion', () => {
+  const { overlay, computedStyle, Placement, Overlay } = fixture();
+  overlay.initialPlacement = overlay.placement = Placement.Top;
+  overlay.selectedHorizontalPosition = 'left';
+  overlay.horizontalCalculation = Overlay.setHorizontalCalculation(Placement.Top, 'left');
+  overlay.triggerInfo.absoluteLeft = 339.65625;
+  overlay.trigger.getBoundingClientRect = () => ({ left: 339.65625, right: 561.90625, width: 222.25, height: 22 });
+  overlay.overlay.getBoundingClientRect = () => ({ width: 74.75, height: 27.2 });
+  computedStyle.width = '93.4375px';
+  computedStyle.height = '34px';
+  computedStyle.boxSizing = 'border-box';
+
+  const result = overlay.calculatePosition(false, true);
+  assert.equal(result.left, 404.0625, 'center alignment uses the final 93.4375px layout width rather than the animated 74.75px visual width');
+});
+
 test('scaled axes retain fractional offsets like rc-trigger', () => {
   const { overlay, computedStyle } = fixture();
   computedStyle.width = '130.43359375px';
@@ -95,7 +129,7 @@ test('scaled axes retain fractional offsets like rc-trigger', () => {
   assert.equal(result.top, 150);
 });
 
-test('popup motion end realigns the final geometry but descendant and hidden animations do not', () => {
+test('popup motion end recalculates using the stable placement policy', () => {
   const { overlay } = fixture();
   const calls = [];
   overlay.calculatePosition = (...args) => calls.push(args);
@@ -106,6 +140,88 @@ test('popup motion end realigns the final geometry but descendant and hidden ani
   overlay.overlay.offsetParent = null;
   overlay.onMotionEnd({ target: overlay.overlay });
   assert.equal(calls.length, 1);
+});
+
+test('position recalculation keeps the initial pixel-snap decision through scale motion', () => {
+  const { overlay, computedStyle } = fixture();
+  overlay.selectedHorizontalPosition = 'left';
+  overlay.selectedVerticalPosition = 'top';
+  overlay.position = { left: 339.65625, top: 469.828125, right: 0, bottom: 0 };
+  overlay.overlay.getBoundingClientRect = () => ({ width: 200, height: 100 });
+  computedStyle.width = '200px';
+  computedStyle.height = '100px';
+
+  overlay.sanitizeCalculatedPositions();
+  const initial = { ...overlay.sanitizedPosition };
+  assert.equal(initial.left, 339);
+  assert.equal(initial.top, 469);
+
+  // Enter motion temporarily scales the visual box. The alignment policy must
+  // remain the one selected for the unanimated first layout.
+  overlay.overlay.getBoundingClientRect = () => ({ width: 180, height: 90 });
+  overlay.position = { left: 339.65625, top: 469.828125, right: 0, bottom: 0 };
+  overlay.sanitizeCalculatedPositions();
+  assert.equal(JSON.stringify(overlay.sanitizedPosition), JSON.stringify(initial));
+
+  overlay.overlay.getBoundingClientRect = () => ({ width: 200, height: 100 });
+  overlay.position = { left: 339.65625, top: 469.828125, right: 0, bottom: 0 };
+  overlay.sanitizeCalculatedPositions();
+  assert.equal(JSON.stringify(overlay.sanitizedPosition), JSON.stringify(initial), 'repeated calculations are idempotent after animation');
+});
+
+test('a replacement Overlay created during enter motion keeps the pre-motion pixel alignment', () => {
+  const { overlay, computedStyle } = fixture();
+  overlay.selectedHorizontalPosition = 'left';
+  overlay.selectedVerticalPosition = 'top';
+  overlay.overlay.getBoundingClientRect = () => ({ width: 180, height: 90 });
+  overlay.overlay.getAnimations = () => [{ playState: 'running' }];
+  computedStyle.width = '200px';
+  computedStyle.height = '100px';
+  overlay.position = { left: 339.65625, top: 469.828125, right: 0, bottom: 0 };
+
+  overlay.sanitizeCalculatedPositions();
+  const duringMotion = JSON.stringify(overlay.sanitizedPosition);
+  assert.equal(overlay.sanitizedPosition.left, 339);
+  assert.equal(overlay.sanitizedPosition.top, 469);
+
+  overlay.overlay.getAnimations = () => [];
+  overlay.overlay.getBoundingClientRect = () => ({ width: 200, height: 100 });
+  overlay.sanitizeCalculatedPositions();
+  assert.equal(JSON.stringify(overlay.sanitizedPosition), duringMotion, 'motion end must not move the replacement overlay');
+});
+
+test('popup resize realigns even when the initial observer delivery is being ignored', () => {
+  const { overlay } = fixture();
+  const calls = [];
+  overlay.duringInit = true;
+  overlay.calculatePosition = (...args) => calls.push(args);
+  overlay.resizing([{ target: overlay.overlay }], {});
+  assert.deepEqual(calls, [[true, false, undefined]]);
+});
+
+test('visible overlays realign when layout moves the trigger without resizing it', () => {
+  const { overlay, window } = fixture();
+  let nextFrame;
+  const triggerRect = { left: 20, top: 40, width: 100, height: 24 };
+  const calls = [];
+  overlay.trigger.getBoundingClientRect = () => triggerRect;
+  overlay.overlay.isConnected = true;
+  overlay.lastTriggerClientRect = { ...triggerRect };
+  overlay.calculatePosition = (...args) => calls.push(args);
+  window.requestAnimationFrame = callback => {
+    nextFrame = callback;
+    return 1;
+  };
+
+  overlay.monitorTriggerPosition();
+  triggerRect.top += 80;
+  nextFrame();
+
+  assert.deepEqual(calls, [[true, false, undefined]]);
+  assert.equal(overlay.lastTriggerClientRect.left, triggerRect.left);
+  assert.equal(overlay.lastTriggerClientRect.top, triggerRect.top);
+  assert.equal(overlay.lastTriggerClientRect.width, triggerRect.width);
+  assert.equal(overlay.lastTriggerClientRect.height, triggerRect.height);
 });
 
 test('Overlay InView contains a popup when neither horizontal direction can fully fit', () => {

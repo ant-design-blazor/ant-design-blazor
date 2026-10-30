@@ -124,12 +124,15 @@ namespace AntDesign
                 .If("ant-collapse-panel-active", () => _isActive)
                 .If("ant-collapse-panel-inactive", () => _isInactive)
                 .If("ant-collapse-panel-hidden", () => _isHidden)
-                .If("ant-motion-collapse-enter ant-motion-collapse-enter-prepare ant-motion-collapse", () => _isCollapseEnterPrepare)
-                .If("ant-motion-collapse-enter ant-motion-collapse-enter-start ant-motion-collapse", () => _isCollapseEnterStart)
-                .If("ant-motion-collapse-enter ant-motion-collapse-enter-active ant-motion-collapse", () => _isCollapseEnterActive)
-                .If("ant-motion-collapse-leave ant-motion-collapse-leave-prepare ant-motion-collapse", () => _isCollapseLeavePrepare)
-                .If("ant-motion-collapse-leave ant-motion-collapse-leave-start ant-motion-collapse", () => _isCollapseLeaveStart)
-                .If("ant-motion-collapse-leave ant-motion-collapse-leave-active ant-motion-collapse", () => _isCollapseLeaveActive)
+                // This stable class lets the client set height inline without a
+                // later Blazor render removing the transition declaration.
+                .If("ant-motion-collapse", () => Collapse.Animation)
+                .If("ant-motion-collapse-enter ant-motion-collapse-enter-prepare", () => _isCollapseEnterPrepare)
+                .If("ant-motion-collapse-enter ant-motion-collapse-enter-start", () => _isCollapseEnterStart)
+                .If("ant-motion-collapse-enter ant-motion-collapse-enter-active", () => _isCollapseEnterActive)
+                .If("ant-motion-collapse-leave ant-motion-collapse-leave-prepare", () => _isCollapseLeavePrepare)
+                .If("ant-motion-collapse-leave ant-motion-collapse-leave-start", () => _isCollapseLeaveStart)
+                .If("ant-motion-collapse-leave ant-motion-collapse-leave-active", () => _isCollapseLeaveActive)
                 ;
         }
 
@@ -234,6 +237,32 @@ namespace AntDesign
                     }
                 }
             }
+        }
+
+        internal async Task SetActiveFromClientAsync(bool active, bool deferInitialContent = false)
+        {
+            if (Active == active) return;
+
+            var needsInitialEnter = deferInitialContent && active && !_hasRendered;
+            Active = active;
+            _isActive = active;
+            _isInactive = !active;
+            // Match React's lazy panel content mount. The client motion helper
+            // removes this hidden state after the server has rendered the body,
+            // then animates it locally without a second server round trip.
+            _isHidden = needsInitialEnter;
+            _hasRendered = true;
+            StateHasChanged();
+            if (OnActiveChange.HasDelegate)
+            {
+                await OnActiveChange.InvokeAsync(active);
+            }
+        }
+
+        internal void SetClientHidden(bool hidden)
+        {
+            _isHidden = hidden;
+            StateHasChanged();
         }
 
         /// <summary>

@@ -1,0 +1,19 @@
+<Flex Direction="FlexDirection.Vertical" Gap="FlexGap.Middle">
+    <Flex Direction="FlexDirection.Vertical" Gap="FlexGap.Small">
+        <span>Interactive suffix</span>
+        <Select TItemValue="string" TItem="string" AllowClear DefaultValue="@("long")" SuffixIcon="@Suffix" DataSource="_options" Style="width:280px" />
+    </Flex>
+    <Flex Direction="FlexDirection.Vertical" Gap="FlexGap.Small">
+        <span>No suffix</span>
+        <Select TItemValue="string" TItem="string" AllowClear DefaultValue="@("long")" ShowArrowIcon="false" DataSource="_options" Style="width:280px" />
+    </Flex>
+</Flex>
+
+@code {
+    private static readonly string _longLabel = "A very very very very very very very long selected label";
+    private static readonly string[] _options = [_longLabel, "Short option"];
+    private RenderFragment Suffix => @<button type="button" @onmousedown:stopPropagation="true" @onclick:stopPropagation="true"
+        style="border:1px solid #d9d9d9;border-radius:4px;padding:0 8px;color:rgba(0,0,0,.88);background:#fff;cursor:pointer">
+        Suffix
+    </button>;
+}

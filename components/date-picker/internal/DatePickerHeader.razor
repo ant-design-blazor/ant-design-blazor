@@ -5,14 +5,14 @@
 <div class="@(PrefixCls)-header" @ref="Ref">
     @if (ShowSuperPreChange)
     {
-        <button tabindex="-1" class="@(PrefixCls)-header-super-prev-btn" @onclick="e => ChangePickerYearValue(-SuperChangeDateInterval)">
+        <button type="button" aria-label="@AccessibleLabel(Locale.Lang.PreviousYear)" tabindex="-1" class="@(PrefixCls)-header-super-prev-btn" @onclick="e => ChangePickerYearValue(-SuperChangeDateInterval)">
             <span class="@(PrefixCls)-super-prev-icon"></span>
         </button>
     }
 
     @if (ShowPreChange)
     {
-        <button tabindex="-1" class="@(PrefixCls)-header-prev-btn" @onclick="e => ChangePickerMonthValue(-ChangeDateInterval)">
+        <button type="button" aria-label="@AccessibleLabel(Locale.Lang.PreviousMonth)" tabindex="-1" class="@(PrefixCls)-header-prev-btn" @onclick="e => ChangePickerMonthValue(-ChangeDateInterval)">
             <span class="@(PrefixCls)-prev-icon"></span>
         </button>
     }
@@ -22,13 +22,13 @@
     {
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
         {
-            <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
+            <button type="button" aria-label="@Locale.Lang.MonthSelect" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
                 @(PickerValue.ToString(Locale.Lang.MonthFormat, CultureInfo))
             </button>
         }
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
         {
-            <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
+            <button type="button" aria-label="@Locale.Lang.YearSelect" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
                 @(PickerValue.ToString(Locale.Lang.YearFormat, CultureInfo))
             </button>
         }
@@ -37,13 +37,13 @@
     {
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Month, DatePickerType.Quarter, DatePickerType.Week))
         {
-            <button type="button" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
+            <button type="button" aria-label="@Locale.Lang.YearSelect" tabindex="-1" class="@(PrefixCls)-year-btn" @onclick="e => PopUpPicker(DatePickerType.Year)">
                 @(PickerValue.ToString(Locale.Lang.YearFormat, CultureInfo))
             </button>
         }
         @if (Picker.IsIn(DatePickerType.Date, DatePickerType.Week))
         {
-            <button type="button" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
+            <button type="button" aria-label="@Locale.Lang.MonthSelect" tabindex="-1" class="@(PrefixCls)-month-btn" @onclick="e => PopUpPicker(DatePickerType.Month)">
                 @(PickerValue.ToString(Locale.Lang.MonthFormat, CultureInfo))
             </button>
         }
@@ -85,19 +85,21 @@
 
     @if (ShowNextChange)
     {
-        <button tabindex="-1" class="@(PrefixCls)-header-next-btn" @onclick="e => ChangePickerMonthValue(ChangeDateInterval)">
+        <button type="button" aria-label="@AccessibleLabel(Locale.Lang.NextMonth)" tabindex="-1" class="@(PrefixCls)-header-next-btn" @onclick="e => ChangePickerMonthValue(ChangeDateInterval)">
             <span class="@(PrefixCls)-next-icon"></span>
         </button>
     }
     @if (ShowSuperNextChange)
     {
-        <button tabindex="-1" class="@(PrefixCls)-header-super-next-btn" @onclick="e => ChangePickerYearValue(SuperChangeDateInterval)">
+        <button type="button" aria-label="@AccessibleLabel(Locale.Lang.NextYear)" tabindex="-1" class="@(PrefixCls)-header-super-next-btn" @onclick="e => ChangePickerYearValue(SuperChangeDateInterval)">
             <span class="@(PrefixCls)-super-next-icon"></span>
         </button>
     }
 </div>
 
 @code {
+    private static string AccessibleLabel(string value) => value?.Split('(')[0].Trim();
+
     [Parameter]
     public int SuperChangeDateInterval { get; set; } = 1;
     [Parameter]

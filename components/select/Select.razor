@@ -13,30 +13,29 @@
 {
         RenderFragment SelectOptionsRender()
         {
-#if NET5_0_OR_GREATER
-            if(UsesVirtualAccessibility)
-            {
-                return @<Microsoft.AspNetCore.Components.Web.Virtualization.Virtualize
-                    Items=@SortedSelectOptionItems.Where(x => !x.IsHidden).ToList()
-                    ItemSize="32"
-                    ChildContent="optionRender(ItemTemplate)"/>;
-            }
-#endif
-
-            return @<ForeachLoop Items=@SortedSelectOptionItems  ChildContent="optionRender(ItemTemplate)" />;
+            return @<ForeachLoop Items=@SortedSelectOptionItems.Where(option => !option.IsHidden).ToList() ChildContent="optionRender(ItemTemplate)" />;
         }
 
 
      Func<RenderFragment<TItem>, RenderFragment<SelectOptionItem<TItemValue, TItem>>> optionRender = 
         itemTemplate => option =>
         @<CascadingValue Value=@itemTemplate Name="ItemTemplate">
+            <CascadingValue Value="@option" Name="Model">
             <CascadingValue Value="@option.InternalId" Name="InternalId">
                 <SelectOption @key="@option.InternalId"
                     TItemValue="TItemValue"
                     TItem="TItem">
                 </SelectOption>
             </CascadingValue>
+            </CascadingValue>
         </CascadingValue>;
+
+    private bool IsVirtualOptionSelected(SelectOptionItem<TItemValue, TItem> option)
+    {
+        return option.IsSelected
+            || SelectedOptionItems.Any(item => EqualityComparer<TItemValue>.Default.Equals(item.Key, option.Value))
+            || Values?.Contains(option.Value, EqualityComparer<TItemValue>.Default) == true;
+    }
 
     protected override RenderFragment RenderOptionDropdown()
     {
@@ -55,15 +54,28 @@
                         {
                             var option = options[index];
                             <div aria-label="@option.Label" role="option" id="@GetOptionId(option.InternalId)"
-                                 aria-selected="@option.IsSelected.ToString().ToLowerInvariant()"
-                                 aria-disabled="@option.IsDisabled.ToString().ToLowerInvariant()">@option.Value</div>
+                                 aria-selected="@(IsVirtualOptionSelected(option) ? "true" : "false")"
+                                 aria-disabled="@(option.IsDisabled ? "true" : null)">@option.Value</div>
                         }
                     }
                 </div>
             }
             <div class="@GetSemanticClass("popup.list", "ant-select-dropdown-list")" style="@GetSemanticStyle("popup.list", empty ? "position: relative;display:none;" : "position: relative;")">
-              <div class="ant-select-dropdown-list-holder" style="max-height: @PopupContainerMaxHeight; overflow-y: auto; overflow-anchor: none;" @ref="_scrollableSelectDiv">
-                <div>
+              <div class="ant-select-dropdown-list-holder" style="max-height: @PopupContainerMaxHeight; overflow-y: @(UsesVirtualAccessibility ? "hidden" : "auto"); overflow-anchor: none;" @ref="_scrollableSelectDiv">
+                    @if (UsesVirtualWindow)
+                    {
+                        <div style="@VirtualListSpacerStyle">
+                            <div class="ant-select-dropdown-list-holder-inner" style="@VirtualListInnerStyle">
+                                @foreach (var option in GetVirtualWindowOptions())
+                                {
+                                    @optionRender(ItemTemplate)(option)
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                    <div>
                     <div class="ant-select-dropdown-list-holder-inner" role="@(empty || UsesVirtualAccessibility ? null : "listbox")" id="@(empty || UsesVirtualAccessibility ? null : ListboxId)" style="@ListboxStyle">
                       @if (SelectOptions != null)
                       {
@@ -105,8 +117,15 @@
                           </CascadingValue>
                       }
                     </div>
-                </div>
+                    </div>
+                    }
               </div>
+              @if (UsesVirtualWindow)
+              {
+                  <div class="ant-select-dropdown-list-scrollbar ant-select-dropdown-list-scrollbar-vertical" style="position: absolute; width: 8px; top: 0px; bottom: 0px; right: 0px; visibility: hidden;">
+                      <div class="ant-select-dropdown-list-scrollbar-thumb" style="position: absolute; border-radius: 99px; background: var(--rc-virtual-list-scrollbar-bg, rgba(0, 0, 0, 0.5)); cursor: pointer; user-select: none; width: 100%; height: 20px; top: 0px;"></div>
+                  </div>
+              }
             </div>
         }
         @if (empty)

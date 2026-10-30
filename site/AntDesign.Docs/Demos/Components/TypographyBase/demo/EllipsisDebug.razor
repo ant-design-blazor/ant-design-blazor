@@ -1,0 +1,27 @@
+<div style="display: flex; flex-direction: column; gap: 12px;">
+    <Flex Gap="FlexGap.Middle" Align="FlexAlign.Center">
+        <Switch @bind-Checked="longText" CheckedChildren="Long Text" />
+        <Switch @bind-Checked="copyable" CheckedChildren="Copyable" />
+        <Switch @bind-Checked="editable" CheckedChildren="Editable" />
+        <Switch @bind-Checked="expandable" CheckedChildren="Expandable" />
+    </Flex>
+    <Slider TValue="double" Min="1" Max="10" Value="rows" ValueChanged="RowsChanged" />
+    <Paragraph EllipsisConfig="@ellipsisConfig" Copyable="@copyable" Editable="@editable">@currentText</Paragraph>
+    <Text Style="width: 280px; display: block;" EllipsisConfig="@tooltipEllipsis" Copyable>
+        In the process of internal desktop applications development, many different design specs and implementations would be involved, which might cause designers and developers difficulties and duplication and reduce the efficiency of development.
+    </Text>
+</div>
+
+@code {
+    private bool longText = true;
+    private bool copyable;
+    private bool editable;
+    private bool expandable;
+    private double rows = 2;
+
+    private const string Sentence = "Ant Design, a design language for background applications, is refined by Ant UED Team. ";
+    private string currentText => longText ? string.Concat(Enumerable.Repeat(Sentence, 8)) : "Hello World";
+    private TypographyEllipsisConfig ellipsisConfig => new() { Rows = (int)rows, Expandable = expandable };
+    private readonly TypographyEllipsisConfig tooltipEllipsis = new();
+    private void RowsChanged(double value) => rows = value;
+}

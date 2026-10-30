@@ -1,5 +1,30 @@
 # React/Blazor DOM and style parity runner
 
+## Icon, Select and Typography checkpoint (2026-10-30)
+
+The focused Icon browser manifest passes all 5 scenarios, including IconFont,
+custom icons and two-tone rendering; computed-style and visual-style gates also
+pass 5/5. IconFont's default accessible name was the actual DOM mismatch: Blazor
+inferred an `aria-label` from the glyph type while React's
+`createFromIconfontCN` wrapper does not. Blazor now forwards only an explicitly
+supplied label for IconFont.
+
+Select's focused size/basic manifests pass 6 scenarios. The suffix scenario
+passes separately against the active Blazor server on port 5002 (1/1, zero DOM
+or style differences). A previous combined report was misleading because it
+included a blocked suffix capture against a stale server on port 5000. The
+runner now scrolls the outer lazy demo anchor before waiting for its inner
+`.code-box-demo`; this fixes the actual timeout cause. The virtual Big Data
+scenario remains outside this focused result because its full-page browser
+capture is slow; it must be audited separately rather than holding up every
+component batch. React's 36 Select demo names are all present among the 80
+Blazor demo names; the extra Blazor demos are not counted as missing coverage.
+
+Typography previously had no Blazor demos. Its first parity batch now adds
+Basic, Title Component, and Text and Link Component examples in both docs
+locales, matching React demo names. Editable, copyable, ellipsis, suffix,
+component-token and table examples remain to be migrated and audited.
+
 The comparison contract is React-first: React routes and scenarios define the
 reference, while Blazor is measured against them. A case can carry interaction
 steps and the React/Blazor selector pair for each semantic node.
@@ -79,6 +104,67 @@ coverage. Before this Transfer case, they covered only Button, Breadcrumb,
 Select and Tooltip. A component with no browser fixture has not been visually
 verified by this gate, even if its source classes or bUnit structure tests pass.
 
+### Overlay coordinate contract
+
+Portal captures retain the popup and trigger `getBoundingClientRect()` values in
+viewport coordinates. When the React and Blazor triggers occupy the same page
+coordinates, `geometryAnchor: { "mode": "viewport" }` compares popup edges and
+dimensions with zero tolerance. When demo-page flow places the corresponding
+triggers in different columns, `pixel-snap-to-trigger` checks the actual
+placement contract (including Select's four-pixel vertical gap) with zero
+tolerance; each side's absolute viewport coordinates remain available in the
+report. Child portal slots are measured against their nearest matching overlay,
+not another portal elsewhere on the page.
+
+The Select Basic popup is exactly at `(339, 470)` with size `120 × 136` on both
+pages. In the Big Data demo, the trigger is at `x=339.65625` in React and
+`x=748.3125` in Blazor because the docs arrange surrounding demos differently;
+both popup left edges are the trigger's floored pixel (`339` and `748`), with
+the same bottom placement. Moving either popup to force matching page-global
+coordinates would detach it from its trigger. Tooltip's visible popup, arrow and
+content also pass zero-tolerance coordinate checks in the same viewport. The
+shared `Overlay` placement tests cover menu-style right alignment, viewport
+flipping, scrolling and fractional Select anchors.
+
+Overlay idempotence was additionally checked across the Select's fast client
+open followed by the Blazor Server render. That render can replace the Overlay
+instance while the enter scale motion is running; the replacement now detects
+active Web Animations and keeps the same final-pixel alignment policy as the
+pre-motion calculation. The motion-end recalculation therefore reproduces the
+same coordinate instead of shifting the popup by a pixel. Select's popup
+geometry matches React exactly (`(339, 470)`, `120 × 136`), and the Tooltip
+portal gate passes 2/2 scenarios with zero visual-style differences. The
+DatePicker now waits for the visible popup nearest the clicked picker, avoiding
+the stale offscreen calendars mounted by other Dumi examples. Its popup root
+matches the React geometry relative to the trigger and the component styles
+(`display: block`, z-index 1050, `288 × 348`). The remaining DatePicker
+differences are outside the overlay root: the picker trigger is `inline-flex`
+instead of React's `flex`, and footer controls have small position/size
+differences. Those remain open; this is not a full DatePicker pass.
+
+### Collapse first-open behavior (2026-10-27)
+
+The Collapse Basic and Collapsible cases pass live React/Blazor DOM-tree and
+computed-style comparison (2/2, zero reported differences). The Basic case
+previously showed closed panel bodies in Blazor before they had ever opened;
+panel bodies now mount on first activation, and the JS motion helper waits for
+that hidden body before starting the client-side height transition. Focused
+Collapse tests pass 14/14 and the helper passes TypeScript compilation.
+
+The separate Semantic preview case is not a valid direct React selector pair:
+`semantic-mark-root` is a Blazor-only class applied by the preview fixture, so
+the React page has no matching node and the runner correctly reports that case
+as blocked. It is excluded from the 2/2 parity result until the fixture maps
+both sides to equivalent rendered components. Browser interaction against the
+Blazor Server page initially still loaded the previous generated JavaScript
+bundle. Running the interop Gulp task directly (`gulp --gulpfile
+scripts/gulp/tasks/interop.ts ts`), copying the bundle to the local static assets
+and restarting the host made the browser test pass: clicking panel 2 mounted
+and expanded its content, while unopened panel 3 remained unrendered. The
+combined `library:scripts` task still fails while loading `library.ts`, which
+imports three missing legacy style-build modules; that legacy task wiring
+remains to be repaired.
+
 ## Scaling this to all components
 
 1. Generate cases from React Jest tests and Dumi demos, retaining source file,
@@ -99,6 +185,34 @@ Raw HTML equality is a strict diagnostic target, but it is not by itself a
 portable cross-framework contract: generated IDs and renderer markers differ.
 The normalized strict gate and Semantic DOM/computed-style gates show precisely
 which differences are implementation noise and which still affect consumers.
+
+## Whole-site inventory checkpoint (2026-10-29)
+
+The current React-first runtime inventory is saved in
+[`runtime-parity-scan-2026-10-29-visible.json`](runtime-parity-scan-2026-10-29-visible.json).
+It pairs 71 component routes and compares 1,133 React demos against the live
+Blazor docs host. React demo names remain the deficit baseline: 292 names are
+not present in Blazor, while 212 Blazor-only names are reported separately.
+The 841 matched demo captures contain 743 normalized HTML-tree differences,
+582 computed-style differences and 546 geometry differences. These are
+triage counts, not completed fixes or a visual pass.
+
+Four routes are incomplete captures: App has no `.code-box-demo`, and Button,
+InputNumber and Upload report `define is not defined`. Those rows remain
+blocked and must be rerun after the docs runtime/build issue is addressed.
+Checkbox and Flex were recaptured after their latest changes. React demo names
+are now complete for both pages (Checkbox 12/12, Flex 6/6). Their runtime
+differences remain visible in the inventory for follow-up.
+Select's Placement demo default was changed from `BottomLeft` to React's
+`topLeft`. A post-build targeted scan was not accepted as evidence because it
+captured the Blazor demo's lazy-load skeleton instead of the rendered controls;
+the Select row in the inventory therefore remains the previous valid capture
+until a hydrated recapture is available.
+
+The generated phase-one audit separately confirms 72/72 style components,
+3/3 algorithms, 423/423 Semantic DOM slots, 65/65 component token pages and
+584/584 component token rows. It reports no token metadata parity mismatches.
+This generated coverage does not establish browser runtime parity.
 
 ## Select and whole-site inventory checkpoint (2026-10-21)
 
@@ -993,3 +1107,729 @@ These cases do not prove full Collapse API coverage or overall first-stage
 completion. A further docs issue was identified for the next batch: component
 token tables label React/TypeScript token types as “C# Type”; the shared generator
 should expose the actual generated C# property types instead.
+
+### Checkpoint commit and generated C# token documentation types (2026-10-25)
+
+Created the user-requested local checkpoint `a3d38ea53` on
+`codex/antd-v6-css-sync-strategy`, containing the accumulated component/theme/docs
+work through Collapse. Temporary screenshots/build outputs remain ignored or
+outside the repository. No push or separate Icons-repository commit was made;
+the requested local Icons package reference is retained.
+
+Subsequent work fixes the shared token table rather than patching one page.
+StyleGen now uses one mapping for typed component-token properties and the new
+ComponentTokenDefinition.CSharpType field. Type retains React's original type
+for upstream metadata comparisons; the existing constructors remain available.
+Regenerated all 671 definitions and LLM token inputs. Pages use CSharpType,
+and compile-time LLM Markdown uses the same field with code formatting for
+generic types. No runtime reflection/HTTP was added.
+
+Verification: regenerating the C# file a second time is byte-identical. A test
+oracle checks every metadata type against its actual C# property, including
+the distinct qr-code/qrcode classes; all compiled component Markdown exports
+in both locales are checked against their documented C# types. The .NET 10
+server build succeeds, 1,930 selected regression tests pass, and all 183
+StyleGen JS tests pass. Browser Collapse rows show string/OneOf<string, double>,
+and both real English/Chinese HTTP Markdown responses contain code-formatted
+C# types rather than CSSProperties. Final browser Accordion testing also
+confirms three initially closed tabs, tablist/tabpanel roles, and Enter switching
+exclusively from panel 1 to panel 2.
+
+Evidence: `/Volumes/Data/antd-v6.OYfUQf/token-csharp-types-check/` includes the
+regenerated-file comparison, browser row values, actual localized HTTP exports
+and `collapse-types-final.png`. Logs use `token-csharp-types-*.log` in that
+workspace. This post-checkpoint work remains uncommitted; overall API/virtual
+DOM/browser coverage gaps remain open, as recorded above.
+
+### Collapse client-side motion responsiveness (2026-10-25)
+
+Collapse header clicks and Enter activation now update the panel, trigger ARIA
+state, arrow, and height/opacity transition in the browser event handler before
+the Server callback returns. The resulting active-key list is then synchronized
+to .NET so ActiveKeysChanged, OnChange, and per-panel active callbacks continue
+to run. Rapid reversal cancels the previous transition; completion uses the
+computed CSS duration, honors reduced-motion, and only then marks a closing
+panel hidden. This local handler and its eager hidden content are enabled only
+when `Animation` is requested; the default non-animated path retains its lazy
+render behavior and does not attach a client listener.
+
+Verification: docs server rebuild succeeds and all 13 focused Collapse tests
+pass. In the running browser, actual clicks opened and closed the animated Basic
+demo and accordion remained mutually exclusive. With DevTools network emulation
+set to 1200ms latency, a sampled in-flight close already had `aria-expanded=false`,
+height `0px`, and a running CSS transition while the panel was still 99px tall.
+The browser logged transient Blazor negotiation failures during server restarts;
+after the final reload, the server received `1,2` from the multiple-open demo.
+The Collapse helper itself logged no errors. Screenshot: `/Volumes/Data/antd-v6.OYfUQf/
+collapse-local-motion-check/collapse-client-motion.png`. The main accumulated
+worktree remains uncommitted after checkpoint `a3d38ea53`.
+
+### Select Big Data settled-window recheck (2026-10-25)
+
+The virtual Select browser scenario waits 400ms after opening so the
+comparison samples the same post-open interval rather than racing popup motion.
+The accessibility mirror emits explicit `aria-disabled="false"` for enabled
+options. Blazor now uses the same 3,200,000px spacer and positioned inner
+window as React instead of ASP.NET `Virtualize` top/bottom spacers. The visible
+initial window is 10 options; a real browser End-key interaction reaches item
+100,000 and renders only the tail window while preserving the active descendant
+and hidden accessibility mirror. A custom scrollbar is included, and scrolling
+is handled by the component's Select interop helper.
+
+The fresh React `127.0.0.1:8000` / Blazor `127.0.0.1:5540` parity run reports
+normalized DOM-tree equality and equality for all computed styles, including
+the popup and hidden accessibility options. Remaining comparator differences
+are byte-level Blazor marker/attribute serialization and subpixel popup
+placement: 0.34375px horizontally and 0.859375px vertically in this run. The
+comparator tolerance was not loosened. The .NET 10 docs server builds with 0
+errors (6 existing dependency warnings); the server is running in Development
+so `_content` assets resolve. The browser remains open on Big Data with the
+last option selected for manual review. Report: `/tmp/select-virtual-window-impl.json`.
+
+### Select open latency and Icon browser recheck (2026-10-26)
+
+Select's pre-open listener now reveals the already-rendered and positioned
+HiddenMode popup directly on `pointerdown`, before the Server callback, without
+recreating Overlay or repeating its placement calculation. Listener ownership
+is tracked in a `WeakSet`, not a DOM attribute, so the optimization adds no
+runtime-only markup. Keyboard Enter/Space/ArrowDown uses the same eager path.
+On the 100,000-item demo, three browser pointer-click samples measured a median
+of 59ms on React and 31ms on Blazor; both exposed the expanded state and visible
+popup immediately. A screen capture confirmed the options and popup placement.
+
+The Icon manifest was run against React `127.0.0.1:8000` and Blazor
+`127.0.0.1:5000`: all five canonical demo groups (Basic, Two-tone, Custom,
+Iconfont and Script URL) passed, with zero DOM/style differences and zero
+blocked groups. The manifest's Blazor host was updated to the live Development
+server port. Report: `/tmp/icon-dom-style-parity-2026-10-26.json`.
+
+The Select virtual Big Data manifest was rerun against the same live hosts.
+Normalized ordered DOM and computed CSS values match; raw byte HTML still only
+differs in Razor whitespace. Its strict semantic geometry gate still reports
+subpixel popup descendant offsets (0.34375px left and 0.25px top), so this is
+not counted as an exact pass; the comparator tolerance remains zero. Report:
+`/tmp/select-virtual-window-2026-10-26-final.json`. Select popup tests pass,
+ESLint/TypeScript checks pass, and the .NET 10 documentation server builds
+without errors. The current browser remains open on the Blazor Big Data example
+with its options visible for manual inspection.
+
+An in-page timing probe now measures from the actual trigger `pointerdown` to
+the first animation frame where the popup has nonzero opacity and a painted
+rectangle. Across four runs of the same Big Data scenario and viewport, React
+measured 412.8–427.2ms (median 426.9ms; the CSS entrance motion dominates);
+Blazor measured 241.8–439.2ms (median 272.9ms). This does not reproduce the
+reported multi-second wait; three of four Blazor samples were faster than
+React. The timed runs continue to show equal normalized DOM and computed CSS.
+The exact geometry gate remains red: popup descendants differ by 0.34375px
+horizontally and 0.25–0.78125px vertically depending on the run, with no
+tolerance change.
+Reports: `/tmp/select-virtual-window-timing-2026-10-26.json`,
+`/tmp/select-virtual-window-timing-repeat2-2026-10-26.json`,
+`/tmp/select-virtual-window-timing-repeat3-2026-10-26.json`, and the final
+post-probe run `/tmp/select-virtual-window-timing-final-2026-10-26.json`.
+
+The strict geometry mismatch was caused by sampling Blazor during its still
+active popup entrance animation. Waiting 800ms after the popup becomes visible
+produces exact geometry for the popup root, accessibility list, and options;
+computed styles and normalized ordered DOM are equal as well. The runner now
+waits for that settled state in the Big Data manifest rather than weakening the
+zero-pixel geometry gate. The remaining report difference is raw Razor HTML
+serialization/whitespace, not rendered DOM or geometry. Report:
+`/tmp/select-virtual-window-stable-open.json`.
+
+Splitter Size was rechecked against the current .NET 10 server after the empty
+dragger `style` attribute was removed. The normalized DOM tree, root, splitter
+bar, dragger, and inspected flex/container properties match. The first pane's
+actual box and computed width still differ (React `300.53125px`/`300.531px`,
+Blazor `300.515625px`/`300.516px`); its right edge rasterizes to the same
+device-pixel boundary at DPR 1, but the strict computed-style gate remains red
+and Splitter is not marked complete. The expanded report captures the bar as a
+semantic node: `/tmp/splitter-size-box-layout-recheck.json`.
+
+### Radio semantic icon structure (2026-10-26)
+
+Radio now follows React v6's semantic icon structure: the `.ant-radio` icon
+contains only the native input, and its selected dot is rendered with the
+icon's `::after` pseudo-element. The obsolete `.ant-radio-inner` child and
+class mapper were removed; the Semantic DOM catalog now identifies `.ant-radio`
+as the `icon` slot. The component CSS compatibility is in `radio/style/patch.less`
+without editing the mirrored `index.less`.
+
+Verification: 20 focused Radio tests pass. The React/Blazor Radio browser parity
+runner reports both Basic and Radio.Button groups passed, with zero DOM/style
+differences (2/2 visual style pass). A real click on each Basic demo selected
+the radio and both pseudo-element dots reached opacity 1. The restarted .NET 10
+docs server is available at `http://127.0.0.1:5000/en-US/components/radio`; the
+browser remains open on that page for review. Report:
+`/tmp/radio-dom-style-parity-2026-10-26-after.json`.
+
+The next browser fixture, Breadcrumb Basic, was rebased from its stale Blazor
+host to the live docs server and rerun against React v6. It passed with zero
+DOM/style differences (1/1 visual style pass). Report:
+`/tmp/breadcrumb-basic-dom-style-parity-2026-10-26.json`.
+
+Transfer Basic passed with zero DOM/style differences (1/1). QRCode Base,
+editable-value interaction, and Loading cover passed all three scenarios
+(3/3). Grid Gutter and all ten Grid Layout examples also passed with zero
+DOM/style differences (11/11). Their fixture hosts were rebased to the live
+React 8000 / Blazor 5000 servers. Reports:
+`/tmp/transfer-basic-dom-style-parity-2026-10-26.json`,
+`/tmp/qrcode-dom-style-parity-2026-10-26.json`,
+`/tmp/grid-gutter-dom-style-parity-2026-10-26.json`, and
+`/tmp/grid-layout-dom-style-parity-2026-10-26.json`.
+
+Tooltip Basic's first hover run exposed discarded asynchronous callbacks on the
+unbound OverlayTrigger path. Those mouse/focus callbacks now return their
+`Task`, so the exclusive DOM listener awaits them. Empty inline `style`
+attributes are also omitted when Tooltip has no custom color. After rebuilding
+and restarting the docs server, both initial and hover/portal scenarios passed
+with zero DOM/style differences (2/2). Focused OverlayTrigger tests pass.
+Final report: `/tmp/tooltip-basic-portal-parity-2026-10-26-final.json`.
+
+Splitter Size remains open: computed styles match, but strict DOM comparison
+finds inline-style serialization differences and an empty `style` attribute;
+panel geometry differs by 0.015px. It is not counted as a pass. Report:
+`/tmp/splitter-size-dom-style-parity-2026-10-26.json`.
+
+### Overlay instance reuse during enter motion (2026-10-26)
+
+The immediate-open path creates and portals an Overlay on pointerdown so
+Blazor Server latency does not delay Select. The subsequent Blazor render now
+reuses the existing instance when popup, container, trigger, boundary mode,
+and trigger prefix still match. If those references temporarily differ during
+an enter animation, replacement is deferred until the motion settles; repeated
+renders update the pending parameters, and disposal cancels pending work.
+Completed enter classes are removed without changing popup identity classes.
+
+Five focused Overlay configuration/idempotence tests pass, TypeScript typecheck
+and `git diff --check` pass, and the regenerated JavaScript bundle is served by
+the local .NET 10 docs app. The manual review tab remains open at
+`http://127.0.0.1:5022/en-US/components/select?theme=light#components-select-demo-basic`.
+This verifies the page loads, not that all Overlay geometries are aligned.
+
+### Splitter Size strict-geometry rerun (2026-10-26)
+
+The earlier 0.015px first-panel width mismatch did not reproduce in two fresh
+React/Blazor Chromium runs with the manifest's matched scope width and strict
+zero-pixel gate. Both runs passed the ordered DOM tree, all four semantic
+paths (root, panels, bar, dragger), computed styles, and visual geometry with
+zero differences. Reports:
+`/tmp/splitter-size-current-2026-10-26.json` and
+`/tmp/splitter-size-repeat-2026-10-26.json`. No CSS tolerance was relaxed.
+
+DatePicker remains a concrete open overlay-adjacent difference: a fresh Basic
+popup run passes popup-root geometry and styles but fails the trigger display
+(`flex` in React, `inline-flex` in Blazor) and footer control geometry (ranges
+top differs by 0.265625px; Today differs in position and size, including a
+5px height difference). It is not counted as a component pass. Report:
+`/tmp/datepicker-overlay-current-2026-10-26.json`.
+
+Select Basic was rerun after rebuilding the server. Closed state is exact and
+all three visual-style checks pass. The open popup still differs in the live
+React runner's `aria-disabled="false"` output for enabled options, while the
+checked React checkout's semantic snapshot includes that attribute; no source
+change was made from this contradictory evidence. The Escape scenario also
+leaves React open while Blazor closes. Report:
+`/tmp/select-basic-popup-after-revert-2026-10-26.json`. The local Select page is
+open in a separate browser tab for manual follow-up.
+
+### Select fixture and parity-runner correction (2026-10-26)
+
+The previous popup comparison was not anchored to the Select trigger: its
+`title="yiminghe"` selector could match another mounted Select demo. The Basic
+popup fixture now selects the visible dropdown nearest to the clicked trigger
+and scopes list/options/content/state capture to that exact popup. An in-page
+check confirms React Basic's options are Jack, Lucy, Disabled, Bamboo, and the
+React and Blazor enabled options both render `aria-disabled="false"`; the
+earlier attribute mismatch is not accepted as a component defect.
+
+The parity runner's `state: "hidden"` action now uses Puppeteer's explicit
+`hidden: true` option (rather than `visible: false`). The Escape fixture waits
+for the opening motion before sending Escape and allows the close motion to
+settle before capture; an interactive browser check closes both versions.
+Capture tests now prove popup descendants stay scoped to the popup selected
+nearest their trigger. All 46 StyleGen runner/parity tests pass.
+
+The fresh headless parity attempt is not counted as a pass: its standalone
+Chromium session rendered an empty React body and timed out before finding the
+Select demo, while the existing in-app React page is loaded. The Select Basic
+and React pages remain open for manual review; rerun the strict browser gate
+once the headless React route is available. Report:
+`/tmp/select-basic-popup-nearest-trigger-2026-10-26.json`.
+
+### Select overlay first-frame width and enter-motion reuse (2026-10-26)
+
+Select's immediate-open path now measures the already-rendered popup while it is
+hidden, locks its resolved width, and only then portals and reveals it. The
+default strategy matches the trigger; content-fit and explicit width strategies
+are also covered. Subsequent Blazor renders reuse the same Overlay when its
+trigger/container context matches, and defer a replacement until an active
+enter motion ends if the context temporarily changes.
+
+Seven focused overlay configuration/idempotence tests pass, including hidden
+width measurement and deferred rebuild. TypeScript typecheck passes. A live
+Blazor browser check on Select Basic observed the popup at the trigger's 120px
+width on its initial visible state; the content-fit case measured 169.23px for
+the same trigger. The local .NET 10 docs server remains available at
+`http://127.0.0.1:5000/en-US/components/select`.
+
+DatePicker's parity capture still reports the trigger `display` as `flex` in
+React and `inline-flex` in Blazor, but the pinned React v6 source explicitly
+declares `inline-flex`. A live React page reports `flex` only while focused/open,
+so this is not changed blindly; the open-state style source needs to be isolated
+before treating it as a Blazor defect. Existing capture:
+`/tmp/datepicker-overlay-current-2026-10-26.json`.
+
+### Select semantic style capture follow-up (2026-10-26)
+
+Corrected the closed-state capture roots from the enclosing Flex to the two
+actual Select instances, excluding Blazor's intentionally pre-rendered hidden
+popup wrappers. Both Select roots and all declared semantic nodes now match in
+DOM, computed styles, and strict geometry. The parity runner also scrolls deep
+documentation targets instantly before clicking, avoiding false timeouts caused
+by smooth page scrolling; its focused suite passes 8/8.
+
+The open semantic popup has matching DOM, computed styles, size, and viewport
+top (`469px`) in React and Blazor. Relative geometry still reports a subpixel
+delta (0.34375px horizontally, 0.3125px vertically) because the documentation
+layouts place the triggers at different fractional coordinates; this case is
+still recorded as a difference, not waived or counted as a complete pass. Report:
+`/tmp/select-semantic-style-live-final-2026-10-26.json`.
+
+After rebuilding the Server target (the first rebuild had left its copied
+component assembly stale), the hidden virtual accessibility list was aligned:
+enabled options omit `aria-disabled`, while disabled options retain
+`aria-disabled="true"`, matching React. Popup root inline style serialization is
+renderer-specific, so that one attribute is excluded only for `popup.root`; its
+computed CSS and trigger-anchored device-pixel geometry remain exact checks with
+zero tolerance. The current two-scenario Select semantic-style gate now passes
+2/2, with both visual-style checks passing and no DOM/CSS/geometry differences.
+Report: `/tmp/select-semantic-style-parity-current-2026-10-26.json`.
+
+The full StyleGen suite passed 200/200 before this final ARIA markup refinement;
+the focused parity-manifest suite passes 39/39 afterward. The targeted xUnit
+virtual-list test currently fails earlier at its existing `data-virtual-count`
+assertion (expected `40`, actual `null`), before reaching the updated ARIA
+assertion; this is tracked as a separate test/runtime discrepancy and is not
+claimed as verified by that test.
+
+### Overlay popup width locking (2026-10-26)
+
+Overlay now prepares Select popup width before container positioning and the
+enter state: default `DropdownMatchSelectWidth=true` locks to the trigger;
+`false` measures content-fit (respecting the trigger minimum and configured max
+width), and explicit widths are measured as well. Width is retained in the
+Overlay component's rendered style so the first Blazor Server rerender cannot
+discard the pre-animation measurement. Reopening a hidden popup remeasures it;
+an immediate pointer-open reuses its already prepared width without interrupting
+the animation. Focused JS tests pass 8/8 and TypeScript typechecking passes. The
+net10 docs server build passes. The full legacy Overlay JS suite has four
+unrelated existing failures (one coordinate expectation and three jsdom
+animation/ResizeObserver mocks); the browser automation connector was
+unavailable because its shared Chrome profile is already owned by another
+process, so interactive browser verification remains pending.
+
+### DatePicker popup capture isolation (2026-10-27)
+
+The StyleGen runner now supports `captureReactBeforeBlazor` for overlays that
+close on blur. DatePicker's open-state capture completes the React actions and
+snapshot before activating Blazor; the popup instance is no longer missing or
+selected from a stale portal. This changed the report from a false missing-node
+failure to a valid same-state comparison: popup dimensions/placement, footer
+range DOM/CSS/geometry, and popup/footer CSS all match exactly. Remaining
+verified differences are the trigger's `display` (`flex` in React docs vs
+`inline-flex` in Blazor), empty-input value serialization, Icon SVG/accessibility
+markup, and the docs font-family difference (which also changes the Today link
+hit-box by up to 5px). The header month/year buttons now expose the localized
+React-equivalent aria labels, and runtime element IDs/class token order are
+normalized as framework details. Current report:
+`/tmp/datepicker-overlay-sequential-current-2026-10-27.json`. Headless Chrome
+capture completes against the running React and Blazor docs servers; DatePicker
+is still in progress and is not counted as fully aligned. The StyleGen suite
+passes 201/201, and the parity-focused file passes 40/40.
+
+### Overlay enter-motion rebuild race (2026-10-27)
+
+When a render changes an Overlay's positioning context during its enter motion,
+the JS helper defers replacing the positioning instance until the motion ends.
+The browser may apply the enter classes one frame before `getAnimations()`
+exposes the corresponding Animation object; computed animation/transition
+durations are now used to cover this startup window. A regression test verifies
+the old instance remains registered until `animationend`, including when
+`getAnimations()` initially returns an empty array. The focused Overlay
+configuration test passes, TypeScript typechecking passes, and the net10 docs
+server builds and restarts successfully. Its first full legacy Overlay JS run
+had four failures: one geometry expectation, a jsdom RAF gap, and two
+ResizeObserver callback mocks using the old single-entry shape. The headless
+browser automation uses an isolated Chrome profile; the user's existing
+browser tabs remain open for manual review.
+
+### Select Semantic DOM cold-start capture (2026-10-27)
+
+Re-ran the Select semantic-style gate against the current React and Blazor
+servers. Cold navigation can exceed the runner's former 60-second default, so
+the Select and Icon manifests now allow 120 seconds for navigation while
+retaining the 20-second component-readiness timeout and zero DOM/CSS/geometry
+tolerance. The fresh Select capture passes both closed and open-popup scenarios
+(2/2), with no DOM, computed-style, or visual-geometry differences. Report:
+`/tmp/select-semantic-style-parity-cold-start-2026-10-27.json`. The latest Icon
+capture remains 5/5 canonical demos passed; those are the documented Icon demo
+groups, not a claim over every generated glyph in the catalog.
+
+### Overlay open-width and enter-instance stability follow-up (2026-10-27)
+
+Select popup width is measured and written before the overlay is revealed. In a
+live browser interaction, its width and trigger-relative coordinates were
+identical immediately after opening and 350ms later (120px wide in both
+captures). The positioning helper reuses the existing Overlay instance when
+the trigger/container context is unchanged, and defers a context replacement
+until enter motion ends; its focused regression case verifies the instance
+remains registered and that only the newest placement/offset parameters are
+applied afterward.
+
+The old geometry fixture expected `right: -111px`, which would place a 372px
+popup 30px beyond the visible viewport edge. The viewport boundary is
+`scrollX + innerWidth`; the clamped left coordinate is 1612px and the equivalent
+body-relative right offset is `-81px`. Updated the stale fixture to this
+boundary-consistent result. The complete Overlay JS file now passes 53/53, and
+TypeScript compilation and the net10 component build pass. Select's
+semantic-DOM/CSS/geometry gate also passes 2/2 with zero differences. The
+Escape mismatch was caused by switching focus between React and Blazor after
+each action. Marked the Select basic group `captureReactBeforeBlazor`, matching
+the existing DatePicker approach; the whole Select popup manifest now passes
+all 3 scenarios, including Escape close, with no DOM/CSS/geometry differences.
+The parity and runner tests pass 48/48. Report:
+`/tmp/select-basic-popup-capture-order-report-2026-10-27.json`.
+
+### DatePicker live follow-up (2026-10-27)
+
+Re-ran the DatePicker basic popup manifest after the Overlay began copying
+scoped Ant Design tokens before portaling. The earlier font-family difference
+and the resulting Today-link hit-box offset are gone; popup, footer, and their
+measured geometry now match. The fresh report is
+`/tmp/datepicker-overlay-current-2026-10-27.json`.
+
+Remaining differences are the trigger's computed `display` (`flex` in the live
+React docs page and `inline-flex` in Blazor) and Icon serialization in the
+trigger: React emits the 896-unit calendar SVG with `data-icon` and hidden
+accessibility attributes, while Blazor currently emits the 1024-unit legacy
+IconStore SVG. Do not change the component's upstream `inline-flex` rule based
+on this report alone: the React v6 component stylesheet also declares
+`inline-flex`, so the `flex` result needs its docs-cascade source identified.
+DatePicker is not counted as fully aligned until these runtime differences are
+resolved or shown to be a capture mismatch.
+
+### Overlay pre-open width precision and component spot checks (2026-10-27)
+
+Select measures and locks the popup while it is hidden, before placement and
+enter animation. The default mode matches the trigger; content-fit and explicit
+width modes use the measured dropdown content. A virtual-list capture exposed
+that returning the fractional measurement as a JS number rounded `342.65625px`
+to `342.656px` across Blazor interop, which snapped the popup one 1/64px step
+narrower. The measured width now crosses interop as a string. React and Blazor
+virtual Select popup widths and trigger-relative geometry now match exactly at
+`342.65625px`; computed styles and visual geometry pass. The basic popup gate
+passes 3/3 scenarios and the Semantic DOM gate passes 2/2. Virtual-list
+accessibility options now match React's `aria-disabled="false"`; its only
+remaining DOM difference is the renderer-specific inline style string on the
+popup root, while computed styles and geometry match. Reports:
+`/tmp/select-virtual-final-v2-2026-10-27.json`,
+`/tmp/select-basic-popup-final-v2-2026-10-27.json`, and
+`/tmp/select-semantic-final-2026-10-27.json`.
+
+The Collapse basic, collapsible, and Semantic DOM gates pass all 3 scenarios
+with zero differences (`/tmp/collapse-parity-live-report-2026-10-27-followup.json`).
+Iconfont injects duplicate external SVG symbol definitions asynchronously. The
+parity runner now waits for the referenced symbol set to stabilize before
+capturing; all five canonical Icon demo groups then pass DOM, computed-style,
+and visual checks (`/tmp/icon-parity-stable-svg-2026-10-27.json`).
+
+### Overlay hidden measurement browser verification (2026-10-28)
+
+Rebuilt the docs server after regenerating demo metadata so the current Select API
+text documents the width modes accurately. On the local net10 docs server, the
+Basic Select popup is 120px wide on first visible capture and remains 120px
+350ms later. The Placement example with `DropdownMatchSelectWidth=false` opens
+with the 180px trigger as its minimum width (the longest option is narrower),
+and the popup remains 180px after 350ms. This confirms the first-frame match and
+content-fit minimum behavior in a live Blazor browser. Server build and
+TypeScript typecheck pass; a previous focused Overlay JS run passed 53/53.
+The Overlay registry now reuses the existing positioning instance when the
+popup, trigger, and container are unchanged. If Blazor supplies a new context
+during enter motion, the helper retains the current popup and queues only the
+latest rebuild parameters until the motion ends; an Overlay JS regression case
+covers this deferred replacement path. This keeps the in-flight DOM node and
+animation intact instead of disposing and recreating Overlay mid-entry.
+
+### DatePicker parity follow-up (2026-10-28)
+
+DatePicker now uses the generated `CalendarOutlined` and `ClockCircleOutlined`
+components from the locally packed Icons package; its calendar icon SVG viewBox
+and `data-icon` markup match React. The warm Basic popup capture confirms equal
+trigger and popup geometry, including footer placement. It still reports two
+DOM/style differences: React serializes `value=""` on the input while Blazor
+omits the empty attribute (the live input value is empty in both), and the
+trigger computes to `flex` in React versus `inline-flex` in Blazor. These are
+recorded as outstanding rather than counting DatePicker as fully aligned.
+Report: `/tmp/datepicker-overlay-current-2026-10-28-warm.json`.
+
+The current Select basic popup, Select Semantic DOM, and five canonical Icon
+demo groups remain passing. The virtual Select report's strict HTML comparison
+still detects renderer-specific serialized whitespace/style text; its
+normalized DOM tree, computed styles, and geometry match. Reports:
+`/tmp/select-basic-popup-final-v2-2026-10-27.json`,
+`/tmp/select-semantic-final-2026-10-27.json`,
+`/tmp/icon-parity-stable-svg-2026-10-27.json`, and
+`/tmp/select-virtual-final-v2-2026-10-27.json`.
+
+### Current Select and Icon browser gates (2026-10-28)
+
+Rebuilt the local JavaScript bundle before recapturing so the newly added
+Overlay helpers are present in the served `ant-design-blazor.js`. The focused
+Select Basic popup gate passes 3/3 scenarios, Select Semantic DOM passes 2/2,
+and all five canonical Icon groups pass. Each has zero DOM/style differences
+and zero visual-style differences. The Virtual Select visual/CSS/geometry gate
+also passes; its raw popup-root `style` text differs because React and Blazor
+express portal coordinates and measured width through different declarations.
+The popup's DOM structure, selected computed styles, and trigger-relative
+geometry match. The renderer-specific style attribute remains diagnostic while
+its computed styles and geometry stay strict gates. Reports:
+`/tmp/select-basic-popup-parity-current-2026-10-28.json`,
+`/tmp/select-semantic-parity-current-2026-10-28.json`,
+`/tmp/icon-parity-current-2026-10-28.json`, and
+`/tmp/select-virtual-parity-current-2026-10-28-final.json`.
+
+### DatePicker Basic strict DOM/CSS rerun (2026-10-28)
+
+Aligned the Basic demo with React's vertical Flex wrapper (`gap="small"`,
+start justification and alignment). This makes the focused DatePicker's
+computed `display:flex` result come from the same flex-item context as React,
+without overriding the component's `inline-flex` base style. DatePicker and
+RangePicker now measure their calendar popup by content while retaining the
+trigger as a minimum width, so the calendar opens at its natural 288px width
+instead of being clamped to the 139px trigger. DatePicker input initialization
+also preserves the empty `value=""` DOM attribute React emits.
+
+The strict Basic popup manifest now passes DOM, computed-style, semantic-node
+geometry, and visual-style checks with zero differences. Browser verification
+opened the Basic calendar at `http://127.0.0.1:5004/en-US/components/datepicker`;
+the trigger/popup measured 138px/288px, the trigger computed to `display:flex`,
+and its input had `value=""`. Docs Server net10 build succeeded with 0 errors.
+Report: `/tmp/datepicker-current-5004-2026-10-28-exact.json`.
+
+The current Select Basic popup regression run also passes all 3 scenarios with
+zero DOM/style and visual-style differences after the generic Overlay width
+measurement changes: `/tmp/select-basic-current-5004-2026-10-28-verified.json`.
+
+The Select Virtual gate now passes the same rendered-DOM, computed-style, and
+zero-tolerance geometry checks. Its popup root's inline `style` attribute is
+ignored only in the semantic-tree attribute comparison because React and
+Blazor serialize portal coordinates, width, and inherited tokens differently;
+the gate still compares the popup's computed styles, full descendant DOM, and
+trigger-anchored geometry. Raw `outerHTML` remains available as a diagnostic
+and is not treated as a DOM-tree failure. Report:
+`/tmp/select-virtual-current-5004-2026-10-28-verified.json`.
+
+Select Size was rerun against the rebuilt net10 Docs Server and passes all 3
+size scenarios (default, large, small), including Semantic DOM slots, computed
+styles, and visual-style checks with zero differences. Report:
+`/tmp/select-size-current-5004-2026-10-28.json`.
+
+A separate cold-start attempt to rerun the Select Semantic DOM manifest was
+blocked because headless React did not mount the demo before its configured
+timeout. The same-day warm report remains valid at 2/2 with zero differences;
+an in-app React page loaded both roots and their five semantic nodes with
+matching dimensions. The blocked cold run is recorded at
+`/tmp/select-semantic-current-5004-2026-10-28-retry.json` and is not counted as
+a component difference.
+
+### Overlay popup width reveal regression guard (2026-10-28)
+
+Popup width is measured while the rendered overlay is hidden and locked before
+positioning/reveal (`match-trigger` remains the default; `content` and `custom`
+remain available). The measurement phase now temporarily disables the popup's
+own CSS transition, including consumer/theme `transition: all` rules, then
+restores the original inline transition immediately before the enter classes
+are applied. This prevents an intrinsic-to-final width transition from
+continuing after the popup becomes visible. The targeted JS regression passes:
+`npm run test-one -- tests/modules/components/overlay.test.ts --grep 'restores the popup transition' --timeout 15000`
+(1 passing). A full Overlay run reached 50 passing but had three unrelated
+async timeout failures under this machine's current load; the new regression
+was rerun independently and passed. Browser visual confirmation remains
+pending because the existing Chrome DevTools browser profile is already owned
+by another running browser session.
+
+The Icon page comparison also found that React v6's page has a trailing FAQ
+section absent from Blazor. Both localized Blazor pages now include the same
+question about icon styles and explicitly explain that React's CSS-layer
+injection workaround does not apply to the generated Blazor SVG package. This
+preserves the relevant topic without copying React-only implementation advice.
+
+### Select interaction and Icon recheck (2026-10-29)
+
+Restarted the React dumi server after its stale process served the HTML fallback
+for `/umi.js`; both React and Blazor docs routes now load their runtime assets.
+The Select interaction manifest was rerun against the live pages. Search/filter
+and multiple-selection scenarios have matching normalized demo-root DOM trees,
+computed styles, and geometry; both pass the visual-style gate (2/2). Semantic
+popup subtrees still have attribute-level differences: portal positioning and
+inherited token declarations are serialized differently on `popup.root`, and
+the multiple-select check icon uses different SVG metadata/structure. These
+remain DOM-parity follow-ups even though the rendered style and geometry gates
+pass. Raw `outerHTML` also contains framework-specific whitespace. Report:
+`/tmp/select-interaction-turn-final-2026-10-29.json`.
+
+The five Icon manifest scenarios (font, font resources, basic, two-tone and
+custom color) pass normalized DOM, computed CSS, and visual-style checks (5/5,
+zero blocked). Raw HTML serialization differences remain diagnostic. Report:
+`/tmp/icon-parity-turn-final-2026-10-29.json`.
+
+The Select popup bUnit regression suite also passes 22/22. Width assertions now
+check the `width` and `min-width` declarations independently so the test
+protects measured values and fractional precision without prescribing harmless
+CSS declaration order or whitespace.
+
+### Virtual Select scrollbar visibility parity (2026-10-29)
+
+The current Select interaction run isolated one remaining popup subtree
+difference: React's `rc-virtual-list` adds
+`ant-select-dropdown-list-scrollbar-visible` on mount and after scrolling, and
+hides the scrollbar after three seconds. Blazor previously only toggled inline
+visibility for 500 ms during scroll and never reflected the visible class. The
+Select JS helper now matches the class and timer behavior. Its focused helper
+test passes, and the live Select interaction manifest passes both scenarios
+(2/2; zero DOM, computed-style, geometry, or visual-style differences). The
+updated Blazor Select page remains open at the multiple-selection demo for
+manual inspection. Browser report: `/tmp/select-interaction-parity-after-scrollbar-fix-2026-10-29.json`.
+
+### Icon gallery toolbar and Two Tone palette (2026-10-29)
+
+The Icon gallery toolbar now uses the shared `Affix` component at an 80px top
+offset, matching the React docs' fixed search/filter bar. Browser inspection
+after scrolling confirmed the affix wrapper is `position: fixed; top: 80px`.
+The Two Tone filter applies the standard Ant primary blue to every gallery
+icon; interactive browser inspection found `rgb(22, 119, 255)` and the
+expected palette fills `#1677ff` / `#e6f4ff` across the displayed icons.
+
+The Select whole-page scan was repeated against a fresh Development server
+circuit after the earlier stale circuit captured only a skeleton. All 36 React
+Select demo names now match, with 15 Blazor-only examples. The current scan
+records 20 HTML, 15 computed-style, and 10 geometry candidate differences;
+none of the React demos were missing. The `Tags` and `Coordinate` demos now
+match normalized HTML, computed styles, and geometry exactly; their differences
+were caused by non-matching tag value generation and the missing `SpaceItem` /
+province-city value labels. Updated inventory:
+`runtime-parity-scan-2026-10-29-visible.json`.
+
+Browser recheck on the Icon page found that the server-driven Affix wrapper was
+not applying its fixed style in the current docs scroll layout. The gallery
+toolbar now uses CSS sticky positioning at the same 80px header offset so it
+remains available while scrolling without waiting for a Blazor scroll event.
+Every generated Two Tone icon now also receives the same `#1677ff` primary
+color parameter; the earlier wrapper text-color rule alone did not recolor SVG
+paths that declare explicit fills.
+
+### Unmatched Select value clear behavior (2026-10-29)
+
+The React-aligned Option Label Center demo renders a controlled string value
+that intentionally has no matching option. Select now treats that raw value as
+clearable and raises `ValueChanged` when its clear icon is used; the demo uses
+two-way binding so the value returns to its placeholder state. The focused
+regression test invokes the same DOM clear callback used by the browser and
+passes. The whole-page scanner was rerun, but its Blazor capture contained
+skeleton placeholders, so its runtime HTML counts were not accepted as parity
+evidence; the most recent hydrated scan above remains the runtime baseline.
+
+### Select Option Label Center browser interaction (2026-10-29)
+
+The earlier browser attempt did not reach the target demo because the local
+Docs Server was running as Production and lacked the generated `AntDesign`
+interop namespace. The resulting `getWindow` JS exception disconnected the
+Blazor circuit and stopped demo mounting at two code boxes. Restarting the host
+with `ASPNETCORE_ENVIRONMENT=Development` restored the interop assets; all 51
+Select code boxes mounted. In the Option Label Center example, the first Select
+showed the unmatched value `long, long, long piece of text` and its clear
+control. Clicking the clear control removed the label and clear affordance,
+confirming the bound value was cleared. The focused regression test passes
+1/1. The browser remains on this Select example for manual review.
+
+### Select sizing and clear-focus recheck (2026-10-30)
+
+Against the current Development build on port 5002, the Select Basic popup
+manifest passed all three closed/open scenarios, and the Size manifest passed
+Default, Large and Small (6/6 total with exact semantic CSS and geometry gates).
+The Option Label Center clear interaction also passes its visual-style gate:
+after clearing the unmatched value, React and Blazor both retain input focus,
+the focused border token and the two-pixel focus shadow. The Blazor clear
+button now prevents its default mousedown focus transfer and Select restores
+input focus after the clear callback. Raw markup still has expected Razor
+serialization differences.
+
+The first automated Search captures sometimes blurred the Blazor input while
+switching back to React, and a second demo scroll changed the popup's viewport
+sample. The Search fixture now captures React before activating Blazor, waits
+for the focused state after filtering, and the runner avoids scrolling during
+capture. Two consecutive Search runs now pass all DOM, CSS, and geometry checks
+(1/1 per run); the Lucy option is visible and the other filtered options remain hidden.
+The broader Select bUnit slice is not green yet (90/111); strict JS interop
+reports unconfigured Overlay helper calls in legacy tests, and the Basic demo
+parity test has a stale component-query expectation after its data-source
+migration.
+
+### Select interaction and Two Tone source-color policy (2026-10-30)
+
+Select interaction parity was rerun on the current Development server after
+preventing option mousedown from stealing focus and aligning virtual-list
+scrollbar visibility with the rendered popup. Search, unmatched-value clear,
+and multiple-selection scenarios pass the DOM, computed-style, geometry, and
+visual-style checks (3/3, zero differences). Focused Select virtual-scroll
+tests pass 8/8; the full StyleGen Node suite passes 206/206.
+
+Two Tone icons now preserve each SVG's original primary and secondary fills
+when no color override is supplied. Supplying one primary computes the
+secondary color from the shared Ant v6 palette; supplying both colors applies
+the explicit pair. The Icon docs' main Two Tone example explicitly supplies
+React's standard `#1677ff` primary, while the dynamic-color demo visibly shows
+the source colors, calculated secondary, and explicit pair. The five React
+Icon examples pass the runtime DOM/style and visual-style comparison (5/5,
+zero differences), and the Two Tone color unit suite passes 23/23. Docs Server
+net10 build succeeds with zero errors. The local Development site remains
+available at `http://127.0.0.1:5002` with the Icon and Select pages open for
+manual review.
+
+### Select suffix icon ID parity (2026-10-30)
+
+React does not add an ID to an icon wrapper unless the caller supplies one.
+`Icon` now follows that behavior while retaining an explicit `Id` parameter.
+This also prevents nested icons from consuming a generated ID ahead of Select's
+combobox input. Focused Icon parameter and Two Tone tests pass 28/28, and the
+Docs Server net10 build succeeds with zero errors. The Suffix demo was recaptured
+against React after restarting the Development server: all three sizes have
+matching computed CSS; structural differences now remain in the SVG source and
+serialization (React's 896-unit viewBox / path source versus the current Blazor
+1024-unit icon catalog). The Suffix page remains open in the browser for review.
+
+### Icon / Select closeout and next component (2026-10-30)
+
+The repeated Icon and Select changes came from treating separate checks as one
+unresolved component gap. Icon's five canonical React demo groups pass rendered
+DOM, computed CSS, and visual-style comparison. Select's Basic popup, sizes,
+Search, unmatched-value clear, and multiple-selection browser scenarios also
+pass their DOM/CSS/geometry checks. Remaining Select issues are isolated to
+legacy bUnit coverage and stale demo-structure assertions; they do not reproduce
+in the current browser parity scenarios.
+
+The Select test failures were initially inflated because Overlay gained JS
+interop calls for pre-show width measurement, inherited token propagation,
+reveal, and repositioning, while the shared bUnit fixture had no defaults for
+them. The fixture now supplies layout-neutral defaults. A focused search test
+still times out waiting for its legacy `OnSearch` callback, so the suite is not
+marked green. The Icon Suffix capture also retains a source-level limitation:
+computed styles match, while SVG markup differs because React's icon source uses
+a 896-unit viewBox and the Blazor catalog currently uses 1024.
+
+Typography's demos are discovered from `TypographyBase/demo`, while the prose
+page lives in `Typography/doc`; this folder mismatch hid React examples. The
+rebuilt page now registers all 14 React demo names, and the browser shows the
+new examples. Divider is the next component under review; its current rebuilt
+page is open in the browser.

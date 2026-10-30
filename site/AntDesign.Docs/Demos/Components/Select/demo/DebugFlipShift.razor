@@ -1,0 +1,5 @@
+<Select TItemValue="int" TItem="int" Style="width:120px;margin-top:50vh" Open DataSource="_options" />
+
+@code {
+    private static readonly int[] _options = Enumerable.Range(0, 100).ToArray();
+}

@@ -1,35 +1,78 @@
 @using AntDesign.Theming
 
-<ConfigProvider ThemeConfig="@_theme">
-    <div style="display: flex; flex-direction: column; gap: 12px;">
-        <Select TItemValue="string" TItem="string" DefaultValue='@("blue")' Style="width: 240px;">
-            <SelectOptions>
-                <SelectOption TItemValue="string" TItem="string" Value='@("blue")' Label="Blue" />
-                <SelectOption TItemValue="string" TItem="string" Value='@("green")' Label="Green" />
-                <SelectOption TItemValue="string" TItem="string" Value='@("purple")' Label="Purple" />
-            </SelectOptions>
-        </Select>
-        <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" DefaultValues="@_values" Style="width: 240px;">
-            <SelectOptions>
-                <SelectOption TItemValue="string" TItem="string" Value='@("blue")' Label="Blue" />
-                <SelectOption TItemValue="string" TItem="string" Value='@("green")' Label="Green" />
-                <SelectOption TItemValue="string" TItem="string" Value='@("purple")' Label="Purple" />
-            </SelectOptions>
-        </Select>
-    </div>
-</ConfigProvider>
+<Space Direction="SpaceDirection.Vertical">
+    <ConfigProvider ThemeConfig="@_componentTokenTheme">
+        <Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+            <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" AllowClear
+                    Style="width: 100%;" Placeholder="Please select" DefaultValues="@_selectedValues"
+                    DataSource="@_options" ItemValue="value => value" ItemLabel="value => value" />
+            <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" Disabled
+                    Style="width: 100%;" Placeholder="Please select" DefaultValues="@_selectedValues"
+                    DataSource="@_options" ItemValue="value => value" ItemLabel="value => value" />
+        </Space>
+    </ConfigProvider>
+
+    <ConfigProvider ThemeConfig="@_smallControlTheme">
+        <Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+            <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" AllowClear
+                    Style="width: 100%;" Placeholder="Please select" Size="InputSize.Small"
+                    DefaultValues="@_selectedValues" DataSource="@_options"
+                    ItemValue="value => value" ItemLabel="value => value" />
+            <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" AllowClear
+                    Style="width: 100%;" Placeholder="Please select" DefaultValues="@_selectedValues"
+                    DataSource="@_options" ItemValue="value => value" ItemLabel="value => value" />
+        </Space>
+    </ConfigProvider>
+
+    <ConfigProvider ThemeConfig="@_componentSizeTheme">
+        <Space Direction="SpaceDirection.Vertical" Style="width: 100%;">
+            <Select TItemValue="string" TItem="string" Style="width: 100%;" DefaultValue='@("a10")'
+                    DataSource="@_options" ItemValue="value => value" ItemLabel="value => value" />
+            <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" Style="width: 100%;"
+                    DefaultValues="@_selectedValues" DataSource="@_options"
+                    ItemValue="value => value" ItemLabel="value => value" />
+        </Space>
+    </ConfigProvider>
+</Space>
 
 @code {
-    private readonly string[] _values = ["blue", "green"];
+    private readonly string[] _options = Enumerable.Range(10, 26).Select(ToBase36Value).ToArray();
+    private readonly string[] _selectedValues = ["a10", "c12"];
 
-    private readonly ThemeConfig _theme = new ThemeConfig().SetComponentToken(
+    private readonly ThemeConfig _componentTokenTheme = new ThemeConfig().SetComponentToken(
         "Select",
         new SelectComponentToken
         {
-            ActiveBorderColor = "#722ed1",
-            OptionActiveBg = "#f9f0ff",
-            OptionSelectedBg = "#efdbff",
-            OptionSelectedColor = "#531dab",
-            MultipleItemBg = "#f9f0ff"
+            MultipleItemBorderColor = "rgba(0,0,0,0.06)",
+            MultipleItemBorderColorDisabled = "rgba(0,0,0,0.06)",
+            OptionSelectedColor = "#1677ff",
+            HoverBorderColor = "red",
+            ActiveBorderColor = "green",
+            ActiveOutlineColor = "pink"
         });
+
+    private readonly ThemeConfig _smallControlTheme = new ThemeConfig
+    {
+        Token = new ThemeToken { ["controlHeightSM"] = "28" }
+    };
+
+    private readonly ThemeConfig _componentSizeTheme = new ThemeConfig
+    {
+        Token = new ThemeToken { ["paddingXXS"] = "0", ["controlHeight"] = "28" }
+    };
+
+    private static string ToBase36Value(int value)
+    {
+        var decimalValue = value;
+        const string digits = "0123456789abcdefghijklmnopqrstuvwxyz";
+        var buffer = new char[8];
+        var index = buffer.Length;
+        do
+        {
+            buffer[--index] = digits[value % 36];
+            value /= 36;
+        } while (value > 0);
+
+        return new string(buffer, index, buffer.Length - index) + decimalValue;
+    }
 }

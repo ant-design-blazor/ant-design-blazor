@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AntDesign.Icons;
 using Microsoft.JSInterop;
@@ -44,8 +45,6 @@ namespace AntDesign
 
             if (string.IsNullOrEmpty(icon.Type)) return null;
 
-            string svgClass = icon.Spin || icon.Type == "loading" ? "anticon-spin" : null;
-
             var svg = icon.Type.EndsWith("</svg>", StringComparison.OrdinalIgnoreCase) ? icon.Type :
                 GetIconImg(icon.Type.ToLowerInvariant(), icon.Theme);
 
@@ -54,20 +53,50 @@ namespace AntDesign
                 return null;
             }
 
-            string svgStyle = $"focusable=\"false\" width=\"{icon.Width}\" height=\"{icon.Height}\" fill=\"{icon.Fill}\" {(icon.Rotate == 0 ? $"style=\"pointer-events: none;\"" : $"style=\"pointer-events: none;transform: rotate({icon.Rotate}deg);\"")}";
-            if (!string.IsNullOrEmpty(svgClass))
+            var svgStyle = icon.Rotate == 0 ? string.Empty : $"transform: rotate({icon.Rotate}deg);";
+            var svgAttributes = new Dictionary<string, string>
             {
-                svgStyle += $" class=\"{svgClass}\"";
-            }
+                ["focusable"] = "false",
+                ["width"] = icon.Width,
+                ["height"] = icon.Height,
+                ["fill"] = icon.Fill,
+                ["aria-hidden"] = "true"
+            };
+            if (!icon.Type.EndsWith("</svg>", StringComparison.OrdinalIgnoreCase))
+                svgAttributes["data-icon"] = icon.Type.ToLowerInvariant();
+            if (!string.IsNullOrEmpty(svgStyle))
+                svgAttributes["style"] = svgStyle;
+            var iconSvg = SetSvgRootAttributes(svg, svgAttributes);
 
-            var iconSvg = svg.Insert(svg.IndexOf("<svg", StringComparison.Ordinal) + 4, $" {svgStyle} ");
-
-            if (icon.Theme == IconThemeType.TwoTone)
+            if (icon.Theme == IconThemeType.TwoTone
+                && (!string.IsNullOrWhiteSpace(icon.TwoToneColor) || !string.IsNullOrWhiteSpace(icon.TwoToneSecondaryColor)))
             {
                 return GetTwoToneIconSvg(iconSvg, icon.TwoToneColor, icon.SecondaryColor);
             }
 
             return iconSvg;
+        }
+
+        private static string SetSvgRootAttributes(string svg, IDictionary<string, string> attributes)
+        {
+            var svgStart = svg.IndexOf("<svg", StringComparison.OrdinalIgnoreCase);
+            if (svgStart < 0) return svg;
+            var svgEnd = svg.IndexOf('>', svgStart + 4);
+            if (svgEnd < 0) return svg;
+
+            var root = svg.Substring(svgStart, svgEnd - svgStart + 1);
+            foreach (var attribute in attributes)
+            {
+                var value = WebUtility.HtmlEncode(attribute.Value ?? string.Empty);
+                var pattern = $"(?<![\\w:-]){Regex.Escape(attribute.Key)}\\s*=\\s*(?:\"[^\"]*\"|'[^']*')";
+                var matcher = new Regex(pattern, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+                var replacement = $"{attribute.Key}=\"{value}\"";
+                root = matcher.IsMatch(root)
+                    ? matcher.Replace(root, _ => replacement, 1)
+                    : root.Insert(root.Length - 1, $" {replacement}");
+            }
+
+            return svg.Substring(0, svgStart) + root + svg.Substring(svgEnd + 1);
         }
 
         public async ValueTask CreateFromIconfontCN(string scriptUrl)
@@ -105,12 +134,22 @@ namespace AntDesign
         {
             // Only replace the catalog's color slots; preserve nested groups,
             // explicit fill="none", and all unrelated SVG attributes.
-            var primary = WebUtility.HtmlEncode(string.IsNullOrWhiteSpace(primaryColor) ? "#1677ff" : primaryColor);
-            var secondary = WebUtility.HtmlEncode(secondaryColor);
-            return iconSvg.Replace("fill=\"#333\"", $"fill=\"{primary}\"")
-                .Replace("fill=\"#E6E6E6\"", $"fill=\"{secondary}\"")
-                .Replace("fill=\"#D9D9D9\"", $"fill=\"{secondary}\"")
-                .Replace("fill=\"#D8D8D8\"", $"fill=\"{secondary}\"");
+            var result = iconSvg;
+            if (!string.IsNullOrWhiteSpace(primaryColor))
+            {
+                var primary = WebUtility.HtmlEncode(primaryColor);
+                result = result.Replace("fill=\"#333\"", $"fill=\"{primary}\"");
+            }
+
+            if (!string.IsNullOrWhiteSpace(secondaryColor))
+            {
+                var secondary = WebUtility.HtmlEncode(secondaryColor);
+                result = result.Replace("fill=\"#E6E6E6\"", $"fill=\"{secondary}\"")
+                    .Replace("fill=\"#D9D9D9\"", $"fill=\"{secondary}\"")
+                    .Replace("fill=\"#D8D8D8\"", $"fill=\"{secondary}\"");
+            }
+
+            return result;
         }
     }
 }

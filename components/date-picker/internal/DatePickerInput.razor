@@ -1,4 +1,5 @@
 @namespace AntDesign.Internal
+@using AntDesign.Icons
 @inherits AntDomComponentBase
 
 @if (!IsRange)
@@ -11,15 +12,17 @@
                @oninput="OnInput"
                @onfocus="Onfocus"
                @onblur="OnBlur"
-               @bind-value="@Value"
-               maxlength="@(Mask?.Length ?? ushort.MaxValue)"
+               autocomplete="off"
+               aria-invalid="@AriaInvalid.ToString().ToLowerInvariant()"
+               maxlength="@Mask?.Length"
                size="@HtmlInputSize"
                disabled="@Disabled"
                placeholder="@Placeholder"
-               readonly="@ReadOnly">
+               readonly="@ReadOnly"
+               value="@(Value ?? string.Empty)">
         @if (ShowSuffixIcon || FeedbackIcon != null)
         {
-            <span class="@SemanticClass("suffix", $"{PrefixCls}-suffix")" style="@SemanticStyle("suffix", "pointer-events: auto;")" onclick="@OnSuffixIconClick">
+            <span class="@SemanticClass("suffix", $"{PrefixCls}-suffix")" style="@SemanticStyle("suffix")" onclick="@OnSuffixIconClick">
 
                 @if (SuffixIcon != null)
                 {
@@ -27,11 +30,11 @@
                 }
                 else if (ShowTime)
                 {
-                    <Icon Type="clock-circle"/>
+                        <ClockCircleOutlined AriaLabel="clock-circle" aria-hidden="true" />
                 }
                 else
                 {
-                    <Icon Type="calendar"/>
+                        <CalendarOutlined AriaLabel="calendar" aria-hidden="true" />
                 }
 
                 @if (FeedbackIcon != null)
@@ -58,16 +61,27 @@ else
                @oninput="OnInput"
                @onfocus="Onfocus"
                @onblur="OnBlur"
-               @bind-value="@Value"
-               maxlength="@(Mask?.Length ?? ushort.MaxValue)"
+               autocomplete="off"
+               aria-invalid="@AriaInvalid.ToString().ToLowerInvariant()"
+               maxlength="@Mask?.Length"
                size="@HtmlInputSize"
                disabled="@Disabled"
                placeholder="@Placeholder"
-               readonly="@ReadOnly">
+               readonly="@ReadOnly"
+               value="@(Value ?? string.Empty)">
     </div>
 }
 
 @code {
+
+    protected override Task OnFirstAfterRenderAsync()
+    {
+        // Blazor tracks input value as a DOM property and omits an empty value
+        // attribute. Keep the initial markup aligned with React's controlled
+        // input while leaving subsequent edits to the normal input flow.
+        return JsInvokeAsync(JSInteropConstants.SetDomAttribute, Ref,
+            new Dictionary<string, string> { ["value"] = Value ?? string.Empty });
+    }
 
     [Parameter]
     public string PrefixCls { get; set; } = "ant-picker";
@@ -92,6 +106,9 @@ else
 
     [Parameter]
     public bool Disabled { get; set; }
+
+    [Parameter]
+    public bool AriaInvalid { get; set; }
 
     [Parameter]
     public bool AutoFocus { get; set; }

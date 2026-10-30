@@ -196,13 +196,13 @@ public partial class Splitter : AntDomComponentBase
         var size = pane.EffectiveSize;
         var styles = new List<string>
         {
-            size == null ? "flex-basis:auto;flex-grow:1" : $"flex-basis:{size};flex-grow:0",
+            size == null ? "flex-basis: auto; flex-grow: 1" : $"flex-basis: {size}; flex-grow: 0",
         };
 
         if (pane.IsCollapsed)
-            styles.Add("overflow:hidden");
+            styles.Add("overflow: hidden");
 
-        return string.Join(";", styles) + ";";
+        return string.Join("; ", styles) + ";";
     }
 
     internal string SemanticClass(string slot, string baseClass)
@@ -261,7 +261,8 @@ public partial class Splitter : AntDomComponentBase
     {
         var stateSlot = _activeDraggerIndex == index ? "dragger.active" : "dragger.default";
         var stateStyle = Styles != null && Styles.TryGetValue(stateSlot, out var value) ? value : null;
-        return SemanticStyle("dragger", stateStyle);
+        var style = SemanticStyle("dragger", stateStyle);
+        return string.IsNullOrWhiteSpace(style) ? null : style;
     }
 
     [JSInvokable]

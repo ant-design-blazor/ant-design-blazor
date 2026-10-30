@@ -84,15 +84,44 @@
     [Fact]
     public void Render_unmatched_selected_value_as_text_like_react_select()
     {
-        var cut = Render(@<Select TItemValue="string" TItem="string" Value='@("a1")'>
+        var cut = Render(@<Select TItemValue="string" TItem="string" Value='@("a1")' AllowClear>
             <SelectOptions>
                 <SelectOption TItemValue="string" TItem="string" Value='@("a10")' Label="a10" />
             </SelectOptions>
         </Select>);
 
+        Assert.Contains("ant-select-allow-clear", cut.Find(".ant-select").ClassList);
+        Assert.NotNull(cut.Find(".ant-select-clear"));
         var content = cut.Find(".ant-select-content");
         Assert.Contains("a1", content.TextContent);
         Assert.Empty(cut.FindAll(".ant-select-placeholder"));
+    }
+
+    [Fact]
+    public async Task Clear_unmatched_selected_value_through_the_clear_icon()
+    {
+        Func<JsonElement, Task> clearHandler = null;
+        MockedDomEventListener
+            .Setup(listener => listener.AddExclusive<JsonElement>(
+                It.IsAny<object>(), "click", It.IsAny<Func<JsonElement, Task>>(), true, true, null))
+            .Callback<object, string, Func<JsonElement, Task>, bool, bool, string>(
+                (_, _, callback, _, _, _) => clearHandler = callback);
+
+        string selectedValue = "a1";
+        var valueChanged = EventCallback.Factory.Create<string>(this, value => selectedValue = value);
+        var cut = Render(@<Select TItemValue="string" TItem="string"
+                                  Value='@("a1")' ValueChanged="@valueChanged" AllowClear>
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value='@("a10")' Label="a10" />
+            </SelectOptions>
+        </Select>);
+
+        Assert.NotNull(cut.Find(".ant-select-clear"));
+        Assert.NotNull(clearHandler);
+
+        await cut.InvokeAsync(() => clearHandler(default));
+
+        Assert.Null(selectedValue);
     }
 
     [Fact]

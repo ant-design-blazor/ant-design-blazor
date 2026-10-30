@@ -470,9 +470,6 @@
   "<p>Select component to select value from options.</p><h2>When To Use</h2><ul><li>A dropdown menu for displaying choices - an elegant alternative to the native HTML <code>select</code> element.</li><li>Utilizing <a href=\"/en-US/components/radio\"><code>Radio</code></a> is recommended when there are fewer total options (less than 5).</li></ul>": {
     "Translated": "<p>选择组件以从选项中选择值。</p><h2>何时使用</h2><ul><li>用于显示选项的下拉菜单 - 原生 HTML <code>select< 的优雅替代品/code> 元素。</li><li>当总选项较少（较少超过 5).</li></ul>"
   },
-  "Will match dropdown width. If <code>true</code>, matches width of the widest item in the dropdown. If <code>string</code>, matches width of the string's value (ex: 250px)": {
-    "Translated": "将匹配下拉宽度。如果 <code>true</code>，则匹配下拉列表中最宽项的宽度。如果是 <code>string</code>，匹配字符串值的宽度（例如：250px）"
-  },
   "Will not allow dropdown width to grow above stated in here value (eg. \"768px\")": {
     "Translated": "不允许下拉宽度超过此处规定的值（例如“768px”）"
   },

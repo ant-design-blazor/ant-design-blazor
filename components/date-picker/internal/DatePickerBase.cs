@@ -100,6 +100,9 @@ namespace AntDesign
         [Parameter]
         public string Status { get; set; }
 
+        protected bool IsInvalid => string.Equals(Status, "error", StringComparison.OrdinalIgnoreCase)
+            || FormItem?.ValidateStatus == FormValidateStatus.Error;
+
         /// <summary>Semantic classes keyed by root, prefix, input, suffix and popup slots.</summary>
         [Parameter]
         public IReadOnlyDictionary<string, string> ClassNames { get; set; }

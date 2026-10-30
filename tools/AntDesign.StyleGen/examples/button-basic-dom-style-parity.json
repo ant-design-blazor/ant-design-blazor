@@ -28,7 +28,7 @@
         "rootSelector": "button.ant-btn"
       },
       "blazor": {
-        "url": "http://127.0.0.1:8186/en-US/components/button",
+        "url": "http://127.0.0.1:5000/en-US/components/button",
         "scopeSelector": "#components-button-demo-Basic .code-box-demo",
         "rootSelector": "button.ant-btn"
       },

@@ -1,4 +1,5 @@
 ﻿@using AntDesign.Select.Internal
+@using AntDesign.Icons
 @namespace AntDesign
 @inherits AntDomComponentBase
 @typeparam TItemValue
@@ -9,9 +10,10 @@
       class="@SelectParent.GetSemanticClass("popup.listItem", ClassMapper.Class)"
       role="@(SelectParent.UsesVirtualAccessibility ? null : "option")"
       aria-selected="@(SelectParent.UsesVirtualAccessibility ? null : IsSelected.ToString().ToLowerInvariant())"
-      aria-disabled="@IsDisabled.ToString().ToLowerInvariant()"
+      aria-disabled="@(IsDisabled || (SelectParent is Select<TItemValue, TItem> select && select.UsesVirtualAccessibility) ? IsDisabled.ToString().ToLowerInvariant() : null)"
       title="@InternalLabel"
       style="@SelectParent.GetSemanticStyle("popup.listItem", InnerStyle)"
+      @onmousedown:preventDefault="true"
       @onclick="@OnClick"
       @onclick:stopPropagation
       @onmouseenter="@OnMouseEnter">
@@ -38,7 +40,7 @@
             if (IsSelected)
             {
                 <span unselectable="on" aria-hidden="true" style="user-select: none;" class="@ClassPrefix-state">
-                    <Icon Type="check"></Icon>
+                    <CheckOutlined />
                 </span>
             }
             break;

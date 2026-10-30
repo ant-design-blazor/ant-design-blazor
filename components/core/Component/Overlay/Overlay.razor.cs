@@ -134,6 +134,12 @@ namespace AntDesign.Internal
         //the removal of that style in js interop overlay.ts class (in constructor)
         private string _overlayStyle = "display: none;"; //initial value prevents from screen flickering when adding overlay to dom; it will be overwritten immediately
 
+        // Keep the measured width in the Blazor-rendered style as well as in
+        // the DOM. Otherwise the first server render after an immediate open
+        // replaces the inline width and causes the popup to grow mid-animation.
+        private string _overlayMeasuredWidthStyle = string.Empty;
+        private string _overlayInheritedTokenStyle = string.Empty;
+
         private string _overlayCls = "";
 
         private bool _shouldRender = true;
@@ -235,7 +241,15 @@ namespace AntDesign.Internal
             }
             _isOverlayDuringShowing = true;
 
-            if (_isOverlayFirstRender)
+            if (_isOverlayFirstRender && HiddenMode && Ref.Id is not null)
+            {
+                // HiddenMode keeps the overlay rendered from the initial render,
+                // so its element reference is already available. Avoid an extra
+                // render round trip on the first open (especially noticeable in
+                // Blazor Server) and position the existing element directly.
+                _isOverlayFirstRender = false;
+            }
+            else if (_isOverlayFirstRender)
             {
                 Trigger.SetShouldRender(false);
                 await Task.Yield();
@@ -254,6 +268,14 @@ namespace AntDesign.Internal
             await UpdateParentOverlayState(true);
 
             await AddOverlayToBody(overlayLeft, overlayTop);
+            if (!string.IsNullOrWhiteSpace(Trigger.EffectivePopupWidthMode) && Ref.Id is not null)
+            {
+                // Keep the popup hidden until its width has been measured and
+                // committed, then start the enter motion from the final box.
+                // The JS pointer path uses the same gate.
+                await JsInvokeAsync(JSInteropConstants.OverlayComponentHelper.RevealOverlayForShow,
+                    Ref, Trigger.GetOverlayHiddenClass(), Trigger.GetOverlayEnterClass(), OverlayDisplayStyle);
+            }
             _isOverlayShow = true;
             _isOverlayDuringShowing = false;
             _isOverlayHiding = false;
@@ -396,8 +418,41 @@ namespace AntDesign.Internal
                 return;
             }
 
+            if (!string.IsNullOrWhiteSpace(Trigger.EffectivePopupWidthMode) && Ref.Id is not null && Trigger.Ref.Id is not null)
+            {
+                // Pointer-open popups may already have measured and revealed
+                // before the Blazor Server callback arrives. Reuse that
+                // locked width instead of measuring during the enter motion.
+                // Keep the measured CSS pixel width as a string across JS interop.
+                // Returning a JSON number rounds fractional widths (for example
+                // 342.65625 to 342.656), which can snap the popup one layout
+                // quantum narrower than its trigger after the Blazor render.
+                var measuredWidth = await JsInvokeAsync<string>(JSInteropConstants.OverlayComponentHelper.PrepareOverlayWidthForShow,
+                    Ref, Trigger.Ref, Trigger.PopupContainerSelector, Trigger.EffectivePopupWidthMode,
+                    Trigger.EffectivePopupWidth, Trigger.EffectivePopupMaxWidth);
+                if (double.TryParse(measuredWidth, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var parsedWidth) && parsedWidth > 0)
+                {
+                    var width = measuredWidth;
+                    var popupMaxWidth = Trigger.EffectivePopupMaxWidth;
+                    var maxWidth = string.IsNullOrWhiteSpace(popupMaxWidth)
+                        || popupMaxWidth.Equals("auto", StringComparison.OrdinalIgnoreCase)
+                        ? string.Empty
+                        : $";max-width:{popupMaxWidth}";
+                    // JS measures while the popup is hidden. Keep the measured
+                    // width constraints in Blazor's style too, since a later
+                    // render replaces the style attribute and would otherwise
+                    // discard JS-only min/max-width values during the motion.
+                    _overlayMeasuredWidthStyle = $"box-sizing:border-box;width:{width}px;min-width:{width}px{maxWidth}";
+                }
+            }
+
             if (Trigger.CheckPlacementChanged() || !_hasAddOverlayToBody)
             {
+                // Keep token overrides from the trigger's scoped ConfigProvider
+                // available after the popup is portaled outside that subtree.
+                _overlayInheritedTokenStyle = await JsInvokeAsync<string>(
+                    JSInteropConstants.OverlayComponentHelper.GetInheritedAntDesignTokenStyle, Trigger.Ref);
+
                 bool triggerIsWrappedInDiv = Trigger.IsTriggerWrappedInDiv;
                 _recurenceGuard++;
 
@@ -438,6 +493,38 @@ namespace AntDesign.Internal
                 await UpdatePosition(overlayLeft, overlayTop);
             }
             _recurenceGuard = 0;
+        }
+
+        internal async Task BindImmediateOpenAsync(string clickIgnoreSelector, string openClass,
+            string widthMode, string width, string maxWidth)
+        {
+            if (Ref.Id is null || Trigger?.Ref.Id is null)
+            {
+                return;
+            }
+
+            await JsInvokeAsync(JSInteropConstants.OverlayComponentHelper.BindImmediateOpen,
+                Trigger.Ref,
+                Ref,
+                Ref.Id,
+                Trigger.GetOverlayHiddenClass(),
+                Trigger.GetOverlayEnterClass(),
+                OverlayDisplayStyle,
+                Trigger.Disabled,
+                clickIgnoreSelector,
+                openClass,
+                Trigger.PlacementWithRTL,
+                Trigger.PopupContainerSelector,
+                Trigger.BoundaryAdjustMode,
+                Trigger.IsTriggerWrappedInDiv,
+                Trigger.PrefixCls,
+                VerticalOffset,
+                HorizontalOffset,
+                OffsetCssExpression,
+                ArrowPointAtCenter,
+                widthMode,
+                width,
+                maxWidth);
         }
 
         /// <summary>

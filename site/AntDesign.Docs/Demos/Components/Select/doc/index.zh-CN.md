@@ -34,7 +34,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg
 | Disabled | 是否禁用 | bool | false |  |
 | DisabledName | 用作禁用指示器的属性名称. | string |  |  |
 | DisabledPredicate | 指定禁用选项的判断条件 |  -  |  -  |
-| DropdownMatchSelectWidth |  将匹配下拉宽度： <br/>- for boolean: `true` - 下拉列表中最宽的项目 <br/> - for string: with value (e.g.: `256px`). | OneOf<bool, string> | true |  |
+| DropdownMatchSelectWidth | 控制下拉宽度：`true` 与 Select 触发器同宽；`false` 适配最宽选项，但不会窄于触发器；字符串可指定宽度（例如 `256px`）。 | OneOf<bool, string> | true |  |
 | DropdownMaxWidth | 不允许下拉菜单的宽度超过此处的值（例如“768px”）. | string | "auto" |  |
 | DropdownRender | 自定义下拉框内容 | Renderfragment | - |  |
 | SearchDebounceMilliseconds |推迟对搜索输入事件的处理，直到用户停止输入一个预定的时间。 | int        | 250    |

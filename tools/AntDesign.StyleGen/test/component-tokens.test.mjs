@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { extractComponentTokenDefinitions } from '../src/component-tokens.mjs';
+import { csharpTokenType, extractComponentTokenDefinitions } from '../src/component-tokens.mjs';
+
+test('C# property and documentation types use one shared mapping without changing React source types', () => {
+  for (const [source, expected] of [
+    ['number', 'double'], ['string', 'string'], ['boolean', 'bool'], ['true | false', 'bool'],
+    ['number | string', 'OneOf<double, string>'], ["CSSProperties['padding']", 'OneOf<string, double>'],
+    ['CSSObject["borderRadius"]', 'OneOf<string, double>'], ['unknown', 'string'],
+  ]) assert.equal(csharpTokenType(source), expected, source);
+});
 
 test('extracts ComponentToken properties inherited from local interfaces', () => {
   const definitions = extractComponentTokenDefinitions(`

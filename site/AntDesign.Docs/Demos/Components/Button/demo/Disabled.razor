@@ -1,32 +1,49 @@
-﻿<div>
-    <Button Type="ButtonType.Primary">Primary</Button>
-    <Button Type="ButtonType.Primary" Disabled>Primary (disabled)</Button>
-    <br />
-    <Button>Default</Button>
-    <Button Disabled>Default (disabled)</Button>
-    <br />
-    <Button Type="ButtonType.Dashed">Dashed</Button>
-    <Button Type="ButtonType.Dashed" Disabled>Dashed (disabled)</Button>
-    <br />
-    <Button Type="ButtonType.Text">Text</Button>
-    <Button Type="ButtonType.Text" Disabled>Text (disabled)</Button>
-    <br />
-    <Button Type="ButtonType.Link">Link</Button>
-    <Button Type="ButtonType.Link" Disabled>Link (disabled)</Button>
-    <br />
-    <Button Type="ButtonType.Link" Danger>Danger Link</Button>
-    <Button Type="ButtonType.Link" Danger Disabled>Danger Link (disabled)</Button>
-    <br />
-    <Button Danger>Danger Default</Button>
-    <Button Danger Disabled>Danger Default (disabled)</Button>
-    <br />
-    <Button Type="ButtonType.Text" Danger>Danger Text</Button>
-    <Button Type="ButtonType.Text" Danger Disabled>Danger Text (disabled)</Button>
-    <br />
-    <Button Type="ButtonType.Link" Danger>Danger Link</Button>
-    <Button Type="ButtonType.Link" Danger Disabled>Danger Link (disabled)</Button>
-    <div class="site-Button-Ghost-wrapper">
+<Flex Gap="FlexGap.Small" Align="FlexAlign.FlexStart" Vertical>
+    <Flex Gap="FlexGap.Small">
+        <Button Type="ButtonType.Primary">Primary</Button>
+        <Button Type="ButtonType.Primary" Disabled>Primary(disabled)</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small">
+        <Button>Default</Button>
+        <Button Disabled>Default(disabled)</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small">
+        <Button Type="ButtonType.Dashed">Dashed</Button>
+        <Button Type="ButtonType.Dashed" Disabled>Dashed(disabled)</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small">
+        <Button Type="ButtonType.Text">Text</Button>
+        <Button Type="ButtonType.Text" Disabled>Text(disabled)</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small">
+        <Button Type="ButtonType.Link">Link</Button>
+        <Button Type="ButtonType.Link" Disabled>Link(disabled)</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small">
+        <Button Type="ButtonType.Primary" Href="https://ant.design/index-cn">Href Primary</Button>
+        <Button Type="ButtonType.Primary" Href="https://ant.design/index-cn" Disabled>Href Primary(disabled)</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small">
+        <Button Danger>Danger Default</Button>
+        <Button Danger Disabled>Danger Default(disabled)</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small">
+        <Button Danger Type="ButtonType.Text">Danger Text</Button>
+        <Button Danger Type="ButtonType.Text" Disabled>Danger Text(disabled)</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small">
+        <Button Type="ButtonType.Link" Danger>Danger Link</Button>
+        <Button Type="ButtonType.Link" Danger Disabled>Danger Link(disabled)</Button>
+    </Flex>
+    <Flex Gap="FlexGap.Small" Class="site-button-ghost-wrapper button-disabled-ghost-wrapper">
         <Button Ghost>Ghost</Button>
-        <Button Ghost Disabled>Ghost (disabled)</Button>
-    </div>
-</div>
+        <Button Ghost Disabled>Ghost(disabled)</Button>
+    </Flex>
+</Flex>
+
+<style>
+    .site-button-ghost-wrapper.button-disabled-ghost-wrapper {
+        background: rgb(190, 200, 200);
+        padding: 16px 16px 16px;
+    }
+</style>

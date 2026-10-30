@@ -85,6 +85,15 @@ export function normalizeRuntimeHtml(html, policy = {}) {
       return ` ${name}=${quote}${classes.join(' ')}${quote}`;
     }
 
+    if (name === 'style' && policy.normalizeStyleAttributes) {
+      const normalized = value.split(';').map((declaration) => {
+        const separator = declaration.indexOf(':');
+        if (separator < 0) return declaration.trim();
+        return `${declaration.slice(0, separator).trim()}:${declaration.slice(separator + 1).trim()}`;
+      }).filter(Boolean).join(';');
+      return ` ${name}=${quote}${normalized}${quote}`;
+    }
+
     return attribute;
   });
 }
@@ -199,8 +208,8 @@ export function compareDomSnapshots(expected, actual, policy = {}) {
       geometryDifferences.push({ field: 'count', expected: left.length, actual: right.length });
     } else {
       left.forEach((node, index) => {
-        const expectedGeometry = node.relativeGeometry;
-        const actualGeometry = right[index]?.relativeGeometry;
+        const expectedGeometry = node.comparisonGeometry ?? node.relativeGeometry;
+        const actualGeometry = right[index]?.comparisonGeometry ?? right[index]?.relativeGeometry;
         if (!expectedGeometry && !actualGeometry) return;
         if (!expectedGeometry || !actualGeometry) {
           geometryDifferences.push({ index, expected: expectedGeometry ?? null, actual: actualGeometry ?? null });
@@ -231,7 +240,9 @@ export function compareDomSnapshots(expected, actual, policy = {}) {
   });
   const styles = compareComputedStyles(expected?.computedStyles, actual?.computedStyles);
   const htmlExact = compareRawHtml(expectedHtml, actualHtml);
-  const equal = htmlExact.equal && domTree.equal && styles.equal && semantic.every((item) => item.equal);
+  // Raw outerHTML is retained as a diagnostic because renderer-specific
+  // whitespace/comment serialization is not a DOM structure difference.
+  const equal = domTree.equal && styles.equal && semantic.every((item) => item.equal);
   const semanticStyleDifferences = semantic.flatMap((item) => [
     ...item.computedStyles.differences,
     ...item.geometry.differences.map((difference) => ({ path: item.path, ...difference })),

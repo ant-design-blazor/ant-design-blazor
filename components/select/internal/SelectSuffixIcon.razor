@@ -55,6 +55,7 @@ else
           style="@ParentSelect.GetSemanticStyle("clear")"
           type="button"
           aria-label="Clear"
+          @onmousedown:preventDefault="true"
           @ref="@_clearRef">
         <CloseCircleFilled />
     </button>

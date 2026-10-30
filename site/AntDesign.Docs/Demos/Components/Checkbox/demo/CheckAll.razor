@@ -1,0 +1,16 @@
+<Checkbox Checked="@allChecked" Indeterminate="@indeterminate" CheckedChanged="OnCheckAllChanged">Check all</Checkbox>
+<Divider />
+<CheckboxGroup TValue="string" Options="@options" @bind-Value="checkedValues" />
+
+@code {
+    private static readonly string[] plainOptions = ["Apple", "Pear", "Orange"];
+    private string[] checkedValues = ["Apple", "Orange"];
+    private bool allChecked => checkedValues.Length == plainOptions.Length;
+    private bool indeterminate => checkedValues.Length > 0 && !allChecked;
+    private Task OnCheckAllChanged(bool value)
+    {
+        checkedValues = value ? plainOptions.ToArray() : Array.Empty<string>();
+        return Task.CompletedTask;
+    }
+    private static readonly string[] options = plainOptions;
+}

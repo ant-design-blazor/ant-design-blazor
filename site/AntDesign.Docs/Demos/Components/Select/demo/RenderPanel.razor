@@ -1,14 +1,14 @@
-<Space Direction="SpaceDirection.Vertical" Size="SpaceSize.Small" Align="SpaceAlign.Start">
-    <Switch @bind-Value="_open" CheckedChildren="Open" UnCheckedChildren="Closed" />
+<Flex Vertical Gap="FlexGap.Small" Align="FlexAlign.Start">
+    <Switch @bind-Value="_open" />
     <Select TItemValue="string"
             TItem="PanelOption"
             DataSource="@_options"
             ValueName="@nameof(PanelOption.Value)"
             LabelName="@nameof(PanelOption.Label)"
             DefaultValue="@("lucy")"
-            Style="width: 180px;"
+            Style="width: 120px;"
             @bind-Open="_open" />
-</Space>
+</Flex>
 
 @code {
     private sealed record PanelOption(string Value, string Label);

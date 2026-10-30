@@ -402,7 +402,19 @@ namespace AntDesign
                 Model.ChildComponent = null;
             if (SelectParent?.HasSelectOptions == true)
             {
-                // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource .
+                // A virtual SelectOptions list temporarily unmounts option components as the window moves.
+                // Keep those models in the parent collection so they can be rebound when they re-enter the window.
+                var model = SelectParent.SelectOptionItems.FirstOrDefault(x => x.InternalId == InternalId);
+                if (model?.ChildComponent == this)
+                    model.ChildComponent = null;
+
+                if (SelectParent is Select<TItemValue, TItem> select && select.UsesVirtualWindow)
+                {
+                    base.Dispose(disposing);
+                    return;
+                }
+
+                // The SelectOptionItem must be explicitly removed if the SelectOption was not created using the DataSource.
                 var selectOptionItem = SelectParent.SelectOptionItems
                     .FirstOrDefault(x => x.InternalId == InternalId && !x.IsSelected);
                 if (selectOptionItem is not null)

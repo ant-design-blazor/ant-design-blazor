@@ -56,7 +56,19 @@ async function navigate(page, url, side, timeoutMs) {
   }
 }
 
-async function waitForDemo(page, sideSpec, timeoutMs, minimumRoots) {
+export async function scrollScopeAnchorIntoView(page, scopeSelector) {
+  // Dumi mounts demos lazily as their preview containers approach the
+  // viewport. Scroll the outer demo anchor first so a deep-linked demo's
+  // `.code-box-demo` exists before waiting for that inner selector.
+  if (scopeSelector.includes(' ')) {
+    const scopeAnchorSelector = scopeSelector.split(/\s+/)[0];
+    await page.evaluate(selector => {
+      document.querySelector(selector)?.scrollIntoView({ block: 'center', inline: 'nearest' });
+    }, scopeAnchorSelector);
+  }
+}
+
+async function waitForDemo(page, sideSpec, timeoutMs, minimumRoots, { scroll = true } = {}) {
   const scopeSelector = sideSpec.scopeSelector;
   const rootSelector = sideSpec.rootSelector;
   // Responsive components often finish layout-dependent rendering from
@@ -64,6 +76,7 @@ async function waitForDemo(page, sideSpec, timeoutMs, minimumRoots) {
   // while a Puppeteer page is in the background, so activate each side before
   // deciding that its DOM is ready to compare.
   await page.bringToFront();
+  if (scroll) await scrollScopeAnchorIntoView(page, scopeSelector);
   await page.waitForSelector(scopeSelector, { timeout: timeoutMs });
   try {
     await page.waitForFunction(({ scopeSelector, rootSelector, skeletonSelector, minimumRoots }) => {
@@ -92,10 +105,12 @@ async function waitForDemo(page, sideSpec, timeoutMs, minimumRoots) {
   // A body-wide scope is common for portals, but scrolling body does not align
   // the component demo. Center the actual trigger so page layout/scroll offsets
   // do not masquerade as component popup-positioning differences.
-  await page.evaluate(({ rootSelector, scopeSelector }) => {
-    (document.querySelector(rootSelector) ?? document.querySelector(scopeSelector))
-      ?.scrollIntoView({ block: 'center', inline: 'nearest' });
-  }, { rootSelector, scopeSelector });
+  if (scroll) {
+    await page.evaluate(({ rootSelector, scopeSelector }) => {
+      (document.querySelector(rootSelector) ?? document.querySelector(scopeSelector))
+        ?.scrollIntoView({ block: 'center', inline: 'nearest' });
+    }, { rootSelector, scopeSelector });
+  }
 }
 
 export async function waitForSvgUses(page, side, sideSpec, semanticNodes, timeoutMs) {
@@ -105,7 +120,7 @@ export async function waitForSvgUses(page, side, sideSpec, semanticNodes, timeou
     const scope = document.querySelector(scopeSelector);
     if (!scope) return false;
     const roots = [...scope.querySelectorAll(rootSelector)];
-    return definitions.every(definition => {
+    const ready = definitions.every(definition => {
       const selector = definition[`${side}Selector`] ?? definition.selector;
       const nodes = definition.portal ? [...document.querySelectorAll(selector)]
         : roots.flatMap(root => selector === '$root' ? [root] : [...root.querySelectorAll(selector)]);
@@ -117,6 +132,28 @@ export async function waitForSvgUses(page, side, sideSpec, semanticNodes, timeou
           .some(symbol => `#${symbol.getAttribute('id')}` === href);
       });
     });
+    if (!ready) return false;
+
+    // Iconfont sprites may append duplicate symbol definitions after the
+    // first usable <use> appears. Wait for the referenced SVG symbol set to
+    // stop changing before capture so symbol-order and glyph bounds reflect
+    // the settled browser state rather than script-load timing.
+    const signature = JSON.stringify(definitions.flatMap(definition => {
+      const selector = definition[`${side}Selector`] ?? definition.selector;
+      const nodes = definition.portal ? [...document.querySelectorAll(selector)]
+        : roots.flatMap(root => selector === '$root' ? [root] : [...root.querySelectorAll(selector)]);
+      return nodes.map(element => {
+        const href = element.getAttribute('xlink:href') ?? element.getAttribute('href');
+        return [href, [...document.querySelectorAll('symbol[id]')]
+          .filter(symbol => `#${symbol.getAttribute('id')}` === href)
+          .map(symbol => symbol.outerHTML)];
+      });
+    }));
+    const stateKey = '__antdV6StyleGenSvgSymbolStability';
+    const state = window[stateKey] ?? (window[stateKey] = { signature: '', stablePolls: 0 });
+    state.stablePolls = state.signature === signature ? state.stablePolls + 1 : 0;
+    state.signature = signature;
+    return state.stablePolls >= 3;
   }, { timeout: timeoutMs, polling: 100 }, {
     side, scopeSelector: sideSpec.scopeSelector, rootSelector: sideSpec.rootSelector, definitions,
   });
@@ -134,7 +171,34 @@ export async function applyAction(page, side, action, timeoutMs) {
         // Native radio inputs are visually hidden; activate the enclosing label so
         // both the browser's checked state and framework change handler run.
         await page.$eval(selector, (element) => (element.closest('label') ?? element).click());
+      } else if (action.visible) {
+        // Component documentation keeps previously opened portal nodes mounted
+        // while hidden or offscreen. Resolve the first actually visible match
+        // before clicking instead of timing out on an earlier stale portal.
+        const candidates = await page.$$(selector);
+        let target;
+        for (const candidate of candidates) {
+          const visible = await candidate.evaluate((element) => {
+            const style = getComputedStyle(element);
+            const rect = element.getBoundingClientRect();
+            return style.display !== 'none' && style.visibility !== 'hidden'
+              && Number(style.opacity) > 0 && rect.width > 0 && rect.height > 0
+              && rect.bottom > 0 && rect.right > 0 && rect.top < innerHeight && rect.left < innerWidth;
+          });
+          if (visible) {
+            target = candidate;
+            break;
+          }
+        }
+        if (!target) throw new Error(`${side} no visible match for ${selector}`);
+        await target.evaluate((element) => element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
+        await target.click({ timeout: timeoutMs });
       } else {
+        // Long component docs often place the target thousands of pixels below
+        // the viewport and use smooth scrolling. Puppeteer's locator can wait
+        // indefinitely for that scroll to settle before clicking; move it into
+        // view instantly so the action tests the component, not page scrolling.
+        await page.$eval(selector, (element) => element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }));
         await page.locator(selector).click({ timeout: timeoutMs });
       }
       if (action[`${side}CheckedValue`] !== undefined) {
@@ -145,18 +209,127 @@ export async function applyAction(page, side, action, timeoutMs) {
         }, { timeout: timeoutMs }, { selector, expectedValue });
       }
       break;
+    case 'measureClickVisible': {
+      const visibleSelector = action[`${side}VisibleSelector`] ?? action.visibleSelector;
+      if (!visibleSelector) throw new Error(`${side}VisibleSelector is required for measureClickVisible`);
+      await page.evaluate((targetSelector, popupSelector, timeout) => {
+        window.__antDesignParityVisibilityPromise = new Promise((resolve) => {
+          let startedAt;
+          let rafId;
+          let timeoutId;
+          let observer;
+          const finish = (elapsed) => {
+            document.removeEventListener('pointerdown', onPointerDown, true);
+            observer?.disconnect();
+            cancelAnimationFrame(rafId);
+            clearTimeout(timeoutId);
+            resolve(elapsed);
+          };
+          const isPaintVisible = () => [...document.querySelectorAll(popupSelector)].some((element) => {
+            const style = getComputedStyle(element);
+            const rect = element.getBoundingClientRect();
+            return style.display !== 'none' && style.visibility !== 'hidden'
+              && Number(style.opacity) > 0 && rect.width > 0 && rect.height > 0;
+          });
+          const check = () => {
+            if (startedAt !== undefined && isPaintVisible()) {
+              finish(performance.now() - startedAt);
+              return;
+            }
+            rafId = requestAnimationFrame(check);
+          };
+          const onPointerDown = (event) => {
+            const target = event.target;
+            if (!(target instanceof Element) || !target.closest(targetSelector)) return;
+            startedAt = performance.now();
+            observer = new MutationObserver(check);
+            observer.observe(document.documentElement, { subtree: true, attributes: true, childList: true });
+            check();
+          };
+          document.addEventListener('pointerdown', onPointerDown, true);
+          timeoutId = setTimeout(() => finish(null), timeout);
+        });
+      }, selector, visibleSelector, timeoutMs);
+      await page.locator(selector).click({ timeout: timeoutMs });
+      return await page.evaluate(() => window.__antDesignParityVisibilityPromise);
+    }
     case 'hover':
       await page.locator(selector).hover({ timeout: timeoutMs });
       break;
     case 'waitForSelector':
-      await page.waitForSelector(selector, { visible: action.state !== 'hidden', timeout: timeoutMs });
+      try {
+        await page.waitForSelector(selector, {
+          ...(action.state === 'hidden' ? { hidden: true } : { visible: true }),
+          timeout: timeoutMs,
+        });
+      } catch (error) {
+        throw new Error(`${side} ${selector}: ${safeError(error)}`);
+      }
       break;
+    case 'waitForSelectOptions': {
+      const visibleLabels = action.visibleLabels ?? [];
+      const hiddenLabels = action.hiddenLabels ?? [];
+      await page.waitForFunction(({ triggerSelector, visibleLabels, hiddenLabels }) => {
+        const trigger = document.querySelector(triggerSelector);
+        const input = trigger?.querySelector('input[aria-controls], input[aria-owns]');
+        const listId = input?.getAttribute('aria-controls') || input?.getAttribute('aria-owns');
+        const list = listId && document.getElementById(listId);
+        const popup = list?.closest('.ant-select-dropdown');
+        if (!popup) return false;
+        const popupStyle = getComputedStyle(popup);
+        if (popupStyle.display === 'none' || popupStyle.visibility === 'hidden' || Number(popupStyle.opacity) === 0) return false;
+        const options = [...popup.querySelectorAll('.ant-select-item-option')];
+        const isVisible = option => {
+          const style = getComputedStyle(option);
+          const rect = option.getBoundingClientRect();
+          return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
+        };
+        const labelOf = option => option.getAttribute('title')?.trim() || option.textContent.trim();
+        return visibleLabels.every(label => options.some(option => labelOf(option) === label && isVisible(option)))
+          && hiddenLabels.every(label => options.every(option => labelOf(option) !== label || !isVisible(option)));
+      }, { timeout: timeoutMs, polling: 100 }, {
+        triggerSelector: action[`${side}Selector`] ?? action.triggerSelector ?? selector,
+        visibleLabels,
+        hiddenLabels,
+      });
+      break;
+    }
+    case 'waitForPortal': {
+      const triggerSelector = action[`${side}TriggerSelector`] ?? action.triggerSelector;
+      const portalSelector = action[`${side}PortalSelector`] ?? action.portalSelector;
+      if (!triggerSelector || !portalSelector) throw new Error(`${side} triggerSelector and portalSelector are required for waitForPortal`);
+      await page.waitForFunction(({ triggerSelector, portalSelector, maxDistance }) => {
+        const trigger = document.querySelector(triggerSelector);
+        if (!trigger) return false;
+        const triggerRect = trigger.getBoundingClientRect();
+        return [...document.querySelectorAll(portalSelector)].some(portal => {
+          const style = getComputedStyle(portal);
+          const rect = portal.getBoundingClientRect();
+          if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0
+            || rect.width <= 0 || rect.height <= 0 || rect.bottom <= 0 || rect.right <= 0
+            || rect.top >= innerHeight || rect.left >= innerWidth) return false;
+          const horizontalGap = Math.max(triggerRect.left - rect.right, rect.left - triggerRect.right, 0);
+          const verticalGap = Math.max(triggerRect.top - rect.bottom, rect.top - triggerRect.bottom, 0);
+          return Math.hypot(horizontalGap, verticalGap) <= maxDistance;
+        });
+      }, { timeout: timeoutMs }, {
+        triggerSelector,
+        portalSelector,
+        maxDistance: action.maxDistance ?? 100,
+      });
+      break;
+    }
     case 'focus':
       await page.waitForSelector(selector, { timeout: timeoutMs });
       await page.focus(selector);
       break;
     case 'fill':
       await page.locator(selector).fill(action.value ?? '', { timeout: timeoutMs });
+      break;
+    case 'typeText':
+      await page.waitForSelector(selector, { timeout: timeoutMs });
+      await page.focus(selector);
+      await page.keyboard.type(action.value ?? '', { delay: action.delayMs ?? 0 });
       break;
     case 'press':
       await page.waitForSelector(selector, { timeout: timeoutMs });
@@ -198,7 +371,7 @@ async function hoverAndVerify(page, selector, timeoutMs) {
 }
 
 export function getFinalHoverAction(actions = []) {
-  const finalStateAction = [...actions].reverse().find(({ type }) => !['wait', 'waitForSelector'].includes(type));
+  const finalStateAction = [...actions].reverse().find(({ type }) => !['wait', 'waitForSelector', 'waitForPortal'].includes(type));
   return finalStateAction?.type === 'hover' ? finalStateAction : null;
 }
 
@@ -250,7 +423,7 @@ async function waitForVisiblePortals(page, semanticNodes, side, timeoutMs, trigg
 }
 
 // Read-only collector, also usable through the in-app browser's evaluate API.
-export async function capture(page, side, sideSpec, semanticNodes, styleProperties, pseudoElements = [], pseudoStyleProperties = []) {
+export async function capture(page, side, sideSpec, semanticNodes, styleProperties, pseudoElements = [], pseudoStyleProperties = [], includeAntDesignTokens = false) {
   return page.evaluate(captureDomStyles, {
     side,
     scopeSelector: sideSpec.scopeSelector,
@@ -259,6 +432,7 @@ export async function capture(page, side, sideSpec, semanticNodes, styleProperti
     styleProperties,
     pseudoElements,
     pseudoStyleProperties,
+    includeAntDesignTokens,
   });
 }
 
@@ -321,77 +495,105 @@ async function runGroup(browser, group, config) {
         const sourceSpec = group[sourceSide];
         const targetSpec = group[targetSide];
         await sourcePage.bringToFront();
+        await scrollScopeAnchorIntoView(sourcePage, sourceSpec.scopeSelector);
         await sourcePage.waitForSelector(sourceSpec.scopeSelector, { timeout: config.timeoutMs });
         const sourceWidth = await sourcePage.$eval(sourceSpec.scopeSelector,
           (element) => element.getBoundingClientRect().width);
         await targetPage.bringToFront();
+        await scrollScopeAnchorIntoView(targetPage, targetSpec.scopeSelector);
         await targetPage.waitForSelector(targetSpec.scopeSelector, { timeout: config.timeoutMs });
         await targetPage.$eval(targetSpec.scopeSelector, (element, width) => {
           element.style.width = `${width}px`;
         }, sourceWidth);
       }
-      for (const action of scenario.actions ?? []) {
-        activeStage = `${action.type} action`;
-        await applyAction(reactPage, 'react', action, config.timeoutMs);
-        await applyAction(blazorPage, 'blazor', action, config.timeoutMs);
-        if (action.stableForMs) {
-          await new Promise((resolvePromise) => setTimeout(resolvePromise, action.stableForMs));
-        }
-        scenarioResult.actions.push(action.id ?? action.type);
-      }
-      // Capture each app while it is active. React's CSS-in-JS size changes
-      // transition for 200ms; if captured in the background, the DOM class and
-      // CSS variables can be updated while the computed box remains stale.
       const finalHover = getFinalHoverAction(scenario.actions);
-      activeStage = 'React final hover and portal readiness';
-      await reactPage.bringToFront();
-      if (finalHover) {
-        const selector = finalHover.reactSelector ?? finalHover.selector;
-        // A page brought back to the foreground can retain Puppeteer's old
-        // mouse coordinates without retaining :hover. Move away first so the
-        // subsequent locator.hover always dispatches a fresh pointer move.
-        await reactPage.mouse.move(0, 0);
-        await new Promise((resolvePromise) => setTimeout(resolvePromise, 250));
-        await hoverAndVerify(reactPage, selector, config.timeoutMs);
-        await waitForVisiblePortals(reactPage, group.semanticNodes, 'react', config.timeoutMs, selector);
-        scenarioResult.finalHoverState ??= {};
-        scenarioResult.finalHoverState.react = await reactPage.$eval(selector, (element) => ({ html: element.outerHTML, hovered: element.matches(':hover') }));
+      const actions = scenario.actions ?? [];
+      const runSideActions = async (side, page) => {
+        for (const action of actions) {
+          activeStage = `${side} ${action.type} action`;
+          const durationMs = await applyAction(page, side, action, config.timeoutMs);
+          if (action.type === 'measureClickVisible') {
+            scenarioResult.timings ??= {};
+            scenarioResult.timings[action.id ?? action.type] ??= { unit: 'ms' };
+            scenarioResult.timings[action.id ?? action.type][side] = durationMs;
+          }
+          if (action.stableForMs) {
+            await new Promise((resolvePromise) => setTimeout(resolvePromise, action.stableForMs));
+          }
+        }
+      };
+      const captureSide = async (side, page, sideSpec) => {
+        // Capture each app while it is active. React's CSS-in-JS size changes
+        // transition for 200ms; background capture can leave computed boxes stale.
+        activeStage = `${side} final hover and portal readiness`;
+        await page.bringToFront();
+        // Locator clicks leave the pointer at each page's trigger coordinates.
+        // Different documentation layouts can place those triggers differently,
+        // which makes the final popup option acquire a different :hover/active
+        // state even though the scenario did not request a hover comparison.
+        // Start every capture from the same neutral pointer state; explicit
+        // hover scenarios re-enter their target below.
+        await page.mouse.move(0, 0);
+        await waitForDemo(page, sideSpec, config.timeoutMs, minimumRoots, { scroll: false });
+        await new Promise((resolvePromise) => setTimeout(resolvePromise, 800));
+        await waitForDemo(page, sideSpec, config.timeoutMs, minimumRoots, { scroll: false });
+        if (finalHover) {
+          const selector = finalHover[`${side}Selector`] ?? finalHover.selector;
+          // Re-enter hover from a neutral pointer location; background pages
+          // may retain coordinates without retaining :hover.
+          await page.mouse.move(0, 0);
+          await new Promise((resolvePromise) => setTimeout(resolvePromise, 250));
+          await hoverAndVerify(page, selector, config.timeoutMs);
+          await waitForVisiblePortals(page, group.semanticNodes, side, config.timeoutMs, selector);
+          scenarioResult.finalHoverState ??= {};
+          scenarioResult.finalHoverState[side] = await page.$eval(selector,
+            (element) => ({ html: element.outerHTML, hovered: element.matches(':hover') }));
+          await new Promise((resolvePromise) => setTimeout(resolvePromise, 800));
+        }
+        activeStage = `${side} SVG glyph readiness`;
+        await waitForSvgUses(page, side, sideSpec, group.semanticNodes, config.timeoutMs);
+        activeStage = `${side} DOM/CSS capture`;
+        return capture(page, side, sideSpec, group.semanticNodes,
+          group.styleProperties ?? DEFAULT_STYLE_PROPERTIES,
+          group.pseudoElements ?? ['::before', '::after'],
+          group.pseudoStyleProperties ?? DEFAULT_PSEUDO_STYLE_PROPERTIES,
+          group.includeAntDesignTokens ?? false);
+      };
+
+      let react;
+      let blazor;
+      if (group.captureReactBeforeBlazor) {
+        // Some popup components close on blur. Finish and snapshot React before
+        // activating Blazor so the portal remains in the intended open state.
+        await runSideActions('react', reactPage);
+        scenarioResult.actions = actions.map((action) => action.id ?? action.type);
+        react = await captureSide('react', reactPage, group.react);
+        await runSideActions('blazor', blazorPage);
+        blazor = await captureSide('blazor', blazorPage, group.blazor);
+      } else {
+        for (const action of actions) {
+          activeStage = `${action.type} action`;
+          const reactDurationMs = await applyAction(reactPage, 'react', action, config.timeoutMs);
+          const blazorDurationMs = await applyAction(blazorPage, 'blazor', action, config.timeoutMs);
+          if (action.type === 'measureClickVisible') {
+            scenarioResult.timings ??= {};
+            scenarioResult.timings[action.id ?? action.type] = {
+              unit: 'ms',
+              react: reactDurationMs,
+              blazor: blazorDurationMs,
+              delta: Number.isFinite(reactDurationMs) && Number.isFinite(blazorDurationMs)
+                ? blazorDurationMs - reactDurationMs
+                : null,
+            };
+          }
+          if (action.stableForMs) {
+            await new Promise((resolvePromise) => setTimeout(resolvePromise, action.stableForMs));
+          }
+          scenarioResult.actions.push(action.id ?? action.type);
+        }
+        react = await captureSide('react', reactPage, group.react);
+        blazor = await captureSide('blazor', blazorPage, group.blazor);
       }
-      // Keep non-hover captures in the foreground too. Background pages may
-      // suspend React's render/layout work, which can invalidate the demo scope
-      // after readiness was checked and before its DOM/CSS snapshot is read.
-      await reactPage.bringToFront();
-      await waitForDemo(reactPage, group.react, config.timeoutMs, minimumRoots);
-      await new Promise((resolvePromise) => setTimeout(resolvePromise, 800));
-      await waitForDemo(reactPage, group.react, config.timeoutMs, minimumRoots);
-      activeStage = 'React SVG glyph readiness';
-      await waitForSvgUses(reactPage, 'react', group.react, group.semanticNodes, config.timeoutMs);
-      activeStage = 'React DOM/CSS capture';
-      const react = await capture(reactPage, 'react', group.react, group.semanticNodes,
-        group.styleProperties ?? DEFAULT_STYLE_PROPERTIES,
-        group.pseudoElements ?? ['::before', '::after'],
-        group.pseudoStyleProperties ?? DEFAULT_PSEUDO_STYLE_PROPERTIES);
-      await blazorPage.bringToFront();
-      activeStage = 'Blazor final hover and portal readiness';
-      if (finalHover) {
-        const selector = finalHover.blazorSelector ?? finalHover.selector;
-        await blazorPage.mouse.move(0, 0);
-        await new Promise((resolvePromise) => setTimeout(resolvePromise, 250));
-        await hoverAndVerify(blazorPage, selector, config.timeoutMs);
-        await waitForVisiblePortals(blazorPage, group.semanticNodes, 'blazor', config.timeoutMs, selector);
-        scenarioResult.finalHoverState ??= {};
-        scenarioResult.finalHoverState.blazor = await blazorPage.$eval(selector, (element) => ({ html: element.outerHTML, hovered: element.matches(':hover') }));
-      }
-      await waitForDemo(blazorPage, group.blazor, config.timeoutMs, minimumRoots);
-      await new Promise((resolvePromise) => setTimeout(resolvePromise, 800));
-      await waitForDemo(blazorPage, group.blazor, config.timeoutMs, minimumRoots);
-      activeStage = 'Blazor SVG glyph readiness';
-      await waitForSvgUses(blazorPage, 'blazor', group.blazor, group.semanticNodes, config.timeoutMs);
-      activeStage = 'Blazor DOM/CSS capture';
-      const blazor = await capture(blazorPage, 'blazor', group.blazor, group.semanticNodes,
-        group.styleProperties ?? DEFAULT_STYLE_PROPERTIES,
-        group.pseudoElements ?? ['::before', '::after'],
-        group.pseudoStyleProperties ?? DEFAULT_PSEUDO_STYLE_PROPERTIES);
       const comparisonPolicy = group.comparisonPolicy ?? config.comparisonPolicy;
       const comparison = compareDomSnapshots(react, blazor, {
         ...comparisonPolicy,
@@ -478,9 +680,14 @@ export function validateParityManifest(manifest) {
       if (!scenario.id || scenarioIds.has(scenario.id)) throw new Error(`${group.id} has a missing or duplicate scenario id`);
       scenarioIds.add(scenario.id);
       for (const action of scenario.actions ?? []) {
-        if (!['click', 'hover', 'focus', 'fill', 'press', 'wait', 'waitForSelector', 'viewport'].includes(action.type)) throw new Error(`${group.id}.${scenario.id} has unsupported action ${action.type}`);
-        if (!['wait', 'viewport'].includes(action.type) && !(action.selector || action.reactSelector)) throw new Error(`${group.id}.${scenario.id} has an action without a React selector`);
-        if (!['wait', 'viewport'].includes(action.type) && !(action.selector || action.blazorSelector)) throw new Error(`${group.id}.${scenario.id} has an action without a Blazor selector`);
+        if (!['click', 'measureClickVisible', 'hover', 'focus', 'fill', 'typeText', 'press', 'wait', 'waitForSelector', 'waitForSelectOptions', 'waitForPortal', 'viewport'].includes(action.type)) throw new Error(`${group.id}.${scenario.id} has unsupported action ${action.type}`);
+        const hasActionSelector = side => action.selector || action[`${side}Selector`]
+          || (action.type === 'waitForPortal' && action[`${side}TriggerSelector`]);
+        if (!['wait', 'viewport'].includes(action.type) && !hasActionSelector('react')) throw new Error(`${group.id}.${scenario.id} has an action without a React selector`);
+        if (!['wait', 'viewport'].includes(action.type) && !hasActionSelector('blazor')) throw new Error(`${group.id}.${scenario.id} has an action without a Blazor selector`);
+        if (action.type === 'measureClickVisible' && !(action.visibleSelector || action.reactVisibleSelector || action.blazorVisibleSelector)) {
+          throw new Error(`${group.id}.${scenario.id} measureClickVisible requires a visible selector`);
+        }
       }
     }
     if (!Array.isArray(group.semanticNodes) || group.semanticNodes.length === 0) {

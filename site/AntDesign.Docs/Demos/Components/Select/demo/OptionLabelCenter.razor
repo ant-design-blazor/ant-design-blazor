@@ -1,29 +1,122 @@
-<Select TItemValue="string"
-        TItem="CenteredOption"
-        DataSource="@_options"
-        ValueName="@nameof(CenteredOption.Value)"
-        LabelName="@nameof(CenteredOption.Label)"
-        DefaultValue='@("first")'
-        Style="width: 240px;">
-    <ItemTemplate Context="option">
-        <span class="select-option-centered-label">@option.Label</span>
-    </ItemTemplate>
-</Select>
+@using AntDesign.Select
 
-<style>
-    .select-option-centered-label {
-        display: block;
-        text-align: center;
-    }
-</style>
+<Space Wrap>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="OptionItem" Style="width:120px" AllowClear @bind-Value="_unmatchedValue" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" />
+    </SpaceItem>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="OptionItem" Style="width:120px;height:60px" Placeholder="Select a option" AllowClear DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" />
+    </SpaceItem>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="OptionItem" Style="width:120px" DefaultValue='@("normal")' Placeholder="Select a option" AllowClear DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" />
+    </SpaceItem>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" Style="width:120px" DefaultValues="@_normalValue" Placeholder="Select a option" AllowClear DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" />
+    </SpaceItem>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" Style="width:120px;height:60px" Placeholder="Select a option" AllowClear DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" />
+    </SpaceItem>
+    <SpaceItem>
+        <Cascader Style="width:120px;height:60px" Placeholder="Select a option" AllowClear Options="@_cascaderOptions" />
+    </SpaceItem>
+    <SpaceItem>
+        <TreeSelect TItemValue="string" TItem="string" ShowSearch Style="width:120px;height:60px" Placeholder="Please select" AllowClear DropdownMatchSelectWidth="false" TreeDefaultExpandAll>
+            <ChildContent>
+                <TreeNode TItem="string" Key="parent 1" Title="parent 1">
+                    <TreeNode TItem="string" Key="long" Title="long, long, long piece of text" />
+                    <TreeNode TItem="string" Key="short" Title="short" />
+                    <TreeNode TItem="string" Key="normal" Title="normal" />
+                </TreeNode>
+            </ChildContent>
+        </TreeSelect>
+    </SpaceItem>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" Style="min-width:200px;height:200px" DefaultValues="@_longValue" Placeholder="Select" AllowClear DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate">
+            <PrefixIcon><span>Hello World</span></PrefixIcon>
+        </Select>
+    </SpaceItem>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" Style="width:200px" Placeholder="Please select" MaxTagCount="ResponsiveTag.Responsive" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate">
+            <PrefixIcon><span>城市</span></PrefixIcon>
+        </Select>
+    </SpaceItem>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="OptionItem" Style="width:200px" Placeholder="Please select" EnableSearch AllowClear Status="error" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate">
+            <PrefixIcon><span>城市</span></PrefixIcon>
+        </Select>
+    </SpaceItem>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="OptionItem" Style="width:100px" EnableSearch AllowClear Status="warning" Variant="InputVariant.Filled" Value='@("Bamboo")' DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate">
+            <PrefixIcon><span>Hi</span></PrefixIcon>
+        </Select>
+    </SpaceItem>
+    <SpaceItem>
+        <Select TItemValue="string" TItem="OptionItem" Style="width:100px" EnableSearch AllowClear Status="error" Variant="InputVariant.Borderless" Value='@("Bamboo")' DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate">
+            <PrefixIcon><span>Hi</span></PrefixIcon>
+        </Select>
+    </SpaceItem>
+    <SpaceItem>
+        <Form Model="@_formModel" Style="width:200px" Layout="FormLayout.Vertical">
+            <FormItem Label="Label" Name="Bamboo" Style="box-shadow:0 0 0 1px red">
+                <Select TItemValue="string" TItem="OptionItem" AllowClear Placeholder="bamboo" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" />
+            </FormItem>
+            <FormItem Label="Label" Name="AutoComplete" Style="box-shadow:0 0 0 1px red">
+                <AutoComplete Options="@_autocompleteOptions" AllowClear Placeholder="bamboo" />
+            </FormItem>
+        </Form>
+    </SpaceItem>
+</Space>
+
+<Flex Vertical Style="width:200px">
+    <Input TValue="string" Placeholder="Input" AllowClear><Prefix>Hi</Prefix></Input>
+    <Select TItemValue="string" TItem="OptionItem" PrefixIcon="@_prefix" Placeholder="Single" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" AllowClear EnableSearch />
+    <Select TItemValue="string" TItem="OptionItem" PrefixIcon="@_prefix" Placeholder="Single" Value='@("Bamboo")' DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" AllowClear EnableSearch />
+    <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" Placeholder="Multiple" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" AllowClear />
+    <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" PrefixIcon="@_prefix" Placeholder="Multiple" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" AllowClear />
+    <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" PrefixIcon="@_prefix" Placeholder="Multiple" DefaultValues="@_longValue" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" AllowClear />
+    <Select TItemValue="string" TItem="OptionItem" Mode="SelectMode.Multiple" Placeholder="Multiple" DefaultValues="@_longValue" DataSource="@_options" ItemValue="item => item.Value" ItemLabel="item => item.Label" ItemTemplate="@OptionTemplate" LabelTemplate="@OptionTemplate" AllowClear />
+</Flex>
 
 @code {
-    private sealed record CenteredOption(string Value, string Label);
-
-    private readonly CenteredOption[] _options =
-    [
-        new("first", "Option one"),
-        new("second", "Option two"),
-        new("third", "Option three")
+    private string? _unmatchedValue = "long, long, long piece of text";
+    private readonly OptionItem[] _options = [
+        new("long", "long, long, long piece of text"),
+        new("short", "short"),
+        new("normal", "normal")
     ];
+    private readonly string[] _autocompleteOptions = ["long, long, long piece of text", "short", "normal"];
+    private readonly string[] _normalValue = ["normal"];
+    private readonly string[] _longValue = ["long"];
+    private readonly RenderFragment _prefix = @<span>Hi</span>;
+    private readonly DemoFormModel _formModel = new();
+
+    private RenderFragment<OptionItem> OptionTemplate => item => builder =>
+    {
+        if (item.Value is "long" or "short")
+        {
+            builder.OpenComponent<Typography>(0);
+            builder.AddAttribute(1, "ChildContent", (RenderFragment)(content => content.AddContent(0, item.Label)));
+            builder.CloseComponent();
+        }
+        else
+        {
+            builder.OpenElement(0, "div");
+            builder.AddContent(1, item.Label);
+            builder.CloseElement();
+        }
+    };
+
+    private sealed record OptionItem(string Value, string Label);
+    private readonly CascaderNode[] _cascaderOptions =
+    [
+        new() { Value = "long", Label = "long, long, long piece of text" },
+        new() { Value = "short", Label = "short" },
+        new() { Value = "normal", Label = "normal" }
+    ];
+
+    private sealed class DemoFormModel
+    {
+        public string Bamboo { get; set; } = "Bamboo";
+        public string AutoComplete { get; set; } = "Bamboo";
+    }
 }

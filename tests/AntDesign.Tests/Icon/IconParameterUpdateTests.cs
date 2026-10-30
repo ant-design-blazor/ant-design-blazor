@@ -24,6 +24,35 @@ public sealed class IconParameterUpdateTests : AntDesignTestBase
     }
 
     [Fact]
+    public void Named_icons_use_the_icon_name_as_the_default_accessible_name()
+    {
+        var cut = RenderComponent<AntDesign.Icon>(p => p.Add(x => x.Type, "Smile"));
+        Assert.Equal("smile", cut.Find("span").GetAttribute("aria-label"));
+        Assert.Null(cut.Find("span").GetAttribute("id"));
+
+        cut.SetParametersAndRender(p => p.Add(x => x.AriaLabel, "Friendly face"));
+        Assert.Equal("Friendly face", cut.Find("span").GetAttribute("aria-label"));
+    }
+
+    [Fact]
+    public void Iconfont_only_renders_an_accessible_name_when_one_is_explicit()
+    {
+        var cut = RenderComponent<AntDesign.IconFont>(p => p.Add(x => x.Type, "icon-twitter"));
+        Assert.False(cut.Find("span").HasAttribute("aria-label"));
+
+        cut.SetParametersAndRender(p => p.Add(x => x.AriaLabel, "Twitter"));
+        Assert.Equal("Twitter", cut.Find("span").GetAttribute("aria-label"));
+    }
+
+    [Fact]
+    public void Explicit_icon_id_is_preserved()
+    {
+        var cut = RenderComponent<AntDesign.Icon>(p => p.Add(x => x.Type, "Smile").Add(x => x.Id, "custom-icon-id"));
+
+        Assert.Equal("custom-icon-id", cut.Find("span").GetAttribute("id"));
+    }
+
+    [Fact]
     public void A_click_callback_added_after_initial_render_is_registered_with_the_React_tabindex_default()
     {
         var clicks = 0;

@@ -8,7 +8,37 @@ import { JSDOM } from 'jsdom';
 const source = readFileSync(new URL('../../../components/core/JsInterop/modules/components/selectHelper.ts', import.meta.url), 'utf8');
 const script = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS } }).outputText;
 const exported = {};
-vm.runInNewContext(script, { exports: exported, getComputedStyle: holder => ({ getPropertyValue: () => holder.optionHeight ?? '' }) });
+const timers = new Map();
+const frames = new Map();
+const observers = [];
+let nextTimerId = 1;
+let nextFrameId = 1;
+const window = {
+  requestAnimationFrame: callback => {
+    const id = nextFrameId++;
+    frames.set(id, callback);
+    return id;
+  },
+  cancelAnimationFrame: id => frames.delete(id),
+  clearTimeout: id => timers.delete(id),
+  setTimeout: (callback, delay) => {
+    const id = nextTimerId++;
+    timers.set(id, { callback, delay });
+    return id;
+  },
+};
+class MutationObserverStub {
+  constructor(callback) { this.callback = callback; observers.push(this); }
+  observe() {}
+  disconnect() {}
+}
+vm.runInNewContext(script, {
+  exports: exported,
+  window,
+  MutationObserver: MutationObserverStub,
+  document: { body: {} },
+  getComputedStyle: holder => ({ getPropertyValue: () => holder.optionHeight ?? '' }),
+});
 const scrollToIndex = (...args) => exported.selectHelper.scrollToIndex(...args);
 const holder = (scrollTop = 0, height = 32) => ({ scrollTop, clientHeight: 256, querySelector: () => ({ offsetHeight: height }) });
 
@@ -104,4 +134,54 @@ test('a newer key navigation supersedes an earlier pending target', async t => {
   resize(32000); addRow(999, 'Last');
   await settle();
   assert.equal(list.scrollTop, 0);
+});
+
+test('virtual scrollbar matches rc-virtual-list visible class and three-second hide timing', t => {
+  const classes = new Set(['ant-select-dropdown-list-scrollbar', 'ant-select-dropdown-list-scrollbar-vertical']);
+  const scrollbar = {
+    classList: {
+      add: value => classes.add(value),
+      remove: value => classes.delete(value),
+    },
+    style: {},
+  };
+  const thumb = { style: {} };
+  let popupVisible = false;
+  const dropdown = {
+    isConnected: true,
+    parentElement: {},
+    getClientRects: () => popupVisible ? [{}] : [],
+  };
+  const listHolder = {
+    clientHeight: 256,
+    scrollHeight: 1000,
+    scrollTop: 0,
+    isConnected: true,
+    getClientRects: () => popupVisible ? [{}] : [],
+    closest: () => dropdown,
+    parentElement: { querySelector: () => scrollbar },
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  };
+  scrollbar.querySelector = () => thumb;
+  const dotNet = { invokeMethodAsync: async () => {} };
+
+  exported.selectHelper.attachVirtualList(listHolder, dotNet, 32, 8, 20);
+  assert.equal(classes.has('ant-select-dropdown-list-scrollbar-visible'), false);
+  popupVisible = true;
+  observers.at(-1).callback([]);
+  const [frameId, frameCallback] = [...frames.entries()].at(-1);
+  frames.delete(frameId);
+  frameCallback();
+  assert.equal(classes.has('ant-select-dropdown-list-scrollbar-visible'), true);
+  assert.equal(scrollbar.style.visibility, 'visible');
+  assert.equal(thumb.style.height, '66px');
+  const [timerId, timer] = [...timers.entries()].at(-1);
+  assert.equal(timer.delay, 3000);
+
+  timer.callback();
+  assert.equal(classes.has('ant-select-dropdown-list-scrollbar-visible'), false);
+  assert.equal(scrollbar.style.visibility, 'hidden');
+  exported.selectHelper.detachVirtualList(listHolder);
+  timers.delete(timerId);
 });

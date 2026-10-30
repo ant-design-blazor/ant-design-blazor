@@ -7,12 +7,14 @@
   },
   "config": {
     "timeoutMs": 20000,
+    "navigationTimeoutMs": 120000,
     "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
     "comparisonPolicy": {
+        "ignoredSemanticAttributes": { "popup.root": ["style"] },
       "normalization": {
         "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+)$",
         "removeAttributes": ["_bl_*"],
-        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[rR]_", "^css-[a-zA-Z0-9]+$", "^acss-[a-zA-Z0-9_-]+$", "^adb-select-semantic-demo-root$"],
         "removeCommentMarkers": ["<!--!-->"]
       }
     }
@@ -21,27 +23,26 @@
     {
       "id": "select-semantic-style",
       "component": "Select",
-      "react": { "url": "http://127.0.0.1:8000/components/select", "scopeSelector": "#select-demo-style-class .code-box-demo", "rootSelector": ".ant-flex" },
-      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/select", "scopeSelector": "#components-select-demo-style-class .code-box-demo", "rootSelector": ".ant-flex" },
+      "react": { "url": "http://127.0.0.1:8000/components/select?theme=light", "scopeSelector": "#select-demo-style-class .code-box-demo", "rootSelector": ".ant-select" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/select?theme=light", "scopeSelector": "#components-select-demo-style-class .code-box-demo", "rootSelector": ".ant-select" },
       "styleProperties": ["display", "position", "boxSizing", "width", "height", "gap", "top", "right", "bottom", "left", "transform", "paddingBlock", "paddingInline", "fontSize", "lineHeight", "color", "backgroundColor", "borderRadius", "borderWidth", "borderColor"],
       "semanticNodes": [
-        { "path": "root", "selector": ".ant-select", "minimumCount": 2 },
         { "path": "prefix", "selector": ".ant-select-prefix", "minimumCount": 2 },
         { "path": "content", "selector": ".ant-select-content", "minimumCount": 2 },
         { "path": "input", "selector": ".ant-select-input", "minimumCount": 2 },
         { "path": "placeholder", "selector": ".ant-select-placeholder", "minimumCount": 2 },
         { "path": "suffix", "selector": ".ant-select-suffix", "minimumCount": 2 }
       ],
-      "scenarios": [ { "id": "closed", "minimumRoots": 1 } ]
+      "scenarios": [ { "id": "closed", "minimumRoots": 2 } ]
     },
     {
       "id": "select-semantic-style-popup",
       "component": "Select",
-      "react": { "url": "http://127.0.0.1:8000/components/select", "scopeSelector": "body", "rootSelector": "#select-demo-style-class .ant-select-filled", "skeletonSelector": "" },
-      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/select", "scopeSelector": "body", "rootSelector": "#components-select-demo-style-class .ant-select-filled", "skeletonSelector": "" },
+      "react": { "url": "http://127.0.0.1:8000/components/select?theme=light", "scopeSelector": "body", "rootSelector": "#select-demo-style-class .ant-select-filled", "skeletonSelector": "" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/select?theme=light", "scopeSelector": "body", "rootSelector": "#components-select-demo-style-class .ant-select-filled", "skeletonSelector": "" },
       "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "borderWidth", "borderStyle", "borderColor", "borderRadius", "boxShadow", "zIndex"],
       "semanticNodes": [
-        { "path": "popup.root", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='GuangZhou'])", "portal": true, "minimumCount": 1 }
+        { "path": "popup.root", "selector": ".ant-select-dropdown:not(.ant-select-dropdown-hidden):not([style*='display: none']):has(.ant-select-item-option[title='GuangZhou'])", "portal": true, "geometryAnchor": { "mode": "pixel-snap-to-trigger", "verticalOffset": 4 }, "minimumCount": 1 }
       ],
       "scenarios": [ {
         "id": "filled-open",

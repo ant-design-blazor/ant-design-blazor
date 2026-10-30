@@ -7,6 +7,7 @@
   },
   "config": {
     "timeoutMs": 20000,
+    "navigationTimeoutMs": 120000,
     "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
     "comparisonPolicy": {
       "svgUsePaintTolerancePx": 0.01,
@@ -23,8 +24,8 @@
     {
       "id": "icon-font",
       "component": "Icon",
-      "react": { "url": "http://127.0.0.1:8000/components/icon", "scopeSelector": "#components-icon-demo-iconfont .code-box-demo", "rootSelector": ".ant-space" },
-      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/icon", "scopeSelector": "#components-icon-demo-iconfont .code-box-demo", "rootSelector": ".ant-space" },
+      "react": { "url": "http://127.0.0.1:8000/components/icon?theme=light", "scopeSelector": "#components-icon-demo-iconfont .code-box-demo", "rootSelector": ".ant-space" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light", "scopeSelector": "#components-icon-demo-iconfont .code-box-demo", "rootSelector": ".ant-space" },
       "styleProperties": ["display", "width", "height", "gap", "alignItems", "fontSize", "lineHeight", "color", "fill", "verticalAlign"],
       "semanticNodes": [
         { "path": "item", "selector": ".ant-space-item", "minimumCount": 3 },
@@ -37,8 +38,8 @@
     {
       "id": "icon-font-resources",
       "component": "Icon",
-      "react": { "url": "http://127.0.0.1:8000/components/icon", "scopeSelector": "#components-icon-demo-scripturl .code-box-demo", "rootSelector": ".ant-space" },
-      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/icon", "scopeSelector": "#components-icon-demo-scriptUrl .code-box-demo", "rootSelector": ".ant-space" },
+      "react": { "url": "http://127.0.0.1:8000/components/icon?theme=light", "scopeSelector": "#components-icon-demo-scripturl .code-box-demo", "rootSelector": ".ant-space" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light", "scopeSelector": "#components-icon-demo-scriptUrl .code-box-demo", "rootSelector": ".ant-space" },
       "styleProperties": ["display", "width", "height", "gap", "alignItems", "fontSize", "lineHeight", "color", "fill", "verticalAlign"],
       "semanticNodes": [
         { "path": "item", "selector": ".ant-space-item", "minimumCount": 4 },
@@ -51,8 +52,8 @@
     {
       "id": "icon-basic",
       "component": "Icon",
-      "react": { "url": "http://127.0.0.1:8000/components/icon", "scopeSelector": "#components-icon-demo-basic .code-box-demo", "rootSelector": ".ant-space" },
-      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/icon", "scopeSelector": "#components-icon-demo-basic .code-box-demo", "rootSelector": ".ant-space" },
+      "react": { "url": "http://127.0.0.1:8000/components/icon?theme=light", "scopeSelector": "#components-icon-demo-basic .code-box-demo", "rootSelector": ".ant-space" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light", "scopeSelector": "#components-icon-demo-basic .code-box-demo", "rootSelector": ".ant-space" },
       "styleProperties": ["display", "width", "height", "gap", "alignItems", "fontSize", "lineHeight", "color"],
       "semanticNodes": [
         { "path": "item", "selector": ".ant-space-item", "minimumCount": 6 },
@@ -64,8 +65,8 @@
     {
       "id": "icon-two-tone",
       "component": "Icon",
-      "react": { "url": "http://127.0.0.1:8000/components/icon", "scopeSelector": "#components-icon-demo-two-tone .code-box-demo", "rootSelector": ".ant-space" },
-      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/icon", "scopeSelector": "#components-icon-demo-two-tone .code-box-demo", "rootSelector": ".ant-space" },
+      "react": { "url": "http://127.0.0.1:8000/components/icon?theme=light", "scopeSelector": "#components-icon-demo-two-tone .code-box-demo", "rootSelector": ".ant-space" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light", "scopeSelector": "#components-icon-demo-two-tone .code-box-demo", "rootSelector": ".ant-space" },
       "styleProperties": ["display", "width", "height", "gap", "alignItems", "fontSize", "lineHeight", "color", "fill"],
       "semanticNodes": [
         { "path": "item", "selector": ".ant-space-item", "minimumCount": 3 },
@@ -77,8 +78,8 @@
     {
       "id": "icon-custom",
       "component": "Icon",
-      "react": { "url": "http://127.0.0.1:8000/components/icon", "scopeSelector": "#components-icon-demo-custom .code-box-demo", "rootSelector": ".ant-space" },
-      "blazor": { "url": "http://127.0.0.1:5540/en-US/components/icon", "scopeSelector": "#components-icon-demo-custom .code-box-demo", "rootSelector": ".ant-space" },
+      "react": { "url": "http://127.0.0.1:8000/components/icon?theme=light", "scopeSelector": "#components-icon-demo-custom .code-box-demo", "rootSelector": ".ant-space" },
+      "blazor": { "url": "http://127.0.0.1:5000/en-US/components/icon?theme=light", "scopeSelector": "#components-icon-demo-custom .code-box-demo", "rootSelector": ".ant-space" },
       "styleProperties": ["display", "width", "height", "gap", "alignItems", "fontSize", "lineHeight", "color"],
       "semanticNodes": [
         { "path": "item", "selector": ".ant-space-item", "minimumCount": 4 },

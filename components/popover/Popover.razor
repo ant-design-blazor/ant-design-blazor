@@ -26,25 +26,25 @@
     <CascadingValue Value="@ArrowPointAtCenter" Name="ArrowPointAtCenter">
         <Overlay @ref="_overlay"
                  CssVarClass="@($"{PrefixCls}-css-var")"
+                 VerticalOffset="12"
+                 HorizontalOffset="12"
                  HideMillisecondsDelay="10"
                  WaitForHideAnimMilliseconds="100"
                  OnOverlayMouseEnter="OnOverlayMouseEnter"
                  OnOverlayMouseLeave="OnOverlayMouseLeave"
                  OnOverlayMouseUp="OnOverlayMouseUp">
-            <div class="ant-popover-content">
-                <div class="ant-popover-arrow">
-                    <span class="ant-popover-arrow-content"></span>
-                </div>
-                <div class="ant-popover-inner" role="tooltip">
-                    @if (TitleTemplate != null || !string.IsNullOrWhiteSpace(Title))
-                    {
-                        <div class="ant-popover-title">
-                            @if (TitleTemplate != null)@TitleTemplate else @Title
-                        </div>
-                    }
-                    <div class="ant-popover-inner-content">
-                        @if (ContentTemplate != null)@ContentTemplate else @Content
+            <div class="ant-popover-arrow">
+                <span class="ant-popover-arrow-content"></span>
+            </div>
+            <div class="ant-popover-container" role="tooltip">
+                @if (TitleTemplate != null || !string.IsNullOrWhiteSpace(Title))
+                {
+                    <div class="ant-popover-title">
+                        @if (TitleTemplate != null)@TitleTemplate else @Title
                     </div>
+                }
+                <div class="ant-popover-content">
+                    @if (ContentTemplate != null)@ContentTemplate else @Content
                 </div>
             </div>
         </Overlay>

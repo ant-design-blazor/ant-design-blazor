@@ -5,12 +5,25 @@
 	{
 		var cut = Render(@<Checkbox>Test</Checkbox>);
 		cut.MarkupMatches(
-			@<label class="ant-checkbox-wrapper">
+			@<label class="ant-checkbox-css-var ant-checkbox-wrapper">
 				<span class="ant-checkbox ant-wave-target">
 					<input id:ignore type="checkbox" class="ant-checkbox-input">
+					<span class="ant-checkbox-inner"></span>
 				</span>
 				<span class="ant-checkbox-label">Test</span>
 			</label>);
+	}
+
+	[Fact]
+	public void Applies_semantic_classes_and_styles_to_checkbox_slots()
+	{
+		var classNames = new Dictionary<string, string> { ["root"] = "custom-root", ["icon"] = "custom-icon", ["label"] = "custom-label" };
+		var styles = new Dictionary<string, string> { ["root"] = "margin: 4px", ["icon"] = "border-radius: 6px", ["label"] = "color: blue" };
+		var cut = Render(@<Checkbox ClassNames="classNames" Styles="styles">Custom</Checkbox>);
+
+		cut.Find("label.custom-root").GetAttribute("style").Should().Contain("margin: 4px");
+		cut.Find(".ant-checkbox-inner.custom-icon").GetAttribute("style").Should().Contain("border-radius: 6px");
+		cut.Find(".ant-checkbox-label.custom-label").GetAttribute("style").Should().Contain("color: blue");
 	}
 
 	[Fact]

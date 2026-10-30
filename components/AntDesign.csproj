@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="QRCoder" Version="1.8.0" />
-    <PackageReference Include="AntDesign.Icons" Version="0.2.0-beta.3-local.20261024.6" />
+		<PackageReference Include="AntDesign.Icons" Version="0.2.0-beta.3-local.20261030.2" />
     <ProjectReference Include="..\src\AntDesign.Colors\AntDesign.Colors.csproj" />
   </ItemGroup>
 

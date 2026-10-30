@@ -226,6 +226,30 @@
     }
 
     [Fact]
+    public void Multiple_select_prefix_is_a_root_sibling_of_the_content()
+    {
+        var cut = Render<AntDesign.Select<string, string>>(@<AntDesign.Select Mode="SelectMode.Multiple"
+                TItemValue="string" TItem="string" EnableSearch>
+            <PrefixIcon><span>User</span></PrefixIcon>
+            <SelectOptions>
+                <SelectOption TItemValue="string" TItem="string" Value="@("lucy")" Label="Lucy" />
+            </SelectOptions>
+        </AntDesign.Select>);
+
+        var root = cut.Find(".ant-select");
+        var prefix = root.QuerySelector(":scope > .ant-select-prefix");
+        var content = root.QuerySelector(":scope > .ant-select-content");
+
+        prefix.Should().NotBeNull();
+        prefix.HasAttribute("aria-hidden").Should().BeFalse();
+        prefix.GetAttribute("style").Should().Be("margin-inline-end: 4px;");
+        content.Should().NotBeNull();
+        content.QuerySelector(".ant-select-prefix").Should().BeNull();
+        var children = root.Children.ToList();
+        children.IndexOf(prefix).Should().BeLessThan(children.IndexOf(content));
+    }
+
+    [Fact]
     public async Task ItShouldAddTags_WhenDatasourceIsEmpty()
     {
         //Arrange

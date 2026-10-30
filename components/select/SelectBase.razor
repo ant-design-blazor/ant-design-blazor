@@ -16,8 +16,13 @@
                             Disabled="Disabled"
                             Placement="@Placement"
                             Trigger="new[] { Trigger.Click }"
-                            ClickIgnoreSelector="@($".{ClassPrefix}-selection-item-remove")"
+                            ClickIgnoreSelector="@($".{ClassPrefix}-selection-item-remove, .{ClassPrefix}-clear")"
                             HiddenMode
+                            ImmediateOpenOnPointerDown
+                            ImmediateOpenClass="@(ClassPrefix + "-open")"
+                            ImmediateOpenWidthMode="@ImmediatePopupWidthMode"
+                            ImmediateOpenWidth="@ImmediatePopupWidth"
+                            ImmediateOpenMaxWidth="@ImmediatePopupMaxWidth"
                             ComplexAutoCloseAndVisible
                             BoundaryAdjustMode="@BoundaryAdjustMode"
                             OnMouseEnter="@(() => { OnMouseEnter?.Invoke(); })"

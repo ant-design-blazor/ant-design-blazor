@@ -120,8 +120,6 @@ namespace AntDesign
 
         private readonly ClassMapper _radioClassMapper = new();
         private readonly ClassMapper _inputClassMapper = new();
-        private readonly ClassMapper _innerClassMapper = new();
-
         private ElementReference _inputRef;
 
         private bool? _checked;
@@ -161,9 +159,6 @@ namespace AntDesign
                 .If($"{prefixCls}-input", () => !RadioButton)
                 .If($"{prefixCls}-button-input", () => RadioButton);
 
-            _innerClassMapper
-                .If($"{prefixCls}-inner", () => !RadioButton)
-                .If($"{prefixCls}-button-inner", () => RadioButton);
         }
 
         internal string SemanticClass(string slot, string baseClass)

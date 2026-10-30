@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -14,6 +15,7 @@ using AntDesign.JsInterop;
 using AntDesign.Select.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using OneOf;
 
 namespace AntDesign
@@ -41,6 +43,14 @@ namespace AntDesign
 
     public partial class Select<TItemValue, TItem> : SelectBase<TItemValue, TItem>
     {
+        protected override string ImmediatePopupWidthMode => DropdownMatchSelectWidth.IsT0
+            ? (DropdownMatchSelectWidth.AsT0 ? "match-trigger" : "content")
+            : "custom";
+        protected override string ImmediatePopupWidth => DropdownMatchSelectWidth.IsT1
+            ? DropdownMatchSelectWidth.AsT1
+            : string.Empty;
+        protected override string ImmediatePopupMaxWidth => DropdownMaxWidth;
+
         #region Parameters
 
         /// <summary>
@@ -66,11 +76,18 @@ namespace AntDesign
 
 #if NET5_0_OR_GREATER
         /// <summary>
-        /// Whether to enable virtualization feature or not, only works for .NET 5 and higher
+        /// Whether to enable the virtual option list, only works for .NET 5 and higher.
+        /// Enabled by default to match Ant Design React; set to false to render all options directly.
         /// </summary>
-        /// <default value="false"/>
+        /// <default value="true"/>
         [Parameter]
-        public bool EnableVirtualization { get; set; }
+        public bool EnableVirtualization
+        {
+            get => _enableVirtualization;
+            set => _enableVirtualization = value;
+        }
+
+        private bool _enableVirtualization = true;
 #endif
 
         private bool _dataSourceHasChanged = false;
@@ -159,7 +176,9 @@ namespace AntDesign
         }
 
         /// <summary>
-        /// Will match dropdown width. If <c>true</c>, matches width of the widest item in the dropdown. If <c>string</c>, matches width of the string's value (ex: 250px)
+        /// Controls the dropdown width. <c>true</c> matches the Select trigger width;
+        /// <c>false</c> fits the widest dropdown item while keeping the trigger width as a minimum;
+        /// a <c>string</c> sets an explicit width (for example, <c>250px</c>).
         /// </summary>
         /// <default value="true"/>
         [Parameter]
@@ -343,9 +362,6 @@ namespace AntDesign
 
         #endregion Parameters
 
-        [Inject]
-        private IDomEventListener DomEventListener { get; set; }
-
         #region Properties
 
         /// <summary>
@@ -364,7 +380,10 @@ namespace AntDesign
             get
             {
 #if NET5_0_OR_GREATER
-                return EnableVirtualization && !HasSelectOptions && !IsGroupingEnabled;
+                // React Select uses the accessibility listbox/proxy whenever
+                // virtualization is enabled, even for short option lists.
+                // The visual list only needs a recycled window for larger sets.
+                return EnableVirtualization && !IsGroupingEnabled;
 #else
                 return false;
 #endif
@@ -373,6 +392,70 @@ namespace AntDesign
 
         internal ElementReference DropDownRef => _dropDown.GetOverlayComponent().Ref;
         private ElementReference _scrollableSelectDiv;
+        private const int VirtualListItemHeight = 32;
+        private const int VirtualListRowsRendered = 10;
+        private int _virtualListStartIndex;
+        private int _virtualListEndIndex = VirtualListRowsRendered;
+        private DotNetObjectReference<Select<TItemValue, TItem>> _virtualListReference;
+        private bool _virtualListAttached;
+
+        internal bool UsesVirtualWindow => UsesVirtualAccessibility
+                                          && SortedSelectOptionItems.Count(option => !option.IsHidden) > 8;
+
+        internal int VirtualListOptionCount => SortedSelectOptionItems.Count(option => !option.IsHidden);
+
+        internal string VirtualListSpacerStyle
+        {
+            get
+            {
+                var height = FormatVirtualListPixels(VirtualListOptionCount * VirtualListItemHeight);
+                return $"height: {height}px; position: relative; overflow: hidden;";
+            }
+        }
+
+        internal string VirtualListInnerStyle
+        {
+            get
+            {
+                var baseStyle = ListboxStyle?.Trim() ?? string.Empty;
+                if (baseStyle.Length > 0 && !baseStyle.EndsWith(';')) baseStyle += ";";
+                var offset = _virtualListStartIndex * VirtualListItemHeight;
+                return $"{baseStyle} transform: translateY({offset}px); margin-left: 0px; position: absolute; left: 0px; right: 0px; top: 0px;";
+            }
+        }
+
+        internal IEnumerable<SelectOptionItem<TItemValue, TItem>> GetVirtualWindowOptions()
+        {
+            var options = SortedSelectOptionItems.Where(option => !option.IsHidden).ToList();
+            var start = Math.Clamp(_virtualListStartIndex, 0, options.Count);
+            var end = Math.Clamp(_virtualListEndIndex, start, options.Count);
+            return options.Skip(start).Take(end - start);
+        }
+
+        private static string FormatVirtualListPixels(int value)
+        {
+            return value >= 1_000_000
+                ? value.ToString("0.0e+00", CultureInfo.InvariantCulture)
+                : value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        [JSInvokable]
+        public Task UpdateVirtualWindow(int startIndex, int endIndex)
+        {
+            return InvokeAsync(() =>
+            {
+                if (!UsesVirtualWindow) return;
+                var optionCount = VirtualListOptionCount;
+                var nextStart = Math.Clamp(startIndex, 0, optionCount);
+                var nextEnd = Math.Clamp(endIndex, nextStart, optionCount);
+                if (nextStart == _virtualListStartIndex && nextEnd == _virtualListEndIndex) return;
+
+                _virtualListStartIndex = nextStart;
+                _virtualListEndIndex = nextEnd;
+                StateHasChanged();
+                RefreshComponentState();
+            });
+        }
 
 
         private TItemValue _selectedValue;
@@ -612,8 +695,6 @@ namespace AntDesign
             {
                 _defaultValueApplied = !(_defaultValueIsNotNull || _defaultValuesHasItems);
 
-                DomEventListener.AddShared<JsonElement>("window", "resize", OnWindowResize);
-                await SetDropdownStyleAsync();
                 _defaultActiveFirstOptionApplied = !(_defaultActiveFirstOption && SelectedOptionItems.Count == 0);
             }
             if (!_defaultValueApplied || !_defaultActiveFirstOptionApplied)
@@ -650,17 +731,32 @@ namespace AntDesign
 
             await base.OnAfterRenderAsync(firstRender);
             _afterFirstRender = true;
+
+            if (UsesVirtualWindow && !_virtualListAttached && _scrollableSelectDiv.Id != null)
+            {
+                _virtualListReference ??= DotNetObjectReference.Create(this);
+                await JsInvokeAsync(JSInteropConstants.SelectHelper.AttachVirtualList,
+                    _scrollableSelectDiv, _virtualListReference, VirtualListItemHeight, VirtualListRowsRendered, VirtualListOptionCount);
+                _virtualListAttached = true;
+            }
+            else if (!UsesVirtualWindow && _virtualListAttached)
+            {
+                await JsInvokeAsync(JSInteropConstants.SelectHelper.DetachVirtualList, _scrollableSelectDiv);
+                _virtualListAttached = false;
+                _virtualListReference?.Dispose();
+                _virtualListReference = null;
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
-            DomEventListener?.Dispose();
+            if (_virtualListAttached && _scrollableSelectDiv.Id != null)
+            {
+                _ = JsInvokeAsync(JSInteropConstants.SelectHelper.DetachVirtualList, _scrollableSelectDiv);
+                _virtualListAttached = false;
+            }
+            _virtualListReference?.Dispose();
             base.Dispose(disposing);
-        }
-
-        protected async Task OnWindowResize(JsonElement element)
-        {
-            await SetDropdownStyleAsync();
         }
 
         /// <summary>
@@ -824,7 +920,7 @@ namespace AntDesign
                 .If($"{ClassPrefix}-multiple", () => Mode != SelectMode.Default)
                 .If($"{ClassPrefix}-in-form-item ", () => FormItem != null)
                 .If($"{ClassPrefix}-has-feedback", () => FormItem?.HasFeedback == true)
-                .If($"{ClassPrefix}-allow-clear", () => !Disabled && AllowClear && HasValue)
+                .If($"{ClassPrefix}-allow-clear", () => !Disabled && AllowClear && HasValueOrUnmatched)
                 .If($"{ClassPrefix}-show-arrow", () => ShowArrowIcon)
                 .If($"{ClassPrefix}-disabled", () => Disabled)
                 .If($"{ClassPrefix}-loading", () => Loading)
@@ -858,28 +954,6 @@ namespace AntDesign
                 return SelectOptionItems.All(x => x.IsHidden);
         }
 
-        /// <summary>
-        /// Gets the BoundingClientRect of Ref (JSInvoke) and set the min-width and width in px.
-        /// </summary>
-        protected async Task SetDropdownStyleAsync()
-        {
-            string maxWidth = "", minWidth = "", definedWidth = "";
-            var domRect = await JsInvokeAsync<DomRect>(JSInteropConstants.GetBoundingClientRect, _selectContent.Ref);
-            var width = domRect.Width.ToString("0.############################", System.Globalization.CultureInfo.InvariantCulture);
-            minWidth = $"min-width: {width}px;";
-            if (DropdownMatchSelectWidth.IsT0 && DropdownMatchSelectWidth.AsT0)
-            {
-                definedWidth = $"width: {width}px;";
-            }
-            else if (DropdownMatchSelectWidth.IsT1)
-            {
-                definedWidth = $"width: {DropdownMatchSelectWidth.AsT1};";
-            }
-            if (!DropdownMaxWidth.Equals("auto", StringComparison.CurrentCultureIgnoreCase))
-                maxWidth = $"max-width: {DropdownMaxWidth};";
-            _dropdownStyle = minWidth + definedWidth + maxWidth;
-        }
-
         protected override async Task OnOverlayVisibleChangeAsync(bool visible)
         {
             OnDropdownVisibleChange?.Invoke(visible);
@@ -887,8 +961,6 @@ namespace AntDesign
             if (visible)
             {
                 OnOverlayShow();
-
-                await SetDropdownStyleAsync();
 
                 FocusIfInSearch();
 
@@ -1361,7 +1433,7 @@ namespace AntDesign
         {
             if (Mode != SelectMode.Tags)
             {
-                bool firstDone = false;
+                SelectOptionItem<TItemValue, TItem> firstActiveOption = null;
                 foreach (var item in SelectOptionItems)
                 {
                     bool matches = false;
@@ -1385,17 +1457,9 @@ namespace AntDesign
 
                     if (matches)
                     {
-                        if (!firstDone)
-                        {
-                            item.IsActive = true;
-                            firstDone = true;
-                        }
-                        else if (item.IsActive)
-                        {
-                            item.IsActive = false;
-                        }
-
                         item.IsHidden = item.IsSelected && HideSelected;
+                        if (firstActiveOption == null && !item.IsHidden && !item.IsDisabled)
+                            firstActiveOption = item;
                     }
                     else
                     {
@@ -1406,6 +1470,12 @@ namespace AntDesign
                         item.IsActive = false;
                     }
                 }
+
+                // Keep the input's aria-activedescendant in sync with the
+                // first visible search result, matching React's Select after
+                // filtering. Updating only IsActive leaves ActiveOptionId
+                // unset even though the option itself appears active.
+                ActiveOption = firstActiveOption;
             }
             else
             {
@@ -1892,6 +1962,10 @@ namespace AntDesign
 
                 await SetInputBlurAsync();
             }
+            else if (key == "ESCAPE" && _dropDown.IsOverlayShow())
+            {
+                await CloseAsync();
+            }
             else if (TokenSeparators is not null && TokenSeparators.Length > 0)
             {
                 _isToken = TokenSeparators.Contains(e.Key[0]);
@@ -1945,6 +2019,16 @@ namespace AntDesign
                     await InvokeAsync(StateHasChanged);
                 }
                 await ElementScrollIntoViewAsync(currentSelected.Ref);
+            }
+            else if (UsesVirtualWindow)
+            {
+                // React opens a virtual multi-select with the first enabled
+                // result active, even when the selection contains later items.
+                // Keep the accessibility window and visible virtual row in
+                // sync with that initial active descendant.
+                var firstOption = SortedSelectOptionItems.FirstOrDefault(x => !x.IsHidden && !x.IsDisabled);
+                if (firstOption != null)
+                    ActiveOption = firstOption;
             }
             else if (ActiveOption == null || ActiveOption.IsHidden || ActiveOption.IsDisabled)
             {

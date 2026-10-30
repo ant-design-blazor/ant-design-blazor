@@ -144,6 +144,18 @@ namespace AntDesign
         public string HtmlType { get; set; } = "button";
 
         /// <summary>
+        /// The URL to navigate to. When set, the component renders an anchor element.
+        /// </summary>
+        [Parameter]
+        public string Href { get; set; }
+
+        /// <summary>
+        /// The browsing context for the linked URL.
+        /// </summary>
+        [Parameter]
+        public string Target { get; set; }
+
+        /// <summary>
         /// Set the icon component of button.
         /// </summary>
         [Parameter]

@@ -8,8 +8,10 @@ import {
   normalizeRuntimeHtml,
 } from '../src/dom-style-parity.mjs';
 import { getFinalHoverAction, getPortalWaitTargets, validateParityManifest } from '../src/dom-style-parity-runner.mjs';
+import { captureDomStyles } from '../src/dom-style-capture.mjs';
 import { setTooltipTriggerState } from '../../../components/wwwroot/js/tooltipTriggerHelper.js';
 import { getSemanticCatalogCoverage } from '../src/semantic-catalog-coverage.mjs';
+import { JSDOM } from 'jsdom';
 
 test('Select virtual gate retains full popup DOM checks alongside its independent accessibility list', async () => {
   const manifest = JSON.parse(await readFile(new URL('../examples/select-virtual-dom-style-parity.json', import.meta.url), 'utf8'));
@@ -20,6 +22,8 @@ test('Select virtual gate retains full popup DOM checks alongside its independen
   assert.ok(manifest.groups[0].styleProperties.includes('overflow'));
   assert.ok(manifest.groups[0].styleProperties.includes('cursor'));
   assert.equal(manifest.groups[0].semanticNodes.find(node => node.path === 'item.disabled').minimumCount, 1);
+  assert.deepEqual(manifest.groups[0].semanticNodes.find(node => node.path === 'popup.root').geometryAnchor,
+    { mode: 'pixel-snap-to-trigger', verticalOffset: 4 });
 });
 
 test('Collapse gate retains meaningful attributes and requires every React semantic slot', async () => {
@@ -27,31 +31,33 @@ test('Collapse gate retains meaningful attributes and requires every React seman
   validateParityManifest(manifest);
   assert.equal(manifest.config.comparisonPolicy.ignoredAttributes, undefined);
   assert.equal(manifest.config.comparisonPolicy.geometryTolerancePx, undefined);
-  assert.deepEqual(manifest.config.comparisonPolicy.normalization.removeAttributes, ['_bl_*']);
+  assert.deepEqual(manifest.config.comparisonPolicy.normalization.removeAttributes, ['_bl_*', 'data-collapse-*']);
   const basic = manifest.groups.find(group => group.id === 'collapse-basic');
   assert.deepEqual(basic.semanticNodes.map(node => node.path), ['root', 'header', 'icon', 'title', 'body']);
   assert.ok(basic.styleProperties.includes('--ant-collapse-header-padding'));
   assert.equal(manifest.groups.find(group => group.id === 'collapse-collapsible').scenarios[0].minimumRoots, 3);
 });
 
-test('Select Escape gate waits for actual expanded/collapsed DOM state and cleared ownership', async () => {
+test('Select Escape gate settles the open and close motions before capture', async () => {
   const manifest = JSON.parse(await readFile(new URL('../examples/select-basic-popup-dom-style-parity.json', import.meta.url), 'utf8'));
   validateParityManifest(manifest);
+  assert.equal(manifest.groups[0].captureReactBeforeBlazor, true);
+  assert.deepEqual(manifest.groups.find(group => group.id === 'select-basic-popup').semanticNodes.find(node => node.path === 'popup.root').geometryAnchor,
+    { mode: 'pixel-snap-to-trigger', verticalOffset: 4 });
   const scenario = manifest.groups[0].scenarios.find(scenario => scenario.id === 'escape-closed');
   assert.equal(scenario.actions[1].type, 'waitForSelector');
   assert.match(scenario.actions[1].blazorSelector, /aria-expanded='true'/);
-  assert.equal(scenario.actions[2].type, 'press');
-  assert.equal(scenario.actions[2].key, 'Escape');
-  for (const side of ['react', 'blazor']) {
-    assert.match(scenario.actions[3][`${side}Selector`], /aria-expanded='false'/);
-    assert.match(scenario.actions[3][`${side}Selector`], /:not\(\[aria-controls\]\)/);
-  }
+  assert.deepEqual(scenario.actions[2], { type: 'wait', milliseconds: 300 });
+  assert.equal(scenario.actions[3].type, 'press');
+  assert.equal(scenario.actions[3].key, 'Escape');
+  assert.deepEqual(scenario.actions[4], { type: 'wait', milliseconds: 300 });
 });
 
-test('Select semantic-style gate includes prefix/input offsets and the filled popup border without ignoring DOM differences', async () => {
+test('Select semantic-style gate compares popup CSS and pixel geometry while ignoring renderer-specific inline positioning serialization', async () => {
   const manifest = JSON.parse(await readFile(new URL('../examples/select-semantic-style-dom-style-parity.json', import.meta.url), 'utf8'));
   validateParityManifest(manifest);
   assert.equal(manifest.config.comparisonPolicy.ignoredAttributes, undefined);
+  assert.deepEqual(manifest.config.comparisonPolicy.ignoredSemanticAttributes['popup.root'], ['style']);
   assert.equal(manifest.config.comparisonPolicy.geometryTolerancePx, undefined);
   const [closed, opened] = manifest.groups;
   assert.ok(closed.styleProperties.includes('left'));
@@ -179,6 +185,11 @@ test('Tooltip pilot keeps portal capture scoped to its visible matching overlay'
   const source = await readFile(new URL('../examples/tooltip-basic-portal-parity.json', import.meta.url), 'utf8');
   const manifest = JSON.parse(source);
   assert.equal(validateParityManifest(manifest), manifest);
+  assert.equal(manifest.groups[0].geometryTolerancePx, 0);
+  assert.deepEqual(manifest.groups[0].semanticNodes.find(({ path }) => path === 'tooltip').geometryAnchor,
+    { mode: 'pixel-snap-to-trigger' });
+  assert.equal(manifest.groups[0].semanticNodes.find(({ path }) => path === 'arrow').geometryParentSelector,
+    '.ant-tooltip:not(.ant-tooltip-hidden)');
   assert.ok(manifest.groups[0].semanticNodes.filter(({ portal }) => portal).every(({ portalText, portalVisible }) => portalText === 'prompt text' && portalVisible));
   assert.ok(manifest.groups[0].scenarios[1].actions.some(({ type }) => type === 'waitForSelector'));
   assert.deepEqual(getPortalWaitTargets(manifest.groups[0].semanticNodes, 'react'), [
@@ -268,6 +279,15 @@ test('DatePicker Dumi popup.root aliases the semantic.md popup node and its sele
   assert.ok(demoPath.includes('popup.root'));
   assert.equal(popup.selector, '.ant-picker-dropdown');
   assert.equal(getSemanticCatalogCoverage(inventory, catalog).dumiPaths.migrated, 352);
+});
+
+test('DatePicker popup parity captures the blur-closing React overlay before activating Blazor', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../examples/datepicker-basic-popup-dom-style-parity.json', import.meta.url), 'utf8'));
+  validateParityManifest(manifest);
+  const group = manifest.groups.find(({ id }) => id === 'datepicker-basic-popup');
+  assert.equal(group.captureReactBeforeBlazor, true);
+  assert.equal(group.scenarios[0].actions[0].type, 'click');
+  assert.ok(group.semanticNodes.find(({ path }) => path === 'popup').portalVisible);
 });
 
 test('generated Semantic DOM catalog includes nested React Dumi preview paths with v6 selectors', async () => {
@@ -372,6 +392,13 @@ test('sorts CSS class tokens only when explicitly requested by the comparison po
     '<div class="marker ant-component is-active"></div>');
 });
 
+test('normalizes only CSS declaration separator whitespace when explicitly requested', () => {
+  const html = '<div style="width: 120px; color: rgb(0, 0, 0);"></div>';
+  assert.equal(normalizeRuntimeHtml(html, { normalizeStyleAttributes: true }),
+    '<div style="width:120px;color:rgb(0, 0, 0)"></div>');
+  assert.equal(normalizeRuntimeHtml(html), html);
+});
+
 test('drops an empty class attribute when all its tokens are declared generated classes', () => {
   assert.equal(normalizeRuntimeHtml('<div class="acss-1obg1u7"></div>', {
     removeClassPatterns: ['^acss-[a-zA-Z0-9]+$'],
@@ -395,7 +422,7 @@ test('compares computed styles per semantic path with exact values', () => {
   assert.deepEqual(result.differences, [{ path: 'root', property: 'height', expected: '32px', actual: '33px' }]);
 });
 
-test('DOM report keeps raw equality and parsed structure equality as separate gates', () => {
+test('DOM parity uses parsed structure as the gate and retains raw HTML only as a diagnostic', () => {
   const result = compareDomSnapshots(
     { html: '<button class="ant-btn" type="button">Save</button>', semantic: {} },
     { html: '<button type="button" class="ant-btn" id="__runtime-id-1">Save</button>', semantic: {} },
@@ -403,6 +430,7 @@ test('DOM report keeps raw equality and parsed structure equality as separate ga
   );
   assert.equal(result.htmlExact.equal, false);
   assert.equal(result.domTree.equal, true);
+  assert.equal(result.equal, true);
 });
 
 test('semantic nodes compare by parsed DOM structure while retaining raw HTML details', () => {
@@ -430,6 +458,214 @@ test('compares portal geometry relative to its trigger within the declared pixel
   const mismatch = compareDomSnapshots(snapshot(expectedNode), snapshot({ ...actualNode, relativeGeometry: { ...actualNode.relativeGeometry, top: -41 } }), { geometryTolerancePx: 1.5 });
   assert.equal(mismatch.equal, false);
   assert.equal(mismatch.semantic[0].geometry.differences[0].property, 'top');
+});
+
+test('compares popup pixel-snap and child-relative geometry exactly without tolerance', () => {
+  const trigger = '<span class="ant-select"></span>';
+  const expectedNode = { html: '<div class="ant-select-dropdown"></div>', computedStyle: {},
+    relativeGeometry: { left: -0.65625, top: 35.015625, width: 342.65625, height: 264 },
+    comparisonGeometry: { left: 0, top: 0, width: 342.65625, height: 264 } };
+  const actualNode = { ...expectedNode,
+    relativeGeometry: { left: -0.3125, top: 35.265625, width: 342.65625, height: 264 } };
+  const snapshot = (node) => ({ html: trigger, semantic: { 'popup.root': [node] } });
+
+  const comparison = compareDomSnapshots(snapshot(expectedNode), snapshot(actualNode));
+  assert.equal(comparison.semantic[0].geometry.equal, true);
+  assert.deepEqual(comparison.semantic[0].geometry.differences, []);
+  assert.notDeepEqual(expectedNode.relativeGeometry, actualNode.relativeGeometry,
+    'retain raw per-page trigger-relative coordinates for diagnostics');
+
+  const mismatch = compareDomSnapshots(snapshot(expectedNode), snapshot({
+    ...actualNode,
+    comparisonGeometry: { ...actualNode.comparisonGeometry, left: 0.25 },
+  }));
+  assert.equal(mismatch.semantic[0].geometry.equal, false);
+  assert.equal(mismatch.semantic[0].geometry.differences[0].property, 'left');
+});
+
+test('compares popup viewport coordinates exactly and retains trigger coordinates for diagnosis', () => {
+  const reactNode = { html: '<div class="ant-select-dropdown"></div>', computedStyle: {},
+    comparisonGeometry: { left: 339, top: 470, right: 459, bottom: 606, width: 120, height: 136 },
+    viewportGeometry: { left: 339, top: 470, right: 459, bottom: 606, width: 120, height: 136 },
+    triggerViewportGeometry: { left: 339.65625, top: 434.484375, right: 459.65625, bottom: 466.484375, width: 120, height: 32 } };
+  const blazorNode = { ...reactNode,
+    triggerViewportGeometry: { ...reactNode.triggerViewportGeometry, top: 434.359375, bottom: 466.359375 } };
+  const snapshot = node => ({ html: '<span>trigger</span>', semantic: { 'popup.root': [node] } });
+  assert.equal(compareDomSnapshots(snapshot(reactNode), snapshot(blazorNode)).semantic[0].geometry.equal, true,
+    'a trigger subpixel difference must not be misreported as popup movement');
+
+  const moved = { ...blazorNode, comparisonGeometry: { ...reactNode.comparisonGeometry, top: 470.125 } };
+  const mismatch = compareDomSnapshots(snapshot(reactNode), snapshot(moved));
+  assert.equal(mismatch.semantic[0].geometry.equal, false);
+  assert.deepEqual(mismatch.semantic[0].geometry.differences.map(({ property, expected, actual }) => ({ property, expected, actual })),
+    [{ property: 'top', expected: 470, actual: 470.125 }]);
+});
+
+test('portal capture selects exact viewport geometry when requested by the manifest', () => {
+  const previous = { document: globalThis.document, getComputedStyle: globalThis.getComputedStyle,
+    innerWidth: globalThis.innerWidth, innerHeight: globalThis.innerHeight, devicePixelRatio: globalThis.devicePixelRatio };
+  const rect = (left, top, width, height) => ({ left, top, right: left + width, bottom: top + height, width, height });
+  const trigger = { outerHTML: '<div class="ant-select"></div>', tagName: 'DIV', getBoundingClientRect: () => rect(339.65625, 434.484375, 120, 32), querySelectorAll: () => [] };
+  const popup = { outerHTML: '<div class="ant-select-dropdown"></div>', tagName: 'DIV', matches: () => false, closest: () => null, getBoundingClientRect: () => rect(339, 470, 120, 136) };
+  globalThis.document = { documentElement: {}, querySelector: selector => selector === '#scope' ? { querySelectorAll: () => [trigger] } : null,
+    querySelectorAll: selector => selector === '.popup' ? [popup] : [] };
+  globalThis.getComputedStyle = () => ({ getPropertyValue: () => '', zoom: '1' });
+  globalThis.innerWidth = 1280; globalThis.innerHeight = 900; globalThis.devicePixelRatio = 1;
+  try {
+    const result = captureDomStyles({ side: 'react', scopeSelector: '#scope', rootSelector: '.ant-select',
+      semanticNodes: [{ path: 'popup.root', selector: '.popup', portal: true, geometryAnchor: { mode: 'viewport' } }] });
+    assert.deepEqual(result.semantic['popup.root'][0].comparisonGeometry, result.semantic['popup.root'][0].viewportGeometry);
+    assert.deepEqual(result.semantic['popup.root'][0].viewportGeometry, { left: 339, top: 470, right: 459, bottom: 606, width: 120, height: 136 });
+    assert.equal(result.semantic['popup.root'][0].triggerViewportGeometry.left, 339.65625);
+  } finally {
+    for (const [key, value] of Object.entries(previous)) {
+      if (value === undefined) delete globalThis[key];
+      else globalThis[key] = value;
+    }
+  }
+});
+
+test('capture includes only the requested computed Ant Design token prefixes', () => {
+  const previous = { document: globalThis.document, getComputedStyle: globalThis.getComputedStyle,
+    innerWidth: globalThis.innerWidth, innerHeight: globalThis.innerHeight, devicePixelRatio: globalThis.devicePixelRatio };
+  const tokenEntries = [['--ant-select-color', 'rgb(1, 2, 3)'], ['--ant-primary-color', 'red'], ['--unrelated', 'ignored']];
+  const trigger = { outerHTML: '<div class="ant-select"></div>', tagName: 'DIV',
+    getBoundingClientRect: () => ({ left: 0, top: 0, right: 120, bottom: 32, width: 120, height: 32 }),
+    querySelectorAll: () => [] };
+  globalThis.document = { documentElement: {}, querySelector: selector => selector === '#scope' ? { querySelectorAll: () => [trigger] } : null };
+  globalThis.getComputedStyle = () => ({ length: tokenEntries.length, item: index => tokenEntries[index][0],
+    getPropertyValue: property => tokenEntries.find(([name]) => name === property)?.[1] ?? '', zoom: '1' });
+  globalThis.innerWidth = 1280; globalThis.innerHeight = 900; globalThis.devicePixelRatio = 1;
+  try {
+    const result = captureDomStyles({ side: 'react', scopeSelector: '#scope', rootSelector: '.ant-select',
+      styleProperties: ['display'], includeAntDesignTokens: ['--ant-select-'] });
+    assert.deepEqual(result.computedStyles['root[0]'], { display: '', '--ant-select-color': 'rgb(1, 2, 3)' });
+  } finally {
+    for (const [key, value] of Object.entries(previous)) {
+      if (value === undefined) delete globalThis[key];
+      else globalThis[key] = value;
+    }
+  }
+});
+
+test('visible portal capture ignores offscreen stale picker popups before nearest-trigger matching', () => {
+  const previous = { document: globalThis.document, getComputedStyle: globalThis.getComputedStyle,
+    innerWidth: globalThis.innerWidth, innerHeight: globalThis.innerHeight, devicePixelRatio: globalThis.devicePixelRatio };
+  const rect = (left, top, width, height) => ({ left, top, right: left + width, bottom: top + height, width, height });
+  const trigger = { outerHTML: '<div class="ant-picker"></div>', tagName: 'DIV', getBoundingClientRect: () => rect(100, 100, 140, 32), querySelectorAll: () => [] };
+  const popup = (name, bounds) => {
+    const element = { outerHTML: `<div class="ant-picker-dropdown ${name}"></div>`, tagName: 'DIV',
+      matches: selector => selector.includes('.ant-picker-dropdown'),
+      closest: selector => selector.includes('.ant-picker-dropdown') ? element : null,
+      classList: { contains: () => false }, getBoundingClientRect: () => bounds };
+    return element;
+  };
+  const active = popup('active', rect(100, 136, 288, 348));
+  const stale = popup('stale', rect(700, 5000, 288, 348));
+  globalThis.document = { documentElement: {}, querySelector: selector => selector === '#scope' ? { querySelectorAll: () => [trigger] } : null,
+    querySelectorAll: selector => selector === '.popup' ? [stale, active] : [] };
+  globalThis.getComputedStyle = () => ({ display: 'block', visibility: 'visible', opacity: '1', getPropertyValue: () => '', zoom: '1' });
+  globalThis.innerWidth = 1280; globalThis.innerHeight = 900; globalThis.devicePixelRatio = 1;
+  try {
+    const result = captureDomStyles({ side: 'react', scopeSelector: '#scope', rootSelector: '.ant-picker',
+      semanticNodes: [{ path: 'popup', selector: '.popup', portal: true, portalMatch: 'nearest-trigger', portalVisible: true,
+        geometryAnchor: { mode: 'pixel-snap-to-trigger', verticalOffset: 4 } }] });
+    assert.equal(result.semantic.popup.length, 1);
+    assert.equal(result.semantic.popup[0].html, active.outerHTML);
+    assert.deepEqual(result.semantic.popup[0].comparisonGeometry, { left: 0, top: 0, width: 288, height: 348 });
+  } finally {
+    for (const [key, value] of Object.entries(previous)) {
+      if (value === undefined) delete globalThis[key];
+      else globalThis[key] = value;
+    }
+  }
+});
+
+test('portal capture can select the popup nearest to the declared trigger', () => {
+  const previous = { document: globalThis.document, getComputedStyle: globalThis.getComputedStyle,
+    innerWidth: globalThis.innerWidth, innerHeight: globalThis.innerHeight, devicePixelRatio: globalThis.devicePixelRatio };
+  const rect = (left, top, width, height) => ({ left, top, right: left + width, bottom: top + height, width, height });
+  const trigger = { outerHTML: '<div class="ant-picker"></div>', tagName: 'DIV', getBoundingClientRect: () => rect(100, 100, 140, 32), querySelectorAll: () => [] };
+  const nearby = { outerHTML: '<div class="popup nearby"></div>', tagName: 'DIV', matches: () => false, closest: () => null, getBoundingClientRect: () => rect(100, 136, 288, 348) };
+  const unrelated = { outerHTML: '<div class="popup unrelated"></div>', tagName: 'DIV', matches: () => false, closest: () => null, getBoundingClientRect: () => rect(700, 500, 288, 348) };
+  globalThis.document = { documentElement: {}, querySelector: selector => selector === '#scope' ? { querySelectorAll: () => [trigger] } : null,
+    querySelectorAll: selector => selector === '.popup' ? [unrelated, nearby] : [] };
+  globalThis.getComputedStyle = () => ({ getPropertyValue: () => '', zoom: '1' });
+  globalThis.innerWidth = 1280; globalThis.innerHeight = 900; globalThis.devicePixelRatio = 1;
+  try {
+    const result = captureDomStyles({ side: 'react', scopeSelector: '#scope', rootSelector: '.ant-picker',
+      semanticNodes: [{ path: 'popup', selector: '.popup', portal: true, portalMatch: 'nearest-trigger', geometryAnchor: { mode: 'pixel-snap-to-trigger' } }] });
+    assert.equal(result.semantic.popup.length, 1);
+    assert.equal(result.semantic.popup[0].html, nearby.outerHTML);
+    assert.deepEqual(result.semantic.popup[0].comparisonGeometry, { left: 0, top: 4, width: 288, height: 348 });
+  } finally {
+    for (const [key, value] of Object.entries(previous)) {
+      if (value === undefined) delete globalThis[key];
+      else globalThis[key] = value;
+    }
+  }
+});
+
+test('portal child capture is scoped to the popup selected nearest to its trigger', () => {
+  const previous = { document: globalThis.document, getComputedStyle: globalThis.getComputedStyle,
+    innerWidth: globalThis.innerWidth, innerHeight: globalThis.innerHeight, devicePixelRatio: globalThis.devicePixelRatio };
+  const dom = new JSDOM('<button class="trigger disabled"></button><button class="trigger selected"></button><div class="popup" id="near"><div class="option">near option</div></div><div class="popup" id="far"><div class="option">far option</div></div>');
+  const rect = (left, top, width, height) => ({ left, top, right: left + width, bottom: top + height, width, height });
+  const disabledTrigger = dom.window.document.querySelector('.disabled');
+  const selectedTrigger = dom.window.document.querySelector('.selected');
+  const near = dom.window.document.querySelector('#near');
+  const far = dom.window.document.querySelector('#far');
+  disabledTrigger.getBoundingClientRect = () => rect(700, 500, 40, 24);
+  selectedTrigger.getBoundingClientRect = () => rect(100, 100, 40, 24);
+  near.getBoundingClientRect = () => rect(100, 128, 120, 80);
+  far.getBoundingClientRect = () => rect(700, 500, 120, 80);
+  try {
+    globalThis.document = dom.window.document;
+    globalThis.getComputedStyle = dom.window.getComputedStyle.bind(dom.window);
+    globalThis.innerWidth = 1280; globalThis.innerHeight = 900; globalThis.devicePixelRatio = 1;
+    const result = captureDomStyles({ side: 'react', scopeSelector: 'body', rootSelector: '.trigger',
+      semanticNodes: [
+        { path: 'popup.root', selector: '.popup', portal: true, portalMatch: 'nearest-trigger', reactTriggerSelector: '.selected' },
+        { path: 'popup.option', selector: '.option', portal: true, portalParentPath: 'popup.root', geometryParentSelector: '.popup' },
+      ] });
+    assert.equal(result.semantic['popup.root'].length, 1);
+    assert.match(result.semantic['popup.root'][0].html, /id="near"/);
+    assert.equal(result.semantic['popup.root'][0].triggerViewportGeometry.left, 100);
+    assert.equal(result.semantic['popup.option'].length, 1);
+    assert.match(result.semantic['popup.option'][0].html, /near option/);
+  } finally {
+    dom.window.close();
+    for (const [key, value] of Object.entries(previous)) {
+      if (value === undefined) delete globalThis[key];
+      else globalThis[key] = value;
+    }
+  }
+});
+
+test('nested portal geometry resolves its own nearest overlay instead of another page portal', () => {
+  const previous = { document: globalThis.document, getComputedStyle: globalThis.getComputedStyle,
+    innerWidth: globalThis.innerWidth, innerHeight: globalThis.innerHeight, devicePixelRatio: globalThis.devicePixelRatio };
+  const rect = (left, top, width, height) => ({ left, top, right: left + width, bottom: top + height, width, height });
+  const trigger = { outerHTML: '<button></button>', tagName: 'BUTTON', getBoundingClientRect: () => rect(100, 100, 40, 24), querySelectorAll: () => [] };
+  const nearestOverlay = { getBoundingClientRect: () => rect(404, 394, 93, 34) };
+  const unrelatedOverlay = { getBoundingClientRect: () => rect(20, 30, 80, 40) };
+  const child = { outerHTML: '<div class="ant-tooltip-arrow"></div>', tagName: 'DIV', matches: () => false,
+    closest: selector => selector === '.ant-tooltip' ? nearestOverlay : null,
+    getBoundingClientRect: () => rect(410, 400, 6, 6) };
+  globalThis.document = { documentElement: {}, querySelector: selector => selector === '#scope' ? { querySelectorAll: () => [trigger] } : unrelatedOverlay,
+    querySelectorAll: selector => selector === '.arrow' ? [child] : [] };
+  globalThis.getComputedStyle = () => ({ getPropertyValue: () => '', zoom: '1' });
+  globalThis.innerWidth = 1280; globalThis.innerHeight = 900; globalThis.devicePixelRatio = 1;
+  try {
+    const result = captureDomStyles({ side: 'react', scopeSelector: '#scope', rootSelector: 'button',
+      semanticNodes: [{ path: 'tooltip.arrow', selector: '.arrow', portal: true, geometryParentSelector: '.ant-tooltip' }] });
+    assert.deepEqual(result.semantic['tooltip.arrow'][0].comparisonGeometry, { left: 6, top: 6, width: 6, height: 6 });
+  } finally {
+    for (const [key, value] of Object.entries(previous)) {
+      if (value === undefined) delete globalThis[key];
+      else globalThis[key] = value;
+    }
+  }
 });
 
 test('ignores only declared popup inline-position attributes while retaining raw markup diagnostics', () => {

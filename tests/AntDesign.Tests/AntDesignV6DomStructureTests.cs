@@ -36,6 +36,8 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
         JSInterop.Setup<AntDesign.JsInterop.DomRect>(AntDesign.JSInteropConstants.GetBoundingClientRect, _ => true)
             .SetResult(new AntDesign.JsInterop.DomRect { Width = 200 });
         JSInterop.SetupVoid("AntDesign.interop.domManipulationHelper.setDomAttribute", _ => true);
+        JSInterop.SetupVoid(AntDesign.JSInteropConstants.CollapseHelper.Attach, _ => true);
+        JSInterop.SetupVoid(AntDesign.JSInteropConstants.CollapseHelper.Detach, _ => true);
     }
 
     [Fact]
@@ -1009,10 +1011,11 @@ public sealed class AntDesignV6DomStructureTests : AntDesignTestBase
             .Add(x => x.Content, "More information")
             .AddChildContent("Open details"));
 
-        Assert.NotNull(cut.Find(".ant-popover-content"));
+        Assert.NotNull(cut.Find(".ant-popover > .ant-popover-arrow"));
         Assert.NotNull(cut.Find(".ant-popover.ant-popover-css-var"));
-        Assert.Equal("Details", cut.Find(".ant-popover-title").TextContent.Trim());
-        Assert.Equal("More information", cut.Find(".ant-popover-inner-content").TextContent.Trim());
+        Assert.NotNull(cut.Find(".ant-popover > .ant-popover-container[role='tooltip']"));
+        Assert.Equal("Details", cut.Find(".ant-popover-container > .ant-popover-title").TextContent.Trim());
+        Assert.Equal("More information", cut.Find(".ant-popover-container > .ant-popover-content").TextContent.Trim());
     }
 
     [Fact]

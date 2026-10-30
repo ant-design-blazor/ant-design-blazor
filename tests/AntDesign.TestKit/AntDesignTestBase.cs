@@ -5,6 +5,7 @@
 using System;
 using System.Globalization;
 using AntDesign.JsInterop;
+using AntDesign.Core.JsInterop.Modules.Components;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,17 @@ namespace AntDesign.Tests
             //Needed for Tests using Overlay
             Services.AddScoped<DomEventService>(sp => new TestDomEventService(Context.JSInterop.JSRuntime, MockedDomEventListener));
             JSInterop.SetupVoid(JSInteropConstants.OverlayComponentHelper.DeleteOverlayFromContainer, _ => true);
+            JSInterop.SetupVoid(JSInteropConstants.OverlayComponentHelper.BindImmediateOpen, _ => true);
+            // Overlay width is prepared in JavaScript before an animated popup
+            // is revealed. Most bUnit tests do not model layout, so return no
+            // measured width unless a test supplies a more specific result.
+            JSInterop.Setup<string>(JSInteropConstants.OverlayComponentHelper.PrepareOverlayWidthForShow, _ => true)
+                .SetResult(string.Empty);
+            JSInterop.Setup<string>(JSInteropConstants.OverlayComponentHelper.GetInheritedAntDesignTokenStyle, _ => true)
+                .SetResult(string.Empty);
+            JSInterop.SetupVoid(JSInteropConstants.OverlayComponentHelper.RevealOverlayForShow, _ => true);
+            JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
+                .SetResult(new OverlayPosition { Placement = Placement.BottomLeft, ZIndex = 5000 });
             JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
             JSInterop.SetupVoid(JSInteropConstants.AddPreventEnterOnOverlayVisible, _ => true);
             JSInterop.SetupVoid(JSInteropConstants.SetDomAttribute, _ => true);
