@@ -18,10 +18,22 @@
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
         probare, quae sunt a te dicta? Refert tamen, quo modo.
     </p>
-    <Divider Orientation="DividerOrientation.Left" Style="margin-inline-start: 0">Left Text margin with 0</Divider>
+    <Divider Orientation="DividerOrientation.Left" Styles="@_marginZeroStyles">Left Text margin with 0</Divider>
     <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
         probare, quae sunt a te dicta? Refert tamen, quo modo.
     </p>
-    <Divider Orientation="DividerOrientation.Right" Style="margin-inline-end: 50px">Right Text margin with 50px</Divider>
+    <Divider Orientation="DividerOrientation.Right" Styles="@_marginEdgeStyles">Right Text margin with 50px</Divider>
 </div>
+
+@code {
+    private static readonly IReadOnlyDictionary<string, string> _marginZeroStyles = new Dictionary<string, string>
+    {
+        ["content"] = "margin: 0px;"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _marginEdgeStyles = new Dictionary<string, string>
+    {
+        ["content"] = "margin: 0px 50px;"
+    };
+}

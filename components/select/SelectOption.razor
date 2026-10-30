@@ -10,7 +10,7 @@
       class="@SelectParent.GetSemanticClass("popup.listItem", ClassMapper.Class)"
       role="@(SelectParent.UsesVirtualAccessibility ? null : "option")"
       aria-selected="@(SelectParent.UsesVirtualAccessibility ? null : IsSelected.ToString().ToLowerInvariant())"
-      aria-disabled="@(IsDisabled || (SelectParent is Select<TItemValue, TItem> select && select.UsesVirtualAccessibility) ? IsDisabled.ToString().ToLowerInvariant() : null)"
+      aria-disabled="@IsDisabled.ToString().ToLowerInvariant()"
       title="@InternalLabel"
       style="@SelectParent.GetSemanticStyle("popup.listItem", InnerStyle)"
       @onmousedown:preventDefault="true"

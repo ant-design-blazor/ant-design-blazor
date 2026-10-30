@@ -83,10 +83,25 @@ namespace AntDesign
         public IReadOnlyDictionary<string, string> ClassNames { get; set; }
 
         /// <summary>
+        /// Computes semantic class names from the current Divider parameters.
+        /// </summary>
+        [Parameter]
+        public Func<Divider, IReadOnlyDictionary<string, string>> ClassNamesFunc { get; set; }
+
+        /// <summary>
         /// Semantic inline styles keyed by root, rail, and content.
         /// </summary>
         [Parameter]
         public IReadOnlyDictionary<string, string> Styles { get; set; }
+
+        /// <summary>
+        /// Computes semantic inline styles from the current Divider parameters.
+        /// </summary>
+        [Parameter]
+        public Func<Divider, IReadOnlyDictionary<string, string>> StylesFunc { get; set; }
+
+        private IReadOnlyDictionary<string, string> _resolvedClassNames;
+        private IReadOnlyDictionary<string, string> _resolvedStyles;
 
         private void SetClass()
         {
@@ -99,22 +114,22 @@ namespace AntDesign
                 .If($"ant-divider-plain", () => Plain && (Text != null || ChildContent != null))
                 .If("ant-divider-dashed", () => Dashed || string.Equals(Variant, "dashed", StringComparison.OrdinalIgnoreCase))
                 .If("ant-divider-dotted", () => string.Equals(Variant, "dotted", StringComparison.OrdinalIgnoreCase))
-                .If("ant-divider-rail", () => Text == null && ChildContent == null)
                 .If("ant-divider-sm", () => string.Equals(Size, "small", StringComparison.OrdinalIgnoreCase))
                 .If("ant-divider-md", () => string.Equals(Size, "middle", StringComparison.OrdinalIgnoreCase) || string.Equals(Size, "medium", StringComparison.OrdinalIgnoreCase))
+                .If("ant-divider-rail", () => Text == null && ChildContent == null)
                 ;
         }
 
         internal string SemanticClass(string slot, string baseClass)
         {
-            if (ClassNames == null || !ClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
+            if (_resolvedClassNames == null || !_resolvedClassNames.TryGetValue(slot, out var customClass) || string.IsNullOrWhiteSpace(customClass))
                 return baseClass;
             return string.IsNullOrWhiteSpace(baseClass) ? customClass : $"{baseClass} {customClass}";
         }
 
         internal string SemanticStyle(string slot, string baseStyle = null)
         {
-            var semanticStyle = Styles != null && Styles.TryGetValue(slot, out var value) ? value : null;
+            var semanticStyle = _resolvedStyles != null && _resolvedStyles.TryGetValue(slot, out var value) ? value : null;
             if (string.IsNullOrWhiteSpace(baseStyle)) return semanticStyle;
             if (string.IsNullOrWhiteSpace(semanticStyle)) return baseStyle;
             return $"{baseStyle.Trim().TrimEnd(';')}; {semanticStyle}";
@@ -132,6 +147,8 @@ namespace AntDesign
 
         protected override void OnParametersSet()
         {
+            _resolvedClassNames = ClassNamesFunc?.Invoke(this) ?? ClassNames;
+            _resolvedStyles = StylesFunc?.Invoke(this) ?? Styles;
             SetClass();
             base.OnParametersSet();
         }
