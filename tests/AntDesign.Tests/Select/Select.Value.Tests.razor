@@ -183,6 +183,28 @@
         input.GetAttribute("value").Should().BeEmpty();
     }
 
+    [Fact] // Issue: #4824
+    public async Task Resetting_to_zero_deselects_the_previously_selected_option()
+    {
+        var entries = new[]
+        {
+            new Person(0, "Entry 1"),
+            new Person(1, "Entry 2")
+        };
+        var cut = Render<AntDesign.Select<int, Person>>(
+            @<AntDesign.Select TItem="Person" TItemValue="int" DataSource="@entries"
+                              LabelName="@nameof(Person.Name)" ValueName="@nameof(Person.Id)"
+                              Value="0" AllowClear="false" />);
+
+        var entry2 = cut.Instance.SelectOptionItems.Single(item => item.Value == 1);
+        await cut.InvokeAsync(() => cut.Instance.SetValueAsync(entry2));
+
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.Value, 0));
+
+        cut.Instance.SelectOptionItems.Where(item => item.IsSelected)
+            .Should().ContainSingle().Which.Value.Should().Be(0);
+    }
+      
     [Fact] // Issue: #4825
     public async Task Select_can_select_a_null_nullable_value()
     {
