@@ -54,7 +54,7 @@
             </div>
             @if (Parent.Type == TabType.EditableCard && Closable)
             {
-                <button type="button" aria-label="remove" tabindex="0" class="ant-tabs-tab-remove" @onclick="(e) => Parent.RemoveTab(this)" @onclick:stopPropagation>
+                <button type="button" aria-label="remove" tabindex="0" class="ant-tabs-tab-remove" @onclick="OnCloseClick" @onclick:stopPropagation>
                     <Icon Type="close" />
                 </button>
             }
