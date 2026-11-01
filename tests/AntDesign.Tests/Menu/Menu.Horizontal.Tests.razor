@@ -9,7 +9,8 @@
         .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
         JSInterop.Setup<HtmlElement>(JSInteropConstants.DomInfoHelper.GetFirstChildDomInfo, _ => true)
         .SetResult(new HtmlElement { ClientWidth = 123 });
-        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
+        .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
     }
 
     private RenderFragment GetBasicHorizontalRender()
@@ -251,13 +252,13 @@
         var cut = Render<AntDesign.Menu>(GetBasicHorizontalRender());
         //Act
         var topExpandable = cut.FindComponent<AntDesign.Internal.SubMenuTrigger>();
-        cut.Find(".ant-menu-submenu").TriggerEvent("onmouseenter", EventArgs.Empty);
+        await cut.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
         await cut.InvokeAsync(() => topExpandable.Instance.Show());
         var midExpandable = topExpandable.FindComponent<AntDesign.Internal.SubMenuTrigger>();
-        midExpandable.Find(".ant-menu-submenu").TriggerEvent("onmouseenter", EventArgs.Empty);
+        await midExpandable.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
         await topExpandable.InvokeAsync(() => midExpandable.Instance.Show());
         var bottomExpandable = midExpandable.FindComponent<AntDesign.Internal.SubMenuTrigger>();
-        bottomExpandable.Find(".ant-menu-submenu").TriggerEvent("onmouseenter", EventArgs.Empty);
+        await bottomExpandable.Find(".ant-menu-submenu").TriggerEventAsync("onmouseenter", EventArgs.Empty);
         await midExpandable.InvokeAsync(() => bottomExpandable.Instance.Show());
         var bottomOverlay = bottomExpandable.FindComponent<AntDesign.Internal.Overlay>();
         //Assert

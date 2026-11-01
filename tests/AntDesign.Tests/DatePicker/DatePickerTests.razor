@@ -53,6 +53,63 @@
     }
 
     [Fact]
+    public async Task Picker_uses_adjusted_placement_for_open_animation()
+    {
+        //Arrange
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.TopLeft });
+        JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
+
+        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker TValue="DateTime" />);
+
+        //Act
+        cut.Find("input").Click();
+        await Task.Delay(1);
+
+        //Assert
+        cut.WaitForAssertion(() =>
+        {
+            var popup = cut.Find(".ant-picker-dropdown");
+            popup.ClassList.Should().Contain("ant-picker-dropdown-placement-topLeft");
+            popup.ClassList.Should().Contain("ant-slide-up-enter-active");
+            popup.GetAttribute("style").Should().Contain("transform-origin: 33% 100%");
+        });
+
+    }
+
+    [Fact]
+    public async Task Picker_uses_latest_placement_for_close_animation()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.Setup<HtmlElement>(JSInteropConstants.GetDomInfo, _ => true)
+            .SetResult(new HtmlElement() { AbsoluteTop = 1, AbsoluteLeft = 1 });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
+            .SetResult(new OverlayPosition() { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.TopLeft });
+        JSInterop.SetupVoid(JSInteropConstants.AddElementTo, _ => true);
+
+        var cut = Render<AntDesign.DatePicker<DateTime>>(@<DatePicker TValue="DateTime" />);
+        cut.Find("input").Click();
+        await Task.Delay(1);
+        cut.WaitForAssertion(() => cut.Find(".ant-picker-dropdown").ClassList.Should().Contain("ant-picker-dropdown-placement-bottomLeft"));
+
+        var hideTask = cut.InvokeAsync(async () => await cut.FindComponent<AntDesign.Internal.Overlay>().Instance.Hide(true));
+        await Task.Delay(150);
+
+        cut.WaitForAssertion(() =>
+        {
+            var popup = cut.Find(".ant-picker-dropdown");
+            popup.ClassList.Should().Contain("ant-picker-dropdown-placement-topLeft");
+            popup.ClassList.Should().Contain("ant-slide-up-leave-active");
+        });
+        await hideTask;
+    }
+
+    [Fact]
     public async Task Picker_Should_Picked_First_Day_In_Next_Month()
     {
         const string dateTimeFormat = "yyyy-MM-dd";
