@@ -1,0 +1,15 @@
+@inherits AntDesignTestBase
+@using Bunit
+
+@code {
+    [Fact]
+    public void Dialog_DoesNotRenderFooterForNullFooter()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var cut = Render<Dialog>(@<Dialog Visible="true" Config="@(new DialogOptions { Footer = (string)null! })" />);
+
+        Assert.Empty(cut.FindAll(".ant-modal-footer"));
+        Assert.NotNull(cut.Find(".ant-modal-wrap[id^='ant-modal-wrap_']"));
+        Assert.Empty(cut.FindAll("[aria-hidden='true']"));
+    }
+}
