@@ -9,7 +9,9 @@
         JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
         DateTime?[]? changed = null;
         var cut = Render<RangePicker<DateTime?[]>>(
-            @<RangePicker TValue="DateTime?[]" ValueChanged="@(value => changed = value)" />);
+            @<RangePicker TValue="DateTime?[]" />);
+        Action<DateTime?[]> valueChanged = value => changed = value;
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.ValueChanged, valueChanged));
 
         var onSelect = typeof(DatePickerBase<DateTime?[]>).GetMethod("OnSelect", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
         await (Task)onSelect.Invoke(cut.Instance, new object[] { new DateTime(2026, 1, 2), 0 })!;
