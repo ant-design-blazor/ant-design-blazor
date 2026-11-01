@@ -33,7 +33,12 @@ if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-sdks | grep -q '^10\.'
 fi
 
 if [[ "${ENABLE_AOT}" == "true" ]]; then
-  dotnet workload install wasm-tools
+  SDK_MAJOR="$(dotnet --version | cut -d. -f1)"
+  if (( SDK_MAJOR > 10 )); then
+    dotnet workload install wasm-tools-net10
+  else
+    dotnet workload install wasm-tools
+  fi
 fi
 npm install
 
@@ -52,7 +57,12 @@ sed -i "s/{version}/${VERSION}/g" site/AntDesign.Docs.Wasm/wwwroot/version.json
 sed -i "s/{version}/${VERSION}/g" site/AntDesign.Docs.Wasm/wwwroot/index.html
 sed -i "s/{version}/${VERSION}/g" site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
 
-dotnet build
+# RunCli generates the JSON data consumed by the docs site during publishing.
+# Running only this target avoids building every project and target framework in
+# the solution before the docs publish builds its own project references.
+dotnet msbuild ./site/AntDesign.Docs.Build/AntDesign.Docs.Build.csproj \
+  -target:RunCli -property:Configuration=Debug
+
 PUBLISH_ARGS=(./site/AntDesign.Docs.Wasm -c Release -o "${PUBLISH_DIR}")
 if [[ "${ENABLE_AOT}" == "true" ]]; then
   PUBLISH_ARGS+=("-p:EnableAOT=true")
