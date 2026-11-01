@@ -204,6 +204,22 @@ namespace AntDesign
             }
         }
 
+        private TimeSpan? _defaultTime;
+
+        /// <summary>
+        /// Time of day used to fill the time portion when the user types only a date
+        /// (e.g. <c>01.01.2024</c>) into a picker whose format includes time
+        /// (e.g. <c>dd.MM.yyyy HH:mm</c>). Defaults to <see cref="TimeSpan.Zero"/>
+        /// (00:00:00) when <c>null</c>.
+        /// </summary>
+        /// <default value="null"/>
+        [Parameter]
+        public TimeSpan? DefaultTime
+        {
+            get => _defaultTime;
+            set => _defaultTime = value;
+        }
+
         /// <summary>
         /// Allow clearing the selected value or not
         /// </summary>
@@ -654,10 +670,81 @@ namespace AntDesign
                     ChangeValue(parsedValue, index);
                 }
             }
+            else if (hasMask && TryParseDateWithDefaultTime(newValue, Mask, out DateTime dateWithDefaultTime))
+            {
+                // The user typed a value that matches only the date portion of the mask
+                // (e.g. "01.01.2024" against "dd.MM.yyyy HH:mm"). Fill the time with
+                // DefaultTime (00:00:00 by default) and treat the input as a full pick.
+                if (IsDisabledDate(dateWithDefaultTime))
+                {
+                    return;
+                }
+
+                _pickerStatus[index].SelectedValue = InternalConvert.SetKind<TValue>(dateWithDefaultTime);
+                ChangePickerValue(dateWithDefaultTime, index);
+                ChangeValue(dateWithDefaultTime, index);
+            }
             else
             {
                 _pickerStatus[index].SelectedValue = null;
             }
+        }
+
+        /// <summary>
+        /// Attempts to parse <paramref name="value"/> using only the date portion of
+        /// <paramref name="mask"/> and combine it with <see cref="DefaultTime"/>.
+        /// Used as a fallback when the full mask does not match but the user typed a
+        /// complete date (e.g. <c>01.01.2024</c> against mask <c>dd.MM.yyyy HH:mm</c>).
+        /// </summary>
+        private bool TryParseDateWithDefaultTime(string value, string mask, out DateTime result)
+        {
+            result = default;
+
+            if (string.IsNullOrEmpty(mask) || string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
+            var dateOnlyFormat = FormatAnalyzer.GetDateOnlyFormat(mask);
+            if (string.IsNullOrEmpty(dateOnlyFormat))
+            {
+                return false;
+            }
+
+            // Only accept inputs whose length exactly matches the date portion
+            // (plus, optionally, a single trailing separator that belongs to the mask
+            // boundary between date and time, like the space in "dd.MM.yyyy HH:mm").
+            // This avoids mis-firing on partial time inputs like "01.01.2024 1".
+            var maskDateLength = dateOnlyFormat.Length;
+            var accepted = value.Length == maskDateLength
+                || (value.Length == maskDateLength + 1 && mask.Length > maskDateLength && mask[maskDateLength] == value[maskDateLength]);
+            if (!accepted)
+            {
+                return false;
+            }
+
+            // Trim the boundary separator before passing to the date-only analyzer
+            // so it does not bleed into the year partial ("2024 " has length 5
+            // which violates the yyyy max width).
+            var valueForDateParse = value.Length > maskDateLength ? value.Substring(0, maskDateLength) : value;
+
+            var dateAnalyzer = new FormatAnalyzer(dateOnlyFormat, Picker, Locale, CultureInfo);
+            if (!dateAnalyzer.TryPickerStringConvert(valueForDateParse, out DateTime parsedDate))
+            {
+                return false;
+            }
+
+            var time = _defaultTime ?? TimeSpan.Zero;
+            result = new DateTime(
+                parsedDate.Year,
+                parsedDate.Month,
+                parsedDate.Day,
+                time.Hours,
+                time.Minutes,
+                time.Seconds,
+                parsedDate.Millisecond,
+                parsedDate.Kind);
+            return true;
         }
 
         protected virtual void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)

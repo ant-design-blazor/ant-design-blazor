@@ -248,7 +248,7 @@ namespace AntDesign
 
         private string DisplayName => Label ?? _propertyReflector?.DisplayName;
 
-        private string[] ValidationMessages => _validationMessages.Length > 0 ? _validationMessages : [Help];
+        private string[] ValidationMessages => _validationMessages.Length > 0 ? _validationMessages : string.IsNullOrEmpty(Help) ? [] : [Help];
 
         private string _name;
         private Action _nameChanged;

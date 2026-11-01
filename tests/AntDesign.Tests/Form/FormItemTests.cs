@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using AntDesign.JsInterop;
 using Bunit;
+using FluentAssertions;
 using Microsoft.AspNetCore.Components;
 using Xunit;
 
@@ -95,6 +96,37 @@ namespace AntDesign.Tests.Form.Validation
                 FormRequiredMark.None,
                 "<label class=\"\">Test Label</label>"
             };
+        }
+
+        // https://github.com/ant-design-blazor/ant-design-blazor/issues/4793
+        [Theory]
+        [InlineData(null, 0)]
+        [InlineData("", 0)]
+        [InlineData("Help text", 1)]
+        public void ItShouldRenderExplainOnlyWhenHelpIsSet(string help, int expectedCount)
+        {
+            JSInterop.Setup<Window>("AntDesign.interop.domInfoHelper.getWindow", _ => true).SetResult(new Window
+            {
+                InnerHeight = 1000m,
+                InnerWidth = 1000m
+            });
+
+            RenderFragment<object> fragment = model => builder =>
+            {
+                builder.OpenComponent<FormItem>(0);
+                builder.AddAttribute(1, "Label", "Test Label");
+                builder.AddAttribute(2, "Help", help);
+                builder.CloseComponent();
+            };
+
+            var wrappedSystemUnderTest = RenderComponent<Form<object>>(parameters => parameters
+                .Add(x => x.ChildContent, fragment)
+                .Add(x => x.Model, new { }));
+
+            var formItem = wrappedSystemUnderTest.FindComponent<FormItem>();
+
+            formItem.FindAll(".ant-form-item-explain").Count.Should().Be(expectedCount);
+            formItem.FindAll(".ant-form-item-margin-offset").Count.Should().Be(expectedCount);
         }
     }
 }
