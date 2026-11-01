@@ -8,6 +8,7 @@
             <div class=@($"{Config.PrefixCls}-mask {GetMaskClsName()}") style="@Config.MaskStyle"></div>
         }
         <div tabindex="-1" class=@($"{Config.PrefixCls}-wrap {Config.GetWrapClassNameExtended(this.Status)}") role="dialog"
+             id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}")
              @onmouseup="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseUp)"
              @onmousedown="@EventUtil.AsNonRenderingEventHandler(OnMaskMouseDown)"
              @onkeydown="@(EventUtil.AsNonRenderingEventHandler<KeyboardEventArgs>(OnKeyDown))"
@@ -19,8 +20,8 @@
                  @onmousedown="@EventUtil.AsNonRenderingEventHandler(OnDialogMouseDown)"
                  style="@GetStyle()"
                  >
-                <div id="@_sentinelStart" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
-                <div class=@($"{Config.PrefixCls}-content") style="@(_resizing ? "resize:both; overflow: hidden;":"")" id=@($"{Config.PrefixCls}-wrap_{DialogWrapperId}")>
+                <div id="@_sentinelStart" tabindex="0" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
+                <div class=@($"{Config.PrefixCls}-content") style="@(_resizing ? "resize:both; overflow: hidden;":"")">
                     @if (Config.Header != null)
                     {
                         <CascadingValue Value="@Config">
@@ -34,11 +35,11 @@
                     <div class=@($"{Config.PrefixCls}-body") style="@GetBodyStyle()">
                         @ChildContent
                     </div>
-                    @if (Config.Footer != null)
+                    @if (HasFooterContent())
                     {
                         <div class=@($"{Config.PrefixCls}-footer")>
                             <CascadingValue Value="@Config">
-                                @if (Config.Footer.Value.IsT0)
+                                @if (Config.Footer!.Value.IsT0)
                                 {
                                     @(Config.Footer.Value.AsT0)
                                 }
@@ -50,7 +51,7 @@
                         </div>
                     }
                 </div>
-                <div id="@_sentinelEnd" tabindex="0" aria-hidden="true" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
+                <div id="@_sentinelEnd" tabindex="0" style="width: 0px; height: 0px; overflow: hidden; outline: none;"></div>
             </div>
         </div>
     </div>

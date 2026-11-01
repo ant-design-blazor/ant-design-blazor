@@ -9,6 +9,18 @@ namespace AntDesign
 {
     internal static class InputNumberMath
     {
+        public static decimal ToDecimal(float value)
+        {
+            if (float.IsNaN(value) || float.IsInfinity(value)) return Convert.ToDecimal(value);
+            return decimal.Parse(value.ToString("R", CultureInfo.InvariantCulture), NumberStyles.Float, CultureInfo.InvariantCulture);
+        }
+
+        public static decimal ToDecimal(double value)
+        {
+            if (double.IsNaN(value) || double.IsInfinity(value)) return Convert.ToDecimal(value);
+            return decimal.Parse(value.ToString("R", CultureInfo.InvariantCulture), NumberStyles.Float, CultureInfo.InvariantCulture);
+        }
+
         #region Round
 
         public static float Round(float x, int digits)

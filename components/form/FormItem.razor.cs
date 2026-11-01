@@ -42,8 +42,11 @@ namespace AntDesign
             get => _name;
             set
             {
-                _name = value;
-                _nameChanged?.Invoke();
+                if (_name != value)
+                {
+                    _name = value;
+                    _nameChanged?.Invoke();
+                }
             }
         }
 

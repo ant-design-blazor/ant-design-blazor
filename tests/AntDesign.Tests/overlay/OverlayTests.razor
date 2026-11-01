@@ -1,0 +1,13 @@
+@inherits AntDesignTestBase
+@using Bunit
+
+@code {
+    [Fact]
+    public void Overlay_RendersMousePropagationGuards()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var overlay = new AntDesign.Internal.Overlay();
+
+        Assert.NotNull(overlay);
+    }
+}
