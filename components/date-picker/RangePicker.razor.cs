@@ -587,7 +587,7 @@ namespace AntDesign
             _isSetPicker = false;
 
             var array = Value as Array;
-            if (array == null)
+            if (array == null || !_isInitialized)
             {
                 return;
             }
