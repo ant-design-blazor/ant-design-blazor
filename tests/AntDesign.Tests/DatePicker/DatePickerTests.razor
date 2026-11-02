@@ -98,7 +98,6 @@
         cut.WaitForAssertion(() => cut.Find(".ant-picker-dropdown").ClassList.Should().Contain("ant-picker-dropdown-placement-bottomLeft"));
 
         var hideTask = cut.InvokeAsync(async () => await cut.FindComponent<AntDesign.Internal.Overlay>().Instance.Hide(true));
-        await Task.Delay(150);
 
         cut.WaitForAssertion(() =>
         {

@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AntDesign.Docs\AntDesign.Docs.csproj" />
+    <ProjectReference Include="..\AntDesign.Docs.Build\AntDesign.Docs.Build.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
