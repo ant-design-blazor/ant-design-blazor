@@ -9,12 +9,12 @@ using Xunit;
 namespace AntDesign.Tests.LocaleProvider
 {
     // These tests mutate process-wide culture state and must not overlap other test collections.
-    [CollectionDefinition("LocaleProvider global culture", DisableParallelization = true)]
-    public class LocaleProviderGlobalCultureCollection
+    [CollectionDefinition("LocaleProvider tests", DisableParallelization = true)]
+    public class LocaleProviderTestCollection
     {
     }
 
-    [Collection("LocaleProvider global culture")]
+    [Collection("LocaleProvider tests")]
     public class LocaleProviderTests
     {
         [Fact]
