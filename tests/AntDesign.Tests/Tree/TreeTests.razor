@@ -2,6 +2,22 @@
 
 @code {
 
+    [Fact]
+    public void DisabledCheckboxExpression_DisablesMatchingNodeOnly()
+    {
+        var data = new List<Item> { new("Public"), new("Secret") };
+        Func<TreeNode<Item>, bool> disableSecret = node => node.DataItem.Name == "Secret";
+        var cut = Render<Tree<Item>>(@<Tree TItem="Item"
+            DataSource="data"
+            Checkable="true"
+            TitleExpression="node => node.DataItem.Name"
+            DisabledCheckboxExpression="disableSecret" />);
+
+        var nodes = cut.FindComponents<TreeNode<Item>>();
+        nodes.Single(x => x.Instance.DataItem.Name == "Secret").Instance.DisableCheckbox.Should().BeTrue();
+        nodes.Single(x => x.Instance.DataItem.Name == "Public").Instance.DisableCheckbox.Should().BeFalse();
+    }
+
     record Item(string Name)
     {
         public List<Item> Children { get; set; } = new();

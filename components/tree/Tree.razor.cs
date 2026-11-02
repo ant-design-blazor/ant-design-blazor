@@ -542,6 +542,12 @@ namespace AntDesign
         /// </summary>
         public string[] DisableCheckKeys { get; set; }
 
+        /// <summary>
+        /// Disables a node checkbox when the expression evaluates to true.
+        /// </summary>
+        [Parameter]
+        public Func<TreeNode<TItem>, bool> DisabledCheckboxExpression { get; set; }
+
         #endregion Checkable
 
         #region Search

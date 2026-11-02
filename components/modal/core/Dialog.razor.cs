@@ -75,6 +75,14 @@ namespace AntDesign
 
         #region ant-modal style
 
+        private bool HasFooterContent()
+        {
+            if (Config.Footer is null) return false;
+            if (Config.Footer.Value.IsT0)
+                return !string.IsNullOrWhiteSpace(Config.Footer.Value.AsT0);
+            return Config.Footer.Value.AsT1 is not null;
+        }
+
         private string _modalStyle = null;
 
         /// <summary>

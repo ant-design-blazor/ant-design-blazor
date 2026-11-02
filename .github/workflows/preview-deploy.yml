@@ -63,6 +63,9 @@ jobs:
     name: update preview comment
     needs: deploy-cloudflare
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      issues: write
     if: >
       always() &&
       github.event.workflow_run.event == 'pull_request' &&
@@ -86,19 +89,30 @@ jobs:
           echo "id=$PR_ID" >> $GITHUB_OUTPUT
 
       - name: Update status comment
-        uses: actions-cool/maintain-one-comment@v1.1.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          body: |
-            [<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">](${{ needs.deploy-cloudflare.outputs.preview_url }})
-            <!-- AUTO_PREVIEW_HOOK -->
-          body-include: '<!-- AUTO_PREVIEW_HOOK -->'
-          number: ${{ steps.pr.outputs.id }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr.outputs.id }}
+          PREVIEW_URL: ${{ needs.deploy-cloudflare.outputs.preview_url }}
+        run: |
+          cat > comment.md <<EOF
+          [<img width="306" src="https://user-images.githubusercontent.com/5378891/72400743-23dbb200-3785-11ea-9d13-1a2d92743846.png">]($PREVIEW_URL)
+          <!-- AUTO_PREVIEW_HOOK -->
+          EOF
+          comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.body | contains("<!-- AUTO_PREVIEW_HOOK -->")) | .id' | head -n 1)
+          if [ -n "$comment_id" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" -X PATCH -f body="$(cat comment.md)"
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -X POST -f body="$(cat comment.md)"
+          fi
 
   preview-deploy-failed:
     name: report preview deploy failure
     needs: deploy-cloudflare
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      issues: write
     if: >
       always() &&
       github.event.workflow_run.event == 'pull_request' &&
@@ -122,18 +136,28 @@ jobs:
           echo "id=$PR_ID" >> $GITHUB_OUTPUT
 
       - name: Report deploy failure
-        uses: actions-cool/maintain-one-comment@v1.1.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          body: |
-            <img width="534" src="https://user-images.githubusercontent.com/5378891/75333447-1e63a280-58c1-11ea-975d-235367fd1522.png">
-            <!-- AUTO_PREVIEW_HOOK -->
-          body-include: '<!-- AUTO_PREVIEW_HOOK -->'
-          number: ${{ steps.pr.outputs.id }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr.outputs.id }}
+        run: |
+          cat > comment.md <<'EOF'
+          <img width="534" src="https://user-images.githubusercontent.com/5378891/75333447-1e63a280-58c1-11ea-975d-235367fd1522.png">
+          <!-- AUTO_PREVIEW_HOOK -->
+          EOF
+          comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.body | contains("<!-- AUTO_PREVIEW_HOOK -->")) | .id' | head -n 1)
+          if [ -n "$comment_id" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" -X PATCH -f body="$(cat comment.md)"
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -X POST -f body="$(cat comment.md)"
+          fi
 
   build-site-failed:
     name: build preview failed
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      issues: write
     if: >
       github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'failure'
@@ -157,11 +181,18 @@ jobs:
           echo "id=$PR_ID" >> $GITHUB_OUTPUT
 
       - name: The job has failed
-        uses: actions-cool/maintain-one-comment@v1.1.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          body: |
-            <img width="534" src="https://user-images.githubusercontent.com/5378891/75333447-1e63a280-58c1-11ea-975d-235367fd1522.png">
-            <!-- AUTO_PREVIEW_HOOK -->
-          body-include: '<!-- AUTO_PREVIEW_HOOK -->'
-          number: ${{ steps.pr.outputs.id }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr.outputs.id }}
+        run: |
+          cat > comment.md <<'EOF'
+          <img width="534" src="https://user-images.githubusercontent.com/5378891/75333447-1e63a280-58c1-11ea-975d-235367fd1522.png">
+          <!-- AUTO_PREVIEW_HOOK -->
+          EOF
+          comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.body | contains("<!-- AUTO_PREVIEW_HOOK -->")) | .id' | head -n 1)
+          if [ -n "$comment_id" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" -X PATCH -f body="$(cat comment.md)"
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -X POST -f body="$(cat comment.md)"
+          fi
