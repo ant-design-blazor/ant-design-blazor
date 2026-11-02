@@ -592,7 +592,9 @@ namespace AntDesign.Docs.Build.CLI.Command
 
             if (componentDemoDirectory?.Exists == true)
             {
-                var demoFiles = componentDemoDirectory.GetFileSystemInfos().GroupBy(x => x.Name
+                var demoFiles = componentDemoDirectory.GetFileSystemInfos()
+                    .Where(x => x.Extension is ".razor" or ".md")
+                    .GroupBy(x => x.Name
                     .Replace(x.Extension, "")
                     .Replace("-", "")
                     .Replace("_", "")
@@ -604,6 +606,11 @@ namespace AntDesign.Docs.Build.CLI.Command
                 {
                     var razorFile = fileGroup.FirstOrDefault(x => x.Extension == ".razor");
                     var descriptionFile = fileGroup.FirstOrDefault(x => x.Extension == ".md");
+                    if (razorFile is null || descriptionFile is null)
+                    {
+                        continue;
+                    }
+
                     var descriptionContent = DocParser.ParseDescription(File.ReadAllText(descriptionFile.FullName));
                     var demoType = $"{demoDirectoryInfo.Name}{razorFile.FullName.Replace(demoDirectoryInfo.FullName, "").Replace("/", ".").Replace("\\", ".").Replace(razorFile.Extension, "")}";
 
@@ -746,7 +753,7 @@ namespace AntDesign.Docs.Build.CLI.Command
                 if (demoDir != null && demoDir.Exists)
                 {
                     foreach (IGrouping<string, FileSystemInfo> demo in (demoDir as DirectoryInfo).GetFileSystemInfos()
-                        .Where(x => !string.IsNullOrEmpty(x.Extension))  // Skip directories and files without extensions
+                        .Where(x => x.Extension is ".razor" or ".md")
                         .GroupBy(x => x.Name
                             .Replace(x.Extension, "")
                             .Replace("-", "")
@@ -757,6 +764,11 @@ namespace AntDesign.Docs.Build.CLI.Command
                         List<FileSystemInfo> showCaseFiles = demo.ToList();
                         FileSystemInfo razorFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".razor");
                         FileSystemInfo descriptionFile = showCaseFiles.FirstOrDefault(x => x.Extension == ".md");
+                        if (razorFile == null || descriptionFile == null)
+                        {
+                            continue;
+                        }
+
                         string code = razorFile != null ? File.ReadAllText(razorFile.FullName) : null;
 
                         string demoType = $"{demoDirectoryInfo.Name}{razorFile.FullName.Replace(demoDirectoryInfo.FullName, "").Replace(Path.DirectorySeparatorChar, '.').Replace(razorFile.Extension, "")}";
