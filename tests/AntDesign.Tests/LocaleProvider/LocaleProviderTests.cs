@@ -8,6 +8,12 @@ using Xunit;
 
 namespace AntDesign.Tests.LocaleProvider
 {
+    [CollectionDefinition("LocaleProvider global culture", DisableParallelization = true)]
+    public class LocaleProviderGlobalCultureCollection
+    {
+    }
+
+    [Collection("LocaleProvider global culture")]
     public class LocaleProviderTests
     {
         [Fact]
