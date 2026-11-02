@@ -8,6 +8,12 @@ using Xunit;
 
 namespace AntDesign.Tests.LocaleProvider
 {
+    [CollectionDefinition("LocaleProvider tests", DisableParallelization = true)]
+    public class LocaleProviderTestCollection
+    {
+    }
+
+    [Collection("LocaleProvider tests")]
     public class LocaleProviderTests
     {
         [Fact]
