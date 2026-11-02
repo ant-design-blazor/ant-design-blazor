@@ -7,6 +7,9 @@
     [InlineData(typeof(ChineseLunisolarCalendar), 2024, 2, 10)]
     public void Calendar_uses_the_configured_dotnet_calendar(Type calendarType, int year, int month, int day)
     {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+
         var calendar = (System.Globalization.Calendar)Activator.CreateInstance(calendarType)!;
         var value = new DateTime(year, month, day);
 
