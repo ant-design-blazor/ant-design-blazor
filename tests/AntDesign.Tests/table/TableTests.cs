@@ -279,6 +279,8 @@ namespace AntDesign.Tests.Table
             JSInterop.SetupVoid("AntDesign.interop.styleHelper.addCls", _ => true);
             JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
                 .SetResult(new OverlayPosition());
+            JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition, _ => true)
+                .SetResult(new OverlayPosition());
             JSInterop.Setup<DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
                 .SetResult(new DomRect());
 
