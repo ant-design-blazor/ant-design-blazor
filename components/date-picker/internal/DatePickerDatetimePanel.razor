@@ -5,9 +5,9 @@
 @inherits DatePickerPanelBase<TValue>
 
 @{
-    var calendar = CultureInfo.Calendar;
+    var calendar = Calendar;
 
-    DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
+    DateTime monthFirstDayDate = DateHelper.CreateDate(calendar, calendar.GetYear(PickerValue), calendar.GetMonth(PickerValue), 1, PickerValue);
     int monthFirstDayOfWeek = (int)calendar.GetDayOfWeek(monthFirstDayDate);
 
     // sunday should be 7
@@ -39,10 +39,10 @@
                             MaxCol="7"
                             ViewStartDate="startDate"
                             ShowFooter="@ShowToday"
-                            IsInView="date => DateHelper.IsSameMonth(date, PickerValue)"
-                            IsToday="date => DateHelper.IsSameDay(date, DatePicker.CurrentDate)"
-                            IsSelected="date => DateHelper.IsSameDay(date, Value) || IsRange && DateHelper.IsSameDay(date, GetIndexValue(Math.Abs(PickerIndex-1)))"
-                            GetColTitle='date => date.ToString(Locale.Lang.DateFormat, CultureInfo)'
+                            IsInView="date => calendar.GetYear(date) == calendar.GetYear(PickerValue) && calendar.GetMonth(date) == calendar.GetMonth(PickerValue)"
+                            IsToday="date => calendar.GetYear(date) == calendar.GetYear(DatePicker.CurrentDate) && calendar.GetDayOfYear(date) == calendar.GetDayOfYear(DatePicker.CurrentDate)"
+                            IsSelected="date => Value.HasValue && calendar.GetYear(date) == calendar.GetYear(Value.Value) && calendar.GetDayOfYear(date) == calendar.GetDayOfYear(Value.Value)"
+                            GetColTitle='date => FormatDate(date, Locale.Lang.DateFormat)'
                             OnValueSelect="OnSelectDate"
                             GetNextColValue="date => DateHelper.AddDaysSafely(date, 1)"
                             SkipDays="skipDays">
@@ -61,7 +61,7 @@
                 </tr>
             </RenderTableHeader>
             <RenderColValue Context="currentColDate">
-                @currentColDate.Day
+                @FormatDay(currentColDate)
             </RenderColValue>
         </DatePickerTemplate>
     }
