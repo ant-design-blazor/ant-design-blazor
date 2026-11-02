@@ -85,7 +85,7 @@ namespace AntDesign
             get
             {
                 Button1Props ??= new ButtonProps();
-                return Button1Props.Type;
+                return Button1Props.Type ?? ButtonType.Default;
             }
 
             set
@@ -110,17 +110,17 @@ namespace AntDesign
         /// <summary>
         /// the leftmost button in LTR layout, it will override the ConfirmLocale
         /// </summary>
-        internal OneOf<string, RenderFragment>? Button1Text { get => Button1Props.ChildContent; set => Button1Props.ChildContent = value; }
+        internal OneOf<string, RenderFragment>? Button1Text { get; set; }
 
         /// <summary>
         /// The second button on the left is in the LTR layout, it will override the ConfirmLocale
         /// </summary>
-        internal OneOf<string, RenderFragment>? Button2Text { get => Button2Props.ChildContent; set => Button2Props.ChildContent = value; }
+        internal OneOf<string, RenderFragment>? Button2Text { get; set; }
 
         /// <summary>
         /// the rightmost button in LTR layout, it will override the ConfirmLocale
         /// </summary>
-        internal OneOf<string, RenderFragment>? Button3Text { get => Button3Props.ChildContent; set => Button3Props.ChildContent = value; }
+        internal OneOf<string, RenderFragment>? Button3Text { get; set; }
 
         #endregion
 
@@ -229,16 +229,6 @@ namespace AntDesign
 
         private static ButtonProps SetButtonProps(ButtonProps newProps, ButtonProps oldProps)
         {
-            if (newProps == null || newProps.ChildContent.HasValue)
-            {
-                return newProps;
-            }
-
-            if (oldProps != null)
-            {
-                newProps.ChildContent = oldProps.ChildContent;
-            }
-
             return newProps;
         }
 
@@ -272,7 +262,7 @@ namespace AntDesign
                             this.Button3Text ??= Locale.CancelText;
 
                             // config button2 default type
-                            this.Button2Props.Danger ??= true;
+                            if (!this.Button2Props.IsSet(nameof(ButtonProps.Danger))) this.Button2Props.Danger = true;
                         }
                         break;
                     }
@@ -290,7 +280,7 @@ namespace AntDesign
                         this.Button3Text ??= Locale.IgnoreText;
 
                         // config button2 default type
-                        this.Button2Props.Danger ??= true;
+                        if (!this.Button2Props.IsSet(nameof(ButtonProps.Danger))) this.Button2Props.Danger = true;
                         break;
                     }
                 default:
