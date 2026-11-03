@@ -3,7 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace AntDesign
 {
@@ -25,6 +28,8 @@ namespace AntDesign
         public RenderFragment ChildContent { get; set; }
 
         private int _index;
+        private string[] _compactClasses = Array.Empty<string>();
+        private string ItemStyle => Compact == null ? Style : $"{Style}display: contents;";
 
         protected override void OnInitialized()
         {
@@ -50,13 +55,27 @@ namespace AntDesign
 
         internal void SetCompactClasses(string direction, Func<bool> isFirst, Func<bool> isLast)
         {
-            ClassMapper
-                .If("ant-space-item-compact-item", () => direction.IsIn("vertical", "horizontal"))
-                .If("ant-space-item-compact-first-item", isFirst)
-                .If("ant-space-item-compact-last-item", isLast)
-                .GetIf(() => $"ant-space-item-compact-{direction}-item", () => direction.IsIn("vertical", "horizontal"))
-                .If($"ant-space-item-compact-{direction}-first-item", () => direction.IsIn("vertical", "horizontal") && isFirst())
-                .If($"ant-space-item-compact-{direction}-last-item", () => direction.IsIn("vertical", "horizontal") && isLast());
+            var first = isFirst();
+            var last = isLast();
+            _compactClasses = new[]
+            {
+                "compact-item",
+                first ? "compact-first-item" : null,
+                last ? "compact-last-item" : null,
+                $"compact-{direction}-item",
+                first ? $"compact-{direction}-first-item" : null,
+                last ? $"compact-{direction}-last-item" : null,
+                RTL ? "compact-item-rtl" : null
+            }.Where(x => x != null).ToArray();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (Compact != null && _compactClasses.Length > 0)
+            {
+                await Js.InvokeVoidAsync(JSInteropConstants.StyleHelper.AddSpaceCompactClasses, Ref, _compactClasses);
+            }
         }
 
         protected override void Dispose(bool disposing)

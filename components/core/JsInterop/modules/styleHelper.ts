@@ -37,6 +37,39 @@ export class styleHelper {
     }
   }
 
+  static addSpaceCompactClasses(root: Element, itemClasses: string[]): void {
+    const components: [string, string][] = [
+      [".ant-btn", "ant-btn"],
+      [".ant-input, .ant-input-search", "ant-input"],
+      [".ant-input-number", "ant-input-number"],
+      [".ant-select", "ant-select"],
+      [".ant-picker", "ant-picker"],
+      [".ant-cascader-picker", "ant-cascader"],
+    ];
+
+    components.forEach(([selector, prefix]) => {
+      root.querySelectorAll(selector).forEach((element) => {
+        if (element.matches(".ant-input") && element.closest(".ant-input-search")) {
+          return;
+        }
+        const compactClasses = [
+          "compact-item",
+          "compact-first-item",
+          "compact-last-item",
+          "compact-horizontal-item",
+          "compact-horizontal-first-item",
+          "compact-horizontal-last-item",
+          "compact-vertical-item",
+          "compact-vertical-first-item",
+          "compact-vertical-last-item",
+          "compact-item-rtl",
+        ].map((cls) => `${prefix}-${cls}`);
+        element.classList.remove(...compactClasses);
+        element.classList.add(...itemClasses.map((cls) => `${prefix}-${cls}`));
+      });
+    });
+  }
+
   static matchMedia(query: string): boolean {
     return window.matchMedia(query).matches;
   }

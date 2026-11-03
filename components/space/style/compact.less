@@ -6,62 +6,6 @@
 .@{space-compact-prefix-cls} {
   display: inline-flex;
 
-  > .ant-space-item-compact-item {
-    position: relative;
-    display: inline-flex;
-
-    &:hover,
-    &:focus-within {
-      z-index: 2;
-    }
-
-    &:not(.ant-space-item-compact-last-item) {
-      margin-right: -@border-width-base;
-    }
-
-    &.ant-space-item-compact-first-item > :is(.ant-btn, .ant-input, .ant-input-number, .ant-picker, .ant-cascader-picker) {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    &.ant-space-item-compact-last-item > :is(.ant-btn, .ant-input, .ant-input-number, .ant-picker, .ant-cascader-picker) {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    &.ant-space-item-compact-horizontal-item:not(.ant-space-item-compact-first-item):not(.ant-space-item-compact-last-item) > :is(.ant-btn, .ant-input, .ant-input-number, .ant-picker, .ant-cascader-picker) {
-      border-radius: 0;
-    }
-
-    &.ant-space-item-compact-first-item > .ant-select .ant-select-selector {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    &.ant-space-item-compact-first-item .ant-btn,
-    &.ant-space-item-compact-first-item .ant-input,
-    &.ant-space-item-compact-first-item .ant-input-number,
-    &.ant-space-item-compact-first-item .ant-picker,
-    &.ant-space-item-compact-first-item .ant-select-selector {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    &.ant-space-item-compact-last-item > .ant-select .ant-select-selector {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    &.ant-space-item-compact-last-item .ant-btn,
-    &.ant-space-item-compact-last-item .ant-input,
-    &.ant-space-item-compact-last-item .ant-input-number,
-    &.ant-space-item-compact-last-item .ant-picker,
-    &.ant-space-item-compact-last-item .ant-select-selector {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-  }
-
   &-block {
     display: flex;
     width: 100%;
@@ -69,38 +13,5 @@
 
   &-vertical {
     flex-direction: column;
-
-    > .ant-space-item-compact-item:not(.ant-space-item-compact-last-item) {
-      margin-right: 0;
-      margin-bottom: -@border-width-base;
-    }
-
-    > .ant-space-item-compact-item.ant-space-item-compact-first-item > :is(.ant-btn, .ant-input, .ant-input-number, .ant-picker, .ant-cascader-picker) {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    > .ant-space-item-compact-item.ant-space-item-compact-last-item > :is(.ant-btn, .ant-input, .ant-input-number, .ant-picker, .ant-cascader-picker) {
-      border-top-right-radius: 0;
-      border-top-left-radius: 0;
-    }
-
-    > .ant-space-item-compact-item.ant-space-item-compact-first-item .ant-btn,
-    > .ant-space-item-compact-item.ant-space-item-compact-first-item .ant-input,
-    > .ant-space-item-compact-item.ant-space-item-compact-first-item .ant-input-number,
-    > .ant-space-item-compact-item.ant-space-item-compact-first-item .ant-picker,
-    > .ant-space-item-compact-item.ant-space-item-compact-first-item .ant-select-selector {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-    }
-
-    > .ant-space-item-compact-item.ant-space-item-compact-last-item .ant-btn,
-    > .ant-space-item-compact-item.ant-space-item-compact-last-item .ant-input,
-    > .ant-space-item-compact-item.ant-space-item-compact-last-item .ant-input-number,
-    > .ant-space-item-compact-item.ant-space-item-compact-last-item .ant-picker,
-    > .ant-space-item-compact-item.ant-space-item-compact-last-item .ant-select-selector {
-      border-top-right-radius: 0;
-      border-top-left-radius: 0;
-    }
   }
 }

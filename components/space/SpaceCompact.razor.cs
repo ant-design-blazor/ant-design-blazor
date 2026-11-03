@@ -51,8 +51,16 @@ namespace AntDesign
             }
 
             _items.Add(item);
-            item.SetCompactClasses(Direction, () => _items.IndexOf(item) == 0, () => _items.IndexOf(item) == _items.Count - 1);
+            RefreshItemClasses();
             _refreshComponents = true;
+        }
+
+        private void RefreshItemClasses()
+        {
+            foreach (var item in _items)
+            {
+                item.SetCompactClasses(Direction, () => _items.IndexOf(item) == 0, () => _items.IndexOf(item) == _items.Count - 1);
+            }
         }
 
         protected override void OnAfterRender(bool firstRender)
@@ -74,6 +82,7 @@ namespace AntDesign
         internal void RemoveComponent(SpaceItem item)
         {
             _items.Remove(item);
+            RefreshItemClasses();
             _refreshComponents = true;
         }
     }
