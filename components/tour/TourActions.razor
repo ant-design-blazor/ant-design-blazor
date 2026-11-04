@@ -1,0 +1,34 @@
+@namespace AntDesign
+
+@if (Current > 0)
+{
+    <Button Size="ButtonSize.Small" Type="ButtonType.Default" Class="ant-tour-prev-btn" OnClick="Previous">@(Step?.PreviousText ?? "Previous")</Button>
+}
+<Button Size="ButtonSize.Small" Type="@(Type == TourType.Primary ? ButtonType.Default : ButtonType.Primary)" Class="ant-tour-next-btn" OnClick="Next">@(Current == Total - 1 ? (Step?.FinishText ?? "Finish") : (Step?.NextText ?? "Next"))</Button>
+
+@code {
+    /// <summary>
+    /// Zero-based current step index.
+    /// </summary>
+    [Parameter] public int Current { get; set; }
+    /// <summary>
+    /// Total number of steps.
+    /// </summary>
+    [Parameter] public int Total { get; set; }
+    /// <summary>
+    /// Visual type of the tour.
+    /// </summary>
+    [Parameter] public TourType Type { get; set; }
+    /// <summary>
+    /// Current step configuration.
+    /// </summary>
+    [Parameter] public TourStep Step { get; set; }
+    /// <summary>
+    /// Callback invoked by the previous button.
+    /// </summary>
+    [Parameter] public EventCallback Previous { get; set; }
+    /// <summary>
+    /// Callback invoked by the next or finish button.
+    /// </summary>
+    [Parameter] public EventCallback Next { get; set; }
+}

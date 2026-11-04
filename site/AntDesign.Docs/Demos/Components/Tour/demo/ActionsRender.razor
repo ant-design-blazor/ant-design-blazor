@@ -1,0 +1,35 @@
+<Button Type="ButtonType.Primary" OnClick="StartTour">Begin Tour</Button>
+<Divider />
+<Space>
+    <span @ref="_firstTarget"><Button>Upload</Button></span>
+    <span @ref="_secondTarget"><Button Type="ButtonType.Primary">Save</Button></span>
+    <span @ref="_thirdTarget"><Button>⋯</Button></span>
+</Space>
+
+<Tour Open="@_open" OpenChanged="OnOpenChanged" Steps="@_steps" ActionsRender="@RenderActions" />
+
+@code {
+    private bool _open;
+    private ElementReference _firstTarget;
+    private ElementReference _secondTarget;
+    private ElementReference _thirdTarget;
+
+    private IReadOnlyList<TourStep> _steps => new[]
+    {
+        new TourStep { Target = _firstTarget, Title = Text("Upload File"), Description = Text("Put your files here.") },
+        new TourStep { Target = _secondTarget, Title = Text("Save"), Description = Text("Save your changes.") },
+        new TourStep { Target = _thirdTarget, Title = Text("Other Actions"), Description = Text("Click to see other actions.") }
+    };
+
+    private RenderFragment<TourActionsRenderContext> RenderActions => context => @<div>
+        @if (context.Current < context.Total - 1)
+        {
+            <Button Size="ButtonSize.Small" OnClick="@(() => context.Close())">Skip</Button>
+        }
+        @context.Origin
+    </div>;
+
+    private void StartTour() => _open = true;
+    private Task OnOpenChanged(bool value) { _open = value; return Task.CompletedTask; }
+    private static RenderFragment Text(string value) => builder => builder.AddContent(0, value);
+}

@@ -1,0 +1,227 @@
+@import '../../style/themes/index';
+@import '../../style/mixins/index';
+
+@tour-prefix-cls: ~'@{ant-prefix}-tour';
+
+.@{tour-prefix-cls} {
+  .reset-component();
+
+  position: fixed;
+  z-index: @zindex-tooltip + 70;
+  width: 520px;
+  max-width: calc(100vw - 24px);
+  visibility: visible;
+
+  &-hidden {
+    display: none;
+  }
+
+  &-pure {
+    position: relative;
+    z-index: auto;
+    max-width: 100%;
+    margin-bottom: @margin-md;
+  }
+
+  &-panel {
+    position: relative;
+  }
+
+  &-arrow {
+    position: absolute;
+    z-index: 1;
+    width: 8px;
+    height: 8px;
+    background: @component-background;
+    transform: rotate(45deg);
+  }
+
+  &-placement-bottom &-arrow,
+  &-placement-bottomleft &-arrow,
+  &-placement-bottomright &-arrow {
+    top: -4px;
+    left: 50%;
+    margin-left: -4px;
+  }
+
+  &-placement-top &-arrow,
+  &-placement-topleft &-arrow,
+  &-placement-topright &-arrow {
+    bottom: -4px;
+    left: 50%;
+    margin-left: -4px;
+  }
+
+  &-placement-left &-arrow,
+  &-placement-lefttop &-arrow,
+  &-placement-leftbottom &-arrow {
+    top: 50%;
+    right: -4px;
+    margin-top: -4px;
+  }
+
+  &-placement-right &-arrow,
+  &-placement-righttop &-arrow,
+  &-placement-rightbottom &-arrow {
+    top: 50%;
+    left: -4px;
+    margin-top: -4px;
+  }
+
+  &-section {
+    position: relative;
+    color: @text-color;
+    text-align: left;
+    text-decoration: none;
+    background: @component-background;
+    background-clip: padding-box;
+    border: 0;
+    border-radius: @border-radius-base;
+    box-shadow: @box-shadow-base;
+  }
+
+  &-close {
+    position: absolute;
+    top: @padding-md;
+    right: @padding-md;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: @font-size-base * @line-height-base;
+    height: @font-size-base * @line-height-base;
+    padding: 0;
+    color: @icon-color;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    border-radius: @border-radius-sm;
+
+    &:hover {
+      color: @icon-color-hover;
+      background: @item-hover-bg;
+    }
+  }
+
+  &-cover {
+    padding: @padding-md @padding-md 0;
+    text-align: center;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  &-header {
+    width: calc(100% - 40px);
+    padding: @padding-md @padding-md @padding-xs;
+    word-break: break-word;
+  }
+
+  &-title {
+    font-weight: 600;
+  }
+
+  &-description {
+    padding: 0 @padding-md;
+    word-wrap: break-word;
+  }
+
+  &-footer {
+    display: flex;
+    align-items: center;
+    padding: @padding-xs @padding-md @padding-md;
+    text-align: right;
+  }
+
+  &-indicators {
+    display: inline-block;
+  }
+
+  &-indicator {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 6px;
+    background: @normal-color;
+    border-radius: 50%;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &-active {
+      background: @primary-color;
+    }
+  }
+
+  &-actions {
+    margin-left: auto;
+
+    .@{ant-prefix}-btn {
+      margin-left: @margin-xs;
+    }
+  }
+
+  &-mask {
+    position: fixed;
+    z-index: @zindex-tooltip + 60;
+    inset: 0;
+    pointer-events: none;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &-target-placeholder {
+    position: fixed;
+    pointer-events: none;
+  }
+
+  &-placeholder-animated {
+    transition: all 0.3s;
+  }
+
+  &-target-placeholder-disabled {
+    pointer-events: auto;
+  }
+
+  &-primary {
+    .@{tour-prefix-cls}-section {
+      color: @text-color-inverse;
+      background: @primary-color;
+      border-radius: @border-radius-base;
+    }
+
+    .@{tour-prefix-cls}-close {
+      color: @text-color-inverse;
+    }
+
+    .@{tour-prefix-cls}-arrow {
+      background: @primary-color;
+    }
+
+    .@{tour-prefix-cls}-indicator {
+      background: fade(@white, 15%);
+
+      &-active {
+        background: @white;
+      }
+    }
+
+    .@{tour-prefix-cls}-prev-btn {
+      color: @text-color-inverse;
+      background: @primary-color;
+      border-color: fade(@white, 15%);
+    }
+
+    .@{tour-prefix-cls}-next-btn {
+      color: @primary-color;
+      background: @white;
+      border-color: transparent;
+    }
+  }
+}
