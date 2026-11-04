@@ -378,7 +378,9 @@ namespace AntDesign
             // }
 
             _duringManualInput = false;
-            AutoFocus = false;
+            // A blur on one endpoint can be part of a focus transfer to the other.
+            // Keep the range picker focused while either endpoint owns focus.
+            AutoFocus = _inputStart.IsOnFocused || _inputEnd.IsOnFocused;
         }
 
         protected override void OnInitialized()

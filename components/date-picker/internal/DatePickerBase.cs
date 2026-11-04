@@ -758,6 +758,9 @@ namespace AntDesign
                     ChangeValue(_pickerStatus[index].SelectedValue.Value, index);
                 }
 
+                // Closing the time panel does not move DOM focus away from the input.
+                // Blur it explicitly so the picker can lose its focused state after OK.
+                await Blur(index);
                 Close();
             }
 
