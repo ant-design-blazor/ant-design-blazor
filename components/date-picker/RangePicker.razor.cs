@@ -762,7 +762,11 @@ namespace AntDesign
 
         internal bool ShowClear()
         {
-            return CurrentValue is Array array && (array.GetValue(0) is not null || array.GetValue(1) is not null) && AllowClear;
+            return AllowClear
+                && !IsDisabled()
+                && (_pickerStatus[0].SelectedValue is not null
+                    || _pickerStatus[1].SelectedValue is not null
+                    || Value is Array array && (array.GetValue(0) is not null || array.GetValue(1) is not null));
         }
 
         protected override bool IsDisabled(int? index = null)
