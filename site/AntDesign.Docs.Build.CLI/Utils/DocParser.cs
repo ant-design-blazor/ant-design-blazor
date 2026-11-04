@@ -217,5 +217,7 @@ namespace AntDesign.Docs.Build.CLI.Utils
         /// Additional files to display in code view (relative paths from demo folder)
         /// </summary>
         public List<string> AdditionalFiles { get; set; }
+
+        public string Version { get; set; }
     }
 }

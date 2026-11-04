@@ -1,0 +1,94 @@
+﻿<div>
+    <SpaceCompact Block>
+        <SpaceItem><Tooltip Title="Like">
+            <Unbound>
+                <Button RefBack="context" Icon="like" />
+            </Unbound>
+        </Tooltip></SpaceItem>
+        <SpaceItem><Tooltip Title="Comment">
+            <Unbound>
+                <Button RefBack="context" Icon="comment" />
+            </Unbound>
+        </Tooltip></SpaceItem>
+        <SpaceItem><Tooltip Title="Star">
+            <Unbound>
+                <Button RefBack="context" Icon="star" />
+                </Unbound>
+        </Tooltip></SpaceItem>
+        <SpaceItem><Tooltip Title="Heart">
+            <Unbound>
+                <Button RefBack="context" Icon="heart" />
+            </Unbound>
+        </Tooltip></SpaceItem>
+        <SpaceItem><Tooltip Title="Share">
+            <Unbound>
+                <Button RefBack="context" Icon="share-alt" />
+            </Unbound>
+        </Tooltip></SpaceItem>
+        <SpaceItem><Tooltip Title="Download">
+            <Unbound>
+                <Button RefBack="context" Icon="download" />
+            </Unbound>
+        </Tooltip></SpaceItem>
+        <SpaceItem><Dropdown Placement="Placement.BottomRight"
+                  Trigger="new[]{Trigger.Click}">
+            <Overlay>
+                <Menu>
+                    <MenuItem Key="1" Title="Report" Icon="warning" />
+                    <MenuItem Key="1" Title="Mail" Icon="mail" />
+                    <MenuItem Key="1" Title="Mobile" Icon="mobile" />
+                </Menu>
+            </Overlay>
+            <Unbound>
+                <Button RefBack="@context" Icon="ellipsis" />
+            </Unbound>
+        </Dropdown></SpaceItem>
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <SpaceItem><Button Type="ButtonType.Primary">Button 1</Button></SpaceItem>
+        <SpaceItem><Button Type="ButtonType.Primary">Button 2</Button></SpaceItem>
+        <SpaceItem><Button Type="ButtonType.Primary">Button 3</Button></SpaceItem>
+        <SpaceItem><Button Type="ButtonType.Primary">Button 4</Button></SpaceItem>
+        <SpaceItem><Tooltip Title="Tooltip">
+            <Unbound>
+                <Button RefBack="context" Type="ButtonType.Primary" Icon="download" Disabled />
+            </Unbound>
+        </Tooltip></SpaceItem>
+        <SpaceItem><Tooltip Title="Tooltip">
+            <Unbound>
+                <Button RefBack="context" Type="ButtonType.Primary" Icon="download" />
+            </Unbound>
+        </Tooltip></SpaceItem>
+    </SpaceCompact>
+    <br />
+    <SpaceCompact Block>
+        <SpaceItem><Button>Button 1</Button></SpaceItem>
+        <SpaceItem><Button>Button 2</Button></SpaceItem>
+        <SpaceItem><Button>Button 3</Button></SpaceItem>
+        <SpaceItem><Tooltip Title="Tooltip">
+            <Unbound>
+            <Button RefBack="context" Icon="download" Disabled />
+            </Unbound>
+        </Tooltip></SpaceItem>
+        <SpaceItem><Tooltip Title="Tooltip">
+            <Unbound>
+                <Button RefBack="context" Icon="download" />
+            </Unbound>
+        </Tooltip></SpaceItem>
+        <SpaceItem><Button Type="ButtonType.Primary">Button 4</Button></SpaceItem>
+        <SpaceItem><Dropdown Placement="@Placement.BottomRight"
+                  Trigger="new[]{Trigger.Click}">
+            <Overlay>
+                <Menu>
+                    <MenuItem Key="1" Title="1st item"></MenuItem>
+                    <MenuItem Key="2" Title="2nd item"></MenuItem>
+                    <MenuItem Key="3" Title="3rd item"></MenuItem>
+                </Menu>
+            </Overlay>
+            <Unbound>
+                <Button RefBack="context" Type="ButtonType.Primary" Icon="ellipsis" />
+            </Unbound>
+        </Dropdown></SpaceItem>
+    </SpaceCompact>
+</div>

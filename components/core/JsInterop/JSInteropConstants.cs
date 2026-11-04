@@ -210,6 +210,7 @@ namespace AntDesign
             public static string MatchMedia => $"{FUNC_PREFIX}matchMedia";
             public static string GetStyle => $"{FUNC_PREFIX}getStyle";
             public static string SetStyle => $"{FUNC_PREFIX}css";
+            public static string AddSpaceCompactClasses => $"{FUNC_PREFIX}addSpaceCompactClasses";
         }
 
         public static class ObserverConstants
