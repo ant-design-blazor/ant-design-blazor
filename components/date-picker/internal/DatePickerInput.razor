@@ -3,7 +3,7 @@
 
 @if (!IsRange)
 {
-    <div class="@(PrefixCls)-input">
+    <div class="@(PrefixCls)-input @(PreviewValue is not null ? $"{PrefixCls}-input-placeholder" : "")">
         <input @ref="Ref"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
@@ -11,7 +11,7 @@
                @oninput="OnInput"
                @onfocus="Onfocus"
                @onblur="OnBlur"
-               @bind-value="@Value"
+               value="@(PreviewValue ?? Value ?? string.Empty)"
                maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
@@ -50,7 +50,7 @@
 }
 else
 {
-    <div class="@(PrefixCls)-input @(Active ? $"{PrefixCls}-input-active" : "")">
+    <div class="@(PrefixCls)-input @(Active ? $"{PrefixCls}-input-active" : "") @(PreviewValue is not null ? $"{PrefixCls}-input-placeholder" : "")">
         <input @ref="Ref"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
@@ -58,7 +58,7 @@ else
                @oninput="OnInput"
                @onfocus="Onfocus"
                @onblur="OnBlur"
-               @bind-value="@Value"
+               value="@(PreviewValue ?? Value ?? string.Empty)"
                maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
@@ -77,6 +77,9 @@ else
 
     [Parameter]
     public string Value { get; set; }
+
+    [Parameter]
+    public string PreviewValue { get; set; }
 
     [Parameter]
     public string Placeholder { get; set; }

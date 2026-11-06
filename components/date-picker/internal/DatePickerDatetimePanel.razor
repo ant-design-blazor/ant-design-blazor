@@ -119,7 +119,8 @@
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
                         var hourValue=use12Hours && hour==0? 12 :  hour;
 
-                        <li @ref="@_hours[hourValue]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                        <li @ref="@_hours[hourValue]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls"
+                            @onmouseenter="e => { if (!disabled) OnPreviewHour(viewTime.AddHours(hoursOffset)); }" @onmouseleave="ResetPreviewValue">
                                 <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectHour(viewTime.AddHours(hoursOffset)); }">
                                 @hourValue
                             </div>
@@ -145,7 +146,8 @@
                         string isSelectedCls = selected(viewTime.Minute, Value?.Minute);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li @ref="@_minutes[viewTime.Minute]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                        <li @ref="@_minutes[viewTime.Minute]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls"
+                            @onmouseenter="e => { if (!disabled) OnPreviewMinute(viewTime); }" @onmouseleave="ResetPreviewValue">
                             <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectMinute(viewTime); }">
                                 @minute
                             </div>
@@ -165,7 +167,8 @@
                         string isSelectedCls = selected(viewTime.Second, Value?.Second);
                         string disabledCls = disabled ? $"{PrefixCls}-time-panel-cell-disabled" : "";
 
-                        <li @ref="@_seconds[viewTime.Second]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls">
+                        <li @ref="@_seconds[viewTime.Second]" class="@(PrefixCls)-time-panel-cell @isSelectedCls @disabledCls"
+                            @onmouseenter="e => { if (!disabled) OnPreviewSecond(viewTime); }" @onmouseleave="ResetPreviewValue">
                             <div class="@(PrefixCls)-time-panel-cell-inner" @onclick="e => { if (!disabled) OnSelectSecond(viewTime); }">
                                 @second
                             </div>
