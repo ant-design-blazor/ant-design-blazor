@@ -1,0 +1,23 @@
+﻿<Masonry T="int" Columns="_columns" Gutter="_gutter" Items="_items" ItemRender="RenderItem" />
+
+@code {
+    private readonly Dictionary<string, int> _columns = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Xs"] = 1,
+        ["Sm"] = 2,
+        ["Md"] = 3,
+        ["Lg"] = 4,
+    };
+
+    private readonly Dictionary<string, int> _gutter = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Xs"] = 8,
+        ["Sm"] = 12,
+        ["Md"] = 16,
+    };
+
+    private readonly IEnumerable<MasonryItem<int>> _items = new[] { 120, 55, 85, 160, 95, 140, 75, 110, 65, 130, 90, 145, 55, 100, 80 }
+        .Select((height, index) => new MasonryItem<int> { Key = $"item-{index}", Data = height });
+
+    private RenderFragment<MasonryItemRenderContext<int>> RenderItem => item => @<Card Size="CardSize.Small" Style="@($"height: {item.Data}px")">@(item.Index + 1)</Card>;
+}
