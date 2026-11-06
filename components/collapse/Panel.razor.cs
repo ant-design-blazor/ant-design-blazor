@@ -132,7 +132,7 @@ namespace AntDesign
         {
             if (!this.Disabled)
             {
-                this.Collapse?.Click(this);
+                this.Collapse?.TogglePanelState(this);
             }
         }
 
@@ -192,7 +192,7 @@ namespace AntDesign
             }
             else
             {
-                this.Collapse.Click(this);
+                this.Collapse.TogglePanelState(this);
             }
         }
 

@@ -21,11 +21,11 @@
     "url": "https://github.com/ElderJames/ant-design-blazor/issues"
   },
   "scripts": {
-    "start": "dotnet watch -p ./site/AntDesign.Docs.Server run -f net9.0",
-    "start:wasm": "dotnet watch -p ./site/AntDesign.Docs.Wasm run -f net9.0",
+    "start": "dotnet watch -p ./site/AntDesign.Docs.Server run -f net10.0",
+    "start:wasm": "dotnet watch -p ./site/AntDesign.Docs.Wasm run -f net10.0",
     "build:lib": "gulp build:library",
     "build:doc": "gulp build:preview --max-old-space-size=81920",
-    "preinstall": "dotnet tool restore",
+    "preinstall": "if command -v dotnet >/dev/null 2>&1 && [ -f .config/dotnet-tools.json ]; then dotnet tool restore; fi",
     "changelog": "node ./scripts/print-changelog",
     "lint": "eslint --ext .ts ./components",
     "lint-fix": "eslint --fix --ext .ts ./components"

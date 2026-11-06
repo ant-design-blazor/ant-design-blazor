@@ -54,7 +54,7 @@
             </div>
             @if (Parent.Type == TabType.EditableCard && Closable)
             {
-                <button type="button" aria-label="remove" tabindex="0" class="ant-tabs-tab-remove" @onclick="(e) => Parent.RemoveTab(this)" @onclick:stopPropagation>
+                <button type="button" aria-label="remove" tabindex="0" class="ant-tabs-tab-remove" @onclick="OnCloseClick" @onclick:stopPropagation>
                     <Icon Type="close" />
                 </button>
             }
@@ -86,7 +86,7 @@
             @if (ChildContent != null && (_isActive || _hasRendered || ForceRender))
             {
                 _hasRendered = true;
-                <AntDesign.Core.Internal.KeepAlive ChildContent="ChildContent" IsActive="@_isActive"></AntDesign.Core.Internal.KeepAlive>
+                <AntDesign.Core.Internal.KeepAlive ChildContent="ChildContent" IsActive="@_isActive" @key="@Key"></AntDesign.Core.Internal.KeepAlive>
                 
             }
         </div>

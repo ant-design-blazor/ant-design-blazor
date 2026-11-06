@@ -1,4 +1,5 @@
 ﻿@using AntDesign.Core.JsInterop.Modules.Components
+@using Microsoft.AspNetCore.Components
 @inherits AntDesignTestBase
 @code {
     public Select_Tags_Tests()
@@ -121,5 +122,93 @@
             .Should()
             .BeEquivalentTo(new[] { "Tag1", "Tag2" }));
     }
+
+    [Fact] // Issue: #4818
+    public async Task Removing_last_tag_updates_bound_values()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+
+        IEnumerable<string> values = [];
+        IEnumerable<string> changedValues = null;
+        IEnumerable<string> changedItems = null;
+        var dataSource = new List<string>();
+        var valuesChanged = EventCallback.Factory.Create<IEnumerable<string>>(this, (IEnumerable<string> newValues) =>
+        {
+            changedValues = newValues;
+            values = newValues;
+        });
+        var selectedItemsChanged = EventCallback.Factory.Create<IEnumerable<string>>(this, (IEnumerable<string> newItems) => changedItems = newItems);
+        var cut = Render<Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string"
+                              DataSource="@dataSource" EnableSearch SearchDebounceMilliseconds="0"
+                              Values="@values"
+                              ValuesChanged="@valuesChanged"
+                              OnSelectedItemsChanged="@selectedItemsChanged" />);
+        var input = cut.Find("input.ant-select-selection-search-input");
+
+        await cut.InvokeAsync(() => input.Input("Tag1"));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption?.Value == "Tag1"));
+        input.KeyUp("ENTER");
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(1));
+
+        await cut.InvokeAsync(() => cut.Find(".ant-select-selection-item-remove").MouseDown());
+
+        cut.WaitForAssertion(() => changedValues.Should().BeEmpty());
+        changedItems.Should().BeEmpty();
+        values.Should().BeEmpty();
+        cut.Instance.SelectedOptionItems.Should().BeEmpty();
+    }
+
+    [Fact] // Issue: #4819
+    public async Task Refreshing_DataSource_does_not_duplicate_a_selected_tag()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+
+        var dataSource = new List<string>();
+        var cut = Render<Select<string, string>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="string" TItem="string" DataSource="@dataSource" EnableSearch SearchDebounceMilliseconds="0" />);
+        var input = cut.Find("input.ant-select-selection-search-input");
+
+        await cut.InvokeAsync(() => input.Input("Tag1"));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption?.Value == "Tag1"));
+        input.KeyUp("ENTER");
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().HaveCount(1));
+
+        dataSource.Add("Server result");
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.DataSource, dataSource));
+
+        cut.Instance.SelectedOptionItems.Should().ContainSingle().Which.Value.Value.Should().Be("Tag1");
+    }
+
+    [Fact]
+    public async Task Refreshing_DataSource_with_same_value_as_added_tag_does_not_throw()
+    {
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+
+        var dataSource = new List<Person>();
+        var cut = Render<Select<int, Person>>(
+            @<AntDesign.Select Mode="SelectMode.Tags" TItemValue="int" TItem="Person"
+                               DataSource="@dataSource" ValueName="Id" LabelName="Name"
+                               CustomTagLabelToValue="ConvertTagValue"
+                               EnableSearch SearchDebounceMilliseconds="0" />);
+        var input = cut.Find("input.ant-select-selection-search-input");
+
+        await cut.InvokeAsync(() => input.Input("42"));
+        await cut.InvokeAsync(() => cut.WaitForState(() => cut.Instance.ActiveOption?.Value == 42));
+        input.KeyUp("ENTER");
+        cut.WaitForAssertion(() => cut.Instance.SelectedOptionItems.Should().ContainKey(42));
+
+        dataSource.Add(new Person(42, "Forty two"));
+        cut.SetParametersAndRender(parameters => parameters.Add(component => component.DataSource, dataSource));
+
+        cut.Instance.SelectedOptionItems.Should().ContainSingle().Which.Key.Should().Be(42);
+    }
+
+    private static int ConvertTagValue(string label) => int.Parse(label);
+
+    private record Person(int Id, string Name);
 }
 }

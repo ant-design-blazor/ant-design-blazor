@@ -12,22 +12,22 @@ namespace AntDesign.Filters
 {
     public class StringFieldFilterType : BaseFieldFilterType
     {
-        private static readonly MethodInfo _stringToLower = typeof(string).GetMethod(nameof(string.ToLower), Array.Empty<Type>());
+        private static readonly MethodInfo _stringToLower = typeof(string).GetMethod(nameof(string.ToLower), []);
 
         public override TableFilterCompareOperator DefaultCompareOperator => TableFilterCompareOperator.Contains;
 
         public override RenderFragment<TableFilterInputRenderOptions> FilterInput { get; } =
             FilterInputs.Instance.GetInput<string>();
 
-        private static IEnumerable<TableFilterCompareOperator> _supportedCompareOperators = new[]
-        {
+        private static readonly IEnumerable<TableFilterCompareOperator> _supportedCompareOperators =
+        [
             TableFilterCompareOperator.Equals,
             TableFilterCompareOperator.NotEquals,
             TableFilterCompareOperator.Contains,
             TableFilterCompareOperator.NotContains,
             TableFilterCompareOperator.StartsWith,
             TableFilterCompareOperator.EndsWith,
-        };
+        ];
 
         public StringFieldFilterType()
         {
@@ -78,11 +78,10 @@ namespace AntDesign.Filters
                 => Expression.AndAlso(Expression.NotEqual(leftExpr, Expression.Constant(null)), innerExpression);
         }
 
-        private static Expression GetMethodExpression(string methodName, Expression leftExpr, Expression rightExpr)
+        private static MethodCallExpression GetMethodExpression(string methodName, Expression leftExpr, Expression rightExpr)
         {
-            MethodInfo mi = typeof(string).GetMethod(methodName, new[] { typeof(string) });
-            if (mi == null)
-                throw new MissingMethodException("There is no method - " + methodName);
+            MethodInfo mi = typeof(string).GetMethod(methodName, [typeof(string)])
+                ?? throw new MissingMethodException("There is no method - " + methodName);
             return Expression.Call(leftExpr, mi, rightExpr);
         }
     }

@@ -4,8 +4,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using OneOf;
@@ -229,9 +232,36 @@ namespace AntDesign
         [Parameter]
         public OneOf<HttpMethod, string> Method { get; set; } = HttpMethod.Post;
 
-        private bool IsText => ListType == UploadListType.Text;
+        /// <summary>
+        /// Whether to upload multiple files in a single request (only for multiple file upload)
+        /// </summary>
+        [Parameter]
+        public bool BatchUpload { get; set; }
 
-        // private bool IsPicture => ListType == UploadListType.Picture;
+        /// <summary>
+        /// Whether to send cookies when making upload requests
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool WithCredentials { get; set; }
+
+        /// <summary>
+        /// Use the manual upload mode
+        /// </summary>
+        [PublicApi("1.5.0")]
+        [Parameter]
+        public bool Defer { get; set; } = false;
+
+        /// <summary>
+        /// Upload mode trigger
+        /// </summary>
+        [PublicApi("1.5.0")]
+        [Parameter]
+        public UploadTrigger Trigger { get; set; } = UploadTrigger.Click;
+
+        private UploadButton _uploadButton;
+
+        private bool IsText => ListType == UploadListType.Text;
 
         private bool IsPictureCard => ListType == UploadListType.PictureCard;
 
@@ -293,6 +323,20 @@ namespace AntDesign
             if (item.State == UploadState.Success && OnDownload.HasDelegate)
             {
                 await OnDownload.InvokeAsync(item);
+            }
+        }
+
+        /// <summary>
+        /// Start uploading. Manual uploading is only valid after Defer is set.
+        /// </summary>
+        /// <returns></returns>
+        [PublicApi("1.5.0")]
+        public async Task StartUpload()
+        {
+            if (Defer)
+            {
+                var fileIds = FileList.Where(x => x.State == UploadState.Waiting).Select(x => x.Id).ToList();
+                await _uploadButton.StartUpload(fileIds);
             }
         }
     }

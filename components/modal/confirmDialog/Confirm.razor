@@ -42,13 +42,13 @@
             <div class="ant-modal-confirm-btns">
                 @{
                     RenderFragment BuildButton(ButtonProps props,
+                        OneOf<string, RenderFragment>? text,
                         Func<MouseEventArgs, Task> onClick, string id = null)
                     {
                         if (props == null) return null;
                         id ??= "ant-blazor-" + Guid.NewGuid();
                         var onClickEvent = new EventCallback<MouseEventArgs>(this, onClick);
                         Button innerBtnRef = null;
-                        var children = props.ChildContent!.Value;
                         RenderFragment compontent = (@<Button @ref="@innerBtnRef"
                                                               OnClick="@onClickEvent"
                                                               Block="@props.Block"
@@ -59,17 +59,21 @@
                                                               Size="@props.Size"
                                                               Icon="@props.Icon"
                                                               Disabled="@props.Disabled"
-                                                              Danger="@props.IsDanger"
+                                                              Danger="@props.Danger"
                                                               Id="@id"
                                                               >
                         @{
-                            if (children.IsT0)
+                            if (props.ChildContent != null)
                             {
-                                @(children.AsT0)
+                                @props.ChildContent
                             }
-                            else
+                            else if (text.HasValue && text.Value.IsT0)
                             {
-                                @(children.AsT1)
+                                @(text.Value.AsT0)
+                            }
+                            else if (text.HasValue)
+                            {
+                                @(text.Value.AsT1)
                             }
                         }
                     </Button>);
@@ -80,7 +84,7 @@
                 {
                     case ConfirmButtons.OK:
                         {
-                            @BuildButton(Config.Button1Props, async (e) =>
+                            @BuildButton(Config.Button1Props, Config.Button1Text, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.OK);
                             }, _okBtnId)
@@ -90,13 +94,13 @@
                     case ConfirmButtons.OKCancel:
                         {
 
-                            @BuildButton(Config.Button1Props, async (e) =>
+                            @BuildButton(Config.Button1Props, Config.Button1Text, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.OK);
                             }, _okBtnId)
                             ;
 
-                            @BuildButton(Config.Button2Props, async (e) =>
+                            @BuildButton(Config.Button2Props, Config.Button2Text, async (e) =>
                             {
                                 await HandleBtn2Click(e, ConfirmResult.Cancel);
                             }, _cancelBtnId)
@@ -106,13 +110,13 @@
                         }
                     case ConfirmButtons.YesNo:
                         {
-                            @BuildButton(Config.Button1Props, async (e) =>
+                            @BuildButton(Config.Button1Props, Config.Button1Text, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.Yes);
                             }, _okBtnId)
                             ;
 
-                            @BuildButton(Config.Button2Props, async (e) =>
+                            @BuildButton(Config.Button2Props, Config.Button2Text, async (e) =>
                             {
                                 await HandleBtn2Click(e, ConfirmResult.No);
                             }, _cancelBtnId)
@@ -122,19 +126,19 @@
                         }
                     case ConfirmButtons.YesNoCancel:
                         {
-                            @BuildButton(Config.Button1Props, async (e) =>
+                            @BuildButton(Config.Button1Props, Config.Button1Text, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.Yes);
                             }, _okBtnId)
                             ;
 
-                            @BuildButton(Config.Button2Props, async (e) =>
+                            @BuildButton(Config.Button2Props, Config.Button2Text, async (e) =>
                             {
                                 await HandleBtn2Click(e, ConfirmResult.No);
                             }, _cancelBtnId)
                             ;
 
-                            @BuildButton(Config.Button3Props, async (e) =>
+                            @BuildButton(Config.Button3Props, Config.Button3Text, async (e) =>
                             {
                                 await HandleBtn3Click(e, ConfirmResult.Cancel);
                             })
@@ -144,13 +148,13 @@
 
                     case ConfirmButtons.RetryCancel:
                         {
-                            @BuildButton(Config.Button1Props, async (e) =>
+                            @BuildButton(Config.Button1Props, Config.Button1Text, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.Retry);
                             }, _okBtnId)
                             ;
 
-                            @BuildButton(Config.Button2Props, async (e) =>
+                            @BuildButton(Config.Button2Props, Config.Button2Text, async (e) =>
                             {
                                 await HandleBtn2Click(e, ConfirmResult.Cancel);
                             }, _cancelBtnId)
@@ -160,19 +164,19 @@
                         }
                     case ConfirmButtons.AbortRetryIgnore:
                         {
-                            @BuildButton(Config.Button1Props, async (e) =>
+                            @BuildButton(Config.Button1Props, Config.Button1Text, async (e) =>
                             {
                                 await HandleBtn1Click(e, ConfirmResult.Abort);
                             }, _okBtnId)
                             ;
 
-                            @BuildButton(Config.Button2Props, async (e) =>
+                            @BuildButton(Config.Button2Props, Config.Button2Text, async (e) =>
                             {
                                 await HandleBtn2Click(e, ConfirmResult.Retry);
                             }, _cancelBtnId)
                             ;
 
-                            @BuildButton(Config.Button3Props, async (e) =>
+                            @BuildButton(Config.Button3Props, Config.Button3Text, async (e) =>
                             {
                                 await HandleBtn3Click(e, ConfirmResult.Ignore);
                             })

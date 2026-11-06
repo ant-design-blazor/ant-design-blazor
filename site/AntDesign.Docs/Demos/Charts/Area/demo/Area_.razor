@@ -7,18 +7,18 @@
     <TabPane Key="1">
         <TabTemplate>基础面积图</TabTemplate>
         <ChildContent>
-            <Area @ref="chart1" Config="config1" OnFirstRender="onChart1_FirstRender"/>
+            <Area @ref="chart1" Config="config1" OnFirstRender="onChart1_FirstRender" />
         </ChildContent>
     </TabPane>
     <TabPane Key="2">
         <TabTemplate>基础面积图-带缩略轴</TabTemplate>
         <ChildContent>
-            <Area @ref="chart2" Config="config2" OnFirstRender="onChart2_FirstRender"/>
+            <Area @ref="chart2" Config="config2" OnFirstRender="onChart2_FirstRender" />
         </ChildContent>
     </TabPane>
 </Tabs>
 
-@code{
+@code {
 
     IChartComponent chart1;
     IChartComponent chart2;
@@ -30,7 +30,7 @@
     }
 
 
-    private async void OnTabChanged(string activeKey)
+    private async Task OnTabChanged(string activeKey)
     {
         if (activeKey == "1")
         {
@@ -59,19 +59,19 @@
     #region 示例1
 
     readonly AreaConfig config1 = new AreaConfig()
+    {
+        XField = "Date",
+        YField = "scales",
+        XAxis = new ValueCatTimeAxis()
         {
-            XField = "Date",
-            YField = "scales",
-            XAxis = new ValueCatTimeAxis()
-            {
-                Range = new[] { 0, 1 },
-                TickCount = 5
-            },
-            AreaStyle = new GraphicStyle()
-            {
-                Fill = "l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff"
-            }
-        };
+            Range = new[] { 0, 1 },
+            TickCount = 5
+        },
+        AreaStyle = new GraphicStyle()
+        {
+            Fill = "l(270) 0:#ffffff 0.5:#7ec2f3 1:#1890ff"
+        }
+    };
 
     #endregion 示例1
 
@@ -105,15 +105,15 @@
 
         // Interactions = new Interaction[]
         // {
-        //     new Interaction
-        //     {
-        //         Type="slider",
-        //         Cfg = new
-        //         {
-        //             start =0.5,
-        //             end =0.55
-        //         }
-        //     }
+        // new Interaction
+        // {
+        // Type="slider",
+        // Cfg = new
+        // {
+        // start =0.5,
+        // end =0.55
+        // }
+        // }
         // }
         Slider = new Slider()
         {

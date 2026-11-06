@@ -8,6 +8,7 @@ namespace AntDesign
     {
         Success = 0,
         Fail,
-        Uploading
+        Uploading,
+        Waiting
     }
 }

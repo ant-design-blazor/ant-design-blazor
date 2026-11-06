@@ -260,6 +260,10 @@ namespace AntDesign.Internal
             _isWaitForOverlayFirstRender = false;
             _isOverlayHiding = true;
 
+            // The browser can flip the popup while it is open (for example, after
+            // scrolling). Refresh placement before selecting the leave animation.
+            await UpdatePosition(_overlayLeft, _overlayTop);
+
             _overlayCls = Trigger.GetOverlayLeaveClass();
 
             await Trigger.OnOverlayHiding.InvokeAsync(true);
@@ -358,7 +362,7 @@ namespace AntDesign.Internal
                 return;
             }
 
-            if (!_hasAddOverlayToBody)
+            if (Trigger.CheckPlacementChanged() || !_hasAddOverlayToBody)
             {
                 bool triggerIsWrappedInDiv = Trigger.Unbound is null;
                 _recurenceGuard++;
@@ -376,7 +380,7 @@ namespace AntDesign.Internal
                 }
 
                 _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer,
-                    Ref.Id, Ref, Trigger.Ref, Trigger.Placement, Trigger.PopupContainerSelector,
+                    Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
                     Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
                     VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
                 if (_position is null && _recurenceGuard <= 10) //up to 10 attempts
@@ -388,11 +392,13 @@ namespace AntDesign.Internal
                 else if (_position is not null)
                 {
                     _hasAddOverlayToBody = true;
-                    _overlayStyle = _position.PositionCss + GetTransformOrigin();
-                    if (_position.Placement != Trigger.Placement)
+                    if (_position.Placement != Trigger.GetPlacementType().Placement)
                     {
                         Trigger.ChangePlacementForShow(PlacementType.Create(_position.Placement));
                     }
+                    // Boundary adjustment can flip the requested placement. Use
+                    // the adjusted placement when choosing the animation origin.
+                    _overlayStyle = _position.PositionCss + GetTransformOrigin();
                 }
             }
             else
@@ -401,6 +407,14 @@ namespace AntDesign.Internal
             }
             _recurenceGuard = 0;
         }
+
+        /// <summary>
+        /// Refresh the state of the component
+        /// </summary>
+        /// <remarks>
+        /// Call to StateHasChanged()
+        /// </remarks>
+        internal void RefreshComponentState() => StateHasChanged();
 
         /// <summary>
         /// Will probe a check predicate every given milliseconds until predicate is true or until
@@ -501,12 +515,12 @@ namespace AntDesign.Internal
             bool triggerIsWrappedInDiv = Trigger.Unbound is null;
 
             _position = await JsInvokeAsync<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.UpdateOverlayPosition,
-                Ref.Id, Ref, Trigger.Ref, Trigger.Placement, Trigger.PopupContainerSelector,
+                Ref.Id, Ref, Trigger.Ref, Trigger.PlacementWithRTL, Trigger.PopupContainerSelector,
                 Trigger.BoundaryAdjustMode, triggerIsWrappedInDiv, Trigger.PrefixCls,
                 VerticalOffset, HorizontalOffset, ArrowPointAtCenter, overlayTop, overlayLeft);
             if (_position is not null)
             {
-                if (_position.Placement != Trigger.Placement)
+                if (_position.Placement != Trigger.GetPlacementType().Placement)
                 {
                     Trigger.ChangePlacementForShow(PlacementType.Create(_position.Placement));
                 }

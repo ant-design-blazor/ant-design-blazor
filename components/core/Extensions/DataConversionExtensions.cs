@@ -4,9 +4,9 @@
 
 using System.Runtime.CompilerServices;
 
-namespace AntDesign.core.Extensions
+namespace AntDesign.Core.Extensions
 {
-    public static class DataConversionExtensions
+    internal static class DataConversionExtensions
     {
         /// <summary>
         /// Converts the generic type TFrom to the specified TTo type

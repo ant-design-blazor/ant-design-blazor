@@ -9,14 +9,14 @@
     {
         JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
 
-        var cut = Context.Render(@<Upload>some content</Upload>);
+        var cut = Context.Render(@<Upload Action="https://example.com/upload">some content</Upload>);
 
         cut.MarkupMatches(
           @<span class="">
               <div class=" ant-upload ant-upload-select-text ant-upload-select" style="">
                   <span tabindex="0" class="ant-upload" style="display: grid;" data-fileid:ignore role="button">
-                      <input type="file" style="display:none;" id:ignore title="">
                       some content
+                      <input type="file" style="display:none;" id:ignore title="">
                   </span>
               </div>
             <div class="ant-upload-list ant-upload-list-text">
@@ -29,16 +29,16 @@
     {
         JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
 
-        var cut = Context.Render(@<Upload Drag>some content</Upload>);
+        var cut = Context.Render(@<Upload Action="https://example.com/upload" Drag>some content</Upload>);
 
         cut.MarkupMatches(
           @<span class="">
               <div class=" ant-upload ant-upload-select-text ant-upload-drag ant-upload-select" style="">
                 <span tabindex="0" class="ant-upload" style="display: grid;;" data-fileid:ignore role="button" >
-                  <input type="file"  style="position: absolute;width: 100%;height: 100%;opacity: 0;top: 0;left: 0;z-index:2;" id:ignore title="">
                   <div class="ant-upload-drag-container">
                     some content
                   </div>
+                  <input type="file" style="position: absolute;width: 100%;height: 100%;opacity: 0;top: 0;left: 0;z-index:2;" id:ignore title="">
                 </span>
             </div>
             <div class="ant-upload-list ant-upload-list-text">
@@ -51,19 +51,29 @@
     {
         JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
 
-        var cut = Context.Render(@<Upload Method="HttpMethod.Put">some content</Upload>);
+        var cut = Context.Render(@<Upload Action="https://example.com/upload" Method="HttpMethod.Put">some content</Upload>);
 
         cut.MarkupMatches(
           @<span class="">
               <div class=" ant-upload ant-upload-select-text ant-upload-select" style="">
                   <span tabindex="0" class="ant-upload" style="display: grid;" data-fileid:ignore role="button">
-                      <input type="file" style="display:none;" id:ignore title="">
                       some content
+                      <input type="file" style="display:none;" id:ignore title="">
                   </span>
               </div>
             <div class="ant-upload-list ant-upload-list-text">
             </div>
           </span>);
+    }
+
+    [Fact]
+    public void Renders_without_action()
+    {
+        JSInterop.SetupVoid(JSInteropConstants.AddFileClickEventListener, _ => true);
+
+        var cut = Context.Render(@<Upload>some content</Upload>);
+        // when no Action is provided the input element should not be rendered
+        cut.FindAll("input").Should().BeEmpty();
     }
 
     [Fact]
@@ -75,7 +85,7 @@
 
         JSInterop.Setup<List<UploadFileItem>>(JSInteropConstants.GetFileInfo, _ => true).SetResult(new List<UploadFileItem> { new UploadFileItem { FileName = "test" } });
 
-        var cut = Context.Render(@<Upload>some content</Upload>);
+        var cut = Context.Render(@<Upload Action="https://example.com/upload">some content</Upload>);
 
         var inputElement = cut.Find("input");
         

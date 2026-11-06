@@ -9,7 +9,8 @@ namespace AntDesign
         Start,
         End,
         Center,
-        SpaceBetween,
         SpaceAround,
+        SpaceBetween,
+        SpaceEvenly
     }
 }

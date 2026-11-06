@@ -72,7 +72,7 @@
 
     async Task<bool> HandleRemove(UploadFileItem file)
     {
-        await _message.Loading($"removing {file.FileName}",2);
+        await _message.LoadingAsync($"removing {file.FileName}",2);
         return await Task.FromResult(true);
     }
 

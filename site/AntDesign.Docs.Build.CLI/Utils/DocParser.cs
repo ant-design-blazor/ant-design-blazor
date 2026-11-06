@@ -212,5 +212,10 @@ namespace AntDesign.Docs.Build.CLI.Utils
         public bool Debug { get; set; }
 
         public bool? Docs { get; set; }
+
+        /// <summary>
+        /// Additional files to display in code view (relative paths from demo folder)
+        /// </summary>
+        public List<string> AdditionalFiles { get; set; }
     }
 }

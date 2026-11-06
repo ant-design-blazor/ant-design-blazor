@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.Json.Serialization;
+using AntDesign.Core.Helpers.MemberPath;
 
 namespace AntDesign.TableModels
 {
@@ -103,6 +104,30 @@ namespace AntDesign.TableModels
                 _getFieldExpression = this._getFieldExpression, // keep the expression instance for sorting rows outside
                 _comparer = this._comparer,
             };
+        }
+
+        void ITableSortModel.BuildGetFieldExpression<TItem>()
+        {
+            if (_getFieldExpression != null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrEmpty(FieldName))
+            {
+                throw new InvalidOperationException("FieldName must be set before initializing the field expression");
+            }
+
+            try
+            {
+                // Use PathHelper to build an expression for accessing the field
+                var lambda = PathHelper.GetLambda(FieldName, typeof(TItem), typeof(TItem), typeof(TField), false);
+                _getFieldExpression = lambda;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to create expression for field '{FieldName}' of type '{typeof(TItem).Name}': {ex.Message}", ex);
+            }
         }
     }
 }

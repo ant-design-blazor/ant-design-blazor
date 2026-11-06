@@ -27,15 +27,6 @@
 #else
     var polyfillPath = "https://raw.githubusercontent.com/Daddoon/Blazor.Polyfill@3.0.8/Publish/Blazor.Polyfill.Publish/blazor.polyfill.min.js";
 #endif
-#if NET6_0
-  var isNET6 = true;
-#else
-    var isNET6 = false;
-#endif
-    if (isNET6)
-    {
-      <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"></script>
-    }
   }
   <script src="@polyfillPath"></script>
   <script src="_content/AntDesign.Charts/g2plot.min.js"></script>
@@ -78,25 +69,8 @@
 
   <script src="@("https://fastly.jsdelivr.net/npm/@docsearch/js@3")"></script>
   <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
-  @if (!isNET6)
-  {
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=ResizeObserver"></script>
-  }
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.js?features=ResizeObserver"></script>
   <script antblazor-js></script>
   <script src="_framework/blazor.server.js"></script>
-
-  <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@@petercatai/assistant/dist/umd/assistant.min.css" />
-  <script src="https://fastly.jsdelivr.net/npm/react/umd/react.development.js"></script>
-  <script src="https://fastly.jsdelivr.net/npm/react-dom/umd/react-dom.development.js"></script>
-  <script src="https://fastly.jsdelivr.net/npm/dayjs/dayjs.min.js"></script>
-  <script src="https://fastly.jsdelivr.net/npm/antd/dist/antd.js"></script>
-  <script src="https://fastly.jsdelivr.net/npm/lottie-web/build/player/lottie.js"></script>
-  <script src="https://fastly.jsdelivr.net/npm/@@petercatai/assistant/dist/umd/assistant.min.js"></script>
-  <script>
-    PetercatLUI.initAssistant({
-      apiDomain: 'https://api.petercat.ai',
-      token: '9dda22fa-1d1a-4854-a53a-5abbc5584840'
-    });
-  </script>
 </body>
 </html>

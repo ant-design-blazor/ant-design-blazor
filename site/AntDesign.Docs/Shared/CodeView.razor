@@ -87,6 +87,9 @@
 
             await Task.Yield();
 
+            if (Compiled.HasDelegate == false)
+                return;
+
             var type = await Compiler.CompileAsync(_source);
 
             await Compiled.InvokeAsync(type);

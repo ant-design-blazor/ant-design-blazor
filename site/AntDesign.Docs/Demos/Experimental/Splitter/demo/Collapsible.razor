@@ -1,0 +1,34 @@
+@using Microsoft.AspNetCore.Components.Rendering
+
+<Flex Gap="FlexGap.Middle" Vertical>
+    @CustomSplitter("height: 200px;")
+    @CustomSplitter("height: 300px;", SplitterLayout.Vertical)
+</Flex>
+
+@code {
+    void RenderDesc(RenderTreeBuilder __builder, string text)
+    {
+        <Flex Justify="FlexJustify.Center" align="FlexAlign.Center" Style="height: 100%">
+            <Title Type="TextElementType.Secondary" Level="5" Style="white-space: nowrap">
+                @text
+            </Title>
+        </Flex>
+    }
+
+    RenderFragment Desc(string text) => b => RenderDesc(b, text);
+
+    void RenderCustomSplitter(RenderTreeBuilder __builder, string style, SplitterLayout layout)
+    {
+        <Splitter Style="@($"box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); {style}")" Layout="layout">
+            <SplitterPanel Collapsible Min="20%">
+                @Desc("First")
+            </SplitterPanel>
+            <SplitterPanel Collapsible>
+                @Desc("Second")
+            </SplitterPanel>
+        </Splitter>
+    }
+
+    RenderFragment CustomSplitter(string style, SplitterLayout layout = SplitterLayout.Horizontal)
+    => b => RenderCustomSplitter(b, style, layout);
+}

@@ -1,5 +1,5 @@
 ﻿<div>
-    <Card Title=@("Card title")>
+    <Card Title="TabbedCard">
         <Extra>
             <a>More</a>
         </Extra>
@@ -22,12 +22,15 @@
     </Card>
     <br />
     <br />
-    <Card>
+    <Card Title="Standalone Tabs">
         <Extra>
             <a>More</a>
         </Extra>
         <ChildContent>
-            <Tabs DefaultActiveKey="1">
+            <p>Card content</p>
+            <p>Card content</p>
+            <p>Card content</p>
+            <Tabs DefaultActiveKey="1" StandaloneInCard>
                 <TabPane Key="1">
                     <TabTemplate>Article</TabTemplate>
                     <ChildContent>Content of Tab Pane 1</ChildContent>

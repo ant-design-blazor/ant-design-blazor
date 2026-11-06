@@ -9,13 +9,13 @@
 </Button>
 
 <Modal Title="@("BasicModal")"
-       @bind-Visible="@_visible"
+       Visible="@_visible"
        OnOk="HandleOk"
        OnCancel="HandleCancel">
          @FormTemplate()
 </Modal>
 
-@inject ModalService ModelService;
+@inject ModalService ModalService;
 @code {
 
     RenderFragment FormTemplate()
@@ -63,14 +63,19 @@
     /// <param name="e"></param>
     private async Task HandleOk(MouseEventArgs e)
     {
+        if (!_form.Validate())
+        {
+            return;
+        }
         _submitting = true;
         await Task.Delay(1000);
         _form.Submit();
+        _visible = false;
     }
 
     private void HandleCancel(MouseEventArgs e)
     {
-        Console.WriteLine(e);
+        _visible = false;
     }
 
     /// <summary>
@@ -91,7 +96,7 @@
     private void ShowModalWithService()
     {
         ModalRef modalRef = default;
-        modalRef = ModelService.CreateModal(new()
+        modalRef = ModalService.CreateModal(new()
         {
             Content = FormTemplate(),
             OnOk = async e =>
@@ -112,7 +117,7 @@
             },
             OnCancel = async e =>
             {   
-                if (!_form.IsModified || await ModelService.ConfirmAsync(new() { Content = "Are you sure you want to discard the entries?" }))
+                if (!_form.IsModified || await ModalService.ConfirmAsync(new() { Content = "Are you sure you want to discard the entries?" }))
                 {   
                     await modalRef.CloseAsync();
                      _form.Reset();

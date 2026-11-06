@@ -45,6 +45,7 @@ namespace AntDesign
             set
             {
                 _size = value;
+                ChangeSize();
             }
         }
 
@@ -79,6 +80,8 @@ namespace AntDesign
 
         private string InnerStyle => Wrap && Direction == SpaceDirection.Horizontal ? "flex-wrap: wrap;" : "";
 
+        private string _gapStyle = "";
+
         private readonly static Dictionary<SpaceAlign, string> _alignMap = new()
         {
             [SpaceAlign.Start] = "start",
@@ -97,9 +100,52 @@ namespace AntDesign
                 .If($"{PrefixCls}-rtl", () => RTL);
         }
 
+        private void ChangeSize()
+        {
+            Size.Switch(
+                singleSize =>
+                {
+                    _gapStyle = $"column-gap:{GetSize(singleSize)};row-gap:{GetSize(singleSize)}";
+                },
+                singleSize =>
+                {
+                    _gapStyle = $"column-gap:{GetSize(singleSize)};row-gap:{GetSize(singleSize)}";
+                },
+                arraySize =>
+                {
+                    _gapStyle = $"column-gap:{GetSize(arraySize.Item1)};row-gap:{GetSize(arraySize.Item2)};";
+                }
+            );
+        }
+
+        private static readonly Dictionary<SpaceSize, string> _spaceSize = new()
+        {
+            [SpaceSize.Small] = "8",
+            [SpaceSize.Middle] = "16",
+            [SpaceSize.Large] = "24"
+        };
+
+        private CssSizeLength GetSize(SpaceSize size)
+        {
+            var originalSize = _spaceSize[size];
+
+            return GetSize(originalSize);
+        }
+
+        private CssSizeLength GetSize(string size)
+        {
+            if (Split != null)
+            {
+                return ((CssSizeLength)size).Value / 2;
+            }
+
+            return size;
+        }
+
         protected override void OnInitialized()
         {
             SetClass();
+            ChangeSize();
             base.OnInitialized();
         }
     }

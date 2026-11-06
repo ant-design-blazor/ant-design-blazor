@@ -47,7 +47,7 @@
                 {
                     <div style="display: flex; flex-wrap: nowrap;">
                         <div class="ant-form-item-explain ant-form-item-explain-connected" role="alert">
-                            <div class=@($"{_prefixCls}-explain-{ValidateStatus.ToString().ToLower()}")>
+                            <div class=@($"{_prefixCls}-explain-{ValidateStatus.ToString().ToLowerInvariant()}")>
                                 @message
                             </div>
                         </div>
@@ -57,7 +57,7 @@
             }
         </AntDesign.Col>
     </Row>
-    @if (!NoStyle && ValidationMessages.Any())
+    @if (!NoStyle && ValidationMessages.Length > 0)
     {
         <div class="ant-form-item-margin-offset" style="margin-bottom: -24px;"></div>
     }

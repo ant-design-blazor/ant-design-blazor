@@ -1,0 +1,30 @@
+<TextArea @bind-Value="value" Rows="4" OnPressEnter="OnPressEnter" Placeholder="@placeholder" />
+
+<Switch @bind-Value="submitOnEnter" CheckedChildren="Submit On Enter" UnCheckedChildren="Submit On Ctrl + Enter"></Switch>
+
+@inject IMessageService message
+@code {
+    string value;
+
+    bool submitOnEnter;
+
+    string placeholder => submitOnEnter ? "Press Enter to submit and Ctrl + Enter to add a new line"
+     : "Press Ctrl + Enter to submit and Enter to add a new line";
+
+    private void OnPressEnter(PressEnterEventArgs e)
+    {
+        if (submitOnEnter)
+        {
+            if (!e.CtrlKey)
+            {
+                message.Info($"Enter: {value}");
+                e.PreventLineBreak();
+            }
+        }
+        else if (e.CtrlKey)
+        {
+            message.Info($"Ctrl + Enter: {value}");
+            e.PreventLineBreak();
+        }
+    }
+}

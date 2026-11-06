@@ -57,6 +57,8 @@ namespace AntDesign
 
         internal void SetSelection(ISelectionColumn selectItem);
 
+        internal void UnSelectSelection(ISelectionColumn selectItem);
+
         internal bool AllSelected { get; }
 
         internal bool AnySelected { get; }
@@ -96,5 +98,9 @@ namespace AntDesign
         internal bool RebuildColumns(bool add);
 
         internal bool AutoColIndexes { get; }
+
+        internal bool IsSticky { get; }
+
+        internal bool ServerSide { get; }
     }
 }

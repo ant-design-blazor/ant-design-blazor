@@ -11,8 +11,12 @@ title:
 
 如果想控制 `Icon` 具体的位置，只能直接使用 `Icon` 组件，而非 `icon` 属性。
 
+如果想在`Button` 内嵌IconFont图标，可以在引用相关的JS后，直接设置`IconFont`属性。
+
 ## en-US
 
 `Button` components can contain an `Icon`. This is done by setting the `icon` property or placing an `Icon` component within the `Button`.
 
 If you want specific control over the positioning and placement of the `Icon`, then that should be done by placing the `Icon` component within the `Button` rather than using the `icon` property.
+
+If you want to use IconFont icons within a `Button`, you can set the `IconFont` property after referencing the relevant JS.

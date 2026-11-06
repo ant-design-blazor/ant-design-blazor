@@ -40,7 +40,7 @@ namespace AntDesign
         [Parameter]
         public bool NoTrigger { get; set; }
 
-        [CascadingParameter] 
+        [CascadingParameter]
         public Layout Parent { get; set; }
 
         /// <summary>
@@ -136,7 +136,9 @@ namespace AntDesign
         private RenderFragment DefaultTrigger => builder =>
         {
             builder.OpenComponent<Icon>(1);
-            builder.AddAttribute(2, "Type", _isCollapsed ? IconType.Outline.Right : IconType.Outline.Left);
+            var collapsedIcon = RTL ? IconType.Outline.Left : IconType.Outline.Right;
+            var expandedIcon = RTL ? IconType.Outline.Right : IconType.Outline.Left;
+            builder.AddAttribute(2, "Type", _isCollapsed ? collapsedIcon : expandedIcon);
             builder.AddAttribute(3, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };

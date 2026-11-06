@@ -1,30 +1,43 @@
 ﻿@namespace AntDesign
 @inherits AntInputBoolComponentBase
+@using Microsoft.AspNetCore.Components.Rendering
 
-<label class="@ClassMapperLabel.Class" style="@Style" for="@Id" @ref="Ref" @onclick:stopPropagation>
-    <span class="@ClassMapper.Class">
-        <input id="@Id"
-               value="@(CheckboxGroup==null?"true":Label)"
+@if (HasLabel)
+{
+    <label class="@ClassMapperLabel.Class" style="@Style" for="@Id" @ref="Ref" @onclick:stopPropagation>
+       @RenderCheckboxControl
+
+        @if (ChildContent != null)
+        {
+            <span>
+                @ChildContent
+            </span>
+        }
+        else
+        {
+            <span>@Label</span>
+        }
+    </label>
+}
+else
+{
+    @RenderCheckboxControl
+}
+
+@code {
+    private void RenderCheckboxControl(RenderTreeBuilder __builder)
+    {
+        <span class="@ClassMapper.Class" @ref="Ref" @onclick:stopPropagation>
+            <input id="@Id"
+               value="@(CheckboxGroup == null ? "true" : Label)"
                checked="@Checked"
                disabled="@IsDisabled"
-               autofocus=@AutoFocus
+               autofocus="@AutoFocus"
                @onchange="@InputCheckedChange"
                type="checkbox"
-               class="ant-checkbox-input"
+               class="@($"{PrefixCls}-input")"
                @attributes="_attributes" />
-        <span class="ant-checkbox-inner"></span>
-    </span>
-
-    @if (ChildContent != null)
-    {
-        <span>
-            @ChildContent
+            <span class="@($"{PrefixCls}-inner")"></span>
         </span>
     }
-    else
-    {
-        <span>@Label</span>
-    }
-
-</label>
-
+}

@@ -11,7 +11,7 @@
         <ContentTemplate>
             @GetEditor(@onSubmit)
         </ContentTemplate>
-</Comment>
+    </Comment>
 </div>
 
 
@@ -29,7 +29,7 @@
             }
         </div>;
 
-    async void onSubmit()
+    async Task onSubmit()
     {
         submitting = true;
 
@@ -50,7 +50,7 @@
     string _value = "";
 
     //TODO::Form
-    RenderFragment GetEditor(Action onSubmit)
+    RenderFragment GetEditor(Func<Task> onSubmit)
     {
         return
             @<div>

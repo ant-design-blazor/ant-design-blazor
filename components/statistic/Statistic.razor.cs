@@ -82,31 +82,25 @@ namespace AntDesign
                 decimalValue = Convert.ToDecimal(Value, CultureInfo.InvariantCulture);
             }
 
-            var intValue = decimalValue - decimalValue % 1;
+            if (Precision > 0)
+            {
+                decimalValue = Math.Round(decimalValue, Precision);
+            }
+            else
+            {
+                decimalValue = Math.Round(decimalValue, 0);
+            }
 
+            var intValue = decimal.Truncate(decimalValue);
             var intString = intValue == 0 ? (decimalValue >= 0 ? "0" : "-0") : intValue.ToString($"###{GroupSeparator}###", CultureInfo.InvariantCulture);
 
             decimalValue = Math.Abs(decimalValue - intValue);
 
             var fractionalPart = "";
-            if (decimalValue == 0 && Precision > 0)
+            if (Precision > 0)
             {
-                fractionalPart = DecimalSeparator.PadRight(Precision + 1, '0');
-            }
-            if (decimalValue != 0)
-            {
-                if (Precision <= 0)
-                {
-                    fractionalPart = decimalValue.ToString(CultureInfo.InvariantCulture)
-                        .Replace("0.", DecimalSeparator, true, CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    decimalValue = Math.Round(decimalValue, Precision);
-                    fractionalPart = decimalValue.ToString(CultureInfo.InvariantCulture)
-                        .Replace("0.", DecimalSeparator, true, CultureInfo.InvariantCulture)
-                        .PadRight(Precision + 1, '0');
-                }
+                fractionalPart = decimalValue.ToString($"F{Precision}", CultureInfo.InvariantCulture)
+                    .Replace("0.", DecimalSeparator, true, CultureInfo.InvariantCulture);
             }
 
             return (intString, fractionalPart);

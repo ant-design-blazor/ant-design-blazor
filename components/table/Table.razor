@@ -12,7 +12,8 @@
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
+                <Pagination Id="@TopPaginationId"
+                            Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
                             Class="@_paginationClass.Class"
                             Total="_total"
                             PageSize="_pageSize"
@@ -28,12 +29,13 @@
         <CascadingValue Value="@this" TValue="ITable" IsFixed>
             <CascadingValue Value=@typeof(TItem) Name="ItemType" IsFixed>
                 <CascadingValue Value="@ColumnContext" IsFixed>
-                    <CascadingValue Name="IsInitialize" Value="true" IsFixed>
-                        @if (_fieldModel is not null)
-                        {
-                            @ChildContent(_fieldModel)
-                        }
-                    </CascadingValue>
+                    <CascadingValue Name="RelationCache" Value="@RelationDataCache" IsFixed>
+                        <CascadingValue Name="IsInitialize" Value="true" IsFixed>
+                            @if (_fieldModel is not null)
+                            {
+                                @ChildContent(_fieldModel)
+                            }
+                        </CascadingValue>
                     <div class="@ClassMapper.Class" @ref="_wrapperRef">
                         @if (TitleTemplate != null || Title != null)
                         {
@@ -44,7 +46,7 @@
                         <div class="ant-table-container">
                             @if (ScrollY != null)
                             {
-                                <div class="ant-table-header" style="overflow: hidden;" @ref="_tableHeaderRef">
+                                <div class="ant-table-header @(IsSticky?"ant-table-sticky-holder":"")" style="overflow: hidden; @StickyHolderStyle" @ref="_tableHeaderRef">
                                     <table style="@TableLayoutStyle">
                                         @colGroup(this, true)
                                         @header()
@@ -102,6 +104,12 @@
                                     </table>
                                 </div>
                             }
+                            @if (IsSticky)
+                            {
+                                <div class="ant-table-sticky-scroll" style="height: 15px; bottom: 0px;">
+                                    <div class="ant-table-sticky-scroll-bar" style="transform: translate3d(0px, 0px, 0px);"></div>
+                                </div>
+                            }
                         </div>
                         @if (FooterTemplate != null || Footer != null)
                         {
@@ -110,6 +118,7 @@
                             </div>
                         }
                     </div>
+                    </CascadingValue>
                 </CascadingValue>
             </CascadingValue>
         </CascadingValue>
@@ -117,7 +126,8 @@
         {
             if (PaginationTemplate == null)
             {
-                <Pagination Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
+                <Pagination Id="@BottomPaginationId"
+                            Size="@(Size == TableSize.Default ? PaginationSize.Default : PaginationSize.Small)"
                             Class="@_paginationClass.Class"
                             Total="_total"
                             PageSize="_pageSize"
@@ -134,6 +144,12 @@
 
 @code
 {
+    /// <summary>Id of the pagination displayed above the table.</summary>
+    public const string TopPaginationId = "Table.TopPagination";
+
+    /// <summary>Id of the pagination displayed below the table.</summary>
+    public const string BottomPaginationId = "Table.BottomPagination";
+
     RenderFragment header()
     {
         var headerRowAttributes = OnHeaderRow?.Invoke();
@@ -298,8 +314,13 @@
                     currentRowData.Children ??= new();
                     currentDataItem.Children ??= [];
                     @body(SortFilterChildren(currentDataItem.Children), currentRowData);
+                }
+
+                if (currentRowData.IsGrouping && currentRowData.Expanded)
+                {
                     @groupFooter(currentRowData);
                 }
+                
                 @if (!currentDataItem.HasChildren && ExpandTemplate != null && InternalRowExpandable(currentRowData) && currentRowData.Expanded)
                 {
                     <tr class="ant-table-expanded-row ant-table-expanded-row-level-1 @ExpandedRowClassName(currentRowData)"

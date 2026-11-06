@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.RenderTree;
 using Microsoft.Extensions.Logging;
 
-namespace AntDesign
+namespace AntDesign.Core
 {
     public class HtmlRenderer : Renderer
     {

@@ -1,0 +1,42 @@
+@namespace AntDesign
+@inherits AntDomComponentBase
+
+<CascadingValue Value="this" IsFixed>
+    @ChildContent
+</CascadingValue>
+
+<div id="@Id" class="split-container splitter-orientation-@(Vertical?"vertical":"horizontal") @(ClassMapper.Class)"
+    style="@Style" @ref="@Ref">
+
+    <div class="pane-of-split-container ant-splitter-panel"
+        style="@this.GetPaneStyle(this.FirstPaneSize, this.FirstPaneMinSize)">
+        @FirstPane
+    </div>
+
+    <div class="ant-splitter-bar">
+        <div class="ant-splitter-bar-dragger spliter-bar @(Disabled?"ant-splitter-bar-dragger-disabled":"")"></div>
+
+        @if (_panes.Count == 2)
+        {
+            @if (_panes[0].Collapsible && !_panes[0].IsCollapsed)
+            {
+                <div class="ant-splitter-bar-collapse-bar ant-splitter-bar-collapse-bar-start" @onclick="_panes[0].ToggleCollapse">
+                    <Icon Class="ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-start" Type="@(Layout== SplitterLayout.Horizontal?"left":"up")"></Icon>
+                </div>
+            }
+            @if (_panes[1].Collapsible && !_panes[1].IsCollapsed)
+            {
+                <div class="ant-splitter-bar-collapse-bar ant-splitter-bar-collapse-bar-end" @onclick="_panes[1].ToggleCollapse">
+                    <Icon Class="ant-splitter-bar-collapse-icon ant-splitter-bar-collapse-end" Type="@(Layout== SplitterLayout.Horizontal?"right":"down")"></Icon>
+                </div>
+            }
+        }
+
+    </div>
+
+    <div class="pane-of-split-container ant-splitter-panel"
+        style="@this.GetPaneStyle(this.SecondPaneSize, this.SecondPaneMinSize)">
+        @SecondPane
+    </div>
+
+</div>

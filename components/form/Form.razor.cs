@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using AntDesign.Form.Locale;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -252,7 +253,10 @@ namespace AntDesign
         public bool IsModified => _editContext.IsModified();
 
         private EditContext _editContext;
+        private static readonly ConditionalWeakTable<EditContext, ValidateGuard> _validateGuards = new();
+        private class ValidateGuard { public bool _inProgress; }
         private IList<IFormItem> _formItems = new List<IFormItem>();
+        private bool _previousValidateOnChange;
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
         private TModel _model;
         private FormRulesValidator _rulesValidator;
@@ -294,17 +298,11 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (Model == null)
-            {
-                Model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
-            }
+            Model ??= (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
 
             _editContext = new EditContext(Model);
 
-            if (FormProvider != null)
-            {
-                FormProvider.AddForm(this);
-            }
+            FormProvider?.AddForm(this);
 
             if (OnFieldChanged.HasDelegate)
                 _editContext.OnFieldChanged += OnFieldChangedHandler;
@@ -318,6 +316,14 @@ namespace AntDesign
                 _editContext.OnFieldChanged += RulesModeOnFieldChanged;
                 _editContext.OnValidationRequested += RulesModeOnValidationRequested;
             }
+
+            // If configured, perform validation centrally on any field change (ValidateOnChange)
+            if (ValidateOnChange)
+            {
+                _editContext.OnFieldChanged += ValidateOnChangeOnFieldChanged;
+            }
+
+            _previousValidateOnChange = ValidateOnChange;
         }
 
         private void OnFieldChangedHandler(object sender, FieldChangedEventArgs e) => InvokeAsync(() => OnFieldChanged.InvokeAsync(e));
@@ -342,6 +348,11 @@ namespace AntDesign
                     _editContext.OnFieldChanged -= RulesModeOnFieldChanged;
                     _editContext.OnValidationRequested -= RulesModeOnValidationRequested;
                 }
+
+                if (ValidateOnChange)
+                {
+                    _editContext.OnFieldChanged -= ValidateOnChangeOnFieldChanged;
+                }
             }
 
             base.Dispose(disposing);
@@ -352,6 +363,17 @@ namespace AntDesign
             base.OnParametersSet();
 
             SetClass();
+
+            // Dynamically subscribe/unsubscribe to EditContext.OnFieldChanged when ValidateOnChange toggles at runtime
+            if (_editContext != null && ValidateOnChange != _previousValidateOnChange)
+            {
+                if (ValidateOnChange)
+                    _editContext.OnFieldChanged += ValidateOnChangeOnFieldChanged;
+                else
+                    _editContext.OnFieldChanged -= ValidateOnChangeOnFieldChanged;
+
+                _previousValidateOnChange = ValidateOnChange;
+            }
         }
 
         protected void SetClass()
@@ -390,16 +412,18 @@ namespace AntDesign
 
             var result = formItem.ValidateFieldWithRules();
 
-            if (result.Length > 0)
+            if (result.Any())
             {
-                var errors = new Dictionary<FieldIdentifier, List<string>>();
-                errors[args.FieldIdentifier] = result.Select(r => r.ErrorMessage).ToList();
+                var errors = new Dictionary<FieldIdentifier, List<string>>
+                {
+                    [args.FieldIdentifier] = [.. result.Select(r => r.ErrorMessage)]
+                };
 
                 _rulesValidator.DisplayErrors(errors);
             }
 
             // invoke StateHasChanged to update the form state like error message and IsModified
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
 
         private void RulesModeOnValidationRequested(object sender, ValidationRequestedEventArgs args)
@@ -411,13 +435,36 @@ namespace AntDesign
             foreach (var formItem in _formItems)
             {
                 var result = formItem.ValidateFieldWithRules();
-                if (result.Length > 0)
+                if (result.Any())
                 {
-                    errors[formItem.GetFieldIdentifier()] = result.Select(r => r.ErrorMessage).ToList();
+                    errors[formItem.GetFieldIdentifier()] = [.. result.Select(r => r.ErrorMessage)];
                 }
             }
 
             _rulesValidator.DisplayErrors(errors);
+        }
+
+        // When ValidateOnChange is enabled, centralize validation: call EditContext.Validate() on any field change.
+        private void ValidateOnChangeOnFieldChanged(object sender, FieldChangedEventArgs args)
+        {
+            if (!ValidateOnChange || _editContext == null)
+                return;
+
+            var ctx = _editContext;
+            var guard = _validateGuards.GetOrCreateValue(ctx);
+
+            if (guard._inProgress)
+                return;
+
+            try
+            {
+                guard._inProgress = true;
+                ctx.Validate();
+            }
+            finally
+            {
+                guard._inProgress = false;
+            }
         }
 
         /// <summary>
@@ -511,7 +558,7 @@ namespace AntDesign
 
             if (Model == null)
             {
-                _model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
+                _model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke([]);
                 _isModelBuildFromNull = true;
             }
 
@@ -520,8 +567,7 @@ namespace AntDesign
             {
                 FieldInfo fieldInfo = kv.Value.fi;
                 EventInfo eventInfo = kv.Value.ei;
-                Delegate mdel = fieldInfo.GetValue(_editContext) as Delegate;
-                if (mdel != null)
+                if (fieldInfo.GetValue(_editContext) is Delegate mdel)
                 {
                     foreach (Delegate del in mdel.GetInvocationList())
                     {
@@ -548,7 +594,7 @@ namespace AntDesign
         {
             if (_eventInfos is null)
             {
-                _eventInfos = new();
+                _eventInfos = [];
                 Type contextType = typeof(EditContext);
                 foreach (EventInfo eventInfo in contextType.GetEvents(AllBindings))
                 {

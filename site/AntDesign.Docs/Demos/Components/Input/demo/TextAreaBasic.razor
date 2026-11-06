@@ -1,13 +1,5 @@
-<TextArea @bind-Value="value" Rows="4" OnPressEnter="OnPressEnter" Placeholder="Press Ctrl + Enter to submit" />
+<TextArea @bind-Value="value" Rows="4" />
 
-@inject IMessageService message
 @code {
     string value;
-    private void OnPressEnter(KeyboardEventArgs e)
-    {
-        if (e.CtrlKey)
-        {
-            message.Info($"Ctrl + Enter: {value}");
-        }
-    }
 }

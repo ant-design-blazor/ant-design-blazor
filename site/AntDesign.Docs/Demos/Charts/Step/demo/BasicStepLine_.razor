@@ -4,36 +4,36 @@
 @inject HttpClient HttpClient
 
 <Tabs ActiveKeyChanged="OnTabChanged">
-        <TabPane Key="1">
-            <TabTemplate>示例1</TabTemplate>
-            <ChildContent>
-                <Line @ref="@chart1" Config="config1" Data="data1" />
-            </ChildContent>
-        </TabPane>
+    <TabPane Key="1">
+        <TabTemplate>示例1</TabTemplate>
+        <ChildContent>
+            <Line @ref="@chart1" Config="config1" Data="data1" />
+        </ChildContent>
+    </TabPane>
 
-        <TabPane Key="2">
-            <TabTemplate>示例2</TabTemplate>
-            <ChildContent>
-                <Line Config="config2" Data="data2" />
-            </ChildContent>
-        </TabPane>
+    <TabPane Key="2">
+        <TabTemplate>示例2</TabTemplate>
+        <ChildContent>
+            <Line Config="config2" Data="data2" />
+        </ChildContent>
+    </TabPane>
 
-        <TabPane Key="3">
-            <TabTemplate>示例3</TabTemplate>
-            <ChildContent>
+    <TabPane Key="3">
+        <TabTemplate>示例3</TabTemplate>
+        <ChildContent>
             <Line @ref="@chart3" Config="config3" Data="data3" />
-            </ChildContent>
-        </TabPane>
+        </ChildContent>
+    </TabPane>
 
-        <TabPane Key="4">
-            <TabTemplate>示例4</TabTemplate>
-            <ChildContent>
-                <Line @ref="@chart4" Config="config4" Data="data4" />
-            </ChildContent>
-        </TabPane>
-    </Tabs>
+    <TabPane Key="4">
+        <TabTemplate>示例4</TabTemplate>
+        <ChildContent>
+            <Line @ref="@chart4" Config="config4" Data="data4" />
+        </ChildContent>
+    </TabPane>
+</Tabs>
 
-@code{
+@code {
     IChartComponent chart1;
     IChartComponent chart2;
     IChartComponent chart3;
@@ -48,7 +48,7 @@
         OnTabChanged("1");
     }
 
-    private async void OnTabChanged(string activeKey)
+    private async Task OnTabChanged(string activeKey)
     {
         if (activeKey == "1")
         {
@@ -88,15 +88,15 @@
 
     readonly object[] data2 = new object[]
     {
-          new { year =  "1991", value =  3 },
-          new { year =  "1992", value =  4 },
-          new { year =  "1993", value =  3.5 },
-          new { year =  "1994", value =  5 },
-          new { year =  "1995", value =  4.9 },
-          new { year =  "1996", value =  6 },
-          new { year =  "1997", value =  7 },
-          new { year =  "1998", value =  9 },
-          new { year =  "1999", value =  13 },
+new { year = "1991", value = 3 },
+new { year = "1992", value = 4 },
+new { year = "1993", value = 3.5 },
+new { year = "1994", value = 5 },
+new { year = "1995", value = 4.9 },
+new { year = "1996", value = 6 },
+new { year = "1997", value = 7 },
+new { year = "1998", value = 9 },
+new { year = "1999", value = 13 },
     };
 
 
@@ -173,17 +173,17 @@
             }
         },
         Interactions = new Interaction[]
-        {
-            new Interaction
-            {
-                Type = "slider",
-                Cfg = new
-                {
-                    start= 0.1,
-                    end= 0.2,
-                }
-            }
-        }
+    {
+new Interaction
+{
+Type = "slider",
+Cfg = new
+{
+start= 0.1,
+end= 0.2,
+}
+}
+    }
     };
 
     #endregion 示例3
@@ -192,15 +192,15 @@
 
     readonly object[] data4 = new object[]
     {
-          new { year =  "1991", value =  3 },
-          new { year =  "1992", value =  4 },
-          new { year =  "1993", value =  3.5 },
-          new { year =  "1994", value =  5 },
-          new { year =  "1995", value =  4.9 },
-          new { year =  "1996", value =  6 },
-          new { year =  "1997", value =  7 },
-          new { year =  "1998", value =  9 },
-          new { year =  "1999", value =  13 },
+new { year = "1991", value = 3 },
+new { year = "1992", value = 4 },
+new { year = "1993", value = 3.5 },
+new { year = "1994", value = 5 },
+new { year = "1995", value = 4.9 },
+new { year = "1996", value = 6 },
+new { year = "1997", value = 7 },
+new { year = "1998", value = 9 },
+new { year = "1999", value = 13 },
     };
 
     readonly LineConfig config4 = new LineConfig
@@ -216,20 +216,20 @@
             Text = "将折线图上的每一个数据点显示出来，作为辅助阅读。"
         },
         ForceFit = true,
-        Padding = "auto",        
+        Padding = "auto",
         XField = "year",
         YField = "value",
         StepType = LineConfig.StepTypeHVH, // 可以选择 hv, vh, hvh, vhv
         Point = new LineViewConfigPoint
         {
-            Visible = true,        
+            Visible = true,
         },
         Label = new Label
         {
             Visible = true,
             Type = "point"
         },
-        
+
     };
 
     #endregion 示例4

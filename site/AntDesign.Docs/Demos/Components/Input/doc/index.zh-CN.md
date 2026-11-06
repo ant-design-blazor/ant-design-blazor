@@ -37,8 +37,8 @@ cover: https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg
 | OnChange |输入框内容变化时的回调                                | Action<TValue>        | -        |
 | OnFocus |输入框获得焦点时的回调                              | Action<FocusEventArgs>        | -         |
 | OnInput |输入框正在输入时的回调                        | Action<ChangeEventArgs>        | -         |
-| OnkeyDown |键盘按键于输入框中按下的回调                                | Action<KeyboardEventArgs>        | -         |
-| OnkeyUp |键盘按键于输入框中抬起时的回调                               | Action<KeyboardEventArgs>        | -         |
+| OnKeyDown |键盘按键于输入框中按下的回调                                | Action<KeyboardEventArgs>        | -         |
+| OnKeyUp |键盘按键于输入框中抬起时的回调                               | Action<KeyboardEventArgs>        | -         |
 | OnMouseUp |鼠标抬起的回调                                | Action<MouseEventArgs>        | -         |
 | OnPressEnter | 按下回车的回调                              | Action<KeyboardEventArgs>        | -         |
 | Placeholder|提供可描述输入字段预期值的提示信息(hint)        | string        | -        |

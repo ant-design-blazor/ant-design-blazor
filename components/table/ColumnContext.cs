@@ -14,6 +14,8 @@ namespace AntDesign
 
         public IList<IColumn> HeaderColumns { get; set; } = new List<IColumn>();
 
+        public IList<IColumn> ColumnDefs => Columns.Where(x => x.IsInitialize).ToList();
+
         private int CurrentColIndex { get; set; }
 
         private int[] ColIndexOccupied { get; set; }
@@ -159,7 +161,11 @@ namespace AntDesign
 
         internal void HeaderColumnInitialized(IColumn column)
         {
-            if (column.ColIndex == Columns.Count - 1)
+            var shouldInvokeInitialized = _table.HasHeaderTemplate
+                ? column.ColIndex == Columns.Count - 1
+                : HeaderColumns.Count == Columns.Count;
+
+            if (shouldInvokeInitialized)
             {
                 // Header columns have all been initialized, then we can invoke the first change.
                 _table.OnColumnInitialized();

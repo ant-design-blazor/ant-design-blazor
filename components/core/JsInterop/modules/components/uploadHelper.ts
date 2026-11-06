@@ -1,8 +1,32 @@
-﻿type fileInfo = {
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+type fileInfo = {
   fileName: string,
   size: number,
   objectURL: string,
   type: string
+}
+
+const CALLBACK_METHODS = {
+  PERCENT: "UploadChanged",
+  SUCCESS: "UploadSuccess",
+  ERROR: "UploadError",
+  PASTE_RESULT: "OnPasteResult"
+} as const;
+
+interface UploadConfig {
+  element: HTMLInputElement;
+  index: number;
+  data: any;
+  headers: any;
+  fileIds: string[];
+  url: string;
+  name: string;
+  instance: any;
+  method: string;
+  withCredentials?: boolean;
 }
 
 export class uploadHelper {
@@ -16,11 +40,76 @@ export class uploadHelper {
     btn.removeEventListener("click", uploadHelper.fileClickEvent);
   }
 
+  static addPasteEventListener(element: HTMLElement, input: HTMLInputElement, instance: any) {
+    const inputTarget = element.querySelector("input");
+    const textareaTarget = element.querySelector("textarea");
+    
+    if (inputTarget && inputTarget.addEventListener) {
+      inputTarget.addEventListener("paste", (e: ClipboardEvent) => uploadHelper.handlePaste(e, input, instance));
+    }
+    
+    if (textareaTarget && textareaTarget.addEventListener) {
+      textareaTarget.addEventListener("paste", (e: ClipboardEvent) => uploadHelper.handlePaste(e, input, instance));
+    }
+  }
+
+  static removePasteEventListener(element: HTMLElement) {
+    const inputTarget = element.querySelector("input");
+    const textareaTarget = element.querySelector("textarea");
+    
+    if (inputTarget) {
+      inputTarget.removeEventListener("paste", uploadHelper.handlePaste as any);
+    }
+    
+    if (textareaTarget) {
+      textareaTarget.removeEventListener("paste", uploadHelper.handlePaste as any);
+    }
+  }
+
   private static fileClickEvent(e: MouseEvent) {
+    if ((e.target as HTMLElement).tagName === "INPUT") {
+      return;
+    }
     e.stopPropagation();
     const fileId = (e.currentTarget as HTMLSpanElement).attributes["data-fileid"].nodeValue;
     const element = document.getElementById(fileId) as HTMLInputElement;
     element.click();
+  }
+
+  private static async handlePaste(e: ClipboardEvent, input: HTMLInputElement, instance: any) {
+    e.preventDefault();
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    const files: File[] = [];
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.kind === 'file') {
+        const file = item.getAsFile();
+        if (file) {
+          files.push(file);
+        }
+      }
+    }
+
+    if (files.length > 0) {
+      const target = e.target as any;
+      if (!target.dataTransfer) {
+        target.dataTransfer = new DataTransfer();
+      }
+      const dataTransfer = target.dataTransfer as DataTransfer;
+      files.forEach(file => dataTransfer.items.add(file));
+      input.files = dataTransfer.files;
+
+      const fileInfo = files.map(file => ({
+        fileName: file.name,
+        size: file.size,
+        objectURL: uploadHelper.getObjectURL(file),
+        type: file.type
+      }));
+
+      await instance.invokeMethodAsync(CALLBACK_METHODS.PASTE_RESULT, fileInfo);
+    }
   }
 
   static clearFile(element) {
@@ -57,11 +146,16 @@ export class uploadHelper {
     return url;
   }
 
-  static uploadFile(element, index, data, headers, fileId, url, name, instance, percentMethod, successMethod, errorMethod, method: string) {
+  static uploadFile({ element, index, data, headers, fileIds, url, name, instance, method, withCredentials }: UploadConfig) {
     const formData = new FormData();
-    const file = element.files[index];
-    const size = file.size;
-    formData.append(name, file);
+    const files = index === -1 ? Array.from(element.files) : [element.files[index]];
+
+    files.forEach((file, i) => {
+      formData.append(name, file);
+      // Add file ID to track individual file progress
+      formData.append(`${name}_id`, fileIds[i]);
+    });
+
     if (data != null) {
       for (const key in data) {
         formData.append(key, data[key]);
@@ -81,21 +175,33 @@ export class uploadHelper {
         // #1655 Any 2xx response code is okay
         if (req.status < 200 || req.status > 299) {
           // #2857 should get error raw response
-          instance.invokeMethodAsync(errorMethod, fileId, req.responseText);
+          fileIds.forEach(id => {
+            instance.invokeMethodAsync(CALLBACK_METHODS.ERROR, id, req.responseText);
+          });
           return;
         }
-        instance.invokeMethodAsync(successMethod, fileId, req.responseText);
+        fileIds.forEach(id => {
+          instance.invokeMethodAsync(CALLBACK_METHODS.SUCCESS, id, req.responseText);
+        });
       }
     }
     req.upload.onprogress = function (event) {
-      const percent = Math.floor(event.loaded / size * 100);
-      instance.invokeMethodAsync(percentMethod, fileId, percent);
+      const percent = Math.floor(event.loaded / event.total * 100);
+      fileIds.forEach(id => {
+        instance.invokeMethodAsync(CALLBACK_METHODS.PERCENT, id, percent);
+      });
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    req.onerror = function (e) {
-      instance.invokeMethodAsync(errorMethod, fileId, "error");
+    req.onerror = function (e: ProgressEvent) {
+      const errorMessage = `Upload failed: ${e.type} (${req.status} ${req.statusText})${req.responseText ? ` - ${req.responseText}` : ''}`;
+      fileIds.forEach(id => {
+        instance.invokeMethodAsync(CALLBACK_METHODS.ERROR, id, errorMessage);
+      });
     }
     req.open(method, url, true)
+    // Set withCredentials if provided
+    if (withCredentials === true) {
+      req.withCredentials = true;
+    }
     if (headers != null) {
       for (const header in headers) {
         req.setRequestHeader(header, headers[header]);

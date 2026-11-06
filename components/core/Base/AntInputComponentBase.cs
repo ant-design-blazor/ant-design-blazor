@@ -228,6 +228,31 @@ namespace AntDesign
         protected bool _isNotifyFieldChanged = true;
         private bool _isValueGuid;
 
+        protected void ForceUpdateValueString(string value)
+        {
+            CurrentValueAsString = null;
+
+            CallAfterRender(async () =>
+            {
+                _value = default;
+                CurrentValueAsString = value;
+                if (TryParseValueFromString(value, out var parsedValue, out var validationErrorMessage))
+                {
+                    _value = parsedValue;
+                    _setValueDelegate?.Invoke(Form.Model, parsedValue);
+                    await ValueChanged.InvokeAsync(parsedValue);
+
+                    OnCurrentValueChange(parsedValue);
+
+                    if (_isNotifyFieldChanged && FieldIdentifier is { Model: not null, FieldName: not null })
+                    {
+                        EditContext?.NotifyFieldChanged(FieldIdentifier);
+                    }
+                }
+            });
+            StateHasChanged();
+        }
+
         /// <summary>
         /// Constructs an instance of <see cref="InputBase{TValue}"/>.
         /// </summary>
@@ -326,7 +351,7 @@ namespace AntDesign
                 }
                 _setValueDelegate = PathHelper.SetDelegate<TValue>(dataIndex, type);
                 _getValueDelegate = PathHelper.GetDelegate<TValue>(dataIndex, type);
-                Value = _getValueDelegate.Invoke(Form.Model);
+                Value = SafeGetValue(Form.Model);
 
                 if (PathHelper.GetLambda<TValue>(dataIndex, type).Body is MemberExpression lambda)
                 {
@@ -335,7 +360,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => _getValueDelegate.Invoke(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
+                    _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => SafeGetValue(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
                 }
             }
 
@@ -496,8 +521,19 @@ namespace AntDesign
         {
             if (_getValueDelegate != null)
             {
-                CurrentValue = _getValueDelegate.Invoke(Form.Model);
-                InvokeAsync(StateHasChanged);
+                CurrentValue = SafeGetValue(Form.Model);
+            }
+        }
+
+        private TValue SafeGetValue(object model)
+        {
+            try
+            {
+                return _getValueDelegate.Invoke(model);
+            }
+            catch (InvalidCastException)
+            {
+                return default!;
             }
         }
     }

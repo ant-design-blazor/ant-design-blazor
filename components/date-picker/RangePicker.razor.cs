@@ -3,8 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using AntDesign.core.Extensions;
+using AntDesign.Core.Extensions;
 using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.Internal;
@@ -47,7 +48,7 @@ namespace AntDesign
 
                 TValue orderedValue = SortValue(value);
 
-                var hasChanged = _lastValue is null || !InternalConvert.SequenceEqual(orderedValue, _lastValue);
+                var hasChanged = _lastValue is null || !EqualityComparer<TValue>.Default.Equals(orderedValue, _lastValue);
 
                 if (hasChanged)
                 {
@@ -55,7 +56,10 @@ namespace AntDesign
 
                     _lastValue ??= CreateInstance();
 
-                    Array.Copy(orderedValue as Array, _lastValue as Array, 2);
+                    if (orderedValue is Array sourceArray && _lastValue is Array targetArray)
+                    {
+                        Array.Copy(sourceArray, targetArray, 2);
+                    }
 
                     GetIfNotNull(_value, 0, (notNullValue) => PickerValues[0] = notNullValue);
                     GetIfNotNull(_value, 1, (notNullValue) => PickerValues[1] = notNullValue);
@@ -392,7 +396,12 @@ namespace AntDesign
             if (_value == null)
             {
                 _value = CreateInstance();
+                _lastValue = CreateInstance();
                 ValueChanged.InvokeAsync(_value);
+            }
+            else
+            {
+                _lastValue = (TValue)(_value as Array).Clone();
             }
             ResetPlaceholder();
 
@@ -557,10 +566,14 @@ namespace AntDesign
 
             if (isValueChanged && startDate is not null && endDate is not null)
             {
-                CurrentValue = DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
-
+                var newCurrentValue = DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
+                // Use CurrentValue assignment so EditContext.NotifyFieldChanged will be triggered when appropriate
+                CurrentValue = newCurrentValue;
+                _lastValue = (TValue)currentValueArray.Clone();
                 InvokeOnChange();
             }
+            // Range values are updated in place, so CurrentValue's equality check does not notify the binding.
+            _ = ValueChanged.InvokeAsync(Value);
 
             _pickerStatus[index].IsValueSelected = true;
 
@@ -570,13 +583,18 @@ namespace AntDesign
             {
                 Close();
             }
+
         }
 
         internal override void ClearValue(int index = -1, bool closeDropdown = true)
         {
             _isSetPicker = false;
 
-            var array = CurrentValue as Array;
+            var array = Value as Array;
+            if (array == null || !_isInitialized)
+            {
+                return;
+            }
             ReadOnlySpan<int> indexToClear;
             if (index == -1)
             {
@@ -610,15 +628,22 @@ namespace AntDesign
                 Close();
             }
 
-            if (array.GetValue(0) is null || array.GetValue(1) is null)
+            // Only update CurrentValue and trigger validation when both range values are null
+            if (array.GetValue(0) is null && array.GetValue(1) is null)
             {
+                // Use a cloned instance so assignment changes reference and triggers CurrentValue change detection
+                var newValue = (TValue)array.Clone();
+                // Assign via CurrentValue to ensure EditContext gets notified when needed
+                CurrentValue = newValue;
+                _lastValue = newValue;
                 InvokeOnChange();
             }
 
             OnClear.InvokeAsync(null);
             OnClearClick.InvokeAsync(null);
 
-            _dropDown.SetShouldRender(true);
+            _dropDown?.SetShouldRender(true);
+            InvokeAsync(StateHasChanged);
         }
 
         internal override void ResetValue()

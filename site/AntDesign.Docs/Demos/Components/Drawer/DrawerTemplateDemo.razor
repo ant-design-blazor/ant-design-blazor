@@ -18,7 +18,7 @@
         base.OnInitialized();
     }
 
-    async void OnClose()
+    async Task OnClose()
     {
         DrawerRef<string> drawerRef = base.FeedbackRef as DrawerRef<string>;
         await drawerRef!.CloseAsync(value);

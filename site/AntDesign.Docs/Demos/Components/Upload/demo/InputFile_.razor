@@ -1,13 +1,27 @@
 <InputFile id="fileInput" OnChange="UploadFiles" hidden multiple />
 
-<Upload Name="files" FileList="fileList">
+<Upload FileList="fileList">
     <label class="ant-btn" for="fileInput">
         <Icon Type="@IconType.Outline.Upload" />
         Click to Upload
     </label>
 </Upload>
 
-@inject IJSRuntime Js;
+<br/>
+
+<Upload Drag>     
+    <InputFile OnChange="UploadFiles" style="position: absolute; width: 100%; height: 100%; opacity: 0; top: 0; left: 0; z-index: 2;" multiple />
+
+    <p class="ant-upload-drag-icon">
+        <Icon Type="@IconType.Outline.Inbox" />
+    </p>
+    <p class="ant-upload-text">Click or drag file to this area to upload</p>
+    <p class="ant-upload-hint">
+        Support for a single or bulk upload. Strictly prohibit from uploading company data or other
+        band files
+    </p>
+</Upload>
+
 @code {
     
   List<UploadFileItem> fileList = new List<UploadFileItem>();

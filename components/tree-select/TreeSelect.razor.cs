@@ -263,6 +263,13 @@ namespace AntDesign
         [Parameter]
         public string[] ExpandedKeys { get; set; }
 
+        /// <summary>
+        /// Render fragment to customize the nodes in the tree.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public RenderFragment ChildContent { get; set; }
+
         private bool IsMultiple => Multiple || TreeCheckable;
 
         private bool IsTemplatedNodes => ChildContent != null;
@@ -463,7 +470,7 @@ namespace AntDesign
             return base.OnFirstAfterRenderAsync();
         }
 
-        protected override async void OnInputAsync(ChangeEventArgs e)
+        protected override async Task OnInputAsync(ChangeEventArgs e)
         {
             if (e == null) throw new ArgumentNullException(nameof(e));
             if (!IsSearchEnabled)
@@ -555,8 +562,15 @@ namespace AntDesign
                     Values = [];
                     return;
                 }
-                var selectedNodes = _tree._allNodes.Where(x => _tree.SelectedKeys.Contains(x.Key));
-                Values = selectedNodes.Select(GetValueFromNode).ToArray();
+                var value = GetValueFromNode(node);
+                if (_tree.SelectedKeys.Contains(key))
+                {
+                    Values = Values.Append(value);
+                }
+                else
+                {
+                    Values = Values.Where(v => !v.AllNullOrEquals(value)).ToArray();
+                }
                 if (IsSearchEnabled && AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
                 {
                     ClearSearch();
@@ -580,20 +594,28 @@ namespace AntDesign
             }
         }
 
-
-        private void DoTreeCheckedKeysChanged(string[] checkedKeys)
+        private async Task DoTreeNodeCheck(TreeEventArgs<TItem> args)
         {
             if (_checkedEventDisabled) return;
             if (!TreeCheckable)
                 return;
-
-            if (checkedKeys is not { Length: > 0 })
+            if (_tree.CheckedKeys is not { Length: > 0 })
             {
                 Values = [];
                 return;
             }
-            var checkedNodes = _tree._allNodes.Where(x => checkedKeys.Contains(x.Key));
-            Values = checkedNodes.Select(GetValueFromNode).ToArray();
+            var node = args.Node;
+
+            var key = node.Key;
+            var value = GetValueFromNode(node);
+            if (_tree.CheckedKeys.Contains(key))
+            {
+                Values = Values == null ? [value] : Values.Append(value);
+            }
+            else
+            {
+                Values = Values?.Where(v => !v.AllNullOrEquals(value)).ToArray();
+            }
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -700,6 +722,8 @@ namespace AntDesign
 
         private void UpdateValueAndSelection()
         {
+            if (Mode != SelectMode.Default)
+                return;
             if (_tree == null)
                 return;
             if (_tree._allNodes.Count == 0)
@@ -734,6 +758,8 @@ namespace AntDesign
 
         private void UpdateValuesSelection()
         {
+            if (Mode != SelectMode.Multiple)
+                return;
             if (_tree == null)
                 return;
             if (_tree._allNodes.Count == 0)
@@ -746,7 +772,7 @@ namespace AntDesign
             _newValues.Clear();
             CreateOptions(_cachedValues);
             base.Values = _newValues.ToArray();
-            if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true))
+            if (_isNotifyFieldChanged && (Form?.ValidateOnChange == true) && FieldIdentifier is { Model: not null, FieldName: not null })
             {
                 EditContext?.NotifyFieldChanged(FieldIdentifier);
             }

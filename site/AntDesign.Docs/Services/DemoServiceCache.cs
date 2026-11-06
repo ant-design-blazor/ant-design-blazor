@@ -29,9 +29,12 @@ namespace AntDesign.Docs.Services
         public void PreFetch(string language)
         {
             PreFetchDemoMenuItems(_menuCache, language, lang => $"_content/AntDesign.Docs/meta/menu.{lang}.json");
-            PreFetchDemoMenuItems(_demoMenuCache, language, lang => $"_content/AntDesign.Docs/meta/demos.{lang}.json");
             PreFetchDemoMenuItems(_docMenuCache, language, lang => $"_content/AntDesign.Docs/meta/docs.{lang}.json");
+            PreFetchComponent(language);
+        }
 
+        private void PreFetchComponent(string language)
+        {
             _componentCache.GetOrAdd(language, (lang) => new(async () =>
             {
                 var components = await _httpClient.GetFromJsonAsync<DemoComponent[]>($"_content/AntDesign.Docs/meta/components.{lang}.json");
@@ -39,7 +42,7 @@ namespace AntDesign.Docs.Services
             }));
         }
 
-        private async void PreFetchDemoMenuItems(ConcurrentCache<string, AsyncLazy<DemoMenuItem[]>> cache, string language, Func<string, string> srcUrl)
+        private void PreFetchDemoMenuItems(ConcurrentCache<string, AsyncLazy<DemoMenuItem[]>> cache, string language, Func<string, string> srcUrl)
         {
             cache.GetOrAdd(language, (lang) => new(async () =>
             {

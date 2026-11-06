@@ -205,7 +205,7 @@ namespace AntDesign
         /// The callback function that is triggered when Enter key is pressed
         /// </summary>
         [Parameter]
-        public EventCallback<KeyboardEventArgs> OnPressEnter { get; set; }
+        public EventCallback<PressEnterEventArgs> OnPressEnter { get; set; }
 
         /// <summary>
         /// Provide prompt information that describes the expected value of the input field
@@ -276,6 +276,14 @@ namespace AntDesign
         [Parameter]
         public string Width { get; set; }
 
+        /// <summary>
+        /// When true, value will be set to empty string.
+        /// When false, value will be set to <c>null</c> when content is empty or whitespace. 
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool DefaultToEmptyString { get; set; }
+
         protected Dictionary<string, object> Attributes { get; set; }
 
         protected ForwardRef WrapperRefBack { get; set; }
@@ -338,7 +346,7 @@ namespace AntDesign
 
         private string WidthStyle => Width is { Length: > 0 } ? $"width:{(CssSizeLength)Width};" : "";
 
-        private Queue<Func<Task>> _afterValueChangedQueue = new();
+        private readonly Queue<Func<Task>> _afterValueChangedQueue = new();
 
         protected override void OnInitialized()
         {
@@ -358,11 +366,11 @@ namespace AntDesign
 
         protected void SetAttributes()
         {
-            Attributes ??= new Dictionary<string, object>();
+            Attributes ??= [];
 
-            if (MaxLength >= 0 && !Attributes.ContainsKey("maxlength"))
+            if (MaxLength >= 0)
             {
-                Attributes?.Add("maxlength", MaxLength);
+                Attributes.TryAdd("maxlength", MaxLength);
             }
         }
 
@@ -410,7 +418,7 @@ namespace AntDesign
 
             if (FormItem is { ValidateStatus: not FormValidateStatus.Default })
             {
-                AffixWrapperClass += $" ant-input-affix-wrapper-status-{FormItem.ValidateStatus.ToString().ToLower()}";
+                AffixWrapperClass += $" ant-input-affix-wrapper-status-{FormItem.ValidateStatus.ToString().ToLowerInvariant()}";
             }
 
             if (FormItem is { HasFeedback: true })
@@ -462,17 +470,20 @@ namespace AntDesign
 
         protected void OnKeyPressAsync(KeyboardEventArgs args)
         {
-            if (EnableOnPressEnter && args?.Key == "Enter")
+            if (EnableOnPressEnter && (args?.Code == "Enter" || args?.Key == "Enter"))
             {
                 CallAfterValueChanged(async () =>
                 {
-                    await OnPressEnter.InvokeAsync(args);
-                    await OnPressEnterAsync();
+                    var enterArgs = new PressEnterEventArgs(args);
+                    await OnPressEnterAsync(enterArgs);
                 });
             }
         }
 
-        protected virtual Task OnPressEnterAsync() => Task.CompletedTask;
+        protected virtual async Task OnPressEnterAsync(PressEnterEventArgs args)
+        {
+            await OnPressEnter.InvokeAsync(args);
+        }
 
         protected void CallAfterValueChanged(Func<Task> workItem)
         {
@@ -483,6 +494,11 @@ namespace AntDesign
             // However, if the user wishes to use the carriage return event to get the bound value, the value needs to be bound first
             ChangeValue(InputType != "textarea");
             BindOnInput = original;
+
+            while (_afterValueChangedQueue.TryDequeue(out var task))
+            {
+                InvokeAsync(task.Invoke);
+            }
         }
 
         protected async Task OnKeyUpAsync(KeyboardEventArgs args)
@@ -492,7 +508,7 @@ namespace AntDesign
             if (OnKeyUp.HasDelegate) await OnKeyUp.InvokeAsync(args);
         }
 
-        protected virtual async Task OnkeyDownAsync(KeyboardEventArgs args)
+        protected virtual async Task OnKeyDownAsync(KeyboardEventArgs args)
         {
             if (OnKeyDown.HasDelegate) await OnKeyDown.InvokeAsync(args);
         }
@@ -522,7 +538,7 @@ namespace AntDesign
             }
         }
 
-        private async void OnFocusInternal(JsonElement e) => await OnFocusAsync(new());
+        private async Task OnFocusInternal(JsonElement e) => await OnFocusAsync(new());
 
         internal virtual async Task OnFocusAsync(FocusEventArgs e)
         {
@@ -612,10 +628,6 @@ namespace AntDesign
             {
                 CurrentValueAsString = _inputString;
             }
-            while (_afterValueChangedQueue.TryDequeue(out var task))
-            {
-                InvokeAsync(task.Invoke);
-            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -660,6 +672,18 @@ namespace AntDesign
             base.OnCurrentValueChange(value);
         }
 
+        protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
+        {
+            if (string.IsNullOrWhiteSpace(value) && DefaultToEmptyString && typeof(TValue) == typeof(string))
+            {
+                result = (TValue)(object)string.Empty;
+                validationErrorMessage = null;
+                return true;
+            }
+
+            return base.TryParseValueFromString(value, out result, out validationErrorMessage);
+        }
+
         /// <summary>
         /// Invoked when user add/remove content
         /// </summary>
@@ -689,7 +713,7 @@ namespace AntDesign
                 builder.AddAttribute(2, "class", string.Join(" ", GroupWrapperClass, WrapperClass));
                 builder.AddAttribute(3, "style", $"{WidthStyle} {WrapperStyle}");
                 builder.OpenElement(4, "span");
-                builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group");
+                builder.AddAttribute(5, "class", $"{PrefixCls}-wrapper {PrefixCls}-group {(RTL ? $" {PrefixCls}-group-rtl" : "")}");
             }
 
             if (AddOnBefore != null)
@@ -786,19 +810,19 @@ namespace AntDesign
             //2022-8-3 去掉if后，search也能正常工作
             //if (!IgnoreOnChangeAndBlur)
             //{
-            builder.AddAttribute(70, "onchange", CallbackFactory.Create(this, OnChangeAsync));
-            builder.AddAttribute(71, "onblur", CallbackFactory.Create(this, OnBlurAsync));
+            builder.AddAttribute(70, "onchange", CallbackFactory.Create<ChangeEventArgs>(this, OnChangeAsync));
+            builder.AddAttribute(71, "onblur", CallbackFactory.Create<FocusEventArgs>(this, OnBlurAsync));
             //}
 
-            builder.AddAttribute(72, "onkeypress", CallbackFactory.Create(this, OnKeyPressAsync));
-            builder.AddAttribute(73, "onkeydown", CallbackFactory.Create(this, OnkeyDownAsync));
-            builder.AddAttribute(74, "onkeyup", CallbackFactory.Create(this, OnKeyUpAsync));
+            builder.AddAttribute(72, "onkeypress", CallbackFactory.Create<KeyboardEventArgs>(this, OnKeyPressAsync));
+            builder.AddAttribute(73, "onkeydown", CallbackFactory.Create<KeyboardEventArgs>(this, OnKeyDownAsync));
+            builder.AddAttribute(74, "onkeyup", CallbackFactory.Create<KeyboardEventArgs>(this, OnKeyUpAsync));
 
-            builder.AddAttribute(75, "oninput", CallbackFactory.Create(this, OnInputAsync));
+            builder.AddAttribute(75, "oninput", CallbackFactory.Create<ChangeEventArgs>(this, OnInputAsync));
 
             //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
             //builder.AddAttribute(76, "onfocus", CallbackFactory.Create(this, OnFocusAsync));
-            builder.AddAttribute(77, "onmouseup", CallbackFactory.Create(this, OnMouseUpAsync));
+            builder.AddAttribute(77, "onmouseup", CallbackFactory.Create<MouseEventArgs>(this, OnMouseUpAsync));
 
             if (StopPropagation)
             {

@@ -144,7 +144,7 @@ namespace AntDesign
             }
 
             AffixWrapperClass = string.Join(" ", AffixWrapperClass, $"{PrefixCls}-search");
-            GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search ant-input-group-wrapper");
+            GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search {(RTL ? $"{PrefixCls}-search-rtl" : "")}");
             GroupWrapperClass = string.Join(" ", GroupWrapperClass, $"{PrefixCls}-search-enter-button");
         }
 
@@ -153,10 +153,10 @@ namespace AntDesign
             await SearchAsync();
         }
 
-        protected override async Task OnPressEnterAsync()
+        protected override async Task OnPressEnterAsync(PressEnterEventArgs args)
         {
+            await base.OnPressEnterAsync(args);
             await SearchAsync();
-            await base.OnPressEnterAsync();
         }
 
         private async Task SearchAsync()

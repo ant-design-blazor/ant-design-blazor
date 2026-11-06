@@ -7,11 +7,11 @@ title:
 
 ## zh-CN
 
-Drawer 的 service 用法，示例中演示了用户自定义模板、自定义component。
+Drawer 的 service 用法，示例中演示了用户自定义模板、自定义 component。
 
 模板代码：DrawerTemplateDemo.razor
 
-``` csharp
+```csharp
 @namespace AntDesign
 @inherits FeedbackComponent<string, string>
 
@@ -32,7 +32,7 @@ Drawer 的 service 用法，示例中演示了用户自定义模板、自定义c
         base.OnInitialized();
     }
 
-    async void OnClose()
+    async Task OnClose()
     {
         DrawerRef<string> drawerRef = base.FeedbackRef as DrawerRef<string>;
         await drawerRef!.CloseAsync(value);
@@ -46,7 +46,7 @@ Usage of Drawer's service, examples demonstrate user-defined templates, custom c
 
 Template code: DrawerTemplateDemo.razor
 
-``` csharp
+```csharp
 @namespace AntDesign
 @inherits FeedbackComponent<string, string>
 
@@ -67,7 +67,7 @@ Template code: DrawerTemplateDemo.razor
         base.OnInitialized();
     }
 
-    async void OnClose()
+    async Task OnClose()
     {
         DrawerRef<string> drawerRef = base.FeedbackRef as DrawerRef<string>;
         await drawerRef!.CloseAsync(value);

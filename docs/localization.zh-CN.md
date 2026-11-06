@@ -135,6 +135,7 @@ Form 组件的默认验证器是 [ObjectGraphDataAnnotationsValidator](https://l
     builder.Services.AddSimpleEmbeddedJsonLocalization(options =>
     {
         options.ResourcesPath = "Resources";
+        options.Resources = SimpleStringLocalizerOptions.BuildResources("Resources", Assembly.GetExecutingAssembly()); //这一行是解决找不到json资源的临时办法
     });
     ```
 

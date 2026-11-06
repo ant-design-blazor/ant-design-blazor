@@ -1,0 +1,11 @@
+@using AntDesign.Select
+
+<Cascader Options="@options" Multiple MaxTagCount="ResponsiveTag.Responsive" Placeholder="Please select" />
+
+@code {
+    private readonly CascaderNode[] options =
+    [
+        new() { Label = "Light", Value = "light", Children = Enumerable.Range(0, 20).Select(i => new CascaderNode { Label = $"Number {i}", Value = $"light-{i}" }) },
+        new() { Label = "Bamboo", Value = "bamboo", Children = [new() { Label = "Little", Value = "little", Children = [new() { Label = "Toy Fish", Value = "fish", DisableCheckbox = true }, new() { Label = "Toy Cards", Value = "cards" }, new() { Label = "Toy Bird", Value = "bird" }] }] }
+    ];
+}

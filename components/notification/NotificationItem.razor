@@ -5,6 +5,8 @@
      class="@(ClassPrefix)-notice @(ClassPrefix)-notice-closable @GetClassName()"
      style="@Config.Style"
      @onclick="OnClick"
+     @onmouseenter="HandleMouseEnter"
+     @onmouseleave="HandleMouseLeave"
      @ref="Ref">
 
     <div class="@(ClassPrefix)-notice-content">

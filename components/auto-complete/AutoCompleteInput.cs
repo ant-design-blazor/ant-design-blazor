@@ -50,9 +50,9 @@ namespace AntDesign
             await base.OnBlurAsync(e);
         }
 
-        protected override async Task OnkeyDownAsync(KeyboardEventArgs args)
+        protected override async Task OnKeyDownAsync(KeyboardEventArgs args)
         {
-            await base.OnkeyDownAsync(args);
+            await base.OnKeyDownAsync(args);
 
             if (Component != null) await Component?.InputKeyDown(args);
         }

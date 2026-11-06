@@ -48,7 +48,7 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
                             OnOverlayHiding="OnOverlayHiding"
                             Trigger="new Trigger[] { RootMenu?.TriggerSubMenuAction ?? AntDesign.Trigger.Hover }"
                             OverlayClassName="@PopupClassName"
-                            PlacementCls="@($"{prefixCls}-popup {RootMenu.PrefixCls} {RootMenu.PrefixCls}-{RootMenu.Theme.ToString().ToLower()} {prefixCls}-placement-{_placement.Name}")">
+                            PlacementCls="@($"{prefixCls}-popup {RootMenu.PrefixCls} {RootMenu.PrefixCls}-{RootMenu.Theme.ToString().ToLowerInvariant()} {prefixCls}-placement-{_placement.Name}")">
                 <ChildContent>
                     <div class="@(prefixCls)-title" role="button">
                         <span class="ant-menu-title-content">

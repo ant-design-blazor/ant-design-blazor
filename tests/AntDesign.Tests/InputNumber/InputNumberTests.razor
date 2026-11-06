@@ -96,4 +96,76 @@
         inputElement.GetAttribute("value").Should().Be($"{expected}");
         bindValue.Should().Be(double.Parse(expected, CultureInfo.InvariantCulture));
     }
+
+    [Theory]
+    [InlineData(true, 10d, 20d, 10d)]  // click up button, with Min=10, Max=20, should start from Min
+    [InlineData(true, null, 20d, 0d)]  // click up button, with only Max=20, should start from 0
+    [InlineData(false, 10d, 20d, 20d)] // click down button, with Min=10, Max=20, should start from Max
+    [InlineData(false, 10d, null, 10d)] // click down button, with only Min=10, should start from Min
+    public void InputNumber_null_value_should_use_correct_initial_value_on_keyboard(bool isUpButton, double? min, double? max, double expected)
+    {
+        //Arrange
+#pragma warning disable CS0618 // Type or member is obsolete
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
+#pragma warning restore CS0618 // Type or member is obsolete
+        AntDesign.InputNumber<double?>? input = null;
+
+        double? bindValue = null;
+        var cut = Render<AntDesign.InputNumber<double?>>(
+            @<AntDesign.InputNumber @ref="@input" 
+                                  @bind-Value="bindValue"
+                                  Min="@min"
+                                  Max="@max"
+                                  CultureInfo="CultureInfo.InvariantCulture"/>
+        );
+
+        //Act
+        var inputElement = cut.Find("input");
+        if (isUpButton)
+        {
+            inputElement.KeyDown(Key.Up);
+        }
+        else
+        {
+            inputElement.KeyDown(Key.Down);
+        }
+
+        //Assert
+        bindValue.Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData(true, 10d, 20d, 10d)]  // click up handler, with Min=10, Max=20, should start from Min
+    [InlineData(true, null, 20d, 0d)]  // click up handler, with only Max=20, should start from 0
+    [InlineData(false, 10d, 20d, 20d)] // click down handler, with Min=10, Max=20, should start from Max
+    [InlineData(false, 10d, null, 10d)] // click down handler, with only Min=10, should start from Min
+    public void InputNumber_null_value_should_use_correct_initial_value_on_click(bool isUpHandler, double? min, double? max, double expected)
+    {
+        //Arrange
+#pragma warning disable CS0618 // Type or member is obsolete
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true).SetVoidResult();
+#pragma warning restore CS0618 // Type or member is obsolete
+        AntDesign.InputNumber<double?>? input = null;
+
+        double? bindValue = null;
+        var cut = Render<AntDesign.InputNumber<double?>>(
+            @<AntDesign.InputNumber @ref="@input" 
+                                  @bind-Value="bindValue"
+                                  Min="@min"
+                                  Max="@max"
+                                  CultureInfo="CultureInfo.InvariantCulture"/>
+        );
+
+        //Act
+        var handler = isUpHandler ? 
+            cut.Find(".ant-input-number-handler-up") : 
+            cut.Find(".ant-input-number-handler-down");
+        
+        // Simulate mouse down and up events
+        handler.MouseDown();
+        handler.MouseUp();
+
+        //Assert
+        bindValue.Should().Be(expected);
+    }
 }

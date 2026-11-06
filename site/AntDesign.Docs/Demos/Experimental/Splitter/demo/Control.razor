@@ -1,0 +1,42 @@
+ <Flex Vertical Gap="@FlexGap.Middle">
+      <Splitter Style="height: 200px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);" OnResize="setSizes">
+        <SplitterPanel Size="@sizes[0]" Resizable="@enabled">
+            @Desc("First")
+        </SplitterPanel>
+        <SplitterPanel Size="@sizes[1]">
+            @Desc("Second")
+        </SplitterPanel>
+      </Splitter>
+      <Flex Gap="@FlexGap.Middle" Justify="@FlexJustify.SpaceBetween">
+        <Switch
+          @bind-Value="@enabled"
+          CheckedChildren="Enabled"
+          UnCheckedChildren="Disabled"
+        />
+        <Button OnClick="@(() => setSizes(["50%", "50%"]))">Reset</Button>
+      </Flex>
+    </Flex>
+
+
+
+@using Microsoft.AspNetCore.Components.Rendering
+
+@code {
+    string[] sizes = ["50%", "50%"];
+    bool enabled = true;
+    RenderFragment Desc(string text) => b => RenderDesc(b, text);
+
+    void RenderDesc(RenderTreeBuilder __builder, string text)
+    {
+        <Flex Justify="FlexJustify.Center" align="FlexAlign.Center" Style="height: 100%">
+            <Title Type="TextElementType.Secondary" Level="5" Style="white-space: nowrap">
+                @text
+            </Title>
+        </Flex>
+    }
+
+    void setSizes(string[] sizes)
+    {
+        this.sizes = sizes;
+    }
+}

@@ -7,47 +7,40 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text.Json;
 
-namespace AntDesign.Internal.Form.Validate
+namespace AntDesign.Internal.Form.Validate;
+
+internal sealed class OneOfAttribute(object[] values, string[] enumOptions = null) : ValidationAttribute
 {
-    internal class OneOfAttribute : ValidationAttribute
+    internal object[] Values { get; set; } = values;
+
+    internal string EnumOptions { get; set; } = enumOptions != null ? string.Join(',', enumOptions) : null;
+
+    public override string FormatErrorMessage(string name)
     {
-        internal object[] Values { get; set; }
+        var options = EnumOptions ?? JsonSerializer.Serialize(Values).Trim('[', ']');
+        return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, options);
+    }
 
-        internal string EnumOptions { get; set; }
-
-        internal OneOfAttribute(object[] values, string[] enumOptions = null)
+    public override bool IsValid(object value)
+    {
+        if (value == null)
         {
-            Values = values;
-            EnumOptions = enumOptions != null ? string.Join(",", enumOptions) : null;
+            return true;
         }
 
-        public override string FormatErrorMessage(string name)
+        if (value is Array)
         {
-            var options = EnumOptions ?? JsonSerializer.Serialize(Values).Trim('[', ']');
-            return string.Format(CultureInfo.CurrentCulture, ErrorMessageString, name, options);
+            return false;
         }
 
-        public override bool IsValid(object value)
+        foreach (var v in Values)
         {
-            if (value == null)
+            if (v.Equals(value))
             {
                 return true;
             }
-
-            if (value is Array)
-            {
-                return false;
-            }
-
-            foreach (var v in Values)
-            {
-                if (v.Equals(value))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
+
+        return false;
     }
 }

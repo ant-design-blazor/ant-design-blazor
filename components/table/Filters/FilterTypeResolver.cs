@@ -28,6 +28,25 @@ public class DefaultFieldFilterTypeResolver : IFieldFilterTypeResolver
 
     public IFieldFilterType Resolve(Type underlyingType)
     {
+        return InternalFieldFilterTypeResolver.Resolve(underlyingType);
+    }
+}
+
+internal static class InternalFieldFilterTypeResolver
+{
+    public static IFieldFilterType Resolve<T>()
+    {
+        var underlyingType = THelper.GetUnderlyingType<T>();
+
+        return underlyingType switch
+        {
+            _ when underlyingType.IsEnum => new EnumFieldFilterType<T>(),
+            _ => Resolve(underlyingType),
+        };
+    }
+
+    public static IFieldFilterType Resolve(Type underlyingType)
+    {
 #pragma warning disable format
         return underlyingType switch
         {
