@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<li class="@(RootMenu.PrefixCls)-item-group" style="@Style" @key="Key" @ref="Ref">
+<li @attributes="AdditionalAttributes" class="@(RootMenu.PrefixCls)-item-group" style="@Style" @key="Key" @ref="Ref">
     <div class="@(RootMenu.PrefixCls)-item-group-title">
         @if (TitleTemplate != null)@TitleTemplate else @Title
     </div>

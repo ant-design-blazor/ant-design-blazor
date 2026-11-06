@@ -5,7 +5,7 @@
     var cancelProps = ModalProps.CancelButtonProps ?? new ButtonProps();
 }
 
-<div>
+<div @attributes="AdditionalAttributes">
     <Button OnClick="@HandleCancel"
             Block="@cancelProps.Block"
             Ghost="@cancelProps.Ghost"

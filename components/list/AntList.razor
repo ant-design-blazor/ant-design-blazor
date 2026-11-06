@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @typeparam TItem
 
-<div class="@ClassMapper.Class" style="@Style" Id="@Id" @ref="Ref">
+<div @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@Style" Id="@Id" @ref="Ref">
     @if (Header != null)
     {
         <div class="@PrefixName-header">

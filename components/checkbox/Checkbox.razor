@@ -28,15 +28,14 @@ else
     private void RenderCheckboxControl(RenderTreeBuilder __builder)
     {
         <span class="@ClassMapper.Class" @ref="Ref" @onclick:stopPropagation>
-            <input id="@Id"
+            <input @attributes="_attributes" id="@Id"
                value="@(CheckboxGroup == null ? "true" : Label)"
                checked="@Checked"
                disabled="@IsDisabled"
                autofocus="@AutoFocus"
                @onchange="@InputCheckedChange"
                type="checkbox"
-               class="@($"{PrefixCls}-input")"
-               @attributes="_attributes" />
+               class="@($"{PrefixCls}-input")" />
             <span class="@($"{PrefixCls}-inner")"></span>
         </span>
     }

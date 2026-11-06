@@ -56,7 +56,7 @@
                  @ref="@context.Current"
                  style="@Style"
                  Id="@Id">
-                <DatePickerInput @ref="_inputStart"
+                <DatePickerInput AdditionalAttributes="AdditionalAttributes" @ref="_inputStart"
                                  PrefixCls="@PrefixCls"
                                  Size="@Size"
                                  Disabled="IsDisabled(0)"
@@ -84,7 +84,7 @@
                     </span>
                 </div>
 
-                <DatePickerInput @ref="_inputEnd"
+                <DatePickerInput AdditionalAttributes="AdditionalAttributes" @ref="_inputEnd"
                                  PrefixCls="@PrefixCls"
                                  Size="@Size"
                                  Disabled="IsDisabled(1)"

@@ -1,7 +1,7 @@
 ﻿@namespace AntDesign
 @inherits AntInputBoolComponentBase
 
-<button type="button" role="switch"
+<button @attributes="AdditionalAttributes" type="button" role="switch"
         aria-checked="@(CurrentValue?"true":"false")"
         disabled="@(Disabled||Loading)"
         class="@ClassMapper.Class"

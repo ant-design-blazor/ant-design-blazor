@@ -4,7 +4,7 @@
 @{
     string prefixCls = $"{SubMenuComponent.RootMenu.PrefixCls}-submenu";
 }
-<li class="@TriggerClass"
+<li @attributes="AdditionalAttributes" class="@TriggerClass"
     role="menuitem"
     style="position:relative;@SubMenuComponent.Style"
     @key="SubMenuComponent.Key"

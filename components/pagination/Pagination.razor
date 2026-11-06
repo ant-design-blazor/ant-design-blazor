@@ -23,9 +23,6 @@
 
     var prevPage = _current - 1 > 0 ? _current - 1 : 0;
     var nextPage = _current + 1 < allPages ? _current + 1 : allPages;
-    var dataOrAriaAttributeProps = UnmatchedAttributes?
-        .Where(pair => pair.Key.StartsWith("data-") || pair.Key.StartsWith("aria-") || pair.Key == "role")
-        .ToDictionary(e => e.Key, e => e.Value);
     if (Simple)
     {
         RenderFragment? goButtonRender;
@@ -53,10 +50,10 @@
                 </li>;
         }
         <ul
+            @attributes="GetAdditionalAttributes(UnmatchedAttributes)"
             class="@ClassMapper.Class"
             style="@Style"
-            @ref="Ref"
-            @attributes="@dataOrAriaAttributeProps">
+            @ref="Ref">
             <li
                 title="@(ShowTitle ? Locale.PrevPage : null)"
                 @onclick="Prev"
@@ -281,11 +278,11 @@
         var nextDisabled = !HasNext() || allPages != 0;
 
         <ul
+            @attributes="GetAdditionalAttributes(UnmatchedAttributes)"
             class="@ClassMapper.Class"
             style="@Style"
             unselectable="unselectable"
-            @ref="Ref"
-            @attributes="@dataOrAriaAttributeProps">
+            @ref="Ref">
             @totalText
             <li
                 title="@(ShowTitle ? Locale.PrevPage : null)"
