@@ -1,0 +1,28 @@
+@using AntDesign.Core.JsInterop.Modules.Components
+@inherits AntDesignTestBase
+
+@code {
+    public CalendarNavigationTests()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+        JSInterop.SetupVoid(JSInteropConstants.AddPreventKeys, _ => true);
+        JSInterop.SetupVoid(JSInteropConstants.Focus, _ => true);
+        JSInterop.Setup<OverlayPosition>(JSInteropConstants.OverlayComponentHelper.AddOverlayToContainer, _ => true)
+            .SetResult(new OverlayPosition { Top = 0, Left = 0, ZIndex = 5000, Placement = Placement.BottomLeft });
+    }
+
+    [Fact]
+    public void Header_selects_change_calendar_year_and_month()
+    {
+        var value = new DateTime(2024, 3, 15);
+        var cut = Render<AntDesign.Calendar>(@<Calendar Value="@value" />);
+
+        cut.Find(".ant-picker-calendar-year-select .ant-select-selector").TextContent.Trim().Should().Be("2024");
+        cut.FindAll(".ant-select-item-option").Single(option => option.TextContent.Trim() == "2026").Click();
+        cut.WaitForAssertion(() => cut.Instance.Value.Year.Should().Be(2026));
+
+        cut.FindAll(".ant-select-item-option").Single(option => option.TextContent.Trim() == "Aug").Click();
+        cut.WaitForAssertion(() => cut.Instance.Value.Month.Should().Be(8));
+    }
+}

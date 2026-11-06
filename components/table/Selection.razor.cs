@@ -152,7 +152,7 @@ namespace AntDesign
         {
             if (!IsHeader)
             {
-                if (Table?.Selection.Type == SelectionType.Radio && Table.ServerSide != true && RowData != null)
+                if (Table?.Selection?.Type == SelectionType.Radio && Table.ServerSide != true && RowData != null)
                 {
                     Table.UnSelectSelection(this);
                 }
