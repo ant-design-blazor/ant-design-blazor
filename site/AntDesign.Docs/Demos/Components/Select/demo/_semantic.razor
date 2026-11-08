@@ -1,20 +1,57 @@
-<Flex Direction="FlexDirection.Vertical" Gap="FlexGap.Middle" Align="FlexAlign.Center">
-    <Segmented TValue="string" Labels="@_modes" @bind-Value="_mode" />
-    @if (_mode == "multiple")
-    {
-        <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" Open DefaultValues="_selected" AllowClear
-                Placeholder="Please select" Style="width:300px" DataSource="_options" />
-    }
-    else
-    {
-        <Select TItemValue="string" TItem="string" Open DefaultValue="@("aojunhao123")" AllowClear
-                Placeholder="Please select" Style="width:300px" DataSource="_options" />
-    }
-</Flex>
+@using AntDesign.Docs.Components
+
+<SemanticDomPreview Component="select" Language="@Language">
+    <Flex Id="select-semantic-demo" Direction="FlexDirection.Vertical" Gap="FlexGap.Middle" Align="FlexAlign.Center"
+          Style="position:absolute; margin-bottom:80px;">
+        <Segmented TValue="string" Options="@_modes" AriaLabel="segmented control" AriaOrientation="horizontal" Role="radiogroup" TabIndex="0" @bind-Value="_mode" />
+        @if (_mode == "multiple")
+        {
+                    <Select TItemValue="string" TItem="string" Mode="SelectMode.Multiple" Open
+                    Placement="AntDesign.Placement.BottomLeft" DefaultValues="_selected" AllowClear
+                    MaxTagCount="AntDesign.Select.ResponsiveTag.Responsive" Placeholder="Please select"
+                    Style="width:300px" DataSource="_options" PopupContainerSelector="#select-semantic-demo" ClassNames="_semanticClasses" Styles="_semanticStyles">
+                <PrefixIcon>prefix</PrefixIcon>
+            </Select>
+        }
+        else
+        {
+            <Select TItemValue="string" TItem="string" Open Placement="AntDesign.Placement.BottomLeft"
+                    DefaultValue='@("aojunhao123")' AllowClear Placeholder="Please select"
+                    Style="width:300px" DataSource="_options" PopupContainerSelector="#select-semantic-demo" ClassNames="_semanticClasses" Styles="_semanticStyles">
+                <PrefixIcon>prefix</PrefixIcon>
+            </Select>
+        }
+    </Flex>
+</SemanticDomPreview>
 
 @code {
+    [Parameter] public string Language { get; set; } = "zh-CN";
     private string _mode = "single";
-    private static readonly string[] _modes = ["single", "multiple"];
+    private static readonly SegmentedOption<string>[] _modes =
+    [
+        new("single", "Single"),
+        new("multiple", "Multiple")
+    ];
     private static readonly string[] _options = ["aojunhao123", "thinkasany", "meet-student"];
     private static readonly string[] _selected = ["aojunhao123"];
+    private static readonly IReadOnlyDictionary<string, string> _semanticClasses = new Dictionary<string, string>
+    {
+        ["root"] = "semantic-mark-root",
+        ["prefix"] = "semantic-mark-prefix",
+        ["content"] = "semantic-mark-content",
+        ["item"] = "semantic-mark-item",
+        ["itemContent"] = "semantic-mark-itemContent",
+        ["itemRemove"] = "semantic-mark-itemRemove",
+        ["input"] = "semantic-mark-input",
+        ["suffix"] = "semantic-mark-suffix",
+        ["clear"] = "semantic-mark-clear",
+        ["popup.root"] = "semantic-mark-popup-root",
+        ["popup.list"] = "semantic-mark-popup-list",
+        ["popup.listItem"] = "semantic-mark-popup-listItem"
+    };
+    private static readonly IReadOnlyDictionary<string, string> _semanticStyles = new Dictionary<string, string>
+    {
+        ["clear"] = "opacity: 1",
+        ["suffix"] = "margin-inline-end: 24px",
+    };
 }
