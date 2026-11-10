@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -61,6 +62,7 @@ namespace AntDesign
 
         private bool _hasShow;
         private bool _hasDestroy = true;
+        private CancellationTokenSource _pendingHideCancellationTokenSource;
         private bool _disableBodyScroll;
         private bool _doDraggable;
         private string _prevUrl = "";
@@ -81,6 +83,14 @@ namespace AntDesign
 #pragma warning restore 649
 
         #region ant-modal style
+
+        private bool HasFooterContent()
+        {
+            if (Config.Footer is null) return false;
+            if (Config.Footer.Value.IsT0)
+                return !string.IsNullOrWhiteSpace(Config.Footer.Value.AsT0);
+            return Config.Footer.Value.AsT1 is not null;
+        }
 
         private string _modalStyle = null;
 
@@ -304,6 +314,7 @@ namespace AntDesign
         {
             if (!_hasShow && Visible)
             {
+                CancelPendingHide();
                 _hasShow = true;
                 _resizing = Config.Resizable;
                 _wrapStyle = CalcWrapStyle();
@@ -342,10 +353,20 @@ namespace AntDesign
         /// more details see style/mixins/modal-mask.less
         /// </summary>
         /// <returns></returns>
-        internal async Task CleanShowAnimationAsync()
+        internal async Task CleanShowAnimationAsync(CancellationToken cancellationToken)
         {
             var animationTimeMs = 300;
-            await Task.Delay(animationTimeMs);
+            try
+            {
+                await Task.Delay(animationTimeMs, cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            if (cancellationToken.IsCancellationRequested || !Visible) return;
+
             _maskAnimationClsName = "";
             _modalAnimationClsName = "";
             await InvokeStateHasChangedAsync();
@@ -364,6 +385,7 @@ namespace AntDesign
 
             if (!Visible)
             {
+                CancelPendingHide();
                 _hasShow = false;
 
                 if (VisibleChanged.HasDelegate)
@@ -371,18 +393,48 @@ namespace AntDesign
                     await VisibleChanged.InvokeAsync(false);
                 }
 
-                _maskAnimationClsName = ModalAnimation.MaskLeave;
-                _modalAnimationClsName = ModalAnimation.ModalLeave;
-                await Task.Delay(200);
-                _wrapStyle = "display: none;";
-                _maskHideClsName = "ant-modal-mask-hidden";
+                if (Visible) return;
 
-                await InvokeStateHasChangedAsync();
-                if (Config.OnClosed != null)
+                var cancellationSource = new CancellationTokenSource();
+                _pendingHideCancellationTokenSource = cancellationSource;
+                try
                 {
-                    await Config.OnClosed.Invoke();
+                    _maskAnimationClsName = ModalAnimation.MaskLeave;
+                    _modalAnimationClsName = ModalAnimation.ModalLeave;
+                    await Task.Delay(200, cancellationSource.Token);
+                    if (cancellationSource.IsCancellationRequested || Visible) return;
+
+                    _wrapStyle = "display: none;";
+                    _maskHideClsName = "ant-modal-mask-hidden";
+
+                    await InvokeStateHasChangedAsync();
+                    if (cancellationSource.IsCancellationRequested || Visible) return;
+
+                    if (Config.OnClosed != null)
+                    {
+                        await Config.OnClosed.Invoke();
+                    }
+                }
+                catch (OperationCanceledException) when (cancellationSource.IsCancellationRequested)
+                {
+                    // A reopen cancels the pending hide animation and callback.
+                }
+                finally
+                {
+                    if (ReferenceEquals(_pendingHideCancellationTokenSource, cancellationSource))
+                    {
+                        _pendingHideCancellationTokenSource = null;
+                    }
+                    cancellationSource.Dispose();
                 }
             }
+        }
+
+        private void CancelPendingHide()
+        {
+            var cancellationSource = _pendingHideCancellationTokenSource;
+            _pendingHideCancellationTokenSource = null;
+            cancellationSource?.Cancel();
         }
 
         /// <summary>
@@ -536,6 +588,7 @@ namespace AntDesign
         {
             if (PurePanel) { base.Dispose(disposing); return; }
 
+            CancelPendingHide();
             _ = TryResetModalStyle();
             // When a modal is defined in template, it will be destroyed when the page is navigated to different page component.
             // but sometime the opened modal dom would not be removed from body, and sometime it would...

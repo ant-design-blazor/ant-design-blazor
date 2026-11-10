@@ -1,0 +1,38 @@
+﻿@using AntDesign.Core.JsInterop.Modules.Components
+@using Microsoft.AspNetCore.Components
+@inherits AntDesignTestBase
+
+@code {
+    [Fact] // Issue: #4818
+    public async Task Removing_last_selected_item_updates_bound_values()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+
+        IEnumerable<string> values = new[] { "leaf" };
+        IEnumerable<string> changedValues = null;
+        IEnumerable<string> changedItems = null;
+        var valuesChanged = EventCallback.Factory.Create<IEnumerable<string>>(this, (IEnumerable<string> newValues) =>
+        {
+            changedValues = newValues;
+            values = newValues;
+        });
+        var selectedItemsChanged = EventCallback.Factory.Create<IEnumerable<string>>(this, (IEnumerable<string> newItems) => changedItems = newItems);
+
+        var cut = Render<TreeSelect<string, string>>(
+            @<TreeSelect TItem="string" TItemValue="string" Multiple
+                        Values="@values"
+                        ValuesChanged="@valuesChanged"
+                        OnSelectedItemsChanged="@selectedItemsChanged">
+                <TreeNode TItem="string" Key="leaf" Title="Leaf" />
+            </TreeSelect>);
+
+        cut.Render();
+        await cut.InvokeAsync(() => cut.Find(".ant-select-selection-item-remove").MouseDown());
+
+        cut.WaitForAssertion(() => changedValues.Should().BeEmpty());
+        changedItems.Should().BeEmpty();
+        values.Should().BeEmpty();
+        cut.Instance.SelectedOptionItems.Should().BeEmpty();
+    }
+}

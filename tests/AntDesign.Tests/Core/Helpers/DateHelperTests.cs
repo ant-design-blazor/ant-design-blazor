@@ -4,12 +4,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Xunit;
 
 namespace AntDesign.Tests.Core.Helpers
 {
     public class DateHelperTests
     {
+        [Fact]
+        public void FormatDate_uses_standalone_calendar_values()
+        {
+            var date = new DateTime(2026, 8, 6);
+
+            Assert.Equal("2026年6月24日", DateHelper.FormatDate(date, "yyyy年M月d日", CultureInfo.GetCultureInfo("zh-CN"), new ChineseLunisolarCalendar()));
+        }
+
         [Theory]
         [MemberData(nameof(GetNextStartDateOfDecade_Values))]
         public void GetNextStartDateOfDecade(DateTime currentDateTime, DateTime exceptedDateTime)
@@ -292,4 +301,3 @@ namespace AntDesign.Tests.Core.Helpers
         };
     }
 }
-

@@ -1,0 +1,27 @@
+@namespace AntDesign.Docs.Demos.Experimental.ComponentPropsProvider.demo
+
+<ComponentPropsProvider Props="@outerProps">
+    <Space Direction="SpaceDirection.Vertical">
+        <Text>Outer provider: all buttons are primary.</Text>
+        <Space>
+            <Button>Enabled</Button>
+            <Button>Also enabled</Button>
+        </Space>
+
+        <ComponentPropsProvider Props="@innerProps">
+            <Text>Inner provider: Button props are merged and buttons in this scope are disabled.</Text>
+            <Space>
+                <Button>Disabled</Button>
+                <Button>Also disabled</Button>
+            </Space>
+        </ComponentPropsProvider>
+    </Space>
+</ComponentPropsProvider>
+
+@code {
+    private readonly ComponentPropsCollection outerProps = new ComponentPropsCollection(
+        new ButtonProps { Type = ButtonType.Primary });
+
+    private readonly ComponentPropsCollection innerProps = new ComponentPropsCollection(
+        new ButtonProps { Disabled = true });
+}

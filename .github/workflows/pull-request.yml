@@ -25,6 +25,11 @@ jobs:
             9.0.x
             10.0.x
 
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 11.0.x
+          dotnet-quality: preview
+
       - uses: actions/setup-node@v1
         with:
           node-version: "18.x"
@@ -34,20 +39,143 @@ jobs:
           npm install
           dotnet build
 
-      - name: Test 📝
-        run: |
-          npm run lint
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net6
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net8
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net9
-          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release --collect:"XPlat Code Coverage" -f net10.0
-          npm install ./tests/AntDesign.Tests.Js
-          npm --prefix ./tests/AntDesign.Tests.Js run test-cov
-          find ./coverage ./tests -name "*coverage*.xml" -type f -exec cp {} ./ \;
+  test-dotnet:
+    name: Test (${{ matrix.tfm }})
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - tfm: net6
+            sdk-version: 6.0.x
+            sdk-quality: ga
+            coverage-flag: dotnet-net6
+          - tfm: net8
+            sdk-version: 8.0.x
+            sdk-quality: ga
+            coverage-flag: dotnet-net8
+          - tfm: net9
+            sdk-version: 9.0.x
+            sdk-quality: ga
+            coverage-flag: dotnet-net9
+          - tfm: net10.0
+            sdk-version: 10.0.x
+            sdk-quality: ga
+            coverage-flag: dotnet-net10
+          - tfm: net11.0
+            sdk-version: 11.0.x
+            sdk-quality: preview
+            coverage-flag: dotnet-net11
 
-      - name: Upload coverage to Codecov
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.sdk-version }}
+          dotnet-quality: ${{ matrix.sdk-quality }}
+
+      - name: Setup .NET 11 SDK for multi-targeting
+        if: matrix.tfm != 'net11.0'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 11.0.x
+          dotnet-quality: preview
+
+      - name: Test
+        run: >-
+          dotnet test ./tests/AntDesign.Tests/AntDesign.Tests.csproj --configuration:Release
+          --collect:"XPlat Code Coverage" -f ${{ matrix.tfm }} --logger "console;verbosity=detailed"
+          --blame-hang --blame-hang-timeout 10m
+
+      - name: Collect .NET coverage
+        if: always()
+        run: find ./tests -name "coverage.cobertura.xml" -type f -exec cp {} ./ \;
+
+      - name: Upload .NET coverage to Codecov
+        if: always()
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.cobertura.xml,./cobertura-coverage.xml
+          files: ./coverage.cobertura.xml
+          flags: ${{ matrix.coverage-flag }}
+          fail_ci_if_error: false
+
+      - name: Analyze hang dumps
+        if: failure()
+        continue-on-error: true
+        shell: bash
+        run: |
+          mapfile -t sequences < <(find tests/AntDesign.Tests/TestResults -type f -name 'Sequence*.xml' 2>/dev/null)
+          for sequence in "${sequences[@]}"; do
+            echo "Test sequence: $sequence"
+            cat "$sequence"
+          done
+
+          mapfile -t dumps < <(find tests/AntDesign.Tests/TestResults -type f \( -name '*.dmp' -o -name '*.core' \) 2>/dev/null)
+          if [ ${#dumps[@]} -eq 0 ]; then
+            echo "No hang dump found."
+            exit 0
+          fi
+
+          mkdir -p "$RUNNER_TEMP/dotnet-tools"
+          if ! dotnet tool install dotnet-dump --tool-path "$RUNNER_TEMP/dotnet-tools"; then
+            echo "Could not install dotnet-dump; the original test diagnostics will still be uploaded."
+            exit 0
+          fi
+
+          for dump in "${dumps[@]}"; do
+            report="${dump}.analysis.txt"
+            echo "Analyzing $dump"
+            "$RUNNER_TEMP/dotnet-tools/dotnet-dump" analyze "$dump" \
+              -c "clrthreads" \
+              -c "clrstack -all" \
+              -c "syncblk" \
+              -c "exit" 2>&1 | tee "$report"
+          done
+
+      - name: Upload test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-diagnostics-${{ matrix.tfm }}
+          path: tests/AntDesign.Tests/TestResults/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  test-javascript:
+    name: Lint and JavaScript tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "18.x"
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test JavaScript
+        run: |
+          npm install ./tests/AntDesign.Tests.Js
+          npm --prefix ./tests/AntDesign.Tests.Js run test-cov
+
+      - name: Collect JavaScript coverage
+        if: always()
+        run: find ./coverage -name "*coverage*.xml" -type f -exec cp {} ./ \;
+
+      - name: Upload JavaScript coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./cobertura-coverage.xml
+          flags: javascript
           fail_ci_if_error: false

@@ -12,12 +12,22 @@ jobs:
   preview-start:
     name: start preview info
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
       - name: update status comment
-        uses: actions-cool/maintain-one-comment@v1.1.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          body: |
-            ![Prepare preview](https://user-images.githubusercontent.com/5378891/72351368-2c979e00-371b-11ea-9652-eb4e825d745e.gif)
-            <!-- AUTO_PREVIEW_HOOK -->
-          body-include: '<!-- AUTO_PREVIEW_HOOK -->'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          cat > comment.md <<'EOF'
+          ![Prepare preview](https://user-images.githubusercontent.com/5378891/72351368-2c979e00-371b-11ea-9652-eb4e825d745e.gif)
+          <!-- AUTO_PREVIEW_HOOK -->
+          EOF
+          comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.body | contains("<!-- AUTO_PREVIEW_HOOK -->")) | .id' | head -n 1)
+          if [ -n "$comment_id" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" -X PATCH -f body="$(cat comment.md)"
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -X POST -f body="$(cat comment.md)"
+          fi

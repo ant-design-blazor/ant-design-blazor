@@ -75,7 +75,13 @@ namespace AntDesign
             {
                 _step = value;
                 NumberFormatInfo nfi = CultureInfo.NumberFormat;
-                var stepStr = Convert.ToDecimal(_step).ToString(nfi);
+                var stepValue = _step switch
+                {
+                    float floatStep => InputNumberMath.ToDecimal(floatStep),
+                    double doubleStep => InputNumberMath.ToDecimal(doubleStep),
+                    _ => Convert.ToDecimal(_step)
+                };
+                var stepStr = stepValue.ToString(nfi);
                 if (stepStr.IndexOf(nfi.NumberDecimalSeparator) > 0)
                     _decimalPlaces = stepStr.Length - stepStr.IndexOf(nfi.NumberDecimalSeparator) - 1;
                 else

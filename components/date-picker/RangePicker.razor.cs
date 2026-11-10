@@ -569,6 +569,8 @@ namespace AntDesign
                 _lastValue = (TValue)currentValueArray.Clone();
                 InvokeOnChange();
             }
+            // Range values are updated in place, so CurrentValue's equality check does not notify the binding.
+            _ = ValueChanged.InvokeAsync(Value);
 
             _pickerStatus[index].IsValueSelected = true;
 
@@ -578,6 +580,7 @@ namespace AntDesign
             {
                 Close();
             }
+
         }
 
         internal override void ClearValue(int index = -1, bool closeDropdown = true)
@@ -585,6 +588,10 @@ namespace AntDesign
             _isSetPicker = false;
 
             var array = Value as Array;
+            if (array == null || !_isInitialized)
+            {
+                return;
+            }
             ReadOnlySpan<int> indexToClear;
             if (index == -1)
             {
@@ -632,7 +639,7 @@ namespace AntDesign
             OnClear.InvokeAsync(null);
             OnClearClick.InvokeAsync(null);
 
-            _dropDown.SetShouldRender(true);
+            _dropDown?.SetShouldRender(true);
             InvokeAsync(StateHasChanged);
         }
 

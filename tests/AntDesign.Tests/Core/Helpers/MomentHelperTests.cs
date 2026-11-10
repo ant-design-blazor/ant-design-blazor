@@ -12,8 +12,11 @@ namespace AntDesign.Tests.Core.Helpers
     {
         [Theory]
         [MemberData(nameof(FromNow_seeds), DisableDiscoveryEnumeration = true)]
-        public void FromNow(DateTime date, string expectedSuffix)
+        public void FromNow(TimeSpan age, string expectedSuffix)
         {
+            // Calculate the date when the test runs, not while xUnit is
+            // discovering test data, so queued tests cannot cross a time bucket.
+            var date = DateTime.Now + age;
             var str = MomentHelper.FromNow(date);
 
             Assert.EndsWith(expectedSuffix, str, StringComparison.OrdinalIgnoreCase);
@@ -21,13 +24,13 @@ namespace AntDesign.Tests.Core.Helpers
 
         public static IEnumerable<object[]> FromNow_seeds => new List<object[]>
         {
-            new object[] { DateTime.Now.AddSeconds(-30), "a few seconds ago" },
-            new object[] { DateTime.Now.AddMinutes(-10), "minutes ago" },
-            new object[] { DateTime.Now.AddHours(-2), "hours ago" },
-            new object[] { DateTime.Now.AddDays(-2), "days ago"  },
-            new object[] { DateTime.Now.AddDays(-10), "weeks ago"  },
-            new object[] { DateTime.Now.AddMonths(-2), "months ago"  },
-            new object[] { DateTime.Now.AddYears(-2), "years ago"  }
+            new object[] { TimeSpan.FromSeconds(-10), "a few seconds ago" },
+            new object[] { TimeSpan.FromMinutes(-10), "minutes ago" },
+            new object[] { TimeSpan.FromHours(-2), "hours ago" },
+            new object[] { TimeSpan.FromDays(-2), "days ago"  },
+            new object[] { TimeSpan.FromDays(-10), "weeks ago"  },
+            new object[] { TimeSpan.FromDays(-62), "months ago"  },
+            new object[] { TimeSpan.FromDays(-730), "years ago"  }
         };
     }
 }

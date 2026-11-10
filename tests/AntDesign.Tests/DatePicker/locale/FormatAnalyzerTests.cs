@@ -402,5 +402,21 @@ namespace AntDesign.Tests.DatePicker.Locale
             new object[] { "yyyy", "yyyy-Q0","2020/Q1", false, null!},
             new object[] { "yyyy", "yyyy-Q0", "2020 Q1", false, null!},
         };
+
+        [Theory]
+        [InlineData("dd.MM.yyyy HH:mm", "dd.MM.yyyy")]
+        [InlineData("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd")]
+        [InlineData("dd.MM.yyyy", "dd.MM.yyyy")]
+        [InlineData("yyyyMMdd", "yyyyMMdd")]
+        [InlineData("M/yyyy/d H:mm:s", "M/yyyy/d")]
+        [InlineData("yyyy年M月d日 HH时mm分ss秒", "yyyy年M月d日")]
+        [InlineData("", null)]
+        [InlineData(null, null)]
+        [InlineData("HH:mm", null)]
+        public void GetDateOnlyFormat_ShouldReturnDatePortion(string fullFormat, string expected)
+        {
+            var actual = FormatAnalyzer.GetDateOnlyFormat(fullFormat);
+            Assert.Equal(expected, actual);
+        }
     }
 }

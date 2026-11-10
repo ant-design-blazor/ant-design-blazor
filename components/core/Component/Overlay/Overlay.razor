@@ -12,7 +12,9 @@
          @onmouseenter="OnOverlayMouseEnter"
          @onmouseleave="OnOverlayMouseLeave"
 		 @onmouseup="OnOverlayMouseUp"
-         @onclick:stopPropagation>
+         @onmouseup:stopPropagation
+         @onclick:stopPropagation
+         @onmousedown:stopPropagation>
 
         <CascadingValue Value="this" Name="Overlay" IsFixed>
             <CascadingValue Value="Trigger" Name="ParentTrigger" IsFixed>

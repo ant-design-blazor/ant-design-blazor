@@ -158,6 +158,13 @@ namespace AntDesign.Internal
         public string OverlayEnterCls { get; set; }
 
         /// <summary>
+        /// CSS classes for the enter and leave animations. Factories receive the current
+        /// adjusted placement, allowing classes to change when the overlay flips.
+        /// </summary>
+        [Parameter]
+        public OverlayAnimationOptions OverlayAnimation { get; set; }
+
+        /// <summary>
         /// Css class added to overlay when overlay is hidden.
         /// </summary>
         [Parameter]
@@ -669,7 +676,11 @@ namespace AntDesign.Internal
             {
                 return OverlayEnterCls;
             }
-            return $"ant-slide-{_actualPlacement.SlideName}-enter ant-slide-{_actualPlacement.SlideName}-enter-active ant-slide-{_actualPlacement.SlideName}";
+            var animationOptions = OverlayAnimation ?? DefaultOverlayAnimation;
+            var animationClasses = animationOptions.GetEnterClass(_actualPlacement.Placement);
+            return !string.IsNullOrEmpty(animationClasses)
+                ? animationClasses
+                : DefaultOverlayAnimation.GetEnterClass(_actualPlacement.Placement);
         }
 
         internal virtual string GetOverlayLeaveClass()
@@ -678,8 +689,20 @@ namespace AntDesign.Internal
             {
                 return OverlayLeaveCls;
             }
-            return $"ant-slide-{_actualPlacement.SlideName}-leave ant-slide-{_actualPlacement.SlideName}-leave-active ant-slide-{_actualPlacement.SlideName}";
+            var animationOptions = OverlayAnimation ?? DefaultOverlayAnimation;
+            var animationClasses = animationOptions.GetLeaveClass(_actualPlacement.Placement);
+            if (!string.IsNullOrEmpty(animationClasses))
+            {
+                return animationClasses;
+            }
+            return DefaultOverlayAnimation.GetLeaveClass(_actualPlacement.Placement);
         }
+
+        private static readonly OverlayAnimationOptions DefaultOverlayAnimation = new OverlayAnimationOptions
+        {
+            Animation = "slide",
+            DirectionFactory = placement => PlacementType.Create(placement).SlideName
+        };
 
         internal virtual string GetOverlayHiddenClass()
         {

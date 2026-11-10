@@ -1,0 +1,36 @@
+<ComponentPropsProvider Props="@props">
+    <Space>
+        <Button>First button</Button>
+        <Button>Second button</Button>
+    </Space>
+
+    <Table TItem="Person" DataSource="@people" PaginationPosition="topRight,bottomRight" PageSize="2" Style="margin-top: 16px">
+        <PropertyColumn Property="c=>c.Name" Title="Name" />
+        <PropertyColumn Property="c=>c.Age" Title="Age" />
+    </Table>
+</ComponentPropsProvider>
+
+@code {
+    private readonly Person[] people =
+    {
+        new() { Name = "Alice", Age = 28 },
+        new() { Name = "Bob", Age = 32 },
+        new() { Name = "Carol", Age = 25 },
+        new() { Name = "David", Age = 36 },
+        new() { Name = "Emma", Age = 30 },
+    };
+
+    private readonly ComponentPropsCollection props = new ComponentPropsCollection(
+        new ButtonProps { Type = ButtonType.Primary },
+        new PaginationProps { ShowQuickJumper = true })
+    {
+        [Table<Person>.BottomPaginationId] = new PaginationProps { ShowSizeChanger = true },
+    };
+
+    private sealed class Person
+    {
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+    }
+}

@@ -1,0 +1,18 @@
+@namespace AntDesign.Docs.Demos.Experimental.ComponentPropsProvider.demo
+
+<ComponentPropsProvider Props="@props">
+    <Space>
+        <Button Id="save">Save</Button>
+        <Button Id="publish">Publish</Button>
+        <Button Id="delete">Delete</Button>
+    </Space>
+</ComponentPropsProvider>
+
+@code {
+    private readonly ComponentPropsCollection props = new ComponentPropsCollection(
+        new ButtonProps { Type = ButtonType.Primary })
+    {
+        ["delete"] = new ButtonProps { Danger = true },
+        ["publish"] = new ButtonProps { Loading = true },
+    };
+}

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using AntDesign.Core.Documentation;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 
@@ -41,6 +42,17 @@ namespace AntDesign
 
         [Parameter]
         public CultureInfo CultureInfo { get; set; }
+
+        [Parameter]
+        [PublicApi("1.7.0")]
+        public System.Globalization.Calendar DateCalendar { get; set; }
+
+        protected System.Globalization.Calendar Calendar => DateCalendar ?? CultureInfo.Calendar;
+
+        protected string FormatDate(DateTime date, string format) => CalendarFormatter.FormatDate(date, format, CultureInfo, Calendar);
+        protected string FormatYear(DateTime date, string format) => CalendarFormatter.FormatYear(date, format, CultureInfo, Calendar);
+        protected string FormatMonth(DateTime date, string format) => CalendarFormatter.FormatMonth(date, format, CultureInfo, Calendar);
+        protected string FormatDay(DateTime date) => CalendarFormatter.FormatDay(date, Calendar, CultureInfo);
 
         [Parameter]
         public Action ClosePanel { get; set; }
@@ -102,6 +114,7 @@ namespace AntDesign
                 { "Picker", Picker },
                 { "Locale", Locale },
                 { "CultureInfo", CultureInfo },
+                { "DateCalendar", DateCalendar },
                 { "ClosePanel", ClosePanel },
                 { "ChangePickerValue", ChangePickerValue },
                 { "ChangeValue", ChangeValue },
@@ -135,13 +148,13 @@ namespace AntDesign
 
         protected void OnSelectTime(DateTime date) => OnSelect?.Invoke(date, GetPickerIndex());
 
-        protected void OnSelectDate(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(year: date.Year, month: date.Month, day: date.Day), GetPickerIndex());
+        protected void OnSelectDate(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(year: Calendar.GetYear(date), month: Calendar.GetMonth(date), day: Calendar.GetDayOfMonth(date)), GetPickerIndex());
 
-        protected void OnSelectYear(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(year: date.Year), GetPickerIndex());
+        protected void OnSelectYear(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(year: Calendar.GetYear(date)), GetPickerIndex());
 
-        protected void OnSelectQuarter(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(month: date.Month), GetPickerIndex());
+        protected void OnSelectQuarter(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(month: Calendar.GetMonth(date)), GetPickerIndex());
 
-        protected void OnSelectMonth(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(month: date.Month), GetPickerIndex());
+        protected void OnSelectMonth(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(month: Calendar.GetMonth(date)), GetPickerIndex());
 
         protected void OnSelectDay(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(day: date.Day), GetPickerIndex());
 
@@ -151,11 +164,11 @@ namespace AntDesign
 
         protected void OnSelectSecond(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(second: date.Second), GetPickerIndex());
 
-        protected void OnSelectShowYear(DateTime date) => ChangePickerValue(CombineNewShowDate(year: date.Year), GetPickerIndex());
+        protected void OnSelectShowYear(DateTime date) => ChangePickerValue(CombineNewShowDate(year: Calendar.GetYear(date)), GetPickerIndex());
 
-        protected void OnSelectShowMonth(DateTime date) => ChangePickerValue(CombineNewShowDate(month: date.Month), GetPickerIndex());
+        protected void OnSelectShowMonth(DateTime date) => ChangePickerValue(CombineNewShowDate(month: Calendar.GetMonth(date)), GetPickerIndex());
 
-        protected void OnSelectShowDay(DateTime date) => ChangePickerValue(CombineNewShowDate(day: date.Day), GetPickerIndex());
+        protected void OnSelectShowDay(DateTime date) => ChangePickerValue(CombineNewShowDate(day: Calendar.GetDayOfMonth(date)), GetPickerIndex());
 
         protected DateTime CombineNewShowDate(
             int? year = null,
@@ -164,7 +177,7 @@ namespace AntDesign
             int? hour = null,
             int? minute = null,
             int? second = null) => DateHelper.CombineNewDate(
-                PickerValue,
+                PickerValue, Calendar,
                 year,
                 month,
                 day,
@@ -184,13 +197,13 @@ namespace AntDesign
             {
                 baseDate = Picker switch
                 {
-                    DatePickerType.Date => PickerValue.AddMonths(-1),
-                    DatePickerType.Week => PickerValue.AddMonths(-1),
-                    DatePickerType.Year => PickerValue.AddYears(-10),
-                    _ => PickerValue.AddYears(-1)
+                    DatePickerType.Date => Calendar.AddMonths(PickerValue, -1),
+                    DatePickerType.Week => Calendar.AddMonths(PickerValue, -1),
+                    DatePickerType.Year => Calendar.AddYears(PickerValue, -10),
+                    _ => Calendar.AddYears(PickerValue, -1)
                 };
             }
-            ChangePickerValue(DateHelper.AddYearsSafely(baseDate, interval), null);
+            ChangePickerValue(Calendar.AddYears(baseDate, interval), null);
         }
 
         protected void ChangePickerMonthValue(int interval)
@@ -199,8 +212,8 @@ namespace AntDesign
             if (IsShowTime || PickerIndex == 0)
                 baseDate = PickerValue;
             else
-                baseDate = PickerValue.AddMonths(-1);
-            ChangePickerValue(DateHelper.AddMonthsSafely(baseDate, interval), null);
+                baseDate = Calendar.AddMonths(PickerValue, -1);
+            ChangePickerValue(Calendar.AddMonths(baseDate, interval), null);
         }
 
         protected void Close() => ClosePanel?.Invoke();

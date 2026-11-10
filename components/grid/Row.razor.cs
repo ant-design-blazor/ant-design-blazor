@@ -182,6 +182,11 @@ namespace AntDesign
                 }
             }
 
+            if (this._currentBreakPoint == actualBreakpoint)
+            {
+                return;
+            }
+
             this._currentBreakPoint = actualBreakpoint;
 
             SetGutterStyle(actualBreakpoint);

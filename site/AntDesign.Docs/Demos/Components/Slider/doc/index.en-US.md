@@ -29,7 +29,7 @@ A Slider component for displaying current value and intervals in range.
 | Step | The granularity the slider can step through values. Must greater than 0, and be divided by (max - min) . When marks no null, step can be null.   | number        | -         |
 | Value | The value of slider. When range is false, use number, otherwise, use [number, number]         | number        | -         |
 | Vertical | If true, the slider will be vertical.                   | boolean        | -         |
-| OnAfterChange |Fire when onmouseup is fired.                        | function(e)        | -         |
+| OnAfterChange |Fire when pointerup is fired.                       | function(e)        | -         |
 | OnChange |Callback function that is fired when the user changes the slider's value.                          | function(e)        | -         |
 | HasTooltip |Will not render `Tooltip` if set to false | boolean | true |
 | TipFormatter |Slider will pass its value to `TipFormatter`, and display its value in `Tooltip`. | Func<double, string> | (d) => d.ToString() |

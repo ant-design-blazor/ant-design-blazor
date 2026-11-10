@@ -351,7 +351,7 @@ namespace AntDesign
                 }
                 _setValueDelegate = PathHelper.SetDelegate<TValue>(dataIndex, type);
                 _getValueDelegate = PathHelper.GetDelegate<TValue>(dataIndex, type);
-                Value = _getValueDelegate.Invoke(Form.Model);
+                Value = SafeGetValue(Form.Model);
 
                 if (PathHelper.GetLambda<TValue>(dataIndex, type).Body is MemberExpression lambda)
                 {
@@ -360,7 +360,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => _getValueDelegate.Invoke(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
+                    _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => SafeGetValue(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
                 }
             }
 
@@ -521,8 +521,19 @@ namespace AntDesign
         {
             if (_getValueDelegate != null)
             {
-                CurrentValue = _getValueDelegate.Invoke(Form.Model);
-                InvokeAsync(StateHasChanged);
+                CurrentValue = SafeGetValue(Form.Model);
+            }
+        }
+
+        private TValue SafeGetValue(object model)
+        {
+            try
+            {
+                return _getValueDelegate.Invoke(model);
+            }
+            catch (InvalidCastException)
+            {
+                return default!;
             }
         }
     }
