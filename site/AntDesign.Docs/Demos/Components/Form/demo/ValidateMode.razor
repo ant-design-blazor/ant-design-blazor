@@ -1,5 +1,6 @@
 ﻿@using System.ComponentModel.DataAnnotations;
 @using System.Text.Json;
+@using System.Threading;
 
 <Switch @bind-Value="@validateOnChange" CheckedChildren="ValidateOnChange" UnCheckedChildren="ValidateOnSubmit" />
 <p />
@@ -120,3 +121,48 @@
 	}
 
 }
+
+@* .NET 11+ async validation example. Use the Form's DataAnnotationsValidator path.
+<Form Model="@asyncModel" @ref="asyncForm">
+	<FormItem Label="UserName">
+		<Input @bind-Value="@context.Username" />
+	</FormItem>
+	<FormItem>
+		<Button OnClick="ValidateAsync">ValidateAsync</Button>
+	</FormItem>
+</Form>
+
+@code
+{
+	private AsyncModel asyncModel = new();
+	private Form<AsyncModel> asyncForm;
+
+	private async Task ValidateAsync()
+	{
+		using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+		var isValid = await asyncForm.ValidateAsync(cts.Token);
+	}
+
+	public class AsyncModel
+	{
+		[UniqueUsername]
+		public string Username { get; set; }
+	}
+
+	public sealed class UniqueUsernameAttribute : AsyncValidationAttribute
+	{
+		protected override async Task<ValidationResult?> IsValidAsync(
+			object? value,
+			ValidationContext validationContext,
+			CancellationToken cancellationToken)
+		{
+			await Task.Delay(TimeSpan.FromMilliseconds(300), cancellationToken);
+			return value as string == "admin"
+				? new ValidationResult("This username is already taken.", [validationContext.MemberName!])
+				: ValidationResult.Success;
+		}
+
+		protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+			=> throw new InvalidOperationException("Use asynchronous validation.");
+	}
+} *@
