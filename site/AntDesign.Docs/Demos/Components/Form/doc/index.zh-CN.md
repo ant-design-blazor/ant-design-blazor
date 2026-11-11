@@ -38,6 +38,28 @@ cover: https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg
 | RequiredMark | 更改必填/可选字段标签在表单上的显示方式。 | FormRequiredMark | FormRequiredMark.Required |
 
 
+### 异步校验（.NET 11+）
+
+在 `net11.0` 目标框架下，Form 支持模型上的 `AsyncValidationAttribute` 和 `IAsyncValidatableObject`。使用默认表单校验时会自动接入 `DataAnnotationsValidator`，提交表单会等待异步校验完成。通过代码触发表单校验或提交时，请使用 `ValidateAsync()` 或 `SubmitAsync()`；同步的 `Validate()` 和 `Submit()` 不支持异步校验。
+
+传入的 `CancellationToken` 会传递给异步校验器。校验器应将它继续传给可取消的 I/O 操作；取消令牌后，当前校验流程会收到取消信号。
+
+```csharp
+using System;
+using System.Threading;
+
+using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+var isValid = await form.ValidateAsync(cts.Token);
+// 或在需要提交时：await form.SubmitAsync(cts.Token);
+```
+
+### 校验方法
+
+| 名称 | 说明 | 返回值 |
+| --- | --- | --- |
+| ValidateAsync(CancellationToken) | 异步校验表单；校验通过返回 `true`。 | Task&lt;bool&gt; |
+| SubmitAsync(CancellationToken) | 异步校验表单，并根据结果触发 `OnFinish` 或 `OnFinishFailed`。 | Task |
+
 ### FormItem
 | 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
