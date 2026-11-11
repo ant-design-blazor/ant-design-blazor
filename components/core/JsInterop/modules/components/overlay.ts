@@ -757,18 +757,20 @@ export class Overlay {
   }
 
   private applyPlacement() {
-    if (this.recentPlacement !== this.placement) {
-      let currentPlacement: string;
-      const stringMach = `${this.triggerPrefixCls}-placement-`;
-      const start = this.overlay.className.indexOf(stringMach);
-      const end = this.overlay.className.indexOf(" ", start + stringMach.length);
-      if (start >= 0) {
-        currentPlacement = this.overlay.className.substr(start, end-start);
+    const placementPrefix = `${this.triggerPrefixCls}-placement-`;
+    const currentPlacement = Array.from(this.overlay.classList)
+      .find(className => className.startsWith(placementPrefix));
+    const newPlacement = placementPrefix + Overlay.appliedStylePositionMap.get(this.placement).class;
+
+    // The first position calculation can adjust placement before the initial DOM
+    // placement is applied. Compare against the rendered class, not only the
+    // placement from the previous calculation, so that first flip is reflected.
+    if (currentPlacement !== newPlacement) {
+      if (currentPlacement) {
+        this.overlay.classList.replace(currentPlacement, newPlacement);
       } else {
-        currentPlacement = Overlay.appliedStylePositionMap.get(this.initialPlacement).class;
+        this.overlay.classList.add(newPlacement);
       }
-      const newPlacement = stringMach + Overlay.appliedStylePositionMap.get(this.placement).class;
-      this.overlay.classList.replace(currentPlacement, newPlacement);
     }
   }
 

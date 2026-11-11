@@ -15,6 +15,8 @@ namespace AntDesign
         int GetOnFocusPickerIndex();
         void ChangePlaceholder(string placeholder, int index = 0);
         void ResetPlaceholder(int index = -1);
+        void ChangePreviewValue(string value, int index = 0);
+        void ResetPreviewValue(int index = -1);
         string GetFormatValue(DateTime value, int index);
         void ChangePickerType(DatePickerType type);
         void ChangePickerType(DatePickerType type, int index);

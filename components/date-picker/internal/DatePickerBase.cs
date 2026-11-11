@@ -35,7 +35,7 @@ namespace AntDesign
         /// Saving the input value after blur
         /// </summary>
         [Parameter]
-        public bool ChangeOnClose { get; set; }
+        public bool ChangeOnClose { get; set; } = true;
 
         protected DatePickerType _picker;
         protected bool _isSetPicker = false;
@@ -435,6 +435,7 @@ namespace AntDesign
         protected DatePickerInput _inputStart;
         protected DatePickerInput _inputEnd;
         protected OverlayTrigger _dropDown;
+        protected string[] _previewValues = new string[2];
 
         protected string _activeBarStyle = "";
         protected string _rangeArrowStyle = "";
@@ -942,6 +943,7 @@ namespace AntDesign
         {
             _duringManualInput = false;
             _dropDown?.Hide();
+            AutoFocus = false;
         }
 
         /// <summary>
@@ -1096,6 +1098,27 @@ namespace AntDesign
                     _placeholders[1] = arr.Length > 1 ? arr[1] : endPlaceholder;
                 }
             });
+        }
+
+        protected void ChangePreviewValue(string value, int index = 0)
+        {
+            _previewValues[index] = value;
+            StateHasChanged();
+        }
+
+        protected void ResetPreviewValue(int index = -1)
+        {
+            if (index < 0)
+            {
+                _previewValues[0] = null;
+                _previewValues[1] = null;
+            }
+            else
+            {
+                _previewValues[index] = null;
+            }
+
+            StateHasChanged();
         }
 
         private int _htmlInputSize;
@@ -1267,7 +1290,7 @@ namespace AntDesign
         {
             var index = GetOnFocusPickerIndex();
 
-            if (!visible && ChangeOnClose)
+            if (!visible && ChangeOnClose && !HasTimeInput)
             {
                 if (_pickerStatus[index].SelectedValue is not null)
                 {
@@ -1277,15 +1300,25 @@ namespace AntDesign
                 {
                     ClearValue(index);
                 }
+
+                _duringManualInput = false;
+            }
+            else if (!visible && HasTimeInput)
+            {
+                // Time selection is provisional until the user clicks OK.
+                // Discard it when the panel closes so the input falls back to
+                // the last committed value.
+                _pickerStatus[index].SelectedValue = null;
             }
             else
             {
-                _pickerStatus[index].SelectedValue = null;
+                _pickerStatus[index].SelectedValue = GetIndexValue(index);
             }
 
             if (IsRange)
             {
-                _pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
+                // don't reset the other one on close
+                //_pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
 
                 if (!visible)
                 {
@@ -1472,6 +1505,16 @@ namespace AntDesign
         void IDatePicker.ResetPlaceholder(int index)
         {
             ResetPlaceholder(index);
+        }
+
+        void IDatePicker.ChangePreviewValue(string value, int index)
+        {
+            ChangePreviewValue(value, index);
+        }
+
+        void IDatePicker.ResetPreviewValue(int index)
+        {
+            ResetPreviewValue(index);
         }
 
         string IDatePicker.GetFormatValue(DateTime value, int index)
