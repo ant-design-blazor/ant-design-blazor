@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <AntDesignBuildNodeVersion Condition="'$(AntDesignBuildNodeVersion)' == ''">18</AntDesignBuildNodeVersion>
     <AntDesignBuildNodeCommand>npm exec --yes --package=node@$(AntDesignBuildNodeVersion) -- node</AntDesignBuildNodeCommand>
   </PropertyGroup>
@@ -40,9 +40,9 @@
 
   <Target Name="RunCli" BeforeTargets="Build">
     <Copy SourceFiles="@(DocFiles)" DestinationFolder="$(ProjectDir)\wwwroot\docs\%(RecursiveDir)" ContinueOnError="true" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) demo2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/meta" ContinueOnError="true" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) menu2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/docs $(ProjectDir)/wwwroot/meta" ContinueOnError="true" />
-    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net10.0 --project $(CLIPath) docs2html $(ProjectDir)/wwwroot/docs ./site/AntDesign.Docs/wwwroot/docs" ContinueOnError="true" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net11.0 --project $(CLIPath) demo2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/meta" ContinueOnError="true" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net11.0 --project $(CLIPath) menu2json $(ProjectDir)/Demos $(ProjectDir)/wwwroot/docs $(ProjectDir)/wwwroot/meta" ContinueOnError="true" />
+    <Exec WorkingDirectory="$(SolutionDir)" Command="dotnet run -f net11.0 --project $(CLIPath) docs2html $(ProjectDir)/wwwroot/docs ./site/AntDesign.Docs/wwwroot/docs" ContinueOnError="true" />
 
     <!-- Copy generated meta JSON into the MCP project's data directory so it's included in the package -->
     <ItemGroup>
