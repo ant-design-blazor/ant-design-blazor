@@ -40,6 +40,7 @@ The following APIs are shared by DatePicker, YearPicker, MonthPicker, RangePicke
 | autoFocus | get focus when component mounted | boolean | false |  |
 | BoundaryAdjustMode | `Dropdown` adjustment strategy (when for example browser resize is happening)         | TriggerBoundaryAdjustMode    | TriggerBoundaryAdjustMode.InView         |
 | className | picker className | string | '' |  |
+| DateCalendar | .NET `Calendar` instance used for panel calculations, selection, and navigation | Calendar | `CultureInfo.Calendar` |  |
 | dateRender | custom rendering function for date cells | function(currentDate: moment, today: moment) => React.ReactNode | - |  |
 | disabled | determine whether the DatePicker is disabled | boolean | false |  |
 | disabledDate | specify the date that cannot be selected | (currentDate: moment) => boolean | - |  |

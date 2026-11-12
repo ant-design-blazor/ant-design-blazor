@@ -17,7 +17,7 @@
 				@{					
                     var startDate = ViewStartDate;
                     bool shouldStopRender = false;
-					DateTime monthFirstDayDate = new DateTime(PickerValue.Year, PickerValue.Month, 1, 0, 0, 0);
+					DateTime monthFirstDayDate = DateHelper.CreateDate(Calendar, Calendar.GetYear(PickerValue), Calendar.GetMonth(PickerValue), 1, PickerValue);
 					bool firstWeekNotInMonth = ViewStartDate.AddDays(7).Equals(monthFirstDayDate);	
                 }
                 @for (int row = 1; row <= MaxRow; row++)
@@ -56,9 +56,10 @@
                             <td title="@GetColTitle?.Invoke(currentColDate)"
                                 class="@cellCls"
                                 @onmouseenter="e => DateOnMouseEnter(currentColDate)"
-                                @onmouseleave="e => DateOnMouseLeave()"
+                                @onmouseleave="e => DateOnMouseLeave(currentColDate)"
                                 @onclick="e=> OnValueSelect?.Invoke(currentColDate)" >
-                                <div class="@innerCellCls"> 
+                                <div class="@innerCellCls"
+                                     @onmouseenter="e => DateOnMouseEnter(currentColDate)">
                                     @if (IsCalendar)
                                     {
                                         <div class="@(PrefixCls)-calendar-date-value">

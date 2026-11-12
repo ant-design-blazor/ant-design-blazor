@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
@@ -67,6 +69,8 @@ namespace AntDesign
         private bool _showDone;
         private bool _hideDone;
         private bool _hasDestroy;
+        private CancellationTokenSource _pendingShowCancellationTokenSource;
+        private CancellationTokenSource _pendingCloseCancellationTokenSource;
 
         /// <summary>
         /// 
@@ -74,6 +78,15 @@ namespace AntDesign
         /// <returns></returns>
         protected override async Task OnParametersSetAsync()
         {
+            if (Visible)
+            {
+                CancelPendingClose();
+            }
+            else
+            {
+                CancelPendingShow();
+            }
+
             if ((Visible || Config.ForceRender) && !_hasAdd)
             {
                 _hasAdd = true;
@@ -97,34 +110,80 @@ namespace AntDesign
                     _hideDone = false;
                     _hasDestroy = false;
 
-                    await _dialog.CleanShowAnimationAsync();
-                    if (OnAfterShow.HasDelegate)
+                    var cancellationSource = new CancellationTokenSource();
+                    _pendingShowCancellationTokenSource = cancellationSource;
+                    try
                     {
-                        await OnAfterShow.InvokeAsync(null);
+                        await _dialog.CleanShowAnimationAsync(cancellationSource.Token);
+                        if (cancellationSource.IsCancellationRequested || !Visible) return;
+
+                        if (OnAfterShow.HasDelegate)
+                        {
+                            await OnAfterShow.InvokeAsync(null);
+                        }
+                    }
+                    catch (OperationCanceledException) when (cancellationSource.IsCancellationRequested)
+                    {
+                        // A close cancels the pending show animation and callback.
+                    }
+                    finally
+                    {
+                        if (ReferenceEquals(_pendingShowCancellationTokenSource, cancellationSource))
+                        {
+                            _pendingShowCancellationTokenSource = null;
+                        }
+                        cancellationSource.Dispose();
                     }
 
                 }
                 else if (!Visible)
                 {
-
-                    if (!_hideDone)
+                    if (!_hideDone || (Config.DestroyOnClose && !_hasDestroy))
                     {
-                        _hideDone = true;
-                        _showDone = false;
-
-                        if (_dialog != null)
+                        var cancellationSource = new CancellationTokenSource();
+                        _pendingCloseCancellationTokenSource = cancellationSource;
+                        try
                         {
-                            await _dialog.Hide();
-                            await Task.Delay(250);
-                            await _dialog.TryResetModalStyle();
-                        }
-                        await OnAfterHide.InvokeAsync(null);
-                    }
+                            if (!_hideDone)
+                            {
+                                _hideDone = true;
+                                _showDone = false;
 
-                    if (Config.DestroyOnClose && !_hasDestroy)
-                    {
-                        _hasDestroy = true;
-                        await DestroyAsync();
+                                if (_dialog != null)
+                                {
+                                    await _dialog.Hide();
+                                    if (cancellationSource.IsCancellationRequested || Visible) return;
+
+                                    await Task.Delay(250, cancellationSource.Token);
+                                    if (cancellationSource.IsCancellationRequested || Visible) return;
+
+                                    await _dialog.TryResetModalStyle();
+                                }
+
+                                if (cancellationSource.IsCancellationRequested || Visible) return;
+
+                                await OnAfterHide.InvokeAsync(null);
+                                if (cancellationSource.IsCancellationRequested || Visible) return;
+                            }
+
+                            if (Config.DestroyOnClose && !_hasDestroy && !cancellationSource.IsCancellationRequested && !Visible)
+                            {
+                                _hasDestroy = true;
+                                await DestroyAsync(cancellationSource.Token);
+                            }
+                        }
+                        catch (OperationCanceledException) when (cancellationSource.IsCancellationRequested)
+                        {
+                            // A reopen cancels the pending close and destroy continuation.
+                        }
+                        finally
+                        {
+                            if (ReferenceEquals(_pendingCloseCancellationTokenSource, cancellationSource))
+                            {
+                                _pendingCloseCancellationTokenSource = null;
+                            }
+                            cancellationSource.Dispose();
+                        }
                     }
                 }
             }
@@ -147,8 +206,41 @@ namespace AntDesign
             await InvokeStateHasChangedAsync();
         }
 
+        private async Task DestroyAsync(CancellationToken cancellationToken)
+        {
+            var cancel = new CancelEventArgs();
+            if (OnBeforeDestroy.HasDelegate)
+            {
+                await OnBeforeDestroy.InvokeAsync(cancel);
+            }
+
+            if (cancellationToken.IsCancellationRequested || Visible)
+            {
+                return;
+            }
+
+            _hasAdd = cancel.Cancel;
+            await InvokeStateHasChangedAsync();
+        }
+
+        private void CancelPendingShow()
+        {
+            var cancellationSource = _pendingShowCancellationTokenSource;
+            _pendingShowCancellationTokenSource = null;
+            cancellationSource?.Cancel();
+        }
+
+        private void CancelPendingClose()
+        {
+            var cancellationSource = _pendingCloseCancellationTokenSource;
+            _pendingCloseCancellationTokenSource = null;
+            cancellationSource?.Cancel();
+        }
+
         protected override void Dispose(bool disposing)
         {
+            CancelPendingShow();
+            CancelPendingClose();
             base.Dispose(disposing);
         }
     }

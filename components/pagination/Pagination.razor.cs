@@ -265,7 +265,7 @@ namespace AntDesign
         /// <summary>
         /// Any other parameters passed in get splatted onto the container element
         /// </summary>
-        [Parameter(CaptureUnmatchedValues = true)]
+        [Parameter]
         public Dictionary<string, object>? UnmatchedAttributes { get; set; }
 
         private const string PrefixCls = "ant-pagination";

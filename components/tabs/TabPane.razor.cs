@@ -61,6 +61,12 @@ namespace AntDesign
         [Parameter]
         public bool Closable { get; set; } = true;
 
+        /// <summary>
+        /// Callback executed before the tab is closed. The callback can cancel the closing operation.
+        /// </summary>
+        [Parameter]
+        public EventCallback<CloseEventArgs<MouseEventArgs>> OnClosing { get; set; }
+
         internal bool IsActive => _isActive;
 
         private bool HasTabTitle => Tab != null || TabTemplate != null;
@@ -144,6 +150,26 @@ namespace AntDesign
             _hasClosed = true;
 
             Dispose();
+        }
+
+        private async Task OnCloseClick(MouseEventArgs e)
+        {
+            var closeEvent = new CloseEventArgs<MouseEventArgs>(e);
+
+            if (OnClosing.HasDelegate)
+            {
+                await OnClosing.InvokeAsync(closeEvent);
+            }
+
+            if (closeEvent.Cancel)
+            {
+                return;
+            }
+
+            if (Parent != null)
+            {
+                await Parent.RemoveTab(this);
+            }
         }
 
         protected override void Dispose(bool disposing)

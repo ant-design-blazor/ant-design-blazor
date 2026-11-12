@@ -31,6 +31,8 @@ Cascader
 | Placement            |  Use preset popup align config from builtinPlacements.    | `BottomLeft` \| `BottomRight` \| `TopLeft` \| `TopRight` |  -  |
 | Size                 |  input size, one of 'large','middle' 'small'             |  string           |  无	          |
 | OnChange             |  callback when finishing cascader select (List<CascaderNode>, string, string) => void  |   -   |  -            |
+| Multiple             | enable checkbox-based multiple selection | bool | false |
+| ShowCheckedStrategy  | tags to render in multiple mode: `ShowAll`, `ShowParent`, or `ShowChild` | CascaderCheckedStrategy | ShowChild |
 
 
 CascaderNode
@@ -40,5 +42,6 @@ CascaderNode
 | Label            |  Label                |  string        |  -        |
 | Value            |  Value                   |  string        |  -        |
 | Disabled         |  Disabled            |  bool          |  false    |
+| DisableCheckbox  | Disable the checkbox in multiple mode | bool | false |
 | HasChildren      |  HasChildren    |  bool          |  -        |
 | Children         |  Children                 |  AntCheckbox[] |  -        |

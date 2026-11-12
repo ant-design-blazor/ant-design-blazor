@@ -2,12 +2,12 @@
 @inherits AntDomComponentBase
 
 <CascadingValue Value="this" IsFixed>
-    <ul class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+    <ul @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
         @ChildContent
 
         @foreach (var item in _displayItems)
         {
-            <li class="@item.ItemClass" @ref="item.Ref" style="@item.Style" id="@item.Id">
+            <li @attributes="item.AdditionalAttributes" class="@item.ItemClass" @ref="item.Ref" style="@item.Style" id="@item.Id">
 				@if (!string.IsNullOrEmpty(item.Label))
 				{
 					<div class="ant-timeline-item-label">@item.Label</div>

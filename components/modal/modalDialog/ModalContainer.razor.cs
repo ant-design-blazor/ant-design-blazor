@@ -30,7 +30,7 @@ namespace AntDesign
 
         private void OnLocationChanged(object sender, EventArgs e)
         {
-            _modalRefs.Clear();
+            _modalRefs.RemoveAll(x => !x.Config.KeepOnRouteChange);
             InvokeStateHasChanged();
         }
 

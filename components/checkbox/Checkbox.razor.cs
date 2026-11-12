@@ -58,7 +58,7 @@ namespace AntDesign
         /// <summary>
         /// Label for checkbox
         /// </summary>
-        [Parameter] 
+        [Parameter]
         public string Label { get; set; }
 
         [CascadingParameter] private ICheckboxGroup CheckboxGroup { get; set; }
@@ -71,6 +71,8 @@ namespace AntDesign
         private bool IsDisabled => Disabled || (CheckboxGroup?.Disabled ?? false);
 
         private Dictionary<string, object> _attributes;
+
+        protected bool HasLabel => ChildContent != null || !string.IsNullOrEmpty(Label);
 
         protected override void OnInitialized()
         {
@@ -99,22 +101,23 @@ namespace AntDesign
 
         protected ClassMapper ClassMapperLabel { get; } = new ClassMapper();
 
-        private string _prefixCls = "ant-checkbox";
+        [CascadingParameter(Name = "PrefixCls")]
+        public string PrefixCls { get; set; } = "ant-checkbox";
 
         protected void SetClass()
         {
             ClassMapperLabel
-                .Add($"{_prefixCls}-wrapper")
-                .If($"{_prefixCls}-wrapper-checked", () => Checked)
-                .If($"{_prefixCls}-wrapper-disabled", () => IsDisabled)
-                .If($"{_prefixCls}-group-item", () => CheckboxGroup != null);
+                .Add($"{PrefixCls}-wrapper")
+                .If($"{PrefixCls}-wrapper-checked", () => Checked)
+                .If($"{PrefixCls}-wrapper-disabled", () => IsDisabled)
+                .If($"{PrefixCls}-group-item", () => CheckboxGroup != null);
 
             ClassMapper
-                .Add(_prefixCls)
-                .If($"{_prefixCls}-checked", () => Checked && !Indeterminate)
-                .If($"{_prefixCls}-disabled", () => IsDisabled)
-                .If($"{_prefixCls}-indeterminate", () => Indeterminate)
-                .If($"{_prefixCls}-rtl", () => RTL);
+                .Add(PrefixCls)
+                .If($"{PrefixCls}-checked", () => Checked && !Indeterminate)
+                .If($"{PrefixCls}-disabled", () => IsDisabled)
+                .If($"{PrefixCls}-indeterminate", () => Indeterminate)
+                .If($"{PrefixCls}-rtl", () => RTL);
         }
 
         protected async Task InputCheckedChange(ChangeEventArgs args)
