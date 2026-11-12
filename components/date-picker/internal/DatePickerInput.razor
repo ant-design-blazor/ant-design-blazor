@@ -5,6 +5,7 @@
 {
     <div class="@(PrefixCls)-input @(PreviewValue is not null ? $"{PrefixCls}-input-placeholder" : "")">
         <input @ref="Ref"
+               @attributes="AdditionalAttributes"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
                @onkeydown="@OnKeyDown"
@@ -52,6 +53,7 @@ else
 {
     <div class="@(PrefixCls)-input @(Active ? $"{PrefixCls}-input-active" : "") @(PreviewValue is not null ? $"{PrefixCls}-input-placeholder" : "")">
         <input @ref="Ref"
+               @attributes="AdditionalAttributes"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
                @onkeydown="@OnKeyDown"

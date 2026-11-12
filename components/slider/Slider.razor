@@ -4,7 +4,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @using System.Globalization
 
-<div class="@ClassMapper.Class" style="user-select:none;@Style" id="@Id" @ref="Ref"
+<div @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="user-select:none;@Style" id="@Id" @ref="Ref"
      @onpointerdown="(e) => OnPointerDown(e)">
     <div class="ant-slider-rail">
     </div>

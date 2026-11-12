@@ -7,7 +7,7 @@
 
 @if (ChildContent != null)
 {
-    <div class="@ClassMapper.Class"
+    <div @attributes="AdditionalAttributes" class="@ClassMapper.Class"
          style="@inlineFlexDisplay @Style"
          id="@Id"
          @ref="@Ref"

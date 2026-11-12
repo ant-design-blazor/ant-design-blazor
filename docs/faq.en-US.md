@@ -21,6 +21,41 @@ And make sure that `#some-scroll-area` element is `position: relative` or `posit
 
 See: [https://ant.design/docs/react/customize-theme](https://ant.design/docs/react/customize-theme)
 
+### How do I add HTML attributes such as `data-testid` or `aria-describedby`?
+
+DOM components inherit the `AdditionalAttributes` catch-all parameter from `AntDomComponentBase`. You can pass unmatched attributes directly or supply an `IReadOnlyDictionary<string, object>` through `AdditionalAttributes`. The dictionary type is the same as the existing input API.
+
+```razor
+<Button data-testid="save-button" data-action="save" aria-describedby="save-help"
+        form="editor" name="action" value="save">
+    Save
+</Button>
+<span id="save-help">Saves your current changes.</span>
+```
+
+Attributes are updated or removed on the next render when the dictionary changes or is cleared. Boolean values follow Blazor HTML rendering rules: `true` adds a boolean attribute and `false`/`null` removes it. Use strings such as `"false"` for ARIA values.
+
+| Component | Attribute target |
+| --- | --- |
+| `Button`, `DownloadButton`, `Switch` | Native `button` |
+| `Input`, `InputNumber`, `Checkbox`, `Radio`, `SegmentedItem` | Native `input`, including when surrounded by wrappers |
+| `TextArea`, `Mentions` | Native `textarea` |
+| `DatePicker`, including time picker mode | Editable `input` |
+| `RangePicker` | Both editable inputs; avoid attributes that must be unique, such as `id` |
+| `Select`, `TreeSelect`, `Cascader` | Search/combobox `input` in either single or multiple mode |
+| `AutoComplete` | Default input; when supplying `ChildContent`, attach attributes to your custom input |
+| `Image`, `MenuLink`, `Form` | `img`, `a`, and `form`, respectively |
+| `TabPane`, `RateItem` | Element with `role="tab"` or `role="radio"` |
+| `Modal`, `Confirm` | Dialog element with `role="document"` |
+| `Column`, `ActionColumn`, `Selection`, `SummaryCell` | Rendered header/body cells; no forwarding to measurement or placeholder cells |
+| `Table`, `Slider`, groups, layout, typography, and other ordinary DOM components | Outermost component element (for `Table`, the wrapper rather than each table/cell) |
+| `Tooltip`, `Popover`, `Popconfirm`, `Dropdown` | Trigger wrapper, when present; with `Unbound`/external trigger references, attach attributes to the supplied trigger |
+| `Message`, `Notification` | Each rendered placement container |
+
+Dedicated parameters and component-managed attributes win collisions. Set `Class`, `Style`, `Id`, `Disabled`, `AriaLabel`, etc. through their parameters; dictionary entries do not replace generated classes, managed ARIA state, or internal event handlers. Use component callbacks such as `OnClick` for managed events. Additional event attributes are accepted where the component has no handler for that event. Existing named dictionaries (`Attributes`, `UnmatchedAttributes`, `OnCell`, `OnHeaderCell`, and row attributes) remain supported; their entries take precedence over the shared dictionary for collisions. Existing behavior within these legacy dictionaries is retained.
+
+`AntComponentBase` itself has no attribute contract. Providers, templates, service containers (`AntContainer`, modal/drawer/message host containers, image preview containers), and other components without their own DOM element do not forward attributes. `Mentions.TextareaTemplate` also owns its markup: attach attributes inside the template. Custom components derived from `AntDomComponentBase` must explicitly forward `AdditionalAttributes` to their chosen element, placing Razor `@attributes` before managed attributes. With `RenderTreeBuilder`, call `AddMultipleAttributes` before adding managed attributes.
+
 ### Why does modifying props in mutable way not trigger a component update?
 
 Blazor use shallow compare of props to optimize performance. You should always pass the new object when updating the state. Please ref [React's document](https://docs.microsoft.com/zh-cn/aspnet/core/blazor/components/lifecycle?view=aspnetcore-3.1&WT.mc_id=DT-MVP-5003987#after-parameters-are-set-onparameterssetasync)

@@ -5,7 +5,7 @@
 @using AntDesign.Internal;
 
 <Spin Spinning="Loading" WrapperClassName="ant-form-spin-wrapper">
-    <EditForm class="@ClassMapper.Class"
+    <EditForm @attributes="AdditionalAttributes" class="@ClassMapper.Class"
               style="@Style"
               id="@Id"
               method="@Method"
