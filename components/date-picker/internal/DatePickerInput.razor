@@ -3,15 +3,16 @@
 
 @if (!IsRange)
 {
-    <div class="@(PrefixCls)-input">
-        <input @attributes="AdditionalAttributes" @ref="Ref"
+    <div class="@(PrefixCls)-input @(PreviewValue is not null ? $"{PrefixCls}-input-placeholder" : "")">
+        <input @ref="Ref"
+               @attributes="AdditionalAttributes"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
                @onkeydown="@OnKeyDown"
                @oninput="OnInput"
                @onfocus="Onfocus"
                @onblur="OnBlur"
-               @bind-value="@Value"
+               value="@(PreviewValue ?? Value ?? string.Empty)"
                maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
@@ -50,15 +51,16 @@
 }
 else
 {
-    <div class="@(PrefixCls)-input @(Active ? $"{PrefixCls}-input-active" : "")">
-        <input @attributes="AdditionalAttributes" @ref="Ref"
+    <div class="@(PrefixCls)-input @(Active ? $"{PrefixCls}-input-active" : "") @(PreviewValue is not null ? $"{PrefixCls}-input-placeholder" : "")">
+        <input @ref="Ref"
+               @attributes="AdditionalAttributes"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
                @onkeydown="@OnKeyDown"
                @oninput="OnInput"
                @onfocus="Onfocus"
                @onblur="OnBlur"
-               @bind-value="@Value"
+               value="@(PreviewValue ?? Value ?? string.Empty)"
                maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
@@ -77,6 +79,9 @@ else
 
     [Parameter]
     public string Value { get; set; }
+
+    [Parameter]
+    public string PreviewValue { get; set; }
 
     [Parameter]
     public string Placeholder { get; set; }

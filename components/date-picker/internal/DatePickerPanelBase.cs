@@ -164,6 +164,20 @@ namespace AntDesign
 
         protected void OnSelectSecond(DateTime date) => OnSelect?.Invoke(CombineNewShowDate(second: date.Second), GetPickerIndex());
 
+        protected void OnPreviewHour(DateTime date) => PreviewValue(CombineNewShowDate(hour: date.Hour));
+
+        protected void OnPreviewMinute(DateTime date) => PreviewValue(CombineNewShowDate(minute: date.Minute));
+
+        protected void OnPreviewSecond(DateTime date) => PreviewValue(CombineNewShowDate(second: date.Second));
+
+        protected void ResetPreviewValue() => DatePicker.ResetPreviewValue(GetPickerIndex());
+
+        private void PreviewValue(DateTime date)
+        {
+            var index = GetPickerIndex();
+            DatePicker.ChangePreviewValue(DatePicker.GetFormatValue(date, index), index);
+        }
+
         protected void OnSelectShowYear(DateTime date) => ChangePickerValue(CombineNewShowDate(year: Calendar.GetYear(date)), GetPickerIndex());
 
         protected void OnSelectShowMonth(DateTime date) => ChangePickerValue(CombineNewShowDate(month: Calendar.GetMonth(date)), GetPickerIndex());

@@ -433,7 +433,7 @@ namespace AntDesign
         private SelectOptionItem<TItemValue, TItem> CreateOption(TreeNode<TItem> node, bool append = false)
         {
             if (!TreeCheckable || TreeCheckStrictly || (ShowCheckedStrategy == TreeCheckedStrategy.ShowAll)
-                    || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowParent) && ((node.ParentNode == null) || (!_cachedValues.Contains(_getValue(node.ParentNode.DataItem)))))
+                    || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowParent) && ((node.ParentNode == null) || (!_cachedValues.Contains(GetValueFromNode(node.ParentNode)))))
                     || ((ShowCheckedStrategy == TreeCheckedStrategy.ShowChild) && !node.HasChildNodes))
             {
                 var o = new SelectOptionItem<TItemValue, TItem>()
@@ -604,18 +604,13 @@ namespace AntDesign
                 Values = [];
                 return;
             }
-            var node = args.Node;
+            var checkedValues = _tree._allNodes
+                .Where(node => node.Checked)
+                .Select(GetValueFromNode)
+                .ToArray();
 
-            var key = node.Key;
-            var value = GetValueFromNode(node);
-            if (_tree.CheckedKeys.Contains(key))
-            {
-                Values = Values == null ? [value] : Values.Append(value);
-            }
-            else
-            {
-                Values = Values?.Where(v => !v.AllNullOrEquals(value)).ToArray();
-            }
+            // Keep the selection order while including changes caused by parent-child checking.
+            Values = (Values ?? []).Intersect(checkedValues).Union(checkedValues).ToArray();
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)

@@ -228,6 +228,7 @@ namespace AntDesign
             }
 
             await _dropDown.Show();
+            AutoFocus = true;
 
             if (index == 0)
             {
@@ -381,7 +382,9 @@ namespace AntDesign
             // }
 
             _duringManualInput = false;
-            AutoFocus = false;
+            // A blur on one endpoint can be part of a focus transfer to the other.
+            // Keep the range picker focused while either endpoint owns focus.
+            AutoFocus = _inputStart.IsOnFocused || _inputEnd.IsOnFocused;
         }
 
         protected override void OnInitialized()
@@ -771,7 +774,8 @@ namespace AntDesign
             {
                 // if value is changed, focus the input
                 var index = GetOnFocusPickerIndex();
-                await Focus(index);
+                await Blur(index);
+                AutoFocus = false;
             }
         }
 
@@ -783,7 +787,11 @@ namespace AntDesign
 
         internal bool ShowClear()
         {
-            return CurrentValue is Array array && (array.GetValue(0) is not null || array.GetValue(1) is not null) && AllowClear;
+            return AllowClear
+                && !IsDisabled()
+                && (_pickerStatus[0].SelectedValue is not null
+                    || _pickerStatus[1].SelectedValue is not null
+                    || Value is Array array && (array.GetValue(0) is not null || array.GetValue(1) is not null));
         }
 
         protected override bool IsDisabled(int? index = null)
