@@ -7,6 +7,10 @@ on:
     branches:
       - doc-fix
 
+concurrency:
+  group: publish-docs-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-site:
     name: Build docs site
