@@ -52,11 +52,10 @@ sed -i "s/{version}/${VERSION}/g" site/AntDesign.Docs.Wasm/wwwroot/version.json
 sed -i "s/{version}/${VERSION}/g" site/AntDesign.Docs.Wasm/wwwroot/index.html
 sed -i "s/{version}/${VERSION}/g" site/AntDesign.Docs.Wasm/wwwroot/service-worker.published.js
 
-# RunCli generates the JSON data consumed by the docs site during publishing.
-# Running only this target avoids building every project and target framework in
-# the solution before the docs publish builds its own project references.
-dotnet msbuild ./site/AntDesign.Docs.Build/AntDesign.Docs.Build.csproj \
-  -target:RunCli -property:Configuration=Debug
+# Building Docs.Build runs its Gulp targets to generate the component JS/CSS and
+# docs assets, then runs RunCli to generate the JSON data consumed by the site.
+# Build only this project instead of every project and target framework in the solution.
+dotnet build ./site/AntDesign.Docs.Build/AntDesign.Docs.Build.csproj -c Debug
 
 PUBLISH_ARGS=(./site/AntDesign.Docs.Wasm -c Release -o "${PUBLISH_DIR}")
 if [[ "${ENABLE_AOT}" == "true" ]]; then
