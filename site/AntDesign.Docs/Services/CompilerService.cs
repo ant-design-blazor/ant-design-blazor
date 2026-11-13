@@ -182,7 +182,7 @@ namespace AntDesign.Docs.Services
 
             var csharpDocument = codeDocument.GetCSharpDocument();
 
-            var syntaxTree = CSharpSyntaxTree.ParseText(csharpDocument.GeneratedCode, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp10));
+            var syntaxTree = CSharpSyntaxTree.ParseText(csharpDocument.GeneratedCode, CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.Latest));
 
             _compilation = _compilation.RemoveAllSyntaxTrees().AddSyntaxTrees(syntaxTree);
 
