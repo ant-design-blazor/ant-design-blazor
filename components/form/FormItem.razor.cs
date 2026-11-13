@@ -352,7 +352,12 @@ namespace AntDesign
             {
                 InvokeAsync(UpdateValidateMessage);
             };
+            _validationStateChangedHandler = (s, e) =>
+            {
+                InvokeAsync(UpdateValidateMessage);
+            };
             CurrentEditContext.OnValidationRequested += _validationRequestedHandler;
+            CurrentEditContext.OnValidationStateChanged += _validationStateChangedHandler;
         }
 
         private void SetInternalIsRequired()
@@ -460,6 +465,17 @@ namespace AntDesign
             _validationMessages = [.. CurrentEditContext.GetValidationMessages(_fieldIdentifier).Distinct()];
             _isValid = _validationMessages.Length == 0;
 
+#if NET11_0_OR_GREATER
+            if (CurrentEditContext.IsValidationPending(_fieldIdentifier))
+            {
+                _validateStatus = FormValidateStatus.Validating;
+            }
+            else if (CurrentEditContext.IsValidationFaulted(_fieldIdentifier))
+            {
+                _validateStatus = FormValidateStatus.Error;
+            }
+            else
+#endif
             _validateStatus = _isValid ? _originalValidateStatus ?? FormValidateStatus.Default : FormValidateStatus.Error;
 
             _onValidated(_validationMessages);
@@ -581,6 +597,13 @@ namespace AntDesign
 
             foreach (var rule in _rules)
             {
+#if NET11_0_OR_GREATER
+                if (rule.ValidationAttribute is AsyncValidationAttribute)
+                {
+                    continue;
+                }
+#endif
+
                 if (rule.Required == true && !IsRequired)
                 {
                     continue;

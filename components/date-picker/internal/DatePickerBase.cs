@@ -35,7 +35,7 @@ namespace AntDesign
         /// Saving the input value after blur
         /// </summary>
         [Parameter]
-        public bool ChangeOnClose { get; set; }
+        public bool ChangeOnClose { get; set; } = true;
 
         protected DatePickerType _picker;
         protected bool _isSetPicker = false;
@@ -165,6 +165,14 @@ namespace AntDesign
                 base.CultureInfo = value;
             }
         }
+
+        /// <summary>
+        /// .NET calendar used for date selection and panel navigation. When omitted, the calendar of <see cref="CultureInfo"/> is used.
+        /// </summary>
+        [Parameter]
+        public System.Globalization.Calendar DateCalendar { get; set; }
+
+        private System.Globalization.Calendar EffectiveCalendar => DateCalendar ?? CultureInfo.Calendar;
 
         /// <summary>
         /// If time should be shown or not. Contains the boolean decision made from setting <see cref="ShowTime" />
@@ -427,6 +435,7 @@ namespace AntDesign
         protected DatePickerInput _inputStart;
         protected DatePickerInput _inputEnd;
         protected OverlayTrigger _dropDown;
+        protected string[] _previewValues = new string[2];
 
         protected string _activeBarStyle = "";
         protected string _rangeArrowStyle = "";
@@ -934,6 +943,7 @@ namespace AntDesign
         {
             _duringManualInput = false;
             _dropDown?.Hide();
+            AutoFocus = false;
         }
 
         /// <summary>
@@ -1052,9 +1062,9 @@ namespace AntDesign
         {
             return Picker switch
             {
-                DatePickerType.Year => pickerValue.AddYears(offset * 10),
-                DatePickerType.Quarter or DatePickerType.Decade or DatePickerType.Month => pickerValue.AddYears(offset),
-                _ => pickerValue.AddMonths(offset)
+                DatePickerType.Year => EffectiveCalendar.AddYears(pickerValue, offset * 10),
+                DatePickerType.Quarter or DatePickerType.Decade or DatePickerType.Month => EffectiveCalendar.AddYears(pickerValue, offset),
+                _ => EffectiveCalendar.AddMonths(pickerValue, offset)
             };
         }
 
@@ -1088,6 +1098,27 @@ namespace AntDesign
                     _placeholders[1] = arr.Length > 1 ? arr[1] : endPlaceholder;
                 }
             });
+        }
+
+        protected void ChangePreviewValue(string value, int index = 0)
+        {
+            _previewValues[index] = value;
+            StateHasChanged();
+        }
+
+        protected void ResetPreviewValue(int index = -1)
+        {
+            if (index < 0)
+            {
+                _previewValues[0] = null;
+                _previewValues[1] = null;
+            }
+            else
+            {
+                _previewValues[index] = null;
+            }
+
+            StateHasChanged();
         }
 
         private int _htmlInputSize;
@@ -1164,7 +1195,7 @@ namespace AntDesign
             else
                 format = Format;
 
-            return value.ToString(format, CultureInfo);
+            return CalendarFormatter.FormatDate(value, format, CultureInfo, EffectiveCalendar);
         }
 
         /// <summary>
@@ -1259,7 +1290,7 @@ namespace AntDesign
         {
             var index = GetOnFocusPickerIndex();
 
-            if (!visible && ChangeOnClose)
+            if (!visible && ChangeOnClose && !HasTimeInput)
             {
                 if (_pickerStatus[index].SelectedValue is not null)
                 {
@@ -1269,15 +1300,25 @@ namespace AntDesign
                 {
                     ClearValue(index);
                 }
+
+                _duringManualInput = false;
+            }
+            else if (!visible && HasTimeInput)
+            {
+                // Time selection is provisional until the user clicks OK.
+                // Discard it when the panel closes so the input falls back to
+                // the last committed value.
+                _pickerStatus[index].SelectedValue = null;
             }
             else
             {
-                _pickerStatus[index].SelectedValue = null;
+                _pickerStatus[index].SelectedValue = GetIndexValue(index);
             }
 
             if (IsRange)
             {
-                _pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
+                // don't reset the other one on close
+                //_pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
 
                 if (!visible)
                 {
@@ -1416,11 +1457,11 @@ namespace AntDesign
                     return dateTime.AddMilliseconds(-dateTime.Millisecond);
 
                 case DatePickerType.Year:
-                    return new DateTime(dateTime.Year, 1, 1);
+                    return DateHelper.CreateDate(EffectiveCalendar, EffectiveCalendar.GetYear(dateTime), 1, 1, dateTime);
 
                 case DatePickerType.Month:
                 case DatePickerType.Quarter:
-                    return new DateTime(dateTime.Year, dateTime.Month, 1);
+                    return DateHelper.CreateDate(EffectiveCalendar, EffectiveCalendar.GetYear(dateTime), EffectiveCalendar.GetMonth(dateTime), 1, dateTime);
             }
 
             if (ShowTime.Value != null)
@@ -1464,6 +1505,16 @@ namespace AntDesign
         void IDatePicker.ResetPlaceholder(int index)
         {
             ResetPlaceholder(index);
+        }
+
+        void IDatePicker.ChangePreviewValue(string value, int index)
+        {
+            ChangePreviewValue(value, index);
+        }
+
+        void IDatePicker.ResetPreviewValue(int index)
+        {
+            ResetPreviewValue(index);
         }
 
         string IDatePicker.GetFormatValue(DateTime value, int index)

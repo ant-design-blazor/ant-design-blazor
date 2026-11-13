@@ -5,7 +5,7 @@
 
 @if (ChildContent != null)
 {
-    <div class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-flex; @Style"
+    <div @attributes="AdditionalAttributes" class="@ClassMapper.Class" @ref="@Ref" Id="@Id" style="display: inline-flex; @Style"
          @onclick="OnClickDiv"
          @onmouseenter="OnTriggerMouseEnter"
          @onmouseleave="OnTriggerMouseLeave"
@@ -61,7 +61,7 @@
                                         Shape="@CancelButtonProps.Shape"
                                         Icon="@CancelButtonProps.Icon"
                                         Disabled="@CancelButtonProps.Disabled"
-                                        Danger="@CancelButtonProps.IsDanger">
+                                        Danger="@CancelButtonProps.Danger">
                                     @CancelText
                                 </Button>
                             }
@@ -74,7 +74,7 @@
                                         Shape="@OkButtonProps.Shape"
                                         Icon="@OkButtonProps.Icon"
                                         Disabled="@OkButtonProps.Disabled"
-                                        Danger="@OkButtonProps.IsDanger">
+                                        Danger="@OkButtonProps.Danger">
                                     @OkText
                                 </Button>
                             }

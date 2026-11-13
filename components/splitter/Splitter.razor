@@ -5,7 +5,7 @@
     @ChildContent
 </CascadingValue>
 
-<div id="@Id" class="split-container splitter-orientation-@(Vertical?"vertical":"horizontal") @(ClassMapper.Class)"
+<div @attributes="AdditionalAttributes" id="@Id" class="split-container splitter-orientation-@(Vertical?"vertical":"horizontal") @(ClassMapper.Class)"
     style="@Style" @ref="@Ref">
 
     <div class="pane-of-split-container ant-splitter-panel"

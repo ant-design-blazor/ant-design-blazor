@@ -103,8 +103,8 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework) == 'net11.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0-rc.3.26522.148" />
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="11.0.100-rc.3.26522.148">
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="11.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="11.0.100">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -112,6 +112,16 @@
 
   <ItemGroup>
     <PackageReference Include="OneOf" Version="3.0.271" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\AntDesign.SourceGenerators\AntDesign.SourceGenerators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+    <None Include="..\src\AntDesign.SourceGenerators\bin\$(Configuration)\netstandard2.0\AntDesign.SourceGenerators.dll"
+          Pack="true"
+          PackagePath="analyzers/dotnet/cs"
+          Visible="false" />
   </ItemGroup>
 
   <ItemGroup>

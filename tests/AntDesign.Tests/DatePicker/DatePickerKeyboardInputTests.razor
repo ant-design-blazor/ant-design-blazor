@@ -58,7 +58,7 @@
 
         var defaultValueAsString = defaultValue.ToString(format, null);
         var cut = Render<AntDesign.DatePicker<T>>(
-        @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" />
+        @<DatePicker @bind-Value="@value" DefaultValue="@defaultValue" ChangeOnClose="false" />
     );
 
         //Act

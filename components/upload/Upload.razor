@@ -3,7 +3,7 @@
 
 @using AntDesign.Internal;
 
-<span style="@Style" @ref="Ref" class="@ClassMapper.Class"
+<span @attributes="AdditionalAttributes" style="@Style" @ref="Ref" class="@ClassMapper.Class"
      @ondragover="@HandleDrag"
      @ondragleave="@HandleDrag"
      @ondrop="@HandleDrag"
