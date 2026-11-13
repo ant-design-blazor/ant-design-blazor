@@ -106,6 +106,7 @@ namespace AntDesign.Docs.Pages
             var fullPageName = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
             fullPageName = fullPageName.IndexOf('/') > 0 ? fullPageName.Substring(fullPageName.IndexOf('/') + 1) : fullPageName;
             fullPageName = fullPageName.IndexOf('#') > 0 ? fullPageName.Substring(0, fullPageName.IndexOf('#')) : fullPageName;
+            fullPageName = fullPageName.TrimEnd('/');
             if (fullPageName.StartsWith("docs"))
             {
                 return;
