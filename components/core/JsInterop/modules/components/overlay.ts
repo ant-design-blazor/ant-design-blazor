@@ -804,12 +804,12 @@ export class Overlay {
     //usually first offsetHeight is taken, as the measurement contains the borders
     this.triggerPosition.height = this.triggerInfo.offsetHeight != 0 ? this.triggerInfo.offsetHeight 
       : this.triggerInfo.clientHeight;    
+    this.triggerPosition.top = this.containerInfo.scrollTop + this.triggerInfo.absoluteTop
+      - this.containerInfo.absoluteTop - this.containerInfo.clientTop;
     if (this.overlayPreset) {
-      this.triggerPosition.top = this.triggerInfo.absoluteTop + this.overlayPreset.y;
+      // Cursor presets are offsets within the trigger, in the same container coordinate space.
+      this.triggerPosition.top += this.overlayPreset.y;
       this.triggerPosition.height = 0;
-    } else {
-      this.triggerPosition.top = this.containerInfo.scrollTop + this.triggerInfo.absoluteTop
-        - this.containerInfo.absoluteTop - this.containerInfo.clientTop;
     }
     this.triggerPosition.absoluteTop = this.triggerInfo.absoluteTop;
 
@@ -836,13 +836,11 @@ export class Overlay {
     //usually first offsetHeight is taken, as the measurement contains the borders    
     this.triggerPosition.width = this.triggerInfo.offsetWidth != 0 ? this.triggerInfo.offsetWidth : this.triggerInfo.clientWidth;
     
-    //let triggerLeft: number;
+    this.triggerPosition.left = this.containerInfo.scrollLeft + this.triggerInfo.absoluteLeft
+      - this.containerInfo.absoluteLeft - this.containerInfo.clientLeft;
     if (this.overlayPreset) {
-      this.triggerPosition.left = this.triggerInfo.absoluteLeft + this.overlayPreset.x;
+      this.triggerPosition.left += this.overlayPreset.x;
       this.triggerPosition.width = 0;
-    } else {
-      this.triggerPosition.left = this.containerInfo.scrollLeft + this.triggerInfo.absoluteLeft
-        - this.containerInfo.absoluteLeft - this.containerInfo.clientLeft;
     }
     this.triggerPosition.absoluteLeft = this.triggerInfo.absoluteLeft;
 
