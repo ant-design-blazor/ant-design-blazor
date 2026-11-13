@@ -78,7 +78,12 @@ namespace AntDesign
         private int _parametersHashCode;
 
         /// <summary>
-        /// Render mode of table. See <see cref="AntDesign.RenderMode"/> documentation for details.
+        /// Controls when the table rerenders after its parameters are set.
+        /// <para>
+        /// <see cref="AntDesign.RerenderStrategy.ParametersHashCodeChanged"/> can skip a render when parameter hashes are unchanged.
+        /// For mutable reference-type parameters, replace changed values or implement <see cref="object.GetHashCode"/>
+        /// so updates are reflected by the parameter hash.
+        /// </para>
         /// </summary>
         [Parameter]
         public RerenderStrategy RerenderStrategy { get; set; } = RerenderStrategy.Always;
