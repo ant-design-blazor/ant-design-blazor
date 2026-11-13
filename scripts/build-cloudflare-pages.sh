@@ -33,12 +33,7 @@ if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-sdks | grep -q '^11\.'
 fi
 
 if [[ "${ENABLE_AOT}" == "true" ]]; then
-  SDK_MAJOR="$(dotnet --version | cut -d. -f1)"
-  if (( SDK_MAJOR > 10 )); then
-    dotnet workload install wasm-tools-net10
-  else
-    dotnet workload install wasm-tools
-  fi
+  dotnet workload install wasm-tools
 fi
 npm install
 
