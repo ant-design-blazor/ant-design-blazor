@@ -4,9 +4,9 @@
 @using System.Globalization;
 
 @{
-    var calendar = CultureInfo.InvariantCulture.Calendar;
+    var calendar = Calendar;
 
-    DateTime startDate = new DateTime(PickerValue.Year, 1, 1);
+    DateTime startDate = DateHelper.CreateDate(calendar, calendar.GetYear(PickerValue), 1, 1, PickerValue);
 
     const int MAX_ROW = 1;
     const int MAX_COL = 4;
@@ -21,9 +21,9 @@
                         IsInView="date => true"
                         IsToday="date => DateHelper.IsSameQuarter(date, DatePicker.CurrentDate)"
                         IsSelected="date => DateHelper.IsSameQuarter(date, Value)"
-                        GetColTitle='date => date.ToString(Locale.Lang.YearFormat, CultureInfo)'
+                        GetColTitle='date => FormatYear(date, Locale.Lang.YearFormat)'
                         OnValueSelect="date => OnSelectQuarter(date)"
-                        GetNextColValue="date => DateHelper.AddMonthsSafely(date, 3)">
+                        GetNextColValue="date => calendar.AddMonths(date, 3)">
         <RenderPickerHeader>
             <DatePickerHeader @attributes="GetAttributes()"
                               TValue="TValue"

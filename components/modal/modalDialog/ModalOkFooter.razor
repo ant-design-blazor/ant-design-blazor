@@ -7,7 +7,7 @@
     okProps.Loading = ModalProps.ConfirmLoading;
 }
 
-<div>
+<div @attributes="AdditionalAttributes">
     <Button OnClick="@HandleOk"
             Loading="@okProps.Loading"
             Type="@okProps.Type"
@@ -17,7 +17,7 @@
             Size="@okProps.Size"
             Icon="@okProps.Icon"
             Disabled="@okProps.Disabled"
-            Danger="@okProps.IsDanger">
+            Danger="@okProps.Danger">
         @{
             if (ModalProps.OkText.IsT0)
             {

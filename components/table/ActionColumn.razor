@@ -41,7 +41,7 @@ else if (IsHeader && HeaderColSpan != 0)
         <th class="ant-table-cell ant-table-row-expand-icon-cell"></th>
     }
 
-	<th class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" rowspan="@(RowSpan > 1 ? RowSpan : false)">
+	<th @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@FixedStyle @HeaderStyle" colspan="@HeaderColSpan" rowspan="@(RowSpan > 1 ? RowSpan : false)">
 		@if (TitleTemplate != null)
 		{
 			@TitleTemplate
@@ -67,7 +67,7 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
     }
 
     var title = Context.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
-    <td class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" data-label="@title">
+    <td @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@FixedStyle @Style" rowspan="@RowSpan" colspan="@ColSpan" data-label="@title">
 		@if (ColIndex == Table.TreeExpandIconColumnIndex && Table.TreeMode)
 		{
 			<span class="ant-table-row-indent indent-level-@RowData.Level" style="padding-left: @((CssSizeLength)(RowData.Level * Table.IndentSize));"></span>

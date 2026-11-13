@@ -1,0 +1,33 @@
+@using System.Globalization
+
+<DatePicker TValue="DateTime"
+            @bind-Value="_value"
+            CultureInfo="@_chineseCulture"
+            Locale="@_chineseLocale"
+            DateRender="RenderGregorianAndLunisolar" />
+
+@code {
+    private readonly ChineseLunisolarCalendar _lunarCalendar = new();
+    private readonly CultureInfo _chineseCulture = CultureInfo.GetCultureInfo("zh-CN");
+    private readonly DatePickerLocale _chineseLocale = LocaleProvider.GetLocale("zh-CN").DatePicker;
+    private DateTime _value = DateTime.Today;
+
+    private RenderFragment RenderGregorianAndLunisolar(DateTime date, DateTime _) => @<div style="line-height: 1.25; text-align: center;">
+        <div style="font-size: 14px;">@date.Day</div>
+        <div style="font-size: 11px; color: #999; white-space: nowrap;">@FormatLunisolarDate(date)</div>
+    </div>;
+
+    private string FormatLunisolarDate(DateTime date)
+    {
+        string dayName = ChineseLunisolarCalendarFormatter.FormatDay(date, _lunarCalendar, _chineseCulture);
+
+        if (date.Month == 1 && date.Day == 1)
+        {
+            return $"{ChineseLunisolarCalendarFormatter.FormatYear(date, string.Empty, _chineseCulture, _lunarCalendar)}年";
+        }
+
+        return _lunarCalendar.GetDayOfMonth(date) == 1
+            ? $"{ChineseLunisolarCalendarFormatter.FormatMonth(date, string.Empty, _chineseCulture, _lunarCalendar)}月{dayName}"
+            : dayName;
+    }
+}

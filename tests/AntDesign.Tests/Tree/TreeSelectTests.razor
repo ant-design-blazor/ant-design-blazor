@@ -1,0 +1,136 @@
+﻿@using AntDesign.Core.JsInterop.Modules.Components
+@using Microsoft.AspNetCore.Components
+@inherits AntDesignTestBase
+
+@code {
+    [Theory] // Issue: #4791
+    [InlineData(TreeCheckedStrategy.ShowAll, false, new[] { 2, 3, 4, 5 })]
+    [InlineData(TreeCheckedStrategy.ShowChild, false, new[] { 3, 4, 5 })]
+    [InlineData(TreeCheckedStrategy.ShowParent, false, new[] { 2 })]
+    [InlineData(TreeCheckedStrategy.ShowAll, true, new[] { 2 })]
+    [InlineData(TreeCheckedStrategy.ShowChild, true, new[] { 2 })]
+    [InlineData(TreeCheckedStrategy.ShowParent, true, new[] { 2 })]
+    public async Task Checking_parent_updates_all_bound_values(TreeCheckedStrategy strategy, bool strictly, int[] expected)
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+
+        IEnumerable<int> values = null;
+        IEnumerable<CheckItem> selectedItems = Array.Empty<CheckItem>();
+        var data = new[]
+        {
+            new CheckItem(2, new CheckItem(3), new CheckItem(4), new CheckItem(5)),
+            new CheckItem(1),
+        };
+        var cut = Render<TreeSelect<int, CheckItem>>(
+            @<TreeSelect TItem="CheckItem" TItemValue="int" TreeCheckable TreeDefaultExpandAll
+                        ShowCheckedStrategy="strategy" TreeCheckStrictly="strictly"
+                        DataSource="data" ItemValue="item => item.Value"
+                        KeyExpression="node => node.DataItem.Key"
+                        TitleExpression="node => node.DataItem.Key"
+                        ChildrenExpression="node => node.DataItem.Children"
+                        Values="values" ValuesChanged="newValues => values = newValues.ToArray()"
+                        OnSelectedItemsChanged="items => selectedItems = items.ToArray()" />);
+        cut.Render();
+        var nodes = cut.FindComponents<TreeNode<CheckItem>>();
+        var parent = nodes.Single(node => node.Instance.DataItem.Value == 2);
+        var other = nodes.Single(node => node.Instance.DataItem.Value == 1);
+        await other.InvokeAsync(() => other.Find(".ant-tree-checkbox").Click());
+        await parent.InvokeAsync(() => parent.Find(".ant-tree-checkbox").Click());
+
+        var expectedValues = new[] { 1 }.Concat(expected).ToArray();
+        cut.WaitForAssertion(() => values.Should().Equal(expectedValues));
+        selectedItems.Select(item => item.Value).Should().Equal(expectedValues);
+        cut.Instance.SelectedOptionItems.Select(item => item.Key).Should().BeEquivalentTo(expectedValues);
+
+        if (!strictly)
+        {
+            var child = nodes.Single(node => node.Instance.DataItem.Value == 3);
+            await child.InvokeAsync(() => child.Find(".ant-tree-checkbox").Click());
+            cut.WaitForAssertion(() => values.Should().Equal(1, 4, 5));
+            selectedItems.Select(item => item.Value).Should().Equal(1, 4, 5);
+            await child.InvokeAsync(() => child.Find(".ant-tree-checkbox").Click());
+            var recheckedValues = strategy switch
+            {
+                TreeCheckedStrategy.ShowAll => new[] { 1, 4, 5, 2, 3 },
+                TreeCheckedStrategy.ShowChild => new[] { 1, 4, 5, 3 },
+                _ => new[] { 1, 2 },
+            };
+            cut.WaitForAssertion(() => values.Should().Equal(recheckedValues));
+            selectedItems.Select(item => item.Value).Should().Equal(recheckedValues);
+        }
+
+        await parent.InvokeAsync(() => parent.Find(".ant-tree-checkbox").Click());
+        cut.WaitForAssertion(() => values.Should().Equal(1));
+        selectedItems.Select(item => item.Value).Should().Equal(1);
+        await other.InvokeAsync(() => other.Find(".ant-tree-checkbox").Click());
+        cut.WaitForAssertion(() => values.Should().BeEmpty());
+        selectedItems.Should().BeEmpty();
+    }
+
+    public record CheckItem(int Value, params CheckItem[] Children)
+    {
+        public string Key => $"node-{Value}";
+    }
+
+    [Theory] // Issue: #4791
+    [InlineData(TreeCheckedStrategy.ShowAll, new[] { "2", "3", "4" })]
+    [InlineData(TreeCheckedStrategy.ShowChild, new[] { "3", "4" })]
+    [InlineData(TreeCheckedStrategy.ShowParent, new[] { "2" })]
+    public async Task Checking_templated_parent_uses_node_keys(TreeCheckedStrategy strategy, string[] expected)
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+
+        IEnumerable<string> values = Array.Empty<string>();
+        var cut = Render<TreeSelect<string, string>>(
+            @<TreeSelect TItem="string" TItemValue="string" TreeCheckable TreeDefaultExpandAll
+                        ShowCheckedStrategy="strategy" Values="values"
+                        ValuesChanged="newValues => values = newValues.ToArray()">
+                <TreeNode TItem="string" Key="2" Title="Parent">
+                    <TreeNode TItem="string" Key="3" Title="Child 3" />
+                    <TreeNode TItem="string" Key="4" Title="Child 4" />
+                </TreeNode>
+            </TreeSelect>);
+        cut.Render();
+        var parent = cut.FindComponents<TreeNode<string>>().Single(node => node.Instance.Key == "2");
+        await parent.InvokeAsync(() => parent.Find(".ant-tree-checkbox").Click());
+
+        cut.WaitForAssertion(() => values.Should().Equal(expected));
+        await parent.InvokeAsync(() => parent.Find(".ant-tree-checkbox").Click());
+        cut.WaitForAssertion(() => values.Should().BeEmpty());
+    }
+
+    [Fact] // Issue: #4818
+    public async Task Removing_last_selected_item_updates_bound_values()
+    {
+        JSInterop.Setup<AntDesign.JsInterop.DomRect>(JSInteropConstants.GetBoundingClientRect, _ => true)
+            .SetResult(new AntDesign.JsInterop.DomRect());
+
+        IEnumerable<string> values = new[] { "leaf" };
+        IEnumerable<string> changedValues = null;
+        IEnumerable<string> changedItems = null;
+        var valuesChanged = EventCallback.Factory.Create<IEnumerable<string>>(this, (IEnumerable<string> newValues) =>
+        {
+            changedValues = newValues;
+            values = newValues;
+        });
+        var selectedItemsChanged = EventCallback.Factory.Create<IEnumerable<string>>(this, (IEnumerable<string> newItems) => changedItems = newItems);
+
+        var cut = Render<TreeSelect<string, string>>(
+            @<TreeSelect TItem="string" TItemValue="string" Multiple
+                        Values="@values"
+                        ValuesChanged="@valuesChanged"
+                        OnSelectedItemsChanged="@selectedItemsChanged">
+                <TreeNode TItem="string" Key="leaf" Title="Leaf" />
+            </TreeSelect>);
+
+        cut.Render();
+        await cut.InvokeAsync(() => cut.Find(".ant-select-selection-item-remove").MouseDown());
+
+        cut.WaitForAssertion(() => changedValues.Should().BeEmpty());
+        changedItems.Should().BeEmpty();
+        values.Should().BeEmpty();
+        cut.Instance.SelectedOptionItems.Should().BeEmpty();
+    }
+}

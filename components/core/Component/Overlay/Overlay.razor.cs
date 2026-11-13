@@ -260,6 +260,10 @@ namespace AntDesign.Internal
             _isWaitForOverlayFirstRender = false;
             _isOverlayHiding = true;
 
+            // The browser can flip the popup while it is open (for example, after
+            // scrolling). Refresh placement before selecting the leave animation.
+            await UpdatePosition(_overlayLeft, _overlayTop);
+
             _overlayCls = Trigger.GetOverlayLeaveClass();
 
             await Trigger.OnOverlayHiding.InvokeAsync(true);
@@ -388,11 +392,13 @@ namespace AntDesign.Internal
                 else if (_position is not null)
                 {
                     _hasAddOverlayToBody = true;
-                    _overlayStyle = _position.PositionCss + GetTransformOrigin();
                     if (_position.Placement != Trigger.GetPlacementType().Placement)
                     {
                         Trigger.ChangePlacementForShow(PlacementType.Create(_position.Placement));
                     }
+                    // Boundary adjustment can flip the requested placement. Use
+                    // the adjusted placement when choosing the animation origin.
+                    _overlayStyle = _position.PositionCss + GetTransformOrigin();
                 }
             }
             else

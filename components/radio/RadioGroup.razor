@@ -4,7 +4,7 @@
 
 <CascadingValue Value="this" IsFixed="@true">
 	<CascadingValue Value="true" Name="InGroup" IsFixed>
-		<div class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
+		<div @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@Style" id="@Id" @ref="Ref">
 			@if (Options.Value != null)
 			{
 				if (Options.IsT0)

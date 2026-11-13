@@ -54,9 +54,6 @@ namespace AntDesign
         /// <default value="false"/>
         [Parameter]
         public bool Disabled { get; set; }
-
-        internal virtual string PrefixCls { get; }
-
         protected override void OnValueChange(bool value)
         {
             base.OnValueChange(value);

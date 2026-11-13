@@ -4,10 +4,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using AntDesign.Form.Locale;
@@ -253,8 +255,12 @@ namespace AntDesign
         public bool IsModified => _editContext.IsModified();
 
         private EditContext _editContext;
+#if !NET11_0_OR_GREATER
         private static readonly ConditionalWeakTable<EditContext, ValidateGuard> _validateGuards = new();
         private class ValidateGuard { public bool _inProgress; }
+#else
+        private CancellationTokenSource _validateOnChangeCancellationTokenSource;
+#endif
         private IList<IFormItem> _formItems = new List<IFormItem>();
         private bool _previousValidateOnChange;
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
@@ -334,6 +340,9 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+#if NET11_0_OR_GREATER
+            Interlocked.Exchange(ref _validateOnChangeCancellationTokenSource, null)?.Cancel();
+#endif
             if (_editContext != null)
             {
                 if (OnFieldChanged.HasDelegate)
@@ -451,6 +460,11 @@ namespace AntDesign
                 return;
 
             var ctx = _editContext;
+#if NET11_0_OR_GREATER
+            var cancellationTokenSource = new CancellationTokenSource();
+            Interlocked.Exchange(ref _validateOnChangeCancellationTokenSource, cancellationTokenSource)?.Cancel();
+            _ = InvokeAsync(() => ValidateOnChangeAsync(ctx, cancellationTokenSource));
+#else
             var guard = _validateGuards.GetOrCreateValue(ctx);
 
             if (guard._inProgress)
@@ -465,7 +479,29 @@ namespace AntDesign
             {
                 guard._inProgress = false;
             }
+#endif
         }
+
+#if NET11_0_OR_GREATER
+        private async Task ValidateOnChangeAsync(EditContext context, CancellationTokenSource cancellationTokenSource)
+        {
+            try
+            {
+                if (ValidateOnChange && ReferenceEquals(context, _editContext))
+                {
+                    await context.ValidateAsync(cancellationTokenSource.Token);
+                }
+            }
+            catch (OperationCanceledException) when (cancellationTokenSource.IsCancellationRequested)
+            {
+            }
+            finally
+            {
+                Interlocked.CompareExchange(ref _validateOnChangeCancellationTokenSource, null, cancellationTokenSource);
+                cancellationTokenSource.Dispose();
+            }
+        }
+#endif
 
         /// <summary>
         /// Reset all the values in the form
@@ -502,6 +538,7 @@ namespace AntDesign
         /// <summary>
         /// Submit the form. Will trigger validation and either <see cref="OnFinish"/> or <see cref="OnFinishFailed"/>.
         /// </summary>
+        /// <remarks>Use <see cref="SubmitAsync(CancellationToken)"/> when asynchronous validation is configured.</remarks>
         public void Submit()
         {
             var isValid = Validate();
@@ -522,14 +559,51 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Submit the form after asynchronous validation. Use this method when the model contains .NET 11 async validation attributes.
+        /// </summary>
+        /// <param name="cancellationToken">A token used to cancel asynchronous validation.</param>
+        public async Task SubmitAsync(CancellationToken cancellationToken = default)
+        {
+            if (await ValidateAsync(cancellationToken))
+            {
+                await OnValidSubmit(_editContext);
+            }
+            else
+            {
+                await OnInvalidSubmit(_editContext);
+            }
+        }
+
+        /// <summary>
         /// Execute validation   
         /// </summary>
+        /// <remarks>Use <see cref="ValidateAsync(CancellationToken)"/> when asynchronous validation is configured.</remarks>
         /// <returns> return <c>true</c> if all fields are valid </returns>
         public bool Validate()
         {
+#if NET11_0_OR_GREATER
+#pragma warning disable CS0618
+#endif
             var result = _editContext.Validate();
+#if NET11_0_OR_GREATER
+#pragma warning restore CS0618
+#endif
 
             return result;
+        }
+
+        /// <summary>
+        /// Execute validation asynchronously. On .NET 11 and later, this awaits async data annotation validation.
+        /// </summary>
+        /// <param name="cancellationToken">A token used to cancel asynchronous validation.</param>
+        /// <returns><c>true</c> if all fields are valid; otherwise, <c>false</c>.</returns>
+        public async Task<bool> ValidateAsync(CancellationToken cancellationToken = default)
+        {
+#if NET11_0_OR_GREATER
+            return await _editContext.ValidateAsync(cancellationToken);
+#else
+            return Validate();
+#endif
         }
 
 

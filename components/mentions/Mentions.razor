@@ -30,9 +30,8 @@
             <div class="@ClassMapper.Class">
                 @if (TextareaTemplate == null)
                 {
-                    <textarea value="@Value"
+                    <textarea @attributes="GetAdditionalAttributes(Attributes)" value="@Value"
                           @ref="context.Current"
-                          @attributes="@Attributes"
                           @onkeydown="OnKeyDown"
                           @oninput="OnInput"
                           style="@Style"
