@@ -396,8 +396,16 @@ namespace AntDesign
                     }
                     else
                     {
-                        ConfirmLoading = false;
-                        await InvokeStateHasChangedAsync();
+                        if (ModalRef != null)
+                        {
+                            ModalRef.Config.ConfirmLoading = false;
+                            await ModalRef.UpdateConfigAsync();
+                        }
+                        else
+                        {
+                            ConfirmLoading = false;
+                            await InvokeStateHasChangedAsync();
+                        }
                     }
                 },
                 OkButtonProps = OkButtonProps,
