@@ -1,0 +1,2907 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0"/>
+    <meta no-antblazor-css=""/>
+    <title>Ant Design Blazor</title>
+    <meta name="author" content="James Yeung"/>
+    <meta name="description" content="🌈A set of enterprise-class UI components based on Ant Design and Blazor WebAssembly."/>
+    <base href="/"/>
+    <link rel="icon" href="logo.png" type="image/x-icon"/>
+    <link rel="preconnect" href="https://C9UTAZSOWW-dsn.algolia.net" crossorigin=""/>
+    <link href="_framework/dotnet.kdn1rtc8z1.js" rel="preload" as="script" fetchpriority="high" crossorigin="anonymous" integrity="sha256-aISY7Ux5G+aZOMqTWPqoZFjsNBkRU/EGMN05WnRIpXU="/>
+    <script type="importmap">{
+  "imports": {
+    "./_content/AntDesign/AntDesign.lib.module.js": "./_content/AntDesign/AntDesign.d05dnpfa5s.lib.module.js",
+    "./_framework/dotnet.js": "./_framework/dotnet.kdn1rtc8z1.js",
+    "./_framework/dotnet.native.js": "./_framework/dotnet.native.xqtf0wdmnf.js",
+    "./_framework/dotnet.runtime.js": "./_framework/dotnet.runtime.uyfhwbfd13.js"
+  },
+  "scopes": {},
+  "integrity": {
+    "./_content/AntDesign/AntDesign.d05dnpfa5s.lib.module.js": "sha256-Y7oJ7/rOncGnhfBrDAPc045cW9bF4cp1INbpZClDsxM=",
+    "./_content/AntDesign/AntDesign.lib.module.js": "sha256-Y7oJ7/rOncGnhfBrDAPc045cW9bF4cp1INbpZClDsxM=",
+    "./_framework/dotnet.js": "sha256-aISY7Ux5G+aZOMqTWPqoZFjsNBkRU/EGMN05WnRIpXU=",
+    "./_framework/dotnet.kdn1rtc8z1.js": "sha256-aISY7Ux5G+aZOMqTWPqoZFjsNBkRU/EGMN05WnRIpXU=",
+    "./_framework/dotnet.native.js": "sha256-WRQwfJB7WeZjZJD5m+jXtS2fAlj3B2EstW6SmorG3Ok=",
+    "./_framework/dotnet.native.xqtf0wdmnf.js": "sha256-WRQwfJB7WeZjZJD5m+jXtS2fAlj3B2EstW6SmorG3Ok=",
+    "./_framework/dotnet.runtime.js": "sha256-FsddKLA9kAdfVKI0lZFago0rrc/gNe0yrVtP7+D/qN0=",
+    "./_framework/dotnet.runtime.uyfhwbfd13.js": "sha256-FsddKLA9kAdfVKI0lZFago0rrc/gNe0yrVtP7+D/qN0="
+  }
+}</script>
+    <link href="_content/AntDesign.Docs/css/default.css?v=doc-fix" rel="stylesheet"/>
+    <link href="manifest.json" rel="manifest"/>
+
+
+
+<!-- %%-PRERENDERING-HEADOUTLET-BEGIN-%% -->
+
+<!-- %%-PRERENDERING-HEADOUTLET-END-%% -->
+</head>
+
+<body>
+    <noscript>Out-of-the-box mid-stage front/design solution!</noscript>
+    <app>
+<!-- %%-PRERENDERING-LOADER-BEGIN-%% -->
+    <div b-prerendering-loader style="position: fixed; inset: 0; z-index: 1; background: var(--bp-loader-background, Canvas);">
+<!-- %%-PRERENDERING-LOADER-END-%% -->
+
+        <div id="root">
+            <style>
+                html,
+                body,
+                #root {
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                #root {
+                    /* background-image: url("_content/AntDesign.Docs/home_bg.png"); */
+                    background-repeat: no-repeat;
+                    background-size: 100% auto;
+                }
+
+                .page-loading-warp {
+                    padding: 98px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .ant-spin {
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+                    margin: 0;
+                    padding: 0;
+                    color: rgba(0, 0, 0, 0.65);
+                    font-size: 14px;
+                    font-variant: tabular-nums;
+                    line-height: 1.5;
+                    list-style: none;
+                    -webkit-font-feature-settings: 'tnum';
+                    font-feature-settings: 'tnum';
+                    position: absolute;
+                    display: none;
+                    color: #1890ff;
+                    text-align: center;
+                    vertical-align: middle;
+                    opacity: 0;
+                    -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                    transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), -webkit-transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+                }
+
+                .ant-spin-spinning {
+                    position: static;
+                    display: inline-block;
+                    opacity: 1;
+                }
+
+                .ant-spin-dot {
+                    position: relative;
+                    display: inline-block;
+                    font-size: 20px;
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .ant-spin-dot-item {
+                    position: absolute;
+                    display: block;
+                    width: 9px;
+                    height: 9px;
+                    background-color: #1890ff;
+                    border-radius: 100%;
+                    -webkit-transform: scale(0.75);
+                    -ms-transform: scale(0.75);
+                    transform: scale(0.75);
+                    -webkit-transform-origin: 50% 50%;
+                    -ms-transform-origin: 50% 50%;
+                    transform-origin: 50% 50%;
+                    opacity: 0.3;
+                    -webkit-animation: antSpinMove 1s infinite linear alternate;
+                    animation: antSpinMove 1s infinite linear alternate;
+                }
+
+                .ant-spin-dot-item:nth-child(1) {
+                    top: 0;
+                    left: 0;
+                }
+
+                .ant-spin-dot-item:nth-child(2) {
+                    top: 0;
+                    right: 0;
+                    -webkit-animation-delay: 0.4s;
+                    animation-delay: 0.4s;
+                }
+
+                .ant-spin-dot-item:nth-child(3) {
+                    right: 0;
+                    bottom: 0;
+                    -webkit-animation-delay: 0.8s;
+                    animation-delay: 0.8s;
+                }
+
+                .ant-spin-dot-item:nth-child(4) {
+                    bottom: 0;
+                    left: 0;
+                    -webkit-animation-delay: 1.2s;
+                    animation-delay: 1.2s;
+                }
+
+                .ant-spin-dot-spin {
+                    -webkit-transform: rotate(45deg);
+                    -ms-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    -webkit-animation: antRotate 1.2s infinite linear;
+                    animation: antRotate 1.2s infinite linear;
+                }
+
+                .ant-spin-lg .ant-spin-dot {
+                    font-size: 32px;
+                    width: 32px;
+                    height: 32px;
+                }
+
+                .ant-spin-lg .ant-spin-dot i {
+                    width: 14px;
+                    height: 14px;
+                }
+
+                @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+                    .ant-spin-blur {
+                        background: #fff;
+                        opacity: 0.5;
+                    }
+                }
+
+                @-webkit-keyframes antSpinMove {
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes antSpinMove {
+                    to {
+                        opacity: 1;
+                    }
+                }
+
+                @-webkit-keyframes antRotate {
+                    to {
+                        -webkit-transform: rotate(405deg);
+                        transform: rotate(405deg);
+                    }
+                }
+
+                @keyframes antRotate {
+                    to {
+                        -webkit-transform: rotate(405deg);
+                        transform: rotate(405deg);
+                    }
+                }
+
+                .loading-progress-text:after {
+                    content: var(--blazor-load-percentage-text, "Loading");
+                }
+            </style>
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 420px; height: 100%;">
+                <img src="logo.png" alt="logo" width="256"/>
+                <div class="page-loading-warp">
+                    <div class="ant-spin ant-spin-lg ant-spin-spinning">
+                        <span class="ant-spin-dot ant-spin-dot-spin">
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                            <i class="ant-spin-dot-item"></i>
+                        </span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="loading-progress-text"></div>
+                </div>
+            </div>
+        </div>
+    
+<!-- %%-PRERENDERING-LOADER-BEGIN-%% -->
+</div>
+<div b-prerendering-container inert style="position: fixed; inset: 0; overflow: auto;">
+<!-- %%-PRERENDERING-LOADER-END-%% -->
+<!-- %%-PRERENDERING-BEGIN-%% -->
+
+    <div id="react-content"><header id="header" class="clearfix ">
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  flex-flow: nowrap; height: 64px;" id="ant-blazor-30bc7cb3-1668-40c4-80a9-cb5c6db99824">
+        <div class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-lg-6 ant-col-xl-5 ant-col-xxl-4" style="  " id="ant-blazor-e1cc4b58-8542-43ad-8148-abc9da5113a2">
+    <h1><a id="logo" href="/"><img alt="logo" src="/docs/assets/logo.svg">Ant Design Blazor
+                </a></h1>
+</div><div class="menu-row ant-col ant-col-md-18 ant-col-lg-18 ant-col-xl-19 ant-col-xxl-20" style="  " id="ant-blazor-e61b0762-c985-4cc4-ae89-c67ab3ce4f70">
+    <div id="search-box"><div id="docsearch"></div></div>
+
+
+    <ul class="menu-site ant-menu ant-menu-root ant-menu-light ant-menu-horizontal" id="nav" direction="ltr" role="menu">
+        
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/docs" class=""><span>Docs</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item ant-menu-item-selected" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components" class=" active"><span>Components</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/charts" class=""><span>Charts</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/experimental" class=""><span>Experimental</span></a>
+            </span>
+        </li>
+<li class="ant-menu-item-only-child ant-menu-item" role="menuitem" style=" ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="https://x.antblazor.com/en-US" class="">AI</a>
+            </span>
+        </li>
+    </ul>
+
+    <button class="header-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-9f5e6497-df70-4daf-a5cc-a894d686b0ef" type="button" __internal_stopPropagation_onclick ant-click-animating-without-extra-node="false">
+                <span>doc-fix</span>
+    </button>
+
+    <button class="header-button header-lang-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-d19a905c-1a8c-4e9d-a448-c67832c7b194" type="button" __internal_stopPropagation_onclick ant-click-animating-without-extra-node="false">
+                <span>简体中文</span>
+    </button>
+
+    <button class="header-button ant-btn ant-btn-default ant-btn-sm" id="ant-blazor-ba7b13f8-4acc-4d9a-9dfb-bc7339e0d5d0" type="button" __internal_stopPropagation_onclick ant-click-animating-without-extra-node="false">
+                <span>RTL</span>
+    </button>
+<span id="github-btn" class="github-btn"><a class="gh-btn" href="//github.com/ant-design-blazor/ant-design-blazor" target="_blank"><span class="gh-ico" aria-hidden="true"></span>
+        <span class="gh-text">Star</span></a></span>
+</div>
+    </div>
+</header>
+
+
+<style>            
+.DocSearch-Hit-content-wrapper {
+    overflow: hidden;
+}
+</style><div class="main-wrapper">
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  " id="ant-blazor-8f6cde25-9fcf-4db9-b312-4ce1850fa580">
+        <div class="main-menu ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-6 ant-col-lg-6 ant-col-xl-5 ant-col-xxl-4" style="  " id="ant-blazor-3510bdea-ea29-49a3-82c0-2e469df59099">
+    <div>
+    <div class="">
+        <section class="main-menu-inner">
+    <ul class="aside-container menu-site ant-menu ant-menu-root ant-menu-light ant-menu-inline" id="ant-blazor-63137b4e-19ab-49fe-918d-3e3ffe56b15e" direction="ltr" role="menu">
+        
+        
+                <li class="ant-menu-item ant-menu-item-selected" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/overview" class=" active"><span>Components Overview</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+<li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+General    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/button" class=""><span>Button</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/icon" class=""><span>Icon</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/typography" class=""><span>Typography</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Layout    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/divider" class=""><span>Divider</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/flex" class=""><span>Flex</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/grid" class=""><span>Grid</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/layout" class=""><span>Layout</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/space" class=""><span>Space</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Navigation    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/affix" class=""><span>Affix</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/breadcrumb" class=""><span>Breadcrumb</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/dropdown" class=""><span>Dropdown</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/menu" class=""><span>Menu</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/pageheader" class=""><span>PageHeader</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/pagination" class=""><span>Pagination</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/steps" class=""><span>Steps</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Data Entry    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/autocomplete" class=""><span>AutoComplete</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/cascader" class=""><span>Cascader</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/checkbox" class=""><span>Checkbox</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/datepicker" class=""><span>DatePicker</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/form" class=""><span>Form</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/input" class=""><span>Input</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/inputnumber" class=""><span>InputNumber</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/mentions" class=""><span>Mentions</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/radio" class=""><span>Radio</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/rate" class=""><span>Rate</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/select" class=""><span>Select</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/slider" class=""><span>Slider</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/switch" class=""><span>Switch</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/timepicker" class=""><span>TimePicker</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/transfer" class=""><span>Transfer</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/treeselect" class=""><span>TreeSelect</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/upload" class=""><span>Upload</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Data Display    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/avatar" class=""><span>Avatar</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/badge" class=""><span>Badge</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/calendar" class=""><span>Calendar</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/card" class=""><span>Card</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/carousel" class=""><span>Carousel</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/collapse" class=""><span>Collapse</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/comment" class=""><span>Comment</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/descriptions" class=""><span>Descriptions</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/empty" class=""><span>Empty</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/image" class=""><span>Image</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/list" class=""><span>List</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/popover" class=""><span>Popover</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/segmented" class=""><span>Segmented</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/statistic" class=""><span>Statistic</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/table" class=""><span>Table</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/tabs" class=""><span>Tabs</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/tag" class=""><span>Tag</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/timeline" class=""><span>Timeline</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/tooltip" class=""><span>Tooltip</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/tree" class=""><span>Tree</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Feedback    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/alert" class=""><span>Alert</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/drawer" class=""><span>Drawer</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/message" class=""><span>Message</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/modal" class=""><span>Modal</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/notification" class=""><span>Notification</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/popconfirm" class=""><span>Popconfirm</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/progress" class=""><span>Progress</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/result" class=""><span>Result</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/skeleton" class=""><span>Skeleton</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/spin" class=""><span>Spin</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/watermark" class=""><span>Watermark</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li><li class="ant-menu-item-group">
+    <div class="ant-menu-item-group-title">
+Other    </div>
+    <ul class="ant-menu-item-group-list">
+        
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/anchor" class=""><span>Anchor</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+        
+                <li class="ant-menu-item" role="menuitem" style="padding-left:24px; ">
+            
+            <span class="ant-menu-title-content">
+                    <a href="en-US/components/backtop" class=""><span>BackTop</span></a>
+            </span>
+        </li>
+            
+
+    
+        
+    
+
+
+    </ul>
+</li>
+    </ul>
+</section>
+    </div>
+</div>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-24 ant-col-md-18 ant-col-lg-18 ant-col-xl-19 ant-col-xxl-20" style="  " id="ant-blazor-af0678c4-9b4b-4f48-a882-eab437b0a47d">
+    <section class="main-container main-container-component"><article><section class="markdown"><h1>Overview</h1></section>
+
+        <code>Ant Design Blazor</code> provides plenty of UI components to enrich your web applications, and we will improve components experience consistently. We also recommend some great Third-Party Libraries additionally.
+
+        <span class="ant-divider ant-divider-horizontal" id="ant-blazor-19b95005-4e99-4953-9aff-6c0b86cc5abb">
+</span>
+
+        <span class="components-overview-search ant-input-affix-wrapper  " style=" "><input class="ant-input" style=" " id="ant-blazor-e9a448cc-0e1e-46bc-b6d2-b100c608f720" type="Text" placeholder="Search in components" /><span class="ant-input-suffix"><span role="img" class="anticon anticon-search" id="ant-blazor-4c1cef4a-da9a-405e-867b-d0c9f05c15c1">
+<svg focusable="false" width="1em" height="1em" fill="currentColor" style="pointer-events: none;"  xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 1024 1024"><path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0 0 11.6 0l43.6-43.5a8.2 8.2 0 0 0 0-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"/></svg>
+</span></span></span>
+
+        <span class="ant-divider ant-divider-horizontal" id="ant-blazor-1c5e85cb-30af-4dc1-b34b-c5d40d7dadb9">
+</span><div class="components-overview"><h2 class="ant-typography">
+    <div class="ant-space ant-space-horizontal ant-space-align-center" style="  column-gap:8px;row-gap:8px" id="ant-blazor-c9c9ba63-3522-4a70-8e8d-4becee3ac3c8">
+        
+<div class="ant-space-item" id="ant-blazor-36454dd2-1346-40f5-902f-fc6e41717a1d">
+    General
+</div>
+                        
+<div class="ant-space-item" id="ant-blazor-729f4a3b-e305-4fe5-8fd8-71f666d1b2d6">
+        <span class="ant-tag ant-tag-default" style="display: block;" id="ant-blazor-db74d6d4-a160-4751-986f-1550da4c9e55">
+        3
+    </span>
+
+</div>
+    </div>
+</h2>
+
+                
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  " id="ant-blazor-c90e66c8-fb5b-4fde-8f87-cb3e453666e7">
+        <div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-5d876025-dc94-4608-a6a9-627fec7b26f0">
+    <a href="/en-US/components/button">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-0c916d19-9323-4914-9fc2-b5b71f7ef393">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Button
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/fNUKzY1sk/Button.svg" alt="Button" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-557a89bc-ac3c-4a3b-bcca-5e599b54b12e">
+    <a href="/en-US/components/icon">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-3803e754-e81f-4fea-885f-63224cb92937">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Icon
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/rrwbSt3FQ/Icon.svg" alt="Icon" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-31d64c09-3aa8-418a-9c8a-1c44b87dcd9c">
+    <a href="/en-US/components/typography">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-44d08f31-adf4-40eb-96a6-3efc2f570519">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Typography
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/GOM1KQ24O/Typography.svg" alt="Typography" /></div>            </div>
+    </div>
+</a>
+</div>
+    </div>
+</div><div class="components-overview"><h2 class="ant-typography">
+    <div class="ant-space ant-space-horizontal ant-space-align-center" style="  column-gap:8px;row-gap:8px" id="ant-blazor-6bb65593-f0b3-40c5-adb0-399a247853d7">
+        
+<div class="ant-space-item" id="ant-blazor-186081ee-a710-4810-8967-793901db5272">
+    Layout
+</div>
+                        
+<div class="ant-space-item" id="ant-blazor-dd5ee680-fab1-4edc-b914-b6db103da6dd">
+        <span class="ant-tag ant-tag-default" style="display: block;" id="ant-blazor-50d417b3-a9b2-4f8c-ad9f-fa8420cfc6e5">
+        5
+    </span>
+
+</div>
+    </div>
+</h2>
+
+                
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  " id="ant-blazor-76e1a6ac-8767-4b0d-b337-ee4e15024e60">
+        <div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-378d0a30-934a-4459-ac6f-f6eb5945cc76">
+    <a href="/en-US/components/divider">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-d6f4eb56-9c4d-4f78-adf3-575f2307c942">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Divider
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/5swjECahe/Divider.svg" alt="Divider" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-7003ac09-a5d9-4310-a68d-a2414e90fb5e">
+    <a href="/en-US/components/flex">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-74044f1c-791f-43e9-aea3-82db7dc78ccd">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Flex
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*SMzgSJZE_AwAAAAAAAAAAAAADrJ8AQ/original" alt="Flex" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-464e3773-08af-49ce-8740-d3f899972a68">
+    <a href="/en-US/components/grid">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-d9da4613-9074-4b70-bc2e-9fd1005ec0d5">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Grid
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/5rWLU27so/Grid.svg" alt="Grid" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-faf4116c-e515-4be1-91a5-9cde34e93a44">
+    <a href="/en-US/components/layout">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-347a487b-77da-4f23-8342-fbdbb907731c">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Layout
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/hzEndUVEx/Layout.svg" alt="Layout" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-7758292e-168c-4ecd-b287-35c24748ad50">
+    <a href="/en-US/components/space">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-69875a5f-9b2a-45e0-a219-7ee40e1d7eee">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Space
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/antfincdn/wc6%263gJ0Y8/Space.svg" alt="Space" /></div>            </div>
+    </div>
+</a>
+</div>
+    </div>
+</div><div class="components-overview"><h2 class="ant-typography">
+    <div class="ant-space ant-space-horizontal ant-space-align-center" style="  column-gap:8px;row-gap:8px" id="ant-blazor-949dd3a3-0501-404e-adba-ac4b09b8ee11">
+        
+<div class="ant-space-item" id="ant-blazor-bbbbdaec-67d5-4ded-bc0d-181d37cffceb">
+    Navigation
+</div>
+                        
+<div class="ant-space-item" id="ant-blazor-2d0114b1-38b4-4073-98da-ed4c90c8fd07">
+        <span class="ant-tag ant-tag-default" style="display: block;" id="ant-blazor-2d3811b4-5619-414e-be72-e56ed2cd7dc5">
+        7
+    </span>
+
+</div>
+    </div>
+</h2>
+
+                
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  " id="ant-blazor-fff25a69-0bff-4fda-9334-134ae028aff3">
+        <div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-84cefc3a-3b31-46c7-b0a6-b26a9918be38">
+    <a href="/en-US/components/affix">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-0ae1afa9-389e-4c6b-bb15-30b47f04370e">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Affix
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/tX6-md4H6/Affix.svg" alt="Affix" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-bdd568d9-7ef7-46fa-a95c-8c8a9638bc40">
+    <a href="/en-US/components/breadcrumb">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-9a73e2b5-52a8-4056-ae76-ec0485add8b6">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Breadcrumb
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/9Ltop8JwH/Breadcrumb.svg" alt="Breadcrumb" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-f0853bf6-ba90-4941-893c-cac13291e9df">
+    <a href="/en-US/components/dropdown">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-6fbcdc4f-beb0-43bd-9d9f-ab29a4c49258">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Dropdown
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/eedWN59yJ/Dropdown.svg" alt="Dropdown" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-f48d15e8-6146-4726-84f3-64bde51fec0b">
+    <a href="/en-US/components/menu">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-7e1eca16-4e52-46ce-be05-7637f27cbe64">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Menu
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/3XZcjGpvK/Menu.svg" alt="Menu" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-c0069f8a-e2f2-4dc8-b49f-8639f7641c37">
+    <a href="/en-US/components/pageheader">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-e4c82561-50ec-4653-8987-dca27b9f842f">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">PageHeader
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/6bKE0Cq0R/PageHeader.svg" alt="PageHeader" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-e065d394-e72c-4a1e-a0fd-fd772106b41f">
+    <a href="/en-US/components/pagination">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-40c7f0cc-1eab-4b49-81ad-2901fe273433">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Pagination
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/1vqv2bj68/Pagination.svg" alt="Pagination" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-529f7914-0c12-4eee-a4cb-65850d03d6f2">
+    <a href="/en-US/components/steps">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-a8626b69-6421-4758-9b77-bafbeb74e841">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Steps
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/antfincdn/UZYqMizXHaj/Steps.svg" alt="Steps" /></div>            </div>
+    </div>
+</a>
+</div>
+    </div>
+</div><div class="components-overview"><h2 class="ant-typography">
+    <div class="ant-space ant-space-horizontal ant-space-align-center" style="  column-gap:8px;row-gap:8px" id="ant-blazor-adbba5bb-aeb2-4e06-ae5d-97878442632e">
+        
+<div class="ant-space-item" id="ant-blazor-be1c09de-6b01-49ac-a26b-cc332bd8cc29">
+    Data Entry
+</div>
+                        
+<div class="ant-space-item" id="ant-blazor-a1dc0ff7-bee3-42c1-acef-129556698072">
+        <span class="ant-tag ant-tag-default" style="display: block;" id="ant-blazor-072ee4e0-7ac8-4249-929f-9f26c4c2781d">
+        17
+    </span>
+
+</div>
+    </div>
+</h2>
+
+                
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  " id="ant-blazor-423595f2-f122-49be-9a1a-c5b6c5493013">
+        <div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-c46ea442-966b-4663-9851-4828574192b8">
+    <a href="/en-US/components/autocomplete">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-79ca7e76-981b-4a97-a054-ae47418af465">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">AutoComplete
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/qtJm4yt45/AutoComplete.svg" alt="AutoComplete" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-f879ab23-891d-4ab2-9506-f68458a8b8e0">
+    <a href="/en-US/components/cascader">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-f26ce0a9-fdb4-40f5-8fdf-f364e313b6ca">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Cascader
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/UdS8y8xyZ/Cascader.svg" alt="Cascader" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-e506c972-83d1-4b3b-be7e-a8218165ff28">
+    <a href="/en-US/components/checkbox">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-4c92ffa5-ef39-44ad-b064-f43f45478eb8">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Checkbox
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/8nbVbHEm_/CheckBox.svg" alt="Checkbox" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-c1b3dd92-b901-4fd5-8753-b74176b8c637">
+    <a href="/en-US/components/datepicker">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-68117923-48b5-47ae-a530-370fd14d8b85">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">DatePicker
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/RT_USzA48/DatePicker.svg" alt="DatePicker" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-8cbb6cd3-19c3-4730-94a2-fcaf6ac0acf9">
+    <a href="/en-US/components/form">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-5f0a3b58-4a68-47cb-ae6d-33223e43a44f">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Form
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/ORmcdeaoO/Form.svg" alt="Form" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-0385d350-28ba-4e81-98d9-953f564e4e5f">
+    <a href="/en-US/components/input">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-d3aae368-39e7-4a15-b5fe-75f44421c503">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Input
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg" alt="Input" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-95851371-5065-4157-9f80-9364309a61dd">
+    <a href="/en-US/components/inputnumber">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-3298bf68-8d04-428a-89d8-2e99c195fb24">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">InputNumber
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/XOS8qZ0kU/InputNumber.svg" alt="InputNumber" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-15e00ad9-5e6b-47b0-b9c8-e4815bc087f7">
+    <a href="/en-US/components/mentions">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-8606c057-ee1a-4e06-bce6-848fc5eb9dbd">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Mentions
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/jPE-itMFM/Mentions.svg" alt="Mentions" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-e215d6ab-dc96-456a-a74c-0a59180748bf">
+    <a href="/en-US/components/radio">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-b2f346ab-7b6e-4d37-8f30-aa5b133247c1">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Radio
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/8cYb5seNB/Radio.svg" alt="Radio" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-fe20419d-c2d8-495c-b821-4248d37e8d9a">
+    <a href="/en-US/components/rate">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-5c193ef7-1134-43e2-8330-53f735548235">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Rate
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/R5uiIWmxe/Rate.svg" alt="Rate" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-fa7486f8-0eb6-4459-8f76-e18ed6bf00a8">
+    <a href="/en-US/components/select">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-db8ef097-4618-4e27-90b4-bb7d76e7a342">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Select
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg" alt="Select" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-dbc22c64-ff1b-4326-a49b-5d4a1e8ed7c4">
+    <a href="/en-US/components/slider">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-8cd34748-a45c-48af-b4d1-21acebcf64fe">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Slider
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/HZ3meFc6W/Silder.svg" alt="Slider" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-f02d85c8-90db-4af3-b2e4-ba0c84bc557c">
+    <a href="/en-US/components/switch">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-f75549f3-c108-4224-b343-d4e93ad10212">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Switch
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/zNdJQMhfm/Switch.svg" alt="Switch" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-590e53bf-a623-4178-902e-d707e3a4b83e">
+    <a href="/en-US/components/timepicker">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-2b80933b-f9cb-47bd-b03d-b8c1c551f1f6">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">TimePicker
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/h04Zsl98I/TimePicker.svg" alt="TimePicker" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-c2edfcae-ecf3-4b57-b0c1-2688cc537883">
+    <a href="/en-US/components/transfer">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-b760504c-4022-4f05-b42b-4a0f003df056">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Transfer
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/QAXskNI4G/Transfer.svg" alt="Transfer" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-c0348af8-61f0-4508-945f-6415586b6580">
+    <a href="/en-US/components/treeselect">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-7fe012e3-5a99-4e29-b092-87556de7e1b9">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">TreeSelect
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/Ax4DA0njr/TreeSelect.svg" alt="TreeSelect" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-f6e24e0a-6aad-4fb4-a6c1-6f5875de010c">
+    <a href="/en-US/components/upload">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-ca4c2163-ea30-45d1-9bfd-139401ea703b">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Upload
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/QaeBt_ZMg/Upload.svg" alt="Upload" /></div>            </div>
+    </div>
+</a>
+</div>
+    </div>
+</div><div class="components-overview"><h2 class="ant-typography">
+    <div class="ant-space ant-space-horizontal ant-space-align-center" style="  column-gap:8px;row-gap:8px" id="ant-blazor-168b51eb-02b2-4a62-941b-303507e576c1">
+        
+<div class="ant-space-item" id="ant-blazor-c7c34275-8532-482d-abea-39a54938ff6c">
+    Data Display
+</div>
+                        
+<div class="ant-space-item" id="ant-blazor-2647eb89-06a1-48a6-bb5b-06d17f4a8dae">
+        <span class="ant-tag ant-tag-default" style="display: block;" id="ant-blazor-a065299f-f01f-40d9-a807-6d963e60aa6b">
+        20
+    </span>
+
+</div>
+    </div>
+</h2>
+
+                
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  " id="ant-blazor-6b9bc969-73fe-482c-8f80-22238d84d53e">
+        <div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-19e19e1e-f439-4c38-a492-168e6b1b9dba">
+    <a href="/en-US/components/avatar">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-ae7b6878-298f-4660-8ad1-06a1078751f2">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Avatar
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/antfincdn/aBcnbw68hP/Avatar.svg" alt="Avatar" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-350b7c2e-9d9d-4a04-aad6-6a08f0cede31">
+    <a href="/en-US/components/badge">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-2c749613-827f-42e8-900b-2214f30cbed2">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Badge
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/antfincdn/6%26GF9WHwvY/Badge.svg" alt="Badge" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-0affa4d3-2221-4ce4-99a4-42c708fea59a">
+    <a href="/en-US/components/calendar">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-8a55d9b0-3e20-4420-bfe9-6711422d439f">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Calendar
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/antfincdn/dPQmLq08DI/Calendar.svg" alt="Calendar" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-19e7e387-578d-4d40-bda9-277d565da283">
+    <a href="/en-US/components/card">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-ccf69247-5af4-432c-81dc-68b5103ee38f">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Card
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/antfincdn/NqXt8DJhky/Card.svg" alt="Card" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-46a3b1f6-b60b-4e9f-9b00-89dc58476fdd">
+    <a href="/en-US/components/carousel">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-64c8c3c7-6f5c-425e-8938-46e7ccdd2a03">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Carousel
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/antfincdn/%24C9tmj978R/Carousel.svg" alt="Carousel" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-bf260184-111b-432d-a50b-cf085628c4d8">
+    <a href="/en-US/components/collapse">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-8787d2f2-117c-412c-ad34-f2466a8d62ac">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Collapse
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/IxH16B9RD/Collapse.svg" alt="Collapse" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-dae1f80c-eafc-4973-8af7-0915ece115b9">
+    <a href="/en-US/components/comment">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-94f689f9-b9f5-4017-b5d4-adfb4dda44fe">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Comment
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/ILhxpGzBO/Comment.svg" alt="Comment" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-bf2b41f8-369f-4701-a389-5b178c6124f4">
+    <a href="/en-US/components/descriptions">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-18f9bc61-0e21-4543-a6d6-8e387ec5a8b2">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Descriptions
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/MjtG9_FOI/Descriptions.svg" alt="Descriptions" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-5a75c8cd-7021-4d7c-a1a7-31c78ed19f36">
+    <a href="/en-US/components/empty">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-1f772327-0f35-4305-8bbd-3ec4c9abe710">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Empty
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/MNbKfLBVb/Empty.svg" alt="Empty" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-4cde4438-8989-4e42-b54a-65f51f820d83">
+    <a href="/en-US/components/image">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-b2437e34-8774-4748-b305-ad7698e8c78d">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Image
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/antfincdn/D1dXz9PZqa/image.svg" alt="Image" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-a0865b2d-9f54-4e52-acd8-c74678b083ad">
+    <a href="/en-US/components/list">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-63ecb8ed-ee65-425c-a9dc-1e8c7d6ac0f8">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">List
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/5FrZKStG_/List.svg" alt="List" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-98a91ef2-e896-4fae-ba72-97a7f8a7cbb5">
+    <a href="/en-US/components/popover">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-053b93f8-ddb4-4475-aad9-6dd6f64a1aed">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Popover
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/1PNL1p_cO/Popover.svg" alt="Popover" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-62dceb62-bb7d-49ba-8ae6-73e3e6c28912">
+    <a href="/en-US/components/segmented">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-17d3fc4c-068b-48a8-b459-3d177a486f64">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Segmented
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/bmw-prod/a3ff040f-24ba-43e0-92e9-c845df1612ad.svg" alt="Segmented" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-632c3a8e-8c9e-4228-b1b1-844499fa5c18">
+    <a href="/en-US/components/statistic">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-f7480260-0ee6-4190-8241-27aafadda746">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Statistic
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/antfincdn/rcBNhLBrKbE/Statistic.svg" alt="Statistic" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-4e8815db-2784-4e9f-9c33-8c8125128bd7">
+    <a href="/en-US/components/table">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-6fecef0c-a3ac-4e5c-a9eb-e8382fcba4eb">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Table
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg" alt="Table" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-9bb6d96c-4943-42ad-85d9-6602390232ee">
+    <a href="/en-US/components/tabs">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-a37585ae-829b-445d-978c-eb9ee9cd8204">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Tabs
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/antfincdn/lkI2hNEDr2V/Tabs.svg" alt="Tabs" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-ced0a9cd-9fd3-49f6-938e-e1562bf7a63d">
+    <a href="/en-US/components/tag">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-5ef1cd8a-26f9-462f-bdec-3ed83b3cbe61">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Tag
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/cH1BOLfxC/Tag.svg" alt="Tag" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-d568f258-b1f0-45a1-b757-43040ec0aa63">
+    <a href="/en-US/components/timeline">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-052ef176-ca98-4adc-a559-016fc15078cb">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Timeline
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/antfincdn/vJmo00mmgR/Timeline.svg" alt="Timeline" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-1afd27db-6ddb-4475-83d5-04fb562adabc">
+    <a href="/en-US/components/tooltip">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-91b5d036-98a6-45ce-aed4-56f175831ac0">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Tooltip
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/Vyyeu8jq2/Tooltp.svg" alt="Tooltip" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-1a8faaed-5698-4d03-b0bf-5bb84a2436fe">
+    <a href="/en-US/components/tree">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-3f57222d-9453-4563-8d10-07a808b65f79">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Tree
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/Xh-oWqg9k/Tree.svg" alt="Tree" /></div>            </div>
+    </div>
+</a>
+</div>
+    </div>
+</div><div class="components-overview"><h2 class="ant-typography">
+    <div class="ant-space ant-space-horizontal ant-space-align-center" style="  column-gap:8px;row-gap:8px" id="ant-blazor-61bff321-7dc3-4b6c-93c3-9186771376fa">
+        
+<div class="ant-space-item" id="ant-blazor-66fea2f0-3e85-4f9a-b9d7-9235ab663e55">
+    Feedback
+</div>
+                        
+<div class="ant-space-item" id="ant-blazor-f19445d3-c769-469a-9a88-30468a7d0f7d">
+        <span class="ant-tag ant-tag-default" style="display: block;" id="ant-blazor-25fd920f-78dd-45a1-a52d-b3fc81d71a59">
+        11
+    </span>
+
+</div>
+    </div>
+</h2>
+
+                
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  " id="ant-blazor-26e3402f-dd0d-4def-a1c1-6b6c535389ec">
+        <div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-50c4773c-586d-4240-aedf-08f5d0c851f6">
+    <a href="/en-US/components/alert">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-be2e92ee-fce9-4889-83c4-a646e762af15">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Alert
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/8emPa3fjl/Alert.svg" alt="Alert" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-3f9af7a3-4c1a-48c2-bcaf-5ba7128a7e06">
+    <a href="/en-US/components/drawer">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-821cb691-df0d-44c8-9f49-967ddbb7f8d2">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Drawer
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/7z8NJQhFb/Drawer.svg" alt="Drawer" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-a787a10e-7178-4197-b9b5-2f73d3277dea">
+    <a href="/en-US/components/message">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-663ea2d9-fab8-493b-b3a0-189d9c941e4b">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Message
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/hAkKTIW0K/Message.svg" alt="Message" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-e520ac11-f2e2-493f-a65b-15ec9d2b84bb">
+    <a href="/en-US/components/modal">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-c521a17e-baa1-44e7-b051-57dc4c4b521d">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Modal
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/3StSdUlSH/Modal.svg" alt="Modal" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-9b25035c-5bf9-41a3-9f64-e64bdad3c756">
+    <a href="/en-US/components/notification">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-264bb269-845e-4a31-a5aa-d14782ee4efa">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Notification
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/Jxm5nw61w/Notification.svg" alt="Notification" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-791b8d6a-852e-4ef1-aa67-f0f540f94e6a">
+    <a href="/en-US/components/popconfirm">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-2b7d69cc-2910-434a-aa59-08dc0c5a09e1">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Popconfirm
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/fjMCD9xRq/Popconfirm.svg" alt="Popconfirm" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-a9384410-3fca-4ba2-b4d7-95e8f67fda0b">
+    <a href="/en-US/components/progress">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-5e487bc0-3eca-41b1-a226-6ff66c7f1d4c">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Progress
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/xqsDu4ZyR/Progress.svg" alt="Progress" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-7ae0d21e-b4dd-49ee-ba17-07e279c57086">
+    <a href="/en-US/components/result">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-4dc8625f-6749-44f8-859c-2df1b2f72f50">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Result
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/9nepwjaLa/Result.svg" alt="Result" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-142c8467-6c1a-41c1-b0e6-9ab16988f21e">
+    <a href="/en-US/components/skeleton">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-79c05482-b267-4743-8ce5-a9c0bb4887b1">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Skeleton
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/KpcciCJgv/Skeleton.svg" alt="Skeleton" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-ff3daf98-3840-4c52-845a-3adc409d390a">
+    <a href="/en-US/components/spin">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-010c10cf-d6d9-4f60-935f-c0eeff9f9589">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Spin
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/LBcJqCPRv/Spin.svg" alt="Spin" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-d24f6587-ab86-442d-91a3-e1b61820e530">
+    <a href="/en-US/components/watermark">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-38d092fd-caff-434e-a9dc-dedc990b243c">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Watermark
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://mdn.alipayobjects.com/huamei_7uahnr/afts/img/A*wr1ISY50SyYAAAAAAAAAAAAADrJ8AQ/original" alt="Watermark" /></div>            </div>
+    </div>
+</a>
+</div>
+    </div>
+</div><div class="components-overview"><h2 class="ant-typography">
+    <div class="ant-space ant-space-horizontal ant-space-align-center" style="  column-gap:8px;row-gap:8px" id="ant-blazor-48a3d394-f77e-49f1-aab6-5062a363f381">
+        
+<div class="ant-space-item" id="ant-blazor-23ea4cc8-71d5-4b28-b8d8-698b1c7f697f">
+    Other
+</div>
+                        
+<div class="ant-space-item" id="ant-blazor-23f2ee63-efce-4ac1-abb2-b184294a4071">
+        <span class="ant-tag ant-tag-default" style="display: block;" id="ant-blazor-dc7531b4-024e-4831-8847-f10a03a508b0">
+        2
+    </span>
+
+</div>
+    </div>
+</h2>
+
+                
+    <div class="ant-row ant-row-top ant-row-start" style="row-gap: 0px;  " id="ant-blazor-1b79b6e1-94d5-4f40-8eb0-f25600fac613">
+        <div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-299ae567-45d9-4b3c-8e59-3539d59e048b">
+    <a href="/en-US/components/anchor">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-d2552a21-7039-4d13-862c-9d058b2ffe69">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">Anchor
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/_1-C1JwsC/Anchor.svg" alt="Anchor" /></div>            </div>
+    </div>
+</a>
+</div><div class="ant-col ant-col-xs-24 ant-col-sm-12 ant-col-lg-8 ant-col-xl-6" style="  padding:12px;" id="ant-blazor-523b01a7-0fc1-4aaf-881e-3aa179aeeec9">
+    <a href="/en-US/components/backtop">
+    <div class="components-overview-card ant-card ant-card-bordered ant-card-hoverable ant-card-small" id="ant-blazor-831d052f-0252-47b9-8ac9-687d45b2c48c">
+            <div class="ant-card-head">
+
+                <div class="ant-card-head-wrapper">
+                        <div class="ant-card-head-title">
+<div class="components-overview-title">BackTop
+                                            </div>                        </div>
+                </div>
+
+            </div>
+
+
+            <div class="ant-card-body">
+<div class="components-overview-img"><img src="https://gw.alipayobjects.com/zos/alicdn/tJZ5jbTwX/BackTop.svg" alt="BackTop" /></div>            </div>
+    </div>
+</a>
+</div>
+    </div>
+</div></article></section>
+                        <div class="fixed-widgets">
+<div class="ant-avatar ant-avatar-circle ant-avatar-icon fixed-widgets-avatar" style="width: 44px; height: 44px; line-height: 44px; font-size: 22px;"><svg class="anticon" role="img" width="21" height="21" viewBox="0 0 21 21" fill="currentColor"><g fill-rule="evenodd"><g fill-rule="nonzero"><path d="M7.02 3.635l12.518 12.518a1.863 1.863 0 010 2.635l-1.317 1.318a1.863 1.863 0 01-2.635 0L3.068 7.588A2.795 2.795 0 117.02 3.635zm2.09 14.428a.932.932 0 110 1.864.932.932 0 010-1.864zm-.043-9.747L7.75 9.635l9.154 9.153 1.318-1.317-9.154-9.155zM3.52 12.473c.514 0 .931.417.931.931v.932h.932a.932.932 0 110 1.864h-.932v.931a.932.932 0 01-1.863 0l-.001-.931h-.93a.932.932 0 010-1.864h.93v-.932c0-.514.418-.931.933-.931zm15.374-3.727a1.398 1.398 0 110 2.795 1.398 1.398 0 010-2.795zM4.385 4.953a.932.932 0 000 1.317l2.046 2.047L7.75 7 5.703 4.953a.932.932 0 00-1.318 0zM14.701.36a.932.932 0 01.931.932v.931h.932a.932.932 0 010 1.864h-.933l.001.932a.932.932 0 11-1.863 0l-.001-.932h-.93a.932.932 0 110-1.864h.93v-.931a.932.932 0 01.933-.932z"></path></g></g></svg></div>
+
+    
+        
+    
+</div>
+
+<link type="text/css" rel="stylesheet" id="docs-theme" />
+                    <section class="prev-next-nav"></section>
+                <footer class="rc-footer rc-footer-dark"><section class="rc-footer-container"><section class="rc-footer-columns"><div class="rc-footer-column"><h2>Resources</h2>
+                <div class="rc-footer-item"><a href="https://ant.design" target="_blank">Ant Design</a></div>
+                <div class="rc-footer-item"><a href="https://ng.ant.design" target="_blank">NG-ZORRO</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Ant Design of Angular</span></div>
+                <div class="rc-footer-item"><a href="https://vue.ant.design" target="_blank">Ant Design Vue</a></div>
+                <div class="rc-footer-item"><a href="https://pro.antblazor.com/" target="_blank">Ant Design Pro Blazor</a></div>
+                <div class="rc-footer-item"><a href="http://www.blazor.zone/" target="_blank">Bootstrap Blazor</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Bootstrap of Blazor</span></div>
+                <div class="rc-footer-item"><a href="https://bulmarazor.loogn.net/" target="_blank">BulmaRazor</a>
+                    <span class="rc-footer-item-separator">-</span>
+                    <span class="rc-footer-item-description">Bulma of Blazor</span></div></div>
+            <div class="rc-footer-column"><h2>Community</h2>
+                <div class="rc-footer-item"><a href="https://github.com/websemantics/awesome-ant-design" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="ant-design" class="anticon anticon-ant-design"><svg viewBox="64 64 896 896" focusable="false" class data-icon="ant-design" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M716.3 313.8c19-18.9 19-49.7 0-68.6l-69.9-69.9.1.1c-18.5-18.5-50.3-50.3-95.3-95.2-21.2-20.7-55.5-20.5-76.5.5L80.9 474.2a53.84 53.84 0 000 76.4L474.6 944a54.14 54.14 0 0076.5 0l165.1-165c19-18.9 19-49.7 0-68.6a48.7 48.7 0 00-68.7 0l-125 125.2c-5.2 5.2-13.3 5.2-18.5 0L189.5 521.4c-5.2-5.2-5.2-13.3 0-18.5l314.4-314.2c.4-.4.9-.7 1.3-1.1 5.2-4.1 12.4-3.7 17.2 1.1l125.2 125.1c19 19 49.8 19 68.7 0zM408.6 514.4a106.3 106.2 0 10212.6 0 106.3 106.2 0 10-212.6 0zm536.2-38.6L821.9 353.5c-19-18.9-49.8-18.9-68.7.1a48.4 48.4 0 000 68.6l83 82.9c5.2 5.2 5.2 13.3 0 18.5l-81.8 81.7a48.4 48.4 0 000 68.6 48.7 48.7 0 0068.7 0l121.8-121.7a53.93 53.93 0 00-.1-76.4z"></path></svg></span></span>
+                        Awesome Ant Design
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://github.com/AdrienTorris/awesome-blazor" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="ant-design" class="anticon"><svg viewBox="0 0 1133 1024" width="1em" height="1em" fill="currentColor"><path d="M1016.452929 325.008051a563.029686 563.029686 0 0 1-552.102137 474.312222 408.956599 408.956599 0 0 1-80.701003-4.895699 247.31566 247.31566 0 0 1-205.677843-233.140565 240.162284 240.162284 0 0 1 480.256301-3.388954c1.009372 39.804368-16.237724 74.72279-51.682775 75.727285-37.863643 0-55.617863-27.014112-55.617864-63.429525v-101.181016a61.971544 61.971544 0 0 0-61.493676-62.025182H404.612545a147.641388 147.641388 0 1 0 109.056069 246.028345l2.969601-4.422708 2.964726 4.905451a104.443189 104.443189 0 0 0 89.063675 42.413131 117.721064 117.721064 0 0 0 109.056068-123.050744 320.200125 320.200125 0 0 0-8.7869-78.209268A299.651845 299.651845 0 0 0 116.483145 559.543208a303.406514 303.406514 0 0 0 295.711881 299.651845s22.215938 2.018744 47.260068 1.443353a639.542039 639.542039 0 0 0 342.967072-102.322045c1.453106-1.009372 2.906211 1.009372 1.940725 2.486859a503.413344 503.413344 0 0 1-392.158113 160.363377A353.875117 353.875117 0 0 1 52.029619 558.075474a366.216763 366.216763 0 0 1 147.105007-293.288413A358.702549 358.702549 0 0 1 410.746797 194.930713h113.839614a320.302525 320.302525 0 0 0 236.290586-104.321285 4.422708 4.422708 0 0 1 2.403963-1.37021 4.515355 4.515355 0 0 1 4.832308 2.106515 4.57387 4.57387 0 0 1 0.629029 2.71604 321.107097 321.107097 0 0 1-49.673783 143.642909 4.354441 4.354441 0 0 0-0.536382 2.462478 4.442212 4.442212 0 0 0 2.930593 3.827812 4.412955 4.412955 0 0 0 2.506363 0.131657 344.210502 344.210502 0 0 0 239.313826-197.3298 6.29029 6.29029 0 0 1 2.213792-2.130896 6.056232 6.056232 0 0 1 5.948956 0 6.212271 6.212271 0 0 1 2.208916 2.130896 436.224273 436.224273 0 0 1 42.793475 278.211222zM411.902454 467.748865a88.551675 88.551675 0 1 0 88.537046 88.537046V473.629554a6.382937 6.382937 0 0 0-6.061108-6.061108l-82.475938 0.180419z" p-id="3785"></path></svg></span></span>
+                        Awesome Blazor
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://dotnet9.com/" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="dotnet9" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        Dotnet9
+                    </a></div></div>
+            <div class="rc-footer-column"><h2>Help</h2>
+                <div class="rc-footer-item"><a href="https://github.com/ant-design-blazor/ant-design-blazor" target="_blank" rel="noopener noreferrer"><span class="rc-footer-item-icon"><span role="img" aria-label="github" class="anticon anticon-github"><svg viewBox="64 64 896 896" focusable="false" data-icon="github" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path></svg></span></span>
+                        GitHub
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://docs.microsoft.com/en-us/aspnet/core/blazor/?WT.mc_id=DT-MVP-5003987" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="dotnet9" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        ASP.NET Blazor Docs
+                    </a></div>
+                <div class="rc-footer-item"><a href="https://docs.microsoft.com/en-us/learn/modules/build-blazor-webassembly-visual-studio-code/?WT.mc_id=DT-MVP-5003987" target="_blank"><span class="rc-footer-item-icon"><span role="img" aria-label="Blazor Tutorial" class="anticon"><svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor"><path d="M574 665.4a8.03 8.03 0 00-11.3 0L446.5 781.6c-53.8 53.8-144.6 59.5-204 0-59.5-59.5-53.8-150.2 0-204l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3l-39.8-39.8a8.03 8.03 0 00-11.3 0L191.4 526.5c-84.6 84.6-84.6 221.5 0 306s221.5 84.6 306 0l116.2-116.2c3.1-3.1 3.1-8.2 0-11.3L574 665.4zm258.6-474c-84.6-84.6-221.5-84.6-306 0L410.3 307.6a8.03 8.03 0 000 11.3l39.7 39.7c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c53.8-53.8 144.6-59.5 204 0 59.5 59.5 53.8 150.2 0 204L665.3 562.6a8.03 8.03 0 000 11.3l39.8 39.8c3.1 3.1 8.2 3.1 11.3 0l116.2-116.2c84.5-84.6 84.5-221.5 0-306.1zM610.1 372.3a8.03 8.03 0 00-11.3 0L372.3 598.7a8.03 8.03 0 000 11.3l39.6 39.6c3.1 3.1 8.2 3.1 11.3 0l226.4-226.4c3.1-3.1 3.1-8.2 0-11.3l-39.5-39.6z"></path></svg></span></span>
+                        Blazor Tutorial
+                    </a></div></div>
+            <div class="rc-footer-column"><h2><span class="rc-footer-column-icon"><img src="https://gw.alipayobjects.com/zos/rmsportal/nBVXkrFdWHxbZlmMbsaH.svg" alt="Ant XTech"></span>
+                    More Products</h2>
+                <div class="rc-footer-item" style="margin-top: 20px;"><div class="theme-pick-wrap"><input type="color" class="theme-pick" name="head" style="width:100%;" value="#1890ff" /></div></div></div></section></section>
+    <section class="rc-footer-bottom"><div class="rc-footer-bottom-container">
+            This project is supported by the <a href="https://dotnetfoundation.org">.NET Foundation</a>.
+            Made with <span style="color: rgb(255, 255, 255);">❤</span> by <a target="_blank" rel="noopener noreferrer" href="https://github.com/ant-design-blazor">Ant Design Blazor Team</a></div></section></footer>
+</div>
+    </div>
+</div></div><blazor-focus-on-navigate selector="h1"></blazor-focus-on-navigate>
+        
+
+
+
+
+
+
+
+<!-- %%-PRERENDERING-END-%% -->
+<!-- %%-PRERENDERING-LOADER-BEGIN-%% -->
+</div>
+<!-- %%-PRERENDERING-LOADER-END-%% -->
+</app>
+    <div id="toast-zh" class="toast ">文档已更新，请点击 <a class="reload" onclick="reload()">此处</a> 更新。</div>
+    <div id="toast-en" class="toast ">A new version of this app is available. Click <a class="reload" onclick="reload()">here</a> to update.</div>
+
+    <!-- Start Single Page Apps for GitHub Pages -->
+    <script type="text/javascript">
+        // Single Page Apps for GitHub Pages
+        // https://github.com/rafrex/spa-github-pages
+        // Copyright (c) 2016 Rafael Pedicini, licensed under the MIT License
+        // ----------------------------------------------------------------------
+        // This script checks to see if a redirect is present in the query string
+        // and converts it back into the correct url and adds it to the
+        // browser's history using window.history.replaceState(...),
+        // which won't cause the browser to attempt to load the new url.
+        // When the single page app is loaded further down in this file,
+        // the correct url will be waiting in the browser's history for
+        // the single page app to route accordingly.
+        (function (l) {
+            if (l.search) {
+                var q = {};
+                l.search.slice(1).split('&').forEach(function (v) {
+                    var a = v.split('=');
+                    q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+                });
+                if (q.p !== undefined) {
+                    window.history.replaceState(null, null,
+                        l.pathname.slice(0, -1) + (q.p || '') +
+                        (q.q ? ('?' + q.q) : '') +
+                        l.hash
+                    );
+                }
+            }
+        }(window.location))
+
+        window.DocSearchInit = window.DocSearchInit || function () { };
+    </script>
+    <!-- End Single Page Apps for GitHub Pages -->
+
+    <script src="decode.js"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script>
+        Blazor.start({
+            loadBootResource: function (type, name, defaultUri, integrity) {
+                if (type === 'dotnetjs' || type === 'configuration' || type === 'manifest') {
+                    return null;
+                }
+
+                return (async function () {
+                    const compressedResponse = await fetch(defaultUri + '.br', { cache: 'no-cache' });
+                    if (!compressedResponse.ok) {
+                        return fetch(defaultUri, { cache: 'no-cache', integrity: integrity });
+                    }
+
+                    const compressedBuffer = await compressedResponse.arrayBuffer();
+                    const decompressedBytes = BrotliDecode(new Int8Array(compressedBuffer));
+                    const contentType = type === 'dotnetwasm' ? 'application/wasm' : 'application/octet-stream';
+
+                    return new Response(decompressedBytes, {
+                        headers: { 'content-type': contentType }
+                    });
+                })();
+            }
+        });
+    </script>
+    <script src="/_content/AntDesign.Charts/g2plot.min.js?v=doc-fix"></script>
+    <script src="/_content/AntDesign.Charts/ant-design-charts-blazor.js?v=doc-fix"></script>
+    <script src="/_content/AntDesign.Docs/js/prism.js?v=doc-fix"></script>
+
+    <script>
+        window.XPrism = {};
+        window.XPrism.highlight = function (code, language) {
+            return Prism.highlight(code, Prism.languages[language], language);
+        }
+
+        window.XPrism.highlightAll = function () {
+            Prism.highlightAll();
+        }
+
+        window.changeColor = function (hex, ref) {
+            window.less
+                .modifyVars({
+                    '@primary-color': hex
+                }).then(() => ref.invokeMethodAsync('OnColorChanged'))
+        }
+
+        //fetch("/version.json?t=" + new Date().getTime())
+        //    .then(response => response.json())
+        //    .then(data => {
+        //        console.log('Latest version is:' + data.version);
+        //        if (data.version != 'doc-fix') {
+        //            showUpdateBar();
+        //        }
+        //    });
+    </script>
+
+    <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@docsearch/css@3" crossorigin=""/>
+    <link rel="stylesheet/less" type="text/css" href="_content/AntDesign.Docs/color.less"/>
+    <link rel="stylesheet" type="text/css" href="./css/toast.css"/>
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://fastly.jsdelivr.net/npm/@docsearch/js@3" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="_content/AntDesign.Docs/js/docsearch.js"></script>
+    <script>
+        let newWorker;
+
+        function showUpdateBar() {
+            var lang = navigator.language || navigator.userLanguage;
+            lang = lang.substr(0, 2);
+            let toast = lang == 'zh' ? document.getElementById('toast-zh') : document.getElementById('toast-en');
+            toast.classList.add('show');
+        }
+
+        function hideUpdateBar() {
+            var lang = navigator.language || navigator.userLanguage;
+            lang = lang.substr(0, 2);
+            let toast = lang == 'zh' ? document.getElementById('toast-zh') : document.getElementById('toast-en');
+            toast.classList.remove('show');
+        }
+
+        function reload() {
+            if (newWorker) {
+                newWorker.postMessage({ action: 'skipWaiting' });
+            } else {
+                navigator.serviceWorker.getRegistration().then(reg => {
+                    if (reg.waiting) {
+                        reg.waiting.postMessage({ action: 'skipWaiting' });
+                    }
+                });
+            }
+            hideUpdateBar();
+        }
+
+        if ('serviceWorker' in navigator) {
+            // The click event on the pop up notification
+
+            navigator.serviceWorker.register('/service-worker.js').then(reg => {
+                if (reg.waiting) {
+                    newWorker = reg.waiting;
+                    showUpdateBar();
+                    return;
+                }
+
+                reg.onupdatefound = function () {
+                    newWorker = reg.installing;
+                    newWorker.onstatechange = function () {
+                        switch (newWorker.state) {
+                            case 'installed':
+                                if (navigator.serviceWorker.controller) {
+                                    showUpdateBar();
+                                }
+                                break;
+                        }
+                    };
+                };
+            });
+
+            let refreshing;
+            navigator.serviceWorker.addEventListener('controllerchange', function () {
+                if (refreshing) return;
+                window.location.reload();
+                refreshing = true;
+            });
+        }
+    </script>
+    <script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' } }</script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.nls.js"></script>
+    <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.js"></script>
+    <script>
+        var instances = {};
+        function createEditor(element, id, ref, options) {
+            console.log(id);
+            var instance = monaco.editor.create(element, options);
+            instance.onDidChangeModelContent(function () {
+                ref.invokeMethodAsync('OnChangeAsync', instance.getValue());
+            });
+            instances[id] = instance;
+            return instance;
+        }
+
+        function copy(id) {
+            var text = instances[id].getValue();
+            navigator.clipboard.writeText(text);
+        }
+    </script>
+
+    <!-- Popup prompt for slow loads in Chinese locales -->
+    <script>
+    (function () {
+        function isChineseLang() {
+            var lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+            if (lang && lang.indexOf('zh') === 0) return true;
+            if (navigator.languages) {
+                for (var i = 0; i < navigator.languages.length; i++) {
+                    if (navigator.languages[i] && navigator.languages[i].toLowerCase().indexOf('zh') === 0) return true;
+                }
+            }
+            return false;
+        }
+
+        function stillShowingLoading() {
+            var root = document.getElementById('root');
+            if (!root) return false;
+            // Common loading markers in this page
+            if (root.querySelector('.page-loading-warp')) return true;
+            if (root.querySelector('.loading-progress-text')) return true;
+            // If root is empty or only contains the initial spinner text/settings
+            var text = (root.innerText || '').trim();
+            if (text.length === 0) return true;
+            if (/loading|加载/i.test(text)) return true;
+            return false;
+        }
+
+        function showGiteePrompt() {
+            if (document.getElementById('gitee-redirect-prompt')) return;
+            var box = document.createElement('div');
+            box.id = 'gitee-redirect-prompt';
+            box.setAttribute('role', 'dialog');
+            box.setAttribute('aria-modal', 'true');
+            box.style = 'position:fixed;left:50%;top:20%;transform:translateX(-50%);z-index:99999;background:#fff;border:1px solid #ddd;padding:16px;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.12);max-width:420px;width:90%;font-family:inherit;color:#333;';
+
+            box.innerHTML = '\n                <div style="font-size:16px;margin-bottom:8px;">页面加载较慢，是否跳转至国内镜像？</div>\n                <div style="display:flex;justify-content:flex-end;gap:8px;">\n                    <a href="https://ant-design-blazor.gitee.io" style="background:#1890ff;color:#fff;padding:8px 12px;border-radius:4px;text-decoration:none;" target="_blank" rel="noopener">前往国内站点</a>\n                    <button id="gitee-close" style="background:#f5f5f5;border:1px solid #ddd;padding:8px 12px;border-radius:4px;cursor:pointer;">取消</button>\n                </div>';
+
+            document.body.appendChild(box);
+            document.getElementById('gitee-close').addEventListener('click', function () {
+                if (box && box.parentNode) box.parentNode.removeChild(box);
+            });
+        }
+
+        window.addEventListener('load', function () {
+            if (!isChineseLang()) return;
+            setTimeout(function () {
+                if (stillShowingLoading()) {
+                    showGiteePrompt();
+                }
+            }, 10000);
+        });
+    })();
+    </script>
+
+
+
+</body></html>
