@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @using AntDesign.Internal;
 
-<div class="@ClassMapper.Class" style="@Style" id="@Id">
+<div @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@Style" id="@Id">
     <Row Class="ant-form-item-row">
         @if (!NoStyle && ( !string.IsNullOrEmpty(DisplayName) || LabelTemplate != null))
         {
@@ -18,6 +18,14 @@
                         @if (Form?.RequiredMark == FormRequiredMark.Optional && !IsRequired)
                         {
                             <span class="ant-form-item-optional">@Form.Locale.Optional</span>
+                        }
+                        @if (ToolTip != null)
+                        {
+                            <Tooltip Placement="Placement.TopLeft" Title="@ToolTip" ArrowPointAtCenter="true">
+                                <Unbound>
+                                     <Icon RefBack="context" Type="@IconType.Outline.QuestionCircle" Class="ant-form-item-tooltip" />
+                                </Unbound>
+                            </Tooltip>
                         }
                     </label>
                 }
@@ -35,11 +43,11 @@
 
             @if (!NoStyle)
             {
-                @foreach (var message in _validationMessages)
+                @foreach (var message in ValidationMessages)
                 {
                     <div style="display: flex; flex-wrap: nowrap;">
                         <div class="ant-form-item-explain ant-form-item-explain-connected" role="alert">
-                            <div class=@($"{_prefixCls}-explain-{ValidateStatus.ToString().ToLower()}")>
+                            <div class=@($"{_prefixCls}-explain-{ValidateStatus.ToString().ToLowerInvariant()}")>
                                 @message
                             </div>
                         </div>
@@ -49,7 +57,7 @@
             }
         </AntDesign.Col>
     </Row>
-    @if (!NoStyle && _validationMessages.Any())
+    @if (!NoStyle && ValidationMessages.Length > 0)
     {
         <div class="ant-form-item-margin-offset" style="margin-bottom: -24px;"></div>
     }

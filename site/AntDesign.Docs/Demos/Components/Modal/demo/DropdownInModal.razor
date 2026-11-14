@@ -1,6 +1,6 @@
 ﻿@inject IMessageService _message
 
-<Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+<Button Type="ButtonType.Primary" OnClick="@(()=>{ _visible = true; })">
     Open Modal
 </Button>
 <Modal Title="@title"
@@ -43,7 +43,7 @@
         </Overlay>
         <ChildContent>
             <a class="ant-dropdown-link" @onclick:preventDefault>
-                Hover me <Icon Type="down" />
+                Hover me <Icon Type="@IconType.Outline.Down" />
             </a>
         </ChildContent>
     </Dropdown>
@@ -51,7 +51,7 @@
     <div style="margin: 64px" />
 
     <b>DatePicker:</b><br />
-    <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" />
+    <DatePicker TValue="DateTime?" Picker="DatePickerType.Date" />
 
     <div style="margin: 64px" />
 

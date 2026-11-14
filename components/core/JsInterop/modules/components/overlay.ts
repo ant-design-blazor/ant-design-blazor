@@ -130,6 +130,7 @@ export class Overlay {
   public overlay: HTMLDivElement;
   private container: HTMLElement;
   private trigger: HTMLElement;
+  private scrollableContainers: HTMLElement[];
 
   private overlayInfo: domTypes.domInfo;
   private containerInfo: domTypes.domInfo;
@@ -220,6 +221,8 @@ export class Overlay {
     this.verticalCalculation = Overlay.setVerticalCalculation(this.placement, this.selectedVerticalPosition);
     this.horizontalCalculation = Overlay.setHorizontalCalculation(this.placement, this.selectedHorizontalPosition);
     this.isTriggerFixed = domInfoHelper.isFixedPosition(this.trigger);
+    this.scrollableContainers = domInfoHelper.getScrollableParents(this.trigger);
+
     this.observe();
   }
 
@@ -414,11 +417,16 @@ export class Overlay {
     else {
       this.container.addEventListener("scroll", this.onScroll.bind(this));
     }
+
+    // for sometime the trigger would be scrolled by any parent contaniners but not body or the popup container.
+    this.scrollableContainers.forEach(container => {
+      container.addEventListener('scroll', this.onScroll.bind(this));
+    });
   }  
 
   private onScroll() {
-    if (this.isTriggerFixed) {
-      if (this.lastScrollPosition !== window.pageYOffset) {      
+    if (this.isTriggerFixed && this.scrollableContainers.length==0) {
+      if (this.lastScrollPosition !== window.pageYOffset) {
         const diff = window.pageYOffset - this.lastScrollPosition; //positive -> down, negative -> up        
         this.position.top += diff;
         this.position.bottom = Overlay.reversePositionValue(this.position.top, this.containerInfo.scrollHeight, this.overlayInfo.clientHeight);      
@@ -486,6 +494,10 @@ export class Overlay {
     else {
       this.container.removeEventListener("scroll", this.onScroll);
     }
+
+    this.scrollableContainers.forEach(container => {
+      container.removeEventListener('scroll', this.onScroll);
+    });
   }
 
   public calculatePosition(applyLocation: boolean, firstTime = false, overlayPreset?: domTypes.position): overlayPosition {        
@@ -745,18 +757,20 @@ export class Overlay {
   }
 
   private applyPlacement() {
-    if (this.recentPlacement !== this.placement) {
-      let currentPlacement: string;
-      const stringMach = `${this.triggerPrefixCls}-placement-`;
-      const start = this.overlay.className.indexOf(stringMach);
-      const end = this.overlay.className.indexOf(" ", start + stringMach.length);
-      if (start >= 0) {
-        currentPlacement = this.overlay.className.substr(start, end-start);
+    const placementPrefix = `${this.triggerPrefixCls}-placement-`;
+    const currentPlacement = Array.from(this.overlay.classList)
+      .find(className => className.startsWith(placementPrefix));
+    const newPlacement = placementPrefix + Overlay.appliedStylePositionMap.get(this.placement).class;
+
+    // The first position calculation can adjust placement before the initial DOM
+    // placement is applied. Compare against the rendered class, not only the
+    // placement from the previous calculation, so that first flip is reflected.
+    if (currentPlacement !== newPlacement) {
+      if (currentPlacement) {
+        this.overlay.classList.replace(currentPlacement, newPlacement);
       } else {
-        currentPlacement = Overlay.appliedStylePositionMap.get(this.initialPlacement).class;
+        this.overlay.classList.add(newPlacement);
       }
-      const newPlacement = stringMach + Overlay.appliedStylePositionMap.get(this.placement).class;
-      this.overlay.classList.replace(currentPlacement, newPlacement);
     }
   }
 

@@ -61,6 +61,12 @@ namespace AntDesign
         /// <default value="NavLinkMatch.All" />
         [Parameter]
         public NavLinkMatch RouterMatch { get; set; } = NavLinkMatch.All;
+        
+        /// <summary>
+        /// Allows specification of the HTML `target` attribute
+        /// </summary>
+        [Parameter]
+        public MenuTarget? Target { get; set; }
 
         /// <summary>
         /// Title of the menu item
@@ -83,6 +89,8 @@ namespace AntDesign
         internal bool IsSelected { get; private set; }
         internal bool FirstRun { get; set; } = true;
         private string _key;
+        private Tooltip _tooltip;
+
         private bool TooltipDisabled => ParentMenu?.IsOpen == true || ParentMenu?._overlayVisible == true || RootMenu?.InlineCollapsed == false;
 
         private int Padding => RootMenu?.InternalMode == MenuMode.Inline ? ((ParentMenu?.Level ?? 0) + 1) * RootMenu?.InlineIndent ?? 0 : 0;
@@ -90,7 +98,7 @@ namespace AntDesign
         private string PaddingStyle => Padding > 0 ? $"{(RTL ? "padding-right" : "padding-left")}:{Padding}px;" : "";
 
         // There is no need to render the tooltip if there is no inline mode. Tooltip will be only showing menu content if menu is collapsed to icon version && only for root menu
-        private bool ShowTooltip => RootMenu?.Mode == MenuMode.Inline && ParentMenu is null && RootMenu?.InlineCollapsed == true && RootMenu?.ShowCollapsedTooltip == true;
+        private bool ShowTooltip => RootMenu?.Mode == MenuMode.Inline && ParentMenu is null && RootMenu?.ShowCollapsedTooltip == true;
 
         private void SetClass()
         {
@@ -119,8 +127,10 @@ namespace AntDesign
         {
             base.OnParametersSet();
 
-            if (RootMenu?.SelectedKeys.Contains(Key) == true && !IsSelected)
+            if (RootMenu?.SelectedKey(Key) == true && !IsSelected)
                 Select();
+
+            _tooltip?.SetShouldRender(true);
         }
 
         protected override void Dispose(bool disposing)
@@ -132,7 +142,7 @@ namespace AntDesign
 
         internal void UpdateStelected()
         {
-            if (RootMenu?.SelectedKeys.Contains(Key) == true)
+            if (RootMenu?.SelectedKey(Key) == true)
             {
                 if (!IsSelected) Select();
             }

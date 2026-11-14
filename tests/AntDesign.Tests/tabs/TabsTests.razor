@@ -125,4 +125,73 @@
         var paneElements = cut.FindAll(".ant-tabs-nav");
             paneElements[0].Attributes["class"]?.Value.Should().Be($"ant-tabs-nav {classList}");
     }
+
+    [Fact]
+    public void Should_fire_OnTabClick_when_tab_is_clicked()
+    {
+        string clickedKey = null;
+        Action<string> onTabClick = key => clickedKey = key;
+
+        var cut = Context.Render(
+            @<Tabs OnTabClick="onTabClick">
+                <TabPane Key="tab1" Tab="Tab 1"></TabPane>
+                <TabPane Key="tab2" Tab="Tab 2"></TabPane>
+            </Tabs>
+        );
+
+        // Click on the first tab (already active)
+        cut.FindAll("div.ant-tabs-tab")[0].Click();
+        clickedKey.Should().Be("tab1");
+
+        // Click on the second tab (not active)
+        clickedKey = null;
+        cut.FindAll("div.ant-tabs-tab")[1].Click();
+        clickedKey.Should().Be("tab2");
+    }
+
+    [Fact]
+    public void OnClosing_can_prevent_tab_closing()
+    {
+        var onCloseCalled = false;
+
+        Action<CloseEventArgs<MouseEventArgs>> onClosing = args => args.Cancel = true;
+        Action<string> onClose = _ => onCloseCalled = true;
+
+        var cut = Context.Render(
+            @<Tabs Type="@TabType.EditableCard" OnClose="onClose">
+                <TabPane Key="tab1" Tab="Tab 1" OnClosing="onClosing">
+                    Tab Content 1
+                </TabPane>
+            </Tabs>
+        );
+
+        cut.Find(".ant-tabs-tab-remove").Click();
+
+        onCloseCalled.Should().BeFalse();
+        cut.FindAll(".ant-tabs-tab").Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void OnClosing_allows_tab_closing_when_not_cancelled()
+    {
+        var onClosingCalled = false;
+        var closedTab = string.Empty;
+
+        Action<CloseEventArgs<MouseEventArgs>> onClosing = _ => onClosingCalled = true;
+        Action<string> onClose = key => closedTab = key;
+
+        var cut = Context.Render(
+            @<Tabs Type="@TabType.EditableCard" OnClose="onClose">
+                <TabPane Key="tab1" Tab="Tab 1" OnClosing="onClosing">
+                    Tab Content 1
+                </TabPane>
+            </Tabs>
+        );
+
+        cut.Find(".ant-tabs-tab-remove").Click();
+
+        onClosingCalled.Should().BeTrue();
+        closedTab.Should().Be("tab1");
+    }
+
 }

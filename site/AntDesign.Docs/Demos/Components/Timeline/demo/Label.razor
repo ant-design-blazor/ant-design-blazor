@@ -1,8 +1,8 @@
 <div>
     <RadioGroup @bind-Value="@mode" Style="margin-bottom:20px">
-        <Radio Value="@TimelineMode.Left">Left</Radio>
-        <Radio Value="@TimelineMode.Right">Right</Radio>
-        <Radio Value="@TimelineMode.Alternate">Alternate</Radio>
+        <Radio Value="TimelineMode.Left">Left</Radio>
+        <Radio Value="TimelineMode.Right">Right</Radio>
+        <Radio Value="TimelineMode.Alternate">Alternate</Radio>
     </RadioGroup>
     <Timeline Mode="@mode">
         <TimelineItem Label="2015-09-01">Create a services</TimelineItem>

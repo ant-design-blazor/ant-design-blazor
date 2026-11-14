@@ -131,13 +131,13 @@ namespace AntDesign
             }
         }
 
-        private async void OnWindowScroll(JsonElement obj) => await RenderAffixAsync();
+        private async Task OnWindowScroll(JsonElement obj) => await RenderAffixAsync();
 
-        private async void OnWindowResize(JsonElement obj) => await RenderAffixAsync();
+        private async Task OnWindowResize(JsonElement obj) => await RenderAffixAsync();
 
-        private async void OnTargetScroll(JsonElement obj) => await RenderAffixAsync();
+        private async Task OnTargetScroll(JsonElement obj) => await RenderAffixAsync();
 
-        private async void OnTargetResize(JsonElement obj) => await RenderAffixAsync();
+        private async Task OnTargetResize(JsonElement obj) => await RenderAffixAsync();
 
         private async Task RenderAffixAsync()
         {

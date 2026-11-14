@@ -56,6 +56,9 @@ namespace AntDesign.Filters
 
         public override sealed Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
         {
+            leftExpr = ConvertToActualTypeIfNecessary(leftExpr, rightExpr);
+            rightExpr = ConvertToActualTypeIfNecessary(rightExpr, rightExpr);
+
             switch (compareOperator)
             {
                 case TableFilterCompareOperator.IsNull:

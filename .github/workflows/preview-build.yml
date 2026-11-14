@@ -9,52 +9,39 @@ jobs:
   build-site:
     name: build preview
     runs-on: ubuntu-latest
+
     steps:
       - name: checkout
         uses: actions/checkout@master
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v3
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 5.0.100
-
-      - name: Setup .NET 6.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 6.0.101
-
-      - name: Setup .NET 7.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.100
-      
-      - name: Setup .NET 8.0
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0.100
+          dotnet-version: |
+            3.1.x
+            5.0.x
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+            10.0.x
+            11.0.x
+          include-prerelease: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: "16.x"
-
-      - name: Prepare AOT workload
-        run: |
-          dotnet workload install wasm-tools
+          node-version: "18.x"
 
       - name: build site
         id: site
-        run: |
-          dotnet --list-sdks
-          npm install
-          dotnet build
-          sed -i s/{version}/$PACKAGE_VERSION/g ./site/AntDesign.Docs/Shared/HeaderMenu.razor
-          dotnet publish ./site/AntDesign.Docs.Wasm -c Release -f net8 -o _site
+        run: bash ./scripts/build-cloudflare-pages.sh _site/wwwroot
         env:
           PACKAGE_VERSION: ${{ github.event.number }}
+          ENABLE_AOT: false
 
       - name: upload site artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: site
           path: _site/wwwroot/
@@ -67,7 +54,7 @@ jobs:
 
       - name: Upload PR number
         if: ${{ always() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: pr
           path: ./pr-id.txt

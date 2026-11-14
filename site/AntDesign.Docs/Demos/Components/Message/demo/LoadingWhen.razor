@@ -1,0 +1,39 @@
+@inject IMessageService _message
+
+<Button Type="ButtonType.Primary" OnClick="OnFetchData">
+    Fetch Data
+</Button>
+<Button Type="ButtonType.Default" OnClick="OnSaveData">
+    Save Data
+</Button>
+
+@code {
+
+    private async Task OnFetchData()
+    {
+        var data = await _message.LoadingWhen(
+            async () =>
+            {
+                await Task.Delay(2000);
+                return new[] { "Item 1", "Item 2", "Item 3" };
+            },
+            "Fetching data..."
+        );
+
+        _message.Success($"Fetched {data.Length} items: {string.Join(", ", data)}");
+    }
+
+    private async Task OnSaveData()
+    {
+        await _message.LoadingWhen(
+            async () => { await Task.Delay(2000); },
+            new MessageConfig
+            {
+                Content = "Saving data...",
+            }
+        );
+
+        _message.Success("Data saved successfully!");
+    }
+
+}

@@ -161,9 +161,9 @@ namespace AntDesign.Internal
                             12 : Use12Hours && _selectedHour > 12 ?
                                 _selectedHour.Value - 12 : _selectedHour.Value;
 
-            if (_hours.ContainsKey(hoursKey))
+            if (_hours.TryGetValue(hoursKey, out var hoursVal))
             {
-                await InvokeSmoothScrollAsync(_hours[hoursKey], _hoursParent, duration);
+                await InvokeSmoothScrollAsync(hoursVal, _hoursParent, duration);
             }
         }
 
@@ -171,9 +171,9 @@ namespace AntDesign.Internal
         {
             _selectedMinute = currentValue.Minute;
 
-            if (_minutes.ContainsKey(_selectedMinute.Value))
+            if (_minutes.TryGetValue(_selectedMinute.Value, out var minuteVal))
             {
-                await InvokeSmoothScrollAsync(_minutes[_selectedMinute.Value], _minutesParent, duration);
+                await InvokeSmoothScrollAsync(minuteVal, _minutesParent, duration);
             }
         }
 
@@ -181,9 +181,9 @@ namespace AntDesign.Internal
         {
             _selectedSecond = currentValue.Second;
 
-            if (_seconds.ContainsKey(_selectedSecond.Value))
+            if (_seconds.TryGetValue(_selectedSecond.Value, out var secVal))
             {
-                await InvokeSmoothScrollAsync(_seconds[_selectedSecond.Value], _secondsParent, duration);
+                await InvokeSmoothScrollAsync(secVal, _secondsParent, duration);
             }
         }
 

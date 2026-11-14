@@ -1,0 +1,39 @@
+<Collapse @bind-ActiveKeys="@_activeKeys">
+    <Panel Key="1" Header="This is panel header 1">
+        <p>A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.</p>
+    </Panel>
+    <Panel Key="2" Header="This is panel header 2">
+        <p>A cat is a type of domesticated animal. Known for its independent and aloof nature, it is a common pet in many households.</p>
+    </Panel>
+    <Panel Key="3" Header="This is panel header 3">
+        <p>A bird is a type of wild or domesticated animal. Known for its ability to fly and sing, it brings joy to many people.</p>
+    </Panel>
+</Collapse>
+<br />
+<Space>
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" OnClick="@(() => TogglePanel("1"))">Toggle Panel 1</Button>
+    </SpaceItem>
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" OnClick="@(() => TogglePanel("2"))">Toggle Panel 2</Button>
+    </SpaceItem>
+    <SpaceItem>
+        <Button Type="@ButtonType.Primary" OnClick="@(() => TogglePanel("3"))">Toggle Panel 3</Button>
+    </SpaceItem>
+</Space>
+
+@code {
+    private string[] _activeKeys = Array.Empty<string>();
+
+    private void TogglePanel(string key)
+    {
+        if (_activeKeys.Contains(key))
+        {
+            _activeKeys = _activeKeys.Where(k => k != key).ToArray();
+        }
+        else
+        {
+            _activeKeys = _activeKeys.Append(key).ToArray();
+        }
+    }
+} 

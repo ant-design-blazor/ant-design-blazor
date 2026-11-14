@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 namespace AntDesign
@@ -51,6 +52,21 @@ namespace AntDesign
         protected override string GetLabel(TEnum item)
         {
             return EnumHelper<TEnum>.GetDisplayName(item);
+        }
+
+
+        protected override async Task ClearSelectedAsync()
+        {
+            await base.ClearSelectedAsync();
+
+            if (OnSelectedItemChanged.HasDelegate)
+            {
+                await OnSelectedItemChanged.InvokeAsync(default);
+            }
+            if (ValueChanged.HasDelegate)
+            {
+                await ValueChanged.InvokeAsync(default);
+            }
         }
     }
 }

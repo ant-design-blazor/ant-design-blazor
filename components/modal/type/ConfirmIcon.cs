@@ -25,7 +25,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "info-circle");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -33,7 +33,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "exclamation-circle");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -41,7 +41,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "close-circle");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -49,7 +49,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "check-circle");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 
@@ -57,7 +57,7 @@ namespace AntDesign
         {
             builder.OpenComponent<Icon>(0);
             builder.AddAttribute(1, "Type", "question-circle");
-            builder.AddAttribute(2, "Theme", "outline");
+            builder.AddAttribute(2, "Theme", IconThemeType.Outline);
             builder.CloseComponent();
         };
 

@@ -1,20 +1,40 @@
-﻿<Flex Gap="middle" Vertical>
-    <RadioGroup @bind-Value="gapSize" Options="gapSizeOptions"></RadioGroup>
-    @if (gapSize == "customize")
+﻿<Flex Gap="FlexGap.Middle" Direction="FlexDirection.Vertical">
+    <span><Switch @bind-Checked="custom" /> Custom</span>
+    @if (custom)
     {
         <Slider @bind-Value="customGapSize" />
+
+        <Flex Gap="@($"{customGapSize}")">
+            <Button Type="ButtonType.Primary">Primary</Button>
+            <Button>Default</Button>
+            <Button Type="ButtonType.Dashed">Dashed</Button>
+            <Button Type="ButtonType.Link">Link</Button>
+        </Flex>
     }
-    <Flex Gap="@(gapSize != "customize" ? gapSize : $"{customGapSize}")">
-        <Button Type="primary">Primary</Button>
-        <Button>Default</Button>
-        <Button Type="dashed">Dashed</Button>
-        <Button Type="link">Link</Button>
-    </Flex>
+    else
+    {
+        <RadioGroup @bind-Value="gapSize" Options="gapSizeOptions"></RadioGroup>
+
+        <Flex Gap="@gapSize">
+            <Button Type="ButtonType.Primary">Primary</Button>
+            <Button>Default</Button>
+            <Button Type="ButtonType.Dashed">Dashed</Button>
+            <Button Type="ButtonType.Link">Link</Button>
+        </Flex>
+    }
+
 </Flex>
 
 @code {
-    string[] gapSizeOptions = ["small", "middle", "large", "customize"];
-    string gapSize;
+    RadioOption<FlexGap>[] gapSizeOptions = new RadioOption<FlexGap>[]
+    {
+        new(){ Value = FlexGap.Small, Label="Small", },
+        new(){ Value = FlexGap.Middle, Label="Middle", },
+        new(){ Value = FlexGap.Large, Label="Large", },
+    };
 
+    FlexGap gapSize;
+
+    bool custom;
     double customGapSize;
 }

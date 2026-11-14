@@ -54,18 +54,26 @@ namespace AntDesign
         /// <default value="false"/>
         [Parameter]
         public bool Disabled { get; set; }
-
-        internal virtual string PrefixCls { get; }
-
         protected override void OnValueChange(bool value)
         {
             base.OnValueChange(value);
+
+            if (value == Checked)
+                return;
+
             Checked = value;
-            CheckedChanged.InvokeAsync(value);
+
+            if (CheckedChanged.HasDelegate)
+            {
+                CheckedChanged.InvokeAsync(value);
+            }
         }
 
         protected virtual async Task ChangeValue(bool value)
         {
+            if (value == CurrentValue)
+                return;
+
             CurrentValue = value;
             if (this.OnChange.HasDelegate)
                 await this.OnChange.InvokeAsync(value);

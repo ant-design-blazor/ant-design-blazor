@@ -23,9 +23,6 @@
 
     var prevPage = _current - 1 > 0 ? _current - 1 : 0;
     var nextPage = _current + 1 < allPages ? _current + 1 : allPages;
-    var dataOrAriaAttributeProps = UnmatchedAttributes?
-        .Where(pair => pair.Key.StartsWith("data-") || pair.Key.StartsWith("aria-") || pair.Key == "role")
-        .ToDictionary(e => e.Key, e => e.Value);
     if (Simple)
     {
         RenderFragment? goButtonRender;
@@ -53,10 +50,10 @@
                 </li>;
         }
         <ul
+            @attributes="GetAdditionalAttributes(UnmatchedAttributes)"
             class="@ClassMapper.Class"
             style="@Style"
-            @ref="Ref"
-            @attributes="@dataOrAriaAttributeProps">
+            @ref="Ref">
             <li
                 title="@(ShowTitle ? Locale.PrevPage : null)"
                 @onclick="Prev"
@@ -281,11 +278,11 @@
         var nextDisabled = !HasNext() || allPages != 0;
 
         <ul
+            @attributes="GetAdditionalAttributes(UnmatchedAttributes)"
             class="@ClassMapper.Class"
             style="@Style"
             unselectable="unselectable"
-            @ref="Ref"
-            @attributes="@dataOrAriaAttributeProps">
+            @ref="Ref">
             @totalText
             <li
                 title="@(ShowTitle ? Locale.PrevPage : null)"
@@ -332,17 +329,17 @@
         RenderFragment ellipsis = @<span class="@($"{PrefixCls}-item-ellipsis")">•••</span>;
         RenderFragment<PaginationItemRenderContext> prevIcon = context =>
             @<button class="@($"{PrefixCls}-item-link")" type="button" tabIndex="-1" disabled="@context.Disabled">
-                <Icon Type="left" Theme="outline"/>
+                <Icon Type="@IconType.Outline.Left" />
             </button>;
         RenderFragment<PaginationItemRenderContext> nextIcon = context =>
             @<button class="@($"{PrefixCls}-item-link")" type="button" tabIndex="-1" disabled="@context.Disabled">
-                <Icon Type="right" Theme="outline"/>
+                <Icon Type="@IconType.Outline.Right" />
             </button>;
         RenderFragment<PaginationItemRenderContext> jumpPrevIcon = _ =>
             @<a class="@($"{PrefixCls}-item-link")">
                 @* You can use transition effects in the container :) *@
                 <div class="@($"{PrefixCls}-item-container")">
-                    <Icon Type="double-left" Class="@($"{PrefixCls}-item-link-icon")"></Icon>
+                    <Icon Type="@IconType.Outline.DoubleLeft" Class="@($"{PrefixCls}-item-link-icon")" />
                     @ellipsis
                 </div>
             </a>;
@@ -350,7 +347,7 @@
             @<a class="@($"{PrefixCls}-item-link")">
                 @* You can use transition effects in the container :) *@
                 <div class="@($"{PrefixCls}-item-container")">
-                    <Icon Type="double-right" Class="@($"{PrefixCls}-item-link-icon")"></Icon>
+                    <Icon Type="double-right" Class="@($"{PrefixCls}-item-link-icon")" />
                     @ellipsis
                 </div>
             </a>;

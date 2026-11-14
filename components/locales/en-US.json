@@ -253,5 +253,11 @@
     "CloseAllTabs": "Close All Tabs",
     "CloseAllButThis": "Close All But This",
     "PinTab": "Pin Tab"
+  },
+  "Draft": {
+    "RecoveryTitle": "Draft Found",
+    "RecoveryContent": "An unfinished draft was detected. Would you like to recover it?\n\nSaved at: ${time}",
+    "RecoveryOkText": "Recover",
+    "RecoveryCancelText": "Delete"
   }
 }

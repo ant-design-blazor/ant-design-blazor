@@ -7,15 +7,16 @@
 @inherits AntDomComponentBase
 
 @{
+    _inputString = IsOverlayShow ? _inputString : string.Empty; // ensure _inputString is empty and selected item is shown when overlay is closed
     var showPlaceholder = !ParentSelect.HasValue && string.IsNullOrEmpty(_inputString);
 }
 <div class="@ParentSelect.CurrentClassMapper.Class"
      style="@ParentSelect.Style"
-     id="@Id"
+     id="@ParentSelect.Id"
      tabindex="-1" 
      @ref="@Ref"
      >
-    @if (ParentSelect.SelectMode == SelectMode.Default)
+    @if (ParentSelect.Mode == SelectMode.Default)
     {
       <div class="@Prefix-selector" style="@(ParentSelect.PrefixIcon is null?"":"padding-left: 4px;")">
         @if (ParentSelect.PrefixIcon != null)
@@ -25,11 +26,10 @@
           </span>
         }
         <span class="@Prefix-selection-search" style="@_inputWidth">
-          <input @ref="ParentSelect._inputRef"
+          <input @attributes="ParentSelect.GetAdditionalAttributes(AdditonalAttributes())" @ref="ParentSelect._inputRef"
                @oninput="@OnInputChange"
                @onkeyup="OnKeyUp"
                @onkeydown="OnKeyDown"
-               @attributes=@AdditonalAttributes()
                disabled="@ParentSelect.Disabled"
                value="@_inputString"
                id="@(ParentSelect.Id)_list"
@@ -53,8 +53,9 @@
         }
         else
         {
-          var selectedItem = ParentSelect.SelectedOptionItems.FirstOrDefault();
-          if (string.IsNullOrEmpty(_inputString) && selectedItem != null)
+          var selectedItem = ParentSelect.GetSingleSelectedItem();
+          var canShowItem = !IsOverlayShow || string.IsNullOrEmpty(_inputString);
+          if (canShowItem && selectedItem != null)
           {
             @if (ParentLabelTemplate != null)
             {
@@ -66,7 +67,7 @@
             }
             else
             {
-              <span class="@Prefix-selection-item" title="@selectedItem.Label" style="@(string.IsNullOrEmpty(_inputString)?"":"visibility: hidden;")">
+              <span class="@Prefix-selection-item" title="@selectedItem.Label">
                 @getLabel(selectedItem)
               </span>
             }
@@ -80,7 +81,8 @@
             IsOverlayShow="@IsOverlayShow"
             OnClearClick="@OnClearClick" 
             ShowArrowIcon="@ShowArrowIcon" 
-            ShowSearchIcon="@ShowArrowIcon"/>
+            ShowSearchIcon="@ShowArrowIcon"
+            Loading="@Loading"/>
     }
     else //ParentSelect.SelectMode != SelectMode.Default
     {
@@ -96,7 +98,7 @@
           }
           @if (!showPlaceholder)
           {
-            var selectedItems = ParentSelect.SelectedOptionItems;
+            var selectedItems = ParentSelect.GetOrderedSelectedItems();
             @if (ParentSelect.HasTagCount)
             {
               @for (int i = 0; i < Math.Min(ParentSelect.MaxTagCount.AsT0, selectedItems.Count); i++)
@@ -218,12 +220,11 @@
           }
           <div class="@Prefix-selection-overflow-item @Prefix-selection-overflow-item-suffix" style="opacity: 1; order: @(ParentSelect.IsResponsive?_calculatedMaxCount-1:ParentSelect.SelectedOptionItems.Count)">
             <div class="@Prefix-selection-search" style="@_inputWidth">
-              <input @ref="ParentSelect._inputRef"
+              <input @attributes="ParentSelect.GetAdditionalAttributes(AdditonalAttributes())" @ref="ParentSelect._inputRef"
                    @oninput="OnInputChange"
                    @onkeyup="OnKeyUp"
                    @onkeydown="OnKeyDown"
-                   @attributes=@AdditonalAttributes()
-                   @bind-value="@SearchValue"
+                   value="@_inputString"
                    disabled="@ParentSelect.Disabled"
                    id="@ParentSelect.Id"
                    type="search"
@@ -264,7 +265,7 @@
         if (option.LabelTemplate != null)
             return builder => builder.AddContent(0, option.LabelTemplate);
         else
-            return builder => builder.AddContent(0, option.Label);
+            return builder => builder.AddContent(0, ParentSelect.GetSelectedItemLabel(option));
     }
 
     RenderFragment getTagLabel(SelectContent<TItemValue, TItem> content, SelectOptionItem<TItemValue, TItem> option)
@@ -272,7 +273,7 @@
         if (option.LabelTemplate != null)
             return builder => builder.AddContent(0, option.LabelTemplate);
         else
-            return builder => builder.AddContent(0, content.FormatLabel(option.Label));
+            return builder => builder.AddContent(0, content.FormatLabel(ParentSelect.GetSelectedItemLabel(option)));
 
     }
 }

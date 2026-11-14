@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.2.32505.173
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11408.92 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0CB79B3D-E483-4051-8026-6A80FCA0C6A6}"
 	ProjectSection(SolutionItems) = preProject
@@ -50,6 +50,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Docs.WebApp", "site\AntDesign.Docs.WebApp\AntDesign.Docs.WebApp.csproj", "{4734661E-8525-4331-9B3C-DC3C3A3612E0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntDesign.Extensions.Localization", "src\AntDesign.Extensions.Localization\AntDesign.Extensions.Localization.csproj", "{2D4FDEAD-7E26-4DE6-99C9-04C11F66E794}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntDesign.Docs.MCP", "site\AntDesign.Docs.MCP\AntDesign.Docs.MCP.csproj", "{8D93CA18-4046-FC3C-EEB8-307C7B9876CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +111,10 @@ Global
 		{2D4FDEAD-7E26-4DE6-99C9-04C11F66E794}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D4FDEAD-7E26-4DE6-99C9-04C11F66E794}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D4FDEAD-7E26-4DE6-99C9-04C11F66E794}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D93CA18-4046-FC3C-EEB8-307C7B9876CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D93CA18-4046-FC3C-EEB8-307C7B9876CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D93CA18-4046-FC3C-EEB8-307C7B9876CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D93CA18-4046-FC3C-EEB8-307C7B9876CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,6 +134,7 @@ Global
 		{5ADDB648-9417-4FE9-8A7D-0D4BF2DD3EC5} = {606789E3-AFE9-4489-9963-2B06A701D6B6}
 		{4734661E-8525-4331-9B3C-DC3C3A3612E0} = {752F5AE8-BA08-4C41-B9B2-D2ED12727E63}
 		{2D4FDEAD-7E26-4DE6-99C9-04C11F66E794} = {C60BCE84-4AF4-4393-8D3E-1B69E29549C1}
+		{8D93CA18-4046-FC3C-EEB8-307C7B9876CC} = {752F5AE8-BA08-4C41-B9B2-D2ED12727E63}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E124DDCB-1F8D-4F96-BF41-D87019D0A412}

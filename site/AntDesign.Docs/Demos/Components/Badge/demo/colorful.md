@@ -1,5 +1,5 @@
 ---
-order: 8
+order: 9
 title:
   zh-CN: 多彩徽标
   en-US: Colorful Badge

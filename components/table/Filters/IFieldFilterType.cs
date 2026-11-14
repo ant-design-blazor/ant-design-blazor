@@ -14,6 +14,6 @@ namespace AntDesign.Filters
         RenderFragment<TableFilterInputRenderOptions> FilterInput { get; }
         IEnumerable<TableFilterCompareOperator> SupportedCompareOperators { get; set; }
         Dictionary<string, object> InputAttributes { get; }
-        Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr);
+        Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression currentValueExpr, Expression filterValueExpr);
     }
 }

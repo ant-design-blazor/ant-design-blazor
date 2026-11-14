@@ -13,6 +13,8 @@ namespace AntDesign.Internal
         private int _maxCol;
         private int _maxRow;
         private DateTime _viewStartDate;
+        private DateTime? _hoveredDateTime;
+        private int _hoveredPickerIndex;
 
         [Parameter]
         public RenderFragment RenderPickerHeader { get; set; }
@@ -94,30 +96,37 @@ namespace AntDesign.Internal
 
         private void DateOnMouseEnter(DateTime hoverDateTime)
         {
-            if (Value is not null)
-            {
-                return;
-            }
-
             if (IsRange)
             {
                 DatePicker.HoverDateTime = hoverDateTime;
             }
 
-            int focusIndex = DatePicker.GetOnFocusPickerIndex();
-            string placeholder = DatePicker.GetFormatValue(hoverDateTime, focusIndex);
+            int pickerIndex = GetPickerIndex();
+            string placeholder = DatePicker.GetFormatValue(hoverDateTime, pickerIndex);
 
-            DatePicker.ChangePlaceholder(placeholder, focusIndex);
+            _hoveredDateTime = hoverDateTime;
+            _hoveredPickerIndex = pickerIndex;
+            DatePicker.ChangePreviewValue(placeholder, pickerIndex);
         }
 
-        private void DateOnMouseLeave()
+        private void DateOnMouseLeave(DateTime hoverDateTime)
         {
-            if (IsRange)
+            var pickerIndex = GetPickerIndex();
+            if (_hoveredDateTime != hoverDateTime || _hoveredPickerIndex != pickerIndex)
             {
-                DatePicker.HoverDateTime = null;
+                return;
             }
 
-            DatePicker.ResetPlaceholder();
+            _hoveredDateTime = null;
+            if (IsRange)
+            {
+                if (DatePicker.HoverDateTime == hoverDateTime)
+                {
+                    DatePicker.HoverDateTime = null;
+                }
+            }
+
+            DatePicker.ResetPreviewValue(pickerIndex);
         }
 
         private bool IsDateInRange(DateTime currentColDate)
@@ -440,13 +449,13 @@ namespace AntDesign.Internal
 
         private bool ShouldStopRenderDate(DateTime preDate, DateTime nextDate)
         {
-            return Picker.Name switch
+            return Picker switch
             {
-                DatePickerType.DATE => DateHelper.IsSameDay(preDate, nextDate),
-                DatePickerType.YEAR => DateHelper.IsSameYear(preDate, nextDate),
-                DatePickerType.MONTH => DateHelper.IsSameMonth(preDate, nextDate),
-                DatePickerType.QUARTER => DateHelper.IsSameQuarter(preDate, nextDate),
-                DatePickerType.DECADE => DateHelper.IsSameYear(preDate, nextDate) || nextDate.Year == DateTime.MaxValue.Year,
+                DatePickerType.Date => DateHelper.IsSameDay(preDate, nextDate),
+                DatePickerType.Year => DateHelper.IsSameYear(preDate, nextDate),
+                DatePickerType.Month => DateHelper.IsSameMonth(preDate, nextDate),
+                DatePickerType.Quarter => DateHelper.IsSameQuarter(preDate, nextDate),
+                DatePickerType.Decade => DateHelper.IsSameYear(preDate, nextDate) || nextDate.Year == DateTime.MaxValue.Year,
                 _ => false,
             };
         }

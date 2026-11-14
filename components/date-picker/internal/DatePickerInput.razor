@@ -3,15 +3,16 @@
 
 @if (!IsRange)
 {
-    <div class="@(PrefixCls)-input">
+    <div class="@(PrefixCls)-input @(PreviewValue is not null ? $"{PrefixCls}-input-placeholder" : "")">
         <input @ref="Ref"
+               @attributes="AdditionalAttributes"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
                @onkeydown="@OnKeyDown"
                @oninput="OnInput"
                @onfocus="Onfocus"
                @onblur="OnBlur"
-               @bind-value="@Value"
+               value="@(PreviewValue ?? Value ?? string.Empty)"
                maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
@@ -43,22 +44,23 @@
         @if (ShowClear())
         {
             <span class="@(PrefixCls)-clear" onclick="@OnClickClear">
-                <Icon Type="close-circle" Theme="fill"/>
+                <Icon Type="@IconType.Fill.CloseCircle"/>
             </span>
         }
     </div>
 }
 else
 {
-    <div class="@(PrefixCls)-input @(Active ? $"{PrefixCls}-input-active" : "")">
+    <div class="@(PrefixCls)-input @(Active ? $"{PrefixCls}-input-active" : "") @(PreviewValue is not null ? $"{PrefixCls}-input-placeholder" : "")">
         <input @ref="Ref"
+               @attributes="AdditionalAttributes"
                @onclick="OnClick"
                @onkeyup="OnKeyUp"
                @onkeydown="@OnKeyDown"
                @oninput="OnInput"
                @onfocus="Onfocus"
                @onblur="OnBlur"
-               @bind-value="@Value"
+               value="@(PreviewValue ?? Value ?? string.Empty)"
                maxlength="@(Mask?.Length ?? ushort.MaxValue)"
                size="@HtmlInputSize"
                disabled="@Disabled"
@@ -73,10 +75,13 @@ else
     public string PrefixCls { get; set; } = "ant-picker";
 
     [Parameter]
-    public string Size { get; set; }
+    public InputSize Size { get; set; }
 
     [Parameter]
     public string Value { get; set; }
+
+    [Parameter]
+    public string PreviewValue { get; set; }
 
     [Parameter]
     public string Placeholder { get; set; }

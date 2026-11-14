@@ -4,10 +4,10 @@
     <PageHeaderExtra>
         <Button>Operation</Button>
         <Button>Operation</Button>
-        <Button Type="@ButtonType.Primary">Primary</Button>
+        <Button Type="ButtonType.Primary">Primary</Button>
     </PageHeaderExtra>
     <PageHeaderContent>
-        <Descriptions Size="small" Column="3">
+        <Descriptions Size="DescriptionsSize.Small" Column="3">
             <DescriptionsItem Title="Created" Span="1">Lili Qu</DescriptionsItem>
             <DescriptionsItem Title="Association" Span="1"><a>421421</a></DescriptionsItem>
             <DescriptionsItem Title="Creation Time" Span="1">2017-01-10</DescriptionsItem>
@@ -23,18 +23,18 @@
     <PageHeaderTitle>Title</PageHeaderTitle>
     <PageHeaderSubtitle>This is a subtitle</PageHeaderSubtitle>
     <PageHeaderTags>
-        <Tag Color="@PresetColor.Blue.ToString()">Running</Tag>
+        <Tag Color="TagColor.Blue">Running</Tag>
     </PageHeaderTags>
     <PageHeaderExtra>
         <Button>Operation</Button>
         <Button>Operation</Button>
-        <Button Type="@ButtonType.Primary">Primary</Button>
+        <Button Type="ButtonType.Primary">Primary</Button>
     </PageHeaderExtra>
     <PageHeaderContent>
-        <Row Type="flex">
-            <Statistic Title="Status" Value=@("Pending")></Statistic>
-            <Statistic Title="Price" Value="568.08" Prefix="$" Style="margin: 0 32px"></Statistic>
-            <Statistic Title="Balance" Value="3345.08" Prefix="$"></Statistic>
+        <Row>
+            <Statistic Title="Status" Value=@("Pending") />
+            <Statistic Title="Price" Value="568.08" Prefix="$" Style="margin: 0 32px" />
+            <Statistic Title="Balance" Value="3345.08" Prefix="$" />
         </Row>
     </PageHeaderContent>
 </PageHeader>

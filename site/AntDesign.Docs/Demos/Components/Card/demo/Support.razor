@@ -14,9 +14,9 @@
                 <CardMeta AvatarTemplate="@avatarTemplate" Title="Meta Card" Description="This is the description" />
             </ChildContent>
             <ActionTemplate>
-                <CardAction><Icon Type="setting" OnClick="@(()=> OnClick("setting"))" /></CardAction>
-                <CardAction><Icon Type="edit" OnClick="@(()=> OnClick("edit"))" /></CardAction>
-                <CardAction><Icon Type="ellipsis" OnClick="@(()=> OnClick("ellipsis"))" /></CardAction>
+                <CardAction><Icon Type="@IconType.Outline.Setting" OnClick="@(()=> OnClick("setting"))" /></CardAction>
+                <CardAction><Icon Type="@IconType.Outline.Edit" OnClick="@(()=> OnClick("edit"))" /></CardAction>
+                <CardAction><Icon Type="@IconType.Outline.Ellipsis" OnClick="@(()=> OnClick("ellipsis"))" /></CardAction>
             </ActionTemplate>
         </Card>
     </GridCol>
@@ -24,11 +24,11 @@
 
 @code
 {
-    RenderFragment actionSetting(Action clickAction) =>@<Icon Type="setting" OnClick="@clickAction" />;
+    RenderFragment actionSetting(Action clickAction) =>@<Icon Type="@IconType.Outline.Setting" OnClick="@clickAction" />;
 
-    RenderFragment actionEdit(Action clickAction) =>@<Icon Type="edit" OnClick="@clickAction" />;
+    RenderFragment actionEdit(Action clickAction) =>@<Icon Type="@IconType.Outline.Edit" OnClick="@clickAction" />;
 
-    RenderFragment actionEllipsis(Action clickAction) => @<Icon Type="ellipsis" OnClick="@clickAction" />;
+    RenderFragment actionEllipsis(Action clickAction) => @<Icon Type="@IconType.Outline.Ellipsis" OnClick="@clickAction" />;
 
     RenderFragment avatarTemplate = @<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></Avatar>;
 

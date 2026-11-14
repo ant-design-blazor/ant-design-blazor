@@ -22,9 +22,9 @@ namespace AntDesign
         /// <summary>
         /// Size of the spinner. Possible values: small, default, large
         /// </summary>
-        /// <default value="default" />
+        /// <default value="SpinSize.Default" />
         [Parameter]
-        public string Size { get; set; } = "default";
+        public SpinSize Size { get; set; } = SpinSize.Default;
 
         /// <summary>
         /// Customize description content when Spin has children
@@ -85,9 +85,9 @@ namespace AntDesign
             ClassMapper
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-spinning", () => _isLoading)
-                .If($"{PrefixCls}-lg", () => Size == "large")
-                .If($"{PrefixCls}-sm", () => Size == "small")
-                .If($"{PrefixCls}-show-text", () => string.IsNullOrWhiteSpace(Tip))
+                .If($"{PrefixCls}-lg", () => Size == SpinSize.Large)
+                .If($"{PrefixCls}-sm", () => Size == SpinSize.Small)
+                .If($"{PrefixCls}-show-text", () => !string.IsNullOrWhiteSpace(Tip))
                 .If($"{PrefixCls}-rtl", () => RTL);
         }
 

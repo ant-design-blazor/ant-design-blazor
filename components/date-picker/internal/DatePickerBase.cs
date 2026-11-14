@@ -7,8 +7,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using AntDesign.core.Extensions;
+using AntDesign.Core.Extensions;
 using AntDesign.Core;
+using AntDesign.Core.Documentation;
 using AntDesign.Datepicker.Locale;
 using AntDesign.Internal;
 using AntDesign.JsInterop;
@@ -34,10 +35,11 @@ namespace AntDesign
         /// Saving the input value after blur
         /// </summary>
         [Parameter]
-        public bool ChangeOnClose { get; set; }
+        public bool ChangeOnClose { get; set; } = true;
 
         protected DatePickerType _picker;
         protected bool _isSetPicker = false;
+        protected bool _isInitialized;
         private bool _isNullableEvaluated;
         private bool _isNullable;
 
@@ -77,14 +79,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public string PopupContainerSelector { get; set; }
-
-        /// <summary>
-        /// Disable the date picker. 
-        /// When given a single boolean, it will disable all of it. 
-        /// When given an array of booleans, it represents disabling the start/end of a range: [start, end]
-        /// </summary>
-        [Parameter]
-        public OneOf<bool, bool[]> Disabled { get; set; } = new bool[] { false, false };
 
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
@@ -173,6 +167,14 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// .NET calendar used for date selection and panel navigation. When omitted, the calendar of <see cref="CultureInfo"/> is used.
+        /// </summary>
+        [Parameter]
+        public System.Globalization.Calendar DateCalendar { get; set; }
+
+        private System.Globalization.Calendar EffectiveCalendar => DateCalendar ?? CultureInfo.Calendar;
+
+        /// <summary>
         /// If time should be shown or not. Contains the boolean decision made from setting <see cref="ShowTime" />
         /// </summary>
         internal bool IsShowTime { get; set; }
@@ -209,6 +211,22 @@ namespace AntDesign
                     ShowTimeFormat = strValue;
                 });
             }
+        }
+
+        private TimeSpan? _defaultTime;
+
+        /// <summary>
+        /// Time of day used to fill the time portion when the user types only a date
+        /// (e.g. <c>01.01.2024</c>) into a picker whose format includes time
+        /// (e.g. <c>dd.MM.yyyy HH:mm</c>). Defaults to <see cref="TimeSpan.Zero"/>
+        /// (00:00:00) when <c>null</c>.
+        /// </summary>
+        /// <default value="null"/>
+        [Parameter]
+        public TimeSpan? DefaultTime
+        {
+            get => _defaultTime;
+            set => _defaultTime = value;
         }
 
         /// <summary>
@@ -396,6 +414,13 @@ namespace AntDesign
         public bool Use12Hours { get; set; }
 
         /// <summary>
+        /// When true, will show week column in date panel
+        /// </summary>
+        /// <default value="false" />
+        [Parameter]
+        public bool ShowWeek { get; set; }
+
+        /// <summary>
         /// Date used for "Today"
         /// </summary>
         DateTime IDatePicker.CurrentDate { get; set; } = DateTime.Today;
@@ -410,6 +435,7 @@ namespace AntDesign
         protected DatePickerInput _inputStart;
         protected DatePickerInput _inputEnd;
         protected OverlayTrigger _dropDown;
+        protected string[] _previewValues = new string[2];
 
         protected string _activeBarStyle = "";
         protected string _rangeArrowStyle = "";
@@ -471,6 +497,8 @@ namespace AntDesign
             this.SetClass();
 
             base.OnInitialized();
+
+            _isInitialized = true;
         }
 
         protected bool _shouldRender = true;
@@ -501,7 +529,8 @@ namespace AntDesign
         {
             this.ClassMapper.Clear()
                 .Add(PrefixCls)
-                .Get(() => $"{PrefixCls}-{Size}")
+                .If($"{PrefixCls}-large", () => Size == InputSize.Large)
+                .If($"{PrefixCls}-small", () => Size == InputSize.Small)
                 .If($"{PrefixCls}-rtl", () => RTL)
                 .If($"{PrefixCls}-borderless", () => Bordered == false)
                 .If($"{PrefixCls}-disabled", () => IsDisabled() == true)
@@ -552,7 +581,7 @@ namespace AntDesign
                     _activeBarStyle = "display: none";
                 }
 
-                StateHasChanged();
+                RefreshComponentState();
             }
 
             _needRefresh = false;
@@ -563,7 +592,10 @@ namespace AntDesign
             base.Dispose(disposing);
             _ = InvokeAsync(async () =>
             {
-                await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, _inputStart.Ref);
+                if (_inputStart != null)
+                {
+                    await Js.InvokeVoidAsync(JSInteropConstants.RemovePreventKeys, _inputStart.Ref);
+                }
             });
         }
 
@@ -650,10 +682,81 @@ namespace AntDesign
                     ChangeValue(parsedValue, index);
                 }
             }
+            else if (hasMask && TryParseDateWithDefaultTime(newValue, Mask, out DateTime dateWithDefaultTime))
+            {
+                // The user typed a value that matches only the date portion of the mask
+                // (e.g. "01.01.2024" against "dd.MM.yyyy HH:mm"). Fill the time with
+                // DefaultTime (00:00:00 by default) and treat the input as a full pick.
+                if (IsDisabledDate(dateWithDefaultTime))
+                {
+                    return;
+                }
+
+                _pickerStatus[index].SelectedValue = InternalConvert.SetKind<TValue>(dateWithDefaultTime);
+                ChangePickerValue(dateWithDefaultTime, index);
+                ChangeValue(dateWithDefaultTime, index);
+            }
             else
             {
                 _pickerStatus[index].SelectedValue = null;
             }
+        }
+
+        /// <summary>
+        /// Attempts to parse <paramref name="value"/> using only the date portion of
+        /// <paramref name="mask"/> and combine it with <see cref="DefaultTime"/>.
+        /// Used as a fallback when the full mask does not match but the user typed a
+        /// complete date (e.g. <c>01.01.2024</c> against mask <c>dd.MM.yyyy HH:mm</c>).
+        /// </summary>
+        private bool TryParseDateWithDefaultTime(string value, string mask, out DateTime result)
+        {
+            result = default;
+
+            if (string.IsNullOrEmpty(mask) || string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
+            var dateOnlyFormat = FormatAnalyzer.GetDateOnlyFormat(mask);
+            if (string.IsNullOrEmpty(dateOnlyFormat))
+            {
+                return false;
+            }
+
+            // Only accept inputs whose length exactly matches the date portion
+            // (plus, optionally, a single trailing separator that belongs to the mask
+            // boundary between date and time, like the space in "dd.MM.yyyy HH:mm").
+            // This avoids mis-firing on partial time inputs like "01.01.2024 1".
+            var maskDateLength = dateOnlyFormat.Length;
+            var accepted = value.Length == maskDateLength
+                || (value.Length == maskDateLength + 1 && mask.Length > maskDateLength && mask[maskDateLength] == value[maskDateLength]);
+            if (!accepted)
+            {
+                return false;
+            }
+
+            // Trim the boundary separator before passing to the date-only analyzer
+            // so it does not bleed into the year partial ("2024 " has length 5
+            // which violates the yyyy max width).
+            var valueForDateParse = value.Length > maskDateLength ? value.Substring(0, maskDateLength) : value;
+
+            var dateAnalyzer = new FormatAnalyzer(dateOnlyFormat, Picker, Locale, CultureInfo);
+            if (!dateAnalyzer.TryPickerStringConvert(valueForDateParse, out DateTime parsedDate))
+            {
+                return false;
+            }
+
+            var time = _defaultTime ?? TimeSpan.Zero;
+            result = new DateTime(
+                parsedDate.Year,
+                parsedDate.Month,
+                parsedDate.Day,
+                time.Hours,
+                time.Minutes,
+                time.Seconds,
+                parsedDate.Millisecond,
+                parsedDate.Kind);
+            return true;
         }
 
         protected virtual void GetIfNotNull(TValue value, int index, Action<DateTime> notNullAction)
@@ -830,35 +933,17 @@ namespace AntDesign
             ResetPlaceholder();
         }
 
-        protected bool IsDisabled(int? index = null)
-        {
-            bool disabled = false;
-
-            Disabled.Switch(single =>
-            {
-                disabled = single;
-            }, arr =>
-            {
-                if (index == null || index > 1 || index < 0)
-                {
-                    disabled = arr[0] && arr[1];
-                }
-                else
-                {
-                    disabled = arr[(int)index];
-                }
-            });
-
-            return disabled;
-        }
+        protected abstract bool IsDisabled(int? index = null);
 
         /// <summary>
         /// Close the popover
         /// </summary>
-        internal void Close()
+        [PublicApi("1.0.0")]
+        public void Close()
         {
             _duringManualInput = false;
             _dropDown?.Hide();
+            AutoFocus = false;
         }
 
         /// <summary>
@@ -908,7 +993,7 @@ namespace AntDesign
             if (input != null)
             {
                 input.IsOnFocused = false;
-                await JsInvokeAsync(JSInteropConstants.Blur, input.Ref);
+                await BlurAsync(input.Ref);
                 _needRefresh = true;
             }
         }
@@ -934,7 +1019,19 @@ namespace AntDesign
 
         protected virtual void InvokeOnChange()
         {
+        }
 
+        /// <summary>
+        /// Refresh the state of the component
+        /// </summary>
+        /// <remarks>
+        /// Call to StateHasChanged() for the overlay
+        /// </remarks>
+        protected void RefreshComponentState()
+        {
+#if NET10_0_OR_GREATER
+            _dropDown.GetOverlayComponent().RefreshComponentState();
+#endif
         }
 
         /// <summary>
@@ -963,11 +1060,11 @@ namespace AntDesign
 
         internal DateTime GetClosingDate(DateTime pickerValue, int offset = 1)
         {
-            return Picker.Name switch
+            return Picker switch
             {
-                DatePickerType.YEAR => pickerValue.AddYears(offset * 10),
-                DatePickerType.QUARTER or DatePickerType.DECADE or DatePickerType.MONTH => pickerValue.AddYears(offset),
-                _ => pickerValue.AddMonths(offset)
+                DatePickerType.Year => EffectiveCalendar.AddYears(pickerValue, offset * 10),
+                DatePickerType.Quarter or DatePickerType.Decade or DatePickerType.Month => EffectiveCalendar.AddYears(pickerValue, offset),
+                _ => EffectiveCalendar.AddMonths(pickerValue, offset)
             };
         }
 
@@ -975,7 +1072,7 @@ namespace AntDesign
         {
             _placeholders[index] = placeholder;
 
-            StateHasChanged();
+            RefreshComponentState();
         }
 
         protected void ResetPlaceholder(int rangePickerIndex = -1)
@@ -1001,6 +1098,27 @@ namespace AntDesign
                     _placeholders[1] = arr.Length > 1 ? arr[1] : endPlaceholder;
                 }
             });
+        }
+
+        protected void ChangePreviewValue(string value, int index = 0)
+        {
+            _previewValues[index] = value;
+            StateHasChanged();
+        }
+
+        protected void ResetPreviewValue(int index = -1)
+        {
+            if (index < 0)
+            {
+                _previewValues[0] = null;
+                _previewValues[1] = null;
+            }
+            else
+            {
+                _previewValues[index] = null;
+            }
+
+            StateHasChanged();
         }
 
         private int _htmlInputSize;
@@ -1032,15 +1150,15 @@ namespace AntDesign
                     if (!string.IsNullOrEmpty(Format))
                         _internalFormat = Format;
                     else
-                        _internalFormat = _pickerStatus[0].InitPicker.Name switch
+                        _internalFormat = _pickerStatus[0].InitPicker.Value switch
                         {
-                            DatePickerType.DATE => GetTimeFormat(),
-                            DatePickerType.MONTH => Locale.Lang.YearMonthFormat,
-                            DatePickerType.YEAR => Locale.Lang.YearFormat,
-                            DatePickerType.TIME when Use12Hours => Locale.Lang.TimeFormat12Hour,
-                            DatePickerType.TIME => Locale.Lang.TimeFormat,
-                            DatePickerType.WEEK => $"{Locale.Lang.YearFormat}-0{Locale.Lang.Week}",
-                            DatePickerType.QUARTER => $"{Locale.Lang.YearFormat}-Q0",
+                            DatePickerType.Date => GetTimeFormat(),
+                            DatePickerType.Month => Locale.Lang.YearMonthFormat,
+                            DatePickerType.Year => Locale.Lang.YearFormat,
+                            DatePickerType.Time when Use12Hours => Locale.Lang.TimeFormat12Hour,
+                            DatePickerType.Time => Locale.Lang.TimeFormat,
+                            DatePickerType.Week => $"{Locale.Lang.YearFormat}-0{Locale.Lang.Week}",
+                            DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-Q0",
                             _ => Locale.Lang.DateFormat,
                         };
                 }
@@ -1068,16 +1186,16 @@ namespace AntDesign
         {
             string format;
             if (string.IsNullOrEmpty(Format))
-                format = _pickerStatus[index].InitPicker.Name switch
+                format = _pickerStatus[index].InitPicker.Value switch
                 {
-                    DatePickerType.WEEK => $"{Locale.Lang.YearFormat}-{CultureInfo.Calendar.GetWeekOfYear(value, CultureInfo.DateTimeFormat.CalendarWeekRule, Locale.FirstDayOfWeek)}'{Locale.Lang.Week}'",
-                    DatePickerType.QUARTER => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
+                    DatePickerType.Week => $"{Locale.Lang.YearFormat}-{CultureInfo.Calendar.GetWeekOfYear(value, CultureInfo.DateTimeFormat.CalendarWeekRule, Locale.FirstDayOfWeek)}'{Locale.Lang.Week}'",
+                    DatePickerType.Quarter => $"{Locale.Lang.YearFormat}-{DateHelper.GetDayOfQuarter(value)}",
                     _ => InternalFormat,
                 };
             else
                 format = Format;
 
-            return value.ToString(format, CultureInfo);
+            return CalendarFormatter.FormatDate(value, format, CultureInfo, EffectiveCalendar);
         }
 
         /// <summary>
@@ -1106,7 +1224,7 @@ namespace AntDesign
 
             InvokeOnPanelChange(date);
 
-            StateHasChanged();
+            RefreshComponentState();
         }
 
         internal void ChangePickerType(DatePickerType type)
@@ -1121,7 +1239,7 @@ namespace AntDesign
 
             InvokeOnPanelChange(PickerValues[index]);
 
-            StateHasChanged();
+            RefreshComponentState();
         }
 
         /// <summary>
@@ -1172,7 +1290,7 @@ namespace AntDesign
         {
             var index = GetOnFocusPickerIndex();
 
-            if (!visible && ChangeOnClose)
+            if (!visible && ChangeOnClose && !HasTimeInput)
             {
                 if (_pickerStatus[index].SelectedValue is not null)
                 {
@@ -1182,15 +1300,25 @@ namespace AntDesign
                 {
                     ClearValue(index);
                 }
+
+                _duringManualInput = false;
+            }
+            else if (!visible && HasTimeInput)
+            {
+                // Time selection is provisional until the user clicks OK.
+                // Discard it when the panel closes so the input falls back to
+                // the last committed value.
+                _pickerStatus[index].SelectedValue = null;
             }
             else
             {
-                _pickerStatus[index].SelectedValue = null;
+                _pickerStatus[index].SelectedValue = GetIndexValue(index);
             }
 
             if (IsRange)
             {
-                _pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
+                // don't reset the other one on close
+                //_pickerStatus[Math.Abs(index - 1)].SelectedValue = null;
 
                 if (!visible)
                 {
@@ -1317,23 +1445,23 @@ namespace AntDesign
             OnPanelChange.InvokeAsync(new DateTimeChangedEventArgs<TValue>
             {
                 Date = InternalConvert.FromDateTimeOffset<TValue>(newValue),
-                DateString = _picker.Name
+                DateString = _picker.ToString().ToLowerInvariant()
             });
         }
 
         protected DateTime FormatDateTime(DateTime dateTime)
         {
-            switch (Picker.Name)
+            switch (Picker)
             {
-                case DatePickerType.TIME:
+                case DatePickerType.Time:
                     return dateTime.AddMilliseconds(-dateTime.Millisecond);
 
-                case DatePickerType.YEAR:
-                    return new DateTime(dateTime.Year, 1, 1);
+                case DatePickerType.Year:
+                    return DateHelper.CreateDate(EffectiveCalendar, EffectiveCalendar.GetYear(dateTime), 1, 1, dateTime);
 
-                case DatePickerType.MONTH:
-                case DatePickerType.QUARTER:
-                    return new DateTime(dateTime.Year, dateTime.Month, 1);
+                case DatePickerType.Month:
+                case DatePickerType.Quarter:
+                    return DateHelper.CreateDate(EffectiveCalendar, EffectiveCalendar.GetYear(dateTime), EffectiveCalendar.GetMonth(dateTime), 1, dateTime);
             }
 
             if (ShowTime.Value != null)
@@ -1377,6 +1505,16 @@ namespace AntDesign
         void IDatePicker.ResetPlaceholder(int index)
         {
             ResetPlaceholder(index);
+        }
+
+        void IDatePicker.ChangePreviewValue(string value, int index)
+        {
+            ChangePreviewValue(value, index);
+        }
+
+        void IDatePicker.ResetPreviewValue(int index)
+        {
+            ResetPreviewValue(index);
         }
 
         string IDatePicker.GetFormatValue(DateTime value, int index)

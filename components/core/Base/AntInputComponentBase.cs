@@ -59,29 +59,20 @@ namespace AntDesign
         /// <summary>
         /// Validation messages for the FormItem
         /// </summary>
-        public string[] ValidationMessages { get; private set; } = Array.Empty<string>();
+        public string[] ValidationMessages { get; private set; } = [];
 
-        private string _formSize;
+        private FormSize _formSize;
 
         [CascadingParameter(Name = "FormSize")]
-        public string FormSize
+        public FormSize? FormSize
         {
-            get
-            {
-                return _formSize;
-            }
+            get => _formSize;
             set
             {
-                _formSize = value;
-                Size = value;
+                _formSize = value.GetValueOrDefault(AntDesign.FormSize.Default);
+                Size = _formSizeMap[_formSize];
             }
         }
-
-        /// <summary>
-        /// Gets or sets a collection of additional attributes that will be applied to the created element.
-        /// </summary>
-        [Parameter(CaptureUnmatchedValues = true)]
-        public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
 
         private TValue _value;
 
@@ -126,11 +117,11 @@ namespace AntDesign
 
         /// <summary>
         /// The size of the input box. Note: in the context of a form,
-        /// the `large` size is used. Available: `large` `default` `small`
+        /// `InputSize.Large` is used. Available: `InputSize.Large` `InputSize.Default` `InputSize.Small`
         /// </summary>
-        /// <default value="AntSizeLDSType.Default"/>
+        /// <default value="InputSize.Default"/>
         [Parameter]
-        public string Size { get; set; } = AntSizeLDSType.Default;
+        public InputSize Size { get; set; } = InputSize.Default;
 
         /// <summary>
         /// What Culture will be used when converting string to value and value to string
@@ -231,6 +222,31 @@ namespace AntDesign
         protected bool _isNotifyFieldChanged = true;
         private bool _isValueGuid;
 
+        protected void ForceUpdateValueString(string value)
+        {
+            CurrentValueAsString = null;
+
+            CallAfterRender(async () =>
+            {
+                _value = default;
+                CurrentValueAsString = value;
+                if (TryParseValueFromString(value, out var parsedValue, out var validationErrorMessage))
+                {
+                    _value = parsedValue;
+                    _setValueDelegate?.Invoke(Form.Model, parsedValue);
+                    await ValueChanged.InvokeAsync(parsedValue);
+
+                    OnCurrentValueChange(parsedValue);
+
+                    if (_isNotifyFieldChanged && FieldIdentifier is { Model: not null, FieldName: not null })
+                    {
+                        EditContext?.NotifyFieldChanged(FieldIdentifier);
+                    }
+                }
+            });
+            StateHasChanged();
+        }
+
         /// <summary>
         /// Constructs an instance of <see cref="InputBase{TValue}"/>.
         /// </summary>
@@ -317,9 +333,6 @@ namespace AntDesign
         {
             _isValueGuid = THelper.GetUnderlyingType<TValue>() == typeof(Guid);
 
-            if (ValueExpression is not null)
-                _propertyReflector = PropertyReflector.Create(ValueExpression);
-
             base.OnInitialized();
 
             if (Form != null && !string.IsNullOrWhiteSpace(FormItem?.Name))
@@ -332,7 +345,7 @@ namespace AntDesign
                 }
                 _setValueDelegate = PathHelper.SetDelegate<TValue>(dataIndex, type);
                 _getValueDelegate = PathHelper.GetDelegate<TValue>(dataIndex, type);
-                Value = _getValueDelegate.Invoke(Form.Model);
+                Value = SafeGetValue(Form.Model);
 
                 if (PathHelper.GetLambda<TValue>(dataIndex, type).Body is MemberExpression lambda)
                 {
@@ -341,7 +354,7 @@ namespace AntDesign
                 }
                 else
                 {
-                    _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => _getValueDelegate.Invoke(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
+                    _propertyReflector = new PropertyReflector { GetValueDelegate = (object m) => SafeGetValue(m), PropertyName = FormItem?.Name, DisplayName = FormItem?.Name };
                 }
             }
 
@@ -384,6 +397,14 @@ namespace AntDesign
             }
         }
 
+        private static readonly Dictionary<FormSize, InputSize> _formSizeMap = new()
+        {
+            [AntDesign.FormSize.Large] = InputSize.Large,
+            [AntDesign.FormSize.Default] = InputSize.Default,
+            [AntDesign.FormSize.Small] = InputSize.Small,
+        };
+
+
         /// <inheritdoc />
         public override Task SetParametersAsync(ParameterView parameters)
         {
@@ -424,10 +445,12 @@ namespace AntDesign
                 if (ValueExpression != null)
                 {
                     FieldIdentifier = FieldIdentifier.Create(ValueExpression);
+                    _propertyReflector = PropertyReflector.Create(ValueExpression);
                 }
                 else if (ValuesExpression != null)
                 {
                     FieldIdentifier = FieldIdentifier.Create(ValuesExpression);
+                    _propertyReflector = PropertyReflector.Create(ValuesExpression);
                 }
                 else if (Form?.Model != null && FormItem?.Name != null)
                 {
@@ -492,8 +515,19 @@ namespace AntDesign
         {
             if (_getValueDelegate != null)
             {
-                CurrentValue = _getValueDelegate.Invoke(Form.Model);
-                InvokeAsync(StateHasChanged);
+                CurrentValue = SafeGetValue(Form.Model);
+            }
+        }
+
+        private TValue SafeGetValue(object model)
+        {
+            try
+            {
+                return _getValueDelegate.Invoke(model);
+            }
+            catch (InvalidCastException)
+            {
+                return default!;
             }
         }
     }

@@ -1,18 +1,18 @@
-﻿<Slider @bind-Value=size />
+﻿<Slider @bind-Value="size" />
 <br />
 <br />
-<Space Size="@($"{size}")">
+<Space Size="@($"{size}px")">
     <SpaceItem>
-        <Button Type="@ButtonType.Primary">Primary</Button>
+        <Button Type="ButtonType.Primary">Primary</Button>
     </SpaceItem>
     <SpaceItem>
         <Button>Default</Button>
     </SpaceItem>
     <SpaceItem>
-        <Button Type="@ButtonType.Dashed">Dashed</Button>
+        <Button Type="ButtonType.Dashed">Dashed</Button>
     </SpaceItem>
     <SpaceItem>
-        <Button Type="@ButtonType.Link">Link</Button>
+        <Button Type="ButtonType.Link">Link</Button>
     </SpaceItem>
 </Space>
 

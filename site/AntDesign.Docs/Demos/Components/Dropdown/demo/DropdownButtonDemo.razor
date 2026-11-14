@@ -1,5 +1,5 @@
-﻿<Divider Orientation="left">Div</Divider>
-<Space Direction="@DirectionVHType.Vertical" Style="width: 100%">
+﻿<Divider Orientation="DividerOrientation.Left">Div</Divider>
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%">
 	<SpaceItem>
 		<Space Size=@(("8", "16")) Wrap>
 			<SpaceItem>
@@ -13,7 +13,7 @@
                 </DropdownButton>
 			</SpaceItem>
 			<SpaceItem>
-                <DropdownButton Icon="user" Type="@((ButtonType.Dashed, ButtonType.Dashed))">
+                <DropdownButton Icon="@IconType.Outline.User" Type="@((ButtonType.Dashed, ButtonType.Dashed))">
                     <Overlay>        
                         @_overlayMenu
                     </Overlay>    
@@ -82,15 +82,15 @@
                         @_overlayMenu
                     </Overlay>
                     <ChildContent>
-                        <Button>Button <Icon Type="down" /></Button>
+                        <Button>Button <Icon Type="@IconType.Outline.Down" /></Button>
                     </ChildContent>
                 </Dropdown>
 		</SpaceItem>
 		</Space>
 	</SpaceItem>
 </Space>
-<Divider Orientation="left">Unbound</Divider>
-<Space Direction="@DirectionVHType.Vertical" Style="width: 100%">
+<Divider Orientation="DividerOrientation.Left">Unbound</Divider>
+<Space Direction="SpaceDirection.Vertical" Style="width: 100%">
 	<SpaceItem>
 		<Space Size=@(("8", "16")) Wrap>
 			<SpaceItem>
@@ -104,7 +104,7 @@
                 </DropdownButton>
 			</SpaceItem>
 			<SpaceItem>
-                <DropdownButton Icon="user" ButtonsStyle="@(("background-color:#91d5ff;", "background-color: #fff0f6;"))">
+                <DropdownButton Icon="@IconType.Outline.User" ButtonsStyle="@(("background-color:#91d5ff;", "background-color: #fff0f6;"))">
                     <Overlay>        
                         @_overlayMenu
                     </Overlay>    
@@ -157,7 +157,7 @@
                         @_overlayMenu
                     </Overlay>
                     <Unbound>
-                        <Button RefBack=@context>Button <Icon Type="down" /></Button>
+                        <Button RefBack=@context>Button <Icon Type="@IconType.Outline.Down" /></Button>
                     </Unbound>
                 </Dropdown>
 		</SpaceItem>

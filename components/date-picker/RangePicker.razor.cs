@@ -3,13 +3,15 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using AntDesign.core.Extensions;
+using AntDesign.Core.Extensions;
 using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -46,7 +48,7 @@ namespace AntDesign
 
                 TValue orderedValue = SortValue(value);
 
-                var hasChanged = _lastValue is null || !InternalConvert.SequenceEqual(orderedValue, _lastValue);
+                var hasChanged = _lastValue is null || !EqualityComparer<TValue>.Default.Equals(orderedValue, _lastValue);
 
                 if (hasChanged)
                 {
@@ -54,7 +56,10 @@ namespace AntDesign
 
                     _lastValue ??= CreateInstance();
 
-                    Array.Copy(orderedValue as Array, _lastValue as Array, 2);
+                    if (orderedValue is Array sourceArray && _lastValue is Array targetArray)
+                    {
+                        Array.Copy(sourceArray, targetArray, 2);
+                    }
 
                     GetIfNotNull(_value, 0, (notNullValue) => PickerValues[0] = notNullValue);
                     GetIfNotNull(_value, 1, (notNullValue) => PickerValues[1] = notNullValue);
@@ -114,6 +119,14 @@ namespace AntDesign
                 _disabledDate = (date) => (value?.Invoke(date) is true) || _defaultDisabledDateCheck(date);
             }
         }
+
+        /// <summary>
+        /// Disable the date picker. 
+        /// When given a single boolean, it will disable all of it. 
+        /// When given an array of booleans, it represents disabling the start/end of a range: [start, end]
+        /// </summary>
+        [Parameter]
+        public OneOf<bool, bool[]> Disabled { get; set; } = new bool[] { false, false };
 
         public RangePicker()
         {
@@ -196,11 +209,11 @@ namespace AntDesign
                 {
                     var otherValue = GetIndexValue(Math.Abs(index - 1));
 
-                    PickerValues[index] = Picker.Name switch
+                    PickerValues[index] = Picker switch
                     {
-                        DatePickerType.YEAR when DateHelper.IsSameDecade(currentValue, otherValue) => currentValue.Value,
-                        DatePickerType.WEEK or DatePickerType.DATE when DateHelper.IsSameMonth(currentValue, otherValue) => currentValue.Value,
-                        DatePickerType.QUARTER or DatePickerType.MONTH when DateHelper.IsSameYear(currentValue, otherValue) => currentValue.Value,
+                        DatePickerType.Year when DateHelper.IsSameDecade(currentValue, otherValue) => currentValue.Value,
+                        DatePickerType.Week or DatePickerType.Date when DateHelper.IsSameMonth(currentValue, otherValue) => currentValue.Value,
+                        DatePickerType.Quarter or DatePickerType.Month when DateHelper.IsSameYear(currentValue, otherValue) => currentValue.Value,
                         _ => GetClosingDate(currentValue.Value, -1)
                     };
                 }
@@ -215,6 +228,7 @@ namespace AntDesign
             }
 
             await _dropDown.Show();
+            AutoFocus = true;
 
             if (index == 0)
             {
@@ -271,7 +285,7 @@ namespace AntDesign
                     await Task.Delay(5);
                     _duringManualInput = false;
                 }
-                var input = (index == 0 ? _inputStart : _inputEnd);
+                var input = index == 0 ? _inputStart : _inputEnd;
 
                 if (isEnter || isTab)
                 {
@@ -362,13 +376,15 @@ namespace AntDesign
                 }
             }
 
-            if (_openingOverlay || _dropDown.IsOverlayShow())
-            {
-                return;
-            }
+            // if (_openingOverlay || _dropDown.IsOverlayShow())
+            // {
+            //     return;
+            // }
 
             _duringManualInput = false;
-            AutoFocus = false;
+            // A blur on one endpoint can be part of a focus transfer to the other.
+            // Keep the range picker focused while either endpoint owns focus.
+            AutoFocus = _inputStart.IsOnFocused || _inputEnd.IsOnFocused;
         }
 
         protected override void OnInitialized()
@@ -380,7 +396,12 @@ namespace AntDesign
             if (_value == null)
             {
                 _value = CreateInstance();
+                _lastValue = CreateInstance();
                 ValueChanged.InvokeAsync(_value);
+            }
+            else
+            {
+                _lastValue = (TValue)(_value as Array).Clone();
             }
             ResetPlaceholder();
 
@@ -545,10 +566,14 @@ namespace AntDesign
 
             if (isValueChanged && startDate is not null && endDate is not null)
             {
-                CurrentValue = DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
-
+                var newCurrentValue = DataConversionExtensions.Convert<Array, TValue>(currentValueArray);
+                // Use CurrentValue assignment so EditContext.NotifyFieldChanged will be triggered when appropriate
+                CurrentValue = newCurrentValue;
+                _lastValue = (TValue)currentValueArray.Clone();
                 InvokeOnChange();
             }
+            // Range values are updated in place, so CurrentValue's equality check does not notify the binding.
+            _ = ValueChanged.InvokeAsync(Value);
 
             _pickerStatus[index].IsValueSelected = true;
 
@@ -558,13 +583,18 @@ namespace AntDesign
             {
                 Close();
             }
+
         }
 
         internal override void ClearValue(int index = -1, bool closeDropdown = true)
         {
             _isSetPicker = false;
 
-            var array = CurrentValue as Array;
+            var array = Value as Array;
+            if (array == null || !_isInitialized)
+            {
+                return;
+            }
             ReadOnlySpan<int> indexToClear;
             if (index == -1)
             {
@@ -598,15 +628,22 @@ namespace AntDesign
                 Close();
             }
 
-            if (array.GetValue(0) is null || array.GetValue(1) is null)
+            // Only update CurrentValue and trigger validation when both range values are null
+            if (array.GetValue(0) is null && array.GetValue(1) is null)
             {
+                // Use a cloned instance so assignment changes reference and triggers CurrentValue change detection
+                var newValue = (TValue)array.Clone();
+                // Assign via CurrentValue to ensure EditContext gets notified when needed
+                CurrentValue = newValue;
+                _lastValue = newValue;
                 InvokeOnChange();
             }
 
             OnClear.InvokeAsync(null);
             OnClearClick.InvokeAsync(null);
 
-            _dropDown.SetShouldRender(true);
+            _dropDown?.SetShouldRender(true);
+            InvokeAsync(StateHasChanged);
         }
 
         internal override void ResetValue()
@@ -730,13 +767,15 @@ namespace AntDesign
 
         private async Task OverlayVisibleChange(bool isVisible)
         {
-            _openingOverlay = false;
+            _openingOverlay = isVisible;
             await OnOpenChange.InvokeAsync(isVisible);
             InvokeInternalOverlayVisibleChanged(isVisible);
             if (!isVisible)
             {
+                // if value is changed, focus the input
                 var index = GetOnFocusPickerIndex();
-                await Focus(index);
+                await Blur(index);
+                AutoFocus = false;
             }
         }
 
@@ -748,7 +787,33 @@ namespace AntDesign
 
         internal bool ShowClear()
         {
-            return CurrentValue is Array array && (array.GetValue(0) is not null || array.GetValue(1) is not null) && AllowClear;
+            return AllowClear
+                && !IsDisabled()
+                && (_pickerStatus[0].SelectedValue is not null
+                    || _pickerStatus[1].SelectedValue is not null
+                    || Value is Array array && (array.GetValue(0) is not null || array.GetValue(1) is not null));
+        }
+
+        protected override bool IsDisabled(int? index = null)
+        {
+            bool disabled = false;
+
+            Disabled.Switch(single =>
+            {
+                disabled = single;
+            }, arr =>
+            {
+                if (index == null || index > 1 || index < 0)
+                {
+                    disabled = arr[0] && arr[1];
+                }
+                else
+                {
+                    disabled = arr[(int)index];
+                }
+            });
+
+            return disabled;
         }
     }
 }

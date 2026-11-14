@@ -5,6 +5,7 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace AntDesign
 {
@@ -22,6 +23,10 @@ namespace AntDesign
 
         protected readonly DrawerService _service;
 
+        private bool _closing;
+        private bool _closed;
+        private bool _canceling;
+
         internal DrawerRef(DrawerOptions options, DrawerService service)
         {
             Config = options;
@@ -32,16 +37,63 @@ namespace AntDesign
         /// close drawer
         /// </summary>
         /// <returns></returns>
-        public override async Task CloseAsync()
+        public override Task CloseAsync()
         {
-            var e = new ModalClosingEventArgs();
-            await (OnClosing?.Invoke(e) ?? Task.CompletedTask);
-            if (!e.Cancel)
+            return CloseAsyncCore(null);
+        }
+
+        /// <summary>
+        /// Close the drawer after checking cancellation, then notify completion.
+        /// </summary>
+        /// <param name="onClosed">The callback invoked after the drawer closes.</param>
+        protected async Task CloseAsyncCore(Func<Task> onClosed)
+        {
+            if (_closing || _closed)
+                return;
+
+            _closing = true;
+            try
             {
+                var e = new ModalClosingEventArgs();
+                await (OnClosing?.Invoke(e) ?? Task.CompletedTask);
+                if (e.Cancel)
+                    return;
+
                 await _service.CloseAsync(this);
-                if (OnClose != null)//before close
-                    await OnClose.Invoke();
+                _closed = true;
             }
+            finally
+            {
+                _closing = false;
+            }
+
+            // Notifications may reopen the drawer and start another close operation.
+            if (OnClose != null)
+                await OnClose.Invoke();
+            if (onClosed != null)
+                await onClosed.Invoke();
+        }
+
+        internal async Task CancelAsync(MouseEventArgs mouseEvent)
+        {
+            if (_canceling || _closing || _closed)
+                return;
+
+            var args = new ModalClosingEventArgs(mouseEvent, false);
+            _canceling = true;
+            try
+            {
+                var template = ((IFeedbackRef)this).ModalTemplate;
+                if (template != null)
+                    await template.OnFeedbackCancelAsync(args);
+            }
+            finally
+            {
+                _canceling = false;
+            }
+
+            if (!args.Cancel)
+                await CloseAsync();
         }
 
 
@@ -51,6 +103,7 @@ namespace AntDesign
         /// <returns></returns>
         public override async Task OpenAsync()
         {
+            _closed = false;
             await _service.OpenAsync(this);
         }
 
@@ -89,22 +142,24 @@ namespace AntDesign
         /// 关闭抽屉
         /// </summary>
         /// <returns></returns>
-        public async Task CloseAsync(TResult result)
+        public override Task CloseAsync()
         {
-            var closeEventArgs = new ModalClosingEventArgs();
+            return CloseAsync(default);
+        }
 
-            if (OnClosing != null)//before close
-                await OnClosing.Invoke(closeEventArgs);
+        /// <summary>
+        /// Close the drawer and return the result after checking cancellation.
+        /// </summary>
+        /// <param name="result">The result returned by the drawer.</param>
+        public Task CloseAsync(TResult result)
+        {
+            return CloseAsyncCore(async () =>
+            {
+                if (OnClosed != null)
+                    await OnClosed.Invoke(result);
 
-            if (closeEventArgs.Cancel)
-                return;
-
-            await _service.CloseAsync(this);
-
-            if (OnClosed != null)//after close
-                await OnClosed.Invoke(result);
-
-            TaskCompletionSource?.SetResult(result);
+                TaskCompletionSource?.TrySetResult(result);
+            });
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace AntDesign.Core.Extensions
 {
-    public static class ArrayExtensions
+    internal static class ArrayExtensions
     {
         /// <summary>
         /// scroll left the elements

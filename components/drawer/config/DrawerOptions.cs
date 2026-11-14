@@ -48,8 +48,8 @@ namespace AntDesign
         /// <summary>
         /// The placement of the Drawer - Possible values: "left", "right", "top", "bottom"
         /// </summary>
-        /// <default value="right" />
-        public string Placement { get; set; } = "right";
+        /// <default value="DrawerPlacement.Right" />
+        public DrawerPlacement Placement { get; set; } = DrawerPlacement.Right;
 
         /// <summary>
         /// Style for Drawer's mask element.

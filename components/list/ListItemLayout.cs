@@ -4,12 +4,9 @@
 
 namespace AntDesign
 {
-    public class ListItemLayout : EnumValue<ListItemLayout>
+    public enum ListItemLayout
     {
-        public static ListItemLayout Horizontal = new ListItemLayout(nameof(Horizontal), 0);
-
-        public static ListItemLayout Vertical = new ListItemLayout(nameof(Vertical), 1);
-
-        public ListItemLayout(string name, int value) : base(name, value) { }
+        Horizontal,
+        Vertical,
     }
 }

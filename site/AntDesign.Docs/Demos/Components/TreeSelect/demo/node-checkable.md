@@ -7,7 +7,7 @@ title:
 
 ## zh-CN
 
-使用`CheckableExpression`来动态设置节点是否可选。
+使用`CheckableExpression`来动态设置节点是否可勾选。
 > 注意：也可以使用`Checkable="false"`来标记节点不可勾选。
 
 ## en-US

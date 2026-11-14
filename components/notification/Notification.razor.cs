@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OneOf;
@@ -238,42 +239,61 @@ namespace AntDesign
             }
         }
 
-        private async Task Remove(NotificationConfig option)
+        private Task Remove(NotificationConfig option)
         {
             if (option.Duration > 0)
             {
-                await Task.Delay(TimeSpan.FromSeconds(option.Duration.Value));
-                await RemoveItem(option);
+                var cts = new CancellationTokenSource();
+                option.Cts = cts;
+
+                var task = Task.Delay(TimeSpan.FromSeconds(option.Duration.Value), cts.Token);
+
+                return task.ContinueWith((result) =>
+                {
+                    if (!cts.IsCancellationRequested)
+                    {
+                        RemoveItem(option);
+                    }
+                }, TaskScheduler.Current);
+            }
+            else
+            {
+                return new Task(() =>
+                {
+                    RemoveItem(option);
+                });
             }
         }
 
-        private async Task RemoveItem(NotificationConfig option)
+        private Task RemoveItem(NotificationConfig option)
         {
             //avoid user do click and option.Duration toggle twice
             if (option.AnimationClass == AnimationType.Enter)
             {
                 option.AnimationClass = AnimationType.Leave;
-                await InvokeStateHasChangedAsync();
+                InvokeAsync(StateHasChanged);
 
                 option.InvokeOnClose();
 
-                await Task.Delay(500);
-                Debug.Assert(option.Placement != null, "option.Placement != null");
-                if (_configDict.TryGetValue(option.Placement.Value, out var configList))
+                Task.Delay(500).ContinueWith((result) =>
                 {
-                    configList.Remove(option);
-                }
+                    Debug.Assert(option.Placement != null, "option.Placement != null");
+                    if (_configDict.TryGetValue(option.Placement.Value, out var configList))
+                    {
+                        configList.Remove(option);
+                    }
 
-                if (!string.IsNullOrWhiteSpace(option.Key))
-                {
-                    _configKeyDict.TryRemove(option.Key, out var _);
-                }
+                    if (!string.IsNullOrWhiteSpace(option.Key))
+                    {
+                        _configKeyDict.TryRemove(option.Key, out var _);
+                    }
 
-                //when next notification item fade out or add new notice item, item will toggle StateHasChanged
-                await InvokeStateHasChangedAsync();
+                    //when next notification item fade out or add new notice item, item will toggle StateHasChanged
+                    InvokeAsync(StateHasChanged);
+                });
             }
 
-            //return Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         private void Destroying()
@@ -287,6 +307,19 @@ namespace AntDesign
             if (_configKeyDict.TryGetValue(key, out var config))
             {
                 await RemoveItem(config);
+            }
+        }
+
+        private void OnMouseEnter(NotificationItem item)
+        {
+            item.Config.Cts?.Cancel();
+        }
+
+        private async Task OnMouseLeave(NotificationItem item)
+        {
+            if (item.Config.Duration > 0)
+            {
+                await Remove(item.Config);
             }
         }
     }

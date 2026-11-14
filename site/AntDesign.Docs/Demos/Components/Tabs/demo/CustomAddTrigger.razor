@@ -2,7 +2,7 @@
     <div style="margin-bottom: 16px;">
         <Button @onclick="(e)=>Add()">ADD</Button>
     </div>
-    <Tabs Type="@TabType.EditableCard" HideAdd @bind-ActiveKey="activeKey">
+    <Tabs Type="TabType.EditableCard" HideAdd @bind-ActiveKey="activeKey">
         @foreach (var pane in panes)
         {
             <TabPane Key="@pane.Key" Tab="@pane.Title">

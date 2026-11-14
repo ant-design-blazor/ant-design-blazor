@@ -1,0 +1,54 @@
+﻿@layout AntDesign.Docs.Demos.Experimental.ReuseTabs.demo.Layout_
+@inject NavigationManager navigationManager
+@implements IDisposable
+@implements IReuseTabsPage
+
+@page "/reuse/Singleton"
+@page "/reuse/Singleton/{Id:int}"
+
+@attribute [ReuseTabsPage(Singleton = true)]
+
+<PageTitle>Singleton Page</PageTitle>
+
+<h1>Singleton Page</h1>
+
+<p>@text</p>
+
+<p>@dynamicText</p>
+
+<p><a href="/reuse/Singleton/@(NextId)?query=@(Random.Shared.Next())">Navigate to next id: @NextId</a></p>
+
+
+@code{
+
+    [Parameter] public int Id { get; set; }
+
+    [SupplyParameterFromQuery] public string Query { get; set; }
+
+    private int NextId => Id + 1;
+
+    string text = "";
+    string dynamicText = "";
+
+    protected override void OnInitialized()
+    {
+        text = "OnInitialized only be called once, Id = " + Id;
+        navigationManager.LocationChanged += OnLationChanged;
+    }
+
+    private void OnLationChanged(object sender, EventArgs e)
+    {
+        dynamicText = $"Current Id = {Id}, Query = {Query}";
+        InvokeAsync(StateHasChanged);
+    }
+
+    public RenderFragment GetPageTitle()
+    {
+        return @<span> Singleton Page with Id @Id </span>;
+    }
+
+    public void Dispose()
+    {
+        navigationManager.LocationChanged -= OnLationChanged;
+    }
+}

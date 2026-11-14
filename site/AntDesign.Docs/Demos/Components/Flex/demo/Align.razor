@@ -1,13 +1,13 @@
-﻿<Flex Gap="middle" Align="start" Vertical>
+﻿<Flex Gap="FlexGap.Middle" Align="FlexAlign.Start" Direction="FlexDirection.Vertical">
     <p>Select justify :</p>
     <Segmented TValue="string" Labels="justifyOptions" @bind-Value="justify" />
     <p>Select align :</p>
     <Segmented Labels="alignOptions" @bind-Value="alignItems" />
     <Flex style="@boxStyle" Justify="@justify" Align="@alignItems">
-        <Button Type="primary">Primary</Button>
-        <Button Type="primary">Primary</Button>
-        <Button Type="primary">Primary</Button>
-        <Button Type="primary">Primary</Button>
+        <Button Type="ButtonType.Primary">Primary</Button>
+        <Button Type="ButtonType.Primary">Primary</Button>
+        <Button Type="ButtonType.Primary">Primary</Button>
+        <Button Type="ButtonType.Primary">Primary</Button>
     </Flex>
 </Flex>
 

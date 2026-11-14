@@ -8,7 +8,7 @@
     @LabelTemplateItemContent(SelectOption.Item)
   </span>
 
-  @if (ParentSelect.SelectMode != SelectMode.Default && !ParentSelect.Disabled)
+  @if (ParentSelect.Mode != SelectMode.Default && !ParentSelect.Disabled)
   {
     <span unselectable="on" aria-hidden="true" style="user-select: none; @RemoveIconStyle" class="@RemoveIconClass"
         @onclick="()=> ParentSelectContent.OnRemoveSelected.InvokeAsync(SelectOption)" @onclick:stopPropagation>

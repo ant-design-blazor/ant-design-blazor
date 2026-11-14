@@ -84,7 +84,7 @@ namespace AntDesign
                 .If($"{_prefixCls}-checked", () => CurrentValue)
                 .If($"{_prefixCls}-disabled", () => Disabled || Loading)
                 .If($"{_prefixCls}-loading", () => Loading)
-                .If($"{_prefixCls}-small", () => Size == "small")
+                .If($"{_prefixCls}-small", () => Size == InputSize.Small)
                 .If($"{_prefixCls}-rtl", () => RTL);
         }
 

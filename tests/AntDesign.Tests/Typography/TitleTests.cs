@@ -15,6 +15,7 @@ namespace AntDesign.Tests.Typography
         [InlineData(2)]
         [InlineData(3)]
         [InlineData(4)]
+        [InlineData(5)]
         public void ItShouldRenderAllLevelsProperly(int level)
         {
             var systemUnderTest = RenderComponent<Title>(parameters => parameters
@@ -25,7 +26,7 @@ namespace AntDesign.Tests.Typography
         }
 
         [Theory]
-        [InlineData(5)]
+        [InlineData(6)]
         [InlineData(0)]
         [InlineData(-1)]
         public void ItShouldRenderUnsupportedLevelsAsHeadingLevel1(int level)
@@ -38,10 +39,10 @@ namespace AntDesign.Tests.Typography
         }
 
         [Theory]
-        [InlineData("secondary", "ant-typography-secondary")]
-        [InlineData("warning", "ant-typography-warning")]
-        [InlineData("danger", "ant-typography-danger")]
-        public void ItShouldRenderTypesProperly(string type, string expectedClass)
+        [InlineData(TextElementType.Secondary, "ant-typography-secondary")]
+        [InlineData(TextElementType.Warning, "ant-typography-warning")]
+        [InlineData(TextElementType.Danger, "ant-typography-danger")]
+        public void ItShouldRenderTypesProperly(TextElementType type, string expectedClass)
         {
             var systemUnderTest = RenderComponent<Title>(parameters => parameters
                 .Add(x => x.Level, 1)

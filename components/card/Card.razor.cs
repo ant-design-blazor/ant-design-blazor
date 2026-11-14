@@ -87,13 +87,13 @@ namespace AntDesign
         /// Card style type, can be set to inner or not set
         /// </summary>
         [Parameter]
-        public string Type { get; set; }
+        public CardType Type { get; set; }
 
         /// <summary>
         /// Size of the card
         /// </summary>
         [Parameter]
-        public string Size { get; set; }
+        public CardSize Size { get; set; }
 
         /// <summary>
         /// Title string for header
@@ -114,7 +114,7 @@ namespace AntDesign
         public RenderFragment Extra { get; set; }
 
         private RenderFragment _cardTabs;
-
+        private RenderFragment _cardTabPanels;
         private bool _hasGrids;
         internal IList<CardAction> _cardActions;
 
@@ -122,12 +122,13 @@ namespace AntDesign
         {
             this.ClassMapper
                 .Add("ant-card")
+                .If("ant-card-rtl", () => RTL)
                 .If("ant-card-loading", () => Loading)
                 .If("ant-card-bordered", () => Bordered)
                 .If("ant-card-hoverable", () => Hoverable)
-                .If("ant-card-small", () => Size == "small")
+                .If("ant-card-small", () => Size == CardSize.Small)
                 .If("ant-card-contain-grid", () => _hasGrids)
-                .If("ant-card-type-inner", () => Type == "inner")
+                .If("ant-card-type-inner", () => Type == CardType.Inner)
                 .If("ant-card-contain-tabs", () => _cardTabs != null)
                 ;
         }
@@ -144,7 +145,7 @@ namespace AntDesign
             StateHasChanged();
         }
 
-        internal void InvokeStateHasChagned()
+        internal void Refresh()
         {
             StateHasChanged();
         }
@@ -153,7 +154,10 @@ namespace AntDesign
         {
             this._cardTabs = tabs;
         }
-
+        internal void SetTabPanels(RenderFragment tabPanels)
+        {
+            this._cardTabPanels = tabPanels;
+        }
         internal void SetBody(RenderFragment body)
         {
             this.Body = body;

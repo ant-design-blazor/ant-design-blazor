@@ -52,14 +52,22 @@ namespace AntDesign
         public int TreeLevel => (ParentNode?.TreeLevel ?? -1) + 1;
 
         /// <summary>
-        /// record the index in children nodes list of parent node.
-        /// </summary>
-        internal int NodeIndex { get; set; }
-
-        /// <summary>
         /// Determine if it is the last node in the same level nodes.
         /// </summary>
-        internal bool IsLastNode => NodeIndex == (ParentNode?.ChildNodes.Count ?? TreeComponent?.ChildNodes.Count) - 1;
+        internal bool IsLastNode()
+        {
+            if (ParentNode is not null)
+            {
+                var nodeIndex = ParentNode.ChildNodes.IndexOf(this);
+                return nodeIndex == ParentNode.ChildNodes.Count - 1;
+
+            }
+            else
+            {
+                var nodeIndex = TreeComponent.ChildNodes.IndexOf(this);
+                return nodeIndex == TreeComponent.ChildNodes.Count - 1;
+            }
+        }
 
         /// <summary>
         /// add node to parent node
@@ -67,7 +75,6 @@ namespace AntDesign
         /// <param name="treeNode"></param>
         internal void AddNode(TreeNode<TItem> treeNode)
         {
-            treeNode.NodeIndex = ChildNodes.Count;
             ChildNodes.Add(treeNode);
             IsLeaf = false;
         }
@@ -136,6 +143,15 @@ namespace AntDesign
             var index = parentNodes.IndexOf(this);
             if (index == parentNodes.Count - 1) return null;
             else return parentNodes[index + 1];
+        }
+
+        /// <summary>
+        /// Gets the parent node.
+        /// </summary>
+        [PublicApi("1.6.0")]
+        public TreeNode<TItem> GetParentNode()
+        {
+            return ParentNode;
         }
 
         #endregion Node
@@ -211,7 +227,7 @@ namespace AntDesign
         [PublicApi("1.0.0")]
         public void SetSelected(bool value)
         {
-            if (!TreeComponent.Selectable) return;
+            if (!Selectable) return;
             DoSelect(value, false, true);
             TreeComponent.UpdateSelectedKeys();
         }
@@ -323,7 +339,7 @@ namespace AntDesign
                 .If("drag-over-gap-bottom", () => DragTarget && DragTargetBottom)
                 .If("drag-over", () => DragTarget && !DragTargetBottom)
                 .If("drop-container", () => TargetContainer)
-                .If("ant-tree-treenode-leaf-last", () => IsLastNode);
+                .If("ant-tree-treenode-leaf-last", () => IsLastNode());
         }
 
         #endregion TreeNode
@@ -512,6 +528,15 @@ namespace AntDesign
             set => _checkable = value;
         }
 
+        private bool _selectable = true;
+
+        [Parameter]
+        public bool Selectable
+        {
+            get => TreeComponent.Selectable && _selectable;
+            set => _selectable = value;
+        }
+
         internal bool Indeterminate { get; set; }
 
         private bool _disableCheckbox;
@@ -524,7 +549,10 @@ namespace AntDesign
         {
             get
             {
-                return _disableCheckbox || (TreeComponent?.DisableCheckKeys?.Any(k => k == Key) ?? false);
+                if (_disableCheckbox) return true;
+                if (TreeComponent?.DisableCheckKeys?.Any(k => k == Key) ?? false) return true;
+                if (TreeComponent?.DisabledCheckboxExpression?.Invoke(this) ?? false) return true;
+                return false;
             }
             set
             {
@@ -535,7 +563,7 @@ namespace AntDesign
         /// <summary>
         /// Triggered when the selection box is clicked
         /// </summary>
-        private async void OnCheckBoxClick(MouseEventArgs args)
+        internal async Task OnCheckBoxClick(MouseEventArgs args)
         {
             if (Disabled || DisableCheckbox)
                 return;
@@ -730,11 +758,17 @@ namespace AntDesign
 
         #region Title
 
+
+        private bool _draggable = true;
         /// <summary>
         /// Whether the node is draggable
         /// </summary>
         [Parameter]
-        public bool Draggable { get; set; }
+        public bool Draggable
+        {
+            get => TreeComponent.Draggable && _draggable;
+            set => _draggable = value;
+        }
 
         private string _icon;
 
@@ -816,7 +850,7 @@ namespace AntDesign
 
         #endregion Title
 
-        #region data binding
+        #region Data Binding
 
         /// <summary>
         /// The data of the node, it's the data item in the data source
@@ -854,7 +888,7 @@ namespace AntDesign
                 return TreeComponent.DataSource as IList<TItem> ?? TreeComponent.DataSource.ToList();
         }
 
-        #endregion data binding
+        #endregion Data Binding
 
         #region Node data operation
 
@@ -1083,7 +1117,10 @@ namespace AntDesign
                 DoCheck(isChecked, false, false);
             }
 
-            if (TreeComponent.Selectable)
+            if (TreeComponent.SelectableExpression != null)
+                Selectable = TreeComponent.SelectableExpression(this);
+
+            if (Selectable)
             {
                 var isSelected = false;
                 if (_selected)
@@ -1098,6 +1135,9 @@ namespace AntDesign
                 }
                 DoSelect(isSelected, TreeComponent.Multiple, false);
             }
+
+            if (TreeComponent.DraggableExpression != null)
+                Draggable = TreeComponent.DraggableExpression(this);
             base.OnInitialized();
         }
 
@@ -1112,6 +1152,24 @@ namespace AntDesign
             }
 
             return ancestorKeys;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (IsDisposed) return;
+
+            if (ParentNode != null)
+            {
+                ParentNode.ChildNodes.Remove(this);
+                ParentNode = null;
+            }
+            else
+            {
+                TreeComponent.ChildNodes.Remove(this);
+            }
+
+            TreeComponent.RemoveNode(this);
+            base.Dispose(disposing);
         }
     }
 }

@@ -9,18 +9,20 @@ namespace AntDesign.TableModels
 {
     public interface ITableSortModel : ICloneable
     {
+        [Obsolete("Use SortDirection instead")]
         public string Sort { get; }
-
         public int Priority { get; }
 
         public string FieldName { get; }
 
         public int ColumnIndex { get; }
 
-        internal SortDirection SortDirection { get; }
+        public SortDirection SortDirection { get; }
 
         internal void SetSortDirection(SortDirection sortDirection);
 
         internal IQueryable<TItem> SortList<TItem>(IQueryable<TItem> source);
+
+        internal void BuildGetFieldExpression<TItem>();
     }
 }

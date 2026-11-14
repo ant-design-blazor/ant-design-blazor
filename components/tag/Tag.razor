@@ -3,8 +3,12 @@
 
 @if (!_closed)
 {
-    <span class="@ClassMapper.Class" style="@_style" id="@Id" @ref="Ref" @onclick="ClickTag">
-        @if (!string.IsNullOrEmpty(Icon))
+    <span @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@_style" id="@Id" @ref="Ref" @onclick="ClickTag">
+        @if (IconTemplate != null)
+        {
+            @IconTemplate
+        }
+        else if (!string.IsNullOrEmpty(Icon))
         {
             <Icon Type="@Icon" Theme="@IconTheme"></Icon>
         }

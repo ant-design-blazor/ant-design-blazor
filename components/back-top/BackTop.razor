@@ -3,7 +3,7 @@
 
 @if (!_hidden)
 {
-    <div class="@ClassMapper.Class" @onclick="OnClickHandler" style="@Style" @ref="Ref" id="@Id">
+    <div @attributes="AdditionalAttributes" class="@ClassMapper.Class" @onclick="OnClickHandler" style="@Style" @ref="Ref" id="@Id">
         <div>
             <div class="@BackTopContentClassMapper.Class">
                 @if (ChildContent != null)
@@ -13,7 +13,7 @@
                 else
                 {
                     <div class="@BackTopIconClassMapper.Class">
-                        <Icon Type="@Icon" Theme="outline" />
+                        <Icon Type="@Icon" Theme="@IconThemeType.Outline" />
                     </div>
                 }
             </div>

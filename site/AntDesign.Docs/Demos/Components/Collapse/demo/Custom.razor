@@ -2,7 +2,7 @@
           DefaultActiveKey="@(new[]{"1"})"
           Class="site-collapse-custom-collapse">
     <ExpandIconTemplate>
-        <Icon Type="caret-right" Rotate="@(context ? 90 : 0)"></Icon>
+        <Icon Type="@IconType.Outline.CaretRight" Rotate="@(context ? 90 : 0)" />
     </ExpandIconTemplate>
     <ChildContent>
         <Panel Header="This is panel header 1" Key="1"

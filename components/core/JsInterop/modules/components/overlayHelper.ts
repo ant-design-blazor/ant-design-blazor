@@ -38,7 +38,11 @@ export class overlayHelper {
     const overlay = new Overlay(blazorId, overlayElement, containerElement, triggerElement, placement, triggerBoundyAdjustMode, triggerIsWrappedInDiv, triggerPrefixCls, overlayConstraints);   
     //register object in store, so it can be retrieved during update/dispose
     this.overlayRegistry[blazorId] = overlay;
-    
+
+    setTimeout(() => {
+      // We need to calculate the position again to ensure that the overlay is correctly placed. Needs to be optimized twice to once
+      overlay.calculatePosition(true, false, overlayPresets);
+    }, 10);
     return overlay.calculatePosition(false, true, overlayPresets);
   }
 
@@ -53,6 +57,10 @@ export class overlayHelper {
       if (overlayTop || overlayLeft) {
         overlayPresets = { x: overlayLeft, y: overlayTop };
       }      
+      setTimeout(() => {
+        // We need to calculate the position again to ensure that the overlay is correctly placed. Needs to be optimized twice to once
+        overlay.calculatePosition(true, false, overlayPresets);
+      }, 10);
       return overlay.calculatePosition(false, false, overlayPresets);      
     } else {
       //When page is slow, it may happen that rendering of an overlay may not happen, even if 

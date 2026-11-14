@@ -11,8 +11,7 @@
                     Disabled="IsDisabled(0)"
                     PopupContainerSelector="@PopupContainerSelector"
                     OnVisibleChange="OverlayVisibleChange"
-                    OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
-                    OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
+                    OverlayAnimation="@(new OverlayAnimationOptions { Animation = "slide", Direction = "up" })"
                     Placement="Placement"
                     Trigger="new[] { Trigger.Click }">
         <Overlay>
@@ -27,11 +26,12 @@
                  @ref="@context.Current"
                  style="@Style"
                  Id="@Id">
-                <DatePickerInput @ref="_inputStart"
+                <DatePickerInput AdditionalAttributes="AdditionalAttributes" @ref="_inputStart"
                                  PrefixCls="@PrefixCls"
                                  Size="@Size"
                                  Disabled="IsDisabled(0)"
                                  Value="@GetInputValue(0)"
+                                 PreviewValue="@_previewValues[0]"
                                  Placeholder="@_placeholders[0]"
                                  ReadOnly="@InputReadOnly"
                                  AutoFocus="@AutoFocus"

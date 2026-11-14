@@ -1,29 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFrameworks>net8</TargetFrameworks>
+    <TargetFramework>net11.0</TargetFramework>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
     <BlazorWebAssemblyLoadAllGlobalizationData>false</BlazorWebAssemblyLoadAllGlobalizationData>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <RequiresAspNetWebAssets>true</RequiresAspNetWebAssets>
   </PropertyGroup>
 
   <PropertyGroup Condition="$(EnableAOT) == 'true'">
     <RunAOTCompilation>true</RunAOTCompilation>
-    <!--<WasmStripILAfterAOT>true</WasmStripILAfterAOT>-->
+    <WasmStripILAfterAOT>true</WasmStripILAfterAOT>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework) == 'net6'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="11.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="11.0.0" PrivateAssets="all" />
   </ItemGroup>
+  
+  <PropertyGroup>
+    <BlazorWasmPrerenderingLocale>en-US,zh-CN</BlazorWasmPrerenderingLocale>
+    <BlazorWasmPrerenderingUrlPathToExplicitFetch>/en-US;/zh-CN</BlazorWasmPrerenderingUrlPathToExplicitFetch>
+    <!-- <BlazorWasmPrerenderingOutputStyle>AppendHtmlExtension</BlazorWasmPrerenderingOutputStyle> -->
+  </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework) == 'net7'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.0" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework) == 'net8'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
+  <ItemGroup>
+    <PackageReference Include="BlazorWasmPreRendering.Build" Version="11.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AntDesign.Docs\AntDesign.Docs.csproj" />
+    <ProjectReference Include="..\AntDesign.Docs.Build\AntDesign.Docs.Build.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>

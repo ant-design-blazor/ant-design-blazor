@@ -20,10 +20,10 @@ namespace AntDesign.Tests.Typography
         }
 
         [Theory]
-        [InlineData("secondary", "ant-typography-secondary")]
-        [InlineData("warning", "ant-typography-warning")]
-        [InlineData("danger", "ant-typography-danger")]
-        public void ItShouldRenderTypesProperly(string type, string expectedClass)
+        [InlineData(TextElementType.Secondary, "ant-typography-secondary")]
+        [InlineData(TextElementType.Warning, "ant-typography-warning")]
+        [InlineData(TextElementType.Danger, "ant-typography-danger")]
+        public void ItShouldRenderTypesProperly(TextElementType type, string expectedClass)
         {
             var systemUnderTest = RenderComponent<Text>(parameters => parameters
                 .Add(x => x.Type, type)

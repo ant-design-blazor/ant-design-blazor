@@ -2,7 +2,7 @@
 @inherits AntDomComponentBase
 @typeparam TItem
 
-<div class="@ClassMapper.Class" style="@Style" Id="@Id" @ref="Ref">
+<div @attributes="AdditionalAttributes" class="@ClassMapper.Class" style="@Style" Id="@Id" @ref="Ref">
     @if (Header != null)
     {
         <div class="@PrefixName-header">
@@ -12,7 +12,7 @@
 
     @if (DataSource?.Any() == true)
     {
-        <Spin Spinning="Loading">
+        <Spin Spinning="Loading" WrapperClassName="ant-list-spin-wrapper">
             @if (Grid != null)
             {
 				  <Row Gutter="Grid.Gutter" OnBreakpoint="OnBreakpoint">

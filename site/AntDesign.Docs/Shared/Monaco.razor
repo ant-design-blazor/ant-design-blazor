@@ -1,0 +1,124 @@
+﻿@implements IDisposable
+
+<div @ref="_editor" style="height: 500px; width: 100%; @(_loaded?"":"display:hidden;")"></div>
+
+@code {
+
+
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; }
+
+    [Parameter]
+    public string Value { get; set; }
+
+    [Parameter]
+    public bool ReadOnly { get; set; }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnLoaded { get; set; }
+
+    [Parameter]
+    public string Language { get; set; }
+
+    IJSObjectReference _monaco;
+    ElementReference _editor;
+    DotNetObjectReference<Monaco> _reference;
+    public string Id => _id;
+    private string _id;
+    private string _value;
+    private bool _loaded;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _id = Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("/", "-").Replace("+", "-").Substring(0, 10);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _reference = DotNetObjectReference.Create(this);
+
+            _monaco = await JSRuntime.InvokeAsync<IJSObjectReference>("createEditor", _editor, _id, _reference, new
+            {
+                language = Language,
+                theme = "vs",
+                codeLens = false,
+                readOnly = ReadOnly,
+                minimap = new
+                {
+                    enabled = false
+                },
+                automaticLaout = true
+            });
+
+            _value = Value;
+
+            await _monaco.InvokeVoidAsync("setValue", _value);
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnChangeAsync(string value)
+    {
+        if (!_loaded)
+        {
+            _loaded = true;
+            if (OnLoaded.HasDelegate)
+            {
+                OnLoaded.InvokeAsync();
+               
+            }
+        }
+
+        if (Value != value)
+        {
+            _value = value;
+            await ValueChanged.InvokeAsync(value);
+        }
+    }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        var valueChanged = parameters.IsParameterChanged(nameof(Value), Value);
+        var readOnlyChanged = parameters.IsParameterChanged(nameof(ReadOnly), ReadOnly);
+
+        await base.SetParametersAsync(parameters);
+
+        if (_monaco != null && valueChanged && _value != Value)
+        {
+            _value = Value;
+
+            await _monaco.InvokeVoidAsync("setValue", _value);
+        }
+
+        if (_monaco != null && readOnlyChanged)
+        {
+            await _monaco.InvokeVoidAsync("setOptions", new { readOnly = ReadOnly });
+        }
+    }
+
+    public void Dispose()
+    {
+        if (JSRuntime != null && _monaco != null)
+        {
+            _monaco.InvokeVoidAsync("dispose");
+        }
+
+        _monaco?.DisposeAsync();
+
+        _reference?.Dispose();
+    }
+
+    public async Task SetReadOnly(bool isReadOnly)
+    {
+        if (_monaco != null)
+        {
+            await _monaco.InvokeVoidAsync("updateOptions", new { domReadOnly = isReadOnly, readOnly = isReadOnly });
+        }
+    }
+}

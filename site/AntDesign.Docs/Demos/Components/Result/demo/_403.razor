@@ -1,9 +1,9 @@
-﻿<Result Status="403"
+﻿<Result Status="ResultStatus.Http403"
         Title="403"
         SubTitle="Sorry, you are not authorized to access this page."
         Extra="extra" />
 
 @code
 {
-    RenderFragment extra = @<Button Type="primary">Back Home</Button>;
+    RenderFragment extra = @<Button Type="ButtonType.Primary">Back Home</Button>;
 }

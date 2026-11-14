@@ -2,7 +2,7 @@
 order: 104
 title:
   zh-CN: 设置验证信息
-  en-US: Setting validation messages
+  en-US: Validation Messages
 ---
 
 ## zh-CN

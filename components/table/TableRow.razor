@@ -4,7 +4,7 @@
 @using AntDesign.TableModels
 
 @{
-    Dictionary<string, object> attributes = null;
+    IReadOnlyDictionary<string, object> attributes = null;
     if (RowAttributes?.Any() != true)
     {
         attributes = AdditionalAttributes;
@@ -15,21 +15,22 @@
     }
     else
     {
-        attributes = new Dictionary<string, object>();
+        var mergedAttributes = new Dictionary<string, object>();
+        attributes = mergedAttributes;
         foreach (var (key, value) in RowAttributes)
         {
-            attributes[key] = value;
+            mergedAttributes[key] = value;
         }
         foreach (var (key, value) in AdditionalAttributes)
         {
-            attributes[key] = value;
+            mergedAttributes[key] = value;
         }
     }
 }
 
 @if (IsBody)
 {
-    <tr @attributes="attributes"
+    <tr @attributes="attributes" @ref="@(RowData.RowElementRef)"
         data-row-key="@(RowData.RowIndex-1)" 
         class="ant-table-row ant-table-row-level-@RowData.Level @(RowData.Selected ? "ant-table-row-selected" : "") @(RowData.IsGrouping? "ant-table-row-grouping":"") @RowClassName @Class @RowAttributes?.GetValueOrDefault("class")">
         @ChildContent
@@ -89,6 +90,4 @@ else if (IsHeader)
     [CascadingParameter(Name = "AntDesign.TableRow.HasFixRight")]
     public bool HasFixRight { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object> AdditionalAttributes { get; set; }
 }

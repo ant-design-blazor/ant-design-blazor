@@ -4,6 +4,7 @@
 
 using System;
 using System.Linq.Expressions;
+using System.Xml.Linq;
 using AntDesign.TableModels;
 
 namespace AntDesign
@@ -37,5 +38,7 @@ namespace AntDesign
         internal void SetSortModel(ITableSortModel sortModel);
 
         internal Expression<Func<TItem, object>> GetGroupByExpression<TItem>();
+
+        internal void SetHeaderFilter(Type columnDataType);
     }
 }

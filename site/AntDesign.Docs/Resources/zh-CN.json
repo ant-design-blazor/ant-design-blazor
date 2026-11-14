@@ -150,5 +150,6 @@
   "app.docs.components.icon.pic-searcher.th-score": "匹配度",
   "app.components.overview": "组件总览",
   "app.components.overview.search": "搜索组件",
-  "app.components.overview.description": "<code>Ant Design Blazor</code> 提供了丰富的 UI 组件来丰富您的 Web 应用，我们将持续改进组件体验。 我们还额外推荐了一些很棒的第三方库。"
+  "app.components.overview.description": "<code>Ant Design Blazor</code> 提供了丰富的 UI 组件来丰富您的 Web 应用，我们将持续改进组件体验。 我们还额外推荐了一些很棒的第三方库。",
+  "app.sponsorship-notice": "您好，我们已坚持积极开源5年，如果本项目承蒙为您或者所在组织创造了价值，请您考虑慷慨赞助，以维持本项目的可持续发展，共同延续这份价值。"
 }

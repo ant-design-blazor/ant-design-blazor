@@ -3,7 +3,7 @@
 @inherits AntDomComponentBase
 @typeparam TItemValue
 @typeparam TItem
-<div @ref="Ref"
+<div @attributes="AdditionalAttributes" @ref="Ref"
       @key="@this"
       class="@ClassMapper.Class"
       role="option"
@@ -11,18 +11,23 @@
       aria-label="@InternalLabel"
       style="@InnerStyle"
       @onclick="@OnClick"
+      @onclick:stopPropagation
       @onmouseenter="@OnMouseEnter">
     <div class="@ClassPrefix-content">
-        @if (ItemTemplate != null)
+        @if (ChildContent != null)
         {
-             @ItemTemplate(Model.Item)
+            @ChildContent(Model.Item)
+        }
+        else if (ItemTemplate != null)
+        {
+            @ItemTemplate(Model.Item)
         }
         else
         {
             @InternalLabel
         }
     </div>
-    @switch (SelectParent.SelectMode)
+    @switch (SelectParent.Mode)
     {
         case SelectMode.Default:
             <span class="@ClassPrefix-state" unselectable="on" aria-hidden="true" style="user-select: none;"></span>

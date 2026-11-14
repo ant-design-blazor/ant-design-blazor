@@ -39,7 +39,7 @@ namespace AntDesign.Select
 
         protected override void OnInitialized()
         {
-            if (ParentSelect.SelectMode == SelectMode.Default
+            if (ParentSelect.Mode == SelectMode.Default
                 && string.IsNullOrWhiteSpace(Class)
                 && string.IsNullOrWhiteSpace(ContentStyle))
             {

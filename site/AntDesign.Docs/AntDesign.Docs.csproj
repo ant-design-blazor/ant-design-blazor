@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFrameworks>net6;net7;net8</TargetFrameworks>
+    <TargetFramework>net11.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AntDesign.Charts" Version="0.5.5" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.4" />
+    <PackageReference Include="System.Net.Http.Json" Version="9.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Razor" Version="6.0.33" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +50,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\components\AntDesign.csproj" />
     <ProjectReference Include="..\..\src\AntDesign.Extensions.Localization\AntDesign.Extensions.Localization.csproj" />
+    <ProjectReference Include="..\..\src\AntDesign.SourceGenerators\AntDesign.SourceGenerators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>

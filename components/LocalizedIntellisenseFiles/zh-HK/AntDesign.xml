@@ -732,7 +732,7 @@ HTMLInputElement或htmltextare。 否則只會專注。
       <param name="offset" v="0000" i="0" />
       <returns v="0000" i="0" />
     </member>
-    <member name="M:AntDesign.core.Extensions.DataConversionExtensions.Convert``2(``0)">
+    <member name="M:AntDesign.Core.Extensions.DataConversionExtensions.Convert``2(``0)">
       <summary v="kkCNA" i="0">
 將泛型類型tof轉換為指定的TTo類型
 </summary>
@@ -741,13 +741,13 @@ HTMLInputElement或htmltextare。 否則只會專注。
       <param name="fromValue" v="0000" i="0" />
       <returns v="0000" i="0" />
     </member>
-    <member name="M:AntDesign.core.Extensions.HttpClientExtensions.GetEncoding(System.Net.Http.HttpContent)">
+    <member name="M:AntDesign.Core.Extensions.HttpClientExtensions.GetEncoding(System.Net.Http.HttpContent)">
       <summary v="1hf85j" i="0">
 從<see cref="T:System.Net.Http.HttpContent" />獲取編碼信息</summary>
       <param name="httpContent" v="0000" i="0" />
       <returns v="0000" i="0" />
     </member>
-    <member name="M:AntDesign.core.Extensions.HttpClientExtensions.ReadAsByteArrayAsync(System.Net.Http.HttpContent,System.Text.Encoding)">
+    <member name="M:AntDesign.Core.Extensions.HttpClientExtensions.ReadAsByteArrayAsync(System.Net.Http.HttpContent,System.Text.Encoding)">
       <summary v="Vs5WG" i="0">
 讀取為二進製數組並轉換為指定的編碼
 </summary>

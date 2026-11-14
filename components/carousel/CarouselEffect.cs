@@ -4,9 +4,9 @@
 
 namespace AntDesign
 {
-    public static class CarouselEffect
+    public enum CarouselEffect
     {
-        public const string ScrollX = "scrollx";
-        public const string Fade = "fade";
+        ScrollX,
+        Fade,
     }
 }

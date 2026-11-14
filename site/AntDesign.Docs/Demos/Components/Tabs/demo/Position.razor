@@ -1,9 +1,9 @@
 ﻿<div>
     <RadioGroup @bind-Value="position" Style="margin-bottom: 16px;">
-        <Radio RadioButton Value="@TabPosition.Top">Top</Radio>
-        <Radio RadioButton Value="@TabPosition.Left">Left</Radio>
-        <Radio RadioButton Value="@TabPosition.Right">Right</Radio>
-        <Radio RadioButton Value="@TabPosition.Bottom">Bottom</Radio>
+        <Radio RadioButton Value="TabPosition.Top">Top</Radio>
+        <Radio RadioButton Value="TabPosition.Left">Left</Radio>
+        <Radio RadioButton Value="TabPosition.Right">Right</Radio>
+        <Radio RadioButton Value="TabPosition.Bottom">Bottom</Radio>
     </RadioGroup>
     <Tabs DefaultActiveKey="1" TabPosition="@position">
         <TabPane Key="1" Tab="Tab 1">

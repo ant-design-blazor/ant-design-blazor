@@ -2,7 +2,7 @@
 order: 6.3
 title:
   zh-CN: 判断表单是否被修改
-  en-US: Check if the form has been modified
+  en-US: Check Modification
 ---
 
 ## zh-CN

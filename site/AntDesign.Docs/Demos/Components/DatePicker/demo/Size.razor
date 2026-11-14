@@ -1,17 +1,17 @@
-﻿<RadioGroup @bind-Value="@datePickerSize">
-    <Radio RadioButton Value="@DatePickerSize.Large">Large</Radio>
-    <Radio RadioButton Value="@DatePickerSize.Default">Default</Radio>
-    <Radio RadioButton Value="@DatePickerSize.Small">Small</Radio>
+﻿<RadioGroup @bind-Value="datePickerSize">
+    <Radio RadioButton Value="InputSize.Large">Large</Radio>
+    <Radio RadioButton Value="InputSize.Default">Default</Radio>
+    <Radio RadioButton Value="InputSize.Small">Small</Radio>
 </RadioGroup>
 <br />
-<DatePicker TValue="DateTime?" Size="@datePickerSize"   />
+<DatePicker TValue="DateTime?" Size="datePickerSize"   />
 <br />
-<DatePicker TValue="DateTime?" Picker="@DatePickerType.Month" Size="@datePickerSize"  />
+<DatePicker TValue="DateTime?" Picker="DatePickerType.Month" Size="datePickerSize"  />
 <br />
-<RangePicker TValue="DateTime?[]" Size="@datePickerSize"  />
+<RangePicker TValue="DateTime?[]" Size="datePickerSize"  />
 <br />
-<DatePicker TValue="DateTime?" Picker="@DatePickerType.Week" Size="@datePickerSize"  />
+<DatePicker TValue="DateTime?" Picker="DatePickerType.Week" Size="datePickerSize"  />
 
 @code {
-    private string datePickerSize = DatePickerSize.Default;
+    private InputSize datePickerSize = InputSize.Default;
 }

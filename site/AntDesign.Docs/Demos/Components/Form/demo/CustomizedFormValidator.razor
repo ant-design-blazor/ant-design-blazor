@@ -1,43 +1,65 @@
 @using System.ComponentModel.DataAnnotations;
 
 <Form Model="@model1"
-      LabelColSpan="8"
-      WrapperColSpan="16"
-      Validator="null">
-    <FormItem Label="No Validator">
-        <AntDesign.InputNumber @bind-Value="@context.Number"/>
-    </FormItem>
+LabelColSpan="8"
+WrapperColSpan="16"
+Validator="null">
+	<FormItem Label="No Validator">
+		<AntDesign.InputNumber @bind-Value="@context.Number"/>
+	</FormItem>
 </Form>
+
 <Form Model="@model2"
-      LabelColSpan="8"
-      WrapperColSpan="16">
-    <Validator>
-        <CustomValidator/>
-    </Validator>
-    <ChildContent>
-        <FormItem Label="CustomValidator">
-            <AntDesign.InputNumber @bind-Value="@context.Number"/>
-        </FormItem>
-    </ChildContent>
+	LabelColSpan="8"
+	WrapperColSpan="16">
+	<Validator>
+		@validator
+	</Validator>
+	<ChildContent>
+		<FormItem Label="CustomValidator">
+			<AntDesign.InputNumber @bind-Value="@context.Number"/>
+		</FormItem>
+	</ChildContent>
 </Form>
 
 @code
 {
-    public class Model1
-    {
-        [Required]
-        public int Number { get; set; }
-    }
+	public class Model1
+	{
+		[Required]
+		public int Number { get; set; }
+	}
 
-    public class Model2
-    {
-        [Required]
-        public int Number { get; set; }
-    }
+	public class Model2
+	{
+		[Required]
+		public int Number { get; set; }
+	}
 
-    private Model1 model1 = new Model1();
+	private Model1 model1 = new Model1();
 
-    private Model2 model2 = new Model2();
+	private Model2 model2 = new Model2();
 
-    private RenderFragment validator = @<CustomValidator/>;
+	private RenderFragment validator = b =>
+	{
+		b.OpenComponent<CustomValidator>(0);
+		b.CloseComponent();	
+	};
+
+	public class CustomValidator : ComponentBase
+	{
+		[CascadingParameter]
+		internal EditContext EditContext { get; set; }
+
+		protected override void OnInitialized()
+		{
+			var messages = new ValidationMessageStore(EditContext);
+			EditContext.OnFieldChanged += (sender, args) =>
+			{
+				messages.Clear();
+				messages.Add(args.FieldIdentifier, "Message from custom validator");
+				EditContext.NotifyValidationStateChanged();
+			};
+		}
+	}
 }

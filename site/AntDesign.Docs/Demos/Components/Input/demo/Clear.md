@@ -11,4 +11,4 @@ title:
 
 
 ## en-US
-Input box with the remove icon, click the icon to delete everything.
+Input box with the remove icon, click the icon to delete everything. `ShowClear` can be used to override when the icon is shown.

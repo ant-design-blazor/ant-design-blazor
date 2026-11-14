@@ -25,9 +25,32 @@ public abstract class BaseFieldFilterType : IFieldFilterType
         TableFilterCompareOperator.NotEquals,
     };
 
-    public virtual Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr,
-        Expression rightExpr)
-        => compareOperator switch
+    protected static Expression ConvertToActualTypeIfNecessary(Expression expr, Expression referenceExpr)
+    {
+        if (expr.Type == typeof(object))
+        {
+            if (referenceExpr is UnaryExpression unaryExpr && unaryExpr.Operand.Type != typeof(object))
+            {
+                // Assuming the actual type is known and can be determined at runtime
+                var actualType = unaryExpr.Operand.Type;
+                return Expression.Convert(expr, actualType);
+            }
+            else if (referenceExpr.Type != typeof(object))
+            {
+                var actualType = referenceExpr.Type;
+                return Expression.Convert(expr, actualType);
+            }
+        }
+        return expr;
+    }
+
+    public virtual Expression GetFilterExpression(TableFilterCompareOperator compareOperator, Expression leftExpr, Expression rightExpr)
+    {
+        // Convert left and right expressions to their actual types if necessary
+        leftExpr = ConvertToActualTypeIfNecessary(leftExpr, rightExpr);
+        rightExpr = ConvertToActualTypeIfNecessary(rightExpr, rightExpr);
+
+        return compareOperator switch
         {
             TableFilterCompareOperator.Equals => Expression.Equal(leftExpr, rightExpr),
             TableFilterCompareOperator.NotEquals => Expression.NotEqual(leftExpr, rightExpr),
@@ -39,4 +62,5 @@ public abstract class BaseFieldFilterType : IFieldFilterType
             TableFilterCompareOperator.IsNotNull => Expression.NotEqual(leftExpr, rightExpr),
             _ => throw new NotSupportedException($"{nameof(TableFilterCompareOperator)} {compareOperator} is not supported by {GetType().Name}!")
         };
+    }
 }

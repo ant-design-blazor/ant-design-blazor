@@ -60,14 +60,14 @@ namespace AntDesign.Tests.Button
         [InlineData(ButtonType.Default)]
         [InlineData(ButtonType.Primary)]
         [InlineData(ButtonType.Link)]
-        public void Renders_buttons_of_different_types(string type)
+        public void Renders_buttons_of_different_types(ButtonType type)
         {
             var cut = Context.RenderComponent<AntDesign.Button>(p =>
                 p.Add(x => x.Type, type)
             );
 
             cut.MarkupMatches($@"
-                <button class=""ant-btn ant-btn-{type.ToLower()}"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
+                <button class=""ant-btn ant-btn-{type.ToString().ToLower()}"" id:ignore type=""button"" ant-click-animating-without-extra-node=""false""></button>
             ");
         }
 

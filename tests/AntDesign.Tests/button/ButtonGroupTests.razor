@@ -1,9 +1,9 @@
 ﻿@inherits AntDesignTestBase
 @code {
     [Theory]
-    [InlineData("small", "-sm")]
-    [InlineData("large", "-lg")]
-    public void Size_is_applied(string size, string expectedCssClass)
+    [InlineData(ButtonGroupSize.Small, "-sm")]
+    [InlineData(ButtonGroupSize.Large, "-lg")]
+    public void Size_is_applied(ButtonGroupSize size, string expectedCssClass)
     {
         var cut = Render<ButtonGroup>(@<ButtonGroup Size="@size">
             <Button>Test</Button>

@@ -22,7 +22,7 @@
 		var cut = Render<AntDesign.Form<Persons>>(
 			@<Form Model="@_model" ValidateOnChange="@true">       
 				<FormItem Label="Allowed Email Domains">
-						<Select TItem="string" TItemValue="string" Mode="multiple"
+						<Select TItem="string" TItemValue="string" Mode="SelectMode.Multiple"
 								@bind-Values=@context.Name>
 							<SelectOptions>
 								@foreach (var item in _datasource)
@@ -54,7 +54,7 @@
 		var cut = Render<AntDesign.Form<Persons>>(
 			@<Form Model="@_model" ValidateOnChange="@true">       
 				<FormItem Label="Allowed Email Domains">
-						<Select TItem="string" TItemValue="string" Mode="multiple"
+						<Select TItem="string" TItemValue="string" Mode="SelectMode.Multiple"
 								@bind-Values=@context.Name>
 							<SelectOptions>
 								@foreach (var item in _datasource)

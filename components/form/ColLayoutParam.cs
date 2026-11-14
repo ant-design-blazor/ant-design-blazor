@@ -35,24 +35,20 @@ namespace AntDesign
 
         public OneOf<int, EmbeddedProperty> Xxl { get; set; }
 
-        public Dictionary<string, object> ToAttributes()
+        public Dictionary<string, object> ToAttributes() => new()
         {
-            Dictionary<string, object> attributes = new Dictionary<string, object>();
-
-            attributes.Add(nameof(Col.Flex), Flex);
-            attributes.Add(nameof(Col.Span), Span);
-            attributes.Add(nameof(Col.Order), Order);
-            attributes.Add(nameof(Col.Offset), Offset);
-            attributes.Add(nameof(Col.Push), Push);
-            attributes.Add(nameof(Col.Pull), Pull);
-            attributes.Add(nameof(Col.Xs), Xs);
-            attributes.Add(nameof(Col.Sm), Sm);
-            attributes.Add(nameof(Col.Md), Md);
-            attributes.Add(nameof(Col.Lg), Lg);
-            attributes.Add(nameof(Col.Xl), Xl);
-            attributes.Add(nameof(Col.Xxl), Xxl);
-
-            return attributes;
-        }
+            { nameof(Col.Flex), Flex },
+            { nameof(Col.Span), Span },
+            { nameof(Col.Order), Order },
+            { nameof(Col.Offset), Offset },
+            { nameof(Col.Push), Push },
+            { nameof(Col.Pull), Pull },
+            { nameof(Col.Xs), Xs },
+            { nameof(Col.Sm), Sm },
+            { nameof(Col.Md), Md },
+            { nameof(Col.Lg), Lg },
+            { nameof(Col.Xl), Xl },
+            { nameof(Col.Xxl), Xxl }
+        };
     }
 }

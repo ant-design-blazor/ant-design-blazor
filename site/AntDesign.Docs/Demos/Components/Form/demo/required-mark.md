@@ -2,7 +2,7 @@
 order: 3.1
 title:
   zh-CN: 必选样式
-  en-US: Required style
+  en-US: Required
 ---
 
 ## zh-CN
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Switch required or optional style with `RequiredMark`.
+Set a form item as required or optional using the `RequiredMark` property.

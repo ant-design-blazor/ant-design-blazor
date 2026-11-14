@@ -22,6 +22,9 @@ namespace AntDesign.Select.Internal
 
         [Parameter]
         public bool ShowArrowIcon { get; set; }
+        
+        [Parameter]
+        public bool Loading { get; set; }
 
         [Parameter]
         public EventCallback<MouseEventArgs> OnClearClick { get; set; }
@@ -55,7 +58,7 @@ namespace AntDesign.Select.Internal
             return base.OnAfterRenderAsync(firstRender);
         }
 
-        private async void OnClear(JsonElement jsonElement)
+        private async Task OnClear(JsonElement jsonElement)
         {
             if (OnClearClick.HasDelegate)
             {

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Components;
 
 namespace AntDesign.TableModels
 {
@@ -62,6 +63,8 @@ namespace AntDesign.TableModels
 
         public string Key { get; set; }
 
+        internal ElementReference RowElementRef { get; set; }
+
         public bool Expanded
         {
             get => _expanded;
@@ -85,7 +88,7 @@ namespace AntDesign.TableModels
             set => TableDataItem.SetSelected(value);
         }
 
-        public event Action<RowData, bool> ExpandedChanged;
+        internal event Action<RowData, bool> ExpandedChanged;
 
         internal void SetExpanded(bool expanded)
         {

@@ -92,12 +92,6 @@
   "<p>A divider line separates different content.</p><h2>When To Use</h2><ul><li>Divide sections of article.</li><li>Divide inline text and links such as the operation column of table.</li></ul>": {
     "Translated": "<p>分隔线分隔不同的内容。</p><h2>何时使用</h2><ul><li>分隔文章的各个部分。</li><li>分隔行内文本和链接，例如表的操作列。</li></ul>"
   },
-  "Type of divider - 'horizontal' | 'vertical'": {
-    "Translated": "分隔线类型 - '水平' | '垂直的'"
-  },
-  "Content/Text orientation - 'left' | 'right' | 'center'. Ignored when not using `Text` or `ChildContent`": {
-    "Translated": "内容/文本方向 - '左' | '正确' | '中央'。不使用 Text 或 ChildContent 时忽略"
-  },
   "<p>A panel which slides in from the edge of the screen.</p><h2>When To Use</h2><p> A Drawer is a panel that is typically overlaid on top of a page and slides in from the side. It contains a set of information or actions. Since the user can interact with the Drawer without leaving the current page, tasks can be achieved more efficiently within the same context. </p><ul><li>Use a Form to create or edit a set of information.</li><li>Processing subtasks. When subtasks are too heavy for a Popover and we still want to keep the subtasks in the context of the main task, Drawer comes very handy.</li><li>When the same Form is needed in multiple places.</li></ul>": {
     "Translated": "<p>从屏幕边缘滑入的面板。</p><h2>何时使用</h2><p>抽屉是通常覆盖在页面顶部并从屏幕边缘滑入的面板旁边。它包含一组信息或操作。由于用户可以在不离开当前页面的情况下与 Drawer 进行交互，因此可以在相同的上下文中更有效地完成任务。 </p><ul><li>使用表单创建或编辑一组信息。</li><li>处理子任务。当子任务对于 Popover 而言过于繁重，而我们仍希望将子任务保留在主任务的上下文中时，Drawer 会非常方便。</li><li>当多个地方需要同一个 Form 时。</li> </ul>"
   },
@@ -124,9 +118,6 @@
   },
   "Whether to support keyboard esc off": {
     "Translated": "是否支持键盘esc关闭"
-  },
-  "Please replace it with Config": {
-    "Translated": "Please replace it with Config"
   },
   "<p>A dropdown list.</p><h2>When To Use</h2><p> When there are more than a few options to choose from, you can wrap them in a <code>Dropdown</code>. By hovering or clicking on the trigger, a dropdown menu will appear, which allows you to choose an option and execute the relevant action. </p><h2>Two types</h2><p>There are 2 rendering approaches for <code>Dropdown</code>:</p><ol><li>Wraps child element (content of the <code>Dropdown</code>) with a <code>div</code> (default approach).</li><li> Child element is not wrapped with anything. This approach requires usage of <code>Unbound</code> tag inside <code>Dropdown</code> and depending on the child element type (please refer to the first example): <ul><li>html tag: has to have its <code>@ref</code> set to <code>@context.Current</code></li><li><code>Ant Design Blazor</code> component: has to have its <code>RefBack</code> attribute set to <code>@context</code>.</li></ul></li></ol>": {
     "Translated": "<p>下拉列表。</p><h2>何时使用</h2><p> 当有多个选项可供选择时，您可以将它们包装在 <code>Dropdown</code> 中.通过悬停或单击触发器，将出现一个下拉菜单，允许您选择一个选项并执行相关操作。 </p><h2>两种类型</h2><p><code>Dropdown</code>有两种渲染方式：</p><ol><li>包裹子元素（<code>的内容>Dropdown</code>) 和 <code>div</code>（默认方法）。</li><li> 子元素未用任何东西包裹。这种方法需要在 <code>Dropdown</code> 中使用 <code>Unbound</code> 标签，并根据子元素类型（请参考第一个示例）： <ul><li>html 标签：必须将其 <code>@ref</code> 设置为 <code>@context.Current</code></li><li><code>Ant Design Blazor</code> 组件：必须具有其 <code> RefBack</code> 属性设置为 <code>@context</code>。</li></ul></li></ol>"
@@ -599,9 +590,6 @@
   "<p>Tag for categorizing or markup.</p><h2>When To Use</h2><ul><li>It can be used to tag by dimension or property.</li><li>When categorizing.</li></ul>": {
     "Translated": "<p>用于分类或标记的标记。</p><h2>何时使用</h2><ul><li>可用于按维度或属性标记。</li><li>在分类时。 </li></ul>"
   },
-  "Use Color instead by passing the string of the enum value": {
-    "Translated": "Use Color instead by passing the string of the enum value"
-  },
   "Parameter is not used and does not affect functionality": {
     "Translated": "Parameter is not used and does not affect functionality"
   },
@@ -943,9 +931,6 @@
   },
   "Shape of the avatar": {
     "Translated": "头像的形状"
-  },
-  "Size of the avatar. See <code>AntSizeLDSType</code> for possible values.": {
-    "Translated": "头像的大小。有关可能的值，请参阅 <code>AntSizeLDSType</code>。"
   },
   "Text string to display in the avatar. Typical use is for displaying initials.": {
     "Translated": "要在头像中显示的文本字符串。典型用途是显示首字母。"
@@ -1564,18 +1549,6 @@
   },
   "If the drawer is visible or not": {
     "Translated": "抽屉是否可见"
-  },
-  "close drawer": {
-    "Translated": "关闭抽屉"
-  },
-  "Open drawer": {
-    "Translated": "打开抽屉"
-  },
-  "update drawer config which Visible=true": {
-    "Translated": "更新 Visible=true 的抽屉配置"
-  },
-  "update drawer config with a new options": {
-    "Translated": "使用新选项更新抽屉配置"
   },
   "Whether the dropdown arrow should be visible.": {
     "Translated": "下拉箭头是否可见。"
@@ -2210,9 +2183,6 @@
   "Callback when the open sub menus change. Passed the array of open keys.": {
     "Translated": "当打开的子菜单改变时回调。传递了一组打开的键。"
   },
-  "Array with the keys of currently selected menu items": {
-    "Translated": "包含当前选定菜单项的键的数组"
-  },
   "Callback when the selected items change. Passed array of open keys.": {
     "Translated": "所选项目更改时回调。传递的打开键数组。"
   },
@@ -2769,7 +2739,7 @@
     "Translated": "间隙位置，选项：top bottom left right"
   },
   "Display label content for the radio": {
-    "Translated": "显示收音机的标签内容"
+    "Translated": "显示 Radio 的标签内容"
   },
   "Selected value": {
     "Translated": "选定值"
@@ -2778,19 +2748,19 @@
     "Translated": "是否自动对焦"
   },
   "Set to <code>true</code> to style the radio as button group.": {
-    "Translated": "设置为 <code>true</code> 将单选按钮设置为按钮组。"
+    "Translated": "设置为 <code>true</code> 将 Radio 设置为按钮组。"
   },
   "Specifies whether the radio is selected": {
-    "Translated": "指定无线电是否被选中"
+    "Translated": "指定 Radio 是否被选中"
   },
   "Specify if the radio button is checked initially or not": {
-    "Translated": "指定是否最初选中单选按钮"
+    "Translated": "指定是否最初选中 Radio "
   },
   "Callback executed when the checked state changes": {
     "Translated": "checked 状态改变时执行的回调"
   },
   "Disable the radio buton": {
-    "Translated": "禁用单选按钮"
+    "Translated": "禁用 Radio "
   },
   "Radio elements for the group. Use either this or <code>AntDesign.RadioGroup`1.Options</code>": {
     "Translated": "该组的单选元素。使用这个或 <code>AntDesign.RadioGroup`1.Options</code>"
@@ -2802,13 +2772,13 @@
     "Translated": "组的按钮样式。"
   },
   "Input name for all the radios in the group": {
-    "Translated": "输入组中所有无线电的名称"
+    "Translated": "输入组中所有 Radio 的名称"
   },
   "The default selected value for the group": {
     "Translated": "组的默认选择值"
   },
   "Options to display a radio for in the group. Use either this or <code>AntDesign.RadioGroup`1.ChildContent</code>": {
-    "Translated": "在组中显示无线电的选项。使用这个或 <code>AntDesign.RadioGroup`1.ChildContent</code>"
+    "Translated": "在组中显示 Radio 的选项。使用这个或 <code>AntDesign.RadioGroup`1.ChildContent</code>"
   },
   "Whether to allow clear or not when clicking again": {
     "Translated": "再次点击时是否允许清除"
@@ -3341,6 +3311,9 @@
   "Set the vertical scroll, can also be used to specify the height of the scrolling area, can be set as a pixel value": {
     "Translated": "设置垂直滚动，也可以用来指定滚动区域的高度，可以设置为像素值"
   },
+  "Automatically raise the table height to full screen display": {
+    "Translated": "自动拉升表格高度至满屏显示"
+  },
   "Scroll bar width": {
     "Translated": "滚动条宽度"
   },
@@ -3386,9 +3359,6 @@
   "Callback executed when total records changes": {
     "Translated": "记录总数变化时执行的回调"
   },
-  "Currently visible page": {
-    "Translated": "当前可见页面"
-  },
   "Number of records per page": {
     "Translated": "每页记录数"
   },
@@ -3401,8 +3371,14 @@
   "Get the query model for the table": {
     "Translated": "获取表的查询模型"
   },
+  "Expression to get the data for the field": {
+    "Translated": "获取字段数据的表达式"
+  },
   "Field this column represents": {
     "Translated": "此列代表的字段"
+  },
+  "Title of the column. Uses the following order of priority: <code>AntDesign.ColumnBase.Title</code>, <code>AntDesign.Column`1.DisplayName</code>, then <code>AntDesign.Column`1.FieldName</code>": {
+    "Translated": "列的标题。使用以下优先级顺序：<code>AntDesign.ColumnBase.Title</code>，<code>AntDesign.Column`1.DisplayName</code>，然后是 <code>AntDesign.Column`1.FieldName</code>"
   },
   "The corresponding path of the column data in the data item, support for querying the nested path through the array": {
     "Translated": "数据项中列数据的对应路径，支持通过数组查询嵌套路径"
@@ -3487,6 +3463,9 @@
   },
   "Index of this column in the table": {
     "Translated": "该列在表中的索引"
+  },
+  "Column content for a row. Takes priority over <code>AntDesign.ColumnBase.ChildContent</code>": {
+    "Translated": "一行的列内容。优先于 <code>AntDesign.ColumnBase.ChildContent</code>"
   },
   "Title for column header": {
     "Translated": "列标题的标题"
@@ -3583,9 +3562,6 @@
   },
   "Callback executed when Tag is checked/unchecked": {
     "Translated": "选中/取消选中 Tag 时执行的回调"
-  },
-  "Tag color. Can either be a predefined color (string) or hex color.": {
-    "Translated": "标记颜色。可以是预定义颜色（字符串）或十六进制颜色。"
   },
   "Tag color from the PresetColor list": {
     "Translated": "PresetColor 列表中的标记颜色"
@@ -3827,14 +3803,8 @@
   "The icon in front of the node": {
     "Translated": "节点前的图标"
   },
-  "Obtain the parent data set": {
-    "Translated": "获取父数据集"
-  },
   "Setting Selection State": {
     "Translated": "设置选择状态"
-  },
-  "Remove the current node": {
-    "Translated": "删除当前节点"
   },
   "Expand the node": {
     "Translated": "展开节点"
@@ -3895,9 +3865,6 @@
   },
   "Additional data to be uploaded with the files": {
     "Translated": "与文件一起上传的附加数据"
-  },
-  "Built-in stylesheets, support for three types: <code>text</code>, <code>picture</code> or <code>picture-card</code>": {
-    "Translated": "内置样式表，支持三种类型：<code>text</code>、<code>picture</code>或<code>picture-card</code>"
   },
   "Support upload whole directory. See <see href=\"https://caniuse.com/input-file-directory\">Can I Use</see> for browser support": {
     "Translated": "支持上传整个目录。请参阅 <see href=\"https://caniuse.com/input-file-directory\">Can I Use</see> 了解浏览器支持"
@@ -4121,9 +4088,6 @@
   "Customize dropdown content. The context is the original content.": {
     "Translated": "自定义下拉内容。上下文是原始内容。"
   },
-  "Render mode of table. See <see cref=\"!:AntDesign.RenderMode\" /> documentation for details.": {
-    "Translated": "表的渲染模式。有关详细信息，请参见<参见 cref=“！：AntDesign.RenderMode” /> 文档。"
-  },
   "Enable resizable column": {
     "Translated": "启用可调整大小的列"
   },
@@ -4148,9 +4112,6 @@
   "Whether the dataSource is filtered. Filter icon will be actived when it is true.": {
     "Translated": "dataSource 是否被过滤。当为 true 时，过滤器图标将被激活。"
   },
-  "'fill' | 'outline' | 'twotone';": {
-    "Translated": "'填充' |'大纲' |'双音';"
-  },
   "A custom CSS style used for rendering the transfer columns": {
     "Translated": "用于呈现传输列的自定义 CSS 样式"
   },
@@ -4161,7 +4122,10 @@
     "Translated": "树的数据源。可以是任何自定义对象类型的列表，方法是提供用于获取 children、leafs、titles 等的表达式。使用 this 或 <code>AntDesign.TreeSelect'2.ChildContent</code>"
   },
   "Specifies a method to return a checkable node": {
-    "Translated": "指定返回可检查节点的方法"
+    "Translated": "指定返回可勾选节点的方法"
+  },
+  "Specifies a method to return a selectable node": {
+    "Translated": "指定返回可选择节点的方法"
   },
   "Check or uncheck the node by click TreeNodeTitle if checkable": {
     "Translated": "如果可选中，请单击 TreeNodeTitle 来检查或取消选中节点"
@@ -4250,17 +4214,14 @@
   "Use @bind-Field to bind to a property of TItem, we recommend using <code>PropertyColumn</code> instead": {
     "Translated": "使用 @bind-Field 绑定到 TItem 的属性，建议使用 <code>PropertyColumn</code> 代替"
   },
+  "Only used for @bind-Field and get the expression, no other purpose": {
+    "Translated": "仅用于 @bind-Field 并获取表达式，无其他用途"
+  },
   "Please use StartIndex": {
     "Translated": "请使用 StartIndex"
   },
   "Get current filters' expression for ORMs like Entity Framework. And you can get the filtered data by executing the expression with the data source.": {
     "Translated": "获取 Entity Framework 等 ORM 的当前过滤器表达式。您可以通过对数据源执行表达式来获取筛选后的数据。"
-  },
-  "A <code>ForwardRef</code> instance. Used to get a reference to the internal DOM.": {
-    "Translated": "<code>一个 ForwardRef</code> 实例。用于获取对内部 DOM 的引用。"
-  },
-  "Placement of the overlay": {
-    "Translated": "叠加层的放置"
   },
   "Whether need both auto-off and Visible control closing.": {
     "Translated": "是否需要自动关闭和可见控件关闭。"
@@ -4361,9 +4322,6 @@
   "Gets or sets the value of the TextArea.": {
     "Translated": "获取或设置 TextArea 的值。"
   },
-  "Whether to enable virtualization feature or not, only works for .NET 5 and higher": {
-    "Translated": "是否启用虚拟化功能，仅适用于 .NET 5 及更高版本"
-  },
   "Callback function that is called when open state changes.": {
     "Translated": "打开状态更改时调用的回调函数。"
   },
@@ -4412,9 +4370,6 @@
   "Toggle the active state of the panel": {
     "Translated": "切换面板的活动状态"
   },
-  "Sets the direction of the comment. <code>left</code> or <code>right</code>.": {
-    "Translated": "设置注释的方向。<code>left</code> 或 <code>right</code>。"
-  },
   "Change default props <code>Colon</code> value of <code>DescriptionsItem</code>.": {
     "Translated": "更改 <code>DescriptionsItem</code> 的默认 props <code>冒号</code>值。"
   },
@@ -4460,6 +4415,9 @@
   "Customize the empty template when the table is empty": {
     "Translated": "自定义表为空时的空模板"
   },
+  "Specify the identifier of each row": {
+    "Translated": "指定每行的标识符"
+  },
   "Set the field filter type resolver": {
     "Translated": "设置字段筛选条件类型解析程序"
   },
@@ -4477,9 +4435,6 @@
   },
   "Set the column content to be displayed in the table": {
     "Translated": "设置表中显示的列内容"
-  },
-  "Type of selection column, checkbox or radio.": {
-    "Translated": "选择列、复选框或单选按钮的类型。"
   },
   "Whether the selection column is disabled.": {
     "Translated": "选择列是否被禁用。"
@@ -4633,5 +4588,68 @@
   },
   "Get or set the list of files that have been uploaded": {
     "Translated": "获取或设置已上传的文件列表"
+  },
+  "Add focus to picker input": {
+    "Translated": "将焦点添加到选取器输入"
+  },
+  "Remove focus from picker input": {
+    "Translated": "从选取器输入中删除焦点"
+  },
+  "Will use both attributes and rules in the same time.": {
+    "Translated": "将同时使用 attributes 和 rules。"
+  },
+  "The value of option.": {
+    "Translated": "option 的值。"
+  },
+  "The content of option.": {
+    "Translated": "选项的内容。"
+  },
+  "Check all nodes": {
+    "Translated": "检查所有节点"
+  },
+  "Uncheck all nodes": {
+    "Translated": "取消选中所有节点"
+  },
+  "Current Node Level": {
+    "Translated": "当前节点级别"
+  },
+  "Get the sibling nodes": {
+    "Translated": "获取同级节点"
+  },
+  "A <code>ForwardRef</code> instance. You can get a reference to the internal DOM by using <code>AntDesign.ForwardRef.Current</code>.": {
+    "Translated": "<code>一个 ForwardRef</code> 实例。您可以使用 <code>AntDesign.ForwardRef.Current</code> 获取对内部 DOM 的引用。"
+  },
+  "Close the popover": {
+    "Translated": "关闭弹出窗口"
+  },
+  "Whether to trigger and keep the loading state until the event callback is done.": {
+    "Translated": "是否触发并保持加载状态，直到事件回调完成。"
+  },
+  "Array with the keys of currently selected menu items, set empty array to clear selection instead of null.": {
+    "Translated": "Array 替换为当前选中的菜单项的键，设置 empty array 来清除选择，而不是 null。"
+  },
+  "Activate the tab with the specified index": {
+    "Translated": "使用指定索引激活选项卡"
+  },
+  "Move to next tab": {
+    "Translated": "移至下一个选项卡"
+  },
+  "Move to previous tab": {
+    "Translated": "移至上一个选项卡"
+  },
+  "Activate the specified tab": {
+    "Translated": "激活指定的选项卡"
+  },
+  "FormItem Help Tooltip information": {
+    "Translated": "设置表单字段的帮助提示信息"
+  },
+  "Overrides whether the clear icon is shown. When <see langword=\"null\" />, it is shown if and only if the input string is not empty.": {
+    "Translated": "覆盖是否显示清除图标。当 <see langword=“null” /> 时，当且仅当输入字符串不为空时，才会显示它。"
+  },
+  "Placement of the overlay. Defaults to <code>AntDesign.Placement.BottomLeft</code>.": {
+    "Translated": "叠加层的放置。默认为 <code>AntDesign.Placement.BottomLeft</code>。"
+  },
+  "Get TreeNode by Key": {
+    "Translated": "按键获取 TreeNode"
   }
 }

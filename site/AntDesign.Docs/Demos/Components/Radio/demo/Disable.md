@@ -10,4 +10,4 @@ Radio 不可用.
 
 
 ## en-US
-Radio unavailable.
+A radio component can be disabled using the `Disabled` property.

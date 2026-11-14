@@ -1,5 +1,5 @@
 ﻿<div>
-    <Button Icon="plus" Type="primary" @onclick="_=>open()">New account</Button>
+    <Button Icon="@IconType.Outline.Plus" Type="ButtonType.Primary" @onclick="_=>open()">New account</Button>
     <Drawer Closable="true" Width="720" Visible="visible" Title='("Submit from in Drawer")' OnClose="_=>close()">
         <Template style="height:90%">
             <Row Gutter="16">
@@ -42,8 +42,8 @@
 
                 </AntDesign.Col>
                 <AntDesign.Col Span="6">
-                    <Button Type="default">Cancel</Button>
-                    <Button Type="primary">Submit</Button>
+                    <Button Type="ButtonType.Default">Cancel</Button>
+                    <Button Type="ButtonType.Primary">Submit</Button>
                 </AntDesign.Col>
             </Row>
         </Template>

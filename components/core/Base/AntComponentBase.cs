@@ -13,8 +13,15 @@ namespace AntDesign
 {
     public abstract class AntComponentBase : ComponentBase, IDisposable
     {
+        /// <summary>ID for the component's HTML and its component props override entry.</summary>
+        [Parameter]
+        public string Id { get; set; }
+
+        [CascadingParameter]
+        public ComponentPropsCollection CascadingPropsCollection { get; set; }
+
         /// <summary>
-        /// A <see cref="ForwardRef" /> instance. Used to get a reference to the internal DOM. 
+        /// A <see cref="ForwardRef" /> instance. You can get a reference to the internal DOM by using <see cref="ForwardRef.Current" />.
         /// </summary>
         [Parameter]
         public ForwardRef RefBack { get; set; } = new ForwardRef();
@@ -56,6 +63,16 @@ namespace AntDesign
             return Task.CompletedTask;
         }
 
+        protected override void OnParametersSet()
+        {
+            if (this is IComponentPropsReceiver receiver)
+            {
+                receiver.ApplyCascadingProps();
+            }
+
+            base.OnParametersSet();
+        }
+
         protected AntComponentBase()
         {
         }
@@ -91,7 +108,7 @@ namespace AntDesign
             {
                 return await Js.InvokeAsync<T>(code, args);
             }
-            catch (Exception e)
+            catch
             {
                 throw;
             }
@@ -103,12 +120,13 @@ namespace AntDesign
             {
                 await Js.InvokeVoidAsync(code, args);
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
+                // Do not write to console
                 throw;
             }
         }
+
 
         /// <summary>
         /// Standard Focus. From Net5 uses Blazor extension method on ElementReference.

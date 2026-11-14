@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-There are three layout for form: `horizontal`, `vertical`, `inline`.
+There are three layout for form: `FormLayout.Horizontal`, `FormLayout.Vertical`, `FormLayout.Inline`.

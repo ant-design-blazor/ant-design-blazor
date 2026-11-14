@@ -3,8 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Text.Json;
+using AntDesign.Core.Helpers;
 
 namespace AntDesign
 {
@@ -62,21 +63,13 @@ namespace AntDesign
 
         public TResponseModel GetResponse<TResponseModel>(JsonSerializerOptions options = null)
         {
-            if (options == null)
-            {
-                //Provide default configuration: ignore case
-                options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true,
-                };
-            }
-            return JsonSerializer.Deserialize<TResponseModel>(this.Response, options);
+            return JsonSerializer.Deserialize<TResponseModel>(this.Response, options: options ?? JsonSerializerHelper.DefaultOptions);
         }
 
         /// <summary>
         /// File extensions that are considered images
         /// </summary>
-        public static string[] ImageExtensions { get; set; } = new[] { ".jpg", ".png", ".gif", ".ico", ".jfif", ".jpeg", ".bmp", ".tga", ".svg", ".tif", ".webp" };
+        public static HashSet<string> ImageExtensions { get; set; } = new(StringComparer.InvariantCultureIgnoreCase) { ".jpg", ".png", ".gif", ".ico", ".jfif", ".jpeg", ".bmp", ".tga", ".svg", ".tif", ".webp" };
 
         /// <summary>
         /// Check if the file is a picture. See <see cref="ImageExtensions"/> for the extensions which will cause this to return true.
@@ -90,7 +83,7 @@ namespace AntDesign
                 if (lastIndex < 0) return false;
                 Ext = FileName[lastIndex..];
             }
-            return ImageExtensions.Any(imageExt => imageExt.Equals(Ext, StringComparison.InvariantCultureIgnoreCase));
+            return ImageExtensions.Contains(Ext);
         }
     }
 }

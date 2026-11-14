@@ -4,279 +4,418 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AntDesign.Core.Extensions;
+using AntDesign.Core.Helpers;
 using AntDesign.Core.JsInterop.ObservableApi;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace AntDesign.JsInterop
+namespace AntDesign.JsInterop;
+
+public class DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore domEventSubscriptionStore) : IDomEventListener
 {
-    public class DomEventListener : IDomEventListener
+    private readonly string _id = Guid.NewGuid().ToString();
+    private readonly Dictionary<DomEventKey, IDisposable> _exclusiveDotNetObjectStore = [];
+    private readonly Dictionary<DomEventKey, IDisposable> _sharedDotNetObjectStore = [];
+
+    private bool? _isResizeObserverSupported = null;
+    private bool _isDisposed;
+
+    private DomEventKey FormatKey(object dom, string eventName)
     {
-        private Dictionary<DomEventKey, IDisposable> _exclusiveDotNetObjectStore = new();
-        private Dictionary<DomEventKey, IDisposable> _sharedDotNetObjectStore = new();
-        private bool? _isResizeObserverSupported = null;
-
-        private readonly IJSRuntime _jsRuntime;
-        private readonly DomEventSubscriptionStore _domEventSubscriptionsStore;
-        private readonly string _id;
-        private bool _isDisposed;
-
-        public DomEventListener(IJSRuntime jsRuntime, DomEventSubscriptionStore domEventSubscriptionStore)
+        var selector = dom is ElementReference eleRef ? eleRef.GetSelector() : dom.ToString();
+        if (selector.IsIn("window", "document"))
         {
-            _jsRuntime = jsRuntime;
-            _domEventSubscriptionsStore = domEventSubscriptionStore;
-            _id = Guid.NewGuid().ToString();
+            return new(selector, eventName, string.Empty);
         }
+        return new(selector, eventName, _id);
+    }
 
-        private DomEventKey FormatKey(object dom, string eventName)
+    public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false)
+    {
+        var key = FormatKey(dom, eventName);
+        if (_exclusiveDotNetObjectStore.ContainsKey(key))
+            return;
+
+        var dotNetObject = DotNetObjectReference.Create(new Invoker<T>((p) =>
         {
-            var selector = dom is ElementReference eleRef ? eleRef.GetSelector() : dom.ToString();
-            if (selector.IsIn("window", "document"))
-            {
-                return new DomEventKey(selector, eventName, "");
-            }
-            return new DomEventKey(selector, eventName, _id);
+            callback(p);
+        }));
+        jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject, stopPropagation);
+        _exclusiveDotNetObjectStore.Add(key, dotNetObject);
+    }
+
+    public void AddExclusive<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false, bool stopPropagation = false)
+    {
+        var key = FormatKey(dom, eventName);
+        if (_exclusiveDotNetObjectStore.ContainsKey(key))
+            return;
+
+        var dotNetObject = DotNetObjectReference.Create(new AsyncInvoker<T>((p) =>
+        {
+            return callback(p);
+        }));
+        jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject, stopPropagation);
+        _exclusiveDotNetObjectStore.Add(key, dotNetObject);
+    }
+
+    public void RemoveExclusive(object dom, string eventName)
+    {
+        var key = FormatKey(dom, eventName);
+        if (_exclusiveDotNetObjectStore.TryGetValue(key, out var dotNetObject))
+        {
+            jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, dom, eventName, dotNetObject);
         }
+        _exclusiveDotNetObjectStore.Remove(key);
+    }
 
-        public void AddExclusive<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false, bool stopPropagation = false)
+    public void DisposeExclusive()
+    {
+        foreach (var (key, dotNetObject) in _exclusiveDotNetObjectStore)
         {
-            var key = FormatKey(dom, eventName);
-            if (_exclusiveDotNetObjectStore.ContainsKey(key))
-                return;
-
-            var dotNetObject = DotNetObjectReference.Create(new Invoker<T>((p) =>
-            {
-                callback(p);
-            }));
-            _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject, stopPropagation);
-            _exclusiveDotNetObjectStore.Add(key, dotNetObject);
+            jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, key.Selector, key.EventName, dotNetObject);
         }
+        _exclusiveDotNetObjectStore.Clear();
+    }
 
-        public void RemoveExclusive(object dom, string eventName)
+    #region SharedEventListerner
+
+    public virtual void AddShared<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
+    {
+        var key = FormatKey(dom, eventName);
+        if (!domEventSubscriptionStore.TryGetValue(key, out var list))
         {
-            var key = FormatKey(dom, eventName);
-            if (_exclusiveDotNetObjectStore.TryGetValue(key, out IDisposable dotNetObject))
+            list = [];
+            if (domEventSubscriptionStore.TryAdd(key, list))
             {
-                _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, dom, eventName, dotNetObject);
-            }
-            _exclusiveDotNetObjectStore.Remove(key);
-        }
-
-        public void DisposeExclusive()
-        {
-            foreach (var (key, dotNetObject) in _exclusiveDotNetObjectStore)
-            {
-                _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, key.Selector, key.EventName, dotNetObject);
-            }
-            _exclusiveDotNetObjectStore.Clear();
-        }
-
-        #region SharedEventListerner
-
-        public virtual void AddShared<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
-        {
-            var key = FormatKey(dom, eventName);
-            if (!_domEventSubscriptionsStore.ContainsKey(key))
-            {
-                _domEventSubscriptionsStore[key] = new List<DomEventSubscription>();
-
                 var dotNetObject = DotNetObjectReference.Create(new Invoker<string>((p) =>
                 {
-                    if (!_domEventSubscriptionsStore.ContainsKey(key))
+                    if (!domEventSubscriptionStore.TryGetValue(key, out var tempList))
                         return;
 
-                    for (var i = 0; i < _domEventSubscriptionsStore[key].Count; i++)
+                    var jsonOpt = JsonSerializerHelper.DefaultOptions;
+                    foreach (var subscription in tempList)
                     {
-                        var subscription = _domEventSubscriptionsStore[key][i];
-                        var tP = JsonSerializer.Deserialize(p, subscription.Type, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                        var tP = JsonSerializer.Deserialize(p, subscription.Type, jsonOpt);
                         subscription.Delegate.DynamicInvoke(tP);
                     }
                 }));
 
                 _sharedDotNetObjectStore.Add(key, dotNetObject);
 
-                _jsRuntime.InvokeVoidAsync(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
-            }
-            _domEventSubscriptionsStore[key].Add(new DomEventSubscription(callback, typeof(T), _id));
-        }
-
-        public void RemoveShared<T>(object dom, string eventName, Action<T> callback)
-        {
-            var key = FormatKey(dom, eventName);
-            if (_domEventSubscriptionsStore.ContainsKey(key))
-            {
-                var subscription = _domEventSubscriptionsStore[key].SingleOrDefault(s => s.Delegate == (Delegate)callback);
-                if (subscription != null && subscription.Id == _id)
-                {
-                    _domEventSubscriptionsStore[key].Remove(subscription);
-                }
-            }
-        }
-
-        public void DisposeShared()
-        {
-            bool find = true;
-
-            while (find)
-            {
-                var (key, subscription) = _domEventSubscriptionsStore.FindDomEventSubscription(_id);
-                if (key != null && subscription != null)
-                {
-                    _domEventSubscriptionsStore[key].Remove(subscription);
-
-                    if (_domEventSubscriptionsStore[key].Count == 0 && _sharedDotNetObjectStore.ContainsKey(key))
-                    {
-                        var dotNetObject = _sharedDotNetObjectStore[key];
-
-                        _jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, key.Selector, key.EventName, dotNetObject);
-
-                        _domEventSubscriptionsStore.Remove(key, out var _);
-                    }
-                }
-                else
-                    find = false;
-            }
-        }
-
-        #endregion SharedEventListerner
-
-        #region ResizeObserver
-
-        public async ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
-        {
-            var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
-            if (!(await IsResizeObserverSupported()))
-            {
-                Action<JsonElement> action = (je) => callback.Invoke(new List<ResizeObserverEntry> { new ResizeObserverEntry() });
-                AddShared<JsonElement>("window", "resize", action, false);
+                jsRuntime.InvokeVoidAsync(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
             }
             else
             {
-                if (!_domEventSubscriptionsStore.ContainsKey(key))
+                _ = domEventSubscriptionStore.TryGetValue(key, out list);
+            }
+        }
+        list.Add(new DomEventSubscription(callback, typeof(T), _id));
+    }
+
+    public virtual void AddShared<T>(object dom, string eventName, Func<T, Task> callback, bool preventDefault = false)
+    {
+        var key = FormatKey(dom, eventName);
+        if (!domEventSubscriptionStore.TryGetValue(key, out var list))
+        {
+            list = [];
+            if (domEventSubscriptionStore.TryAdd(key, list))
+            {
+                var dotNetObject = DotNetObjectReference.Create(new AsyncInvoker<string>(async (p) =>
                 {
-                    _domEventSubscriptionsStore[key] = new List<DomEventSubscription>();
-                    await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), DotNetObjectReference.Create(new Invoker<string>((p) =>
+                    if (!domEventSubscriptionStore.TryGetValue(key, out var tempList))
+                        return;
+
+                    var jsonOpt = JsonSerializerHelper.DefaultOptions;
+                    foreach (var subscription in tempList)
                     {
-                        for (var i = 0; i < _domEventSubscriptionsStore[key].Count; i++)
+                        var tP = JsonSerializer.Deserialize(p, subscription.Type, jsonOpt);
+                        if (subscription.IsAsync)
                         {
-                            var subscription = _domEventSubscriptionsStore[key][i];
-                            object tP = JsonSerializer.Deserialize(p, subscription.Type);
+                            await (Task)subscription.Delegate.DynamicInvoke(tP);
+                        }
+                        else
+                        {
                             subscription.Delegate.DynamicInvoke(tP);
                         }
-                    })));
-                    await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Observe, key.ToString(), dom);
-                }
-                _domEventSubscriptionsStore[key].Add(new DomEventSubscription(callback, typeof(List<ResizeObserverEntry>), _id));
-            }
-        }
-
-        public async ValueTask RemoveResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
-        {
-            var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
-            if (_domEventSubscriptionsStore.ContainsKey(key))
-            {
-                var subscription = _domEventSubscriptionsStore[key].SingleOrDefault(s => s.Delegate == (Delegate)callback);
-                if (subscription != null)
-                {
-                    _domEventSubscriptionsStore[key].Remove(subscription);
-                }
-            }
-
-            await Task.CompletedTask;
-        }
-
-        public async ValueTask DisposeResizeObserver(ElementReference dom)
-        {
-            var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
-            if (await IsResizeObserverSupported())
-            {
-                await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Dispose, key.ToString());
-            }
-            _domEventSubscriptionsStore.TryRemove(key, out _);
-        }
-
-        public async ValueTask DisconnectResizeObserver(ElementReference dom)
-        {
-            var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
-            if (await IsResizeObserverSupported())
-            {
-                await _jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Disconnect, key.ToString());
-            }
-            if (_domEventSubscriptionsStore.ContainsKey(key))
-            {
-                _domEventSubscriptionsStore[key].Clear();
-            }
-        }
-
-        private async ValueTask<bool> IsResizeObserverSupported() => _isResizeObserverSupported ??= await _jsRuntime.IsResizeObserverSupported();
-
-        #endregion ResizeObserver
-
-        #region EventListenerToFirstChild
-
-        public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
-        {
-            AddEventListenerToFirstChildInternal<string>(dom, eventName, preventDefault, (e) =>
-            {
-                JsonElement jsonElement = JsonDocument.Parse(e).RootElement;
-                callback(jsonElement);
-            });
-        }
-
-        public void AddEventListenerToFirstChild<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
-        {
-            AddEventListenerToFirstChildInternal<string>(dom, eventName, preventDefault, (e) =>
-            {
-                T obj = JsonSerializer.Deserialize<T>(e);
-                callback(obj);
-            });
-        }
-
-        private void AddEventListenerToFirstChildInternal<T>(object dom, string eventName, bool preventDefault, Action<T> callback)
-        {
-            var key = FormatKey(dom, eventName);
-            if (!_exclusiveDotNetObjectStore.ContainsKey(key))
-            {
-                var dotNetObject = DotNetObjectReference.Create(new Invoker<T>((p) =>
-                {
-                    callback?.Invoke(p);
+                    }
                 }));
 
-                _jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListenerToFirstChild, dom, eventName, preventDefault, dotNetObject);
-                _exclusiveDotNetObjectStore.Add(key, dotNetObject);
+                _sharedDotNetObjectStore.Add(key, dotNetObject);
+
+                jsRuntime.InvokeVoidAsync(JSInteropConstants.AddDomEventListener, dom, eventName, preventDefault, dotNetObject);
+            }
+            else
+            {
+                _ = domEventSubscriptionStore.TryGetValue(key, out list);
             }
         }
+        list.Add(new DomEventSubscription(callback, typeof(T), _id, true));
+    }
 
-        #endregion EventListenerToFirstChild
-
-        public void Dispose()
+    public void RemoveShared<T>(object dom, string eventName, Action<T> callback)
+    {
+        var key = FormatKey(dom, eventName);
+        if (domEventSubscriptionStore.TryGetValue(key, out var subscriptions))
         {
-            if (!_isDisposed)
+            var index = subscriptions.FindIndex(s => s.Id == _id && s.Delegate == (Delegate)callback);
+            if (index >= 0)
             {
-                DisposeExclusive();
-                DisposeShared();
-                _isDisposed = true;
+                subscriptions.RemoveAt(index);
             }
         }
     }
 
-    public class Invoker<T>
+    public void RemoveShared<T>(object dom, string eventName, Func<T, Task> callback)
     {
-        private Action<T> _action;
-
-        public Invoker(Action<T> invoker)
+        var key = FormatKey(dom, eventName);
+        if (domEventSubscriptionStore.TryGetValue(key, out var subscriptions))
         {
-            _action = invoker;
+            var index = subscriptions.FindIndex(s => s.Id == _id && s.Delegate == (Delegate)callback);
+            if (index >= 0)
+            {
+                subscriptions.RemoveAt(index);
+            }
+        }
+    }
+
+    public void DisposeShared()
+    {
+        var find = true;
+
+        while (find)
+        {
+            var (key, subscription) = domEventSubscriptionStore.FindDomEventSubscription(_id);
+            if (key != null && subscription != null)
+            {
+                var tempList = domEventSubscriptionStore[key];
+                tempList.Remove(subscription);
+
+                if (tempList.Count == 0 && _sharedDotNetObjectStore.TryGetValue(key, out var dotNetObject))
+                {
+                    jsRuntime.InvokeVoidAsync(JSInteropConstants.RemoveDomEventListener, key.Selector, key.EventName, dotNetObject);
+
+                    domEventSubscriptionStore.Remove(key, out var _);
+                }
+            }
+            else
+            {
+                find = false;
+            }
+        }
+    }
+
+    #endregion SharedEventListerner
+
+    #region ResizeObserver
+
+    public async ValueTask AddResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
+    {
+        var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+        if (!await IsResizeObserverSupported())
+        {
+            AddShared<JsonElement>("window", "resize", Callback, false);
+
+            void Callback(JsonElement _) => callback.Invoke([new ResizeObserverEntry()]);
+        }
+        else
+        {
+            if (!domEventSubscriptionStore.TryGetValue(key, out var subscriptions))
+            {
+                subscriptions = [];
+                if (domEventSubscriptionStore.TryAdd(key, subscriptions))
+                {
+                    await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), DotNetObjectReference.Create(new Invoker<string>((p) =>
+                    {
+                        foreach (var subscription in subscriptions)
+                        {
+                            var tP = JsonSerializer.Deserialize(p, subscription.Type);
+                            subscription.Delegate.DynamicInvoke(tP);
+                        }
+                    })));
+                    await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Observe, key.ToString(), dom);
+                }
+                else
+                {
+                    _ = domEventSubscriptionStore.TryGetValue(key, out subscriptions);
+                }
+            }
+
+            subscriptions.Add(new DomEventSubscription(callback, typeof(List<ResizeObserverEntry>), _id));
+        }
+    }
+
+    public async ValueTask AddResizeObserver(ElementReference dom, Func<List<ResizeObserverEntry>, Task> callback)
+    {
+        var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+        if (!await IsResizeObserverSupported())
+        {
+            AddShared<JsonElement>("window", "resize", AsyncCallback, false);
+
+            async void AsyncCallback(JsonElement _) => await callback.Invoke([new ResizeObserverEntry()]);
+        }
+        else
+        {
+            if (!domEventSubscriptionStore.TryGetValue(key, out var subscriptions))
+            {
+                subscriptions = [];
+                if (domEventSubscriptionStore.TryAdd(key, subscriptions))
+                {
+                    await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Create, key.ToString(), DotNetObjectReference.Create(new AsyncInvoker<string>(async (p) =>
+                    {
+                        foreach (var subscription in subscriptions)
+                        {
+                            var tP = JsonSerializer.Deserialize(p, subscription.Type);
+                            if (subscription.IsAsync)
+                            {
+                                await (Task)subscription.Delegate.DynamicInvoke(tP);
+                            }
+                            else
+                            {
+                                subscription.Delegate.DynamicInvoke(tP);
+                            }
+                        }
+                    })));
+                    await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Observe, key.ToString(), dom);
+                }
+                else
+                {
+                    _ = domEventSubscriptionStore.TryGetValue(key, out subscriptions);
+                }
+            }
+
+            subscriptions.Add(new DomEventSubscription(callback, typeof(List<ResizeObserverEntry>), _id, true));
+        }
+    }
+
+    public async ValueTask RemoveResizeObserver(ElementReference dom, Action<List<ResizeObserverEntry>> callback)
+    {
+        var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+        if (domEventSubscriptionStore.TryGetValue(key, out var list))
+        {
+            var index = list.FindIndex(s => s.Delegate == (Delegate)callback);
+            if (index >= 0)
+            {
+                list.RemoveAt(index);
+            }
         }
 
-        [JSInvokable]
-        public void Invoke(T param)
+        await Task.CompletedTask;
+    }
+
+    public async ValueTask RemoveResizeObserver(ElementReference dom, Func<List<ResizeObserverEntry>, Task> callback)
+    {
+        var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+        if (domEventSubscriptionStore.TryGetValue(key, out var list))
         {
-            _action.Invoke(param);
+            var index = list.FindIndex(s => s.Delegate == (Delegate)callback && s.IsAsync);
+            if (index >= 0)
+            {
+                list.RemoveAt(index);
+            }
         }
+
+        await Task.CompletedTask;
+    }
+
+    public async ValueTask DisposeResizeObserver(ElementReference dom)
+    {
+        var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+        if (await IsResizeObserverSupported())
+        {
+            await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Dispose, key.ToString());
+        }
+        domEventSubscriptionStore.TryRemove(key, out _);
+    }
+
+    public async ValueTask DisconnectResizeObserver(ElementReference dom)
+    {
+        var key = FormatKey(dom.Id, nameof(JSInteropConstants.ObserverConstants.Resize));
+        if (await IsResizeObserverSupported())
+        {
+            await jsRuntime.InvokeVoidAsync(JSInteropConstants.ObserverConstants.Resize.Disconnect, key.ToString());
+        }
+        if (domEventSubscriptionStore.TryGetValue(key, out var list))
+        {
+            list.Clear();
+        }
+    }
+
+    private async ValueTask<bool> IsResizeObserverSupported() => _isResizeObserverSupported ??= await jsRuntime.IsResizeObserverSupported();
+
+    #endregion ResizeObserver
+
+    #region EventListenerToFirstChild
+
+    public void AddEventListenerToFirstChild(object dom, string eventName, Action<JsonElement> callback, bool preventDefault = false)
+    {
+        AddEventListenerToFirstChildInternal<string>(dom, eventName, preventDefault, (e) =>
+        {
+            JsonElement jsonElement = JsonDocument.Parse(e).RootElement;
+            callback(jsonElement);
+        });
+    }
+
+    public void AddEventListenerToFirstChild<T>(object dom, string eventName, Action<T> callback, bool preventDefault = false)
+    {
+        AddEventListenerToFirstChildInternal<string>(dom, eventName, preventDefault, (e) =>
+        {
+            T obj = JsonSerializer.Deserialize<T>(e);
+            callback(obj);
+        });
+    }
+
+    private void AddEventListenerToFirstChildInternal<T>(object dom, string eventName, bool preventDefault, Action<T> callback)
+    {
+        var key = FormatKey(dom, eventName);
+        if (!_exclusiveDotNetObjectStore.ContainsKey(key))
+        {
+            var dotNetObject = DotNetObjectReference.Create(new Invoker<T>((p) =>
+            {
+                callback?.Invoke(p);
+            }));
+
+            jsRuntime.InvokeAsync<string>(JSInteropConstants.AddDomEventListenerToFirstChild, dom, eventName, preventDefault, dotNetObject);
+            _exclusiveDotNetObjectStore.Add(key, dotNetObject);
+        }
+    }
+
+    #endregion EventListenerToFirstChild
+
+    public void Dispose()
+    {
+        if (!_isDisposed)
+        {
+            DisposeExclusive();
+            DisposeShared();
+            _isDisposed = true;
+        }
+    }
+}
+
+public class Invoker<T>(Action<T> invoker)
+{
+    [JSInvokable]
+    public void Invoke(T param)
+    {
+        invoker.Invoke(param);
+    }
+}
+
+public class AsyncInvoker<T>
+{
+    private readonly Func<T, Task> _invoker;
+
+    public AsyncInvoker(Func<T, Task> invoker)
+    {
+        _invoker = invoker;
+    }
+
+    [JSInvokable]
+    public Task Invoke(T param)
+    {
+        return _invoker(param);
     }
 }

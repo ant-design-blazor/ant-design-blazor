@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
 using AntDesign.Core.Extensions;
 using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.Internal;
@@ -29,10 +30,14 @@ namespace AntDesign
 #endif
     public abstract partial class SelectBase<TItemValue, TItem> : AntInputComponentBase<TItemValue>, IEqualityComparer<TItem>
     {
-        protected const string DefaultWidth = "width: 100%;";
+        protected virtual string DefaultWidth => "width: 100%;";
+        protected virtual bool UseChildContentAsTrigger => true;
         protected bool TypeDefaultExistsAsSelectOption { get; set; } = false; //this is to indicate that value was set outside - basically to monitor for scenario when Value is set to default(Value)
         private SelectOptionItem<TItemValue, TItem> _selectOptionEqualToTypeDefault;
         private SelectOptionItem<TItemValue, TItem> _activeOption;
+
+        private bool _waittingFocus;
+
         protected OverlayTrigger _dropDown;
 
         internal ElementReference _dropDownRef;
@@ -59,6 +64,18 @@ namespace AntDesign
 
         protected SelectContent<TItemValue, TItem> _selectContent;
 
+        /// <summary>
+        /// Request the Select component to refresh its selected-item display.
+        /// This is intended to be used by child components (e.g. SelectOption) when
+        /// their label template changes at runtime. Internal visibility keeps this
+        /// callable within the assembly without exposing it publicly.
+        /// </summary>
+        internal void RequestSelectedDisplayRefresh()
+        {
+            // Use InvokeAsync to ensure this runs on the renderer synchronization context.
+            _ = InvokeAsync(() => StateHasChanged());
+        }
+
         protected TItemValue[] _selectedValues;
 
         protected Func<TItem, string> _getLabel;
@@ -74,6 +91,8 @@ namespace AntDesign
         internal RenderFragment FeedbackIcon => FormItem?.FeedbackIcon;
 
         internal ClassMapper CurrentClassMapper => ClassMapper;
+
+        protected virtual string OverlayClassName { get; }
 
         /// <summary>
         /// Overlay adjustment strategy (when for example browser resize is happening)
@@ -105,7 +124,7 @@ namespace AntDesign
         /// Set mode of Select - default | multiple | tags
         /// </summary>
         [Parameter]
-        public string Mode { get; set; } = "default";
+        public SelectMode Mode { get; set; } = SelectMode.Default;
 
         /// <summary>
         /// Indicates whether the search function is active or not. Always true for mode tags.
@@ -244,10 +263,42 @@ namespace AntDesign
         [Parameter]
         public EventCallback OnClearSelected { get; set; }
 
+        protected virtual RenderFragment TriggerContent { get; }
+
+        /// <summary>
+        /// ChildElement with ElementReference set to avoid wrapping div.
+        /// </summary>
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public RenderFragment<ForwardRef> Unbound { get; set; }
+
+
         internal bool IsResponsive { get; set; }
 
-        internal HashSet<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new();
-        internal List<SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new();
+        internal List<SelectOptionItem<TItemValue, TItem>> SelectOptionItems { get; } = new();
+        internal NullKeyDictionary<TItemValue, SelectOptionItem<TItemValue, TItem>> SelectedOptionItems { get; } = new();
+
+        private List<SelectOptionItem<TItemValue, TItem>> _cachedOrderedSelectedItems = null;
+
+        internal virtual List<SelectOptionItem<TItemValue, TItem>> GetOrderedSelectedItems()
+        {
+            if (_cachedOrderedSelectedItems != null) return _cachedOrderedSelectedItems;
+            _cachedOrderedSelectedItems = [];
+            if (SelectedOptionItems.Count > 0 && _selectedValues != null)
+            {
+                foreach (var selectedValue in _selectedValues)
+                {
+                    if (SelectedOptionItems.TryGetValue(selectedValue, out var item))
+                    {
+                        _cachedOrderedSelectedItems.Add(item);
+                    }
+                }
+            }
+            return _cachedOrderedSelectedItems;
+        }
+
+        /// <summary>Gets the item displayed in the single-value trigger.</summary>
+        internal virtual SelectOptionItem<TItemValue, TItem> GetSingleSelectedItem() => SelectedOptionItems.Values.FirstOrDefault();
 
         /// <summary>
         /// Called when the selected item changes.
@@ -260,8 +311,6 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public EventCallback<IEnumerable<TItem>> OnSelectedItemsChanged { get; set; }
-
-        internal virtual SelectMode SelectMode => Mode.ToSelectMode();
 
         /// <summary>
         ///     Currently active (highlighted) option.
@@ -334,7 +383,7 @@ namespace AntDesign
                     }
                 }
 
-                if (_isNotifyFieldChanged && Form?.ValidateOnChange == true)
+                if (_isNotifyFieldChanged && Form?.ValidateOnChange == true && FieldIdentifier is { Model: not null, FieldName: not null })
                 {
                     EditContext?.NotifyFieldChanged(FieldIdentifier);
                 }
@@ -351,13 +400,16 @@ namespace AntDesign
         ///     Determines if SelectOptions has any selected items
         /// </summary>
         /// <returns>true if SelectOptions has any selected Items, otherwise false</returns>
-        internal bool HasValue => SelectOptionItems.Any(x => x.IsSelected);
+        internal virtual bool HasValue => SelectOptionItems.Any(x => x.IsSelected);
+
+        /// <summary>Gets the text rendered for a selected item in the default trigger.</summary>
+        internal virtual string GetSelectedItemLabel(SelectOptionItem<TItemValue, TItem> option) => option.Label;
 
         /// <summary>
         ///     Returns whether the user can input a pattern to search matched items
         /// </summary>
         /// <returns>true if search is enabled</returns>
-        internal bool IsSearchEnabled => EnableSearch || SelectMode == SelectMode.Tags;
+        internal bool IsSearchEnabled => EnableSearch || Mode == SelectMode.Tags;
 
         /// <summary>
         ///     Sorted list of SelectOptionItems
@@ -412,18 +464,14 @@ namespace AntDesign
             }
         }
 
-        /// <summary>
-        /// Used for rendering select options manually.
-        /// </summary>
-        [Parameter]
-        public RenderFragment SelectOptions { get; set; }
-
         internal List<SelectOptionItem<TItemValue, TItem>> AddedTags { get; } = new();
 
         internal SelectOptionItem<TItemValue, TItem> CustomTagSelectOptionItem { get; set; }
 
         internal bool Focused { get; set; }
         internal bool HasTagCount { get; set; }
+
+        internal virtual bool HasSelectOptions => false;
 
         /// <summary>
         /// How long (number of characters) a tag will be.
@@ -504,7 +552,7 @@ namespace AntDesign
             set
             {
                 _getLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.GetDelegate<TItem, string>(value);
-                if (SelectMode == SelectMode.Tags)
+                if (Mode == SelectMode.Tags)
                 {
                     _setLabel = string.IsNullOrWhiteSpace(value) ? null : PathHelper.SetDelegate<TItem, string>(value);
                 }
@@ -543,25 +591,32 @@ namespace AntDesign
                 return;
             }
 
-            //if (!SelectOptionItems.Any())
-            //{
-            //    return;
-            //}
-
             if (values == null)
             {
                 await ValuesChanged.InvokeAsync(default);
                 await OnSelectedItemsChanged.InvokeAsync(default);
                 return;
             }
-
+            if (!SelectOptionItems.Any())
+            {
+                if (!values.Any())
+                {
+                    _cachedOrderedSelectedItems = null;
+                    if (ValuesChanged.HasDelegate)
+                        await ValuesChanged.InvokeAsync(Values);
+                    if (OnSelectedItemsChanged.HasDelegate)
+                        await OnSelectedItemsChanged.InvokeAsync(Enumerable.Empty<TItem>());
+                }
+                return;
+            }
+            _cachedOrderedSelectedItems = null;
             EvaluateValuesChangedOutsideComponent(values);
 
             if (ValuesChanged.HasDelegate)
                 await ValuesChanged.InvokeAsync(Values);
-
+            var orderedSelectedItems = GetOrderedSelectedItems();
             if (OnSelectedItemsChanged.HasDelegate)
-                await OnSelectedItemsChanged.InvokeAsync(SelectedOptionItems.Select(s => s.Item));
+                await OnSelectedItemsChanged.InvokeAsync(orderedSelectedItems.Select(s => s.Item));
 
             if (_dropDown != null && _dropDown.IsOverlayShow())
             {
@@ -583,18 +638,18 @@ namespace AntDesign
         private void EvaluateValuesChangedOutsideComponent(IEnumerable<TItemValue> values)
         {
             var newSelectedItems = new List<TItem>();
-            var deselectList = SelectedOptionItems.ToDictionary(item => item.Value, item => item);
+            var deselectList = SelectedOptionItems.ToDictionary(item => item.Key, item => item.Value);
             foreach (var value in values.ToList())
             {
                 SelectOptionItem<TItemValue, TItem> result;
-                if (SelectMode == SelectMode.Multiple)
+                if (Mode == SelectMode.Multiple)
                 {
                     result = SelectOptionItems.FirstOrDefault(x =>
                         !x.IsSelected && EqualityComparer<TItemValue>.Default.Equals(x.Value, value));
                     if (result != null && !result.IsDisabled)
                     {
                         result.IsSelected = true;
-                        SelectedOptionItems.Add(result);
+                        SelectedOptionItems.Add(result.Value, result);
                     }
 
                     deselectList.Remove(value);
@@ -610,12 +665,12 @@ namespace AntDesign
                         AddedTags.Add(result);
                         SelectOptionItems.Add(result);
                         AddEqualityToNoValue(result);
-                        SelectedOptionItems.Add(result);
+                        SelectedOptionItems.Add(result.Value, result);
                     }
                     else if (result != null && !result.IsSelected && !result.IsDisabled)
                     {
                         result.IsSelected = true;
-                        SelectedOptionItems.Add(result);
+                        SelectedOptionItems.Add(result.Value, result);
                     }
 
                     deselectList.Remove(value);
@@ -627,7 +682,7 @@ namespace AntDesign
                 foreach (var item in deselectList)
                 {
                     item.Value.IsSelected = false;
-                    SelectedOptionItems.Remove(item.Value);
+                    SelectedOptionItems.Remove(item.Key);
                     RemoveEqualityToNoValue(item.Value);
                     if (item.Value.IsAddedTag)
                     {
@@ -644,27 +699,35 @@ namespace AntDesign
         /// <param name="label">Creation based on passed label</param>
         /// <param name="isActive">if set to <c>true</c> [is active].</param>
         /// <returns></returns>
-        protected SelectOptionItem<TItemValue, TItem> CreateSelectOptionItem(string label, bool isActive)
+        protected virtual SelectOptionItem<TItemValue, TItem> CreateSelectOptionItem(string label, bool isActive)
         {
-            var value = GetItemValueFromLabel(label);
-            TItem item;
-            if (_isPrimitive)
-            {
-                item = (TItem)TypeDescriptor.GetConverter(typeof(TItem)).ConvertFromInvariantString(_searchValue);
-            }
-            else
-            {
-                if (_setValue == null)
-                {
-                    item = THelper.ChangeType<TItem>(value);
-                }
-                else
-                {
-                    item = Activator.CreateInstance<TItem>();
-                    _setValue(item, value);
-                }
+            TItemValue value = default;
+            TItem item = default;
 
-                _setLabel?.Invoke(item, _searchValue);
+            try
+            {
+                if (typeof(TItem) == typeof(string))
+                {
+                    item = (TItem)(object)label;
+                    value = (TItemValue)(object)label;
+                }
+                else if (Mode == SelectMode.Tags && CustomTagLabelToValue != null)
+                {
+                    try
+                    {
+                        value = CustomTagLabelToValue(label);
+                    }
+                    catch
+                    {
+                        value = default;
+                    }
+                }
+            }
+            catch
+            {
+                // If any conversion fails, use default values
+                value = default;
+                item = default;
             }
 
             return new SelectOptionItem<TItemValue, TItem>
@@ -680,6 +743,56 @@ namespace AntDesign
 
         protected bool IsOptionEqualToNoValue(SelectOptionItem<TItemValue, TItem> option)
             => EqualityComparer<TItemValue>.Default.Equals(option.Value, default);
+
+        internal virtual void AddOptionItem(SelectOptionItem<TItemValue, TItem> optionItem)
+        {
+            SelectOptionItems.Add(optionItem);
+#if NET10_0_OR_GREATER
+            // .NET 10: Schedule refresh for next render cycle to update overlay after child components change
+            // In SelectOptions mode, this automatically handles data source changes without requiring manual RefreshOptionsAsync() call
+            if (HasSelectOptions)
+            {
+                _ = InvokeAsync(() => RefreshComponentState());
+            }
+#endif
+        }
+
+        internal void RemoveOptionItem(SelectOptionItem<TItemValue, TItem> optionItem)
+        {
+            SelectOptionItems.Remove(optionItem);
+            if (optionItem.IsSelected)
+            {
+                SelectedOptionItems.Remove(optionItem.Value);
+            }
+            if (optionItem.IsAddedTag)
+            {
+                AddedTags.Remove(optionItem);
+            }
+#if NET10_0_OR_GREATER
+            // .NET 10: Schedule refresh for next render cycle to update overlay after child components change
+            // In SelectOptions mode, this automatically handles data source changes without requiring manual RefreshOptionsAsync() call
+            if (HasSelectOptions)
+            {
+                _ = InvokeAsync(() => RefreshComponentState());
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Refresh the state of the component and its overlay
+        /// </summary>
+        /// <remarks>
+        /// Calls StateHasChanged() for both overlay and parent component
+        /// </remarks>
+        protected void RefreshComponentState()
+        {
+#if NET10_0_OR_GREATER
+            if (_dropDown?.GetOverlayComponent() != null)
+            {
+                _dropDown.GetOverlayComponent().RefreshComponentState();
+            }
+#endif
+        }
 
         internal void RemoveEqualityToNoValue(SelectOptionItem<TItemValue, TItem> option)
         {
@@ -733,14 +846,25 @@ namespace AntDesign
             base.OnInitialized();
         }
 
-        protected override async Task OnFirstAfterRenderAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (AutoFocus)
-            {
-                await SetInputFocusAsync();
-            }
+            await base.OnAfterRenderAsync(firstRender);
 
-            await base.OnFirstAfterRenderAsync();
+            if (firstRender)
+            {
+                if (AutoFocus)
+                {
+                    await SetInputFocusAsync();
+                }
+            }
+            else
+            {
+                if (_waittingFocus)
+                {
+                    _waittingFocus = false;
+                    await SetInputFocusAsync();
+                }
+            }
         }
 
         protected void OnOverlayHide()
@@ -755,15 +879,15 @@ namespace AntDesign
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(_searchValue))
+            _selectContent?.ClearInput();
+
+            if (!string.IsNullOrWhiteSpace(_searchValue))
             {
-                return;
+                _searchValue = string.Empty;
+                _prevSearchValue = string.Empty;
             }
 
-            _searchValue = string.Empty;
-            _prevSearchValue = string.Empty;
-
-            if (SelectMode != SelectMode.Default && HideSelected)
+            if (Mode != SelectMode.Default && HideSelected)
             {
                 SelectOptionItems.Where(x => !x.IsSelected && x.IsHidden)
                     .ForEach(i => i.IsHidden = false);
@@ -781,6 +905,11 @@ namespace AntDesign
             }
         }
 
+        protected void OnOverlayShow()
+        {
+            _selectContent?.DiscoverySearch();
+        }
+
         /// <summary>
         ///     A separate method to invoke ValuesChanged and OnSelectedItemsChanged to reduce code duplicates.
         /// </summary>
@@ -792,7 +921,7 @@ namespace AntDesign
             }
             else
             {
-                if (LabelInValue && SelectOptions != null)
+                if (LabelInValue && HasSelectOptions)
                 {
                     // Embed the label into the value and return the result as json string.
                     var valueLabel = new ValueLabel<TItemValue>
@@ -827,17 +956,15 @@ namespace AntDesign
                 throw new ArgumentNullException(nameof(selectOption));
             }
 
-            if (SelectMode == SelectMode.Default)
+            if (Mode == SelectMode.Default)
             {
                 if (SelectedOptionItems.Count > 0)
                 {
-                    SelectedOptionItems[0].IsSelected = false;
-                    SelectedOptionItems[0] = selectOption;
+                    var oldSelectedValue = SelectedOptionItems.Values.First();
+                    oldSelectedValue.IsSelected = false;
+                    SelectedOptionItems.Remove(oldSelectedValue.Value);
                 }
-                else
-                {
-                    SelectedOptionItems.Add(selectOption);
-                }
+                SelectedOptionItems[selectOption.Value] = selectOption;
 
                 selectOption.IsSelected = true;
                 CurrentValue = selectOption.Value;
@@ -852,11 +979,6 @@ namespace AntDesign
                     if (HideSelected && !selectOption.IsHidden)
                     {
                         selectOption.IsHidden = true;
-                    }
-
-                    if (IsSearchEnabled && !string.IsNullOrWhiteSpace(_searchValue))
-                    {
-                        ClearSearch();
                     }
 
                     if (selectOption.IsAddedTag)
@@ -879,7 +1001,7 @@ namespace AntDesign
                     if (selectOption.IsAddedTag)
                     {
                         SelectOptionItems.Remove(selectOption);
-                        SelectedOptionItems.Remove(selectOption);
+                        SelectedOptionItems.Remove(selectOption.Value);
                         AddedTags.Remove(selectOption);
                     }
 
@@ -891,15 +1013,18 @@ namespace AntDesign
 
                 if (IsSearchEnabled)
                 {
-                    await SetInputFocusAsync();
+                    if (AutoClearSearchValue && !string.IsNullOrWhiteSpace(_searchValue))
+                    {
+                        ClearSearch();
+                    }
                 }
 
-                await InvokeValuesChanged(selectOption);
+                InvokeValuesChanged(selectOption);
                 await UpdateOverlayPositionAsync();
             }
         }
 
-        protected async Task InvokeValuesChanged(SelectOptionItem<TItemValue, TItem> newSelection = null)
+        protected void InvokeValuesChanged(SelectOptionItem<TItemValue, TItem> newSelection = null)
         {
             List<TItemValue> newSelectedValues;
             if (newSelection is null || Values is null)
@@ -907,10 +1032,10 @@ namespace AntDesign
                 newSelectedValues = new List<TItemValue>();
                 SelectedOptionItems.Clear();
                 SelectOptionItems.Where(x => x.IsSelected)
-                    .ForEach(i =>
+                    .ForEach(item =>
                     {
-                        newSelectedValues.Add(i.Value);
-                        SelectedOptionItems.Add(i);
+                        newSelectedValues.Add(item.Value);
+                        SelectedOptionItems.Add(item.Value, item);
                     });
             }
             else
@@ -919,12 +1044,12 @@ namespace AntDesign
                 if (newSelection.IsSelected)
                 {
                     newSelectedValues.Add(newSelection.Value);
-                    SelectedOptionItems.Add(newSelection);
+                    SelectedOptionItems.Add(newSelection.Value, newSelection);
                 }
                 else
                 {
                     newSelectedValues.Remove(newSelection.Value);
-                    SelectedOptionItems.Remove(newSelection);
+                    SelectedOptionItems.Remove(newSelection.Value);
                 }
             }
 
@@ -933,7 +1058,7 @@ namespace AntDesign
 
         protected void ClearSearch()
         {
-            if (SelectMode != SelectMode.Default)
+            if (Mode != SelectMode.Default)
             {
                 foreach (var item in SelectOptionItems)
                 {
@@ -960,6 +1085,7 @@ namespace AntDesign
 
             _searchValue = string.Empty;
             _prevSearchValue = string.Empty;
+            _selectContent?.ClearInput();
         }
 
         /// <summary>
@@ -969,7 +1095,7 @@ namespace AntDesign
         /// </summary>
         protected async Task OnInputClearClickAsync(MouseEventArgs _)
         {
-            if (SelectMode == SelectMode.Default)
+            if (Mode == SelectMode.Default)
             {
                 await ClearDefaultMode();
             }
@@ -1026,8 +1152,9 @@ namespace AntDesign
             }
             if (!TypeDefaultExistsAsSelectOption && !_hasValueOnClear)
             {
-                SelectedOptionItems[0].IsSelected = false;
-                SelectedOptionItems[0].IsHidden = false;
+                var oldSelectedItem = SelectedOptionItems.First().Value;
+                oldSelectedItem.IsSelected = false;
+                oldSelectedItem.IsHidden = false;
 
                 ActiveOption = SelectOptionItems.FirstOrDefault();
                 SelectedOptionItems.Clear();
@@ -1043,8 +1170,9 @@ namespace AntDesign
                 }
                 else
                 {
-                    SelectedOptionItems[0].IsSelected = false;
-                    SelectedOptionItems[0].IsHidden = false;
+                    var oldSelectedItem = SelectedOptionItems.First().Value;
+                    oldSelectedItem.IsSelected = false;
+                    oldSelectedItem.IsHidden = false;
 
                     ActiveOption = SelectOptionItems.FirstOrDefault();
                     SelectedOptionItems.Clear();
@@ -1053,11 +1181,13 @@ namespace AntDesign
             }
             else
             {
-                if (SelectedOptionItems[0].InternalId != _selectOptionEqualToTypeDefault.InternalId)
+                var oldSelectedItem = SelectedOptionItems.First().Value;
+                if (oldSelectedItem.InternalId != _selectOptionEqualToTypeDefault.InternalId)
                 {
-                    SelectedOptionItems[0].IsSelected = false;
-                    SelectedOptionItems[0] = _selectOptionEqualToTypeDefault;
-                    SelectedOptionItems[0].IsSelected = true;
+                    oldSelectedItem.IsSelected = false;
+                    SelectedOptionItems.Remove(oldSelectedItem.Value);
+                    SelectedOptionItems[_selectOptionEqualToTypeDefault.Value] = _selectOptionEqualToTypeDefault;
+                    _selectOptionEqualToTypeDefault.IsSelected = true;
                     CurrentValue = _selectOptionEqualToTypeDefault.Value;
                 }
                 else
@@ -1069,11 +1199,12 @@ namespace AntDesign
         }
 
         /// <summary>
-        ///     Check if Focused property is False; Set the Focused property to true, change the
+        ///     Set the Focused property to true, change the
         ///     style and set the Focus on the Input element via DOM. It also invoke the OnFocus Action.
         /// </summary>
-        internal async Task SetInputFocusAsync()
+        protected virtual async Task SetInputFocusAsync()
         {
+            // SetInputBlurAsync may sometimes not be invoked.
             if (!Focused)
             {
                 Focused = true;
@@ -1102,7 +1233,11 @@ namespace AntDesign
         internal async Task CloseAsync()
         {
             await _dropDown.Hide(true);
-            _selectContent?.ClearSearch();
+        }
+
+        protected async Task OpenAsync()
+        {
+            await _dropDown.Show();
         }
 
         /// <summary>
@@ -1130,9 +1265,9 @@ namespace AntDesign
         /// <summary>
         ///     Clears the selectValue(s) property and send the null(default) value back through the two-way binding.
         /// </summary>
-        protected async Task ClearSelectedAsync()
+        protected virtual async Task ClearSelectedAsync()
         {
-            if (SelectMode == SelectMode.Default)
+            if (Mode == SelectMode.Default)
             {
                 await OnSelectedItemChanged.InvokeAsync(default);
                 await ValueChanged.InvokeAsync(default);
@@ -1224,6 +1359,14 @@ namespace AntDesign
         [Parameter] public virtual bool ShowArrowIcon { get; set; } = true;
 
         /// <summary>
+        /// Placement of the overlay. Defaults to <see cref="Placement.BottomLeft"/>.
+        /// </summary>
+        /// <default value="Placement.BottomLeft" />
+        [Parameter]
+        [PublicApi("1.2.0")]
+        public Placement Placement { get; set; } = Placement.BottomLeft;
+
+        /// <summary>
         /// When newly set Value is not found in SelectOptionItems, it is reset to
         /// default. This property holds the value before reset. It may be needed
         /// to be reaplied (for example when new Value is set at the same time
@@ -1238,7 +1381,7 @@ namespace AntDesign
 
         protected abstract Task OnOverlayVisibleChangeAsync(bool visible);
 
-        protected abstract void OnInputAsync(ChangeEventArgs e);
+        protected abstract Task OnInputAsync(ChangeEventArgs e);
 
         protected virtual async Task OnKeyUpAsync(KeyboardEventArgs e)
         {
@@ -1255,6 +1398,7 @@ namespace AntDesign
         /// </summary>
         protected async Task OnInputFocusAsync(FocusEventArgs _)
         {
+            Focused = true;
             await SetInputFocusAsync();
         }
 
@@ -1263,6 +1407,7 @@ namespace AntDesign
         /// </summary>
         protected async Task OnInputBlurAsync(FocusEventArgs _)
         {
+            Focused = false;
             await SetInputBlurAsync();
         }
 
@@ -1287,6 +1432,25 @@ namespace AntDesign
         internal virtual async Task ProcessSelectedSelectOptions()
         {
             await Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// used to focus again the input box if it still during the search process 
+        /// but lost the focus by clicking on the dropdown or closing tags.
+        /// </summary>
+        internal void FocusIfInSearch()
+        {
+            if (IsSearchEnabled && IsDropdownShown())
+            {
+                if (Focused) // if it's still focused, then wait for blur and then focus again
+                {
+                    _waittingFocus = true;
+                }
+                else
+                {
+                    _ = SetInputFocusAsync();
+                }
+            }
         }
 
         #endregion

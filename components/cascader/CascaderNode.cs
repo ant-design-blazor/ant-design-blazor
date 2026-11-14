@@ -25,6 +25,12 @@ namespace AntDesign
         /// <default value="false" />
         public bool Disabled { get; set; }
 
+        /// <summary>
+        /// Disable the checkbox while keeping the node available for navigation.
+        /// Only applies when the Cascader is in multiple mode.
+        /// </summary>
+        public bool DisableCheckbox { get; set; }
+
         internal int Level { get; set; }
 
         internal CascaderNode ParentNode { get; set; }

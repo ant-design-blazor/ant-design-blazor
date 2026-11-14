@@ -5,7 +5,7 @@
 @if (RealDisplay)
 {
     <CascadingValue Value="this" Name="SelfNode">
-        <div @key="NodeId" class="@ClassMapper.Class" style="@Style">
+        <div @attributes="AdditionalAttributes" @key="NodeId" class="@ClassMapper.Class" style="@Style">
 
             <TreeIndent TreeLevel="@TreeLevel" TItem="TItem"></TreeIndent>
 

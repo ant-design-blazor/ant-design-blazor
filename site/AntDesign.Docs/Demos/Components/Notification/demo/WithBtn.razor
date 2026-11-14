@@ -1,6 +1,6 @@
 ﻿@inject INotificationService _notice
 
-<Button Type="@ButtonType.Primary" OnClick="@OnClick">
+<Button Type="ButtonType.Primary" OnClick="OnClick">
     custom button
 </Button>
 
@@ -9,7 +9,7 @@
     private async Task OnClick()
     {
         string key = $"open{DateTime.Now}";
-        RenderFragment btn = @<Button Type="@ButtonType.Primary" OnClick="() => { _notice.Close(key); }">
+        RenderFragment btn = @<Button Type="ButtonType.Primary" OnClick="() => { _notice.Close(key); }">
                                 confirm
                             </Button>;
         await _notice.Open(new NotificationConfig()

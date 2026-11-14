@@ -37,15 +37,17 @@ namespace AntDesign.JsInterop
 
     public class DomEventSubscription
     {
-        internal Delegate Delegate { get; set; }
-        internal Type Type { get; set; }
-        internal string Id { get; set; }
+        public Delegate Delegate { get; }
+        public Type Type { get; }
+        public string Id { get; }
+        public bool IsAsync { get; }
 
-        public DomEventSubscription(Delegate @delegate, Type type, string id)
+        public DomEventSubscription(Delegate @delegate, Type type, string id, bool isAsync = false)
         {
             Delegate = @delegate;
             Type = type;
             Id = id;
+            IsAsync = isAsync;
         }
     }
 

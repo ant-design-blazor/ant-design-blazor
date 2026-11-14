@@ -62,13 +62,13 @@ namespace AntDesign
         /// Avatar size
         /// </summary>
         [Parameter]
-        public OneOf<int?, string> AvatarSize { get; set; }
+        public OneOf<SkeletonElementSize, string> AvatarSize { get; set; }
 
         /// <summary>
         /// Avatar shape
         /// </summary>
         [Parameter]
-        public string AvatarShape { get; set; }
+        public SkeletonElementShape AvatarShape { get; set; }
 
         /// <summary>
         /// Show paragraph skeleton
@@ -156,7 +156,7 @@ namespace AntDesign
 
             if (AvatarShape == null)
             {
-                AvatarShape = AntDesign.AvatarShape.Circle;
+                AvatarShape = SkeletonElementShape.Circle;
             }
 
             if (AvatarSize.Value == null)

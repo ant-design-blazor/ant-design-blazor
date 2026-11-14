@@ -49,7 +49,11 @@ namespace AntDesign
             {
                 CssSizeLengthUnit.Percent => "%",
                 CssSizeLengthUnit.Calc or CssSizeLengthUnit.NoUnit => "",
+#if NET5_0_OR_GREATER
+                _ => Enum.GetName(_unit).ToLowerInvariant()
+#else
                 _ => Enum.GetName(typeof(CssSizeLengthUnit), _unit).ToLowerInvariant()
+#endif
             };
 
             return $"{numericValue ?? StringValue}{unit}";
@@ -69,9 +73,14 @@ namespace AntDesign
         {
         }
 
-        public CssSizeLength(double value, bool noUnit = false) : this(Convert.ToDecimal(value), EvalUnitless(noUnit))
+        public CssSizeLength(double value, bool noUnit = false) : this(ToDecimal(value), EvalUnitless(noUnit))
         {
         }
+
+        private static decimal ToDecimal(double value) => decimal.Parse(
+            value.ToString("R", CultureInfo.InvariantCulture),
+            NumberStyles.Float,
+            CultureInfo.InvariantCulture);
 
         public CssSizeLength(decimal value, bool noUnit = false) : this(value, EvalUnitless(noUnit))
         {

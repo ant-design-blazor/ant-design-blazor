@@ -6,18 +6,18 @@
 		@switcherIcon
 	</SwitcherIconTemplate>
 	<Nodes>
-		<TreeNode Title="parent 1" Key="0-0" Icon="smile">
-			<TreeNode Title="leaf" Key="0-0-0" Icon="meh" />
+		<TreeNode Title="parent 1" Key="0-0" Icon="@IconType.Outline.Smile">
+			<TreeNode Title="leaf" Key="0-0-0" Icon="@IconType.Outline.Meh" />
 		</TreeNode>
 		<TreeNode Title="leaf" Key="0-0-1">
 			<IconTemplate Context="node">
 				@if (node.Selected)
 				{
-					<Icon Type="frown" Theme="fill" />
+					<Icon Type="@IconType.Fill.Frown"/>
 				}
 				else
 				{
-					<Icon Type="frown" Theme="outline" />
+					<Icon Type="@IconType.Outline.Frown" />
 				}
 			</IconTemplate>
 		</TreeNode>
@@ -25,5 +25,5 @@
 </Tree>
 
 @code {
-	RenderFragment switcherIcon =@<Icon Type="down" />;
+	RenderFragment switcherIcon =@<Icon Type="@IconType.Outline.Down" />;
 }

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 
@@ -149,7 +150,20 @@ namespace AntDesign
             _preventRowDataTriggerSelectedRowsChanged = true;
 
             ClearSelectedRows();
-            selectItem.RowData.SetSelected(true, selectItem.Type == "radio" || selectItem.CheckStrictly);
+            selectItem.RowData.SetSelected(true, selectItem.Type == SelectionType.Radio || selectItem.CheckStrictly);
+
+            _preventRowDataTriggerSelectedRowsChanged = false;
+
+            _selection?.StateHasChanged();
+            SelectionChanged();
+        }
+
+        void ITable.UnSelectSelection(ISelectionColumn selectItem)
+        {
+            _preventRowDataTriggerSelectedRowsChanged = true;
+
+            ClearSelectedRows();
+            selectItem.RowData.SetSelected(false, selectItem.Type == SelectionType.Radio || selectItem.CheckStrictly);
 
             _preventRowDataTriggerSelectedRowsChanged = false;
 
@@ -170,12 +184,31 @@ namespace AntDesign
             _preventRowDataTriggerSelectedRowsChanged = false;
         }
 
+        /// <summary>
+        /// Scroll the item into view
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task ScrollItemIntoView(TItem item)
+        {
+            if (_rootRowDataCache.TryGetValue(GetHashCode(item), out var rowData))
+            {
+                await JsInvokeAsync(JSInteropConstants.ScrollTo, rowData.RowElementRef);
+            }
+        }
+
 
         /// <summary>
         /// Set all selected items
         /// </summary>
         /// <param name="items"></param>
         public void SetSelection(IEnumerable<TItem> items)
+        {
+            UpdateSelection(items);
+            SelectionChanged();
+        }
+
+        private void UpdateSelection(IEnumerable<TItem> items)
         {
             if (items.SequenceEqual(_selectedRows, this))
                 return;
@@ -193,7 +226,6 @@ namespace AntDesign
             _preventRowDataTriggerSelectedRowsChanged = false;
 
             _selection?.StateHasChanged();
-            SelectionChanged();
         }
 
         /// <summary>

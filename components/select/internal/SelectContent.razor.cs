@@ -25,6 +25,7 @@ namespace AntDesign.Select.Internal
         [CascadingParameter(Name = "ParentMaxTagPlaceholerTemplate")] internal RenderFragment<IEnumerable<TItem>> ParentMaxTagPlaceholerTemplate { get; set; }
         [CascadingParameter(Name = "ShowSearchIcon")] internal bool ShowSearchIcon { get; set; }
         [CascadingParameter(Name = "ShowArrowIcon")] internal bool ShowArrowIcon { get; set; }
+        [CascadingParameter(Name = "Loading")] internal bool Loading { get; set; }
 
         [Parameter]
         public string Prefix
@@ -92,6 +93,12 @@ namespace AntDesign.Select.Internal
 
         private bool _compositionInputting;
 
+        /// <summary>
+        /// Indicates whether the IME composition is in progress.
+        /// During IME composition (e.g., typing Chinese characters), this property is true.
+        /// </summary>
+        internal bool IsComposing => _compositionInputting;
+
         protected override void OnInitialized()
         {
             if (!_isInitialized)
@@ -142,7 +149,7 @@ namespace AntDesign.Select.Internal
                 }
 
                 DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "compositionstart", OnCompositionStart);
-                DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "compositionend", OnCompositionEnd);
+                DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "compositionend", OnCompositionEndAsync);
                 DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focusout", OnBlurInternal);
                 DomEventListener.AddExclusive<JsonElement>(ParentSelect._inputRef, "focus", OnFocusInternal);
             }
@@ -155,7 +162,7 @@ namespace AntDesign.Select.Internal
             await base.OnAfterRenderAsync(firstRender);
         }
 
-        protected async void OnOveralyResize(List<ResizeObserverEntry> entries)
+        protected async Task OnOveralyResize(List<ResizeObserverEntry> entries)
         {
             await CalculateResponsiveTags(false, entries[0].ContentRect);
         }
@@ -175,7 +182,7 @@ namespace AntDesign.Select.Internal
             int i = 0;
             bool overflowing = false;
             bool renderAgain = false;
-            foreach (var item in ParentSelect.SelectedOptionItems)
+            foreach (var item in ParentSelect.GetOrderedSelectedItems())
             {
                 if (item.Width == 0)
                 {
@@ -237,6 +244,11 @@ namespace AntDesign.Select.Internal
             _inputString = e.Value.ToString();
             SetInputWidth();
 
+            if (_compositionInputting)
+            {
+                return; // Don't trigger search during IME composition
+            }
+
             if (SearchDebounceMilliseconds == 0)
             {
                 await InvokeOnInput(e);
@@ -257,7 +269,6 @@ namespace AntDesign.Select.Internal
             if (_debounceTimer != null)
             {
                 await _debounceTimer.DisposeAsync();
-
                 _debounceTimer = null;
             }
 
@@ -268,7 +279,7 @@ namespace AntDesign.Select.Internal
         {
             if (_compositionInputting)
             {
-                return;
+                return; // Double check to prevent search during IME composition
             }
 
             await OnInput.InvokeAsync(e);
@@ -282,6 +293,11 @@ namespace AntDesign.Select.Internal
 
         private void DebounceTimerIntervalOnTick(object state)
         {
+            if (_compositionInputting)
+            {
+                return; // Don't trigger search if still in IME composition
+            }
+
             InvokeAsync(async () => await DebounceInputChange((ChangeEventArgs)state, true));
         }
 
@@ -290,25 +306,44 @@ namespace AntDesign.Select.Internal
             _compositionInputting = true;
         }
 
-        internal virtual void OnCompositionEnd(JsonElement e)
+        internal virtual Task OnCompositionEndAsync(JsonElement e)
         {
             _compositionInputting = false;
+
+            // Trigger search with current input value after IME composition ends
+            if (!string.IsNullOrEmpty(_inputString))
+            {
+                var changeArgs = new ChangeEventArgs { Value = _inputString };
+                return OnInputChange(changeArgs);
+            }
+
+            return Task.CompletedTask;
         }
 
-        internal void ClearSearch()
+        /// <summary>
+        /// clear input value after the dropdown is closed if AutoClearSearchValue=true
+        /// </summary>
+        internal void ClearInput()
         {
             _inputString = string.Empty;
-            StateHasChanged();
+        }
+
+        /// <summary>
+        /// discovery search value after the dropdown is opened
+        /// </summary>
+        internal void DiscoverySearch()
+        {
+            _inputString = SearchValue;
         }
 
         private void SetInputWidth()
         {
             _inputWidth = string.Empty;
-            if (ParentSelect.PrefixIcon != null && ParentSelect.SelectMode == SelectMode.Default)
+            if (ParentSelect.PrefixIcon != null && ParentSelect.Mode == SelectMode.Default)
             {
                 _inputWidth = "left: 22px;";
             }
-            if (ParentSelect.SelectMode != SelectMode.Default)
+            if (ParentSelect.Mode != SelectMode.Default)
             {
                 if (!string.IsNullOrWhiteSpace(_inputString))
                 {
@@ -462,10 +497,10 @@ namespace AntDesign.Select.Internal
         }
 
         //TODO: Use built in @onfocus once https://github.com/dotnet/aspnetcore/issues/30070 is solved
-        private async void OnFocusInternal(JsonElement e) => await OnFocus.InvokeAsync(new());
+        private async Task OnFocusInternal(JsonElement e) => await OnFocus.InvokeAsync(new());
 
         //TODO: Use built in @onblur once https://github.com/dotnet/aspnetcore/issues/30070 is solved
-        private async void OnBlurInternal(JsonElement e)
+        private async Task OnBlurInternal(JsonElement e)
         {
             if (_compositionInputting)
             {

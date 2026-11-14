@@ -1,23 +1,22 @@
 ﻿<div>
     <Slider TValue="double" DefaultValue="35" Disabled="@_disabled"  />
     <Slider TValue="(double, double)" DefaultValue="(20, 50)" Disabled="@_disabled" />
-    <Slider TValue="(double, double)" Value="_value" Min="15" Max="75" DefaultValue="_value" Disabled="@_disabled" Marks=@_marks />
+    <Slider TValue="(double, double)" Value="_value" Min="15" Max="75" DefaultValue="_value" Disabled="@_disabled" Marks="@_marks" />
 
-    Disabled: <Switch Size="small" Checked="@_disabled" OnChange="(e)=>OnSwitch(e)" />
+    Disabled: <Switch Size="InputSize.Small" Checked="@_disabled" OnChange="(e) => OnSwitch(e)" />
 </div>
 
 @code
 {
-
     private bool _disabled;
 
     private (double, double) _value = (15, 75);
 
     private SliderMark[] _marks =
-        {
-            new SliderMark(15, "15"),
-            new SliderMark(30, "30"),
-            new SliderMark(75, "75")
+    {
+        new SliderMark(15, "15"),
+        new SliderMark(30, "30"),
+        new SliderMark(75, "75")
     };
 
     private void OnSwitch(bool args)

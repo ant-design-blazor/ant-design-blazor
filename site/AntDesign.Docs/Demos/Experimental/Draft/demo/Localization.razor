@@ -1,0 +1,31 @@
+@using AntDesign.Locales
+
+<h4>Default Localization</h4>
+<DraftMonitor TData="string" 
+              Data="@_defaultData" 
+              DataChanged="@((v) => _defaultData = v)"
+              Options="@(new DraftOptions { Key = "demo-localization-default" })" />
+<Input @bind-Value="@_defaultData" Placeholder="Enter some text..." />
+
+<Divider />
+
+<h4>Custom Localization</h4>
+<DraftMonitor TData="string" 
+              Data="@_customData" 
+              DataChanged="@((v) => _customData = v)"
+              Locale="@_customLocale"
+              Options="@(new DraftOptions { Key = "demo-localization-custom" })" />
+<Input @bind-Value="@_customData" Placeholder="Enter some text..." />
+
+@code {
+    private string _defaultData = "";
+    private string _customData = "";
+
+    private DraftLocale _customLocale = new DraftLocale
+    {
+        RecoveryTitle = "Found a Draft!",
+        RecoveryContent = "We detected an unfinished draft saved at {time}. Would you like to restore it?",
+        RecoveryOkText = "Yes, Restore",
+        RecoveryCancelText = "No, Delete"
+    };
+}

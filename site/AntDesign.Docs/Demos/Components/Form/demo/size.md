@@ -2,7 +2,7 @@
 order: 3.1
 title:
   zh-CN: 表单尺寸
-  en-US: Form size
+  en-US: Form Size
 ---
 
 ## zh-CN
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Set component size, only works for antd components.
+Set the component size for any Ant Design inputs used in the form.

@@ -1,11 +1,11 @@
 <div>
     <RadioGroup @bind-Value="_position" Style="margin-bottom: 8px;">
-        <Radio RadioButton Value="@CarouselDotPosition.Top">Top</Radio>
-        <Radio RadioButton Value="@CarouselDotPosition.Bottom">Bottom</Radio>
-        <Radio RadioButton Value="@CarouselDotPosition.Left">Left</Radio>
-        <Radio RadioButton Value="@CarouselDotPosition.Right">Right</Radio>
+        <Radio RadioButton Value="CarouselDotPosition.Top">Top</Radio>
+        <Radio RadioButton Value="CarouselDotPosition.Bottom">Bottom</Radio>
+        <Radio RadioButton Value="CarouselDotPosition.Left">Left</Radio>
+        <Radio RadioButton Value="CarouselDotPosition.Right">Right</Radio>
     </RadioGroup>
-    <Carousel DotPosition="@_position">
+    <Carousel DotPosition="_position">
         <CarouselSlick>
             <h3>1</h3>
         </CarouselSlick>
@@ -22,5 +22,5 @@
 </div>
 
 @code{
-    private string _position = CarouselDotPosition.Bottom;
+    private CarouselDotPosition _position = CarouselDotPosition.Bottom;
 }

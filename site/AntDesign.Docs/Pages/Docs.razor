@@ -14,10 +14,13 @@
                 <Tooltip Title="@Localizer["app.content.edit-demo"]">
                     <Unbound>
                         <a @ref="context.Current" class="edit-button" href="@EditUrl" target="_blank" rel="noopener noreferrer">
-                            <Icon Type="edit" />
+                            <Icon Type="@IconType.Outline.Edit" />
                         </a>
                     </Unbound>
                 </Tooltip>
+                <div style="float:right;">
+                    <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CW7I6K7I&placement=antblazorcom&format=cover" id="_carbonads_js"></script>
+                </div>
             </h1>
 
             @((MarkupString) _file.Html)

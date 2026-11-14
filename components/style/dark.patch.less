@@ -1,0 +1,22 @@
+body[data-theme='dark'],
+[data-theme='dark'] * {
+  scrollbar-color: #434343 #262626;
+
+  &::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #262626;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #434343;
+    border: 2px solid #262626;
+    border-radius: 6px;
+
+    &:hover {
+      background-color: #262626;
+    }
+  }
+}

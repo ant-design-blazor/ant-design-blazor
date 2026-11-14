@@ -6,8 +6,8 @@ title:
 ---
 
 ## zh-CN
-使用 type="vertical" 设置为行内的垂直分割线。
+使用 `Type="DividerType.Vertical"` 设置为行内的垂直分割线。
 
 
 ## en-US
-Use type="vertical" make it vertical.
+Use `Type="DividerType.Vertical"` to divide elements with a vertical bar.

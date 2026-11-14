@@ -1,30 +1,31 @@
 @namespace AntDesign
 @inherits AntDomComponentBase
 
-<nav class="@ClassMapper.Class" id="@Id" @ref="Ref" style="@Style">
+<nav @attributes="AdditionalAttributes" class="@ClassMapper.Class" id="@Id" @ref="Ref" style="@Style">
     <ol>
         <CascadingValue Value="this" IsFixed="@true">
             @ChildContent
-        </CascadingValue>
-        @if (AutoGenerate)
-        {
-            @foreach (var options in MenuService.GetBreadcrumbOptions())
+            @if (AutoGenerate)
             {
-                @if (_existingOptions.Any(x => x.RouterLink == options.RouterLink))
+                @foreach (var options in MenuService.GetBreadcrumbOptions())
                 {
-                    continue;
+                    @if (_existingOptions.Any(x => x.RouterLink == options.RouterLink))
+                    {
+                        continue;
+                    }
+
+                    <BreadcrumbItem Href="@options.RouterLink">
+                        @if (options.TitleTemplate != null)
+                        {
+                            @options.TitleTemplate
+                        }
+                        else
+                        {
+                            @options.Title
+                        }
+                    </BreadcrumbItem>
                 }
-                <BreadcrumbItem Href="@options.RouterLink">
-                    @if (options.TitleTemplate != null)
-                    {
-                        @options.TitleTemplate
-                    }
-                    else
-                    {
-                        @options.Title
-                    }
-                </BreadcrumbItem>
             }
-        }
+        </CascadingValue>
     </ol>
 </nav>

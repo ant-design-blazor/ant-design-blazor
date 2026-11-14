@@ -6,8 +6,11 @@ title:
 ---
 
 ## zh-CN
-数字输入框。
+
+以泛型的方式支持所有数值类型，同时支持可空类型。
 
 
 ## en-US
-Numeric-only input box.
+
+Supports all numeric types in a generic way, including nullable types.
+

@@ -4,6 +4,7 @@
 
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace AntDesign
 {
@@ -12,6 +13,52 @@ namespace AntDesign
         private static readonly System.Globalization.Calendar _calendar = CultureInfo.InvariantCulture.Calendar;
         private const int DECADE_YEAR_COUNT = 10;
         private const int QUARTER_MONTH_COUNT = 3;
+
+        public static int GetYear(DateTime date, System.Globalization.Calendar calendar) => calendar.GetYear(date);
+
+        public static int GetMonth(DateTime date, System.Globalization.Calendar calendar) => calendar.GetMonth(date);
+
+        public static int GetDay(DateTime date, System.Globalization.Calendar calendar) => calendar.GetDayOfMonth(date);
+
+        public static DateTime CreateDate(System.Globalization.Calendar calendar, int year, int month, int day, DateTime source)
+        {
+            day = Math.Min(day, calendar.GetDaysInMonth(year, month));
+            return calendar.ToDateTime(year, month, day, source.Hour, source.Minute, source.Second, source.Millisecond);
+        }
+
+        public static DateTime CombineNewDate(DateTime date, System.Globalization.Calendar calendar, int? year = null, int? month = null, int? day = null,
+            int? hour = null, int? minute = null, int? second = null)
+        {
+            var yearValue = year ?? calendar.GetYear(date);
+            var monthValue = month ?? calendar.GetMonth(date);
+            var dayValue = Math.Min(day ?? calendar.GetDayOfMonth(date), calendar.GetDaysInMonth(yearValue, monthValue));
+            return calendar.ToDateTime(yearValue, monthValue, dayValue, hour ?? date.Hour, minute ?? date.Minute, second ?? date.Second, date.Millisecond);
+        }
+
+        /// <summary>
+        /// Formats numeric date fields using a standalone calendar when that calendar cannot be assigned to the culture.
+        /// </summary>
+        public static string FormatDate(DateTime date, string format, CultureInfo culture, System.Globalization.Calendar calendar)
+        {
+            if (calendar is null || calendar.GetType() == culture.Calendar.GetType())
+            {
+                return date.ToString(format, culture);
+            }
+
+            return Regex.Replace(format, "y+|M+|d+", match =>
+            {
+                var value = match.Value[0] switch
+                {
+                    'y' => calendar.GetYear(date),
+                    'M' => calendar.GetMonth(date),
+                    _ => calendar.GetDayOfMonth(date),
+                };
+
+                return match.Value.Length == 2
+                    ? value.ToString("D2", culture)
+                    : value.ToString(culture);
+            });
+        }
 
         public static bool IsSameDate(DateTime? date, DateTime? compareDate)
         {
@@ -183,12 +230,12 @@ namespace AntDesign
 
         public static DateTime FormatDateByPicker(DateTime dateTime, DatePickerType picker)
         {
-            switch (picker.Name)
+            switch (picker)
             {
-                case DatePickerType.DATE: return dateTime.Date;
-                case DatePickerType.YEAR: return new DateTime(dateTime.Year, 1, 1);
-                case DatePickerType.MONTH: return new DateTime(dateTime.Year, dateTime.Month, 1);
-                case DatePickerType.QUARTER: return new DateTime(dateTime.Year, dateTime.Month, 1);
+                case DatePickerType.Date: return dateTime.Date;
+                case DatePickerType.Year: return new DateTime(dateTime.Year, 1, 1);
+                case DatePickerType.Month: return new DateTime(dateTime.Year, dateTime.Month, 1);
+                case DatePickerType.Quarter: return new DateTime(dateTime.Year, dateTime.Month, 1);
             }
 
             return dateTime;
@@ -285,26 +332,26 @@ namespace AntDesign
 
         public static DateTime GetPreviousStartDateOfPeriod(DateTime dateTime, DatePickerType picker)
         {
-            return picker.Name switch
+            return picker switch
             {
-                DatePickerType.DATE => AddDaysSafely(dateTime, -1),
-                DatePickerType.YEAR => AddYearsSafely(dateTime, -1),
-                DatePickerType.MONTH => AddMonthsSafely(dateTime, -1),
-                DatePickerType.QUARTER => AddMonthsSafely(dateTime, -3),
-                DatePickerType.DECADE => AddYearsSafely(dateTime, -10),
+                DatePickerType.Date => AddDaysSafely(dateTime, -1),
+                DatePickerType.Year => AddYearsSafely(dateTime, -1),
+                DatePickerType.Month => AddMonthsSafely(dateTime, -1),
+                DatePickerType.Quarter => AddMonthsSafely(dateTime, -3),
+                DatePickerType.Decade => AddYearsSafely(dateTime, -10),
                 _ => dateTime,
             };
         }
 
         public static DateTime GetNextStartDateOfPeriod(DateTime dateTime, DatePickerType picker)
         {
-            return picker.Name switch
+            return picker switch
             {
-                DatePickerType.DATE => AddDaysSafely(dateTime, 1),
-                DatePickerType.YEAR => AddYearsSafely(dateTime, 1),
-                DatePickerType.MONTH => AddMonthsSafely(dateTime, 1),
-                DatePickerType.QUARTER => AddMonthsSafely(dateTime, 3),
-                DatePickerType.DECADE => AddYearsSafely(dateTime, 10),
+                DatePickerType.Date => AddDaysSafely(dateTime, 1),
+                DatePickerType.Year => AddYearsSafely(dateTime, 1),
+                DatePickerType.Month => AddMonthsSafely(dateTime, 1),
+                DatePickerType.Quarter => AddMonthsSafely(dateTime, 3),
+                DatePickerType.Decade => AddYearsSafely(dateTime, 10),
                 _ => dateTime,
             };
         }

@@ -37,8 +37,6 @@ namespace AntDesign
         private string _circlePathStyle;
         private string _circleSuccessStyle;
 
-        private static readonly Regex _hexColor = new(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$");
-
         #region Parameters
 
         /// <summary>
@@ -80,7 +78,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="ProgressStatus.Normal" />
         [Parameter]
-        public ProgressStatus Status { get; set; } = ProgressStatus.Normal;
+        public ProgressStatus? Status { get; set; }
 
         /// <summary>
         /// to set the style of the progress linecap
@@ -149,6 +147,12 @@ namespace AntDesign
 
         #endregion Parameters
 
+        private static readonly Dictionary<ProgressSize, int> _sizeMap = new()
+        {
+            [ProgressSize.Small] = 6,
+            [ProgressSize.Default] = 8,
+        };
+
         protected override void OnInitialized()
         {
             SetClasses();
@@ -161,24 +165,20 @@ namespace AntDesign
 
             if (StrokeWidth <= 0)
             {
-                if (Type == ProgressType.Line)
+                var size = Type switch
                 {
-                    StrokeWidth = Size.Value;
-                }
-                else // Type is Circle or Dashboard
-                {
-                    StrokeWidth = 6;
-                }
+                    ProgressType.Line => Size,
+                    _ => ProgressSize.Small // Type is Circle or Dashboard
+                };
+                StrokeWidth = _sizeMap[size];
             }
 
-            if (Percent is double percent && percent == 100)
+            if (Status is null && Percent is double percent && percent == 100)
             {
                 Status = ProgressStatus.Success;
             }
-            else
-            {
-                Status = ProgressStatus.Normal;
-            }
+
+            Status ??= ProgressStatus.Normal;
 
             SetStyle();
         }
@@ -187,10 +187,11 @@ namespace AntDesign
         {
             ClassMapper
                 .Add(PrefixCls)
-                .Get(() => $"{PrefixCls}-{Size.Name}")
-                .GetIf(() => $"{PrefixCls}-{Type.Name}", () => Type != ProgressType.Dashboard)
-                .GetIf(() => $"{PrefixCls}-{ProgressType.Circle.Name}", () => Type == ProgressType.Dashboard)
-                .GetIf(() => $"{PrefixCls}-status-{Status.Name}", () => Status != null)
+                .Get(() => $"{PrefixCls}-status-{Status.ToString().ToLowerInvariant()}")
+                .GetIf(() => $"{PrefixCls}-small", () => Size == ProgressSize.Small)
+                .GetIf(() => $"{PrefixCls}-default", () => Size == ProgressSize.Default)
+                .GetIf(() => $"{PrefixCls}-{Type.ToString().ToLowerInvariant()}", () => Type != ProgressType.Dashboard)
+                .GetIf(() => $"{PrefixCls}-circle", () => Type == ProgressType.Dashboard)
                 .GetIf(() => $"{PrefixCls}-show-info", () => ShowInfo)
                 .GetIf(() => $"{PrefixCls}-steps", () => Steps > 0)
                 .GetIf(() => $"{PrefixCls}-rtl", () => RTL);
@@ -228,11 +229,11 @@ namespace AntDesign
                 _circleTrailStyle = FormattableString.Invariant($"stroke:{TrailColor}; transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;");
                 if (SuccessPercent == 0)
                 {
-                    _circlePathStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * Percent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;");
+                    _circlePathStyle = FormattableString.Invariant($"{GetCircleColor()};transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * Percent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;");
                 }
                 else
                 {
-                    _circlePathStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * (Percent - SuccessPercent) / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;");
+                    _circlePathStyle = FormattableString.Invariant($"{GetCircleColor()};transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * (Percent - SuccessPercent) / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset}px;");
                     _circleSuccessStyle = FormattableString.Invariant($"transition:stroke-dashoffset 0.3s, stroke-dasharray 0.3s, stroke 0.3s, stroke-width 0.06s 0.3s; stroke-dasharray: {circumference * SuccessPercent / 100}px, {CircleDash}px; stroke-dashoffset: {dashoffset - circumference * SuccessPercent / 100}px;");
                 }
             }
@@ -240,7 +241,7 @@ namespace AntDesign
 
         private string GetCircleColor()
         {
-            var baseColor = "";
+            var baseColor = string.Empty;
             if (StrokeColor.Value == null)
             {
                 return baseColor;
@@ -306,14 +307,20 @@ namespace AntDesign
             return style.ToString();
         }
 
-        private string GetCircleBGStyle()
-        {
-            throw new NotImplementedException();
-        }
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$")]
+        private static partial Regex HexColor();
+#else
+        private static readonly Regex _hexColor = new(@"^#(?<r>[a-fA-F0-9]{2})(?<g>[a-fA-F0-9]{2})(?<b>[a-fA-F0-9]{2})$");
+#endif
 
         private string ToRGB(string color)
         {
+#if NET7_0_OR_GREATER
+            var hexMatch = HexColor().Match(color);
+#else
             var hexMatch = _hexColor.Match(color);
+#endif
             if (!hexMatch.Success)
             {
                 throw new ArgumentOutOfRangeException($"{nameof(StrokeColor)}'s value must be like \"#ffffff\"");

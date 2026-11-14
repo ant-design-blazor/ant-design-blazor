@@ -1,8 +1,8 @@
 ---
 order: 4
 title:
-  zh-CN: Avatar.Group
-  en-US: Avatar.Group
+  zh-CN: Avatar Group
+  en-US: Avatar Group
 ---
 
 ## zh-CN
@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Avatar group display.
+Avatars can be grouped by utilizing the `AvatarGroup` container component.

@@ -1,8 +1,20 @@
 <div>
     <Steps>
-        <Step Status="finish" Title="Login" Icon="user" />
-        <Step Status="finish" Title="Verification" Icon="solution"  />
-        <Step Status="process" Title="Pay" Icon="loading" />
-        <Step Status="wait" Title="Done" Icon="smile"/>
+        <Step Status="StepsStatus.Finish" Title="Login" Icon="@IconType.Outline.User" />
+        <Step Status="StepsStatus.Finish" Title="Verification" Icon="@IconType.Outline.Solution"  />
+        <Step Status="StepsStatus.Process" Title="Pay" IconTemplate="@PayIconTemplate" />
+        <Step Status="StepsStatus.Wait" Title="Done" Icon="@IconType.Outline.Smile"/>
     </Steps>
 </div>
+
+@code {
+    private RenderFragment  PayIconTemplate(StepsStatus status) 
+    {
+        return status switch
+        {
+            StepsStatus.Finish => @<Icon Type="@IconType.Outline.CheckCircle" />,
+            StepsStatus.Error => @<Icon Type="@IconType.Outline.CloseCircle" />,
+            _ => @<Icon Type="@IconType.Outline.PayCircle" />
+        };
+    }
+}

@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using Microsoft.AspNetCore.Components;
 using OneOf;
 
@@ -44,7 +45,7 @@ namespace AntDesign
         public OneOf<string, RenderFragment> Description { get; set; }
 
         /// <summary>
-        /// 自动关闭的延时，单位为秒。默认 4.5 秒后自动关闭，配置为 null 则不自动关闭
+        /// 自动关闭的延时，单位为秒。默认 4.5 秒后自动关闭，配置为 0 则不自动关闭
         ///  </summary>
         public double? Duration { get; set; } = null;
 
@@ -95,5 +96,6 @@ namespace AntDesign
         /// </summary>
         public NotificationType NotificationType { get; set; } = NotificationType.None;
 
+        internal CancellationTokenSource Cts { get; set; }
     }
 }

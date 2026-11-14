@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -60,6 +61,12 @@ namespace AntDesign
         [Parameter]
         public bool Closable { get; set; } = true;
 
+        /// <summary>
+        /// Callback executed before the tab is closed. The callback can cancel the closing operation.
+        /// </summary>
+        [Parameter]
+        public EventCallback<CloseEventArgs<MouseEventArgs>> OnClosing { get; set; }
+
         internal bool IsActive => _isActive;
 
         private bool HasTabTitle => Tab != null || TabTemplate != null;
@@ -72,7 +79,7 @@ namespace AntDesign
 
         internal ElementReference TabBtnRef => _tabBtnRef;
 
-        private ClassMapper _tabPaneClassMapper = new();
+        private ClassMapper _tabClassMapper = new();
 
         private const string PrefixCls = "ant-tabs-tab";
         private const string TabPanePrefixCls = "ant-tabs-tabpane";
@@ -86,23 +93,17 @@ namespace AntDesign
         private bool _hasRendered;
         private int _tabIndex;
 
+        private string TabStyles => $"margin-right:{(Parent.Type == TabType.Line ? "24px;" : "2px;")}; order:{TabIndex};";
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
             this.SetClass();
 
+            Key ??= Guid.NewGuid().ToString();
+
             Parent?.AddTabPane(this);
-        }
-
-        protected override void OnAfterRender(bool firstRender)
-        {
-            base.OnAfterRender(firstRender);
-
-            if (HasTabTitle)
-            {
-                _hasRendered = true;
-            }
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -117,13 +118,13 @@ namespace AntDesign
 
         private void SetClass()
         {
-            ClassMapper
+            _tabClassMapper
                 .Add(PrefixCls)
                 .If($"{PrefixCls}-active", () => _isActive)
                 .If($"{PrefixCls}-with-remove", () => Closable)
                 .If($"{PrefixCls}-disabled", () => Disabled);
 
-            _tabPaneClassMapper
+            ClassMapper
                 .Add(TabPanePrefixCls)
                 .If($"{TabPanePrefixCls}-active", () => _isActive)
                 .If($"{TabPanePrefixCls}-hidden", () => !_isActive)
@@ -151,6 +152,26 @@ namespace AntDesign
             Dispose();
         }
 
+        private async Task OnCloseClick(MouseEventArgs e)
+        {
+            var closeEvent = new CloseEventArgs<MouseEventArgs>(e);
+
+            if (OnClosing.HasDelegate)
+            {
+                await OnClosing.InvokeAsync(closeEvent);
+            }
+
+            if (closeEvent.Cancel)
+            {
+                return;
+            }
+
+            if (Parent != null)
+            {
+                await Parent.RemoveTab(this);
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             Parent?.RemovePane(this);
@@ -163,9 +184,9 @@ namespace AntDesign
             (_tabIndex, other._tabIndex) = (other._tabIndex, _tabIndex);
         }
 
-        private Task HandleKeydown(KeyboardEventArgs e)
+        private void HandleKeydown(KeyboardEventArgs e)
         {
-            return Parent?.HandleKeydown(e, this);
+            Parent?.HandleKeydown(e, this);
         }
     }
 }

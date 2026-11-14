@@ -8,7 +8,7 @@
 
 @if (RootMenu.InternalMode == MenuMode.Inline)
 {
-    <li class="@ClassMapper.Class" role="menuitem" @key="Key" style="position:relative;@Style" @ref="Ref">
+    <li @attributes="AdditionalAttributes" class="@ClassMapper.Class" role="menuitem" @key="Key" style="position:relative;@Style" @ref="Ref">
         <div class="@(prefixCls)-title" style="@PaddingStyle" role="button" @onclick="HandleOnTitleClick" aria-haspopup="true">
             <span class="ant-menu-title-content">
                 @if (TitleTemplate != null)
@@ -48,7 +48,7 @@ else if (RootMenu.InlineCollapsed || RootMenu.InternalMode == MenuMode.Horizonta
                             OnOverlayHiding="OnOverlayHiding"
                             Trigger="new Trigger[] { RootMenu?.TriggerSubMenuAction ?? AntDesign.Trigger.Hover }"
                             OverlayClassName="@PopupClassName"
-                            PlacementCls="@($"{prefixCls}-popup {RootMenu.PrefixCls} {RootMenu.PrefixCls}-{RootMenu.Theme} {prefixCls}-placement-{_placement.Name}")">
+                            PlacementCls="@($"{prefixCls}-popup {RootMenu.PrefixCls} {RootMenu.PrefixCls}-{RootMenu.Theme.ToString().ToLowerInvariant()} {prefixCls}-placement-{_placement.Name}")">
                 <ChildContent>
                     <div class="@(prefixCls)-title" role="button">
                         <span class="ant-menu-title-content">

@@ -1,8 +1,8 @@
 ﻿<div>
     <RadioGroup @bind-Value="size" Style="margin-bottom: 16px;">
-        <Radio RadioButton Value="@TabSize.Small">Small</Radio>
-        <Radio RadioButton Value="@TabSize.Default">Default</Radio>
-        <Radio RadioButton Value="@TabSize.Large">Large</Radio>
+        <Radio RadioButton Value="TabSize.Small">Small</Radio>
+        <Radio RadioButton Value="TabSize.Default">Default</Radio>
+        <Radio RadioButton Value="TabSize.Large">Large</Radio>
     </RadioGroup>
 
     <Tabs DefaultActiveKey="1" Size="@size" Style="margin-bottom: 32px">
@@ -17,7 +17,7 @@
         </TabPane>
     </Tabs>
 
-    <Tabs DefaultActiveKey="1" Type="@TabType.Card" Size="@size">
+    <Tabs DefaultActiveKey="1" Type="TabType.Card" Size="@size">
         <TabPane Key="1" Tab="Tab 1">
             Content of Tab Pane 1
         </TabPane>

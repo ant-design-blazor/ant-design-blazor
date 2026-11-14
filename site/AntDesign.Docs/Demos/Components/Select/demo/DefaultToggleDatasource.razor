@@ -9,23 +9,23 @@
         Placeholder="Select a person"
         OnSelectedItemChanged="OnSelectedItemChangedHandler"
         OnDataSourceChanged="OnDataSourceChangedHandler"
-        SortByLabel="@SortDirection.Ascending"
+        SortByLabel="SortDirection.Ascending"
         AllowClear
         Style="width: calc(100% - 68px);">
 </Select>
 <Dropdown Style="padding-left: 8px;" Trigger="@(new Trigger[] { Trigger.Click })">
     <Overlay>
         <Menu Selectable="false">
-            <MenuItem OnClick="@SetDatasource1">Set Datasource 1</MenuItem>
-            <MenuItem OnClick="@SetDatasource2">Set Datasource 2</MenuItem>
-            <MenuItem OnClick="@SetDatasourceNull">Set Datasource to NULL</MenuItem>
-            <MenuItem OnClick="@AddPerson">Add Person (John)</MenuItem>
-            <MenuItem OnClick="@RemovePerson">Remove Person (John)</MenuItem>
-            <MenuItem OnClick="@ClearDS">Clear Datasource</MenuItem>
+            <MenuItem OnClick="SetDatasource1">Set Datasource 1</MenuItem>
+            <MenuItem OnClick="SetDatasource2">Set Datasource 2</MenuItem>
+            <MenuItem OnClick="SetDatasourceNull">Set Datasource to NULL</MenuItem>
+            <MenuItem OnClick="AddPerson">Add Person (John)</MenuItem>
+            <MenuItem OnClick="RemovePerson">Remove Person (John)</MenuItem>
+            <MenuItem OnClick="ClearDS">Clear Datasource</MenuItem>
         </Menu>
     </Overlay>
     <ChildContent>
-        <a class="ant-dropdown-link" @onclick:preventDefault>Actions<Icon Type="down" /></a>        
+        <a class="ant-dropdown-link" @onclick:preventDefault>Actions<Icon Type="@IconType.Outline.Down" /></a>        
     </ChildContent>
 </Dropdown>
 <br /><br />

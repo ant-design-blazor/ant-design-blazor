@@ -117,7 +117,7 @@ namespace AntDesign
         /// Callback executed when the type of calendar being viewed changes
         /// </summary>
         [Parameter]
-        public Action<DateTime, string> OnPanelChange { get; set; }
+        public Action<DateTime, DatePickerType> OnPanelChange { get; set; }
 
         /// <summary>
         /// Function to determine if a specific date is disabled
@@ -136,6 +136,12 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public CultureInfo CultureInfo { get; set; } = LocaleProvider.CurrentLocale.CurrentCulture;
+
+        /// <summary>
+        /// .NET calendar used for date selection and panel navigation. When omitted, the calendar of <see cref="CultureInfo"/> is used.
+        /// </summary>
+        [Parameter]
+        public System.Globalization.Calendar DateCalendar { get; set; }
 
         protected DatePickerType _picker;
         protected readonly DateTime[] PickerValues = new DateTime[] { DateTime.Now, DateTime.Now };
@@ -160,11 +166,11 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            _picker = Mode.Name switch
+            _picker = Mode switch
             {
-                CalendarMode.MONTH => DatePickerType.Date,
-                CalendarMode.YEAR => DatePickerType.Month,
-                _ => DatePickerType.Date,
+                CalendarMode.Month => DatePickerType.Date,
+                CalendarMode.Year => DatePickerType.Month,
+                _ => DatePickerType.Date
             };
 
             if (ValidRange != null)
@@ -219,17 +225,17 @@ namespace AntDesign
         {
             Mode = mode;
 
-            DatePickerType picker = mode.Name switch
+            DatePickerType picker = Mode switch
             {
-                DatePickerType.YEAR => DatePickerType.Month,
-                DatePickerType.MONTH => DatePickerType.Date,
-                _ => DatePickerType.Date,
+                CalendarMode.Month => DatePickerType.Date,
+                CalendarMode.Year => DatePickerType.Month,
+                _ => DatePickerType.Date
             };
 
             _prePickerStack.Push(_picker);
             _picker = picker;
 
-            OnPanelChange?.Invoke(PickerValues[0], _picker.Name);
+            OnPanelChange?.Invoke(PickerValues[0], _picker);
 
             StateHasChanged();
         }
@@ -244,10 +250,14 @@ namespace AntDesign
 
         string IDatePicker.GetFormatValue(DateTime value, int index)
         {
-            return value.ToString(CultureInfo);
+            return CalendarFormatter.FormatDate(value, CultureInfo.DateTimeFormat.ShortDatePattern, CultureInfo, DateCalendar ?? CultureInfo.Calendar);
         }
 
         void IDatePicker.ChangePlaceholder(string placeholder, int index)
+        {
+        }
+
+        void IDatePicker.ChangePreviewValue(string value, int index)
         {
         }
 
@@ -259,6 +269,10 @@ namespace AntDesign
         void IDatePicker.ResetPlaceholder(int index)
         {
 
+        }
+
+        void IDatePicker.ResetPreviewValue(int index)
+        {
         }
 
         void IDatePicker.Close()

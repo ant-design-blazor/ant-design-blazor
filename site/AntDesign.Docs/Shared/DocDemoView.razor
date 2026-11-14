@@ -1,0 +1,37 @@
+﻿@using AntDesign.Docs.Services
+@using System.Reflection;
+@inherits ComponentBase
+
+@if (_demoType != null)
+{
+    <DynamicComponent Type="_demoType" />
+}
+
+@inject DemoService demoService;
+@code {
+
+    [Parameter]
+    public DemoItem Demo { get; set; }
+
+    private Type _demoType;
+
+    private bool _render;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _render = true;
+            StateHasChanged();
+            return;
+        }
+        if (_render && _demoType == null)
+        {
+            _demoType = demoService.GetShowCase(Demo.Type);
+            StateHasChanged();
+        }
+
+        base.OnAfterRender(firstRender);
+
+    }
+}

@@ -2,11 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AntDesign.JsInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -38,19 +39,31 @@ namespace AntDesign
         /// </summary>
         /// <default value="AvatarShape.Circle"/>
         [Parameter]
-        public string Shape { get; set; } = null;
+        public AvatarShape? Shape { get; set; }
 
         /// <summary>
-        /// Size of the avatar. See <see cref="AntSizeLDSType"/> for possible values.
+        /// Size of the avatar. See <see cref="AvatarSize"/> for possible values.
         /// </summary>
-        /// <default value="default"/>
+        /// <default value="AvatarSize.Default"/>
         [Parameter]
-        public string Size
+        public OneOf<AvatarSize, string> Size
         {
             get => _size;
             set
             {
-                if (_size != value)
+                if (_size.IsT0 && value.IsT0 && _size.AsT0 != value.AsT0)
+                {
+                    _size = value;
+                    SetSizeStyle();
+                }
+
+                if (_size.IsT1 && value.IsT1 && _size.AsT1 != value.AsT1)
+                {
+                    _size = value;
+                    SetSizeStyle();
+                }
+
+                if (_size.IsT0 != value.IsT0)
                 {
                     _size = value;
                     SetSizeStyle();
@@ -120,19 +133,21 @@ namespace AntDesign
         private bool _hasSrc = true;
         private bool _hasIcon;
 
-        private string _textStyles = "";
-        private string _sizeStyles = "";
+        private string _textStyles = string.Empty;
+        private string _sizeStyles = string.Empty;
 
         protected ElementReference TextEl { get; set; }
 
-        private string _prefixCls = "ant-avatar";
-
-        private readonly Hashtable _sizeMap = new Hashtable() { ["large"] = "lg", ["small"] = "sm" };
+        private readonly Dictionary<AvatarShape, string> _shapeMap = new()
+        {
+            [AvatarShape.Square] = "square",
+            [AvatarShape.Circle] = "circle"
+        };
 
         private string _text;
         private RenderFragment _childContent;
         private bool _waitingCalcSize;
-        private string _size = AntSizeLDSType.Default;
+        private OneOf<AvatarSize, string> _size = AvatarSize.Default;
 
         protected override void OnInitialized()
         {
@@ -183,17 +198,27 @@ namespace AntDesign
 
         private void SetClassMap()
         {
+            const string PrefixCls = "ant-avatar";
+
             ClassMapper
-                .Add(_prefixCls)
-                .GetIf(() => $"{_prefixCls}-{_sizeMap[Size]}", () => _sizeMap.ContainsKey(Size))
-                .GetIf(() => $"{_prefixCls}-{Shape}", () => !string.IsNullOrEmpty(Shape))
-                .If($"{_prefixCls}-icon", () => !string.IsNullOrEmpty(Icon))
-                .If($"{_prefixCls}-image", () => _hasSrc);
+                .Add(PrefixCls)
+                .GetIf(() => $"{PrefixCls}-{_shapeMap[Shape.GetValueOrDefault(AvatarShape.Square)]}", () => Shape.HasValue)
+                .If($"{PrefixCls}-sm", () => _size.IsT0 && _size.AsT0 == AvatarSize.Small)
+                .If($"{PrefixCls}-lg", () => _size.IsT0 && _size.AsT0 == AvatarSize.Large)
+                .If($"{PrefixCls}-icon", () => !string.IsNullOrEmpty(Icon))
+                .If($"{PrefixCls}-image", () => _hasSrc);
         }
 
         private void SetSizeStyle()
         {
-            if (!CssSizeLength.TryParse(Size, out var cssSize)) return;
+            var size = string.Empty;
+
+            if (_size.IsT0)
+                size = _size.AsT0.ToString().ToLowerInvariant();
+            else
+                size = _size.AsT1;
+
+            if (!CssSizeLength.TryParse(size, out var cssSize)) return;
 
             _sizeStyles = $"width:{cssSize};height:{cssSize};line-height:{cssSize};";
             _sizeStyles += $"font-size:calc({cssSize} / 2);";

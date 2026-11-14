@@ -4,9 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using AntDesign.Core.Documentation;
+using AntDesign.Internal;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OneOf;
 
 namespace AntDesign
 {
@@ -80,11 +85,11 @@ namespace AntDesign
         public Dictionary<string, object> Data { get; set; }
 
         /// <summary>
-        /// Built-in stylesheets, support for three types: <c>text</c>, <c>picture</c> or <c>picture-card</c>
+        /// Built-in stylesheets, support for three types: <c>Text</c>, <c>Picture</c> or <c>PictureCard</c>
         /// </summary>
-        /// <default value="text" />
+        /// <default value="UploadListType.Text" />
         [Parameter]
-        public string ListType { get; set; } = "text";
+        public UploadListType ListType { get; set; } = UploadListType.Text;
 
         /// <summary>
         /// Support upload whole directory.
@@ -225,30 +230,66 @@ namespace AntDesign
         /// </summary>
         /// <default value="post"/>
         [Parameter]
-        public string Method { get; set; } = "post";
+        public OneOf<HttpMethod, string> Method { get; set; } = HttpMethod.Post;
 
-        private bool IsText => ListType == "text";
-        private bool IsPicture => ListType == "picture";
-        private bool IsPictureCard => ListType == "picture-card";
+        /// <summary>
+        /// Whether to upload multiple files in a single request (only for multiple file upload)
+        /// </summary>
+        [Parameter]
+        public bool BatchUpload { get; set; }
 
-        private ClassMapper _listClassMapper = new ClassMapper();
+        /// <summary>
+        /// Whether to send cookies when making upload requests
+        /// </summary>
+        /// <default value="false"/>
+        [Parameter]
+        public bool WithCredentials { get; set; }
+
+        /// <summary>
+        /// Use the manual upload mode
+        /// </summary>
+        [PublicApi("1.5.0")]
+        [Parameter]
+        public bool Defer { get; set; } = false;
+
+        /// <summary>
+        /// Upload mode trigger
+        /// </summary>
+        [PublicApi("1.5.0")]
+        [Parameter]
+        public UploadTrigger Trigger { get; set; } = UploadTrigger.Click;
+
+        private UploadButton _uploadButton;
+
+        private bool IsText => ListType == UploadListType.Text;
+
+        private bool IsPictureCard => ListType == UploadListType.PictureCard;
+
+        private readonly ClassMapper _listClassMapper = new();
 
         internal bool _dragHover;
+
+        private static readonly Dictionary<UploadListType, string> _typeMap = new()
+        {
+            [UploadListType.Text] = "text",
+            [UploadListType.Picture] = "picture",
+            [UploadListType.PictureCard] = "picture-card",
+        };
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
 
-            var prefixCls = "ant-upload";
+            const string PrefixCls = "ant-upload";
 
             ClassMapper
-                .GetIf(() => $"{prefixCls}-picture-card-wrapper", () => IsPictureCard)
-                .GetIf(() => $"{prefixCls}-no-btn", () => ChildContent == null);
+                .GetIf(() => $"{PrefixCls}-picture-card-wrapper", () => IsPictureCard)
+                .GetIf(() => $"{PrefixCls}-no-btn", () => ChildContent == null);
 
             _listClassMapper
-                .Add($"{prefixCls}-list")
-                .Get(() => $"{prefixCls}-list-{ListType}")
-                .If($"{prefixCls}-list-rtl", () => RTL);
+                .Add($"{PrefixCls}-list")
+                .Get(() => $"{PrefixCls}-list-{_typeMap[ListType]}")
+                .If($"{PrefixCls}-list-rtl", () => RTL);
 
             FileList.InsertRange(0, DefaultFileList);
         }
@@ -282,6 +323,20 @@ namespace AntDesign
             if (item.State == UploadState.Success && OnDownload.HasDelegate)
             {
                 await OnDownload.InvokeAsync(item);
+            }
+        }
+
+        /// <summary>
+        /// Start uploading. Manual uploading is only valid after Defer is set.
+        /// </summary>
+        /// <returns></returns>
+        [PublicApi("1.5.0")]
+        public async Task StartUpload()
+        {
+            if (Defer)
+            {
+                var fileIds = FileList.Where(x => x.State == UploadState.Waiting).Select(x => x.Id).ToList();
+                await _uploadButton.StartUpload(fileIds);
             }
         }
     }

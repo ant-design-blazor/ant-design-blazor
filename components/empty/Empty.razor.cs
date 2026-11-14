@@ -22,8 +22,7 @@ namespace AntDesign
     [Documentation(DocumentationCategory.Components, DocumentationType.DataDisplay, "https://gw.alipayobjects.com/zos/alicdn/MNbKfLBVb/Empty.svg", Columns = 1, Title = "Empty", SubTitle = "空状态")]
     public partial class Empty : AntDomComponentBase
     {
-        [CascadingParameter(Name = "PrefixCls")]
-        private string PrefixCls { get; set; } = "ant-empty";
+        private string _prefixCls = "ant-empty";
 
         /// <summary>
         /// Style for the wrapper of the image. Always used regardless of image type.
@@ -77,10 +76,10 @@ namespace AntDesign
         protected void SetClass()
         {
             this.ClassMapper.Clear()
-                .Add(PrefixCls)
-                .If($"{PrefixCls}-normal", () => Simple)
-                .If($"{PrefixCls}-small", () => Small)
-                .If($"{PrefixCls}-rtl", () => RTL)
+                .Add(_prefixCls)
+                .If($"{_prefixCls}-normal", () => Simple)
+                .If($"{_prefixCls}-small", () => Small)
+                .If($"{_prefixCls}-rtl", () => RTL)
                 ;
         }
 

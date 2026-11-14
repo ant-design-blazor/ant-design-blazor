@@ -4,10 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using AntDesign.Form.Locale;
 using AntDesign.Forms;
 using AntDesign.Internal;
@@ -57,7 +61,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="FormLayout.Horizontal"/>
         [Parameter]
-        public string Layout { get; set; } = FormLayout.Horizontal;
+        public FormLayout Layout { get; set; } = FormLayout.Horizontal;
 
         /// <summary>
         /// Content of the form. Typically contains different form inputs and layout elements.
@@ -127,7 +131,7 @@ namespace AntDesign
         /// The size of the ant components inside the form
         /// </summary>
         [Parameter]
-        public string Size { get; set; }
+        public FormSize? Size { get; set; }
 
         /// <summary>
         /// Gets or sets the form handler name. This is required for posting it to a server-side endpoint.
@@ -140,7 +144,7 @@ namespace AntDesign
         /// Http method used to submit form
         /// </summary>
         [Parameter]
-        public string Method { get; set; } = "get";
+        public HttpMethod Method { get; set; } = HttpMethod.Get;
 
         /// <summary>
         /// The model to bind the form inputs to
@@ -151,6 +155,12 @@ namespace AntDesign
             get { return _model; }
             set
             {
+                //prevent building edit context in dead loop
+                if (value is null && _isModelBuildFromNull)
+                {
+                    return;
+                }
+
                 if (!(_model?.Equals(value) ?? false))
                 {
                     var wasNull = _model is null;
@@ -245,10 +255,18 @@ namespace AntDesign
         public bool IsModified => _editContext.IsModified();
 
         private EditContext _editContext;
+#if !NET11_0_OR_GREATER
+        private static readonly ConditionalWeakTable<EditContext, ValidateGuard> _validateGuards = new();
+        private class ValidateGuard { public bool _inProgress; }
+#else
+        private CancellationTokenSource _validateOnChangeCancellationTokenSource;
+#endif
         private IList<IFormItem> _formItems = new List<IFormItem>();
+        private bool _previousValidateOnChange;
         private IList<IControlValueAccessor> _controls = new List<IControlValueAccessor>();
         private TModel _model;
         private FormRulesValidator _rulesValidator;
+        private bool _isModelBuildFromNull;
 
         ColLayoutParam IForm.WrapperCol => WrapperCol;
 
@@ -257,7 +275,7 @@ namespace AntDesign
         EditContext IForm.EditContext => _editContext;
 
         AntLabelAlignType? IForm.LabelAlign => LabelAlign;
-        string IForm.Size => Size;
+        FormSize IForm.Size => Size.GetValueOrDefault();
         string IForm.Name => Name;
         object IForm.Model => Model;
         bool IForm.ValidateOnChange => ValidateOnChange;
@@ -286,17 +304,11 @@ namespace AntDesign
         {
             base.OnInitialized();
 
-            if (Model == null)
-            {
-                Model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
-            }
+            Model ??= (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
 
             _editContext = new EditContext(Model);
 
-            if (FormProvider != null)
-            {
-                FormProvider.AddForm(this);
-            }
+            FormProvider?.AddForm(this);
 
             if (OnFieldChanged.HasDelegate)
                 _editContext.OnFieldChanged += OnFieldChangedHandler;
@@ -310,6 +322,14 @@ namespace AntDesign
                 _editContext.OnFieldChanged += RulesModeOnFieldChanged;
                 _editContext.OnValidationRequested += RulesModeOnValidationRequested;
             }
+
+            // If configured, perform validation centrally on any field change (ValidateOnChange)
+            if (ValidateOnChange)
+            {
+                _editContext.OnFieldChanged += ValidateOnChangeOnFieldChanged;
+            }
+
+            _previousValidateOnChange = ValidateOnChange;
         }
 
         private void OnFieldChangedHandler(object sender, FieldChangedEventArgs e) => InvokeAsync(() => OnFieldChanged.InvokeAsync(e));
@@ -320,6 +340,9 @@ namespace AntDesign
 
         protected override void Dispose(bool disposing)
         {
+#if NET11_0_OR_GREATER
+            Interlocked.Exchange(ref _validateOnChangeCancellationTokenSource, null)?.Cancel();
+#endif
             if (_editContext != null)
             {
                 if (OnFieldChanged.HasDelegate)
@@ -334,6 +357,11 @@ namespace AntDesign
                     _editContext.OnFieldChanged -= RulesModeOnFieldChanged;
                     _editContext.OnValidationRequested -= RulesModeOnValidationRequested;
                 }
+
+                if (ValidateOnChange)
+                {
+                    _editContext.OnFieldChanged -= ValidateOnChangeOnFieldChanged;
+                }
             }
 
             base.Dispose(disposing);
@@ -344,13 +372,24 @@ namespace AntDesign
             base.OnParametersSet();
 
             SetClass();
+
+            // Dynamically subscribe/unsubscribe to EditContext.OnFieldChanged when ValidateOnChange toggles at runtime
+            if (_editContext != null && ValidateOnChange != _previousValidateOnChange)
+            {
+                if (ValidateOnChange)
+                    _editContext.OnFieldChanged += ValidateOnChangeOnFieldChanged;
+                else
+                    _editContext.OnFieldChanged -= ValidateOnChangeOnFieldChanged;
+
+                _previousValidateOnChange = ValidateOnChange;
+            }
         }
 
         protected void SetClass()
         {
             this.ClassMapper.Clear()
                 .Add(_prefixCls)
-                .Get(() => $"{_prefixCls}-{Layout.ToLowerInvariant()}")
+                .Get(() => $"{_prefixCls}-{Layout.ToString().ToLowerInvariant()}")
                 .If($"{_prefixCls}-rtl", () => RTL)
                ;
         }
@@ -382,13 +421,18 @@ namespace AntDesign
 
             var result = formItem.ValidateFieldWithRules();
 
-            if (result.Length > 0)
+            if (result.Any())
             {
-                var errors = new Dictionary<FieldIdentifier, List<string>>();
-                errors[args.FieldIdentifier] = result.Select(r => r.ErrorMessage).ToList();
+                var errors = new Dictionary<FieldIdentifier, List<string>>
+                {
+                    [args.FieldIdentifier] = [.. result.Select(r => r.ErrorMessage)]
+                };
 
                 _rulesValidator.DisplayErrors(errors);
             }
+
+            // invoke StateHasChanged to update the form state like error message and IsModified
+            InvokeAsync(StateHasChanged);
         }
 
         private void RulesModeOnValidationRequested(object sender, ValidationRequestedEventArgs args)
@@ -400,14 +444,64 @@ namespace AntDesign
             foreach (var formItem in _formItems)
             {
                 var result = formItem.ValidateFieldWithRules();
-                if (result.Length > 0)
+                if (result.Any())
                 {
-                    errors[formItem.GetFieldIdentifier()] = result.Select(r => r.ErrorMessage).ToList();
+                    errors[formItem.GetFieldIdentifier()] = [.. result.Select(r => r.ErrorMessage)];
                 }
             }
 
             _rulesValidator.DisplayErrors(errors);
         }
+
+        // When ValidateOnChange is enabled, centralize validation: call EditContext.Validate() on any field change.
+        private void ValidateOnChangeOnFieldChanged(object sender, FieldChangedEventArgs args)
+        {
+            if (!ValidateOnChange || _editContext == null)
+                return;
+
+            var ctx = _editContext;
+#if NET11_0_OR_GREATER
+            var cancellationTokenSource = new CancellationTokenSource();
+            Interlocked.Exchange(ref _validateOnChangeCancellationTokenSource, cancellationTokenSource)?.Cancel();
+            _ = InvokeAsync(() => ValidateOnChangeAsync(ctx, cancellationTokenSource));
+#else
+            var guard = _validateGuards.GetOrCreateValue(ctx);
+
+            if (guard._inProgress)
+                return;
+
+            try
+            {
+                guard._inProgress = true;
+                ctx.Validate();
+            }
+            finally
+            {
+                guard._inProgress = false;
+            }
+#endif
+        }
+
+#if NET11_0_OR_GREATER
+        private async Task ValidateOnChangeAsync(EditContext context, CancellationTokenSource cancellationTokenSource)
+        {
+            try
+            {
+                if (ValidateOnChange && ReferenceEquals(context, _editContext))
+                {
+                    await context.ValidateAsync(cancellationTokenSource.Token);
+                }
+            }
+            catch (OperationCanceledException) when (cancellationTokenSource.IsCancellationRequested)
+            {
+            }
+            finally
+            {
+                Interlocked.CompareExchange(ref _validateOnChangeCancellationTokenSource, null, cancellationTokenSource);
+                cancellationTokenSource.Dispose();
+            }
+        }
+#endif
 
         /// <summary>
         /// Reset all the values in the form
@@ -444,6 +538,7 @@ namespace AntDesign
         /// <summary>
         /// Submit the form. Will trigger validation and either <see cref="OnFinish"/> or <see cref="OnFinishFailed"/>.
         /// </summary>
+        /// <remarks>Use <see cref="SubmitAsync(CancellationToken)"/> when asynchronous validation is configured.</remarks>
         public void Submit()
         {
             var isValid = Validate();
@@ -464,14 +559,51 @@ namespace AntDesign
         }
 
         /// <summary>
+        /// Submit the form after asynchronous validation. Use this method when the model contains .NET 11 async validation attributes.
+        /// </summary>
+        /// <param name="cancellationToken">A token used to cancel asynchronous validation.</param>
+        public async Task SubmitAsync(CancellationToken cancellationToken = default)
+        {
+            if (await ValidateAsync(cancellationToken))
+            {
+                await OnValidSubmit(_editContext);
+            }
+            else
+            {
+                await OnInvalidSubmit(_editContext);
+            }
+        }
+
+        /// <summary>
         /// Execute validation   
         /// </summary>
+        /// <remarks>Use <see cref="ValidateAsync(CancellationToken)"/> when asynchronous validation is configured.</remarks>
         /// <returns> return <c>true</c> if all fields are valid </returns>
         public bool Validate()
         {
+#if NET11_0_OR_GREATER
+#pragma warning disable CS0618
+#endif
             var result = _editContext.Validate();
+#if NET11_0_OR_GREATER
+#pragma warning restore CS0618
+#endif
 
             return result;
+        }
+
+        /// <summary>
+        /// Execute validation asynchronously. On .NET 11 and later, this awaits async data annotation validation.
+        /// </summary>
+        /// <param name="cancellationToken">A token used to cancel asynchronous validation.</param>
+        /// <returns><c>true</c> if all fields are valid; otherwise, <c>false</c>.</returns>
+        public async Task<bool> ValidateAsync(CancellationToken cancellationToken = default)
+        {
+#if NET11_0_OR_GREATER
+            return await _editContext.ValidateAsync(cancellationToken);
+#else
+            return Validate();
+#endif
         }
 
 
@@ -496,9 +628,12 @@ namespace AntDesign
             if (_editContext == null)
                 return;
 
+            _isModelBuildFromNull = false;
+
             if (Model == null)
             {
-                Model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke(new object[] { });
+                _model = (TModel)Expression.New(typeof(TModel)).Constructor.Invoke([]);
+                _isModelBuildFromNull = true;
             }
 
             var newContext = new EditContext(Model);
@@ -506,8 +641,7 @@ namespace AntDesign
             {
                 FieldInfo fieldInfo = kv.Value.fi;
                 EventInfo eventInfo = kv.Value.ei;
-                Delegate mdel = fieldInfo.GetValue(_editContext) as Delegate;
-                if (mdel != null)
+                if (fieldInfo.GetValue(_editContext) is Delegate mdel)
                 {
                     foreach (Delegate del in mdel.GetInvocationList())
                     {
@@ -534,7 +668,7 @@ namespace AntDesign
         {
             if (_eventInfos is null)
             {
-                _eventInfos = new();
+                _eventInfos = [];
                 Type contextType = typeof(EditContext);
                 foreach (EventInfo eventInfo in contextType.GetEvents(AllBindings))
                 {

@@ -64,7 +64,7 @@ namespace AntDesign
             Len = "'{0}' must be exactly {1} characters",
             Min = "'{0}' must be at least {1} characters",
             Max = "'{0}' cannot be longer than {1} characters",
-            Range = "'{0}' must be between {1} and {2} characters",
+            Range = "'{0}' must be between ${min} and ${max} characters",
         };
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace AntDesign
             Len = "'{0}' must equal {1}",
             Min = "'{0}' cannot be less than {1}",
             Max = "'{0}' cannot be greater than {1}",
-            Range = "'{0}' must be between {1} and {2}",
+            Range = "'{0}' must be between ${min} and ${max}",
         };
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace AntDesign
             Len = "'{0}' must be exactly {1} in length",
             Min = "'{0}' cannot be less than {1} in length",
             Max = "'{0}' cannot be greater than {1} in length",
-            Range = "'{0}' must be between {1} and {2} in length",
+            Range = "'{0}' must be between ${min} and ${max} in length",
         };
 
         /// <summary>

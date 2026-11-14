@@ -1,7 +1,12 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
 
-<li class="@ClassMapper.Class"
+@if (Hidden)
+{
+    return;
+}
+
+<li @attributes="AdditionalAttributes" class="@ClassMapper.Class"
     @onmouseover="OnMouseOver"
     @onclick="OnClick">
     @ChildContent

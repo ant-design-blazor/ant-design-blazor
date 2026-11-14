@@ -13,9 +13,22 @@
             {
                 <MockBrowser Height="@Demo.Iframe.Value" WithUrl="@(Demo.Link??$"/mock?demoId={DemoId}&type={Demo.Type}")" />
             }
-            else if (_demoType != null)
+            else
             {
-               <DynamicComponent Type="_demoType" />
+                @if (_demoType != null)
+                {
+                     <ErrorBoundary @ref="_errorBoundary">
+                        <ChildContent>
+                              <DynamicComponent Type="_demoType" />
+                        </ChildContent>
+                        <ErrorContent Context="ex">
+                            <Alert Type="AlertType.Error"
+                                   Message="@ex.Message"
+                                   Description="@ex.StackTrace">
+                            </Alert>
+                        </ErrorContent>
+                    </ErrorBoundary>
+                }
             }
         }
         else
@@ -29,7 +42,7 @@
             <Tooltip Title="@Localizer["app.content.edit-demo"]">
                 <Unbound>
                     <a @ref="context.Current" class="edit-button" href="@EditUrl" target="_blank" rel="noopener noreferrer">
-                        <Icon Type="edit" />
+                        <Icon Type="@IconType.Outline.Edit" />
                     </a>
                 </Unbound>
             </Tooltip>
@@ -40,24 +53,49 @@
         <div class="code-box-actions">
             <Tooltip Title="@Localizer[_copied?"app.demo.copied":"app.demo.copy"]" OnVisibleChange="() => _copied = false">
                 <Unbound>
-                    <Icon RefBack="context" Type="@(_copied?"check" : "snippets")" Class="code-box-code-copy code-box-code-action" OnClick="Copy" />
+                    <Icon RefBack="context" Type="@(_copied ? IconType.Outline.Check : IconType.Outline.Snippets)" Class="code-box-code-copy code-box-code-action" OnClick="Copy" />
                 </Unbound>
             </Tooltip>
-            <Tooltip Title="@(CodeExpand? Localizer["app.demo.code.hide"] : Localizer["app.demo.code.show"])">
+            <Tooltip Title="@(_innerExpand?Localizer["app.demo.code.hide"] : Localizer["app.demo.code.show"])">
                 <Unbound>
-                    <span @ref="context.Current" class="code-expand-icon code-box-code-action" @onclick="_ => CodeExpand = !CodeExpand">
-                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(CodeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
-                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="@(!CodeExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
+                    <span @ref="context.Current" class="code-expand-icon code-box-code-action" @onclick="_ => _innerExpand = !_innerExpand">
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/wSAkBuJFbdxsosKKpqyq.svg" class="@(_innerExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
+                        <img alt="expand code" src="https://gw.alipayobjects.com/zos/rmsportal/OpROPHYqWmrMDBFMZtKF.svg" class="@(!_innerExpand ? "code-expand-icon-hide" : "code-expand-icon-show")">
                     </span>
                 </Unbound>
             </Tooltip>
-            @DebugIcon
+            @_debugIcon
         </div>
     </section>
-    <section class="highlight-wrapper @(CodeExpand?"highlight-wrapper-expand":"")">
-        <div class="highlight">
-            <HighlightedCode Code="@Demo.Code" CanLoad="CodeExpand" Language="html"></HighlightedCode>
-        </div>
+    <section class="highlight-wrapper @(_innerExpand?"highlight-wrapper-expand":"")">
+        @if (_innerExpand || _codeViewRendered)
+        {
+            _codeViewRendered = true;
+            @if (Demo.AdditionalFiles != null && Demo.AdditionalFiles.Any())
+            {
+                @* 多文件展示:使用Tabs切换 *@
+                <Tabs ActiveKey="@_activeFileTab" OnChange="OnFileTabChange" Type="@TabType.Card" Size="TabSize.Small">
+                    <TabPane Key="@Demo.Name" Tab="@($"{Demo.Name}.razor")">
+                        <div class="highlight">
+                            <CodeView Value="@Demo.Code"></CodeView>
+                        </div>
+                    </TabPane>
+                    @foreach (var file in Demo.AdditionalFiles)
+                    {
+                        <TabPane Key="@file.Key" Tab="@file.Key">
+                            <div class="highlight">
+                                <CodeView Value="@file.Value"></CodeView>
+                            </div>
+                        </TabPane>
+                    }
+                </Tabs>
+            }
+            else
+            {
+                @* 单文件展示:使用CodeView编辑器 *@
+                <CodeView @bind-Value="@Demo.Code" Compiled="OnCompiled" />
+            }
+        }
     </section>
     <style>
         @Demo.Style
@@ -68,6 +106,7 @@
 @inject DemoService demoService;
 @inject ILocalizationService lang;
 @inject IStringLocalizer Localizer;
+
 @code {
 
     [Parameter]
@@ -77,38 +116,51 @@
     public DemoItem Demo { get; set; }
 
     [Parameter]
-    public bool CodeExpand { get; set; }
+    public bool CodeExpand
+    {
+        get => _codeExpand;
+        set
+        {
+            if (_codeExpand != value)
+            {
+                _codeExpand = value;
+                _innerExpand = value;
+            }
+        }
+    }
 
     private Type _demoType;
 
-    RenderFragment DebugIcon;
+    RenderFragment _debugIcon;
 
     private bool _copied;
     private bool _rendered;
+    private bool _codeViewRendered;
+    private ErrorBoundary _errorBoundary;
+    private bool _innerExpand;
+    private bool _codeExpand;
+    private string _activeFileTab; // 当前激活的文件Tab
 
-    protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name.ToLower()}";
+    protected string DemoId => $"components-{ComponentName.ToLower()}-demo-{Demo.Name}";
 
     private string EditUrl => $"https://github.com/ant-design-blazor/ant-design-blazor/edit/master/site/AntDesign.Docs/{Demo.Type.Replace(".", "/")}.razor";
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
         lang.LanguageChanged += OnLangeChanged;
-
+        
+        // 初始化文件Tab为主文件
+        _activeFileTab = Demo.Name;
+        
 #if DEBUG
-        DebugIcon =
-    @<a href="@($"{(Demo.Link??"mock")}?type={Demo.Type}")" class="code-box-code-action" target="_blank">
-            <Icon Type="bug" />
+        _debugIcon =
+    @<a href="@(Demo.Link??$"mock?type={Demo.Type}")" class="code-box-code-action" target="_blank">
+            <Icon Type="@IconType.Outline.Bug" />
     </a>
     ;
 #endif
     }
-
-    void IDisposable.Dispose()
-    {
-        lang.LanguageChanged -= OnLangeChanged;
-    } 
 
     async Task Copy()
     {
@@ -120,13 +172,22 @@
     {
         await InteropService.JsInvokeAsync("window.eval", $"window.location.hash='{DemoId}'");
     }
+    
+    void OnFileTabChange(string key)
+    {
+        _activeFileTab = key;
+    }
+
+    void IDisposable.Dispose()
+    {
+        lang.LanguageChanged -= OnLangeChanged;
+    } 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             _rendered = true;
-            await Task.Yield();
             StateHasChanged();
             return;
         }
@@ -136,6 +197,13 @@
             _demoType = Type.GetType($"{Assembly.GetExecutingAssembly().GetName().Name}.{Demo.Type}");
             StateHasChanged();
         }
+    }
+
+    void OnCompiled(Type type)
+    {
+        _demoType = type;
+        _errorBoundary.Recover();
+        StateHasChanged();
     }
 
     private void OnLangeChanged(object sender, CultureInfo e)

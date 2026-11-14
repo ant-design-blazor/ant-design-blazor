@@ -1,0 +1,86 @@
+@inherits AntDesignTestBase
+
+@code {
+    [Fact]
+    public async Task Search_OnPressEnter_Should_Trigger_Callback()
+    {
+        //Arrange
+        var onPressEnterInvoked = false;
+        Action<PressEnterEventArgs> action = (args) => { onPressEnterInvoked = true; };
+        var cut = Render<AntDesign.Search>(@<AntDesign.Search OnPressEnter="@(action)" />);
+
+        //Act
+        var input = cut.Find("input");
+        await input.KeyPressAsync(new KeyboardEventArgs { Code = "Enter" });
+
+        //Assert
+        onPressEnterInvoked.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Search_OnPressEnter_Should_Not_Trigger_On_Other_Keys()
+    {
+        //Arrange
+        var onPressEnterInvoked = false;
+        Action<PressEnterEventArgs> action = (args) => { onPressEnterInvoked = true; };
+        var cut = Render<AntDesign.Search>(@<AntDesign.Search OnPressEnter="@(action)" />);
+
+        //Act
+        var input = cut.Find("input");
+        await input.KeyPressAsync(new KeyboardEventArgs { Code = "KeyA" });
+
+        //Assert
+        onPressEnterInvoked.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Search_OnPressEnter_Should_Trigger_OnSearch()
+    {
+        //Arrange
+        var searchTriggered = false;
+        Action<string> action = value => { searchTriggered = true; };
+        var cut = Render<AntDesign.Search>(@<AntDesign.Search OnSearch="@(action)" />);
+
+        //Act
+        var input = cut.Find("input");
+        await input.KeyPressAsync(new KeyboardEventArgs { Code = "Enter" });
+
+        //Assert
+        searchTriggered.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task Search_OnPressEnter_Should_Pass_Current_Value_To_OnSearch()
+    {
+        //Arrange
+        string? searchedValue = null;
+        Action<string> action = value => { searchedValue = value; };
+        var cut = Render<AntDesign.Search>(@<AntDesign.Search OnSearch="@(action)" />);
+
+        //Act
+        var input = cut.Find("input");
+        await input.InputAsync(new ChangeEventArgs { Value = "test" });
+        await input.KeyPressAsync(new KeyboardEventArgs { Code = "Enter" });
+
+        //Assert
+        searchedValue.Should().Be("test");
+    }
+
+    [Fact]
+    public async Task Search_OnPressEnter_Should_Provide_KeyboardEventArgs()
+    {
+        //Arrange
+        PressEnterEventArgs? capturedArgs = null;
+        Action<PressEnterEventArgs> action = (args) => { capturedArgs = args; };
+        var cut = Render<AntDesign.Search>(@<AntDesign.Search OnPressEnter="@(action)" />);
+        
+        //Act
+        var input = cut.Find("input");
+        await input.KeyPressAsync(new KeyboardEventArgs { Code = "Enter", CtrlKey = true });
+        
+        //Assert
+        capturedArgs.Should().NotBeNull();
+        capturedArgs!.Code.Should().Be("Enter");
+        capturedArgs.CtrlKey.Should().BeTrue();
+    }
+}

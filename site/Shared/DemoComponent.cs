@@ -19,6 +19,8 @@ namespace AntDesign.Docs
 
         public string ApiDoc { get; set; }
 
+        public string Faq { get; set; }
+
         public int? Cols { get; set; }
 
         public string Cover { get; set; }
@@ -49,5 +51,11 @@ namespace AntDesign.Docs
         public bool? Docs { get; set; }
 
         public bool Debug { get; set; }
+
+        /// <summary>
+        /// Additional files to display in code view (e.g., related components)
+        /// Key: file name, Value: file content
+        /// </summary>
+        public Dictionary<string, string> AdditionalFiles { get; set; }
     }
 }

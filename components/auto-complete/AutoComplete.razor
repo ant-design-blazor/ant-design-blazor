@@ -11,45 +11,37 @@
                     Trigger="[]"
                     BoundaryAdjustMode="@BoundaryAdjustMode"
                     PopupContainerSelector="@PopupContainerSelector"
-                    OverlayEnterCls="ant-slide-up-enter ant-slide-up-enter-active ant-slide-up"
-                    OverlayLeaveCls="ant-slide-up-leave ant-slide-up-leave-active ant-slide-up"
+                    OverlayAnimation="@(new OverlayAnimationOptions { Animation = "slide", Direction = "up" })"
                     OverlayClassName="@OverlayClassName"
                     OverlayStyle="@OverlayStyle"
                     OnVisibleChange="@OnOverlayTriggerVisibleChange">
         <Overlay>
             <CascadingValue Value="this" IsFixed="@true">
-                @if (ShowPanel && !_isOptionsZero)
-                {
-                    <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @_minWidth">
-                        <div style="display: flex;flex-direction: column;">
-
-                            @if (OverlayTemplate != null)
-                            {
-                                @OverlayTemplate
-                            }
-                            else
+                <div style="max-height: 256px; overflow-y: auto; overflow-anchor: none; @_minWidth">
+                    <div style="display: flex;flex-direction: column;">
+                        @if (OverlayTemplate != null)
+                        {
+                            @OverlayTemplate
+                        }
+                        else if (_filteredOptions?.Any()==true)
+                        {
+                            @foreach (var option in _filteredOptions)
                             {
                                 @if (OptionTemplate != null)
                                 {
-                                    @foreach (var option in GetOptionItems())
-                                    {
-                                        @OptionTemplate(option)
-                                    }
+                                    @OptionTemplate(option)
                                 }
                                 else
                                 {
-                                    @foreach (var option in GetOptionItems())
-                                    {
-                                        var label = OptionFormat == null ? option.Label : OptionFormat(option);
-                                        <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
-                                            @label
-                                        </AutoCompleteOption>
-                                    }
+                                    var label = OptionFormat == null ? option.Label : OptionFormat(option);
+                                    <AutoCompleteOption Value="@option.Value" Label="@option.Label" Disabled="option.IsDisabled">
+                                        @label
+                                    </AutoCompleteOption>
                                 }
                             }
-                        </div>
+                        }
                     </div>
-                }
+                </div>
             </CascadingValue>
         </Overlay>
         <Unbound>
@@ -57,7 +49,7 @@
                 <CascadingValue Value="context" Name="OverlayTriggerContext" IsFixed>
                     @if (ChildContent == null)
                     {
-                        <AutoCompleteInput @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" DebounceMilliseconds="DebounceMilliseconds" BindOnInput Class="@Class" />
+                        <AutoCompleteInput AdditionalAttributes="AdditionalAttributes" @bind-Value="@CurrentValue" Placeholder="@Placeholder" Disabled="@Disabled" Style="@Style" Id="@Id" DebounceMilliseconds="DebounceMilliseconds" BindOnInput Class="@Class" />
                     }
                     else
                     {

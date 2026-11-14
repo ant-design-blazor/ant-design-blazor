@@ -17,6 +17,7 @@
             { "Picker", DatePicker.Picker },
             { "Locale", DatePicker.Locale },
             { "CultureInfo", DatePicker.CultureInfo },
+            { "DateCalendar", DatePicker.DateCalendar ?? DatePicker.CultureInfo.Calendar },
             { "ClosePanel", ClosePanel },
             { "ChangePickerValue", ChangePickerValue },
             { "ChangeValue", ChangeValue },
@@ -34,6 +35,7 @@
 
     Dictionary<string, object> dateAttributes = new Dictionary<string, object>(attributes);
     dateAttributes.Add("ShowToday", DatePicker.ShowToday);	
+    dateAttributes.Add("ShowWeek", DatePicker.ShowWeek);
 
     Dictionary<string, object> dateTimeAttributes = new Dictionary<string, object>(dateAttributes);
     dateTimeAttributes.Add("ShowTimeFormat", DatePicker.ShowTimeFormat);

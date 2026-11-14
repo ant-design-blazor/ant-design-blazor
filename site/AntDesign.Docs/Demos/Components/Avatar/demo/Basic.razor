@@ -1,17 +1,17 @@
 ﻿<div>
   <div>
-    <Avatar Size="5rem" Icon="user" />
-    <Avatar Size="large" Icon="user" />
-    <Avatar Icon="user" />
-    <Avatar Size="small" Icon="user" />
+    <Avatar Size="@("5rem")" Icon="@IconType.Outline.User" />
+    <Avatar Size="AvatarSize.Large" Icon="@IconType.Outline.User" />
+    <Avatar Icon="@IconType.Outline.User" />
+    <Avatar Size="AvatarSize.Small" Icon="@IconType.Outline.User" />
   </div>
   <div>
     <span @onclick="()=> size++ ">
-      <Avatar Shape="@AvatarShape.Square" Size="@size.ToString()" Icon="user" />
+      <Avatar Shape="AvatarShape.Square" Size="@size.ToString()" Icon="@IconType.Outline.User" />
     </span>
-    <Avatar Shape="@AvatarShape.Square" Size="large" Icon="user" />
-    <Avatar Shape="@AvatarShape.Square" Icon="user" />
-    <Avatar Shape="@AvatarShape.Square" Size="small" Icon="user" />
+    <Avatar Shape="AvatarShape.Square" Size="AvatarSize.Large" Icon="@IconType.Outline.User" />
+    <Avatar Shape="AvatarShape.Square" Icon="@IconType.Outline.User" />
+    <Avatar Shape="AvatarShape.Square" Size="AvatarSize.Small" Icon="@IconType.Outline.User" />
   </div>
 </div>
 
