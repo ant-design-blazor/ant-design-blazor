@@ -1,12 +1,12 @@
 @using AntDesign.TableModels
 
 <QuickTable TItem="Person" DataSource="@people" Bordered Size="TableSize.Small">
-    <PropertyColumn Property="person => person.Name" Title="Name">
+    <PropertyColumn TItem="Person" TProp="string" Property="person => person.Name" Title="Name">
         <CellRender Context="cell">
             <a>@cell.FieldValue</a>
         </CellRender>
     </PropertyColumn>
-    <PropertyColumn Property="person => person.Age" Title="Age" />
+    <PropertyColumn TItem="Person" TProp="int" Property="person => person.Age" Title="Age" />
     <ActionColumn Title="Action">
         <CellRender Context="cell">
             <Button Type="ButtonType.Link">

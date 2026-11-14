@@ -8,10 +8,9 @@ namespace AntDesign
     {
         protected override void OnInitialized()
         {
-            base.OnInitialized();
-
             if (ColSpan != 1) HeaderColSpan = ColSpan;
             if (ChildContent != null) TitleTemplate = ChildContent;
+            base.OnInitialized();
         }
 
         protected override void OnParametersSet()

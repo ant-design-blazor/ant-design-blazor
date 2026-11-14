@@ -6,9 +6,17 @@ using AntDesign.TableModels;
 
 namespace AntDesign
 {
-    internal interface IColumn
+    public interface IColumn
     {
-        public ITable Table { get; }
+        public ITable Table { get; set; }
+
+        public bool IsInitialize { get; set; }
+
+        public bool IsHeader { get; set; }
+
+        public bool IsPlaceholder { get; set; }
+
+        public bool IsColGroup { get; set; }
 
         public bool IsBody { get; set; }
 
@@ -22,17 +30,13 @@ namespace AntDesign
 
         public string Width { get; set; }
 
+        public RowData RowData { get; set; }
+
         public int ColSpan { get; set; }
 
         public int RowSpan { get; set; }
 
         public int HeaderColSpan { get; set; }
-
-        public bool Hidden { get; set; }
-
-        public RowData RowData { get; set; }
-
-        void Load();
 
         internal void UpdateFixedStyle();
     }

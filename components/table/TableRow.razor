@@ -1,6 +1,5 @@
 ﻿@namespace AntDesign
 @inherits AntDomComponentBase
-@using AntDesign.Table;
 @using AntDesign.TableModels
 
 @{
@@ -39,16 +38,7 @@
 else if (IsHeader)
 {
     <tr @attributes="attributes" class="@Class @RowAttributes?.GetValueOrDefault("class")">
-        @if (IsHeaderTemplate)
-        {
-            <CascadingValue Value="RowData">
-                @ChildContent
-            </CascadingValue>
-        }
-        else
-        {
-            @ChildContent
-        }
+        @ChildContent
         @if (ScrollY != null)
         {
             <th class="ant-table-cell @(HasFixRight?"ant-table-cell-fix-right":"") ant-table-cell-scrollbar" style="@(HasFixRight?"position: sticky; right: 0px;":"")"></th>
@@ -65,15 +55,6 @@ else if (IsHeader)
 
     [CascadingParameter(Name = "IsBody")]
     public bool IsBody { get; set; }
-
-    [CascadingParameter(Name = "IsHeaderTemplate")]
-    public bool IsHeaderTemplate { get; set; }
-
-    [CascadingParameter(Name = "IsRowTemplate")]
-    public bool IsRowTemplate{ get; set; }
-
-    [CascadingParameter(Name = "Table")]
-    public ITable Table { get; set; }
 
     [CascadingParameter(Name = "RowData")]
     public RowData RowData { get; set; }

@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using AntDesign.Filters;
 using AntDesign.TableModels;
@@ -12,7 +11,6 @@ namespace AntDesign
 {
     public interface ITable
     {
-        internal Type ItemType { get; }
         void ReloadData();
 
         void ReloadData(int? pageIndex, int? pageSize = null);
@@ -70,6 +68,8 @@ namespace AntDesign
         internal bool HasRowTemplate { get; }
 
         internal bool Quick { get; }
+
+        //internal void SelectionChanged();
 
         internal void OnExpandChange(RowData rowData);
 
