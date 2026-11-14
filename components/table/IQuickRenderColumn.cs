@@ -4,11 +4,12 @@
 
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
     internal interface IQuickRenderColumn
     {
-        RenderFragment RenderQuickBody(RowData rowData);
+        void RenderQuickBody(RenderTreeBuilder __builder, RowData rowData);
     }
 }

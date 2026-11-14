@@ -652,6 +652,14 @@ namespace AntDesign
             return queryModel;
         }
 
+        private RenderFragment RenderQuickCells(RowData rowData) => builder =>
+        {
+            foreach (var column in ColumnContext.Columns.Cast<IQuickRenderColumn>())
+            {
+                column.RenderQuickBody(builder, rowData);
+            }
+        };
+
         private void ForceReRender()
         {
             _shouldRender = true;

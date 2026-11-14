@@ -301,10 +301,7 @@
                             else if (Quick && !_treeMode && ExpandTemplate == null && !currentRowData.IsGrouping && ColumnContext.Columns.All(column => column is IQuickRenderColumn))
                             {
                                 <TableRow>
-                                    @foreach (var column in ColumnContext.Columns.Cast<IQuickRenderColumn>())
-                                    {
-                                        @column.RenderQuickBody(currentRowData)
-                                    }
+                                    @RenderQuickCells(currentRowData)
                                 </TableRow>
                             }
                             else

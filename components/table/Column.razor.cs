@@ -296,42 +296,18 @@ namespace AntDesign
         private Func<object, TData> _quickValueGetter;
         private Func<RowData, object> _quickItemGetter;
 
-        RenderFragment IQuickRenderColumn.RenderQuickBody(RowData rowData)
+        void IQuickRenderColumn.RenderQuickBody(RenderTreeBuilder __builder, RowData rowData)
         {
             if (Hidden || RowSpan == 0 || ColSpan == 0)
             {
-                return builder => { };
+                return;
             }
 
             var value = GetFieldExpression == null ? default : GetQuickValue(GetQuickItem(rowData));
             var cellData = new CellData<TData>(rowData, value, Format);
             var cellAttributes = OnCell?.Invoke(cellData);
             var title = Context?.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
-
-            return builder =>
-            {
-                builder.OpenElement(0, "td");
-                builder.AddMultipleAttributes(1, GetAdditionalAttributes(cellAttributes));
-                builder.AddAttribute(2, "class", ClassMapper.Class);
-                builder.AddAttribute(3, "style", $"{QuickFixedStyle} {Style}");
-                builder.AddAttribute(4, "rowspan", RowSpan > 1 ? RowSpan : null);
-                builder.AddAttribute(5, "colspan", ColSpan > 1 ? ColSpan : null);
-                builder.AddAttribute(6, "title", ShouldShowEllipsis ? cellData.FormattedValue : null);
-                builder.AddAttribute(7, "data-label", title);
-                if (CellRender != null)
-                {
-                    builder.AddContent(8, CellRender(cellData));
-                }
-                else if (ChildContent != null)
-                {
-                    builder.AddContent(8, ChildContent);
-                }
-                else
-                {
-                    builder.AddContent(8, cellData.FormattedValue);
-                }
-                builder.CloseElement();
-            };
+            QuickBody(__builder, cellData, cellAttributes, title);
         }
 
         private object GetQuickItem(RowData rowData)

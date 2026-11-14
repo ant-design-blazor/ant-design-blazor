@@ -4,6 +4,7 @@
 
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
@@ -18,32 +19,29 @@ namespace AntDesign
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
 
-        RenderFragment IQuickRenderColumn.RenderQuickBody(RowData rowData)
+        void IQuickRenderColumn.RenderQuickBody(RenderTreeBuilder builder, RowData rowData)
         {
             if (Hidden || RowSpan == 0 || ColSpan == 0)
             {
-                return builder => { };
+                return;
             }
 
             var cellData = new CellData(rowData);
-            return builder =>
+            builder.OpenElement(0, "td");
+            builder.AddMultipleAttributes(1, GetAdditionalAttributes(null));
+            builder.AddAttribute(2, "class", ClassMapper.Class);
+            builder.AddAttribute(3, "style", $"{QuickFixedStyle} {Style}");
+            builder.AddAttribute(4, "rowspan", RowSpan > 1 ? RowSpan : null);
+            builder.AddAttribute(5, "colspan", ColSpan > 1 ? ColSpan : null);
+            if (CellRender != null)
             {
-                builder.OpenElement(0, "td");
-                builder.AddMultipleAttributes(1, GetAdditionalAttributes(null));
-                builder.AddAttribute(2, "class", ClassMapper.Class);
-                builder.AddAttribute(3, "style", $"{QuickFixedStyle} {Style}");
-                builder.AddAttribute(4, "rowspan", RowSpan > 1 ? RowSpan : null);
-                builder.AddAttribute(5, "colspan", ColSpan > 1 ? ColSpan : null);
-                if (CellRender != null)
-                {
-                    builder.AddContent(6, CellRender(cellData));
-                }
-                else if (ChildContent != null)
-                {
-                    builder.AddContent(6, ChildContent);
-                }
-                builder.CloseElement();
-            };
+                builder.AddContent(6, CellRender(cellData));
+            }
+            else if (ChildContent != null)
+            {
+                builder.AddContent(6, ChildContent);
+            }
+            builder.CloseElement();
         }
 
         protected override void OnInitialized()
