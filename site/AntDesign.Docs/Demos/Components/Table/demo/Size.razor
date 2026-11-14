@@ -1,28 +1,24 @@
 @using System.ComponentModel
 <p>Middle size table</p>
-<Table DataSource="@data" Bordered=@true Size=@TableSize.Middle>
+<Table DataSource="@data" Bordered="true" Size="TableSize.Middle">
     <PropertyColumn Property="c=>c.Name">
-        <CellRender Context="cell">
-            <a>@cell.FieldValue</a>
-        </CellRender>
+        <a>@context.Name</a>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address"></PropertyColumn>
     <PropertyColumn Property="c=>c.Tags">
-        <CellRender Context="cell">
-            @foreach (var tag in cell.FieldValue)
+        @foreach (var tag in context.Tags)
+        {
+            var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
+            if (tag == "loser")
             {
-                var color = tag.Length > 5 ? "geekblue" : "green";
-                if (tag == "loser")
-                {
-                    color = "volcano";
-                }
-                <Tag Color="@color">@tag</Tag>
+                color = TagColor.Volcano;
             }
-        </CellRender>
+            <Tag Color="@color">@tag</Tag>
+        }
     </PropertyColumn>
     <ActionColumn Title="Action">
-        <Space Size=@("middle")>
+        <Space Size="SpaceSize.Middle">
             <SpaceItem>
                 <a>Invite @context.Name</a>
             </SpaceItem>
@@ -33,29 +29,25 @@
     </ActionColumn>
 </Table>
 <p>Small size table</p>
-<Table DataSource="@data" Bordered=@true Size=@TableSize.Small>
+<Table DataSource="@data" Bordered="true" Size="TableSize.Small">
     <PropertyColumn Property="c=>c.Name">
-        <CellRender Context="cell">
-            <a>@cell.FieldValue</a>
-        </CellRender>
+        <a>@context.Name</a>
     </PropertyColumn>
     <PropertyColumn Property="c=>c.Age"></PropertyColumn>
     <PropertyColumn Property="c=>c.Address"></PropertyColumn>
     <PropertyColumn Property="c=>c.Tags">
-        <CellRender Context="cell">
-            @foreach (var tag in cell.FieldValue)
+        @foreach (var tag in context.Tags)
+        {
+            var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
+            if (tag == "loser")
             {
-                var color = tag.Length > 5 ? "geekblue" : "green";
-                if (tag == "loser")
-                {
-                    color = "volcano";
-                }
-                <Tag Color="@color">@tag</Tag>
+                color = TagColor.Volcano;
             }
-        </CellRender>
+            <Tag Color="@color">@tag</Tag>
+        }
     </PropertyColumn>
     <ActionColumn Title="Action">
-        <Space Size=@("middle")>
+        <Space Size="SpaceSize.Middle">
             <SpaceItem>
                 <a>Invite @context.Name</a>
             </SpaceItem>

@@ -14,18 +14,18 @@
       <PropertyColumn Property="c=>c.Name" />
       <Column TData="string" Title="Status">
         <span>
-          <Badge Status="success" />
+          <Badge Status="BadgeStatus.Success" />
           Finished
         </span>
       </Column>
       <PropertyColumn Property="c=>c.UpgradeNum" />
       <ActionColumn Title="Action">
-        <Space Size="@("middle")">
+        <Space Size="SpaceSize.Middle">
           <SpaceItem><a>Pause</a></SpaceItem>
           <SpaceItem><a>Stop</a></SpaceItem>
           <SpaceItem>
             <Dropdown Overlay="menu">
-              <a>More <Icon Type="down" /></a>
+              <a>More <Icon Type="@IconType.Outline.Down" /></a>
             </Dropdown>
           </SpaceItem>
         </Space>

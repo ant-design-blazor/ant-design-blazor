@@ -5,7 +5,7 @@
        Loading="_loading" OnChange="HandleTableChange" RemoteDataSource>
     <PropertyColumn Property="c=>c.UserName" Sortable DefaultSortOrder="SortDirection.Ascending"></PropertyColumn>
     <PropertyColumn Property="c=>c.Gender" />
-    <PropertyColumn Property="c=>c.Emails.FirstOrDefault()" Title="Email"/>
+    <PropertyColumn Property="c=>c.Emails.FirstOrDefault()" />
 </Table>
 
 @inject HttpClient HttpClient;
@@ -25,7 +25,7 @@
 
         if (queryModel.SortModel.Any())
         {
-            queryString += "&$orderby=" + string.Join(",", queryModel.SortModel.Where(x => x.Sort is not null).OrderBy(x => x.Priority).Select(x => $"{x.FieldName}{(x.Sort == "descend" ? " desc" : "")}"));
+            queryString += "&$orderby=" + string.Join(",", queryModel.SortModel.OrderBy(x => x.Priority).Select(x => $"{x.FieldName}{(x.SortDirection == SortDirection.Descending ? " desc" : "")}"));
 
         }
 

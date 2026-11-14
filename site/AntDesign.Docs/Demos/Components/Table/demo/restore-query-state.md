@@ -1,7 +1,7 @@
 ﻿---
 order: 6.7
 title:
-  en-US: Restore query state
+  en-US: Restore Query State
   zh-CN: 筛选状态
 ---
 
@@ -12,5 +12,6 @@ title:
 
 ## en-US
 
-Every table configuration with 'Filter', 'Sort', 'PageSize' and 'PageIndex' can be saved and later re-applied by `ReloadData()`. 
-Also applied sorting and filters can be reseted by `ResetData()`.
+Every table configuration with `Filter`, `Sort`, `PageSize` and `PageIndex` can be saved and later re-applied by `ReloadData()`. 
+
+Applied sorting and filters can also be reset by calling `ResetData()`.

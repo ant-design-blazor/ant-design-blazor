@@ -1,7 +1,7 @@
 ---
-order: 17.2
+order: 22.5
 title:
-  en-US: Row Grouping
+  en-US: Grouping Rows
   zh-CN: 行分组
 ---
 

@@ -1,7 +1,7 @@
 ---
 order: 10
 title:
-  en-US: Ajax
+  en-US: AJAX
   zh-CN: 远程加载数据
 ---
 
@@ -19,7 +19,7 @@ title:
 
 This example shows how to fetch and present data from a remote server, and how to implement filtering and sorting in server side by sending related parameters to server.
 
-Setting `rowSelection.preserveSelectedRowKeys` to keep the `key` when enable selection.
+Setting `Selection.PreserveSelectedRowKeys` to keep the `key` when enabling selection.
 
 Note, this example use [Mock API](https://randomuser.me/) that you can look up in Network Console.
 

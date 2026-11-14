@@ -1,7 +1,7 @@
 ---
 order: 2
 title:
-  en-US: Selection
+  en-US: Row Selection
   zh-CN: 行选择
 ---
 
@@ -13,6 +13,6 @@ title:
 
 ## en-US
 
-Rows can be selectable by making first column as a selectable column. You can use `rowSelection.type` to set selection type. Default is `checkbox`.
+Rows can be selectable by making first column as a selectable column. You can use `Selection.Type` to set selection type. Default is `checkbox`.
 
 > Default values can be set for `SelectedRows` to set the default selection. The default is to compare the column data with the object reference, so **select the object from the DataSource**. You can also customize the compare key using the `RowKey` parameter on the Table.

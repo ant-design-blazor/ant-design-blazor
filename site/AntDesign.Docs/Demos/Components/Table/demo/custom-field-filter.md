@@ -2,7 +2,7 @@
 order: 6.55
 title:
   zh-CN: 自定义筛选器
-  en-US: Custom field filter
+  en-US: Custom Field Filter
 ---
 
 ## zh-CN

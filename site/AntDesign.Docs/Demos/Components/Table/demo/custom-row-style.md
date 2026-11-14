@@ -13,8 +13,6 @@ title:
 
 ## en-US
 
-A solution for displaying custom styling on rows.
-> When you need to conditionally style rows based on the data provided.
-> The example highlights rows where score is < 70.
+Rows can be given a class by utilizing the `RowClassName` property. In this example, the row is given a class of `danger` if the data item's `Score` property is greater than 70.
 
 Note: If you set a fixed column, you also need to specify a style for the cell.

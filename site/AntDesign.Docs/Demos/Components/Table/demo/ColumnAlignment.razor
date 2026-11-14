@@ -3,26 +3,24 @@
 <p>Column alignment: @columnAlign</p>
 <EnumRadioGroup TEnum="ColumnAlign" @bind-Value="@columnAlign" />
 
-<Table TItem="Data" DataSource="@data" Quick>
+<Table TItem="Data" DataSource="@data">
     @*By default, ColumnAlign is Left (if Align property isn't defined)*@
     <PropertyColumn Property="c=>c.Name" Align="@columnAlign" />
     <PropertyColumn Property="c=>c.Age" Align="@columnAlign" Sortable />
     <PropertyColumn Property="c=>c.Address" Align="@columnAlign">
         <TitleTemplate>
-            <span> <Icon Type="environment" /> Address </span>
+            <span><Icon Type="@IconType.Outline.Environment" /> Address</span>
         </TitleTemplate>
     </PropertyColumn>
-    <PropertyColumn Property="c=>c.Tags" Align="columnAlign">
-        <CellRender Context="cell">
-            @foreach (var tag in cell.FieldValue)
-            {
-                string color = tag.Length > 5 ? "geekblue" : "green";
-                <Tag Color="@color">@tag</Tag>
-            }
-        </CellRender>
+  <PropertyColumn Property="c=>c.Tags" Align="columnAlign">
+        @foreach (var tag in context.Tags)
+        {
+            var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
+            <Tag Color="@color">@tag</Tag>
+        }
     </PropertyColumn>
     <ActionColumn Title="Action" Align="columnAlign">
-        <Space Size=@("middle")>
+        <Space Size="SpaceSize.Middle">
             <SpaceItem>
                 <a>Invite @context.Name</a>
             </SpaceItem>
@@ -34,7 +32,7 @@
 </Table>
 
 
-@code {
+@code{
     ColumnAlign columnAlign = ColumnAlign.Left;
 
     readonly Data[] data = new Data[]

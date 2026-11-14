@@ -354,6 +354,9 @@ namespace AntDesign
         /// The default remains false in 1.x to preserve the existing ChildContent rendering behavior.
         /// ChildContent remains the column-definition input and is invoked once to initialize the table. In 2.0, only the repeated legacy rendering path can be removed after consumers migrate custom row and cell rendering to RowTemplate and CellRender.
         /// </summary>
+        /// <remarks>
+        /// In quick mode, row-specific content should use CellRender with cell.FieldValue or cell.RowData. ChildContent that relies on the outer row context is not re-executed for each row. Quick mode does not currently support GroupTitleTemplate; keep this option disabled when using row grouping.
+        /// </remarks>
         /// <default value="false" />
         [Parameter]
         public bool Quick { get; set; }

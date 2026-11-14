@@ -1,44 +1,40 @@
 ﻿@using System.ComponentModel
 
 <Table TItem="Data" DataSource="data" @bind-PageSize="pageSize">
-    <ColumnDefinitions>
+    <ChildContent>
         <PropertyColumn Property="c=>c.Name">
-            <CellRender Context="cell">
-                <a>@cell.FieldValue</a>
-            </CellRender>
+            <a>@context.Name</a>
         </PropertyColumn>
         <PropertyColumn Property="c=>c.Age"></PropertyColumn>
         <PropertyColumn Property="c=>c.Address">
             <TitleTemplate>
-                <span> <Icon Type="environment" /> Address </span>
+                <span><Icon Type="@IconType.Outline.Environment" /> Address</span>
             </TitleTemplate>
         </PropertyColumn>
         <PropertyColumn Property="c=>c.Tags">
-            <CellRender Context="cell">
-                @foreach (var tag in cell.FieldValue)
+            @foreach (var tag in context.Tags)
+            {
+                var color = tag.Length > 5 ? TagColor.GeekBlue : TagColor.Green;
+                if (tag == "loser")
                 {
-                    var color = tag.Length > 5 ? "geekblue" : "green";
-                    if (tag == "loser")
-                    {
-                        color = "volcano";
-                    }
-                    <Tag Color="@color">@tag</Tag>
+                    color = TagColor.Volcano;
                 }
-            </CellRender>
+                <Tag Color="@color">@tag</Tag>
+            }
         </PropertyColumn>
-    </ColumnDefinitions>
+    </ChildContent>
 
     <PaginationTemplate>
         <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
                     Total="context.Total"
                     PageSize="context.PageSize"
                     Current="context.PageIndex"
-                        ShowSizeChanger
+                    ShowSizeChanger
                     OnChange="context.HandlePageChange" />
     </PaginationTemplate>
-    </Table>
+</Table>
 
-    @code {
+@code {
     Data[] data = new Data[]
     {
         new()
