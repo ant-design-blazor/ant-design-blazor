@@ -1,0 +1,36 @@
+@using System.ComponentModel
+<Table DataSource="data" PageSize="10" ScrollX="1500" StickyOffsetHeader="64">
+    <PropertyColumn Property="c=>c.Name" Width="100" Fixed="ColumnFixPlacement.Left" />
+    <PropertyColumn Property="c=>c.Age" Width="100" Fixed="ColumnFixPlacement.Left" />
+    <PropertyColumn Property="c=>c.Address" Width="150" Title="Column 1" />
+    <PropertyColumn Property="c=>c.Address" Width="150" Title="Column 2" />
+    <PropertyColumn Property="c=>c.Address" Width="150" Title="Column 3" />
+    <PropertyColumn Property="c=>c.Address" Width="150" Title="Column 4" />
+    <PropertyColumn Property="c=>c.Address" Width="150" Title="Column 5" />
+    <PropertyColumn Property="c=>c.Address" Width="150" Title="Column 6" />
+    <PropertyColumn Property="c=>c.Address" Width="150" Title="Column 7" />
+    <PropertyColumn Property="c=>c.Address" Title="Column 8" />
+    <ActionColumn Title="Action" Width="100" Fixed="ColumnFixPlacement.Right">
+        <a>action</a>
+    </ActionColumn>
+</Table>
+
+@code {
+    class Column
+    {
+        [DisplayName("Full Name")]
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+
+        public string Address { get; set; }
+    }
+
+    Column[] data = Enumerable.Range(0, 100).Select(i => new Column()
+    {
+        Name = $"Edrward {i}",
+        Age = 32,
+        Address = $"London Park no. {i}"
+    }).ToArray();
+
+}

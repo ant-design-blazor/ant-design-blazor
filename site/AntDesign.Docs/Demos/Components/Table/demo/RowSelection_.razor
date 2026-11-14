@@ -76,8 +76,7 @@
 
     public void RemoveSelection(string key)
     {
-        var selected = selectedRows.Where(x => x.Name != key).ToList();
-        table.SetSelection(selected.Select(x => x.Name).ToArray());
+        this.selectedRows = selectedRows.Where(x => x.Name != key).ToList();
     }
 
     void OnSelectAll(bool selectAll)
