@@ -350,11 +350,13 @@ namespace AntDesign
         public RenderFragment EmptyTemplate { get; set; }
 
         /// <summary>
-        /// Whether to enable the quick mode
+        /// Enables the quick table rendering path, which reuses column definitions instead of replaying ChildContent for each header and row.
+        /// The default remains false in 1.x to preserve the existing ChildContent rendering behavior.
+        /// ChildContent remains the column-definition input and is invoked once to initialize the table. In 2.0, only the repeated legacy rendering path can be removed after consumers migrate custom row and cell rendering to RowTemplate and CellRender.
         /// </summary>
-        /// <default value="true" />
+        /// <default value="false" />
         [Parameter]
-        public bool Quick { get; set; } = true;
+        public bool Quick { get; set; }
 
         /// Specify the identifier of each row
         /// </summary>
