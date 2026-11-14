@@ -169,6 +169,26 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
         }
     }
 
+    void QuickBody(RenderTreeBuilder __builder, CellData<TData> cellData, Dictionary<string, object> cellAttributes, string title)
+    {
+        <td @attributes="GetAdditionalAttributes(cellAttributes)" class="@ClassMapper.Class" style="@($"{QuickFixedStyle} {Style}")"
+            rowspan="@(RowSpan > 1 ? RowSpan : false)" colspan="@(ColSpan > 1 ? ColSpan : false)"
+            title="@(ShouldShowEllipsis ? cellData.FormattedValue : false)" data-label="@title">
+            @if (CellRender != null)
+            {
+                @CellRender(cellData)
+            }
+            else if (ChildContent != null)
+            {
+                @ChildContent
+            }
+            else
+            {
+                @cellData.FormattedValue
+            }
+        </td>
+    }
+
     RenderFragment HeaderCellContent()
     {
         if (Sortable || (_filterable && _filters?.Any() == true))

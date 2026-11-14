@@ -32,7 +32,7 @@ namespace AntDesign
     /// <typeparam name="TData">
     /// The type of a property of the TItem objec. 
     /// </typeparam>
-    public partial class Column<TData> : ColumnBase, IFieldColumn, IColumnInternal<TData>
+    public partial class Column<TData> : ColumnBase, IFieldColumn, IColumnInternal<TData>, IQuickRenderColumn
     {
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
         internal bool Blocked { get; set; }
@@ -292,6 +292,56 @@ namespace AntDesign
         protected Func<RowData, TData> GetValue { get; set; }
 
         protected LambdaExpression GetFieldExpression { get; set; }
+
+        private Func<object, TData> _quickValueGetter;
+        private Func<RowData, object> _quickItemGetter;
+
+        void IQuickRenderColumn.RenderQuickBody(RenderTreeBuilder __builder, RowData rowData)
+        {
+            if (Hidden || RowSpan == 0 || ColSpan == 0)
+            {
+                return;
+            }
+
+            var value = GetFieldExpression == null ? default : GetQuickValue(GetQuickItem(rowData));
+            var cellData = new CellData<TData>(rowData, value, Format);
+            var cellAttributes = OnCell?.Invoke(cellData);
+            var title = Context?.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
+            QuickBody(__builder, cellData, cellAttributes, title);
+        }
+
+        private object GetQuickItem(RowData rowData)
+        {
+            if (_quickItemGetter == null)
+            {
+                var rowType = typeof(RowData<>).MakeGenericType(ItemType);
+                var rowParameter = Expression.Parameter(typeof(RowData), "row");
+                var typedRow = Expression.Convert(rowParameter, rowType);
+                var dataProperty = rowType.GetProperty(nameof(RowData<int>.Data));
+                _quickItemGetter = Expression.Lambda<Func<RowData, object>>(
+                    Expression.Convert(Expression.Property(typedRow, dataProperty), typeof(object)),
+                    rowParameter).Compile();
+            }
+
+            return _quickItemGetter(rowData);
+        }
+
+        private TData GetQuickValue(object item)
+        {
+            if (item == null)
+            {
+                return default;
+            }
+
+            if (_quickValueGetter == null)
+            {
+                var itemParameter = Expression.Parameter(typeof(object), "item");
+                var fieldValue = Expression.Invoke(GetFieldExpression, Expression.Convert(itemParameter, ItemType));
+                _quickValueGetter = Expression.Lambda<Func<object, TData>>(fieldValue, itemParameter).Compile();
+            }
+
+            return _quickValueGetter(item);
+        }
 
         void IFieldColumn.ClearSorter()
         {

@@ -298,6 +298,12 @@
                             {
                                 @RowTemplate(currentRowData)
                             }
+                            else if (Quick && !_treeMode && ExpandTemplate == null && !currentRowData.IsGrouping && ColumnContext.Columns.All(column => column is IQuickRenderColumn))
+                            {
+                                <TableRow>
+                                    @RenderQuickCells(currentRowData)
+                                </TableRow>
+                            }
                             else
                             {
                                 <TableRow>

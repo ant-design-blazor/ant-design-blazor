@@ -157,6 +157,8 @@ namespace AntDesign
 
         protected string FixedStyle => _fixedStyle;
 
+        protected string QuickFixedStyle => CalcFixedStyle();
+
         private int ActualColumnSpan => IsHeader ? HeaderColSpan : ColSpan;
 
         private int ColEndIndex => ColIndex + ActualColumnSpan;

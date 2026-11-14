@@ -1,0 +1,33 @@
+@using AntDesign.TableModels
+
+<QuickTable TItem="Person" DataSource="@people" Bordered Size="TableSize.Small">
+    <PropertyColumn TItem="Person" TProp="string" Property="person => person.Name" Title="Name">
+        <CellRender Context="cell">
+            <a>@cell.FieldValue</a>
+        </CellRender>
+    </PropertyColumn>
+    <PropertyColumn TItem="Person" TProp="int" Property="person => person.Age" Title="Age" />
+    <ActionColumn Title="Action">
+        <CellRender Context="cell">
+            <Button Type="ButtonType.Link">
+                View @(((RowData<Person>)cell.RowData).Data.Name)
+            </Button>
+        </CellRender>
+    </ActionColumn>
+</QuickTable>
+
+@code {
+    private readonly Person[] people =
+    {
+        new() { Name = "Alice", Age = 28 },
+        new() { Name = "Bob", Age = 32 },
+        new() { Name = "Carol", Age = 25 }
+    };
+
+    private sealed class Person
+    {
+        public string Name { get; set; }
+
+        public int Age { get; set; }
+    }
+}

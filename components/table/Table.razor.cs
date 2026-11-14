@@ -128,6 +128,17 @@ namespace AntDesign
         public RenderFragment<RowData<TItem>> RowTemplate { get; set; }
 
         /// <summary>
+        /// Renders cells directly from initialized column definitions to reduce component creation for each row.
+        /// Use <see cref="Column{TData}.CellRender"/> or <see cref="ActionColumn.CellRender"/> for row-specific content.
+        /// </summary>
+        /// <remarks>
+        /// Quick rendering is used when every column has a direct cell renderer. Tables with row grouping, a selection column, or custom column components keep the standard rendering path.
+        /// </remarks>
+        /// <default value="false" />
+        [Parameter]
+        public bool Quick { get; set; }
+
+        /// <summary>
         /// Template for column definitions
         /// </summary>
         [Parameter]
@@ -460,6 +471,7 @@ namespace AntDesign
         bool ITable.HasExpandTemplate => ExpandTemplate != null;
         bool ITable.HasHeaderTemplate => HeaderTemplate != null;
         bool ITable.HasRowTemplate => RowTemplate != null;
+        bool ITable.Quick => Quick;
         bool ITable.ServerSide => ServerSide;
         bool ITable.IsSticky => IsSticky;
 
@@ -639,6 +651,14 @@ namespace AntDesign
 
             return queryModel;
         }
+
+        private RenderFragment RenderQuickCells(RowData rowData) => builder =>
+        {
+            foreach (var column in ColumnContext.Columns.Cast<IQuickRenderColumn>())
+            {
+                column.RenderQuickBody(builder, rowData);
+            }
+        };
 
         private void ForceReRender()
         {

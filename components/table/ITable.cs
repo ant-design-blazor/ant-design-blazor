@@ -67,6 +67,8 @@ namespace AntDesign
 
         internal bool HasRowTemplate { get; }
 
+        internal bool Quick { get; }
+
         //internal void SelectionChanged();
 
         internal void OnExpandChange(RowData rowData);

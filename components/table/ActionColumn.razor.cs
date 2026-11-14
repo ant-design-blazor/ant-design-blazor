@@ -4,10 +4,11 @@
 
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
-    public partial class ActionColumn : ColumnBase
+    public partial class ActionColumn : ColumnBase, IQuickRenderColumn
     {
         [CascadingParameter(Name = "AntDesign.Column.Blocked")]
         internal bool Blocked { get; set; }
@@ -17,6 +18,31 @@ namespace AntDesign
         /// </summary>
         [Parameter]
         public virtual RenderFragment<CellData> CellRender { get; set; }
+
+        void IQuickRenderColumn.RenderQuickBody(RenderTreeBuilder builder, RowData rowData)
+        {
+            if (Hidden || RowSpan == 0 || ColSpan == 0)
+            {
+                return;
+            }
+
+            var cellData = new CellData(rowData);
+            builder.OpenElement(0, "td");
+            builder.AddMultipleAttributes(1, GetAdditionalAttributes(null));
+            builder.AddAttribute(2, "class", ClassMapper.Class);
+            builder.AddAttribute(3, "style", $"{QuickFixedStyle} {Style}");
+            builder.AddAttribute(4, "rowspan", RowSpan > 1 ? RowSpan : null);
+            builder.AddAttribute(5, "colspan", ColSpan > 1 ? ColSpan : null);
+            if (CellRender != null)
+            {
+                builder.AddContent(6, CellRender(cellData));
+            }
+            else if (ChildContent != null)
+            {
+                builder.AddContent(6, ChildContent);
+            }
+            builder.CloseElement();
+        }
 
         protected override void OnInitialized()
         {
