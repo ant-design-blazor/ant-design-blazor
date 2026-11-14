@@ -1,0 +1,19 @@
+<span id="tour-placement-target" @ref="_target"><Button Type="ButtonType.Primary" OnClick="StartTour">Begin Tour</Button></span>
+
+<Tour Open="@_open" OpenChanged="OnOpenChanged" Steps="@_steps" />
+
+@code {
+    private bool _open;
+    private ElementReference _target;
+
+    private IReadOnlyList<TourStep> _steps => new[]
+    {
+        new TourStep { Title = Text("Center"), Description = Text("Displayed in the center of screen.") },
+        new TourStep { Target = "#tour-placement-target", Title = Text("Right"), Description = Text("On the right of target."), Placement = AntDesign.Placement.Right },
+        new TourStep { Target = _target, Title = Text("Top"), Description = Text("On the top of target."), Placement = AntDesign.Placement.Top }
+    };
+
+    private void StartTour() => _open = true;
+    private Task OnOpenChanged(bool value) { _open = value; return Task.CompletedTask; }
+    private static RenderFragment Text(string value) => builder => builder.AddContent(0, value);
+}
