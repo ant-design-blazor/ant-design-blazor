@@ -171,10 +171,40 @@ else if (IsBody && RowSpan != 0 && ColSpan != 0)
 
     void QuickBody(RenderTreeBuilder __builder, CellData<TData> cellData, Dictionary<string, object> cellAttributes, string title)
     {
+        @if (AppendExpandColumn)
+        {
+            <td class="ant-table-cell ant-table-row-expand-icon-cell">
+                @if (Table.RowExpandable(cellData.RowData) && !Table.TreeMode)
+                {
+                    <button type="button" @onclick="() => ToggleTreeNode(cellData.RowData)" @onclick:stopPropagation
+                            class="ant-table-row-expand-icon @(cellData.RowData.Expanded ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")"
+                            aria-label="@(cellData.RowData.Expanded ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
+                }
+            </td>
+        }
+
         <td @attributes="GetAdditionalAttributes(cellAttributes)" class="@ClassMapper.Class" style="@($"{QuickFixedStyle} {Style}")"
-            rowspan="@(RowSpan > 1 ? RowSpan : false)" colspan="@(ColSpan > 1 ? ColSpan : false)"
+            rowspan="@(RowSpan > 1 ? RowSpan : false)" colspan="@(cellData.RowData.IsGrouping ? Context.Columns.Count + 1 : (ColSpan > 1 ? ColSpan : false))"
             title="@(ShouldShowEllipsis ? cellData.FormattedValue : false)" data-label="@title">
-            @if (CellRender != null)
+            @if (ColIndex == Table.TreeExpandIconColumnIndex && (Table.TreeMode || cellData.RowData.IsGrouping))
+            {
+                <span class="ant-table-row-indent indent-level-@cellData.RowData.Level" style="padding-left: @((CssSizeLength)(cellData.RowData.Level * Table.IndentSize));"></span>
+                @if (cellData.RowData.TableDataItem.HasChildren || cellData.RowData.IsGrouping)
+                {
+                    <button type="button" @onclick="() => ToggleTreeNode(cellData.RowData)" @onclick:stopPropagation
+                            class="ant-table-row-expand-icon @(cellData.RowData.Expanded ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")"
+                            aria-label="@(cellData.RowData.Expanded ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
+                }
+                else
+                {
+                    <button type="button" class="ant-table-row-expand-icon ant-table-row-expand-icon-spaced" aria-label="@Table.Locale.Expand"></button>
+                }
+            }
+            @if (cellData.RowData.IsGrouping)
+            {
+                @Table.GroupTitleTemplate(cellData.RowData)
+            }
+            else if (CellRender != null)
             {
                 @CellRender(cellData)
             }

@@ -298,14 +298,14 @@ namespace AntDesign
 
         void IQuickRenderColumn.RenderQuickBody(RenderTreeBuilder __builder, RowData rowData)
         {
-            if (Hidden || RowSpan == 0 || ColSpan == 0)
+            if (Hidden || RowSpan == 0 || ColSpan == 0 || (rowData.IsGrouping && ColIndex != Table.TreeExpandIconColumnIndex))
             {
                 return;
             }
 
-            var value = GetFieldExpression == null ? default : GetQuickValue(GetQuickItem(rowData));
+            var value = rowData.IsGrouping || GetFieldExpression == null ? default : GetQuickValue(GetQuickItem(rowData));
             var cellData = new CellData<TData>(rowData, value, Format);
-            var cellAttributes = OnCell?.Invoke(cellData);
+            var cellAttributes = rowData.IsGrouping ? null : OnCell?.Invoke(cellData);
             var title = Context?.HeaderColumns.LastOrDefault(x => x.ColIndex <= ColIndex && x.ColIndex + x.HeaderColSpan > ColIndex)?.Title;
             QuickBody(__builder, cellData, cellAttributes, title);
         }

@@ -62,6 +62,9 @@ namespace AntDesign
     public partial class Table<TItem> : AntDomComponentBase, ITable, IEqualityComparer<TItem>, IAsyncDisposable
 #endif
     {
+        private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _columnRenderParameters = new();
+        private readonly Dictionary<IColumn, RenderFragment> _registeredColumnRenderers = new();
+
         private static TItem _fieldModel = typeof(TItem).IsInterface ? DispatchProxy.Create<TItem, TItemProxy>()
             : !typeof(TItem).IsAbstract ? ExpressionActivator<TItem>.CreateInstance()
             ?? (TItem)RuntimeHelpers.GetUninitializedObject(typeof(TItem))
@@ -132,11 +135,12 @@ namespace AntDesign
         /// Use <see cref="Column{TData}.CellRender"/> or <see cref="ActionColumn.CellRender"/> for row-specific content.
         /// </summary>
         /// <remarks>
-        /// Quick rendering is used when every column has a direct cell renderer. Tables with row grouping, a selection column, or custom column components keep the standard rendering path.
+        /// Quick rendering is enabled by default. Columns using regular ChildContent
+        /// keep their existing per-row behavior through a compatibility rendering path.
         /// </remarks>
-        /// <default value="false" />
+        /// <default value="true" />
         [Parameter]
-        public bool Quick { get; set; }
+        public bool Quick { get; set; } = true;
 
         /// <summary>
         /// Template for column definitions
@@ -416,6 +420,7 @@ namespace AntDesign
         private IList<SummaryRow> _summaryRows;
 
         private bool _hasInitialized;
+        private bool _quickCompatibilityWarningLogged;
         private bool _waitingDataSourceReload;
         private bool _waitingReloadAndInvokeChange;
         private bool _treeMode;
@@ -539,6 +544,7 @@ namespace AntDesign
             }
 
             _hasInitialized = true;
+            _ = HasQuickLegacyChildContent;
             ReloadAndInvokeChange();
         }
 
@@ -658,6 +664,94 @@ namespace AntDesign
             {
                 column.RenderQuickBody(builder, rowData);
             }
+        };
+
+        // A plain column ChildContent is a RenderFragment that may close over the
+        // item passed to Table.ChildContent. The quick registration pass only has
+        // the field model, so re-render the original column definitions per row
+        // when such legacy content is present. CellRender remains on the quick path.
+        private bool HasQuickLegacyChildContent
+        {
+            get
+            {
+                var hasLegacyChildContent = Quick && ColumnContext.Columns
+                    .OfType<ColumnBase>()
+                    .Any(column => column.ChildContent != null
+                        && (!column.RegisteredParameters.TryGetValue("CellRender", out var cellRender) || cellRender == null));
+
+                if (hasLegacyChildContent && !_quickCompatibilityWarningLogged)
+                {
+                    Logger?.LogWarning("Table Quick mode is using the compatibility rendering path because a column defines ChildContent without CellRender. Use CellRender to avoid re-executing the column template for every row and improve rendering performance.");
+                    _quickCompatibilityWarningLogged = true;
+                }
+
+                return hasLegacyChildContent;
+            }
+        }
+
+        private RenderFragment RenderRegisteredColumns() => builder =>
+        {
+            var sequence = 0;
+            foreach (var column in ColumnContext.Columns)
+            {
+                builder.AddContent(sequence++, GetRegisteredColumnRenderer(column));
+            }
+        };
+
+        private RenderFragment RenderRegisteredBodyColumns(RowData rowData) => builder =>
+        {
+            var sequence = 0;
+            foreach (var column in ColumnContext.Columns)
+            {
+                if (column is IQuickRenderColumn quickColumn)
+                {
+                    quickColumn.RenderQuickBody(builder, rowData);
+                }
+                else
+                {
+                    builder.AddContent(sequence++, GetRegisteredColumnRenderer(column));
+                }
+            }
+        };
+
+        private RenderFragment GetRegisteredColumnRenderer(IColumn column)
+        {
+            if (!_registeredColumnRenderers.TryGetValue(column, out var renderer))
+            {
+                renderer = RenderRegisteredColumn(column);
+                _registeredColumnRenderers.Add(column, renderer);
+            }
+
+            return renderer;
+        }
+
+        private static RenderFragment RenderRegisteredColumn(IColumn column) => builder =>
+        {
+            builder.OpenComponent(0, column.GetType());
+            var parameters = _columnRenderParameters.GetOrAdd(column.GetType(), type => type
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(property => property.GetCustomAttribute<ParameterAttribute>() != null)
+                .GroupBy(property => property.Name)
+                .Select(group => group.Last())
+                .ToArray());
+
+            var sequence = 1;
+            if (column is ColumnBase columnBase)
+            {
+                foreach (var parameter in columnBase.RegisteredParameters)
+                {
+                    builder.AddAttribute(sequence++, parameter.Key, parameter.Value);
+                }
+            }
+            else
+            {
+                foreach (var parameter in parameters)
+                {
+                    builder.AddAttribute(sequence++, parameter.Name, parameter.GetValue(column));
+                }
+            }
+
+            builder.CloseComponent();
         };
 
         private void ForceReRender()
@@ -1178,6 +1272,10 @@ namespace AntDesign
         /// <returns>Whether to start rebuilding</returns>
         protected virtual bool RebuildColumns(bool add)
         {
+            // Quick mode keeps the registered column components mounted in ColumnRegistrationHost.
+            // Clearing and restoring ChildContent would execute the column definitions again.
+            if (Quick) return false;
+
             // avoid rerender again before initialized (beacuse when we render the empty ChildContent, it will be called by Dispose)
             if (add && !_hasInitialized) return false;
             // avoid rerender again when the column are cleared

@@ -200,10 +200,11 @@ namespace AntDesign.Tests.Table
         }
 
         [Fact]
-        public void Header_template_and_row_template_can_render_custom_rows()
+        public void Quick_mode_keeps_header_and_row_templates()
         {
             // GroupingColumns, RowTemplate.
             var cut = RenderTable(Array.Empty<RenderFragment<Item>>(), parameters => parameters
+                .Add(table => table.Quick, true)
                 .Add(table => table.HeaderTemplate, _ => builder =>
                 {
                     builder.OpenComponent<TableRow>(0);
@@ -288,15 +289,18 @@ namespace AntDesign.Tests.Table
         }
 
         [Fact]
-        public void Expand_template_is_shown_for_expandable_rows()
+        public async Task Expand_template_is_shown_for_expandable_rows()
         {
             // Expand, NestedTable.
             var cut = RenderTable(new[] { PropertyColumn("Name", item => item.Name) }, parameters => parameters
+                .Add(table => table.Quick, true)
                 .Add(table => table.ExpandTemplate, row => builder => builder.AddContent(0, $"Details {row.Data.Name}"))
                 .Add(table => table.RowExpandable, row => row.Data.Name != "Charlie"));
 
             Assert.Contains("ant-table-row-expand-icon", cut.Markup);
             Assert.DoesNotContain("Details Charlie", cut.Markup);
+            await cut.InvokeAsync(() => cut.Find(".ant-table-row-expand-icon").Click());
+            Assert.Contains("Details Alice", cut.Markup);
         }
 
         [Fact]
@@ -362,23 +366,29 @@ namespace AntDesign.Tests.Table
         }
 
         [Fact]
-        public void Grouped_rows_render_group_titles_and_values()
+        public async Task Grouped_rows_render_group_titles_and_values()
         {
             // GroupingRows, GroupingColumns, including Quick rendering.
             var cut = RenderTable(new[]
             {
-                PropertyColumn("Group", item => item.Group, (nameof(Column<string>.Grouping), true)),
+                PropertyColumn("Group", item => item.Group,
+                    (nameof(Column<string>.Grouping), true),
+                    (nameof(Column<string>.TitleTemplate), (RenderFragment)(builder => builder.AddContent(0, "Grouped field")))),
                 PropertyColumn("Name", item => item.Name),
             }, parameters => parameters
                 .Add(table => table.HidePagination, true)
-                .Add(table => table.Quick, true));
+                .Add(table => table.Quick, true)
+                .Add(table => table.GroupTitleTemplate, group => builder => builder.AddContent(0, $"Group {group.Key}")));
 
+            Assert.Contains("Group A", cut.Markup);
+            Assert.Contains("Group B", cut.Markup);
+            Assert.Contains("Grouped field", cut.Find("thead").TextContent);
             Assert.Contains("A", cut.Markup);
             Assert.Contains("B", cut.Markup);
-            var groupBRow = cut.FindAll("tbody tr.ant-table-row").First(row => row.TextContent.Contains("B"));
-            var groupBExpand = groupBRow.QuerySelector(".ant-table-row-expand-icon");
-            Assert.NotNull(groupBExpand);
-            groupBExpand.Click();
+            await cut.InvokeAsync(() => cut.FindAll("tbody tr.ant-table-row")
+                .First(row => row.TextContent.Contains("Group B"))
+                .QuerySelector(".ant-table-row-expand-icon")
+                .Click());
             Assert.Contains("Charlie", cut.Markup);
         }
 
@@ -540,7 +550,7 @@ namespace AntDesign.Tests.Table
         }
 
         [Fact]
-        public void Quick_mode_falls_back_for_selection_and_custom_row_templates()
+        public void Quick_mode_supports_selection_columns_and_custom_row_templates()
         {
             // QuickTable plus RowSelection and RowTemplate compatibility.
             var cut = RenderTable(new[]

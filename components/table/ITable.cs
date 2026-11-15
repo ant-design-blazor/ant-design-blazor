@@ -57,6 +57,8 @@ namespace AntDesign
 
         internal void SetSelection(ISelectionColumn selectItem);
 
+        internal void SetSelection(ISelectionColumn selectItem, RowData rowData);
+
         internal void UnSelectSelection(ISelectionColumn selectItem);
 
         internal bool AllSelected { get; }

@@ -1,5 +1,6 @@
 ﻿@namespace AntDesign
 @using AntDesign.TableModels
+@using Microsoft.AspNetCore.Components.Rendering
 @inherits ColumnBase
 
 @if (IsInitialize)
@@ -91,4 +92,32 @@ else if (!IsHeader && RowSpan != 0 && ColSpan != 0)
             @ChildContent
         }
     </td>
+}
+
+@code {
+    void QuickBody(RenderTreeBuilder __builder, CellData cellData)
+    {
+        @if (AppendExpandColumn)
+        {
+            <td class="ant-table-cell ant-table-row-expand-icon-cell">
+                @if (Table.RowExpandable(cellData.RowData) && !Table.TreeMode)
+                {
+                    <button type="button" @onclick="() => ToggleTreeNode(cellData.RowData)" @onclick:stopPropagation
+                            class="ant-table-row-expand-icon @(cellData.RowData.Expanded ? "ant-table-row-expand-icon-expanded" : "ant-table-row-expand-icon-collapsed")"
+                            aria-label="@(cellData.RowData.Expanded ? Table.Locale.Collapse : Table.Locale.Expand)"></button>
+                }
+            </td>
+        }
+        <td @attributes="GetAdditionalAttributes(null)" class="@ClassMapper.Class" style="@($"{QuickFixedStyle} {Style}")"
+            rowspan="@(RowSpan > 1 ? RowSpan : false)" colspan="@(ColSpan > 1 ? ColSpan : false)">
+            @if (CellRender != null)
+            {
+                @CellRender(cellData)
+            }
+            else if (ChildContent != null)
+            {
+                @ChildContent
+            }
+        </td>
+    }
 }

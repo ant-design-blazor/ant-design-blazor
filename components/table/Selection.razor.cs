@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
-    public partial class Selection : ColumnBase, ISelectionColumn
+    public partial class Selection : ColumnBase, ISelectionColumn, IQuickRenderColumn
     {
         /// <summary>
         /// The type of input to use for the selection column (checkbox or radio)
@@ -83,6 +84,53 @@ namespace AntDesign
                     RowData.SetSelected(selected, CheckStrictly);
                 }
             }
+        }
+
+        void IQuickRenderColumn.RenderQuickBody(RenderTreeBuilder builder, RowData rowData)
+        {
+            if (Hidden || RowSpan == 0 || ColSpan == 0)
+            {
+                return;
+            }
+
+            var cellData = new CellData(rowData);
+            builder.OpenElement(0, "td");
+            builder.AddMultipleAttributes(1, GetAdditionalAttributes(null));
+            builder.AddAttribute(2, "class", $"{ClassMapper.Class} ant-table-selection-column");
+            builder.AddAttribute(3, "style", $"{QuickFixedStyle} {Style}");
+            builder.AddAttribute(4, "rowspan", RowSpan > 1 ? RowSpan : null);
+            builder.AddAttribute(5, "colspan", ColSpan > 1 ? ColSpan : null);
+            if (CellRender != null)
+            {
+                builder.AddContent(6, CellRender(cellData));
+            }
+            else if (ChildContent != null)
+            {
+                builder.AddContent(6, ChildContent);
+            }
+            else if (Type == SelectionType.Checkbox)
+            {
+                builder.OpenComponent<Checkbox>(7);
+                builder.AddAttribute(8, nameof(Checkbox.Checked), rowData.Selected);
+                builder.AddAttribute(9, nameof(Checkbox.Disabled), Disabled || rowData.TableDataItem.Disabled);
+                builder.AddAttribute(10, nameof(Checkbox.CheckedChange), EventCallback.Factory.Create<bool>(this, selected => rowData.SetSelected(selected, CheckStrictly)));
+                builder.CloseComponent();
+            }
+            else if (Type == SelectionType.Radio)
+            {
+                builder.OpenComponent<Radio<bool>>(7);
+                builder.AddAttribute(8, nameof(Radio<bool>.Checked), rowData.Selected);
+                builder.AddAttribute(9, nameof(Radio<bool>.Disabled), Disabled || rowData.TableDataItem.Disabled);
+                builder.AddAttribute(10, nameof(Radio<bool>.CheckedChanged), EventCallback.Factory.Create<bool>(this, selected =>
+                {
+                    if (selected)
+                    {
+                        Table.SetSelection(this, rowData);
+                    }
+                }));
+                builder.CloseComponent();
+            }
+            builder.CloseElement();
         }
 
         protected override void OnInitialized()

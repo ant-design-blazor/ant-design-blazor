@@ -3,7 +3,9 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AntDesign.Core.Documentation;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
@@ -12,6 +14,20 @@ namespace AntDesign
 {
     public class ColumnBase : AntDomComponentBase, IColumn
     {
+        private readonly Dictionary<string, object> _registeredParameters = new(StringComparer.Ordinal);
+
+        internal IReadOnlyDictionary<string, object> RegisteredParameters => _registeredParameters;
+
+        public override Task SetParametersAsync(ParameterView parameters)
+        {
+            foreach (var parameter in parameters)
+            {
+                _registeredParameters[parameter.Name] = parameter.Value;
+            }
+
+            return base.SetParametersAsync(parameters);
+        }
+
         [CascadingParameter]
         public ITable Table { get; set; }
 
@@ -219,6 +235,10 @@ namespace AntDesign
             {
                 Context?.AddHeaderColumn(this);
             }
+            else if (IsMeasure)
+            {
+                // Measurement columns render markup only; they are not row columns.
+            }
             else
             {
                 Context?.AddRowColumn(this);
@@ -317,8 +337,13 @@ namespace AntDesign
 
         protected void ToggleTreeNode()
         {
-            RowData.Expanded = !RowData.Expanded;
-            Table?.OnExpandChange(RowData);
+            ToggleTreeNode(RowData);
+        }
+
+        protected void ToggleTreeNode(RowData rowData)
+        {
+            rowData.Expanded = !rowData.Expanded;
+            Table?.OnExpandChange(rowData);
         }
 
         void IColumn.UpdateFixedStyle()

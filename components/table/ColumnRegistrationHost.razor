@@ -1,0 +1,57 @@
+@namespace AntDesign
+@using System
+@using System.Collections.Concurrent
+@typeparam TItem
+
+<CascadingValue Value="TableInstance" TValue="ITable" IsFixed>
+    <CascadingValue Value="ItemType" Name="ItemType" IsFixed>
+        <CascadingValue Value="Context" IsFixed>
+            <CascadingValue Name="RelationCache" Value="RelationCache" IsFixed>
+                <CascadingValue Name="IsInitialize" Value="true" IsFixed>
+                    @RenderDefinitions()
+                </CascadingValue>
+            </CascadingValue>
+        </CascadingValue>
+    </CascadingValue>
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public RenderFragment<TItem> ColumnDefinitions { get; set; }
+
+    [Parameter]
+    public TItem Model { get; set; }
+
+    [Parameter]
+    public ITable TableInstance { get; set; }
+
+    [Parameter]
+    public Type ItemType { get; set; }
+
+    [Parameter]
+    public ColumnContext Context { get; set; }
+
+    [Parameter]
+    public ConcurrentDictionary<string, object> RelationCache { get; set; }
+
+    private RenderFragment<TItem> _registeredDefinitions;
+    private bool _definitionsChanged;
+
+    protected override void OnParametersSet()
+    {
+        _definitionsChanged = !ReferenceEquals(_registeredDefinitions, ColumnDefinitions);
+        _registeredDefinitions = ColumnDefinitions;
+    }
+
+    private RenderFragment RenderDefinitions() => builder =>
+    {
+        if (ColumnDefinitions != null && Model is not null)
+        {
+            builder.AddContent(0, ColumnDefinitions(Model));
+        }
+    };
+
+    // Avoid rerunning stable definitions during Table's initialization rerenders, but
+    // accept a new fragment from the parent so dynamic column parameters can update.
+    protected override bool ShouldRender() => _definitionsChanged;
+}
