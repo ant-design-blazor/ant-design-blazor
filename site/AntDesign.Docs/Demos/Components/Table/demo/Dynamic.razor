@@ -1,7 +1,9 @@
-﻿@using AntDesign.Core
+﻿@using System.ComponentModel
+@using AntDesign.Core
+@using AntDesign.TableModels
 @using System.Text.Json.Serialization
 
-<Table TItem="Dictionary<string, object>" DataSource="@data" Loading="loading" ScrollX="1500"
+<Table TItem="Dictionary<string, object>" OnChange="HanleChange" DataSource="@data" Loading="data==null" ScrollX="1500"
     PageSize="5" Size="TableSize.Small">
     @foreach (var key in data?.FirstOrDefault()?.Keys.Take(10) ?? new string[0])
     {
@@ -9,36 +11,25 @@
     }
 </Table>
 
-@if (loadError != null)
-{
-    <p class="ant-typography ant-typography-danger">@loadError</p>
-}
-
-@inject HttpClient httpClient
+@inject HttpClient httpClient;
 @code {
-    private const string DataUrl = "data/table-contributors.json";
 
-    private List<Dictionary<string, object>> data;
-    private bool loading = true;
-    private string loadError;
+    List<Dictionary<string, object>> data;
 
-    protected override async Task OnInitializedAsync()
+    string githubUrl = "data/table-contributors.json";
+
+    protected async Task HanleChange(QueryModel<Dictionary<string, object>> query)
     {
         try
-        {
+        { 
             var options = new JsonSerializerOptions();
             options.Converters.Add(new DictionaryConverter());
-            data = await httpClient.GetFromJsonAsync<List<Dictionary<string, object>>>(DataUrl, options);
-            data ??= new List<Dictionary<string, object>>();
+
+            data = await httpClient.GetFromJsonAsync<List<Dictionary<string, object>>>(githubUrl, options);
         }
-        catch (Exception exception)
+        catch (Exception e)
         {
-            loadError = $"Unable to load table data: {exception.Message}";
-            data = new List<Dictionary<string, object>>();
-        }
-        finally
-        {
-            loading = false;
+            Console.WriteLine(e);
         }
     }
 }
