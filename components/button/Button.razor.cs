@@ -208,7 +208,7 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(prefixName)
-                .Add($"{prefixName}-{_typeMap[Type]}")
+                .GetIf(() => $"{prefixName}-{_typeMap[Type]}", () => true)
                 .If($"{prefixName}-dangerous", () => Danger == true)
                 .GetIf(() => $"{prefixName}-{Shape.ToString().ToLowerInvariant()}", () => Shape != ButtonShape.Rectangle)
                 .If($"{prefixName}-lg", () => Size == ButtonSize.Large)
