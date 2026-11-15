@@ -85,7 +85,7 @@ namespace AntDesign
             get
             {
                 Button1Props ??= new ButtonProps();
-                return Button1Props.Type;
+                return Button1Props.Type ?? ButtonType.Default;
             }
 
             set
