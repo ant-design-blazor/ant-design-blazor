@@ -62,7 +62,7 @@
         },
         ["mainWrapper"] = new System.Collections.Generic.Dictionary<string, object>
         {
-            ["position"] = "relative", ["padding"] = "40px 0 0", ["background"] = "var(--ant-color-bg-layout, #f5f5f5)",
+            ["position"] = "relative", ["padding"] = "0", ["background"] = "var(--ant-color-bg-container, #fff)",
             ["transition"] = "all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86)",
             ["& .docs-main-content"] = new System.Collections.Generic.Dictionary<string, object> { ["minWidth"] = 0 },
             ["& .main-container"] = new System.Collections.Generic.Dictionary<string, object>
@@ -97,6 +97,13 @@
                 ["lineHeight"] = "var(--ant-line-height)",
                 ["--ant-font-family"] = "AlibabaSans, -apple-system, 'system-ui', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'"
             },
+            ["& .main-container-component .docs-component-overview-content > h1"] = new System.Collections.Generic.Dictionary<string, object>
+            {
+                // The React documentation shell positions its component title
+                // at the top of the 32px-spaced content row without markdown's
+                // additional 8px heading margin.
+                ["marginTop"] = 0
+            },
             [".ant-row-rtl & .main-container"] = new System.Collections.Generic.Dictionary<string, object> { ["padding"] = "0 64px 144px 170px" },
             ["@media only screen and (max-width: 992px)"] = new System.Collections.Generic.Dictionary<string, object>
             {
@@ -116,8 +123,7 @@
         },
         ["mainMenu"] = new System.Collections.Generic.Dictionary<string, object>
         {
-            // Keep the sidebar in the same top-padded row as the document body.
-            // A negative offset pulled its first entries above the page content.
+            // Keep the sidebar aligned with the document row directly below the header.
             ["zIndex"] = 1, ["& > div, & > div > div"] = new System.Collections.Generic.Dictionary<string, object> { ["height"] = "100%" }
         },
         ["mainMenuInner"] = new System.Collections.Generic.Dictionary<string, object> { ["height"] = "100%" },

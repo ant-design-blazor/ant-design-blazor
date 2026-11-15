@@ -46,7 +46,8 @@
             {
                 var tips = string.Empty;
                 var stateClass = string.Empty;
-                string picture = "";
+                var fileUrl = string.IsNullOrEmpty(file.Url) ? file.ObjectURL : file.Url;
+                string picture = string.Empty;
 
                 switch (file.State)
                 {
@@ -70,15 +71,104 @@
                             @if (IsPictureCard && file.State == UploadState.Uploading)
                             {
                                 <div class="@SemanticClass("item", $"ant-upload-list-item ant-upload-list-item-uploading {DragSortClass(file)}")" style="@FileItemStyle(file)" draggable="@DragSort" @ondragstart="() => StartFileDrag(file)" @ondragover="() => DragOverFile(file)" @ondragover:preventDefault @ondrop="() => DropFile(file)" @ondrop:preventDefault @ondrop:stopPropagation @ondragend="EndFileDrag" @ref="@context.Current">
-                                    <div class="ant-upload-list-item-info">
-                                        <div class="ant-upload-list-item-thumbnail">@Locale.Uploading</div>
-                                        <span class="ant-upload-list-item-name ant-upload-list-item-name-icon-count-1" title="@file.FileName">
-                                            @file.FileName
-                                        </span>
-                                    </div>
+                                    <div class="ant-upload-list-item-thumbnail">@Locale.Uploading</div>
+                                    @if (!string.IsNullOrEmpty(file.Url) || !string.IsNullOrEmpty(file.ObjectURL))
+                                    {
+                                        <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@(string.IsNullOrEmpty(file.Url) ? file.ObjectURL : file.Url)">@file.FileName</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="ant-upload-list-item-name" title="@file.FileName" role="@(OnPreview.HasDelegate ? "button" : null)" tabindex="@(OnPreview.HasDelegate ? 0 : null)" @onclick="() => PreviewFile(file)" @onkeydown="args => OnFileNameKeyDown(args, file)">@file.FileName</span>
+                                    }
                                     <div class="ant-upload-list-item-progress">
                                         <Progress Percent="file.Percent" StrokeWidth="@(ProgressStrokeWidth ?? 2)" StrokeColor="@ProgressStrokeColor" Format="@(ProgressFormat ?? DefaultProgressFormat)" Type="ProgressType.Line" ShowInfo="@ProgressShowInfo"></Progress>
                                     </div>
+                                </div>
+                            }
+                            else if (IsPictureCard)
+                            {
+                                var fileLink = string.IsNullOrEmpty(file.Url) ? file.ObjectURL : file.Url;
+                                <div class="@SemanticClass("item", $"ant-upload-list-item {stateClass} {DragSortClass(file)}")" style="@FileItemStyle(file)" draggable="@DragSort" @ondragstart="() => StartFileDrag(file)" @ondragover="() => DragOverFile(file)" @ondragover:preventDefault @ondrop="() => DropFile(file)" @ondrop:preventDefault @ondrop:stopPropagation @ondragend="EndFileDrag" @ref="@context.Current">
+                                    @if (!string.IsNullOrEmpty(fileLink))
+                                    {
+                                        <a class="ant-upload-list-item-thumbnail @(!file.IsPicture() ? "ant-upload-list-item-file" : null)" href="@fileLink" target="_blank" rel="noopener noreferrer" @onclick="() => PreviewFile(file)">
+                                            @if (file.IsPicture())
+                                            {
+                                                <img src="@fileLink" alt="@file.FileName" class="ant-upload-list-item-image" />
+                                            }
+                                            else
+                                            {
+                                                <Icon Type="file" />
+                                            }
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <div class="ant-upload-list-item-thumbnail ant-upload-list-item-file">
+                                            <Icon Type="@(file.IsPicture() ? "picture" : "file")" />
+                                        </div>
+                                    }
+
+                                    @if (!string.IsNullOrEmpty(fileLink))
+                                    {
+                                        <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@fileLink" @onclick="() => PreviewFile(file)">@file.FileName</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="ant-upload-list-item-name" title="@file.FileName" role="@(OnPreview.HasDelegate ? "button" : null)" tabindex="@(OnPreview.HasDelegate ? 0 : null)" @onclick="() => PreviewFile(file)" @onkeydown="args => OnFileNameKeyDown(args, file)">@file.FileName</span>
+                                    }
+
+                                    @if ((ShowPreviewIcon && !string.IsNullOrEmpty(fileLink)) || (ShowDownloadIcon && file.State == UploadState.Success) || ShowRemoveIcon)
+                                    {
+                                        <span class="ant-upload-list-item-actions">
+                                            @if (ShowPreviewIcon && !string.IsNullOrEmpty(fileLink))
+                                            {<a href="@fileLink" target="_blank" rel="noopener noreferrer" title="@Locale.PreviewFile" aria-label="@Locale.PreviewFile" @onclick="() => PreviewFile(file)" @onclick:preventDefault="@OnPreview.HasDelegate">@if (PreviewIcon != null) {@PreviewIcon(file)} else {<Icon Type="eye"/>}</a>}@if (ShowDownloadIcon && file.State == UploadState.Success) {<a href="@(OnDownload.HasDelegate ? null : fileLink)" target="_blank" rel="noopener noreferrer" title="@Locale.DownloadFile" aria-label="@Locale.DownloadFile" @onclick="() => DownloadFile(file)">@if (DownloadIcon != null) {@DownloadIcon(file)} else {<Icon Type="download"/>}</a>}@if (ShowRemoveIcon) {<button aria-label="@Locale.RemoveFile" title="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-color-default ant-btn-sm ant-btn-text ant-btn-variant-text ant-btn-icon-only ant-upload-list-item-action" @onclick="() => RemoveFile(file)" disabled="@Disabled"><span class="ant-btn-icon">@if (RemoveIcon != null) {@RemoveIcon(file)} else {<Icon Type="delete" TabIndex="-1"/>}</span></button>}
+                                        </span>
+                                    }
+                                </div>
+                            }
+                            else if (ListType == UploadListType.Picture)
+                            {
+                                <div class="@SemanticClass("item", $"ant-upload-list-item {stateClass} {DragSortClass(file)}".Trim())" style="@FileItemStyle(file)" draggable="@DragSort" @ondragstart="() => StartFileDrag(file)" @ondragover="() => DragOverFile(file)" @ondragover:preventDefault @ondrop="() => DropFile(file)" @ondrop:preventDefault @ondrop:stopPropagation @ondragend="EndFileDrag" @ref="@context.Current">
+                                    @if (file.State == UploadState.Uploading)
+                                    {
+                                        <div class="ant-upload-list-item-thumbnail"><Icon Type="loading" /></div>
+                                    }
+                                    else if (file.State == UploadState.Success && !string.IsNullOrEmpty(fileUrl) && file.IsPicture())
+                                    {
+                                        <a class="ant-upload-list-item-thumbnail" href="@fileUrl" target="_blank" rel="noopener noreferrer">
+                                            <img alt="@file.FileName" class="ant-upload-list-item-image" src="@fileUrl" />
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <div class="ant-upload-list-item-thumbnail ant-upload-list-item-file"><Icon Type="picture" /></div>
+                                    }
+
+                                    @if (file.State == UploadState.Success && !string.IsNullOrEmpty(fileUrl))
+                                    {
+                                        <a target="_blank" rel="noopener noreferrer" class="ant-upload-list-item-name" title="@file.FileName" href="@fileUrl">@file.FileName</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="ant-upload-list-item-name" title="@file.FileName">@file.FileName</span>
+                                    }
+
+                                    <span class="ant-upload-list-item-actions picture">
+                                        @if (ShowRemoveIcon)
+                                        {
+                                            <button title="@Locale.RemoveFile" aria-label="@Locale.RemoveFile" type="button" class="ant-btn ant-btn-text ant-btn-color-default ant-btn-variant-text ant-btn-sm ant-btn-icon-only ant-upload-list-item-action" @onclick="() => RemoveFile(file)" disabled="@Disabled">
+                                                <span class="ant-btn-icon">@if (RemoveIcon != null) { @RemoveIcon(file) } else { <Icon Type="delete" TabIndex="-1" /> }</span>
+                                            </button>
+                                        }
+                                    </span>
+
+                                    @if (file.State == UploadState.Uploading)
+                                    {
+                                        <div class="ant-upload-list-item-progress">
+                                            <Progress Percent="file.Percent" StrokeWidth="@(ProgressStrokeWidth ?? 2)" StrokeColor="@ProgressStrokeColor" Format="@(ProgressFormat ?? DefaultProgressFormat)" Type="ProgressType.Line" ShowInfo="@ProgressShowInfo"></Progress>
+                                        </div>
+                                    }
                                 </div>
                             }
                             else
@@ -195,7 +285,7 @@
                                         <span class="ant-upload-list-item-actions">
                                             @if (ShowPreviewIcon)
                                             {
-                                                <a href="@(OnPreview.HasDelegate ? null : (string.IsNullOrEmpty(file.Url) ? file.ObjectURL : file.Url))" target="_blank" rel="noopener noreferrer" title="@Locale.PreviewFile" @onclick="() => PreviewFile(file)" style="@(file.State==UploadState.Fail?"pointer-events: none; opacity: 0.5;":"")">
+                                                <a href="@(string.IsNullOrEmpty(file.Url) ? file.ObjectURL : file.Url)" target="_blank" rel="noopener noreferrer" title="@Locale.PreviewFile" @onclick="() => PreviewFile(file)" @onclick:preventDefault="@OnPreview.HasDelegate" style="@(file.State==UploadState.Fail?"pointer-events: none; opacity: 0.5;":"")">
                                                     @if (PreviewIcon != null) { @PreviewIcon(file) } else { <Icon Type="eye" /> }
                                                 </a>
                                             }

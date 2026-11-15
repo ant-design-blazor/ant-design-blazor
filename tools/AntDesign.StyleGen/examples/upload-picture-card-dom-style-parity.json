@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "ant-design/ant-design",
+    "component": "Upload"
+  },
+  "config": {
+    "timeoutMs": 45000,
+    "viewport": {
+      "width": 1280,
+      "height": 900,
+      "deviceScaleFactor": 1
+    },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+|__runtime-id-\\d+)$",
+        "removeAttributes": [
+          "_bl_*",
+          "id"
+        ],
+        "removeClassPatterns": [
+          "^css-dev-only-do-not-override-",
+          "^css-var-_[a-zA-Z0-9_]+$",
+          "^css-[a-zA-Z0-9]+$"
+        ],
+        "removeCommentMarkers": [
+          "<!--!-->"
+        ],
+        "normalizeStyleAttributes": true,
+        "sortClassTokens": true
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "upload-picture-card",
+      "component": "Upload",
+      "react": {
+        "url": "http://127.0.0.1:8000/components/upload?theme=light#upload-demo-picture-card",
+        "scopeSelector": "#upload-demo-picture-card",
+        "rootSelector": ".ant-upload-wrapper"
+      },
+      "blazor": {
+        "url": "http://127.0.0.1:5000/en-US/components/upload?theme=light#components-upload-demo-pictureCard",
+        "scopeSelector": "#components-upload-demo-pictureCard",
+        "rootSelector": ".ant-upload-wrapper"
+      },
+      "styleProperties": [
+        "display",
+        "position",
+        "boxSizing",
+        "width",
+        "height",
+        "minWidth",
+        "minHeight",
+        "paddingBlock",
+        "paddingInline",
+        "marginBlock",
+        "gap",
+        "alignItems",
+        "justifyContent",
+        "fontSize",
+        "lineHeight",
+        "color",
+        "backgroundColor",
+        "borderRadius",
+        "borderWidth",
+        "borderColor",
+        "maxWidth",
+        "overflow",
+        "objectFit",
+        "flex",
+        "flexBasis"
+      ],
+      "computedStylePixelToleranceByProperty": {
+        "width": 0.02
+      },
+      "semanticNodes": [
+        {
+          "path": "root",
+          "selector": "$root",
+          "minimumCount": 1
+        },
+        {
+          "path": "list",
+          "selector": ".ant-upload-list.ant-upload-list-picture-card",
+          "minimumCount": 1
+        },
+        {
+          "path": "item",
+          "selector": ".ant-upload-list-item",
+          "minimumCount": 6
+        },
+        {
+          "path": "item.thumbnail",
+          "selector": ".ant-upload-list-item-thumbnail",
+          "minimumCount": 6
+        },
+        {
+          "path": "item.image",
+          "selector": "img.ant-upload-list-item-image",
+          "minimumCount": 4
+        },
+        {
+          "path": "item.name",
+          "selector": ".ant-upload-list-item-name",
+          "minimumCount": 6
+        },
+        {
+          "path": "item.actions",
+          "selector": ".ant-upload-list-item-actions",
+          "minimumCount": 5
+        },
+        {
+          "path": "item.progress",
+          "selector": ".ant-upload-list-item-progress",
+          "minimumCount": 1
+        }
+      ],
+      "scenarios": [
+        {
+          "id": "default",
+          "minimumRoots": 1
+        }
+      ]
+    }
+  ]
+}

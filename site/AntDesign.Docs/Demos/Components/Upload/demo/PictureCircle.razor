@@ -1,15 +1,25 @@
 <Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-        Name="avatar"
+        Name="file"
         ListType="UploadListType.PictureCircle"
         @bind-FileList="_fileList"
-        ShowButton="_fileList.Count < 8">
-    <button type="button" style="border: 0; background: none;">
+        ShowButton="_fileList.Count < 8"
+        OnPreview="HandlePreview">
+    <button type="button" style="border: 0px; background: none;">
         <Icon Type="@IconType.Outline.Plus" />
         <div style="margin-top: 8px;">Upload</div>
     </button>
 </Upload>
 
+@if (_previewFile is not null)
+{
+    <Image Src="@PreviewUrl(_previewFile)" PreviewVisible="_previewVisible" PreviewVisibleChanged="HandlePreviewVisibleChanged" Style="display:none" />
+}
+
 @code {
+    private bool _previewVisible;
+    private bool _openPreviewOnRender;
+    private UploadFileItem _previewFile;
+
     private List<UploadFileItem> _fileList = new()
     {
         new()
@@ -34,4 +44,32 @@
             State = UploadState.Fail
         }
     };
+
+    private void HandlePreview(UploadFileItem file)
+    {
+        _previewFile = file;
+        _previewVisible = false;
+        _openPreviewOnRender = true;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (_openPreviewOnRender)
+        {
+            _openPreviewOnRender = false;
+            _previewVisible = true;
+            StateHasChanged();
+        }
+    }
+
+    private void HandlePreviewVisibleChanged(bool visible)
+    {
+        _previewVisible = visible;
+        if (!visible)
+        {
+            _previewFile = null;
+        }
+    }
+
+    private static string PreviewUrl(UploadFileItem file) => string.IsNullOrEmpty(file.ObjectURL) ? file.Url : file.ObjectURL;
 }

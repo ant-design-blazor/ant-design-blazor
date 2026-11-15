@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "upstream": { "repository": "ant-design/ant-design", "component": "Upload" },
+  "config": {
+    "timeoutMs": 45000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+|__runtime-id-\\d+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[a-zA-Z0-9_]+$", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "normalizeStyleAttributes": true,
+        "sortClassTokens": true
+      }
+    }
+  },
+  "groups": [{
+    "id": "upload-picture-style",
+    "component": "Upload",
+    "geometryTolerancePx": 0.03,
+    "computedStylePixelToleranceByProperty": { "width": 0.03 },
+    "react": {
+      "url": "http://127.0.0.1:8000/components/upload?theme=light#upload-demo-picture-style",
+      "scopeSelector": "#upload-demo-picture-style",
+      "rootSelector": ".ant-upload-wrapper"
+    },
+    "blazor": {
+      "url": "http://127.0.0.1:5000/en-US/components/upload?theme=light#components-upload-demo-pictureStyle",
+      "scopeSelector": "#components-upload-demo-pictureStyle",
+      "rootSelector": ".ant-upload-wrapper"
+    },
+    "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "marginBlock", "gap", "alignItems", "fontSize", "lineHeight", "color", "backgroundColor", "borderRadius", "borderWidth", "borderColor", "maxWidth", "overflow", "objectFit", "flex", "flexBasis"],
+    "semanticNodes": [
+      { "path": "root", "selector": "$root", "minimumCount": 1 },
+      { "path": "trigger", "selector": ".ant-upload-select", "minimumCount": 1 },
+      { "path": "button", "selector": ".ant-upload-select .ant-btn", "minimumCount": 1 },
+      { "path": "input", "selector": "input[type=file][name=file]", "minimumCount": 1 },
+      { "path": "list", "selector": ".ant-upload-list.ant-upload-list-picture", "minimumCount": 1 },
+      { "path": "item", "selector": ".ant-upload-list-item", "minimumCount": 3 },
+      { "path": "item.uploading", "selector": ".ant-upload-list-item-uploading", "minimumCount": 1 },
+      { "path": "item.done", "selector": ".ant-upload-list-item-done", "minimumCount": 1 },
+      { "path": "item.error", "selector": ".ant-upload-list-item-error", "minimumCount": 1 },
+      { "path": "item.thumbnail", "selector": ".ant-upload-list-item-thumbnail", "minimumCount": 1 },
+      { "path": "item.image", "selector": "img.ant-upload-list-item-image", "minimumCount": 1 },
+      { "path": "item.actions", "selector": ".ant-upload-list-item-actions", "minimumCount": 2 },
+      { "path": "item.remove", "selector": ".ant-upload-list-item-action", "minimumCount": 2 },
+      { "path": "item.progress", "selector": ".ant-upload-list-item-progress", "minimumCount": 1 }
+    ],
+    "scenarios": [{ "id": "default", "minimumRoots": 1 }]
+  }]
+}

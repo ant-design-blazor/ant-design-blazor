@@ -74,6 +74,22 @@ html {
 }
 
 /* Shared component metadata, matching React's compact three-row introduction. */
+.docs-blazor-brand-accent {
+  background: linear-gradient(128.87deg, #512bd4 14.05%, #d600aa 89.3%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.home-banner-normal .docs-blazor-brand-accent {
+  text-shadow: none;
+}
+
+.upload-demo-style-class-root {
+  border-radius: var(--ant-border-radius, 6px);
+  padding: var(--ant-padding, 16px);
+}
+
 .docs-carbon-ad {
   float: right;
   max-width: 100%;

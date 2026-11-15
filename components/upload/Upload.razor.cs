@@ -199,7 +199,7 @@ namespace AntDesign
         /// List of files that have been uploaded (controlled)
         /// </summary>
         [Parameter]
-        public bool ShowDownloadIcon { get; set; } = true;
+        public bool ShowDownloadIcon { get; set; }
 
         /// <summary>
         /// Show the preview icon or not
@@ -464,6 +464,14 @@ namespace AntDesign
             if (item.State == UploadState.Success && OnPreview.HasDelegate)
             {
                 await OnPreview.InvokeAsync(item);
+            }
+        }
+
+        private async Task OnFileNameKeyDown(KeyboardEventArgs args, UploadFileItem item)
+        {
+            if (args.Key is "Enter" or " ")
+            {
+                await PreviewFile(item);
             }
         }
 

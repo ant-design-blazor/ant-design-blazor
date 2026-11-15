@@ -1,111 +1,15 @@
-@inject IMessageService _message
-
-<Upload @attributes="attrs"
-        ShowUploadList=true
-        ShowPreviewIcon=true
-        ShowRemoveIcon=false
-        OnSingleCompleted="OnSingleCompleted"
-        OnRemove="HandleRemove">
-    <Button Icon="upload">
-        <span>Upload</span>
-    </Button>
+<Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        Name="file"
+        ListType="UploadListType.Picture"
+        DefaultFileList="_fileList">
+    <Button Type="ButtonType.Primary" Icon="@IconType.Outline.Upload">Upload</Button>
 </Upload>
-<br />
-<br />
-<Upload @attributes="attrs"
-        ShowUploadList=true
-        ShowPreviewIcon=true
-        ShowRemoveIcon=true
-        OnSingleCompleted="OnSingleCompleted"
-        OnRemove="HandleRemove">
-    <Button Icon="upload">
-        <span>Upload</span>
-    </Button>
-</Upload>
-<br />
-<br />
 
-@code
-{
-    static List<UploadFileItem> fileList = new List<UploadFileItem>
+@code {
+    private static readonly List<UploadFileItem> _fileList = new()
     {
-        new UploadFileItem
-        {
-            Id = "1",
-            FileName = "xxx.png",
-            State = UploadState.Success,
-            Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-        },
-        new UploadFileItem
-        {
-            Id = "2",
-            FileName = "yyy.png",
-            State = UploadState.Fail
-        }
+        new() { Id = "0", FileName = "xxx.png", State = UploadState.Uploading, Percent = 33 },
+        new() { Id = "-1", FileName = "yyy.png", State = UploadState.Success, Url = "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" },
+        new() { Id = "-2", FileName = "zzz.png", State = UploadState.Fail }
     };
-
-    Dictionary<string, object> attrs = new Dictionary<string, object>
-    {
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" },
-        {"DefaultFileList", fileList},
-        {"ListType", UploadListType.Picture }
-    };
-
-    Dictionary<string, object> attrs1 = new Dictionary<string, object>
-    {
-        {"Action", "https://www.mocky.io/v2/5cc8019d300000980a055e76" },
-        {"Name", "files" },
-        {"DefaultFileList", fileList},
-        {"ListType", UploadListType.Picture },
-        {"Class", "upload-list-inline" }
-    };
-
-    void OnSingleCompleted(UploadInfo fileinfo)
-    {
-        if (fileinfo.File.State == UploadState.Success)
-        {
-            var result = fileinfo.File.GetResponse<ResponseModel>();
-            fileinfo.File.Url = result.url;
-        }
-    }
-
-    async Task<bool> HandleRemove(UploadFileItem file)
-    {
-        await _message.LoadingAsync($"removing {file.FileName}",2);
-        return await Task.FromResult(true);
-    }
-
-    public class ResponseModel
-    {
-        public string name { get; set; }
-
-        public string status { get; set; }
-
-        public string url { get; set; }
-
-        public string thumbUrl { get; set; }
-    }
-
 }
-
-<style>
-    /* tile uploaded pictures */
-    .upload-list-inline .ant-upload-list-item {
-        float: left;
-        width: 200px;
-        margin-right: 8px;
-    }
-
-    .upload-list-inline [class*='-upload-list-rtl'] .ant-upload-list-item {
-        float: right;
-    }
-
-    .upload-list-inline .ant-upload-animate-enter {
-        animation-name: uploadAnimateInlineIn;
-    }
-
-    .upload-list-inline .ant-upload-animate-leave {
-        animation-name: uploadAnimateInlineOut;
-    }
-</style>

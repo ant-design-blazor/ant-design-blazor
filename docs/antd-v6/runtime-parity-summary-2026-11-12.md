@@ -60,7 +60,7 @@ Across the inventory: React 912 demos; Blazor 1106; 762 matched names; 150 React
 | TimePicker | 16 | 14 | 13 | 12hours, change-on-scroll, _semantic | 13 | 7 | 7 |
 | Transfer | 12 | 13 | 11 | _semantic | 11 | 11 | 10 |
 | TreeSelect | 13 | 18 | 12 | _semantic | 11 | 9 | 9 |
-| Upload | 22 | 25 | 22 | — | 19 | 17 | 17 |
+| Upload | 22 | 25 | 22 | — | 19 | 14 | 14 |
 | Avatar | 7 | 10 | 7 | — | 7 | 6 | 6 |
 | Badge | 14 | 13 | 11 | style-class, _semantic, _semantic_ribbon | 11 | 11 | 11 |
 | Calendar | 10 | 5 | 5 | event-range, lunar, week, style-class, _semantic | 5 | 5 | 5 |
@@ -362,3 +362,37 @@ browser for manual review.
 | Upload — Basic, Default Files, File List, Drag | Synced the Basic/Drag trigger, implemented React-shaped file-list items and states, fixed the progress rail's empty color serialization, and aligned File List sample content. | Focused four-demo fixture passes 4/4 with zero normalized DOM/CSS/visual differences; 0.02px allows only 1/64px width serialization. Docs.Server `net11.0` build: 0 errors. Keyboard/drag-drop interaction verified. Full route still has many uncovered DOM/style gaps and React hydration #418. |
 | All 71 components | Full component/demo inventory remains the baseline table at the beginning of this document; this focused update changes Upload only. | Select/Icon focused checks remain green but whole-page/token audits are incomplete. Table Virtual List still differs structurally. Global/component tokens, Theme Preview, docs and Semantic DOM remain in scope. |
 | Next | Continue Upload's remaining mismatched demos, then broaden to the next highest component mismatch. | Re-run page inventory after the current Upload edits and prioritize its largest remaining runtime gaps. |
+
+## Focused continuation — 2026-11-15 (documentation top spacing)
+
+| Area | Current update | Verification / next |
+|---|---|---|
+| Documentation shell / Select Semantic DOM | Removed the extra `.main-wrapper` top padding so the docs region starts directly under the fixed header, as requested against the React reference; retained the white container background and zeroed the component title's extra top margin. | Docs.Server `net11.0` build: 0 errors. Existing Select `_semantic` fixture passes 2/2 DOM/CSS/geometry/visual checks: `/tmp/select-semantic-recheck-final-20261115.json`. |
+| All 71 components | The full matrix above remains the all-component progress index. Select/Icon focused checks, Table virtual-window DOM, all component APIs/tokens/docs, Theme Preview, and Semantic DOM audits remain incomplete. | Continue the 71-component mismatch queue and retain global/component Design Token coverage as open work. |
+| Next | Continue Upload's remaining mismatched demos, then return to Select/Icon route-level gaps and Table virtual-window parity. | See the full component matrix above and dated focused records in `dom-style-parity.md`. |
+## Focused continuation — 2026-11-15 (Upload PictureCircle)
+
+| Component | Current progress | Verification / next |
+|---|---|---|
+| Upload — PictureCircle | Synced the picture-circle file row DOM, hidden default download action, preview links and callback flow, `file` input name, and upload-button inline style with React. | Focused fixture passes 1/1 with zero DOM/CSS/geometry/visual-style differences. Docs.Server `net11.0` build: 0 errors. Report: `/tmp/upload-picture-circle-final-20261115.json`. File-selection/upload and image-preview interactions remain to be exercised. |
+| All 71 components | See the full runtime mismatch matrix above; this focused fix covers one Upload demo only. | Full Upload demo/token/API coverage, Select/Icon page-level work, Table virtual-list structure, shared design tokens and docs remain incomplete. |
+| Next | Continue with Upload's next largest scoped mismatch, then resume the broad component/demo queue. | Details and prior verification records are in `dom-style-parity.md`. |
+
+## Focused continuation — 2026-11-15 (Upload PictureCard)
+
+| Component | Current progress | Verification / next |
+|---|---|---|
+| Upload — PictureCard and PictureCircle | Matched PictureCard demo structure and default actions, replaced its legacy Modal with React-style Image preview, and fixed dynamic Image preview initialization in both picture demos. | PictureCard fixture 1/1, PictureCircle regression 1/1, existing Upload baseline fixture 5/5. All report zero normalized DOM/CSS/geometry/visual-style differences. Browser opened and closed the preview in both demos. Docs.Server `net11.0` build: 0 errors. Reports linked in `dom-style-parity.md`. |
+| Upload — remaining demos | The broad scan still lists DOM/CSS/geometry candidate mismatches in Directory, Preview File, custom actions, Crop, Style Class, Avatar, Paste, sorting, token and other demos. | Re-scan after the PictureCard/PictureCircle fixes and continue the highest-impact remaining scoped demo. Full Upload is still open. |
+| All 71 components | The complete 71-route snapshot table above remains the component progress index; this update changes two Upload demos only. | Select/Icon page-level work, Table virtual-window structure, component API/token/docs/Semantic DOM and Theme Preview parity remain incomplete. |
+| Next | Refresh Upload's route inventory, then continue its highest remaining mismatch before returning to the 71-component queue. | The matrix is a broad candidate scan; use focused demo fixtures and interaction checks to close each mismatch. |
+
+## Focused continuation — 2026-11-15 (docs top gap and Upload StyleClass)
+
+| Area | Current progress | Verification / next |
+|---|---|---|
+| Documentation shell / brand | Removed extra wrapper top padding; matched Microsoft's `#512BD4` → `#D600AA` gradient in header and home title; removed the happy-work white text shadow that washed out the homepage gradient. | Computed styles, fresh homepage screenshot, and zero wrapper top padding verified. Docs.Server `net11.0` build: 0 errors. |
+| Upload — StyleClass and PictureStyle | Replaced the semantic placeholder with React's two StyleClass Uploads and reconstructed PictureStyle's one picture-list demo plus direct status-specific row markup. | Both focused fixtures pass 1/1 with zero normalized DOM/CSS/geometry/visual differences: `/tmp/upload-style-class-parity-20261115.json`, `/tmp/upload-picture-style-parity-20261115.json`. |
+| Upload — refreshed route inventory | React 22 demos, Blazor 25, 22 matched, no React demos missing. | Candidate DOM/CSS/geometry differences: 19/14/14; React route logs hydration error #418, so use focused fixtures for acceptance. Report: `/tmp/upload-inventory-current-20261115.json`. |
+| All 71 components | The full matrix above remains the broad component/demo mismatch index. | Runtime, API, global/component tokens, docs, Theme Preview, and Semantic DOM parity remain incomplete. |
+| Next | Continue Upload's next highest scoped gap, then proceed through the other components in descending mismatch volume. | Full progress matrix and focused records are in this file and `dom-style-parity.md`. |

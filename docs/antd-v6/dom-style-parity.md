@@ -1,5 +1,75 @@
 # React/Blazor DOM and style parity runner
 
+## Upload PictureCard demo — 2026-11-15
+
+Aligned the PictureCard demo with the React example: the same upload endpoint,
+input name, six file states, native button content, and default-hidden download
+action; replaced the old Modal preview with the hidden Image component used by
+React and removed the demo-only legacy CSS. The preview Image is mounted hidden
+first, then opened after render so the Image component's preview service sees a
+false-to-true visibility transition. The focused fixture passes 1/1 with zero
+normalized DOM, computed CSS, geometry, or visual-style differences. A 0.02px
+width tolerance accounts for 1/64px computed-width serialization. Browser
+interaction verified opening the correct image and closing the preview. The
+PictureCircle path now uses the same post-mount preview transition and was also
+verified open/close. The combined five-scenario Upload fixture passes 5/5 after
+the Upload default download behavior change. Reports:
+`/tmp/upload-picture-card-final-20261115.json`,
+`/tmp/upload-picture-circle-regression-20261115.json`, and
+`/tmp/upload-baseline-regression-20261115.json`. Docs.Server `net11.0` builds
+with 0 errors (existing analyzer warnings remain).
+
+## Upload PictureCircle demo — 2026-11-15
+
+Reworked the PictureCircle file rows to use React's direct thumbnail, name, and
+actions siblings, removed the default download action to match React, restored
+the preview link URL while preventing navigation when the preview callback is
+handled, and added the hidden Image preview flow. The demo now uses React's
+`name="file"` and matching inline button style. Focused React/Blazor fixture
+passes 1/1 with zero normalized DOM, computed-style, geometry, or visual-style
+differences; there are no blocked scenarios. Docs.Server `net11.0` builds with
+0 errors (existing analyzer warnings remain). Report:
+`/tmp/upload-picture-circle-final-20261115.json`. This closes the PictureCircle
+initial-render gap; file upload and preview interaction still need manual
+interaction coverage, and the rest of Upload remains under audit.
+
+## Documentation page top alignment — 2026-11-15
+
+Removed the extra 32px top padding from `.main-wrapper`, so the docs region
+starts directly under the fixed header as in the React page. The wrapper keeps
+the container background, and the component title's additional top margin stays
+removed. Docs.Server `net11.0` builds with 0 errors. Existing Select Semantic
+DOM fixture remains 2/2 with zero normalized differences
+(`/tmp/select-semantic-recheck-final-20261115.json`).
+
+## Blazor brand gradient and Upload StyleClass — 2026-11-15
+
+Applied Microsoft's Blazor brand purple-to-magenta gradient to the `Blazor`
+word in both the fixed documentation header and the homepage title, matching
+the official page's `#512BD4` to `#D600AA` gradient. Browser computed styles
+confirm the same gradient is active in both locations. The homepage's existing
+five-layer white happy-work `text-shadow` washed the gradient out; disabling
+that shadow only on the gradient title restores the full gradient, verified in
+a fresh browser screenshot. Also removed the additional top padding from the
+docs wrapper; its computed padding is now zero and its background remains white.
+
+Rebuilt Upload `StyleClass` to match React's two vertical Upload examples,
+including identical three-file status data, `name="file"`, `multiple` on the
+second instance, per-slot item/trigger styles, and root class styling. The
+focused fixture passes 1/1 with zero normalized DOM, CSS, geometry, or visual
+style differences: `/tmp/upload-style-class-parity-20261115.json`. Docs.Server
+`net11.0` build succeeds with 0 errors (existing warnings remain).
+
+## Upload Picture list demo — 2026-11-15
+
+Replaced the placeholder PictureStyle page with React's single picture-list
+example and exact three-file states. Added the dedicated `UploadListType.Picture`
+render path so uploading, successful, and failed rows use React's direct
+thumbnail/name/actions/progress DOM, including the thumbnail image URL and
+remove-button semantics. Focused fixture passes 1/1 with zero normalized DOM,
+computed CSS, geometry, and visual-style differences:
+`/tmp/upload-picture-style-parity-20261115.json`.
+
 ## Select Semantic DOM and Icon gallery responsive labels — 2026-11-15
 
 Rechecked Select `_semantic` in live React and Blazor pages after the broad

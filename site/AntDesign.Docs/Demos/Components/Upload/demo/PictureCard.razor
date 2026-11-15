@@ -1,41 +1,26 @@
-@inject IMessageService _message
-
-<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        Name="avatar"
-        ShowUploadList="true"
-        ShowDownloadIcon="true"
-        ShowPreviewIcon="true"
-        ShowRemoveIcon="true"
+<Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+        Name="file"
         @bind-FileList="fileList"
         ShowButton="fileList?.Count < 8"
         ListType="UploadListType.PictureCard"
-        OnPreview="(file)=> {
-                           Console.WriteLine(file.FileName);
-                           Console.WriteLine(file.Url);
-                           previewVisible = true;
-                           previewTitle = file.FileName;
-                           imgUrl = file.Url;
-                       }"
+        OnPreview="HandlePreview"
         OnChange="HandleChange">
-    <div>
+    <button type="button" style="border: 0px; background: none;">
         <Icon Type="@IconType.Outline.Plus" />
-        <div className="ant-upload-text">Upload</div>
-    </div>
+        <div style="margin-top: 8px;">Upload</div>
+    </button>
 
 </Upload>
-<Modal Visible="previewVisible"
-       Title="previewTitle"
-       OnCancel="()=> previewVisible=false">
-    <img style="width: 100%" src="@imgUrl" />
-</Modal>
+@if (!string.IsNullOrEmpty(previewImage))
+{
+    <Image Src="@previewImage" PreviewVisible="previewVisible" PreviewVisibleChanged="HandlePreviewVisibleChanged" Style="display:none" />
+}
 
 @code
 {
-    bool previewVisible = false;
-    string previewTitle = string.Empty;
-    string imgUrl = string.Empty;
-    bool showUploadListOption1 = true;
-
+    bool previewVisible;
+    bool openPreviewOnRender;
+    string previewImage = string.Empty;
     List<UploadFileItem> fileList = new List<UploadFileItem>
     {
         new UploadFileItem
@@ -90,27 +75,30 @@
         }
     }
 
-    public class ResponseModel
+    void HandlePreview(UploadFileItem file)
     {
-        public string name { get; set; }
-
-        public string status { get; set; }
-
-        public string url { get; set; }
-
-        public string thumbUrl { get; set; }
+        previewImage = string.IsNullOrEmpty(file.Url) ? file.ObjectURL : file.Url;
+        previewVisible = false;
+        openPreviewOnRender = true;
     }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (openPreviewOnRender)
+        {
+            openPreviewOnRender = false;
+            previewVisible = true;
+            StateHasChanged();
+        }
+    }
+
+    void HandlePreviewVisibleChanged(bool visible)
+    {
+        previewVisible = visible;
+        if (!visible)
+        {
+            previewImage = string.Empty;
+        }
+    }
+
 }
-
-<style>
-    /* you can make up upload button and sample style by using stylesheets */
-    .ant-upload-select-picture-card i {
-        color: #999;
-        font-size: 32px;
-    }
-
-    .ant-upload-select-picture-card .ant-upload-text {
-        margin-top: 8px;
-        color: #666;
-    }
-</style>

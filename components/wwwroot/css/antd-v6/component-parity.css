@@ -41,6 +41,10 @@
   font-weight: 400;
 }
 
+.ant-upload-list-item-image {
+  max-width: 100%;
+}
+
 #components-table-demo-dynamic-settings .ant-form-inline {
   display: flex;
   flex-wrap: wrap;

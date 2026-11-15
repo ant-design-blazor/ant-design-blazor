@@ -1,28 +1,44 @@
-<Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        ClassNames="_classNames" Styles="_styles"
-        DefaultFileList="_files">
-    <Button Type="ButtonType.Primary" Icon="upload">Upload file</Button>
-</Upload>
+<Flex Gap="FlexGap.Large" Vertical>
+    <Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+            Name="file"
+            ClassNames="_classNames"
+            Styles="_styles"
+            DefaultFileList="_files">
+        <Button Icon="@IconType.Outline.Upload">Upload</Button>
+    </Upload>
+    <Upload Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+            Name="file"
+            ClassNames="_classNames"
+            Styles="_multipleStyles"
+            Multiple
+            DefaultFileList="_files">
+        <Button Icon="@IconType.Outline.Upload">Upload</Button>
+    </Upload>
+</Flex>
 
 @code {
     private static readonly IReadOnlyDictionary<string, string> _classNames = new Dictionary<string, string>
     {
-        ["root"] = "upload-demo-root",
-        ["trigger"] = "upload-demo-trigger",
-        ["list"] = "upload-demo-list",
-        ["item"] = "upload-demo-item"
+        ["root"] = "upload-demo-style-class-root"
     };
 
     private static readonly IReadOnlyDictionary<string, string> _styles = new Dictionary<string, string>
     {
-        ["root"] = "padding: 12px; border: 1px dashed #91caff; border-radius: 8px;",
-        ["trigger"] = "border-radius: 6px;",
-        ["list"] = "margin-top: 8px;",
-        ["item"] = "color: #1677ff;"
+        ["item"] = "border-radius: 2px; background-color: rgba(5, 5, 5, 0.06); height: 30px;",
+        ["trigger"] = "background-color: rgba(84, 89, 172, 0.1); padding: 8px; border-radius: 4px;"
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> _multipleStyles = new Dictionary<string, string>
+    {
+        ["root"] = "border: 1px solid rgb(84, 89, 172);",
+        ["item"] = "border-radius: 2px; background-color: rgba(5, 5, 5, 0.06); height: 30px;",
+        ["trigger"] = "background-color: rgba(84, 89, 172, 0.2); padding: 8px; border-radius: 4px;"
     };
 
     private static readonly List<UploadFileItem> _files = new()
     {
-        new() { Id = "semantic-file", FileName = "semantic-demo.txt", State = UploadState.Success }
+        new() { Id = "1", FileName = "xxx.png", State = UploadState.Uploading, Url = "http://www.baidu.com/xxx.png", Percent = 33 },
+        new() { Id = "2", FileName = "yyy.png", State = UploadState.Success, Url = "http://www.baidu.com/yyy.png" },
+        new() { Id = "3", FileName = "zzz.png", State = UploadState.Fail, Response = "Server Error 500", Url = "http://www.baidu.com/zzz.png" }
     };
 }
