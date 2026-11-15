@@ -4,11 +4,12 @@
 @{
     var okProps = ModalProps.OkButtonProps ?? new ButtonProps();
     okProps.Type = ModalProps.OkType;
+    okProps.Loading = ModalProps.ConfirmLoading;
 }
 
 <div @attributes="AdditionalAttributes">
     <Button OnClick="@HandleOk"
-            Loading="@ModalProps.ConfirmLoading"
+            Loading="@okProps.Loading"
             Type="@okProps.Type"
             Block="@okProps.Block"
             Ghost="@okProps.Ghost"

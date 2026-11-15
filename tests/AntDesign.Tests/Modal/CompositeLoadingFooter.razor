@@ -1,0 +1,16 @@
+@namespace AntDesign.Tests.Modal
+
+@if (OkOnlyFooter)
+{
+    @ModalFooter.DefaultOkFooter
+}
+else
+{
+    <ModalFooter />
+}
+<PropsLoadingFooter />
+
+@code {
+    [Parameter]
+    public bool OkOnlyFooter { get; set; }
+}
