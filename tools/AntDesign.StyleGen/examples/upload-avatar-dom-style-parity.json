@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "upstream": { "repository": "ant-design/ant-design", "component": "Upload" },
+  "config": {
+    "timeoutMs": 45000,
+    "viewport": { "width": 1280, "height": 900, "deviceScaleFactor": 1 },
+    "colorScheme": "light",
+    "comparisonPolicy": {
+      "normalization": {
+        "runtimeIdPattern": "^(?:ant-blazor-[a-zA-Z0-9_-]+|_[rR]_[a-zA-Z0-9_-]+|__runtime-id-\\d+)$",
+        "removeAttributes": ["_bl_*", "id"],
+        "removeClassPatterns": ["^css-dev-only-do-not-override-", "^css-var-_[a-zA-Z0-9_]+$", "^css-[a-zA-Z0-9]+$"],
+        "removeCommentMarkers": ["<!--!-->"],
+        "normalizeStyleAttributes": true,
+        "sortClassTokens": true
+      }
+    }
+  },
+  "groups": [{
+    "id": "upload-avatar",
+    "component": "Upload",
+    "geometryTolerancePx": 0.03,
+    "computedStylePixelToleranceByProperty": { "width": 0.03, "height": 0.03 },
+    "react": {
+      "url": "http://127.0.0.1:8000/components/upload?theme=light#upload-demo-avatar",
+      "scopeSelector": "#upload-demo-avatar",
+      "rootSelector": ".ant-flex-gap-medium"
+    },
+    "blazor": {
+      "url": "http://127.0.0.1:5000/en-US/components/upload?theme=light#components-upload-demo-avatar",
+      "scopeSelector": "#components-upload-demo-avatar",
+      "rootSelector": ".ant-flex-gap-medium"
+    },
+    "styleProperties": ["display", "position", "boxSizing", "width", "height", "paddingBlock", "paddingInline", "marginBlock", "gap", "alignItems", "flexWrap", "fontSize", "lineHeight", "color", "backgroundColor", "borderRadius", "borderWidth", "borderColor", "objectFit"],
+    "semanticNodes": [
+      { "path": "layout", "selector": "$root", "minimumCount": 1 },
+      { "path": "upload.card", "selector": ".ant-upload-wrapper.ant-upload-picture-card-wrapper", "minimumCount": 1 },
+      { "path": "upload.circle", "selector": ".ant-upload-wrapper.ant-upload-picture-circle-wrapper", "minimumCount": 1 },
+      { "path": "trigger", "selector": ".ant-upload-select", "minimumCount": 2 },
+      { "path": "button", "selector": ".ant-upload-select button", "minimumCount": 2 },
+      { "path": "input", "selector": "input[type=file][name=avatar]", "minimumCount": 2 }
+    ],
+    "scenarios": [{ "id": "default", "minimumRoots": 1 }]
+  }]
+}

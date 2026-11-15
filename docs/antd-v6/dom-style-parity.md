@@ -1,5 +1,20 @@
 # React/Blazor DOM and style parity runner
 
+## Upload Avatar — 2026-11-15
+
+Recreated React's two upload controls side by side: one `picture-card` and one
+`picture-circle`, both sharing avatar image state, loading state, file type/size
+validation, and the React mock upload endpoint. The raw button trigger and the
+128px trigger sizing rule match the React example; the outer component wrappers
+render as 102px boxes on both pages with a 16px gap.
+
+The focused fixture passes 1/1 with zero normalized DOM, computed CSS,
+geometry, or visual-style differences. The browser screenshot confirms both
+wrappers render at 102px with a 16px gap. Report:
+`/tmp/upload-avatar-parity-20261115.json`. The refreshed 22-demo route scan
+reports 19/12/12 candidate H/C/G differences, with React hydration error #418
+blocking clean broad capture; Avatar's focused comparison is clean.
+
 ## Upload PictureCard demo — 2026-11-15
 
 Aligned the PictureCard demo with the React example: the same upload endpoint,

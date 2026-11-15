@@ -60,7 +60,7 @@ Across the inventory: React 912 demos; Blazor 1106; 762 matched names; 150 React
 | TimePicker | 16 | 14 | 13 | 12hours, change-on-scroll, _semantic | 13 | 7 | 7 |
 | Transfer | 12 | 13 | 11 | _semantic | 11 | 11 | 10 |
 | TreeSelect | 13 | 18 | 12 | _semantic | 11 | 9 | 9 |
-| Upload | 22 | 25 | 22 | — | 19 | 14 | 14 |
+| Upload | 22 | 25 | 22 | — | 19 | 12 | 12 |
 | Avatar | 7 | 10 | 7 | — | 7 | 6 | 6 |
 | Badge | 14 | 13 | 11 | style-class, _semantic, _semantic_ribbon | 11 | 11 | 11 |
 | Calendar | 10 | 5 | 5 | event-range, lunar, week, style-class, _semantic | 5 | 5 | 5 |
@@ -396,3 +396,12 @@ browser for manual review.
 | Upload — refreshed route inventory | React 22 demos, Blazor 25, 22 matched, no React demos missing. | Candidate DOM/CSS/geometry differences: 19/14/14; React route logs hydration error #418, so use focused fixtures for acceptance. Report: `/tmp/upload-inventory-current-20261115.json`. |
 | All 71 components | The full matrix above remains the broad component/demo mismatch index. | Runtime, API, global/component tokens, docs, Theme Preview, and Semantic DOM parity remain incomplete. |
 | Next | Continue Upload's next highest scoped gap, then proceed through the other components in descending mismatch volume. | Full progress matrix and focused records are in this file and `dom-style-parity.md`. |
+
+## Focused continuation — 2026-11-15 (Upload Avatar)
+
+| Area | Current progress | Verification / next |
+|---|---|---|
+| Upload — Avatar | Matched React's paired picture-card and picture-circle avatar uploaders, shared validation/loading/image state, upload endpoint, wrapper class, and trigger markup. | Focused React/Blazor fixture passes 1/1 with zero normalized DOM, computed CSS, geometry, and visual-style differences: `/tmp/upload-avatar-parity-20261115.json`. Browser screenshot confirms both wrappers render at 102px with a 16px gap. Docs.Server `net11.0` build succeeds with 0 errors. |
+| Upload — refreshed route inventory | React 22 demos, Blazor 25, 22 matched, no React demo names missing; Blazor-only: `input-file`, `file-type`, `component-token`. | Candidate H/C/G differences are 19/12/12. One React page capture remains blocked by hydration error #418; focused fixtures are the acceptance evidence. Report: `/tmp/upload-inventory-avatar-20261115.json`. |
+| All 71 components | The table above remains the full component status index; Upload's CSS and geometry candidate counts were refreshed. | Component API, Design Token, docs, Theme Preview, Semantic DOM, and runtime parity are not complete across all components. |
+| Next | Continue with the highest remaining mismatch volume, beginning with Table's remaining demo and runtime differences. | Use focused per-demo fixtures and update this matrix after each component batch. |

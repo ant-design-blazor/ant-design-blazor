@@ -1,7 +1,8 @@
 @inject IMessageService _message
 
-    <Upload Action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            Name="avatar"
+<Flex Gap="FlexGap.Medium" Wrap="FlexWrap.Wrap">
+    <Upload Name="avatar"
+            Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
             Class="avatar-uploader"
             ListType="UploadListType.PictureCard"
             ShowUploadList="false"
@@ -9,63 +10,77 @@
             OnChange="HandleChange">
         @if (!string.IsNullOrWhiteSpace(imageUrl))
         {
-            <img src="@imageUrl" alt="avatar" style="width: 100%" />
+            <img draggable="false" src="@imageUrl" alt="avatar" style="width: 100%" />
         }
         else
         {
-            <div>
-                <Icon Spin="loading" Type="@(loading ? IconType.Outline.Loading : IconType.Outline.Plus)" />
-                <div className="ant-upload-text">Upload</div>
-            </div>
+            <button type="button" style="border: 0px; background: none">
+                <Icon Type="@(loading ? IconType.Outline.Loading : IconType.Outline.Plus)" />
+                <div style="margin-top: 8px">Upload</div>
+            </button>
         }
     </Upload>
 
-@code
-{
-    bool loading = false;
-
-    string imageUrl;
-
-    bool BeforeUpload(UploadFileItem file)
-    {
-        var isJpgOrPng = file.Type == "image/jpeg" || file.Type == "image/png";
-        if (!isJpgOrPng)
+    <Upload Name="avatar"
+            Action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+            Class="avatar-uploader"
+            ListType="UploadListType.PictureCircle"
+            ShowUploadList="false"
+            BeforeUpload="BeforeUpload"
+            OnChange="HandleChange">
+        @if (!string.IsNullOrWhiteSpace(imageUrl))
         {
-            _message.Error("You can only upload JPG/PNG file!");
+            <img draggable="false" src="@imageUrl" alt="avatar" style="width: 100%" />
         }
-        var isLt2M = file.Size / 1024 / 1024 < 2;
-        if (!isLt2M)
+        else
         {
-            _message.Error("Image must smaller than 2MB!");
+            <button type="button" style="border: 0px; background: none">
+                <Icon Type="@(loading ? IconType.Outline.Loading : IconType.Outline.Plus)" />
+                <div style="margin-top: 8px">Upload</div>
+            </button>
         }
-        return isJpgOrPng && isLt2M;
-    }
+    </Upload>
+</Flex>
 
-    void HandleChange(UploadInfo fileinfo)
-    {
-        loading = fileinfo.File.State == UploadState.Uploading;
-            
-        if (fileinfo.File.State == UploadState.Success)
-        {
-            imageUrl = fileinfo.File.ObjectURL;
-        }
-        InvokeAsync(StateHasChanged);
-    }
-
-    public class ResponseModel
-    {
-        public string name { get; set; }
-
-        public string status { get; set; }
-
-        public string url { get; set; }
-
-        public string thumbUrl { get; set; }
-    }
-}
 <style>
     .avatar-uploader > .ant-upload {
         width: 128px;
         height: 128px;
     }
 </style>
+
+@code
+{
+    private bool loading;
+
+    private string imageUrl;
+
+    private bool BeforeUpload(UploadFileItem file)
+    {
+        var isJpgOrPng = file.Type == "image/jpeg" || file.Type == "image/png";
+        if (!isJpgOrPng)
+        {
+            _message.Error("You can only upload JPG/PNG file!");
+        }
+
+        var isLt2M = file.Size / 1024 / 1024 < 2;
+        if (!isLt2M)
+        {
+            _message.Error("Image must smaller than 2MB!");
+        }
+
+        return isJpgOrPng && isLt2M;
+    }
+
+    private void HandleChange(UploadInfo fileinfo)
+    {
+        loading = fileinfo.File.State == UploadState.Uploading;
+
+        if (fileinfo.File.State == UploadState.Success)
+        {
+            imageUrl = fileinfo.File.ObjectURL;
+        }
+
+        InvokeAsync(StateHasChanged);
+    }
+}
