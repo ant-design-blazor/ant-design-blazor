@@ -44,6 +44,7 @@ Since 0.16.0, Table has supported ordinary classes, record, interface, and abstr
 | RowTemplate | Row template | RenderFragment | - |
 | ExpandTemplate | Expand content template | RenderFragment<RowData<TItem>> | - |
 | DataSource | Data Sources | IEnumerable<TItem> | - |
+| Quick | Enable quick cell rendering; set to false to force the standard rendering path | bool | true |
 | DefaultExpandAllRows | Initially, whether to expand all rows | bool | false |
 | RowExpandable | Set whether to allow row expansion | bool | false | - |
 | TreeChildren | Used to select child nodes when displaying tree data | Func<TItem, IEnumerable<TItem>> | - |
@@ -154,3 +155,17 @@ The table supports responsive by default, and when the screen width is less than
 In small-screen mode, only certain features are currently supported, and mis-styling will occur in tables with some features such as group, expanded columns, tree data, summary cell, etc. 
 
 If you want to disable responsive, you can set `Responsive="false"`.
+
+### Quick rendering
+
+`Table` enables quick rendering by default to reduce the number of component instances created for cells. Use a column's `CellRender` to access the current cell data:
+
+```razor
+<PropertyColumn Property="person => person.Name" Title="Name">
+    <CellRender Context="cell">
+        <a>@cell.FieldValue</a>
+    </CellRender>
+</PropertyColumn>
+```
+
+Regular column `ChildContent` remains supported. To preserve the existing `@context` behavior, the table executes the column template for each row and logs a warning recommending `CellRender`; this compatibility path reduces the quick-rendering performance benefit. Set `Quick="false"` to force standard rendering.

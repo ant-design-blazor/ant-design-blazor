@@ -584,7 +584,7 @@ namespace AntDesign.Tests.Table
         }
 
         [Fact]
-        public void QuickTable_demo_uses_quick_rendering_and_keeps_row_values()
+        public void QuickTable_component_uses_quick_rendering_and_keeps_row_values()
         {
             var cut = Context.RenderComponent<QuickTable<Item>>(parameters => parameters
                 .Add(table => table.DataSource, Items)

@@ -44,6 +44,7 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 | RowTemplate | 行模板 | RenderFragment | - |
 | ExpandTemplate | 展开内容模板 | RenderFragment<RowData<TItem>> | - |
 | DataSource | 数据来源 | IEnumerable<TItem> | - |
+| Quick | 启用快速单元格渲染；默认启用，设为 false 时强制使用标准渲染路径 | bool | true |
 | DefaultExpandAllRows | 初始时，是否展开所有行 | bool | false |
 | RowExpandable | 设置是否允许行展开 | bool | false | - |
 | TreeChildren | 用于树形数据展示时选择子节点 | Func<TItem, IEnumerable<TItem>> | - |
@@ -151,3 +152,17 @@ cover: https://gw.alipayobjects.com/zos/alicdn/f-SbcX2Lx/Table.svg
 
 在小屏模式下，目前只支持一定的表格功能，在有 分组合并、展开列、树形数据、总结栏 等属性的表格中会出现样式错乱。
 如果想禁用响应式，可以设置 `Responsive="false"`。
+
+### 快速渲染
+
+`Table` 默认启用快速渲染，以减少每个单元格创建的组件实例。建议使用列的 `CellRender` 获取当前单元格数据：
+
+```razor
+<PropertyColumn Property="person => person.Name" Title="Name">
+    <CellRender Context="cell">
+        <a>@cell.FieldValue</a>
+    </CellRender>
+</PropertyColumn>
+```
+
+普通列 `ChildContent` 仍受支持。为保持旧有 `@context` 行为，使用这种写法时表格会逐行执行列模板，并记录 warning 日志建议改用 `CellRender`；该兼容路径会降低快速渲染的性能收益。需要强制使用标准渲染路径时，设置 `Quick="false"`。
