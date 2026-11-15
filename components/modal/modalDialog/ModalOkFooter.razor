@@ -17,7 +17,7 @@
             Size="@okProps.Size"
             Icon="@okProps.Icon"
             Disabled="@okProps.Disabled"
-            Danger="@okProps.Danger">
+            Danger="@(okProps.Danger ?? false)">
         @{
             if (ModalProps.OkText.IsT0)
             {

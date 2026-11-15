@@ -11,4 +11,4 @@ title:
 
 ## en-US
 
-Generate the table from JSON dynamically.
+Generate the table columns dynamically from a local JSON data source. The example is self-contained, so it works without an external API.

@@ -99,7 +99,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="false" />
         [Parameter]
-        public bool Danger { get; set; }
+        public bool? Danger { get; set; }
 
         /// <summary>
         /// Whether the `Button` is disabled.
@@ -178,7 +178,7 @@ namespace AntDesign
         /// </summary>
         /// <default value="ButtonType.Default" />
         [Parameter]
-        public ButtonType? Type { get; set; } = ButtonType.Default;
+        public ButtonType Type { get; set; } = ButtonType.Default;
 
         private static readonly Dictionary<ButtonType, string> _typeMap = new()
         {
@@ -196,6 +196,9 @@ namespace AntDesign
         public bool NoSpanWrap { get; set; }
 
         private bool _animating = false;
+        private string _baseStyle;
+        private string _lastAppliedStyle;
+        private bool _hasAppliedStyle;
 
         private const string BtnWave = "--antd-wave-shadow-color: rgb(255, 120, 117);";
 
@@ -205,8 +208,8 @@ namespace AntDesign
 
             ClassMapper.Clear()
                 .Add(prefixName)
-                .GetIf(() => $"{prefixName}-{_typeMap[Type.GetValueOrDefault(ButtonType.Default)]}", () => Type.HasValue)
-                .If($"{prefixName}-dangerous", () => Danger)
+                .Add($"{prefixName}-{_typeMap[Type]}")
+                .If($"{prefixName}-dangerous", () => Danger == true)
                 .GetIf(() => $"{prefixName}-{Shape.ToString().ToLowerInvariant()}", () => Shape != ButtonShape.Rectangle)
                 .If($"{prefixName}-lg", () => Size == ButtonSize.Large)
                 .If($"{prefixName}-sm", () => Size == ButtonSize.Small)
@@ -218,11 +221,17 @@ namespace AntDesign
                 ;
         }
 
-        protected override void OnInitialized()
+        protected override void OnParametersSet()
         {
-            base.OnInitialized();
+            base.OnParametersSet();
             SetClassMap();
             SetButtonColorStyle();
+        }
+
+        protected override bool ShouldRender()
+        {
+            SetClassMap();
+            return base.ShouldRender();
         }
 
         private async Task HandleOnClick(MouseEventArgs args)
@@ -259,10 +268,14 @@ namespace AntDesign
 
         private void SetButtonColorStyle()
         {
-            if (Color != Color.None)
+            if (!_hasAppliedStyle || Style != _lastAppliedStyle)
             {
-                Style += ColorHelper.GetBackgroundStyle(Color);
+                _baseStyle = Style;
             }
+
+            Style = _baseStyle + (Color != Color.None ? ColorHelper.GetBackgroundStyle(Color) : null);
+            _lastAppliedStyle = Style;
+            _hasAppliedStyle = true;
         }
     }
 }

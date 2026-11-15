@@ -65,7 +65,7 @@
                             @if (ScrollY != null)
                             {
                                 <div class="ant-table-header @(IsSticky?"ant-table-sticky-holder":"")" style="overflow: hidden; @StickyHolderStyle" @ref="_tableHeaderRef">
-                                    <table style="@TableLayoutStyle">
+                                    <table style="@(ScrollX != null ? $"width: {(CssSizeLength)ScrollX}; min-width: 100%;" : "") @TableLayoutStyle">
                                         @colGroup(this, true)
                                         @header()
                                     </table>
