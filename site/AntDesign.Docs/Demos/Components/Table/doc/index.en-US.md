@@ -169,3 +169,26 @@ If you want to disable responsive, you can set `Responsive="false"`.
 ```
 
 Regular column `ChildContent` remains supported. To preserve the existing `@context` behavior, the table executes the column template for each row and logs a warning recommending `CellRender`; this compatibility path reduces the quick-rendering performance benefit. Set `Quick="false"` to force standard rendering.
+
+#### Benchmark
+
+The benchmark uses Blazor's `HtmlRenderer` to compare `Quick=true/false`; all columns use `CellRender`. Non-virtualized cases cover 100 and 1,000 rows; virtualized cases cover 100, 1,000, and 10,000 rows. Each table has 8 or 16 columns. Virtualized cases simulate a 400px viewport and render 28 rows including overscan. Each case has one warmup, then takes the median of 7 runs (100 rows), 5 runs (1,000 rows), or 3 runs (10,000 rows). Results were collected on an Apple M4 Pro, macOS 27.0.1, and .NET 11 RC3:
+
+| Rows | Columns | Virtualized | Rows rendered | Quick=true time / allocations | Quick=false time / allocations | Time / allocation reduction |
+| ---: | ---: | :---: | ---: | ---: | ---: | ---: |
+| 100 | 8 | No | 100 | 39.10 ms / 4,565,432 B | 151.61 ms / 19,685,312 B | 74.2% / 76.8% |
+| 100 | 16 | No | 100 | 62.16 ms / 6,737,064 B | 235.09 ms / 36,901,856 B | 73.6% / 81.7% |
+| 100 | 8 | Yes | 28 | 6.30 ms / 938,448 B | 20.09 ms / 4,082,800 B | 68.6% / 77.0% |
+| 100 | 16 | Yes | 28 | 14.83 ms / 1,492,088 B | 39.18 ms / 8,067,528 B | 62.2% / 81.5% |
+| 1,000 | 8 | No | 1,000 | 200.64 ms / 48,812,128 B | 782.03 ms / 197,566,440 B | 74.3% / 75.3% |
+| 1,000 | 16 | No | 1,000 | 371.89 ms / 70,302,080 B | 14,277.07 ms / 371,741,904 B | 97.4% / 81.1% |
+| 1,000 | 8 | Yes | 28 | 84.10 ms / 1,276,944 B | 182.86 ms / 4,420,968 B | 54.0% / 71.1% |
+| 1,000 | 16 | Yes | 28 | 235.38 ms / 1,782,080 B | 1,282.56 ms / 8,355,888 B | 81.6% / 78.7% |
+| 10,000 | 8 | Yes | 28 | 170.66 ms / 5,349,728 B | 1,398.73 ms / 8,492,248 B | 87.8% / 37.0% |
+| 10,000 | 16 | Yes | 28 | 148.57 ms / 5,856,912 B | 583.24 ms / 12,461,744 B | 74.5% / 53.0% |
+
+These are component-rendering microbenchmark results; they exclude browser layout, painting, and network time. Virtualization simulates a 400px viewport by invoking the framework's viewport-fill callback, so browser JavaScript and scrolling performance are not measured. The 10,000-row cases only use virtualization to avoid the cost of rendering every cell. Virtualization renders only 28 rows here, but the table still processes the full data source, so allocations increase with 10,000 rows. Timings are sensitive to machine load; compare the Quick modes within the same scenario. Rerun with:
+
+```bash
+dotnet run --project tests/AntDesign.Benchmarks/AntDesign.Benchmarks.csproj --configuration Release --framework net11.0
+```
