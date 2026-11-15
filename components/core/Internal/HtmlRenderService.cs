@@ -9,16 +9,42 @@ namespace AntDesign.Core
 {
     public class HtmlRenderService
     {
-        private readonly HtmlRenderer _htmlRenderer;
+#if NET8_0_OR_GREATER
+        private readonly Microsoft.AspNetCore.Components.Web.HtmlRenderer _officialHtmlRenderer;
+        private readonly AntDesign.Core.HtmlRenderer _legacyHtmlRenderer;
 
-        public HtmlRenderService(HtmlRenderer htmlRenderer)
+        public HtmlRenderService(AntDesign.Core.HtmlRenderer htmlRenderer)
         {
-            _htmlRenderer = htmlRenderer;
+            _legacyHtmlRenderer = htmlRenderer;
         }
+
+        internal HtmlRenderService(Microsoft.AspNetCore.Components.Web.HtmlRenderer htmlRenderer)
+        {
+            _officialHtmlRenderer = htmlRenderer;
+        }
+#else
+        private readonly AntDesign.Core.HtmlRenderer _legacyHtmlRenderer;
+
+        public HtmlRenderService(AntDesign.Core.HtmlRenderer htmlRenderer)
+        {
+            _legacyHtmlRenderer = htmlRenderer;
+        }
+#endif
 
         public async ValueTask<string> RenderAsync(RenderFragment renderFragment)
         {
-            var text = await _htmlRenderer.Dispatcher.InvokeAsync(() => _htmlRenderer.RenderComponentAsync(new EmptyComponent(renderFragment), ParameterView.Empty));
+#if NET8_0_OR_GREATER
+            if (_officialHtmlRenderer != null)
+            {
+                var parameters = ParameterView.FromDictionary(new System.Collections.Generic.Dictionary<string, object>
+                {
+                    [nameof(EmptyComponent.Content)] = renderFragment
+                });
+                var rendered = await _officialHtmlRenderer.Dispatcher.InvokeAsync(() => _officialHtmlRenderer.RenderComponentAsync<EmptyComponent>(parameters));
+                return rendered.ToHtmlString();
+            }
+#endif
+            var text = await _legacyHtmlRenderer.Dispatcher.InvokeAsync(() => _legacyHtmlRenderer.RenderComponentAsync(new EmptyComponent(renderFragment), ParameterView.Empty));
             return string.Join("", text.Tokens);
         }
 
@@ -26,12 +52,17 @@ namespace AntDesign.Core
         {
             private RenderHandle _renderHandle;
 
-            private readonly RenderFragment _content;
+            public EmptyComponent()
+            {
+            }
 
             public EmptyComponent(RenderFragment content)
             {
-                this._content = content;
+                Content = content;
             }
+
+            [Parameter]
+            public RenderFragment Content { get; set; }
 
             public void Attach(RenderHandle renderHandle)
             {
@@ -40,7 +71,8 @@ namespace AntDesign.Core
 
             public Task SetParametersAsync(ParameterView parameters)
             {
-                _renderHandle.Render(_content);
+                parameters.SetParameterProperties(this);
+                _renderHandle.Render(Content);
                 return Task.CompletedTask;
             }
         }

@@ -1,6 +1,7 @@
 ﻿@using AntDesign.Core
+@using System.Text.Json.Serialization
 
-<Table TItem="Dictionary<string, object>" DataSource="@data" Loading="data==null" ScrollX="1500"
+<Table TItem="Dictionary<string, object>" DataSource="@data" Loading="loading" ScrollX="1500"
     PageSize="5" Size="TableSize.Small">
     @foreach (var key in data?.FirstOrDefault()?.Keys.Take(10) ?? new string[0])
     {
@@ -8,25 +9,36 @@
     }
 </Table>
 
+@if (loadError != null)
+{
+    <p class="ant-typography ant-typography-danger">@loadError</p>
+}
+
+@inject HttpClient httpClient
 @code {
+    private const string DataUrl = "data/table-contributors.json";
 
-    private const string JsonData = """
-        [
-          { "id": 1001, "login": "jamesyeung", "contributions": 128, "type": "User", "site_admin": true, "html_url": "https://github.com/jamesyeung" },
-          { "id": 1002, "login": "alice-dev", "contributions": 86, "type": "User", "site_admin": false, "html_url": "https://github.com/alice-dev" },
-          { "id": 1003, "login": "blazor-fan", "contributions": 52, "type": "User", "site_admin": false, "html_url": "https://github.com/blazor-fan" },
-          { "id": 1004, "login": "design-system", "contributions": 41, "type": "Organization", "site_admin": false, "html_url": "https://github.com/design-system" },
-          { "id": 1005, "login": "table-expert", "contributions": 27, "type": "User", "site_admin": false, "html_url": "https://github.com/table-expert" },
-          { "id": 1006, "login": "community-member", "contributions": 13, "type": "User", "site_admin": false, "html_url": "https://github.com/community-member" }
-        ]
-        """;
+    private List<Dictionary<string, object>> data;
+    private bool loading = true;
+    private string loadError;
 
-    List<Dictionary<string, object>> data;
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        var options = new JsonSerializerOptions();
-        options.Converters.Add(new DictionaryConverter());
-        data = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(JsonData, options);
+        try
+        {
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new DictionaryConverter());
+            data = await httpClient.GetFromJsonAsync<List<Dictionary<string, object>>>(DataUrl, options);
+            data ??= new List<Dictionary<string, object>>();
+        }
+        catch (Exception exception)
+        {
+            loadError = $"Unable to load table data: {exception.Message}";
+            data = new List<Dictionary<string, object>>();
+        }
+        finally
+        {
+            loading = false;
+        }
     }
 }
