@@ -6,6 +6,8 @@ using System.Reflection;
 using AntDesign.Docs.Highlight;
 using AntDesign.Docs.Services;
 using AntDesign.Extensions.Localization;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -14,6 +16,8 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddAntDesignDocs(this IServiceCollection services)
         {
             services.AddAntDesign();
+            services.AddScoped(sp => new HtmlRenderer(sp, sp.GetRequiredService<ILoggerFactory>()));
+            services.AddScoped<HtmlRenderService>();
             services.AddSingleton<DemoServiceCache>();
             services.AddScoped<DemoService>();
             services.AddScoped<IconListService>();
