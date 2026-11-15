@@ -42,58 +42,6 @@ Specify `dataSource` of Table as an array of data, the `OnChange` event and its 
 
 Regular column `ChildContent` remains supported. To preserve the existing `@context` behavior, the table executes the column template for each row and logs a warning recommending `CellRender`; this compatibility path reduces the quick-rendering performance benefit. Set `Quick="false"` to force standard rendering.
 
-#### Benchmark
-
-The benchmark uses Blazor's `HtmlRenderer` to compare `Quick=true/false`; all columns use `CellRender`. Non-virtualized cases cover 100 and 1,000 rows; virtualized cases cover 100, 1,000, and 10,000 rows. Each table has 8 or 16 columns. Virtualized cases simulate a 400px viewport and render 28 rows including overscan. Each case has one warmup, then takes the median of 7 runs (100 rows), 5 runs (1,000 rows), or 3 runs (10,000 rows). Results were collected on an Apple M4 Pro running macOS 27.0.1, with .NET SDK 11.0.100 and .NET runtime 11.0.0:
-
-| Rows | Columns | Virtualized | Rows rendered | Quick=true time / allocations | Quick=false time / allocations | Time / allocation reduction |
-| ---: | ---: | :---: | ---: | ---: | ---: | ---: |
-| 100 | 8 | No | 100 | 37.18 ms / 4,565,736 B | 148.79 ms / 19,705,032 B | 75.0% / 76.8% |
-| 100 | 16 | No | 100 | 46.89 ms / 6,242,832 B | 203.03 ms / 36,101,416 B | 76.9% / 82.7% |
-| 100 | 8 | Yes | 28 | 3.03 ms / 910,896 B | 9.99 ms / 4,039,600 B | 69.7% / 77.5% |
-| 100 | 16 | Yes | 28 | 6.15 ms / 1,422,864 B | 27.24 ms / 7,991,544 B | 77.4% / 82.2% |
-| 1,000 | 8 | No | 1,000 | 106.97 ms / 48,807,024 B | 792.15 ms / 197,761,976 B | 86.5% / 75.3% |
-| 1,000 | 16 | No | 1,000 | 257.59 ms / 70,313,512 B | 1,245.56 ms / 371,748,968 B | 79.3% / 81.1% |
-| 1,000 | 8 | Yes | 28 | 3.05 ms / 1,273,104 B | 13.95 ms / 4,417,632 B | 78.1% / 71.2% |
-| 1,000 | 16 | Yes | 28 | 4.52 ms / 1,782,304 B | 22.75 ms / 8,356,112 B | 80.1% / 78.7% |
-| 10,000 | 8 | Yes | 28 | 11.85 ms / 5,349,240 B | 20.92 ms / 8,492,952 B | 43.4% / 37.0% |
-| 10,000 | 16 | Yes | 28 | 21.74 ms / 5,857,672 B | 38.19 ms / 12,428,176 B | 43.1% / 52.9% |
-
-These are component-rendering microbenchmark results; they exclude browser layout, painting, and network time. Virtualization simulates a 400px viewport by invoking the framework's viewport-fill callback, so browser JavaScript and scrolling performance are not measured. The 10,000-row cases only use virtualization to avoid the cost of rendering every cell. Virtualization renders only 28 rows here, but the table still processes the full data source, so allocations increase with 10,000 rows. Timings are sensitive to machine load; compare the Quick modes within the same scenario. Rerun with:
-
-```bash
-dotnet run --project tests/AntDesign.Benchmarks/AntDesign.Benchmarks.csproj --configuration Release --framework net11.0
-```
-
-#### WASM browser benchmark
-
-This benchmark renders the table in a Release Blazor WebAssembly app using Chromium. Timing starts when the browser invokes the benchmark page and ends after the table renders, two browser frames pass, and the row count stabilizes. It includes JS interop, WASM rendering, and browser layout/paint waiting; it excludes WASM startup, data loading, and network time. Each Quick mode is warmed up once, then measured three times in alternating order; the median is reported. Virtualized scenarios use a real 400px table viewport and render 30 rows. This benchmark reports end-to-end UI latency, not memory allocations.
-
-Results were collected on an Apple M4 Pro running macOS 27.0.0, Chromium 159.0.8154.6, and Node.js 24.14.0, using .NET SDK 11.0.100 / runtime 11.0.0 and Release WASM with AOT disabled:
-
-| Rows | Columns | Virtualized | Rows rendered | Quick=true | Quick=false | Time reduction |
-| ---: | ---: | :---: | ---: | ---: | ---: | ---: |
-| 100 | 8 | No | 100 | 265.60 ms | 931.30 ms | 71.5% |
-| 100 | 16 | No | 100 | 415.60 ms | 1,565.80 ms | 73.5% |
-| 100 | 8 | Yes | 30 | 82.20 ms | 199.00 ms | 58.7% |
-| 100 | 16 | Yes | 30 | 132.30 ms | 349.20 ms | 62.1% |
-| 1,000 | 8 | No | 1,000 | 2,335.30 ms | 8,250.60 ms | 71.7% |
-| 1,000 | 16 | No | 1,000 | 3,643.30 ms | 15,997.80 ms | 77.2% |
-| 1,000 | 8 | Yes | 30 | 82.00 ms | 215.00 ms | 61.9% |
-| 1,000 | 16 | Yes | 30 | 148.70 ms | 365.60 ms | 59.3% |
-| 10,000 | 8 | Yes | 30 | 164.40 ms | 282.30 ms | 41.8% |
-| 10,000 | 16 | Yes | 30 | 215.40 ms | 482.40 ms | 55.3% |
-
-Timings vary with the device, browser version, and system load. Use these numbers to compare Quick modes within the same environment, rather than as fixed performance figures for every device. Rerun with:
-
-```bash
-ASPNETCORE_ENVIRONMENT=Production DOTNET_ENVIRONMENT=Production dotnet run --project site/AntDesign.Docs.Wasm/AntDesign.Docs.Wasm.csproj --configuration Release --framework net11.0 --no-launch-profile --urls http://localhost:8183
-cd tests/AntDesign.Benchmarks.Wasm
-npm ci
-npx playwright install chromium
-npm run benchmark -- --url=http://localhost:8183/en-US/table-benchmark
-```
-
 ## API
 
 ### The TItem Generic type parameter

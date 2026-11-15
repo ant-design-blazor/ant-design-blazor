@@ -32,12 +32,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 return domEventService.CreateDomEventListerner();
             });
 
-#if NET8_0_OR_GREATER
-            services.TryAddScoped(sp => new HtmlRenderService(new Microsoft.AspNetCore.Components.Web.HtmlRenderer(sp, sp.GetRequiredService<ILoggerFactory>())));
-#else
             services.TryAddScoped(sp => new HtmlRenderService(new HtmlRenderer(sp, sp.GetRequiredService<ILoggerFactory>(),
-                        s => HtmlEncoder.Default.Encode(s))));
-#endif
+                        s => HtmlEncoder.Default.Encode(s)))
+            );
             services.TryAddScoped<IconService>();
             services.TryAddScoped<InteropService>();
             services.TryAddScoped<ClientDimensionService>();
