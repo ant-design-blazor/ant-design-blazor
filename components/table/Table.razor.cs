@@ -698,6 +698,42 @@ namespace AntDesign
             }
         };
 
+        private RenderFragment RenderRegisteredHeaders() => builder =>
+        {
+            var sequence = 0;
+            foreach (var column in ColumnContext.Columns)
+            {
+                if (column is IQuickRenderColumn quickColumn)
+                {
+                    builder.OpenRegion(sequence++);
+                    quickColumn.RenderQuickHeader(builder);
+                    builder.CloseRegion();
+                }
+                else
+                {
+                    builder.AddContent(sequence++, GetRegisteredColumnRenderer(column));
+                }
+            }
+        };
+
+        private RenderFragment RenderRegisteredColGroups() => builder =>
+        {
+            var sequence = 0;
+            foreach (var column in ColumnContext.Columns)
+            {
+                if (column is IQuickRenderColumn quickColumn)
+                {
+                    builder.OpenRegion(sequence++);
+                    quickColumn.RenderQuickColGroup(builder);
+                    builder.CloseRegion();
+                }
+                else
+                {
+                    builder.AddContent(sequence++, GetRegisteredColumnRenderer(column));
+                }
+            }
+        };
+
         private RenderFragment RenderRegisteredBodyColumns(RowData rowData) => builder =>
         {
             var sequence = 0;

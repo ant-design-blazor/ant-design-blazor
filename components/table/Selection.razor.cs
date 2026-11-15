@@ -113,7 +113,11 @@ namespace AntDesign
                 builder.OpenComponent<Checkbox>(7);
                 builder.AddAttribute(8, nameof(Checkbox.Checked), rowData.Selected);
                 builder.AddAttribute(9, nameof(Checkbox.Disabled), Disabled || rowData.TableDataItem.Disabled);
-                builder.AddAttribute(10, nameof(Checkbox.CheckedChange), EventCallback.Factory.Create<bool>(this, selected => rowData.SetSelected(selected, CheckStrictly)));
+                builder.AddAttribute(10, nameof(Checkbox.CheckedChange), EventCallback.Factory.Create<bool>(this, selected =>
+                {
+                    rowData.SetSelected(selected, CheckStrictly);
+                    Table.Refresh();
+                }));
                 builder.CloseComponent();
             }
             else if (Type == SelectionType.Radio)
@@ -126,9 +130,61 @@ namespace AntDesign
                     if (selected)
                     {
                         Table.SetSelection(this, rowData);
+                        Table.Refresh();
                     }
                 }));
                 builder.CloseComponent();
+            }
+            builder.CloseElement();
+        }
+
+        void IQuickRenderColumn.RenderQuickHeader(RenderTreeBuilder builder)
+        {
+            var initialize = !QuickHeaderInitialized;
+            InitializeQuickHeader();
+            if (initialize)
+            {
+                Context.HeaderColumnInitialized(this);
+                Table.Selection = this;
+            }
+            if (Hidden || HeaderColSpan == 0)
+            {
+                return;
+            }
+            builder.OpenElement(0, "th");
+            builder.AddMultipleAttributes(1, AdditionalAttributes);
+            builder.AddAttribute(2, "class", $"{ClassMapper.Class} ant-table-selection-column");
+            builder.AddAttribute(3, "style", $"{FixedStyle} {HeaderStyle}");
+            builder.SetKey(Key);
+            builder.AddAttribute(4, "colspan", HeaderColSpan);
+            if (Type == SelectionType.Checkbox)
+            {
+                builder.OpenComponent<Checkbox>(5);
+                builder.AddAttribute(6, nameof(Checkbox.Checked), Table.AllSelected);
+                builder.AddAttribute(7, nameof(Checkbox.CheckedChange), EventCallback.Factory.Create<bool>(this, selected =>
+                {
+                    OnCheckedChange(selected);
+                    Table.Refresh();
+                }));
+                builder.AddAttribute(8, nameof(Checkbox.Indeterminate), Indeterminate);
+                builder.AddAttribute(9, nameof(Checkbox.Disabled), IsHeaderDisabled);
+                builder.CloseComponent();
+            }
+            builder.CloseElement();
+        }
+
+        void IQuickRenderColumn.RenderQuickColGroup(RenderTreeBuilder builder)
+        {
+            Context?.AddColGroup(this);
+            if (Hidden)
+            {
+                return;
+            }
+            builder.OpenElement(0, "col");
+            builder.AddAttribute(1, "class", "ant-table-selection-col");
+            if (Width != null)
+            {
+                builder.AddAttribute(2, "style", $"width: {(CssSizeLength)Width}; min-width: {(CssSizeLength)Width};");
             }
             builder.CloseElement();
         }

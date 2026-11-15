@@ -201,7 +201,7 @@
                                     <TableRow>
                                         @if (Quick)
                                         {
-                                            @RenderRegisteredColumns()
+                                            @RenderRegisteredHeaders()
                                         }
                                         else
                                         {
@@ -226,7 +226,7 @@
                 {
                     @if (table.Quick)
                     {
-                        @table.RenderRegisteredColumns()
+                        @table.RenderRegisteredColGroups()
                     }
                     else
                     {

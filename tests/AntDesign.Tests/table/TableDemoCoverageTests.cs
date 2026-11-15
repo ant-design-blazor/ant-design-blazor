@@ -493,6 +493,11 @@ namespace AntDesign.Tests.Table
         public void Virtualization_configuration_does_not_change_column_definitions()
         {
             // Virtualization, Ajax, AutoHeight.
+            // bUnit 1.36's automatic Virtualize JS handler invokes the callback using the
+            // pre-.NET 11 signature. Stub initialization here because this test verifies the
+            // table's component configuration and column definitions, not browser scrolling.
+            JSInterop.SetupVoid("Blazor._internal.Virtualize.init", _ => true);
+
             var cut = RenderTable(new[]
             {
                 SelectionColumn(),

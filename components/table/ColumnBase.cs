@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using AntDesign.Core.Documentation;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace AntDesign
 {
@@ -169,6 +170,10 @@ namespace AntDesign
 
         private string _fixedStyle;
 
+        private bool _quickHeaderInitialized;
+
+        protected bool QuickHeaderInitialized => _quickHeaderInitialized;
+
         private ColumnAlign _align = ColumnAlign.Left;
 
         protected string FixedStyle => _fixedStyle;
@@ -250,6 +255,42 @@ namespace AntDesign
             }
 
             SetClass();
+        }
+
+        protected void InitializeQuickHeader()
+        {
+            if (_quickHeaderInitialized)
+            {
+                return;
+            }
+
+            _quickHeaderInitialized = true;
+            IsHeader = true;
+            Context?.AddHeaderColumn(this);
+            _fixedStyle = CalcFixedStyle();
+            SetClass();
+        }
+
+        protected void RenderQuickColGroup(RenderTreeBuilder builder)
+        {
+            Context?.AddColGroup(this);
+            if (Hidden)
+            {
+                return;
+            }
+            if (AppendExpandColumn)
+            {
+                builder.OpenElement(0, "col");
+                builder.AddAttribute(1, "class", "ant-table-expand-icon-col");
+                builder.CloseElement();
+            }
+
+            builder.OpenElement(2, "col");
+            if (Width != null)
+            {
+                builder.AddAttribute(3, "style", $"width: {(CssSizeLength)Width}; min-width: {(CssSizeLength)Width};");
+            }
+            builder.CloseElement();
         }
 
         protected override void Dispose(bool disposing)
@@ -349,7 +390,14 @@ namespace AntDesign
         void IColumn.UpdateFixedStyle()
         {
             _fixedStyle = CalcFixedStyle();
-            StateHasChanged();
+            if (_quickHeaderInitialized)
+            {
+                Table?.Refresh();
+            }
+            else
+            {
+                StateHasChanged();
+            }
         }
     }
 }

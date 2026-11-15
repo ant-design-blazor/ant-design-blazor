@@ -93,6 +93,32 @@ namespace AntDesign.Tests.Table
         }
 
         [Fact]
+        public void Quick_mode_keeps_generated_property_columns_when_action_content_uses_row_context()
+        {
+            var cut = Context.RenderComponent<Table<Person>>(parameters => parameters
+                .Add(table => table.DataSource, People)
+                .Add(table => table.HidePagination, true)
+                .Add(table => table.Quick, true)
+                .Add(table => table.ColumnDefinitions, person => builder =>
+                {
+                    builder.OpenComponent<GenerateColumns<Person>>(0);
+                    builder.CloseComponent();
+
+                    builder.OpenComponent<ActionColumn>(1);
+                    builder.AddAttribute(2, nameof(ActionColumn.Title), "Action");
+                    builder.AddAttribute(3, nameof(ActionColumn.ChildContent), (RenderFragment)(contentBuilder =>
+                        contentBuilder.AddContent(0, $"edit:{person.Name}")));
+                    builder.CloseComponent();
+                }));
+
+            Assert.Contains("Name", cut.Find("thead").TextContent);
+            Assert.Contains("Alice", cut.FindAll("tbody tr.ant-table-row")[0].TextContent);
+            Assert.Contains("Bob", cut.FindAll("tbody tr.ant-table-row")[1].TextContent);
+            Assert.Contains("edit:Alice", cut.Markup);
+            Assert.Contains("edit:Bob", cut.Markup);
+        }
+
+        [Fact]
         public void Quick_mode_logs_once_when_legacy_child_content_uses_compatibility_rendering()
         {
             var logger = new Mock<ILogger<Table<Person>>>();
@@ -143,6 +169,45 @@ namespace AntDesign.Tests.Table
             Assert.Contains("Name", cut.Find("thead").TextContent);
             Assert.Contains("Alice", cut.Markup);
             Assert.Contains("Bob", cut.Markup);
+        }
+
+        [Fact]
+        public void Quick_mode_reuses_registered_columns_for_headers_and_colgroups()
+        {
+            var cut = Context.RenderComponent<Table<Person>>(parameters => parameters
+                .Add(table => table.DataSource, People)
+                .Add(table => table.HidePagination, true)
+                .Add(table => table.Quick, true)
+                .Add(table => table.ChildContent, _ => builder =>
+                {
+                    builder.OpenComponent<Selection>(0);
+                    builder.CloseComponent();
+
+                    builder.OpenComponent<Column<string>>(1);
+                    builder.AddAttribute(2, nameof(Column<string>.Title), "Name");
+                    builder.AddAttribute(3, nameof(Column<string>.CellRender), (RenderFragment<CellData<string>>)(cell => contentBuilder =>
+                        contentBuilder.AddContent(0, ((RowData<Person>)cell.RowData).Data.Name)));
+                    builder.CloseComponent();
+
+                    builder.OpenComponent<ActionColumn>(4);
+                    builder.AddAttribute(5, nameof(ActionColumn.Title), "Action");
+                    builder.AddAttribute(6, nameof(ActionColumn.CellRender), (RenderFragment<CellData>)(_ => contentBuilder =>
+                        contentBuilder.AddContent(0, "Edit")));
+                    builder.CloseComponent();
+                }));
+
+            Assert.Single(cut.FindComponents<Selection>());
+            Assert.Single(cut.FindComponents<Column<string>>());
+            Assert.Single(cut.FindComponents<ActionColumn>());
+            Assert.Collection(cut.FindAll("colgroup col"), _ => { }, _ => { }, _ => { });
+            Assert.Equal(new[] { "", "Name", "Action" }, cut.FindAll("thead th").Select(header => header.TextContent.Trim()));
+            Assert.Contains("Alice", cut.Markup);
+            Assert.Contains("Edit", cut.Markup);
+            Assert.Equal(3, cut.FindAll(".ant-checkbox-input").Count);
+
+            cut.Find("thead .ant-checkbox-input").Change(true);
+
+            Assert.Equal(2, cut.FindAll("tbody tr.ant-table-row-selected").Count);
         }
 
         [Fact]

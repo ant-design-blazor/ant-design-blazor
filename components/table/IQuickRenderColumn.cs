@@ -10,6 +10,10 @@ namespace AntDesign
 {
     internal interface IQuickRenderColumn
     {
+        void RenderQuickHeader(RenderTreeBuilder builder);
+
+        void RenderQuickColGroup(RenderTreeBuilder builder);
+
         void RenderQuickBody(RenderTreeBuilder __builder, RowData rowData);
     }
 }
